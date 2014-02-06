@@ -17,6 +17,7 @@
 		<h:outputStylesheet
         library="styleSkinInfox"
         name="login.css" />
+		<ui:param name="useCertLogin"  value="#{certificateAuthenticator.certificateLogin}" />
 	</ui:define>
 
 	<ui:define name="baseBody">
@@ -37,7 +38,6 @@
 		<s:div id="pageBody" styleClass="loginPageBody">
 			<div class="corpoSuperior" />
 			<div class="corpoInferior" />
-			<ui:param name="useCertLogin"  value="#{(loginComCertificado or producao) and false}" />
 			<div id="seletorSkinLogin" class="seletorSkinsLogin" >
 				<h:commandButton
 					id="consultaExterna"
@@ -57,30 +57,31 @@
 							styleClass="logo"
 							url="#{a4jSkin.imgLogoLogin}"/>
 			    	</div>
+			    	
 					<div id="bg_login" class="bg_login login">
-						<div>
-							<h:outputLabel for="username"
-										   rendered="#{not useCertLogin}"
-										   class="login-lbl"
-										   value="#{messages['login.nomeUsuario']}">
-							</h:outputLabel>
-							<h:inputText id="username"
-										 value="#{credentials.username}"
-										 class="input_login"
-										 rendered="#{not useCertLogin}"/>
-						</div>
-						<div>
-							<h:outputLabel for="password"
-									       rendered="#{not useCertLogin}"
-									       class="login-lbl"
-									       value="#{messages['login.senha']}">
-							</h:outputLabel>
-							<h:inputSecret id="password" 
-										   value="#{credentials.password}"
-										   rendered="#{not useCertLogin}"
-										   class="input_login" />
-						</div>
 						<c:if test="#{not useCertLogin}">
+							<div>
+								<h:outputLabel for="username"
+											   rendered="#{not useCertLogin}"
+											   class="login-lbl"
+											   value="#{messages['login.nomeUsuario']}">
+								</h:outputLabel>
+								<h:inputText id="username"
+											 value="#{credentials.username}"
+											 class="input_login"
+											 rendered="#{not useCertLogin}"/>
+							</div>
+							<div>
+								<h:outputLabel for="password"
+										       rendered="#{not useCertLogin}"
+										       class="login-lbl"
+										       value="#{messages['login.senha']}">
+								</h:outputLabel>
+								<h:inputSecret id="password" 
+											   value="#{credentials.password}"
+											   rendered="#{not useCertLogin}"
+											   class="input_login" />
+							</div>
 							<div class="novaSenha">
 								<h:outputLabel for="newPassword1"
 											   rendered="#{not useCertLogin}"
@@ -102,9 +103,46 @@
 											   value="#{authenticator.newPassword2}"/>							
 							</div>
 						</c:if>
+						<c:if test="#{useCertLogin}">
+							<wi:appletAssinatura id="certificacao"
+					            urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
+					            formId="#{rich:clientId('login')}"
+					            certificationChainField="#{rich:clientId('certChain')}"
+					            signatureField="#{rich:clientId('signature')}"
+								signButtonCaption="#{messages['signature.loginBtn']}"
+					            getDataFunction="''"
+					            useBase64Function="'true'"
+								functionPreSign="RichFaces.$('mp_formValidar').show();"	
+								functionPosSign="RichFaces.$('mp_formValidar').hide();"
+								functionPosSignOk="submitForm();"
+								debug="false"
+					            loginMode="true"
+					            useProviderDll="false">
+					        </wi:appletAssinatura>
+				
+							<h:inputHidden id="signature" 
+								rendered="#{useCertLogin}"
+								value="#{certificateAuthenticator.assinatura}" />
+								
+							<h:inputHidden id="certChain" 
+								rendered="#{useCertLogin}"
+								value="#{certificateAuthenticator.certChain}" />				
+									
+							<h:inputHidden id="certChainStringLog" 
+								rendered="#{useCertLogin}"
+								value="#{certificateAuthenticator.certChainStringLog}" />	
+													
+					        <a:jsFunction 
+					        	rendered="#{useCertLogin}"
+					        	name="submitForm" 
+					        	status="status"
+					        	action="#{certificateAuthenticator.authenticate()}"
+					        	render="pagina"
+			                    limitRender="true" />
+						</c:if>
 					</div>
-					<div id="bg_login_inferior" class="bg_login_inferior login">
-						<c:if test="#{not useCertLogin}">
+					<c:if test="#{not useCertLogin}">
+						<div id="bg_login_inferior" class="bg_login_inferior login">
 							<h:commandButton
 								id="btnEntrar"
 								value="#{messages['login.entrarBtn']}" 
@@ -122,44 +160,9 @@
 								id="btnTrocarSenha"
 								type="button"
 								value="#{messages['login.requisitarSenhaBtn']}"/>
-						</c:if>
-						
-						<c:if test="#{useCertLogin}">
-							<wi:appletAssinatura 
-								width="80"
-								id="certificacao" 
-								formId="login"
-								signButtonCaption="Entrar"
-								certificationChainField="login:certChain"
-								signatureField="login:signature"
-								functionPreSign="#{rich:component('mp_formValidar')}.show();"	
-								functionPosSign="#{rich:component('mp_formValidar')}.hide();"
-								functionPosSignOk="submitForm();"	
-								loginMode="true" />
-						</c:if>
-			        </div>
+				        </div>
+			        </c:if>
 				</div>
-				
-				<h:inputHidden id="signature" 
-					rendered="#{useCertLogin}"
-					value="#{authenticator.assinatura}" />
-					
-				<h:inputHidden id="certChain" 
-					rendered="#{useCertLogin}"
-					value="#{authenticator.certChain}" />				
-						
-				<h:inputHidden id="certChainStringLog" 
-					rendered="#{useCertLogin}"
-					value="#{authenticator.certChainStringLog}" />	
-										
-		        <a:jsFunction 
-		        	rendered="#{useCertLogin}"
-		        	name="submitForm" 
-		        	status="status"
-		        	action="#{authenticator.authenticateSC()}" 
-		        	oncomplete="mostrarInconsistencia();"
-		        	render="pagina"
-                    limitRender="true" />
 				
 			</h:form>
 			
