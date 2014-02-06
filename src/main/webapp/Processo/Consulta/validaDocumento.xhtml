@@ -3,15 +3,15 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:s="http://jboss.com/products/seam/taglib"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:rich="http://richfaces.org/rich"
-				xmlns:wi= "http://www.itx.com.br/jsf"
-				xmlns:c="http://java.sun.com/jstl/core"
-				template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-<!--
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:c="http://java.sun.com/jstl/core"
+    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+    <!--
   IBPM - Ferramenta de produtividade Java
   Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
  
@@ -25,40 +25,46 @@
   Consulte a GNU GPL para mais detalhes.
   Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
   veja em http://www.gnu.org/licenses/  
--->   
-	<ui:define name="baseBody"> 
-		<div class="pageBody">
-			<rich:panel id="mp_ass">
-				<f:facet name="header">
-					<h:outputText value="Dados do Documento" />
-				</f:facet>
-				<f:facet name="controls">
-		         		<span style="cursor:pointer; font-family: Verdana, Arial; 
-		         			padding-right: 22px"
-		         			onclick="Richfaces.hideModalPanel('mp_ass')">X</span>
-				</f:facet>
-				<div>
-			        <h:panelGrid columns="2" >
-						<h:outputLabel value="Nome:" for="nome" />
-						<h:outputText id="nome" value="#{validaDocumentoHome.documento.processoDocumentoBin.usuarioUltimoAssinar}" />
-			   	        
-						<h:outputLabel value="Papel:" for="papel" />
-						<h:outputText id="papel" value="#{validaDocumentoHome.documento.papel}" />
-			   	        
-						<h:outputLabel value="Localização:" for="localizacao" />
-						<h:outputText id="localizacao" value="#{validaDocumentoHome.documento.localizacao}" />
-			   	        
-			   	        <h:outputLabel value="Data da assinatura:" for="validade" />
-				        <h:outputText id="validade" value="#{validaDocumentoHome.documento.processoDocumentoBin.dataInclusao}" >
-				        	<s:convertDateTime pattern="dd/MM/yyyy"/>
-				        </h:outputText>
-				        
-			        </h:panelGrid>
-					<br /> 
-					<rich:messages id="msg" infoClass="formMessage" />
-				</div>				
-			</rich:panel>
-		</div>			
-	</ui:define>
-	
+-->
+    <ui:define name="baseBody">
+        <div class="pageBody">
+            <rich:panel id="mp_ass">
+                <f:facet name="header">
+                    <h:outputText value="Dados do Documento" />
+                </f:facet>
+                <f:facet name="controls">
+                    <span
+                        style="cursor: pointer; font-family: Verdana, Arial; padding-right: 22px"
+                        onclick="Richfaces.hideModalPanel('mp_ass')">X</span>
+                </f:facet>
+                <div>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Nome:" for="nome" />
+                        <h:outputText id="nome"
+                            value="#{validaDocumentoHome.documento.processoDocumentoBin.usuarioUltimoAssinar}" />
+
+                        <h:outputLabel value="Papel:" for="papel" />
+                        <h:outputText id="papel"
+                            value="#{validaDocumentoHome.documento.papel}" />
+
+                        <h:outputLabel value="Localização:"
+                            for="localizacao" />
+                        <h:outputText id="localizacao"
+                            value="#{validaDocumentoHome.documento.localizacao}" />
+
+                        <h:outputLabel value="Data da assinatura:"
+                            for="validade" />
+                        <h:outputText id="validade"
+                            value="#{validaDocumentoHome.documento.processoDocumentoBin.dataInclusao}">
+                            <s:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:outputText>
+
+                    </h:panelGrid>
+                    <br />
+                    <rich:messages id="msg" infoClass="formMessage" />
+                </div>
+            </rich:panel>
+        </div>
+    </ui:define>
+
 </ui:composition>
