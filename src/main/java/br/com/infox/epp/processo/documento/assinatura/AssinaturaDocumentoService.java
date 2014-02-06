@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.documento.service;
+package br.com.infox.epp.processo.documento.assinatura;
 
 import java.io.Serializable;
 
@@ -12,8 +12,7 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.documento.AssinaturaException;
-import br.com.infox.epp.processo.documento.AssinaturaException.Motivo;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 
