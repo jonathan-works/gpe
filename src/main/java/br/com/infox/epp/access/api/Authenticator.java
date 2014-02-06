@@ -41,7 +41,6 @@ import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
-import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.operation.ChangePasswordOperation;
 import br.com.infox.core.persistence.DAOException;
@@ -66,9 +65,6 @@ public class Authenticator {
 	private String newPassword1;
 	private String newPassword2;
 	private String login;
-	private String assinatura;
-	private String certChain;
-	private String certChainStringLog;
 	
 	//Variaveis de sessão
 	public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
@@ -118,7 +114,6 @@ public class Authenticator {
 			JpaIdentityStore store = getJpaIdentyStore();
 			UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
 			validaCadastroDeUsuario(id, usuario);
-			limparAssinatura();
 			try {
 				getAuthenticatorService().validarUsuario(usuario);
 				if (isTrocarSenha()) {
@@ -145,12 +140,6 @@ public class Authenticator {
 
 	private JpaIdentityStore getJpaIdentyStore() {
 		return (JpaIdentityStore) IdentityManager.instance().getIdentityStore();
-	}
-
-	private void limparAssinatura() {
-		if (!Strings.isEmpty(assinatura)) {
-			assinatura = null;
-		}
 	}
 
 	private void validaCadastroDeUsuario(String id, UsuarioLogin usuario) throws LoginException {
@@ -386,30 +375,6 @@ public class Authenticator {
 		return login;
 	}
 
-	public void setAssinatura(String assinatura) {
-		this.assinatura = assinatura;
-	}
-
-	public String getAssinatura() {
-		return assinatura;
-	}
-
-	public void setCertChain(String certChain) {
-		this.certChain = certChain;
-	}
-
-	public String getCertChain() {
-		return certChain;
-	}	
-		
-	public void setCertChainStringLog(String certChainStringLog) {
-		this.certChainStringLog = certChainStringLog;
-	}
-
-	public String getCertChainStringLog() {
-		return certChainStringLog;
-	}	
-	
 	@SuppressWarnings(UNCHECKED)
 	public List<UsuarioLocalizacao> getUsuarioLocalizacaoListItems() {
 		List<UsuarioLocalizacao> list = (List<UsuarioLocalizacao>) 
