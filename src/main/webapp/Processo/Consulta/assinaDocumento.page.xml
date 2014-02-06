@@ -7,6 +7,6 @@ login-required="true"
 >
 
     <begin-conversation join="true" />
-    <param name="id" value="#{processoDocumentoHome.id}" converterId="integerConverter"/>
+    <param name="id" value="#{assinadorDocumento.id}" converterId="integerConverter"/>
 
 </page>

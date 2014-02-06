@@ -26,17 +26,15 @@
     <ui:define name="baseBody">
         <s:div id="pageBody" styleClass="pageBody">
             <wi:messages formId="pageBody" globalOnly="true" />
-            <ui:param name="home" value="#{processoDocumentoHome}" />
-            <ui:param name="pd" value="#{home.instance}" />
             <ui:param name="isBinario"
-                value="#{pd.processoDocumentoBin.isBinario()}" />
+                value="#{assinadorDocumento.processoDocumentoBin.isBinario()}" />
             <script>
             var documento= {
                     useBase64:function useBase64() {
                         return 'true';
                     },
                     getData:function getData() {
-                        return "#{pd.processoDocumentoBin.md5Documento}";        
+                        return "#{assinadorDocumento.processoDocumentoBin.md5Documento}";        
                     },
                     hasSignature:function hasSignature() {
                         return #{rich:jQuery("signature")}.val() != ''
@@ -56,7 +54,7 @@
                     title="Documento" opened="false" />
 
                 <s:div
-                    rendered="#{not processoDocumentoBinHome.houveErroAoAssinar}"
+                    rendered="#{not assinadorDocumento.houveErroAoAssinar}"
                     id="certificadoDigitalDiv">
                     <div id="divApplet">
                         <wi:appletAssinatura id="certificacao"
@@ -73,20 +71,20 @@
                     </div>
                     <h:form id="formValidar">
                         <script>
-                        if (!(#{empty pd.processoDocumentoBin.signature or empty pd.processoDocumentoBin.certChain})) {
+                        if (!(#{empty assinadorDocumento.processoDocumentoBin.signature or empty assinadorDocumento.processoDocumentoBin.certChain})) {
                             opener.location.reload();
                         }
                         </script>
                         <h:inputHidden id="certChain"
-                            value="#{processoDocumentoBinHome.certChain}" />
+                            value="#{assinadorDocumento.certChain}" />
                         <h:inputHidden id="signature"
-                            value="#{processoDocumentoBinHome.signature}" />
+                            value="#{assinadorDocumento.signature}" />
 
                         <a:jsFunction name="submitForm"
-                            action="#{processoDocumentoBinHome.assinarDocumento(pd)}"
+                            action="#{assinadorDocumento.assinarDocumento()}"
                             oncomplete="if (!event.data) close();"
                             execute="@form"
-                            data="#{processoDocumentoBinHome.houveErroAoAssinar}"
+                            data="#{assinadorDocumento.houveErroAoAssinar}"
                             render="painel, pageBodyDialogMessage" />
                     </h:form>
                 </s:div>
