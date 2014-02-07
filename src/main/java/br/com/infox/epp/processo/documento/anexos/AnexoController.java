@@ -19,19 +19,19 @@ public class AnexoController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "anexoController";
-    
+
     private Processo processo;
     private List<DocumentoCreator> creators;
     private List<ProcessoDocumento> documentosDaSessao;
-    
+
     @Create
-    public void init(){
+    public void init() {
         creators = new ArrayList<>();
         creators.add((DocumentoCreator) getComponent(DocumentoUploader.NAME));
         creators.add((DocumentoCreator) getComponent(DocumentoEditor.NAME));
         documentosDaSessao = new ArrayList<>();
     }
-    
+
     public Processo getProcesso() {
         return processo;
     }
@@ -47,9 +47,9 @@ public class AnexoController extends AbstractController {
     public void setdocumentosDaSessao(List<ProcessoDocumento> documentosDaSessao) {
         this.documentosDaSessao = documentosDaSessao;
     }
-    
-    public void onClickTabAnexar(Processo processo){
-        for (DocumentoCreator creator : creators){
+
+    public void onClickTabAnexar(Processo processo) {
+        for (DocumentoCreator creator : creators) {
             creator.setProcesso(processo);
             creator.clear();
         }

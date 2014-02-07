@@ -15,21 +15,21 @@ import br.com.infox.epp.tarefa.entity.Tarefa;
 @AutoCreate
 public class TarefaManager extends Manager<TarefaDAO, Tarefa> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "tarefaManager";
-	
-	public List<SelectItem> getPreviousNodes(Tarefa tarefa){
-		return getDao().getPreviousNodes(tarefa);
-	}
-	
-	public void encontrarNovasTarefas(){
-		getDao().encontrarNovasTarefas();
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "tarefaManager";
+
+    public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
+        return getDao().getPreviousNodes(tarefa);
+    }
+
+    public void encontrarNovasTarefas() {
+        getDao().encontrarNovasTarefas();
+    }
 
     public Tarefa getTarefa(long idJbpmTask) {
         return getDao().getTarefa(idJbpmTask);
     }
-    
+
     public Tarefa getTarefa(String tarefa, String fluxo) {
         return getDao().getTarefa(tarefa, fluxo);
     }
