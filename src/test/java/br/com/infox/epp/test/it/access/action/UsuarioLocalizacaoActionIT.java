@@ -63,8 +63,6 @@ import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
-import br.com.infox.epp.processo.documento.home.ProcessoDocumentoBinHome;
-import br.com.infox.epp.processo.documento.home.ProcessoDocumentoHome;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
@@ -129,9 +127,8 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
                     ProcessoManager.class,LocalizacaoDAO.class,ControleFiltros.class,
                     ProcessoDocumentoDAO.class,ProcessoEpaDAO.class,ProcessoLocalizacaoIbpmDAO.class,
                     ProcessoHome.class,Certificado.class,CertificadoException.class,
-                    TipoProcessoDocumentoDAO.class,ProcessoDocumentoHome.class,
-                    ProcessoEpaManager.class,TaskInstanceHome.class,DigitalSignatureUtils.class,
-                    SituacaoProcessoManager.class,Indexer.class,Reindexer.class,
+                    TipoProcessoDocumentoDAO.class, ProcessoEpaManager.class,TaskInstanceHome.class,
+                    DigitalSignatureUtils.class, SituacaoProcessoManager.class,Indexer.class,Reindexer.class,
                     SearchHandler.class,ProcessoEpaTarefaManager.class,TaskPageAction.class,
                     TaskInstanceManager.class,UserHandler.class,SituacaoProcessoDAO.class,
                     SearchService.class,VariableHandler.class, Variavel.class,ProcessoEpaTarefaDAO.class,
@@ -140,7 +137,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
                     TarefasEntityNode.class, AssinaturaException.class,LocalizacaoCrudAction.class, 
                     LocalizacaoTreeHandler.class,PapelCrudAction.class,RolesMap.class,PapelManager.class,
                     RecursoManager.class,PapelDAO.class,RecursoDAO.class,LogProvider.class,
-                    AssinaturaDocumentoService.class,ProcessoDocumentoBinHome.class,
+                    AssinaturaDocumentoService.class,
                     ProcessoDocumentoBinManager.class, ProcessoSearcher.class)
             .createDeployment();
     }

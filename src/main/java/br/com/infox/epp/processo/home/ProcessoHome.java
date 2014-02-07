@@ -41,7 +41,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.home.ProcessoDocumentoHome;
+//import br.com.infox.epp.processo.documento.home.ProcessoDocumentoHome;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
@@ -258,7 +258,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
         if (processoDocumento != null) {
             setPdFluxo(processoDocumento);
             processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
-            ProcessoDocumentoHome.instance().setInstance(processoDocumento);
             setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
             setTipoProcessoDocumento(processoDocumento.getTipoProcessoDocumento());
         }
