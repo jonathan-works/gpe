@@ -22,7 +22,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
@@ -91,17 +90,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private Long tarefaId;
 
     private Boolean podeInativarParteProcesso;
-
-    public void iniciarNovoFluxo() {
-        limpar();
-        redirecionarPagina();
-    }
-
-    private void redirecionarPagina() {
-        Redirect redirect = Redirect.instance();
-        redirect.setViewId("/Processo/movimentar.xhtml");
-        redirect.execute();
-    }
 
     public void limpar() {
         modeloDocumento = null;
