@@ -14,6 +14,6 @@ public interface CaixaQuery {
     
     String PARAM_ID_CAIXA = "idCaixa";
     String REMOVE_BY_ID = "removeCaixaById";
-    String REMOVE_BY_ID_QUERY = "update Processo set caixa = :caixa where caixa.idCaixa = :" + PARAM_ID_CAIXA;
+    String REMOVE_BY_ID_QUERY = "update Processo set caixa = null where caixa.idCaixa = :" + PARAM_ID_CAIXA;
 
 }

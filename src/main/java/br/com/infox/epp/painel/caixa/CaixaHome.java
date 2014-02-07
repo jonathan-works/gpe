@@ -12,6 +12,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.entity.Tarefa;
@@ -21,7 +22,7 @@ import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
 @Name(CaixaHome.NAME)
-public class CaixaHome extends AbstractHome<Caixa> {
+public class CaixaHome extends AbstractCrudAction<Caixa, CaixaManager> {
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(CaixaHome.class);
 
@@ -34,7 +35,7 @@ public class CaixaHome extends AbstractHome<Caixa> {
     private CaixaManager caixaManager;
 
     public List<SelectItem> getPreviousNodes() {
-        return getPreviousNodes(instance.getTarefa());
+        return getPreviousNodes(getInstance().getTarefa());
     }
 
     public List<SelectItem> getPreviousNodes(Integer idTarefa) {
@@ -46,28 +47,27 @@ public class CaixaHome extends AbstractHome<Caixa> {
     }
 
     @Override
-    protected boolean beforePersistOrUpdate() {
-        if (instance.getTarefa() == null) {
+    protected boolean isInstanceValid() {
+        if (getInstance().getTarefa() == null) {
             return false;
         }
         return true;
     }
 
     public void addCaixa(int idTarefa) {
-        instance.setTarefa(tarefaManager.find(idTarefa));
-        instance.setNomeIndice(MessageFormat.format("{0}-{1}", instance.getNomeCaixa(), idTarefa));
+        getInstance().setTarefa(tarefaManager.find(idTarefa));
+        getInstance().setNomeIndice(MessageFormat.format("{0}-{1}", getInstance().getNomeCaixa(), idTarefa));
         persist();
-
         newInstance();
     }
 
     @Override
-    protected String afterPersistOrUpdate(String ret) {
+    protected void afterSave(String ret) {
         if (AbstractHome.PERSISTED.equals(ret)) {
             JbpmEventsHandler.updatePostDeploy();
             TarefasTreeHandler.clearActiveTree();
         }
-        return super.afterPersistOrUpdate(ret);
+        super.afterSave(ret);
     }
 
     @Override
@@ -90,13 +90,8 @@ public class CaixaHome extends AbstractHome<Caixa> {
     }
 
     @Override
-    protected Caixa createInstance() {
-        return new Caixa();
-    }
-
-    @Override
     public String remove() {
-        caixaManager.removeCaixaByIdCaixa(instance.getIdCaixa());
+        caixaManager.removeCaixaByIdCaixa(getInstance().getIdCaixa());
         String ret = super.remove();
         TarefasTreeHandler.clearActiveTree();
         return ret;
@@ -114,8 +109,8 @@ public class CaixaHome extends AbstractHome<Caixa> {
         if (idCaixa == 0) {
             return;
         }
-        instance = caixaManager.find(idCaixa);
-        if (instance != null) {
+        setInstance(caixaManager.find(idCaixa));
+        if (getInstance() != null) {
             remove();
         } else {
             FacesMessages.instance().add(Severity.ERROR, "Por favor, selecione a caixa que deseja excluir!");
