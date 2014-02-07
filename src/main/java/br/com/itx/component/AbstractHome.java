@@ -555,8 +555,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
                 ut.rollback();
             }
         } catch (Exception e) {
-            throw new ApplicationException(ApplicationException.createMessage("rollback da transação", 
-                    "rollbackTransaction()", "Util", "ePP"), e);
+            throw new ApplicationException(ApplicationException.createMessage("rollback da transação", "rollbackTransaction()", "Util", "ePP"), e);
         }
     }
 }

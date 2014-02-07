@@ -29,7 +29,7 @@ public class DocumentoDownloader {
 
     @In
     ProcessoDocumentoManager processoDocumentoManager;
-    
+
     @In
     DocumentoBinManager documentoBinManager;
 
@@ -106,8 +106,9 @@ public class DocumentoDownloader {
     private String getCodData(ProcessoDocumento pd) {
         return dfCodData.format(pd.getDataInclusao());
     }
-    
-    public String getUrlDownloadProcessoDocumento(ProcessoDocumento processoDocumento) {
+
+    public String getUrlDownloadProcessoDocumento(
+            ProcessoDocumento processoDocumento) {
         String retorno = MessageFormat.format(URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION, Integer.toString(processoDocumento.getIdProcessoDocumento()), getCodData(processoDocumento), processoDocumento.getProcessoDocumentoBin().getMd5Documento());
         return new Util().getUrlProject() + retorno;
     }
