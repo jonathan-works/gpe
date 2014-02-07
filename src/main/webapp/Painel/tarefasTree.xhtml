@@ -86,10 +86,10 @@
                                         icon="/img/remove.png"
                                         onclick="confirm('Confirma?')"
                                         render="tarefasDiv"
-                                        action="#{caixaHome.remove}">
+                                        action="#{caixaCrudAction.remove}">
 
                                         <f:setPropertyActionListener
-                                            target="#{caixaHome.id}"
+                                            target="#{caixaCrudAction.id}"
                                             value="#{painelUsuarioHome.selected.idCaixa}" />
 
                                     </rich:menuItem>

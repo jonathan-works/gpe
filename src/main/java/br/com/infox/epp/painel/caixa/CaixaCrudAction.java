@@ -21,12 +21,12 @@ import br.com.infox.ibpm.event.JbpmEventsHandler;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
-@Name(CaixaHome.NAME)
-public class CaixaHome extends AbstractCrudAction<Caixa, CaixaManager> {
+@Name(CaixaCrudAction.NAME)
+public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging.getLogProvider(CaixaHome.class);
+    private static final LogProvider LOG = Logging.getLogProvider(CaixaCrudAction.class);
 
-    public static final String NAME = "caixaHome";
+    public static final String NAME = "caixaCrudAction";
     public static final String ADD_CAIXA_EVENT = "addCaixaEvent";
 
     @In
@@ -85,7 +85,7 @@ public class CaixaHome extends AbstractCrudAction<Caixa, CaixaManager> {
         return ret;
     }
 
-    public static CaixaHome instance() {
+    public static CaixaCrudAction instance() {
         return ComponentUtil.getComponent(NAME);
     }
 

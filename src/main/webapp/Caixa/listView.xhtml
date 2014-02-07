@@ -16,25 +16,25 @@
 	
 	<ui:param
          name="home"
-         value="#{caixaHome}" />
+         value="#{caixaCrudAction}" />
 		
 	<ui:define
          name="body">
 		<infox:tabPanel
 			id="defaultTabPanel"
 			switchType="ajax"
-			activeTab="#{caixaHome.tab}">
+			activeTab="#{caixaCrudAction.tab}">
 			<h:form>
 				<infox:tabHeaders />
 			</h:form>
 			<infox:tab
 				id="form"
 				name="search"
-				rendered="#{caixaHome.managed}"
+				rendered="#{caixaCrudAction.managed}"
 				immediate="true"
 				status=":status"
 				title="Formulário"
-				action="#{caixaHome.onClickFormTab}"
+				action="#{caixaCrudAction.onClickFormTab}"
 			>
 				<wi:dataForm
 	                     formId="caixaForm"
@@ -42,26 +42,26 @@
 							<wi:inputText
 	                         id="tarefa"
 	                         label="Tarefa"
-	                         value="#{caixaHome.instance.tarefa}"
+	                         value="#{caixaCrudAction.instance.tarefa}"
 	                         required="true"
 	                         disabled="true" />
 							<wi:inputText
 	                         id="nomeCaixa"
 	                         label="#{messages['caixa.nomeCaixa']}"
-	                         value="#{caixaHome.instance.nomeCaixa}"
+	                         value="#{caixaCrudAction.instance.nomeCaixa}"
 	                         required="true"
 	                         length="100" />
 							<wi:inputTextarea
 	                         id="dsCaixa"
 	                         label="#{messages['caixa.dsCaixa']}"
-	                         value="#{caixaHome.instance.dsCaixa}" 
+	                         value="#{caixaCrudAction.instance.dsCaixa}" 
 	                         showCounter="false"/>						
 	
 							<wi:selectOneMenu
 	                         id="idNodeAnterior"
 	                         label="Nó Anterior"
-	                         value="#{caixaHome.instance.idNodeAnterior}"
-	                         valueItems="#{caixaHome.getPreviousNodes(caixaHome.instance.tarefa.idTarefa)}" />
+	                         value="#{caixaCrudAction.instance.idNodeAnterior}"
+	                         valueItems="#{caixaCrudAction.getPreviousNodes(caixaCrudAction.instance.tarefa.idTarefa)}" />
 						 <ui:define
 	                         name="buttons">
 							<wi:commandButtonUpdate />

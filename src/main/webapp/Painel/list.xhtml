@@ -131,10 +131,10 @@
                 <h:form id="modalForm">
                     <wi:inputText id="nomeCaixa"
                         label="#{messages['caixa.nomeCaixa']}"
-                        value="#{caixaHome.instance.nomeCaixa}" />
+                        value="#{caixaCrudAction.instance.nomeCaixa}" />
                     <a:commandButton value="#{messages['crud.persist']}"
                         styleClass="buttons"
-                        action="#{caixaHome.addCaixa(painelUsuarioHome.tarefaId)}"
+                        action="#{caixaCrudAction.addCaixa(painelUsuarioHome.tarefaId)}"
                         oncomplete="#{rich:component('novaCaixaPanel')}.hide()"
                         render="tarefasDiv,painelProcessos" />
                 </h:form>
