@@ -57,7 +57,7 @@ public class CaixaHome extends AbstractCrudAction<Caixa, CaixaManager> {
     public void addCaixa(int idTarefa) {
         getInstance().setTarefa(tarefaManager.find(idTarefa));
         getInstance().setNomeIndice(MessageFormat.format("{0}-{1}", getInstance().getNomeCaixa(), idTarefa));
-        persist();
+        save();
         newInstance();
     }
 
