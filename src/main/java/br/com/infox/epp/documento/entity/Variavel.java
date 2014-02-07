@@ -1,20 +1,4 @@
-/*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
 package br.com.infox.epp.documento.entity;
-// Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
 import static br.com.infox.core.persistence.ORConstants.*;
 import static br.com.infox.epp.documento.query.VariavelQuery.*;
@@ -38,109 +22,111 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.core.constants.LengthConstants;
 
-
 @Entity
-@Table(name = TABLE_VARIAVEL, schema=PUBLIC)
-@NamedQueries(value={
-    @NamedQuery(name=VARIAVEL_BY_TIPO_MODELO_DOCUMENTO, query=VARIAVEL_BY_TIPO_MODELO_QUERY)
-})
+@Table(name = TABLE_VARIAVEL, schema = PUBLIC)
+@NamedQueries(value = { @NamedQuery(name = VARIAVEL_BY_TIPO_MODELO_DOCUMENTO,
+        query = VARIAVEL_BY_TIPO_MODELO_QUERY) })
 public class Variavel implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private int idVariavel;
-	private String variavel;
-	private String valorVariavel;
-	private Boolean ativo;
-	
-	private List<VariavelTipoModelo> variavelTipoModeloList = new ArrayList<VariavelTipoModelo>(0);
+    private int idVariavel;
+    private String variavel;
+    private String valorVariavel;
+    private Boolean ativo;
 
-	public Variavel() {
-	}
+    private List<VariavelTipoModelo> variavelTipoModeloList = new ArrayList<VariavelTipoModelo>(0);
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_VARIAVEL, unique = true, nullable = false)
-	public int getIdVariavel() {
-		return this.idVariavel;
-	}
+    public Variavel() {
+    }
 
-	public void setIdVariavel(int idVariavel) {
-		this.idVariavel = idVariavel;
-	}
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_VARIAVEL, unique = true, nullable = false)
+    public int getIdVariavel() {
+        return this.idVariavel;
+    }
 
-	@Column(name = DESCRICAO_VARIAVEL, nullable = false, length=LengthConstants.DESCRICAO_PADRAO, unique = true)
-	@NotNull
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	public String getVariavel() {
-		return this.variavel;
-	}
+    public void setIdVariavel(int idVariavel) {
+        this.idVariavel = idVariavel;
+    }
 
-	public void setVariavel(String variavel) {
-		String var = "";
-		if(variavel != null && variavel.trim().length() > 0){
-			var = variavel.replace(" ", "_");
-         }
-		this.variavel = var;
-	}
+    @Column(name = DESCRICAO_VARIAVEL, nullable = false,
+            length = LengthConstants.DESCRICAO_PADRAO, unique = true)
+    @NotNull
+    @Size(max = LengthConstants.DESCRICAO_PADRAO)
+    public String getVariavel() {
+        return this.variavel;
+    }
 
-	@Column(name = VALOR_VARIAVEL, nullable = false, length=LengthConstants.DESCRICAO_PADRAO_DOBRO)
-	@NotNull
-	@Size(max=LengthConstants.DESCRICAO_PADRAO_DOBRO)
-	public String getValorVariavel() {
-		return this.valorVariavel;
-	}
+    public void setVariavel(String variavel) {
+        String var = "";
+        if (variavel != null && variavel.trim().length() > 0) {
+            var = variavel.replace(" ", "_");
+        }
+        this.variavel = var;
+    }
 
-	public void setValorVariavel(String valorVariavel) {
-		this.valorVariavel = valorVariavel;
-	}
+    @Column(name = VALOR_VARIAVEL, nullable = false,
+            length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
+    @NotNull
+    @Size(max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
+    public String getValorVariavel() {
+        return this.valorVariavel;
+    }
 
-	@Column(name = ATIVO, nullable = false)
-	@NotNull
-	public Boolean getAtivo() {
-		return this.ativo;
-	}
+    public void setValorVariavel(String valorVariavel) {
+        this.valorVariavel = valorVariavel;
+    }
 
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
-	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = VARIAVEL_ATTRIBUTE)
-	public List<VariavelTipoModelo> getVariavelTipoModeloList() {
-		return variavelTipoModeloList;
-	}
+    @Column(name = ATIVO, nullable = false)
+    @NotNull
+    public Boolean getAtivo() {
+        return this.ativo;
+    }
 
-	public void setVariavelTipoModeloList(List<VariavelTipoModelo> variavelTipoModeloList) {
-		this.variavelTipoModeloList = variavelTipoModeloList;
-	}
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 
-	@Override
-	public String toString() {
-		return variavel;
-	}
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+        CascadeType.REFRESH }, fetch = FetchType.LAZY,
+            mappedBy = VARIAVEL_ATTRIBUTE)
+    public List<VariavelTipoModelo> getVariavelTipoModeloList() {
+        return variavelTipoModeloList;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Variavel)) {
-			return false;
-		}
-		Variavel other = (Variavel) obj;
-		return getIdVariavel() == other.getIdVariavel();
-	}
+    public void setVariavelTipoModeloList(
+            List<VariavelTipoModelo> variavelTipoModeloList) {
+        this.variavelTipoModeloList = variavelTipoModeloList;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdVariavel();
-		return result;
-	}
+    @Override
+    public String toString() {
+        return variavel;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Variavel)) {
+            return false;
+        }
+        Variavel other = (Variavel) obj;
+        return getIdVariavel() == other.getIdVariavel();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getIdVariavel();
+        return result;
+    }
 }

@@ -1,18 +1,3 @@
-/*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
 package br.com.infox.epp.ajuda.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
@@ -39,53 +24,54 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = TABLE_PAGINA, schema=PUBLIC)
-@NamedQueries(value={
-    @NamedQuery(name=PAGINA_BY_URL, query=PAGINA_BY_URL_QUERY)
-})
+@Table(name = TABLE_PAGINA, schema = PUBLIC)
+@NamedQueries(value = { @NamedQuery(name = PAGINA_BY_URL,
+        query = PAGINA_BY_URL_QUERY) })
 public class Pagina implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Integer idPagina;
-	private String descricao;
-	private String url;
+    private Integer idPagina;
+    private String descricao;
+    private String url;
 
-	public Pagina() {
-	}
+    public Pagina() {
+    }
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAGINA)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_PAGINA, unique = true, nullable = false)
-	public Integer getIdPagina() {
-		return this.idPagina;
-	}
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAGINA)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_PAGINA, unique = true, nullable = false)
+    public Integer getIdPagina() {
+        return this.idPagina;
+    }
 
-	public void setIdPagina(Integer idPagina) {
-		this.idPagina = idPagina;
-	}
-	
-	@Column(name = DESCRICAO, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	@NotNull
-	public String getDescricao() {
-		return this.descricao;
-	}
+    public void setIdPagina(Integer idPagina) {
+        this.idPagina = idPagina;
+    }
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-	
-	@Column(name = URL, nullable = false, length=LengthConstants.DESCRICAO_PADRAO)
-	@Size(max=LengthConstants.DESCRICAO_PADRAO)
-	@NotNull
-	public String getUrl() {
-		return this.url;
-	}
+    @Column(name = DESCRICAO, nullable = false,
+            length = LengthConstants.DESCRICAO_PADRAO)
+    @Size(max = LengthConstants.DESCRICAO_PADRAO)
+    @NotNull
+    public String getDescricao() {
+        return this.descricao;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    @Column(name = URL, nullable = false,
+            length = LengthConstants.DESCRICAO_PADRAO)
+    @Size(max = LengthConstants.DESCRICAO_PADRAO)
+    @NotNull
+    public String getUrl() {
+        return this.url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
 }

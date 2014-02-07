@@ -1,23 +1,18 @@
-/*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
 package br.com.infox.epp.access.entity;
-// Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.*;
-import static javax.persistence.FetchType.*;
+
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.CONTABILIZAR;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.ESTRUTURA;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.ID_USUARIO_LOCALIZACAO;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.LOCALIZACAO;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.PAPEL;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.RESPONSAVEL_LOCALIZACAO;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.SEQUENCE_USUARIO_LOCALIZACAO;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.TABLE_USUARIO_LOCALIZACAO;
+import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.USUARIO;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

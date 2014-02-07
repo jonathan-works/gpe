@@ -1,18 +1,3 @@
-/*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
 package br.com.infox.epp.system.util;
 
 import java.beans.Introspector;
@@ -45,185 +30,191 @@ import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 import br.com.itx.component.MeasureTime;
 import br.com.itx.util.EntityUtil;
 
-
 public final class LogUtil {
 
     private static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss:SSS";
-	private static final LogProvider LOG = Logging.getLogProvider(LogUtil.class);
-	
-	private LogUtil(){
-	    super();
-	}
+    private static final LogProvider LOG = Logging.getLogProvider(LogUtil.class);
 
-	/**
-	 * Checa se a classe é um array de bytes.
-	 * @param type
-	 * @return
-	 */
-	public static boolean isBinario(Class<?> type) {
-		return type.isArray() && 
-				type.getComponentType().getName().equals("byte"); 
-	}	
+    private LogUtil() {
+        super();
+    }
 
-	/**
-	 * Checa se um atributo de um objeto é um array de bytes.
-	 * @param entidade
-	 * @param nomeAtributo
-	 * @return
-	 * @throws Exception
-	 */
-	public static boolean isBinario(Object entidade, String nomeAtributo) {
-		Class<?> classAtributo = getType(entidade, nomeAtributo);
-		return isBinario(classAtributo);
-	}
+    /**
+     * Checa se a classe é um array de bytes.
+     * 
+     * @param type
+     * @return
+     */
+    public static boolean isBinario(Class<?> type) {
+        return type.isArray()
+                && type.getComponentType().getName().equals("byte");
+    }
 
-	private static Class<?> getType(Object entidade, String nomeAtributo) {
-		return Reflections
-					.getField(entidade.getClass(),nomeAtributo).getType();
-	}		
+    /**
+     * Checa se um atributo de um objeto é um array de bytes.
+     * 
+     * @param entidade
+     * @param nomeAtributo
+     * @return
+     * @throws Exception
+     */
+    public static boolean isBinario(Object entidade, String nomeAtributo) {
+        Class<?> classAtributo = getType(entidade, nomeAtributo);
+        return isBinario(classAtributo);
+    }
 
-	/**
-	 * Checa se o atributo de um objeto é uma coleção.
-	 * @param entidade
-	 * @param nomeAtributo
-	 * @return
-	 * @throws Exception
-	 */
-	public static boolean isCollection(Object entidade, String nomeAtributo) {
-		Class<?> classAtributo = getType(entidade, nomeAtributo);
-		return isCollectionClass(classAtributo);
-	}
+    private static Class<?> getType(Object entidade, String nomeAtributo) {
+        return Reflections.getField(entidade.getClass(), nomeAtributo).getType();
+    }
 
-	private static boolean isCollectionClass(Class<?> classAtributo) {
-		return ArrayList.class.equals(classAtributo) 
-				|| List.class.equals(classAtributo) 
-				|| Set.class.equals(classAtributo);
-	}		
-	
-	/**
-	 * Testa se a entidade possui a anotação @Ignore, caso possua não será logada
-	 * @param entidade
-	 * @return
-	 */
-	public static boolean isLogable(Object entity) {
-		return !EntityUtil.isAnnotationPresent(entity, Ignore.class);
-	}	
-	
-	public static boolean compareObj(Object object1, Object object2) {
-		if (object1 == null) {
-			return object2 == null;
-		} 
-		return object1.equals(object2);
-	}
-	
-	public static String getIpRequest() throws LogException {
-		HttpServletRequest request = getRequest();
-		if (request == null) {
-			throw new LogException("Não foi possível obter os dados da requisição");
-		}
-		return request.getRemoteAddr();		
-	}
-	
-	public static String getUrlRequest() throws LogException {
-		HttpServletRequest request = getRequest();
-		if (request == null) {
-			throw new LogException("Não foi possível obter os dados da requisição");
-		}
-		return getRequest().getRequestURL().toString();
-	}	
-	
-	public static String getIdPagina() {
-		HttpServletRequest request = getRequest();
-		if (request == null) {
-			return null;
-		}
-		String requestURL = request.getRequestURL().toString();
-		return requestURL.split(request.getContextPath())[1];
-	}
+    /**
+     * Checa se o atributo de um objeto é uma coleção.
+     * 
+     * @param entidade
+     * @param nomeAtributo
+     * @return
+     * @throws Exception
+     */
+    public static boolean isCollection(Object entidade, String nomeAtributo) {
+        Class<?> classAtributo = getType(entidade, nomeAtributo);
+        return isCollectionClass(classAtributo);
+    }
 
-	public static HttpServletRequest getRequest() {
-		FacesContext fc = FacesContext.getCurrentInstance();
-		if (fc == null) {
-			return null;
-		} 
-		return (HttpServletRequest) fc.getExternalContext().getRequest();
-	}	
-	
-	public static String toStringForLog(Object object) {
-		if (object == null) {
-			return null;
-		} else if (object instanceof Date) {
-			SimpleDateFormat date = new SimpleDateFormat(DATE_PATTERN);
-			return date.format((Date) object);
-		} else if (EntityUtil.isEntity(object)) {
-			return EntityUtil.getEntityIdObject(object) + ": " + object.toString();
-		} else {
-			return object.toString();
-		}
-	}
-	
-	public static Map<String, Object> getFields(Object component) {
-		try {
-			MeasureTime t = new MeasureTime(true);
-			Map<String, Object> map = new HashMap<String, Object>();
-			PropertyDescriptor[] props = Introspector.getBeanInfo(
-					component.getClass()).getPropertyDescriptors();
-			for (PropertyDescriptor descriptor : props) {
-				if (isColumn(descriptor)) {
-					Object field = descriptor.getReadMethod().invoke(component);
-					map.put(descriptor.getName(), field);
-				}
-			}
-			LOG.info("getFields(" + component.getClass().getName() + "): " + t.getTime());
-			return map;
-		} catch (Exception e) {
-			LOG.error(".getFields(component)", e);
-			return new HashMap<String, Object>();
-		}
-	}	
-	
-	private static boolean isColumn(PropertyDescriptor pd) {
-		Method rm = pd.getReadMethod();
-		return rm != null && (rm.isAnnotationPresent(Column.class) 
-				|| rm.isAnnotationPresent(JoinColumn.class));
-	}	
-	
-	public static EntityLog getEntityLog(Object component, TipoOperacaoLogEnum operacaoLogEnum) {
-		EntityLog entityLog = createEntityLog(component);
-		entityLog.setTipoOperacao(operacaoLogEnum);
-		Map<String, Object> fields = getFields(component);
-		for (Entry<String, Object> entry : fields.entrySet()) {
-			EntityLogDetail det = new EntityLogDetail();
-			det.setNomeAtributo(entry.getKey());
-			String value = entry.getValue() == null ? "null" : entry.getValue().toString();
-			if (operacaoLogEnum.equals(TipoOperacaoLogEnum.D)) {
-				det.setValorAnterior(value);
-			} else {
-				det.setValorAtual(value);
-			}
-			det.setEntityLog(entityLog);
-			entityLog.getLogDetalheList().add(det);
-		}
-		return entityLog;
-	}
-	
-	public static EntityLog createEntityLog(Object component) {
-		EntityLog entityLog = new EntityLog();
-		entityLog.setUsuario(Authenticator.getUsuarioLogado());
-		entityLog.setDataLog(new Date());
-		try {
-			entityLog.setIp(getIpRequest());
-			entityLog.setUrlRequisicao(getUrlRequest());
-		} catch (LogException e) {
-			LOG.error(".createEntityLog(component)", e);
-			//Se a requisição for executada por temporizador, não há requisição então não se consegue obter o ip
-			entityLog.setIp("localhost");
-		}
-		Class<? extends Object> clazz = EntityUtil.getEntityClass(component);
-		entityLog.setNomeEntidade(clazz.getSimpleName());
-		entityLog.setNomePackage(clazz.getPackage().getName());
-		entityLog.setIdEntidade(EntityUtil.getEntityIdObject(component).toString());
-		return entityLog;
-	}
-	
+    private static boolean isCollectionClass(Class<?> classAtributo) {
+        return ArrayList.class.equals(classAtributo)
+                || List.class.equals(classAtributo)
+                || Set.class.equals(classAtributo);
+    }
+
+    /**
+     * Testa se a entidade possui a anotação @Ignore, caso possua não será
+     * logada
+     * 
+     * @param entidade
+     * @return
+     */
+    public static boolean isLogable(Object entity) {
+        return !EntityUtil.isAnnotationPresent(entity, Ignore.class);
+    }
+
+    public static boolean compareObj(Object object1, Object object2) {
+        if (object1 == null) {
+            return object2 == null;
+        }
+        return object1.equals(object2);
+    }
+
+    public static String getIpRequest() throws LogException {
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            throw new LogException("Não foi possível obter os dados da requisição");
+        }
+        return request.getRemoteAddr();
+    }
+
+    public static String getUrlRequest() throws LogException {
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            throw new LogException("Não foi possível obter os dados da requisição");
+        }
+        return getRequest().getRequestURL().toString();
+    }
+
+    public static String getIdPagina() {
+        HttpServletRequest request = getRequest();
+        if (request == null) {
+            return null;
+        }
+        String requestURL = request.getRequestURL().toString();
+        return requestURL.split(request.getContextPath())[1];
+    }
+
+    public static HttpServletRequest getRequest() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if (fc == null) {
+            return null;
+        }
+        return (HttpServletRequest) fc.getExternalContext().getRequest();
+    }
+
+    public static String toStringForLog(Object object) {
+        if (object == null) {
+            return null;
+        } else if (object instanceof Date) {
+            SimpleDateFormat date = new SimpleDateFormat(DATE_PATTERN);
+            return date.format((Date) object);
+        } else if (EntityUtil.isEntity(object)) {
+            return EntityUtil.getEntityIdObject(object) + ": "
+                    + object.toString();
+        } else {
+            return object.toString();
+        }
+    }
+
+    public static Map<String, Object> getFields(Object component) {
+        try {
+            MeasureTime t = new MeasureTime(true);
+            Map<String, Object> map = new HashMap<String, Object>();
+            PropertyDescriptor[] props = Introspector.getBeanInfo(component.getClass()).getPropertyDescriptors();
+            for (PropertyDescriptor descriptor : props) {
+                if (isColumn(descriptor)) {
+                    Object field = descriptor.getReadMethod().invoke(component);
+                    map.put(descriptor.getName(), field);
+                }
+            }
+            LOG.info("getFields(" + component.getClass().getName() + "): "
+                    + t.getTime());
+            return map;
+        } catch (Exception e) {
+            LOG.error(".getFields(component)", e);
+            return new HashMap<String, Object>();
+        }
+    }
+
+    private static boolean isColumn(PropertyDescriptor pd) {
+        Method rm = pd.getReadMethod();
+        return rm != null
+                && (rm.isAnnotationPresent(Column.class) || rm.isAnnotationPresent(JoinColumn.class));
+    }
+
+    public static EntityLog getEntityLog(Object component,
+            TipoOperacaoLogEnum operacaoLogEnum) {
+        EntityLog entityLog = createEntityLog(component);
+        entityLog.setTipoOperacao(operacaoLogEnum);
+        Map<String, Object> fields = getFields(component);
+        for (Entry<String, Object> entry : fields.entrySet()) {
+            EntityLogDetail det = new EntityLogDetail();
+            det.setNomeAtributo(entry.getKey());
+            String value = entry.getValue() == null ? "null" : entry.getValue().toString();
+            if (operacaoLogEnum.equals(TipoOperacaoLogEnum.D)) {
+                det.setValorAnterior(value);
+            } else {
+                det.setValorAtual(value);
+            }
+            det.setEntityLog(entityLog);
+            entityLog.getLogDetalheList().add(det);
+        }
+        return entityLog;
+    }
+
+    public static EntityLog createEntityLog(Object component) {
+        EntityLog entityLog = new EntityLog();
+        entityLog.setUsuario(Authenticator.getUsuarioLogado());
+        entityLog.setDataLog(new Date());
+        try {
+            entityLog.setIp(getIpRequest());
+            entityLog.setUrlRequisicao(getUrlRequest());
+        } catch (LogException e) {
+            LOG.error(".createEntityLog(component)", e);
+            // Se a requisição for executada por temporizador, não há requisição
+            // então não se consegue obter o ip
+            entityLog.setIp("localhost");
+        }
+        Class<? extends Object> clazz = EntityUtil.getEntityClass(component);
+        entityLog.setNomeEntidade(clazz.getSimpleName());
+        entityLog.setNomePackage(clazz.getPackage().getName());
+        entityLog.setIdEntidade(EntityUtil.getEntityIdObject(component).toString());
+        return entityLog;
+    }
+
 }

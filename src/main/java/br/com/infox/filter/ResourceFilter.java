@@ -1,18 +1,3 @@
-/*
- * IBPM - Ferramenta de produtividade Java
- * Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- * sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- * Free Software Foundation; versão 2 da Licença.
- * Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- * NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- * 
- * Consulte a GNU GPL para mais detalhes.
- * Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- * veja em http://www.gnu.org/licenses/  
- */
 package br.com.infox.filter;
 
 import java.io.File;
@@ -39,66 +24,66 @@ import org.jboss.seam.util.Resources;
 import org.jboss.seam.util.Strings;
 import org.jboss.seam.web.AbstractFilter;
 
-
 @Name("resourceFilter")
 @BypassInterceptors
 @Scope(ScopeType.APPLICATION)
 @Filter
 public class ResourceFilter extends AbstractFilter {
 
-	
-	private static final String PATTERN = "/img/.*|/resources/js/.*|/resources/stylesheet/.*|/resources/styleSkinInfox/.*";
-	private static final LogProvider LOG = Logging.getLogProvider(ResourceFilter.class);
- 
-	@Override
-	public String getRegexUrlPattern() {
-		return PATTERN;
-	}
-	
-	@Override
-	public void doFilter(ServletRequest req, ServletResponse resp,
-			FilterChain chain) throws IOException, ServletException {
+    private static final String PATTERN = "/img/.*|/resources/js/.*|/resources/stylesheet/.*|/resources/styleSkinInfox/.*";
+    private static final LogProvider LOG = Logging.getLogProvider(ResourceFilter.class);
 
-		HttpServletRequest request = (HttpServletRequest) req;
-		HttpServletResponse response = (HttpServletResponse) resp;
+    @Override
+    public String getRegexUrlPattern() {
+        return PATTERN;
+    }
 
-		String path = request.getServletPath();
-		ServletContext servletContext = request.getSession().getServletContext();
-		String realPath = servletContext.getRealPath(path);
-		if (new File(realPath).exists()) {
-			chain.doFilter(request, response);
-		} else {
-			InputStream is = Resources.getResourceAsStream(path, servletContext);
-			if (is != null) {
-				writeResponse(response, path, is);
-			}
-		}
-	}
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp,
+            FilterChain chain) throws IOException, ServletException {
 
-	private void writeResponse(HttpServletResponse response, String path, InputStream is) {
-		if (path.endsWith(".png") || path.endsWith(".gif") || path.endsWith(".jpg")) {
-			try {
-				ServletOutputStream os = response.getOutputStream();
-				byte[] trecho = new byte[10240];
-			    for ( int n; is.read(trecho) != -1; ) {
-			        n = is.read(trecho);
-			    	os.write(trecho, 0, n);
-			    }
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
+
+        String path = request.getServletPath();
+        ServletContext servletContext = request.getSession().getServletContext();
+        String realPath = servletContext.getRealPath(path);
+        if (new File(realPath).exists()) {
+            chain.doFilter(request, response);
+        } else {
+            InputStream is = Resources.getResourceAsStream(path, servletContext);
+            if (is != null) {
+                writeResponse(response, path, is);
+            }
+        }
+    }
+
+    private void writeResponse(HttpServletResponse response, String path,
+            InputStream is) {
+        if (path.endsWith(".png") || path.endsWith(".gif")
+                || path.endsWith(".jpg")) {
+            try {
+                ServletOutputStream os = response.getOutputStream();
+                byte[] trecho = new byte[10240];
+                for (int n; is.read(trecho) != -1;) {
+                    n = is.read(trecho);
+                    os.write(trecho, 0, n);
+                }
                 is.close();
-    	        os.flush();
+                os.flush();
             } catch (IOException err) {
                 LOG.error(".writeResponse()", err);
-			}
-		} else {
-			try {
-				String text = Strings.toString(is);
-				response.getWriter().write(text.trim());
-				response.getWriter().flush();
-			} catch (IOException e) {
-			    LOG.error(".writeResponse()", e);
-			}
-		}
-		response.setStatus(HttpServletResponse.SC_OK);
-	}
+            }
+        } else {
+            try {
+                String text = Strings.toString(is);
+                response.getWriter().write(text.trim());
+                response.getWriter().flush();
+            } catch (IOException e) {
+                LOG.error(".writeResponse()", e);
+            }
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
 
 }

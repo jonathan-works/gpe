@@ -1,18 +1,3 @@
-/*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
 package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
@@ -39,75 +24,76 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Entity
-@Table(name = TABLE_ITEM_TIPO_DOCUMENTO, schema=PUBLIC)
+@Table(name = TABLE_ITEM_TIPO_DOCUMENTO, schema = PUBLIC)
 public class ItemTipoDocumento implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private int idItemTipoDocumento;
-	private Localizacao localizacao;
-	private GrupoModeloDocumento grupoModeloDocumento;
+    private int idItemTipoDocumento;
+    private Localizacao localizacao;
+    private GrupoModeloDocumento grupoModeloDocumento;
 
-	public ItemTipoDocumento() {
-	}
+    public ItemTipoDocumento() {
+    }
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_ITEM_TIPO_DOCUMENTO)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_ITEM_TIPO_DOCUMENTO, unique = true, nullable = false)
-	public int getIdItemTipoDocumento() {
-		return this.idItemTipoDocumento;
-	}
+    @SequenceGenerator(name = GENERATOR,
+            sequenceName = SEQUENCE_ITEM_TIPO_DOCUMENTO)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_ITEM_TIPO_DOCUMENTO, unique = true, nullable = false)
+    public int getIdItemTipoDocumento() {
+        return this.idItemTipoDocumento;
+    }
 
-	public void setIdItemTipoDocumento(int idItemTipoDocumento) {
-		this.idItemTipoDocumento = idItemTipoDocumento;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_LOCALIZACAO)
-	public Localizacao getLocalizacao() {
-		return this.localizacao;
-	}
+    public void setIdItemTipoDocumento(int idItemTipoDocumento) {
+        this.idItemTipoDocumento = idItemTipoDocumento;
+    }
 
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_GRUPO_MODELO_DOCUMENTO, nullable = false)
-	@NotNull
-	public GrupoModeloDocumento getGrupoModeloDocumento() {
-		return this.grupoModeloDocumento;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_LOCALIZACAO)
+    public Localizacao getLocalizacao() {
+        return this.localizacao;
+    }
 
-	public void setGrupoModeloDocumento(
-			GrupoModeloDocumento grupoModeloDocumento) {
-		this.grupoModeloDocumento = grupoModeloDocumento;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof ItemTipoDocumento)) {
-			return false;
-		}
-		ItemTipoDocumento other = (ItemTipoDocumento) obj;
-		if (getIdItemTipoDocumento() != other.getIdItemTipoDocumento()) {
-			return false;
-		}
-		return true;
-	}
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdItemTipoDocumento();
-		return result;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_GRUPO_MODELO_DOCUMENTO, nullable = false)
+    @NotNull
+    public GrupoModeloDocumento getGrupoModeloDocumento() {
+        return this.grupoModeloDocumento;
+    }
+
+    public void setGrupoModeloDocumento(
+            GrupoModeloDocumento grupoModeloDocumento) {
+        this.grupoModeloDocumento = grupoModeloDocumento;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ItemTipoDocumento)) {
+            return false;
+        }
+        ItemTipoDocumento other = (ItemTipoDocumento) obj;
+        if (getIdItemTipoDocumento() != other.getIdItemTipoDocumento()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getIdItemTipoDocumento();
+        return result;
+    }
 }

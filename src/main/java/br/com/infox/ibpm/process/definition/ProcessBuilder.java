@@ -1,18 +1,3 @@
-/*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
- */
 package br.com.infox.ibpm.process.definition;
 
 import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
@@ -80,394 +65,407 @@ import com.google.common.base.Strings;
 @AutoCreate
 public class ProcessBuilder implements Serializable {
 
-	private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
-	private static final String PROCESS_DEFINITION_MESSAGES_ID = ":pageBodyDialogMessage";
-	
-	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
+    private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
+    private static final String PROCESS_DEFINITION_MESSAGES_ID = ":pageBodyDialogMessage";
 
-	public static final String NAME = "processBuilder";
-	public static final String POST_DEPLOY_EVENT = "postDeployEvent";
-	
-	@In	private EventFitter eventFitter;
-	@In	private TransitionFitter transitionFitter;
-	@In private SwimlaneFitter swimlaneFitter;
-	@In private TaskFitter taskFitter;
-	@In private NodeFitter nodeFitter;
-	@In private TypeFitter typeFitter;
-	@In	private ProcessBuilderGraph processBuilderGraph;
-	@In private JsfComponentTreeValidator jsfComponentTreeValidator;
-	@In private GenericManager genericManager;
+    private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
 
-	private String id;
-	private ProcessDefinition instance;
-	private Map<Node, List<TaskHandler>> taskNodeMap;
+    public static final String NAME = "processBuilder";
+    public static final String POST_DEPLOY_EVENT = "postDeployEvent";
 
-	private boolean exists;
-	private String xml;
-	private String tab;
-	private boolean needToPublic;
-	
-	private Fluxo fluxo;
+    @In
+    private EventFitter eventFitter;
+    @In
+    private TransitionFitter transitionFitter;
+    @In
+    private SwimlaneFitter swimlaneFitter;
+    @In
+    private TaskFitter taskFitter;
+    @In
+    private NodeFitter nodeFitter;
+    @In
+    private TypeFitter typeFitter;
+    @In
+    private ProcessBuilderGraph processBuilderGraph;
+    @In
+    private JsfComponentTreeValidator jsfComponentTreeValidator;
+    @In
+    private GenericManager genericManager;
 
-	public void newInstance() {
-		instance = null;
-	}
+    private String id;
+    private ProcessDefinition instance;
+    private Map<Node, List<TaskHandler>> taskNodeMap;
 
-	public void createInstance() {
-		id = null;
-		exists = false;
-		clear();
-		instance = ProcessDefinition.createNewProcessDefinition();
-		Swimlane laneSolicitante = new Swimlane("solicitante");
-		laneSolicitante.setActorIdExpression("#{actor.id}");
+    private boolean exists;
+    private String xml;
+    private String tab;
+    private boolean needToPublic;
 
-		Task startTask = new Task("Tarefa inicial");
-		startTask.setSwimlane(laneSolicitante);
-		taskFitter.setStarTaskHandler(new TaskHandler(startTask));
-		instance.getTaskMgmtDefinition().setStartTask(taskFitter.getStartTaskHandler().getTask());
-		
-		StartState startState = new StartState("Início");
-		instance.addNode(startState);
-		EndState endState = new EndState("Término");
-		instance.addNode(endState);
-		Transition t = new Transition();
-		t.setName(endState.getName());
-		t.setTo(endState);
-		startState.addLeavingTransition(t);
-		endState.addArrivingTransition(t);
-		instance.getTaskMgmtDefinition().addSwimlane(laneSolicitante);
-		eventFitter.addEvents();
-		taskFitter.getTasks();
-		processBuilderGraph.clear();
-	}
+    private Fluxo fluxo;
 
-	private void clear() {
-		taskNodeMap = null;
-		swimlaneFitter.clear();
-		taskFitter.clear();
-		nodeFitter.clear();
-		transitionFitter.clear();
-		eventFitter.clear();
-	}
-	
-	public void load(Fluxo fluxo) {
-	    this.fluxo = fluxo;
-		String newId = fluxo.getCodFluxo();
-		this.id = null;
-		setId(newId);
-		
-		getInstance().setName(fluxo.getFluxo());
-		xml = fluxo.getXml();
-		if (xml == null) {
-			this.id = newId;
-			update();
-		} else {
-			try {
-				instance = parseInstance(xml);
-				instance.setName(fluxo.getFluxo());
-			} catch (Exception e) {
-			    LOG.error(".load()", e);
-			}
-			exists = true;
-			this.id = newId;
-		}
-	}
+    public void newInstance() {
+        instance = null;
+    }
 
-	private ProcessDefinition parseInstance(String newXml) {
-		StringReader stringReader = new StringReader(newXml);
-		InfoxJpdlXmlReader jpdlReader = new InfoxJpdlXmlReader(new InputSource(
-				stringReader));
-		return jpdlReader.readProcessDefinition();
-	}
-	
-	public void prepareUpdate(ActionEvent event) {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
-		UIComponent messages = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_MESSAGES_ID);
-		ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(facesContext);
-		
-		try {
-			validateJsfTree();
-			validateJbpmGraph();
-			validateMailNode();
-		} catch (IllegalStateException e) {
-			FacesMessages.instance().clearGlobalMessages();
-			FacesMessages.instance().add(e.getMessage());
-			context.getRenderIds().add(messages.getClientId(facesContext));
-			throw new AbortProcessingException("processBuilder.prepareUpdate(event)", e);
-		}
-		
-		context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
-		context.getRenderIds().add(messages.getClientId(facesContext));
-	}
+    public void createInstance() {
+        id = null;
+        exists = false;
+        clear();
+        instance = ProcessDefinition.createNewProcessDefinition();
+        Swimlane laneSolicitante = new Swimlane("solicitante");
+        laneSolicitante.setActorIdExpression("#{actor.id}");
 
-	@SuppressWarnings(UNCHECKED)
-	private void validateMailNode() {
-		List<Node> nodes = getInstance().getNodes();
-		for (Node node : nodes) {
-			if (node instanceof InfoxMailNode) {
-				InfoxMailNode mailNode = (InfoxMailNode) node;
-				if (Strings.isNullOrEmpty(mailNode.getTo())) {
-					throw new IllegalStateException("O nó de email deve possuir pelo menos um destinatário.");
-				}
-			}
-		}
-	}
+        Task startTask = new Task("Tarefa inicial");
+        startTask.setSwimlane(laneSolicitante);
+        taskFitter.setStarTaskHandler(new TaskHandler(startTask));
+        instance.getTaskMgmtDefinition().setStartTask(taskFitter.getStartTaskHandler().getTask());
 
-	@SuppressWarnings(UNCHECKED)
-	private void validateJbpmGraph() {
-		List<Node> nodes = getInstance().getNodes();
-		for (Node node : nodes) {
-			if (!node.getNodeType().equals(NodeType.EndState) && (node.getLeavingTransitions() == null || node.getLeavingTransitions().isEmpty())) {
-				throw new IllegalStateException("Existe algum nó na definição que não possui transição de saída.");
-			}
-		}
-		
-		Node start = getInstance().getStartState();
-		Set<Node> visitedNodes = new HashSet<>();
-		if (!findPathToEndState(start, visitedNodes, false)) {
-			throw new IllegalStateException("Fluxo mal-definido, não há como alcançar o nó de término.");
-		}
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	private boolean findPathToEndState(Node node, Set<Node> visitedNodes, boolean hasFoundEndState) {
-		if (node.getNodeType().equals(NodeType.EndState)) {
-			return true;
-		}
-		
-		if (!visitedNodes.contains(node)) {
-			visitedNodes.add(node);
-		
-			List<Transition> transitions = node.getLeavingTransitions();
-			for (Transition t : transitions) {
-				hasFoundEndState = findPathToEndState(t.getTo(), visitedNodes, hasFoundEndState);
-			}
-		}
-		return hasFoundEndState;
-	}
+        StartState startState = new StartState("Início");
+        instance.addNode(startState);
+        EndState endState = new EndState("Término");
+        instance.addNode(endState);
+        Transition t = new Transition();
+        t.setName(endState.getName());
+        t.setTo(endState);
+        startState.addLeavingTransition(t);
+        endState.addArrivingTransition(t);
+        instance.getTaskMgmtDefinition().addSwimlane(laneSolicitante);
+        eventFitter.addEvents();
+        taskFitter.getTasks();
+        processBuilderGraph.clear();
+    }
 
-	private void validateJsfTree() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
-		if (jsfComponentTreeValidator.hasInvalidComponent(processDefinitionTabPanel)) {
-			throw new IllegalStateException("O formulário possui campos inválidos, favor corrigí-los.");
-		}
-	}
-	
-	public void update() {
-		exists = true;
-		if (fluxo != null) {
-			String xmlDef = JpdlXmlWriter.toString(instance);
+    private void clear() {
+        taskNodeMap = null;
+        swimlaneFitter.clear();
+        taskFitter.clear();
+        nodeFitter.clear();
+        transitionFitter.clear();
+        eventFitter.clear();
+    }
 
-			String xmlFluxo = fluxo.getXml();
+    public void load(Fluxo fluxo) {
+        this.fluxo = fluxo;
+        String newId = fluxo.getCodFluxo();
+        this.id = null;
+        setId(newId);
 
-			if (xmlFluxo == null || !xmlFluxo.equals(xmlDef)) {
-				// verifica a consistencia do fluxo para evitar salva-lo com
-				// erros.
-				parseInstance(xmlDef);
-				needToPublic = true;
-				modifyNodesAndTasks();
-				fluxo.setXml(xmlDef);
-				try {
-					genericManager.update(fluxo);
-				} catch (DAOException e) {
-					LOG.error(".update()", e);
-				}
-			}
-			taskFitter.updateTarefas();
-			FacesMessages.instance().add("Fluxo salvo com sucesso!");
-		}
-		processBuilderGraph.clear();
-	}
-	
-	public void updateFluxo(String cdFluxo) {
-		String xmlDef = JpdlXmlWriter.toString(instance);
-		fluxo.setXml(xmlDef);
-		try {
-			genericManager.update(fluxo);
-		} catch (DAOException e) {
-			LOG.error(".updateFluxo()", e);
-		}
+        getInstance().setName(fluxo.getFluxo());
+        xml = fluxo.getXml();
+        if (xml == null) {
+            this.id = newId;
+            update();
+        } else {
+            try {
+                instance = parseInstance(xml);
+                instance.setName(fluxo.getFluxo());
+            } catch (Exception e) {
+                LOG.error(".load()", e);
+            }
+            exists = true;
+            this.id = newId;
+        }
+    }
 
-		this.id = cdFluxo;
-		this.exists = true;
-		this.needToPublic = true;
-	}
+    private ProcessDefinition parseInstance(String newXml) {
+        StringReader stringReader = new StringReader(newXml);
+        InfoxJpdlXmlReader jpdlReader = new InfoxJpdlXmlReader(new InputSource(stringReader));
+        return jpdlReader.readProcessDefinition();
+    }
 
-	private void modifyNodesAndTasks() {
-		nodeFitter.modifyNodes();		
-		taskFitter.modifyTasks();
-	}
+    public void prepareUpdate(ActionEvent event) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
+        UIComponent messages = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_MESSAGES_ID);
+        ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(facesContext);
 
-	public void deploy() {
-		update();
-		if (needToPublic) {
-			try {
-				JbpmUtil.getGraphSession().deployProcessDefinition(instance);
-				JbpmUtil.getJbpmSession().flush();
-				Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
-				taskFitter.checkCurrentTaskPersistenceState();
-				FacesMessages.instance().clear();
-				FacesMessages.instance().add("Fluxo publicado com sucesso!");
-			} catch (Exception e) {
-			    LOG.error(".deploy()", e);
-			}
-			needToPublic = false;
-		}
-	}
+        try {
+            validateJsfTree();
+            validateJbpmGraph();
+            validateMailNode();
+        } catch (IllegalStateException e) {
+            FacesMessages.instance().clearGlobalMessages();
+            FacesMessages.instance().add(e.getMessage());
+            context.getRenderIds().add(messages.getClientId(facesContext));
+            throw new AbortProcessingException("processBuilder.prepareUpdate(event)", e);
+        }
 
-	public void clearDefinition() {
-		fluxo.setXml(null);
-		load(fluxo);
-	}
+        context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
+        context.getRenderIds().add(messages.getClientId(facesContext));
+    }
 
-	public static ProcessBuilder instance() {
-	    ProcessBuilder returnInstance = (ProcessBuilder) Contexts.getConversationContext().get(NAME);
-	    if (returnInstance == null) {
-	        returnInstance = (ProcessBuilder) Component.getInstance(ProcessBuilder.class);
-	    }
-		return returnInstance;
-	}
+    @SuppressWarnings(UNCHECKED)
+    private void validateMailNode() {
+        List<Node> nodes = getInstance().getNodes();
+        for (Node node : nodes) {
+            if (node instanceof InfoxMailNode) {
+                InfoxMailNode mailNode = (InfoxMailNode) node;
+                if (Strings.isNullOrEmpty(mailNode.getTo())) {
+                    throw new IllegalStateException("O nó de email deve possuir pelo menos um destinatário.");
+                }
+            }
+        }
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------
-	// ------------------------------------------------ Getters and Setters -----------------------------------------------
-	// ---------------------------------------------------- ~Comuns~ ------------------------------------------------------
+    @SuppressWarnings(UNCHECKED)
+    private void validateJbpmGraph() {
+        List<Node> nodes = getInstance().getNodes();
+        for (Node node : nodes) {
+            if (!node.getNodeType().equals(NodeType.EndState)
+                    && (node.getLeavingTransitions() == null || node.getLeavingTransitions().isEmpty())) {
+                throw new IllegalStateException("Existe algum nó na definição que não possui transição de saída.");
+            }
+        }
 
-	public String getId() {
-		return id;
-	}
+        Node start = getInstance().getStartState();
+        Set<Node> visitedNodes = new HashSet<>();
+        if (!findPathToEndState(start, visitedNodes, false)) {
+            throw new IllegalStateException("Fluxo mal-definido, não há como alcançar o nó de término.");
+        }
+    }
 
-	public void setTab(String tab) {
-		this.tab = tab;
-	}
+    @SuppressWarnings(UNCHECKED)
+    private boolean findPathToEndState(Node node, Set<Node> visitedNodes,
+            boolean hasFoundEndState) {
+        if (node.getNodeType().equals(NodeType.EndState)) {
+            return true;
+        }
 
-	public String getTab() {
-		return tab;
-	}
+        if (!visitedNodes.contains(node)) {
+            visitedNodes.add(node);
 
-	public boolean isExists() {
-		return exists;
-	}
+            List<Transition> transitions = node.getLeavingTransitions();
+            for (Transition t : transitions) {
+                hasFoundEndState = findPathToEndState(t.getTo(), visitedNodes, hasFoundEndState);
+            }
+        }
+        return hasFoundEndState;
+    }
 
-	public void setExists(boolean exists) {
-		this.exists = exists;
-	}
+    private void validateJsfTree() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
+        if (jsfComponentTreeValidator.hasInvalidComponent(processDefinitionTabPanel)) {
+            throw new IllegalStateException("O formulário possui campos inválidos, favor corrigí-los.");
+        }
+    }
 
-	public Map<Node, List<TaskHandler>> getTaskNodeMap() {
-		return taskNodeMap;
-	}
+    public void update() {
+        exists = true;
+        if (fluxo != null) {
+            String xmlDef = JpdlXmlWriter.toString(instance);
 
-	public void setTaskNodeMap(Map<Node, List<TaskHandler>> taskNodeMap) {
-		this.taskNodeMap = taskNodeMap;
-	}
-	
-	// --------------------------------------------------------------------------------------------------------------------
-	// ------------------------------------------------ Getters and Setters -----------------------------------------------
-	// --------------------------------------------------- ~Especiais~ ----------------------------------------------------
+            String xmlFluxo = fluxo.getXml();
 
-	public void setId(String newId) {
-		boolean changed = !newId.equals(this.id);
-		this.id = newId;
-		if (changed || instance == null) {
-			try {
-				createInstance();
-			} catch (Exception e) {
-			    LOG.error(".setId()", e);
-			}
-		}
-	}
+            if (xmlFluxo == null || !xmlFluxo.equals(xmlDef)) {
+                // verifica a consistencia do fluxo para evitar salva-lo com
+                // erros.
+                parseInstance(xmlDef);
+                needToPublic = true;
+                modifyNodesAndTasks();
+                fluxo.setXml(xmlDef);
+                try {
+                    genericManager.update(fluxo);
+                } catch (DAOException e) {
+                    LOG.error(".update()", e);
+                }
+            }
+            taskFitter.updateTarefas();
+            FacesMessages.instance().add("Fluxo salvo com sucesso!");
+        }
+        processBuilderGraph.clear();
+    }
 
-	@SuppressWarnings(UNCHECKED)
-	public BigInteger getIdProcessDefinition() {
-		if (instance == null) {
-			return null;
-		}
-		String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
-		Query param = JbpmUtil.getJbpmSession().createSQLQuery(query)
-				.setParameter("pdName", instance.getName());
-		List<Object> list = param.list();
-		if (list == null || list.size() == 0) {
-			return null;
-		}
-		return (BigInteger) list.get(0);
-	}
+    public void updateFluxo(String cdFluxo) {
+        String xmlDef = JpdlXmlWriter.toString(instance);
+        fluxo.setXml(xmlDef);
+        try {
+            genericManager.update(fluxo);
+        } catch (DAOException e) {
+            LOG.error(".updateFluxo()", e);
+        }
 
-	public ProcessDefinition getInstance() {
-		if (instance == null) {
-			createInstance();
-		}
-		return instance;
-	}
+        this.id = cdFluxo;
+        this.exists = true;
+        this.needToPublic = true;
+    }
 
-	public void setInstance(ProcessDefinition newInstance) {
-		this.instance = newInstance;
-	}
+    private void modifyNodesAndTasks() {
+        nodeFitter.modifyNodes();
+        taskFitter.modifyTasks();
+    }
 
-	public String getXml() {
-		xml = JpdlXmlWriter.toString(instance);
-		return xml;
-	}
+    public void deploy() {
+        update();
+        if (needToPublic) {
+            try {
+                JbpmUtil.getGraphSession().deployProcessDefinition(instance);
+                JbpmUtil.getJbpmSession().flush();
+                Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
+                taskFitter.checkCurrentTaskPersistenceState();
+                FacesMessages.instance().clear();
+                FacesMessages.instance().add("Fluxo publicado com sucesso!");
+            } catch (Exception e) {
+                LOG.error(".deploy()", e);
+            }
+            needToPublic = false;
+        }
+    }
 
-	public void setXml(String xml) {
-		this.xml = xml;
-		if (xml != null && !xml.trim().equals("")) {
-			instance = parseInstance(xml);
-		}
-		clear();
-	}
-	
-	public String getTypeLabel(String type){
-		return typeFitter.getTypeLabel(type);
-	}
+    public void clearDefinition() {
+        fluxo.setXml(null);
+        load(fluxo);
+    }
 
-	public EventFitter getEventFitter() {
-		return eventFitter;
-	}
+    public static ProcessBuilder instance() {
+        ProcessBuilder returnInstance = (ProcessBuilder) Contexts.getConversationContext().get(NAME);
+        if (returnInstance == null) {
+            returnInstance = (ProcessBuilder) Component.getInstance(ProcessBuilder.class);
+        }
+        return returnInstance;
+    }
 
-	public TransitionFitter getTransitionFitter() {
-		return transitionFitter;
-	}
+    // --------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------ Getters and Setters
+    // -----------------------------------------------
+    // ---------------------------------------------------- ~Comuns~
+    // ------------------------------------------------------
 
-	public SwimlaneFitter getSwimlaneFitter() {
-		return swimlaneFitter;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public TaskFitter getTaskFitter() {
-		return taskFitter;
-	}
+    public void setTab(String tab) {
+        this.tab = tab;
+    }
 
-	public NodeFitter getNodeFitter() {
-		return nodeFitter;
-	}
+    public String getTab() {
+        return tab;
+    }
 
-	public TypeFitter getTypeFitter() {
-		return typeFitter;
-	}
-	
-	public Fluxo getFluxo(){
-	    return this.fluxo;
-	}
+    public boolean isExists() {
+        return exists;
+    }
 
-	public void getPaintedGraph() {
-		try {
-			getProcessBuilderGraph().paintGraph();
-		} catch (IOException e) {
-			throw new AbortProcessingException(e);
-		}
-	}
-	
-	public ProcessBuilderGraph getProcessBuilderGraph() {
-		return processBuilderGraph;
-	}
-	
-	public void importarXPDL(byte[] bytes, Fluxo fluxo) {
+    public void setExists(boolean exists) {
+        this.exists = exists;
+    }
+
+    public Map<Node, List<TaskHandler>> getTaskNodeMap() {
+        return taskNodeMap;
+    }
+
+    public void setTaskNodeMap(Map<Node, List<TaskHandler>> taskNodeMap) {
+        this.taskNodeMap = taskNodeMap;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------ Getters and Setters
+    // -----------------------------------------------
+    // --------------------------------------------------- ~Especiais~
+    // ----------------------------------------------------
+
+    public void setId(String newId) {
+        boolean changed = !newId.equals(this.id);
+        this.id = newId;
+        if (changed || instance == null) {
+            try {
+                createInstance();
+            } catch (Exception e) {
+                LOG.error(".setId()", e);
+            }
+        }
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public BigInteger getIdProcessDefinition() {
+        if (instance == null) {
+            return null;
+        }
+        String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
+        Query param = JbpmUtil.getJbpmSession().createSQLQuery(query).setParameter("pdName", instance.getName());
+        List<Object> list = param.list();
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        return (BigInteger) list.get(0);
+    }
+
+    public ProcessDefinition getInstance() {
+        if (instance == null) {
+            createInstance();
+        }
+        return instance;
+    }
+
+    public void setInstance(ProcessDefinition newInstance) {
+        this.instance = newInstance;
+    }
+
+    public String getXml() {
+        xml = JpdlXmlWriter.toString(instance);
+        return xml;
+    }
+
+    public void setXml(String xml) {
+        this.xml = xml;
+        if (xml != null && !xml.trim().equals("")) {
+            instance = parseInstance(xml);
+        }
+        clear();
+    }
+
+    public String getTypeLabel(String type) {
+        return typeFitter.getTypeLabel(type);
+    }
+
+    public EventFitter getEventFitter() {
+        return eventFitter;
+    }
+
+    public TransitionFitter getTransitionFitter() {
+        return transitionFitter;
+    }
+
+    public SwimlaneFitter getSwimlaneFitter() {
+        return swimlaneFitter;
+    }
+
+    public TaskFitter getTaskFitter() {
+        return taskFitter;
+    }
+
+    public NodeFitter getNodeFitter() {
+        return nodeFitter;
+    }
+
+    public TypeFitter getTypeFitter() {
+        return typeFitter;
+    }
+
+    public Fluxo getFluxo() {
+        return this.fluxo;
+    }
+
+    public void getPaintedGraph() {
+        try {
+            getProcessBuilderGraph().paintGraph();
+        } catch (IOException e) {
+            throw new AbortProcessingException(e);
+        }
+    }
+
+    public ProcessBuilderGraph getProcessBuilderGraph() {
+        return processBuilderGraph;
+    }
+
+    public void importarXPDL(byte[] bytes, Fluxo fluxo) {
         try {
             load(fluxo);
             final FluxoXPDL fluxoXPDL = FluxoXPDL.createInstance(bytes);
             final String xml = fluxoXPDL.toJPDL(fluxo.getCodFluxo());
-            setXml(xml); 
+            setXml(xml);
             updateFluxo(fluxo.getCodFluxo());
         } catch (IllegalXPDLException e) {
             LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage(), e);
