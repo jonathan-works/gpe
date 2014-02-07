@@ -1,18 +1,3 @@
-/*
- IBPM - Ferramenta de produtividade Java
- Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
-
- Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
- sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
- Free Software Foundation; versão 2 da Licença.
- Este programa é distribuído na expectativa de que seja útil, porém, SEM 
- NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
- ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
- 
- Consulte a GNU GPL para mais detalhes.
- Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
- veja em http://www.gnu.org/licenses/   
-*/
 package br.com.itx.component;
 
 import java.io.Serializable;
@@ -25,164 +10,164 @@ import org.jboss.seam.log.Logging;
 
 public class FormField implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(FormField.class);
+    private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(FormField.class);
 
-	private String id;
+    private String id;
 
-	private Form form;
-	
-	private String formId;
-	
-	private String formHome;
+    private Form form;
 
-	private String label;
+    private String formId;
 
-	private String type;
+    private String formHome;
 
-	private String valueExpression;
-	
-	private String required;
+    private String label;
 
-	private String rendered = "true";
+    private String type;
 
-	private Map<String, Object> properties = new PropertyMap<String, Object>();
+    private String valueExpression;
 
-	public String getId() {
-		return id;
-	}
+    private String required;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    private String rendered = "true";
 
-	public String getLabel() {
-		if (label == null) {
-			String key = id;
-			if (key.indexOf('.') > -1) {
-				key = key.substring(0, key.indexOf('.'));
-			}
-			key = getFormId() + "." + key;
-			Map<String, String> msg = Messages.instance();
-			if (msg != null && msg.containsKey(key)) {
-				label =  msg.get(key);
-			} else {
-				label = label != null ? label : id;
-			}
-		}
-		return label;
-	}
+    private Map<String, Object> properties = new PropertyMap<String, Object>();
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getType() {
-	    if (type == null || "null".equals(type)) {
-	        return "default";
-	    } else {
-	        return type;
-	    }
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getLabel() {
+        if (label == null) {
+            String key = id;
+            if (key.indexOf('.') > -1) {
+                key = key.substring(0, key.indexOf('.'));
+            }
+            key = getFormId() + "." + key;
+            Map<String, String> msg = Messages.instance();
+            if (msg != null && msg.containsKey(key)) {
+                label = msg.get(key);
+            } else {
+                label = label != null ? label : id;
+            }
+        }
+        return label;
+    }
 
-	public String getValueExpression() {
-		return valueExpression;
-	}
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	public void setValueExpression(String valueExpression) {
-		this.valueExpression = valueExpression;
-	}
+    public String getType() {
+        if (type == null || "null".equals(type)) {
+            return "default";
+        } else {
+            return type;
+        }
+    }
 
-	public Object getValue() {
-		Expressions exp = Expressions.instance(); 
-		return exp.createValueExpression(getVEString()).getValue();
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public void setValue(Object obj) {
-		Expressions exp = Expressions.instance(); 
-		exp.createValueExpression(getVEString()).setValue(obj);
-	}
-	
-	private String getVEString() {
-		if (valueExpression == null) {
-			if (formHome != null) {
-				return "#{" + getFormHome() + ".instance." + id + "}";
-			} else {
-				return "#{" + getFormId() + "Form.home.instance." + id + "}";
-			}	
-		} else if (valueExpression.startsWith("\\#{")) {
-			return valueExpression.substring(1);
-		} else {
-			return "#{" + valueExpression + "}";
-		}
-	}
+    public String getValueExpression() {
+        return valueExpression;
+    }
 
-	public boolean isRequired() {
-		Boolean value = Boolean.FALSE;
-		try {
-			Expressions exp = Expressions.instance(); 
-			value = (Boolean) exp.createValueExpression("#{" + required + "}").getValue();
-			if (value == null) {
-				value = Boolean.FALSE;
-			}
-		} catch (RuntimeException e) {
-		    LOG.error("isRequired()", e);
-		}
-		return value.booleanValue();
-	}
+    public void setValueExpression(String valueExpression) {
+        this.valueExpression = valueExpression;
+    }
 
-	public void setRequired(String required) {
-		this.required = required;
-	}
+    public Object getValue() {
+        Expressions exp = Expressions.instance();
+        return exp.createValueExpression(getVEString()).getValue();
+    }
 
-	public boolean isRendered() {
-		Boolean value = Boolean.FALSE;
-		try {
-			Expressions exp = Expressions.instance(); 
-			value = (Boolean) exp.createValueExpression("#{" + rendered + "}").getValue();
-			if (value == null) {
-				value = Boolean.TRUE;
-			}
-		} catch (RuntimeException e) {
-		    LOG.error("isRendered()", e);
-		}
-		return value.booleanValue();
-	}
+    public void setValue(Object obj) {
+        Expressions exp = Expressions.instance();
+        exp.createValueExpression(getVEString()).setValue(obj);
+    }
 
-	public void setRendered(String rendered) {
-		this.rendered = rendered;
-	}
+    private String getVEString() {
+        if (valueExpression == null) {
+            if (formHome != null) {
+                return "#{" + getFormHome() + ".instance." + id + "}";
+            } else {
+                return "#{" + getFormId() + "Form.home.instance." + id + "}";
+            }
+        } else if (valueExpression.startsWith("\\#{")) {
+            return valueExpression.substring(1);
+        } else {
+            return "#{" + valueExpression + "}";
+        }
+    }
 
-	public Map<String, Object> getProperties() {
-		return properties;
-	}
+    public boolean isRequired() {
+        Boolean value = Boolean.FALSE;
+        try {
+            Expressions exp = Expressions.instance();
+            value = (Boolean) exp.createValueExpression("#{" + required + "}").getValue();
+            if (value == null) {
+                value = Boolean.FALSE;
+            }
+        } catch (RuntimeException e) {
+            LOG.error("isRequired()", e);
+        }
+        return value.booleanValue();
+    }
 
-	public void setProperties(Map<String, Object> properties) {
-		this.properties.clear();
-		this.properties.putAll(properties);
-	}
+    public void setRequired(String required) {
+        this.required = required;
+    }
 
-	public String getFormId() {
-		if (form != null) {
-			formId = form.getFormId();
-		}
-		return formId;
-	}
+    public boolean isRendered() {
+        Boolean value = Boolean.FALSE;
+        try {
+            Expressions exp = Expressions.instance();
+            value = (Boolean) exp.createValueExpression("#{" + rendered + "}").getValue();
+            if (value == null) {
+                value = Boolean.TRUE;
+            }
+        } catch (RuntimeException e) {
+            LOG.error("isRendered()", e);
+        }
+        return value.booleanValue();
+    }
 
-	public void setFormId(String formId) {
-		this.formId = formId;
-	}
-	
-	public String getFormHome() {
-		return formHome;
-	}
+    public void setRendered(String rendered) {
+        this.rendered = rendered;
+    }
 
-	public void setFormHome(String formHome) {
-		this.formHome = formHome;
-	}
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties.clear();
+        this.properties.putAll(properties);
+    }
+
+    public String getFormId() {
+        if (form != null) {
+            formId = form.getFormId();
+        }
+        return formId;
+    }
+
+    public void setFormId(String formId) {
+        this.formId = formId;
+    }
+
+    public String getFormHome() {
+        return formHome;
+    }
+
+    public void setFormHome(String formHome) {
+        this.formHome = formHome;
+    }
 
 }
