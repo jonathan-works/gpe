@@ -46,117 +46,119 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.CONVERSATION)
 public class IniciarProcessoAction {
 
-	public static final String NAME = "iniciarProcessoAction";
-	private static final LogProvider LOG = Logging.getLogProvider(IniciarProcessoAction.class);
+    public static final String NAME = "iniciarProcessoAction";
+    private static final LogProvider LOG = Logging.getLogProvider(IniciarProcessoAction.class);
 
-	@In
-	private IniciarProcessoService iniciarProcessoService;
-	@In
-	private ProcessoEpaManager processoEpaManager;
-	@In
-	private PessoaManager pessoaManager;
-	
-	private boolean renderedByItem;
-	private boolean renderizarCadastroPartes;
-	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
-	private Item itemDoProcesso;
-	private ProcessoEpa processoEpa;
-	private List<ItemBean> itemList;
-	private List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
-	private List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
-	
-	public void iniciarProcesso() {
-		final StatusMessages messagesHandler = getMessagesHandler();
+    @In
+    private IniciarProcessoService iniciarProcessoService;
+    @In
+    private ProcessoEpaManager processoEpaManager;
+    @In
+    private PessoaManager pessoaManager;
+
+    private boolean renderedByItem;
+    private boolean renderizarCadastroPartes;
+    private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
+    private Item itemDoProcesso;
+    private ProcessoEpa processoEpa;
+    private List<ItemBean> itemList;
+    private List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
+    private List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
+
+    public void iniciarProcesso() {
+        final StatusMessages messagesHandler = getMessagesHandler();
         try {
-			final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-			final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-			processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
-			if (necessitaPartes()){
-				for (Pessoa p : pessoaFisicaList) {
-					processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-				}
-				for (Pessoa p : pessoaJuridicaList) {
-					processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-				}
-			}
-			processoEpaManager.persist(processoEpa);
-			iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
-			messagesHandler.add("Processo inserido com sucesso!");
-		} catch(TypeMismatchException tme) {
-		    sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);
-		} catch(NullPointerException npe) {
-		    sendIniciarProcessoErrorMessage("Nenhum processo informado.", npe);
-		} catch (DAOException e) {
-            sendIniciarProcessoErrorMessage("Erro ao inserir o processo: "+ e.getMessage(), e);
-		}
-	}
+            final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+            final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+            processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
+            if (necessitaPartes()) {
+                for (Pessoa p : pessoaFisicaList) {
+                    processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
+                }
+                for (Pessoa p : pessoaJuridicaList) {
+                    processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
+                }
+            }
+            processoEpaManager.persist(processoEpa);
+            iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
+            messagesHandler.add("Processo inserido com sucesso!");
+        } catch (TypeMismatchException tme) {
+            sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);
+        } catch (NullPointerException npe) {
+            sendIniciarProcessoErrorMessage("Nenhum processo informado.", npe);
+        } catch (DAOException e) {
+            sendIniciarProcessoErrorMessage("Erro ao inserir o processo: "
+                    + e.getMessage(), e);
+        }
+    }
 
-    private void sendIniciarProcessoErrorMessage(final String message, final Exception exception) {
+    private void sendIniciarProcessoErrorMessage(final String message,
+            final Exception exception) {
         LOG.error(".iniciarProcesso()", exception);
         getMessagesHandler().add(Severity.ERROR, message);
     }
 
-	public void onSelectNatCatFluxo(final NaturezaCategoriaFluxo ncf) {
-		naturezaCategoriaFluxo = ncf;
-		itemList = new ArrayList<ItemBean>();
-		final Categoria categoria = naturezaCategoriaFluxo.getCategoria();
-		if (categoria != null) {
-            for(CategoriaItem ca : categoria.getCategoriaItemList()) {
-    			itemList.add(new ItemBean(ca.getItem()));
-    		}
-    		if (itemList.isEmpty()){
-    			getMessagesHandler().add(Severity.ERROR, "Não há itens cadastrados para a categoria escolhida");
-    		} else { 
-    			setRenderedByItem(Boolean.TRUE);
-    		}
-		}
-	}
-	
-	
-	public void onSelectItem(final ItemBean bean) {
-		itemDoProcesso = bean.getItem();
-		renderedByItem = hasSelectedItem();
-		if (!necessitaPartes()) {
-			iniciarProcesso();
-			if (Authenticator.instance().isUsuarioExterno()) {
+    public void onSelectNatCatFluxo(final NaturezaCategoriaFluxo ncf) {
+        naturezaCategoriaFluxo = ncf;
+        itemList = new ArrayList<ItemBean>();
+        final Categoria categoria = naturezaCategoriaFluxo.getCategoria();
+        if (categoria != null) {
+            for (CategoriaItem ca : categoria.getCategoriaItemList()) {
+                itemList.add(new ItemBean(ca.getItem()));
+            }
+            if (itemList.isEmpty()) {
+                getMessagesHandler().add(Severity.ERROR, "Não há itens cadastrados para a categoria escolhida");
+            } else {
+                setRenderedByItem(Boolean.TRUE);
+            }
+        }
+    }
+
+    public void onSelectItem(final ItemBean bean) {
+        itemDoProcesso = bean.getItem();
+        renderedByItem = hasSelectedItem();
+        if (!necessitaPartes()) {
+            iniciarProcesso();
+            if (Authenticator.instance().isUsuarioExterno()) {
                 final Redirect redirect = Redirect.instance();
                 redirect.setViewId("/Processo/movimentar.seam");
                 redirect.setParameter("cid", Conversation.instance().getId());
                 redirect.setParameter("idProcesso", getProcessoEpa().getIdProcesso());
                 redirect.execute();
             }
-		} else{
-			renderizarCadastroPartes = Boolean.TRUE;
-			renderedByItem = Boolean.FALSE;
-		}
-	}
+        } else {
+            renderizarCadastroPartes = Boolean.TRUE;
+            renderedByItem = Boolean.FALSE;
+        }
+    }
 
-	private boolean hasSelectedItem() {
-		for (ItemBean ib : itemList) {
-			if(ib.isChecked()) {
-				return Boolean.TRUE;
-			}
-		}
-		return Boolean.FALSE;
-	}
-	
-	private TipoPessoaEnum convertTipoPessoaEnum(final String tipoPessoa) {
-	    if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
-	        return TipoPessoaEnum.F;
-	    } else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
-	        return TipoPessoaEnum.J;
-	    }
-	    return null;
-	}
-	
-	public void carregaPessoa(String tipoPessoa, String codigo){
-		pessoaManager.carregaPessoa(convertTipoPessoaEnum(tipoPessoa), codigo);
-	}
-	
-	private <P extends Pessoa> void include(final AbstractHome<P> home, final TipoPessoaEnum tipoPessoa, final List<P> list) {
+    private boolean hasSelectedItem() {
+        for (ItemBean ib : itemList) {
+            if (ib.isChecked()) {
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
+    }
+
+    private TipoPessoaEnum convertTipoPessoaEnum(final String tipoPessoa) {
+        if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
+            return TipoPessoaEnum.F;
+        } else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
+            return TipoPessoaEnum.J;
+        }
+        return null;
+    }
+
+    public void carregaPessoa(String tipoPessoa, String codigo) {
+        pessoaManager.carregaPessoa(convertTipoPessoaEnum(tipoPessoa), codigo);
+    }
+
+    private <P extends Pessoa> void include(final AbstractHome<P> home,
+            final TipoPessoaEnum tipoPessoa, final List<P> list) {
         final StatusMessages messagesHandler = getMessagesHandler();
         final P pessoa = home.getInstance();
-        if (pessoa.getAtivo() == null){
+        if (pessoa.getAtivo() == null) {
             pessoa.setAtivo(Boolean.TRUE);
             pessoa.setTipoPessoa(tipoPessoa);
             try {
@@ -172,76 +174,80 @@ public class IniciarProcessoAction {
         }
         home.setInstance(null);
     }
-	
-	public void incluir(String tipoPessoa){
-	    final TipoPessoaEnum tipoPessoaEnum = convertTipoPessoaEnum(tipoPessoa);
-		if (TipoPessoaEnum.F.equals(tipoPessoaEnum)) {
-            include((PessoaFisicaHome)Component.getInstance(PessoaFisicaHome.NAME), tipoPessoaEnum, pessoaFisicaList);
-		} else if (TipoPessoaEnum.J.equals(tipoPessoaEnum)) {
+
+    public void incluir(String tipoPessoa) {
+        final TipoPessoaEnum tipoPessoaEnum = convertTipoPessoaEnum(tipoPessoa);
+        if (TipoPessoaEnum.F.equals(tipoPessoaEnum)) {
+            include((PessoaFisicaHome) Component.getInstance(PessoaFisicaHome.NAME), tipoPessoaEnum, pessoaFisicaList);
+        } else if (TipoPessoaEnum.J.equals(tipoPessoaEnum)) {
             include((PessoaJuridicaHome) Component.getInstance(PessoaJuridicaHome.NAME), tipoPessoaEnum, pessoaJuridicaList);
-		}
-	}
+        }
+    }
 
     private StatusMessages getMessagesHandler() {
         return FacesMessages.instance();
     }
-	
-	public void removePessoaFisica(final PessoaFisica obj) {
-		pessoaFisicaList.remove(obj);
-	}
-	
-	public void removePessoaJuridica(final PessoaJuridica obj) {
-		pessoaJuridicaList.remove(obj);
-	}
-	
-	public boolean isRenderedByItem() {
-		return renderedByItem;
-	}
-	public void setRenderedByItem(final boolean renderedByItem) {
-		this.renderedByItem = renderedByItem;
-	}
 
-	public void setProcessoEpa(final ProcessoEpa processoEpa) {
-		this.processoEpa = processoEpa;
-	}
-	public ProcessoEpa getProcessoEpa() {
-		return processoEpa;
-	}
+    public void removePessoaFisica(final PessoaFisica obj) {
+        pessoaFisicaList.remove(obj);
+    }
 
-	public List<ItemBean> getItemList() {
-		return itemList;
-	}
-	public void setItemList(final List<ItemBean> itemList) {
-		this.itemList = itemList;
-	}
-	
-	public boolean necessitaPartes(){
-		if (naturezaCategoriaFluxo != null) {
-			final Natureza natureza = naturezaCategoriaFluxo.getNatureza();
-			if (natureza != null) {
-			    return natureza.getHasPartes();
-			}
-		}
-		return Boolean.FALSE;
-	}
+    public void removePessoaJuridica(final PessoaJuridica obj) {
+        pessoaJuridicaList.remove(obj);
+    }
 
-	public boolean isRenderizarCadastroPartes() {
-		return renderizarCadastroPartes;
-	}
+    public boolean isRenderedByItem() {
+        return renderedByItem;
+    }
 
-	public List<PessoaFisica> getPessoaFisicaList() {
-		return pessoaFisicaList;
-	}
+    public void setRenderedByItem(final boolean renderedByItem) {
+        this.renderedByItem = renderedByItem;
+    }
 
-	public void setPessoaFisicaList(final List<PessoaFisica> pessoaFisicaList) {
-		this.pessoaFisicaList = pessoaFisicaList;
-	}
+    public void setProcessoEpa(final ProcessoEpa processoEpa) {
+        this.processoEpa = processoEpa;
+    }
 
-	public List<PessoaJuridica> getPessoaJuridicaList() {
-		return pessoaJuridicaList;
-	}
+    public ProcessoEpa getProcessoEpa() {
+        return processoEpa;
+    }
 
-	public void setPessoaJuridicaList(final List<PessoaJuridica> pessoaJuridicaList) {
-		this.pessoaJuridicaList = pessoaJuridicaList;
-	}
+    public List<ItemBean> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(final List<ItemBean> itemList) {
+        this.itemList = itemList;
+    }
+
+    public boolean necessitaPartes() {
+        if (naturezaCategoriaFluxo != null) {
+            final Natureza natureza = naturezaCategoriaFluxo.getNatureza();
+            if (natureza != null) {
+                return natureza.getHasPartes();
+            }
+        }
+        return Boolean.FALSE;
+    }
+
+    public boolean isRenderizarCadastroPartes() {
+        return renderizarCadastroPartes;
+    }
+
+    public List<PessoaFisica> getPessoaFisicaList() {
+        return pessoaFisicaList;
+    }
+
+    public void setPessoaFisicaList(final List<PessoaFisica> pessoaFisicaList) {
+        this.pessoaFisicaList = pessoaFisicaList;
+    }
+
+    public List<PessoaJuridica> getPessoaJuridicaList() {
+        return pessoaJuridicaList;
+    }
+
+    public void setPessoaJuridicaList(
+            final List<PessoaJuridica> pessoaJuridicaList) {
+        this.pessoaJuridicaList = pessoaJuridicaList;
+    }
 }
