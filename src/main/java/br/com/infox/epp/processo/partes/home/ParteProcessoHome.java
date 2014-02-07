@@ -14,44 +14,45 @@ import br.com.itx.component.AbstractHome;
 
 @Name(ParteProcessoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ParteProcessoHome extends AbstractHome<ParteProcesso>{
+public class ParteProcessoHome extends AbstractHome<ParteProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "parteProcessoHome";
-	private static final Log LOG = Logging.getLog(ParteProcessoHome.class);
-	
-	private String motivoModificacao;
-	
-	@In private ParteProcessoManager parteProcessoManager;
-	
-	@Override
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "parteProcessoHome";
+    private static final Log LOG = Logging.getLog(ParteProcessoHome.class);
+
+    private String motivoModificacao;
+
+    @In
+    private ParteProcessoManager parteProcessoManager;
+
+    @Override
     public void newInstance() {
-	    motivoModificacao = "";
+        motivoModificacao = "";
         super.newInstance();
     }
 
-    public void alternarAtividadeParteProcesso(){
-		try {
-			parteProcessoManager.alternarAtividade(getInstance(), motivoModificacao);
-			newInstance();
-			raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
-		} catch (DAOException e) {
-			LOG.error(".alternarAtividadeParteProcesso()", e);
-			FacesMessages.instance().add(e.getLocalizedMessage());
-		}
-	}
+    public void alternarAtividadeParteProcesso() {
+        try {
+            parteProcessoManager.alternarAtividade(getInstance(), motivoModificacao);
+            newInstance();
+            raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
+        } catch (DAOException e) {
+            LOG.error(".alternarAtividadeParteProcesso()", e);
+            FacesMessages.instance().add(e.getLocalizedMessage());
+        }
+    }
 
-	public String getMotivoModificacao() {
-		return motivoModificacao;
-	}
+    public String getMotivoModificacao() {
+        return motivoModificacao;
+    }
 
-	public void setMotivoModificacao(String motivoModificacao) {
-		this.motivoModificacao = motivoModificacao;
-	}
-	
-	@Override
-	protected String afterPersistOrUpdate(String ret) {
-		raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
-		return super.afterPersistOrUpdate(ret);
-	}
+    public void setMotivoModificacao(String motivoModificacao) {
+        this.motivoModificacao = motivoModificacao;
+    }
+
+    @Override
+    protected String afterPersistOrUpdate(String ret) {
+        raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
+        return super.afterPersistOrUpdate(ret);
+    }
 }

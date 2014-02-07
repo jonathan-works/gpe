@@ -13,28 +13,28 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.PAGE)
 public class PessoaHome extends AbstractHome<Pessoa> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "pessoaHome";
-	
-	private TipoPessoaEnum tipoPessoa;
-	
-	public TipoPessoaEnum[] getTipoPessoaItens(){
-		return TipoPessoaEnum.values();
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "pessoaHome";
 
-	public TipoPessoaEnum getTipoPessoa() {
-		return tipoPessoa;
-	}
+    private TipoPessoaEnum tipoPessoa;
 
-	public void setTipoPessoa(TipoPessoaEnum tipoPessoa) {
-		this.tipoPessoa = tipoPessoa;
-	}
-	
-	public boolean isPessoaFisica(){
-		return this.tipoPessoa == TipoPessoaEnum.F;
-	}
-	
-	public boolean isPessoaJuridica(){
-		return this.tipoPessoa == TipoPessoaEnum.J;
-	}
+    public TipoPessoaEnum[] getTipoPessoaItens() {
+        return TipoPessoaEnum.values();
+    }
+
+    public TipoPessoaEnum getTipoPessoa() {
+        return tipoPessoa;
+    }
+
+    public void setTipoPessoa(TipoPessoaEnum tipoPessoa) {
+        this.tipoPessoa = tipoPessoa;
+    }
+
+    public boolean isPessoaFisica() {
+        return this.tipoPessoa == TipoPessoaEnum.F;
+    }
+
+    public boolean isPessoaJuridica() {
+        return this.tipoPessoa == TipoPessoaEnum.J;
+    }
 }

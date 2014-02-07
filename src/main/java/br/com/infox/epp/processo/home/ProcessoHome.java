@@ -70,7 +70,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private ProcessoEpaManager processoEpaManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
-    
+
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
@@ -305,7 +305,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------------
-    // -------------------------------------------- Getters e Setters --------------------------------------------------------
+    // -------------------------------------------- Getters e Setters
+    // --------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------------
 
     public void setProcessoIdProcesso(Integer id) {
