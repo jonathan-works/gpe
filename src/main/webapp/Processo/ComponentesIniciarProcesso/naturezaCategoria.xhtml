@@ -1,45 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
 
-	<h:form id="NaturezaCategoriaForm">
-		<s:div rendered="#{!action.renderedByItem}">
-			<wi:dataTable
-				values="#{natCatProcessoList.list(15)}"
-				bean="#{natCatProcessoList}"
-				tableTitle=""
-				id="natCatProcessoList"
-				rowId="#{row.idNaturezaCategoriaFluxo}"
-				searchFormStyleClass="hidden"
-			>
-				<ui:define name="headerToolBar" />
-				<ui:define name="toolBar">
-					<h:commandLink
-						action="#{action.onSelectNatCatFluxo(row)}">
-						<h:graphicImage value="/img/jbpm/StartState.gif" />
-					</h:commandLink>
-				</ui:define>
-				<wi:columnOutputText
-					columnId="natureza"
-					columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
-					value="#{row.natureza}" />
-				<wi:columnOutputText
-					columnId="categoria"
-					columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
-					value="#{row.categoria}" />
-				<wi:columnOutputText
-					columnId="fluxo"
-					columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
-					value="#{row.fluxo}" />
+    <h:form id="NaturezaCategoriaForm">
+        <s:div rendered="#{!action.renderedByItem}">
+            <wi:dataTable values="#{natCatProcessoList.list(15)}"
+                bean="#{natCatProcessoList}" tableTitle=""
+                id="natCatProcessoList"
+                rowId="#{row.idNaturezaCategoriaFluxo}"
+                searchFormStyleClass="hidden">
+                <ui:define name="headerToolBar" />
+                <ui:define name="toolBar">
+                    <h:commandLink
+                        action="#{action.onSelectNatCatFluxo(row)}">
+                        <h:graphicImage value="/img/jbpm/StartState.gif" />
+                    </h:commandLink>
+                </ui:define>
+                <wi:columnOutputText columnId="natureza"
+                    columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
+                    value="#{row.natureza}" />
+                <wi:columnOutputText columnId="categoria"
+                    columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+                    value="#{row.categoria}" />
+                <wi:columnOutputText columnId="fluxo"
+                    columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+                    value="#{row.fluxo}" />
 
-			</wi:dataTable>
-		</s:div>
-	</h:form>
+            </wi:dataTable>
+        </s:div>
+    </h:form>
 </ui:composition>
