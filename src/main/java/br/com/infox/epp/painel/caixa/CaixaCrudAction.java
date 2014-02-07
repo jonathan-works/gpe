@@ -15,7 +15,6 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
-import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.event.JbpmEventsHandler;
 import br.com.itx.component.AbstractHome;
@@ -35,15 +34,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
     private CaixaManager caixaManager;
 
     public List<SelectItem> getPreviousNodes() {
-        return getPreviousNodes(getInstance().getTarefa());
-    }
-
-    public List<SelectItem> getPreviousNodes(Integer idTarefa) {
-        return tarefaManager.getPreviousNodes(tarefaManager.find(idTarefa));
-    }
-
-    public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
-        return tarefaManager.getPreviousNodes(tarefa);
+        return tarefaManager.getPreviousNodes(getInstance().getTarefa());
     }
 
     @Override
