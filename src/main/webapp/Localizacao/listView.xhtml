@@ -1,221 +1,169 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
---><ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:infox="http://www.infox.com.br/jsf"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-	
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
 
     <ui:define name="title">#{messages['localizacao.titlePage']}</ui:define>
-    <ui:param
-		 name="home"
-		 value="#{localizacaoCrudAction}" />
+    <ui:param name="home" value="#{localizacaoCrudAction}" />
 
     <ui:define name="searchGrid">
-		
-        <wi:dataTable
-			 values="#{localizacaoList.list(15)}"
-			 bean="#{localizacaoList}"
-			 tableTitle="#{messages['localizacao.tableTitle']}"
-			 id="localizacaoList"
-			 rowId="#{row.idLocalizacao}">
-			
+
+        <wi:dataTable values="#{localizacaoList.list(15)}"
+            bean="#{localizacaoList}"
+            tableTitle="#{messages['localizacao.tableTitle']}"
+            id="localizacaoList" rowId="#{row.idLocalizacao}">
+
             <ui:define name="searchForm">
-				
-                <wi:searchForm
-					 formId="pesquisarLocalizacaoForm"
-					 formTitle="#{messages['searchForm.title']}">
-					
-                    <wi:inputText
-						 id="codigoItem"
-						 value="#{localizacaoList.entity.localizacao}"
-						 label="#{messages['localizacao.localizacao']}" />
-                    <wi:tree
-						 id="localizacaoPai"
-						 assignTo="localizacaoList.entity.localizacaoPai"
-						 tree="#{localizacaoTree}"
-						 icon="/img/nivelTree.gif"
-						 iconLeaf="/img/file.gif"
-						 label="#{messages['localizacao.localizacaoPai']}" />
-                    <wi:selectBooleanMenu
-						 id="estrutura"
-						 label="#{messages['localizacao.estrutura']}"
-						 value="#{localizacaoList.entity.estrutura}" />
-                	<wi:selectSituacaoOneMenu
-						 id="ativo"
-						 label="#{messages['field.situacao']}"
-						 value="#{localizacaoList.entity.ativo}" />
-                    
-				</wi:searchForm>
-			</ui:define>
+
+                <wi:searchForm formId="pesquisarLocalizacaoForm"
+                    formTitle="#{messages['searchForm.title']}">
+
+                    <wi:inputText id="codigoItem"
+                        value="#{localizacaoList.entity.localizacao}"
+                        label="#{messages['localizacao.localizacao']}" />
+                    <wi:tree id="localizacaoPai"
+                        assignTo="localizacaoList.entity.localizacaoPai"
+                        tree="#{localizacaoTree}"
+                        icon="/img/nivelTree.gif"
+                        iconLeaf="/img/file.gif"
+                        label="#{messages['localizacao.localizacaoPai']}" />
+                    <wi:selectBooleanMenu id="estrutura"
+                        label="#{messages['localizacao.estrutura']}"
+                        value="#{localizacaoList.entity.estrutura}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{localizacaoList.entity.ativo}" />
+
+                </wi:searchForm>
+            </ui:define>
             <ui:define name="headerToolBar" />
-            <wi:columnOutputTextIdent
-            	hideOrder="true"
-				columnId="localizacao"
-				columnHeader="#{messages['localizacao.localizacao']}"
-				value="#{row.localizacao}"
-				fullPath="#{row.caminhoCompleto}" />
-			<wi:columnOutputText
-				hideOrder="true"
-				columnId="localizacaoPai"
-				columnHeader="#{messages['localizacao.localizacaoPai']}"
-				value="#{row.localizacaoPai}" 
-			/>
-            <wi:columnBoolean
-            	hideOrder="true"
-				columnId="estrutura"
-				columnHeader="#{messages['localizacao.estrutura']}"
-				value="#{row.estrutura}" />
-            <wi:columnSituacao
-            	hideOrder="true"
-				columnId="ativo"
-				columnHeader="#{messages['field.situacao']}"
-				value="#{row.ativo}" />
-        
-		</wi:dataTable>
-    
-	</ui:define>
+            <wi:columnOutputTextIdent hideOrder="true"
+                columnId="localizacao"
+                columnHeader="#{messages['localizacao.localizacao']}"
+                value="#{row.localizacao}"
+                fullPath="#{row.caminhoCompleto}" />
+            <wi:columnOutputText hideOrder="true"
+                columnId="localizacaoPai"
+                columnHeader="#{messages['localizacao.localizacaoPai']}"
+                value="#{row.localizacaoPai}" />
+            <wi:columnBoolean hideOrder="true" columnId="estrutura"
+                columnHeader="#{messages['localizacao.estrutura']}"
+                value="#{row.estrutura}" />
+            <wi:columnSituacao hideOrder="true" columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
+
+        </wi:dataTable>
+
+    </ui:define>
 
     <ui:define name="form">
-		
-        <wi:dataForm
-			 formId="localizacaoForm"
-			 formTitle="#{messages['form.title']}">
-			
-            <wi:inputText
-				 id="localizacao"
-				 required="true"
-				 label="#{messages['localizacao.localizacao']}"
-				 value="#{localizacaoCrudAction.instance.localizacao}" />
-            <wi:selectBooleanRadio
-				 id="estrutura"
-				 required="true"
-				 label="#{messages['localizacao.estrutura']}"
-				 value="#{localizacaoCrudAction.instance.estrutura}">
-				 <a:ajax
-				 	event="change"
-					execute="@this"
-					render="notEstrutura"
-					limitRender="true" />
-			</wi:selectBooleanRadio>
-			<h:panelGroup id="notEstrutura">
-	            <wi:tree
-					 id="localizacaoPai"
-					 assignTo="localizacaoCrudAction.instance.localizacaoPai"
-					 tree="#{localizacaoTree}"
-					 icon="/img/nivelTree.gif"
-					 iconLeaf="/img/file.gif"
-					 rendered="#{!localizacaoCrudAction.instance.estrutura}"
-					 label="#{messages['localizacao.localizacaoPai']}" />
-				<wi:selectOneMenuEntity
-					id="estruturaFilho"
-					value="#{localizacaoCrudAction.instance.estruturaFilho}"
-					label="#{messages['localizacao.estruturaFilho']}"
-					items="#{localizacaoCrudAction.getLocalizacoesEstrutura()}"
-					rendered="#{!localizacaoCrudAction.instance.estrutura}"
-					noSelectionLabel="#{messages['crud.select.select']}"
-				/>
-			</h:panelGroup>
-            <wi:selectSituacaoRadio
-                id="ativo"
-                label="#{messages['field.situacao']}"
-                required="true"
+
+        <wi:dataForm formId="localizacaoForm"
+            formTitle="#{messages['form.title']}">
+
+            <wi:inputText id="localizacao" required="true"
+                label="#{messages['localizacao.localizacao']}"
+                value="#{localizacaoCrudAction.instance.localizacao}" />
+            <wi:selectBooleanRadio id="estrutura" required="true"
+                label="#{messages['localizacao.estrutura']}"
+                value="#{localizacaoCrudAction.instance.estrutura}">
+                <a:ajax event="change" execute="@this"
+                    render="notEstrutura" limitRender="true" />
+            </wi:selectBooleanRadio>
+            <h:panelGroup id="notEstrutura">
+                <wi:tree id="localizacaoPai"
+                    assignTo="localizacaoCrudAction.instance.localizacaoPai"
+                    tree="#{localizacaoTree}" icon="/img/nivelTree.gif"
+                    iconLeaf="/img/file.gif"
+                    rendered="#{!localizacaoCrudAction.instance.estrutura}"
+                    label="#{messages['localizacao.localizacaoPai']}" />
+                <wi:selectOneMenuEntity id="estruturaFilho"
+                    value="#{localizacaoCrudAction.instance.estruturaFilho}"
+                    label="#{messages['localizacao.estruturaFilho']}"
+                    items="#{localizacaoCrudAction.getLocalizacoesEstrutura()}"
+                    rendered="#{!localizacaoCrudAction.instance.estrutura}"
+                    noSelectionLabel="#{messages['crud.select.select']}" />
+            </h:panelGroup>
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{messages['field.situacao']}" required="true"
                 value="#{localizacaoCrudAction.instance.ativo}" />
-        
-		</wi:dataForm>
-    
-	</ui:define>
+
+        </wi:dataForm>
+
+    </ui:define>
 
     <ui:define name="tabs">
-		
-        <infox:tab
-			 status=":status"
-			 id="itemTipoDocumento"
-			 rendered="#{home.managed and !home.instance.estrutura}"
-			 title="#{messages['localizacao.itemTipoDocumentoList']}"
-			 name="itemTipoDocumento">
-			
+
+        <infox:tab status=":status" id="itemTipoDocumento"
+            rendered="#{home.managed and !home.instance.estrutura}"
+            title="#{messages['localizacao.itemTipoDocumentoList']}"
+            name="itemTipoDocumento">
+
 
             <wi:dataForm
-				 home="#{localizacaoTipoModeloDocumentoCrudAction}"
-				 formId="itemTipoDocumentoForm"
-				 formTitle="Adicionar Grupo de Documento à Localização - #{(localizacaoCrudAction.instance)}">
-				
-                <wi:suggest
-                        id="grupoModeloDocumento"
-                        suggestProvider="#{grupoModeloDocumentoSuggest}"
-                        value="#{localizacaoTipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
-                        label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
-                        required="true" />
-            
-			</wi:dataForm>
-            <wi:dataTable
-				 id="itemTipoDocumentoList"
-				 values="#{itemTipoDocumentoList.list(15)}"
-				 bean="#{itemTipoDocumentoList}"
-				 tableTitle="Grupo Documento"
-				 rowId="#{row.idItemTipoDocumento}">
-				
-				<ui:define name="headerToolBar" />
+                home="#{localizacaoTipoModeloDocumentoCrudAction}"
+                formId="itemTipoDocumentoForm"
+                formTitle="Adicionar Grupo de Documento à Localização - #{(localizacaoCrudAction.instance)}">
+
+                <wi:suggest id="grupoModeloDocumento"
+                    suggestProvider="#{grupoModeloDocumentoSuggest}"
+                    value="#{localizacaoTipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
+                    label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
+                    required="true" />
+
+            </wi:dataForm>
+            <wi:dataTable id="itemTipoDocumentoList"
+                values="#{itemTipoDocumentoList.list(15)}"
+                bean="#{itemTipoDocumentoList}"
+                tableTitle="Grupo Documento"
+                rowId="#{row.idItemTipoDocumento}">
+
+                <ui:define name="headerToolBar" />
                 <ui:define name="toolBar">
-					<wi:toolBarRemove
-                            id="toolBarRemove"
-                            reRender="pageBody"
-                            actionRemove="localizacaoTipoModeloDocumentoCrudAction.remove(row)" />
-                
-				</ui:define>
+                    <wi:toolBarRemove id="toolBarRemove"
+                        reRender="pageBody"
+                        actionRemove="localizacaoTipoModeloDocumentoCrudAction.remove(row)" />
 
-                <wi:columnOutputText
-					 columnId="grupoModeloDocumento"
-					 columnHeader="Grupo Documento"
-					 value="#{row.grupoModeloDocumento}" />
+                </ui:define>
 
-            
-			</wi:dataTable>
-        
-		</infox:tab>
+                <wi:columnOutputText columnId="grupoModeloDocumento"
+                    columnHeader="Grupo Documento"
+                    value="#{row.grupoModeloDocumento}" />
 
-        <infox:tab
-			 status=":status"
-			 id="localizacaoTurnoTab"
-			 action="#{localizacaoTurnoAction.newInstance(localizacaoCrudAction.instance)}"
-			 rendered="#{home.managed and !home.instance.estrutura}"
-			 title="#{messages['localizacao.localizacaoTurno']}"
-			 name="localizacaoTurnoTab">
-			<h:form>
-	            <wi:turnoCalendar handler="#{localizacaoTurnoAction.turnoHandler}" />
-	            <a:commandButton
-					 action="#{localizacaoTurnoAction.gravarTurnos()}"
-					 render="pageBodyDialogMessage"
-					 limitRender="true"
-					 execute="@form"
-					 value="#{messages['crud.update']}" />
-			 </h:form>
-        
-		</infox:tab>
 
-    
-	</ui:define>
+            </wi:dataTable>
+
+        </infox:tab>
+
+        <infox:tab status=":status" id="localizacaoTurnoTab"
+            action="#{localizacaoTurnoAction.newInstance(localizacaoCrudAction.instance)}"
+            rendered="#{home.managed and !home.instance.estrutura}"
+            title="#{messages['localizacao.localizacaoTurno']}"
+            name="localizacaoTurnoTab">
+            <h:form>
+                <wi:turnoCalendar
+                    handler="#{localizacaoTurnoAction.turnoHandler}" />
+                <a:commandButton
+                    action="#{localizacaoTurnoAction.gravarTurnos()}"
+                    render="pageBodyDialogMessage" limitRender="true"
+                    execute="@form" value="#{messages['crud.update']}" />
+            </h:form>
+
+        </infox:tab>
+
+
+    </ui:define>
 
 
 </ui:composition>

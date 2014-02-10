@@ -1,105 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
--->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="title">#{messages['contaTwitter.titlePage']}</ui:define>
 
-	<ui:define name="title">#{messages['contaTwitter.titlePage']}</ui:define>
+    <ui:param name="showSearchTab" value="false" />
+    <ui:param name="home" value="#{contaTwitterCrudAction}" />
 
-	<ui:param
-		name="showSearchTab"
-		value="false" />
-	<ui:param
-		name="home"
-		value="#{contaTwitterCrudAction}" />
-
-	<ui:define name="body">
-		<rich:panel>
-			<s:div id="idTwitterBody">
-				<h:form>
-					<wi:dataForm
-						formId="contaTwitterForm"
-						formTitle="#{messages['form.title']}"
-						requiredForm="false">
-						<rich:dataTable
-							rendered="#{contaTwitterCrudAction.managed}"
-							>
-							<f:facet name="header">
-								<h:outputText
-									value="#{messages['contaTwitter.contaCadastrada']}" />
-							</f:facet>
-							<rich:column >
-								<f:facet name="header">
-									<wi:commandLink
-										id="recadastrarLink"
-										rendered="#{contaTwitterCrudAction.managed}"
-										onclick="if(!confirm('Deseja inativar este registro?')) return false;"
-										action="contaTwitterCrudAction.remove()"
-										reRender="contaTwitterForm">
-										<wi:toolBarGraphicImage url="/img/remove.png" />
-									</wi:commandLink>
-								</f:facet>
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="#{home.instance.screenName}" />
-								</f:facet>
-							</rich:column>
-						</rich:dataTable>
-						<s:div
-							rendered="#{!home.managed and home.requesting}"
-							id="includeTwitterDiv">
-							<wi:inputText
-								id="pin"
-								label="#{messages['contaTwitter.pin']}"
-								value="#{home.pin}"
-								required="false" />
-						</s:div>
-						<ui:define name="buttons">
-							<s:div rendered="#{!home.managed}">
-								<wi:commandButton
-									id="includeButton"
-									action="#{home.setRequesting(true)}"
-									value="Incluir Twitter"
-									rendered="#{!home.requesting}"
-									reRender="idTwitterBody"
-									onclick="window.open('#{home.getAuthorizationURL()}', 'Autorizar Aplicação' ,'');" />
-								<wi:commandButton
-									id="gravarButton"
-									value="#{messages['crud.update']}"
-									rendered="#{home.requesting}"
-									reRender="idTwitterBody"
-									action="#{home.getAutorizacao('S')}" />
-							</s:div>
-						</ui:define>
-					</wi:dataForm>
-				</h:form>
-			</s:div>
-		</rich:panel>
-	</ui:define>
+    <ui:define name="body">
+        <rich:panel>
+            <s:div id="idTwitterBody">
+                <h:form>
+                    <wi:dataForm formId="contaTwitterForm"
+                        formTitle="#{messages['form.title']}"
+                        requiredForm="false">
+                        <rich:dataTable
+                            rendered="#{contaTwitterCrudAction.managed}">
+                            <f:facet name="header">
+                                <h:outputText
+                                    value="#{messages['contaTwitter.contaCadastrada']}" />
+                            </f:facet>
+                            <rich:column>
+                                <f:facet name="header">
+                                    <wi:commandLink id="recadastrarLink"
+                                        rendered="#{contaTwitterCrudAction.managed}"
+                                        onclick="if(!confirm('Deseja inativar este registro?')) return false;"
+                                        action="contaTwitterCrudAction.remove()"
+                                        reRender="contaTwitterForm">
+                                        <wi:toolBarGraphicImage
+                                            url="/img/remove.png" />
+                                    </wi:commandLink>
+                                </f:facet>
+                            </rich:column>
+                            <rich:column>
+                                <f:facet name="header">
+                                    <h:outputText
+                                        value="#{home.instance.screenName}" />
+                                </f:facet>
+                            </rich:column>
+                        </rich:dataTable>
+                        <s:div
+                            rendered="#{!home.managed and home.requesting}"
+                            id="includeTwitterDiv">
+                            <wi:inputText id="pin"
+                                label="#{messages['contaTwitter.pin']}"
+                                value="#{home.pin}" required="false" />
+                        </s:div>
+                        <ui:define name="buttons">
+                            <s:div rendered="#{!home.managed}">
+                                <wi:commandButton id="includeButton"
+                                    action="#{home.setRequesting(true)}"
+                                    value="Incluir Twitter"
+                                    rendered="#{!home.requesting}"
+                                    reRender="idTwitterBody"
+                                    onclick="window.open('#{home.getAuthorizationURL()}', 'Autorizar Aplicação' ,'');" />
+                                <wi:commandButton id="gravarButton"
+                                    value="#{messages['crud.update']}"
+                                    rendered="#{home.requesting}"
+                                    reRender="idTwitterBody"
+                                    action="#{home.getAutorizacao('S')}" />
+                            </s:div>
+                        </ui:define>
+                    </wi:dataForm>
+                </h:form>
+            </s:div>
+        </rich:panel>
+    </ui:define>
 
 </ui:composition>

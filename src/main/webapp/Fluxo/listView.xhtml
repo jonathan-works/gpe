@@ -1,316 +1,256 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
---><ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:c="http://java.sun.com/jsp/jstl/core"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:infox="http://www.infox.com.br/jsf"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-	
 
-	<ui:define name="title">#{messages['fluxo.titlePage']}</ui:define>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-	<ui:param
-		 name="home"
-		 value="#{fluxoCrudAction}" />
 
-	<ui:define name="searchGrid">
-		
-		<wi:dataTable
-			 values="#{fluxoList.list(15)}"
-			 bean="#{fluxoList}"
-			 tableTitle="#{messages['fluxo.tableTitle']}"
-			 id="fluxoList"
-			 rowId="#{row.idFluxo}">
-			
-			<ui:define name="headerToolBar">
-			</ui:define>
-			<ui:define name="searchForm">
-				
-				<wi:searchForm
-					 formId="pesquisarFluxoForm"
-					 formTitle="#{messages['searchForm.title']}">
-					
-					<wi:inputText
-						 id="codFluxo"
-						 label="#{messages['fluxo.codFluxo']}"
-						 value="#{fluxoList.entity.codFluxo}" />
-					<wi:inputText
-						 id="descricao"
-						 label="#{messages['fluxo.descricao']}"
-						 value="#{fluxoList.entity.fluxo}" />
-					<wi:inputDataPeriodo
-						 id="dataPublicacao"
-						 label="#{messages['fluxo.dataPublicacao']}"
-						 valueDateFrom="#{fluxoList.entity.dataInicioPublicacao}"
-						 valueDateTo="#{fluxoList.entity.dataFimPublicacao}"/>
-					<wi:selectBooleanMenu
-						 id="publicado"
-						 label="#{messages['fluxo.publicado']}"
-						 value="#{fluxoList.entity.publicado}" />
-					<wi:selectSituacaoOneMenu
-						 id="ativo"
-						 label="#{messages['field.situacao']}"
-						 value="#{fluxoList.entity.ativo}" />
-				
-				</wi:searchForm>
-			
-			</ui:define>
-			<wi:columnOutputText
-				 columnId="codFluxo"
-				 columnHeader="#{messages['fluxo.codFluxo']}"
-				 value="#{row.codFluxo}" />
-			<wi:columnOutputText
-				 columnId="fluxo"
-				 columnHeader="#{messages['fluxo.descricao']}"
-				 value="#{row.fluxo}" />
-			<wi:columnOutputText
-				 columnId="dataInicioPublicacao"
-				 columnHeader="#{messages['fluxo.dataInicioPublicacao']}"
-				 value="#{row.dataInicioPublicacao}" />
-			<wi:columnOutputText
-				 columnId="dataFimPublicacao"
-				 columnHeader="#{messages['fluxo.dataFimPublicacao']}"
-				 value="#{row.dataFimPublicacao}" />
-			<wi:columnBoolean
-				 columnId="publicado"
-				 columnHeader="#{messages['fluxo.publicado']}"
-				 value="#{row.publicado}" />
-			<wi:columnSituacao
-				 columnId="ativo"
-				 columnHeader="#{messages['field.situacao']}"
-				 value="#{row.ativo}" />
-		
-		</wi:dataTable>
-	
-	</ui:define>
+    <ui:define name="title">#{messages['fluxo.titlePage']}</ui:define>
 
-	<ui:define name="form">
-		
-		<wi:dataForm
-			 formId="fluxoForm"
-			 formTitle="#{messages['form.title']}">
-			
-			<wi:inputText
-				 id="codFluxo"
-				 value="#{fluxoCrudAction.instance.codFluxo}"
-				 required="true"
-				 label="#{messages['fluxo.codFluxo']}">
-				 <f:validator validatorId="jsfComponentIdValidator" />
-			</wi:inputText>
-			<wi:inputText
-				 id="descricaoFluxo"
-				 required="true"
-				 label="#{messages['fluxo.descricao']}"
-				 value="#{fluxoCrudAction.instance.fluxo}"/>
-			<wi:inputNumber
-				 id="prazoDias"
-				 label="#{messages['fluxo.qtPrazo']}"
-				 required="true"
-				 value="#{fluxoCrudAction.instance.qtPrazo}"/>
-			<wi:inputDate
-				 id="dataInicio"
-				 label="#{messages['fluxo.dataInicioPublicacao']}"
-				 required="true"
-				 value="#{fluxoCrudAction.instance.dataInicioPublicacao}"/>
-			<wi:inputDate
-				 id="dataFim"
-				 label="#{messages['fluxo.dataFimPublicacao']}"
-				 value="#{fluxoCrudAction.instance.dataFimPublicacao}"/>
-			<wi:selectBooleanRadio
-				 id="publicado"
-				 label="#{messages['fluxo.publicado']}"
-				 value="#{fluxoCrudAction.instance.publicado}"/>
-			<wi:selectSituacaoRadio
-				 id="ativo"
-				 label="#{messages['field.situacao']}"
-				 value="#{fluxoCrudAction.instance.ativo}"/>
-			<ui:define name="buttons">
-			
-			    <wi:commandButtonSave rendered="#{not fluxoCrudAction.replica}" />
+    <ui:param name="home" value="#{fluxoCrudAction}" />
+
+    <ui:define name="searchGrid">
+
+        <wi:dataTable values="#{fluxoList.list(15)}" bean="#{fluxoList}"
+            tableTitle="#{messages['fluxo.tableTitle']}" id="fluxoList"
+            rowId="#{row.idFluxo}">
+
+            <ui:define name="headerToolBar">
+            </ui:define>
+            <ui:define name="searchForm">
+
+                <wi:searchForm formId="pesquisarFluxoForm"
+                    formTitle="#{messages['searchForm.title']}">
+
+                    <wi:inputText id="codFluxo"
+                        label="#{messages['fluxo.codFluxo']}"
+                        value="#{fluxoList.entity.codFluxo}" />
+                    <wi:inputText id="descricao"
+                        label="#{messages['fluxo.descricao']}"
+                        value="#{fluxoList.entity.fluxo}" />
+                    <wi:inputDataPeriodo id="dataPublicacao"
+                        label="#{messages['fluxo.dataPublicacao']}"
+                        valueDateFrom="#{fluxoList.entity.dataInicioPublicacao}"
+                        valueDateTo="#{fluxoList.entity.dataFimPublicacao}" />
+                    <wi:selectBooleanMenu id="publicado"
+                        label="#{messages['fluxo.publicado']}"
+                        value="#{fluxoList.entity.publicado}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{fluxoList.entity.ativo}" />
+
+                </wi:searchForm>
+
+            </ui:define>
+            <wi:columnOutputText columnId="codFluxo"
+                columnHeader="#{messages['fluxo.codFluxo']}"
+                value="#{row.codFluxo}" />
+            <wi:columnOutputText columnId="fluxo"
+                columnHeader="#{messages['fluxo.descricao']}"
+                value="#{row.fluxo}" />
+            <wi:columnOutputText columnId="dataInicioPublicacao"
+                columnHeader="#{messages['fluxo.dataInicioPublicacao']}"
+                value="#{row.dataInicioPublicacao}" />
+            <wi:columnOutputText columnId="dataFimPublicacao"
+                columnHeader="#{messages['fluxo.dataFimPublicacao']}"
+                value="#{row.dataFimPublicacao}" />
+            <wi:columnBoolean columnId="publicado"
+                columnHeader="#{messages['fluxo.publicado']}"
+                value="#{row.publicado}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
+
+        </wi:dataTable>
+
+    </ui:define>
+
+    <ui:define name="form">
+
+        <wi:dataForm formId="fluxoForm"
+            formTitle="#{messages['form.title']}">
+
+            <wi:inputText id="codFluxo"
+                value="#{fluxoCrudAction.instance.codFluxo}"
+                required="true" label="#{messages['fluxo.codFluxo']}">
+                <f:validator validatorId="jsfComponentIdValidator" />
+            </wi:inputText>
+            <wi:inputText id="descricaoFluxo" required="true"
+                label="#{messages['fluxo.descricao']}"
+                value="#{fluxoCrudAction.instance.fluxo}" />
+            <wi:inputNumber id="prazoDias"
+                label="#{messages['fluxo.qtPrazo']}" required="true"
+                value="#{fluxoCrudAction.instance.qtPrazo}" />
+            <wi:inputDate id="dataInicio"
+                label="#{messages['fluxo.dataInicioPublicacao']}"
+                required="true"
+                value="#{fluxoCrudAction.instance.dataInicioPublicacao}" />
+            <wi:inputDate id="dataFim"
+                label="#{messages['fluxo.dataFimPublicacao']}"
+                value="#{fluxoCrudAction.instance.dataFimPublicacao}" />
+            <wi:selectBooleanRadio id="publicado"
+                label="#{messages['fluxo.publicado']}"
+                value="#{fluxoCrudAction.instance.publicado}" />
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{messages['field.situacao']}"
+                value="#{fluxoCrudAction.instance.ativo}" />
+            <ui:define name="buttons">
+
+                <wi:commandButtonSave
+                    rendered="#{not fluxoCrudAction.replica}" />
                 <wi:commandButtonNew />
-			
-			    <wi:commandButton
-	                id="updateButton"
-	                action="fluxoCrudAction.criarReplica()"
-	                reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
-	                rendered="#{fluxoCrudAction.managed or fluxoCrudAction.replica}"
-	                value="Incluir como..." />
-	
-	            <wi:commandButton
-	                id="definicao"
-	                action="#{processBuilder.load(fluxoCrudAction.instance)}"
-	                value="Definição"
-	                rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-	                oncomplete="openPopUp('processDefinition', '#{util.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);" />
-	            
-	            <wi:commandButton
-	                id="importarXPDL"
-	                value="#{messages['importarXPDL.button']}"
-	                rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-	                onclick="openPopUp('importarXPDL', '#{util.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);" />
-			
-			</ui:define>
-		
-		</wi:dataForm>
-	
-	</ui:define>
 
-	<ui:define name="tabs">
-		
-		<ui:param
-			 name="action"
-			 value="#{fluxoPapelAction}" />
-		<infox:tab
-			 id="fluxoPapelTab"
-			 rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
-			 action="#{action.init(fluxoCrudAction.instance)}"
-			 title="#{messages['fluxoPapel.titleTab']}"
-			 name="fluxoPapelTab">
-			
-			<wi:dataForm
-				 formId="fluxoPapelForm"
-				 formTitle="#{messages['form.title']}">
-				
-				<wi:tree
-					 id="papelTree"
-					 label="#{messages['fluxoPapel.papel']}"
-					 assignTo="fluxoPapelAction.instance.papel"
-					 tree="#{action.papelTreeHandler}"
-					 required="true" />
-				<ui:define name="buttons">
-					
-					<wi:commandButton
-						 id="savePapelButton"
-						 action="fluxoPapelAction.save"
-						 reRender="fluxoPapelForm, fluxoPapelDiv"
-						 value="#{messages['crud.persist']}" />
-				
-				</ui:define>
-			
-			</wi:dataForm>
-			<s:div id="fluxoPapelDiv">
-				
-				<rich:dataTable
-					 id="fluxoPapelTable"
-					 value="#{action.fluxoPapelList}"
-					 var="row"
-					 rows="10"
-					 >
-					
-					<rich:column >
-							<wi:toolBarRemove
-								 id="toolBarRemove"
-								 reRender="fluxoPapelDiv"
-								 actionRemove="fluxoPapelAction.remove(row)" />
-					</rich:column>
-					<rich:column >
-						
-						<f:facet name="header">
-							
-							<h:outputText value="#{messages['fluxoPapel.papel']}" />
-						
-						</f:facet>
-						<h:outputText value="#{row.papel}" />
-					
-					</rich:column>
-				
-				</rich:dataTable>
-				<rich:dataScroller
-					 id="dsFluxoPapelTable"
-					 for="fluxoPapelTable"
-					 lastPageMode="full"
-					 align="left"
-					 renderIfSinglePage="false" />
-			
-			</s:div>
-		
-		</infox:tab>
-	
-		<infox:tab id="natCatFluxoLoc"
-			name="natCatFluxoLoc"
-			rendered="#{home.managed and not fluxoCrudAction.replica}"
-			title="#{messages['localizacao.localizacao']}">
-			<s:div id="natCatFluxoLocDiv">
-				<div>
-					<wi:dataForm
-						formId="natCatFluxoLocForm"
-						formTitle="#{messages['form.title']}: #{fluxoCrudAction.instance}">
-						<wi:selectOneMenuEntity
-							id="naturezaCategoriaFluxo"
-							value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
-							required="true"
-							label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
-							noSelectionLabel="Selecione um registro..."
-							items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoCrudAction.instance)}"/>
-						<wi:tree 
-							id="localizacao"
-							assignTo="fluxoLocalizacaoCrudAction.instance.localizacao"
-							label="#{messages['localizacao.localizacao']}"
-							required="true"
-							tree="#{localizacaoTree}" />
-							<ui:define 
-								name="buttons">
-								<wi:commandButton 
-									id="saveButton"
-									action="fluxoLocalizacaoCrudAction.save"
-									reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
-									value="#{messages['crud.persist']}"	/>
-							</ui:define>
-						</wi:dataForm>
-					</div>
-					<s:div id="dtable">
-						<wi:dataTable values="#{natCatFluxoLocalizacaoList.list(15)}"
-									  bean="#{natCatFluxoLocalizacaoList}"
-									  tableTitle="#{messages['natCatFluxoLocalizacao.tableTitle']}"
-									  id="natCatFluxoLocalizacaoList"
-									  rowId="#{row.idNatCatFluxoLocalizacao}"
-									  actionInactive="fluxoLocalizacaoCrudAction.inactive">
-							<ui:define name="searchForm" />
-				            <ui:define name="headerToolBar"/>
-							<ui:define name="toolBar">
-								<wi:toolBarRemove
-									actionRemove="fluxoLocalizacaoCrudAction.remove(row)"
-									reRender="natCatFluxoLocDiv pageBodyDialogMessage"/>
-							</ui:define>
-							<wi:columnOutputText columnId="naturezaCategoriaFluxoNatureza"
-												 columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
-												 columnWidth="25%"
-												 value="#{row.naturezaCategoriaFluxo.natureza}"/>
-							<wi:columnOutputText columnId="naturezaCategoriaFluxoCategoria"
-												 columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
-												 columnWidth="20%"
-												 value="#{row.naturezaCategoriaFluxo.categoria}"/>
-							<wi:columnOutputText columnId="naturezaCategoriaFluxoFluxo"
-												 columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
-												 columnWidth="20%"
-												 value="#{row.naturezaCategoriaFluxo.fluxo}"/>
-							<wi:columnOutputText columnId="localizacao"
-												 columnHeader="#{messages['localizacao.localizacao']}"
-												 columnWidth="20%"
-												 value="#{row.localizacao}"/>
-						</wi:dataTable>
-					</s:div>
-				</s:div>
-		</infox:tab>
-	</ui:define>
+                <wi:commandButton id="updateButton"
+                    action="fluxoCrudAction.criarReplica()"
+                    reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
+                    rendered="#{fluxoCrudAction.managed or fluxoCrudAction.replica}"
+                    value="Incluir como..." />
+
+                <wi:commandButton id="definicao"
+                    action="#{processBuilder.load(fluxoCrudAction.instance)}"
+                    value="Definição"
+                    rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
+                    oncomplete="openPopUp('processDefinition', '#{util.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);" />
+
+                <wi:commandButton id="importarXPDL"
+                    value="#{messages['importarXPDL.button']}"
+                    rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
+                    onclick="openPopUp('importarXPDL', '#{util.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);" />
+
+            </ui:define>
+
+        </wi:dataForm>
+
+    </ui:define>
+
+    <ui:define name="tabs">
+
+        <ui:param name="action" value="#{fluxoPapelAction}" />
+        <infox:tab id="fluxoPapelTab"
+            rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
+            action="#{action.init(fluxoCrudAction.instance)}"
+            title="#{messages['fluxoPapel.titleTab']}"
+            name="fluxoPapelTab">
+
+            <wi:dataForm formId="fluxoPapelForm"
+                formTitle="#{messages['form.title']}">
+
+                <wi:tree id="papelTree"
+                    label="#{messages['fluxoPapel.papel']}"
+                    assignTo="fluxoPapelAction.instance.papel"
+                    tree="#{action.papelTreeHandler}" required="true" />
+                <ui:define name="buttons">
+
+                    <wi:commandButton id="savePapelButton"
+                        action="fluxoPapelAction.save"
+                        reRender="fluxoPapelForm, fluxoPapelDiv"
+                        value="#{messages['crud.persist']}" />
+
+                </ui:define>
+
+            </wi:dataForm>
+            <s:div id="fluxoPapelDiv">
+
+                <rich:dataTable id="fluxoPapelTable"
+                    value="#{action.fluxoPapelList}" var="row" rows="10">
+
+                    <rich:column>
+                        <wi:toolBarRemove id="toolBarRemove"
+                            reRender="fluxoPapelDiv"
+                            actionRemove="fluxoPapelAction.remove(row)" />
+                    </rich:column>
+                    <rich:column>
+
+                        <f:facet name="header">
+
+                            <h:outputText
+                                value="#{messages['fluxoPapel.papel']}" />
+
+                        </f:facet>
+                        <h:outputText value="#{row.papel}" />
+
+                    </rich:column>
+
+                </rich:dataTable>
+                <rich:dataScroller id="dsFluxoPapelTable"
+                    for="fluxoPapelTable" lastPageMode="full"
+                    align="left" renderIfSinglePage="false" />
+
+            </s:div>
+
+        </infox:tab>
+
+        <infox:tab id="natCatFluxoLoc" name="natCatFluxoLoc"
+            rendered="#{home.managed and not fluxoCrudAction.replica}"
+            title="#{messages['localizacao.localizacao']}">
+            <s:div id="natCatFluxoLocDiv">
+                <div>
+                    <wi:dataForm formId="natCatFluxoLocForm"
+                        formTitle="#{messages['form.title']}: #{fluxoCrudAction.instance}">
+                        <wi:selectOneMenuEntity
+                            id="naturezaCategoriaFluxo"
+                            value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
+                            required="true"
+                            label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
+                            noSelectionLabel="Selecione um registro..."
+                            items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoCrudAction.instance)}" />
+                        <wi:tree id="localizacao"
+                            assignTo="fluxoLocalizacaoCrudAction.instance.localizacao"
+                            label="#{messages['localizacao.localizacao']}"
+                            required="true" tree="#{localizacaoTree}" />
+                        <ui:define name="buttons">
+                            <wi:commandButton id="saveButton"
+                                action="fluxoLocalizacaoCrudAction.save"
+                                reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
+                                value="#{messages['crud.persist']}" />
+                        </ui:define>
+                    </wi:dataForm>
+                </div>
+                <s:div id="dtable">
+                    <wi:dataTable
+                        values="#{natCatFluxoLocalizacaoList.list(15)}"
+                        bean="#{natCatFluxoLocalizacaoList}"
+                        tableTitle="#{messages['natCatFluxoLocalizacao.tableTitle']}"
+                        id="natCatFluxoLocalizacaoList"
+                        rowId="#{row.idNatCatFluxoLocalizacao}"
+                        actionInactive="fluxoLocalizacaoCrudAction.inactive">
+                        <ui:define name="searchForm" />
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <wi:toolBarRemove
+                                actionRemove="fluxoLocalizacaoCrudAction.remove(row)"
+                                reRender="natCatFluxoLocDiv pageBodyDialogMessage" />
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxoNatureza"
+                            columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
+                            columnWidth="25%"
+                            value="#{row.naturezaCategoriaFluxo.natureza}" />
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxoCategoria"
+                            columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+                            columnWidth="20%"
+                            value="#{row.naturezaCategoriaFluxo.categoria}" />
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxoFluxo"
+                            columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+                            columnWidth="20%"
+                            value="#{row.naturezaCategoriaFluxo.fluxo}" />
+                        <wi:columnOutputText columnId="localizacao"
+                            columnHeader="#{messages['localizacao.localizacao']}"
+                            columnWidth="20%" value="#{row.localizacao}" />
+                    </wi:dataTable>
+                </s:div>
+            </s:div>
+        </infox:tab>
+    </ui:define>
 
 
 </ui:composition>

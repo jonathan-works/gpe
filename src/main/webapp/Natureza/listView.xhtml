@@ -1,115 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
---><ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf" 
-     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-	
-                       
-	<ui:define name="title">#{messages['natureza.titlePage']}</ui:define>
-	
-	<ui:param
-		 name="home"
-		 value="#{naturezaCrudAction}" />
-	
-	<ui:define name="searchGrid">
-		
-	    <wi:dataTable
-			 values="#{naturezaList.list(15)}"
-			 bean="#{naturezaList}"
-			 tableTitle="#{messages['natureza.tableTitle']}"
-			 id="naturezaList"
-			 rowId="#{row.idNatureza}"
-			 actionInactive="naturezaCrudAction.inactive">
-			
-			<ui:define name="searchForm">
-				
-				<wi:searchForm
-					 formId="pesquisarNaturezaForm"
-					 formTitle="#{messages['searchForm.title']}">
-					
-					<wi:inputText
-						 id="natureza"
-						 value="#{naturezaList.entity.natureza}"
-						 label="#{messages['natureza.natureza']}" />
-					<wi:selectBooleanMenu
-						 id="hasPartes"
-						 label="#{messages['natureza.hasPartes']}"
-						 value="#{naturezaList.entity.hasPartes}" />
-                    <wi:selectSituacaoOneMenu
-						 id="ativo"
-						 label="#{messages['field.situacao']}"
-						 value="#{naturezaList.entity.ativo}" />
-				
-				</wi:searchForm>
-			
-			</ui:define>
-			<ui:define name="toolBar">
-				
-				<wi:toolBarEdit id="naturezaListEditToolbar" />
-				<wi:toolBarInactive actionInactive="naturezaCrudAction.inactive(row)" />
-			
-			</ui:define>
-			<wi:columnOutputText
-				 columnId="natureza"
-				 columnHeader="#{messages['natureza.natureza']}"
-				 value="#{row.natureza}" />
-			<wi:columnBoolean
-				 columnId="hasPartes"
-				 columnHeader="#{messages['natureza.hasPartes']}"
-				 columnWidth="15%"
-				 value="#{row.hasPartes}" />
-            <wi:columnSituacao
-				 columnId="ativo"
-				 columnHeader="#{messages['field.situacao']}"
-				 columnWidth="15%"
-				 value="#{row.ativo}" />
-		
-		</wi:dataTable>
-	
-	</ui:define>
 
-	<ui:define name="form">
-		
-		<wi:dataForm
-			 formId="naturezaForm"
-			 formTitle="#{messages['form.title']}">
-			
-			<wi:inputText
-				 id="natureza"
-				 value="#{naturezaCrudAction.instance.natureza}"
-				 required="true"
-				 label="#{messages['natureza.natureza']}" />
-            <wi:selectBooleanRadio
-				 id="hasPartes"
-				 label="#{messages['natureza.hasPartes']}"
-				 value="#{naturezaCrudAction.instance.hasPartes}" />
-			<wi:selectSituacaoRadio
-				 id="ativo"
-				 label="#{messages['field.situacao']}"
-				 value="#{naturezaCrudAction.instance.ativo}" />
-		
-		</wi:dataForm>
-	
-	</ui:define>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+
+    <ui:define name="title">#{messages['natureza.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{naturezaCrudAction}" />
+
+    <ui:define name="searchGrid">
+
+        <wi:dataTable values="#{naturezaList.list(15)}"
+            bean="#{naturezaList}"
+            tableTitle="#{messages['natureza.tableTitle']}"
+            id="naturezaList" rowId="#{row.idNatureza}"
+            actionInactive="naturezaCrudAction.inactive">
+
+            <ui:define name="searchForm">
+
+                <wi:searchForm formId="pesquisarNaturezaForm"
+                    formTitle="#{messages['searchForm.title']}">
+
+                    <wi:inputText id="natureza"
+                        value="#{naturezaList.entity.natureza}"
+                        label="#{messages['natureza.natureza']}" />
+                    <wi:selectBooleanMenu id="hasPartes"
+                        label="#{messages['natureza.hasPartes']}"
+                        value="#{naturezaList.entity.hasPartes}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{naturezaList.entity.ativo}" />
+
+                </wi:searchForm>
+
+            </ui:define>
+            <ui:define name="toolBar">
+
+                <wi:toolBarEdit id="naturezaListEditToolbar" />
+                <wi:toolBarInactive
+                    actionInactive="naturezaCrudAction.inactive(row)" />
+
+            </ui:define>
+            <wi:columnOutputText columnId="natureza"
+                columnHeader="#{messages['natureza.natureza']}"
+                value="#{row.natureza}" />
+            <wi:columnBoolean columnId="hasPartes"
+                columnHeader="#{messages['natureza.hasPartes']}"
+                columnWidth="15%" value="#{row.hasPartes}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                columnWidth="15%" value="#{row.ativo}" />
+
+        </wi:dataTable>
+
+    </ui:define>
+
+    <ui:define name="form">
+
+        <wi:dataForm formId="naturezaForm"
+            formTitle="#{messages['form.title']}">
+
+            <wi:inputText id="natureza"
+                value="#{naturezaCrudAction.instance.natureza}"
+                required="true" label="#{messages['natureza.natureza']}" />
+            <wi:selectBooleanRadio id="hasPartes"
+                label="#{messages['natureza.hasPartes']}"
+                value="#{naturezaCrudAction.instance.hasPartes}" />
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{messages['field.situacao']}"
+                value="#{naturezaCrudAction.instance.ativo}" />
+
+        </wi:dataForm>
+
+    </ui:define>
 
 </ui:composition>
