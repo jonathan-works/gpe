@@ -1,86 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
--->
-<ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf">
-	<h:outputStylesheet
-        library="styleSkinInfox"
-        name="datatable.css" />
-	<s:div id="#{id}SearchForm" styleClass="dtable-search-form #{searchFormStyleClass}">
-		<ui:insert name="searchForm" />
-	</s:div>
-	<a:region>
-		<rich:panel
-			rendered="#{wi:get(showGrid, true)}"
-			header="#{tableTitle}"
-			id="#{id}Panel"
-			bodyClass="dtable-p-b"
-			styleClass="dtable-p #{panelStyleClass}"
-			>
 
-			<rich:dataTable
-				value="#{values}"
-				id="#{id}"
-				rowKeyVar="key"
-				rowClasses="#{rowClasses}"
-				styleClass="dtable rf-dt-crud #{styleClass}"
-				var="row">
-				<rich:column
-					styleClass="dt-toolbar-col"
-					rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
-					rowspan="#{empty columnRowspan ? '1':columnRowspan}">
-					<f:facet name="header">
-						<s:div>
-							<ui:insert name="headerToolBar">
-								<ui:param
-									name="home"
-									value="#{wi:get(home, '')}" />
-								<wi:toolBarReport
-									rendered="#{systemFacade.exportarPDF()}" />
-								<wi:toolBarReportExcel
-									rendered="#{systemFacade.exportarXLS() and not empty bean.template}"
-									action="#{bean.exportarXLS()}" />
-							</ui:insert>
-						</s:div>
-					</f:facet>
-					<ui:insert name="toolBar">
-						<wi:toolBarEdit id="#{id}edit" />
-						<wi:toolBarInactive />
-					</ui:insert>
-				</rich:column>
-				<ui:insert />
-			</rich:dataTable>
-			<h:outputText
-				value="Foram encontrados:  #{not empty bean ? bean.resultCount : values.size()} resultados"
-				styleClass="dt-res-count"
-				rendered="#{wi:get(showGridCount, true)}" />
-			<s:div rendered="#{bean.previousExists or bean.nextExists}">
-            <ui:fragment rendered="#{!empty inForm ? false : inForm}"> <ui:include src="inputNumberSlider.xhtml" /> </ui:fragment>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <h:outputStylesheet library="styleSkinInfox" name="datatable.css" />
+    <s:div id="#{id}SearchForm"
+        styleClass="dtable-search-form #{searchFormStyleClass}">
+        <ui:insert name="searchForm" />
+    </s:div>
+    <a:region>
+        <rich:panel rendered="#{wi:get(showGrid, true)}"
+            header="#{tableTitle}" id="#{id}Panel"
+            bodyClass="dtable-p-b"
+            styleClass="dtable-p #{panelStyleClass}">
+
+            <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key"
+                rowClasses="#{rowClasses}"
+                styleClass="dtable rf-dt-crud #{styleClass}" var="row">
+                <rich:column styleClass="dt-toolbar-col"
+                    rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
+                    rowspan="#{empty columnRowspan ? '1':columnRowspan}">
+                    <f:facet name="header">
+                        <s:div>
+                            <ui:insert name="headerToolBar">
+                                <ui:param name="home"
+                                    value="#{wi:get(home, '')}" />
+                                <wi:toolBarReport
+                                    rendered="#{systemFacade.exportarPDF()}" />
+                                <wi:toolBarReportExcel
+                                    rendered="#{systemFacade.exportarXLS() and not empty bean.template}"
+                                    action="#{bean.exportarXLS()}" />
+                            </ui:insert>
+                        </s:div>
+                    </f:facet>
+                    <ui:insert name="toolBar">
+                        <wi:toolBarEdit id="#{id}edit" />
+                        <wi:toolBarInactive />
+                    </ui:insert>
+                </rich:column>
+                <ui:insert />
+            </rich:dataTable>
+            <h:outputText
+                value="Foram encontrados:  #{not empty bean ? bean.resultCount : values.size()} resultados"
+                styleClass="dt-res-count"
+                rendered="#{wi:get(showGridCount, true)}" />
+            <s:div rendered="#{bean.previousExists or bean.nextExists}">
+                <ui:fragment
+                    rendered="#{!empty inForm ? false : inForm}">
+                    <ui:include src="inputNumberSlider.xhtml" />
+                </ui:fragment>
                 <h:form rendered="#{empty inForm ? true : !inForm}">
-				    <ui:include src="inputNumberSlider.xhtml" />
+                    <ui:include src="inputNumberSlider.xhtml" />
                 </h:form>
             </s:div>
-		</rich:panel>
-	</a:region>
+        </rich:panel>
+    </a:region>
 
 </ui:composition>
