@@ -1,52 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
--->
-<ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<h:form id="#{formId}" enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}" acceptcharset="UTF-8">
-		<a:region rendered="#{wi:get(rendered, true)}">
-			<ui:param
-				name="panelWidth"
-				value="#{wi:get(panelWidth, '100%')}" />
-			<s:token
-				allowMultiplePosts="true"
-				requireSession="true" />
-			<rich:panel styleClass="dt-form-p" bodyClass="dt-form-p-b" headerClass="dt-form-p-h">
-				<f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
-				<ui:insert />
-				<s:div styleClass="required-alert" rendered="#{wi:get(requiredForm,true)}">
-					<img src="#{util.contextPath}#{a4jSkin.imgIconBalao}" />
-					<span class="required">*</span>
-					<span>Campos Obrigatórios</span>
-				</s:div>
-			</rich:panel>
-			<div  />
-			<ui:insert name="buttons">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:form id="#{formId}"
+        enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}"
+        acceptcharset="UTF-8">
+        <a:region rendered="#{wi:get(rendered, true)}">
+            <ui:param name="panelWidth"
+                value="#{wi:get(panelWidth, '100%')}" />
+            <s:token allowMultiplePosts="true" requireSession="true" />
+            <rich:panel styleClass="dt-form-p" bodyClass="dt-form-p-b"
+                headerClass="dt-form-p-h">
+                <f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
+                <ui:insert />
+                <s:div styleClass="required-alert"
+                    rendered="#{wi:get(requiredForm,true)}">
+                    <img
+                        src="#{util.contextPath}#{a4jSkin.imgIconBalao}" />
+                    <span class="required">*</span>
+                    <span>Campos Obrigatórios</span>
+                </s:div>
+            </rich:panel>
+            <div />
+            <ui:insert name="buttons">
                 <wi:commandButtonSave />
-				<wi:commandButtonNew />
-			</ui:insert>
-		</a:region>
-	</h:form>
+                <wi:commandButtonNew />
+            </ui:insert>
+        </a:region>
+    </h:form>
 </ui:composition>

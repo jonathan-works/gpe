@@ -1,57 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  IBPM - Ferramenta de produtividade Java
-  Copyright (c) 1986-2009 Infox Tecnologia da Informação Ltda.
- 
-  Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo 
-  sob os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela 
-  Free Software Foundation; versão 2 da Licença.
-  Este programa é distribuído na expectativa de que seja útil, porém, SEM 
-  NENHUMA GARANTIA; nem mesmo a garantia implícita de COMERCIABILIDADE OU 
-  ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.
-  
-  Consulte a GNU GPL para mais detalhes.
-  Você deve ter recebido uma cópia da GNU GPL junto com este programa; se não, 
-  veja em http://www.gnu.org/licenses/  
---><ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:infox="http://www.infox.com.br/jsf"
-     xmlns:wi="http://www.itx.com.br/jsf">
 
-	<ui:param
-         name="width"
-         value="#{empty props.width ? '250' : props.width}" />
-	<ui:param
-         name="widthBoxSuggest"
-         value="#{empty props.widthBoxSuggest ? '250' : props.widthBoxSuggest}" />
-	<ui:param
-         name="maxlength"
-         value="#{empty maxlength ? '50' : maxlength}" />
-	<ui:param
-         name="template"
-         value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
-	<ui:param
-         name="minChars"
-         value="#{empty props.minChars ? (empty minChars ? '1' : minChars) : props.minChars}" />
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf">
 
-    <s:decorate
-    	id="#{id}Decoration"
-    	template="#{template}"
-    	styleClass="decoration-div suggest-div #{wi:get(decorationClass,'')}">
+    <ui:param name="width"
+        value="#{empty props.width ? '250' : props.width}" />
+    <ui:param name="widthBoxSuggest"
+        value="#{empty props.widthBoxSuggest ? '250' : props.widthBoxSuggest}" />
+    <ui:param name="maxlength"
+        value="#{empty maxlength ? '50' : maxlength}" />
+    <ui:param name="template"
+        value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
+    <ui:param name="minChars"
+        value="#{empty props.minChars ? (empty minChars ? '1' : minChars) : props.minChars}" />
+
+    <s:decorate id="#{id}Decoration" template="#{template}"
+        styleClass="decoration-div suggest-div #{wi:get(decorationClass,'')}">
         <ui:define name="label">#{label}</ui:define>
-		<infox:suggest id="#{id}"
-		        minChars="#{minChars}"
-		        value="#{value}"
-		        required="#{required}"
-		        suggestProvider="#{suggestProvider}"
-		        disabled="#{disabled}" 
-		        ajax="#{ajax}"
-		        render="#{render}"
-		        width="#{width}"
-		        style="#{style}"
-		        styleClass="#{styleClass}"
-		        maxlength="#{maxlength}"/>
+        <infox:suggest id="#{id}" minChars="#{minChars}"
+            value="#{value}" required="#{required}"
+            suggestProvider="#{suggestProvider}" disabled="#{disabled}"
+            ajax="#{ajax}" render="#{render}" width="#{width}"
+            style="#{style}" styleClass="#{styleClass}"
+            maxlength="#{maxlength}" />
     </s:decorate>
 </ui:composition>
