@@ -29,88 +29,95 @@ import javax.validation.constraints.Size;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
-@Table(name=TABLE_NATUREZA, schema=PUBLIC)
+@Table(name = TABLE_NATUREZA, schema = PUBLIC)
 public class Natureza implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Integer idNatureza;
-	private String natureza;
-	private Boolean hasPartes;
-	private Boolean ativo;
-	
-	private List<NaturezaCategoriaFluxo> natCatFluxoList = 
-		new ArrayList<NaturezaCategoriaFluxo>(0);
-	
-	public Natureza() {
-	}
-	
-	public Natureza(final String natureza, final Boolean hasPartes, final Boolean ativo) {
+    private Integer idNatureza;
+    private String natureza;
+    private Boolean hasPartes;
+    private Boolean ativo;
+
+    private List<NaturezaCategoriaFluxo> natCatFluxoList = new ArrayList<NaturezaCategoriaFluxo>(0);
+
+    public Natureza() {
+    }
+
+    public Natureza(final String natureza, final Boolean hasPartes,
+            final Boolean ativo) {
         this.natureza = natureza;
         this.hasPartes = hasPartes;
         this.ativo = ativo;
     }
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATUREZA)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_NATUREZA, unique = true, nullable = false)
-	public Integer getIdNatureza() {
-		return idNatureza;
-	}
-	public void setIdNatureza(final Integer idNatureza) {
-		this.idNatureza = idNatureza;
-	}
-	
-	@Column(name=DESCRICAO_NATUREZA, length=DESCRICAO_PEQUENA, nullable=false, unique=true)
-	@Size(min=FLAG,max=DESCRICAO_PEQUENA)
-	public String getNatureza() {
-		return natureza;
-	}
-	
-	public void setNatureza(final String natureza) {
-		this.natureza = natureza;
-	}
-	
-	@Column(name=OBRIGATORIO_PARTES, nullable=false)
-	@NotNull
-	public Boolean getHasPartes() {
-		return hasPartes;
-	}
-	public void setHasPartes(final Boolean hasPartes) {
-		this.hasPartes = hasPartes;
-	}
-	
-	@Column(name=ATIVO, nullable=false)
-	@NotNull
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	
-	public void setAtivo(final Boolean ativo) {
-		this.ativo = ativo;
-	}
-	public void setNatCatFluxoList(final List<NaturezaCategoriaFluxo> natCatFluxoList) {
-		this.natCatFluxoList = natCatFluxoList;
-	}
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_NATUREZA, unique = true, nullable = false)
+    public Integer getIdNatureza() {
+        return idNatureza;
+    }
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = NATUREZA_ATTRIBUTE)
-	public List<NaturezaCategoriaFluxo> getNatCatFluxoList() {
-		return natCatFluxoList;
-	}
+    public void setIdNatureza(final Integer idNatureza) {
+        this.idNatureza = idNatureza;
+    }
 
-	@Override
-	public String toString() {
-		return natureza;
-	}
+    @Column(name = DESCRICAO_NATUREZA, length = DESCRICAO_PEQUENA,
+            nullable = false, unique = true)
+    @Size(min = FLAG, max = DESCRICAO_PEQUENA)
+    public String getNatureza() {
+        return natureza;
+    }
+
+    public void setNatureza(final String natureza) {
+        this.natureza = natureza;
+    }
+
+    @Column(name = OBRIGATORIO_PARTES, nullable = false)
+    @NotNull
+    public Boolean getHasPartes() {
+        return hasPartes;
+    }
+
+    public void setHasPartes(final Boolean hasPartes) {
+        this.hasPartes = hasPartes;
+    }
+
+    @Column(name = ATIVO, nullable = false)
+    @NotNull
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(final Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public void setNatCatFluxoList(
+            final List<NaturezaCategoriaFluxo> natCatFluxoList) {
+        this.natCatFluxoList = natCatFluxoList;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = NATUREZA_ATTRIBUTE)
+    public List<NaturezaCategoriaFluxo> getNatCatFluxoList() {
+        return natCatFluxoList;
+    }
+
+    @Override
+    public String toString() {
+        return natureza;
+    }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (idNatureza == null ? 0 : idNatureza.hashCode());
+        result = prime * result
+                + (idNatureza == null ? 0 : idNatureza.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -128,5 +135,5 @@ public class Natureza implements java.io.Serializable {
         }
         return true;
     }
-	
+
 }
