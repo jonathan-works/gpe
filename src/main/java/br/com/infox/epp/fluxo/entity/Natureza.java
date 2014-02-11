@@ -5,18 +5,15 @@ import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
-import static br.com.infox.epp.fluxo.query.NaturezaQuery.DESCRICAO_NATUREZA;
-import static br.com.infox.epp.fluxo.query.NaturezaQuery.ID_NATUREZA;
-import static br.com.infox.epp.fluxo.query.NaturezaQuery.NATUREZA_ATTRIBUTE;
-import static br.com.infox.epp.fluxo.query.NaturezaQuery.OBRIGATORIO_PARTES;
-import static br.com.infox.epp.fluxo.query.NaturezaQuery.SEQUENCE_NATUREZA;
-import static br.com.infox.epp.fluxo.query.NaturezaQuery.TABLE_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -26,6 +23,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.itx.util.HibernateUtil;
 
 @Entity
@@ -37,6 +35,8 @@ public class Natureza implements java.io.Serializable {
     private Integer idNatureza;
     private String natureza;
     private Boolean hasPartes;
+    private ParteProcessoEnum tipoPartes;
+    private Integer numeroPartes;
     private Boolean ativo;
 
     private List<NaturezaCategoriaFluxo> natCatFluxoList = new ArrayList<NaturezaCategoriaFluxo>(0);
@@ -82,6 +82,25 @@ public class Natureza implements java.io.Serializable {
 
     public void setHasPartes(final Boolean hasPartes) {
         this.hasPartes = hasPartes;
+    }
+
+    @Column(name=TIPO_PARTES)
+    @Enumerated(EnumType.STRING)
+    public ParteProcessoEnum getTipoPartes() {
+        return tipoPartes;
+    }
+
+    public void setTipoPartes(ParteProcessoEnum tipoPartes) {
+        this.tipoPartes = tipoPartes;
+    }
+
+    @Column(name=NUMERO_PARTES)
+    public Integer getNumeroPartes() {
+        return numeroPartes;
+    }
+
+    public void setNumeroPartes(Integer numeroPartes) {
+        this.numeroPartes = numeroPartes;
     }
 
     @Column(name = ATIVO, nullable = false)
