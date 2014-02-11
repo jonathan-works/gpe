@@ -59,10 +59,27 @@
                 required="true" label="#{messages['natureza.natureza']}" />
             <wi:selectBooleanRadio id="hasPartes"
                 label="#{messages['natureza.hasPartes']}"
-                value="#{naturezaCrudAction.instance.hasPartes}" />
+                value="#{naturezaCrudAction.instance.hasPartes}">
+                <a:ajax event="change" render="partesDiv"
+                    limitRender="true" status=":status" execute="@this" />
+            </wi:selectBooleanRadio>
             <wi:selectSituacaoRadio id="ativo"
                 label="#{messages['field.situacao']}"
                 value="#{naturezaCrudAction.instance.ativo}" />
+                
+            <s:div id="partesDiv" >
+                <wi:selectOneMenuEnum id="tipoDasPartes"
+                    label="#{messages['natureza.tipoDasPartes']}"
+                    items="#{naturezaCrudAction.getTiposDePartes()}"
+                    value="#{naturezaCrudAction.instance.tipoPartes}"
+                    required="true" noSelectionLabel="Selecione... "
+                    rendered="#{naturezaCrudAction.instance.hasPartes}" />
+                <wi:inputNumber id="numeroPartes"
+                    label="#{messages['natureza.numeroPartes']}"
+                    required="true"
+                    value="#{naturezaCrudAction.instance.numeroPartes}"
+                    rendered="#{naturezaCrudAction.instance.hasPartes}"/>
+            </s:div>
         </wi:dataForm>
     </ui:define>
 
