@@ -26,8 +26,8 @@
 
     <ui:param name="urlDownloadFile"
         value="#{empty urlDownloadFile and not empty processoDocumento ? processoDocumentoDownloader.getUrlDownloadProcessoDocumento(processoDocumento) : urlDownloadFile}" />
-    <s:div id="#{empty id ? 'divApplet' : id}">
-        <s:div rendered="#{empty rendered ? true : rendered}">
+    <h:panelGroup id="#{empty id ? 'divApplet' : id}">
+        <s:fragment rendered="#{empty rendered ? true : rendered}">
             <applet width="#{empty width ? '140' : width}" height="25"
                 id="certificacao#{id}" code="SmartCardSignerApplet"
                 archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
@@ -61,7 +61,7 @@
                 <param name="useProviderDll"
                     value="#{empty useProviderDll ? false : useProviderDll}" />
             </applet>
-        </s:div>
-    </s:div>
+        </s:fragment>
+    </h:panelGroup>
 
 </ui:composition>
