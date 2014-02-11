@@ -5,25 +5,25 @@ import static java.text.MessageFormat.format;
 import org.jboss.seam.annotations.exception.Redirect;
 import org.jboss.seam.faces.FacesMessages;
 
-@Redirect(viewId = "")
+@Redirect(viewId = "/login.xhtml")
 @org.jboss.seam.annotations.ApplicationException(rollback = true, end = true)
-public class NoRedirectApplicationException extends RuntimeException {
+public class RedirectToLoginApplicationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public NoRedirectApplicationException() {
+    public RedirectToLoginApplicationException() {
         super();
     }
 
-    public NoRedirectApplicationException(String message, Throwable cause) {
+    public RedirectToLoginApplicationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NoRedirectApplicationException(String message) {
+    public RedirectToLoginApplicationException(String message) {
         super(message);
     }
 
-    public NoRedirectApplicationException(Throwable cause) {
+    public RedirectToLoginApplicationException(Throwable cause) {
         super(cause);
     }
 
