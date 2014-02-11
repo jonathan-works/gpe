@@ -21,6 +21,8 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.pessoa.manager.PessoaManager;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
@@ -32,6 +34,7 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
+import br.com.infox.epp.processo.partes.manager.ParteProcessoManager;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
@@ -48,14 +51,16 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     @In
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-
+    @In
+    private PessoaManager pessoaManager;
+    @In
+    private ParteProcessoManager parteProcessoManager;
     @In
     private ProcessoManager processoManager;
     @In
     private ProcessoEpaManager processoEpaManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
-
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
@@ -410,6 +415,34 @@ public class ProcessoHome extends AbstractHome<Processo> {
     @Observer(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO)
     public void setPodeInativarParteProcesso() {
         this.podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
+    }
+
+    public void incluirParteProcesso(Processo processo, String tipoPessoa) {
+        try {
+            parteProcessoManager.incluir(processo, tipoPessoa);
+            raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
+        } catch (DAOException e) {
+            LOG.error(".incluirParteProcesso()", e);
+            final FacesMessages messagesHandler = FacesMessages.instance();
+            messagesHandler.clear();
+            messagesHandler.add(Severity.ERROR, e.getLocalizedMessage());
+        }
+    }
+
+    private TipoPessoaEnum convertTipoPessoaEnum(final String tipoPessoa) {
+        if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
+            return TipoPessoaEnum.F;
+        } else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
+            return TipoPessoaEnum.J;
+        }
+        return null;
+    }
+
+    public void carregaPessoa(final String tipoPessoa, final String codigo) {
+        final TipoPessoaEnum tipoPessoaEnum = convertTipoPessoaEnum(tipoPessoa);
+        if (tipoPessoaEnum != null) {
+            pessoaManager.carregaPessoa(tipoPessoaEnum, codigo);
+        }
     }
 
 }
