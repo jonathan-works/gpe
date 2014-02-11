@@ -31,6 +31,7 @@ import br.com.infox.epp.fluxo.manager.CategoriaManager;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
+import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.PersistSuccessTest;
@@ -50,7 +51,7 @@ public class NaturezaCategoriaFluxoCrudActionIT extends AbstractCrudTest<Naturez
                         NaturezaCrudActionIT.class, NaturezaManager.class,
                         NaturezaDAO.class,CategoriaManager.class,CategoriaDAO.class,
                         NaturezaCategoriaFluxoManager.class, NaturezaCategoriaFluxoDAO.class,
-                        CategoriaCrudActionIT.class)
+                        CategoriaCrudActionIT.class, ParteProcessoEnum.class)
         .createDeployment();
     }
 
