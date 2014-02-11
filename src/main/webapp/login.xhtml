@@ -59,7 +59,7 @@
 			    	</div>
 			    	
 					<div id="bg_login" class="bg_login login">
-						<c:if test="#{not useCertLogin}">
+						<s:div rendered="#{not useCertLogin}">
 							<div>
 								<h:outputLabel for="username"
 											   rendered="#{not useCertLogin}"
@@ -102,8 +102,8 @@
 											   class="input_login passwd"
 											   value="#{authenticator.newPassword2}"/>							
 							</div>
-						</c:if>
-						<c:if test="#{useCertLogin}">
+						</s:div>
+						<s:div styleClass="cert-div" rendered="#{useCertLogin}">
 							<wi:appletAssinatura id="certificacao"
 					            urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
 					            formId="#{rich:clientId('login')}"
@@ -117,31 +117,30 @@
 								functionPosSignOk="submitForm();"
 								debug="false"
 					            loginMode="true"
-					            useProviderDll="false">
+					            useProviderDll="false"
+					            rendered="#{useCertLogin}">
 					        </wi:appletAssinatura>
 				
-							<h:inputHidden id="signature" 
-								rendered="#{useCertLogin}"
-								value="#{certificateAuthenticator.assinatura}" />
+							<h:inputHidden
+								id="signature" 
+								value="#{certificateAuthenticator.assinatura}">
+							</h:inputHidden>
 								
-							<h:inputHidden id="certChain" 
-								rendered="#{useCertLogin}"
-								value="#{certificateAuthenticator.certChain}" />				
+							<h:inputHidden
+								id="certChain" 
+								value="#{certificateAuthenticator.certChain}">
+							</h:inputHidden>				
 									
-							<h:inputHidden id="certChainStringLog" 
-								rendered="#{useCertLogin}"
-								value="#{certificateAuthenticator.certChainStringLog}" />	
-													
-					        <a:jsFunction 
-					        	rendered="#{useCertLogin}"
+					        <a:jsFunction
 					        	name="submitForm" 
-					        	status="status"
 					        	action="#{certificateAuthenticator.authenticate()}"
-					        	render="pagina"
-			                    limitRender="true" />
-						</c:if>
+					        	execute="signature, certChain, certChainStringLog, @this"
+					        	render="DialogMessage"
+			                    limitRender="true"
+							/>
+						</s:div>
 					</div>
-					<c:if test="#{not useCertLogin}">
+					<s:div rendered="#{not useCertLogin}">
 						<div id="bg_login_inferior" class="bg_login_inferior login">
 							<h:commandButton
 								id="btnEntrar"
@@ -161,7 +160,7 @@
 								type="button"
 								value="#{messages['login.requisitarSenhaBtn']}"/>
 				        </div>
-			        </c:if>
+			        </s:div>
 				</div>
 				
 			</h:form>
@@ -213,7 +212,7 @@
 			<rich:popupPanel id="mp_formValidar" height="100" width="250"
 							 rendered="#{useCertLogin}" resizeable="false">
 				<f:facet name="header">
-					<h:outputText value="Aguarde a incialização do SmartCard." />
+					<h:outputText value="#{messages['certificate.waitInit']}" />
 				</f:facet>
 				<div >
 					<h:graphicImage url="/img/ajax-loader.gif" />
