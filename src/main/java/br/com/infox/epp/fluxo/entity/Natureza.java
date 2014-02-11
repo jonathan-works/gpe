@@ -27,9 +27,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.swing.text.StyledEditorKit.BoldAction;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.itx.util.HibernateUtil;
 
@@ -52,9 +54,12 @@ public class Natureza implements java.io.Serializable {
     }
 
     public Natureza(final String natureza, final Boolean hasPartes,
+            final ParteProcessoEnum tipoPartes, final Integer numeroPartes,
             final Boolean ativo) {
         this.natureza = natureza;
         this.hasPartes = hasPartes;
+        this.tipoPartes = tipoPartes;
+        this.numeroPartes = numeroPartes;
         this.ativo = ativo;
     }
 
