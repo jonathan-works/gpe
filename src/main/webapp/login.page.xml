@@ -8,8 +8,8 @@
 	xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd">
 
 	<action execute="#{authenticator.unAuthenticate()}" />
-
-	<param name="certificateLogin" value="#{certificateAuthenticator.certificateLogin}"/>
+	
+	<param name="loginComAssinatura" value="#{certificateAuthenticator.certificateLogin}"/>
 
 	<navigation from-action="#{identity.login}">
 		<rule if="#{identity.loggedIn and !usuarioLogado.provisorio}">
