@@ -26,6 +26,8 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_ID_TASK
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_ID_TASK_INSTANCE_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_PESSOA;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_PESSOA_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_EMAIL_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_QUERY;
@@ -82,12 +84,13 @@ import br.com.infox.epp.system.entity.EntityLog;
 
 @Entity
 @Table(name = TABLE_USUARIO_LOGIN, schema = PUBLIC,
-        uniqueConstraints = @UniqueConstraint(columnNames = LOGIN))
+        uniqueConstraints = {@UniqueConstraint(columnNames = LOGIN), @UniqueConstraint(columnNames="id_pessoa_fisica")})
 @NamedQueries(value = {
     @NamedQuery(name = USUARIO_LOGIN_NAME, query = USUARIO_LOGIN_QUERY),
     @NamedQuery(name = USUARIO_BY_LOGIN_TASK_INSTANCE, query = USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY),
     @NamedQuery(name = USUARIO_BY_EMAIL, query = USUARIO_LOGIN_EMAIL_QUERY),
-    @NamedQuery(name = INATIVAR_USUARIO, query = INATIVAR_USUARIO_QUERY) 
+    @NamedQuery(name = INATIVAR_USUARIO, query = INATIVAR_USUARIO_QUERY),
+    @NamedQuery(name = USUARIO_BY_PESSOA, query = USUARIO_BY_PESSOA_QUERY) 
 })
 @NamedNativeQueries({
     @NamedNativeQuery(name=USUARIO_BY_ID_TASK_INSTANCE, query=USUARIO_BY_ID_TASK_INSTANCE_QUERY),

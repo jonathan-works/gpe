@@ -4,7 +4,6 @@ package br.com.infox.certificado;
 import java.math.BigInteger;
 import java.security.Principal;
 import java.security.PrivateKey;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Date;
@@ -29,7 +28,7 @@ public class Certificado {
     private String ou4 = null;
     private String ou5 = null;
     private String o = null;
-    private Certificate[] certChain;
+    private X509Certificate[] certChain;
     private X509Certificate mainCertificate;
     private PrivateKey privateKey;
     private Date dataValidadeInicio;
@@ -37,14 +36,14 @@ public class Certificado {
     private BigInteger serialNumber;
     private String nomeCertificadora;
     
-    public Certificado(Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
+    public Certificado(X509Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
         this.certChain = Arrays.copyOf(certChain, certChain.length);
         this.mainCertificate = (X509Certificate) this.certChain[0];
         this.privateKey = privateKey;
         processSubject();
     }
     
-    public Certificado(Certificate[] certChain) throws CertificadoException {
+    public Certificado(X509Certificate[] certChain) throws CertificadoException {
         this(certChain, null);
     }    
 
@@ -195,7 +194,7 @@ public class Certificado {
 		return nomeCertificadora;
 	}
 
-    public Certificate[] getCertChain() {
+    public X509Certificate[] getCertChain() {
         return ArrayUtil.copyOf(certChain);
     }
 

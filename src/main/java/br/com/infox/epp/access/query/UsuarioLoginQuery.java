@@ -26,6 +26,11 @@ public interface UsuarioLoginQuery {
     String USUARIO_LOGIN_EMAIL_QUERY = "select u from UsuarioLogin u where u.email = :"
             + PARAM_EMAIL;
 
+    String PARAM_PESSOA_FISICA = "pessoaFisica";
+    
+    String USUARIO_BY_PESSOA = "usuarioLoginByPessoaFisica";
+    String USUARIO_BY_PESSOA_QUERY = "select u from UsuarioLogin u where u.pessoaFisica=:"+PARAM_PESSOA_FISICA;
+    
     String USUARIO_BY_LOGIN_TASK_INSTANCE = "usuarioByLoginTaskinstance";
     String USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY = "select o from UsuarioLogin o"
             + " where o.login = :" + PARAM_LOGIN + " and not exists (from UsuarioTaskInstance"

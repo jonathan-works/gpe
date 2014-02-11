@@ -9,6 +9,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(UsuarioLoginManager.NAME)
 @AutoCreate
@@ -45,6 +46,10 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     
     public String getUsuarioByTarefa(TaskInstance taskInstance) {
         return getDao().getUsuarioByTarefa(taskInstance);
+    }
+    
+    public UsuarioLogin getUsuarioLoginByPessoaFisica(final PessoaFisica pessoaFisica) {
+        return getDao().getUsuarioLoginByPessoaFisica(pessoaFisica);
     }
 
 }

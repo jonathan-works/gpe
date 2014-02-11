@@ -2,6 +2,7 @@
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import javax.persistence.NoResultException;
 
 import org.jboss.seam.ScopeType;
@@ -15,6 +16,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.itx.util.ComponentUtil;
 
@@ -62,6 +64,23 @@ public class ParametroUtil {
 			return "false";
 		}
 	}
+	
+	public static boolean isLoginComAssinatura() {
+	    return isParameterActiveAndTrue("loginComAssinatura");
+	}
+	
+	public static boolean isProducao() {
+	    return isParameterActiveAndTrue("producao");
+	}
+
+    private static boolean isParameterActiveAndTrue(final String nome) {
+        try{
+            final Parametro parametro = getParametroManager().getParametro(nome);
+            return parametro.getAtivo() && Boolean.parseBoolean(parametro.getValorVariavel());
+        } catch (Exception exception){
+            return false;
+        }
+    }
 
 	public String executarFactorys() {
 		for (Method metodo : this.getClass().getDeclaredMethods()) {
