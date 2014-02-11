@@ -23,7 +23,7 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.exception.NoRedirectApplicationException;
+import br.com.infox.core.exception.RedirectToLoginApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.CertificateManager;
@@ -79,10 +79,10 @@ public class CertificateAuthenticator implements Serializable {
             }
         } catch (final CertificateExpiredException e) {
             LOG.error(AUTHENTICATE, e);
-            throw new NoRedirectApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
+            throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
         } catch (CertificadoException | LoginException | CertificateException | DAOException e) {
             LOG.error(AUTHENTICATE, e);
-            throw new NoRedirectApplicationException(e.getMessage(), e);
+            throw new RedirectToLoginApplicationException(e.getMessage(), e);
         }
         
     }
