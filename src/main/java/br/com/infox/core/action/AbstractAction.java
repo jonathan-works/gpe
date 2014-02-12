@@ -5,12 +5,10 @@ import static java.text.MessageFormat.format;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Create;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
@@ -23,7 +21,6 @@ import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.core.persistence.Recursive;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
@@ -49,6 +46,9 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
     protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
     private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
+    
+    @In
+    private ActionMessagesService actionMessagesService;
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
 	@Create
@@ -86,40 +86,10 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
         } catch (final DAOException daoException) {
             final String msg = isPersist ? "persist()" : "update()";
             LOG.error(msg, daoException);
-            ret = handleDAOException(daoException);
+            ret = actionMessagesService.handleDAOException(daoException);
         }
 
         return ret;
-    }
-
-    private String handleBeanViolationException(
-            final ConstraintViolationException e) {
-        final StatusMessages messages = getMessagesHandler();
-        messages.clear();
-        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-            final String message = format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());
-            messages.add(message);
-        }
-        return null;
-    }
-
-    private String handleDAOException(final DAOException daoException) {
-        final PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
-        final StatusMessages messages = getMessagesHandler();
-        if (errorCode != null) {
-            final String ret = errorCode.toString();
-            messages.clearGlobalMessages();
-            messages.add(daoException.getLocalizedMessage());
-            return ret;
-        } else {
-            final Throwable cause = daoException.getCause();
-            if (cause instanceof ConstraintViolationException) {
-                return handleBeanViolationException((ConstraintViolationException) cause);
-            } else {
-                messages.add(StatusMessage.Severity.ERROR, format("Erro ao gravar: {0}", cause.getMessage()), cause);
-            }
-        }
-        return null;
     }
 
     /**
@@ -156,7 +126,7 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
             ret = REMOVED;
         } catch (DAOException daoException) {
             LOG.error(".remove()", daoException);
-            ret = handleDAOException(daoException);
+            ret = actionMessagesService.handleDAOException(daoException);
         }
         return ret;
     }
