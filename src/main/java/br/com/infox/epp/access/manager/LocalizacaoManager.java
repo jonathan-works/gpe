@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.manager;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -20,4 +21,7 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
         return getDao().getLocalizacoesEstrutura();
     }
 
+    public List<Localizacao> getLocalizacoes(Collection<Integer> ids) {
+    	return getDao().getLocalizacoes(ids);
+    }
 }
