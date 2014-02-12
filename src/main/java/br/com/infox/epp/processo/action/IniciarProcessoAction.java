@@ -39,6 +39,7 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
+import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.itx.component.AbstractHome;
 
@@ -220,14 +221,25 @@ public class IniciarProcessoAction {
         this.itemList = itemList;
     }
 
-    public boolean necessitaPartes() {
+    private Natureza getNatureza() {
         if (naturezaCategoriaFluxo != null) {
-            final Natureza natureza = naturezaCategoriaFluxo.getNatureza();
-            if (natureza != null) {
-                return natureza.getHasPartes();
-            }
+            return naturezaCategoriaFluxo.getNatureza();
+        }
+        return null;
+    }
+
+    public boolean necessitaPartes() {
+        if (getNatureza() != null) {
+            return getNatureza().getHasPartes();
         }
         return Boolean.FALSE;
+    }
+
+    public ParteProcessoEnum tipoPartes() {
+        if (getNatureza() != null) {
+            return getNatureza().getTipoPartes();
+        }
+        return null;
     }
 
     public boolean isRenderizarCadastroPartes() {
