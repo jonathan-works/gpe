@@ -6,6 +6,12 @@
 }
 .ui-tabs-panel.ui-widget-content.ui-corner-bottom {
 }
+.mp-help {
+	cursor:help;
+}
+.mp-close {
+	cursor:pointer;
+}
 .blocker {
 	height:100%;
 	width:100%;

@@ -67,15 +67,24 @@
 
         <ui:define name="label">#{label}</ui:define>
         <span id="#{id}Locator" />
-        <rich:editor id="#{id}" value="#{value}"
-            toolbar="#{wi:get(toolbar, 'InfoxToolbar')}"
-            width="#{wi:get(width, 650)}"
-            height="#{wi:get(height, 350)}" readonly="#{readonly}"
+        <rich:editor
+        	id="#{id}"
+        	value="#{value}"
+            toolbar="#{readonly ? 'empty':wi:get(toolbar, 'InfoxToolbar')}"
+            readonly="#{readonly}"
             required="#{required}"
-            onchange="#{wi:get(onchange, 'void(0);')}">
-
+            onchange="#{wi:get(onchange, 'void(0);')}"
+            >
+			<ui:param name="editorHeight" value="#{wi:get(height, 390)}" />
+			<ui:param name="editorWidth" value="#{wi:get(width, 625)}" />
             <f:facet name="config">
                 removePlugins: 'elementspath',
+                resize_enable:false,
+                resize_dir:'none',
+                toolbar_empty:[],
+                toolbarCanCollapse:false,
+                width:'#{editorWidth}',
+                height:'#{editorHeight}',
                 toolbar_InfoxToolbar:
                 [
                 { name:'document',items:["DocProps","Preview","Print"]},
@@ -90,7 +99,6 @@
                 tabSpaces:4,
                 on:{
                     configLoaded:function(evt) {
-                        
                         var editor = evt.editor;
                         var config = editor.config;
                         var tags = [

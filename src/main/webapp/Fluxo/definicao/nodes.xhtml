@@ -175,13 +175,13 @@
 
 						<h:form>
 
-	                        <rich:collapsiblePanel switchType="ajax" expanded="false" header="Descrição">
-	
-	                            <wi:inputTextarea id="nodeDescription" label="" value="#{nodeFitter.currentNode.description}" showCounter="false">
+	                        <rich:collapsiblePanel switchType="ajax" expanded="false" header="#{messages['jbpm.taskNode.description']}">
+								
+	                            <wi:editor id="nodeDescription" label="" value="#{nodeFitter.currentNode.description}">
 	
 	                                <a:ajax event="change" execute="@this" limitRender="true" />
 	
-	                            </wi:inputTextarea>
+	                            </wi:editor>
 		                            
 	                        </rich:collapsiblePanel>
 	                        
