@@ -11,23 +11,21 @@
 
     <wi:dataForm formId="pessoaFisicaForm"
         formTitle="#{messages['form.title']}" panelWidth="70%"
-        rendered="#{home.isPessoaFisica()}">
+        rendered="#{not empty partesController.tipoPartes and not partesController.apenasPessoaJuridica()}">
 
-        <wi:inputCpf id="cpf" value="#{pessoaFisicaHome.instance.cpf}"
+        <wi:inputCpf id="cpf" value="#{partesController.pessoaFisica.cpf}"
             label="#{messages['pessoaFisica.cpf']}"
-            assignTo="#{pessoaFisicaHome.instance.cpf}" required="true">
-
+            assignTo="#{partesController.pessoaFisica.cpf}" required="true">
             <a:ajax event="blur"
-                listener="#{action.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}"
+                listener="#{partesController.searchByCpf()}"
                 execute="@this" render="loadedByCPF" limitRender="true" />
-
         </wi:inputCpf>
         <h:panelGroup id="loadedByCPF">
             <wi:inputText id="nome"
-                value="#{pessoaFisicaHome.instance.nome}"
+                value="#{partesController.pessoaFisica.nome}"
                 label="#{messages['pessoaFisica.nome']}" required="true" />
             <wi:inputDate id="dataNascimento"
-                value="#{pessoaFisicaHome.instance.dataNascimento}"
+                value="#{partesController.pessoaFisica.dataNascimento}"
                 label="#{messages['pessoaFisica.dataNascimento']}"
                 required="true" />
         </h:panelGroup>
