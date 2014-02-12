@@ -17,7 +17,7 @@ public class PessoaJuridicaManager extends Manager<PessoaJuridicaDAO, PessoaJuri
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pessoaJuridicaManager";
 
-    public PessoaJuridica searchByCnpj(final String cnpj) {
+    public PessoaJuridica getByCnpj(final String cnpj) {
         return getDao().searchByCnpj(cnpj);
     }
 
