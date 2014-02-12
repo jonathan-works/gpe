@@ -7,9 +7,11 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_LOGIN;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_PESSOA_FISICA;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_PESSOA;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
 
 import java.util.HashMap;
@@ -21,6 +23,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(UsuarioLoginDAO.NAME)
 @AutoCreate
@@ -66,4 +69,10 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
         return getNamedSingleResult(USUARIO_BY_ID_TASK_INSTANCE, parameters);
     }
 
+    public UsuarioLogin getUsuarioLoginByPessoaFisica(final PessoaFisica pessoaFisica) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_PESSOA_FISICA, pessoaFisica);
+        return getNamedSingleResult(USUARIO_BY_PESSOA, parameters);
+    }
+    
 }

@@ -8,6 +8,11 @@
 #gerarSenha {
 	text-align:center;
 }
+
+.cert-div {
+	margin-top:45px;
+}
+
 .seletorSkinsLogin {
 	position:fixed;
 	top:0px;
@@ -40,6 +45,7 @@
 .bg_login {
     border-radius: 10px 10px 0 0;
     width: 350px;
+    min-height:106px;
     font-size:16px;
     padding:0 0 10px 0;
 }
