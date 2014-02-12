@@ -9,7 +9,8 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <h:form id="NaturezaCategoriaForm">
-        <s:div rendered="#{!action.renderedByItem}">
+        <s:div
+            rendered="#{!action.renderedByItem and !action.renderizarCadastroPartes}">
             <wi:dataTable values="#{natCatProcessoList.list(15)}"
                 bean="#{natCatProcessoList}" tableTitle=""
                 id="natCatProcessoList"
