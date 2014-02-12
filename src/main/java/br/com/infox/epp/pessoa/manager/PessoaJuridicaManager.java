@@ -13,6 +13,12 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class PessoaJuridicaManager extends Manager<PessoaJuridicaDAO, PessoaJuridica> {
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pessoaJuridicaManager";
+
+    public PessoaJuridica searchByCnpj(final String cnpj) {
+        return getDao().searchByCnpj(cnpj);
+    }
+
 }

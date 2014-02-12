@@ -1,5 +1,8 @@
 package br.com.infox.epp.pessoa.dao;
 
+import static br.com.infox.epp.pessoa.query.PessoaJuridicaQuery.CNPJ_PARAM;
+import static br.com.infox.epp.pessoa.query.PessoaJuridicaQuery.SEARCH_BY_CNPJ;
+
 import java.util.HashMap;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -16,10 +19,9 @@ public class PessoaJuridicaDAO extends DAO<PessoaJuridica> {
     public static final String NAME = "pessoaJuridicaDAO";
 
     public PessoaJuridica searchByCnpj(final String cnpj) {
-        final String hql = "select o from PessoaJuridica o where o.cnpj = :cnpj";
         final HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("cnpj", cnpj);
-        return getSingleResult(hql, parameters);
+        parameters.put(CNPJ_PARAM, cnpj);
+        return getNamedSingleResult(SEARCH_BY_CNPJ, parameters);
     }
 
 }
