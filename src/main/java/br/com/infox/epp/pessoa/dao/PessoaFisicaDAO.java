@@ -1,5 +1,8 @@
 package br.com.infox.epp.pessoa.dao;
 
+import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.CPF_PARAM;
+import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF;
+
 import java.util.HashMap;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -12,14 +15,13 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 @AutoCreate
 public class PessoaFisicaDAO extends DAO<PessoaFisica> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "pessoaFisicaDAO";
-	
-	public PessoaFisica searchByCpf(final String cpf){
-		final String hql = "select o from PessoaFisica o where o.cpf = :cpf";
-		final HashMap<String, Object> parameters = new HashMap<>();
-		parameters.put("cpf", cpf);
-		return getSingleResult(hql, parameters);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "pessoaFisicaDAO";
+
+    public PessoaFisica searchByCpf(final String cpf) {
+        final HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(CPF_PARAM, cpf);
+        return getNamedSingleResult(SEARCH_BY_CPF, parameters);
+    }
 
 }

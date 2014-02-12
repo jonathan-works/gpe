@@ -13,10 +13,10 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class PessoaFisicaManager extends Manager<PessoaFisicaDAO, PessoaFisica> {
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "pessoaFisicaManager";
-	
-	public PessoaFisica getByCpf(final String cpf) {
-		return getDao().searchByCpf(cpf);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "pessoaFisicaManager";
+
+    public PessoaFisica getByCpf(final String cpf) {
+        return getDao().searchByCpf(cpf);
+    }
 }
