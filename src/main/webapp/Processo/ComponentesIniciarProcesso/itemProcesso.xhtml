@@ -28,6 +28,7 @@
                     <a:commandLink
                         rendered="#{action.necessitaPartes()}"
                         action="#{action.onSelectItem(row)}"
+                        oncomplete="#{partesController.setTipoPartes(action.tipoPartes())}"
                         execute="@this" render="@all" limitRender="true">
                         <h:graphicImage value="/img/start.gif" />
                     </a:commandLink>
