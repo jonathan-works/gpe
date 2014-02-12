@@ -18,12 +18,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name=TABLE_NAME, schema=PUBLIC)
+@Table(name=TABLE_NAME, schema=PUBLIC, uniqueConstraints=@UniqueConstraint(columnNames={TIPO_RELACIONAMENTO}))
 public class TipoRelacionamentoProcesso implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -44,7 +45,7 @@ public class TipoRelacionamentoProcesso implements Serializable {
     
     @NotNull
     @Length(min=FLAG, max=DESCRICAO_PADRAO)
-    @Column(name=TIPO_RELACIONAMENTO, nullable=false, length=DESCRICAO_PADRAO)
+    @Column(name=TIPO_RELACIONAMENTO, nullable=false, length=DESCRICAO_PADRAO, unique=true)
     public String getTipoRelacionamento() {
         return tipoRelacionamento;
     }

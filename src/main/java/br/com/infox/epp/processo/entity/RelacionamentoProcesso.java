@@ -29,12 +29,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name=TABLE_NAME, schema=PUBLIC)
+@Table(name=TABLE_NAME, schema=PUBLIC, uniqueConstraints={
+    @UniqueConstraint(columnNames={ID_PROCESSO})
+})
 public class RelacionamentoProcesso implements Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -71,7 +74,7 @@ public class RelacionamentoProcesso implements Serializable {
 
     @NotNull
     @ManyToOne(fetch=LAZY)
-    @JoinColumn(name=ID_PROCESSO, nullable=false)
+    @JoinColumn(name=ID_PROCESSO, nullable=false, unique=true)
     public Processo getProcesso() {
         return processo;
     }
