@@ -13,6 +13,45 @@
 
     <ui:param name="pageTitle" value="#{messages['processo.titlePage']}" />
     <ui:define name="title">#{pageTitle}</ui:define>
+    <ui:define name="contentTitle">
+    	#{pageTitle}
+		<h:graphicImage
+			id="helpBtn"
+			styleClass="mp-help" 
+			value="#{a4jSkin.imgIconHelp}"
+		/>    	
+    </ui:define>
+    <ui:define name="scripts">
+    	<h:outputScript library="js/components" name="Modal.js" />
+    	<h:inputHidden id="taskCompleted"></h:inputHidden>
+        <h:inputHidden id="canClosePanel"></h:inputHidden>
+            <script type="text/javascript">
+                function verifyFields() {
+                    if ($('#taskCompleted').val() != '') {
+                        try {
+                            opener.atualizaPainelFluxo();
+                        } catch (e) {
+                        }
+                        if ($('#canClosePanel').val() != '') {
+                            close();
+                        } else {
+                            location = location.href;
+                        }
+                    } else {
+                        infox.hideLoading();
+                    }
+                }
+                invoke(["infox.Modal"],function(Modal) {
+                	var panelTeste = new Modal({id:'mp_taskNodeDescription'});
+                	$("#helpBtn").click(function show() {
+                		panelTeste.show();
+                    });
+                	$("#mp_taskNodeCloseBtn").click(function hide() {
+                    	panelTeste.hide();
+                    });
+                });
+            </script>
+    </ui:define>
 
     <ui:param name="home" value="#{processoHome}" />
     <ui:param name="showMenu" value="false" />
@@ -26,33 +65,6 @@
             name="movimentar.css" />
     </ui:define>
     <ui:define name="body">
-
-        <s:div id="script">
-            <h:inputHidden id="taskCompleted"></h:inputHidden>
-            <h:inputHidden id="canClosePanel"></h:inputHidden>
-            <script type="text/javascript">
-                function verifyFields() {
-                    if ($('#taskCompleted')
-                            .val() != '') {
-                        try {
-                            opener
-                                    .atualizaPainelFluxo();
-                        } catch (e) {
-                        }
-                        if ($(
-                                '#canClosePanel')
-                                .val() != '') {
-                            close();
-                        } else {
-                            location = location.href;
-                        }
-                    } else {
-                        infox.hideLoading();
-                    }
-                }
-            </script>
-
-        </s:div>
 
         <h:form>
 
@@ -115,7 +127,6 @@
             <infox:tab id="tabSaida" name="tabSaida"
                 rendered="#{processoHome.managed}" status=":status"
                 title="Saída">
-
                 <c:if test="#{not taskPageAction.hasTaskPage}">
                     <wi:form canEdit="true"
                         formTitle="#{taskInstance.name}"
@@ -278,6 +289,38 @@
                 value="#{messages['movimentar.noPermission']}" />
 
         </c:if>
+        <ui:param name="modalWidth" value="640" />
+        <ui:param name="modalHeight" value="480" />
+        <rich:popupPanel
+        	id="mp_taskNodeDescription"
+        	height="#{modalHeight}"
+        	width="#{modalWidth}"
+        	show="false"
+        	modal="true"
+        	moveable="true"
+        	resizeable="false"
+        	styleClass="popup-help"
+        	domElementAttachment="parent"
+        >
+			<f:facet name="header">
+				<h:outputText value="#{messages['jbpm.taskNode.description']}" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage
+						id="mp_taskNodeCloseBtn"
+						styleClass="mp-close" 
+						value="/img/closeMP.gif"/>
+				</h:panelGroup>
+			</f:facet>
+			<wi:editor
+				id="taskNodeDescription"
+				value="#{taskInstanceHome.taskNodeDescription}"
+				width="#{modalWidth-15}"
+				height="#{modalHeight-90}"
+				readonly="true"
+			></wi:editor>			
+		</rich:popupPanel>
 
     </ui:define>
 
