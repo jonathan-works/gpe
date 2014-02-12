@@ -6,12 +6,15 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:s="http://jboss.org/schema/seam/taglib">
 
-    <div class="pageContent">
-        <div class="subBorda">
-            <div class="tituloPagina">
-                <ui:insert name="title">#{title}</ui:insert>
+    <div class="pageContent #{styleClass}">
+        <div class="subBorda #{styleClass}">
+	    	<div class="banner #{styleClass}">
+	    		<ui:insert name="banner"></ui:insert>
+	    	</div>
+            <div class="tituloPagina #{styleClass}">
+                <ui:insert name="contentTitle">#{title}</ui:insert>
             </div>
-            <div class="conteudo">
+            <div class="conteudo #{styleClass}">
                 <ui:insert />
             </div>
         </div>
