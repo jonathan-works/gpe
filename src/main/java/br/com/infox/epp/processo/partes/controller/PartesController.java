@@ -64,7 +64,8 @@ public class PartesController extends AbstractController {
         this.pessoaJuridica = pessoaJuridica;
     }
 
-    public void searchByCpf(final String cpf) {
+    public void searchByCpf() {
+        final String cpf = pessoaFisica.getCpf();
         setPessoaFisica(pessoaFisicaManager.getByCpf(cpf));
         if (getPessoaFisica() == null) {
             setPessoaFisica(new PessoaFisica());
@@ -72,7 +73,8 @@ public class PartesController extends AbstractController {
         }
     }
 
-    public void searchByCnpf(final String cnpj) {
+    public void searchByCnpf() {
+        final String cnpj = pessoaJuridica.getCnpj();
         setPessoaJuridica(pessoaJuridicaManager.getByCnpj(cnpj));
         if (getPessoaJuridica() == null) {
             setPessoaJuridica(new PessoaJuridica());
