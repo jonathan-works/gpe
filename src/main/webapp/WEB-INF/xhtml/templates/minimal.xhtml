@@ -41,11 +41,15 @@
 					showDialogMessage="#{showDialogMessage}"
 					timeCloseMSG="#{timeCloseMSG}"
 				/>	
-				<wi:quadro>
-					<h:graphicImage
-						styleClass="banner-logo"
-						url="#{a4jSkin.imgLogoTopo}" 
-					/>
+				<wi:quadro
+					styleClass="minimal"
+				>
+					<ui:define name="banner">
+						<h:graphicImage
+							styleClass="banner-logo"
+							url="#{a4jSkin.imgLogoTopo}" 
+						/>
+					</ui:define>
 					<ui:insert name="body" />
 				</wi:quadro>
 		</s:div>
