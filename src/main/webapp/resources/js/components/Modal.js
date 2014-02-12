@@ -7,16 +7,6 @@ namespace("infox.Modal",function Modal(args){
 	}
 	var instances = instances || {};
 	var $modalId = args.id;
-	var result = instances[$modalId] || {
-		get instances() {
-			return instances;
-		},
-		show:function() {
-			RichFaces.$($modalId).show();
-		},
-		hide:function() {
-			RichFaces.$($modalId).hide();
-		}
-	};
+	var result = instances[$modalId] || RichFaces.$($modalId);
 	return result;
 });

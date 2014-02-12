@@ -71,6 +71,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
 	}
 
 	public void init() {
+		super.init();
 		final ProcessoHome processoHome = ProcessoHome.instance();
 		processo = processoHome.getInstance();
 		localizacaoFisicaList = new LocalizacaoFisicaList().getResultList();

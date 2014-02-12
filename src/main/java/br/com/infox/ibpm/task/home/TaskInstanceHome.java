@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.task.home;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -313,6 +313,13 @@ public class TaskInstanceHome implements Serializable {
             currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         }
         return currentTaskInstance;
+    }
+    
+    public String getTaskNodeDescription() {
+        if (currentTaskInstance == null) {
+            currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        }
+        return currentTaskInstance.getTask().getTaskNode().getDescription();
     }
 
     public void updateIndex() {

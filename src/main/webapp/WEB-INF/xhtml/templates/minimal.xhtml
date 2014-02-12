@@ -8,7 +8,7 @@
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns:wi="http://www.itx.com.br/jsf">
-	<h:head>    
+	<h:head>
 	    <meta
              http-equiv="Content-Type"
              content="text/html; charset=UTF-8" />
@@ -41,13 +41,18 @@
 					showDialogMessage="#{showDialogMessage}"
 					timeCloseMSG="#{timeCloseMSG}"
 				/>	
-				<wi:quadro>
-					<h:graphicImage
-						styleClass="banner-logo"
-						url="#{a4jSkin.imgLogoTopo}" 
-					/>
+				<wi:quadro
+					styleClass="minimal"
+				>
+					<ui:define name="banner">
+						<h:graphicImage
+							styleClass="banner-logo"
+							url="#{a4jSkin.imgLogoTopo}" 
+						/>
+					</ui:define>
 					<ui:insert name="body" />
 				</wi:quadro>
 		</s:div>
+		<ui:insert name="scripts" />
 	</h:body>
 </html>
