@@ -16,3 +16,14 @@
 .applet-div.hidden {
 	visibility:hidden;
 }
+.banner.minimal {
+	height:85px;
+	display:inline-block;
+	background:transparent;
+}
+.tituloPagina.minimal {
+	height:25px;
+}
+.conteudo.minimal {
+	height:calc(100% - 129px);
+}
