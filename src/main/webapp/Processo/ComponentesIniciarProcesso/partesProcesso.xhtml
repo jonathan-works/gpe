@@ -9,17 +9,9 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <ui:param name="home" value="#{pessoaHome}" />
-
     <h:form id="partesForm">
         <s:div id="partesDiv"
             rendered="#{action.renderizarCadastroPartes}">
-            <wi:selectOneRadioEnum id="tipoPessoaEnum"
-                items="#{home.getTipoPessoaItens()}"
-                value="#{home.tipoPessoa}"
-                label="#{messages['pessoa.tipoPessoa']}">
-                <a:ajax event="change" execute="@this" render="buscaDiv" />
-            </wi:selectOneRadioEnum>
         </s:div>
     </h:form>
     <s:div id="buscaDiv">
