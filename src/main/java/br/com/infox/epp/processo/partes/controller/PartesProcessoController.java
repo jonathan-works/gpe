@@ -10,10 +10,10 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 
 @Name(PartesProcessoController.NAME)
-public class PartesProcessoController  extends AbstractPartesController{
-    
+public class PartesProcessoController extends AbstractPartesController {
+
     public static final String NAME = "partesProcessoController";
-    
+
     private ProcessoEpa processoEpa;
 
     public ProcessoEpa getProcessoEpa() {
@@ -25,21 +25,21 @@ public class PartesProcessoController  extends AbstractPartesController{
         setPessoaFisica(new PessoaFisica());
         setPessoaJuridica(new PessoaJuridica());
     }
-    
-    private Natureza getNatureza(){
+
+    private Natureza getNatureza() {
         return processoEpa.getNaturezaCategoriaFluxo().getNatureza();
     }
 
     @Override
     public void includePessoaFisica() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void includePessoaJuridica() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -55,12 +55,13 @@ public class PartesProcessoController  extends AbstractPartesController{
     @Override
     public void removePessoa(Pessoa pessoa) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     @Override
-    public boolean podeAdicionarPartes(){
-        return getNatureza().getHasPartes() && (getNatureza().getNumeroPartes() == 0 || processoEpa.getPartes().size() < getNatureza().getNumeroPartes());
+    public boolean podeAdicionarPartes() {
+        return getNatureza().getHasPartes()
+                && (getNatureza().getNumeroPartes() == 0 || processoEpa.getPartes().size() < getNatureza().getNumeroPartes());
     }
 
 }
