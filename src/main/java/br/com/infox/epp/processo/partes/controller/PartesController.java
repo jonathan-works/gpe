@@ -129,5 +129,9 @@ public class PartesController extends AbstractController {
             FacesMessages.instance().add(Severity.WARN, pessoa + "já cadastrada na lista de partes");
         }
     }
+    
+    public void removePessoa(Pessoa pessoa){
+        pessoas.remove(pessoa);
+    }
 
 }
