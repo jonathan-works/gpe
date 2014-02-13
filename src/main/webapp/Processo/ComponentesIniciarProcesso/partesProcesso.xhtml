@@ -13,8 +13,10 @@
         <ui:include src="includePessoaFisica.xhtml" />
         <ui:include src="includePessoaJuridica.xhtml" />
     </s:div>
+
     <s:div id="pessoasListDiv">
         <wi:dataTable id="partesTable"
+            showGrid="#{not partesController.pessoas.isEmpty()}"
             tableTitle="#{messages['partes.titleTable']}"
             values="#{partesController.pessoas}" rowId="#{row.idPessoa}"
             searchFormStyleClass="hidden">
