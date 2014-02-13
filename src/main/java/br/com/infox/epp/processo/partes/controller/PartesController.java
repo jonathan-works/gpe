@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
@@ -87,7 +89,7 @@ public class PartesController extends AbstractController {
     public void includePessoaFisica(){
         try {
             pessoaFisicaManager.persist(getPessoaFisica());
-            pessoas.add(getPessoaFisica());
+            includePessoa(getPessoaFisica());
         } catch (DAOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -99,7 +101,7 @@ public class PartesController extends AbstractController {
     public void includePessoaJuridica(){
         try {
             pessoaJuridicaManager.persist(getPessoaJuridica());
-            pessoas.add(getPessoaJuridica());
+            includePessoa(getPessoaJuridica());
         } catch (DAOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -118,6 +120,14 @@ public class PartesController extends AbstractController {
     
     public boolean apenasPessoaJuridica(){
         return ParteProcessoEnum.J.equals(tipoPartes);
+    }
+    
+    private void includePessoa(Pessoa pessoa){
+        if (!pessoas.contains(pessoa)){
+            pessoas.add(pessoa);
+        } else {
+            FacesMessages.instance().add(Severity.WARN, pessoa + "já cadastrada na lista de partes");
+        }
     }
 
 }
