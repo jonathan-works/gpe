@@ -136,7 +136,7 @@ public class PartesController extends AbstractController {
     }
     
     public boolean podeAdicionarPartes(){
-        return natureza != null && pessoas.size() < natureza.getNumeroPartes();
+        return natureza != null && natureza.getHasPartes() && (natureza.getNumeroPartes() == 0 || pessoas.size() < natureza.getNumeroPartes());
     }
 
 }
