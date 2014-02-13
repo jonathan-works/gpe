@@ -18,7 +18,6 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
-import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 
 @Name(PartesController.NAME)
@@ -110,10 +109,6 @@ public class PartesController extends AbstractController {
         } finally {
             setPessoaJuridica(new PessoaJuridica());
         }
-    }
-    
-    public TipoPessoaEnum[] getTipoPessoaItens() {
-        return TipoPessoaEnum.values();
     }
     
     public boolean apenasPessoaFisica(){
