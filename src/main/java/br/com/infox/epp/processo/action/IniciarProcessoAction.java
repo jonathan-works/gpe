@@ -171,7 +171,7 @@ public class IniciarProcessoAction {
         this.itemList = itemList;
     }
 
-    private Natureza getNatureza() {
+    public Natureza getNatureza() {
         if (naturezaCategoriaFluxo != null) {
             return naturezaCategoriaFluxo.getNatureza();
         }

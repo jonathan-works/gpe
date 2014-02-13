@@ -10,7 +10,7 @@
 
     <wi:dataForm formId="pessoaJuridicaForm"
         formTitle="#{messages['pessoaJuridica.formTitle']}"
-        rendered="#{not empty partesController.tipoPartes and not partesController.apenasPessoaFisica()}">
+        rendered="#{not empty partesController.natureza and not partesController.apenasPessoaFisica()}">
 
         <wi:inputCnpj id="cnpj"
             value="#{partesController.pessoaJuridica.cnpj}"

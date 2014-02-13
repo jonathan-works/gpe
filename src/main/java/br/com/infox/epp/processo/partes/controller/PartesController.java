@@ -10,6 +10,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
@@ -24,7 +25,7 @@ public class PartesController extends AbstractController {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "partesController";
 
-    private ParteProcessoEnum tipoPartes;
+    private Natureza natureza;
     private PessoaFisica pessoaFisica = new PessoaFisica();
     private PessoaJuridica pessoaJuridica = new PessoaJuridica();
     private List<Pessoa> pessoas = new ArrayList<>();
@@ -34,12 +35,12 @@ public class PartesController extends AbstractController {
     @In
     private PessoaJuridicaManager pessoaJuridicaManager;
 
-    public ParteProcessoEnum getTipoPartes() {
-        return tipoPartes;
+    public Natureza getNatureza() {
+        return natureza;
     }
 
-    public void setTipoPartes(ParteProcessoEnum tipoPartes) {
-        this.tipoPartes = tipoPartes;
+    public void setNatureza(Natureza natureza) {
+        this.natureza = natureza;
     }
 
     public List<Pessoa> getPessoas() {
@@ -115,11 +116,11 @@ public class PartesController extends AbstractController {
     }
     
     public boolean apenasPessoaFisica(){
-        return ParteProcessoEnum.F.equals(tipoPartes);
+        return ParteProcessoEnum.F.equals(getNatureza().getTipoPartes());
     }
     
     public boolean apenasPessoaJuridica(){
-        return ParteProcessoEnum.J.equals(tipoPartes);
+        return ParteProcessoEnum.J.equals(getNatureza().getTipoPartes());
     }
     
     private void includePessoa(Pessoa pessoa){

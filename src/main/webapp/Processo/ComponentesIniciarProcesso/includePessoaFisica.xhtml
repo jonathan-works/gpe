@@ -11,7 +11,7 @@
 
     <wi:dataForm formId="pessoaFisicaForm"
         formTitle="#{messages['pessoaFisica.formTitle']}"
-        rendered="#{not empty partesController.tipoPartes and not partesController.apenasPessoaJuridica()}">
+        rendered="#{not empty partesController.natureza and not partesController.apenasPessoaJuridica()}">
 
         <wi:inputCpf id="cpf"
             value="#{partesController.pessoaFisica.cpf}"
@@ -32,8 +32,7 @@
                 required="true" />
         </h:panelGroup>
         <ui:define name="buttons">
-            <!-- TODO: Verificar porque usar diretamente o wi:commandButton lança uma org.jboss.seam.ui.UnauthorizedCommandException -->
-            <a:commandButton id="saveButton"
+            <wi:commandButton id="saveButton"
                 action="#{partesController.includePessoaFisica()}"
                 render="includePessoaFisicaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
                 value="#{messages['crud.persist']}"
