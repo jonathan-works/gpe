@@ -10,12 +10,14 @@
 
 
     <wi:dataForm formId="pessoaFisicaForm"
-        formTitle="#{messages['form.title']}" panelWidth="70%"
+        formTitle="#{messages['pessoaFisica.formTitle']}" panelWidth="70%"
         rendered="#{not empty partesController.tipoPartes and not partesController.apenasPessoaJuridica()}">
 
-        <wi:inputCpf id="cpf" value="#{partesController.pessoaFisica.cpf}"
+        <wi:inputCpf id="cpf"
+            value="#{partesController.pessoaFisica.cpf}"
             label="#{messages['pessoaFisica.cpf']}"
-            assignTo="#{partesController.pessoaFisica.cpf}" required="true">
+            assignTo="#{partesController.pessoaFisica.cpf}"
+            required="true">
             <a:ajax event="blur"
                 listener="#{partesController.searchByCpf()}"
                 execute="@this" render="loadedByCPF" limitRender="true" />
@@ -30,14 +32,14 @@
                 required="true" />
         </h:panelGroup>
         <ui:define name="buttons">
-
-            <wi:commandButton id="saveButton"
+            <!-- TODO: Verificar porque usar diretamente o wi:commandButton lança uma org.jboss.seam.ui.UnauthorizedCommandException -->
+            <a:commandButton id="saveButton"
                 action="#{partesController.includePessoaFisica()}"
-                reRender="includePessoaFisicaDiv, pessoasListDiv, storeDiv"
-                value="#{messages['crud.persist']}" />
-
+                render="includePessoaFisicaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
+                value="#{messages['crud.persist']}"
+                styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
         </ui:define>
 
     </wi:dataForm>
-
+    <br />
 </ui:composition>
