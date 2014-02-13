@@ -19,7 +19,7 @@
                 <a:ajax event="blur" execute="@this"
                     render="nome, dataNascimentoDecoration"
                     limitRender="true"
-                    listener="#{processoEpaHome.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}" />
+                    listener="#{processoHome.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}" />
             </wi:inputCpf>
             <wi:inputText id="nome"
                 value="#{pessoaFisicaHome.instance.nome}"
@@ -30,7 +30,7 @@
                 required="true" />
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
-                    action="#{processoEpaHome.incluirParteProcesso(processoHome.instance,'F')}"
+                    action="#{processoHome.incluirParteProcesso(processoHome.instance,'F')}"
                     reRender="parteProcessoListDiv, includePessoaFisicaDiv, pessoasListDiv, storeDiv"
                     value="#{messages['crud.persist']}" />
             </ui:define>

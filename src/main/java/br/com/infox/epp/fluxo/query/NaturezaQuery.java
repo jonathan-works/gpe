@@ -6,6 +6,8 @@ public interface NaturezaQuery {
     String SEQUENCE_NATUREZA = "public.sq_tb_natureza";
     String ID_NATUREZA = "id_natureza";
     String DESCRICAO_NATUREZA = "ds_natureza";
+    String TIPO_PARTES = "tp_partes";
+    String NUMERO_PARTES = "nr_partes";
     String OBRIGATORIO_PARTES = "in_partes";
     String NATUREZA_ATTRIBUTE = "natureza";
 

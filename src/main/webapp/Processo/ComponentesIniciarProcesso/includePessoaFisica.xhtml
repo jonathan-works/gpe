@@ -1,59 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-	 xmlns:ui="http://java.sun.com/jsf/facelets"
-	 xmlns="http://www.w3.org/1999/xhtml"
-	 xmlns:a="http://richfaces.org/a4j"
-	 xmlns:f="http://java.sun.com/jsf/core"
-	 xmlns:h="http://java.sun.com/jsf/html"
-	 xmlns:rich="http://richfaces.org/rich"
-	 xmlns:s="http://jboss.org/schema/seam/taglib"
-	 xmlns:wi="http://www.itx.com.br/jsf">
-	
-		
-	<wi:dataForm
-		 formId="pessoaFisicaForm"
-		 formTitle="#{messages['form.title']}"
-		 panelWidth="70%"
-		 rendered="#{home.isPessoaFisica()}">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
 
-		<wi:inputCpf
-			 id="cpf"
-			 value="#{pessoaFisicaHome.instance.cpf}"
-			 label="#{messages['pessoaFisica.cpf']}"
-			 assignTo="#{pessoaFisicaHome.instance.cpf}"
-			 required="true">
-			
-			<a:ajax
-				 event="blur"
-				 listener="#{action.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}"
-				 execute="@this"
-				 render="loadedByCPF"
-				 limitRender="true" />
-		
-		</wi:inputCpf>
-		<h:panelGroup id="loadedByCPF">
-			<wi:inputText
-				 id="nome"
-				 value="#{pessoaFisicaHome.instance.nome}"
-				 label="#{messages['pessoaFisica.nome']}"
-				 required="true" />
-			<wi:inputDate
-				 id="dataNascimento"
-				 value="#{pessoaFisicaHome.instance.dataNascimento}"
-				 label="#{messages['pessoaFisica.dataNascimento']}"
-				 required="true" />
-		</h:panelGroup>
-		<ui:define name="buttons">
-			
-			<wi:commandButton
-				 id="saveButton"
-				 action="#{action.incluir('F')}"
-				 reRender="includePessoaFisicaDiv, pessoasListDiv, storeDiv"
-				 value="#{messages['crud.persist']}" />
-			<wi:commandButtonNew />
-		
-		</ui:define>
-	
-	</wi:dataForm>
-	
+    <wi:dataForm formId="pessoaFisicaForm"
+        formTitle="#{messages['pessoaFisica.formTitle']}"
+        rendered="#{partesController.podeAdicionarPartes() and not partesController.apenasPessoaJuridica()}">
+
+        <wi:inputCpf id="cpf"
+            value="#{partesController.pessoaFisica.cpf}"
+            label="#{messages['pessoaFisica.cpf']}"
+            assignTo="#{partesController.pessoaFisica.cpf}"
+            required="true">
+            <a:ajax event="blur"
+                listener="#{partesController.searchByCpf()}"
+                execute="@this" render="loadedByCPF" limitRender="true" />
+        </wi:inputCpf>
+        <h:panelGroup id="loadedByCPF">
+            <wi:inputText id="nome"
+                value="#{partesController.pessoaFisica.nome}"
+                label="#{messages['pessoaFisica.nome']}" required="true" />
+            <wi:inputDate id="dataNascimento"
+                value="#{partesController.pessoaFisica.dataNascimento}"
+                label="#{messages['pessoaFisica.dataNascimento']}"
+                required="true" />
+        </h:panelGroup>
+        <ui:define name="buttons">
+            <wi:commandButton id="pessoaFisicaSaveButton"
+                action="#{partesController.includePessoaFisica()}"
+                reRender="buscaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
+                value="#{messages['crud.persist']}" />
+        </ui:define>
+
+    </wi:dataForm>
+    <br />
 </ui:composition>

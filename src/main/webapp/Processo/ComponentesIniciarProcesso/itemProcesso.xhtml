@@ -10,41 +10,34 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <h:form id="itemProcessoForm">
-        <s:div id="itemDiv">
-            <rich:dataTable id="itemTable" value="#{action.itemList}"
-                var="row" rows="10" rendered="#{action.renderedByItem}">
-                <rich:column>
-                    <c:if test="#{!action.necessitaPartes()}">
-                        <a:commandLink
-                            action="#{action.onSelectItem(row)}"
-                            execute="@this" render="@this"
-                            limitRender="true"
-                            oncomplete="open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{util.contextPath}/Painel/list.seam';">
-                            <h:graphicImage url="/img/start.gif" />
-                        </a:commandLink>
-                    </c:if>
-                    <c:if test="#{action.necessitaPartes()}">
-                        <a:commandLink
-                            action="#{action.onSelectItem(row)}"
-                            execute="@this" render="partesForm"
-                            limitRender="true">
-                            <h:graphicImage url="/img/start.gif" />
-                        </a:commandLink>
-                    </c:if>
-                </rich:column>
-                <rich:column>
-                    <f:facet name="header">
-                        <h:outputText
-                            value="#{messages['item.descricaoItem']}" />
-                    </f:facet>
-                    <h:outputText
-                        value="#{row.item.caminhoCompletoToString()}" />
-                </rich:column>
-            </rich:dataTable>
-            <rich:dataScroller for="itemTable" lastPageMode="full"
-                id="dsItemTable" align="right"
-                renderIfSinglePage="false" />
+        <s:div id="itemDiv"
+            rendered="#{action.renderedByItem and !action.renderizarCadastroPartes}">
+            <wi:dataTable values="#{action.itemList}" tableTitle="Itens"
+                id="itemTable" rowId="#{row.idItem}"
+                searchFormStyleClass="hidden">
+                <ui:define name="headerToolBar" />
+                <ui:define name="toolBar">
+                    <a:commandLink
+                        rendered="#{!action.necessitaPartes()}"
+                        action="#{action.onSelectItem(row)}"
+                        execute="@this" render="@this"
+                        limitRender="true"
+                        oncomplete="open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{util.contextPath}/Painel/list.seam';">
+                        <h:graphicImage value="/img/start.gif" />
+                    </a:commandLink>
+                    <a:commandLink
+                        rendered="#{action.necessitaPartes()}"
+                        action="#{action.onSelectItem(row)}"
+                        oncomplete="#{partesController.setNatureza(action.natureza)}"
+                        execute="@this" render="@all" limitRender="true">
+                        <h:graphicImage value="/img/start.gif" />
+                    </a:commandLink>
+                </ui:define>
+                <wi:columnOutputText columnId="item"
+                    columnHeader="#{messages['item.descricaoItem']}"
+                    value="#{row.item.caminhoCompletoToString()}" />
+            </wi:dataTable>
         </s:div>
-        <wi:messages />
     </h:form>
+
 </ui:composition>

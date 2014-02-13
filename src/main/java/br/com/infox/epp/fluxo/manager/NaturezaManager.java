@@ -11,7 +11,7 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 @AutoCreate
 public class NaturezaManager extends Manager<NaturezaDAO, Natureza> {
 
-	private static final long serialVersionUID = 2649821908249070536L;
+    private static final long serialVersionUID = 2649821908249070536L;
 
-	public static final String NAME = "naturezaManager";
+    public static final String NAME = "naturezaManager";
 }
