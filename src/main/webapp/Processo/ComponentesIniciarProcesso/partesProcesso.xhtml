@@ -40,7 +40,7 @@
         <h:form>
             <s:div id="storeDiv">
                 <wi:commandButton id="storeButton"
-                    action="#{action.iniciarProcesso()}"
+                    action="#{action.iniciarProcesso(partesController.pessoas)}"
                     rendered="#{!partesController.pessoas.isEmpty()}"
                     reRender="includePessoaFisicaDiv, pessoasFisicasListDiv"
                     value="Iniciar Processo"
