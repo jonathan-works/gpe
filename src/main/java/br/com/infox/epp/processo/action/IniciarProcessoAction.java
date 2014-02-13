@@ -67,17 +67,31 @@ public class IniciarProcessoAction {
     private List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
 
     public void iniciarProcesso() {
-        final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-        processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
+        newProcessoEpa();
+        enviarProcessoParaJbpm();
+    }
+    
+    public void iniciarProcesso(List<Pessoa> pessoas){
+        newProcessoEpa();
+        inserirPartes(pessoas);
+        enviarProcessoParaJbpm();
+    }
+
+    private void inserirPartes(List<Pessoa> pessoas) {
         if (necessitaPartes()) {
-            for (Pessoa p : pessoaFisicaList) {
-                processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-            }
-            for (Pessoa p : pessoaJuridicaList) {
+            for (Pessoa p : pessoas) {
                 processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
             }
         }
+    }
+
+    private void newProcessoEpa() {
+        final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+        final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+        processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
+    }
+
+    private void enviarProcessoParaJbpm() {
         try {
             processoEpaManager.persist(processoEpa);
             iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
