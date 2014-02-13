@@ -32,7 +32,6 @@ import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 
 @Name(IniciarProcessoAction.NAME)
@@ -183,13 +182,6 @@ public class IniciarProcessoAction {
             return getNatureza().getHasPartes();
         }
         return Boolean.FALSE;
-    }
-
-    public ParteProcessoEnum tipoPartes() {
-        if (getNatureza() != null) {
-            return getNatureza().getTipoPartes();
-        }
-        return null;
     }
 
     public boolean isRenderizarCadastroPartes() {
