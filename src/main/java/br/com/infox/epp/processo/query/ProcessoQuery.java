@@ -75,4 +75,7 @@ public interface ProcessoQuery {
             "(select * from jbpm_task where name_ = t.name_ " +
             "and id_ = pl.id_task_jbpm))";
     
+    String GET_PROCESSO_BY_NUMERO_PROCESSO = "getProcessoByNumeroProcesso";
+    String GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY = "select o from ProcessoEpa o where o.numeroProcesso=:"+NUMERO_PROCESSO;
+    
 }
