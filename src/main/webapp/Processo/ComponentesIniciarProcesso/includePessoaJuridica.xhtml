@@ -10,7 +10,7 @@
 
     <wi:dataForm formId="pessoaJuridicaForm"
         formTitle="#{messages['pessoaJuridica.formTitle']}"
-        rendered="#{not empty partesController.natureza and not partesController.apenasPessoaFisica()}">
+        rendered="#{partesController.podeAdicionarPartes() and not partesController.apenasPessoaFisica()}">
 
         <wi:inputCnpj id="cnpj"
             value="#{partesController.pessoaJuridica.cnpj}"
@@ -32,9 +32,9 @@
                 required="true" />
         </h:panelGroup>
         <ui:define name="buttons">
-            <wi:commandButton id="saveButton"
+            <wi:commandButton id="pessoaJuridicaSaveButton"
                 action="#{partesController.includePessoaJuridica()}"
-                reRender="includePessoaJuridicaDiv, pessoasListDiv, storeDiv, pessoaJuridicaForm"
+                reRender="buscaDiv, pessoasListDiv, storeDiv, pessoaJuridicaForm"
                 value="#{messages['crud.persist']}" />
         </ui:define>
 

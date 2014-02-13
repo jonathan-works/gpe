@@ -134,5 +134,9 @@ public class PartesController extends AbstractController {
     public void removePessoa(Pessoa pessoa){
         pessoas.remove(pessoa);
     }
+    
+    public boolean podeAdicionarPartes(){
+        return natureza != null && pessoas.size() < natureza.getNumeroPartes();
+    }
 
 }

@@ -8,10 +8,9 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-
     <wi:dataForm formId="pessoaFisicaForm"
         formTitle="#{messages['pessoaFisica.formTitle']}"
-        rendered="#{not empty partesController.natureza and not partesController.apenasPessoaJuridica()}">
+        rendered="#{partesController.podeAdicionarPartes() and not partesController.apenasPessoaJuridica()}">
 
         <wi:inputCpf id="cpf"
             value="#{partesController.pessoaFisica.cpf}"
@@ -32,11 +31,10 @@
                 required="true" />
         </h:panelGroup>
         <ui:define name="buttons">
-            <wi:commandButton id="saveButton"
+            <wi:commandButton id="pessoaFisicaSaveButton"
                 action="#{partesController.includePessoaFisica()}"
-                render="includePessoaFisicaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
-                value="#{messages['crud.persist']}"
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
+                reRender="buscaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
+                value="#{messages['crud.persist']}" />
         </ui:define>
 
     </wi:dataForm>
