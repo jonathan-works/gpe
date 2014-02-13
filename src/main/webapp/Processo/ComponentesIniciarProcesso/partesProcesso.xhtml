@@ -9,16 +9,27 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <h:form id="partesForm">
-        <s:div id="partesDiv"
-            rendered="#{action.renderizarCadastroPartes}">
-        </s:div>
-    </h:form>
     <s:div id="buscaDiv">
         <ui:include src="includePessoaFisica.xhtml" />
         <ui:include src="includePessoaJuridica.xhtml" />
     </s:div>
     <s:div id="pessoasListDiv">
+        <wi:dataTable id="partesTable"
+            tableTitle="#{messages['partes.titleTable']}"
+            values="#{partesController.pessoas}" rowId="#{row.idPessoa}"
+            searchFormStyleClass="hidden">
+            <ui:define name="headerToolBar" />
+            <ui:define name="toolBar" />
+            <wi:columnOutputText columnId="pessoa"
+                columnHeader="#{messages['partes.nome']}"
+                value="#{row.nome}" />
+            <wi:columnEnum columnId="tipo"
+                columnHeader="#{messages['partes.tipoParte']}"
+                value="#{row.tipoPessoa}" />
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{messages['partes.codigo']}"
+                value="#{row.codigo}" />
+        </wi:dataTable>
         <h:form>
             <s:div id="pessoasFisicasListDiv">
                 <rich:dataTable id="pessoasFisicasTable"
