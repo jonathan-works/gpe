@@ -70,6 +70,7 @@ public class PartesController extends AbstractController {
         if (getPessoaFisica() == null) {
             setPessoaFisica(new PessoaFisica());
             getPessoaFisica().setCpf(cpf);
+            getPessoaFisica().setAtivo(true);
         }
     }
 
@@ -79,6 +80,7 @@ public class PartesController extends AbstractController {
         if (getPessoaJuridica() == null) {
             setPessoaJuridica(new PessoaJuridica());
             getPessoaJuridica().setCnpj(cnpj);
+            getPessoaJuridica().setAtivo(true);
         }
     }
     
