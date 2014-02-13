@@ -32,10 +32,9 @@
         <ui:define name="buttons">
 
             <wi:commandButton id="saveButton"
-                action="#{action.incluir('F')}"
+                action="#{partesController.includePessoaFisica()}"
                 reRender="includePessoaFisicaDiv, pessoasListDiv, storeDiv"
                 value="#{messages['crud.persist']}" />
-            <wi:commandButtonNew />
 
         </ui:define>
 
