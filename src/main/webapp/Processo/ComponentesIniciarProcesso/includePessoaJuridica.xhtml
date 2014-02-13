@@ -9,40 +9,36 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <wi:dataForm formId="pessoaJuridicaForm"
-        formTitle="#{messages['form.title']}" panelWidth="70%"
+        formTitle="#{messages['pessoaJuridica.formTitle']}"
+        panelWidth="70%"
         rendered="#{not empty partesController.tipoPartes and not partesController.apenasPessoaFisica()}">
 
         <wi:inputCnpj id="cnpj"
-            value="#{pessoaJuridicaHome.instance.cnpj}"
+            value="#{partesController.pessoaJuridica.cnpj}"
             label="#{messages['pessoaJuridica.cnpj']}"
-            assignTo="#{pessoaJuridicaHome.instance.cnpj}"
+            assignTo="#{partesController.pessoaJuridica.cnpj}"
             required="true">
-
             <a:ajax event="blur"
-                listener="#{action.carregaPessoa('J', pessoaJuridicaHome.instance.cnpj)}"
+                listener="#{partesController.searchByCnpj()}"
                 execute="@this" render="loadedByCNPJ" limitRender="true" />
-
         </wi:inputCnpj>
         <h:panelGroup id="loadedByCNPJ">
             <wi:inputText id="nome"
-                value="#{pessoaJuridicaHome.instance.nome}"
+                value="#{partesController.pessoaJuridica.nome}"
                 label="#{messages['pessoaJuridica.nome']}"
                 required="true" />
             <wi:inputText id="razao"
-                value="#{pessoaJuridicaHome.instance.razaoSocial}"
+                value="#{partesController.pessoaJuridica.razaoSocial}"
                 label="#{messages['pessoaJuridica.razaoSocial']}"
                 required="true" />
         </h:panelGroup>
         <ui:define name="buttons">
-
             <wi:commandButton id="saveButton"
-                action="#{action.incluir('J')}"
-                reRender="includePessoaJuridicaDiv, pessoasListDiv, storeDiv"
+                action="#{partesController.includePessoaJuridica()}"
+                reRender="includePessoaJuridicaDiv, pessoasListDiv, storeDiv, pessoaJuridicaForm"
                 value="#{messages['crud.persist']}" />
-            <wi:commandButtonNew />
-
         </ui:define>
 
     </wi:dataForm>
-
+    <br />
 </ui:composition>
