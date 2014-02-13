@@ -21,7 +21,11 @@
             values="#{partesController.pessoas}" rowId="#{row.idPessoa}"
             searchFormStyleClass="hidden">
             <ui:define name="headerToolBar" />
-            <ui:define name="toolBar" />
+            <ui:define name="toolBar">
+                <wi:toolBarRemove id="toolBarRemove"
+                    reRender="pessoasListDiv, storeDiv"
+                    actionRemove="#{partesController.removePessoa(row)}" />
+            </ui:define>
             <wi:columnOutputText columnId="pessoa"
                 columnHeader="#{messages['partes.nome']}"
                 value="#{row.nome}" />
