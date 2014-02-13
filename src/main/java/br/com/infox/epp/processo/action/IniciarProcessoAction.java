@@ -67,22 +67,21 @@ public class IniciarProcessoAction {
     private List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
 
     public void iniciarProcesso() {
-        final StatusMessages messagesHandler = getMessagesHandler();
-        try {
-            final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-            final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-            processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
-            if (necessitaPartes()) {
-                for (Pessoa p : pessoaFisicaList) {
-                    processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-                }
-                for (Pessoa p : pessoaJuridicaList) {
-                    processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-                }
+        final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+        final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+        processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
+        if (necessitaPartes()) {
+            for (Pessoa p : pessoaFisicaList) {
+                processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
             }
+            for (Pessoa p : pessoaJuridicaList) {
+                processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
+            }
+        }
+        try {
             processoEpaManager.persist(processoEpa);
             iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
-            messagesHandler.add("Processo inserido com sucesso!");
+            getMessagesHandler().add("Processo inserido com sucesso!");
         } catch (TypeMismatchException tme) {
             sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);
         } catch (NullPointerException npe) {
