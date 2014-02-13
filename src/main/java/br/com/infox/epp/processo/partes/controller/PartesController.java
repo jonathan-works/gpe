@@ -7,6 +7,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
@@ -24,6 +26,7 @@ public class PartesController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "partesController";
+    private static final LogProvider LOG = Logging.getLogProvider(PartesController.class);
 
     private Natureza natureza;
     private PessoaFisica pessoaFisica = new PessoaFisica();
@@ -92,8 +95,7 @@ public class PartesController extends AbstractController {
             pessoaFisicaManager.persist(getPessoaFisica());
             includePessoa(getPessoaFisica());
         } catch (DAOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Não foi possível inserir a pessoa " + getPessoaFisica(), e);
         } finally {
             setPessoaFisica(new PessoaFisica());
         }
@@ -104,8 +106,7 @@ public class PartesController extends AbstractController {
             pessoaJuridicaManager.persist(getPessoaJuridica());
             includePessoa(getPessoaJuridica());
         } catch (DAOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Não foi possível inserir a pessoa " + getPessoaJuridica(), e);
         } finally {
             setPessoaJuridica(new PessoaJuridica());
         }
