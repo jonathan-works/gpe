@@ -275,6 +275,7 @@
 
             <infox:tab id="tabPartesDoProcesso"
                 name="tabPartesDoProcesso" status=":status"
+                action="#{partesProcessoController.setProcessoEpa(home.instance)}"
                 rendered="#{home.hasPartes()}"
                 title="#{messages['parteProcesso.partes']}">
                 <ui:include src="parteProcessoGrid.xhtml" />
