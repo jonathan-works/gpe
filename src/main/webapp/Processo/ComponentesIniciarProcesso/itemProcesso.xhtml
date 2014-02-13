@@ -13,7 +13,7 @@
         <s:div id="itemDiv"
             rendered="#{action.renderedByItem and !action.renderizarCadastroPartes}">
             <wi:dataTable values="#{action.itemList}" tableTitle="Itens"
-                id="itemTable" rowId="#{row.idNaturezaCategoriaFluxo}"
+                id="itemTable" rowId="#{row.idItem}"
                 searchFormStyleClass="hidden">
                 <ui:define name="headerToolBar" />
                 <ui:define name="toolBar">
