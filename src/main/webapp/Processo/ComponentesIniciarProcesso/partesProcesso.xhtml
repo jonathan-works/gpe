@@ -36,82 +36,12 @@
                 columnHeader="#{messages['partes.codigo']}"
                 value="#{row.codigo}" />
         </wi:dataTable>
+        <br />
         <h:form>
-            <s:div id="pessoasFisicasListDiv">
-                <rich:dataTable id="pessoasFisicasTable"
-                    value="#{action.pessoaFisicaList}" var="row"
-                    rows="10"
-                    rendered="#{!action.pessoaFisicaList.isEmpty()}">
-                    <f:facet name="header">
-                        <h:outputText value="Partes - Pessoas Fisicas" />
-                    </f:facet>
-                    <rich:column>
-                        <f:facet name="header" />
-                        <center>
-                            <wi:toolBarRemove id="toolBarRemove"
-                                reRender="pessoasFisicasListDiv, storeDiv"
-                                actionRemove="#{action.removePessoaFisica(row)}" />
-                        </center>
-                    </rich:column>
-                    <rich:column>
-                        <f:facet name="header">
-                            <h:outputText
-                                value="#{messages['pessoaFisica.nome']}" />
-                        </f:facet>
-                        <h:outputText value="#{row.nome}" />
-                    </rich:column>
-                    <rich:column>
-                        <f:facet name="header">
-                            <h:outputText
-                                value="#{messages['pessoaFisica.cpf']}" />
-                        </f:facet>
-                        <h:outputText value="#{row.cpf}" />
-                    </rich:column>
-                </rich:dataTable>
-                <rich:dataScroller for="pessoasFisicasTable"
-                    lastPageMode="full" id="dsPessoasFisicasTable"
-                    align="left" renderIfSinglePage="false" />
-                <br />
-            </s:div>
-            <s:div id="pessoasJuridicasListDiv">
-                <rich:dataTable id="pessoasJuridicasTable"
-                    value="#{action.pessoaJuridicaList}" var="row"
-                    rows="10"
-                    rendered="#{!action.pessoaJuridicaList.isEmpty()}">
-                    <f:facet name="header">
-                        <h:outputText value="Partes - Pessoas Juridicas" />
-                    </f:facet>
-                    <rich:column>
-                        <f:facet name="header" />
-                        <center>
-                            <wi:toolBarRemove id="toolBarRemove"
-                                reRender="pessoasJuridicasListDiv, storeDiv"
-                                actionRemove="#{action.removePessoaJuridica(row)}" />
-                        </center>
-                    </rich:column>
-                    <rich:column>
-                        <f:facet name="header">
-                            <h:outputText
-                                value="#{messages['pessoaJuridica.nome']}" />
-                        </f:facet>
-                        <h:outputText value="#{row.nome}" />
-                    </rich:column>
-                    <rich:column>
-                        <f:facet name="header">
-                            <h:outputText
-                                value="#{messages['pessoaJuridica.cnpj']}" />
-                        </f:facet>
-                        <h:outputText value="#{row.cnpj}" />
-                    </rich:column>
-                </rich:dataTable>
-                <rich:dataScroller for="pessoasJuridicasTable"
-                    lastPageMode="full" id="dsPessoasJuridicasTable"
-                    align="left" renderIfSinglePage="false" />
-            </s:div>
             <s:div id="storeDiv">
                 <wi:commandButton id="storeButton"
                     action="#{action.iniciarProcesso()}"
-                    rendered="#{!action.pessoaFisicaList.isEmpty() || !action.pessoaJuridicaList.isEmpty()}"
+                    rendered="#{!partesController.pessoas.isEmpty()}"
                     reRender="includePessoaFisicaDiv, pessoasFisicasListDiv"
                     value="Iniciar Processo"
                     oncomplete="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{processoHome.instance.idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');                 window.location='#{util.contextPath}/Painel/list.seam';" />
