@@ -115,4 +115,12 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
     public Double getMediaTempoGasto(Fluxo fluxo, SituacaoPrazoEnum prazoEnum) {
         return getDao().getMediaTempoGasto(fluxo, prazoEnum);
     }
+    
+    public ProcessoEpa getProcessoEpaByNumeroProcesso(final String numeroProcesso) {
+        ProcessoEpa processo = null;
+        if (numeroProcesso != null) {
+            processo = getDao().getProcessoEpaByNumeroProcesso(numeroProcesso);
+        }
+        return processo;
+    }
 }
