@@ -74,7 +74,7 @@ public class PartesController extends AbstractController {
         }
     }
 
-    public void searchByCnpf() {
+    public void searchByCnpj() {
         final String cnpj = pessoaJuridica.getCnpj();
         setPessoaJuridica(pessoaJuridicaManager.getByCnpj(cnpj));
         if (getPessoaJuridica() == null) {
