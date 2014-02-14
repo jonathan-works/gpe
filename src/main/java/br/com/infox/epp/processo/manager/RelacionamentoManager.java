@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.manager;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
@@ -11,6 +12,7 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.itx.util.EntityUtil;
 
+@AutoCreate
 @Name(RelacionamentoManager.NAME)
 public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionamento> {
 
