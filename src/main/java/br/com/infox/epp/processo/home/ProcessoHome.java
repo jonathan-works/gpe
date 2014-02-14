@@ -22,7 +22,6 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.pessoa.manager.PessoaManager;
-import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
@@ -421,22 +420,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
     @Observer(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO)
     public void setPodeInativarParteProcesso() {
         this.podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
-    }
-
-    private TipoPessoaEnum convertTipoPessoaEnum(final String tipoPessoa) {
-        if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
-            return TipoPessoaEnum.F;
-        } else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
-            return TipoPessoaEnum.J;
-        }
-        return null;
-    }
-
-    public void carregaPessoa(final String tipoPessoa, final String codigo) {
-        final TipoPessoaEnum tipoPessoaEnum = convertTipoPessoaEnum(tipoPessoa);
-        if (tipoPessoaEnum != null) {
-            pessoaManager.carregaPessoa(tipoPessoaEnum, codigo);
-        }
     }
 
 }
