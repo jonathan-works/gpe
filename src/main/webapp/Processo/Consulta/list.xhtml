@@ -110,7 +110,8 @@
                 name="tabPartesDoProcesso" immediate="true"
                 status=":status"
                 rendered="#{processoHandler.hasPartes()}"
-                title="#{messages['parteProcesso.partes']}">
+                title="#{messages['parteProcesso.partes']}"
+                action="#{parteProcessoList.entity.setProcesso(processoHome.instance)}">
 
                 <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
 

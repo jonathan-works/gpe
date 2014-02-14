@@ -131,11 +131,12 @@
             <infox:tab id="tabPartesDoProcesso"
                 name="tabPartesDoProcesso" status=":status"
                 rendered="#{home.hasPartes()}"
+                action="#{parteProcessoList.entity.setProcesso(home.instance)}"
                 title="#{messages['parteProcesso.partes']}">
                 <ui:decorate id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{messages['parteProcesso.partes']}</ui:define>
-                    <ui:include src="parteProcessoGrid.xhtml" />
+                    <ui:include src="parteProcessoGridRO.xhtml" />
                 </ui:decorate>
             </infox:tab>
             
