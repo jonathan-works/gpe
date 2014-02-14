@@ -32,8 +32,8 @@
             </h:panelGroup>
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
-                    action="#{processoHome.incluirParteProcesso(processoHome.instance,'J')}"
-                    reRender="parteProcessoListDiv, includePessoaJuridicaDiv, pessoasListDiv, storeDiv"
+                    action="#{partesProcessoController.includePessoaJuridica()}"
+                    reRender="buscaDiv, parteProcessoListDiv, includePessoaJuridicaDiv, pessoasListDiv, storeDiv"
                     value="#{messages['crud.persist']}" />
             </ui:define>
         </wi:dataForm>

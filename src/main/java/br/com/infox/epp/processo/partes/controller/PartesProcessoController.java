@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -66,8 +64,16 @@ public class PartesProcessoController extends AbstractPartesController {
 
     @Override
     public void includePessoaJuridica() {
-        // TODO Auto-generated method stub
-
+        try {
+            pessoaJuridicaManager.persist(getPessoaJuridica());
+            parteProcessoManager.incluir(processoEpa, getPessoaJuridica());
+            processoEpaManager.refresh(processoEpa);
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
+            LOG.error("Não foi possível inserir a pessoa " + getPessoaJuridica(), e);
+        } finally {
+            setPessoaJuridica(new PessoaJuridica());
+        }
     }
     
     @Override
