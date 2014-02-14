@@ -13,13 +13,11 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
-import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 
 @Name(ProcessoEpaManager.NAME)
 @AutoCreate
@@ -39,17 +37,6 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
 
     public List<ProcessoEpa> listNotEnded(Fluxo fluxo) {
         return getDao().listNotEnded(fluxo);
-    }
-
-    public void incluirParteProcesso(ProcessoEpa processoEpa, Pessoa pessoa) throws DAOException {
-        processoEpa.getPartes().add(new ParteProcesso(processoEpa, pessoa));
-        update(processoEpa);
-    }
-
-    public void incluirParteProcesso(ProcessoEpa processoEpa,
-            ParteProcesso parteProcesso) throws DAOException {
-        processoEpa.getPartes().add(parteProcesso);
-        update(processoEpa);
     }
 
     public Boolean podeInativarPartesDoProcesso(Processo processo) {
