@@ -34,6 +34,10 @@ public class HistoricoParteProcesso {
     // Em caso de novas regras/atributos, favor inserir aqui abaixo
     private boolean ativo;
 
+    public HistoricoParteProcesso() {
+        super();
+    }
+
     public HistoricoParteProcesso(ParteProcesso parteProcessoAtual,
             String motivoModificacao) {
         responsavelPorModificacao = Authenticator.getUsuarioLogado();
