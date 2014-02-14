@@ -364,6 +364,9 @@ public class Authenticator {
 	 */
 	public static UsuarioLogin getUsuarioLogado() {
 		UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
+		if (usuario == null) {
+			return null;
+		}
 		return getUsuarioLoginDAO().find(usuario.getIdUsuarioLogin());
 	}
 	

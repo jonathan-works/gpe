@@ -30,11 +30,13 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParteProcessoManager;
+import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
@@ -63,7 +65,9 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
-
+    @In
+    private SigiloProcessoService sigiloProcessoService;
+    
     private ModeloDocumento modeloDocumento;
     private TipoProcessoDocumento tipoProcessoDocumento;
     private TipoProcessoDocumento tipoProcessoDocumentoRO;
@@ -112,7 +116,9 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public Boolean checarVisibilidade() {
-        if (checkVisibilidade) {
+    	if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), (ProcessoEpa) getInstance())) {
+    		possuiPermissaoVisibilidade = false;
+    	} else if (checkVisibilidade) {
             possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO.possuiPermissao();
             checkVisibilidade = false;
         }

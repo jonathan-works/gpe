@@ -32,6 +32,7 @@ import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
 
+import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 
 @Entity
@@ -47,10 +48,16 @@ import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 })
 @FilterDefs({ 
     @FilterDef(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, parameters = {
-    @ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO),
-    @ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL) }) })
+   		@ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO),
+   		@ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL) 
+  	}),
+  	@FilterDef(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, parameters = {
+  		@ParamDef(type = SigiloProcessoFilter.TYPE_INT, name = SigiloProcessoFilter.PARAM_ID_USUARIO)
+  	})
+})
 @Filters({ 
-    @Filter(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, condition = SituacaoProcessoFilter.CONDITION_PAPEL_LOCALIZACAO) 
+    @Filter(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, condition = SituacaoProcessoFilter.CONDITION_PAPEL_LOCALIZACAO),
+    @Filter(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, condition = SigiloProcessoFilter.CONDITION_FILTER_SIGILO_PROCESSO)
 })
 public class SituacaoProcesso implements java.io.Serializable {
 

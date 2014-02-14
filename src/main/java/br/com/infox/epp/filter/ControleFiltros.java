@@ -3,6 +3,7 @@
 package br.com.infox.epp.filter;
 
 import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.*;
+
 import java.text.MessageFormat;
 
 import org.jboss.seam.ScopeType;
@@ -15,6 +16,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.itx.component.MeasureTime;
@@ -46,6 +48,9 @@ public class ControleFiltros {
 				FILTER_PARAM_ID_PAPEL, usuarioLocalizacaoAtual.getPapel().getIdPapel());
 		HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, 
 				FILTER_PARAM_ID_LOCALIZACAO, usuarioLocalizacaoAtual.getLocalizacao().getIdLocalizacao());
+		
+		HibernateUtil.setFilterParameter(SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, 
+				SigiloProcessoFilter.PARAM_ID_USUARIO, usuarioLocalizacaoAtual.getUsuario().getIdUsuarioLogin());
 		
 		LOG.info(MessageFormat.format(
 				"Filtro executado para usuário [{0} | {1}] ({2} ms)", usuarioLocalizacaoAtual.getUsuario(),
