@@ -67,7 +67,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private ProcessoDocumentoManager processoDocumentoManager;
     @In
     private SigiloProcessoService sigiloProcessoService;
-    
+
     private ModeloDocumento modeloDocumento;
     private TipoProcessoDocumento tipoProcessoDocumento;
     private TipoProcessoDocumento tipoProcessoDocumentoRO;
@@ -116,9 +116,9 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public Boolean checarVisibilidade() {
-    	if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), (ProcessoEpa) getInstance())) {
-    		possuiPermissaoVisibilidade = false;
-    	} else if (checkVisibilidade) {
+        if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), (ProcessoEpa) getInstance())) {
+            possuiPermissaoVisibilidade = false;
+        } else if (checkVisibilidade) {
             possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO.possuiPermissao();
             checkVisibilidade = false;
         }
