@@ -34,7 +34,6 @@ import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.pessoa.manager.PessoaManager;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
@@ -48,7 +47,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
-        .addClasses(UsuarioPessoaFisicaCrudAction.class,PessoaManager.class,
+        .addClasses(UsuarioPessoaFisicaCrudAction.class,
                 PessoaFisicaDAO.class,PessoaJuridicaDAO.class,
                 UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
                 UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
