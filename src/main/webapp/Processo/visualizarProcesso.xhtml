@@ -142,7 +142,8 @@
             <infox:tab id="tabSigiloProcesso"
                 name="tabSigiloProcesso" status=":status"
                 title="#{messages['sigiloProcesso.sigiloProcesso']}"
-                action="#{usuarioRaiaList.loadLocalizacoes(processoHome.instance.naturezaCategoriaFluxo.fluxo)}">
+                action="#{usuarioRaiaList.loadLocalizacoes(processoHome.instance.naturezaCategoriaFluxo.fluxo)}"
+                rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
                 
                 <f:setPropertyActionListener target="#{sigiloProcessoAction.processo}" value="#{processoHome.instance}" />
                 <f:setPropertyActionListener target="#{sigiloProcessoList.processo}" value="#{processoHome.instance}" />
