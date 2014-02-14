@@ -5,12 +5,14 @@ import static br.com.infox.epp.processo.query.RelacionamentoProcessoQuery.RELACI
 
 import java.util.HashMap;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.entity.Relacionamento;
 
+@AutoCreate
 @Name(RelacionamentoDAO.NAME)
 public class RelacionamentoDAO extends DAO<Relacionamento> {
 
