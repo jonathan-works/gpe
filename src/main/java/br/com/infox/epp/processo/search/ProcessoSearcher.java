@@ -9,8 +9,11 @@ import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
 @Name(ProcessoSearcher.NAME)
 @Scope(ScopeType.EVENT)
@@ -21,6 +24,7 @@ public class ProcessoSearcher {
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoSearcher.class);
     
     @In ProcessoManager processoManager;
+    @In SigiloProcessoService sigiloProcessoService;
     
     /**
      * Método redireciona para visualização do processo escolhido no paginador
@@ -45,11 +49,10 @@ public class ProcessoSearcher {
      */
     public boolean searchProcesso(String searchText) {
         Processo processo = searchIdProcesso(searchText);
-        boolean hasProcesso = processo != null;
-        if (hasProcesso) {
-            visualizarProcesso(processo);
+        if (processo != null && sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), (ProcessoEpa) processo)) {
+        	visualizarProcesso(processo);
         }
-        return hasProcesso;
+        return false;
     }
     
     /**
