@@ -417,18 +417,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
         this.podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
     }
 
-    public void incluirParteProcesso(Processo processo, String tipoPessoa) {
-        try {
-            parteProcessoManager.incluir(processo, tipoPessoa);
-            raiseEvent(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO);
-        } catch (DAOException e) {
-            LOG.error(".incluirParteProcesso()", e);
-            final FacesMessages messagesHandler = FacesMessages.instance();
-            messagesHandler.clear();
-            messagesHandler.add(Severity.ERROR, e.getLocalizedMessage());
-        }
-    }
-
     private TipoPessoaEnum convertTipoPessoaEnum(final String tipoPessoa) {
         if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
             return TipoPessoaEnum.F;
