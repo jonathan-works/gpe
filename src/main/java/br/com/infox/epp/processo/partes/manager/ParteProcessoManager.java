@@ -38,17 +38,4 @@ public class ParteProcessoManager extends Manager<ParteProcessoDAO, ParteProcess
         persist(new ParteProcesso(processoEpa, pessoa));
     }
 
-    public HistoricoParteProcesso restaurarParteProcesso(
-            ParteProcesso parteProcessoAtual,
-            HistoricoParteProcesso versaoAnterior, String motivoRestauracao) throws ValidationException, DAOException {
-        if (!parteProcessoAtual.getIdParteProcesso().equals(versaoAnterior.getParteModificada().getIdParteProcesso())) {
-            throw new ValidationException("Restauração inválida: Histórico passado não pertence ao Histórico da Parte de Processo instanciada");
-        }
-
-        HistoricoParteProcesso novoHistorico = new HistoricoParteProcesso(parteProcessoAtual, motivoRestauracao);
-        historicoParteProcessoDAO.persist(novoHistorico);
-        parteProcessoAtual.setAtivo(parteProcessoAtual.getAtivo());
-        update(parteProcessoAtual);
-        return novoHistorico;
-    }
 }
