@@ -23,6 +23,8 @@ import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 @Name(PartesProcessoController.NAME)
 public class PartesProcessoController extends AbstractPartesController {
 
+    private static final int QUANTIDADE_INFINITA_PARTES = 0;
+    private static final int QUANTIDADE_MINIMA_PARTES = 1;
     public static final String NAME = "partesProcessoController";
     private static final LogProvider LOG = Logging.getLogProvider(PartesProcessoController.class);
 
@@ -89,7 +91,7 @@ public class PartesProcessoController extends AbstractPartesController {
     @Override
     public boolean podeAdicionarPartes() {
         return getNatureza().getHasPartes()
-                && (getNatureza().getNumeroPartes() == 0 || countPartesAtivas() < getNatureza().getNumeroPartes());
+                && (getNatureza().getNumeroPartes() == QUANTIDADE_INFINITA_PARTES || countPartesAtivas() < getNatureza().getNumeroPartes());
     }
     
     private int countPartesAtivas(){
@@ -100,6 +102,10 @@ public class PartesProcessoController extends AbstractPartesController {
             }
         }
         return count;
+    }
+    
+    public boolean podeInativarPartes() {
+        return countPartesAtivas() > QUANTIDADE_MINIMA_PARTES;
     }
 
 }
