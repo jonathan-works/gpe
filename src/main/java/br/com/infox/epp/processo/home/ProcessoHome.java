@@ -30,9 +30,7 @@ import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParteProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
@@ -56,8 +54,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
     @In
     private ProcessoManager processoManager;
     @In
-    private ProcessoEpaManager processoEpaManager;
-    @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
@@ -79,8 +75,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private boolean possuiPermissaoVisibilidade = false;
 
     private Long tarefaId;
-
-    private Boolean podeInativarParteProcesso;
 
     public void limpar() {
         modeloDocumento = null;
@@ -401,22 +395,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
             return processo.getNumeroProcesso();
         }
         return String.valueOf(idProcesso);
-    }
-
-    public Boolean getPodeInativarParteProcesso() {
-        if (podeInativarParteProcesso == null) {
-            podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
-        }
-        return podeInativarParteProcesso;
-    }
-
-    public void setPodeInativarParteProcesso(Boolean podeInativarParteProcesso) {
-        return;
-    }
-
-    @Observer(ParteProcesso.ALTERACAO_ATIVIDADE_PARTE_PROCESSO)
-    public void setPodeInativarParteProcesso() {
-        this.podeInativarParteProcesso = processoEpaManager.podeInativarPartesDoProcesso(instance);
     }
 
 }
