@@ -31,7 +31,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.partes.manager.ParteProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.itx.component.AbstractHome;
@@ -49,8 +48,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     @In
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-    @In
-    private ParteProcessoManager parteProcessoManager;
     @In
     private ProcessoManager processoManager;
     @In
