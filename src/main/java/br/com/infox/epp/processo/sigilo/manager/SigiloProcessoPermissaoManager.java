@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.sigilo.dao.SigiloProcessoPermissaoDAO;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
@@ -40,5 +41,17 @@ public class SigiloProcessoPermissaoManager extends Manager<SigiloProcessoPermis
 			permissao.setSigiloProcesso(sigiloProcesso);
 			persist(permissao);
 		}
+	}
+	
+	public static final String getPermissaoConditionFragment() {
+		StringBuilder sb = new StringBuilder("(not exists (select 1 from SigiloProcesso sp where sp.processo = o and sp.ativo = true) ");
+		UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+		if (usuarioLogado != null) {
+			sb.append("or exists (select 1 from SigiloProcessoPermissao spp where spp.usuario = #{usuarioLogado}");
+			sb.append(" and spp.ativo = true and spp.sigiloProcesso = (select sp from SigiloProcesso sp where sp.processo = o and sp.ativo = true)))");
+		} else {
+			sb.append("or 1 = 0)");
+		}
+		return sb.toString();
 	}
 }
