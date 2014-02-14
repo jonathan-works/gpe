@@ -11,16 +11,15 @@
     xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="isUsuarioAtualResponsavel"
         value="#{authenticator.isUsuarioAtualResponsavel() ? true : false}" />
-    
+
     <s:div id="buscaDiv">
         <ui:include src="partePessoaFisica.xhtml" />
         <ui:include src="partePessoaJuridica.xhtml" />
     </s:div>
     <s:div id="parteProcessoListDiv">
-        <wi:dataTable values="#{parteProcessoList.list(15)}"
-            bean="#{parteProcessoList}"
-            tableTitle="#{messages['parteProcesso.tableTitle']}"
-            id="parteProcessoList">
+        <wi:dataTable id="partesTable"
+            values="#{partesProcessoController.partes}"
+            tableTitle="#{messages['parteProcesso.tableTitle']}">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBar
