@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.partes.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
@@ -9,6 +10,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
@@ -47,7 +49,11 @@ public class PartesProcessoController extends AbstractPartesController {
     }
     
     public List<ParteProcesso> getPartes(){
-        return processoEpa.getPartes();
+        if (Authenticator.isUsuarioAtualResponsavel()) {
+            return processoEpa.getPartes();
+        } else {
+            return getPartesAtivas();
+        }
     }
 
     @Override
@@ -91,21 +97,21 @@ public class PartesProcessoController extends AbstractPartesController {
     @Override
     public boolean podeAdicionarPartes() {
         return getNatureza().getHasPartes()
-                && (getNatureza().getNumeroPartes() == QUANTIDADE_INFINITA_PARTES || countPartesAtivas() < getNatureza().getNumeroPartes());
-    }
-    
-    private int countPartesAtivas(){
-        int count = 0;
-        for (ParteProcesso pp : processoEpa.getPartes()){
-            if (pp.getAtivo()) {
-                count++;
-            }
-        }
-        return count;
+                && (getNatureza().getNumeroPartes() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas().size() < getNatureza().getNumeroPartes());
     }
     
     public boolean podeInativarPartes() {
-        return countPartesAtivas() > QUANTIDADE_MINIMA_PARTES;
+        return getPartesAtivas().size() > QUANTIDADE_MINIMA_PARTES;
+    }
+    
+    private List<ParteProcesso> getPartesAtivas() {
+        List<ParteProcesso> partesAtivas = new ArrayList<>();
+        for (ParteProcesso pp : processoEpa.getPartes()) {
+            if (pp.getAtivo()) {
+                partesAtivas.add(pp);
+            }
+        }
+        return partesAtivas;
     }
 
 }
