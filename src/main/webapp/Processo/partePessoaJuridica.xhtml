@@ -10,7 +10,7 @@
     <s:div id="includePessoaJuridicaDiv">
         <wi:dataForm formId="pessoaJuridicaForm"
             formTitle="#{messages['form.title']}" panelWidth="70%"
-            rendered="#{partesProcessoController.podeAdicionarPartes() and !partesProcessoController.apenasPessoaFisica()}">
+            rendered="#{isUsuarioAtualResponsavel and partesProcessoController.podeAdicionarPartes() and !partesProcessoController.apenasPessoaFisica()}">
             <wi:inputCnpj id="cnpj"
                 value="#{partesProcessoController.pessoaJuridica.cnpj}"
                 label="#{messages['pessoaJuridica.cnpj']}"
