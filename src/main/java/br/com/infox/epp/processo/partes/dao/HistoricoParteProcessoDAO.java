@@ -13,6 +13,6 @@ import br.com.infox.epp.processo.partes.entity.HistoricoParteProcesso;
 @Scope(ScopeType.EVENT)
 public class HistoricoParteProcessoDAO extends DAO<HistoricoParteProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "historicoParteProcessoDAO";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "historicoParteProcessoDAO";
 }

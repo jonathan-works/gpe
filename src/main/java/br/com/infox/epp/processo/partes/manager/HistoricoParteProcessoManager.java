@@ -18,8 +18,8 @@ public class HistoricoParteProcessoManager extends Manager<HistoricoParteProcess
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "historicoParteProcessoManager";
-    
-    public void createHistorico(ParteProcesso parte, String motivoModificacao) throws DAOException{
+
+    public void createHistorico(ParteProcesso parte, String motivoModificacao) throws DAOException {
         HistoricoParteProcesso historicoParteProcesso = new HistoricoParteProcesso(parte, motivoModificacao);
         historicoParteProcesso.setAtivo(parte.getAtivo());
         historicoParteProcesso.setDataModificacao(new Date());
