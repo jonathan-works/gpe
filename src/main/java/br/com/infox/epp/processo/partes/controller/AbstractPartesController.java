@@ -4,7 +4,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
