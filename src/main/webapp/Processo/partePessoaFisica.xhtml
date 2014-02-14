@@ -9,25 +9,28 @@
     <s:div id="includePessoaFisicaDiv">
 
         <wi:dataForm formId="pessoaFisicaForm"
-            formTitle="#{messages['form.title']}" panelWidth="70%">
-
+            formTitle="#{messages['form.title']}" panelWidth="70%"
+            rendered="#{!partesProcessoController.apenasPessoaJuridica()}">
             <wi:inputCpf id="cpf"
-                value="#{pessoaFisicaHome.instance.cpf}"
+                value="#{partesProcessoController.pessoaFisica.cpf}"
                 label="#{messages['pessoaFisica.cpf']}"
-                assignTo="#{pessoaFisicaHome.instance.cpf}"
+                assignTo="#{partesProcessoController.pessoaFisica.cpf}"
                 required="true">
-                <a:ajax event="blur" execute="@this"
-                    render="nome, dataNascimentoDecoration"
-                    limitRender="true"
-                    listener="#{processoHome.carregaPessoa('F', pessoaFisicaHome.instance.cpf)}" />
+                <a:ajax event="blur"
+                    listener="#{partesProcessoController.searchByCpf()}"
+                    execute="@this" render="loadedByCPF"
+                    limitRender="true" />
             </wi:inputCpf>
-            <wi:inputText id="nome"
-                value="#{pessoaFisicaHome.instance.nome}"
-                label="#{messages['pessoaFisica.nome']}" required="true" />
-            <wi:inputDate id="dataNascimento"
-                value="#{pessoaFisicaHome.instance.dataNascimento}"
-                label="#{messages['pessoaFisica.dataNascimento']}"
-                required="true" />
+            <h:panelGroup id="loadedByCPF">
+                <wi:inputText id="nome"
+                    value="#{partesProcessoController.pessoaFisica.nome}"
+                    label="#{messages['pessoaFisica.nome']}"
+                    required="true" />
+                <wi:inputDate id="dataNascimento"
+                    value="#{partesProcessoController.pessoaFisica.dataNascimento}"
+                    label="#{messages['pessoaFisica.dataNascimento']}"
+                    required="true" />
+            </h:panelGroup>
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
                     action="#{processoHome.incluirParteProcesso(processoHome.instance,'F')}"
@@ -35,5 +38,6 @@
                     value="#{messages['crud.persist']}" />
             </ui:define>
         </wi:dataForm>
+        <br />
     </s:div>
 </ui:composition>

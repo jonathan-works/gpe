@@ -11,23 +11,10 @@
     xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="isUsuarioAtualResponsavel"
         value="#{authenticator.isUsuarioAtualResponsavel() ? true : false}" />
-    <s:div id="partesDiv">
-        <h:form id="partesForm" styleClass="texto-painel-padrao">
-            <wi:selectOneRadioEnum id="tipoPessoaEnum"
-                items="#{pessoaHome.getTipoPessoaItens()}"
-                value="#{pessoaHome.tipoPessoa}"
-                label="#{messages['pessoa.tipoPessoa']}">
-                <a:ajax execute="@this" render="buscaDiv" event="change" />
-            </wi:selectOneRadioEnum>
-        </h:form>
-    </s:div>
+    
     <s:div id="buscaDiv">
-        <c:if test="#{pessoaHome.isPessoaFisica()}">
-            <ui:include src="partePessoaFisica.xhtml" />
-        </c:if>
-        <c:if test="#{pessoaHome.isPessoaJuridica()}">
-            <ui:include src="partePessoaJuridica.xhtml" />
-        </c:if>
+        <ui:include src="partePessoaFisica.xhtml" />
+        <ui:include src="partePessoaJuridica.xhtml" />
     </s:div>
     <s:div id="parteProcessoListDiv">
         <wi:dataTable values="#{parteProcessoList.list(15)}"
