@@ -1,7 +1,9 @@
 package br.com.infox.epp.processo.manager;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
@@ -11,7 +13,9 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.dao.RelacionamentoProcessoDAO;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
+import br.com.itx.util.EntityUtil;
 
+@AutoCreate
 @Name(RelacionamentoProcessoManager.NAME)
 public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcessoDAO, RelacionamentoProcesso> {
 
@@ -26,13 +30,23 @@ public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcess
         if (instance.getAtivo() == null) {
             instance.setAtivo(Boolean.TRUE);
         }
-        Relacionamento relacionamento = relacionamentoManager.getRelacionamentoByProcesso(instance.getProcesso());
-        if (relacionamento == null) {
-            relacionamento = relacionamentoManager.persist(new Relacionamento());
+        if (instance.getRelacionamento() == null) {
+            Relacionamento relacionamento = relacionamentoManager.getRelacionamentoByProcesso(instance.getProcesso());
+            if (relacionamento == null) {
+                relacionamento = relacionamentoManager.persist(new Relacionamento());
+            }
+            instance.setRelacionamento(relacionamento);
         }
         instance.setDataRelacionamento(new Date());
         instance.setNomeUsuario(Authenticator.getUsuarioLogado().getNomeUsuario());
-        return getDao().persist(instance);
+        final RelacionamentoProcessoDAO dao = getDao();
+        dao.persist(instance);
+        try {
+            final Object id = EntityUtil.getId(instance).getReadMethod().invoke(instance);
+            return dao.find(id);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            throw new DAOException(e);
+        }
     }
     
 }
