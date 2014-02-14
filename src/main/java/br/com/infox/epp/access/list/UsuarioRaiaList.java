@@ -18,7 +18,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 
 @Name(UsuarioRaiaList.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
 
@@ -33,7 +33,7 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
 	private static final String DEFAULT_ORDER = "u.nomeUsuario";
 
 	private static final String R1 = "ul.localizacao = #{usuarioRaiaList.localizacao}";
-	private static final String R2 = "u.nomeUsuario = #{usuarioRaiaList.entity.nomeUsuario}";
+	private static final String R2 = "lower(u.nomeUsuario) like concat('%', lower(#{usuarioRaiaList.entity.nomeUsuario}), '%')";
 	
 	@In
 	private LocalizacaoManager localizacaoManager;
