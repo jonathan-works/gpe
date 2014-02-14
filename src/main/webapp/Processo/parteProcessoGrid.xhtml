@@ -23,11 +23,11 @@
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBar
-                    rendered="#{row.ativo and partesProcessoController.podeInativarPartes()}"
+                    rendered="#{isUsuarioAtualResponsavel and row.ativo and partesProcessoController.podeInativarPartes()}"
                     action="#{parteProcessoHome.setInstance(row)}"
                     reRender="parteProcessoListDiv"
                     url="/img/remove.png" id="ativo" />
-                <wi:toolBar rendered="#{!row.ativo}"
+                <wi:toolBar rendered="#{isUsuarioAtualResponsavel and !row.ativo and partesProcessoController.podeAdicionarPartes()}"
                     action="#{parteProcessoHome.setInstance(row)}"
                     reRender="parteProcessoListDiv" url="/img/add.gif"
                     id="inativo" />
