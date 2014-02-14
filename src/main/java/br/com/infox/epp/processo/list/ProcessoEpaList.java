@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.list;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,7 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 
 @Name(ProcessoEpaList.NAME)
 @BypassInterceptors
@@ -23,7 +24,7 @@ public class ProcessoEpaList extends EntityList<ProcessoEpa> {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o";
+	private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o where " + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
 	private static final String DEFAULT_ORDER = "dataInicio DESC";
 	private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.entity.dataInicio}";
 	private static final String R2 = "cast(dataFim as date)<= #{processoEpaList.entity.dataFim}";
