@@ -30,70 +30,74 @@ import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 @AutoCreate
 public class ParteProcessoManager extends Manager<ParteProcessoDAO, ParteProcesso> {
 
-	public static final String NAME = "parteProcessoManager";
-	private static final long serialVersionUID = 1L;
-	
-	@In private ProcessoEpaDAO processoEpaDAO; 
-	@In private PessoaFisicaDAO pessoaFisicaDAO;
-	@In private PessoaJuridicaDAO pessoaJuridicaDAO;
-	@In private HistoricoParteProcessoDAO historicoParteProcessoDAO;
-	
-	public void alternarAtividade(ParteProcesso parteProcesso, String motivoModificacao) throws DAOException{
-		HistoricoParteProcesso hpp = new HistoricoParteProcesso(parteProcesso, motivoModificacao);
-		parteProcesso.setAtivo(!parteProcesso.getAtivo());
-		update(parteProcesso);
-		historicoParteProcessoDAO.persist(hpp);
-	}
-	
-	public void incluir(Processo processo, String tipoPessoa) throws DAOException{
-		ProcessoEpa processoEpa = processoEpaDAO.getProcessoEpaByProcesso(processo);
-		if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
-			PessoaFisicaHome pf = (PessoaFisicaHome) Component.getInstance("pessoaFisicaHome");
-			PessoaFisica p = pf.getInstance();
-			if (p.getAtivo() == null){
-				p.setAtivo(true);
-				p.setTipoPessoa(TipoPessoaEnum.F);
-				pessoaFisicaDAO.persist(p);
-				flush();
-			}
-			if (processoEpa.getPartes().contains(p)) {
-			    FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			}
-			else {
-			    persist(new ParteProcesso(processoEpa, p));
-			}
-			pf.setInstance(null);
-		}
-		else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
-			PessoaJuridicaHome pj = (PessoaJuridicaHome) Component.getInstance("pessoaJuridicaHome");
-			PessoaJuridica p = pj.getInstance();
-			if (p.getAtivo() == null){
-				p.setAtivo(true);
-				p.setTipoPessoa(TipoPessoaEnum.J);
-				pessoaJuridicaDAO.persist(p);
-				flush();
-			}
-			if (processoEpa.getPartes().contains(p)) {
-			    FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
-			}
-			else {
-			    persist(new ParteProcesso(processoEpa, p));
-			}
-			pj.setInstance(null);
-		} else {
-		    return;
-		}
-	}
-	
-	public HistoricoParteProcesso restaurarParteProcesso(ParteProcesso parteProcessoAtual, HistoricoParteProcesso versaoAnterior, String motivoRestauracao) throws ValidationException, DAOException {
-		if (!parteProcessoAtual.getIdParteProcesso().equals(versaoAnterior.getParteModificada().getIdParteProcesso())) {
-			throw new ValidationException("Restauração inválida: Histórico passado não pertence ao Histórico da Parte de Processo instanciada");
-		}
-		
-		HistoricoParteProcesso novoHistorico = new HistoricoParteProcesso(parteProcessoAtual, motivoRestauracao);
-		historicoParteProcessoDAO.persist(novoHistorico);
-		parteProcessoAtual.setAtivo(parteProcessoAtual.getAtivo());
-		update(parteProcessoAtual);
-		return novoHistorico;
-	}
+    public static final String NAME = "parteProcessoManager";
+    private static final long serialVersionUID = 1L;
+
+    @In
+    private ProcessoEpaDAO processoEpaDAO;
+    @In
+    private PessoaFisicaDAO pessoaFisicaDAO;
+    @In
+    private PessoaJuridicaDAO pessoaJuridicaDAO;
+    @In
+    private HistoricoParteProcessoDAO historicoParteProcessoDAO;
+
+    public void alternarAtividade(ParteProcesso parteProcesso,
+            String motivoModificacao) throws DAOException {
+        HistoricoParteProcesso hpp = new HistoricoParteProcesso(parteProcesso, motivoModificacao);
+        parteProcesso.setAtivo(!parteProcesso.getAtivo());
+        update(parteProcesso);
+        historicoParteProcessoDAO.persist(hpp);
+    }
+
+    public void incluir(Processo processo, String tipoPessoa) throws DAOException {
+        ProcessoEpa processoEpa = processoEpaDAO.getProcessoEpaByProcesso(processo);
+        if ("F".equals(tipoPessoa) || "f".equals(tipoPessoa)) {
+            PessoaFisicaHome pf = (PessoaFisicaHome) Component.getInstance("pessoaFisicaHome");
+            PessoaFisica p = pf.getInstance();
+            if (p.getAtivo() == null) {
+                p.setAtivo(true);
+                p.setTipoPessoa(TipoPessoaEnum.F);
+                pessoaFisicaDAO.persist(p);
+                flush();
+            }
+            if (processoEpa.getPartes().contains(p)) {
+                FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
+            } else {
+                persist(new ParteProcesso(processoEpa, p));
+            }
+            pf.setInstance(null);
+        } else if ("J".equals(tipoPessoa) || "j".equals(tipoPessoa)) {
+            PessoaJuridicaHome pj = (PessoaJuridicaHome) Component.getInstance("pessoaJuridicaHome");
+            PessoaJuridica p = pj.getInstance();
+            if (p.getAtivo() == null) {
+                p.setAtivo(true);
+                p.setTipoPessoa(TipoPessoaEnum.J);
+                pessoaJuridicaDAO.persist(p);
+                flush();
+            }
+            if (processoEpa.getPartes().contains(p)) {
+                FacesMessages.instance().add(Severity.ERROR, "Parte já cadastrada no processo");
+            } else {
+                persist(new ParteProcesso(processoEpa, p));
+            }
+            pj.setInstance(null);
+        } else {
+            return;
+        }
+    }
+
+    public HistoricoParteProcesso restaurarParteProcesso(
+            ParteProcesso parteProcessoAtual,
+            HistoricoParteProcesso versaoAnterior, String motivoRestauracao) throws ValidationException, DAOException {
+        if (!parteProcessoAtual.getIdParteProcesso().equals(versaoAnterior.getParteModificada().getIdParteProcesso())) {
+            throw new ValidationException("Restauração inválida: Histórico passado não pertence ao Histórico da Parte de Processo instanciada");
+        }
+
+        HistoricoParteProcesso novoHistorico = new HistoricoParteProcesso(parteProcessoAtual, motivoRestauracao);
+        historicoParteProcessoDAO.persist(novoHistorico);
+        parteProcessoAtual.setAtivo(parteProcessoAtual.getAtivo());
+        update(parteProcessoAtual);
+        return novoHistorico;
+    }
 }
