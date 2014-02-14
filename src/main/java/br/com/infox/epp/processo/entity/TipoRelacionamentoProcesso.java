@@ -94,4 +94,9 @@ public class TipoRelacionamentoProcesso implements Serializable {
         return true;
     }
     
+    @Override
+    public String toString() {
+        return tipoRelacionamento;
+    }
+    
 }
