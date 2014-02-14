@@ -91,7 +91,6 @@ public class PartesController extends AbstractPartesController {
         }
     }
     
-    @Override
     public void removePessoa(Pessoa pessoa){
         pessoas.remove(pessoa);
     }

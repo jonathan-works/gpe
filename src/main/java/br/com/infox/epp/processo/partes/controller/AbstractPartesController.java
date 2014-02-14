@@ -62,6 +62,5 @@ abstract class AbstractPartesController {
     public abstract void includePessoaJuridica();
     public abstract boolean apenasPessoaFisica();
     public abstract boolean apenasPessoaJuridica();
-    public abstract void removePessoa(Pessoa pessoa);
 
 }

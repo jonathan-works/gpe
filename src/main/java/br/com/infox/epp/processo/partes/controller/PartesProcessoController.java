@@ -60,12 +60,6 @@ public class PartesProcessoController extends AbstractPartesController {
     }
 
     @Override
-    public void removePessoa(Pessoa pessoa) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public boolean podeAdicionarPartes() {
         return getNatureza().getHasPartes()
                 && (getNatureza().getNumeroPartes() == 0 || processoEpa.getPartes().size() < getNatureza().getNumeroPartes());
