@@ -89,7 +89,17 @@ public class PartesProcessoController extends AbstractPartesController {
     @Override
     public boolean podeAdicionarPartes() {
         return getNatureza().getHasPartes()
-                && (getNatureza().getNumeroPartes() == 0 || processoEpa.getPartes().size() < getNatureza().getNumeroPartes());
+                && (getNatureza().getNumeroPartes() == 0 || countPartesAtivas() < getNatureza().getNumeroPartes());
+    }
+    
+    private int countPartesAtivas(){
+        int count = 0;
+        for (ParteProcesso pp : processoEpa.getPartes()){
+            if (pp.getAtivo()) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }
