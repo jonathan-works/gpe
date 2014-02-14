@@ -12,6 +12,9 @@
 .mp-close {
 	cursor:pointer;
 }
+.rel-proc-dt.rf-p.dtable-p {
+	width:100%;
+}
 .blocker {
 	height:100%;
 	width:100%;
