@@ -10,7 +10,7 @@
 
         <wi:dataForm formId="pessoaFisicaForm"
             formTitle="#{messages['form.title']}" panelWidth="70%"
-            rendered="#{!partesProcessoController.apenasPessoaJuridica()}">
+            rendered="#{partesProcessoController.podeAdicionarPartes() and !partesProcessoController.apenasPessoaJuridica()}">
             <wi:inputCpf id="cpf"
                 value="#{partesProcessoController.pessoaFisica.cpf}"
                 label="#{messages['pessoaFisica.cpf']}"
