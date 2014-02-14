@@ -34,14 +34,6 @@ public class ParteProcessoManager extends Manager<ParteProcessoDAO, ParteProcess
     @In
     private HistoricoParteProcessoDAO historicoParteProcessoDAO;
 
-    public void alternarAtividade(ParteProcesso parteProcesso,
-            String motivoModificacao) throws DAOException {
-        HistoricoParteProcesso hpp = new HistoricoParteProcesso(parteProcesso, motivoModificacao);
-        parteProcesso.setAtivo(!parteProcesso.getAtivo());
-        update(parteProcesso);
-        historicoParteProcessoDAO.persist(hpp);
-    }
-    
     public void incluir(ProcessoEpa processoEpa, Pessoa pessoa) throws DAOException {
         persist(new ParteProcesso(processoEpa, pessoa));
     }
