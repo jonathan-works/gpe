@@ -22,7 +22,7 @@
             
             <value>menu.cadBasicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
             <value>menu.cadBasicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
-            <value>menu.cadBasicos/pj.menuText:/PessoaJuridica/listView.seam</value>
+            <value>menu.cadBasicos/pessoaJuridica.menuText:/PessoaJuridica/listView.seam</value>
             
             <value>menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>
             <value>menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
