@@ -20,91 +20,96 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name=HistoricoParteProcesso.TABLE_NAME, schema="public")
+@Table(name = HistoricoParteProcesso.TABLE_NAME, schema = "public")
 public class HistoricoParteProcesso {
-	
-	public static final String TABLE_NAME = "tb_historico_parte_processo";
-	
-	private Integer idHistoricoParteProcesso;
-	private UsuarioLogin responsavelPorModificacao;
-	private Date dataModificacao;
-	private String motivoModificacao;
-	private ParteProcesso parteModificada;
-	//Atributos da Entidade ParteProcesso que podem ser modificados
-	//Em caso de novas regras/atributos, favor inserir aqui abaixo
-	private boolean ativo;
-	
-	public HistoricoParteProcesso(){
-		super();
-	}
-	
-	public HistoricoParteProcesso(ParteProcesso parteProcessoAtual, String motivoModificacao){
-		responsavelPorModificacao = Authenticator.getUsuarioLogado();
-		dataModificacao = new Date();
-		this.motivoModificacao = motivoModificacao;
-		parteModificada = parteProcessoAtual;
-		ativo = parteProcessoAtual.getAtivo();
-	}
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_historico_parte_processo")
-	@Id
-	@GeneratedValue(generator="generator")
-	@Column(name="id_historico_parte_processo", unique=true, nullable=false)
-	public Integer getIdHistoricoParteProcesso() {
-		return idHistoricoParteProcesso;
-	}
+    public static final String TABLE_NAME = "tb_historico_parte_processo";
 
-	public void setIdHistoricoParteProcesso(Integer idHistoricoParteProcesso) {
-		this.idHistoricoParteProcesso = idHistoricoParteProcesso;
-	}
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_responsavel_modificacao")
-	public UsuarioLogin getResponsavelPorModificacao() {
-		return responsavelPorModificacao;
-	}
+    private Integer idHistoricoParteProcesso;
+    private UsuarioLogin responsavelPorModificacao;
+    private Date dataModificacao;
+    private String motivoModificacao;
+    private ParteProcesso parteModificada;
+    // Atributos da Entidade ParteProcesso que podem ser modificados
+    // Em caso de novas regras/atributos, favor inserir aqui abaixo
+    private boolean ativo;
 
-	public void setResponsavelPorModificacao(UsuarioLogin responsavelPorModificacao) {
-		this.responsavelPorModificacao = responsavelPorModificacao;
-	}
+    public HistoricoParteProcesso() {
+        super();
+    }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="dt_alteracao", nullable=false)
-	public Date getDataModificacao() {
-		return dataModificacao;
-	}
+    public HistoricoParteProcesso(ParteProcesso parteProcessoAtual,
+            String motivoModificacao) {
+        responsavelPorModificacao = Authenticator.getUsuarioLogado();
+        dataModificacao = new Date();
+        this.motivoModificacao = motivoModificacao;
+        parteModificada = parteProcessoAtual;
+        ativo = parteProcessoAtual.getAtivo();
+    }
 
-	public void setDataModificacao(Date dataModificacao) {
-		this.dataModificacao = dataModificacao;	
-	}
+    @SequenceGenerator(name = "generator",
+            sequenceName = "public.sq_tb_historico_parte_processo")
+    @Id
+    @GeneratedValue(generator = "generator")
+    @Column(name = "id_historico_parte_processo", unique = true,
+            nullable = false)
+    public Integer getIdHistoricoParteProcesso() {
+        return idHistoricoParteProcesso;
+    }
 
-	@Column(name="ds_motivo_modificacao", nullable=false, length=LengthConstants.DESCRICAO_MEDIA)
-	@Size(max=LengthConstants.DESCRICAO_MEDIA)
-	public String getMotivoModificacao() {
-		return motivoModificacao;
-	}
+    public void setIdHistoricoParteProcesso(Integer idHistoricoParteProcesso) {
+        this.idHistoricoParteProcesso = idHistoricoParteProcesso;
+    }
 
-	public void setMotivoModificacao(String motivoModificacao) {
-		this.motivoModificacao = motivoModificacao;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_responsavel_modificacao")
+    public UsuarioLogin getResponsavelPorModificacao() {
+        return responsavelPorModificacao;
+    }
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_parte_processo")
-	public ParteProcesso getParteModificada() {
-		return parteModificada;
-	}
+    public void setResponsavelPorModificacao(
+            UsuarioLogin responsavelPorModificacao) {
+        this.responsavelPorModificacao = responsavelPorModificacao;
+    }
 
-	public void setParteModificada(ParteProcesso parte) {
-		this.parteModificada = parte;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_alteracao", nullable = false)
+    public Date getDataModificacao() {
+        return dataModificacao;
+    }
 
-	@Column(name="is_ativo", nullable=false)
-	public boolean getAtivo() {
-		return ativo;
-	}
+    public void setDataModificacao(Date dataModificacao) {
+        this.dataModificacao = dataModificacao;
+    }
 
-	public void setAtivo(boolean ativo) {
-		this.ativo = ativo;
-	}
-	
+    @Column(name = "ds_motivo_modificacao", nullable = false,
+            length = LengthConstants.DESCRICAO_MEDIA)
+    @Size(max = LengthConstants.DESCRICAO_MEDIA)
+    public String getMotivoModificacao() {
+        return motivoModificacao;
+    }
+
+    public void setMotivoModificacao(String motivoModificacao) {
+        this.motivoModificacao = motivoModificacao;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_parte_processo")
+    public ParteProcesso getParteModificada() {
+        return parteModificada;
+    }
+
+    public void setParteModificada(ParteProcesso parte) {
+        this.parteModificada = parte;
+    }
+
+    @Column(name = "is_ativo", nullable = false)
+    public boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
 }
