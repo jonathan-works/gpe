@@ -33,7 +33,7 @@
             </h:panelGroup>
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
-                    action="#{processoHome.incluirParteProcesso(processoHome.instance,'F')}"
+                    action="#{partesProcessoController.includePessoaFisica()}"
                     reRender="parteProcessoListDiv, includePessoaFisicaDiv, pessoasListDiv, storeDiv"
                     value="#{messages['crud.persist']}" />
             </ui:define>
