@@ -56,10 +56,12 @@
             formTitle="#{messages['form.title']}">
             <wi:inputText id="natureza"
                 value="#{naturezaCrudAction.instance.natureza}"
-                required="true" label="#{messages['natureza.natureza']}" />
+                required="true" label="#{messages['natureza.natureza']}" 
+                disabled="#{naturezaCrudAction.instance.locked}"/>
             <wi:selectBooleanRadio id="hasPartes"
                 label="#{messages['natureza.hasPartes']}"
-                value="#{naturezaCrudAction.instance.hasPartes}">
+                value="#{naturezaCrudAction.instance.hasPartes}"
+                disabled="#{naturezaCrudAction.instance.locked}">
                 <a:ajax event="change" render="partesDiv"
                     limitRender="true" status=":status" execute="@this" />
             </wi:selectBooleanRadio>
@@ -73,11 +75,13 @@
                     items="#{naturezaCrudAction.getTiposDePartes()}"
                     value="#{naturezaCrudAction.instance.tipoPartes}"
                     required="true" noSelectionLabel="Selecione... "
+                    disabled="#{naturezaCrudAction.instance.locked}"
                     rendered="#{naturezaCrudAction.instance.hasPartes}" />
                 <wi:inputNumber id="numeroPartes"
                     label="#{messages['natureza.numeroPartes']}"
                     required="true"
                     value="#{naturezaCrudAction.instance.numeroPartes}"
+                    disabled="#{naturezaCrudAction.instance.locked}"
                     rendered="#{naturezaCrudAction.instance.hasPartes}"/>
             </s:div>
         </wi:dataForm>
