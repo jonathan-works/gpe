@@ -75,8 +75,7 @@ public class Natureza implements java.io.Serializable {
         this.idNatureza = idNatureza;
     }
 
-    @Column(name = DESCRICAO_NATUREZA, length = DESCRICAO_PEQUENA,
-            nullable = false, unique = true)
+    @Column(name = DESCRICAO_NATUREZA, length = DESCRICAO_PEQUENA, nullable = false, unique = true)
     @Size(min = FLAG, max = DESCRICAO_PEQUENA)
     public String getNatureza() {
         return natureza;
@@ -112,7 +111,11 @@ public class Natureza implements java.io.Serializable {
     }
 
     public void setNumeroPartes(Integer numeroPartes) {
-        this.numeroPartes = numeroPartes;
+        if (numeroPartes < 0) {
+            this.numeroPartes = 0;
+        } else {
+            this.numeroPartes = numeroPartes;
+        }
     }
 
     @Column(name = LOCKED, nullable = false)
