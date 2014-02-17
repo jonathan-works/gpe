@@ -66,7 +66,9 @@ public class RelacionamentoProcessoCrudAction extends AbstractCrudAction<Relacio
     @Override
     protected void afterSave(String ret) {
         if (ret != null) {
+            final int idProcesso = processo.getIdProcesso();
             newInstance();
+            setProcesso(processoEpaManager.find(idProcesso));
         }
     }
     
