@@ -23,6 +23,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
+import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 
@@ -36,6 +37,9 @@ public class IniciarProcessoService {
 
     @In
     private ProcessoEpaManager processoEpaManager;
+    
+    @In
+    private NaturezaManager naturezaManager;
 
     public static final String ON_CREATE_PROCESS = "br.com.infox.epp.IniciarProcessoService.ONCREATEPROCESS";
     public static final String NAME = "iniciarProcessoService";
@@ -53,6 +57,7 @@ public class IniciarProcessoService {
         Long idProcessoJbpm = iniciarProcessoJbpm(processoEpa, processoEpa.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
         processoEpa.setIdJbpm(idProcessoJbpm);
         processoEpa.setNumeroProcesso(String.valueOf(processoEpa.getIdProcesso()));
+        naturezaManager.lockNatureza(processoEpa.getNaturezaCategoriaFluxo().getNatureza());
         processoEpaManager.update(processoEpa);
     }
 
