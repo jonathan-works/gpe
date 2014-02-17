@@ -10,5 +10,6 @@ public interface NaturezaQuery {
     String NUMERO_PARTES = "nr_partes";
     String OBRIGATORIO_PARTES = "in_partes";
     String NATUREZA_ATTRIBUTE = "natureza";
+    String LOCKED = "in_lock";
 
 }
