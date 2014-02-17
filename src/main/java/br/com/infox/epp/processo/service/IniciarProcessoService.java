@@ -68,12 +68,7 @@ public class IniciarProcessoService {
         processoManager.update(processo);
     }
 
-    /**
-     * 
-     * @param id
-     * @param fluxo
-     */
-    public Long iniciarProcessoJbpm(Processo processo, String fluxo) {
+    private Long iniciarProcessoJbpm(Processo processo, String fluxo) {
         BusinessProcess businessProcess = BusinessProcess.instance();
         businessProcess.createProcess(fluxo);
         org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
@@ -96,8 +91,7 @@ public class IniciarProcessoService {
         return businessProcess.getProcessId();
     }
 
-    private void createJbpmVariables(Processo processo,
-            ContextInstance contextInstance) {
+    private void createJbpmVariables(Processo processo, ContextInstance contextInstance) {
         ProcessoEpa processoEpa = processoEpaManager.find(processo.getIdProcesso());
         List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
         for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
