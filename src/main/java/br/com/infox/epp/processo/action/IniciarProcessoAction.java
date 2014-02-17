@@ -30,7 +30,6 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 
@@ -43,8 +42,6 @@ public class IniciarProcessoAction {
 
     @In
     private IniciarProcessoService iniciarProcessoService;
-    @In
-    private ProcessoEpaManager processoEpaManager;
 
     private boolean renderedByItem;
     private boolean renderizarCadastroPartes;
