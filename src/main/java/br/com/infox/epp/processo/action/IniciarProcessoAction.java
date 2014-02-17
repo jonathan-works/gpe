@@ -80,8 +80,7 @@ public class IniciarProcessoAction {
 
     private void enviarProcessoParaJbpm() {
         try {
-            processoEpaManager.persist(processoEpa);
-            iniciarProcessoService.iniciarProcesso(processoEpa, naturezaCategoriaFluxo.getFluxo());
+            iniciarProcessoService.iniciarProcesso(processoEpa);
             getMessagesHandler().add("Processo inserido com sucesso!");
         } catch (TypeMismatchException tme) {
             sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);

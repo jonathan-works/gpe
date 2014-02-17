@@ -22,7 +22,6 @@ import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
@@ -46,12 +45,12 @@ public class IniciarProcessoService {
     /**
      * 
      * @param processoEpa
-     * @param fluxo
      * @throws DAOException
      */
-    public void iniciarProcesso(ProcessoEpa processoEpa, Fluxo fluxo) throws DAOException {
+    public void iniciarProcesso(ProcessoEpa processoEpa) throws DAOException {
+        processoEpaManager.persist(processoEpa);
         processoEpa.setDataInicio(new Date());
-        Long idProcessoJbpm = iniciarProcessoJbpm(processoEpa, fluxo.getFluxo());
+        Long idProcessoJbpm = iniciarProcessoJbpm(processoEpa, processoEpa.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
         processoEpa.setIdJbpm(idProcessoJbpm);
         processoEpa.setNumeroProcesso(String.valueOf(processoEpa.getIdProcesso()));
         processoEpaManager.update(processoEpa);
