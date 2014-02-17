@@ -34,6 +34,7 @@
             </infox:tab>
 
             <infox:tab id="tabAnexos" name="tabAnexos" immediate="true"
+                action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
                 status=":status" title="Documentos do Processo">
 
                 <wi:dataTable values="#{processoDocumentoList.list(15)}"

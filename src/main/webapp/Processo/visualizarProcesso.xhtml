@@ -56,6 +56,7 @@
 
             <infox:tab id="tabAnexos" name="tabAnexos"
                 rendered="#{processoHome.managed}" status=":status"
+                action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
                 title="Documentos do Processo">
                 <ui:decorate id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
