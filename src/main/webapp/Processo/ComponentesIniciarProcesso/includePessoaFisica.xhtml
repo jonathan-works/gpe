@@ -30,11 +30,13 @@
                 label="#{messages['pessoaFisica.dataNascimento']}"
                 required="true" />
         </h:panelGroup>
+        <!-- TODO: Verificar porque este botão não funciona quando é um wi:commandButton -->
         <ui:define name="buttons">
-            <wi:commandButton id="pessoaFisicaSaveButton"
+            <a:commandButton id="pessoaFisicaSaveButton"
                 action="#{partesController.includePessoaFisica()}"
-                reRender="buscaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
-                value="#{messages['crud.persist']}" />
+                render="buscaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
+                value="#{messages['crud.persist']}" 
+                styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
         </ui:define>
 
     </wi:dataForm>

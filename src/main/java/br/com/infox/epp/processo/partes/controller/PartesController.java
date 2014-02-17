@@ -10,7 +10,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -18,19 +17,15 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
-import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 
 @Name(PartesController.NAME)
-public class PartesController extends AbstractController {
+public class PartesController extends AbstractPartesController {
 
-    private static final long serialVersionUID = 1L;
     public static final String NAME = "partesController";
     private static final LogProvider LOG = Logging.getLogProvider(PartesController.class);
 
     private Natureza natureza;
-    private PessoaFisica pessoaFisica = new PessoaFisica();
-    private PessoaJuridica pessoaJuridica = new PessoaJuridica();
     private List<Pessoa> pessoas = new ArrayList<>();
 
     @In
@@ -54,42 +49,7 @@ public class PartesController extends AbstractController {
         this.pessoas = pessoas;
     }
 
-    public PessoaFisica getPessoaFisica() {
-        return pessoaFisica;
-    }
-
-    public void setPessoaFisica(PessoaFisica pessoaFisica) {
-        this.pessoaFisica = pessoaFisica;
-    }
-
-    public PessoaJuridica getPessoaJuridica() {
-        return pessoaJuridica;
-    }
-
-    public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
-        this.pessoaJuridica = pessoaJuridica;
-    }
-
-    public void searchByCpf() {
-        final String cpf = pessoaFisica.getCpf();
-        setPessoaFisica(pessoaFisicaManager.getByCpf(cpf));
-        if (getPessoaFisica() == null) {
-            setPessoaFisica(new PessoaFisica());
-            getPessoaFisica().setCpf(cpf);
-            getPessoaFisica().setAtivo(true);
-        }
-    }
-
-    public void searchByCnpj() {
-        final String cnpj = pessoaJuridica.getCnpj();
-        setPessoaJuridica(pessoaJuridicaManager.getByCnpj(cnpj));
-        if (getPessoaJuridica() == null) {
-            setPessoaJuridica(new PessoaJuridica());
-            getPessoaJuridica().setCnpj(cnpj);
-            getPessoaJuridica().setAtivo(true);
-        }
-    }
-    
+    @Override
     public void includePessoaFisica(){
         try {
             pessoaFisicaManager.persist(getPessoaFisica());
@@ -101,6 +61,7 @@ public class PartesController extends AbstractController {
         }
     }
     
+    @Override
     public void includePessoaJuridica(){
         try {
             pessoaJuridicaManager.persist(getPessoaJuridica());
@@ -112,14 +73,12 @@ public class PartesController extends AbstractController {
         }
     }
     
-    public TipoPessoaEnum[] getTipoPessoaItens() {
-        return TipoPessoaEnum.values();
-    }
-    
+    @Override
     public boolean apenasPessoaFisica(){
         return ParteProcessoEnum.F.equals(getNatureza().getTipoPartes());
     }
     
+    @Override
     public boolean apenasPessoaJuridica(){
         return ParteProcessoEnum.J.equals(getNatureza().getTipoPartes());
     }
@@ -136,6 +95,7 @@ public class PartesController extends AbstractController {
         pessoas.remove(pessoa);
     }
     
+    @Override
     public boolean podeAdicionarPartes(){
         return natureza != null && natureza.getHasPartes() && (natureza.getNumeroPartes() == 0 || pessoas.size() < natureza.getNumeroPartes());
     }

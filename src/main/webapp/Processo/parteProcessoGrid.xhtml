@@ -11,38 +11,25 @@
     xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="isUsuarioAtualResponsavel"
         value="#{authenticator.isUsuarioAtualResponsavel() ? true : false}" />
-    <s:div id="partesDiv">
-        <h:form id="partesForm" styleClass="texto-painel-padrao">
-            <wi:selectOneRadioEnum id="tipoPessoaEnum"
-                items="#{pessoaHome.getTipoPessoaItens()}"
-                value="#{pessoaHome.tipoPessoa}"
-                label="#{messages['pessoa.tipoPessoa']}">
-                <a:ajax execute="@this" render="buscaDiv" event="change" />
-            </wi:selectOneRadioEnum>
-        </h:form>
-    </s:div>
+
     <s:div id="buscaDiv">
-        <c:if test="#{pessoaHome.isPessoaFisica()}">
-            <ui:include src="partePessoaFisica.xhtml" />
-        </c:if>
-        <c:if test="#{pessoaHome.isPessoaJuridica()}">
-            <ui:include src="partePessoaJuridica.xhtml" />
-        </c:if>
+        <ui:include src="partePessoaFisica.xhtml" />
+        <ui:include src="partePessoaJuridica.xhtml" />
     </s:div>
     <s:div id="parteProcessoListDiv">
-        <wi:dataTable values="#{parteProcessoList.list(15)}"
-            bean="#{parteProcessoList}"
-            tableTitle="#{messages['parteProcesso.tableTitle']}"
-            id="parteProcessoList">
+        <wi:dataTable id="partesTable"
+            values="#{partesProcessoController.partes}"
+            tableTitle="#{messages['parteProcesso.tableTitle']}">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBar
-                    rendered="#{row.ativo and processoHome.getPodeInativarParteProcesso()}"
-                    action="#{parteProcessoHome.setInstance(row)}"
+                    rendered="#{isUsuarioAtualResponsavel and row.ativo and partesProcessoController.podeInativarPartes()}"
+                    action="#{parteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv"
                     url="/img/remove.png" id="ativo" />
-                <wi:toolBar rendered="#{!row.ativo}"
-                    action="#{parteProcessoHome.setInstance(row)}"
+                <wi:toolBar
+                    rendered="#{isUsuarioAtualResponsavel and !row.ativo and partesProcessoController.podeAdicionarPartes()}"
+                    action="#{parteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv" url="/img/add.gif"
                     id="inativo" />
             </ui:define>
@@ -60,23 +47,26 @@
                 columnHeader="#{messages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
+
         <s:div id="atividadeParteDiv"
-            rendered="#{parteProcessoHome.isManaged()}">
+            rendered="#{parteProcessoCrudAction.isManaged()}">
             <s:div id="backgroundBlock"></s:div>
-            <wi:dataForm formId="atividadeParte" formTitle="">
-                <ui:define name="buttons">
-                    <wi:commandButton id="persistButton"
-                        action="#{parteProcessoHome.alternarAtividadeParteProcesso()}"
-                        rendered="true" reRender="parteProcessoListDiv"
-                        value="#{messages['crud.persist']}" />
-                    <wi:commandButton id="cancelarButton"
-                        action="#{parteProcessoHome.newInstance()}"
-                        rendered="true" ajaxSingle="true"
-                        reRender="parteProcessoListDiv" value="Cancelar" />
-                </ui:define>
+            <br />
+            <wi:dataForm formId="atividadeParte"
+                formTitle="#{messages['partes.alteracao']}">
                 <wi:inputText id="motivo" required="true"
                     label="Motivo da Modificação"
-                    value="#{parteProcessoHome.motivoModificacao}" />
+                    value="#{parteProcessoCrudAction.motivoModificacao}" />
+                <ui:define name="buttons">
+                    <wi:commandButton id="persistButton"
+                        action="#{parteProcessoCrudAction.inverterSituacao()}"
+                        rendered="true" reRender="parteProcessoListDiv, buscaDiv"
+                        value="#{messages['partes.modificar']}" />
+                    <wi:commandButton id="cancelarButton"
+                        action="#{parteProcessoCrudAction.newInstance()}"
+                        rendered="true" execute="@this"
+                        reRender="parteProcessoListDiv, buscaDiv" value="Cancelar" />
+                </ui:define>
             </wi:dataForm>
         </s:div>
     </s:div>

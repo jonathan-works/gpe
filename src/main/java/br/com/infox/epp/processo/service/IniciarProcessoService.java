@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.service;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.util.Collection;
 import java.util.Date;
@@ -21,32 +21,25 @@ import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
-import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.epp.processo.manager.ProcessoManager;
 
-/**
- * 
- * @author Daniel
- * 
- */
 @Name(IniciarProcessoService.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class IniciarProcessoService {
 
     @In
-    private ProcessoManager processoManager;
-
-    @In
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 
     @In
     private ProcessoEpaManager processoEpaManager;
+    
+    @In
+    private NaturezaManager naturezaManager;
 
     public static final String ON_CREATE_PROCESS = "br.com.infox.epp.IniciarProcessoService.ONCREATEPROCESS";
     public static final String NAME = "iniciarProcessoService";
@@ -55,30 +48,25 @@ public class IniciarProcessoService {
 
     /**
      * 
-     * @param processo
-     * @param fluxo
+     * @param processoEpa
      * @throws DAOException
      */
-    public void iniciarProcesso(Processo processo, Fluxo fluxo) throws DAOException {
-        processo.setDataInicio(new Date());
-        Long idProcessoJbpm = iniciarProcessoJbpm(processo, fluxo.getFluxo());
-        processo.setIdJbpm(idProcessoJbpm);
-        processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
-
-        processoManager.update(processo);
+    public void iniciarProcesso(ProcessoEpa processoEpa) throws DAOException {
+        processoEpaManager.persist(processoEpa);
+        processoEpa.setDataInicio(new Date());
+        Long idProcessoJbpm = iniciarProcessoJbpm(processoEpa, processoEpa.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
+        processoEpa.setIdJbpm(idProcessoJbpm);
+        processoEpa.setNumeroProcesso(String.valueOf(processoEpa.getIdProcesso()));
+        naturezaManager.lockNatureza(processoEpa.getNaturezaCategoriaFluxo().getNatureza());
+        processoEpaManager.update(processoEpa);
     }
 
-    /**
-     * 
-     * @param id
-     * @param fluxo
-     */
-    public Long iniciarProcessoJbpm(Processo processo, String fluxo) {
+    private Long iniciarProcessoJbpm(ProcessoEpa processoEpa, String fluxo) {
         BusinessProcess businessProcess = BusinessProcess.instance();
         businessProcess.createProcess(fluxo);
         org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
-        processInstance.getContextInstance().setVariable("processo", processo.getIdProcesso());
-        createJbpmVariables(processo, processInstance.getContextInstance());
+        processInstance.getContextInstance().setVariable("processo", processoEpa.getIdProcesso());
+        createJbpmVariables(processoEpa, processInstance.getContextInstance());
         @SuppressWarnings(UNCHECKED) Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
         if (taskInstances != null && !taskInstances.isEmpty()) {
@@ -92,13 +80,11 @@ public class IniciarProcessoService {
         Set<String> pooledActors = LocalizacaoAssignment.instance().getPooledActors(actorsExpression);
         String[] actorIds = pooledActors.toArray(new String[pooledActors.size()]);
         swimlaneInstance.setPooledActors(actorIds);
-        Events.instance().raiseEvent(ON_CREATE_PROCESS, taskInstance, processo);
+        Events.instance().raiseEvent(ON_CREATE_PROCESS, taskInstance, processoEpa);
         return businessProcess.getProcessId();
     }
 
-    private void createJbpmVariables(Processo processo,
-            ContextInstance contextInstance) {
-        ProcessoEpa processoEpa = processoEpaManager.find(processo.getIdProcesso());
+    private void createJbpmVariables(ProcessoEpa processoEpa, ContextInstance contextInstance) {
         List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
         for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
             contextInstance.setVariable(variavelProcesso.getNome(), null);
