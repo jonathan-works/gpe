@@ -18,5 +18,7 @@ login-required="true"
     <param name="tarefaId" value="#{processoHome.tarefaId}" />
     <action execute="#{processoHome.iniciarTarefaProcesso()}" if="#{not util.ajaxRequest}"/>
     <action execute="#{variavelProcessoAction.setProcesso(processoHome.instance)}" on-postback="false"/>
+    <action execute="#{relacionamentoProcessoCrudAction.setProcesso(processoHome.instance)}" 
+            if="#{processoHome.tab eq 'relacionamentoProcessoTab'}"/>
 
 </page>

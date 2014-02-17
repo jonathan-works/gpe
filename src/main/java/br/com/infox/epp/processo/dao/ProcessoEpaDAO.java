@@ -14,6 +14,8 @@ import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_I
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.QUERY_PARAM_PROCESSO_EPA;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -149,5 +151,11 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
         parameters.put(PARAM_FLUXO, fluxo);
         parameters.put(PARAM_SITUACAO, prazoEnum);
         return getNamedSingleResult(TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, parameters);
+    }
+    
+    public ProcessoEpa getProcessoEpaByNumeroProcesso(final String numeroProcesso) {
+        final HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put(NUMERO_PROCESSO, numeroProcesso);
+        return getNamedSingleResult(GET_PROCESSO_BY_NUMERO_PROCESSO, parameters);
     }
 }

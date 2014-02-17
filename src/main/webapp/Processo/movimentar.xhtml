@@ -272,6 +272,115 @@
                 </s:div>
 
             </infox:tab>
+            <infox:tab
+                id="relacionamentoProcessoTab"
+                name="relacionamentoProcessoTab"
+                rendered="#{home.isManaged()}"
+                title="#{messages['relacionamentoProcesso.titleTab']}"
+            >
+                <s:div id="relacionamentoProcessoFormDiv">
+                    <wi:dataForm
+                        formId="relacionamentoProcessoForm"
+                        formTitle="#{messages['form.title']}"
+                        home="#{relacionamentoProcessoCrudAction}"
+                    >
+                        <wi:inputText
+                            id="labelNumeroProcesso"
+                            label="#{messages['relacionamentoProcesso.numeroProcesso']}"
+                            required="true"
+                            maxlength="30"
+                            value="#{relacionamentoProcessoCrudAction.instance.numeroProcesso}"
+                            disabled="#{relacionamentoProcessoCrudAction.managed}"
+                        >
+                        </wi:inputText>
+                        <wi:selectOneMenuEntity
+                            id="tipoRelacionamento"
+                            value="#{relacionamentoProcessoCrudAction.instance.tipoRelacionamentoProcesso}"
+                            label="#{messages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
+                            items="#{relacionamentoProcessoCrudAction.tipoRelacionamentoProcessoList}"
+                            required="true"
+                            hideNoSelectionLabel="false"
+                            noSelectionLabel="Selecione..."
+                        >
+                        </wi:selectOneMenuEntity>
+                        <wi:inputText
+                            id="motivo"
+                            label="#{messages['relacionamentoProcesso.motivo']}"
+                            value="#{relacionamentoProcessoCrudAction.instance.motivo}"
+                            required="true"
+                        >
+                        </wi:inputText>
+                        <wi:selectSituacaoRadio
+                            id="ativo"
+			                label="#{messages['field.situacao']}"
+			                rendered="#{relacionamentoProcessoCrudAction.managed}"
+			                value="#{relacionamentoProcessoCrudAction.instance.ativo}" />
+                        <ui:define name="buttons">
+                           <wi:commandButton
+                               id="persistButton"
+                               action="relacionamentoProcessoCrudAction.save()"
+                               reRender="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
+                               value="#{relacionamentoProcessoCrudAction.isManaged() ? messages['crud.update'] : messages['crud.persist']}"
+                               execute="relacionamentoProcessoFormDiv"
+                           >
+                           </wi:commandButton>
+                        </ui:define>
+                    </wi:dataForm>
+                </s:div>
+                <s:div id="relacionamentoProcessoDTDiv">
+                    <h:panelGroup id="dtable" rendered="#{not empty relacionamentoProcessoCrudAction.instance.relacionamento}">
+	                    <wi:dataTable
+	                        id="relProcDt2"
+	                        bean="#{relacionamentoProcessoList}"
+	                        values="#{relacionamentoProcessoList.list(15)}"
+	                        tableTitle="#{messages['relacionamentoProcesso.processosRelacionados']}"
+	                        rowId="#{row.idRelacionamentoProcesso}"
+	                        searchFormStyleClass="hidden"
+	                        panelStyleClass="rel-proc-dt"
+	                    >
+	                        <ui:define name="headerToolBar" />
+	                        <ui:define name="toolBar">
+	                            <wi:toolBarEdit
+	                                id="#{id}Edit"
+	                                action="#{relacionamentoProcessoCrudAction.setId(row.idRelacionamentoProcesso)}"
+	                                render="relacionamentoProcessoFormDiv pageBodyDialogMessage"
+	                            />
+	                            <wi:toolBarInactive
+	                                id="#{id}Inactivate"
+	                                actionInactive="relacionamentoProcessoCrudAction.inactive(row)"
+	                                reRender="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
+	                            />
+	                        </ui:define>
+	                        
+	                        <wi:columnOutputText
+	                           columnId="numeroProcesso"
+	                           columnHeader="#{messages['relacionamentoProcesso.numeroProcesso']}"
+	                           value="#{row.numeroProcesso}"
+	                        />
+	                        <wi:columnOutputText
+	                           columnId="motivo"
+	                           columnHeader="#{messages['relacionamentoProcesso.motivo']}"
+	                           value="#{row.motivo}"
+	                        />
+	                        <wi:columnOutputText
+	                           columnId="nomeUsuario"
+	                           columnHeader="#{messages['relacionamentoProcesso.nomeUsuario']}"
+	                           value="#{row.nomeUsuario}"
+	                        />
+	                        <wi:columnOutputText
+	                           columnId="dataRelacionamento"
+	                           columnHeader="#{messages['relacionamentoProcesso.dataRelacionamento']}"
+	                           value="#{row.dataRelacionamento}"
+	                        />
+	                        <wi:columnSituacao
+	                           columnId="ativo"
+	                           columnHeader="#{messages['field.ativo']}"
+	                        >
+	                        </wi:columnSituacao>
+	                    </wi:dataTable>
+                    </h:panelGroup>
+                </s:div>
+            </infox:tab>
 
             <infox:tab id="tabPartesDoProcesso"
                 name="tabPartesDoProcesso" status=":status"

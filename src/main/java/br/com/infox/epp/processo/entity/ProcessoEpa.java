@@ -16,6 +16,8 @@ import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCE
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +64,9 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
     @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO,
             query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
     @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP,
-            query = TEMPO_GASTO_PROCESSO_EPP_QUERY) })
+            query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
+    @NamedQuery(name=GET_PROCESSO_BY_NUMERO_PROCESSO,
+            query=GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY) })
 public class ProcessoEpa extends Processo {
 
     private static final long serialVersionUID = 1L;
