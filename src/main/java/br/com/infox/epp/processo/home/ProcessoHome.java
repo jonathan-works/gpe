@@ -106,7 +106,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
         if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), (ProcessoEpa) getInstance())) {
             possuiPermissaoVisibilidade = false;
         } else if (checkVisibilidade) {
-            possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO.possuiPermissao();
+            possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO.possuiPermissao(getInstance());
             checkVisibilidade = false;
         }
         if (!possuiPermissaoVisibilidade) {
