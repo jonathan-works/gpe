@@ -79,7 +79,10 @@ public class NaturezaCategoriaFluxoCrudActionIT extends AbstractCrudTest<Naturez
         for (final Natureza natureza : naturezaList) {
             for (final Categoria categoria : persistCategoria) {
                 for (final Fluxo fluxo : persistFluxo) {
-                    list.add(new PersistSuccessTest<>(NaturezaCategoriaFluxoCrudAction.NAME, initEntity).runTest(action, new NaturezaCategoriaFluxo(natureza, categoria, fluxo), servletContext, session));
+                    final NaturezaCategoriaFluxo entity = new NaturezaCategoriaFluxo(natureza, categoria, fluxo);
+                    final PersistSuccessTest<NaturezaCategoriaFluxo> test = new PersistSuccessTest<>(NaturezaCategoriaFluxoCrudAction.NAME, initEntity);
+                    final NaturezaCategoriaFluxo naturezaCategoriaFluxo = test.runTest(action, entity, servletContext, session);
+                    list.add(naturezaCategoriaFluxo);
                 }
             }
         }
@@ -131,7 +134,7 @@ public class NaturezaCategoriaFluxoCrudActionIT extends AbstractCrudTest<Naturez
         for (final Natureza natureza : naturezaList) {
             for (final Categoria categoria : persistCategoria) {
                 for (final Fluxo fluxo : persistFluxo) {
-                    removeSuccess.runTest(new NaturezaCategoriaFluxo(natureza, categoria, fluxo));
+                    removeSuccess.runTest(new NaturezaCategoriaFluxo(natureza, categoria, fluxo), servletContext, session);
                 }
             }
         }
