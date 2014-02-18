@@ -222,8 +222,8 @@
                 value="#{localizacaoDocumentoFisicoCrudAction}" />
             <infox:tab id="documentoFisicoTab" name="documentoFisicoTab"
                 rendered="#{home.isManaged()}"
-                title="#{messages['documentoFisico.titleTab']}"
-                action="#{localizacaoDocumentoFisicoCrudAction.init()}">
+                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
+                title="#{messages['documentoFisico.titleTab']}">
                 <wi:dataForm formId="documentoFisicoForm"
                     formTitle="#{messages['form.title']}">
 

@@ -3,21 +3,21 @@
 <page xmlns="http://jboss.org/schema/seam/pages"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
-	  login-required="true"
+      login-required="true"
 >
-	
-	<description>Processo: #{processoHome.instance}</description>
-	
-	<begin-conversation join="true"/>
+    
+    <description>Processo: #{processoHome.instance}</description>
+    
+    <begin-conversation join="true"/>
 
 <!-- Parametros para RESTFull -->
-	<param name="tab" value="#{processoHome.tab}"/>
-	<param name="goBackUrl" value="#{processoHome.goBackUrl}"/>
-	<param name="goBackId" value="#{processoHome.goBackId}"/>
-	<param name="goBackTab" value="#{processoHome.goBackTab}"/>		
+    <param name="tab" value="#{processoHome.tab}"/>
+    <param name="goBackUrl" value="#{processoHome.goBackUrl}"/>
+    <param name="goBackId" value="#{processoHome.goBackId}"/>
+    <param name="goBackTab" value="#{processoHome.goBackTab}"/>
 
-	<param name="idProcesso" value="#{processoHome.processoIdProcesso}"/>
-    <param name="tarefaId" value="#{processoHome.tarefaId}" />	
-	<action execute="#{processoHome.visualizarTarefaProcesso()}"/>
+    <param name="idProcesso" value="#{processoHome.processoIdProcesso}"/>
+    <param name="tarefaId" value="#{processoHome.tarefaId}" />    
+    <action execute="#{processoHome.visualizarTarefaProcesso()}"/>
  
 </page>

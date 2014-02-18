@@ -18,7 +18,6 @@ import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.epp.documento.list.LocalizacaoFisicaList;
 import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.home.ProcessoHome;
 
 @Name(LocalizacaoDocumentoFisicoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -31,6 +30,12 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
     private List<LocalizacaoFisica> localizacaoFisicaList;
     private List<DocumentoFisico> documentoFisicoList;
     private Processo processo;
+    
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
+        localizacaoFisicaList = new LocalizacaoFisicaList().getResultList();
+        listByProcesso();
+    }
 
     @Override
     protected boolean isInstanceValid() {
@@ -67,14 +72,6 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
             iterator.remove();
         }
         FacesMessages.instance().add("Registros inativados com sucesso!");
-    }
-
-    public void init() {
-        super.init();
-        final ProcessoHome processoHome = ProcessoHome.instance();
-        processo = processoHome.getInstance();
-        localizacaoFisicaList = new LocalizacaoFisicaList().getResultList();
-        listByProcesso();
     }
 
     private void listByProcesso() {
