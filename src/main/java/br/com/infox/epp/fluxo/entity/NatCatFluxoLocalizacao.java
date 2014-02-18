@@ -48,19 +48,29 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int idNatCatFluxoLocalizacao;
+	private Integer idNatCatFluxoLocalizacao;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;	
 	private Localizacao localizacao;
-	private boolean heranca = false;
+	private Boolean heranca = Boolean.FALSE;
 	
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAT_CAT_FLUXO_LOCALIZACAO)
+	public NatCatFluxoLocalizacao() {
+    }
+	
+    public NatCatFluxoLocalizacao(final NaturezaCategoriaFluxo naturezaCategoriaFluxo,
+            final Localizacao localizacao, final boolean heranca) {
+        this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
+        this.localizacao = localizacao;
+        this.heranca = heranca;
+    }
+
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAT_CAT_FLUXO_LOCALIZACAO)
 	@Id
 	@GeneratedValue(generator = GENERATOR)
 	@Column(name = ID_NAT_CAT_FLUXO_LOCALIZACAO, unique = true, nullable = false)
-	public int getIdNatCatFluxoLocalizacao() {
+	public Integer getIdNatCatFluxoLocalizacao() {
 		return idNatCatFluxoLocalizacao;
 	}
-	public void setIdNatCatFluxoLocalizacao(int idNatCatFluxoLocalizacao) {
+	public void setIdNatCatFluxoLocalizacao(Integer idNatCatFluxoLocalizacao) {
 		this.idNatCatFluxoLocalizacao = idNatCatFluxoLocalizacao;
 	}
 
@@ -86,12 +96,12 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 		this.localizacao = localizacao;
 	}
 
-	public void setHeranca(boolean heranca) {
+	public void setHeranca(Boolean heranca) {
 		this.heranca = heranca;
 	}
 	
 	@Column(name=HERANCA, nullable=false)
-	public boolean getHeranca() {
+	public Boolean getHeranca() {
 		return heranca;
 	}
 	
@@ -99,5 +109,37 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 	public boolean isAtivo(){
 		return (naturezaCategoriaFluxo.isAtivo() && localizacao.getAtivo());
 	}
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime
+                * result
+                + ((idNatCatFluxoLocalizacao == null) ? 0 : idNatCatFluxoLocalizacao.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof NatCatFluxoLocalizacao)) {
+            return false;
+        }
+        NatCatFluxoLocalizacao other = (NatCatFluxoLocalizacao) obj;
+        if (idNatCatFluxoLocalizacao == null) {
+            if (other.idNatCatFluxoLocalizacao != null) {
+                return false;
+            }
+        } else if (!idNatCatFluxoLocalizacao.equals(other.idNatCatFluxoLocalizacao)) {
+            return false;
+        }
+        return true;
+    }
 	
 }
