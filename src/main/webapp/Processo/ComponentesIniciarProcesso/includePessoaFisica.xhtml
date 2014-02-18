@@ -32,9 +32,9 @@
         </h:panelGroup>
         <!-- TODO: Verificar porque este botão não funciona quando é um wi:commandButton -->
         <ui:define name="buttons">
-            <a:commandButton id="pessoaFisicaSaveButton"
+            <wi:commandButton id="pessoaFisicaSaveButton"
                 action="#{partesController.includePessoaFisica()}"
-                render="buscaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
+                reRender="buscaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
                 value="#{messages['crud.persist']}" 
                 styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
         </ui:define>
