@@ -7,7 +7,7 @@ login-required="true"
 >
 
     <begin-conversation join="true"/>
-    <param name="idProcesso" value="#{processoHome.processoIdProcesso}"/>
+    <param name="idProcesso" value="#{consultaController.id}"/>
     <param name="inicio" value="#{processoHandler.inicio}"/>
     <param name="taskId" value="#{processoHandler.taskId}"/>
 

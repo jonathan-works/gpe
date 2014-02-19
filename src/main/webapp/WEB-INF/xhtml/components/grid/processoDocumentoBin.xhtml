@@ -44,16 +44,12 @@
         <s:link target="idJan#{var.idProcessoDocumento}"
             rendered="#{empty bin.signature}"
             view="/Processo/Consulta/assinaDocumento.xhtml"
-            onclick="openPopUp('idJan#{var.idProcessoDocumento}', 'about:blank');">
+            onclick="infox.abrirPopUp('idJan#{var.idProcessoDocumento}');">
 
-            <h:graphicImage title="Assinar Documento"
+            <h:graphicImage title="Assinar Documento #{var.idProcessoDocumento}"
                 alt="Assinar Documento" url="/img/lock_unlock.png" />
             <f:param value="#{var.idProcessoDocumento}"
-                name="idProcessoDocumento" />
-            <f:param
-                value="#{util.urlRequest}?id=#{processoHome.id}&amp;tab=#{processoTrfHome.tab}&amp;cid=#{conversation.id}"
-                name="urlOpenner" />
-
+                name="id" />
         </s:link>
 
     </div>
