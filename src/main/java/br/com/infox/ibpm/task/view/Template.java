@@ -1,4 +1,4 @@
-package br.com.itx.component;
+package br.com.infox.ibpm.task.view;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;

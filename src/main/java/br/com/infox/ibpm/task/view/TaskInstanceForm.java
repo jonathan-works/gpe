@@ -27,9 +27,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
-import br.com.itx.component.Form;
-import br.com.itx.component.FormField;
-import br.com.itx.component.Template;
 
 /**
  * Gera um formulario a partir do controller da tarefa atual (taskInstance) Para
