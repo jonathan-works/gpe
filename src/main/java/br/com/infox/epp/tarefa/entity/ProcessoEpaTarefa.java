@@ -34,8 +34,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name=ProcessoEpaTarefa.TABLE_NAME, schema="public")
@@ -151,7 +151,7 @@ public class ProcessoEpaTarefa implements Serializable {
 	
 	@Transient
 	public String getTempoGastoFormatado() {
-		return DateUtil.formatTempo(tempoGasto, tarefa.getTipoPrazo());
+		return PrazoEnum.formatTempo(tempoGasto, tarefa.getTipoPrazo());
 	}
 
 	public void setTempoPrevisto(Integer tempoPrevisto) {
