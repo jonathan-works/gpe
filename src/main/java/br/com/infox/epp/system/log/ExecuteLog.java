@@ -1,4 +1,4 @@
-package br.com.infox.epp.system.action;
+package br.com.infox.epp.system.log;
 
 import javax.persistence.EntityManager;
 
