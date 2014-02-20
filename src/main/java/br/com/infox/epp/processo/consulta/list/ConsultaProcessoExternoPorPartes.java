@@ -17,17 +17,18 @@ public class ConsultaProcessoExternoPorPartes extends EntityList<ProcessoEpa> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoExternoPorPartes";
-    
+
     private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o inner join o.naturezaCategoriaFluxo ncf inner join ncf.natureza n where n.hasPartes = true "
-    		+ "and " + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
+            + "and "
+            + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     private static final String DEFAULT_ORDER = "o.dataInicio ASC";
-    
+
     private String nomePartes;
-    
-    private static final String R1 = "exists (select p from ParteProcesso pp inner join pp.pessoa p " +
-    		"where lower(p.nome) like lower(concat('%', #{consultaProcessoExternoPorPartes.nomePartes}, '%'))" +
-    		" and pp.processo = o)";
-    
+
+    private static final String R1 = "exists (select p from ParteProcesso pp inner join pp.pessoa p "
+            + "where lower(p.nome) like lower(concat('%', #{consultaProcessoExternoPorPartes.nomePartes}, '%'))"
+            + " and pp.processo = o)";
+
     private boolean exibirTable = false;
 
     @Override
@@ -35,7 +36,7 @@ public class ConsultaProcessoExternoPorPartes extends EntityList<ProcessoEpa> {
         nomePartes = "";
         super.newInstance();
     }
-    
+
     @Override
     protected void addSearchFields() {
         addSearchField("nome", SearchCriteria.CONTENDO, R1);
@@ -56,17 +57,17 @@ public class ConsultaProcessoExternoPorPartes extends EntityList<ProcessoEpa> {
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
-    
-    public void exibirTable(){
+
+    public void exibirTable() {
         exibirTable = true;
     }
-    
-    public void esconderTable(){
+
+    public void esconderTable() {
         newInstance();
         exibirTable = false;
     }
-    
-    public boolean isExibirTable(){
+
+    public boolean isExibirTable() {
         return this.exibirTable;
     }
 
