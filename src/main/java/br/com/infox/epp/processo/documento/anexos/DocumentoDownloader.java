@@ -44,7 +44,7 @@ public class DocumentoDownloader {
         return PAGINA_DOWNLOAD;
     }
 
-    public void exportData(ProcessoDocumentoBin doc) {
+    private void exportData(ProcessoDocumentoBin doc) {
         FileHome file = FileHome.instance();
         file.setFileName(doc.getNomeArquivo());
         try {
