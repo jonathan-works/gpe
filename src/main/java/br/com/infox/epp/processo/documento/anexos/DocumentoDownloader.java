@@ -15,6 +15,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
+import br.com.infox.core.file.FileDownloader;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -42,6 +43,14 @@ public class DocumentoDownloader {
     public String setDownloadInstance(ProcessoDocumento doc) {
         exportData(doc.getProcessoDocumentoBin());
         return PAGINA_DOWNLOAD;
+    }
+    
+    public void downloadDocumento(ProcessoDocumento documento){
+        ProcessoDocumentoBin pdBin= documento.getProcessoDocumentoBin();
+        byte [] data = documentoBinManager.getData(pdBin.getIdProcessoDocumentoBin());
+        String fileName = pdBin.getNomeArquivo();
+        String contentType = "application/" + pdBin.getExtensao();
+        FileDownloader.download(data, contentType, fileName);
     }
 
     private void exportData(ProcessoDocumentoBin doc) {

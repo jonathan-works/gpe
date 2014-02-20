@@ -24,8 +24,7 @@
         </h:commandLink>
 
         <h:commandLink target="idPdf#{row}" rendered="#{!isModelo}"
-            action="#{documentoDownloader.setDownloadInstance(var)}"
-            onclick="openPopUp('idPdf#{row}', 'about:blank');">
+            action="#{documentoDownloader.downloadDocumento(var)}">
             <h:graphicImage value="/img/pdf.gif"
                 title="#{bin.nomeArquivo} (#{util.getFormattedKb(bin.size)})" />
         </h:commandLink>
