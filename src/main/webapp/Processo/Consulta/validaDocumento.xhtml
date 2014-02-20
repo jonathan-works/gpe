@@ -27,21 +27,21 @@
                     <h:panelGrid columns="2">
                         <h:outputLabel value="Nome:" for="nome" />
                         <h:outputText id="nome"
-                            value="#{validaDocumentoHome.documento.processoDocumentoBin.usuarioUltimoAssinar}" />
+                            value="#{validaDocumentoAction.documento.processoDocumentoBin.usuarioUltimoAssinar}" />
 
                         <h:outputLabel value="Papel:" for="papel" />
                         <h:outputText id="papel"
-                            value="#{validaDocumentoHome.documento.papel}" />
+                            value="#{validaDocumentoAction.documento.papel}" />
 
                         <h:outputLabel value="Localização:"
                             for="localizacao" />
                         <h:outputText id="localizacao"
-                            value="#{validaDocumentoHome.documento.localizacao}" />
+                            value="#{validaDocumentoAction.documento.localizacao}" />
 
                         <h:outputLabel value="Data da assinatura:"
                             for="validade" />
                         <h:outputText id="validade"
-                            value="#{validaDocumentoHome.documento.processoDocumentoBin.dataInclusao}">
+                            value="#{validaDocumentoAction.documento.processoDocumentoBin.dataInclusao}">
                             <s:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
 

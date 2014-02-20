@@ -18,16 +18,16 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.itx.util.ComponentUtil;
 
-@Name(ValidaDocumentoHome.NAME)
-public class ValidaDocumentoHome {
+@Name(ValidaDocumentoAction.NAME)
+public class ValidaDocumentoAction {
 
-    public static final String NAME = "validaDocumentoHome";
+    public static final String NAME = "validaDocumentoAction";
     private ProcessoDocumento documento;
     private ProcessoDocumentoBin processoDocumentoBin;
     private Boolean valido;
     private Certificado dadosCertificado;
 
-    private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoHome.class);
+    private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoAction.class);
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
     @In
@@ -138,7 +138,7 @@ public class ValidaDocumentoHome {
         return dadosCertificado == null ? null : dadosCertificado.getSerialNumber();
     }
 
-    public static ValidaDocumentoHome instance() {
+    public static ValidaDocumentoAction instance() {
         return ComponentUtil.getComponent(NAME);
     }
 }
