@@ -16,7 +16,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jboss.seam.util.RandomStringUtils;
 
 import br.com.infox.core.exception.ExcelExportException;
-import br.com.itx.component.FileHome;
+import br.com.infox.core.file.FileDownloader;
 import br.com.itx.component.Util;
 import br.com.itx.util.FileUtil;
 
@@ -84,12 +84,7 @@ public class ExcelExportUtil {
 
     private void downloadXLSFileTemp() throws ExcelExportException {
         byte[] content = readFile(new File(fileNameTemp));
-
-        FileHome home = FileHome.instance();
-        home.setData(content);
-        home.setContentType("application/xls");
-        home.setFileName(fileNameDownload);
-        home.download();
+        FileDownloader.download(content, "application/xls", fileNameDownload);
     }
 
     private byte[] readFile(File arquivo) throws ExcelExportException {
