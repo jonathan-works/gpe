@@ -19,7 +19,7 @@ public class ConsultaProcessoExternoPorPartes extends EntityList<ProcessoEpa> {
     public static final String NAME = "consultaProcessoExternoPorPartes";
     
     private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o inner join o.naturezaCategoriaFluxo ncf inner join ncf.natureza n where n.hasPartes = true "
-    		+ "where " + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
+    		+ "and " + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     private static final String DEFAULT_ORDER = "o.dataInicio ASC";
     
     private String nomePartes;
