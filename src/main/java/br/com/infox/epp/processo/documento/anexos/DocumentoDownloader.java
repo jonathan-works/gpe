@@ -8,11 +8,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.file.FileDownloader;
@@ -35,34 +32,15 @@ public class DocumentoDownloader {
     DocumentoBinManager documentoBinManager;
 
     public static final String NAME = "documentoDownloader";
-    private static final String PAGINA_DOWNLOAD = "/download.xhtml";
     private SimpleDateFormat dfCodData = new SimpleDateFormat("HHmmssSSS");
-    private static final LogProvider LOG = Logging.getLogProvider(DocumentoDownloader.class);
     private static final String URL_DOWNLOAD_PROCESSO_DOCUMENTO_EXPRESSION = "/downloadProcessoDocumento.seam?id={0}&codIni={1}&md5={2}";
 
-    public String setDownloadInstance(ProcessoDocumento doc) {
-        exportData(doc.getProcessoDocumentoBin());
-        return PAGINA_DOWNLOAD;
-    }
-    
     public void downloadDocumento(ProcessoDocumento documento){
         ProcessoDocumentoBin pdBin= documento.getProcessoDocumentoBin();
         byte [] data = documentoBinManager.getData(pdBin.getIdProcessoDocumentoBin());
         String fileName = pdBin.getNomeArquivo();
         String contentType = "application/" + pdBin.getExtensao();
         FileDownloader.download(data, contentType, fileName);
-    }
-
-    private void exportData(ProcessoDocumentoBin doc) {
-        FileHome file = FileHome.instance();
-        file.setFileName(doc.getNomeArquivo());
-        try {
-            file.setData(documentoBinManager.getData(doc.getIdProcessoDocumentoBin()));
-        } catch (Exception e) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao descarregar o documento.");
-            LOG.error(".exportData()", e);
-        }
-        Contexts.getConversationContext().set("fileHome", file);
     }
 
     /**
