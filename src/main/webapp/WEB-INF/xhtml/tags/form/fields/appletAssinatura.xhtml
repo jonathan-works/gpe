@@ -9,8 +9,6 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <ui:param name="urlDownloadFile"
-        value="#{empty urlDownloadFile and not empty processoDocumento ? documentoDownloader.getUrlDownloadProcessoDocumento(processoDocumento) : urlDownloadFile}" />
     <h:panelGroup id="#{empty id ? 'divApplet' : id}">
         <s:fragment rendered="#{empty rendered ? true : rendered}">
             <applet width="#{empty width ? '140' : width}" height="25"
