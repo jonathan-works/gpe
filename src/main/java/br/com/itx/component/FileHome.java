@@ -107,6 +107,10 @@ public class FileHome implements Serializable, FileUploadListener {
         FacesMessages.instance().add(Messages.instance().get("processoDocumento.doneLabel"));
     }
 
+    /**
+     * Replaced by {@link br.com.infox.core.file.FileDownloader.download(data, contentType, fileName)}
+     * */
+    @Deprecated
     public void download() {
         if (data == null) {
             return;

@@ -208,8 +208,7 @@
 
                                             <h:commandLink target="idPdf#{row}"
                                                 rendered="#{empty doc.processoDocumentoBin.modeloDocumento}"
-                                                action="#{documentoDownloader.setDownloadInstance(doc)}"
-                                                onclick="openPopUp('idPdf#{row}', 'about:blank');">
+                                                action="#{documentoDownloader.downloadDocumento(doc)}">
                                                 <h:graphicImage
                                                     value="/img/pdf.gif"
                                                     title="#{doc.processoDocumentoBin.nomeArquivo} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />

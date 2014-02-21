@@ -19,7 +19,6 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
-import br.com.itx.component.MeasureTime;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.HibernateUtil;
 
@@ -35,9 +34,8 @@ public class ControleFiltros {
 	
 	@Observer({INICIALIZAR_FILTROS, TarefasTreeHandler.FILTER_TAREFAS_TREE})
 	public void iniciarFiltro() {	
-		MeasureTime mt = new MeasureTime(true);
 		if (!firstTime) {
-			LOG.info("Ignorando execução duplicada. " + mt.getTime());
+			LOG.info("Ignorando execução duplicada. ");
 			return;
 		}
 		firstTime = false;
@@ -53,8 +51,8 @@ public class ControleFiltros {
 				SigiloProcessoFilter.PARAM_ID_USUARIO, usuarioLocalizacaoAtual.getUsuario().getIdUsuarioLogin());
 		
 		LOG.info(MessageFormat.format(
-				"Filtro executado para usuário [{0} | {1}] ({2} ms)", usuarioLocalizacaoAtual.getUsuario(),
-				LogUtil.getIdPagina(), mt.getTime()));
+				"Filtro executado para usuário [{0} | {1}]", usuarioLocalizacaoAtual.getUsuario(),
+				LogUtil.getIdPagina()));
 	}
 	
 	public static ControleFiltros instance() {

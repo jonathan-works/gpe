@@ -12,7 +12,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -35,7 +34,6 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
-import br.com.itx.component.MeasureTime;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.FileUtil;
 
@@ -54,7 +52,6 @@ public class CertificateManager {
     @Observer({ "org.jboss.seam.postInitialization",
             "org.jboss.seam.postReInitialization" })
     public synchronized void init() {
-        MeasureTime mt = new MeasureTime(true);
         listCertificadosCA = new ArrayList<X509Certificate>();
         acceptedCaNameList = new ArrayList<String>();
         acceptedCaNameSb = new StringBuilder();
@@ -65,7 +62,7 @@ public class CertificateManager {
             throw new RuntimeException("Erro ao iniciar " + NAME + ": "
                     + e.getMessage(), e);
         }
-        LOG.info(MessageFormat.format("Inicializado [{0} ms]", mt.getTime()));
+        LOG.info("Inicializado");
     }
 
     public List<X509Certificate> getListCertificadosCA() {
@@ -115,7 +112,6 @@ public class CertificateManager {
 
     public void verificaCertificado(X509Certificate[] certChain)
             throws CertificateException {
-        MeasureTime mt = new MeasureTime(true);
         X509Certificate certificate = certChain[0];
         boolean valid = true;
 
@@ -134,7 +130,7 @@ public class CertificateManager {
 
         if (!valid) {
             String msg = "A validade da cadeia não pode ser verificada.";
-            LOG.info(msg + mt.getTime());
+            LOG.info(msg);
             throw new CertificateException(msg);
         }
 
@@ -159,7 +155,7 @@ public class CertificateManager {
         }
 
         String msg = "A validade do certificado não pode ser verificada junto ao ICP-Brasil.";
-        LOG.info(msg + mt.getTime());
+        LOG.info(msg);
         throw new CertificateException(msg);
     }
 

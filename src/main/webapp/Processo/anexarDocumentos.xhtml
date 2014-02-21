@@ -69,7 +69,7 @@
                 value="#{documentoUploader.processoDocumento.documentoSigiloso}"
                 label="#{messages['processoDocumento.documentoSigiloso']}" />
             <s:div id="tipoDocumentoDivPdf">
-                <wi:fileUpload id="uploadArquivo" label="Arquivo">
+                <wi:fileUpload id="uploadArquivo" label="Arquivo" reRender="buttonsPdfDiv">
                 </wi:fileUpload>
 
             </s:div>
@@ -79,7 +79,8 @@
                     value="#{messages['processo.anexarDocumentoBtn']}"
                     execute="uploaderDiv"
                     reRender="@form,pageBodyDialogMessage"
-                    styleClass="buttons">
+                    styleClass="buttons"
+                    rendered="#{documentoUploader.valido}">
                 </wi:commandButton>
             </s:div>
         </s:div>

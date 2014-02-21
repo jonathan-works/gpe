@@ -24,7 +24,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import br.com.itx.component.MeasureTime;
 import br.com.itx.component.Util;
 
 @Name("reindexer")
@@ -36,7 +35,6 @@ public class Reindexer {
 
     @SuppressWarnings(UNCHECKED)
     public void execute() {
-        MeasureTime mt = new MeasureTime().start();
         LOG.warn("----------- Criando indices de documentos das tarefas -------------");
         Session session = ManagedJbpmContext.instance().getSession().getSessionFactory().openSession();
         Util.commitTransction();
@@ -65,7 +63,7 @@ public class Reindexer {
         }
         scroll.close();
         session.getTransaction().commit();
-        LOG.warn(MessageFormat.format("----------- indices de documentos de tarefas criadas: {0} ------------- {1} ms", i, mt.getTime()));
+        LOG.warn(MessageFormat.format("----------- indices de documentos de tarefas criadas: {0} ------------- ", i));
     }
 
     public static void delete(File path) {

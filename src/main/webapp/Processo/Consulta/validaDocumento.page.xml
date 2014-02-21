@@ -8,7 +8,7 @@
 
 	<begin-conversation join="true" flush-mode="manual" />
 	
-	<action execute="#{validaDocumentoHome.validaDocumentoId(param.idProcessoDocumento)}"/>
+	<action execute="#{validaDocumentoAction.validaDocumentoId(param.idProcessoDocumento)}"/>
 	
 	
 </page>
