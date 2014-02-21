@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.entity;
 import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.DATA_INCLUSAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_TODOS_OS_ACTOR_IDS;
@@ -54,6 +55,7 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -174,6 +176,7 @@ public class Processo implements java.io.Serializable {
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
             mappedBy = PROCESSO_ATTRIBUTE)
+    @OrderBy(DATA_INCLUSAO)
     public List<ProcessoDocumento> getProcessoDocumentoList() {
         return this.processoDocumentoList;
     }
