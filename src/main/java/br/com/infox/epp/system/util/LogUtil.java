@@ -198,6 +198,7 @@ public final class LogUtil {
         EntityLog entityLog = new EntityLog();
         entityLog.setUsuario(Authenticator.getUsuarioLogado());
         entityLog.setDataLog(new Date());
+        //TODO melhorar esse try-catch
         try {
             entityLog.setIp(getIpRequest());
             entityLog.setUrlRequisicao(getUrlRequest());
