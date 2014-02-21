@@ -9,7 +9,7 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 
-	<s:div styleClass="Swimlane">
+	<s:div styleClass="Swimlane swimlane-list">
 	
 		<ui:decorate template="dataTable.xhtml">
 		
@@ -86,7 +86,7 @@
 		</ui:decorate>
 	</s:div>
 	
-	<h:form id="swimlanesForm">
+	<h:form id="swimlanesForm" styleClass="swimlane-form">
 	
 		<s:div rendered="#{!empty swimlaneFitter.currentSwimlane}">
 		

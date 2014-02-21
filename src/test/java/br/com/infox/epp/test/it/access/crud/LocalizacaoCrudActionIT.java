@@ -1,10 +1,16 @@
 package br.com.infox.epp.test.it.access.crud;
 
 import static br.com.infox.core.action.AbstractAction.UPDATED;
+import static java.text.MessageFormat.format;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
@@ -21,12 +27,73 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.PersistSuccessTest;
+import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
 public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
     private static final String SERVLET_3_0 = "Servlet 3.0";
     
+    private static ActionContainer<Localizacao> initEntityAction = new ActionContainer<Localizacao>() {
+        @Override
+        public void execute(final CrudActions<Localizacao> crudActions) {
+            final Localizacao entity = getEntity();
+            crudActions.setEntityValue("localizacao", entity.getLocalizacao());// required
+            crudActions.setEntityValue("estrutura", entity.getEstrutura());// required
+            crudActions.setEntityValue("localizacaoPai", entity.getLocalizacaoPai());
+            crudActions.setEntityValue("estruturaFilho", entity.getEstruturaFilho());
+            crudActions.setEntityValue("ativo", entity.getAtivo());// required
+        }
+    };
+
+    private static final PersistSuccessTest<Localizacao> persistSuccessLocalizacao = new PersistSuccessTest<>(LocalizacaoCrudAction.NAME, initEntityAction);
+
+    private static final Localizacao persistEstruturaFilho(final Localizacao entity, final ActionContainer<Localizacao> action, final HashMap<String, Localizacao> localizacoes,final ServletContext servletContext, final HttpSession session) throws Exception {
+        Localizacao result = null;
+        if (entity != null) {
+            entity.setEstruturaFilho(persistEstruturaFilho(entity.getEstruturaFilho(), action, localizacoes, servletContext, session));
+            result = persistIfNotOnMap(entity, action, localizacoes, servletContext, session);
+        }
+        return result;
+    }
+
+    private static final Localizacao persistIfNotOnMap(final Localizacao entity, final ActionContainer<Localizacao> action, final HashMap<String, Localizacao> localizacoes, final ServletContext servletContext, final HttpSession session) throws Exception {
+        Localizacao result;
+        final String key = entity.getLocalizacao();
+        if (localizacoes.containsKey(key)) {
+            result = localizacoes.get(key);
+        } else {
+            result = persistSuccessLocalizacao.runTest(action, entity, servletContext, session);
+            localizacoes.put(key, result);
+        }
+        return result;
+    }
+    
+    private static final Localizacao persistParent(final Localizacao entity, final ActionContainer<Localizacao> action, final HashMap<String, Localizacao> localizacoes,final ServletContext servletContext, final HttpSession session) throws Exception {
+        Localizacao result = null;
+        if (entity != null) {
+            entity.setParent(persistParent(entity.getParent(), action, localizacoes, servletContext, session));
+            result = persistIfNotOnMap(entity, action, localizacoes, servletContext, session);
+        }
+        return result;
+    }
+
+    private static final Localizacao persistSuccessTest(final Localizacao entity, final ActionContainer<Localizacao> action, final HashMap<String, Localizacao> localizacoes,final ServletContext servletContext, final HttpSession session) throws Exception {
+        final Localizacao localizacaoPai = persistParent(entity.getLocalizacaoPai(), action, localizacoes, servletContext, session);
+        entity.setLocalizacaoPai(localizacaoPai);
+        final Localizacao estruturaFilho = persistEstruturaFilho(entity.getEstruturaFilho(), action, localizacoes, servletContext, session);
+        entity.setEstruturaFilho(estruturaFilho);
+        return persistIfNotOnMap(entity, action, localizacoes, servletContext, session);
+    }
+
+    private static void updateValueAndTest(final Integer id, final String field, final Object value, final boolean wasSuccessful, final CrudActions<Localizacao> crudActions) {
+        crudActions.resetInstance(id);
+        crudActions.setEntityValue(field, value);
+        assertEquals("updated", wasSuccessful, UPDATED.equals(crudActions.save()));
+    }
+
     @Deployment
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
@@ -34,84 +101,65 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
             .addClasses(LocalizacaoCrudAction.class, LocalizacaoManager.class, LocalizacaoTreeHandler.class,
                         LocalizacaoDAO.class).createDeployment();
     }
+    
+    public static final List<Localizacao> getSuccessfullyPersisted(final ActionContainer<Localizacao> action, final String suffix,final ServletContext servletContext, final HttpSession session) throws Exception {
+        final HashMap<String, Localizacao> localizacoes = new HashMap<>();
 
-    private final HashMap<String, Localizacao> localizacoes = new HashMap<>();
+        final Localizacao estruturaEPP = new Localizacao(format("EPP{0}",suffix), Boolean.TRUE, Boolean.TRUE);
+        final Localizacao estruturaEmpresa = new Localizacao(format("Estrutura Empresa{0}",suffix), Boolean.TRUE, Boolean.TRUE);
+        
+        final Localizacao localizacaoGerencia = new Localizacao(format("Gerência{0}",suffix), Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null);
+        
+        persistSuccessTest(new Localizacao(format("Setor Pessoal{0}",suffix), Boolean.FALSE, Boolean.TRUE, localizacaoGerencia, null), action,localizacoes, servletContext, session);
+        persistSuccessTest(new Localizacao(format("Setor Financeiro{0}",suffix), Boolean.FALSE, Boolean.TRUE, localizacaoGerencia, null), action,localizacoes, servletContext, session);
+        persistSuccessTest(new Localizacao(format("Setor de Compras{0}",suffix), Boolean.FALSE, Boolean.TRUE, localizacaoGerencia, null), action,localizacoes, servletContext, session);
 
-    private Localizacao persistIfNotOnMap(final Localizacao entity, final InternalRunnableTest<Localizacao> runnable) throws Exception {
-        Localizacao result;
-        final String key = entity.getLocalizacao();
-        if (localizacoes.containsKey(key)) {
-            result = localizacoes.get(key);
-        } else {
-            result = runnable.runTest(entity);
-            localizacoes.put(key, result);
-        }
-        return result;
+        persistSuccessTest(new Localizacao(format("Empresa Hipotética{0}",suffix), Boolean.FALSE, Boolean.FALSE, estruturaEPP, estruturaEmpresa), action,localizacoes, servletContext, session);
+        
+        return new ArrayList<Localizacao>(localizacoes.values());
     }
     
-    private Localizacao persistEstruturaFilho(final Localizacao entity, final InternalRunnableTest<Localizacao> runnable) throws Exception {
-        Localizacao result = null;
-        if (entity != null) {
-            entity.setEstruturaFilho(persistEstruturaFilho(entity.getEstruturaFilho(), runnable));
-            result = persistIfNotOnMap(entity, runnable);
+    private final RunnableTest<Localizacao> inactivateSuccess = new RunnableTest<Localizacao>(LocalizacaoCrudAction.NAME) {
+        @Override
+        protected void testComponent() throws Exception {
+            final Localizacao entity = getEntity();
+            if (entity.getIdLocalizacao() !=  null) {
+                resetInstance(entity.getIdLocalizacao());
+            }
+            assertEquals("children inactive", true, assertChildrenActive(getInstance()));
+            assertEquals("inactivate success true", UPDATED, inactivate());
+            assertEquals("children active", true, assertChildrenInactive(getInstance()));
         }
-        return result;
-    }
+    };
 
-    private Localizacao persistParent(final Localizacao entity, final InternalRunnableTest<Localizacao> runnable) throws Exception {
-        Localizacao result = null;
-        if (entity != null) {
-            entity.setParent(persistParent(entity.getParent(),runnable));
-            result = persistIfNotOnMap(entity, runnable);
+    private final RunnableTest<Localizacao> updateSuccess = new RunnableTest<Localizacao>(LocalizacaoCrudAction.NAME) {
+        @Override
+        protected void testComponent() throws Exception {
+            final Localizacao entity = getEntity();
+            final Integer id = entity.getIdLocalizacao();
+            updateValueAndTest(id, "localizacao", entity.getLocalizacao()+".changed", true, this);
+            updateValueAndTest(id, "localizacaoPai", null, true, this);
+            final Localizacao localizacao = this.resetInstance(id);
+            assertEquals("localizacao changed",true,localizacao.getLocalizacao().endsWith(".changed"));
+            assertNull("localizacaoPai null", localizacao.getLocalizacaoPai());
         }
-        return result;
-    }
+    };
 
-    protected Localizacao persistSuccessTest(final Localizacao entity) throws Exception {
-        final Localizacao localizacaoPai = persistParent(entity.getLocalizacaoPai(),persistSuccess);
-        entity.setLocalizacaoPai(localizacaoPai);
-        final Localizacao estruturaFilho = persistEstruturaFilho(entity.getEstruturaFilho(),persistSuccess);
-        entity.setEstruturaFilho(estruturaFilho);
-        return persistIfNotOnMap(entity, persistSuccess);
-    }
+    private final RunnableTest<Localizacao> updateFail = new RunnableTest<Localizacao>(LocalizacaoCrudAction.NAME) {
+        @Override
+        protected void testComponent() throws Exception {
+            final Localizacao entity = getEntity();
+            final Integer id = entity.getIdLocalizacao();
 
-    protected void initEntity(final Localizacao entity, final CrudActions<Localizacao> crudActions) {
-        crudActions.setEntityValue("localizacao", entity.getLocalizacao());// required
-        crudActions.setEntityValue("estrutura", entity.getEstrutura());// required
-        crudActions.setEntityValue("localizacaoPai", entity.getLocalizacaoPai());
-        crudActions.setEntityValue("estruturaFilho", entity.getEstruturaFilho());
-        crudActions.setEntityValue("ativo", entity.getAtivo());// required
-    }
-
-    protected String getComponentName() {
-        return LocalizacaoCrudAction.NAME;
-    }
-
-    @Test
-    public void persistSuccessTest() throws Exception {
-        final Localizacao estruturaEPP = new Localizacao("EPP", Boolean.TRUE, Boolean.TRUE);
-        final Localizacao estruturaEmpresa = new Localizacao("Estrutura Empresa", Boolean.TRUE, Boolean.TRUE);
-        
-        final Localizacao localizacaoGerencia = new Localizacao("Gerência", Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null);
-        
-        persistSuccessTest(new Localizacao("Setor Pessoal", Boolean.FALSE, Boolean.TRUE, localizacaoGerencia, null));
-        persistSuccessTest(new Localizacao("Setor Financeiro", Boolean.FALSE, Boolean.TRUE, localizacaoGerencia, null));
-        persistSuccessTest(new Localizacao("Setor de Compras", Boolean.FALSE, Boolean.TRUE, localizacaoGerencia, null));
-
-        persistSuccessTest(new Localizacao("Empresa Hipotética", Boolean.FALSE, Boolean.FALSE, estruturaEPP, estruturaEmpresa));
-    }
-
-    @Test
-    public void persistFailTest() throws Exception {
-        //FALHAS AO INSERIR DESCRIÇÕES INVÁLIDAS
-        persistFail.runTest(new Localizacao(fillStr("Setor Pessoal.Fail", LengthConstants.DESCRICAO_PADRAO+1), Boolean.TRUE, Boolean.TRUE, null, null));
-        persistFail.runTest(new Localizacao(null, Boolean.TRUE, Boolean.TRUE));
-        //FALHAS AO INSERIR VALOR INVÁLIDO PARA ESTRUTURA
-        persistFail.runTest(new Localizacao("Setor Pessoal.Fail", null, Boolean.TRUE));
-        
-        //FALHAS AO INSERIR VALOR INVÁLIDO PARA ATIVO
-        persistFail.runTest(new Localizacao("Setor Pessoal.Fail", Boolean.TRUE, null));
-    }
+            updateValueAndTest(id, "localizacao", fillStr(entity.getLocalizacao()+".changed",LengthConstants.DESCRICAO_PADRAO+1), false, this);
+            
+            updateValueAndTest(id, "localizacao", null, false, this);
+            
+            updateValueAndTest(id, "estrutura", null, false, this);
+            
+            updateValueAndTest(id,"ativo", null, false, this);
+        }
+    };
 
     private boolean assertChildrenActive(final Localizacao l) {
         boolean result = l.getAtivo();
@@ -129,103 +177,59 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
         return !result;
     }
     
-    private final InternalRunnableTest<Localizacao> inactivateSuccess = new InternalRunnableTest<Localizacao>() {
-        @Override
-        protected void testComponent() throws Exception {
-            final Localizacao entity = getEntity();
-            if (entity.getIdLocalizacao() !=  null) {
-                crudActions.resetInstance(entity.getIdLocalizacao());
+    @Override
+    protected String getComponentName() {
+        return LocalizacaoCrudAction.NAME;
+    }
+    
+    @Override
+    protected void initEntity(final Localizacao entity, final CrudActions<Localizacao> crudActions) {
+        initEntityAction.setEntity(entity);
+        initEntityAction.execute(crudActions);
+    }
+    
+    @Test
+    public void inactivateSuccessTest() throws Exception {
+        final List<Localizacao> successfullyPersisted = getSuccessfullyPersisted(null, ".inac-suc", servletContext, session);
+        for (final Localizacao localizacao : successfullyPersisted) {
+            if ("Estrutura Empresa.inac-suc".equals(localizacao.getLocalizacao())) {
+                inactivateSuccess.runTest(localizacao, servletContext, session);
+                break;
             }
-            assertEquals("children inactive", true, assertChildrenActive(crudActions.getInstance()));
-            assertEquals("inactivate success true", UPDATED, crudActions.inactivate());
-            assertEquals("children active", true, assertChildrenInactive(crudActions.getInstance()));
         }
-    };
+    }
     
     @Test
-    public void inactivateTest() throws Exception {
-        final Localizacao estruturaEPP = persistSuccessTest(new Localizacao("EPP.inactiveSuc", Boolean.TRUE, Boolean.TRUE));
-        final Localizacao estruturaEmpresa = persistSuccessTest(new Localizacao("Estrutura Empresa.inactiveSuc", Boolean.TRUE, Boolean.TRUE));
+    public void persistFailTest() throws Exception {
+        //FALHAS AO INSERIR DESCRIÇÕES INVÁLIDAS
+        persistFail.runTest(new Localizacao(fillStr("Setor Pessoal.Fail", LengthConstants.DESCRICAO_PADRAO+1), Boolean.TRUE, Boolean.TRUE, null, null), servletContext, session);
+        persistFail.runTest(new Localizacao(null, Boolean.TRUE, Boolean.TRUE), servletContext, session);
+        //FALHAS AO INSERIR VALOR INVÁLIDO PARA ESTRUTURA
+        persistFail.runTest(new Localizacao("Setor Pessoal.Fail", null, Boolean.TRUE), servletContext, session);
         
-        final Localizacao locGerencia = persistSuccessTest(new Localizacao("Gerência.inactiveSuc", Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null));
-        final Localizacao locSetorPessoal = persistSuccessTest(new Localizacao("Setor Pessoal.inactiveSuc", Boolean.FALSE, Boolean.TRUE, locGerencia, null));
-        final Localizacao locSetorFinanceiro = persistSuccessTest(new Localizacao("Setor Financeiro.inactiveSuc", Boolean.FALSE, Boolean.TRUE, locSetorPessoal, null));
-        persistSuccessTest(new Localizacao("Setor de Compras.inactiveSuc", Boolean.FALSE, Boolean.TRUE, locSetorFinanceiro, null));
-        persistSuccessTest(new Localizacao("Empresa Hipotética.inactiveSuc", Boolean.FALSE, Boolean.TRUE, estruturaEPP, estruturaEmpresa));
-        
-        inactivateSuccess.runTest(estruturaEmpresa);
+        //FALHAS AO INSERIR VALOR INVÁLIDO PARA ATIVO
+        persistFail.runTest(new Localizacao("Setor Pessoal.Fail", Boolean.TRUE, null), servletContext, session);
     }
-    
-    final InternalRunnableTest<Localizacao> updateSuccess = new InternalRunnableTest<Localizacao>() {
-        @Override
-        protected void testComponent() throws Exception {
-            final Localizacao entity = getEntity();
-            final Integer id = entity.getIdLocalizacao();
-            updateValueAndTest(id, "localizacao", entity.getLocalizacao()+".changed", true, this.crudActions);
-            updateValueAndTest(id, "localizacaoPai", null, true, this.crudActions);
-            final Localizacao localizacao = crudActions.resetInstance(id);
-            assertEquals("localizacao changed",true,localizacao.getLocalizacao().endsWith(".changed"));
-            assertNull("localizacaoPai null", localizacao.getLocalizacaoPai());
-        }
-
-    };
-
-    private void updateValueAndTest(final Integer id, final String field, final Object value, boolean wasSuccessful, final CrudActions<Localizacao> crudActions) {
-        crudActions.resetInstance(id);
-        crudActions.setEntityValue(field, value);
-        assertEquals("updated", wasSuccessful, UPDATED.equals(crudActions.save()));
-    }
-    
-    final InternalRunnableTest<Localizacao> updateFail = new InternalRunnableTest<Localizacao>() {
-        @Override
-        protected void testComponent() throws Exception {
-            final Localizacao entity = getEntity();
-            final Integer id = entity.getIdLocalizacao();
-
-            updateValueAndTest(id, "localizacao", fillStr(entity.getLocalizacao()+".changed",LengthConstants.DESCRICAO_PADRAO+1), false, this.crudActions);
-            
-            updateValueAndTest(id, "localizacao", null, false, this.crudActions);
-            
-            updateValueAndTest(id, "estrutura", null, false, this.crudActions);
-            
-            updateValueAndTest(id,"ativo", null, false, this.crudActions);
-        }
-    };
     
     @Test
-    public void updateSuccessTest() throws Exception {
-        final Localizacao estruturaEPP = persistSuccessTest(new Localizacao("EPP.updtSuc", Boolean.TRUE, Boolean.TRUE));
-        final Localizacao estruturaEmpresa = persistSuccessTest(new Localizacao("Estrutura Empresa.updtSuc", Boolean.TRUE, Boolean.TRUE));
-        
-        final Localizacao locGerencia = persistSuccessTest(new Localizacao("Gerência.updtSuc", Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null));
-        final Localizacao locSetorPessoal = persistSuccessTest(new Localizacao("Setor Pessoal.updtSuc", Boolean.FALSE, Boolean.TRUE, locGerencia, null));
-        final Localizacao locSetorFinanc = persistSuccessTest(new Localizacao("Setor Financeiro.updtSuc", Boolean.FALSE, Boolean.TRUE, locSetorPessoal, null));
-        final Localizacao locEmpresaHip = persistSuccessTest(new Localizacao("Empresa Hipotética.updtSuc", Boolean.FALSE, Boolean.TRUE, estruturaEPP, estruturaEmpresa));
-        
-        updateSuccess.runTest(locGerencia);
-        updateSuccess.runTest(locSetorPessoal);
-        updateSuccess.runTest(locSetorFinanc);
-        updateSuccess.runTest(locEmpresaHip);
+    public void persistSuccessTest() throws Exception {
+        getSuccessfullyPersisted(null, "", servletContext, session);
     }
-    
-    
     
     @Test
     public void updateFailTest() throws Exception {
-        final Localizacao estruturaEPP = persistSuccessTest(new Localizacao("EPP.updtFail", Boolean.TRUE, Boolean.TRUE));
-        final Localizacao estruturaEmpresa = persistSuccessTest(new Localizacao("Estrutura Empresa.updtFail", Boolean.TRUE, Boolean.TRUE));
-        
-        final Localizacao locGerencia = persistSuccessTest(new Localizacao("Gerência.updtFail", Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null));
-        final Localizacao locSetorPessoal = persistSuccessTest(new Localizacao("Setor Pessoal.updtFail", Boolean.FALSE, Boolean.TRUE, locGerencia, null));
-        final Localizacao locSetorFinanc = persistSuccessTest(new Localizacao("Setor Financeiro.updtFail", Boolean.FALSE, Boolean.TRUE, locSetorPessoal, null));
-        final Localizacao locEmpresaHip = persistSuccessTest(new Localizacao("Empresa Hipotética.updtFail", Boolean.FALSE, Boolean.TRUE, estruturaEPP, estruturaEmpresa));
-        
-        updateFail.runTest(locGerencia);
-        updateFail.runTest(locSetorPessoal);
-        updateFail.runTest(locSetorFinanc);
-        updateFail.runTest(locEmpresaHip);
-        updateFail.runTest(estruturaEPP);
-        updateFail.runTest(estruturaEmpresa);
+        final List<Localizacao> successfullyPersisted = getSuccessfullyPersisted(null, "updtFail", servletContext, session);
+        for (final Localizacao localizacao : successfullyPersisted) {
+            updateFail.runTest(localizacao, servletContext, session);
+        }
+    }
+    
+    @Test
+    public void updateSuccessTest() throws Exception {
+        final List<Localizacao> successfullyPersisted = getSuccessfullyPersisted(null, "updtSuc", servletContext, session);
+        for (final Localizacao localizacao : successfullyPersisted) {
+            updateSuccess.runTest(localizacao, servletContext, session);
+        }
     }
     
 }

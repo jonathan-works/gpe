@@ -17,3 +17,8 @@
 .conteudo.minimal {
 	height:calc(100% - 100px);
 }
+
+ .swimlane-list,  .swimlane-form {
+ 	display:inline-block;
+ 	vertical-align:top;
+ }

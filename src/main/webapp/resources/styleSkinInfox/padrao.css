@@ -564,6 +564,7 @@ form {
 .ui-tabs-panel.ui-widget-content.ui-corner-bottom {
 	background:white;
 	margin:1px 0 0 3px;
+	overflow:auto;
 }
 
 #javax_faces_developmentstage_messages {
