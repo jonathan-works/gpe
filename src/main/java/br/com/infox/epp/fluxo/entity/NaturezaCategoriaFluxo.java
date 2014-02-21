@@ -37,8 +37,8 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.core.util.HibernateUtil;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.itx.util.HibernateUtil;
 
 @Entity
 @Table(name=TABLE_NATUREZA_CATEGORIA_FLUXO, schema=PUBLIC, 

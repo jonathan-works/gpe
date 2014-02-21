@@ -14,13 +14,13 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.util.HibernateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.HibernateUtil;
 
 @Name(ControleFiltros.NAME)
 @Scope(ScopeType.EVENT)

@@ -2,6 +2,7 @@ package br.com.infox.epp.estatistica.entity;
 
 import static br.com.infox.core.persistence.ORConstants.*;
 import static br.com.infox.epp.estatistica.query.TempoMedioProcessoQuery.*;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 
@@ -15,8 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import br.com.infox.core.constants.FloatFormatConstants;
+import br.com.infox.core.util.HibernateUtil;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.itx.util.HibernateUtil;
 
 @Entity
 @Table(name=VIEW_TEMPO_MEDIO_PROCESSO, schema=PUBLIC)
