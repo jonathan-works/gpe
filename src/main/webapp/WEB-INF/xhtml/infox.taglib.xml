@@ -167,11 +167,6 @@
 	</tag>
 	
 	<tag>
-		<tag-name>fileUploadBox</tag-name>
-		<source>tags/form/fields/fileUploadBox.xhtml</source>
-	</tag>	
-	
-	<tag>
 		<tag-name>imageUpload</tag-name>
 		<source>tags/form/fields/imageUpload.xhtml</source>
 	</tag>
