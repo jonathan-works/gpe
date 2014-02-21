@@ -31,6 +31,12 @@ import br.com.itx.util.EntityUtil;
  * 
  * @param <T> Entity principal, onde devem ser realizadas as alterações.
  */
+/**
+ * @author erikliberal
+ *
+ * @param <T>
+ * @param <M>
+ */
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, T>> extends AbstractAction<T, M> implements Crudable<T>, Serializable {
 
@@ -73,9 +79,12 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
     protected void beforeSave() {
     }
     
-    protected void afterSave() {
-
-    }
+    /**
+     * Deprecated
+     * use {@link #AbstractCrudAction.afterSave(String)}.{@link #afterSave(String)} instead
+     */
+    @Deprecated
+    protected void afterSave() {}
 
     protected void afterSave(final String ret) {
     }

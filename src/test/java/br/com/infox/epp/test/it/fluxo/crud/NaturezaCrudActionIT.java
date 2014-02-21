@@ -74,7 +74,7 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
             for(final Boolean ativo : booleans) {
                 if (hasParte){
                     for (ParteProcessoEnum tipo : ParteProcessoEnum.values()){
-                        persistSuccessTest.runTest(action, new Natureza(format("Natureza{0}{1}",suffix,++i), hasParte, tipo, 2, ativo), servletContext, session);
+                        naturezas.add(persistSuccessTest.runTest(action, new Natureza(format("Natureza{0}{1}",suffix,++i), hasParte, tipo, 2, ativo), servletContext, session));
                     }
                 } else {
 //                    TODO verificar por que o teste seguinte está falhando

@@ -39,6 +39,7 @@ import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -57,7 +58,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         .createDeployment();
     }
     
-    private final InternalRunnableTest<UsuarioLogin> persistUsuario = new PersistUsuarioTest();    
+    private final RunnableTest<UsuarioLogin> persistUsuario = new PersistUsuarioTest();    
     /*
     <action execute="#{bloqueioUsuarioCrudAction.setUsuarioAtual(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'historicoBloqueioUsuario'}"/>        
@@ -107,7 +108,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         final GregorianCalendar calendar = new GregorianCalendar();
         
         for (int i = 0; i < 50; i++) {
-            final UsuarioLogin usuarioLogin = persistUsuario.runTest(createUsuario("per-success", ++id));
+            final UsuarioLogin usuarioLogin = persistUsuario.runTest(createUsuario("per-success", ++id), servletContext, session);
             calendar.add(Calendar.DAY_OF_MONTH, (i+1) * 5);
             testeBloqueioDesbloqueioSuccess(usuarioLogin, calendar.getTime(), motivoBloqueio);   
         }
@@ -120,30 +121,30 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         //for(int i=0;i<50;i++)
         int i=0;
         {
-            final UsuarioLogin usuarioLogin = persistUsuario.runTest(createUsuario("per-fail", ++id));
+            final UsuarioLogin usuarioLogin = persistUsuario.runTest(createUsuario("per-fail", ++id), servletContext, session);
             final GregorianCalendar calendar = new GregorianCalendar();
-            new PersistBloqueioFailTest(usuarioLogin).runTest(new BloqueioUsuario(null, null));
-            new PersistBloqueioFailTest(usuarioLogin).runTest(new BloqueioUsuario(null, ""));
-            new PersistBloqueioFailTest(usuarioLogin).runTest(new BloqueioUsuario(null, fillStr(motivoBloqueio,LengthConstants.DESCRICAO_ENTIDADE+1)));
+            new PersistBloqueioFailTest(usuarioLogin).runTest(new BloqueioUsuario(null, null), servletContext, session);
+            new PersistBloqueioFailTest(usuarioLogin).runTest(new BloqueioUsuario(null, ""), servletContext, session);
+            new PersistBloqueioFailTest(usuarioLogin).runTest(new BloqueioUsuario(null, fillStr(motivoBloqueio,LengthConstants.DESCRICAO_ENTIDADE+1)), servletContext, session);
             calendar.add(Calendar.DAY_OF_MONTH, -5);
-            new PersistBloqueioFailTest(usuarioLogin).runTest(new BloqueioUsuario(calendar.getTime(), motivoBloqueio));
+            new PersistBloqueioFailTest(usuarioLogin).runTest(new BloqueioUsuario(calendar.getTime(), motivoBloqueio), servletContext, session);
             calendar.add(Calendar.DAY_OF_MONTH, (i+2)*5);
             testeBloqueioDesbloqueioSuccess(usuarioLogin, calendar.getTime(), motivoBloqueio);
             
-            new PersistBloqueioFailTest(usuarioLogin, Boolean.TRUE).runTest(new BloqueioUsuario(null, null));
-            new PersistBloqueioFailTest(usuarioLogin, Boolean.TRUE).runTest(new BloqueioUsuario(null, ""));
-            new PersistBloqueioFailTest(usuarioLogin, Boolean.TRUE).runTest(new BloqueioUsuario(null, fillStr(motivoBloqueio,LengthConstants.DESCRICAO_ENTIDADE+1)));
+            new PersistBloqueioFailTest(usuarioLogin, Boolean.TRUE).runTest(new BloqueioUsuario(null, null), servletContext, session);
+            new PersistBloqueioFailTest(usuarioLogin, Boolean.TRUE).runTest(new BloqueioUsuario(null, ""), servletContext, session);
+            new PersistBloqueioFailTest(usuarioLogin, Boolean.TRUE).runTest(new BloqueioUsuario(null, fillStr(motivoBloqueio,LengthConstants.DESCRICAO_ENTIDADE+1)), servletContext, session);
             calendar.add(Calendar.DAY_OF_MONTH, (-i-2)*10);
-            new PersistBloqueioFailTest(usuarioLogin, Boolean.TRUE).runTest(new BloqueioUsuario(calendar.getTime(), motivoBloqueio));
+            new PersistBloqueioFailTest(usuarioLogin, Boolean.TRUE).runTest(new BloqueioUsuario(calendar.getTime(), motivoBloqueio), servletContext, session);
             
         }
     }
 
     private void testeBloqueioDesbloqueioSuccess(final UsuarioLogin usuarioLogin,
             final Date dataDesbloqueio, final String motivoBloqueio) throws Exception {
-        new PersistBloqueioUsuarioTest(usuarioLogin).runTest(new BloqueioUsuario(dataDesbloqueio, motivoBloqueio));
-        new PersistDesbloqueioUsuarioTest(usuarioLogin).runTest((BloqueioUsuario)null);
-        new PersistBloqueioUsuarioTest(usuarioLogin).runTest(new BloqueioUsuario(null,motivoBloqueio));
+        new PersistBloqueioUsuarioTest(usuarioLogin).runTest(new BloqueioUsuario(dataDesbloqueio, motivoBloqueio), servletContext, session);
+        new PersistDesbloqueioUsuarioTest(usuarioLogin).runTest((BloqueioUsuario)null, servletContext, session);
+        new PersistBloqueioUsuarioTest(usuarioLogin).runTest(new BloqueioUsuario(null,motivoBloqueio), servletContext, session);
     }
 
     private UsuarioLogin createUsuario(final String suffix, final int currentId) {
@@ -154,7 +155,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         return usuarioLogin;
     }
     
-    private final class PersistDesbloqueioUsuarioTest extends InternalRunnableTest<BloqueioUsuario> {
+    private final class PersistDesbloqueioUsuarioTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
         private final CrudActions<UsuarioLogin> usrCrudActions;
         
@@ -167,28 +168,28 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         @Override
         protected void testComponent() throws Exception {
             usuario = this.usrCrudActions.resetInstance(usuario.getIdUsuarioLogin());
-            this.crudActions.newInstance();
-            this.crudActions.setComponentValue("usuarioAtual", usuario);
+            newInstance();
+            setComponentValue("usuarioAtual", usuario);
             
             assertEquals("usuario bloqueado", Boolean.TRUE, usuario.getBloqueio());
             
 
-            final Object bloquearRet = this.crudActions.invokeMethod("desbloquear");
+            final Object bloquearRet = invokeMethod("desbloquear");
             assertEquals("persisted", true, PERSISTED.equals(bloquearRet) || UPDATED.equals(bloquearRet));
             
-            final Integer id = this.crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            this.crudActions.newInstance();
-            assertNull("nullId", this.crudActions.getId());
-            this.crudActions.setId(id);
-            setEntity(this.crudActions.getInstance());
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
+            setEntity(getInstance());
             
             usuario = this.usrCrudActions.resetInstance(usuario.getIdUsuarioLogin());
             assertEquals("usuario desbloqueado", Boolean.FALSE, usuario.getBloqueio());
         }
     }
     
-    private final class PersistBloqueioFailTest extends InternalRunnableTest<BloqueioUsuario> {
+    private final class PersistBloqueioFailTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
         private final CrudActions<UsuarioLogin> usrCrudActions;
         private final Boolean bloqueadoStartValue;
@@ -210,26 +211,26 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         @Override
         protected void testComponent() throws Exception {
             usuario = this.usrCrudActions.resetInstance(usuario.getIdUsuarioLogin());
-            this.crudActions.newInstance();
-            this.crudActions.setComponentValue("usuarioAtual", usuario);
-            initEntity(getEntity(), this.crudActions);
+            newInstance();
+            setComponentValue("usuarioAtual", usuario);
+            initEntity(getEntity(), this);
 
             assertEquals("usuario não bloqueado", this.bloqueadoStartValue, usuario.getBloqueio());
-            final Object bloquearRet = this.crudActions.invokeMethod("bloquear");
+            final Object bloquearRet = invokeMethod("bloquear");
             assertEquals("persisted", false, PERSISTED.equals(bloquearRet) || UPDATED.equals(bloquearRet));
 
-            final Integer id = this.crudActions.getId();
+            final Integer id = getId();
             
             assertEquals("id", bloqueadoStartValue, Boolean.valueOf(id != null));
             
-            setEntity(crudActions.getInstance());
+            setEntity(getInstance());
             
             usuario = this.usrCrudActions.resetInstance(usuario.getIdUsuarioLogin());
             assertEquals("usuário bloqueado", this.bloqueadoStartValue, usuario.getBloqueio());
         }
     }
     
-    private final class PersistBloqueioUsuarioTest extends InternalRunnableTest<BloqueioUsuario> {
+    private final class PersistBloqueioUsuarioTest extends RunnableTest<BloqueioUsuario> {
         private UsuarioLogin usuario;
         private final CrudActions<UsuarioLogin> usrCrudActions;
         
@@ -242,18 +243,18 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         @Override
         protected void testComponent() throws Exception {
             usuario = this.usrCrudActions.resetInstance(usuario.getIdUsuarioLogin());
-            this.crudActions.newInstance();
-            this.crudActions.setComponentValue("usuarioAtual", usuario);
-            initEntity(getEntity(), this.crudActions);
+            newInstance();
+            setComponentValue("usuarioAtual", usuario);
+            initEntity(getEntity(), this);
             assertEquals("usuario não bloqueado", Boolean.FALSE, usuario.getBloqueio());
-            final Object bloquearRet = this.crudActions.invokeMethod("bloquear");
+            final Object bloquearRet = invokeMethod("bloquear");
             assertEquals("persisted", true, PERSISTED.equals(bloquearRet) || UPDATED.equals(bloquearRet));
-            final Integer id = this.crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            this.crudActions.newInstance();
-            assertNull("nullId", this.crudActions.getId());
-            this.crudActions.setId(id);
-            setEntity(this.crudActions.getInstance());
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
+            setEntity(getInstance());
             
             usuario = this.usrCrudActions.resetInstance(usuario.getIdUsuarioLogin());
             assertEquals("usuário bloqueado", Boolean.TRUE, usuario.getBloqueio());
@@ -261,33 +262,33 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         
     }
     
-    private final class PersistUsuarioTest extends InternalRunnableTest<UsuarioLogin> {
+    private final class PersistUsuarioTest extends RunnableTest<UsuarioLogin> {
         
         public PersistUsuarioTest() {
             super(UsuarioLoginCrudAction.NAME);
         }
         
         private void initEntity(final UsuarioLogin entity) {
-            this.crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
-            this.crudActions.setEntityValue("email", entity.getEmail());
-            this.crudActions.setEntityValue("login", entity.getLogin());
-            this.crudActions.setEntityValue("tipoUsuario", entity.getTipoUsuario());
-            this.crudActions.setEntityValue("ativo", entity.getAtivo());
-            this.crudActions.setEntityValue("provisorio", entity.getProvisorio());
+            setEntityValue("nomeUsuario", entity.getNomeUsuario());
+            setEntityValue("email", entity.getEmail());
+            setEntityValue("login", entity.getLogin());
+            setEntityValue("tipoUsuario", entity.getTipoUsuario());
+            setEntityValue("ativo", entity.getAtivo());
+            setEntityValue("provisorio", entity.getProvisorio());
         }
         
         @Override
         protected void testComponent() throws Exception {
-            this.crudActions.newInstance();
+            newInstance();
             initEntity(getEntity());
-            assertEquals("persisted", PERSISTED, this.crudActions.save());
+            assertEquals("persisted", PERSISTED, save());
 
-            final Integer id = this.crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            this.crudActions.newInstance();
-            assertNull("nullId", this.crudActions.getId());
-            this.crudActions.setId(id);
-            setEntity(this.crudActions.getInstance());
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
+            setEntity(getInstance());
         }
     }
     

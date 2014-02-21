@@ -17,12 +17,37 @@
         <h:form id="uploadXPDL">
 
             <a:jsFunction name="chamarMetodo"
-                action="#{processBuilder.importarXPDL(fileHome.getData(), fluxoCrudAction.instance)}" />
+                action="#{processBuilder.importarXPDL(xpdlUploader.getData(), fluxoCrudAction.instance)}" />
 
-            <wi:fileUploadBox id="uploadArquivo" label="Arquivo XPDL"
-                tipMessage="Somente arquivos XPDL" acceptedTypes="xpdl"
-                onuploadcomplete="chamarMetodo();close();">
-            </wi:fileUploadBox>
+            <ui:param name="template"
+                value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+
+            <s:decorate id="#{id}Decoration" template="#{template}"
+                rendered="#{wi:get(rendered, true)}">
+                <rich:fileUpload id="uploadArquivo" execute="@this"
+                    status=":status" limitRender="true"
+                    required="#{wi:get(required, false)}"
+                    acceptedTypes="xpdl"
+                    tipMessage="Somente arquivos XPDL"
+                    maxFilesQuantity="1"
+                    fileUploadListener="#{xpdlUploader.processFileUpload}"
+                    immediateUpload="#{wi:get(immediateUpload, true)}"
+                    listWidth="#{wi:get(listWidth, '260px')}"
+                    listHeight="#{wi:get(listHeight, '58px')}"
+                    noDuplicate="#{wi:get(noDuplicate, true)}"
+                    onuploadcomplete="chamarMetodo();close();"
+                    addLabel="Adicionar" clearAllLabel="Limpar Todos"
+                    clearLabel="Limpar" uploadLabel="Processar"
+                    doneLabel="Enviado"
+                    sizeExceededLabel="Erro! Tamanho máximo 2MB."
+                    validatorMessage="campo obrigatório."
+                    requiredMessage="erro, campo obrigatorio"
+                    disabled="#{disabled}">
+                    <f:facet name="label">
+                        <h:outputText value="{_KB}KB de {KB}KB" />
+                    </f:facet>
+                </rich:fileUpload>
+            </s:decorate>
         </h:form>
     </ui:define>
 

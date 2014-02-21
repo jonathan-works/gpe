@@ -41,34 +41,38 @@ public class NatCatFluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatF
     
     @Override
     public String save() {
-        if (getInstance().getHeranca()) {
+        final FacesMessages messages = FacesMessages.instance();
+        final NatCatFluxoLocalizacao instance = getInstance();
+        final NatCatFluxoLocalizacaoManager manager = getManager();
+        if (instance.getHeranca()) {
         	try {
-				getManager().persistWithChildren(getInstance());
-			} catch (DAOException e) {
+				manager.persistWithChildren(instance);
+			} catch (final DAOException e) {
 				LOG.error(null, e);
-				FacesMessages.instance().clear();
-				FacesMessages.instance().add(e.getLocalizedMessage());
+				messages.clear();
+				messages.add(e.getLocalizedMessage());
 				return e.getPostgreSQLErrorCode().toString();
 			}
         }
-        if (getManager().existsNatCatFluxoLocalizacao(getInstance().getNaturezaCategoriaFluxo(), getInstance().getLocalizacao())) {
-        	FacesMessages.instance().clear();
-        	FacesMessages.instance().add("#{messages['constraintViolation.uniqueViolation']}");
+        if (manager.existsNatCatFluxoLocalizacao(instance.getNaturezaCategoriaFluxo(), instance.getLocalizacao())) {
+        	messages.clear();
+        	messages.add("#{messages['constraintViolation.uniqueViolation']}");
         	return PostgreSQLErrorCode.UNIQUE_VIOLATION.toString();
         }
         return super.save();
     }
     
     @Override
-    protected void afterSave() {
-        super.afterSave();
+    protected void afterSave(final String ret) {
         newInstance();
         clearTree();
     }
 
     private void clearTree() {
-        LocalizacaoTreeHandler treeHandler = ComponentUtil.getComponent("localizacaoTree");
-        treeHandler.clearTree();
+        final LocalizacaoTreeHandler treeHandler = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
+        if (treeHandler != null) {
+            treeHandler.clearTree();
+        }
     }
     
 }

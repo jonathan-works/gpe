@@ -67,7 +67,7 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
         final PersistSuccessTest<Categoria> persistSuccessTest = new PersistSuccessTest<>(CategoriaCrudAction.NAME, initEntityAction);
         int i=0;
         for(final Boolean ativo : new Boolean[]{TRUE, FALSE}) {
-            persistSuccessTest.runTest(action, new Categoria(format("Categoria {0} {1}", ++i, suffix), ativo), servletContext, session);
+            categorias.add(persistSuccessTest.runTest(action, new Categoria(format("Categoria {0} {1}", ++i, suffix), ativo), servletContext, session));
         }
         return categorias;
     }
