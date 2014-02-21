@@ -2,8 +2,6 @@ package br.com.infox.epp.test.it.fluxo.crud;
 
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 
 import java.util.List;
 
@@ -42,7 +40,6 @@ import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
-import br.com.infox.epp.test.crud.PersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
@@ -109,8 +106,9 @@ public class NatCatFluxoLocalizacaoCrudActionIT extends AbstractCrudTest<NatCatF
     
     @Test
     public void persistSuccessTest() throws Exception {
-        final List<Localizacao> localizacoes = LocalizacaoCrudActionIT.getSuccessfullyPersisted(null, "per-suc", servletContext, session);
-        final List<NaturezaCategoriaFluxo> natCatFluxoList = NaturezaCategoriaFluxoCrudActionIT.getSuccessfullyPersisted(null, "per-suc", servletContext, session);
+        final String suffix = "per-suc";
+		final List<Localizacao> localizacoes = LocalizacaoCrudActionIT.getSuccessfullyPersisted(null, suffix, servletContext, session);
+        final List<NaturezaCategoriaFluxo> natCatFluxoList = NaturezaCategoriaFluxoCrudActionIT.getSuccessfullyPersisted(null, suffix, servletContext, session);
         for (NaturezaCategoriaFluxo naturezaCategoriaFluxo : natCatFluxoList) {
             for (Localizacao localizacao : localizacoes) {
                 persistSuccess.runTest(new NatCatFluxoLocalizacao(naturezaCategoriaFluxo, localizacao, Boolean.TRUE), servletContext, session);
@@ -127,8 +125,9 @@ public class NatCatFluxoLocalizacaoCrudActionIT extends AbstractCrudTest<NatCatF
     
     @Test
     public void removeSuccessTest() throws Exception {
-        final List<Localizacao> localizacoes = LocalizacaoCrudActionIT.getSuccessfullyPersisted(null, "per-suc", servletContext, session);
-        final List<NaturezaCategoriaFluxo> natCatFluxoList = NaturezaCategoriaFluxoCrudActionIT.getSuccessfullyPersisted(null, "per-suc", servletContext, session);
+        final String suffix = "rem-suc";
+		final List<Localizacao> localizacoes = LocalizacaoCrudActionIT.getSuccessfullyPersisted(null, suffix, servletContext, session);
+        final List<NaturezaCategoriaFluxo> natCatFluxoList = NaturezaCategoriaFluxoCrudActionIT.getSuccessfullyPersisted(null, suffix, servletContext, session);
         for (NaturezaCategoriaFluxo naturezaCategoriaFluxo : natCatFluxoList) {
             for (Localizacao localizacao : localizacoes) {
                 persistSuccess.runTest(new NatCatFluxoLocalizacao(naturezaCategoriaFluxo, localizacao, Boolean.TRUE), servletContext, session);
