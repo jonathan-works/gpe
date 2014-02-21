@@ -12,6 +12,8 @@ import org.hibernate.engine.spi.LoadQueryInfluencers;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.persistence.FullTextHibernateSessionProxy;
 
+import br.com.infox.core.session.SessionAssistant;
+
 public final class HibernateUtil {
 
     private HibernateUtil() {
