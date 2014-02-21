@@ -466,11 +466,10 @@ public class Util implements Serializable {
      */
     public static void invokeMethod(String action) {
         if (action != null && !"".equals(action)) {
-            MeasureTime mt = new MeasureTime(true);
             StringBuilder sb = new StringBuilder();
             sb.append("#{").append(action).append("}");
             Expressions.instance().createMethodExpression(sb.toString()).invoke();
-            LOG.info(MessageFormat.format("invokeMethod: {0} [{1} ms]", sb, mt.getTime()));
+            LOG.info(MessageFormat.format("invokeMethod: {0}", sb));
         }
     }
 

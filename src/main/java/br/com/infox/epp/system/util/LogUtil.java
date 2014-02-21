@@ -27,7 +27,6 @@ import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.epp.system.exception.LogException;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
-import br.com.itx.component.MeasureTime;
 import br.com.itx.util.EntityUtil;
 
 public final class LogUtil {
@@ -153,7 +152,6 @@ public final class LogUtil {
 
     public static Map<String, Object> getFields(Object component) {
         try {
-            MeasureTime t = new MeasureTime(true);
             Map<String, Object> map = new HashMap<String, Object>();
             PropertyDescriptor[] props = Introspector.getBeanInfo(component.getClass()).getPropertyDescriptors();
             for (PropertyDescriptor descriptor : props) {
@@ -162,8 +160,7 @@ public final class LogUtil {
                     map.put(descriptor.getName(), field);
                 }
             }
-            LOG.info("getFields(" + component.getClass().getName() + "): "
-                    + t.getTime());
+            LOG.info("getFields(" + component.getClass().getName() + ")");
             return map;
         } catch (Exception e) {
             LOG.error(".getFields(component)", e);
