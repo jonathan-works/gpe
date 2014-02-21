@@ -18,7 +18,7 @@
         <ui:param name="accept"
             value="#{wi:get(accept, 'application/pdf')}" />
         <ui:param name="tipMessage"
-            value="#{accept == 'application/pdf' ? 'Somente arquivo PDF com tamanho máximo de 1.5MB' : tipMessage}" />
+            value="#{accept == 'application/pdf' ? 'Somente arquivo PDF com tamanho máximo de 2MB' : tipMessage}" />
 
         <ui:define name="label">#{label}</ui:define>
         <rich:fileUpload id="#{id}" execute="@this" status=":status"
@@ -30,7 +30,7 @@
             uploadLabel="#{messages['processoDocumento.uploadLabel']}"
             maxFilesQuantity="1" listHeight="50px"
             immediateUpload="true" noDuplicate="true"
-            render="pageBodyDialogMessage" acceptedTypes="pdf">
+            render="#{reRender}, pageBodyDialogMessage" acceptedTypes="pdf">
         </rich:fileUpload>
     </s:decorate>
 

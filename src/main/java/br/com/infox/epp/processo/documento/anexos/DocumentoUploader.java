@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.richfaces.event.FileUploadEvent;
@@ -25,16 +26,34 @@ import br.com.itx.util.Crypto;
 public class DocumentoUploader extends DocumentoCreator implements FileUploadListener {
 
     public static final String NAME = "documentoUploader";
+    private static final int TAMANHO_MAXIMO_ARQUIVO = 2097152;
     
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
     
+    private boolean isValido;
+    
     @In private ProcessoDocumentoManager processoDocumentoManager;
     @In private DocumentoBinManager documentoBinManager;
+
+    public boolean isValido() {
+        return isValido;
+    }
+
+    public void setValido(boolean isValido) {
+        this.isValido = isValido;
+    }
+    
+    @Override
+    protected void newInstance() {
+        super.newInstance();
+        isValido = false;
+    }
 
     @Override
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
         newInstance();
         final UploadedFile ui = fileUploadEvent.getUploadedFile();
+        setValido(isDocumentoBinValido(ui));
         bin().setUsuario(Authenticator.getUsuarioLogado());
         bin().setNomeArquivo(ui.getName());
         bin().setExtensao(getFileType(ui.getName()));
@@ -74,6 +93,17 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         ProcessoDocumento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
         documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
         return pd;
+    }
+    
+    private boolean isDocumentoBinValido(final UploadedFile file) {
+        if (file == null) {
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Nenhum documento selecionado.");
+            return false;
+        } if (file.getSize() > TAMANHO_MAXIMO_ARQUIVO) {
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de 1.5MB!");
+            return false;
+        }
+        return true;
     }
     
 
