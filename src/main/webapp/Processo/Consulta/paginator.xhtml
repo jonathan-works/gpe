@@ -8,7 +8,7 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
-    <ui:define name="title">#{messages['processo.documentos']} #{processoHome.instance.numeroProcesso}</ui:define>
+    <ui:define name="title">#{messages['processo.documentos']} #{consultaController.processoEpa.numeroProcesso}</ui:define>
 
     <ui:define name="body">
         <h:outputScript name="jquery.hotkeys.js" library="js" />

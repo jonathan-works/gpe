@@ -69,5 +69,9 @@ public class ProcessoSearcher {
         }
         return processoManager.find(prc);
     }
+    
+    public String getNumeroProcesso(int idProcesso) {
+        return processoManager.getNumeroProcesso(idProcesso);
+    }
 
 }

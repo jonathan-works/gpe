@@ -1,4 +1,4 @@
-package br.com.infox.core.log;
+package br.com.infox.epp.system.log;
 
 import org.hibernate.event.spi.PostDeleteEvent;
 import org.hibernate.event.spi.PostDeleteEventListener;
@@ -11,7 +11,6 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.epp.system.action.ExecuteLog;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 import br.com.infox.epp.system.util.LogUtil;
 

@@ -20,7 +20,6 @@ import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.util.ComponentUtil;
 
-
 @Name(CaixaEventHandler.NAME)
 @Scope(ScopeType.APPLICATION)
 /**
@@ -29,59 +28,59 @@ import br.com.itx.util.ComponentUtil;
  */
 public class CaixaEventHandler {
 
-	public static final String NAME = "caixaEvento";
-	private static final String PROCESSO = "processo";
-	
-	@In private ProcessoManager processoManager;
-	
-	/**
-	 * Método principal, onde ocorrerá a validação para verificar se o processo
-	 * se encaixa em alguma Caixa, para então adicioná-lo à ela.
-	 */
-	@Observer(Event.EVENTTYPE_TRANSITION)
- 	public void filtrarProcessos(final ExecutionContext context) {
-		final Processo proc = processoManager.find(getIdProcesso());
-		if(proc != null) {
-			final List<Caixa> caixaResList = getCaixaResultList(context);
-			if(caixaResList != null && !caixaResList.isEmpty()) {
-				processoManager.moverProcessoParaCaixa(caixaResList, proc);
-			}
-		}
-	}
+    public static final String NAME = "caixaEvento";
+    private static final String PROCESSO = "processo";
 
-	private List<Caixa> getCaixaResultList(final ExecutionContext context) {
-		final Caixa cf = getCaixa(context.getTransition());
-		final List<Caixa> result = new ArrayList<>(0);
-		if (cf != null) {
-		    final CaixaList caixaList = ComponentUtil.getComponent(CaixaList.NAME);
-		    caixaList.setEntity(cf);
-		    result.addAll(caixaList.getResultList());
-		}
-		return result;
-	}
+    @In
+    private ProcessoManager processoManager;
 
-	private Caixa getCaixa(final Transition transicao) {
-		Caixa caixa =  null;
-		TarefaManager tarefaManager = ComponentUtil.getComponent(TarefaManager.NAME);
-		final Tarefa destino = tarefaManager.getTarefa(transicao.getTo().getName(), 
-				transicao.getTo().getProcessDefinition().getName());
-		if (destino != null) {
-			caixa = new Caixa();
-			caixa.setTarefa(destino);
-			caixa.setIdNodeAnterior(new Long(transicao.getFrom().getId()).intValue());
-		}
-		return caixa;
-	}
+    /**
+     * Método principal, onde ocorrerá a validação para verificar se o processo
+     * se encaixa em alguma Caixa, para então adicioná-lo à ela.
+     */
+    @Observer(Event.EVENTTYPE_TRANSITION)
+    public void filtrarProcessos(final ExecutionContext context) {
+        final Processo proc = processoManager.find(getIdProcesso());
+        if (proc != null) {
+            final List<Caixa> caixaResList = getCaixaResultList(context);
+            if (caixaResList != null && !caixaResList.isEmpty()) {
+                processoManager.moverProcessoParaCaixa(caixaResList, proc);
+            }
+        }
+    }
 
-	private Integer getIdProcesso() {
-		Integer idProcesso = JbpmUtil.getProcessVariable(PROCESSO);
-		if(idProcesso == null) {
-			final Processo processo = ProcessoHome.instance().getInstance();
-			if(processo != null) {
-				idProcesso = processo.getIdProcesso();
-			}
-		}
-		return idProcesso;
-	}
-	
+    private List<Caixa> getCaixaResultList(final ExecutionContext context) {
+        final Caixa cf = getCaixa(context.getTransition());
+        final List<Caixa> result = new ArrayList<>(0);
+        if (cf != null) {
+            final CaixaList caixaList = ComponentUtil.getComponent(CaixaList.NAME);
+            caixaList.setEntity(cf);
+            result.addAll(caixaList.getResultList());
+        }
+        return result;
+    }
+
+    private Caixa getCaixa(final Transition transicao) {
+        Caixa caixa = null;
+        TarefaManager tarefaManager = ComponentUtil.getComponent(TarefaManager.NAME);
+        final Tarefa destino = tarefaManager.getTarefa(transicao.getTo().getName(), transicao.getTo().getProcessDefinition().getName());
+        if (destino != null) {
+            caixa = new Caixa();
+            caixa.setTarefa(destino);
+            caixa.setIdNodeAnterior(new Long(transicao.getFrom().getId()).intValue());
+        }
+        return caixa;
+    }
+
+    private Integer getIdProcesso() {
+        Integer idProcesso = JbpmUtil.getProcessVariable(PROCESSO);
+        if (idProcesso == null) {
+            final Processo processo = ProcessoHome.instance().getInstance();
+            if (processo != null) {
+                idProcesso = processo.getIdProcesso();
+            }
+        }
+        return idProcesso;
+    }
+
 }

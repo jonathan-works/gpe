@@ -160,6 +160,7 @@
 
             <infox:tab id="tabAnexos" name="tabAnexos"
                 rendered="#{processoHome.managed}" status=":status"
+                action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
                 title="Documentos do Processo">
                 <wi:dataTable values="#{processoDocumentoList.list(15)}"
                     bean="#{processoDocumentoList}"
@@ -200,7 +201,7 @@
                                 alt="#{messages['assinaturas.assinar']}"
                                 url="/img/lock_unlock.png" />
                             <f:param value="#{row.idProcessoDocumento}"
-                                name="id" />
+                                name="idProcessoDocumento" />
 
                         </s:link>
                     </ui:define>
@@ -221,8 +222,8 @@
                 value="#{localizacaoDocumentoFisicoCrudAction}" />
             <infox:tab id="documentoFisicoTab" name="documentoFisicoTab"
                 rendered="#{home.isManaged()}"
-                title="#{messages['documentoFisico.titleTab']}"
-                action="#{localizacaoDocumentoFisicoCrudAction.init()}">
+                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
+                title="#{messages['documentoFisico.titleTab']}">
                 <wi:dataForm formId="documentoFisicoForm"
                     formTitle="#{messages['form.title']}">
 

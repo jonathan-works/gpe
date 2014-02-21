@@ -24,8 +24,7 @@
         </h:commandLink>
 
         <h:commandLink target="idPdf#{row}" rendered="#{!isModelo}"
-            action="#{documentoDownloader.setDownloadInstance(var)}"
-            onclick="openPopUp('idPdf#{row}', 'about:blank');">
+            action="#{documentoDownloader.downloadDocumento(var)}">
             <h:graphicImage value="/img/pdf.gif"
                 title="#{bin.nomeArquivo} (#{util.getFormattedKb(bin.size)})" />
         </h:commandLink>
@@ -44,16 +43,12 @@
         <s:link target="idJan#{var.idProcessoDocumento}"
             rendered="#{empty bin.signature}"
             view="/Processo/Consulta/assinaDocumento.xhtml"
-            onclick="openPopUp('idJan#{var.idProcessoDocumento}', 'about:blank');">
+            onclick="infox.abrirPopUp('idJan#{var.idProcessoDocumento}');">
 
-            <h:graphicImage title="Assinar Documento"
+            <h:graphicImage title="Assinar Documento #{var.idProcessoDocumento}"
                 alt="Assinar Documento" url="/img/lock_unlock.png" />
             <f:param value="#{var.idProcessoDocumento}"
                 name="idProcessoDocumento" />
-            <f:param
-                value="#{util.urlRequest}?id=#{processoHome.id}&amp;tab=#{processoTrfHome.tab}&amp;cid=#{conversation.id}"
-                name="urlOpenner" />
-
         </s:link>
 
     </div>

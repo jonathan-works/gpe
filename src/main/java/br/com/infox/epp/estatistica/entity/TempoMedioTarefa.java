@@ -22,7 +22,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
@@ -87,7 +86,7 @@ public class TempoMedioTarefa implements Serializable {
 	
 	@Transient
 	public String getTempoMedioFormatado() {
-		return DateUtil.formatTempo(tempoMedio.intValue(), tipoPrazo);
+		return PrazoEnum.formatTempo(tempoMedio.intValue(), tipoPrazo);
 	}
 	
 	@Column(name=TIPO_PRAZO)

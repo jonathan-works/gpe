@@ -56,6 +56,7 @@
 
             <infox:tab id="tabAnexos" name="tabAnexos"
                 rendered="#{processoHome.managed}" status=":status"
+                action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
                 title="Documentos do Processo">
                 <ui:decorate id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
@@ -102,14 +103,14 @@
                 value="#{localizacaoDocumentoFisicoCrudAction}" />
             <infox:tab id="documentoFisicoTab" name="documentoFisicoTab"
                 rendered="#{home.isManaged()}"
-                title="#{messages['documentoFisico.titleTab']}"
-                action="#{localizacaoDocumentoFisicoCrudAction.init()}">
+                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
+                title="#{messages['documentoFisico.titleTab']}">
                 <ui:decorate id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{messages['documentoFisico.titleTab']}</ui:define>
                     <s:div id="documentoFisicoDiv">
-                        <wi:dataTable id="documentoFisicoTable2"
-                            value="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
+                        <wi:dataTable id="documentoFisicoTable"
+                            values="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
                             var="row" rows="10"
                             searchFormStyleClass="hidden">
                             <ui:define name="toolBar" />
@@ -139,16 +140,20 @@
                     <ui:include src="parteProcessoGridRO.xhtml" />
                 </ui:decorate>
             </infox:tab>
-            
-            <infox:tab id="tabSigiloProcesso"
-                name="tabSigiloProcesso" status=":status"
+
+            <infox:tab id="tabSigiloProcesso" name="tabSigiloProcesso"
+                status=":status"
                 title="#{messages['sigiloProcesso.sigiloProcesso']}"
                 action="#{usuarioRaiaList.loadLocalizacoes(processoHome.instance.naturezaCategoriaFluxo.fluxo)}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
-                
-                <f:setPropertyActionListener target="#{sigiloProcessoAction.processo}" value="#{processoHome.instance}" />
-                <f:setPropertyActionListener target="#{sigiloProcessoList.processo}" value="#{processoHome.instance}" />
-                
+
+                <f:setPropertyActionListener
+                    target="#{sigiloProcessoAction.processo}"
+                    value="#{processoHome.instance}" />
+                <f:setPropertyActionListener
+                    target="#{sigiloProcessoList.processo}"
+                    value="#{processoHome.instance}" />
+
                 <ui:decorate id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{messages['sigiloProcesso.sigiloProcesso']}</ui:define>

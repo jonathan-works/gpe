@@ -13,31 +13,30 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Name(ProcessoDocumentoList.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
-	private static final long serialVersionUID = 1L;
-	private static final String DEFAULT_EJBQL = "select o from ProcessoDocumento o";
+    private static final long serialVersionUID = 1L;
+    private static final String DEFAULT_EJBQL = "select o from ProcessoDocumento o";
     private static final String DEFAULT_ORDER = "dataInclusao desc";
-    private static final String R1 = "o.processo.idProcesso = #{processoHome.id}";
-	
-	public static final String NAME = "processoDocumentoList";
 
-	@Override
-	protected void addSearchFields() {
-		addSearchField("idProcesso", SearchCriteria.IGUAL, ProcessoDocumentoList.R1);
-	}
+    public static final String NAME = "processoDocumentoList";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("processo", SearchCriteria.IGUAL);
+    }
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

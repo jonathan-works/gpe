@@ -15,5 +15,6 @@ public interface ProcessoDocumentoQuery {
     String LIST_ANEXOS_PUBLICOS = "listAnexosPublicos";
     String LIST_ANEXOS_PUBLICOS_QUERY = "select o from ProcessoDocumento o inner join o.tipoProcessoDocumento tpd "
             + "where o.idJbpmTask = :" + ID_JDBPM_TASK_PARAM +" and (tpd.visibilidade='A' or tpd.visibilidade='E')";
+	String DATA_INCLUSAO = "dataInclusao";
 
 }

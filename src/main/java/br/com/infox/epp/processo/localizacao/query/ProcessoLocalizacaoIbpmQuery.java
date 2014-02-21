@@ -29,11 +29,9 @@ public interface ProcessoLocalizacaoIbpmQuery {
             + "and tl.localizacao = :localizacao "
             + "and (tl.papel = :papel or tl.papel is null))";
     
-    String PARAM_ID_PROCESSO = "idProcesso";
     String COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES = "countProcessoLocalizacaoIbpmByAttributes";
     String COUNT_PROCESSO_LOC_IBPM_BY_IDP_LOC_AND_PAPEL_QUERY = "select count(o) from ProcessoLocalizacaoIbpm o " +
-            "where o.processo.idProcesso = :" + PARAM_ID_PROCESSO +
-            " and o.localizacao = :" + PARAM_LOCALIZACAO +
+            "where o.processo = :" + PARAM_PROCESSO + " and o.localizacao = :" + PARAM_LOCALIZACAO +
             " and o.papel = :" + PARAM_PAPEL;
     
     String PARAM_PROCESS_ID = "processId";

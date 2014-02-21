@@ -5,7 +5,6 @@ import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbp
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_ID_TASK;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_ID_TASK_INSTANCE;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_LOCALIZACAO;
@@ -26,7 +25,6 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 
 @Name(ProcessoLocalizacaoIbpmDAO.NAME)
@@ -41,10 +39,10 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         return getNamedSingleResult(LIST_BY_TASK_INSTANCE, parameters);
     }
 
-    public boolean possuiPermissao() {
+    public boolean possuiPermissao(Processo processo) {
         ControleFiltros.instance().iniciarFiltro();
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_ID_PROCESSO, ProcessoHome.instance().getInstance().getIdProcesso());
+        parameters.put(PARAM_PROCESSO, processo);
         parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
         parameters.put(PARAM_PAPEL, Authenticator.getPapelAtual());
         Long count = getNamedSingleResult(COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, parameters);
