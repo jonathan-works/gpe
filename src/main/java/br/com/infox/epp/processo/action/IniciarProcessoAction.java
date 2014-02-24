@@ -49,6 +49,8 @@ public class IniciarProcessoAction {
     private Item itemDoProcesso;
     private ProcessoEpa processoEpa;
     private List<ItemBean> itemList;
+    
+    private String viewId;
 
     public void iniciarProcesso() {
         newProcessoEpa();
@@ -182,6 +184,14 @@ public class IniciarProcessoAction {
 
     public boolean isRenderizarCadastroPartes() {
         return renderizarCadastroPartes;
+    }
+
+    public String getViewId() {
+        return viewId;
+    }
+
+    public void setViewId(String viewId) {
+        this.viewId = viewId;
     }
 
 }

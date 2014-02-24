@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.consulta.list;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -9,6 +10,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Name(ConsultaProcessoEpaList.NAME)
@@ -24,11 +26,22 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
 
     private static final String R1 = "o.idProcesso in (#{painelUsuarioHome.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioHome.idCaixa}";
-    private static final String R3 = "o.numeroProcesso = #{consultaProcessoHome.instance.numeroProcesso}";
-    private static final String R4 = "o.naturezaCategoriaFluxo.natureza = #{consultaProcessoHome.instance.natureza}";
-    private static final String R5 = "o.naturezaCategoriaFluxo.categoria = #{consultaProcessoHome.instance.categoria}";
-    private static final String R6 = "cast(o.dataInicio as date) >= #{consultaProcessoHome.instance.dataInicio}";
-    private static final String R7 = "cast(o.dataInicio as date) <= #{consultaProcessoHome.instance.dataFim}";
+    private static final String R3 = "o.numeroProcesso = #{consultaProcessoEpaList.entity.numeroProcesso}";
+    private static final String R4 = "o.naturezaCategoriaFluxo.natureza = #{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.natureza}";
+    private static final String R5 = "o.naturezaCategoriaFluxo.categoria = #{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}";
+    private static final String R6 = "cast(o.dataInicio as date) >= #{consultaProcessoEpaList.dataInicio}";
+    private static final String R7 = "cast(o.dataInicio as date) <= #{consultaProcessoEpaList.dataFim}";
+    
+    private Date dataInicio;
+    private Date dataFim;
+    
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        getEntity().setNaturezaCategoriaFluxo(new NaturezaCategoriaFluxo());
+        setDataInicio(null);
+        setDataFim(null);
+    }
 
     @Override
     protected void addSearchFields() {
@@ -54,6 +67,22 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
+    }
+    
+    public Date getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public Date getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(Date dataFim) {
+        this.dataFim = br.com.infox.core.util.DateUtil.getEndOfDay(dataFim);
     }
 
 }

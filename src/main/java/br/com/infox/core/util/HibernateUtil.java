@@ -1,6 +1,4 @@
-/* $Id: HibernateUtil.java 516 2010-08-12 23:21:53Z jplacerda $ */
-
-package br.com.itx.util;
+package br.com.infox.core.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +10,10 @@ import org.hibernate.engine.spi.LoadQueryInfluencers;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.persistence.FullTextHibernateSessionProxy;
 
+import br.com.infox.core.session.SessionAssistant;
+import br.com.itx.util.ComponentUtil;
+
+//TODO verificar se os métodos não utilizados dessa classe podem (devem) ser excluídos
 public final class HibernateUtil {
 
     private HibernateUtil() {

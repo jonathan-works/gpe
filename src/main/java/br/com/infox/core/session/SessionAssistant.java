@@ -1,4 +1,4 @@
-package br.com.itx.util;
+package br.com.infox.core.session;
 
 import java.sql.Connection;
 import java.sql.SQLException;
