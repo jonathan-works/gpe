@@ -37,6 +37,8 @@ import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -52,27 +54,31 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
                 UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
                 ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
                 ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-                ParametroManager.class,ParametroDAO.class, PessoaFisicaManager.class)
+                ParametroManager.class,ParametroDAO.class, PessoaFisicaManager.class,
+                UsuarioLoginCrudActionIT.class)
         .createDeployment();
     }
 
     private final CrudActions<UsuarioLogin> crudActionsUsuarioLogin = new CrudActionsImpl<>(UsuarioLoginCrudAction.NAME);
     
     //TODO: listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
+    public static final ActionContainer<PessoaFisica> initEntityAction = new ActionContainer<PessoaFisica>() {
+        @Override
+        public void execute(CrudActions<PessoaFisica> crud) {
+            final PessoaFisica entity = getEntity();
+            crud.setEntityValue("cpf",entity.getCpf());
+            crud.setEntityValue("nome",entity.getNome());
+            crud.setEntityValue("dataNascimento",entity.getDataNascimento());            
+        }
+    }; 
+    
     @Override
-    protected void initEntity(final PessoaFisica entity, final CrudActions<PessoaFisica> crudActions) {
-        crudActions.setEntityValue("cpf",entity.getCpf());
-        crudActions.setEntityValue("nome",entity.getNome());
-        crudActions.setEntityValue("dataNascimento",entity.getDataNascimento());
+    protected ActionContainer<PessoaFisica> getInitEntityAction() {
+        return initEntityAction;
     }
 
     private void initUsuarioLogin(final UsuarioLogin usuario) {
-        crudActionsUsuarioLogin.setEntityValue("nomeUsuario", usuario.getNomeUsuario());
-        crudActionsUsuarioLogin.setEntityValue("email", usuario.getEmail());
-        crudActionsUsuarioLogin.setEntityValue("login", usuario.getLogin());
-        crudActionsUsuarioLogin.setEntityValue("tipoUsuario", usuario.getTipoUsuario());
-        crudActionsUsuarioLogin.setEntityValue("ativo", usuario.getAtivo());
-        crudActionsUsuarioLogin.setEntityValue("provisorio", usuario.getProvisorio());
+        UsuarioLoginCrudActionIT.initEntityAction.execute(usuario, crudActionsUsuarioLogin);
     }
     
     protected Integer persistUsuarioLogin(final UsuarioLogin entity) {
@@ -89,28 +95,28 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
     
     private static int usr_id=0;
     
-    private final InternalRunnableTest<PessoaFisica> persistSuccess = new InternalRunnableTest<PessoaFisica>() {
+    private final RunnableTest<PessoaFisica> persistSuccess = new RunnableTest<PessoaFisica>(UsuarioPessoaFisicaCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final PessoaFisica entity = getEntity();
             final UsuarioLogin user = createUser(entity);
 
-            crudActions.newInstance();
-            initEntity(entity, this.crudActions);
-            crudActions.setComponentValue("usuarioAssociado", user);
-            final String persistResult = crudActions.save();
+            this.newInstance();
+            initEntityAction.execute(entity, this);
+            this.setComponentValue("usuarioAssociado", user);
+            final String persistResult = this.save();
             assertEquals(PERSISTED, persistResult);
 
-            final Integer id = crudActions.getId();
+            final Integer id = this.getId();
             assertNotNull(id);
-            crudActions.newInstance();
-            final Integer nullId = crudActions.getId();
+            this.newInstance();
+            final Integer nullId = this.getId();
             assertNull(nullId);
-            crudActions.setId(id);
-            assert compareEntityValues(entity, this.crudActions);
+            this.setId(id);
+            assert compareEntityValues(entity, this);
 
             assert user.getPessoaFisica() != null;
-            assert user.getPessoaFisica().equals(crudActions.getInstance());
+            assert user.getPessoaFisica().equals(this.getInstance());
         }
     };
 
@@ -128,27 +134,27 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
     
     @Test
     public void persistSuccessTest() throws Exception {
-        persistSuccess.runTest(new PessoaFisica("", "", new GregorianCalendar(1960,11,10).getTime(), Boolean.TRUE));
+        persistSuccess.runTest(new PessoaFisica("", "", new GregorianCalendar(1960,11,10).getTime(), Boolean.TRUE), servletContext, session);
     }
     
-    private final InternalRunnableTest<PessoaFisica> removeSuccess = new InternalRunnableTest<PessoaFisica>() {
+    private final RunnableTest<PessoaFisica> removeSuccess = new RunnableTest<PessoaFisica>(UsuarioPessoaFisicaCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final PessoaFisica entity = getEntity();
             UsuarioLogin user = createUser(entity);
             
-            crudActions.setComponentValue("usuarioAssociado", user);
+            this.setComponentValue("usuarioAssociado", user);
             
-            crudActions.newInstance();
-            initEntity(entity, crudActions);
-            assert PERSISTED.equals(crudActions.save());
-            assert crudActions.getId() != null;
+            this.newInstance();
+            initEntityAction.execute(entity, this);
+            assert PERSISTED.equals(this.save());
+            assert this.getId() != null;
             
             crudActionsUsuarioLogin.newInstance();
             crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
             user = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
             assert user.getPessoaFisica() != null;
-            assert REMOVED.equals(crudActions.remove(user.getPessoaFisica()));
+            assert REMOVED.equals(this.remove(user.getPessoaFisica()));
             
             crudActionsUsuarioLogin.newInstance();
             crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
@@ -159,9 +165,9 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
     
     @Test
     public void removeSuccessTest() throws Exception {
-        removeSuccess.runTest(new PessoaFisica("111111111","",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
-        removeSuccess.runTest(new PessoaFisica("324789655","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
-        removeSuccess.runTest(new PessoaFisica("123332123","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE));
+        removeSuccess.runTest(new PessoaFisica("111111111","",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE), servletContext, session);
+        removeSuccess.runTest(new PessoaFisica("324789655","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE), servletContext, session);
+        removeSuccess.runTest(new PessoaFisica("123332123","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE), servletContext, session);
     }
     
 }

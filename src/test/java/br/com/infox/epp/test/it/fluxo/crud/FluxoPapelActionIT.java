@@ -42,6 +42,8 @@ import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -71,18 +73,26 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         return FluxoPapelAction.NAME;
     }
 
+    private final ActionContainer<FluxoPapel> initEntityAction = new ActionContainer<FluxoPapel>() {
+        @Override
+        public void execute(CrudActions<FluxoPapel> crud) {
+            final FluxoPapel entity = getEntity();
+            crud.invokeMethod("init",Void.class, entity.getFluxo());
+            crud.setEntityValue("papel", entity.getPapel());
+        }
+    };
+    
     @Override
-    protected void initEntity(final FluxoPapel entity,final CrudActions<FluxoPapel> crudActions) {
-        crudActions.invokeMethod("init",Void.class, entity.getFluxo());
-        crudActions.setEntityValue("papel", entity.getPapel());
+    protected ActionContainer<FluxoPapel> getInitEntityAction() {
+        return initEntityAction;
     }
     
-    private final InternalRunnableTest<FluxoPapel> persistSuccess = new InternalRunnableTest<FluxoPapel>() {
+    private final RunnableTest<FluxoPapel> persistSuccess = new RunnableTest<FluxoPapel>(FluxoPapelAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final FluxoPapel entity= getEntity();
             newInstance();
-            initEntity(entity, this);
+            initEntityAction.execute(entity, this);
             assertEquals("persist failed", PERSISTED, save());
 
             final Integer id = getId();
@@ -98,7 +108,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         
         for (final Fluxo fluxo : fluxos) {
             for (final Papel papel : papeis) {
-                persistSuccess.runTest(new FluxoPapel(fluxo, papel));        
+                persistSuccess.runTest(new FluxoPapel(fluxo, papel), servletContext, session);        
             }
         }
     }
@@ -111,8 +121,8 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         
         for (final Fluxo fluxo : fluxos) {
             for (final Papel papel : papeis) {
-                persistSuccess.runTest(new FluxoPapel(fluxo, papel));
-                persistFail.runTest(new FluxoPapel(fluxo, papel));
+                persistSuccess.runTest(new FluxoPapel(fluxo, papel), servletContext, session);
+                persistFail.runTest(new FluxoPapel(fluxo, papel), servletContext, session);
             }
         }
     }
@@ -125,9 +135,9 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         
         for (final Fluxo fluxo : fluxos) {
             for (final Papel papel : papeis) {
-                persistSuccess.runTest(new FluxoPapel(fluxo, papel));
+                persistSuccess.runTest(new FluxoPapel(fluxo, papel), servletContext, session);
             }
-            removeSuccess.runTest(new FluxoPapel(fluxo, null));
+            removeSuccess.runTest(new FluxoPapel(fluxo, null), servletContext, session);
         }
     }
     
@@ -139,15 +149,15 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         
         for (final Fluxo fluxo : fluxos) {
             for (final Papel papel : papeis) {
-                persistSuccess.runTest(new FluxoPapel(fluxo, papel));
+                persistSuccess.runTest(new FluxoPapel(fluxo, papel), servletContext, session);
             }
             final FluxoPapel entity = new FluxoPapel(fluxo, null);
-            removeSuccess.runTest(entity);
-            removeFail.runTest(entity);
+            removeSuccess.runTest(entity, servletContext, session);
+            removeFail.runTest(entity, servletContext, session);
         }
     }
     
-    private final InternalRunnableTest<FluxoPapel> removeSuccess = new InternalRunnableTest<FluxoPapel>() {
+    private final RunnableTest<FluxoPapel> removeSuccess = new RunnableTest<FluxoPapel>(FluxoPapelAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final FluxoPapel entity = getEntity();
@@ -165,7 +175,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         }
     };
     
-    private final InternalRunnableTest<FluxoPapel> removeFail = new InternalRunnableTest<FluxoPapel>() {
+    private final RunnableTest<FluxoPapel> removeFail = new RunnableTest<FluxoPapel>(FluxoPapelAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final FluxoPapel entity = getEntity();
@@ -183,7 +193,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         }
     };
     
-    private final InternalRunnableTest<Fluxo> persistFluxo = new InternalRunnableTest<Fluxo>(FluxoCrudAction.NAME) {
+    private final RunnableTest<Fluxo> persistFluxo = new RunnableTest<Fluxo>(FluxoCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Fluxo entity = getEntity(); 
@@ -209,7 +219,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         }
     };
     
-    private final InternalRunnableTest<Papel> persistPapel = new InternalRunnableTest<Papel>(PapelCrudAction.NAME) {
+    private final RunnableTest<Papel> persistPapel = new RunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -230,17 +240,17 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         }
         
         private void initEntity(final Papel entity) {
-            this.crudActions.setEntityValue("identificador", entity.getIdentificador()); //req
-            this.crudActions.setEntityValue("nome", entity.getNome()); // req
+            setEntityValue("identificador", entity.getIdentificador()); //req
+            setEntityValue("nome", entity.getNome()); // req
         }
     };
     
     private ArrayList<Papel> initPapeis(final String suffix) throws Exception {
         final ArrayList<Papel> result = new ArrayList<>();
-        result.add(persistPapel.runTest(new Papel("Gestor"+suffix,"gestor"+suffix)));
-        result.add(persistPapel.runTest(new Papel("Administrador Admin"+suffix,"admin"+suffix)));
-        result.add(persistPapel.runTest(new Papel("Comprador"+suffix,"comprador"+suffix)));
-        result.add(persistPapel.runTest(new Papel("Colaborador"+suffix,"colaborador"+suffix)));
+        result.add(persistPapel.runTest(new Papel("Gestor"+suffix,"gestor"+suffix), servletContext, session));
+        result.add(persistPapel.runTest(new Papel("Administrador Admin"+suffix,"admin"+suffix), servletContext, session));
+        result.add(persistPapel.runTest(new Papel("Comprador"+suffix,"comprador"+suffix), servletContext, session));
+        result.add(persistPapel.runTest(new Papel("Colaborador"+suffix,"colaborador"+suffix), servletContext, session));
         return result;
     }
     
@@ -254,7 +264,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
             for(final Boolean publicado: allBooleans) {
                 for (final Boolean ativo:booleans) {
                     final String codigo = format("Fluxo.{0}.{1}", ++id, suffix);
-                    fluxos.add(persistFluxo.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo)));
+                    fluxos.add(persistFluxo.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo), servletContext, session));
                 }
             }
         }

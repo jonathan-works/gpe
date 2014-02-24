@@ -3,7 +3,6 @@ package br.com.infox.epp.processo.entity;
 import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.DATA_INCLUSAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_TODOS_OS_ACTOR_IDS;
@@ -90,7 +89,7 @@ public class Processo implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idProcesso;
+    private Integer idProcesso;
     private UsuarioLogin usuarioCadastroProcesso;
     private String numeroProcesso;
     private Date dataInicio;
@@ -111,11 +110,11 @@ public class Processo implements java.io.Serializable {
     @Id
     @GeneratedValue(generator = GENERATOR)
     @Column(name = ID_PROCESSO, unique = true, nullable = false)
-    public int getIdProcesso() {
+    public Integer getIdProcesso() {
         return this.idProcesso;
     }
 
-    public void setIdProcesso(int idProcesso) {
+    public void setIdProcesso(Integer idProcesso) {
         this.idProcesso = idProcesso;
     }
 
@@ -176,8 +175,9 @@ public class Processo implements java.io.Serializable {
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
             mappedBy = PROCESSO_ATTRIBUTE)
-    @OrderBy(DATA_INCLUSAO)
+    @OrderBy("dataInclusao DESC")
     public List<ProcessoDocumento> getProcessoDocumentoList() {
+        
         return this.processoDocumentoList;
     }
 
@@ -220,29 +220,29 @@ public class Processo implements java.io.Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Processo)) {
-            return false;
-        }
-        Processo other = (Processo) obj;
-        if (getIdProcesso() != other.getIdProcesso()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + getIdProcesso();
+        result = prime * result
+                + ((idProcesso == null) ? 0 : idProcesso.hashCode());
         return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Processo other = (Processo) obj;
+        if (idProcesso == null) {
+            if (other.idProcesso != null)
+                return false;
+        } else if (!idProcesso.equals(other.idProcesso))
+            return false;
+        return true;
     }
 
 }

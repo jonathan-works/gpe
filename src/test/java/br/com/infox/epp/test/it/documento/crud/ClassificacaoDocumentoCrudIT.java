@@ -62,18 +62,26 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
         return instance;
     }
 
-    protected void initEntity(final TipoProcessoDocumento entity, final CrudActions<TipoProcessoDocumento> crudActions) {
-        crudActions.setEntityValue("codigoDocumento", entity.getCodigoDocumento());
-        crudActions.setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
-        crudActions.setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
-        crudActions.setEntityValue("visibilidade", entity.getVisibilidade());
-        crudActions.setEntityValue("numera", entity.getNumera());
-        crudActions.setEntityValue("tipoNumeracao", entity.getTipoNumeracao());
-        crudActions.setEntityValue("sistema", entity.getSistema());
-        crudActions.setEntityValue("publico", entity.getPublico());
-        crudActions.setEntityValue("ativo", entity.getAtivo());
-        crudActions.setEntityValue("tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
-    }
+    private final ActionContainer<TipoProcessoDocumento> initEntityAction = new ActionContainer<TipoProcessoDocumento>() {
+        @Override
+        public void execute(CrudActions<TipoProcessoDocumento> crudActions) {
+            final TipoProcessoDocumento entity = getEntity();
+            crudActions.setEntityValue("codigoDocumento", entity.getCodigoDocumento());
+            crudActions.setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
+            crudActions.setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
+            crudActions.setEntityValue("visibilidade", entity.getVisibilidade());
+            crudActions.setEntityValue("numera", entity.getNumera());
+            crudActions.setEntityValue("tipoNumeracao", entity.getTipoNumeracao());
+            crudActions.setEntityValue("sistema", entity.getSistema());
+            crudActions.setEntityValue("publico", entity.getPublico());
+            crudActions.setEntityValue("ativo", entity.getAtivo());
+            crudActions.setEntityValue("tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
+        }
+    };
+    
+    protected ActionContainer<TipoProcessoDocumento> getInitEntityAction() {
+        return initEntityAction;
+    };
     
     private boolean areEquals(final Object obj1, final Object obj2) {
         return (obj1==obj2) || (obj1 != null && obj1.equals(obj2)) ;
@@ -102,16 +110,16 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
                 final Object id = crudActions.getId();
                 assert id != null;
                 crudActions.newInstance();
-                initEntity(getEntity(), crudActions);
+                initEntityAction.execute(getEntity(), crudActions);
                 crudActions.setEntityValue("idTipoProcessoDocumento", ((int) id) + 1);
             }
-        });
+        }, servletContext, session);
     }
 
     @Test
     public void updateSuccessTest() throws Exception {
         TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        TipoProcessoDocumento processoDocumento = persistSuccess.runTest(createdEntity);
+        TipoProcessoDocumento processoDocumento = persistSuccess.runTest(createdEntity, servletContext, session);
         System.out.println(format("ENTITY = {0}", processoDocumento.getIdTipoProcessoDocumento()));
 //        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
 //        updateSuccess.runTest(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
@@ -124,29 +132,29 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
 
     @Test
     public void persistSuccessTest() throws Exception {
-        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", LengthConstants.DESCRICAO_PADRAO), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
-        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", 0), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", LengthConstants.DESCRICAO_PADRAO), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)), servletContext, session);
+        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", 0), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)), servletContext, session);
 
-        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", LengthConstants.CODIGO_DOCUMENTO), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
-        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 0), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", LengthConstants.CODIGO_DOCUMENTO), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)), servletContext, session);
+        persistSuccess.runTest(createInstance(fillStr("codigoDocumento", 0), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)), servletContext, session);
         for (int i = 0; i < 25; i++) {
             persistSuccess.runTest(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i
-                    + ""));
+                    + ""), servletContext, session);
         }
     }
 
     @Test
     public void persistFailTest() throws Exception {
-        persistFail.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", LengthConstants.DESCRICAO_PADRAO + 1), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
-        persistFail.runTest(createInstance(fillStr("codigoDocumento", 12), null, TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+        persistFail.runTest(createInstance(fillStr("codigoDocumento", 12), fillStr("descricao", LengthConstants.DESCRICAO_PADRAO + 1), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)), servletContext, session);
+        persistFail.runTest(createInstance(fillStr("codigoDocumento", 12), null, TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)), servletContext, session);
 
-        persistFail.runTest(createInstance(fillStr("codigoDocumento", LengthConstants.CODIGO_DOCUMENTO + 1), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)));
+        persistFail.runTest(createInstance(fillStr("codigoDocumento", LengthConstants.CODIGO_DOCUMENTO + 1), fillStr("descricao", 9), TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, fillStr("tipoProcessoDocumentoObservacao", 10)), servletContext, session);
     }
 
     @Test
     public void inactivateSuccessTest() throws Exception {
         for (int i = 0; i < 25; i++) {
-            inactivateSuccess.runTest(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i+ ""));
+            inactivateSuccess.runTest(createInstance(i + "", i + "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, i+ ""), servletContext, session);
         }
     }
 

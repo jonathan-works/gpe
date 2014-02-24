@@ -77,12 +77,10 @@ public class NatCatFluxoLocalizacaoCrudActionIT extends AbstractCrudTest<NatCatF
     }
 
     @Override
-    protected void initEntity(final NatCatFluxoLocalizacao entity,
-            final CrudActions<NatCatFluxoLocalizacao> crudActions) {
-        initEntityAction.setEntity(entity);
-        initEntityAction.execute(crudActions);
+    protected ActionContainer<NatCatFluxoLocalizacao> getInitEntityAction() {
+        return initEntityAction;
     }
-
+    
     private static final ActionContainer<NatCatFluxoLocalizacao> initEntityAction = new ActionContainer<NatCatFluxoLocalizacao>() {
         @Override
         public void execute(CrudActions<NatCatFluxoLocalizacao> crudActions) {

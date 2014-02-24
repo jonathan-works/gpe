@@ -90,12 +90,10 @@ public class NaturezaCategoriaFluxoCrudActionIT extends AbstractCrudTest<Naturez
     }
     
     @Override
-    protected void initEntity(final NaturezaCategoriaFluxo entity,
-            final CrudActions<NaturezaCategoriaFluxo> crudActions) {
-        initEntity.setEntity(entity);
-        initEntity.execute(crudActions);
+    protected ActionContainer<NaturezaCategoriaFluxo> getInitEntityAction() {
+        return initEntity;
     }
-
+    
     @Test
     public void persistSuccessTest() throws Exception {
         getSuccessfullyPersisted(null, "pers-suc", servletContext, session);

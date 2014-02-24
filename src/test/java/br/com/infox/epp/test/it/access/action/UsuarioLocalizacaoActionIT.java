@@ -85,6 +85,8 @@ import br.com.infox.epp.tarefa.dao.ProcessoEpaTarefaDAO;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.ibpm.task.action.TaskPageAction;
@@ -142,13 +144,21 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
             .createDeployment();
     }
     
+    public static final ActionContainer<UsuarioLocalizacao> initEntityAction = new ActionContainer<UsuarioLocalizacao>() {
+        @Override
+        public void execute(CrudActions<UsuarioLocalizacao> crudActions) {
+            final UsuarioLocalizacao entity = getEntity();
+            crudActions.setComponentValue("usuarioGerenciado", entity.getUsuario());//req
+            crudActions.setEntityValue("localizacao", entity.getLocalizacao());//req
+            crudActions.setEntityValue("papel", entity.getPapel());//req
+            crudActions.setEntityValue("estrutura", entity.getEstrutura());
+            crudActions.setEntityValue("responsavelLocalizacao", entity.getResponsavelLocalizacao());
+        }
+    };
+    
     @Override
-    protected void initEntity(final UsuarioLocalizacao entity, final CrudActions<UsuarioLocalizacao> crudActions) {
-        crudActions.setComponentValue("usuarioGerenciado", entity.getUsuario());//req
-        crudActions.setEntityValue("localizacao", entity.getLocalizacao());//req
-        crudActions.setEntityValue("papel", entity.getPapel());//req
-        crudActions.setEntityValue("estrutura", entity.getEstrutura());
-        crudActions.setEntityValue("responsavelLocalizacao", entity.getResponsavelLocalizacao());
+    protected ActionContainer<UsuarioLocalizacao> getInitEntityAction() {
+        return initEntityAction;
     }
     
     @Override
@@ -156,78 +166,78 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
         return UsuarioLocalizacaoCrudAction.NAME;
     }
     
-    private final InternalRunnableTest<Localizacao> persistLocalizacao = new InternalRunnableTest<Localizacao>(LocalizacaoCrudAction.NAME) {
+    private final RunnableTest<Localizacao> persistLocalizacao = new RunnableTest<Localizacao>(LocalizacaoCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
-            this.crudActions.newInstance();
+            newInstance();
             initEntity(getEntity());
-            assertEquals("persisted", PERSISTED, this.crudActions.save());
+            assertEquals("persisted", PERSISTED, save());
 
-            final Integer id = this.crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            this.crudActions.newInstance();
-            assertNull("nullId", this.crudActions.getId());
-            this.crudActions.setId(id);
-            setEntity(this.crudActions.getInstance());
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
+            setEntity(getInstance());
         }
 
         private void initEntity(Localizacao entity) {
-            this.crudActions.setEntityValue("localizacao", entity.getLocalizacao());// required
-            this.crudActions.setEntityValue("estrutura", entity.getEstrutura());// required
-            this.crudActions.setEntityValue("localizacaoPai", entity.getLocalizacaoPai());
-            this.crudActions.setEntityValue("estruturaFilho", entity.getEstruturaFilho());
-            this.crudActions.setEntityValue("ativo", entity.getAtivo());// required
+            setEntityValue("localizacao", entity.getLocalizacao());// required
+            setEntityValue("estrutura", entity.getEstrutura());// required
+            setEntityValue("localizacaoPai", entity.getLocalizacaoPai());
+            setEntityValue("estruturaFilho", entity.getEstruturaFilho());
+            setEntityValue("ativo", entity.getAtivo());// required
         }
     };
     
-    private final InternalRunnableTest<Papel> persistPapel = new InternalRunnableTest<Papel>(PapelCrudAction.NAME) {
+    private final RunnableTest<Papel> persistPapel = new RunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
-            this.crudActions.newInstance();
+            newInstance();
             initEntity(entity);
-            assertEquals("persisted", PERSISTED, this.crudActions.save());
+            assertEquals("persisted", PERSISTED, save());
 
-            final Integer id = this.crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            this.crudActions.newInstance();
-            assertNull("nullId", this.crudActions.getId());
-            this.crudActions.setId(id);
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
             
             boolean roleExists = IdentityManager.instance().roleExists(entity.getIdentificador());
             assertEquals("roleExists", true, roleExists);
             
-            setEntity(this.crudActions.getInstance());
+            setEntity(getInstance());
         }
 
         private void initEntity(final Papel entity) {
-            this.crudActions.setEntityValue("identificador", entity.getIdentificador()); //req
-            this.crudActions.setEntityValue("nome", entity.getNome()); // req
+            setEntityValue("identificador", entity.getIdentificador()); //req
+            setEntityValue("nome", entity.getNome()); // req
         }
     };
 
-    private final InternalRunnableTest<UsuarioLogin> persistUsuario = new InternalRunnableTest<UsuarioLogin>(UsuarioLoginCrudAction.NAME) {
+    private final RunnableTest<UsuarioLogin> persistUsuario = new RunnableTest<UsuarioLogin>(UsuarioLoginCrudAction.NAME) {
         private void initEntity(final UsuarioLogin entity) {
-            this.crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
-            this.crudActions.setEntityValue("email", entity.getEmail());
-            this.crudActions.setEntityValue("login", entity.getLogin());
-            this.crudActions.setEntityValue("tipoUsuario", entity.getTipoUsuario());
-            this.crudActions.setEntityValue("ativo", entity.getAtivo());
-            this.crudActions.setEntityValue("provisorio", entity.getProvisorio());
+            setEntityValue("nomeUsuario", entity.getNomeUsuario());
+            setEntityValue("email", entity.getEmail());
+            setEntityValue("login", entity.getLogin());
+            setEntityValue("tipoUsuario", entity.getTipoUsuario());
+            setEntityValue("ativo", entity.getAtivo());
+            setEntityValue("provisorio", entity.getProvisorio());
         }
         
         @Override
         protected void testComponent() throws Exception {
-            this.crudActions.newInstance();
+            newInstance();
             initEntity(getEntity());
-            assertEquals("persisted", PERSISTED, this.crudActions.save());
+            assertEquals("persisted", PERSISTED, save());
 
-            final Integer id = this.crudActions.getId();
+            final Integer id = getId();
             assertNotNull("id", id);
-            this.crudActions.newInstance();
-            assertNull("nullId", this.crudActions.getId());
-            this.crudActions.setId(id);
-            setEntity(this.crudActions.getInstance());
+            newInstance();
+            assertNull("nullId", getId());
+            setId(id);
+            setEntity(getInstance());
         }
     };
     
@@ -243,44 +253,44 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
     
     private ArrayList<Localizacao> initLocalizacoes(final String suffix) throws Exception {
         final ArrayList<Localizacao> resultMap = new ArrayList<>();
-        final Localizacao estruturaEpp = persistLocalizacao.runTest(new Localizacao(ESTRUTURA_EPP+suffix, Boolean.TRUE, Boolean.TRUE));
+        final Localizacao estruturaEpp = persistLocalizacao.runTest(new Localizacao(ESTRUTURA_EPP+suffix, Boolean.TRUE, Boolean.TRUE), servletContext, session);
         resultMap.add(estruturaEpp);
-        final Localizacao estruturaEmpresa = persistLocalizacao.runTest(new Localizacao(ESTRUTURA_EMPRESA+suffix, Boolean.TRUE, Boolean.TRUE));
+        final Localizacao estruturaEmpresa = persistLocalizacao.runTest(new Localizacao(ESTRUTURA_EMPRESA+suffix, Boolean.TRUE, Boolean.TRUE), servletContext, session);
         resultMap.add(estruturaEmpresa);
-        final Localizacao gerencia = persistLocalizacao.runTest(new Localizacao(GERENCIA+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null));
+        final Localizacao gerencia = persistLocalizacao.runTest(new Localizacao(GERENCIA+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null), servletContext, session);
         resultMap.add(gerencia);
-        final Localizacao setorPessoal = persistLocalizacao.runTest(new Localizacao(SETOR_PESSOAL+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null));
+        final Localizacao setorPessoal = persistLocalizacao.runTest(new Localizacao(SETOR_PESSOAL+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
         resultMap.add(setorPessoal);
-        final Localizacao setorFinanceiro = persistLocalizacao.runTest(new Localizacao(SETOR_FINANCEIRO+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null));
+        final Localizacao setorFinanceiro = persistLocalizacao.runTest(new Localizacao(SETOR_FINANCEIRO+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
         resultMap.add(setorFinanceiro);
-        final Localizacao setorCompras = persistLocalizacao.runTest(new Localizacao(SETOR_DE_COMPRAS+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null));
+        final Localizacao setorCompras = persistLocalizacao.runTest(new Localizacao(SETOR_DE_COMPRAS+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
         resultMap.add(setorCompras);
-        final Localizacao empresaX = persistLocalizacao.runTest(new Localizacao(EMPRESA_X+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEpp, estruturaEmpresa));
+        final Localizacao empresaX = persistLocalizacao.runTest(new Localizacao(EMPRESA_X+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEpp, estruturaEmpresa), servletContext, session);
         resultMap.add(empresaX);
-        final Localizacao empresaY = persistLocalizacao.runTest(new Localizacao(EMPRESA_Y+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEpp, estruturaEmpresa));
+        final Localizacao empresaY = persistLocalizacao.runTest(new Localizacao(EMPRESA_Y+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEpp, estruturaEmpresa), servletContext, session);
         resultMap.add(empresaY);
         return resultMap;
     }
     
     private ArrayList<Papel> initPapeis(final String suffix) throws Exception {
         final ArrayList<Papel> result = new ArrayList<>();
-        result.add(persistPapel.runTest(new Papel("Gestor"+suffix,"gestor"+suffix)));
-        result.add(persistPapel.runTest(new Papel("Administrador Admin"+suffix,"admin"+suffix)));
-        result.add(persistPapel.runTest(new Papel("Comprador"+suffix,"comprador"+suffix)));
-        result.add(persistPapel.runTest(new Papel("Colaborador"+suffix,"colaborador"+suffix)));
+        result.add(persistPapel.runTest(new Papel("Gestor"+suffix,"gestor"+suffix), servletContext, session));
+        result.add(persistPapel.runTest(new Papel("Administrador Admin"+suffix,"admin"+suffix), servletContext, session));
+        result.add(persistPapel.runTest(new Papel("Comprador"+suffix,"comprador"+suffix), servletContext, session));
+        result.add(persistPapel.runTest(new Papel("Colaborador"+suffix,"colaborador"+suffix), servletContext, session));
         return result;
     }
     
     @Test
     public void persistSuccessTest() throws Exception {
         final String login = "usuario1";
-        final UsuarioLogin usuarioLogin = persistUsuario.runTest(new UsuarioLogin("Nome "+login,format("{0}@infox.com.br",login),login));
+        final UsuarioLogin usuarioLogin = persistUsuario.runTest(new UsuarioLogin("Nome "+login,format("{0}@infox.com.br",login),login), servletContext, session);
         final ArrayList<Papel> papeis = initPapeis("pers.success");
         final ArrayList<Localizacao> locs = initLocalizacoes("pers.success");
         for (Localizacao localizacao : locs) {
             for (Localizacao estrutura : locs) {
                 for (Papel papel : papeis) {
-                    persistSuccess.runTest(new UsuarioLocalizacao(usuarioLogin, localizacao, estrutura, papel));   
+                    persistSuccess.runTest(new UsuarioLocalizacao(usuarioLogin, localizacao, estrutura, papel), servletContext, session);   
                 }
             }
         }
@@ -289,18 +299,18 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
     @Test
     public void persistFailTest() throws Exception {
         final String login = "usuario2";
-        final UsuarioLogin usuarioLogin = persistUsuario.runTest(new UsuarioLogin("Nome "+login,format("{0}@infox.com.br",login),login));
+        final UsuarioLogin usuarioLogin = persistUsuario.runTest(new UsuarioLogin("Nome "+login,format("{0}@infox.com.br",login),login), servletContext, session);
         final ArrayList<Papel> papeis = initPapeis("pers.fail");
         final ArrayList<Localizacao> locs = initLocalizacoes("pers.fail");
         for (Localizacao estrutura : locs) {
             for (Papel papel : papeis) {
-                persistFail.runTest(new UsuarioLocalizacao(usuarioLogin, null, estrutura, papel));   
+                persistFail.runTest(new UsuarioLocalizacao(usuarioLogin, null, estrutura, papel), servletContext, session);   
             }
         }
         
         for (Localizacao localizacao : locs) {
             for (Localizacao estrutura : locs) {
-                persistFail.runTest(new UsuarioLocalizacao(usuarioLogin, localizacao, estrutura, null));
+                persistFail.runTest(new UsuarioLocalizacao(usuarioLogin, localizacao, estrutura, null), servletContext, session);
             }
         }
     }
@@ -308,14 +318,14 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
     @Test
     public void removeSuccessTest() throws Exception {
         final String login = "usuario3";
-        final UsuarioLogin usuarioLogin = persistUsuario.runTest(new UsuarioLogin("Nome "+login,format("{0}@infox.com.br",login),login));
+        final UsuarioLogin usuarioLogin = persistUsuario.runTest(new UsuarioLogin("Nome "+login,format("{0}@infox.com.br",login),login), servletContext, session);
         final ArrayList<Papel> papeis = initPapeis("rem.success");
         final ArrayList<Localizacao> locs = initLocalizacoes("rem.success");
         
         for (Localizacao localizacao : locs) {
             for (Localizacao estrutura : locs) {
                 for (Papel papel : papeis) {
-                    removeSuccess.runTest(new UsuarioLocalizacao(usuarioLogin, localizacao, estrutura, papel));   
+                    removeSuccess.runTest(new UsuarioLocalizacao(usuarioLogin, localizacao, estrutura, papel), servletContext, session);   
                 }
             }
         }

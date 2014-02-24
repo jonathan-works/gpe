@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 
@@ -20,4 +21,12 @@ public class UsuarioLocalizacaoManager extends Manager<UsuarioLocalizacaoDAO, Us
 	public boolean existeUsuarioLocalizacao(UsuarioLocalizacao usuarioLocalizacao) {
 		return getDao().existeUsuarioLocalizacao(usuarioLocalizacao);
 	}
+    
+    @Override
+    public UsuarioLocalizacao persist(final UsuarioLocalizacao usuarioLocalizacao) throws DAOException {
+        if (existeUsuarioLocalizacao(usuarioLocalizacao)) {
+            throw new DAOException("#{messages['constraintViolation.uniqueViolation']}");
+        }
+        return super.persist(usuarioLocalizacao);
+    }
 }

@@ -66,15 +66,13 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
     }
     
     @Override
-    protected void afterSave() {
+    protected void afterSave(String ret) {
         updateOldInstance();
-        super.afterSave();
     }
     
     @Override
-    public String save() {
-        gravarHistorico();
-        return super.save();
+    protected void beforeSave() {
+    	gravarHistorico();
     }
     
     private void gravarHistorico() {

@@ -16,7 +16,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 
 @Name(UsuarioLocalizacaoDAO.NAME)
@@ -44,13 +43,5 @@ public class UsuarioLocalizacaoDAO extends DAO<UsuarioLocalizacao> {
 		}
 		
 		return (Long) getSingleResult(hql.toString(), params) > 0;
-	}
-	
-	@Override
-	public UsuarioLocalizacao persist(final UsuarioLocalizacao usuarioLocalizacao) throws DAOException {
-		if (existeUsuarioLocalizacao(usuarioLocalizacao)) {
-			throw new DAOException("#{messages['constraintViolation.uniqueViolation']}");
-		}
-		return super.persist(usuarioLocalizacao);
 	}
 }

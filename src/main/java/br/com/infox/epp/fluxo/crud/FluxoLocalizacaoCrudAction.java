@@ -39,8 +39,7 @@ public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLo
     }
     
     @Override
-    protected void afterSave() {
-        super.afterSave();
+    protected void afterSave(String ret) {
         newInstance();
         clearTree();
     }
