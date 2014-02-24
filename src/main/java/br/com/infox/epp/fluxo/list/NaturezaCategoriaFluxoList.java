@@ -3,13 +3,11 @@ package br.com.infox.epp.fluxo.list;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 
 @Name(NaturezaCategoriaFluxoList.NAME)
@@ -19,9 +17,6 @@ public class NaturezaCategoriaFluxoList extends EntityList<NaturezaCategoriaFlux
     private static final String DEFAULT_EJBQL = "select o from NaturezaCategoriaFluxo o";
     private static final String DEFAULT_ORDER = "fluxo";
     public static final String NAME = "naturezaCategoriaFluxoList";
-
-    @In
-    private GenericManager genericManager;
 
     @Override
     protected void addSearchFields() {
