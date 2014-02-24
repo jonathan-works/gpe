@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.dao;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;

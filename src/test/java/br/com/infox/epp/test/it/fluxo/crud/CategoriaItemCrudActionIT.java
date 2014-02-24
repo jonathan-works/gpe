@@ -1,8 +1,8 @@
 package br.com.infox.epp.test.it.fluxo.crud;
 
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
 import static br.com.infox.core.action.AbstractAction.REMOVED;
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 import static java.lang.Boolean.TRUE;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;

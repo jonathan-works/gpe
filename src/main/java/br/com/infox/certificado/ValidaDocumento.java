@@ -1,6 +1,6 @@
 package br.com.infox.certificado;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.security.GeneralSecurityException;
 import java.security.cert.CertPath;

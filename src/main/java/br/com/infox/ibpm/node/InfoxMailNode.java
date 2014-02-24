@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.node;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.StringReader;
 import java.text.MessageFormat;

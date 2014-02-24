@@ -17,7 +17,7 @@ import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;

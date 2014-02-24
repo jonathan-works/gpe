@@ -23,7 +23,7 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.action.RoleAction;
 import org.jboss.seam.security.permission.PermissionManager;
 
-import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.operation.PopulateRoleMembersListOperation;
 import br.com.infox.core.operation.UpdateRolesOperation;

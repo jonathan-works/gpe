@@ -1,6 +1,6 @@
 package br.com.infox.core.tree;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;

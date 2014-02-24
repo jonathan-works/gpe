@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.util;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.ibpm.util.JbpmQueries.ALL_TASKS_QUERY;
 import static br.com.infox.ibpm.util.JbpmQueries.PROCESS_NAMES_QUERY;
 

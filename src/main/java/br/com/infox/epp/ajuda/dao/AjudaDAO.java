@@ -1,7 +1,7 @@
 package br.com.infox.epp.ajuda.dao;
 
-import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_FIND_ALL_QUERY;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.PARAM_URL;

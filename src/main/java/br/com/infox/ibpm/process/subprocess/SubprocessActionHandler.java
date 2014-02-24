@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.process.subprocess;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.util.Map;
 

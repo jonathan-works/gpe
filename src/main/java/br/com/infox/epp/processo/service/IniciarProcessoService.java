@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.service;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.util.Collection;
 import java.util.Date;

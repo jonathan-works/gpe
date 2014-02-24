@@ -1,6 +1,6 @@
 package br.com.itx.component;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.File;
 import java.io.Serializable;

@@ -1,6 +1,6 @@
 package br.com.infox.core.list;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

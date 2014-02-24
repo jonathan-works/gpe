@@ -1,7 +1,7 @@
 package br.com.itx.component;
 
 import static org.jboss.seam.faces.FacesMessages.instance;
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;

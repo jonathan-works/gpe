@@ -3,7 +3,7 @@
 // Please visit our website at http://echidna.sf.net
 package br.com.infox.ibpm.process.definition.graphical.layout;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.awt.Point;
 import java.awt.Rectangle;

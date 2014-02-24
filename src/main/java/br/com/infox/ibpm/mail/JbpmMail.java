@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.mail;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.jpdl;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.io.IOException;
 import java.io.StringWriter;

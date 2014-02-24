@@ -1,6 +1,6 @@
 package br.com.infox.epp.search;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.*;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package br.com.infox.core.crud;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;

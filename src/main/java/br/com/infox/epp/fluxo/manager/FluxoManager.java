@@ -16,7 +16,7 @@ import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.xml.sax.InputSource;
 
-import br.com.infox.core.constants.WarningConstants;
+import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
