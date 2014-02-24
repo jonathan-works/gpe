@@ -80,23 +80,23 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
     @Test
     public void persistFailTest() throws Exception {
         int i = 0;
-        persistFail.runTest(new Categoria(null, null));
-        persistFail.runTest(new Categoria(fillStr(format("categoria-pers-fail-{0}", ++i), LengthConstants.DESCRICAO_PEQUENA + 1), FALSE));
-        persistFail.runTest(new Categoria("", FALSE));
-        persistFail.runTest(new Categoria(null, FALSE));
-        persistFail.runTest(new Categoria(fillStr(format("categoria-pers-fail-{0}", ++i), LengthConstants.DESCRICAO_PEQUENA + 1), TRUE));
-        persistFail.runTest(new Categoria("", TRUE));
-        persistFail.runTest(new Categoria(null, TRUE));
-        persistFail.runTest(new Categoria(fillStr(format("categoria-pers-fail-{0}", ++i), LengthConstants.DESCRICAO_PEQUENA + 1), null));
-        persistFail.runTest(new Categoria(format("categoria-pers-fail-{0}", ++i), null));
-        persistFail.runTest(new Categoria("", null));
+        persistFail.runTest(new Categoria(null, null), servletContext, session);
+        persistFail.runTest(new Categoria(fillStr(format("categoria-pers-fail-{0}", ++i), LengthConstants.DESCRICAO_PEQUENA + 1), FALSE), servletContext, session);
+        persistFail.runTest(new Categoria("", FALSE), servletContext, session);
+        persistFail.runTest(new Categoria(null, FALSE), servletContext, session);
+        persistFail.runTest(new Categoria(fillStr(format("categoria-pers-fail-{0}", ++i), LengthConstants.DESCRICAO_PEQUENA + 1), TRUE), servletContext, session);
+        persistFail.runTest(new Categoria("", TRUE), servletContext, session);
+        persistFail.runTest(new Categoria(null, TRUE), servletContext, session);
+        persistFail.runTest(new Categoria(fillStr(format("categoria-pers-fail-{0}", ++i), LengthConstants.DESCRICAO_PEQUENA + 1), null), servletContext, session);
+        persistFail.runTest(new Categoria(format("categoria-pers-fail-{0}", ++i), null), servletContext, session);
+        persistFail.runTest(new Categoria("", null), servletContext, session);
     }
 
     @Test
     public void inactivateSuccessTest() throws Exception {
         for (int i = 0; i < 20; i++) {
             final String categoria = format("categoria-inac-suc-{0}", i);
-            inactivateSuccess.runTest(new Categoria(categoria, TRUE));
+            inactivateSuccess.runTest(new Categoria(categoria, TRUE), servletContext, session);
         }
     }
 

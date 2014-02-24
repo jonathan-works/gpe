@@ -19,18 +19,12 @@ public class RelacionamentoProcessoList extends EntityList<RelacionamentoProcess
     private static final String DEFAULT_ORDER = "dataRelacionamento";
     
     private static final String R1 = "o.relacionamento=#{relacionamentoProcessoCrudAction.instance.relacionamento}";
-    private static final String R2 = "o.ativo=true";
     
     public static final String NAME = "relacionamentoProcessoList";
 
     @Override
     protected void addSearchFields() {
         addSearchField("relacionamento", SearchCriteria.IGUAL, R1);
-        //addSearchField("ativo", SearchCriteria.IGUAL, R2);
-        //addSearchField("relacionamento", SearchCriteria.IGUAL, "#{not empty relacionamentoProcessoCrudAction.instance.relacionamento}=true");
-        //addSearchField("relacionamento", SearchCriteria.IGUAL, "o.relacionamento=#{relacionamentoProcessoCrudAction.instance.relacionamento}");
-        //addSearchField("relacionamento", SearchCriteria.IGUAL, "o.relacionamento.idRelacionamento in all(#{relacionamentoProcessoCrudAction.instance.relacionamento})");
-        //and o.relacionamento=#{relacionamentoProcessoCrudAction.instance.relacionamento}
     }
 
     @Override

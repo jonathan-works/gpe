@@ -36,6 +36,7 @@ import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -51,9 +52,9 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     }
 
     @Override
-    protected void initEntity(final Papel entity, final CrudActions<Papel> crudActions) {
-        crudActions.setEntityValue("identificador", entity.getIdentificador()); //req
-        crudActions.setEntityValue("nome", entity.getNome()); // req
+    protected void initEntity(final Papel entity, final CrudActions<Papel> crud) {
+        crud.setEntityValue("identificador", entity.getIdentificador()); //req
+        crud.setEntityValue("nome", entity.getNome()); // req
     }
 
     @Override
@@ -61,13 +62,13 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         return PapelCrudAction.NAME;
     }
     
-    private final InternalRunnableTest<Papel> persistSuccess = new InternalRunnableTest<Papel>() {
+    private final RunnableTest<Papel> persistSuccess = new RunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
             
             this.newInstance();
-            initEntity(entity, this.crudActions);
+            initEntity(entity, this);
             assertEquals("persisted", PERSISTED, this.save());
 
             final Integer id = this.getId();
@@ -75,7 +76,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
             this.newInstance();
             assertNull("nullId", this.getId());
             this.setId(id);
-            assertEquals("Compare", true, compareEntityValues(entity, this.crudActions));
+            assertEquals("Compare", true, compareEntityValues(entity, this));
             
             final boolean roleExists = IdentityManager.instance().roleExists(entity.getIdentificador());
             assertEquals("roleExists", true, roleExists);
@@ -86,24 +87,24 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     
     @Test
     public void persistSuccessTest() throws Exception {
-        persistSuccess.runTest(new Papel("Administrador Admin","admin"));
-        persistSuccess.runTest(new Papel("Gestor","gestor"));
-        persistSuccess.runTest(new Papel("Comprador","comprador"));
-        persistSuccess.runTest(new Papel("Colaborador","colab"));
-        persistSuccess.runTest(new Papel("Redator","redator"));
-        persistSuccess.runTest(new Papel("Vendedor","vendedor"));
+        persistSuccess.runTest(new Papel("Administrador Admin","admin"), servletContext, session);
+        persistSuccess.runTest(new Papel("Gestor","gestor"), servletContext, session);
+        persistSuccess.runTest(new Papel("Comprador","comprador"), servletContext, session);
+        persistSuccess.runTest(new Papel("Colaborador","colab"), servletContext, session);
+        persistSuccess.runTest(new Papel("Redator","redator"), servletContext, session);
+        persistSuccess.runTest(new Papel("Vendedor","vendedor"), servletContext, session);
     }
     /*
     private String jsonPapel(Papel papel) {
         return format("'{'id:{0},nome:{1},role:{2},ativo:{3}'}'", papel.getIdPapel(), papel.getNome(), papel.getIdentificador(), papel.getAtivo());
     }
     */
-    private final InternalRunnableTest<Papel> persistFail = new InternalRunnableTest<Papel>() {
+    private final RunnableTest<Papel> persistFail = new RunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
             this.newInstance();
-            initEntity(entity, this.crudActions);
+            initEntity(entity, this);
             
             assertEquals("persisted", true, !PERSISTED.equals(this.save()));
 
@@ -113,7 +114,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         }
     };
     
-    private final InternalRunnableTest<Papel> updateSuccess = new InternalRunnableTest<Papel>() {
+    private final RunnableTest<Papel> updateSuccess = new RunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -125,7 +126,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         }
     };
 
-    private final InternalRunnableTest<Recurso> createRoles = new InternalRunnableTest<Recurso>(RecursoManager.NAME) {
+    private final RunnableTest<Recurso> createRoles = new RunnableTest<Recurso>(RecursoManager.NAME) {
         @Override
         protected void testComponent() throws Exception {
             for (int i = 0; i < 25; i++) {
@@ -152,7 +153,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         }
     };
     
-    private final InternalRunnableTest<Papel> removeSuccess = new InternalRunnableTest<Papel>() {
+    private final RunnableTest<Papel> removeSuccess = new RunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -165,7 +166,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     
     
     private final void addRecursos(final Papel papel, final String... recursos) throws Exception {
-        new InternalRunnableTest<Papel>() {
+        new RunnableTest<Papel>(PapelCrudAction.NAME) {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
@@ -187,7 +188,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
                     assertEquals("Permissão", Boolean.TRUE, recursoExisteEmPermissoes(recurso, permissoesFromRole));
                 }
             }
-        }.runTest(papel);
+        }.runTest(papel, servletContext, session);
     }
     
     private Boolean recursoExisteEmPermissoes(final String recurso, final List<Permissao> permissoesFromRole) {
@@ -202,7 +203,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     }
     
     private final void addLicenciadores(final Papel papel, final Papel... licenciadores) throws Exception {
-        new InternalRunnableTest<Papel>() {
+        new RunnableTest<Papel>(PapelCrudAction.NAME) {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
@@ -219,11 +220,11 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
                 setEntity(instance);
                 assertEquals("possui permissão",Boolean.TRUE, Boolean.valueOf(IdentityManager.instance().getRoleGroups(papel.getIdentificador()).containsAll(licenciadorList)));
             }
-        }.runTest(papel);
+        }.runTest(papel, servletContext, session);
     }
     
     private final void addHerdeiros(final Papel entity, final Papel... herdeiros) throws Exception {
-        new InternalRunnableTest<Papel>() {
+        new RunnableTest<Papel>(PapelCrudAction.NAME) {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
@@ -243,11 +244,11 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
                 }
                 setEntity(resetInstance(entity.getIdPapel()));
             }
-        }.runTest();
+        }.runTest(servletContext, session);
     }
     
     private final void removeHerdeiros(final Papel papel, final Papel... herdeiros) throws Exception {
-        new InternalRunnableTest<Papel>() {
+        new RunnableTest<Papel>(PapelCrudAction.NAME) {
             @Override
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
@@ -265,17 +266,17 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
                 }
                 setEntity(resetInstance(idPapel));
             }
-        }.runTest();
+        }.runTest(servletContext, session);
     }
     
     @Test
     public void removeSuccessTest() throws Exception {
-        final Papel admin = persistSuccess.runTest(new Papel("Admin.rem.suc","admin.rem.suc"));
-        final Papel gestor = persistSuccess.runTest(new Papel("Gestor.rem.suc","gestor.rem.suc"));
-        final Papel comprador = persistSuccess.runTest(new Papel("Comprador.rem.suc","comprador.rem.suc"));
-        final Papel colaborador = persistSuccess.runTest(new Papel("Colaborador.rem.suc","colab.rem.suc"));
-        final Papel redator = persistSuccess.runTest(new Papel("Redator.rem.suc","redator.rem.suc"));
-        final Papel vendedor = persistSuccess.runTest(new Papel("Vendedor.rem.suc","vendedor.rem.suc"));
+        final Papel admin = persistSuccess.runTest(new Papel("Admin.rem.suc","admin.rem.suc"), servletContext, session);
+        final Papel gestor = persistSuccess.runTest(new Papel("Gestor.rem.suc","gestor.rem.suc"), servletContext, session);
+        final Papel comprador = persistSuccess.runTest(new Papel("Comprador.rem.suc","comprador.rem.suc"), servletContext, session);
+        final Papel colaborador = persistSuccess.runTest(new Papel("Colaborador.rem.suc","colab.rem.suc"), servletContext, session);
+        final Papel redator = persistSuccess.runTest(new Papel("Redator.rem.suc","redator.rem.suc"), servletContext, session);
+        final Papel vendedor = persistSuccess.runTest(new Papel("Vendedor.rem.suc","vendedor.rem.suc"), servletContext, session);
         
         addHerdeiros(redator, admin);
         addHerdeiros(gestor, admin);
@@ -285,15 +286,15 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
 
         removeHerdeiros(colaborador, comprador);
         
-        removeSuccess.runTest(admin);
-        removeSuccess.runTest(gestor);
-        removeSuccess.runTest(redator);
-        removeSuccess.runTest(vendedor);
-        removeSuccess.runTest(colaborador);
-        removeSuccess.runTest(comprador);
+        removeSuccess.runTest(admin, servletContext, session);
+        removeSuccess.runTest(gestor, servletContext, session);
+        removeSuccess.runTest(redator, servletContext, session);
+        removeSuccess.runTest(vendedor, servletContext, session);
+        removeSuccess.runTest(colaborador, servletContext, session);
+        removeSuccess.runTest(comprador, servletContext, session);
     }
     
-    private final InternalRunnableTest<Papel> updateFail = new InternalRunnableTest<Papel>() {
+    private final RunnableTest<Papel> updateFail = new RunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -323,37 +324,37 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     
     @Test
     public void updateFailTest() throws Exception {
-        final Papel admin = persistSuccess.runTest(new Papel("Admin.upd.fail","admin.upd.fail"));
-        final Papel gestor = persistSuccess.runTest(new Papel("Gestor.upd.fail","gestor.upd.fail"));
-        final Papel comprador = persistSuccess.runTest(new Papel("Comprador.upd.fail","comprador.upd.fail"));
-        final Papel colaborador = persistSuccess.runTest(new Papel("Colaborador.upd.fail","colab.upd.fail"));
-        final Papel redator = persistSuccess.runTest(new Papel("Redator.upd.fail","redator.upd.fail"));
-        final Papel vendedor = persistSuccess.runTest(new Papel("Vendedor.upd.fail","vendedor.upd.fail"));
+        final Papel admin = persistSuccess.runTest(new Papel("Admin.upd.fail","admin.upd.fail"), servletContext, session);
+        final Papel gestor = persistSuccess.runTest(new Papel("Gestor.upd.fail","gestor.upd.fail"), servletContext, session);
+        final Papel comprador = persistSuccess.runTest(new Papel("Comprador.upd.fail","comprador.upd.fail"), servletContext, session);
+        final Papel colaborador = persistSuccess.runTest(new Papel("Colaborador.upd.fail","colab.upd.fail"), servletContext, session);
+        final Papel redator = persistSuccess.runTest(new Papel("Redator.upd.fail","redator.upd.fail"), servletContext, session);
+        final Papel vendedor = persistSuccess.runTest(new Papel("Vendedor.upd.fail","vendedor.upd.fail"), servletContext, session);
         
-        updateFail.runTest(admin);
-        updateFail.runTest(gestor);
-        updateFail.runTest(comprador);
-        updateFail.runTest(colaborador);
-        updateFail.runTest(redator);
-        updateFail.runTest(vendedor);
+        updateFail.runTest(admin, servletContext, session);
+        updateFail.runTest(gestor, servletContext, session);
+        updateFail.runTest(comprador, servletContext, session);
+        updateFail.runTest(colaborador, servletContext, session);
+        updateFail.runTest(redator, servletContext, session);
+        updateFail.runTest(vendedor, servletContext, session);
     }
     
     @Test
     public void updateSuccessTest() throws Exception {
-        final Papel admin = persistSuccess.runTest(new Papel("Admin.upd.suc","admin.upd.suc"));
-        final Papel gestor = persistSuccess.runTest(new Papel("Gestor.upd.suc","gestor.upd.suc"));
-        final Papel comprador = persistSuccess.runTest(new Papel("Comprador.upd.suc","comprador.upd.suc"));
-        final Papel colaborador = persistSuccess.runTest(new Papel("Colaborador.upd.suc","colab.upd.suc"));
-        final Papel redator = persistSuccess.runTest(new Papel("Redator.upd.suc","redator.upd.suc"));
-        final Papel vendedor = persistSuccess.runTest(new Papel("Vendedor.upd.suc","vendedor.upd.suc"));
+        final Papel admin = persistSuccess.runTest(new Papel("Admin.upd.suc","admin.upd.suc"), servletContext, session);
+        final Papel gestor = persistSuccess.runTest(new Papel("Gestor.upd.suc","gestor.upd.suc"), servletContext, session);
+        final Papel comprador = persistSuccess.runTest(new Papel("Comprador.upd.suc","comprador.upd.suc"), servletContext, session);
+        final Papel colaborador = persistSuccess.runTest(new Papel("Colaborador.upd.suc","colab.upd.suc"), servletContext, session);
+        final Papel redator = persistSuccess.runTest(new Papel("Redator.upd.suc","redator.upd.suc"), servletContext, session);
+        final Papel vendedor = persistSuccess.runTest(new Papel("Vendedor.upd.suc","vendedor.upd.suc"), servletContext, session);
 
-        createRoles.runTest();
-        updateSuccess.runTest(admin);
-        updateSuccess.runTest(gestor);
-        updateSuccess.runTest(comprador);
-        updateSuccess.runTest(colaborador);
-        updateSuccess.runTest(redator);
-        updateSuccess.runTest(vendedor);
+        createRoles.runTest(servletContext, session);
+        updateSuccess.runTest(admin, servletContext, session);
+        updateSuccess.runTest(gestor, servletContext, session);
+        updateSuccess.runTest(comprador, servletContext, session);
+        updateSuccess.runTest(colaborador, servletContext, session);
+        updateSuccess.runTest(redator, servletContext, session);
+        updateSuccess.runTest(vendedor, servletContext, session);
         
         addHerdeiros(redator, admin);
         addHerdeiros(gestor, admin);
@@ -383,9 +384,9 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     
     @Test
     public void persistFailTest() throws Exception{
-        persistFail.runTest(new Papel(fillStr("Administrador Admin.fail",LengthConstants.NOME_PADRAO+1),"adminRole"));
-        persistFail.runTest(new Papel(null,fillStr("admin",LengthConstants.DESCRICAO_PADRAO+1)));
-        persistFail.runTest(new Papel("Gestor",null));
+        persistFail.runTest(new Papel(fillStr("Administrador Admin.fail",LengthConstants.NOME_PADRAO+1),"adminRole"), servletContext, session);
+        persistFail.runTest(new Papel(null,fillStr("admin",LengthConstants.DESCRICAO_PADRAO+1)), servletContext, session);
+        persistFail.runTest(new Papel("Gestor",null), servletContext, session);
     }
     
 }

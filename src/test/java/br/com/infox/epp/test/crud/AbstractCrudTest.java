@@ -148,7 +148,7 @@ public abstract class AbstractCrudTest<T> extends JUnitSeamTest {
             final T entity = this.getEntity();
             
             newInstance();
-            initEntity(entity, crudActions);
+            initEntity(entity, this);
             assertEquals("persisted", PERSISTED, save());
 
             final Integer id = getId();
