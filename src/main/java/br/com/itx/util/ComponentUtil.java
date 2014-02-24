@@ -1,6 +1,6 @@
 package br.com.itx.util;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -8,19 +8,15 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
@@ -70,27 +66,6 @@ public final class ComponentUtil {
         }
     }
 
-    public static List<PropertyDescriptor> getProperties(Object component) {
-        return getProperties(component.getClass());
-    }
-
-    public static List<PropertyDescriptor> getProperties(Class<?> component) {
-        List<PropertyDescriptor> resp = new ArrayList<PropertyDescriptor>();
-        try {
-            PropertyDescriptor[] pds = getPropertyDescriptors(component);
-            for (int i = 0; i < pds.length; i++) {
-                PropertyDescriptor pd = pds[i];
-                if (!"class".equals(pd.getName())
-                        && !"bytes".equals(pd.getName())) {
-                    resp.add(pd);
-                }
-            }
-        } catch (Exception ex) {
-            LOG.error(".getProperties()", ex);
-        }
-        return resp;
-    }
-
     /**
      * Metodo que devolve um array com os PropertyDescriptors de uma classe
      * 
@@ -108,28 +83,6 @@ public final class ComponentUtil {
 
     public static PropertyDescriptor[] getPropertyDescriptors(Object component) {
         return getPropertyDescriptors(component.getClass());
-    }
-
-    public static PropertyDescriptor getPropertyDescriptor(Object component,
-            String property) {
-        try {
-            return PropertyUtils.getPropertyDescriptor(component, property);
-        } catch (Exception ex) {
-            LOG.error(".getPropertyDescriptor()", ex);
-            return null;
-        }
-    }
-
-    public static Class<?> getType(Object component, String property) {
-        PropertyDescriptor pd = getPropertyDescriptor(component, property);
-        if (pd == null) {
-            return null;
-        }
-        return getType(pd);
-    }
-
-    public static Class<?> getType(PropertyDescriptor pd) {
-        return pd.getPropertyType();
     }
 
     public static boolean hasAnnotation(PropertyDescriptor pd,
@@ -162,33 +115,11 @@ public final class ComponentUtil {
         return null;
     }
 
-    public static Object getValue(Object component, PropertyDescriptor pd) {
-        return Reflections.invokeAndWrap(pd.getReadMethod(), component, new Object[0]);
-    }
-
     public static void setValue(Object component, String property, Object value) {
         Method setterMethod = Reflections.getSetterMethod(component.getClass(), property);
         if (setterMethod != null) {
             Reflections.invokeAndWrap(setterMethod, component, value);
         }
-    }
-
-    public static void setValue(Object component, PropertyDescriptor pd,
-            Object value) {
-        Reflections.invokeAndWrap(pd.getWriteMethod(), component, value);
-    }
-
-    public static Object getValuePrivateField(Object component, String fieldName) {
-        Object returnObj = null;
-        try {
-            Field f = component.getClass().getDeclaredField(fieldName);
-            f.setAccessible(true);
-            returnObj = f.get(component);
-            f.setAccessible(false);
-        } catch (Exception e) {
-            LOG.warn("Exception ao tentar ler atributo privado", e);
-        }
-        return returnObj;
     }
 
     /**
@@ -203,11 +134,6 @@ public final class ComponentUtil {
     @SuppressWarnings(UNCHECKED)
     public static <C> C getComponent(String componentName) {
         return (C) Component.getInstance(componentName);
-    }
-
-    @SuppressWarnings(UNCHECKED)
-    public static <C> C getComponent(Class<C> componentClass) {
-        return (C) Component.getInstance(componentClass);
     }
 
     /**
@@ -226,37 +152,6 @@ public final class ComponentUtil {
     }
 
     /**
-     * Retorna true se algum dos objetos for null
-     * 
-     * @param objects
-     * @return
-     */
-    public static boolean containsNullObject(Object... objects) {
-        if (objects != null) {
-            for (Object object : objects) {
-                if (object == null) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Metodo que devolve a instancia de um componente usando o
-     * {@link org.jboss.seam.Component#getInstance(String, boolean)
-     * Component.getInstance} e fazendo cast para o tipo declarado.
-     * 
-     * @param <C> O tipo declarado
-     * @param componentName Nome do componte
-     * @return
-     */
-    @SuppressWarnings(UNCHECKED)
-    public static <C> C getComponent(String componentName, boolean create) {
-        return (C) Component.getInstance(componentName, create);
-    }
-
-    /**
      * Retorna a nome do componente atraves da anotação @Name
      * 
      * @param clazz
@@ -265,32 +160,6 @@ public final class ComponentUtil {
     public static String getComponentName(Class<?> clazz) {
         Name annotationName = clazz.getAnnotation(Name.class);
         return annotationName.value();
-    }
-
-    /**
-     * Testa de um componente está no contexto de conversação
-     * 
-     * @param clazz
-     * @return
-     */
-    public static boolean isOnConversationContext(Class<?> clazz) {
-        String componentName = ComponentUtil.getComponentName(clazz);
-        if (componentName != null) {
-            return isOnConversationContext(componentName);
-        } else {
-            throw new IllegalArgumentException("Classe não possui @Name");
-        }
-    }
-
-    /**
-     * Testa de um componente está no contexto de conversação
-     * 
-     * @param name
-     * @return
-     */
-    public static boolean isOnConversationContext(String name) {
-        Object object = Contexts.getConversationContext().get(name);
-        return object != null;
     }
 
 }
