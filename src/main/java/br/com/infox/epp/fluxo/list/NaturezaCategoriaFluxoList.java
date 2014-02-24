@@ -1,6 +1,5 @@
 package br.com.infox.epp.fluxo.list;
 
-import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -11,9 +10,6 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.epp.fluxo.entity.Categoria;
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 
 @Name(NaturezaCategoriaFluxoList.NAME)
@@ -48,16 +44,4 @@ public class NaturezaCategoriaFluxoList extends EntityList<NaturezaCategoriaFlux
 		return null;
 	}
 	
-	public List<Natureza> getNaturezaList() {
-		return genericManager.findAll(Natureza.class);
-	}
-	
-	public List<Categoria> getCategoriaList() {
-		return genericManager.findAll(Categoria.class);
-	}
-	
-	public List<Fluxo> getFluxoList() {
-		return genericManager.findAll(Fluxo.class);
-	}
-
 }

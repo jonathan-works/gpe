@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Natureza;
 
 @Scope(ScopeType.CONVERSATION)
@@ -22,6 +23,7 @@ public class NaturezaCategoriaFluxoFacade implements Serializable {
 
     private List<Natureza> naturezaList;
     private List<Categoria> categoriaList;
+    private List<Fluxo> fluxoList;
 
     @In
     private GenericManager genericManager;
@@ -30,6 +32,7 @@ public class NaturezaCategoriaFluxoFacade implements Serializable {
     public void init() {
         naturezaList = genericManager.findAll(Natureza.class);
         categoriaList = genericManager.findAll(Categoria.class);
+        fluxoList = genericManager.findAll(Fluxo.class);
     }
 
     public List<Natureza> getNaturezaList() {
@@ -38,6 +41,10 @@ public class NaturezaCategoriaFluxoFacade implements Serializable {
 
     public List<Categoria> getCategoriaList() {
         return categoriaList;
+    }
+    
+    public List<Fluxo> getFluxoList() {
+        return fluxoList;
     }
 
 }
