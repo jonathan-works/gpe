@@ -34,6 +34,7 @@ import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
+import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -56,12 +57,12 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
     }
 
     @Override
-    protected void initEntity(final CategoriaItem entity,final CrudActions<CategoriaItem> crudActions) {
-        crudActions.setComponentValue("categoria", entity.getCategoria());
-        crudActions.setComponentValue("item", entity.getItem());
+    protected void initEntity(final CategoriaItem entity,final CrudActions<CategoriaItem> actions) {
+        actions.setComponentValue("categoria", entity.getCategoria());
+        actions.setComponentValue("item", entity.getItem());
     }
 
-    private final InternalRunnableTest<Item> persistItem = new InternalRunnableTest<Item>(ItemCrudAction.NAME) {
+    private final RunnableTest<Item> persistItem = new RunnableTest<Item>(ItemCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Item entity = getEntity();
@@ -91,34 +92,34 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
 
     private void inicializaItens(final String suffix) throws Exception {
         final Item perifericos = persistItem.runTest(new Item("perifComp"
-                + suffix, "Periféricos de Computador" + suffix, Boolean.TRUE));
+                + suffix, "Periféricos de Computador" + suffix, Boolean.TRUE), servletContext, session);
         final Item logitech = persistItem.runTest(new Item("logitech" + suffix, "Logitech"
-                + suffix, perifericos, Boolean.TRUE));
+                + suffix, perifericos, Boolean.TRUE), servletContext, session);
         final Item leadership = persistItem.runTest(new Item("leadership"
-                + suffix, "Leadership" + suffix, perifericos, Boolean.TRUE));
+                + suffix, "Leadership" + suffix, perifericos, Boolean.TRUE), servletContext, session);
         final Item computadores = persistItem.runTest(new Item("comp" + suffix, "Computadores"
-                + suffix, Boolean.TRUE));
+                + suffix, Boolean.TRUE), servletContext, session);
         final Item notbook = persistItem.runTest(new Item("notbook" + suffix, "Notebook"
-                + suffix, computadores, Boolean.TRUE));
+                + suffix, computadores, Boolean.TRUE), servletContext, session);
         final Item dell = persistItem.runTest(new Item("dell" + suffix, "Dell"
-                + suffix, notbook, Boolean.TRUE));
+                + suffix, notbook, Boolean.TRUE), servletContext, session);
 
         addToMap(perifericos, logitech, leadership, computadores, notbook, dell, persistItem.runTest(new Item("microsoft"
-                + suffix, "Microsoft" + suffix, perifericos, Boolean.FALSE)), persistItem.runTest(new Item("ultbook"
-                + suffix, "Ultrabook" + suffix, computadores, Boolean.FALSE)), persistItem.runTest(new Item("mcbook"
-                + suffix, "Macbook" + suffix, computadores, Boolean.FALSE)), persistItem.runTest(new Item("hp"
-                + suffix, "Hewlett Packard" + suffix, notbook, Boolean.FALSE)), persistItem.runTest(new Item("clamSh0979"
-                + suffix, "Mouse Clamshell 0979 USB" + suffix, leadership, Boolean.TRUE)), persistItem.runTest(new Item("mgc2022"
-                + suffix, "Mouse Magic 2022 USB" + suffix, leadership, Boolean.TRUE)), persistItem.runTest(new Item("m600"
-                + suffix, "Mouse Touch M600" + suffix, logitech, Boolean.TRUE)), persistItem.runTest(new Item("m187"
-                + suffix, "Mouse Wireless M187" + suffix, logitech, Boolean.TRUE)),
+                + suffix, "Microsoft" + suffix, perifericos, Boolean.FALSE), servletContext, session), persistItem.runTest(new Item("ultbook"
+                + suffix, "Ultrabook" + suffix, computadores, Boolean.FALSE), servletContext, session), persistItem.runTest(new Item("mcbook"
+                + suffix, "Macbook" + suffix, computadores, Boolean.FALSE), servletContext, session), persistItem.runTest(new Item("hp"
+                + suffix, "Hewlett Packard" + suffix, notbook, Boolean.FALSE), servletContext, session), persistItem.runTest(new Item("clamSh0979"
+                + suffix, "Mouse Clamshell 0979 USB" + suffix, leadership, Boolean.TRUE), servletContext, session), persistItem.runTest(new Item("mgc2022"
+                + suffix, "Mouse Magic 2022 USB" + suffix, leadership, Boolean.TRUE), servletContext, session), persistItem.runTest(new Item("m600"
+                + suffix, "Mouse Touch M600" + suffix, logitech, Boolean.TRUE), servletContext, session), persistItem.runTest(new Item("m187"
+                + suffix, "Mouse Wireless M187" + suffix, logitech, Boolean.TRUE), servletContext, session),
 
         persistItem.runTest(new Item("inspiron1525" + suffix, "Inspiron 1525"
-                + suffix, dell, Boolean.TRUE)), persistItem.runTest(new Item("inspiron14"
-                + suffix, "Inspiron 14" + suffix, dell, Boolean.TRUE)));
+                + suffix, dell, Boolean.TRUE), servletContext, session), persistItem.runTest(new Item("inspiron14"
+                + suffix, "Inspiron 14" + suffix, dell, Boolean.TRUE), servletContext, session));
     }
     
-    private final InternalRunnableTest<CategoriaItem> addCategoriaItemSuccess = new InternalRunnableTest<CategoriaItem>(CategoriaItemCrudAction.NAME) {
+    private final RunnableTest<CategoriaItem> addCategoriaItemSuccess = new RunnableTest<CategoriaItem>(CategoriaItemCrudAction.NAME) {
         @Override
         @SuppressWarnings(UNCHECKED)
         protected void testComponent() throws Exception {
@@ -161,7 +162,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
         }
     };
 
-    private final InternalRunnableTest<CategoriaItem> removeCategoriaItemSuccess = new InternalRunnableTest<CategoriaItem>(CategoriaItemCrudAction.NAME) {
+    private final RunnableTest<CategoriaItem> removeCategoriaItemSuccess = new RunnableTest<CategoriaItem>(CategoriaItemCrudAction.NAME) {
         @Override
         @SuppressWarnings(UNCHECKED)
         protected void testComponent() throws Exception {
@@ -179,15 +180,15 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
         }
     };
     
-    private final InternalRunnableTest<Categoria> persistCategoria = new InternalRunnableTest<Categoria>(CategoriaCrudAction.NAME) {
+    private final RunnableTest<Categoria> persistCategoria = new RunnableTest<Categoria>(CategoriaCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Categoria entity = getEntity(); 
             newInstance();
             final String categoria = entity.getCategoria();
-            crudActions.setEntityValue("categoria", categoria);
+            setEntityValue("categoria", categoria);
             final Boolean ativo = entity.getAtivo();
-            crudActions.setEntityValue("ativo", ativo);
+            setEntityValue("ativo", ativo);
             assertEquals("persisted", PERSISTED, save());
 
             final Integer id = getId();
@@ -204,21 +205,21 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
     @Test
     public void removeCategoriaItemSuccessTest() throws Exception {
         inicializaItens("removeSuccess");
-        final Categoria categoria = persistCategoria.runTest(new Categoria("categoriaRemItemSucc1Test", TRUE));
+        final Categoria categoria = persistCategoria.runTest(new Categoria("categoriaRemItemSucc1Test", TRUE), servletContext, session);
         final Item item = itens.get("perifCompremoveSuccess");
         final CategoriaItem entity = new CategoriaItem(categoria, item);
         
-        addCategoriaItemSuccess.runTest(entity);
-        removeCategoriaItemSuccess.runTest(entity);
+        addCategoriaItemSuccess.runTest(entity, servletContext, session);
+        removeCategoriaItemSuccess.runTest(entity, servletContext, session);
     }
     
     @Test
     public void addCategoriaItemSuccessTest() throws Exception {
         inicializaItens("addSuccess");
-        final Categoria categoria = persistCategoria.runTest(new Categoria("categoriaAddItemSucc1Test", TRUE));
+        final Categoria categoria = persistCategoria.runTest(new Categoria("categoriaAddItemSucc1Test", TRUE), servletContext, session);
         final Item item = itens.get("perifCompaddSuccess");
         final CategoriaItem entity = new CategoriaItem(categoria, item);
-        addCategoriaItemSuccess.runTest(entity);
+        addCategoriaItemSuccess.runTest(entity, servletContext, session);
     }
 
 }
