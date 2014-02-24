@@ -13,13 +13,13 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
+import br.com.infox.core.encoder.MD5Encoder;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.itx.util.Crypto;
 
 @Name(DocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -80,7 +80,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     }
     
     private String getMD5(byte[] data) {
-        return Crypto.encodeMD5(data);
+        return MD5Encoder.encode(data);
     }
     
     @Override
