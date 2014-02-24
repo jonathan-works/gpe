@@ -59,20 +59,4 @@ public final class ReflectionsUtil {
         }
     }
 
-    /**
-     * Retorna os campos de uma classe e todas as suas superclasses
-     * 
-     * @param clazz
-     * @return lista dos campos
-     */
-    public static List<Field> getFields(Class<?> clazz) {
-        List<Field> fields = new ArrayList<Field>();
-        for (Class<?> superClass = clazz; superClass != Object.class; superClass = superClass.getSuperclass()) {
-            for (Field field : superClass.getDeclaredFields()) {
-                fields.add(field);
-            }
-        }
-        return fields;
-    }
-
 }
