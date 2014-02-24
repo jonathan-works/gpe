@@ -111,9 +111,8 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
     }
 
     @Override
-    protected void initEntity(final Natureza entity, final CrudActions<Natureza> crudActions) {
-        initEntityAction.setEntity(entity);
-        initEntityAction.execute(crudActions);
+    protected ActionContainer<Natureza> getInitEntityAction() {
+        return initEntityAction;
     }
     
     @Test

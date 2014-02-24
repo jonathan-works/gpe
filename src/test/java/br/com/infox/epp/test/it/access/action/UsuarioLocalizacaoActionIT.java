@@ -86,6 +86,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.ibpm.task.action.TaskPageAction;
@@ -143,13 +144,21 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
             .createDeployment();
     }
     
+    public static final ActionContainer<UsuarioLocalizacao> initEntityAction = new ActionContainer<UsuarioLocalizacao>() {
+        @Override
+        public void execute(CrudActions<UsuarioLocalizacao> crudActions) {
+            final UsuarioLocalizacao entity = getEntity();
+            crudActions.setComponentValue("usuarioGerenciado", entity.getUsuario());//req
+            crudActions.setEntityValue("localizacao", entity.getLocalizacao());//req
+            crudActions.setEntityValue("papel", entity.getPapel());//req
+            crudActions.setEntityValue("estrutura", entity.getEstrutura());
+            crudActions.setEntityValue("responsavelLocalizacao", entity.getResponsavelLocalizacao());
+        }
+    };
+    
     @Override
-    protected void initEntity(final UsuarioLocalizacao entity, final CrudActions<UsuarioLocalizacao> crud) {
-        crud.setComponentValue("usuarioGerenciado", entity.getUsuario());//req
-        crud.setEntityValue("localizacao", entity.getLocalizacao());//req
-        crud.setEntityValue("papel", entity.getPapel());//req
-        crud.setEntityValue("estrutura", entity.getEstrutura());
-        crud.setEntityValue("responsavelLocalizacao", entity.getResponsavelLocalizacao());
+    protected ActionContainer<UsuarioLocalizacao> getInitEntityAction() {
+        return initEntityAction;
     }
     
     @Override

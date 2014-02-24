@@ -38,6 +38,7 @@ import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -53,27 +54,31 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
                 UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
                 ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
                 ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-                ParametroManager.class,ParametroDAO.class, PessoaFisicaManager.class)
+                ParametroManager.class,ParametroDAO.class, PessoaFisicaManager.class,
+                UsuarioLoginCrudActionIT.class)
         .createDeployment();
     }
 
     private final CrudActions<UsuarioLogin> crudActionsUsuarioLogin = new CrudActionsImpl<>(UsuarioLoginCrudAction.NAME);
     
     //TODO: listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
+    public static final ActionContainer<PessoaFisica> initEntityAction = new ActionContainer<PessoaFisica>() {
+        @Override
+        public void execute(CrudActions<PessoaFisica> crud) {
+            final PessoaFisica entity = getEntity();
+            crud.setEntityValue("cpf",entity.getCpf());
+            crud.setEntityValue("nome",entity.getNome());
+            crud.setEntityValue("dataNascimento",entity.getDataNascimento());            
+        }
+    }; 
+    
     @Override
-    protected void initEntity(final PessoaFisica entity, final CrudActions<PessoaFisica> crud) {
-        crud.setEntityValue("cpf",entity.getCpf());
-        crud.setEntityValue("nome",entity.getNome());
-        crud.setEntityValue("dataNascimento",entity.getDataNascimento());
+    protected ActionContainer<PessoaFisica> getInitEntityAction() {
+        return initEntityAction;
     }
 
     private void initUsuarioLogin(final UsuarioLogin usuario) {
-        crudActionsUsuarioLogin.setEntityValue("nomeUsuario", usuario.getNomeUsuario());
-        crudActionsUsuarioLogin.setEntityValue("email", usuario.getEmail());
-        crudActionsUsuarioLogin.setEntityValue("login", usuario.getLogin());
-        crudActionsUsuarioLogin.setEntityValue("tipoUsuario", usuario.getTipoUsuario());
-        crudActionsUsuarioLogin.setEntityValue("ativo", usuario.getAtivo());
-        crudActionsUsuarioLogin.setEntityValue("provisorio", usuario.getProvisorio());
+        UsuarioLoginCrudActionIT.initEntityAction.execute(usuario, crudActionsUsuarioLogin);
     }
     
     protected Integer persistUsuarioLogin(final UsuarioLogin entity) {
@@ -97,7 +102,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
             final UsuarioLogin user = createUser(entity);
 
             this.newInstance();
-            initEntity(entity, this);
+            initEntityAction.execute(entity, this);
             this.setComponentValue("usuarioAssociado", user);
             final String persistResult = this.save();
             assertEquals(PERSISTED, persistResult);
@@ -141,7 +146,7 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
             this.setComponentValue("usuarioAssociado", user);
             
             this.newInstance();
-            initEntity(entity, this);
+            initEntityAction.execute(entity, this);
             assert PERSISTED.equals(this.save());
             assert this.getId() != null;
             

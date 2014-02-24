@@ -43,15 +43,22 @@ public class ItemCrudActionIT extends AbstractCrudTest<Item> {
         		.createDeployment();
     }
 
+    private static final ActionContainer<Item> initEntityAction = new ActionContainer<Item>() {
+        @Override
+        public void execute(CrudActions<Item> crudActions) {
+            final Item entity = getEntity();
+            crudActions.setEntityValue(FIELD_CODIGO_ITEM, entity.getCodigoItem());// *
+            crudActions.setEntityValue(FIELD_DESCRICAO_ITEM, entity.getDescricaoItem());// *
+            crudActions.setEntityValue("itemPai", entity.getItemPai());
+            crudActions.setEntityValue(FIELD_ATIVO, entity.getAtivo());
+        }
+    };
+    
     @Override
-    protected void initEntity(final Item entity,
-            final CrudActions<Item> crudActions) {
-        crudActions.setEntityValue(FIELD_CODIGO_ITEM, entity.getCodigoItem());// *
-        crudActions.setEntityValue(FIELD_DESCRICAO_ITEM, entity.getDescricaoItem());// *
-        crudActions.setEntityValue("itemPai", entity.getItemPai());
-        crudActions.setEntityValue(FIELD_ATIVO, entity.getAtivo());
+    protected ActionContainer<Item> getInitEntityAction() {
+        return initEntityAction;
     }
-
+    
     @Override
     protected String getComponentName() {
         return ItemCrudAction.NAME;
@@ -71,7 +78,7 @@ public class ItemCrudActionIT extends AbstractCrudTest<Item> {
                     }
                 }
                 final String codItem = format(NM_ITEM_PATT, ++id, "per-suc");
-                itens.add(persistSuccess.runTest(new Item(codItem, codItem, randomPai, ativo)));
+                itens.add(persistSuccess.runTest(new Item(codItem, codItem, randomPai, ativo), servletContext, session));
             }
         }
     }
@@ -82,14 +89,14 @@ public class ItemCrudActionIT extends AbstractCrudTest<Item> {
         
         for (final Boolean ativo : new Boolean[]{TRUE, FALSE} ) {
             for (final String codigo : new String[]{"", null, fillStr(baseCode, DESCRICAO_PEQUENA+1)}) {
-                persistFail.runTest(new Item(codigo, baseCode, null, ativo));
+                persistFail.runTest(new Item(codigo, baseCode, null, ativo), servletContext, session);
             }
             
             for (final String descricao: new String[]{"", null, fillStr(baseCode, DESCRICAO_PADRAO+1)}) {
-                persistFail.runTest(new Item(baseCode, descricao, null, ativo));
+                persistFail.runTest(new Item(baseCode, descricao, null, ativo), servletContext, session);
             }
         
-            persistFail.runTest(new Item(baseCode, baseCode, new Item("d","s",null,ativo), ativo));
+            persistFail.runTest(new Item(baseCode, baseCode, new Item("d","s",null,ativo), ativo), servletContext, session);
         }
     }
     
@@ -107,7 +114,7 @@ public class ItemCrudActionIT extends AbstractCrudTest<Item> {
                 }
             }
             final String codItem = format(NM_ITEM_PATT, ++id, "inac-suc");
-            itens.add(inactivateSuccess.runTest(new Item(codItem, codItem, randomPai, TRUE)));
+            itens.add(inactivateSuccess.runTest(new Item(codItem, codItem, randomPai, TRUE), servletContext, session));
         }
     }
     
@@ -149,7 +156,7 @@ public class ItemCrudActionIT extends AbstractCrudTest<Item> {
                     }
                 }
                 final String codItem = format(NM_ITEM_PATT, ++id, "upd-fail");
-                itens.add(persistSuccess.runTest(updateFailAction, new Item(codItem, codItem, randomPai, ativo)));
+                itens.add(persistSuccess.runTest(updateFailAction, new Item(codItem, codItem, randomPai, ativo), servletContext, session));
             }
         }
     }
@@ -197,7 +204,7 @@ public class ItemCrudActionIT extends AbstractCrudTest<Item> {
                     }
                 }
                 final String codItem = format(NM_ITEM_PATT, ++id, "upd-suc");
-                itens.add(persistSuccess.runTest(updateAction, new Item(codItem, codItem, randomPai, ativo)));
+                itens.add(persistSuccess.runTest(updateAction, new Item(codItem, codItem, randomPai, ativo), servletContext, session));
             }
         }
     }

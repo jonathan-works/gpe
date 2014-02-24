@@ -1,6 +1,8 @@
 package br.com.infox.epp.test.it.fluxo.crud;
 
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
+import static br.com.infox.core.action.AbstractAction.REMOVED;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 import static junit.framework.Assert.assertEquals;
 
 import java.util.List;
@@ -77,12 +79,10 @@ public class NatCatFluxoLocalizacaoCrudActionIT extends AbstractCrudTest<NatCatF
     }
 
     @Override
-    protected void initEntity(final NatCatFluxoLocalizacao entity,
-            final CrudActions<NatCatFluxoLocalizacao> crudActions) {
-        initEntityAction.setEntity(entity);
-        initEntityAction.execute(crudActions);
+    protected ActionContainer<NatCatFluxoLocalizacao> getInitEntityAction() {
+        return initEntityAction;
     }
-
+    
     private static final ActionContainer<NatCatFluxoLocalizacao> initEntityAction = new ActionContainer<NatCatFluxoLocalizacao>() {
         @Override
         public void execute(CrudActions<NatCatFluxoLocalizacao> crudActions) {
@@ -98,8 +98,7 @@ public class NatCatFluxoLocalizacaoCrudActionIT extends AbstractCrudTest<NatCatF
         protected void testComponent() throws Exception {
             final NatCatFluxoLocalizacao entity = getEntity(); 
             newInstance();
-            initEntityAction.setEntity(entity);
-            initEntityAction.execute(this);
+            initEntityAction.execute(entity, this);
             assertEquals("persisted", PERSISTED, save());
         }
     };
@@ -116,10 +115,16 @@ public class NatCatFluxoLocalizacaoCrudActionIT extends AbstractCrudTest<NatCatF
         }
     }
     
-    private static final RunnableTest<Localizacao> removeSuccess = new RunnableTest<Localizacao>(NatCatFluxoLocalizacaoCrudAction.NAME) {
+    private static final RunnableTest<NatCatFluxoLocalizacao> removeSuccess = new RunnableTest<NatCatFluxoLocalizacao>(NatCatFluxoLocalizacaoCrudAction.NAME) {
+        @SuppressWarnings(UNCHECKED)
         @Override
         protected void testComponent() throws Exception {
-            
+            List<NatCatFluxoLocalizacao> list = invokeMethod(NatCatFluxoLocalizacaoManager.NAME, "findAll", List.class, new Class<?>[]{}, new Object[]{});
+            for (final NatCatFluxoLocalizacao natCatFluxoLocalizacao : list) {
+                assertEquals("natCatFluxoLocalizacao remove failed", REMOVED, remove(natCatFluxoLocalizacao));
+            }
+            list = invokeMethod(NatCatFluxoLocalizacaoManager.NAME, "findAll", List.class, new Class<?>[]{}, new Object[]{});
+            assertEquals("list not empty", 0, list.size());
         }
     };
     

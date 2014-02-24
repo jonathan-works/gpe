@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
-import br.com.itx.util.HibernateUtil;
+import br.com.infox.core.util.HibernateUtil;
 
 @Entity
 @Table(name = TABLE_TIPO_MODELO_DOCUMENTO, schema = PUBLIC,

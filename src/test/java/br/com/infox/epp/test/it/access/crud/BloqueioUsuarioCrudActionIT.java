@@ -40,6 +40,7 @@ import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -86,13 +87,19 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
         </ui:define>
     </wi:dataForm>
 */
+    public static final ActionContainer<BloqueioUsuario> initEntityAction = new ActionContainer<BloqueioUsuario>() {
+        @Override
+        public void execute(CrudActions<BloqueioUsuario> crudActions) {
+            final BloqueioUsuario entity = getEntity();
+            //dataPrevisaoDesbloqueio
+            crudActions.setEntityValue("dataPrevisaoDesbloqueio", entity.getDataPrevisaoDesbloqueio());
+            crudActions.setEntityValue("motivoBloqueio", entity.getMotivoBloqueio());                
+        }
+    };
+    
     @Override
-    protected void initEntity(final BloqueioUsuario entity,
-            final CrudActions<BloqueioUsuario> crudActions) {
-        //dataPrevisaoDesbloqueio
-        crudActions.setEntityValue("dataPrevisaoDesbloqueio", entity.getDataPrevisaoDesbloqueio());
-        crudActions.setEntityValue("motivoBloqueio", entity.getMotivoBloqueio());
-
+    protected ActionContainer<BloqueioUsuario> getInitEntityAction() {
+        return initEntityAction;
     }
 
     @Override
@@ -213,7 +220,8 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
             usuario = this.usrCrudActions.resetInstance(usuario.getIdUsuarioLogin());
             newInstance();
             setComponentValue("usuarioAtual", usuario);
-            initEntity(getEntity(), this);
+            initEntityAction.setEntity(getEntity());
+            initEntityAction.execute(this);
 
             assertEquals("usuario não bloqueado", this.bloqueadoStartValue, usuario.getBloqueio());
             final Object bloquearRet = invokeMethod("bloquear");
@@ -245,7 +253,8 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
             usuario = this.usrCrudActions.resetInstance(usuario.getIdUsuarioLogin());
             newInstance();
             setComponentValue("usuarioAtual", usuario);
-            initEntity(getEntity(), this);
+            initEntityAction.setEntity(getEntity());
+            initEntityAction.execute(this);
             assertEquals("usuario não bloqueado", Boolean.FALSE, usuario.getBloqueio());
             final Object bloquearRet = invokeMethod("bloquear");
             assertEquals("persisted", true, PERSISTED.equals(bloquearRet) || UPDATED.equals(bloquearRet));

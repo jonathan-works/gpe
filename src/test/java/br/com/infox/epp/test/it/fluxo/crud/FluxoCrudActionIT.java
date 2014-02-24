@@ -34,6 +34,7 @@ import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.PersistSuccessTest;
+import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
@@ -58,7 +59,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         .createDeployment();
     }
 
-    private static final ActionContainer<Fluxo> initEntityAction = new ActionContainer<Fluxo>() {
+    public static final ActionContainer<Fluxo> initEntityAction = new ActionContainer<Fluxo>() {
         @Override
         public void execute(final CrudActions<Fluxo> crudActions) {
             final Fluxo entity = getEntity();
@@ -72,7 +73,8 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         }
     };
     
-    public static ActionContainer<Fluxo> getInitEntityAction() {
+    @Override
+    protected ActionContainer<Fluxo> getInitEntityAction() {
         return initEntityAction;
     }
     
@@ -83,7 +85,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         final Date[] datasFim = { null, currentDate.getTime() };
         int id = 0;
         final List<Fluxo> fluxos = new ArrayList<Fluxo>();
-        final ActionContainer<Fluxo> initEntityAction = FluxoCrudActionIT.getInitEntityAction();
+        //final ActionContainer<Fluxo> initEntityAction = FluxoCrudActionIT.initEntityAction;
         final PersistSuccessTest<Fluxo> persistSuccessTest = new PersistSuccessTest<Fluxo>(FluxoCrudAction.NAME, initEntityAction);
         for (final Date dataFim : datasFim) {
             for (final Boolean publicado : allBooleans) {
@@ -103,13 +105,6 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         return FluxoCrudAction.NAME;
     }
 
-    @Override
-    protected void initEntity(final Fluxo entity, final CrudActions<Fluxo> crudActions) {
-        final ActionContainer<Fluxo> initEntityAction = getInitEntityAction();
-        initEntityAction.setEntity(entity);
-        initEntityAction.execute(crudActions);
-    }
-    
     private static int id=0;
     
     private String generateName(final String baseString) {
@@ -138,7 +133,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         for(final Date dataFim : datasFim) {
             for(final Boolean publicado : allBooleans) {
                 final String codigo = generateName("persistFailFluxo");
-                persistFail.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 20, dataInicio, dataFim, publicado, null));
+                persistFail.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 20, dataInicio, dataFim, publicado, null), servletContext, session);
             }
         }
     }
@@ -149,7 +144,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         for(final Boolean publicado : allBooleans) {
             for (final Boolean ativo : booleans) {
                 final String codigo = generateName("persistFailFluxo");
-                persistFail.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 20, dataInicio, getIncrementedDate(currentDate,GregorianCalendar.DAY_OF_YEAR,-20), publicado, ativo));
+                persistFail.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 20, dataInicio, getIncrementedDate(currentDate,GregorianCalendar.DAY_OF_YEAR,-20), publicado, ativo), servletContext, session);
             }
         }
     }
@@ -162,7 +157,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
             for(final Boolean publicado : allBooleans) {
                 for (final Boolean ativo : booleans) {
                     final String codigo = generateName("persistFailFluxo");
-                    persistFail.runTest(new Fluxo(codigo,codigo.replace('.', ' '), null, dataInicio, dataFim, publicado, ativo));
+                    persistFail.runTest(new Fluxo(codigo,codigo.replace('.', ' '), null, dataInicio, dataFim, publicado, ativo), servletContext, session);
                 }
             }
         }
@@ -173,7 +168,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
             for(final Boolean publicado: allBooleans) {
                 for (final Boolean ativo : booleans) {
                     final String codigo = generateName("persistFailFluxo");
-                    persistFail.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 5, null, dataFim, publicado, ativo));
+                    persistFail.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 5, null, dataFim, publicado, ativo), servletContext, session);
                 }
             }
         }
@@ -187,7 +182,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
             for(final Date dataFim : datasFim) {
                 for(final Boolean publicado: allBooleans) {
                     for (final Boolean ativo:booleans) {
-                        persistFail.runTest(new Fluxo(generateName("persistFailFluxo"), fluxo, 5, dataInicio, dataFim, publicado, ativo));
+                        persistFail.runTest(new Fluxo(generateName("persistFailFluxo"), fluxo, 5, dataInicio, dataFim, publicado, ativo), servletContext, session);
                     }
                 }
             } 
@@ -202,7 +197,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
             for(final Date dataFim : datasFim) {
                 for(final Boolean publicado: allBooleans) {
                     for (final Boolean ativo:booleans) {
-                        persistFail.runTest(new Fluxo(codigo,generateName("persistFailFluxo"), 5, dataInicio, dataFim, publicado, ativo));
+                        persistFail.runTest(new Fluxo(codigo,generateName("persistFailFluxo"), 5, dataInicio, dataFim, publicado, ativo), servletContext, session);
                     }
                 }
             }            
@@ -234,7 +229,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
             for(final Boolean publicado: allBooleans) {
                 for (final Boolean ativo:booleans) {
                     final String codigo = generateName("persistSuccessFluxo");
-                    inactivateSuccess.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo));
+                    inactivateSuccess.runTest(new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo), servletContext, session);
                 }
             }
         }
@@ -304,7 +299,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
     }
     
     private void executeUpdate(final ActionContainer<Fluxo> actionContainer,
-            final InternalRunnableTest<Fluxo> runnable, final String defaultCodigo) throws Exception {
+            final RunnableTest<Fluxo> runnable, final String defaultCodigo) throws Exception {
         final GregorianCalendar currentDate = new GregorianCalendar();
         final Date dataInicio = currentDate.getTime();
         final Date[] datasFim = {null, getIncrementedDate(currentDate,GregorianCalendar.DAY_OF_YEAR,20)};
@@ -312,7 +307,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
             for(final Boolean publicado: allBooleans) {
                 for (final Boolean ativo:booleans) {
                     final String codigo = generateName(defaultCodigo);
-                    runnable.runTest(actionContainer,new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo));
+                    runnable.runTest(actionContainer,new Fluxo(codigo,codigo.replace('.', ' '), 5, dataInicio, dataFim, publicado, ativo), servletContext, session);
                 }
             }
         }

@@ -41,7 +41,7 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
         		.createDeployment();
     }
 
-    private static final ActionContainer<Categoria> initEntityAction = new ActionContainer<Categoria>() {
+    public static final ActionContainer<Categoria> initEntityAction = new ActionContainer<Categoria>() {
         @Override
         public void execute(final CrudActions<Categoria> crudActions) {
             final Categoria entity = getEntity();
@@ -51,10 +51,8 @@ public class CategoriaCrudActionIT extends AbstractCrudTest<Categoria> {
     };
     
     @Override
-    protected void initEntity(final Categoria entity,
-            final CrudActions<Categoria> crudActions) {
-        initEntityAction.setEntity(entity);
-        initEntityAction.execute(crudActions);
+    protected ActionContainer<Categoria> getInitEntityAction() {
+        return initEntityAction;
     }
 
     @Override

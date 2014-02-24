@@ -35,6 +35,7 @@ import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -56,10 +57,18 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
         return CategoriaItemCrudAction.NAME;
     }
 
+    public static final ActionContainer<CategoriaItem> initEntityAction = new ActionContainer<CategoriaItem>() {
+        @Override
+        public void execute(CrudActions<CategoriaItem> actions) {
+            final CategoriaItem entity = getEntity();
+            actions.setComponentValue("categoria", entity.getCategoria());
+            actions.setComponentValue("item", entity.getItem());        
+        }
+    };
+    
     @Override
-    protected void initEntity(final CategoriaItem entity,final CrudActions<CategoriaItem> actions) {
-        actions.setComponentValue("categoria", entity.getCategoria());
-        actions.setComponentValue("item", entity.getItem());
+    protected ActionContainer<CategoriaItem> getInitEntityAction() {
+        return initEntityAction;
     }
 
     private final RunnableTest<Item> persistItem = new RunnableTest<Item>(ItemCrudAction.NAME) {
@@ -131,7 +140,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
             final Item item = entity.getItem();
             assertNotNull("item not null", item);
             assertNotNull("id item not null", item.getIdItem());
-            initEntity(entity, this);
+            initEntityAction.execute(entity, this);
             
             assertEquals("categoriaItem persisted", PERSISTED, save());
             
@@ -172,7 +181,7 @@ public class CategoriaItemCrudActionIT extends AbstractCrudTest<CategoriaItem>{
             
             assertNotNull("categoria not null", categoria);
             assertNotNull("id categoria not null", categoria.getIdCategoria());
-            initEntity(entity, this);
+            initEntityAction.execute(entity, this);
             for (final CategoriaItem categoriaItem : (List<CategoriaItem>)invokeMethod("categoriaItemManager","listByCategoria", List.class, new Class[]{Categoria.class}, categoria)) {
                 assertEquals(REMOVED, REMOVED, remove(categoriaItem));
             }
