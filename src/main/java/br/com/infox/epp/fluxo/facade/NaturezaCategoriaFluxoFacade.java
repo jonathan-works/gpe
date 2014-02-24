@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.consulta.home;
+package br.com.infox.epp.fluxo.facade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,10 +14,10 @@ import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Natureza;
 
 @Scope(ScopeType.CONVERSATION)
-@Name(ConsultaProcessoHome.NAME)
-public class ConsultaProcessoHome implements Serializable {
+@Name(NaturezaCategoriaFluxoFacade.NAME)
+public class NaturezaCategoriaFluxoFacade implements Serializable {
 
-    public static final String NAME = "consultaProcessoHome";
+    public static final String NAME = "naturezaCategoriaFluxoFacade";
     private static final long serialVersionUID = 1L;
 
     private List<Natureza> naturezaList;
