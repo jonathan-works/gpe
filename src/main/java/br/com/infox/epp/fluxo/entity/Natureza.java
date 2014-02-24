@@ -31,8 +31,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.core.util.HibernateUtil;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = TABLE_NATUREZA, schema = PUBLIC)

@@ -1,4 +1,4 @@
-package br.com.infox.core.util;
+package br.com.infox.hibernate.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
