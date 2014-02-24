@@ -7,3 +7,5 @@
 *.db
 /br.com.infox.epp.ajuda.entity.Ajuda
 derby.log
+/target
+/target

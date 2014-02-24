@@ -59,7 +59,7 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         .createDeployment();
     }
 
-    private static final ActionContainer<Fluxo> initEntityAction = new ActionContainer<Fluxo>() {
+    public static final ActionContainer<Fluxo> initEntityAction = new ActionContainer<Fluxo>() {
         @Override
         public void execute(final CrudActions<Fluxo> crudActions) {
             final Fluxo entity = getEntity();
@@ -73,7 +73,8 @@ public class FluxoCrudActionIT extends AbstractCrudTest<Fluxo> {
         }
     };
     
-    public ActionContainer<Fluxo> getInitEntityAction() {
+    @Override
+    protected ActionContainer<Fluxo> getInitEntityAction() {
         return initEntityAction;
     }
     

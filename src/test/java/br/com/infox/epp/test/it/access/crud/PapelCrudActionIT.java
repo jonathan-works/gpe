@@ -11,6 +11,9 @@ import static junit.framework.Assert.assertNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
@@ -54,7 +57,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
 
     private static final ActionContainer<Papel> initEntityAction = new ActionContainer<Papel>() {
         @Override
-        public void execute(CrudActions<Papel> crudActions) {
+        public void execute(final CrudActions<Papel> crudActions) {
             final Papel entity = getEntity();
             crudActions.setEntityValue("identificador", entity.getIdentificador()); //req
             crudActions.setEntityValue("nome", entity.getNome()); // req
@@ -77,7 +80,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         return PapelCrudAction.NAME;
     }
     
-    private final RunnableTest<Papel> persistSuccess = new RunnableTest<Papel>(PapelCrudAction.NAME) {
+    private static final RunnableTest<Papel> persistSuccess = new RunnableTest<Papel>(PapelCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
@@ -91,7 +94,6 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
             this.newInstance();
             assertNull("nullId", this.getId());
             this.setId(id);
-            assertEquals("Compare", true, compareEntityValues(entity, this));
             
             final boolean roleExists = IdentityManager.instance().roleExists(entity.getIdentificador());
             assertEquals("roleExists", true, roleExists);
@@ -100,14 +102,20 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         }
     };
     
+    public static List<Papel> getSuccessFullyPersisted(final ActionContainer<Papel> action, final String suffix, final ServletContext servletContext, final HttpSession session) throws Exception {
+        final ArrayList<Papel> list = new ArrayList<>();
+        list.add(persistSuccess.runTest(new Papel(format("Administrador Admin{0}",suffix),format("admin{0}",suffix)), servletContext, session));
+        list.add(persistSuccess.runTest(new Papel(format("Gestor{0}",suffix),format("gestor{0}",suffix)), servletContext, session));
+        list.add(persistSuccess.runTest(new Papel(format("Comprador{0}",suffix),format("comprador{0}",suffix)), servletContext, session));
+        list.add(persistSuccess.runTest(new Papel(format("Colaborador{0}",suffix),format("colab{0}",suffix)), servletContext, session));
+        list.add(persistSuccess.runTest(new Papel(format("Redator{0}",suffix),format("redator{0}",suffix)), servletContext, session));
+        list.add(persistSuccess.runTest(new Papel(format("Vendedor{0}",suffix),format("vendedor{0}",suffix)), servletContext, session));
+        return list;
+    }
+    
     @Test
     public void persistSuccessTest() throws Exception {
-        persistSuccess.runTest(new Papel("Administrador Admin","admin"), servletContext, session);
-        persistSuccess.runTest(new Papel("Gestor","gestor"), servletContext, session);
-        persistSuccess.runTest(new Papel("Comprador","comprador"), servletContext, session);
-        persistSuccess.runTest(new Papel("Colaborador","colab"), servletContext, session);
-        persistSuccess.runTest(new Papel("Redator","redator"), servletContext, session);
-        persistSuccess.runTest(new Papel("Vendedor","vendedor"), servletContext, session);
+        getSuccessFullyPersisted(null, "per-suc", servletContext, session);
     }
     /*
     private String jsonPapel(Papel papel) {
@@ -268,7 +276,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
             @SuppressWarnings(WarningConstants.UNCHECKED)
             protected void testComponent() throws Exception {
                 this.setComponentValue("activeInnerTab", "herdeirosTab");
-                int idPapel = papel.getIdPapel();
+                final int idPapel = papel.getIdPapel();
                 resetInstance(idPapel);
                 final ArrayList<String> membros = new ArrayList<>((List<String>)this.getComponentValue("membros"));
                 for (final Papel herdeiro : herdeiros) {
@@ -339,19 +347,9 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
     
     @Test
     public void updateFailTest() throws Exception {
-        final Papel admin = persistSuccess.runTest(new Papel("Admin.upd.fail","admin.upd.fail"), servletContext, session);
-        final Papel gestor = persistSuccess.runTest(new Papel("Gestor.upd.fail","gestor.upd.fail"), servletContext, session);
-        final Papel comprador = persistSuccess.runTest(new Papel("Comprador.upd.fail","comprador.upd.fail"), servletContext, session);
-        final Papel colaborador = persistSuccess.runTest(new Papel("Colaborador.upd.fail","colab.upd.fail"), servletContext, session);
-        final Papel redator = persistSuccess.runTest(new Papel("Redator.upd.fail","redator.upd.fail"), servletContext, session);
-        final Papel vendedor = persistSuccess.runTest(new Papel("Vendedor.upd.fail","vendedor.upd.fail"), servletContext, session);
-        
-        updateFail.runTest(admin, servletContext, session);
-        updateFail.runTest(gestor, servletContext, session);
-        updateFail.runTest(comprador, servletContext, session);
-        updateFail.runTest(colaborador, servletContext, session);
-        updateFail.runTest(redator, servletContext, session);
-        updateFail.runTest(vendedor, servletContext, session);
+        for (final Papel papel : getSuccessFullyPersisted(null, "upd.fail", servletContext, session)) {
+            updateFail.runTest(papel, servletContext, session);
+        }
     }
     
     @Test
