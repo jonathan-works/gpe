@@ -62,7 +62,9 @@ public class ProcessoHandler implements Serializable {
 
             for (org.jbpm.graph.exe.ProcessInstance p : l) {
                 Collection<TaskInstance> tis = p.getTaskMgmtInstance().getTaskInstances();
-                taskInstanceList.addAll(tis);
+                if (tis != null) {
+                	taskInstanceList.addAll(tis);
+                }
             }
 
             Collections.sort(taskInstanceList, new Comparator<TaskInstance>() {
