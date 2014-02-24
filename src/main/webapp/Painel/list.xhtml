@@ -69,13 +69,13 @@
                                     label="#{messages['natureza.tableTitle']}"
                                     value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.natureza}"
                                     noSelectionLabel="#{messages['crud.select.select']}"
-                                    items="#{consultaProcessoHome.naturezaList}" />
+                                    items="#{consultaProcessoHome.getNaturezaList()}" />
                                 <wi:selectOneMenuEntity id="categoria"
                                     label="#{messages['categoria.tableTitle']}"
                                     value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}"
                                     noSelectionLabel="#{messages['crud.select.select']}"
                                     inNewLine="true"
-                                    items="#{consultaProcessoHome.categoriaList}" />
+                                    items="#{consultaProcessoHome.getCategoriaList()}" />
                             </wi:searchForm>
                         </ui:define>
                         <wi:columnOutputText columnId="numeroProcesso"
