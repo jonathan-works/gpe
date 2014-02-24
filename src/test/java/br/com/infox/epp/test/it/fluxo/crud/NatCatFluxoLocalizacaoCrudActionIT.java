@@ -1,9 +1,9 @@
 package br.com.infox.epp.test.it.fluxo.crud;
 
 import static br.com.infox.core.action.AbstractAction.PERSISTED;
+import static br.com.infox.core.action.AbstractAction.REMOVED;
+import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
 import static junit.framework.Assert.assertEquals;
-import static br.com.infox.core.constants.WarningConstants.*;
-import static br.com.infox.core.crud.AbstractCrudAction.*;
 
 import java.util.List;
 
@@ -17,7 +17,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.infox.core.action.AbstractAction;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
 import br.com.infox.epp.access.dao.LocalizacaoDAO;
