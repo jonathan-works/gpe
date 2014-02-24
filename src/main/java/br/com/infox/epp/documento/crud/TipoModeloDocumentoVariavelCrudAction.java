@@ -27,15 +27,13 @@ public class TipoModeloDocumentoVariavelCrudAction extends AbstractCrudAction<Va
 	}
 	
 	@Override
-	protected boolean isInstanceValid() {
+	protected void beforeSave() {
 		getInstance().setTipoModeloDocumento(tipoModeloDocumentoAtual);
-		return super.isInstanceValid();
 	}
 	
 	@Override
-	protected void afterSave() {
+	protected void afterSave(String ret) {
 		newInstance();
-		super.afterSave();
 	}
 	
 	public void addVariavelTipoModelo(Variavel obj) {

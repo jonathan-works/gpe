@@ -28,15 +28,13 @@ public class LocalizacaoTipoModeloDocumentoCrudAction extends AbstractCrudAction
     }
     
     @Override
-    public String save() {
-        getInstance().setLocalizacao(localizacaoAtual);
-        return super.save();
+    protected void beforeSave() {
+    	getInstance().setLocalizacao(localizacaoAtual);
     }
     
     @Override
-    protected void afterSave() {
+    protected void afterSave(String ret) {
         newInstance();
-        super.afterSave();
     }
     
     
