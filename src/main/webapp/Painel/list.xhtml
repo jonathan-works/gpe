@@ -39,7 +39,6 @@
                 </infox:tabPanel>
             </div>
             <s:div id="painelProcessos" styleClass="p-list">
-                <ui:param name="home" value="#{consultaProcessoHome}" />
                 <s:div id="processos"
                     rendered="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}">
 
@@ -56,28 +55,27 @@
                             <wi:searchForm opened="false"
                                 formId="consultaProcessoForm"
                                 formTitle="#{messages['searchForm.title']}"
-                                searchAction="consultaProcessoHome.instance.setInPesquisa(true)"
                                 searchReRender="painelProcessos"
-                                clearAction="consultaProcessoHome.newInstance()"
+                                clearAction="consultaProcessoEpaList.newInstance()"
                                 clearReRender="painelProcessos">
                                 <wi:inputText id="numeroProcesso"
                                     label="#{messages['consultaProcesso.numeroProcesso']}"
-                                    value="#{home.instance.numeroProcesso}" />
+                                    value="#{consultaProcessoEpaList.entity.numeroProcesso}" />
                                 <wi:inputDataPeriodo id="periodo"
                                     label="Período"
-                                    valueDateFrom="#{home.instance.dataInicio}"
-                                    valueDateTo="#{home.instance.dataFim}" />
+                                    valueDateFrom="#{consultaProcessoEpaList.dataInicio}"
+                                    valueDateTo="#{consultaProcessoEpaList.dataFim}" />
                                 <wi:selectOneMenuEntity id="natureza"
                                     label="#{messages['natureza.tableTitle']}"
-                                    value="#{home.instance.natureza}"
+                                    value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.natureza}"
                                     noSelectionLabel="#{messages['crud.select.select']}"
-                                    items="#{home.naturezaList}" />
+                                    items="#{consultaProcessoHome.naturezaList}" />
                                 <wi:selectOneMenuEntity id="categoria"
                                     label="#{messages['categoria.tableTitle']}"
-                                    value="#{home.instance.categoria}"
+                                    value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}"
                                     noSelectionLabel="#{messages['crud.select.select']}"
                                     inNewLine="true"
-                                    items="#{home.categoriaList}" />
+                                    items="#{consultaProcessoHome.categoriaList}" />
                             </wi:searchForm>
                         </ui:define>
                         <wi:columnOutputText columnId="numeroProcesso"

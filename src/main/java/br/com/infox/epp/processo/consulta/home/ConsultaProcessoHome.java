@@ -6,7 +6,6 @@ import java.util.List;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
@@ -18,7 +17,6 @@ import br.com.infox.epp.processo.consulta.bean.ConsultaProcesso;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(ConsultaProcessoHome.NAME)
-@Install(precedence = Install.FRAMEWORK)
 public class ConsultaProcessoHome implements Serializable {
 
     public static final String NAME = "consultaProcessoHome";
