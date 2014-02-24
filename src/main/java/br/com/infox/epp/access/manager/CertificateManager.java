@@ -247,7 +247,9 @@ public class CertificateManager {
                 jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
                 entries = jar.entries(); // gives ALL entries
             } finally {
-                FileUtil.close(jar);
+                if (jar != null) {
+                    jar.close();
+                }
             }
                                                             // in jar
             List<URL> result = new ArrayList<URL>(); // avoid duplicates in case
