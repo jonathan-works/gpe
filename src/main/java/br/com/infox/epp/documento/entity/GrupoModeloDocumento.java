@@ -26,15 +26,13 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.itx.util.HibernateUtil;
-
 @Entity
 @Table(name = TABLE_GRUPO_MODELO_DOCUMENTO, schema = PUBLIC)
 public class GrupoModeloDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idGrupoModeloDocumento;
+    private Integer idGrupoModeloDocumento;
     private String grupoModeloDocumento;
     private Boolean ativo;
     private List<ItemTipoDocumento> itemTipoDocumentoList = new ArrayList<ItemTipoDocumento>(0);
@@ -42,17 +40,22 @@ public class GrupoModeloDocumento implements java.io.Serializable {
 
     public GrupoModeloDocumento() {
     }
+    
+    public GrupoModeloDocumento(final String grupoModeloDocumento, final Boolean ativo) {
+        this.grupoModeloDocumento = grupoModeloDocumento;
+        this.ativo = ativo;
+    }
 
     @SequenceGenerator(name = GENERATOR,
             sequenceName = SEQUENCE_GRUPO_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR)
     @Column(name = ID_GRUPO_MODELO_DOCUMENTO, unique = true, nullable = false)
-    public int getIdGrupoModeloDocumento() {
+    public Integer getIdGrupoModeloDocumento() {
         return this.idGrupoModeloDocumento;
     }
 
-    public void setIdGrupoModeloDocumento(int idGrupoModeloDocumento) {
+    public void setIdGrupoModeloDocumento(Integer idGrupoModeloDocumento) {
         this.idGrupoModeloDocumento = idGrupoModeloDocumento;
     }
 
@@ -106,28 +109,31 @@ public class GrupoModeloDocumento implements java.io.Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof GrupoModeloDocumento)) {
-            return false;
-        }
-        GrupoModeloDocumento other = (GrupoModeloDocumento) HibernateUtil.removeProxy(obj);
-        if (getIdGrupoModeloDocumento() != other.getIdGrupoModeloDocumento()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + getIdGrupoModeloDocumento();
+        result = prime
+                * result
+                + ((idGrupoModeloDocumento == null) ? 0
+                        : idGrupoModeloDocumento.hashCode());
         return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        GrupoModeloDocumento other = (GrupoModeloDocumento) obj;
+        if (idGrupoModeloDocumento == null) {
+            if (other.idGrupoModeloDocumento != null)
+                return false;
+        } else if (!idGrupoModeloDocumento.equals(other.idGrupoModeloDocumento))
+            return false;
+        return true;
+    }
+    
 }
