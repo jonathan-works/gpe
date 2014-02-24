@@ -53,39 +53,47 @@ public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
         return NAME;
     }
     
+    public static final ActionContainer<UsuarioLogin> initEntityAction = new ActionContainer<UsuarioLogin>() {
+        @Override
+        public void execute(CrudActions<UsuarioLogin> crudActions) {
+            final UsuarioLogin entity = getEntity();
+            crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
+            crudActions.setEntityValue("email", entity.getEmail());
+            crudActions.setEntityValue("login", entity.getLogin());
+            crudActions.setEntityValue("tipoUsuario", entity.getTipoUsuario());
+            crudActions.setEntityValue("ativo", entity.getAtivo());
+            crudActions.setEntityValue("provisorio", entity.getProvisorio());
+        }
+    };
+    
     @Override
-    protected void initEntity(final UsuarioLogin entity, final CrudActions<UsuarioLogin> crudActions) {
-        crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
-        crudActions.setEntityValue("email", entity.getEmail());
-        crudActions.setEntityValue("login", entity.getLogin());
-        crudActions.setEntityValue("tipoUsuario", entity.getTipoUsuario());
-        crudActions.setEntityValue("ativo", entity.getAtivo());
-        crudActions.setEntityValue("provisorio", entity.getProvisorio());
+    protected ActionContainer<UsuarioLogin> getInitEntityAction() {
+        return initEntityAction;
     }
     
     @Test
     public void getPersistSuccessList() throws Exception {
         for (int i = 0; i < 30; i++) {
-            persistSuccess.runTest(new UsuarioLogin("Usuario Login Persist"+i, MessageFormat.format("usr-login-pers{0}@infox.com.br", i), MessageFormat.format("usr-login-pers{0}", i)));
+            persistSuccess.runTest(new UsuarioLogin("Usuario Login Persist"+i, MessageFormat.format("usr-login-pers{0}@infox.com.br", i), MessageFormat.format("usr-login-pers{0}", i)), servletContext, session);
         }
     }
 
     @Test
     public void getPersistFailList() throws Exception {
-        persistFail.runTest(new UsuarioLogin(null, "usr-login-pers-fail1@infox.com.br", "usr-login-pers-fail"));
-        persistFail.runTest(new UsuarioLogin(fillStr("usr-login-pers-fail2@infox.com.br",LengthConstants.NOME_ATRIBUTO+1), "usr-login-pers-fail2@infox.com.br", "usr-login-pers-fail2"));
+        persistFail.runTest(new UsuarioLogin(null, "usr-login-pers-fail1@infox.com.br", "usr-login-pers-fail"), servletContext, session);
+        persistFail.runTest(new UsuarioLogin(fillStr("usr-login-pers-fail2@infox.com.br",LengthConstants.NOME_ATRIBUTO+1), "usr-login-pers-fail2@infox.com.br", "usr-login-pers-fail2"), servletContext, session);
         
-        persistFail.runTest(new UsuarioLogin("Usuario Login", null, "usr-login-pers-fail3"));
-        persistFail.runTest(new UsuarioLogin("Usuario Login", fillStr("usr-login-pers-fail4@infox.com.br",LengthConstants.DESCRICAO_PADRAO+1), "usr-login-pers-fail"));
+        persistFail.runTest(new UsuarioLogin("Usuario Login", null, "usr-login-pers-fail3"), servletContext, session);
+        persistFail.runTest(new UsuarioLogin("Usuario Login", fillStr("usr-login-pers-fail4@infox.com.br",LengthConstants.DESCRICAO_PADRAO+1), "usr-login-pers-fail"), servletContext, session);
         
-        persistFail.runTest(new UsuarioLogin("Usuario Login", "usr-login-pers-fail5@infox.com.br", null));
-        persistFail.runTest(new UsuarioLogin("Usuario Login", "usr-login-pers-fail6@infox.com.br", fillStr("usr-login-pers-fail6",LengthConstants.DESCRICAO_PADRAO+1)));
+        persistFail.runTest(new UsuarioLogin("Usuario Login", "usr-login-pers-fail5@infox.com.br", null), servletContext, session);
+        persistFail.runTest(new UsuarioLogin("Usuario Login", "usr-login-pers-fail6@infox.com.br", fillStr("usr-login-pers-fail6",LengthConstants.DESCRICAO_PADRAO+1)), servletContext, session);
     }
 
     @Test
     public void getInactivateSuccessList() throws Exception {
         for (int i = 0; i < 32; i++) {
-            inactivateSuccess.runTest(new UsuarioLogin("Usuario Login Inactive", "usr-login-inac"+i+"@infox.com.br", "usr-login-inac"+i, UsuarioEnum.H, Boolean.TRUE));
+            inactivateSuccess.runTest(new UsuarioLogin("Usuario Login Inactive", "usr-login-inac"+i+"@infox.com.br", "usr-login-inac"+i, UsuarioEnum.H, Boolean.TRUE), servletContext, session);
         }
     }
 
@@ -98,7 +106,7 @@ public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
                     final String updatedNomeUsuario = getEntity().getNomeUsuario()+"(updated)";
                     crudActions.setEntityValue("nomeUsuario", updatedNomeUsuario);
                 }
-            });
+            }, servletContext, session);
         }
     }
 
@@ -111,7 +119,7 @@ public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
                   final String updatedNomeUsuario = fillStr(getEntity().getNomeUsuario()+"(updated)", LengthConstants.NOME_ATRIBUTO+1);
                   crudActions.setEntityValue("nomeUsuario", updatedNomeUsuario);
                 }
-            });
+            }, servletContext, session);
         }
     }
     

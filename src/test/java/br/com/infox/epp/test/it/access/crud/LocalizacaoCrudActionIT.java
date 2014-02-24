@@ -183,9 +183,8 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
     }
     
     @Override
-    protected void initEntity(final Localizacao entity, final CrudActions<Localizacao> crudActions) {
-        initEntityAction.setEntity(entity);
-        initEntityAction.execute(crudActions);
+    protected ActionContainer<Localizacao> getInitEntityAction() {
+        return initEntityAction;
     }
     
     @Test

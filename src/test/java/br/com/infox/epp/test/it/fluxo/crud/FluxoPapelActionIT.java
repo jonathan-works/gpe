@@ -43,6 +43,7 @@ import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -72,10 +73,18 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         return FluxoPapelAction.NAME;
     }
 
+    private final ActionContainer<FluxoPapel> initEntityAction = new ActionContainer<FluxoPapel>() {
+        @Override
+        public void execute(CrudActions<FluxoPapel> crud) {
+            final FluxoPapel entity = getEntity();
+            crud.invokeMethod("init",Void.class, entity.getFluxo());
+            crud.setEntityValue("papel", entity.getPapel());
+        }
+    };
+    
     @Override
-    protected void initEntity(final FluxoPapel entity,final CrudActions<FluxoPapel> crud) {
-        crud.invokeMethod("init",Void.class, entity.getFluxo());
-        crud.setEntityValue("papel", entity.getPapel());
+    protected ActionContainer<FluxoPapel> getInitEntityAction() {
+        return initEntityAction;
     }
     
     private final RunnableTest<FluxoPapel> persistSuccess = new RunnableTest<FluxoPapel>(FluxoPapelAction.NAME) {
@@ -83,7 +92,7 @@ public class FluxoPapelActionIT extends AbstractCrudTest<FluxoPapel> {
         protected void testComponent() throws Exception {
             final FluxoPapel entity= getEntity();
             newInstance();
-            initEntity(entity, this);
+            initEntityAction.execute(entity, this);
             assertEquals("persist failed", PERSISTED, save());
 
             final Integer id = getId();

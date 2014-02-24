@@ -37,6 +37,7 @@ import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
+import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
@@ -51,11 +52,25 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         .createDeployment();
     }
 
+    private static final ActionContainer<Papel> initEntityAction = new ActionContainer<Papel>() {
+        @Override
+        public void execute(CrudActions<Papel> crudActions) {
+            final Papel entity = getEntity();
+            crudActions.setEntityValue("identificador", entity.getIdentificador()); //req
+            crudActions.setEntityValue("nome", entity.getNome()); // req
+        }
+    };
+    
     @Override
-    protected void initEntity(final Papel entity, final CrudActions<Papel> crud) {
-        crud.setEntityValue("identificador", entity.getIdentificador()); //req
-        crud.setEntityValue("nome", entity.getNome()); // req
+    protected ActionContainer<Papel> getInitEntityAction() {
+        return initEntityAction;
     }
+    
+//    @Override
+//    protected void initEntity(final Papel entity, final CrudActions<Papel> crud) {
+//        crud.setEntityValue("identificador", entity.getIdentificador()); //req
+//        crud.setEntityValue("nome", entity.getNome()); // req
+//    }
 
     @Override
     protected String getComponentName() {
@@ -68,7 +83,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
             final Papel entity = getEntity();
             
             this.newInstance();
-            initEntity(entity, this);
+            initEntityAction.execute(entity, this);
             assertEquals("persisted", PERSISTED, this.save());
 
             final Integer id = this.getId();
@@ -104,7 +119,7 @@ public class PapelCrudActionIT extends AbstractCrudTest<Papel>{
         protected void testComponent() throws Exception {
             final Papel entity = getEntity();
             this.newInstance();
-            initEntity(entity, this);
+            initEntityAction.execute(entity, this);
             
             assertEquals("persisted", true, !PERSISTED.equals(this.save()));
 

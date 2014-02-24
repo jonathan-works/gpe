@@ -22,6 +22,11 @@ public abstract class RunnableTest<E> extends AbstractCrudActions<E> {
             this.entity = entity;
         }
 
+        public final void execute(final R entity, final CrudActions<R> crudActions) {
+            this.setEntity(entity);
+            this.execute(crudActions);
+        }
+        
         public abstract void execute(final CrudActions<R> crudActions);
 
         public R getEntity() {
@@ -34,12 +39,9 @@ public abstract class RunnableTest<E> extends AbstractCrudActions<E> {
     
     private E entity;
     private ActionContainer<E> actionContainer;
-    @Deprecated
-    protected final CrudActions<E> crudActions;
     
     public RunnableTest(final String componentName) {
         super(componentName);
-        this.crudActions = this;
     }
     
     protected abstract void testComponent() throws Exception;
