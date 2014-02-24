@@ -32,7 +32,7 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
+import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 

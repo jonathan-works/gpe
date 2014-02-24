@@ -7,11 +7,11 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NatCatFluxoLocalizacaoManager;
+import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.itx.util.ComponentUtil;
 
 @Name(NatCatFluxoLocalizacaoCrudAction.NAME)

@@ -8,11 +8,11 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
+import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 
 @Name(UsuarioPessoaFisicaCrudAction.NAME)
 public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica, PessoaFisicaManager> {

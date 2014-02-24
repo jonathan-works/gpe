@@ -17,7 +17,7 @@ import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
+import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.itx.util.EntityUtil;
 
 /**

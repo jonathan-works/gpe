@@ -6,6 +6,8 @@ import org.jboss.seam.annotations.ApplicationException;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
+
 @ApplicationException(end = false, rollback = false)
 public class DAOException extends Exception {
 	

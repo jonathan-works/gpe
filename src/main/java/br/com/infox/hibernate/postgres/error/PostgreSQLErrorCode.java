@@ -1,4 +1,4 @@
-package br.com.infox.core.persistence;
+package br.com.infox.hibernate.postgres.error;
 
 public enum PostgreSQLErrorCode {
 
