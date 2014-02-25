@@ -24,7 +24,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import br.com.itx.component.Util;
+import br.com.infox.core.transaction.TransactionService;
 
 @Name("reindexer")
 @BypassInterceptors
@@ -37,7 +37,7 @@ public class Reindexer {
     public void execute() {
         LOG.warn("----------- Criando indices de documentos das tarefas -------------");
         Session session = ManagedJbpmContext.instance().getSession().getSessionFactory().openSession();
-        Util.commitTransction();
+        TransactionService.commitTransction();
         session.getTransaction().setTimeout(30 * 60);
         session.getTransaction().begin();
         Query query = session.createQuery("select ti from org.jbpm.taskmgmt.exe.TaskInstance as ti");

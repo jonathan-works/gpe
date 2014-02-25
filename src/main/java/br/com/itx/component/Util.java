@@ -23,11 +23,8 @@ import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.Strings;
 import org.richfaces.context.ExtendedPartialViewContext;
-
-import br.com.infox.core.exception.ApplicationException;
 
 @Scope(ScopeType.APPLICATION)
 public class Util implements Serializable {
@@ -180,32 +177,6 @@ public class Util implements Serializable {
             sb.append(htmlBreak ? "<br />" : '\n');
         }
         return sb.toString();
-    }
-
-    public static boolean beginTransaction() {
-        try {
-            org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
-            if (ut != null && !ut.isActive()) {
-                ut.begin();
-                return true;
-            }
-        } catch (Exception e) {
-            LOG.error(".beginTransaction()", e);
-            throw new ApplicationException(ApplicationException.createMessage("iniciar transação", "beginTransaction()", "RegistraEventoAction", "BPM"), e);
-        }
-        return false;
-    }
-
-    public static void commitTransction() {
-        try {
-            org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
-            if (ut != null && ut.isActive()) {
-                ut.commit();
-            }
-        } catch (Exception e) {
-            LOG.error(".commitTransction()", e);
-            throw new ApplicationException(ApplicationException.createMessage("iniciar transação", "beginTransaction()", "RegistraEventoAction", "BPM"), e);
-        }
     }
 
     /**

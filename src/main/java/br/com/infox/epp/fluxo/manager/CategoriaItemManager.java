@@ -16,11 +16,11 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.transaction.TransactionService;
 import br.com.infox.epp.fluxo.dao.CategoriaItemDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
-import br.com.itx.component.Util;
 
 @Name(CategoriaItemManager.NAME)
 @AutoCreate
@@ -82,7 +82,7 @@ public class CategoriaItemManager extends Manager<CategoriaItemDAO, CategoriaIte
 	 */
     private void persistCategoriaItem(Categoria categoria, Item item,
             List<CategoriaItem> categoriaItemList) {
-        Util.beginTransaction();
+        TransactionService.beginTransaction();
         CategoriaItem ci;
 		try {
 			ci = persist(new CategoriaItem(categoria, item));
@@ -90,7 +90,7 @@ public class CategoriaItemManager extends Manager<CategoriaItemDAO, CategoriaIte
 			LOG.error(null, e);
 			ci = null;
 		}
-        Util.commitTransction();
+        TransactionService.commitTransction();
         if (ci!=null) {
             categoriaItemList.add(ci);
         }
