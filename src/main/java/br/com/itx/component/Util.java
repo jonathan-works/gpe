@@ -2,50 +2,32 @@ package br.com.itx.component;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
-import java.io.File;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.LazyInitializationException;
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.contexts.ServletLifecycle;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.framework.EntityHome;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.transaction.Transaction;
-import org.jboss.seam.util.RandomStringUtils;
 import org.jboss.seam.util.Strings;
-import org.jboss.seam.web.Parameters;
 import org.richfaces.context.ExtendedPartialViewContext;
 
 import br.com.infox.core.exception.ApplicationException;
-import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.FacesUtil;
 
 @Scope(ScopeType.APPLICATION)
 public class Util implements Serializable {
@@ -65,18 +47,6 @@ public class Util implements Serializable {
     }
 
     /**
-     * Retorna o nome definido na anotação @Name do componente
-     * 
-     * @param obj componente return Nome do componente
-     */
-    public String getComponentName(Object obj) {
-        if (obj.getClass().isAnnotationPresent(Name.class)) {
-            return ComponentUtil.getComponentName(obj.getClass());
-        }
-        return null;
-    }
-
-    /**
      * Retorna o caminho completo, ou seja, desde o servidor.
      * 
      * @return
@@ -93,50 +63,6 @@ public class Util implements Serializable {
         return url.substring(0, url.indexOf('/', pos)) + rc.getContextPath();
     }
 
-    public String getUrlRequest() {
-        return getRequest().getRequestURL().toString();
-    }
-
-    public String getUrlRequestParams() {
-        HttpServletRequest request = getRequest();
-        StringBuilder url = new StringBuilder(request.getRequestURL().toString());
-        Map<?, ?> parameterMap = request.getParameterMap();
-        boolean first = true;
-        for (Entry<?, ?> entry : parameterMap.entrySet()) {
-            if (first) {
-                url.append("?");
-                first = false;
-            } else {
-                url.append("&amp;");
-            }
-            String[] value = (String[]) entry.getValue();
-            url.append(entry.getKey().toString()).append('=').append(value[0]);
-        }
-        return url.toString();
-    }
-
-    public String getRequestParams() {
-        HttpServletRequest request = getRequest();
-        StringBuilder url = new StringBuilder();
-        Map<?, ?> parameterMap = request.getParameterMap();
-        boolean first = true;
-        for (Entry<?, ?> entry : parameterMap.entrySet()) {
-            if (!first) {
-                url.append(", ");
-                first = false;
-            }
-            String[] value = (String[]) entry.getValue();
-            url.append(entry.getKey().toString()).append('=').append(value[0]);
-        }
-        return url.toString();
-    }
-
-    public String getIdPagina() {
-        HttpServletRequest request = getRequest();
-        String requestURL = request.getRequestURL().toString();
-        return requestURL.split(request.getContextPath())[1];
-    }
-
     public HttpServletRequest getRequest() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext != null && facesContext.getExternalContext() != null) {
@@ -146,82 +72,6 @@ public class Util implements Serializable {
             }
         }
         return null;
-    }
-
-    /**
-     * Retorna uma string gerada de maneira Randomica com caracteres
-     * alfanumericos de tamanho 20.
-     * 
-     * @return
-     */
-    public String getRandom() {
-        return RandomStringUtils.randomAlphanumeric(20).toUpperCase();
-    }
-
-    /**
-     * Retorna uma string gerada pelo metodo {@link #getRandom() getRandom()},
-     * concatenado com o prefixo rnd_
-     * 
-     * @return
-     */
-    public String getRandomId() {
-        return "rnd_" + getRandom();
-    }
-
-    /**
-     * Retorna o parametro de requisição action.
-     * 
-     * @return
-     */
-    public String action() {
-        Parameters parameters = Parameters.instance();
-        String[] action = parameters.getRequestParameters().get("action");
-        return action != null ? action[0] : "";
-    }
-
-    public String homeEvent(String event, EntityHome<?> home, String type) {
-        Context eventContext = Contexts.getEventContext();
-        eventContext.set("homeActionType", type);
-        eventContext.set("home", home);
-        eventContext.set("instance", home.getInstance());
-        if (event == null || "".equals(event)) {
-            String exp = "#{home." + type + "}";
-            Expressions e = Expressions.instance();
-            return (String) e.createMethodExpression(exp).invoke();
-        }
-        return event(event);
-    }
-
-    public String event(String event) {
-        Context eventContext = Contexts.getEventContext();
-        if (event != null && !"".equals(event)) {
-            eventContext.set("event", event);
-            ((Events) Component.getInstance("org.jboss.seam.core.events")).raiseEvent(event);
-        }
-        String action = (String) eventContext.get("action");
-        if (action == null) {
-            action = (String) eventContext.get("actionFromHome");
-        }
-        return action != null ? action : "";
-    }
-
-    /**
-     * Deixa a primeira letra da string maiuscula.
-     * 
-     * @param text - Texto a ser convertido
-     * @return Texto com a primeira letra maiuscula.
-     */
-    public String upperFirst(String text) {
-        if (text == null || "".equals(text)) {
-            return "";
-        }
-        return text.substring(0, 1).toUpperCase() + text.substring(1);
-    }
-
-    public String getSelfViewId() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        String viewId = fc.getViewRoot().getViewId();
-        return viewId.replace(".xhtml", "");
     }
 
     /**
@@ -257,47 +107,6 @@ public class Util implements Serializable {
     }
 
     /**
-     * Gera uma lista de SelectItem partindo de uma String separada por vírgula
-     * neste metodo o valor antes dos dois pontos, deverá ser um inteiro.
-     * 
-     * @param values são os valores separados por vírgulas, no formato
-     *        valor:label onde valor é um inteiro.
-     * @return lista de SelectItem
-     */
-
-    // TODO Tratar virgula e dois pontos no valor ou no texto (\, \:) -> ou JSON
-    public List<SelectItem> splitAsListWithKeyNumber(String values) {
-        List<SelectItem> l = new ArrayList<SelectItem>();
-        for (String s : values.split(",")) {
-            if (s.indexOf(":") == -1) {
-                l.add(new SelectItem(s));
-            } else {
-                String[] value = s.split(":");
-                l.add(new SelectItem(Integer.parseInt(value[0].trim()), value[1]));
-            }
-        }
-        return l;
-    }
-
-    /**
-     * Retorna uma lista de String a partir de um string separado por vírgula
-     * 
-     * @param values A string unificada separada por vírgula.
-     * @return Lista de strings.
-     */
-    public List<String> getStringAsList(String values) {
-        List<String> l = new ArrayList<String>();
-        for (String s : values.split(",")) {
-            l.add(s);
-        }
-        return l;
-    }
-
-    public List<Object> getArrayAsList(Object[] array) {
-        return Arrays.asList(array);
-    }
-
-    /**
      * Cria um valor de expressão a partir de um método do Seam.
      * 
      * @param expression - Expressão a ser criada.
@@ -321,52 +130,9 @@ public class Util implements Serializable {
      * @param object - Home em execução.
      * @return True se for um subtipo de AbstractHome
      */
+    //TODO verificar a remoção desse método
     public boolean isAbstractChild(Object object) {
         return object instanceof AbstractHome<?>;
-    }
-
-    /**
-     * Concatena os valores de um List quebrando linha entre eles. Caso a lista
-     * esteja vazia devolve a String do parametro <code>valueOnEnptyList</code>
-     * 
-     * @param list
-     * @param valueOnEmptyList Valor a ser retornado caso o
-     *        <code>list<code> esteja nulo ou vazio
-     * @return
-     */
-    public String listToString(List<?> list, String valueOnEmptyList) {
-        StringBuilder sb = new StringBuilder();
-        for (Object object : list) {
-            if (sb.length() > 0) {
-                sb.append('\n');
-            }
-            sb.append(object.toString());
-        }
-        return !list.isEmpty() ? sb.toString() : valueOnEmptyList;
-    }
-
-    public String listToString(List<?> list) {
-        return listToString(list, "");
-    }
-
-    public String formatDateLong(Date date) {
-        if (date != null) {
-            Locale ptBR = new Locale("pt", "BR");
-            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, ptBR);
-            return dateFormat.format(date);
-        } else {
-            return null;
-        }
-    }
-
-    public String formatDataAtual(String formato) {
-        try {
-            SimpleDateFormat sf = new SimpleDateFormat(formato);
-            return sf.format(new Date());
-        } catch (Exception e) {
-            LOG.warn(".formatDataAtual(formato)", e);
-            return null;
-        }
     }
 
     public boolean isAjaxRequest() {
@@ -374,24 +140,8 @@ public class Util implements Serializable {
         return context != null && context.isAjaxRequest();
     }
 
-    public Object getFromPageContext(String var) {
-        return Contexts.getPageContext().get(var);
-    }
-
-    public void setToPageContext(String var, Object object) {
-        Contexts.getPageContext().set(var, object);
-    }
-
-    public static Object getFromEventContext(String var) {
-        return Contexts.getEventContext().get(var);
-    }
-
     public static void setToEventContext(String var, Object object) {
         Contexts.getEventContext().set(var, object);
-    }
-
-    public List<?> getEmptyList() {
-        return Collections.EMPTY_LIST;
     }
 
     // TODO verificar se este metodo ficará aqui mesmo, pois no
@@ -517,35 +267,6 @@ public class Util implements Serializable {
     }
 
     /**
-     * Elimina comentarios do HTML.
-     * 
-     * @param text - Texto a ser convertido
-     * @return Texto com os comentarios eliminados.
-     */
-    public String removeCommentsHTML(String text) {
-        StringBuilder sb = new StringBuilder(text);
-        int posIni = sb.indexOf("<!--");
-        int posFim = sb.indexOf("-->", posIni);
-        while (posIni != -1 && posFim != -1) {
-            sb.delete(posIni, posFim + 3);
-            posIni = sb.indexOf("<!--");
-            posFim = sb.indexOf("-->", posIni);
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Adiciona a mensagem passada como parâmetro no FacesMessages e no log.
-     * 
-     * @param severity
-     * @param msg Mensagem a ser exibida.
-     */
-    public static void setMessage(Severity severity, String msg) {
-        FacesMessages.instance().add(severity, msg);
-        LOG.warn(msg);
-    }
-
-    /**
      * Recebe o número de bytes e retorna o número em Kb (kilobytes).
      * 
      * @param bytes número em bytes
@@ -564,8 +285,4 @@ public class Util implements Serializable {
         }
     }
 
-    public boolean fileExists(String arquivo) {
-        File f = new File(FacesUtil.getServletContext(null).getRealPath(arquivo));
-        return f.exists();
-    }
 }
