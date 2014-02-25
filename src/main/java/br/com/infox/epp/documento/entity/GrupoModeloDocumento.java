@@ -1,6 +1,7 @@
 package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
+import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
@@ -61,7 +62,7 @@ public class GrupoModeloDocumento implements java.io.Serializable {
 
     @Column(name = DESCRICAO_GRUPO_MODELO_DOCUMENTO, nullable = false,
             length = DESCRICAO_PEQUENA, unique = true)
-    @Size(max = DESCRICAO_PEQUENA)
+    @Size(min=FLAG, max = DESCRICAO_PEQUENA)
     @NotNull
     public String getGrupoModeloDocumento() {
         return this.grupoModeloDocumento;
