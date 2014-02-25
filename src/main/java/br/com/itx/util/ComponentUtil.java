@@ -16,7 +16,6 @@ import javax.faces.context.FacesContext;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
@@ -149,17 +148,6 @@ public final class ComponentUtil {
     @SuppressWarnings(UNCHECKED)
     public static <C> C getComponent(String componentName, ScopeType scopeType) {
         return (C) Component.getInstance(componentName, scopeType);
-    }
-
-    /**
-     * Retorna a nome do componente atraves da anotação @Name
-     * 
-     * @param clazz
-     * @return
-     */
-    public static String getComponentName(Class<?> clazz) {
-        Name annotationName = clazz.getAnnotation(Name.class);
-        return annotationName.value();
     }
 
 }
