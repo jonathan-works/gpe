@@ -14,8 +14,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.dao.GenericDAO;
-
 @Name(SessionAssistant.NAME)
 @AutoCreate
 public class SessionAssistant {
