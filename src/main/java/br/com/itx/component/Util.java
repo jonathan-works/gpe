@@ -3,12 +3,9 @@ package br.com.itx.component;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
 import java.text.MessageFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -31,7 +28,6 @@ public class Util implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(Util.class);
-    private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
     /**
      * Retorna o caminho do projeto.
@@ -235,25 +231,6 @@ public class Util implements Serializable {
 
     public String getPageContextsAsString(boolean htmlBreak) {
         return getContextsAsString(Contexts.getPageContext(), htmlBreak);
-    }
-
-    /**
-     * Recebe o número de bytes e retorna o número em Kb (kilobytes).
-     * 
-     * @param bytes número em bytes
-     * @return número em kilobytes
-     */
-    public String getFormattedKb(Integer bytes) {
-        if (bytes != null && bytes > 0) {
-            NumberFormat formatter = DecimalFormat.getNumberInstance(new Locale("pt", "BR"));
-            formatter.setMinimumIntegerDigits(1);
-            formatter.setMaximumFractionDigits(2);
-            formatter.setMinimumFractionDigits(2);
-            float kbytes = bytes / BYTES_IN_A_KILOBYTE;
-            return formatter.format(kbytes) + " Kb";
-        } else {
-            return null;
-        }
     }
 
 }
