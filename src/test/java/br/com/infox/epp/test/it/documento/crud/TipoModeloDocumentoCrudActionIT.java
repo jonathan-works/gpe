@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.codec.binary.Hex;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.arquillian.junit.Arquillian;
@@ -119,8 +119,7 @@ public class TipoModeloDocumentoCrudActionIT extends AbstractCrudTest<TipoModelo
         MessageDigest instance = MessageDigest.getInstance("SHA-1");
         instance.reset();
         instance.update(value.getBytes("utf8"));
-        
-        return new String(Hex.encodeHex(instance.digest()));
+        return new BigInteger(1, instance.digest()).toString(32);
     }
     
     @Override
