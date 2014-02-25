@@ -2,7 +2,11 @@ package br.com.infox.epp.processo.documento.entity;
 
 // Generated 30/10/2008 07:40:27 by Hibernate Tools 3.2.0.CR1
 
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.*;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_QUERY;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL_QUERY;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,8 +24,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;

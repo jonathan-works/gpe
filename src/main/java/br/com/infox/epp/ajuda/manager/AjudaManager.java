@@ -1,6 +1,6 @@
 package br.com.infox.epp.ajuda.manager;
 
-import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.constants.WarningConstants.RAWTYPES;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package br.com.infox.epp.fluxo.dao;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_FLUXO;

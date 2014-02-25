@@ -4,13 +4,15 @@ import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL_QUERY;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_FIND_ALL;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_FIND_ALL_QUERY;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.DATA_REGISTRO;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.ID_AJUDA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.PAGINA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.SEQUENCE_AJUDA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.TABLE_AJUDA;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.TEXTO;
-import static br.com.infox.epp.ajuda.query.AjudaQuery.*;
+import static br.com.infox.epp.ajuda.query.AjudaQuery.USUARIO;
 
 import java.util.Date;
 

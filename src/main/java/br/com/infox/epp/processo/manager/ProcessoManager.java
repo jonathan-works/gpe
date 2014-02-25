@@ -13,7 +13,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.core.encoder.MD5Encoder;
+import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;

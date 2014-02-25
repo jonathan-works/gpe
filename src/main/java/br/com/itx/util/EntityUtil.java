@@ -1,6 +1,6 @@
 package br.com.itx.util;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;

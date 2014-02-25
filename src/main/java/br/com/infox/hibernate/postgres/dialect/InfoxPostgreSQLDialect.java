@@ -1,4 +1,4 @@
-package br.com.infox.hibernate;
+package br.com.infox.hibernate.postgres.dialect;
 
 import org.hibernate.dialect.PostgreSQL82Dialect;
 

@@ -1,7 +1,20 @@
 package br.com.infox.epp.documento.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.*;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.CONTEUDO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.DATA_ALTERACAO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.ID_HISTORICO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.ID_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.ID_USUARIO_ALTERACAO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.LIST_MODELO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.LIST_MODELO_QUERY;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.LIST_USUARIO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.LIST_USUARIO_QUERY;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.SEQUENCE_HISTORICO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.TABLE_HISTORICO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.TITULO_MODELO_DOCUMENTO;
 
 import java.text.DateFormat;
 import java.util.Date;

@@ -13,9 +13,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
+import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.infox.ibpm.event.JbpmEventsHandler;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;

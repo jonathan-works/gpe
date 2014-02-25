@@ -1,8 +1,8 @@
 package br.com.infox.ibpm.task.home;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;

@@ -1,6 +1,6 @@
 package br.com.infox.epp.access.action;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.ESTRUTURA_CONDITION;
 import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.ESTRUTURA_NULL_CONDITION;
 import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.EXISTE_USUARIO_LOCALIZACAO_QUERY;

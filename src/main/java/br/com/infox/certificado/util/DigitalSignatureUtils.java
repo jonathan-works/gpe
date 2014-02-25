@@ -1,6 +1,7 @@
 package br.com.infox.certificado.util;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -188,12 +189,7 @@ public final class DigitalSignatureUtils {
      * @param aTrustedCertificates a list of trusted certificates to be used in
      *        the verification process.
      * 
-     * @throws CertificateExpiredException if the certificate validity period is
-     *         expired.
-     * @throws CertificateNotYetValidException if the certificate validity
-     *         period is not yet started.
-     * @throws CertificateValidationException if the certificate is invalid (can
-     *         not be validated using the given set of trusted certificates.
+     * @throws GeneralSecurityException
      */
     public static void verifyCertificate(X509Certificate aCertificate,
             X509Certificate[] aTrustedCertificates) throws GeneralSecurityException {

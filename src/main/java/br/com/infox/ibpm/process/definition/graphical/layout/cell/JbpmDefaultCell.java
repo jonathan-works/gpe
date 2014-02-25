@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.process.definition.graphical.layout.cell;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;

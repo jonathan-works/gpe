@@ -3,7 +3,7 @@ package br.com.infox.epp.processo.documento.manager;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
-import br.com.infox.core.encoder.MD5Encoder;
+import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;

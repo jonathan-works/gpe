@@ -1,6 +1,6 @@
 package br.com.infox.epp.access.assignment;
 
-import static br.com.infox.core.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -19,6 +19,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.core.exception.ApplicationException;
+import br.com.infox.core.transaction.TransactionService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.itx.component.Util;
@@ -41,10 +42,10 @@ public class LocalizacaoAssignment implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public Set<String> getPooledActors(String... localPapel) {
-        boolean opened = Util.beginTransaction();
+        boolean opened = TransactionService.beginTransaction();
         addLocalizacaoPapel(localPapel);
         if (opened) {
-            Util.commitTransction();
+            TransactionService.commitTransction();
         }
         return Collections.EMPTY_SET;
     }

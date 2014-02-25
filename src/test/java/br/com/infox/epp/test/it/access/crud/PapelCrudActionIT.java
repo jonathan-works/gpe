@@ -25,8 +25,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.constants.LengthConstants;
-import br.com.infox.core.constants.WarningConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.RolesMap;
 import br.com.infox.epp.access.crud.PapelCrudAction;

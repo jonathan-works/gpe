@@ -26,7 +26,7 @@
         <h:commandLink target="idPdf#{row}" rendered="#{!isModelo}"
             action="#{documentoDownloader.downloadDocumento(var)}">
             <h:graphicImage value="/img/pdf.gif"
-                title="#{bin.nomeArquivo} (#{util.getFormattedKb(bin.size)})" />
+                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})" />
         </h:commandLink>
 
         <s:link target="idJan#{var.idProcessoDocumento}"

@@ -1,8 +1,14 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.core.constants.LengthConstants.*;
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.access.query.PermissaoQuery.*;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_GRANDE;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.access.query.PermissaoQuery.ACAO;
+import static br.com.infox.epp.access.query.PermissaoQuery.ALVO;
+import static br.com.infox.epp.access.query.PermissaoQuery.DESTINATARIO;
+import static br.com.infox.epp.access.query.PermissaoQuery.DISCRIMINADOR;
+import static br.com.infox.epp.access.query.PermissaoQuery.ID_PERMISSAO;
+import static br.com.infox.epp.access.query.PermissaoQuery.TABLE_PERMISSAO;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;

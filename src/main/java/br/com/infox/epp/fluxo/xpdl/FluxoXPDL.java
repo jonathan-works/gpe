@@ -15,6 +15,7 @@ import org.jdom2.Element;
 import br.com.infox.epp.fluxo.xpdl.activities.ActivitiesXPDL;
 import br.com.infox.epp.fluxo.xpdl.activities.ActivityXPDL;
 import br.com.infox.epp.fluxo.xpdl.activities.AssignTaskXPDL;
+import br.com.infox.epp.fluxo.xpdl.element.ParallelNodeXPDLException;
 import br.com.infox.epp.fluxo.xpdl.lane.LaneXPDL;
 import br.com.infox.epp.fluxo.xpdl.lane.LanesXPDLFactory;
 import br.com.infox.epp.fluxo.xpdl.transition.TransitionsXPDL;

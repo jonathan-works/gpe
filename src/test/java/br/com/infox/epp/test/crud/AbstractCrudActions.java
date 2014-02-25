@@ -1,6 +1,6 @@
 package br.com.infox.epp.test.crud;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static java.text.MessageFormat.format;
 
 import java.util.ArrayList;

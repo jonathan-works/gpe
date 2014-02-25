@@ -1,7 +1,8 @@
 package br.com.itx.component;
 
+import static br.com.infox.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static org.jboss.seam.faces.FacesMessages.instance;
-import static br.com.infox.core.constants.WarningConstants.*;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -32,11 +33,16 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
+import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
+/**
+ * Deprecated 
+ * use {@link br.com.infox.core.crud.AbstractCrudAction} or {@link br.com.infox.core.controller.AbstractController} instead
+ * */
 @SuppressWarnings(UNCHECKED)
+@Deprecated
 public abstract class AbstractHome<T> extends EntityHome<T> {
 
     private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";

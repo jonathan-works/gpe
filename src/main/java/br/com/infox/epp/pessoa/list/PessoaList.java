@@ -3,10 +3,12 @@ package br.com.infox.epp.pessoa.list;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.*;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.core.list.*;
+import br.com.infox.core.list.EntityList;
+import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 
 @Name(PessoaList.NAME)

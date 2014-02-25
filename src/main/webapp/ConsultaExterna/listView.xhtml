@@ -211,7 +211,7 @@
                                                 action="#{documentoDownloader.downloadDocumento(doc)}">
                                                 <h:graphicImage
                                                     value="/img/pdf.gif"
-                                                    title="#{doc.processoDocumentoBin.nomeArquivo} (#{util.getFormattedKb(doc.processoDocumentoBin.size)})" />
+                                                    title="#{doc.processoDocumentoBin.nomeArquivo} (#{documentoDownloader.getFormattedKb(doc.processoDocumentoBin)})" />
                                             </h:commandLink>
                                         </rich:column>
                                         <rich:column>

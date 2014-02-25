@@ -1,6 +1,6 @@
 package br.com.infox.epp.estatistica.dao;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.BASE_QUERY;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_DATA_FIM;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_DATA_INICIO;

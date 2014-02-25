@@ -1,7 +1,7 @@
 package br.com.infox.epp.ajuda.dao;
 
-import static br.com.infox.core.constants.WarningConstants.RAWTYPES;
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_FIND_ALL_QUERY;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.PARAM_URL;
@@ -28,9 +28,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.core.session.SessionAssistant;
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.search.SearchService;
+import br.com.infox.hibernate.session.SessionAssistant;
 
 @Name(AjudaDAO.NAME)
 @AutoCreate

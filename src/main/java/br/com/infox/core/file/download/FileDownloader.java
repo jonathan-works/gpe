@@ -1,4 +1,4 @@
-package br.com.infox.core.file;
+package br.com.infox.core.file.download;
 
 import java.io.IOException;
 import java.io.OutputStream;

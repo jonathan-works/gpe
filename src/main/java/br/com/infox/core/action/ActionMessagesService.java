@@ -16,7 +16,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.PostgreSQLErrorCode;
+import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 
 @Name(ActionMessagesService.NAME)
 @Scope(ScopeType.EVENT)
