@@ -13,9 +13,11 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
-@Name("dateUtil")
+@Name(DateUtil.NAME)
 @BypassInterceptors
 public class DateUtil {
+    
+    public static final String NAME = "dateUtil";
 
     public static final int MILESIMOS_DO_SEGUNDO = 1000;
 
