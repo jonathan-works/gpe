@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.task.entity;
 
-import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.*;
+import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.USUARIO_DA_TAREFA;
+import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.USUARIO_DA_TAREFA_QUERY;
 
 import java.io.Serializable;
 

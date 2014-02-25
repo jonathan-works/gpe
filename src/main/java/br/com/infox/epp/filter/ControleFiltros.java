@@ -2,7 +2,9 @@
 
 package br.com.infox.epp.filter;
 
-import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.*;
+import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO;
+import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO;
+import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL;
 
 import java.text.MessageFormat;
 

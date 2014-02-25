@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.jpdl;
 
-import static br.com.infox.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -12,8 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;

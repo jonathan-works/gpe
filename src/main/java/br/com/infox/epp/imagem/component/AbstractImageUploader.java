@@ -13,11 +13,11 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
-import br.com.infox.epp.imagem.entity.ImagemBin;
-import br.com.infox.epp.imagem.manager.ImagemBinManager;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.ArrayUtil;
+import br.com.infox.epp.imagem.entity.ImagemBin;
+import br.com.infox.epp.imagem.manager.ImagemBinManager;
 
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractImageUploader implements FileUploadListener {

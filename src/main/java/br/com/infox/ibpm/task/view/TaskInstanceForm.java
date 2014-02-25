@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.task.view;
 
-import static br.com.infox.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.ArrayList;

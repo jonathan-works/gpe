@@ -1,5 +1,20 @@
 package br.com.infox.epp.turno.entity;
 
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.COUNT_BY_HORA_INICIO_FIM_QUERY;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA_QUERY;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.DELETE_TURNOS_ANTERIORES;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.DELETE_TURNOS_ANTERIORES_QUERY;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LIST_BY_HORA_INICIO_FIM_QUERY;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO_QUERY;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_QUERY;
+
 import java.io.Serializable;
 import java.sql.Time;
 
@@ -19,7 +34,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
-import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.*;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 @Entity

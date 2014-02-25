@@ -1,7 +1,10 @@
 package br.com.infox.epp.estatistica.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.estatistica.query.TempoMedioProcessoQuery.*;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.estatistica.query.TempoMedioProcessoQuery.ID_NATUREZA_CATEGORIA_FLUXO;
+import static br.com.infox.epp.estatistica.query.TempoMedioProcessoQuery.PRAZO;
+import static br.com.infox.epp.estatistica.query.TempoMedioProcessoQuery.TEMPO_MEDIO;
+import static br.com.infox.epp.estatistica.query.TempoMedioProcessoQuery.VIEW_TEMPO_MEDIO_PROCESSO;
 
 import java.io.Serializable;
 import java.text.MessageFormat;

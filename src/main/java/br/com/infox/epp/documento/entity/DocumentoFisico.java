@@ -1,10 +1,30 @@
 package br.com.infox.epp.documento.entity;
 
-import static br.com.infox.core.persistence.ORConstants.*;
-import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.*;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.DOCUMENTO_FISICO;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.ID_DOCUMENTO_FISICO;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.ID_LOCALIZACAO_FISICA;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.ID_PROCESSO;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.LIST_BY_PROCESSO;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.LIST_BY_PROCESSO_QUERY;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.SEQUENCE_DOCUMENTO_FISICO;
+import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.TABLE_DOCUMENTO_FISICO;
+
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;

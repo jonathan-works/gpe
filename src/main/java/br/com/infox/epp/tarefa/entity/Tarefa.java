@@ -3,7 +3,11 @@ package br.com.infox.epp.tarefa.entity;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS_QUERY;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES;
-import static br.com.infox.epp.tarefa.query.TarefaQuery.*;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES_QUERY;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_ID_JBPM_TASK;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_ID_JBPM_TASK_QUERY;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_TAREFA_AND_FLUXO;
+import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_TAREFA_AND_FLUXO_QUERY;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
-import static br.com.infox.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.FileInputStream;
 import java.io.Serializable;

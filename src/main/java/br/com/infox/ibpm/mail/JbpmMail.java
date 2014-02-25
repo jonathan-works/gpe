@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.mail;
 
-import static br.com.infox.constants.WarningConstants.*;
+import static br.com.infox.constants.WarningConstants.RAWTYPES;
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

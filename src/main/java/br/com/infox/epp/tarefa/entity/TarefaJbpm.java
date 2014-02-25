@@ -1,6 +1,8 @@
 package br.com.infox.epp.tarefa.entity;
 
-import static br.com.infox.epp.tarefa.query.TarefaJbpmQuery.*;
+import static br.com.infox.epp.tarefa.query.TarefaJbpmQuery.INSERT_TAREFA_VERSIONS;
+import static br.com.infox.epp.tarefa.query.TarefaJbpmQuery.INSERT_TAREFA_VERSIONS_QUERY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
