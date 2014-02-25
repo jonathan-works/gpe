@@ -56,7 +56,7 @@ public class LocalizacaoAssignment implements Serializable {
         if (currentTaskInstance == null) {
             currentTaskInstance = TaskInstance.instance();
         }
-        if (localPapel == null || Util.isEmpty(localPapel)) {
+        if (localPapel == null || allNullElements(localPapel)) {
             return false;
         }
         if (currentTaskInstance == null || processo == null) {
@@ -68,6 +68,21 @@ public class LocalizacaoAssignment implements Serializable {
             inserted = true;
         }
         return inserted;
+    }
+    
+    /**
+     * Verifica se todos os elementos do Array são null
+     * 
+     * @param o Array que deseja-se verificar se é vazio
+     * @return True se for vazio
+     */
+    private boolean allNullElements(String[] o) {
+        for (int i = 0; i < o.length; i++) {
+            if (o[i] != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected void insertProcessoLocalizacaoIbpm(String s, Processo processo) {

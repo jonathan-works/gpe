@@ -173,19 +173,4 @@ public class Util implements Serializable {
         }
     }
 
-    /**
-     * Verifica se todos os elementos do Array são null
-     * 
-     * @param o Array que deseja-se verificar se é vazio
-     * @return True se for vazio
-     */
-    public static boolean isEmpty(Object[] o) {
-        for (int i = 0; i < o.length; i++) {
-            if (o[i] != null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }
