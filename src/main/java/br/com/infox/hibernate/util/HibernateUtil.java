@@ -10,7 +10,7 @@ import org.hibernate.engine.spi.LoadQueryInfluencers;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.persistence.FullTextHibernateSessionProxy;
 
-import br.com.infox.core.session.SessionAssistant;
+import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.itx.util.ComponentUtil;
 
 //TODO verificar se os métodos não utilizados dessa classe podem (devem) ser excluídos

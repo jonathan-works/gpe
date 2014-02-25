@@ -1,4 +1,4 @@
-package br.com.infox.core.session;
+package br.com.infox.hibernate.session;
 
 import java.sql.Connection;
 import java.sql.SQLException;

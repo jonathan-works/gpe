@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.naming.NamingException;
 
-import br.com.infox.core.session.SessionAssistant;
+import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.itx.util.ComponentUtil;
 
 public class SequenceUtil {
