@@ -16,7 +16,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jboss.seam.util.RandomStringUtils;
 
 import br.com.infox.core.exception.ExcelExportException;
-import br.com.infox.core.file.FileDownloader;
+import br.com.infox.core.file.download.FileDownloader;
 import br.com.itx.component.Util;
 import br.com.itx.util.FileUtil;
 

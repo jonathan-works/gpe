@@ -1,4 +1,4 @@
-package br.com.infox.core.encoder;
+package br.com.infox.core.file.encode;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
