@@ -9,8 +9,9 @@ import java.util.regex.Pattern;
 
 import javax.naming.NamingException;
 
+import org.jboss.seam.Component;
+
 import br.com.infox.hibernate.session.SessionAssistant;
-import br.com.itx.util.ComponentUtil;
 
 public class SequenceUtil {
     private static final Pattern SEQUENCE_PATTERN = Pattern.compile("nextval\\('(.*?)'::regclass\\)", Pattern.CASE_INSENSITIVE);
@@ -61,6 +62,6 @@ public class SequenceUtil {
     }
 
     private SessionAssistant sessionAssistant() {
-        return ComponentUtil.getComponent(SessionAssistant.NAME);
+        return (SessionAssistant) Component.getInstance(SessionAssistant.NAME);
     }
 }

@@ -2,9 +2,9 @@ package br.com.infox.hibernate.util;
 
 import org.hibernate.Filter;
 import org.hibernate.proxy.HibernateProxy;
+import org.jboss.seam.Component;
 
 import br.com.infox.hibernate.session.SessionAssistant;
-import br.com.itx.util.ComponentUtil;
 
 public final class HibernateUtil {
 
@@ -33,7 +33,7 @@ public final class HibernateUtil {
     }
 
     private static SessionAssistant sessionAssistant() {
-        return ComponentUtil.getComponent(SessionAssistant.NAME);
+        return (SessionAssistant) Component.getInstance(SessionAssistant.NAME);
     }
 
 }
