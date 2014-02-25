@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Role;
@@ -15,11 +16,11 @@ import org.jboss.seam.security.permission.Permission;
 import org.jboss.seam.security.permission.PermissionManager;
 import org.jboss.seam.security.permission.PermissionStore;
 
+import br.com.infox.core.path.PathResolver;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.access.util.SecurityUtil;
-import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
 
 class RecursoCreator extends SimpleFileVisitor<Path> {
@@ -43,8 +44,8 @@ class RecursoCreator extends SimpleFileVisitor<Path> {
 			LOG.warn(".visitFile(file, attrs)", e);
 			return FileVisitResult.CONTINUE;
 		}
-		
-		Path war = new File(new Util().getContextRealPath()).toPath();
+		PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+		Path war = new File(pathResolver.getContextRealPath()).toPath();
 		
 		String relativeXhtmlFile = xhtmlFile.toString().replace(war.toString(), "").replace(XHTML_EXTENSION, SEAM_EXTENSION);
 		

@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.Selector;
 import org.jboss.seam.util.Strings;
 
-import br.com.itx.component.Util;
+import br.com.infox.core.path.PathResolver;
 
 @Name("skinZoom")
 @Scope(ScopeType.SESSION)
@@ -25,8 +25,8 @@ public class SkinZoom extends Selector {
         TAM_GRANDE };
 
     public SkinZoom() {
-        Util util = (Util) Component.getInstance("util");
-        String cookiePath = util.getContextPath();
+        PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+        String cookiePath = pathResolver.getContextPath();
         setCookiePath(cookiePath);
         setCookieEnabled(true);
         String tamanhoCookie = getCookieValueIfEnabled();

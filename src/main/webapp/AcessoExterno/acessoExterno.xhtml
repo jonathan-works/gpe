@@ -18,7 +18,7 @@
 				function relocate() {
 					clearTimeout(t);
 					if (message.isHidden) {
-						location.href = "#{util.contextPath}/login.seam";
+						location.href = "#{pathResolver.contextPath}/login.seam";
 					} else {
 						t = setTimeout(relocate, 100);
 					}

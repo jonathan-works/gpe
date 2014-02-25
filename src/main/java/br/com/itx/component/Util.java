@@ -9,12 +9,10 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -26,44 +24,6 @@ public class Util implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(Util.class);
-
-    /**
-     * Retorna o caminho do projeto.
-     * 
-     * @return
-     */
-    public String getContextPath() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        return fc.getExternalContext().getRequestContextPath();
-    }
-
-    /**
-     * Retorna o caminho completo, ou seja, desde o servidor.
-     * 
-     * @return
-     */
-    public String getContextRealPath() {
-        return ServletLifecycle.getServletContext().getRealPath("");
-    }
-
-    public String getUrlProject() {
-        HttpServletRequest rc = getRequest();
-        String url = rc.getRequestURL().toString();
-        String protEnd = "://";
-        int pos = url.indexOf(protEnd) + protEnd.length() + 1;
-        return url.substring(0, url.indexOf('/', pos)) + rc.getContextPath();
-    }
-
-    public HttpServletRequest getRequest() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        if (facesContext != null && facesContext.getExternalContext() != null) {
-            Object requestObj = facesContext.getExternalContext().getRequest();
-            if (requestObj instanceof HttpServletRequest) {
-                return (HttpServletRequest) requestObj;
-            }
-        }
-        return null;
-    }
 
     /**
      * @return Retorna o diretório do JSF View Id, ou seja, o diretório da

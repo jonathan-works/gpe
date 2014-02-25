@@ -14,12 +14,12 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.path.PathResolver;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.imagem.dao.ImagemBinDAO;
 import br.com.infox.epp.imagem.entity.ImagemBin;
-import br.com.infox.epp.imagem.util.ImageUtil;
 
 @Name(ImagemBinManager.NAME)
 @AutoCreate
@@ -28,8 +28,8 @@ public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
 	private static final LogProvider LOG = Logging.getLogProvider(ImagemBinManager.class); 
 	public static final String NAME = "imagemBinManager";
 	
-	@In 
-	private ImageUtil imageUtil;
+	@In
+	private PathResolver pathResolver;
 
     public void persistImageBin(ImagemBin imagemBin) throws DAOException {
     	getDao().persistImageBin(imagemBin);
@@ -48,7 +48,7 @@ public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
     }
     
     public String[] getImagesDir(String imagesRelativePath) {
-        return getImagesDir(imageUtil.getRealPath(imagesRelativePath), Authenticator.getUsuarioLocalizacaoAtual());
+        return getImagesDir(pathResolver.getRealPath(imagesRelativePath), Authenticator.getUsuarioLocalizacaoAtual());
     }
 
     public String[] getDBPath(String imagesRelativePath) {
@@ -56,7 +56,7 @@ public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
     }
     
     public String[] getImagesPath(String imagesRelativePath) {
-        return getImagesDir(imageUtil.getContextPath(imagesRelativePath), Authenticator.getUsuarioLocalizacaoAtual());
+        return getImagesDir(pathResolver.getContextPath(imagesRelativePath), Authenticator.getUsuarioLocalizacaoAtual());
     }
 
     private void createDir(String imagesDir) {
@@ -127,7 +127,7 @@ public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
         final List<ImagemBin> list = getDao().getTodasAsImagens();
         
         for (ImagemBin imagemBin : list) {
-            String imagemDir = imageUtil.getRealPath(imagemBin.getFilePath());
+            String imagemDir = pathResolver.getRealPath(imagemBin.getFilePath());
             createDir(imagemDir);
             File fileDestino = new File(imagemDir, imagemBin.getNomeArquivo());
             

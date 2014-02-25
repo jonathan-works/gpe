@@ -13,11 +13,12 @@ import net.sf.jxls.exception.ParsePropertyException;
 import net.sf.jxls.transformer.XLSTransformer;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.jboss.seam.Component;
 import org.jboss.seam.util.RandomStringUtils;
 
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.file.download.FileDownloader;
-import br.com.itx.component.Util;
+import br.com.infox.core.path.PathResolver;
 import br.com.itx.util.FileUtil;
 
 public class ExcelExportUtil {
@@ -74,7 +75,8 @@ public class ExcelExportUtil {
 
     private String criarNomeArquivoTemporario() {
         StringBuilder sb = new StringBuilder();
-        sb.append(new Util().getContextRealPath());
+        PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+        sb.append(pathResolver.getContextRealPath());
         sb.append("/WEB-INF/temp/");
         sb.append(MessageFormat.format("{0,date,kkmmss}", new Date()));
         sb.append(RandomStringUtils.randomAlphanumeric(6));

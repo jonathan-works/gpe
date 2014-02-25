@@ -37,7 +37,7 @@
     </s:div>
     <s:div id="appletDiv" styleClass="applet-div">
         <wi:appletAssinatura id="#{id}"
-            urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
+            urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
             formId="#{rich:clientId('taskInstanceForm')}"
             certificationChainField="#{rich:clientId(idCertChain)}"
             signatureField="#{rich:clientId(idSignature)}"

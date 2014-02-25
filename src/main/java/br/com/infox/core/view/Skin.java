@@ -13,7 +13,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.Selector;
 import org.jboss.seam.util.Strings;
 
-import br.com.itx.component.Util;
+import br.com.infox.core.path.PathResolver;
 
 @Name("wiSkin")
 @Scope(ScopeType.SESSION)
@@ -30,8 +30,8 @@ public class Skin extends Selector {
         "altoContraste" };
 
     public Skin() {
-        Util util = (Util) Component.getInstance("util");
-        String cookiePath = util.getContextPath();
+        PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+        String cookiePath = pathResolver.getContextPath();
         setCookiePath(cookiePath);
         setCookieEnabled(true);
         String skinCookie = getCookieValueIfEnabled();
