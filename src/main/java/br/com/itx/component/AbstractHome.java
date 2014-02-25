@@ -36,7 +36,12 @@ import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
+/**
+ * Deprecated 
+ * use {@link br.com.infox.core.crud.AbstractCrudAction} or {@link br.com.infox.core.controller.AbstractController} instead
+ * */
 @SuppressWarnings(UNCHECKED)
+@Deprecated
 public abstract class AbstractHome<T> extends EntityHome<T> {
 
     private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
