@@ -11,10 +11,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.LazyInitializationException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.core.Expressions;
@@ -160,21 +158,6 @@ public class Util implements Serializable {
         return returnObject;
     }
 
-    public String getContextsAsString(Context context, boolean htmlBreak) {
-        StringBuilder sb = new StringBuilder();
-        for (String name : context.getNames()) {
-            sb.append(name).append(" = ");
-            try {
-                sb.append(context.get(name));
-            } catch (LazyInitializationException e) {
-                LOG.warn(".getContextsAsString(context, htmlBreak)", e);
-                sb.append("----");
-            }
-            sb.append(htmlBreak ? "<br />" : '\n');
-        }
-        return sb.toString();
-    }
-
     /**
      * Cria um method expression para a string informada no parametro.
      * 
@@ -203,34 +186,6 @@ public class Util implements Serializable {
             }
         }
         return true;
-    }
-
-    public String getSessionContextsAsString(boolean htmlBreak) {
-        return getContextsAsString(Contexts.getSessionContext(), htmlBreak);
-    }
-
-    public String getApplicationContextsAsString(boolean htmlBreak) {
-        return getContextsAsString(Contexts.getApplicationContext(), htmlBreak);
-    }
-
-    public String getBusinessProcessContextsAsString(boolean htmlBreak) {
-        return getContextsAsString(Contexts.getBusinessProcessContext(), htmlBreak);
-    }
-
-    public String getConversationContextsAsString(boolean htmlBreak) {
-        return getContextsAsString(Contexts.getConversationContext(), htmlBreak);
-    }
-
-    public String getEventContextsAsString(boolean htmlBreak) {
-        return getContextsAsString(Contexts.getEventContext(), htmlBreak);
-    }
-
-    public String getMethodContextsAsString(boolean htmlBreak) {
-        return getContextsAsString(Contexts.getMethodContext(), htmlBreak);
-    }
-
-    public String getPageContextsAsString(boolean htmlBreak) {
-        return getContextsAsString(Contexts.getPageContext(), htmlBreak);
     }
 
 }
