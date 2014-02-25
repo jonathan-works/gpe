@@ -13,6 +13,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.encoder.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -30,7 +31,6 @@ import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
-import br.com.itx.util.Crypto;
 
 @Name(ProcessoManager.NAME)
 @AutoCreate
@@ -54,7 +54,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
         bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
         bin.setDataInclusao(new Date());
-        bin.setMd5Documento(Crypto.encodeMD5(String.valueOf(value)));
+        bin.setMd5Documento(MD5Encoder.encode(String.valueOf(value)));
         bin.setUsuario(Authenticator.getUsuarioLogado());
         bin.setCertChain(certChain);
         bin.setSignature(signature);

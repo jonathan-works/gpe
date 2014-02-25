@@ -13,33 +13,33 @@ import br.com.infox.core.list.SearchCriteria;
 @Scope(ScopeType.CONVERSATION)
 public class CaixaList extends EntityList<Caixa> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "caixaList";
-	
-	private static final String DEFAULT_EJBQL = "select o from Caixa o";
-	private static final String DEFAULT_ORDER = "o.dsCaixa";
-	
-	private static final String R1 = "o.idNodeAnterior=#{caixaList.entity.idNodeAnterior}";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "caixaList";
 
-	@Override
-	protected void addSearchFields() {
-		addSearchField("tarefa", SearchCriteria.IGUAL);
-		addSearchField("idNodeAnterior", SearchCriteria.IGUAL, R1);
-	}
+    private static final String DEFAULT_EJBQL = "select o from Caixa o";
+    private static final String DEFAULT_ORDER = "o.dsCaixa";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String R1 = "o.idNodeAnterior=#{caixaList.entity.idNodeAnterior}";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("tarefa", SearchCriteria.IGUAL);
+        addSearchField("idNodeAnterior", SearchCriteria.IGUAL, R1);
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

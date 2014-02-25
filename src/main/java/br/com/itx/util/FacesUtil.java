@@ -1,34 +1,13 @@
 package br.com.itx.util;
 
-import static br.com.infox.core.constants.WarningConstants.UNCHECKED;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 
 /**
  * Classe genérica para acesso ao container do myfaces.
  */
 public final class FacesUtil {
-
-    private static final LogProvider LOG = Logging.getLogProvider(FacesUtil.class);
 
     private FacesUtil() {
     }
@@ -46,105 +25,6 @@ public final class FacesUtil {
             return wiSc;
         }
         return wiSc.getContext(webapp);
-    }
-
-    /**
-     * Recupera uma mensagem.
-     * 
-     * @param bundle define o arquivo de mensagens a ser utilizado.
-     * @param key define a chave a ser utilizada.
-     */
-    public static String getMessage(String bundle, String key) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Locale loc = fc.getViewRoot().getLocale();
-        ResourceBundle rb = ResourceBundle.getBundle(bundle, loc);
-        return rb.getString(key);
-    }
-
-    /**
-     * Recupera o outputstream já com o mime definido.
-     * 
-     * @param mime define o mime a ser enviado.
-     * @param filename define o nome ao salvar o arquivo.
-     */
-    public static OutputStream getOutputStream(boolean nocache, String mime,
-            String name) {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        ExternalContext ec = fc.getExternalContext();
-        HttpServletResponse response = (HttpServletResponse) ec.getResponse();
-        if (nocache) {
-            response.setHeader("Pragma", "no-cache");
-            response.setHeader("Cache-Control", "must-revalidate, no-store");
-            response.setDateHeader("Expires", 0);
-        } else {
-            response.setHeader("Cache-Control", "max-age=60");
-        }
-        if (name != null && !"".equals(name)) {
-            String disposition = "inline; filename=\"" + name + "\"";
-            response.setHeader("Content-disposition", disposition);
-        }
-        response.setContentType(mime);
-        OutputStream out = null;
-        try {
-            out = response.getOutputStream();
-        } catch (IOException e) {
-            LOG.error(".getOutputStream(nocache, mime, name)", e);
-        }
-        return out;
-    }
-
-    /**
-     * Fecha o outputstream.
-     */
-    public static void closeOutputStream(OutputStream out) {
-        try {
-            if (out != null) {
-                out.flush();
-                out.close();
-            }
-        } catch (IOException e) {
-            LOG.error(".closeOutputStream(out)", e);
-        }
-    }
-
-    /**
-     * Armazena uma mensagem de erro.
-     * 
-     * @param message define a mensagem.
-     */
-    public static void setErrorMessage(String message) {
-        try {
-            String encmsg = URLEncoder.encode(message, "iso-8859-1");
-            encmsg = encmsg.replace('+', ' ');
-            Contexts.getEventContext().set("errorMessage", encmsg);
-        } catch (UnsupportedEncodingException e) {
-            LOG.error(".setErrorMessage()", e);
-        }
-    }
-
-    /**
-     * Clona um objeto.
-     */
-    @SuppressWarnings(UNCHECKED)
-    public static <T extends Object> T cloneBean(T obj) {
-        Object resp = null;
-        try {
-            byte[] bytes = null;
-            // Serialize to a byte array
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutput out = new ObjectOutputStream(baos);
-            out.writeObject(obj);
-            out.close();
-            bytes = baos.toByteArray();
-            // Deserialize from a byte array
-            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-            ObjectInputStream in = new ObjectInputStream(bais);
-            resp = in.readObject();
-            in.close();
-        } catch (Exception e) {
-            LOG.error(".cloneBean(obj)", e);
-        }
-        return (T) resp;
     }
 
 }
