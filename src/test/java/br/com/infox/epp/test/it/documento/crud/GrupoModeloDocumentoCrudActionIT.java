@@ -35,6 +35,8 @@ import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 @RunWith(Arquillian.class)
 public class GrupoModeloDocumentoCrudActionIT extends AbstractCrudTest<GrupoModeloDocumento> {
     
+    private static final Boolean[] BOOLEANS = new Boolean[]{TRUE, FALSE};
+
     @Deployment
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
@@ -79,7 +81,7 @@ public class GrupoModeloDocumentoCrudActionIT extends AbstractCrudTest<GrupoMode
     public static final List<GrupoModeloDocumento> getSuccessfullyPersisted(final ActionContainer<GrupoModeloDocumento> action, final String suffix, final ServletContext servletContext, final HttpSession session) throws Exception {
         final ArrayList<GrupoModeloDocumento> list = new ArrayList<>();
         int i=0;
-        for (final Boolean ativo : new Boolean[]{TRUE, FALSE}) {
+        for (final Boolean ativo : BOOLEANS) {
             final String grupoModeloDocumento = format("grupoModeloDocumento{0}{1}", ++i, suffix);
             final int length = grupoModeloDocumento.length();
             final int beginIndex = length-DESCRICAO_PEQUENA;
@@ -104,7 +106,7 @@ public class GrupoModeloDocumentoCrudActionIT extends AbstractCrudTest<GrupoMode
         final String[] grupoModeloDocFail = new String[]{ null, "", successFullyPersisted, fillStr(format("grupoModeloDocumento-{0}-{1}", ++i, suffix), DESCRICAO_PEQUENA+1) };
         PERSIST_SUCCESS.runTest(new GrupoModeloDocumento(successFullyPersisted, TRUE), servletContext, session);
         for (final String grupoModeloDocumento : grupoModeloDocFail) {
-            for (final Boolean ativo : new Boolean[]{TRUE, FALSE}) {
+            for (final Boolean ativo : BOOLEANS) {
                 persistFail.runTest(new GrupoModeloDocumento(grupoModeloDocumento, ativo), servletContext, session);
             }
         }

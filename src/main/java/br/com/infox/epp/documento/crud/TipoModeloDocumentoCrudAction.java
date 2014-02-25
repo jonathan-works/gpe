@@ -24,7 +24,8 @@ public class TipoModeloDocumentoCrudAction extends AbstractCrudAction<TipoModelo
 	@In private ModeloDocumentoManager modeloDocumentoManager;
 	
 	public List<ModeloDocumento> getListaDeModeloDocumento(){
-		return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(getInstance().getGrupoModeloDocumento(), getInstance());
+		final TipoModeloDocumento tipoModeloDocumento = getInstance();
+        return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(tipoModeloDocumento.getGrupoModeloDocumento(), tipoModeloDocumento);
 	}
 	
 }

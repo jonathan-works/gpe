@@ -1,5 +1,8 @@
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_ABREVIADA;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO_METADE;
+import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
@@ -30,9 +33,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.core.constants.LengthConstants;
-import br.com.infox.core.util.HibernateUtil;
-
 @Entity
 @Table(name = TABLE_TIPO_MODELO_DOCUMENTO, schema = PUBLIC,
         uniqueConstraints = {
@@ -42,7 +42,7 @@ public class TipoModeloDocumento implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idTipoModeloDocumento;
+    private Integer idTipoModeloDocumento;
     private GrupoModeloDocumento grupoModeloDocumento;
     private String tipoModeloDocumento;
     private String abreviacao;
@@ -55,16 +55,24 @@ public class TipoModeloDocumento implements Serializable {
     public TipoModeloDocumento() {
     }
 
+    public TipoModeloDocumento(final GrupoModeloDocumento grupoModeloDocumento,
+            final String tipoModeloDocumento, final String abreviacao, final Boolean ativo) {
+        this.grupoModeloDocumento = grupoModeloDocumento;
+        this.tipoModeloDocumento = tipoModeloDocumento;
+        this.abreviacao = abreviacao;
+        this.ativo = ativo;
+    }
+
     @SequenceGenerator(name = GENERATOR,
             sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR)
     @Column(name = ID_TIPO_MODELO_DOCUMENTO, unique = true, nullable = false)
-    public int getIdTipoModeloDocumento() {
+    public Integer getIdTipoModeloDocumento() {
         return this.idTipoModeloDocumento;
     }
 
-    public void setIdTipoModeloDocumento(int idTipoModeloDocumento) {
+    public void setIdTipoModeloDocumento(Integer idTipoModeloDocumento) {
         this.idTipoModeloDocumento = idTipoModeloDocumento;
     }
 
@@ -81,9 +89,9 @@ public class TipoModeloDocumento implements Serializable {
     }
 
     @Column(name = TIPO_MODELO_DOCUMENTO, nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO_METADE)
+            length = DESCRICAO_PADRAO_METADE)
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO_METADE)
+    @Size(min= FLAG, max = DESCRICAO_PADRAO_METADE)
     public String getTipoModeloDocumento() {
         return this.tipoModeloDocumento;
     }
@@ -93,9 +101,9 @@ public class TipoModeloDocumento implements Serializable {
     }
 
     @Column(name = ABREVIACAO, nullable = false,
-            length = LengthConstants.DESCRICAO_ABREVIADA, unique = true)
+            length = DESCRICAO_ABREVIADA, unique = true)
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_ABREVIADA)
+    @Size(min= FLAG, max = DESCRICAO_ABREVIADA)
     public String getAbreviacao() {
         return this.abreviacao;
     }
@@ -143,28 +151,31 @@ public class TipoModeloDocumento implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof TipoModeloDocumento)) {
-            return false;
-        }
-        TipoModeloDocumento other = (TipoModeloDocumento) HibernateUtil.removeProxy(obj);
-        if (getIdTipoModeloDocumento() != other.getIdTipoModeloDocumento()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + getIdTipoModeloDocumento();
+        result = prime
+                * result
+                + ((idTipoModeloDocumento == null) ? 0 : idTipoModeloDocumento
+                        .hashCode());
         return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TipoModeloDocumento other = (TipoModeloDocumento) obj;
+        if (idTipoModeloDocumento == null) {
+            if (other.idTipoModeloDocumento != null)
+                return false;
+        } else if (!idTipoModeloDocumento.equals(other.idTipoModeloDocumento))
+            return false;
+        return true;
+    }
+
 }
