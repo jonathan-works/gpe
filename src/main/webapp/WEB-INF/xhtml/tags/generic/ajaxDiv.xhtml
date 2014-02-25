@@ -6,7 +6,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib">
 
     <a:region renderRegionOnly="true">
-        <s:div id="#{empty id ? util.randomId : id}">
+        <s:div id="#{id}">
             <ui:insert />
         </s:div>
     </a:region>
