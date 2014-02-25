@@ -3,52 +3,69 @@
 <!-- $Id: persistence.xml 835 2010-10-07 19:21:41Z danielsilva $ -->
 
 <!-- Persistence deployment descriptor for dev profile -->
-<persistence xmlns="http://java.sun.com/xml/ns/persistence" 
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" 
-             version="2.0">
-             
-   <persistence-unit name="EPAPersistenceUnit" transaction-type="JTA">
-      <provider>org.hibernate.ejb.HibernatePersistence</provider>
-      <jta-data-source>java:jboss/datasources/EPADataSource</jta-data-source>
-      <properties>
-			<property name="hibernate.dialect" value="br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="false" />
-			<property name="hibernate.default_schema" value="public" />
-			
-			<property name="hibernate.default_batch_fetch_size" value="16" />	
-			<property name="hibernate.max_fetch_depth" value="2" />				
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+    version="2.0">
 
-	        <property name="hibernate.ejb.event.post-insert" value="br.com.infox.epp.system.log.LogEventListener" />
-			<property name="hibernate.ejb.event.post-update" value="br.com.infox.epp.system.log.LogEventListener" />
-			<property name="hibernate.ejb.event.post-delete" value="br.com.infox.epp.system.log.LogEventListener" />
-	        <property name="hibernate.id.new_generator_mappings" value="false"/>
-                      
-			<property name="hibernate.search.default.directory_provider" value="filesystem" />
-			<property name="hibernate.search.lucene_version" value="LUCENE_36"/>
- 
-			<property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/EPAPersistenceUnit"/> 
-      </properties>
-   </persistence-unit>
-   
-   <persistence-unit name="EPABinPersistenceUnit" transaction-type="JTA">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jta-data-source>java:jboss/datasources/EPADataSourceBin</jta-data-source>
-		<properties>
-			<property name="hibernate.dialect" value="br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="false" />
-			<property name="hibernate.default_schema" value="public" />
-			<property name="hibernate.id.new_generator_mappings" value="false"/>
+    <persistence-unit name="EPAPersistenceUnit"
+        transaction-type="JTA">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>java:jboss/datasources/EPADataSource</jta-data-source>
+        <properties>
+            <property name="hibernate.dialect"
+                value="br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect" />
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="false" />
+            <property name="hibernate.default_schema" value="public" />
 
-			<property name="hibernate.default_batch_fetch_size" value="16" />
+            <property name="hibernate.default_batch_fetch_size"
+                value="16" />
+            <property name="hibernate.max_fetch_depth" value="2" />
 
-			<property name="hibernate.search.default.directory_provider" value="filesystem" />
-			<property name="hibernate.search.lucene_version" value="LUCENE_36"/>
+            <property name="hibernate.ejb.event.post-insert"
+                value="br.com.infox.epp.system.log.LogEventListener" />
+            <property name="hibernate.ejb.event.post-update"
+                value="br.com.infox.epp.system.log.LogEventListener" />
+            <property name="hibernate.ejb.event.post-delete"
+                value="br.com.infox.epp.system.log.LogEventListener" />
+            <property name="hibernate.id.new_generator_mappings"
+                value="false" />
 
-			<property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/EPABinPersistenceUnit" />
-		</properties>
-	</persistence-unit>
-   
+            <property name="hibernate.search.default.directory_provider"
+                value="filesystem" />
+            <property name="hibernate.search.lucene_version"
+                value="LUCENE_36" />
+
+            <property name="jboss.entity.manager.factory.jndi.name"
+                value="java:jboss/EPAPersistenceUnit" />
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="EPABinPersistenceUnit"
+        transaction-type="JTA">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>java:jboss/datasources/EPADataSourceBin</jta-data-source>
+        <properties>
+            <property name="hibernate.dialect"
+                value="br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect" />
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="false" />
+            <property name="hibernate.default_schema" value="public" />
+            <property name="hibernate.id.new_generator_mappings"
+                value="false" />
+
+            <property name="hibernate.default_batch_fetch_size"
+                value="16" />
+
+            <property name="hibernate.search.default.directory_provider"
+                value="filesystem" />
+            <property name="hibernate.search.lucene_version"
+                value="LUCENE_36" />
+
+            <property name="jboss.entity.manager.factory.jndi.name"
+                value="java:jboss/EPABinPersistenceUnit" />
+        </properties>
+    </persistence-unit>
+
 </persistence>
