@@ -203,7 +203,7 @@ public final class LogUtil {
             entityLog.setIp(getIpRequest());
             entityLog.setUrlRequisicao(getUrlRequest());
         } catch (LogException e) {
-            LOG.error(".createEntityLog(component)", e);
+            LOG.info(".createEntityLog(component) : Requisição for executada por temporizador", e);
             // Se a requisição for executada por temporizador, não há requisição
             // então não se consegue obter o ip
             entityLog.setIp("localhost");
