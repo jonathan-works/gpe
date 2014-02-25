@@ -1,8 +1,6 @@
 package br.com.itx.util;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
