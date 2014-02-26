@@ -9,95 +9,95 @@ import br.com.infox.constants.WarningConstants;
 
 public class LazyMap<K, V> implements Map<K, V> {
 
-	private Map<K, V> wrapped;
-	private Factory<K, V> factory;
-	
-	public LazyMap(Map<K, V> wrapped, Factory<K, V> factory) {
-		this.wrapped = wrapped;
-		this.factory = factory;
-	}
-	
-	public LazyMap(Factory<K, V> factory) {
-		this.wrapped = new HashMap<>();
-		this.factory = factory;
-	}
-	
-	@Override
-	public int size() {
-		return wrapped.size();
-	}
+    private Map<K, V> wrapped;
+    private Factory<K, V> factory;
 
-	@Override
-	public boolean isEmpty() {
-		return wrapped.isEmpty();
-	}
+    public LazyMap(Map<K, V> wrapped, Factory<K, V> factory) {
+        this.wrapped = wrapped;
+        this.factory = factory;
+    }
 
-	@Override
-	public boolean containsKey(Object key) {
-		return wrapped.containsKey(key);
-	}
+    public LazyMap(Factory<K, V> factory) {
+        this.wrapped = new HashMap<>();
+        this.factory = factory;
+    }
 
-	@Override
-	public boolean containsValue(Object value) {
-		return wrapped.containsValue(value);
-	}
+    @Override
+    public int size() {
+        return wrapped.size();
+    }
 
-	@Override
-	@SuppressWarnings(WarningConstants.UNCHECKED)
-	public V get(Object key) {
-		if (containsKey(key)) {
-			return wrapped.get(key);
-		}
-		V value = factory.create((K) key);
-		put((K) key, value);
-		return value;
-	}
+    @Override
+    public boolean isEmpty() {
+        return wrapped.isEmpty();
+    }
 
-	@Override
-	public V put(K key, V value) {
-		return wrapped.put(key, value);
-	}
+    @Override
+    public boolean containsKey(Object key) {
+        return wrapped.containsKey(key);
+    }
 
-	@Override
-	public V remove(Object key) {
-		return wrapped.remove(key);
-	}
+    @Override
+    public boolean containsValue(Object value) {
+        return wrapped.containsValue(value);
+    }
 
-	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
-		wrapped.putAll(m);
-	}
+    @Override
+    @SuppressWarnings(WarningConstants.UNCHECKED)
+    public V get(Object key) {
+        if (containsKey(key)) {
+            return wrapped.get(key);
+        }
+        V value = factory.create((K) key);
+        put((K) key, value);
+        return value;
+    }
 
-	@Override
-	public void clear() {
-		wrapped.clear();
-	}
+    @Override
+    public V put(K key, V value) {
+        return wrapped.put(key, value);
+    }
 
-	@Override
-	public Set<K> keySet() {
-		return wrapped.keySet();
-	}
+    @Override
+    public V remove(Object key) {
+        return wrapped.remove(key);
+    }
 
-	@Override
-	public Collection<V> values() {
-		return wrapped.values();
-	}
+    @Override
+    public void putAll(Map<? extends K, ? extends V> m) {
+        wrapped.putAll(m);
+    }
 
-	@Override
-	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		return wrapped.entrySet();
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o == this) {
-			return true;
-		}
-		return wrapped.equals(o);
-	}
-	
-	@Override
-	public int hashCode() {
-		return wrapped.hashCode();
-	}
+    @Override
+    public void clear() {
+        wrapped.clear();
+    }
+
+    @Override
+    public Set<K> keySet() {
+        return wrapped.keySet();
+    }
+
+    @Override
+    public Collection<V> values() {
+        return wrapped.values();
+    }
+
+    @Override
+    public Set<java.util.Map.Entry<K, V>> entrySet() {
+        return wrapped.entrySet();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        return wrapped.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return wrapped.hashCode();
+    }
 }
