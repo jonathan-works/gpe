@@ -36,7 +36,6 @@ public class GrupoModeloDocumento implements java.io.Serializable {
     private Integer idGrupoModeloDocumento;
     private String grupoModeloDocumento;
     private Boolean ativo;
-    private List<ItemTipoDocumento> itemTipoDocumentoList = new ArrayList<ItemTipoDocumento>(0);
     private List<TipoModeloDocumento> tipoModeloDocumentoList = new ArrayList<TipoModeloDocumento>(0);
 
     public GrupoModeloDocumento() {
@@ -70,17 +69,6 @@ public class GrupoModeloDocumento implements java.io.Serializable {
 
     public void setGrupoModeloDocumento(String grupoModeloDocumento) {
         this.grupoModeloDocumento = grupoModeloDocumento;
-    }
-
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = "grupoModeloDocumento")
-    public List<ItemTipoDocumento> getItemTipoDocumentoList() {
-        return this.itemTipoDocumentoList;
-    }
-
-    public void setItemTipoDocumentoList(
-            List<ItemTipoDocumento> itemTipoDocumentoList) {
-        this.itemTipoDocumentoList = itemTipoDocumentoList;
     }
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = FetchType.LAZY,
