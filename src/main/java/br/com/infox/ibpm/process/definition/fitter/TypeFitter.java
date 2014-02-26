@@ -22,7 +22,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
-import br.com.infox.jboss.ContextFacade;
+import br.com.infox.jboss.context.ContextFacade;
 import br.com.itx.util.FileUtil;
 
 @Name(TypeFitter.NAME)

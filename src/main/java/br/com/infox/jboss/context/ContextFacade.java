@@ -1,4 +1,4 @@
-package br.com.infox.jboss;
+package br.com.infox.jboss.context;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;

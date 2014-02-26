@@ -59,7 +59,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.util.UserHandler;
-import br.com.infox.jboss.ContextFacade;
+import br.com.infox.jboss.context.ContextFacade;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
