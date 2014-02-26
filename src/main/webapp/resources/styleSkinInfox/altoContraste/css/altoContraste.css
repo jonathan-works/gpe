@@ -65,3 +65,28 @@ html, body {
 .login-lbl {
 	color:#FFF;
 }
+
+/*Aba ativa*/
+.ui-widget-header > .ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active {
+	background:#000;
+}
+/* texto */
+.ui-widget-header > .ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active > a {
+	color:#FFF;
+}
+
+/*Aba inativa*/
+.ui-widget-header > .ui-state-default.ui-corner-top {
+	background:#FFF;
+}
+/* texto */
+.ui-widget-header > .ui-state-default.ui-corner-top > a {
+	color:#000;
+}
+
+/*Aba desabilitada*/
+.ui-widget-header > .ui-state-default.ui-corner-top.ui-state-disabled {
+}
+/* texto */
+.ui-widget-header > .ui-state-default.ui-corner-top.ui-state-disabled > a {
+}
