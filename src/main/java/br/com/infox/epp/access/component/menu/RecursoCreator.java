@@ -16,11 +16,11 @@ import org.jboss.seam.security.permission.Permission;
 import org.jboss.seam.security.permission.PermissionManager;
 import org.jboss.seam.security.permission.PermissionStore;
 
-import br.com.infox.core.path.PathResolver;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.access.util.SecurityUtil;
+import br.com.infox.jboss.path.PathResolver;
 import br.com.itx.util.ComponentUtil;
 
 class RecursoCreator extends SimpleFileVisitor<Path> {

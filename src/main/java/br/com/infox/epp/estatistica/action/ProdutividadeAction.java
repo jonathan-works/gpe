@@ -19,7 +19,6 @@ import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.ExcelExportException;
-import br.com.infox.core.path.PathResolver;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
@@ -27,6 +26,7 @@ import br.com.infox.epp.estatistica.manager.ProdutividadeManager;
 import br.com.infox.epp.estatistica.query.ProdutividadeQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.jboss.path.PathResolver;
 
 @Name(ProdutividadeAction.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -14,12 +14,12 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.manager.Manager;
-import br.com.infox.core.path.PathResolver;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.imagem.dao.ImagemBinDAO;
 import br.com.infox.epp.imagem.entity.ImagemBin;
+import br.com.infox.jboss.path.PathResolver;
 
 @Name(ImagemBinManager.NAME)
 @AutoCreate

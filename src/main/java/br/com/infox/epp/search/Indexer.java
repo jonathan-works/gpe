@@ -31,7 +31,7 @@ import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.path.PathResolver;
+import br.com.infox.jboss.path.PathResolver;
 import br.com.infox.jsf.function.ElFunctions;
 
 public class Indexer {
