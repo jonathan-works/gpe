@@ -41,7 +41,6 @@ import org.xml.sax.InputSource;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.validator.JsfComponentTreeValidator;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
@@ -57,6 +56,7 @@ import br.com.infox.ibpm.process.definition.fitter.TypeFitter;
 import br.com.infox.ibpm.process.definition.graphical.ProcessBuilderGraph;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jsf.validator.JsfComponentTreeValidator;
 
 import com.google.common.base.Strings;
 
