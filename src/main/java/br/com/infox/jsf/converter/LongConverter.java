@@ -1,32 +1,34 @@
-package br.com.infox.core.converter;
+package br.com.infox.jsf.converter;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.ConverterException;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.util.Strings;
 
 @org.jboss.seam.annotations.faces.Converter
-@Name("stringConverter")
+@Name("longConverter")
 @BypassInterceptors
-public class StringConverter implements Converter {
-
-    private static char[][] replaceCharTable = { { (char) 8211, '-' },
-        { (char) 45, '-' }, { (char) 8221, '"' }, { (char) 8220, '"' },
-        { (char) 28, '"' }, { (char) 29, '"' },
-        // referente ao caractere: flecha
-        { (char) 8594, '-' } };
+public class LongConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component,
             String value) {
-        String saida = value;
-        for (char[] tupla : replaceCharTable) {
-            saida = saida.replace(tupla[0], tupla[1]);
+        if (Strings.isEmpty(value)) {
+            return null;
         }
-        return Strings.nullIfEmpty(saida.trim());
+        Long valor = null;
+        try {
+            valor = Long.parseLong(value);
+        } catch (Exception e) {
+            throw new ConverterException(new FacesMessage("Formato inválido: "
+                    + value), e);
+        }
+        return valor;
     }
 
     @Override

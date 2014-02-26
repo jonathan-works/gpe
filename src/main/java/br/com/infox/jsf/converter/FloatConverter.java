@@ -1,5 +1,6 @@
-package br.com.infox.core.converter;
+package br.com.infox.jsf.converter;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import javax.faces.application.FacesMessage;
@@ -8,24 +9,16 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
-import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.util.Strings;
 
 @org.jboss.seam.annotations.faces.Converter
-@Name("monetarioConverter")
-@Install(precedence = Install.FRAMEWORK)
+@Name("floatConverter")
 @BypassInterceptors
-public class MonetarioConverter implements Converter {
+public class FloatConverter implements Converter {
 
-    private static final NumberFormat FORMATTER;
-    private static final String SYMBOL;
-
-    static {
-        FORMATTER = NumberFormat.getCurrencyInstance();
-        SYMBOL = FORMATTER.getCurrency().getSymbol();
-    }
+    private static final NumberFormat FORMATTER = new DecimalFormat("#,##0.00");
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component,
@@ -33,16 +26,12 @@ public class MonetarioConverter implements Converter {
         if (Strings.isEmpty(value)) {
             return null;
         }
-        String newValue = value;
-        if (!value.startsWith(SYMBOL)) {
-            newValue = SYMBOL + " " + value;
-        }
         Double valor = null;
         try {
-            valor = FORMATTER.parse(newValue).doubleValue();
+            valor = FORMATTER.parse(value).doubleValue();
         } catch (Exception e) {
             throw new ConverterException(new FacesMessage("Formato inválido: "
-                    + newValue), e);
+                    + value), e);
         }
         return valor;
     }

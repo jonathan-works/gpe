@@ -1,4 +1,6 @@
-package br.com.infox.core.converter;
+package br.com.infox.jsf.converter;
+
+import java.text.NumberFormat;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -6,14 +8,24 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.util.Strings;
 
 @org.jboss.seam.annotations.faces.Converter
-@Name("longConverter")
+@Name("monetarioConverter")
+@Install(precedence = Install.FRAMEWORK)
 @BypassInterceptors
-public class LongConverter implements Converter {
+public class MonetarioConverter implements Converter {
+
+    private static final NumberFormat FORMATTER;
+    private static final String SYMBOL;
+
+    static {
+        FORMATTER = NumberFormat.getCurrencyInstance();
+        SYMBOL = FORMATTER.getCurrency().getSymbol();
+    }
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component,
@@ -21,12 +33,16 @@ public class LongConverter implements Converter {
         if (Strings.isEmpty(value)) {
             return null;
         }
-        Long valor = null;
+        String newValue = value;
+        if (!value.startsWith(SYMBOL)) {
+            newValue = SYMBOL + " " + value;
+        }
+        Double valor = null;
         try {
-            valor = Long.parseLong(value);
+            valor = FORMATTER.parse(newValue).doubleValue();
         } catch (Exception e) {
             throw new ConverterException(new FacesMessage("Formato inválido: "
-                    + value), e);
+                    + newValue), e);
         }
         return valor;
     }
@@ -34,7 +50,7 @@ public class LongConverter implements Converter {
     @Override
     public String getAsString(FacesContext context, UIComponent component,
             Object value) {
-        return value == null ? null : value.toString();
+        return value == null ? null : FORMATTER.format(value);
     }
 
 }
