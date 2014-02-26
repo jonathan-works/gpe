@@ -10,15 +10,5 @@ public class Util implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Verifica se a classe é um subtipo de AbstractHome.
-     * 
-     * @param object - Home em execução.
-     * @return True se for um subtipo de AbstractHome
-     */
-    //TODO verificar a remoção desse método
-    public boolean isAbstractChild(Object object) {
-        return object instanceof AbstractHome<?>;
-    }
 
 }

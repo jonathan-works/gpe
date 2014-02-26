@@ -18,8 +18,6 @@
     <ui:param name="required" value="#{required or requiredField}" />
     <ui:param name="showRequired"
         value="#{showRequired == false ? false : required and not empty label}" />
-    <ui:param name="showLock"
-        value="#{showLock == false ? false : (not empty label) and false}" />
     <ui:param name="homeRef" value="#{empty homeRef ? home : homeRef}" />
     <ui:param name="fieldName"
         value="#{(wi:get(fieldId, id)).toString().replaceAll('\\.', '_')}" />
@@ -34,20 +32,6 @@
                     <s:span styleClass="required"
                         rendered="#{showRequired}">*</s:span>
                 </s:label>
-                <c:if
-                    test="#{util.isAbstractChild(homeRef) and showLock}">
-                    <a:commandLink
-                        action="#{home.toggleFields(fieldName, homeRef)}"
-                        execute="@this" render="#{fieldId}Div"
-                        limitRender="true" tabindex="-1">
-                        <h:graphicImage url="/img/locked.gif"
-                            rendered="#{homeRef.lockedFields.contains(fieldName)}"
-                            title="Limpar Valor ao Cadastrar" />
-                        <h:graphicImage url="/img/unlocked.gif"
-                            rendered="#{!homeRef.lockedFields.contains(fieldName)}"
-                            title="Manter Valor ao Cadastrar" />
-                    </a:commandLink>
-                </c:if>
 
                 <c:if test="#{not empty tipMessage}">
                     <h:graphicImage id="#{fieldId}EditTipImg"
