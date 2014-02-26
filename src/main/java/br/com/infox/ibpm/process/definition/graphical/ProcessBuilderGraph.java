@@ -22,66 +22,64 @@ import br.com.itx.util.ComponentUtil;
 @Name(ProcessBuilderGraph.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class ProcessBuilderGraph implements Serializable{
-	
-    private static final long serialVersionUID = 1L;
-    
-    public static final String NAME = "processBuilderGraph";
-	private transient JbpmLayout layout;
-	
-	private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
-	private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilderGraph.class);
-	
-	@Create
-	public void init() {
-	    pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
-	}
-	
-	private String encodedGraph;
-	
-	public void paintGraph() throws IOException {
-		JbpmLayout layoutOut = getLayout();
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		layoutOut.paint(out);
-		out.close();
-		encodedGraph = Base64.encodeBytes(out.toByteArray());
-	}
-	
-	public String getEncodedGraph() {
-		return encodedGraph;
-	}
-	
-	public boolean isGraphImage() {
-		String path = ContextFacade.getServletContext(null).getRealPath(
-				"/Assunto/definicao/" + pb.getId() + "/processImage.png");
-		return new File(path).canRead();
-	}
-	
-	private synchronized JbpmLayout getLayout() {
-		if (layout == null) {
-			try {
-				layout = new JbpmLayout(pb.getInstance());
-			} catch (Exception e) {
-				LOG.error(
-						"Erro ao construir a imagem do fluxo: "
-								+ e.getMessage(), e);
-			}
-		}
-		return layout;
-	}
+public class ProcessBuilderGraph implements Serializable {
 
-	public String getMap() {
-		JbpmLayout layoutOut = getLayout();
-		try {
-			return layoutOut != null ? layoutOut.getMap() : null;
-		} catch (Exception e) {
-			LOG.error("Erro ao construir a imagem do fluxo: " + e.getMessage(),
-					e);
-			return null;
-		}
-	}
-	
-	public void clear(){
-		layout = null;
-	}
+    private static final long serialVersionUID = 1L;
+
+    public static final String NAME = "processBuilderGraph";
+    private transient JbpmLayout layout;
+
+    private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+    private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilderGraph.class);
+
+    @Create
+    public void init() {
+        pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+    }
+
+    private String encodedGraph;
+
+    public void paintGraph() throws IOException {
+        JbpmLayout layoutOut = getLayout();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        layoutOut.paint(out);
+        out.close();
+        encodedGraph = Base64.encodeBytes(out.toByteArray());
+    }
+
+    public String getEncodedGraph() {
+        return encodedGraph;
+    }
+
+    public boolean isGraphImage() {
+        String path = ContextFacade.getServletContext(null).getRealPath("/Assunto/definicao/"
+                + pb.getId() + "/processImage.png");
+        return new File(path).canRead();
+    }
+
+    private synchronized JbpmLayout getLayout() {
+        if (layout == null) {
+            try {
+                layout = new JbpmLayout(pb.getInstance());
+            } catch (Exception e) {
+                LOG.error("Erro ao construir a imagem do fluxo: "
+                        + e.getMessage(), e);
+            }
+        }
+        return layout;
+    }
+
+    public String getMap() {
+        JbpmLayout layoutOut = getLayout();
+        try {
+            return layoutOut != null ? layoutOut.getMap() : null;
+        } catch (Exception e) {
+            LOG.error("Erro ao construir a imagem do fluxo: " + e.getMessage(), e);
+            return null;
+        }
+    }
+
+    public void clear() {
+        layout = null;
+    }
 }
