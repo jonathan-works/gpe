@@ -9,9 +9,9 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
-import br.com.itx.util.StringUtil;
 
 /**
  * EntityList que consulta as tarefas de um determinado processo
