@@ -16,7 +16,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
@@ -134,20 +133,6 @@ public class TransitionFitter extends Fitter implements Serializable {
 		to.addArrivingTransition(transition);
 		clearArrivingAndLeavingTransitions();
 		return new TransitionHandler(transition);
-	}
-	
-	public boolean canAddLeavingTransition() {
-		if (getLeavingTransitions() == null || getLeavingTransitions().isEmpty()) {
-			return true;
-		}
-		
-		Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
-		if (currentNode == null) {
-			return false;
-		}
-		NodeType nodeType = currentNode.getNodeType();
-		
-		return nodeType.equals(NodeType.Decision) || nodeType.equals(NodeType.Fork);
 	}
 	
 	public void setCurrentTransition(Transition currentTransition) {
@@ -273,23 +258,5 @@ public class TransitionFitter extends Fitter implements Serializable {
 	public void clearArrivingAndLeavingTransitions(){
 		arrivingTransitions = null;
 		leavingTransitions = null;
-	}
-	
-	public boolean hasOperationalTransition(String type) {
-		if (!"to".equals(type)) {
-			return false;
-		}
-		
-		List<TransitionHandler> leavingTransitions = getLeavingTransitions();
-		if (leavingTransitions == null || leavingTransitions.isEmpty()) {
-			return canAddLeavingTransition();
-		}
-		
-		for (TransitionHandler transitionHandler : leavingTransitions) {
-			if (canAddLeavingTransition() || (!"#{true}".equals(transitionHandler.getTransition().getCondition()) && transitionHandler.canDefineCondition())) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

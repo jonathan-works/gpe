@@ -40,7 +40,7 @@
 				
 					<a:commandLink action="#{transitionFitter.addTransition(type)}"
 							 execute="@this"
-							 rendered="#{type.equals('to') and transitionFitter.canAddLeavingTransition()}"
+							 rendered="#{type.equals('to')}"
 							 render="transition#{type}Table,nodesDiv"
 							 limitRender="true">
 							
