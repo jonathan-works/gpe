@@ -22,6 +22,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.collection.Factory;
 import br.com.infox.core.collection.LazyMap;
+import br.com.infox.core.path.PathResolver;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
@@ -29,7 +30,6 @@ import br.com.infox.epp.processo.documento.sigilo.action.SigiloDocumentoControll
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.itx.component.Util;
 
 @Name(SigiloDocumentoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -51,6 +51,9 @@ public class SigiloDocumentoAction implements Serializable {
 	
 	@In
 	private ActionMessagesService actionMessagesService;
+	
+	@In
+	private PathResolver pathResolver;
 	
 	private ProcessoEpa processo;
 	private Map<Integer, Boolean> sigiloDocumentoMap;
@@ -80,11 +83,10 @@ public class SigiloDocumentoAction implements Serializable {
 	}
 	
 	public String getViewUrl(ProcessoDocumento documento) {
-		Util util = new Util();
 		if (documento.getProcessoDocumentoBin().isBinario()) {
-			return MessageFormat.format(URL_DOWNLOAD_BINARIO, util.getContextPath(), documento.getIdProcessoDocumento());
+			return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getIdProcessoDocumento());
 		}
-		return MessageFormat.format(URL_DOWNLOAD_HTML, util.getContextPath(), documento.getIdProcessoDocumento());
+		return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getIdProcessoDocumento());
 	}
 	
 	public boolean isSigiloso(ProcessoDocumento documento) {
