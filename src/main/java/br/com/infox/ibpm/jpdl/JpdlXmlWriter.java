@@ -44,8 +44,8 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.ibpm.node.DecisionNode;
-import br.com.itx.util.ReflectionsUtil;
 
 public class JpdlXmlWriter {
 

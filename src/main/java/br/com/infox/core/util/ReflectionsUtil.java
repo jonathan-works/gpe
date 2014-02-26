@@ -1,4 +1,4 @@
-package br.com.itx.util;
+package br.com.infox.core.util;
 
 import java.lang.reflect.Field;
 
@@ -12,7 +12,7 @@ public final class ReflectionsUtil {
     private ReflectionsUtil() {
     }
 
-    public static Field getField(Object o, String fieldName) {
+    private static Field getField(Object o, String fieldName) {
         Exception exc = null;
         Class<?> cl = o.getClass();
         while (cl != null) {
