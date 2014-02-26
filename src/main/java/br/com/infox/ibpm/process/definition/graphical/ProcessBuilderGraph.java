@@ -14,9 +14,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 
-import br.com.infox.core.context.ContextFacade;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.graphical.layout.JbpmLayout;
+import br.com.infox.jboss.ContextFacade;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ProcessBuilderGraph.NAME)

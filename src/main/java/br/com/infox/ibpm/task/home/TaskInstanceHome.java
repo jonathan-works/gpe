@@ -41,7 +41,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.context.ContextFacade;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -60,6 +59,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.util.UserHandler;
+import br.com.infox.jboss.ContextFacade;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
