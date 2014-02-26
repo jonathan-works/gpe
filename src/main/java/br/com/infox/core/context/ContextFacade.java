@@ -1,5 +1,7 @@
 package br.com.infox.core.context;
 
+import javax.faces.context.FacesContext;
+
 import org.hibernate.LazyInitializationException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -8,6 +10,7 @@ import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.richfaces.context.ExtendedPartialViewContext;
 
 @Name(ContextFacade.NAME)
 @Scope(ScopeType.APPLICATION)
@@ -41,5 +44,11 @@ public class ContextFacade {
             sb.append("<br /> \n");
         }
         return sb.toString();
+    }
+    
+    //TODO encontrar um lugar melhor para esse método
+    public boolean isAjaxRequest() {
+        ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(FacesContext.getCurrentInstance());
+        return context != null && context.isAjaxRequest();
     }
 }

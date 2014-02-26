@@ -16,7 +16,7 @@ login-required="true"
     <param name="goBackTab" value="#{processoHome.goBackTab}"/>
     <param name="idProcesso" value="#{processoHome.processoIdProcesso}" />
     <param name="tarefaId" value="#{processoHome.tarefaId}" />
-    <action execute="#{processoHome.iniciarTarefaProcesso()}" if="#{not util.ajaxRequest}"/>
+    <action execute="#{processoHome.iniciarTarefaProcesso()}" if="#{not contextFacade.ajaxRequest}"/>
     <action execute="#{variavelProcessoAction.setProcesso(processoHome.instance)}" on-postback="false"/>
     <action execute="#{relacionamentoProcessoCrudAction.setProcesso(processoHome.instance)}"
         if="#{processoHome.tab eq 'relacionamentoProcessoTab'}"/>

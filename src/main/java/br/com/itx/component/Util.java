@@ -2,12 +2,9 @@ package br.com.itx.component;
 
 import java.io.Serializable;
 
-import javax.faces.context.FacesContext;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
-import org.richfaces.context.ExtendedPartialViewContext;
 
 @Scope(ScopeType.APPLICATION)
 public class Util implements Serializable {
@@ -23,11 +20,6 @@ public class Util implements Serializable {
     //TODO verificar a remoção desse método
     public boolean isAbstractChild(Object object) {
         return object instanceof AbstractHome<?>;
-    }
-
-    public boolean isAjaxRequest() {
-        ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(FacesContext.getCurrentInstance());
-        return context != null && context.isAjaxRequest();
     }
 
     public static void setToEventContext(String var, Object object) {
