@@ -14,6 +14,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.context.ContextFacade;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -34,7 +35,6 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
 
 @Name(ProcessoHome.NAME)
@@ -116,7 +116,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     private void avisarNaoHaPermissaoParaAcessarProcesso() {
-        Util.setToEventContext("canClosePanel", true);
+        ContextFacade.setToEventContext("canClosePanel", true);
         FacesMessages.instance().clear();
         FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: "
                 + getInstance().getNumeroProcesso());

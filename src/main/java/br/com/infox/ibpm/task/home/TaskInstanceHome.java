@@ -41,6 +41,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.function.RichFunction;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.context.ContextFacade;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -61,7 +62,6 @@ import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
@@ -206,7 +206,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void completeUpdate() {
         Contexts.getBusinessProcessContext().flush();
-        Util.setToEventContext(UPDATED_VAR_NAME, true);
+        ContextFacade.setToEventContext(UPDATED_VAR_NAME, true);
         updateIndex();
         updateTransitions();
         // Necessário para gravar a prioridade do processo ao clicar no botão

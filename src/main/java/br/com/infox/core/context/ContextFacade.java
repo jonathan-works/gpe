@@ -46,6 +46,10 @@ public class ContextFacade {
         return sb.toString();
     }
     
+    public static void setToEventContext(String var, Object object) {
+        Contexts.getEventContext().set(var, object);
+    }
+    
     //TODO encontrar um lugar melhor para esse método
     public boolean isAjaxRequest() {
         ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(FacesContext.getCurrentInstance());

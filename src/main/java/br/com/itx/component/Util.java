@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.contexts.Contexts;
 
 @Scope(ScopeType.APPLICATION)
 public class Util implements Serializable {
@@ -20,10 +19,6 @@ public class Util implements Serializable {
     //TODO verificar a remoção desse método
     public boolean isAbstractChild(Object object) {
         return object instanceof AbstractHome<?>;
-    }
-
-    public static void setToEventContext(String var, Object object) {
-        Contexts.getEventContext().set(var, object);
     }
 
 }
