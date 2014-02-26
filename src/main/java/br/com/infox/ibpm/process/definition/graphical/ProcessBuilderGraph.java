@@ -14,10 +14,10 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Base64;
 
+import br.com.infox.core.context.ContextFacade;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.graphical.layout.JbpmLayout;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.FacesUtil;
 
 @Name(ProcessBuilderGraph.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -52,7 +52,7 @@ public class ProcessBuilderGraph implements Serializable{
 	}
 	
 	public boolean isGraphImage() {
-		String path = FacesUtil.getServletContext(null).getRealPath(
+		String path = ContextFacade.getServletContext(null).getRealPath(
 				"/Assunto/definicao/" + pb.getId() + "/processImage.png");
 		return new File(path).canRead();
 	}

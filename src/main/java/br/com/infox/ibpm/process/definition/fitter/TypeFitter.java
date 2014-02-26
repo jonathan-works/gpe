@@ -19,10 +19,10 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.context.ContextFacade;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
-import br.com.itx.util.FacesUtil;
 import br.com.itx.util.FileUtil;
 
 @Name(TypeFitter.NAME)
@@ -39,7 +39,7 @@ public class TypeFitter extends Fitter implements Serializable {
     @SuppressWarnings({ RAWTYPES, UNCHECKED })
     public List getTypeList() {
         if (typeList == null) {
-            String path = FacesUtil.getServletContext(null).getRealPath("/WEB-INF/xhtml/components/jbpmComponents.properties");
+            String path = ContextFacade.getServletContext(null).getRealPath("/WEB-INF/xhtml/components/jbpmComponents.properties");
             types = new Properties();
             FileInputStream input = null;
             try {
