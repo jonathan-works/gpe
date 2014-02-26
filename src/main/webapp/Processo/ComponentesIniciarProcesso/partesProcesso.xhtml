@@ -39,11 +39,13 @@
         <br />
         <h:form>
             <s:div id="storeDiv">
-                <wi:commandButton id="storeButton"
+                <a:commandButton id="storeButton"
+                    execute="@all"
                     action="#{action.iniciarProcesso(partesController.pessoas)}"
                     rendered="#{!partesController.pessoas.isEmpty()}"
-                    reRender="includePessoaFisicaDiv, pessoasFisicasListDiv"
+                    render="includePessoaFisicaDiv, pessoasFisicasListDiv"
                     value="Iniciar Processo"
+                    styleClass="buttons #{wi:get(styleClass, 'buttons')}"
                     oncomplete="window.open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1'); window.location='#{pathResolver.contextPath}/Painel/list.seam';" />
             </s:div>
         </h:form>
