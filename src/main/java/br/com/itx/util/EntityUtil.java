@@ -24,7 +24,6 @@ import br.com.infox.core.util.ReflectionsUtil;
 
 public final class EntityUtil implements Serializable {
 
-    public static final String ENTITY_MANAGER_NAME = "entityManager";
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(EntityUtil.class);
 
