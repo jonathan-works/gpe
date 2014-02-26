@@ -32,7 +32,7 @@
 		 value="#{empty props.evalHeader ? false : props.evalHeader}" />
 		<ui:param
 		 name="header"
-		 value="#{evalHeader ? util.eval(header) : header}" />
+		 value="#{evalHeader ? elFunctions.evaluateExpression(header) : header}" />
 		<ui:param
 		 name="mostrarOrdenar"
 		 value="#{isLeftGrid != true and false}" />

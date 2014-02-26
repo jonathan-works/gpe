@@ -32,7 +32,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.path.PathResolver;
-import br.com.itx.component.Util;
+import br.com.infox.jsf.function.ElFunctions;
 
 public class Indexer {
 
@@ -41,8 +41,7 @@ public class Indexer {
     private static final LogProvider LOG = Logging.getLogProvider(Indexer.class);
 
     public static File getIndexerPath() {
-        Util util = new Util();
-        String fileName = util.eval("indexerFileName");
+        String fileName = getIndexerFileName();
         if (fileName == null) {
             String path = System.getProperty("user.home");
             StringBuilder sb = new StringBuilder();
@@ -112,6 +111,11 @@ public class Indexer {
     
     private static PathResolver getPathResolver(){
         return (PathResolver) Component.getInstance(PathResolver.NAME);
+    }
+    
+    private static String getIndexerFileName(){
+        ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
+        return elFunctions.evaluateExpression("indexerFileName");
     }
 
 }

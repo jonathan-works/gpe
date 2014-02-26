@@ -59,6 +59,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.util.UserHandler;
+import br.com.infox.jsf.function.ElFunctions;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
@@ -571,7 +572,8 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public List<ModeloDocumento> getModeloItems(String variavel) {
-        String listaModelos = (String) new Util().eval(variavel);
+        ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
+        String listaModelos = elFunctions.evaluateExpression(variavel);
         return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
     }
 
