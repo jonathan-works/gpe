@@ -1,4 +1,4 @@
-package br.com.infox.core.jsf;
+package br.com.infox.jsf.function;
 
 public final class JsfFunctions {
 
