@@ -1,4 +1,4 @@
-package br.com.itx.util;
+package br.com.infox.epp.fluxo.xpdl;
 
 import java.io.InputStream;
 import java.util.List;
@@ -10,6 +10,11 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
 
+/**
+ * Deprecated : Utilizada apenas para o XPDL, cuja funcionalidade será totalmente
+ * reimplementada
+ * */
+@Deprecated
 public final class XmlUtil {
 
     private static final LogProvider LOG = Logging.getLogProvider(XmlUtil.class);
