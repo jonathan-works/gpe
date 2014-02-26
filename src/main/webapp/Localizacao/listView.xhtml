@@ -105,47 +105,6 @@
 
     <ui:define name="tabs">
 
-        <infox:tab status=":status" id="itemTipoDocumento"
-            rendered="#{home.managed and !home.instance.estrutura}"
-            title="#{messages['localizacao.itemTipoDocumentoList']}"
-            name="itemTipoDocumento">
-
-
-            <wi:dataForm
-                home="#{localizacaoTipoModeloDocumentoCrudAction}"
-                formId="itemTipoDocumentoForm"
-                formTitle="Adicionar Grupo de Documento à Localização - #{(localizacaoCrudAction.instance)}">
-
-                <wi:suggest id="grupoModeloDocumento"
-                    suggestProvider="#{grupoModeloDocumentoSuggest}"
-                    value="#{localizacaoTipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
-                    label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
-                    required="true" />
-
-            </wi:dataForm>
-            <wi:dataTable id="itemTipoDocumentoList"
-                values="#{itemTipoDocumentoList.list(15)}"
-                bean="#{itemTipoDocumentoList}"
-                tableTitle="Grupo Documento"
-                rowId="#{row.idItemTipoDocumento}">
-
-                <ui:define name="headerToolBar" />
-                <ui:define name="toolBar">
-                    <wi:toolBarRemove id="toolBarRemove"
-                        reRender="pageBody"
-                        actionRemove="localizacaoTipoModeloDocumentoCrudAction.remove(row)" />
-
-                </ui:define>
-
-                <wi:columnOutputText columnId="grupoModeloDocumento"
-                    columnHeader="Grupo Documento"
-                    value="#{row.grupoModeloDocumento}" />
-
-
-            </wi:dataTable>
-
-        </infox:tab>
-
         <infox:tab status=":status" id="localizacaoTurnoTab"
             action="#{localizacaoTurnoAction.newInstance(localizacaoCrudAction.instance)}"
             rendered="#{home.managed and !home.instance.estrutura}"

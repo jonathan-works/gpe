@@ -45,7 +45,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.persistence.Recursive;
-import br.com.infox.epp.documento.entity.ItemTipoDocumento;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 
 @Entity
@@ -66,7 +65,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     private Boolean estrutura;
 
     private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<LocalizacaoTurno>(0);
-    private List<ItemTipoDocumento> itemTipoDocumentoList = new ArrayList<ItemTipoDocumento>(0);
     private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
     private List<Localizacao> localizacaoList = new ArrayList<Localizacao>(0);
 
@@ -140,17 +138,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     public void setLocalizacaoPai(Localizacao localizacaoPai) {
         this.localizacaoPai = localizacaoPai;
-    }
-
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = LOCALIZACAO_ATTRIBUTE)
-    public List<ItemTipoDocumento> getItemTipoDocumentoList() {
-        return this.itemTipoDocumentoList;
-    }
-
-    public void setItemTipoDocumentoList(
-            List<ItemTipoDocumento> itemTipoDocumentoList) {
-        this.itemTipoDocumentoList = itemTipoDocumentoList;
     }
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,

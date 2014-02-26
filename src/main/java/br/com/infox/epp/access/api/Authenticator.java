@@ -405,6 +405,8 @@ public class Authenticator {
         credentials.setPassword("");
         identity.quietLogin();
         identity.login();
+        UsuarioLoginManager usuarioLoginManager = (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
+        Contexts.getSessionContext().set(USUARIO_LOGADO, usuarioLoginManager.getUsuarioLoginByLogin(credentials.getUsername()));
     }
 	
 	public boolean isUsuarioExterno() {
