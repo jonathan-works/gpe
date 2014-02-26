@@ -5,8 +5,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import javax.faces.component.EditableValueHolder;
