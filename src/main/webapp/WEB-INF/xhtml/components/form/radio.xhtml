@@ -37,7 +37,7 @@
 			 readonly="#{readonly}"
 			 styleClass="radio">
 			 
-				<f:selectItems value="#{util.splitAsList(valueList) }" />
+				<f:selectItems value="#{selectItemFunctions.createFromString(valueList) }" />
 				<ui:insert />
 			
 		</h:selectOneRadio>

@@ -20,7 +20,7 @@
             layout="#{wi:get(direction, 'line')}Direction"
             disabled="#{disabled}" required="#{required}"
             value="#{value}" styleClass="checkbox">
-            <f:selectItems value="#{util.splitAsList(valueList) }" />
+            <f:selectItems value="#{selectItemFunctions.createFromString(valueList) }" />
             <ui:insert />
         </h:selectManyCheckbox>
     </s:decorate>

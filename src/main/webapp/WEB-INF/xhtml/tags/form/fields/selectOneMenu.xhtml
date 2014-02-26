@@ -27,7 +27,7 @@
             </c:if>
             <c:if test="#{empty valueItems}">
                 <s:selectItems value="#{items}" var="item"
-                    label="#{empty optionExpression ? (empty optionLabel ? item : optionLabel) : util.getSelectExpressionSelectItem(optionExpression, item)}"
+                    label="#{empty optionExpression ? (empty optionLabel ? item : optionLabel) : selectItemFunctions.getSelectExpressionSelectItem(optionExpression, item)}"
                     hideNoSelectionLabel="#{hideNoSelectionLabel}"
                     noSelectionLabel="#{noSelectionLabel}"
                     disabled="#{wi:get(inactiveCond,'')}" />

@@ -27,7 +27,7 @@
 			 styleClass="radio"
 			 boxChecked="#{sim ? 0 : 1}">
 			  
-                <f:selectItems value="#{util.splitAsList('true:Sim,false:Não') }" />
+                <f:selectItems value="#{selectItemFunctions.createFromString('true:Sim,false:Não') }" />
                 <ui:insert />
             
 		</h:selectOneRadio>

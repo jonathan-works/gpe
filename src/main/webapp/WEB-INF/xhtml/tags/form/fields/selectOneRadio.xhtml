@@ -22,7 +22,7 @@
             disabled="#{disabled}" required="#{required}"
             onchange="#{onchange}" readonly="#{readonly}"
             styleClass="radio">
-            <f:selectItems value="#{util.splitAsList(valueList) }" />
+            <f:selectItems value="#{selectItemFunctions.createFromString(valueList) }" />
             <ui:insert />
             <script>
 				invoke(["infox.escapeId"],function(EscapeId) {

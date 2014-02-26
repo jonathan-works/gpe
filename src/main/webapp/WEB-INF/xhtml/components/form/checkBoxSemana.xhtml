@@ -60,7 +60,7 @@
 			 value="#{value}"
 			 styleClass="checkbox">
 			
-				<f:selectItems value="#{util.splitAsList('SEG:Segunda,TER:Terça,QUA:Quarta,QUI:Quinta,SEX:Sexta,SAB:Sábado,DOM:Domingo')}" />
+				<f:selectItems value="#{selectItemFunctions.createFromString('SEG:Segunda,TER:Terça,QUA:Quarta,QUI:Quinta,SEX:Sexta,SAB:Sábado,DOM:Domingo')}" />
 				
 			
 		</h:selectManyCheckbox>

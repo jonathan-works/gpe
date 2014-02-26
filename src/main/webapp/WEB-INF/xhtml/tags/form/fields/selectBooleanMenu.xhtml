@@ -19,7 +19,7 @@
 				<f:selectItem
                  itemLabel="[Todos]" />
 				<f:selectItems
-                 value="#{wi:get(items, util.splitAsList('true:Sim,false:Não'))}" />
+                 value="#{wi:get(items, selectItemFunctions.createFromString('true:Sim,false:Não'))}" />
 			</h:selectOneMenu>
 		</s:decorate>
 
