@@ -1,6 +1,5 @@
 package br.com.itx.component;
 
-import static br.com.infox.constants.WarningConstants.RAWTYPES;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static org.jboss.seam.faces.FacesMessages.instance;
 
@@ -483,21 +482,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
     }
 
     /**
-     * Verifica se o registro está na lista para controlar o ícone do cadeado.
-     * 
-     * @param idField - Nome do atributo da Entity referente ao campo
-     * @param homeRef - Home da Entity do atributo informado
-     */
-    @SuppressWarnings(RAWTYPES)
-    public void toggleFields(String idField, AbstractHome homeRef) {
-        if (homeRef.getLockedFields().contains(idField)) {
-            homeRef.getLockedFields().remove(idField);
-        } else {
-            homeRef.getLockedFields().add(idField);
-        }
-    }
-
-    /**
      * Limpa todos os campos que não foram marcados.
      * 
      * @throws IllegalAccessException
@@ -516,24 +500,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         setId(null);
         clearForm();
         instance = t;
-    }
-
-    /**
-     * Retorna a lista dos campos que não devem ser limpados.
-     * 
-     * @return
-     */
-    public List<String> getLockedFields() {
-        return lockedFields;
-    }
-
-    /**
-     * Seta a lista dos campos que não devem ser limpados.
-     * 
-     * @param lockedFields - Lista dos campos que não devem ser limpados
-     */
-    public void setLockedFields(List<String> lockedFields) {
-        this.lockedFields = lockedFields;
     }
 
     private void rollbackTransactionIfNeeded() {
