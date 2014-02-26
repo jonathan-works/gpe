@@ -24,7 +24,8 @@
                     <wi:commandButton id="ajudaPersistButton"
                         action="ajudaCrudAction.save"
                         value="#{messages['crud.update']}"
-                        reRender="gridAjuda">
+                        reRender="gridAjuda"
+                        oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})">
                     </wi:commandButton>
 
                 </ui:define>
@@ -37,7 +38,8 @@
                 bean="#{historicoAjudaList}"
                 tableTitle="Histórico das revisões"
                 id="historicoAjudaId" rowId="#{row.idHistoricoAjuda}"
-                toolBar="ajuda" panelWidth="100%">
+                toolBar="ajuda" panelStyleClass="rf-dt-crud"
+                showSearchForm="false">
 
                 <wi:columnDateTime columnId="dataRegistro"
                     columnHeader="Data" value="#{row.dataRegistro}"
@@ -49,9 +51,10 @@
                 <ui:define name="toolBar">
                     <wi:toolBar id="recuperarRevisao"
                         url="/img/grid/copyLeft.gif"
-                        title="Recuperar revisão" reRender="formAjuda"
+                        title="Recuperar revisão" render="formAjuda, gridAjuda"
                         action="ajudaCrudAction.recuperar(row)"
-                        limitToList="true" />
+                        limitToList="true"
+                        oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})" />
                     <wi:toolBarTextPreview value="#{row.texto}" />
                 </ui:define>
             </wi:dataTable>

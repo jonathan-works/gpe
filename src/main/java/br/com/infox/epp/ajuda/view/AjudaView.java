@@ -124,5 +124,8 @@ public class AjudaView {
         }
         return texto;
     }
-
+    
+    public void setId(Integer id) {
+        setInstance(ajudaManager.find(id));
+    }
 }
