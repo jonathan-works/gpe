@@ -26,16 +26,6 @@ public class Util implements Serializable {
     private static final LogProvider LOG = Logging.getLogProvider(Util.class);
 
     /**
-     * @return Retorna o diretório do JSF View Id, ou seja, o diretório da
-     *         página atual.
-     */
-    public String getViewIdDirectory() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        String viewId = fc.getViewRoot().getViewId();
-        return viewId.substring(0, viewId.lastIndexOf('/') + 1);
-    }
-
-    /**
      * Gera uma lista de SelectItem partindo de uma String separada por vírgula
      * 
      * @param values são os valores separados por vírgulas, no formato

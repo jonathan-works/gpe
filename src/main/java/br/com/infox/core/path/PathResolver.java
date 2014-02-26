@@ -42,6 +42,16 @@ public class PathResolver implements Serializable{
     public final String getRealPath(String relativePath) {
         return ServletLifecycle.getServletContext().getRealPath(relativePath);
     }
+    
+    /**
+     * @return Retorna o diretório do JSF View Id, ou seja, o diretório da
+     *         página atual.
+     */
+    public String getViewIdDirectory() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        String viewId = fc.getViewRoot().getViewId();
+        return viewId.substring(0, viewId.lastIndexOf('/') + 1);
+    }
 
     public String getUrlProject() {
         HttpServletRequest rc = getRequest();

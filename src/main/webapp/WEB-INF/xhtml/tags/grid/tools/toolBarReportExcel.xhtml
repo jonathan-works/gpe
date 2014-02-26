@@ -12,7 +12,7 @@
         <h:form>
             <c:if test="#{not empty reportPath}">
                 <s:link
-                    view="#{empty reportPath ? util.viewIdDirectory.concat('excelReport.xhtml') : reportPath}"
+                    view="#{empty reportPath ? pathResolver.viewIdDirectory.concat('excelReport.xhtml') : reportPath}"
                     target="_blank">
                     <h:graphicImage url="/img/excel.png"
                         title="Gerar Excel" />
