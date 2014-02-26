@@ -22,7 +22,6 @@ import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.transaction.TransactionService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.itx.component.Util;
 import br.com.itx.util.ComponentUtil;
 
 @Name(LocalizacaoAssignment.NAME)

@@ -83,11 +83,6 @@
         password="minot@uro"
         session-jndi-name="java:jboss/mail/epp" />
 
-    <!-- ITX: Added -->
-    <component
-        name="util"
-        class="br.com.itx.component.Util" />
-
     <bpm:jbpm>
         <bpm:process-definitions></bpm:process-definitions>
         <bpm:pageflow-definitions></bpm:pageflow-definitions>
