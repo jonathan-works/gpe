@@ -114,3 +114,29 @@ html, body {
 .reqSenha label {
     color: #616161;
 }
+
+/*Aba ativa*/
+.ui-widget-header > .ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active {
+	background:#A9A9A9;
+}
+/* texto */
+.ui-widget-header > .ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active > a {
+	color:#000;
+}
+
+/*Aba inativa*/
+.ui-widget-header > .ui-state-default.ui-corner-top {
+	background:#C9C9C9;
+}
+/* texto */
+.ui-widget-header > .ui-state-default.ui-corner-top > a {
+}
+
+/*Aba desabilitada*/
+.ui-widget-header > .ui-state-default.ui-corner-top.ui-state-disabled {
+	background:#E9E9E9;
+}
+/* texto */
+.ui-widget-header > .ui-state-default.ui-corner-top.ui-state-disabled > a {
+	color:#A9A9A9;
+}
