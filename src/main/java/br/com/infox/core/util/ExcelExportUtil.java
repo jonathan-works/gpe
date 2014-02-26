@@ -21,6 +21,7 @@ import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.jboss.path.PathResolver;
 import br.com.itx.util.FileUtil;
 
+//TODO Transformar essa classe em um Util de verdade ou em um componente
 public class ExcelExportUtil {
     private XLSTransformer transformer = new XLSTransformer();
     private Map<String, Object> bean = new HashMap<String, Object>();
