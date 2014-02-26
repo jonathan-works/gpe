@@ -47,7 +47,7 @@
                                     <a:commandButton id="clearButton"
                                         onclick="$('##{formId}').clearForm();showLoading();"
                                         oncomplete="hideLoading();"
-                                        action="#{util.invokeMethod(clearAction)}"
+                                        action="#{elFunctions.invokeMethod(clearAction)}"
                                         value="Limpar" execute="@this"
                                         render="#{wi:get(clearReRender, 'pageBody')}"
                                         styleClass="buttons buttons" />

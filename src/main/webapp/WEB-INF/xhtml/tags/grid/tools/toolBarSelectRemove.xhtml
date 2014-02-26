@@ -19,7 +19,7 @@
                     title="Selecionar" />
             </a:commandLink>
 
-            <a:commandLink action="#{util.invokeMethod(removeAction)}"
+            <a:commandLink action="#{elFunctions.invokeMethod(removeAction)}"
                 rendered="#{wi:get(canEdit,true)}" limitRender="true"
                 status=":status" render="#{reRender}"
                 onclick="if(!confirm('Confirma?')) return false;">

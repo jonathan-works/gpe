@@ -6,7 +6,7 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <a:commandLink id="#{id}" status="#{status}" render="#{render}"
-        action="#{util.invokeMethod(action)}" onclick="#{onclick}"
+        action="#{elFunctions.invokeMethod(action)}" onclick="#{onclick}"
         disabled="#{disabled}" oncomplete="#{oncomplete}"
         execute="#{ajaxSingle ? '@this' : ''}"
         limitRender="#{wi:get(limitToList, true)}"

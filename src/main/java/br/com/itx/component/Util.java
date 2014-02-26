@@ -3,7 +3,6 @@ package br.com.itx.component;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 
 import javax.faces.context.FacesContext;
 
@@ -11,15 +10,12 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 import org.richfaces.context.ExtendedPartialViewContext;
 
 @Scope(ScopeType.APPLICATION)
 public class Util implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging.getLogProvider(Util.class);
 
     /**
      * Cria um valor de expressão a partir de um método do Seam.
@@ -57,21 +53,6 @@ public class Util implements Serializable {
 
     public static void setToEventContext(String var, Object object) {
         Contexts.getEventContext().set(var, object);
-    }
-
-    /**
-     * Cria um method expression para a string informada no parametro.
-     * 
-     * @param methodName Método a ser chamado
-     * @return MethodExpression
-     */
-    public static void invokeMethod(String action) {
-        if (action != null && !"".equals(action)) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("#{").append(action).append("}");
-            Expressions.instance().createMethodExpression(sb.toString()).invoke();
-            LOG.info(MessageFormat.format("invokeMethod: {0}", sb));
-        }
     }
 
 }

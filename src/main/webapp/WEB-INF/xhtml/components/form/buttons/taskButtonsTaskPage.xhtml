@@ -18,7 +18,7 @@
             <f:selectItems
                 value="#{taskInstanceHome.transtionsSelectItems}" />
         </h:selectOneMenu>
-        <a:commandButton action="#{util.invokeMethod(taskEndAction)}"
+        <a:commandButton action="#{elFunctions.invokeMethod(taskEndAction)}"
             value="OK" status="none" onmouseup="showLoading()"
             styleClass="buttons" eventsQueue="editQueue"
             oncomplete="verifyFields();"
@@ -33,7 +33,7 @@
                 render=":script, #{reRenderEndTask}, :pageBodyDialogMessage"
                 limitRender="true" value="#{transition.name}"
                 styleClass="buttons buttons"
-                action="#{util.invokeMethod(taskEndAction)}">
+                action="#{elFunctions.invokeMethod(taskEndAction)}">
                 <f:setPropertyActionListener
                     target="#{taskInstanceHome.name}"
                     value="#{transition.name}" />
