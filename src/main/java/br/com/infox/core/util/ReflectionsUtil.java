@@ -1,6 +1,9 @@
 package br.com.infox.core.util;
 
+import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -55,6 +58,26 @@ public final class ReflectionsUtil {
         } catch (Exception e) {
             LOG.error(".setValue()", e);
         }
+    }
+    
+    public static boolean hasAnnotation(PropertyDescriptor pd, Class<? extends Annotation> annotation) {
+        Method readMethod = pd.getReadMethod();
+        if (readMethod != null) {
+            if (readMethod.isAnnotationPresent(annotation)) {
+                return true;
+            }
+
+            Class<?> declaringClass = readMethod.getDeclaringClass();
+            try {
+                Field field = declaringClass.getDeclaredField(pd.getName());
+                return field.isAnnotationPresent(annotation);
+            } catch (NoSuchFieldException ex) {
+                LOG.debug("hasAnnotation(pd, annotation)", ex);
+                return false;
+            }
+
+        }
+        return false;
     }
 
 }
