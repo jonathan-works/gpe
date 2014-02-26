@@ -16,6 +16,10 @@ public final class DateUtil {
 
     public static final int QUANTIDADE_DIAS_SEMANA = 7;
     public static final int QUANTIDADE_MESES_ANO = 12;
+    
+    private DateUtil(){
+        
+    }
 
     /**
      * Retorna a diferencia em dias entre a data inicial e final informadas.
