@@ -7,7 +7,7 @@ import java.util.List;
 import org.jdom2.Element;
 
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
-import br.com.itx.util.XmlUtil;
+import br.com.infox.epp.fluxo.xpdl.XmlUtil;
 
 public final class LanesXPDLFactory implements Serializable {
 

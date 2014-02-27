@@ -26,9 +26,9 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.util.ExcelExportUtil;
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.jboss.path.PathResolver;
 import br.com.itx.util.EntityUtil;
-import br.com.itx.util.ReflectionsUtil;
 
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 

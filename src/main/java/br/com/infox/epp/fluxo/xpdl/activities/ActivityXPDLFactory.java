@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jdom2.Element;
 
-import br.com.itx.util.XmlUtil;
+import br.com.infox.epp.fluxo.xpdl.XmlUtil;
 
 public final class ActivityXPDLFactory {
 	

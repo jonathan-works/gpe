@@ -8,8 +8,8 @@ import org.jdom2.Element;
 
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
+import br.com.infox.epp.fluxo.xpdl.XmlUtil;
 import br.com.infox.epp.fluxo.xpdl.activities.ActivityXPDL;
-import br.com.itx.util.XmlUtil;
 
 
 public final class TransitionXPDL implements Serializable {

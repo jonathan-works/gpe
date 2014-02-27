@@ -37,6 +37,11 @@ import br.com.infox.jboss.context.ContextFacade;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
 
+/**
+ * Deprecated : A superclasse AbstractHome está em processo de remoção, assim as
+ * funções de ProcessoHome estão sendo repassadas a novos componentes
+ * */
+@Deprecated
 @Name(ProcessoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoHome extends AbstractHome<Processo> {

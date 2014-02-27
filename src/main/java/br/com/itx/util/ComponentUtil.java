@@ -5,8 +5,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import javax.faces.component.EditableValueHolder;
@@ -34,6 +32,7 @@ public final class ComponentUtil {
      * @return componente com o nome solicitado ou null, especialmente em testes
      *         de integração.
      */
+    @Deprecated
     public static UIComponent getUIComponent(String componentId) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext == null) {
@@ -52,6 +51,7 @@ public final class ComponentUtil {
      * @param component geralmente um UIForm, mas pode ser qualquer tipo de
      *        UIComponente
      */
+    @Deprecated
     public static void clearChildren(UIComponent component) {
         if (component == null) {
             return;
@@ -78,31 +78,6 @@ public final class ComponentUtil {
             LOG.error(".getPropertyDescriptors()", e);
         }
         return new PropertyDescriptor[0];
-    }
-
-    public static PropertyDescriptor[] getPropertyDescriptors(Object component) {
-        return getPropertyDescriptors(component.getClass());
-    }
-
-    public static boolean hasAnnotation(PropertyDescriptor pd,
-            Class<? extends Annotation> annotation) {
-        Method readMethod = pd.getReadMethod();
-        if (readMethod != null) {
-            if (readMethod.isAnnotationPresent(annotation)) {
-                return true;
-            }
-
-            Class<?> declaringClass = readMethod.getDeclaringClass();
-            try {
-                Field field = declaringClass.getDeclaredField(pd.getName());
-                return field.isAnnotationPresent(annotation);
-            } catch (NoSuchFieldException ex) {
-                LOG.debug("hasAnnotation(pd, annotation)", ex);
-                return false;
-            }
-
-        }
-        return false;
     }
 
     public static Object getValue(Object component, String property) {

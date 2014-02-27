@@ -1,12 +1,12 @@
-package br.com.itx.util;
+package br.com.infox.jboss.conversation;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Conversation;
 
-@Name(ConversationUtil.NAME)
-public class ConversationUtil {
+@Name(ConversationFacade.NAME)
+public class ConversationFacade {
 
-    public static final String NAME = "conversationUtil";
+    public static final String NAME = "conversationFacade";
 
     /**
      * Finaliza a conversação

@@ -11,7 +11,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.infox.core.util.DateRange;
+import br.com.infox.core.time.DateRange;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 
 public class ProcessoEpaTarefaManagerTest {

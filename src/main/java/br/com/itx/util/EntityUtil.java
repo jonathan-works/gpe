@@ -20,9 +20,10 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
 
+import br.com.infox.core.util.ReflectionsUtil;
+
 public final class EntityUtil implements Serializable {
 
-    public static final String ENTITY_MANAGER_NAME = "entityManager";
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(EntityUtil.class);
 
@@ -194,18 +195,18 @@ public final class EntityUtil implements Serializable {
 
     private static boolean isId(PropertyDescriptor pd) {
         return pd != null
-                && (ComponentUtil.hasAnnotation(pd, Id.class) || ComponentUtil.hasAnnotation(pd, EmbeddedId.class));
+                && (ReflectionsUtil.hasAnnotation(pd, Id.class) || ReflectionsUtil.hasAnnotation(pd, EmbeddedId.class));
     }
 
     private static boolean isAceptable(PropertyDescriptor pd) {
         return pd != null
-                && !ComponentUtil.hasAnnotation(pd, Transient.class)
-                && (ComponentUtil.hasAnnotation(pd, Column.class) || ComponentUtil.hasAnnotation(pd, ManyToOne.class));
+                && !ReflectionsUtil.hasAnnotation(pd, Transient.class)
+                && (ReflectionsUtil.hasAnnotation(pd, Column.class) || ReflectionsUtil.hasAnnotation(pd, ManyToOne.class));
     }
 
     private static boolean isRelacao(PropertyDescriptor pd) {
         return pd != null
-                && (ComponentUtil.hasAnnotation(pd, ManyToMany.class) || ComponentUtil.hasAnnotation(pd, OneToMany.class));
+                && (ReflectionsUtil.hasAnnotation(pd, ManyToMany.class) || ReflectionsUtil.hasAnnotation(pd, OneToMany.class));
     }
 
     @SuppressWarnings(UNCHECKED)
