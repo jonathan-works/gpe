@@ -80,11 +80,6 @@ public final class ComponentUtil {
         return new PropertyDescriptor[0];
     }
 
-    @Deprecated
-    public static PropertyDescriptor[] getPropertyDescriptors(Object component) {
-        return getPropertyDescriptors(component.getClass());
-    }
-
     public static Object getValue(Object component, String property) {
         Method getterMethod = Reflections.getGetterMethod(component.getClass(), property);
         if (getterMethod != null) {
