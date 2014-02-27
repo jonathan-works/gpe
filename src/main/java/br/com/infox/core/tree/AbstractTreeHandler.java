@@ -27,263 +27,262 @@ import br.com.itx.util.ComponentUtil;
 @Scope(ScopeType.PAGE)
 public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable {
 
-	private static final int LIMITE_VISUALIZACAO = 25;
+    private static final int LIMITE_VISUALIZACAO = 25;
     private static final LogProvider LOG = Logging.getLogProvider(AbstractTreeHandler.class);
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private E selected;
-	private List<EntityNode<E>> rootList;
-	private String treeId;
+    private E selected;
+    private List<EntityNode<E>> rootList;
+    private String treeId;
     private String iconFolder;
-	private String iconLeaf;
-	private boolean folderSelectable = true;
-	private String expression;
-	private List<EntityNode<E>> selectedNodesList = new ArrayList<EntityNode<E>>(0);
-	
-	@Override
-	public void clearTree() {
-		selectedNodesList = new ArrayList<EntityNode<E>>();
-		rootList = null;
-		selected = null;
-		clearUITree();
-		if (expression != null) {
-			Expressions.instance().createValueExpression(expression).setValue(null);
-		}
-	}
+    private String iconLeaf;
+    private boolean folderSelectable = true;
+    private String expression;
+    private List<EntityNode<E>> selectedNodesList = new ArrayList<EntityNode<E>>(0);
 
-	private void clearUITree() {
-		if (treeId != null) {
-			UITree tree = (UITree) FacesContext.getCurrentInstance().getViewRoot().findComponent(treeId);
-			tree.setRowKey(null);
-			tree.setSelection(null);
-			closeParentPanel(tree);
-		}
-	}
+    @Override
+    public void clearTree() {
+        selectedNodesList = new ArrayList<EntityNode<E>>();
+        rootList = null;
+        selected = null;
+        clearUITree();
+        if (expression != null) {
+            Expressions.instance().createValueExpression(expression).setValue(null);
+        }
+    }
 
-	@Override
-	public List<EntityNode<E>> getRoots() {
-		if (rootList == null) {
-			StopWatch sw = new StopWatch();
-			sw.start();
-			Query queryRoots = genericDAO().createQuery(getQueryRoots(), null);
-			EntityNode<E> entityNode = createNode();
-			entityNode.setIgnore(getEntityToIgnore());
-			rootList = entityNode.getRoots(queryRoots);
-			LOG.info(".getRoots(): " + sw.getTime());
-		}
-		return rootList;
-	}
+    private void clearUITree() {
+        if (treeId != null) {
+            UITree tree = (UITree) FacesContext.getCurrentInstance().getViewRoot().findComponent(treeId);
+            tree.setRowKey(null);
+            tree.setSelection(null);
+            closeParentPanel(tree);
+        }
+    }
 
-	protected EntityNode<E> createNode() {
-		return new EntityNode<E>(getQueryChildrenList());
-	}
+    @Override
+    public List<EntityNode<E>> getRoots() {
+        if (rootList == null) {
+            StopWatch sw = new StopWatch();
+            sw.start();
+            Query queryRoots = genericDAO().createQuery(getQueryRoots(), null);
+            EntityNode<E> entityNode = createNode();
+            entityNode.setIgnore(getEntityToIgnore());
+            rootList = entityNode.getRoots(queryRoots);
+            LOG.info(".getRoots(): " + sw.getTime());
+        }
+        return rootList;
+    }
 
-	/**
-	 * Lista de queries que irão gerar os nós filhos Caso haja mais de uma
-	 * query, deve-se sobrescrever esse método e retornar null no método
-	 * getQueryChildren()
-	 * 
-	 * @return
-	 */
-	protected String[] getQueryChildrenList() {
-		String[] children = new String[1];
-		children[0] = getQueryChildren();
-		return children;
-	}
+    protected EntityNode<E> createNode() {
+        return new EntityNode<E>(getQueryChildrenList());
+    }
 
-	@Override
-	@SuppressWarnings(UNCHECKED)
-	public E getSelected() {
-		if (expression == null) {
-			return selected;
-		}
-		Object value = null;
-		try {
-			value = Expressions.instance().createValueExpression(expression)
-					.getValue();
-		} catch (Exception ignore) {
-		    LOG.error(".getSelected()", ignore);
-		}
-		return (E) value;
-	}
+    /**
+     * Lista de queries que irão gerar os nós filhos Caso haja mais de uma
+     * query, deve-se sobrescrever esse método e retornar null no método
+     * getQueryChildren()
+     * 
+     * @return
+     */
+    protected String[] getQueryChildrenList() {
+        String[] children = new String[1];
+        children[0] = getQueryChildren();
+        return children;
+    }
 
-	@Override
-	public void setSelected(E selected) {
-		if (expression == null) {
-			this.selected = selected;
-		} else {
-			Expressions.instance().createValueExpression(expression).setValue(selected);
-		}
-	}
+    @Override
+    @SuppressWarnings(UNCHECKED)
+    public E getSelected() {
+        if (expression == null) {
+            return selected;
+        }
+        Object value = null;
+        try {
+            value = Expressions.instance().createValueExpression(expression).getValue();
+        } catch (Exception ignore) {
+            LOG.error(".getSelected()", ignore);
+        }
+        return (E) value;
+    }
 
-	@SuppressWarnings(UNCHECKED)
-	@Override
-	public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
-		// Considerando single selection
-		Object selectionKey = new ArrayList<Object>(ev.getNewSelection()).get(0);
-		UITree tree = (UITree) ev.getSource();
-		treeId = ":" + tree.getClientId();
+    @Override
+    public void setSelected(E selected) {
+        if (expression == null) {
+            this.selected = selected;
+        } else {
+            Expressions.instance().createValueExpression(expression).setValue(selected);
+        }
+    }
 
-		Object key = tree.getRowKey();
-		tree.setRowKey(selectionKey);
-		EntityNode<E> en = (EntityNode<E>) tree.getRowData();
-		tree.setRowKey(key);
-		setSelected(en.getEntity());
-		closeParentPanel(tree);
-		raiseEvents(en);
-	}
-	
-	protected void raiseEvents(EntityNode<E> en) {
-		Events.instance().raiseEvent(getEventSelected(), getSelected());
-	}
+    @SuppressWarnings(UNCHECKED)
+    @Override
+    public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
+        // Considerando single selection
+        Object selectionKey = new ArrayList<Object>(ev.getNewSelection()).get(0);
+        UITree tree = (UITree) ev.getSource();
+        treeId = ":" + tree.getClientId();
 
-	protected String getEventSelected() {
-		return null;
-	}
+        Object key = tree.getRowKey();
+        tree.setRowKey(selectionKey);
+        EntityNode<E> en = (EntityNode<E>) tree.getRowData();
+        tree.setRowKey(key);
+        setSelected(en.getEntity());
+        closeParentPanel(tree);
+        raiseEvents(en);
+    }
 
-	protected abstract String getQueryRoots();
+    protected void raiseEvents(EntityNode<E> en) {
+        Events.instance().raiseEvent(getEventSelected(), getSelected());
+    }
 
-	protected abstract String getQueryChildren();
+    protected String getEventSelected() {
+        return null;
+    }
 
-	@Override
-	public String getIconFolder() {
-		return iconFolder;
-	}
+    protected abstract String getQueryRoots();
 
-	@Override
-	public void setIconFolder(String iconFolder) {
-		this.iconFolder = iconFolder;
-	}
+    protected abstract String getQueryChildren();
 
-	@Override
-	public String getIconLeaf() {
-		return iconLeaf;
-	}
+    @Override
+    public String getIconFolder() {
+        return iconFolder;
+    }
 
-	@Override
-	public void setIconLeaf(String iconLeaf) {
-		this.iconLeaf = iconLeaf;
-	}
+    @Override
+    public void setIconFolder(String iconFolder) {
+        this.iconFolder = iconFolder;
+    }
 
-	@Override
-	public boolean isFolderSelectable() {
-		return folderSelectable;
-	}
+    @Override
+    public String getIconLeaf() {
+        return iconLeaf;
+    }
 
-	@Override
-	public void setFolderSelectable(boolean folderSelectable) {
-		this.folderSelectable = folderSelectable;
-	}
+    @Override
+    public void setIconLeaf(String iconLeaf) {
+        this.iconLeaf = iconLeaf;
+    }
 
-	public String getExpression() {
-		return expression;
-	}
+    @Override
+    public boolean isFolderSelectable() {
+        return folderSelectable;
+    }
 
-	public void setExpression(String expression) {
-		this.expression = "#{" + expression + "}";
-	}
+    @Override
+    public void setFolderSelectable(boolean folderSelectable) {
+        this.folderSelectable = folderSelectable;
+    }
 
-	/**
-	 * Tratamento para que a string não fique maior que o tamanho do campo
-	 * 
-	 * @param selected
-	 * @return
-	 */
-	public String getSelectedView(E selected) {
-		String selecionado = "";
-		if (selected == null || selected.toString() == null) {
-			return selecionado;
-		}
-		if (selected.toString().length() > LIMITE_VISUALIZACAO) {
-			selecionado = selected.toString().substring(0, LIMITE_VISUALIZACAO) + "...";
-		} else {
-			selecionado = selected.toString();
-		}
-		return selecionado;
-	}
+    public String getExpression() {
+        return expression;
+    }
 
-	/**
-	 * Método que retorna a lista dos itens selecionados.
-	 * 
-	 * @return - Lista dos itens selecionados.
-	 */
-	public List<E> getSelectedTree() {
-		List<E> selectedList = new ArrayList<E>();
-		for (EntityNode<E> node : selectedNodesList) {
-			selectedList.add(node.getEntity());
-		}
-		return selectedList;
-	}
+    public void setExpression(String expression) {
+        this.expression = "#{" + expression + "}";
+    }
 
-	public List<EntityNode<E>> getSelectedNodesList() {
-		return selectedNodesList;
-	}
+    /**
+     * Tratamento para que a string não fique maior que o tamanho do campo
+     * 
+     * @param selected
+     * @return
+     */
+    public String getSelectedView(E selected) {
+        String selecionado = "";
+        if (selected == null || selected.toString() == null) {
+            return selecionado;
+        }
+        if (selected.toString().length() > LIMITE_VISUALIZACAO) {
+            selecionado = selected.toString().substring(0, LIMITE_VISUALIZACAO)
+                    + "...";
+        } else {
+            selecionado = selected.toString();
+        }
+        return selecionado;
+    }
 
-	public void setSelectedNodesList(List<EntityNode<E>> selectedNodesList) {
-		this.selectedNodesList = selectedNodesList;
-	}
+    /**
+     * Método que retorna a lista dos itens selecionados.
+     * 
+     * @return - Lista dos itens selecionados.
+     */
+    public List<E> getSelectedTree() {
+        List<E> selectedList = new ArrayList<E>();
+        for (EntityNode<E> node : selectedNodesList) {
+            selectedList.add(node.getEntity());
+        }
+        return selectedList;
+    }
 
-	/**
-	 * Insere o nó selecionado pela checkBox na lista dos nós selecionados.
-	 * 
-	 * @param node
-	 *            - Nó selecionado pelo usuário
-	 */
-	public void setSelectedNode(EntityNode<E> node) {
-		if (getSelected() == null || getSelected().toString() == null) {
-			setSelected(node.getEntity());
-		}
-		if (selectedNodesList.contains(node)) {
-			selectedNodesList.remove(node);
-			selectAllChildren(node, false);
-		} else {
-			selectedNodesList.add(node);
-			selectAllChildren(node, true);
-		}
-	}
-	
-	protected void setTreeId(String treeId) {
+    public List<EntityNode<E>> getSelectedNodesList() {
+        return selectedNodesList;
+    }
+
+    public void setSelectedNodesList(List<EntityNode<E>> selectedNodesList) {
+        this.selectedNodesList = selectedNodesList;
+    }
+
+    /**
+     * Insere o nó selecionado pela checkBox na lista dos nós selecionados.
+     * 
+     * @param node - Nó selecionado pelo usuário
+     */
+    public void setSelectedNode(EntityNode<E> node) {
+        if (getSelected() == null || getSelected().toString() == null) {
+            setSelected(node.getEntity());
+        }
+        if (selectedNodesList.contains(node)) {
+            selectedNodesList.remove(node);
+            selectAllChildren(node, false);
+        } else {
+            selectedNodesList.add(node);
+            selectAllChildren(node, true);
+        }
+    }
+
+    protected void setTreeId(String treeId) {
         this.treeId = treeId;
     }
 
-	private void selectAllChildren(EntityNode<E> selectedNode, boolean operation) {
-		for (EntityNode<E> node : selectedNode.getNodes()) {
-			selectAllChildren(node, operation);
-			node.setSelected(operation);
-			if (operation) {
-				selectedNodesList.add(node);
-			} else {
-				selectedNodesList.remove(node);
-			}
-		}
-	}
+    private void selectAllChildren(EntityNode<E> selectedNode, boolean operation) {
+        for (EntityNode<E> node : selectedNode.getNodes()) {
+            selectAllChildren(node, operation);
+            node.setSelected(operation);
+            if (operation) {
+                selectedNodesList.add(node);
+            } else {
+                selectedNodesList.remove(node);
+            }
+        }
+    }
 
-	/**
-	 * Metodo que retorna a entidade que deve ser ignorada na montagem do
-	 * treeview
-	 * 
-	 * @return
-	 */
-	protected E getEntityToIgnore() {
-		return null;
-	}
+    /**
+     * Metodo que retorna a entidade que deve ser ignorada na montagem do
+     * treeview
+     * 
+     * @return
+     */
+    protected E getEntityToIgnore() {
+        return null;
+    }
 
-	private UICollapsiblePanel getParentPanel(UIComponent root) {
-		UIComponent parent = root.getParent();
-		if (parent instanceof UICollapsiblePanel || parent == null) {
-			return (UICollapsiblePanel) parent;
-		}
-		return getParentPanel(parent);
-	}
-	
-	protected void closeParentPanel(UITree tree) {
-		UICollapsiblePanel panel = getParentPanel(tree);
-		if (panel != null) {
-			panel.setExpanded(false);
-		}
-	}
-	
-	private GenericDAO genericDAO(){
-	    return ComponentUtil.getComponent(GenericDAO.NAME);
-	}
+    private UICollapsiblePanel getParentPanel(UIComponent root) {
+        UIComponent parent = root.getParent();
+        if (parent instanceof UICollapsiblePanel || parent == null) {
+            return (UICollapsiblePanel) parent;
+        }
+        return getParentPanel(parent);
+    }
+
+    protected void closeParentPanel(UITree tree) {
+        UICollapsiblePanel panel = getParentPanel(tree);
+        if (panel != null) {
+            panel.setExpanded(false);
+        }
+    }
+
+    private GenericDAO genericDAO() {
+        return ComponentUtil.getComponent(GenericDAO.NAME);
+    }
 }

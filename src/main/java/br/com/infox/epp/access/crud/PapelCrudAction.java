@@ -48,23 +48,24 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
 
     public static final String NAME = "papelCrudAction";
 
-	private Map<Boolean, List<String>> papeisDisponiveis;
-	private Map<String, Papel> papelMap;
-	private Map<String, Recurso> recursoMap;
+    private Map<Boolean, List<String>> papeisDisponiveis;
+    private Map<String, Papel> papelMap;
+    private Map<String, Recurso> recursoMap;
 
-	private List<String> membros;
-	private Map<String, Papel> membrosMap;
+    private List<String> membros;
+    private Map<String, Papel> membrosMap;
 
-	private List<String> recursosDisponiveis;
-	private List<String> papeis;
-	private List<String> recursos;
-	
-	private String activeInnerTab;
-	private boolean acceptChange=Boolean.FALSE;
-	
-	@In private RecursoManager recursoManager;
-    
-	private final Comparator<String> papelComparator = new Comparator<String>(){
+    private List<String> recursosDisponiveis;
+    private List<String> papeis;
+    private List<String> recursos;
+
+    private String activeInnerTab;
+    private boolean acceptChange = Boolean.FALSE;
+
+    @In
+    private RecursoManager recursoManager;
+
+    private final Comparator<String> papelComparator = new Comparator<String>() {
         @Override
         public int compare(final String o1, final String o2) {
             final String n1 = papelMap.get(o1).toString();
@@ -72,171 +73,170 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             return n1.compareTo(n2);
         }
     };
-    
-	public Integer getPapelId() {
-		return (Integer) getId();
-	}
-	
-	private void clear() {
-		papeis = null;
-		recursos = null;
-		recursosDisponiveis = null;
-		papeisDisponiveis = null;
-		membros = null;
-	}
 
-	public void setPapelId(final Integer id) {
-		final Object oid = getId();
-		if (oid == null || !oid.equals(id)) {
-			super.setId(id);
-			Conversation.instance().end();
-			clear();
-			
-			getRoleaction().editRole(getInstance().getIdentificador());
-		}
-	}
+    public Integer getPapelId() {
+        return (Integer) getId();
+    }
 
-	public List<String> getMembros() {
-		if (membros == null) {
-			membros = new ArrayList<>();
-			membrosMap = new HashMap<>();
-			final List<Principal> list = new ArrayList<>();
-			new PopulateRoleMembersListOperation(getInstance().getIdentificador(), list).run();
-			if (list.isEmpty()) {
-				return new ArrayList<>();
-			}
-			final List<String> idPapeis = new ArrayList<String>();
-			for (final Principal principal : list) {
-				idPapeis.add(principal.getName());
-			}
-			final List<Papel> papelList = getManager().getPapeisByListaDeIdentificadores(idPapeis);
-			for (final Papel papel : papelList) {
-				final String id = papel.getIdentificador();
-				membros.add(id);
-				membrosMap.put(id, papel);
-			}
-			Collections.sort(membros);
-		}
-		return membros;
-	}
-	
-	public void setMembros(final List<String> membros){
-	    if (acceptChange || MEMBROS_TAB_ID.equals(activeInnerTab)) {
-	        acceptChange=Boolean.FALSE;
-	        this.membros = membros;
-	    }
-	}
-	
-	private RoleAction getRoleaction() {
-		return ComponentUtil.getComponent(ROLE_ACTION);
-	}
-	
-	@Override
-	public void newInstance() {
-		super.newInstance();
-		clear();
-		Contexts.removeFromAllContexts(ROLE_ACTION);
-	}
-	
-	@Override
-	public String remove(final Papel p) {
-		setInstance(p);
-		final String ret = super.remove();
-		newInstance();
-		RolesMap.instance().clear();
-		if (REMOVED.equals(ret)) {
-			getMessagesHandler().add(MSG_REGISTRO_REMOVIDO);
-		}
-		return ret;
-	}
-	
-	public String getNome(final String identificador) {
-		if (papelMap != null && papelMap.containsKey(identificador)) {
-			return papelMap.get(identificador).toString();
-		}
-		return null;
-	}
-	
-	public String getNomeRecurso(final String identificador){
-	    if (recursoMap != null && recursoMap.containsKey(identificador)){
-	        return recursoMap.get(identificador).getNome();
-	    }
-	    return null;
-	}
-	
-	public List<String> getPapeis() {
-		if (papeis == null) {
-			papeis = getRoleaction().getGroups();
-			if (papeis == null) {
-				papeis = new ArrayList<>();
-			}
-		}
-		return papeis;
-	}
+    private void clear() {
+        papeis = null;
+        recursos = null;
+        recursosDisponiveis = null;
+        papeisDisponiveis = null;
+        membros = null;
+    }
 
-	public void setPapeis(final List<String> papeis) {
-	    if (acceptChange || PAPEIS_TAB_ID.equals(activeInnerTab)) {
-	        acceptChange=Boolean.FALSE;
-	        this.papeis = papeis;
-	    }
-	}
-	
-	/**
-	 * Busca os papeis que podem ser atribuidos ao papel atual,
-	 * removendo aqueles que são implícitos, isso é, atribuidos 
-	 * por herança de papel
-	 * 
-	 * @return
-	 */
-	public List<String> getPapeisDisponiveis(final boolean removeMembros) {
-		if (papeisDisponiveis == null) {
-			papeisDisponiveis = new HashMap<>();
-		}
-		if (!papeisDisponiveis.containsKey(removeMembros)) {
-			final List<String> assignableRoles = getRoleaction().getAssignableRoles();
-			papeisDisponiveis.put(removeMembros, assignableRoles);
-			removePapeisImplicitos(assignableRoles, getPapeis());
-			removeRecursos(assignableRoles);
-			if (isManaged() && removeMembros) {
-				removeMembros(getInstance().getIdentificador(), assignableRoles);
-			} else {
-				assignableRoles.removeAll(papeis);
-			}
-			if (papelMap == null) {
-				papelMap = new HashMap<>();
-			}
-			final List<Papel> papelList = getManager().getPapeisByListaDeIdentificadores(assignableRoles);
-			for (final Papel p : papelList) {
-				papelMap.put(p.getIdentificador(), p);
-			}
+    public void setPapelId(final Integer id) {
+        final Object oid = getId();
+        if (oid == null || !oid.equals(id)) {
+            super.setId(id);
+            Conversation.instance().end();
+            clear();
+
+            getRoleaction().editRole(getInstance().getIdentificador());
+        }
+    }
+
+    public List<String> getMembros() {
+        if (membros == null) {
+            membros = new ArrayList<>();
+            membrosMap = new HashMap<>();
+            final List<Principal> list = new ArrayList<>();
+            new PopulateRoleMembersListOperation(getInstance().getIdentificador(), list).run();
+            if (list.isEmpty()) {
+                return new ArrayList<>();
+            }
+            final List<String> idPapeis = new ArrayList<String>();
+            for (final Principal principal : list) {
+                idPapeis.add(principal.getName());
+            }
+            final List<Papel> papelList = getManager().getPapeisByListaDeIdentificadores(idPapeis);
+            for (final Papel papel : papelList) {
+                final String id = papel.getIdentificador();
+                membros.add(id);
+                membrosMap.put(id, papel);
+            }
+            Collections.sort(membros);
+        }
+        return membros;
+    }
+
+    public void setMembros(final List<String> membros) {
+        if (acceptChange || MEMBROS_TAB_ID.equals(activeInnerTab)) {
+            acceptChange = Boolean.FALSE;
+            this.membros = membros;
+        }
+    }
+
+    private RoleAction getRoleaction() {
+        return ComponentUtil.getComponent(ROLE_ACTION);
+    }
+
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        clear();
+        Contexts.removeFromAllContexts(ROLE_ACTION);
+    }
+
+    @Override
+    public String remove(final Papel p) {
+        setInstance(p);
+        final String ret = super.remove();
+        newInstance();
+        RolesMap.instance().clear();
+        if (REMOVED.equals(ret)) {
+            getMessagesHandler().add(MSG_REGISTRO_REMOVIDO);
+        }
+        return ret;
+    }
+
+    public String getNome(final String identificador) {
+        if (papelMap != null && papelMap.containsKey(identificador)) {
+            return papelMap.get(identificador).toString();
+        }
+        return null;
+    }
+
+    public String getNomeRecurso(final String identificador) {
+        if (recursoMap != null && recursoMap.containsKey(identificador)) {
+            return recursoMap.get(identificador).getNome();
+        }
+        return null;
+    }
+
+    public List<String> getPapeis() {
+        if (papeis == null) {
+            papeis = getRoleaction().getGroups();
+            if (papeis == null) {
+                papeis = new ArrayList<>();
+            }
+        }
+        return papeis;
+    }
+
+    public void setPapeis(final List<String> papeis) {
+        if (acceptChange || PAPEIS_TAB_ID.equals(activeInnerTab)) {
+            acceptChange = Boolean.FALSE;
+            this.papeis = papeis;
+        }
+    }
+
+    /**
+     * Busca os papeis que podem ser atribuidos ao papel atual, removendo
+     * aqueles que são implícitos, isso é, atribuidos por herança de papel
+     * 
+     * @return
+     */
+    public List<String> getPapeisDisponiveis(final boolean removeMembros) {
+        if (papeisDisponiveis == null) {
+            papeisDisponiveis = new HashMap<>();
+        }
+        if (!papeisDisponiveis.containsKey(removeMembros)) {
+            final List<String> assignableRoles = getRoleaction().getAssignableRoles();
+            papeisDisponiveis.put(removeMembros, assignableRoles);
+            removePapeisImplicitos(assignableRoles, getPapeis());
+            removeRecursos(assignableRoles);
+            if (isManaged() && removeMembros) {
+                removeMembros(getInstance().getIdentificador(), assignableRoles);
+            } else {
+                assignableRoles.removeAll(papeis);
+            }
+            if (papelMap == null) {
+                papelMap = new HashMap<>();
+            }
+            final List<Papel> papelList = getManager().getPapeisByListaDeIdentificadores(assignableRoles);
+            for (final Papel p : papelList) {
+                papelMap.put(p.getIdentificador(), p);
+            }
             Collections.sort(assignableRoles, papelComparator);
-		}
-		return papeisDisponiveis.get(removeMembros);
-	}
+        }
+        return papeisDisponiveis.get(removeMembros);
+    }
 
-	@SuppressWarnings(WarningConstants.UNCHECKED)
+    @SuppressWarnings(WarningConstants.UNCHECKED)
     public List<String> getRecursos() {
-		if (recursos == null) {
-			final String identificador_ = getInstance().getIdentificador();
+        if (recursos == null) {
+            final String identificador_ = getInstance().getIdentificador();
             if (IdentityManager.instance().roleExists(identificador_)) {
                 final Role role = new Role(identificador_);
                 final List<Permissao> permissoes = (List<Permissao>) PermissionManager.instance().getPermissoesFromRole(role);
-				recursos = recursoManager.getIdentificadorRecursosFromPermissoes(permissoes);
-			} else {
-				recursos = new ArrayList<String>();
-			}
-		}
-		return recursos;
-	}
-	
-	public void setRecursos(final List<String> recursos) {
-	    if (acceptChange || RECURSOS_TAB_ID.equals(activeInnerTab)) {
-	        acceptChange=Boolean.FALSE;
-	        this.recursos = recursos;
-	    }
-	}
+                recursos = recursoManager.getIdentificadorRecursosFromPermissoes(permissoes);
+            } else {
+                recursos = new ArrayList<String>();
+            }
+        }
+        return recursos;
+    }
 
-	public String getActiveInnerTab() {
+    public void setRecursos(final List<String> recursos) {
+        if (acceptChange || RECURSOS_TAB_ID.equals(activeInnerTab)) {
+            acceptChange = Boolean.FALSE;
+            this.recursos = recursos;
+        }
+    }
+
+    public String getActiveInnerTab() {
         return activeInnerTab;
     }
 
@@ -251,72 +251,77 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
                 final List<Recurso> listaRecursos = recursoManager.findAll();
                 recursoMap = new HashMap<>();
-                for (final Recurso recurso : listaRecursos){
+                for (final Recurso recurso : listaRecursos) {
                     final String identificadorRecurso = recurso.getIdentificador();
                     recursosDisponiveis.add(identificadorRecurso);
                     recursoMap.put(identificadorRecurso, recurso);
                 }
-            } 
+            }
         }
-		return recursosDisponiveis;
-	}
+        return recursosDisponiveis;
+    }
 
-	private void removeRecursos(final List<String> roles) {
-		for (final Iterator<String> iterator = roles.iterator(); iterator.hasNext();) {
-			final String papelId = iterator.next();
-			if (papelId.startsWith("/")) {
-				iterator.remove();
-			}
-		}
-	}
-	
-	private void removePapeisImplicitos(final List<String> list, List<String> from) {
-		if (from == null) {
-			return;
-		}
-		// ser for o mesmo objeto, clona para evitar ConcurrentModificationException
-		if (from.equals(list)) {
-			from = new ArrayList<String>(list);
-		}
-		for (final String papel : from) {
-			removePapeisImplicitos(papel, list);
-		}
-	}
+    private void removeRecursos(final List<String> roles) {
+        for (final Iterator<String> iterator = roles.iterator(); iterator.hasNext();) {
+            final String papelId = iterator.next();
+            if (papelId.startsWith("/")) {
+                iterator.remove();
+            }
+        }
+    }
 
-	/**
-	 * Remove o papel da lista, recursivamente
-	 * @param papel
-	 */
-	private void removePapeisImplicitos(final String papel, final List<String> list) {
-		for (final String p : IdentityManager.instance().getRoleGroups(papel)) {
-			list.remove(p);
-			getManager().flush();
-			removePapeisImplicitos(p, list);
-		}
-	}
-	
-	private void removeMembros(final String papel, final List<String> roles) {
-		final List<Principal> listMembers = new ArrayList<>();
-		new PopulateRoleMembersListOperation(papel, listMembers).run();
-		for (final Principal p : listMembers) {
-			if (p instanceof Role) {
+    private void removePapeisImplicitos(final List<String> list,
+            List<String> from) {
+        if (from == null) {
+            return;
+        }
+        // ser for o mesmo objeto, clona para evitar
+        // ConcurrentModificationException
+        if (from.equals(list)) {
+            from = new ArrayList<String>(list);
+        }
+        for (final String papel : from) {
+            removePapeisImplicitos(papel, list);
+        }
+    }
+
+    /**
+     * Remove o papel da lista, recursivamente
+     * 
+     * @param papel
+     */
+    private void removePapeisImplicitos(final String papel,
+            final List<String> list) {
+        for (final String p : IdentityManager.instance().getRoleGroups(papel)) {
+            list.remove(p);
+            getManager().flush();
+            removePapeisImplicitos(p, list);
+        }
+    }
+
+    private void removeMembros(final String papel, final List<String> roles) {
+        final List<Principal> listMembers = new ArrayList<>();
+        new PopulateRoleMembersListOperation(papel, listMembers).run();
+        for (final Principal p : listMembers) {
+            if (p instanceof Role) {
                 roles.remove(p.getName());
-				removeMembros(p.getName(), roles);
-			}
-		}
-	}
+                removeMembros(p.getName(), roles);
+            }
+        }
+    }
 
-	@Override
-	protected boolean isInstanceValid() {
-	    boolean result = Boolean.TRUE;
-	    if (IdentityManager.instance().roleExists(getInstance().getIdentificador()) && !isManaged()) {
-	        getMessagesHandler().clear();
-	        getMessagesHandler().add(CONSTRAINT_VIOLATION_UNIQUE_VIOLATION);
+    @Override
+    protected boolean isInstanceValid() {
+        boolean result = Boolean.TRUE;
+        if (IdentityManager.instance().roleExists(getInstance().getIdentificador())
+                && !isManaged()) {
+            getMessagesHandler().clear();
+            getMessagesHandler().add(CONSTRAINT_VIOLATION_UNIQUE_VIOLATION);
             result = Boolean.FALSE;
         }
-	    return result;
-	}
-	
+        return result;
+    }
+
     @Override
     protected void afterSave(final String ret) {
         if (UPDATED.equals(ret)) {
@@ -333,18 +338,18 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     }
 
     @Observer(RolesTreeHandler.ROLE_TREE_EVENT)
-	public void treeSelected(final Papel papel) {
-		setPapelId(papel.getIdPapel());
-		setTab("form");
-		if (papel.getIdentificador().startsWith("/")) {
-			final Redirect redirect = Redirect.instance();
-			redirect.setViewId("/useradmin/recursoListView.xhtml");
-			redirect.execute();
-		}
-	}
-	
-	public static PapelCrudAction instance() {
-		return ComponentUtil.getComponent(NAME);
-	}
-	
+    public void treeSelected(final Papel papel) {
+        setPapelId(papel.getIdPapel());
+        setTab("form");
+        if (papel.getIdentificador().startsWith("/")) {
+            final Redirect redirect = Redirect.instance();
+            redirect.setViewId("/useradmin/recursoListView.xhtml");
+            redirect.execute();
+        }
+    }
+
+    public static PapelCrudAction instance() {
+        return ComponentUtil.getComponent(NAME);
+    }
+
 }

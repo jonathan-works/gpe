@@ -44,117 +44,114 @@ import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
 
 @Entity
-@Table(name = TABLE_PAPEL, schema=PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
+@Table(name = TABLE_PAPEL, schema = PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
 @NamedQueries({
-    @NamedQuery(name=PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, 
-            query=PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY),
-    @NamedQuery(name=PAPEL_BY_IDENTIFICADOR, query=PAPEL_BY_IDENTIFICADOR_QUERY),
-    @NamedQuery(name=PAPEIS_BY_IDENTIFICADORES, query=PAPEIS_BY_IDENTIFICADORES_QUERY),
-    @NamedQuery(name=PAPEIS_BY_LOCALIZACAO, query=PAPEIS_BY_LOCALIZACAO_QUERY),
-    @NamedQuery(name=PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, 
-            query=PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY)
-})
+    @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY),
+    @NamedQuery(name = PAPEL_BY_IDENTIFICADOR, query = PAPEL_BY_IDENTIFICADOR_QUERY),
+    @NamedQuery(name = PAPEIS_BY_IDENTIFICADORES, query = PAPEIS_BY_IDENTIFICADORES_QUERY),
+    @NamedQuery(name = PAPEIS_BY_LOCALIZACAO, query = PAPEIS_BY_LOCALIZACAO_QUERY),
+    @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY) })
 public class Papel implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private int idPapel;
-	private String nome;
-	private String identificador;
+    private int idPapel;
+    private String nome;
+    private String identificador;
 
-	private List<Papel> grupos;
+    private List<Papel> grupos;
 
-	public Papel() {
-    }
-	
-	public Papel(final String nome, final String identificador) {
-	    this.nome = nome;
-	    this.identificador = identificador;
+    public Papel() {
     }
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_PAPEL, unique = true, nullable = false)
-	public int getIdPapel() {
-		return this.idPapel;
-	}
+    public Papel(final String nome, final String identificador) {
+        this.nome = nome;
+        this.identificador = identificador;
+    }
 
-	public void setIdPapel(int idPerfil) {
-		this.idPapel = idPerfil;
-	}
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_PAPEL, unique = true, nullable = false)
+    public int getIdPapel() {
+        return this.idPapel;
+    }
 
-	@Column(name = NOME_PAPEL, length=NOME_PADRAO)
-	@Size(max=NOME_PADRAO)
-	public String getNome() {
-		return this.nome;
-	}
+    public void setIdPapel(int idPerfil) {
+        this.idPapel = idPerfil;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    @Column(name = NOME_PAPEL, length = NOME_PADRAO)
+    @Size(max = NOME_PADRAO)
+    public String getNome() {
+        return this.nome;
+    }
 
-	@Column(name = IDENTIFICADOR, length = DESCRICAO_PADRAO)
-	@Size(max=DESCRICAO_PADRAO)
-	@NotNull
-	@RoleName
-	public String getIdentificador() {
-		return this.identificador;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public void setIdentificador(String identificador) {
-		this.identificador = identificador;
-	}
+    @Column(name = IDENTIFICADOR, length = DESCRICAO_PADRAO)
+    @Size(max = DESCRICAO_PADRAO)
+    @NotNull
+    @RoleName
+    public String getIdentificador() {
+        return this.identificador;
+    }
 
-	@RoleGroups
-	@ManyToMany
-	@JoinTable(name = "tb_papel_grupo", schema=PUBLIC, joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "membro_do_grupo"))
-	@ForeignKey(name="tb_papel_grupo_papel_fk", inverseName = "tb_papel_grupo_membro_fk" )
-	@OrderBy("nome")
-	public List<Papel> getGrupos() {
-		return this.grupos;
-	}
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
+    }
 
-	public void setGrupos(List<Papel> grupos) {
-		this.grupos = grupos;
-	}
+    @RoleGroups
+    @ManyToMany
+    @JoinTable(name = "tb_papel_grupo", schema = PUBLIC, joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "membro_do_grupo"))
+    @ForeignKey(name = "tb_papel_grupo_papel_fk", inverseName = "tb_papel_grupo_membro_fk")
+    @OrderBy("nome")
+    public List<Papel> getGrupos() {
+        return this.grupos;
+    }
 
-	@Override
-	public String toString() {
-		if (this.nome == null) {
-			return this.identificador;
-		}
-		return this.nome;
-	}
+    public void setGrupos(List<Papel> grupos) {
+        this.grupos = grupos;
+    }
 
-	@Transient
-	public boolean getAtivo() {
-		return true;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Papel)) {
-			return false;
-		}
-		Papel other = (Papel) obj;
-		if (getIdPapel() != other.getIdPapel()) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public String toString() {
+        if (this.nome == null) {
+            return this.identificador;
+        }
+        return this.nome;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdPapel();
-		return result;
-	}
+    @Transient
+    public boolean getAtivo() {
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Papel)) {
+            return false;
+        }
+        Papel other = (Papel) obj;
+        if (getIdPapel() != other.getIdPapel()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getIdPapel();
+        return result;
+    }
 }

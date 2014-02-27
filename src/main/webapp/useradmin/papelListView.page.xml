@@ -8,10 +8,10 @@
    login-required="true"
 >
 
-	<begin-conversation join="true"/>
-	<restrict>#{security.checkPage()}</restrict>
+    <begin-conversation join="true"/>
+    <restrict>#{security.checkPage()}</restrict>
 
-	<param name="id" value="#{papelCrudAction.papelId}"/>
-	<param name="tab" value="#{papelCrudAction.tab}"/>
-	
+    <param name="id" value="#{papelCrudAction.papelId}"/>
+    <param name="tab" value="#{papelCrudAction.tab}"/>
+    
 </page>
