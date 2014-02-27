@@ -3,6 +3,7 @@ package br.com.infox.epp.system.entity;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS_QUERY;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -18,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -106,6 +108,11 @@ public class Parametro implements java.io.Serializable {
     @Column(name = "dt_atualizacao")
     public Date getDataAtualizacao() {
         return this.dataAtualizacao;
+    }
+    
+    @Transient
+    public String getDataAtualizacaoFormatada() {
+        return DateFormat.getDateInstance().format(dataAtualizacao);
     }
 
     public void setDataAtualizacao(Date dataAtualizacao) {
