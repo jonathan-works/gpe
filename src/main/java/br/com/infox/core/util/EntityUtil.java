@@ -1,4 +1,4 @@
-package br.com.itx.util;
+package br.com.infox.core.util;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
@@ -20,7 +20,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
 
-import br.com.infox.core.util.ReflectionsUtil;
+import br.com.itx.util.ComponentUtil;
 
 public final class EntityUtil implements Serializable {
 

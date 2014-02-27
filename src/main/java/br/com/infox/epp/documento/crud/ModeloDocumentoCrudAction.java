@@ -13,6 +13,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
@@ -24,7 +25,6 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoPapelManager;
 import br.com.infox.epp.documento.manager.VariavelManager;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(ModeloDocumentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)

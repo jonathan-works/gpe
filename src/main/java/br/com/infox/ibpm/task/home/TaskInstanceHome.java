@@ -43,6 +43,7 @@ import org.richfaces.function.RichFunction;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -63,7 +64,6 @@ import br.com.infox.jboss.context.ContextFacade;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.itx.component.AbstractHome;
 import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(TaskInstanceHome.NAME)
 @Scope(ScopeType.CONVERSATION)

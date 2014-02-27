@@ -21,13 +21,13 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
 
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.system.annotation.Ignore;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.epp.system.exception.LogException;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
-import br.com.itx.util.EntityUtil;
 
 public final class LogUtil {
 
