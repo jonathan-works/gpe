@@ -1,4 +1,4 @@
-package br.com.itx.util;
+package br.com.infox.core.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
 import org.hibernate.AnnotationException;
+
+import br.com.itx.util.ComponentUtil;
 
 public final class AnnotationUtil {
 

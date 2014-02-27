@@ -10,7 +10,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.RecursiveException;
-import br.com.itx.util.AnnotationUtil;
+import br.com.infox.core.util.AnnotationUtil;
 import br.com.itx.util.ComponentUtil;
 
 /**
