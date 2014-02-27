@@ -7,22 +7,9 @@ import java.text.MessageFormat;
 
 import org.hibernate.AnnotationException;
 
-//TODO collapse the two getAnnotationField methods into one
 public final class AnnotationUtil {
 
     private AnnotationUtil() {
-    }
-
-    /**
-     * Retorna o nome do atributo que possui a anotação informada.
-     * 
-     * @param object Objeto em que será pesquisada o método que possui a
-     *        anotação
-     * @param annotationClass @interface da anotação a ser pesquisada.
-     * @return Nome do atributo
-     */
-    private static String getAnnotationField(Object object, Class<? extends Annotation> annotationClass) {
-        return getAnnotationField(object.getClass(), annotationClass);
     }
 
     /**
@@ -64,7 +51,7 @@ public final class AnnotationUtil {
      * @return Valor do atributo
      */
     public static Object getAnnotatedAttributeValue(Object object, Class<? extends Annotation> annotationClass) {
-        String fieldName = getAnnotationField(object, annotationClass);
+        String fieldName = getAnnotationField(object.getClass(), annotationClass);
         return ComponentUtil.getValue(object, fieldName);
     }
 
