@@ -4,9 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 
@@ -60,6 +62,19 @@ public class CalendarioEventosCrudAction extends AbstractCrudAction<CalendarioEv
     protected boolean isInstanceValid() {
         setData();
         return super.isInstanceValid();
+    }
+    
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        limparTreeDeLocalizacao();
+    }
+    
+    private void limparTreeDeLocalizacao(){
+        final LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
+        if (ret != null) {
+            ret.clearTree();
+        }
     }
 
 }
