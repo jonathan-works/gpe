@@ -18,8 +18,13 @@
         <s:div id="resultado">
             <div>
                 <div>Pesquisa de documentos</div>
-                <b>#{search.firstRow} a #{search.lastRow}</b> de <b>#{search.resultSize}</b>
-                documentos sobre <b>#{search.searchText}</b>
+                <h:panelGroup rendered="#{search.resultSize gt 0}">
+                    <h:outputText value="#{search.firstRow} a #{search.lastRow}" style="font-weight: bold" />
+                    <h:outputText value=" de " />
+                </h:panelGroup>
+                <h:outputText value="#{search.resultSize}" style="font-weight: bold"/>
+                <h:outputText value=" documentos sobre "/>
+                <h:outputText value="#{search.searchText}" style="font-weight: bold" />
             </div>
             <h:form>
                 <h:dataTable id="searchResult" rows="#{search.pageSize}"

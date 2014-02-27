@@ -22,10 +22,10 @@
                 <ui:param name="selectedOrder"
                     value="#{not hideOrder and bean.orderedColumn.startsWith(columnId.concat(' '))}" />
                 <s:div>
-                    <ui:fragment
-                        rendered="#{!empty inForm ? false : inForm}">
+                    <s:div
+                        rendered="#{empty inForm ? false : inForm}">
                         <ui:include src="columnOrder.xhtml" />
-                    </ui:fragment>
+                    </s:div>
                     <h:form rendered="#{empty inForm ? true : !inForm}">
                         <ui:include src="columnOrder.xhtml" />
                     </h:form>
