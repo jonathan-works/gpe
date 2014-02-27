@@ -30,6 +30,9 @@
 	width: 100%;
 	text-align:center;
 }
+.dtable-p.grid-lateral-editor-ajuda {
+    width: 420px;
+}
 .tb-rprt,.tb-rprt-xls {
 	display:inline-block;
 	margin:0px 3px;

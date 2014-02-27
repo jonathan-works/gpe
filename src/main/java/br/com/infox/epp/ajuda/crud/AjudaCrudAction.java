@@ -97,4 +97,11 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
         getInstance().setTexto(historico.getTexto());
         save();
     }
+    
+    public Integer getOldInstanceId() {
+        if (this.oldInstance != null) {
+            return this.oldInstance.getIdAjuda();
+        }
+        return null;
+    }
 }
