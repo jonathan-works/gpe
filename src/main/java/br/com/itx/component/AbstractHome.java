@@ -3,11 +3,6 @@ package br.com.itx.component;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static org.jboss.seam.faces.FacesMessages.instance;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
@@ -37,8 +32,8 @@ import br.com.itx.util.ComponentUtil;
 import br.com.itx.util.EntityUtil;
 
 /**
- * Deprecated 
- * use {@link br.com.infox.core.crud.AbstractCrudAction} or {@link br.com.infox.core.controller.AbstractController} instead
+ * Deprecated use {@link br.com.infox.core.crud.AbstractCrudAction} or
+ * {@link br.com.infox.core.controller.AbstractController} instead
  * */
 @SuppressWarnings(UNCHECKED)
 @Deprecated
@@ -92,12 +87,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         return MSG_REGISTRO_CADASTRADO;
     }
 
-    /**
-     * Lista dos campos que não devem ser limpados ao realizar inclusão no
-     * formulario
-     */
-    private List<String> lockedFields = new ArrayList<String>();
-
     public String getTab() {
         return tab;
     }
@@ -139,20 +128,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
      */
     public void newInstance() {
         oldEntity = null;
-
         getEntityManager().clear();
-
-        if (!lockedFields.isEmpty()) {
-            try {
-                clearUnlocked();
-            } catch (Exception e) {
-                LOG.error(".newInstance()", e);
-            }
-        } else {
-            setId(null);
-            clearForm();
-            instance = createInstance();
-        }
+        setId(null);
+        clearForm();
+        instance = createInstance();
     }
 
     @Override
@@ -479,27 +458,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 
     private String getInstanceClassName() {
         return getInstance() != null ? getInstance().getClass().getName() : "";
-    }
-
-    /**
-     * Limpa todos os campos que não foram marcados.
-     * 
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws InvocationTargetException
-     * @throws IllegalArgumentException
-     */
-    public void clearUnlocked() throws InstantiationException, IllegalAccessException, InvocationTargetException {
-        PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(getInstance());
-        T t = (T) getInstance().getClass().newInstance();
-        for (PropertyDescriptor pd : pds) {
-            if (lockedFields.contains(pd.getName())) {
-                ComponentUtil.setValue(t, pd.getName(), pd.getReadMethod().invoke(getInstance()));
-            }
-        }
-        setId(null);
-        clearForm();
-        instance = t;
     }
 
     private void rollbackTransactionIfNeeded() {
