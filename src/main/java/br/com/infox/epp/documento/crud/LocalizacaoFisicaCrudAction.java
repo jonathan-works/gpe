@@ -8,7 +8,7 @@ import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.documento.component.tree.LocalizacaoFisicaTreeHandler;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.epp.documento.manager.LocalizacaoFisicaManager;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(LocalizacaoFisicaCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)

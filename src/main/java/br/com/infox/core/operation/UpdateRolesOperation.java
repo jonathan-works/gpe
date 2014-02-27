@@ -11,7 +11,7 @@ import org.jboss.seam.security.management.action.RoleAction;
 import org.jboss.seam.security.permission.Permission;
 import org.jboss.seam.security.permission.PermissionManager;
 
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 public class UpdateRolesOperation extends RunAsOperation {
     private static final String ACCESS = "access";

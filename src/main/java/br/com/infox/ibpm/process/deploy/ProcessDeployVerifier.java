@@ -29,7 +29,7 @@ import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 /**
  * Componente responsavel por verificar se os fluxos da aplicação já foram

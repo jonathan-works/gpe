@@ -22,7 +22,7 @@ import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.infox.epp.twitter.manager.ContaTwitterManager;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 /**
  * @author jonas

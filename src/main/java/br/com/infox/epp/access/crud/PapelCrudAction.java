@@ -34,7 +34,7 @@ import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(PapelCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)

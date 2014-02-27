@@ -13,7 +13,7 @@ import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(SwimlaneFitter.NAME)
 @AutoCreate

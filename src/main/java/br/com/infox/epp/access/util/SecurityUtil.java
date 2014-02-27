@@ -14,7 +14,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.web.ServletContexts;
 
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name("security")
 @Scope(ScopeType.APPLICATION)

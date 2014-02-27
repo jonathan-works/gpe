@@ -24,7 +24,7 @@ import br.com.infox.epp.documento.manager.HistoricoModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoPapelManager;
 import br.com.infox.epp.documento.manager.VariavelManager;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(ModeloDocumentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)

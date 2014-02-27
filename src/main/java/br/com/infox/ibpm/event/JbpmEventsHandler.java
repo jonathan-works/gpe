@@ -23,7 +23,7 @@ import br.com.infox.epp.tarefa.manager.TarefaJbpmManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(JbpmEventsHandler.NAME)
 @Install(precedence = Install.FRAMEWORK)

@@ -7,7 +7,7 @@ import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.epp.system.entity.Parametro;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 public final class TimerUtil {
     

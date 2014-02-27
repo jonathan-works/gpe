@@ -29,7 +29,7 @@ import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 /**
  * Deprecated use {@link br.com.infox.core.crud.AbstractCrudAction} or

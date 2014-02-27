@@ -7,7 +7,7 @@ import java.text.MessageFormat;
 
 import org.hibernate.AnnotationException;
 
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 public final class AnnotationUtil {
 

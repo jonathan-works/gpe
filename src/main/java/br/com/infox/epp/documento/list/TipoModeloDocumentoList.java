@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 
 @Name(TipoModeloDocumentoList.NAME)

@@ -11,7 +11,7 @@ import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(NatCatFluxoLocalizacaoList.NAME)
 @Scope(ScopeType.PAGE)

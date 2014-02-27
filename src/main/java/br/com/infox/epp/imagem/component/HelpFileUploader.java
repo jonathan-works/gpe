@@ -2,7 +2,7 @@ package br.com.infox.epp.imagem.component;
 
 import org.jboss.seam.annotations.Name;
 
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(HelpFileUploader.NAME)
 public class HelpFileUploader extends AbstractImageUploader {

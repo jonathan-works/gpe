@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.LocalizacaoFisica;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(LocalizacaoFisicaList.NAME)
 @Scope(ScopeType.PAGE)

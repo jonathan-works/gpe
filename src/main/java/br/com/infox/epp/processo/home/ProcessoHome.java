@@ -34,8 +34,8 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.jboss.context.ContextFacade;
+import br.com.infox.jboss.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.util.ComponentUtil;
 
 /**
  * Deprecated : A superclasse AbstractHome está em processo de remoção, assim as

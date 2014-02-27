@@ -21,7 +21,7 @@ import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.access.util.SecurityUtil;
 import br.com.infox.jboss.path.PathResolver;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 class RecursoCreator extends SimpleFileVisitor<Path> {
 	private static final String PAGE_XML_EXTENSION = ".page.xml";

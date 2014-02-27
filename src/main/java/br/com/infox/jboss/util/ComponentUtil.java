@@ -1,4 +1,4 @@
-package br.com.itx.util;
+package br.com.infox.jboss.util;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 

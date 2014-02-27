@@ -29,7 +29,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(QuartzJobsInfo.NAME)
 @Scope(ScopeType.APPLICATION)

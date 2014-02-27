@@ -18,7 +18,7 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.AbstractTreeHandler;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.jboss.util.ComponentUtil;
 
 @Name(TarefasTreeHandler.NAME)
 @Install(precedence=Install.FRAMEWORK)
