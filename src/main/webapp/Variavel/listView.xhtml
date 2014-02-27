@@ -99,6 +99,7 @@
                         id="associatedTipoModeloVariavelList"
                         rowId="#{row.idVariavelTipoModelo}"
                         styleClass="Associated-dt"
+                        panelStyleClass="rf-dt-crud"
                         searchFormStyleClass="hidden">
 
                         <ui:define name="searchForm" />
@@ -133,8 +134,8 @@
                     </wi:dataTable>
 
                 </s:div>
-
-                <s:div styleClass="Associative">
+                
+                <s:div styleClass="padding-top-5">
 
                     <wi:dataTable
                         values="#{associativeTipoModeloDocumentoList.list(15)}"
