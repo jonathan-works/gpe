@@ -103,6 +103,9 @@ public class ProcessBuilder implements Serializable {
     private boolean needToPublic;
 
     private Fluxo fluxo;
+    
+    private Boolean importacaoConcluida;
+    private Set<String> mensagensImportacao;
 
     public void newInstance() {
         instance = null;
@@ -460,15 +463,34 @@ public class ProcessBuilder implements Serializable {
         return processBuilderGraph;
     }
 
+    public Set<String> getMensagensImportacao() {
+        return mensagensImportacao;
+    }
+    
+    public Boolean getImportacaoConcluida() {
+        return importacaoConcluida;
+    }
+    
     public void importarXPDL(byte[] bytes, Fluxo fluxo) {
+        FluxoXPDL fluxoXPDL = null;
         try {
+            importacaoConcluida = false;
             load(fluxo);
-            final FluxoXPDL fluxoXPDL = FluxoXPDL.createInstance(bytes);
+            fluxoXPDL = FluxoXPDL.createInstance(bytes);
             final String xml = fluxoXPDL.toJPDL(fluxo.getCodFluxo());
             setXml(xml);
             updateFluxo(fluxo.getCodFluxo());
+            importacaoConcluida = true;
         } catch (IllegalXPDLException e) {
             LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage(), e);
+            if (fluxoXPDL != null) {
+                mensagensImportacao = fluxoXPDL.getMensagens();
+            }
         }
+    }
+    
+    public void clearImportacao() {
+        importacaoConcluida = null;
+        mensagensImportacao = null;
     }
 }

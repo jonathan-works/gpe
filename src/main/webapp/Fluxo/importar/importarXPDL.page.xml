@@ -9,5 +9,6 @@
 	 
 	<restrict>#{security.checkPage()}</restrict>
 	<begin-conversation join="true" flush-mode="manual"/>
+	<action execute="#{processBuilder.clearImportacao}" on-postback="false"/>
  
 </page>
