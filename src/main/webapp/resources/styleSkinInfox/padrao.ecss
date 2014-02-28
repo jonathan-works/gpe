@@ -66,3 +66,6 @@ textarea,select {
 .rf-dt-hdr-c {
 	color:'#{a4jSkin.headerTextColor}';
 }
+.label-general.resultado-pesquisa-ajuda {
+    color:'#{a4jSkin.headerTextColor}';
+}

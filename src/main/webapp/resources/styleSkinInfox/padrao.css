@@ -44,7 +44,6 @@
 }
 .tituloPagina {		
 	font-weight:bold;
-	font-size:14pt;
 	color:#fff;
 	text-align:right;
 }
@@ -523,10 +522,11 @@ select {
 	width:400px;
 }
 
-.resultado-pesquisa-ajuda {
-	margin: 1em;
-	font-family: arial, sans-serif;
-	font-size: 11px;
+.label-general, .label-header, .label-button, .label-tab, .label-menu {
+    font-family: arial, sans-serif;
+}
+.resultado-pesquisa-ajuda.label-general {
+    margin: 1em;
 }
 
 .cursor-pointer {
