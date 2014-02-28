@@ -19,6 +19,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name("security")
 @Scope(ScopeType.APPLICATION)
 @BypassInterceptors
+//TODO verificar se esta classe não se encaixaria melhor em br.com.infox.seam
 public class SecurityUtil {
 
     public static final String PAGES_PREFIX = "/pages";
