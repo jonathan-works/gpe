@@ -17,11 +17,18 @@
         name="namespace.js"
         library="js" />
     <style>
-        .label-general, .label-header, .label-button, .label-tab, .label-menu {
+        #body {
             font-size:#{skinZoom.skinZoom}px;
         }
-        .label-header.tituloPagina {
-            font-size:#{skinZoom.skinZoom+2}pt;;
+        .label-header.tituloPagina, .conteudo, .sem-resultado-ajuda {
+            font-size:#{skinZoom.skinZoom+2}pt;
         }
+        .rich-calendar-input,.inputText {
+            height:#{skinZoom.skinZoom+3}px;
+        }
+        .input_login.label-general, .bg_login {
+            font-size:#{skinZoom.skinZoom+8}px;
+        }
+        
     </style>
 </ui:composition>

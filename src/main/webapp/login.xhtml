@@ -68,7 +68,7 @@
 								</h:outputLabel>
 								<h:inputText id="username"
 											 value="#{credentials.username}"
-											 class="input_login"
+											 class="input_login label-general"
 											 rendered="#{not useCertLogin}"/>
 							</div>
 							<div>
@@ -80,7 +80,7 @@
 								<h:inputSecret id="password" 
 											   value="#{credentials.password}"
 											   rendered="#{not useCertLogin}"
-											   class="input_login" />
+											   class="input_login label-general" />
 							</div>
 							<div class="novaSenha">
 								<h:outputLabel for="newPassword1"
@@ -89,7 +89,7 @@
 											   value="#{messages['login.novaSenha']}">
 								</h:outputLabel>
 								<h:inputSecret id="newPassword1"
-											   class="input_login passwd"
+											   class="input_login label-general passwd"
 											   value="#{authenticator.newPassword1}" />
 							</div>
 							<div class="novaSenha">
@@ -99,7 +99,7 @@
 											   value="#{messages['login.confirmacaoNovaSenha']}">
 								</h:outputLabel>	
 								<h:inputSecret id="newPassword2"
-											   class="input_login passwd"
+											   class="input_login label-general passwd"
 											   value="#{authenticator.newPassword2}"/>							
 							</div>
 						</s:div>
@@ -182,7 +182,7 @@
 										   value="#{messages['login.nomeUsuario']}">
 							</h:outputLabel>
 							<h:inputText id="login"
-										 class="input_login"
+										 class="input_login label-general"
 										 value="#{passwordRequester.login}" />
 						</div>
 						<div>
@@ -191,7 +191,7 @@
 										   value="#{messages['login.emailUsuario']}">
 							</h:outputLabel>
 							<h:inputText id="email"
-										 class="input_login"
+										 class="input_login label-general"
 										 value="#{passwordRequester.email}"/>
 						</div>
 					</div>

@@ -35,7 +35,6 @@
 }
 
 .conteudo {
-	font-size:14pt; 
 	text-align:left;
 	padding:5px;
 	height:calc(100% - 36px);
@@ -112,10 +111,10 @@ h1 {
 	font-size: 1.6em;
 	margin-top: 0;
 }
-html,body {
+#html,#body {
 	height:100%;width:100%;
 }
-body {
+#body {
 	margin: 0px;
 	font-family: Arial, sans-serif;
 	color: #616161;
@@ -336,7 +335,6 @@ select {
 
 .rich-calendar-input,.inputText {
 	border-width:0px;
-	height: 15px;
 	color: #000;
 	background-repeat: no-repeat;
 	background-position: top left;
@@ -540,7 +538,6 @@ select {
 }
 
 .sem-resultado-ajuda {
-	font-size: 13px;
 	position: absolute;
     color: red;
     right: 250px;
@@ -596,7 +593,4 @@ div.rf-trn {
 }
 .tree-inactive {
 	text-decoration:line-through;
-}
-.texto-painel-padrao {
-	font-size: 11px;
 }

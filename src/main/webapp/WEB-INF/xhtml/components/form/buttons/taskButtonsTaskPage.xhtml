@@ -43,7 +43,7 @@
 
     <ui:fragment rendered="#{authenticator.isUsuarioAtualResponsavel()}">
         <h:outputText value="Prioridade:"
-            style="font-size: 13px; margin-left: 40px;" />
+            style="margin-left: 40px;" />
         <h:selectOneMenu
             value="#{processoHome.instance.prioridadeProcesso}">
             <s:selectItems value="#{prioridadeProcessoList.list()}"

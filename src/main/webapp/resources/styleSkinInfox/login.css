@@ -46,7 +46,6 @@
     border-radius: 10px 10px 0 0;
     width: 350px;
     min-height:106px;
-    font-size:16px;
     padding:0 0 10px 0;
 }
 .novaSenha {
@@ -63,7 +62,6 @@
 }
 .input_login {
     border-radius: 7px 7px 7px 7px;
-    font-size: 20px !important;
     max-width: 200px;
     margin-top: 25px;
     padding-right: 4px;

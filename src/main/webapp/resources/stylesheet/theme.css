@@ -54,7 +54,7 @@ a:hover {
 }
 
 .propertyView input, .propertyView select {
-	width: 250px;
+	width: 500px;
 }
 
 .readOnly {
@@ -75,7 +75,6 @@ radio_teste {
 
 input,textarea,select {
 	border: 1px solid #BBBBBB;
-	font-size: 12px;
 	background: #F0F8FF;
 	color: black;
 }
