@@ -1,4 +1,4 @@
-package br.com.infox.jboss.util;
+package br.com.infox.seam.util;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 

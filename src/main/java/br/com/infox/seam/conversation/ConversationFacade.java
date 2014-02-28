@@ -1,4 +1,4 @@
-package br.com.infox.jboss.conversation;
+package br.com.infox.seam.conversation;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Conversation;

@@ -22,7 +22,7 @@ import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.hibernate.util.HibernateUtil;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ControleFiltros.NAME)
 @Scope(ScopeType.EVENT)

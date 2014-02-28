@@ -22,7 +22,7 @@ import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Scope(ScopeType.PAGE)
 public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializable {

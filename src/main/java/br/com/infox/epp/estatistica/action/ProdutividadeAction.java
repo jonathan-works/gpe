@@ -26,7 +26,7 @@ import br.com.infox.epp.estatistica.manager.ProdutividadeManager;
 import br.com.infox.epp.estatistica.query.ProdutividadeQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.infox.jboss.path.PathResolver;
+import br.com.infox.seam.path.PathResolver;
 
 @Name(ProdutividadeAction.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -18,7 +18,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(CaixaEventHandler.NAME)
 @Scope(ScopeType.APPLICATION)

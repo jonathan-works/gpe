@@ -17,7 +17,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(VariableHandler.NAME)
 public class VariableHandler implements Serializable {

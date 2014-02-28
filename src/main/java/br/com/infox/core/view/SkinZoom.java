@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.Selector;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.jboss.path.PathResolver;
+import br.com.infox.seam.path.PathResolver;
 
 @Name("skinZoom")
 @Scope(ScopeType.SESSION)

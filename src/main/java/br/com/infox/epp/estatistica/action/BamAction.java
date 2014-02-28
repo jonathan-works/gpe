@@ -23,7 +23,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.list.ProcessoEpaTarefaList;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 /**
  * Classe Action para o BAM

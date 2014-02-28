@@ -10,7 +10,7 @@ import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
 
 final class TaskVariableRetriever extends TaskVariable {

@@ -36,7 +36,7 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
 

@@ -19,7 +19,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.imagem.dao.ImagemBinDAO;
 import br.com.infox.epp.imagem.entity.ImagemBin;
-import br.com.infox.jboss.path.PathResolver;
+import br.com.infox.seam.path.PathResolver;
 
 @Name(ImagemBinManager.NAME)
 @AutoCreate

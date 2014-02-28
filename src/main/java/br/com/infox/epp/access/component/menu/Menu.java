@@ -15,7 +15,7 @@ import org.jboss.seam.security.Identity;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.epp.access.util.SecurityUtil;
-import br.com.infox.jboss.path.PathResolver;
+import br.com.infox.seam.path.PathResolver;
 
 /**
  * Monta o menu do usuário baseado nas permissões de acesso às páginas

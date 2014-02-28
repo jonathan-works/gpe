@@ -11,7 +11,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.RecursiveException;
 import br.com.infox.core.util.AnnotationUtil;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 /**
  * Classe que gerencia a consistência dos valores no campo que possui o caminho

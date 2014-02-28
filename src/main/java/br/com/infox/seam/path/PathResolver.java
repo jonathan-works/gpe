@@ -1,4 +1,4 @@
-package br.com.infox.jboss.path;
+package br.com.infox.seam.path;
 
 import java.io.Serializable;
 

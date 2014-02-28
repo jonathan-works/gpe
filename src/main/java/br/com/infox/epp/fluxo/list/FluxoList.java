@@ -11,7 +11,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FluxoList.NAME)
 @BypassInterceptors

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jbpm.graph.def.Node;
 
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 public final class NodeConverter {
 

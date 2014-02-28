@@ -23,7 +23,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 /**
  * Classe abstrata que possui algumas implementações comuns aos beans, como

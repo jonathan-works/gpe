@@ -20,8 +20,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.access.util.SecurityUtil;
-import br.com.infox.jboss.path.PathResolver;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.util.ComponentUtil;
 
 class RecursoCreator extends SimpleFileVisitor<Path> {
 	private static final String PAGE_XML_EXTENSION = ".page.xml";

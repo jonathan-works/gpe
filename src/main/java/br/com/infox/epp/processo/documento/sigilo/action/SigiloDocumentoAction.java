@@ -29,7 +29,7 @@ import br.com.infox.epp.processo.documento.sigilo.action.SigiloDocumentoControll
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.jboss.path.PathResolver;
+import br.com.infox.seam.path.PathResolver;
 
 @Name(SigiloDocumentoAction.NAME)
 @Scope(ScopeType.CONVERSATION)

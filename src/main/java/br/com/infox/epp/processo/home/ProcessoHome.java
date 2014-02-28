@@ -33,8 +33,8 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.infox.jboss.context.ContextFacade;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.context.ContextFacade;
+import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
 
 /**

@@ -13,7 +13,7 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
 	

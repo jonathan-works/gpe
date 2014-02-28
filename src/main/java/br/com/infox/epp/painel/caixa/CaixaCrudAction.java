@@ -17,7 +17,7 @@ import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.infox.ibpm.event.JbpmEventsHandler;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
 
 @Name(CaixaCrudAction.NAME)

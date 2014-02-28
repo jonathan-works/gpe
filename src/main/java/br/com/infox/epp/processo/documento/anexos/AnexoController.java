@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.documento.anexos;
 
-import static br.com.infox.jboss.util.ComponentUtil.getComponent;
+import static br.com.infox.seam.util.ComponentUtil.getComponent;
 
 import java.util.ArrayList;
 import java.util.List;

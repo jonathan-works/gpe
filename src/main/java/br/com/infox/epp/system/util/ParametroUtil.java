@@ -18,7 +18,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ParametroUtil.NAME)
 @Scope(ScopeType.APPLICATION)

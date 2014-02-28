@@ -35,7 +35,7 @@ import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.util.FileUtil;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(CertificateManager.NAME)
 @BypassInterceptors

@@ -16,8 +16,8 @@ import org.jboss.seam.util.Base64;
 
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.graphical.layout.JbpmLayout;
-import br.com.infox.jboss.context.ContextFacade;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.context.ContextFacade;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ProcessBuilderGraph.NAME)
 @Scope(ScopeType.CONVERSATION)

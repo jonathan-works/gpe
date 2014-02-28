@@ -23,7 +23,7 @@ import br.com.infox.core.util.FileUtil;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
-import br.com.infox.jboss.context.ContextFacade;
+import br.com.infox.seam.context.ContextFacade;
 
 @Name(TypeFitter.NAME)
 @AutoCreate

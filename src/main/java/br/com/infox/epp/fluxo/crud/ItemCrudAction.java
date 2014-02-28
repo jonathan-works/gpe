@@ -10,7 +10,7 @@ import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.manager.ItemManager;
 import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -46,7 +46,7 @@ import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.node.manager.JbpmNodeManager;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.transition.TransitionHandler;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)

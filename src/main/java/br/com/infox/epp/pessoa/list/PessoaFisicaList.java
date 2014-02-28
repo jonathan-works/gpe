@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PessoaFisicaList.NAME)
 @Scope(ScopeType.PAGE)

@@ -34,7 +34,7 @@ import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
-import br.com.infox.jboss.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(JbpmUtil.NAME)
 @Scope(ScopeType.APPLICATION)
