@@ -1,89 +1,92 @@
 package br.com.infox.epp.estatistica.action;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.fluxo.dao.CategoriaDAO;
+import br.com.infox.epp.fluxo.dao.FluxoDAO;
+import br.com.infox.epp.fluxo.dao.NaturezaCategoriaFluxoDAO;
+import br.com.infox.epp.fluxo.dao.NaturezaDAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.tarefa.entity.Tarefa;
 
 
 
 @Name(TempoMedioTarefaAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.EVENT)
 public class TempoMedioTarefaAction implements Serializable {
 
     public static final String NAME = "tempoMediaTarefaAction";
     private static final long serialVersionUID = 1L;
     
     @In
-    private GenericDAO genericDAO;
-    private Natureza natureza;
-    private Categoria categoria;
-    private Fluxo fluxo;
-    private Date dataInicio;
-    private Date dataFim;
+    private NaturezaDAO naturezaDAO;
+    @In
+    private CategoriaDAO categoriaDAO;
+    @In
+    private FluxoDAO fluxoDAO;
+    @In
+    private NaturezaCategoriaFluxoDAO naturezaCategoriaFluxoDAO;
     
-    public Natureza getNatureza() {
-        return natureza;
+    private List<Natureza> naturezaList;
+    private List<Categoria> categoriaList;
+    private List<Fluxo> fluxoList;
+    private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList;
+    
+    @Create
+    public void init() {
+//        naturezaList = naturezaDAO.findAll();
+//        categoriaList = categoriaDAO.findAll();
+//        fluxoList = fluxoDAO.findAll();
+        naturezaCategoriaFluxoList = naturezaCategoriaFluxoDAO.findAll();
     }
 
-    public void setNatureza(Natureza natureza) {
-        this.natureza = natureza;
+    public List<Natureza> getNaturezaList() {
+        return naturezaList;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public void setNaturezaList(List<Natureza> naturezaList) {
+        this.naturezaList = naturezaList;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public List<Categoria> getCategoriaList() {
+        return categoriaList;
     }
 
-    public Fluxo getFluxo() {
-        return fluxo;
+    public void setCategoriaList(List<Categoria> categoriaList) {
+        this.categoriaList = categoriaList;
     }
 
-    public void setFluxo(Fluxo fluxo) {
-        this.fluxo = fluxo;
+    public List<Fluxo> getFluxoList() {
+        return fluxoList;
     }
 
-    public Date getDataInicio() {
-        return dataInicio;
+    public void setFluxoList(List<Fluxo> fluxoList) {
+        this.fluxoList = fluxoList;
     }
 
-    public void setDataInicio(Date dataInicio) {
-        this.dataInicio = dataInicio;
+    public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
+        return naturezaCategoriaFluxoList;
     }
 
-    public Date getDataFim() {
-        return dataFim;
+    public void setNaturezaCategoriaFluxoList(
+            List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
+        this.naturezaCategoriaFluxoList = naturezaCategoriaFluxoList;
     }
-
-    public void setDataFim(Date dataFim) {
-        this.dataFim = dataFim;
-    }
-
-    public List<Map<String, Object>> getTemposMediosTarefa() {
+    
+/*    
+    public List<TempoMedioTarefaContainer> getTemposMediosTarefa() {
         final HashMap<String, Object> parameters = new HashMap<>();
         final StringBuilder sb = new StringBuilder();
-        /*TempoMedioTarefaNovo(Tarefa tarefa,
-            NaturezaCategoriaFluxo naturezaCategoriaFluxo, Integer instancias,
-            Double mediaTempoGasto)*/
-        sb.append("select new TempoMedioTarefaNovo(t, ncf, count(pet), avg(pet.tempoGasto))");
+        sb.append("select new TempoMedioTarefaContainer(t, ncf, count(pet), avg(pet.tempoGasto))");
         sb.append(" from ProcessoEpaTarefa pet");
         sb.append(" inner join pet.processoEpa p with pet.tempoGasto > 0");
         sb.append(" right join pet.tarefa t");
@@ -140,5 +143,5 @@ public class TempoMedioTarefaAction implements Serializable {
 //        parameters.put("dataFim", null);
         return genericDAO.getResultList(hql, parameters);
     }
-
+*/
 }
