@@ -32,7 +32,7 @@ public class ArquillianSeamTestSetup {
 
     public ArquillianSeamTestSetup() {
         this.packages = new ArrayList<>();
-        addPackages("br.com.infox.core", "br.com.infox.seam", "br.com.itx");
+        addPackages("br.com.infox.core", "br.com.infox.seam");
         this.classes = new ArrayList<>();
         this.archiveName = "epp-test.war";
         this.mockComponentsXMLPath = "src/test/resources/mock-components.xml";
