@@ -2,118 +2,84 @@ package br.com.infox.epp.estatistica.list;
 
 import static java.text.MessageFormat.format;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.dao.GenericDAO;
-import br.com.infox.core.list.Pageable;
+import br.com.infox.core.list.AbstractPageableList;
 import br.com.infox.epp.estatistica.entity.TempoMedioTarefa;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Name(TempoMedioTarefaList.NAME)
-@Scope(ScopeType.CONVERSATION)
-public class TempoMedioTarefaList implements Serializable, Pageable {
-	public static final String NAME = "tempoMedioTarefaList";
+public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa> {
+	private static final String FIELD_DATA_FIM = "dataFim";
+    private static final String FIELD_DATA_INICIO = "dataInicio";
+    private static final String FIELD_CATEGORIA = "categoria";
+    private static final String FIELD_NATUREZA = "natureza";
+    private static final String FIELD_FLUXO = "fluxo";
+
+    public static final String NAME = "tempoMedioTarefaList";
 	
 	private static final long serialVersionUID = 1L;
 	
 	private static final String TEMPLATE = "/Estatistica/tempoMedioTarefaTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "relatorioTemposMedios.xls";
 
-    @In
-    private GenericDAO genericDAO;
 	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
     private Date dataInicio;
 	private Date dataFim;
-	
-	private boolean isDirty=false;
-	private Integer maxAmmount;
-	private Integer page;
-	private Integer pageCount;
-	private List<TempoMedioTarefa> resultList;
 	private double tempoMedioProcesso;
 	
-	public List<TempoMedioTarefa> list() {
-	    return list(15);
-	}
-	
-	private void initResultList() {
-	    if (isDirty) {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("select new br.com.infox.epp.estatistica.entity.TempoMedioTarefa(t, ncf, count(pet) , avg(pet.tempoGasto))");
-            final HashMap<String, Object> parameters = getDynamicQuery(sb);
-            sb.append(" group by t, ncf");
-            this.resultList = genericDAO.getResultList(sb.toString(), parameters);
-            isDirty = false;
-        }
-	}
-	
-	public List<TempoMedioTarefa> list(final int maxAmmount) {
-        this.maxAmmount = maxAmmount;
-	    initResultList();
-        return truncList();
-	}
-	
-	public List<TempoMedioTarefa> truncList() {
-	    final int fromIndex = (page-1)*maxAmmount;
-	    final int toIndex = maxAmmount*page;
-        final int listSize = this.resultList.size();
-	    return resultList.subList(fromIndex, toIndex > listSize ? listSize : toIndex);
-	}
-
-    private HashMap<String, Object> getDynamicQuery(final StringBuilder sb) {
+	@Override
+	protected String getQuery() {
+	    final StringBuilder sb = new StringBuilder();
+        sb.append("select new br.com.infox.epp.estatistica.entity.TempoMedioTarefa(t, ncf, count(pet) , avg(pet.tempoGasto))");
         sb.append(" from ProcessoEpaTarefa pet");
         sb.append(" inner join pet.processoEpa p with pet.tempoGasto > 0");
         sb.append(" inner join p.naturezaCategoriaFluxo ncf");
         sb.append(" right join pet.tarefa t");
         sb.append(" where 1=1");
-
-        final HashMap<String, Object> parameters = new HashMap<>();
+        
         if (naturezaCategoriaFluxo != null) {
-            final String fieldName = "fluxo";
-            parameters.put(fieldName, naturezaCategoriaFluxo.getFluxo());
-            parameters.put("natureza", naturezaCategoriaFluxo.getNatureza());
-            parameters.put("categoria", naturezaCategoriaFluxo.getCategoria());
-            sb.append(" and t.fluxo=:fluxo");
-            sb.append(" and (ncf.natureza=:natureza or pet is null)");
-            sb.append(" and (ncf.categoria=:categoria or pet is null)");
-        }
-        if (dataInicio != null) {
-            final String fieldName = "dataInicio";
-            sb.append(" and cast(pet.dataInicio as timestamp) >= cast(:").append(fieldName).append(" as timestamp)");
-            parameters.put(fieldName, dataInicio);
-        }
-        if (dataFim != null) {
-            final String fieldName = "dataFim";
-            sb.append(" and cast(pet.dataFim as timestamp) <= cast(:").append(fieldName).append(" as timestamp)");
-            parameters.put(fieldName, dataFim);
+            sb.append(" and t.fluxo=:");
+            sb.append(FIELD_FLUXO);
+            sb.append(" and (ncf.natureza=:");
+            sb.append(FIELD_NATUREZA);
+            sb.append(" or pet is null)");
+            sb.append(" and (ncf.categoria=:");
+            sb.append(FIELD_CATEGORIA);
+            sb.append(" or pet is null)");
         }
         
-        return parameters;
-    }
-
+        if (dataInicio != null) {
+            sb.append(" and cast(pet.dataInicio as timestamp) >= cast(:");
+            sb.append(FIELD_DATA_INICIO);
+            sb.append(" as timestamp)");
+        }
+        if (dataFim != null) {
+            sb.append(" and cast(pet.dataFim as timestamp) <= cast(:");
+            sb.append(FIELD_DATA_FIM);
+            sb.append(" as timestamp)");
+        }
+        sb.append(" group by t, ncf");
+        return sb.toString();
+	}
+	
     public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
         return naturezaCategoriaFluxo;
     }
 
     public void setNaturezaCategoriaFluxo(final NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
-        isDirty = isDirty || !areEqual(this.naturezaCategoriaFluxo, naturezaCategoriaFluxo);
-        this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
+        if (!areEqual(this.naturezaCategoriaFluxo, naturezaCategoriaFluxo)) {
+            this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
+            addParameter(FIELD_FLUXO, naturezaCategoriaFluxo.getFluxo());
+            addParameter(FIELD_NATUREZA, naturezaCategoriaFluxo.getNatureza());
+            addParameter(FIELD_CATEGORIA, naturezaCategoriaFluxo.getCategoria());
+        }
     }
 
-    public boolean areEqual(final Object obj1, final Object obj2) {
-        return obj1==obj2 || obj1 != null && obj1.equals(obj2);
-    }
-    
     public Date getDataInicio() {
         return dataInicio;
     }
@@ -128,8 +94,10 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
             c.set(GregorianCalendar.MILLISECOND, 0);
             dataInicio = c.getTime();
         } 
-        isDirty = isDirty || !areEqual(this.dataInicio, dataInicio);
-        this.dataInicio = dataInicio;            
+        if (!areEqual(this.dataInicio, dataInicio)) {
+            this.dataInicio = dataInicio;
+            addParameter(FIELD_DATA_INICIO, dataInicio);
+        }            
         
     }
 
@@ -147,59 +115,18 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
             c.set(GregorianCalendar.MILLISECOND, 999);
             dataFim = c.getTime();
         }
-        isDirty = isDirty || !areEqual(this.dataFim, dataFim);
-        this.dataFim = dataFim;
+        if (!areEqual(this.dataFim, dataFim)) {
+            addParameter(FIELD_DATA_FIM, dataFim);
+            this.dataFim = dataFim;
+        }
     }
     
+    @Override
     public void newInstance() {
         naturezaCategoriaFluxo = null;
         dataInicio = null;
         dataFim = null;
-    }
-
-    @Override
-    public void setPage(final Integer page) {
-        this.page = page;
-    }
-
-    @Override
-    public boolean isPreviousExists() {
-        return getPage() > 1;
-    }
-
-    @Override
-    public boolean isNextExists() {
-        return getPage() < getPageCount();
-    }
-
-    @Override
-    public Integer getPage() {
-        if (page == null || page < 0) {
-            page = 1;
-        }
-        final Integer count = getPageCount();
-        if (page > count) {
-            page = count;
-        }
-        return page;
-    }
-
-    @Override
-    public Integer getPageCount() {
-        if (pageCount == null || isDirty) {
-            final int size = resultList.size();
-            final int estimatedPageCount = size / maxAmmount;
-            if (size % maxAmmount == 0) {
-                pageCount = estimatedPageCount;
-            } else {
-                pageCount = estimatedPageCount+1;
-            }
-        }
-        return pageCount;
-    }
-    
-    public Integer getResultCount() {
-        return resultList.size();
+        clearParameters();
     }
 
     public void exportarXLS() {
@@ -210,10 +137,9 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
     }
 
     public double getTempoMedioProcesso() {
-        if (isDirty) {
-            initResultList();
+        if (isDirty()) {
             this.tempoMedioProcesso = 0.0;
-            for (final TempoMedioTarefa item : resultList) {
+            for (final TempoMedioTarefa item : list(getResultCount())) {
                 final PrazoEnum tipoPrazo = item.getTarefa().getTipoPrazo();
                 final double mediaTempoGasto = item.getMediaTempoGasto();
                 if (PrazoEnum.H.equals(tipoPrazo)) {
@@ -237,5 +163,5 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
         }
         return result;
     }
-    
+
 }
