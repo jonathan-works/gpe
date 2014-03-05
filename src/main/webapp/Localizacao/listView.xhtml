@@ -68,16 +68,24 @@
     </ui:define>
 
     <ui:define name="form">
-
+			
+		<ui:param name="isEditable" value="#{localizacaoCrudAction.hasPermissionToEdit()}" />
         <wi:dataForm formId="localizacaoForm"
-            formTitle="#{messages['form.title']}">
-
-            <wi:inputText id="localizacao" required="true"
+            formTitle="#{messages['form.title']}"
+            disabled="#{not isEditable}">
+			
+            <wi:inputText
+            	id="localizacao"
+            	required="true"
                 label="#{messages['localizacao.localizacao']}"
-                value="#{localizacaoCrudAction.instance.localizacao}" />
+                value="#{localizacaoCrudAction.instance.localizacao}"
+                readonly="#{not isEditable}"
+            />
             <wi:selectBooleanRadio id="estrutura" required="true"
                 label="#{messages['localizacao.estrutura']}"
-                value="#{localizacaoCrudAction.instance.estrutura}">
+                value="#{localizacaoCrudAction.instance.estrutura}"
+                readonly="#{not isEditable}"
+            >
                 <a:ajax event="change" execute="@this"
                     render="notEstrutura" limitRender="true" />
             </wi:selectBooleanRadio>
@@ -87,17 +95,22 @@
                     tree="#{localizacaoTree}" icon="/img/nivelTree.gif"
                     iconLeaf="/img/file.gif"
                     rendered="#{!localizacaoCrudAction.instance.estrutura}"
-                    label="#{messages['localizacao.localizacaoPai']}" />
+                    label="#{messages['localizacao.localizacaoPai']}"
+                	readonly="#{not isEditable}"
+                />
                 <wi:selectOneMenuEntity id="estruturaFilho"
                     value="#{localizacaoCrudAction.instance.estruturaFilho}"
                     label="#{messages['localizacao.estruturaFilho']}"
                     items="#{localizacaoCrudAction.getLocalizacoesEstrutura()}"
                     rendered="#{!localizacaoCrudAction.instance.estrutura}"
+                	readonly="#{not isEditable}"
                     noSelectionLabel="#{messages['crud.select.select']}" />
             </h:panelGroup>
             <wi:selectSituacaoRadio id="ativo"
                 label="#{messages['field.situacao']}" required="true"
-                value="#{localizacaoCrudAction.instance.ativo}" />
+                value="#{localizacaoCrudAction.instance.ativo}"
+                readonly="#{not isEditable}"
+            />
 
         </wi:dataForm>
 
