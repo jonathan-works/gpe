@@ -16,4 +16,41 @@
     <h:outputScript
         name="namespace.js"
         library="js" />
+    <style>
+        #body, .message, .inputText, .buttons, div.rf-ddm-nd {
+            font-size:#{skinZoom.skinZoom}px;
+        }
+        .buttons {
+            height: #{skinZoom.skinZoom+skinZoom.skinZoom}px;
+        }
+        .d-msg-h {
+            height: #{skinZoom.skinZoom+6}px;
+        }
+        .d-msg, .d-msg-c {
+            height: #{120 + ((skinZoom.skinZoom - 12) * 4)}px;
+        }
+        
+        .label-header.tituloPagina, .conteudo, .sem-resultado-ajuda {
+            font-size:#{skinZoom.skinZoom+2}px;
+        }
+        .rich-calendar-input,.inputText {
+            height:#{skinZoom.skinZoom+3}px;
+        }
+        .input_button{
+            font-size:#{skinZoom.skinZoom+4}px;
+        }
+        .input_login.label-general, .bg_login, th.banner, td.banner, .banner-ctr {
+            font-size:#{skinZoom.skinZoom+8}px;
+        }
+        .banner-subTitle {
+            font-size:#{skinZoom.skinZoom+6}px;
+        }
+        .banner-title{
+            font-size:#{skinZoom.skinZoom+12}px;
+        }
+        .banner {
+            height:#{85 + ((skinZoom.skinZoom - 12) * 2)}px;
+        }
+        
+    </style>
 </ui:composition>

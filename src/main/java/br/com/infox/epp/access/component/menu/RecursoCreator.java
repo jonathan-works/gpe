@@ -19,8 +19,8 @@ import org.jboss.seam.security.permission.PermissionStore;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.RecursoManager;
-import br.com.infox.epp.access.util.SecurityUtil;
 import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 class RecursoCreator extends SimpleFileVisitor<Path> {

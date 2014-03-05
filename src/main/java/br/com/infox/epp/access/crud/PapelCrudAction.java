@@ -25,8 +25,6 @@ import org.jboss.seam.security.permission.PermissionManager;
 
 import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.operation.PopulateRoleMembersListOperation;
-import br.com.infox.core.operation.UpdateRolesOperation;
 import br.com.infox.epp.access.api.RolesMap;
 import br.com.infox.epp.access.component.tree.RolesTreeHandler;
 import br.com.infox.epp.access.entity.Papel;
@@ -34,6 +32,8 @@ import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
+import br.com.infox.seam.security.operation.PopulateRoleMembersListOperation;
+import br.com.infox.seam.security.operation.UpdateRolesOperation;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PapelCrudAction.NAME)

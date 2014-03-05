@@ -23,8 +23,7 @@
 
 <h:body>
 
-    <ui:include
-         src="/WEB-INF/xhtml/templates/ajaxQueue.xhtml" />   
+    <ui:include src="/WEB-INF/xhtml/templates/ajaxQueue.xhtml" />
 
     <h:outputScript name="JAVASERVERFACES-1718-Workaround.js"
         library="js" target="head" />
@@ -92,14 +91,14 @@
                             value="#{ajudaView.resultadoPesquisa}"
                             var="v">
                             <h:column>
-                                <div class="resultado-pesquisa-ajuda">
+                                <div
+                                    class="resultado-pesquisa-ajuda label-general">
                                     <a:commandLink
                                         value="#{v[0].pagina.descricao}"
                                         render="helpText, helpLink"
                                         limitRender="true"
                                         oncomplete="#{rich:component('helpPanel')}.switchToItem('help');"
-                                        action="#{ajudaView.setViewId(v[0].pagina.url, false)}"
-                                        style="color: blue; font-size: 13px;">
+                                        action="#{ajudaView.setViewId(v[0].pagina.url, false)}">
                                         <f:param name="queryString"
                                             value="#{ajudaView.textoPesquisa}" />
                                     </a:commandLink>

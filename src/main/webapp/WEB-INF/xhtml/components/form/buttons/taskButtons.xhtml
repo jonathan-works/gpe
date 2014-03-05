@@ -38,7 +38,7 @@
             value="#{messages['crud.persist']}" styleClass="buttons"
             action="#{taskInstanceHome.persist(home)}" />
 
-        <h:outputText styleClass="texto-painel-padrao"
+        <h:outputText styleClass="label-general"
             value="Próxima ação:" />
         <c:if test="#{taskInstanceHome.transitions.size gt 3}">
             <h:selectOneMenu value="#{taskInstanceHome.name}">
@@ -66,7 +66,7 @@
         <ui:fragment
             rendered="#{authenticator.isUsuarioAtualResponsavel()}">
             <h:outputText value="Prioridade:"
-                style="font-size: 13px; margin-left: 40px;" />
+                style="margin-left: 40px;" />
             <h:selectOneMenu
                 value="#{processoHome.instance.prioridadeProcesso}">
                 <s:selectItems value="#{prioridadeProcessoList.list()}"
