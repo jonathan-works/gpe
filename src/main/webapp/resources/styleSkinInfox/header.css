@@ -10,17 +10,13 @@
 	width:317px;
 }
 .banner-ctr {
-    font-size:20pt;
     text-align:center;
     left:calc(50% - 147.5px);
 }
 .banner-title {
 	margin-top:15px;
-	font-size:24px;
 }
-.banner-subTitle {
-	font-size:18px;
-}
+
 .banner-rgt {
 	right:0;
     text-align: right;

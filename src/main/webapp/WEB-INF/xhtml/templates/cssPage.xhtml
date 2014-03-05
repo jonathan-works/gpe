@@ -17,17 +17,26 @@
         name="namespace.js"
         library="js" />
     <style>
-        #body {
+        #body, .message, .inputText, .buttons {
             font-size:#{skinZoom.skinZoom}px;
         }
+        .buttons {
+            height: #{skinZoom.skinZoom+skinZoom.skinZoom}px;
+        }
         .label-header.tituloPagina, .conteudo, .sem-resultado-ajuda {
-            font-size:#{skinZoom.skinZoom+2}pt;
+            font-size:#{skinZoom.skinZoom+2}px;
         }
         .rich-calendar-input,.inputText {
             height:#{skinZoom.skinZoom+3}px;
         }
-        .input_login.label-general, .bg_login {
+        .input_login.label-general, .bg_login, th.banner, td.banner, .banner-ctr {
             font-size:#{skinZoom.skinZoom+8}px;
+        }
+        .banner-subTitle{
+            font-size:#{skinZoom.skinZoom+6}px;
+        }
+        .banner-title{
+            font-size:#{skinZoom.skinZoom+12}px;
         }
         
     </style>
