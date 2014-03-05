@@ -46,7 +46,7 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
 	    return list(15);
 	}
 	
-	private void getResultList() {
+	private void initResultList() {
 	    if (isDirty) {
             final StringBuilder sb = new StringBuilder();
             sb.append("select new br.com.infox.epp.estatistica.entity.TempoMedioTarefa(t, ncf, count(pet) , avg(pet.tempoGasto))");
@@ -57,9 +57,9 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
         }
 	}
 	
-	public List<TempoMedioTarefa> list(int maxAmmount) {
+	public List<TempoMedioTarefa> list(final int maxAmmount) {
         this.maxAmmount = maxAmmount;
-	    getResultList();
+	    initResultList();
         return truncList();
 	}
 	
@@ -105,12 +105,12 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
         return naturezaCategoriaFluxo;
     }
 
-    public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
+    public void setNaturezaCategoriaFluxo(final NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
         isDirty = isDirty || !areEqual(this.naturezaCategoriaFluxo, naturezaCategoriaFluxo);
         this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
     }
 
-    public boolean areEqual(Object obj1, Object obj2) {
+    public boolean areEqual(final Object obj1, final Object obj2) {
         return obj1==obj2 || obj1 != null && obj1.equals(obj2);
     }
     
@@ -120,7 +120,7 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
 
     public void setDataInicio(Date dataInicio) {
         if (dataInicio != null) {
-            GregorianCalendar c = new GregorianCalendar();
+            final GregorianCalendar c = new GregorianCalendar();
             c.setTime(dataInicio);
             c.set(GregorianCalendar.HOUR_OF_DAY, 0);
             c.set(GregorianCalendar.MINUTE, 0);
@@ -139,7 +139,7 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
 
     public void setDataFim(Date dataFim) {
         if (dataFim != null) {
-            GregorianCalendar c = new GregorianCalendar();
+            final GregorianCalendar c = new GregorianCalendar();
             c.setTime(dataFim);
             c.set(GregorianCalendar.HOUR_OF_DAY, 23);
             c.set(GregorianCalendar.MINUTE, 59);
@@ -211,14 +211,15 @@ public class TempoMedioTarefaList implements Serializable, Pageable {
 
     public double getTempoMedioProcesso() {
         if (isDirty) {
-            getResultList();
-            this.tempoMedioProcesso=0.0;
-            for (TempoMedioTarefa item : resultList) {
+            initResultList();
+            this.tempoMedioProcesso = 0.0;
+            for (final TempoMedioTarefa item : resultList) {
                 final PrazoEnum tipoPrazo = item.getTarefa().getTipoPrazo();
+                final double mediaTempoGasto = item.getMediaTempoGasto();
                 if (PrazoEnum.H.equals(tipoPrazo)) {
-                    this.tempoMedioProcesso+= item.getMediaTempoGasto() / (1440);
+                    this.tempoMedioProcesso += (mediaTempoGasto / 1440);
                 } else if (PrazoEnum.D.equals(tipoPrazo)) {
-                    this.tempoMedioProcesso+= item.getMediaTempoGasto();
+                    this.tempoMedioProcesso += mediaTempoGasto;
                 }
             }
         }
