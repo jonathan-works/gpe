@@ -42,7 +42,6 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 
-import br.com.infox.core.operation.ChangePasswordOperation;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
@@ -53,6 +52,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.seam.security.operation.ChangePasswordOperation;
 
 @Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)

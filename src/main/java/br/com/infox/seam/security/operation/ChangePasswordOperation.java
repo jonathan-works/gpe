@@ -1,4 +1,4 @@
-package br.com.infox.core.operation;
+package br.com.infox.seam.security.operation;
 
 import org.jboss.seam.security.RunAsOperation;
 import org.jboss.seam.security.management.IdentityManager;
