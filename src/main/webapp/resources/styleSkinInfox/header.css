@@ -1,17 +1,18 @@
 .banner {
 	width:100%;
 	position:relative;
-	height:85px;
+	height:100px;
 }
 .banner-lft, .banner-ctr, .banner-rgt {
-	position:absolute;
+	display:inline-block;
+	vertical-align: top;
 }
 .banner-lft {
-	width:317px;
+	width:20%;
 }
 .banner-ctr {
     text-align:center;
-    left:calc(50% - 147.5px);
+    width:50%;
 }
 .banner-title {
 	margin-top:15px;
@@ -20,7 +21,7 @@
 .banner-rgt {
 	right:0;
     text-align: right;
-    width:317px;
+    width:30%;
 }
 .divBg {
 	width:100%;
