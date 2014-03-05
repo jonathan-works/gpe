@@ -18,7 +18,19 @@
 	height:calc(100% - 100px);
 }
 
- .swimlane-list,  .swimlane-form {
+ .swimlane-list,  .swimlane-form, .node-instance-e, .node-instance-l {
  	display:inline-block;
  	vertical-align:top;
+ }
+ 
+.node-instance-e {
+	width:70%;
+}
+.node-instance-l {
+	width:30%;
+}
+ 
+ .node-instance-p {
+ 	width:100%;
+ 	min-width:800px;
  }
