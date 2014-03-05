@@ -9,6 +9,8 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.DESCRICAO_LOCALIZAC
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ID_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IN_ESTRUTURA;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI_ATTRIBUTE;
@@ -51,7 +53,8 @@ import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 @Table(name = TABLE_LOCALIZACAO, schema = PUBLIC)
 @NamedQueries(value = { 
 	@NamedQuery(name = LOCALIZACOES_ESTRUTURA, query = LOCALIZACOES_ESTRUTURA_QUERY),
-	@NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY)
+	@NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY),
+	@NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY)
 })
 public class Localizacao implements Serializable, Recursive<Localizacao> {
 
