@@ -1,4 +1,4 @@
-package br.com.infox.epp.access.util;
+package br.com.infox.seam.security;
 
 import java.text.MessageFormat;
 

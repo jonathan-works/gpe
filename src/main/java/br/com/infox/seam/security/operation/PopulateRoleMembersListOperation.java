@@ -1,4 +1,4 @@
-package br.com.infox.core.operation;
+package br.com.infox.seam.security.operation;
 
 import java.security.Principal;
 import java.util.List;
