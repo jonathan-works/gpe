@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
@@ -26,6 +27,11 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
         limparTrees();
         super.newInstance();
         getInstance().setEstrutura(Boolean.FALSE);
+    }
+    
+    public boolean hasPermissionToEdit() {
+        final Localizacao localizacaoUsuarioLogado = Authenticator.getLocalizacaoAtual();
+        return getManager().isLocalizacaoAncestor(localizacaoUsuarioLogado, getInstance());
     }
     
     @Override
