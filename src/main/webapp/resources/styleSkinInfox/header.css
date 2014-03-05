@@ -1,7 +1,6 @@
 .banner {
 	width:100%;
 	position:relative;
-	height:100px;
 }
 .banner-lft, .banner-ctr, .banner-rgt {
 	display:inline-block;

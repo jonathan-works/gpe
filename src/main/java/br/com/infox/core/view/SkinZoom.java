@@ -18,7 +18,7 @@ public class SkinZoom extends Selector {
     private static final long serialVersionUID = 1L;
     private int skinZoom = TAM_NORMAL;
     private static final Integer TAM_NORMAL = 12;
-    private static final Integer TAM_MEDIO = 18;
+    private static final Integer TAM_MEDIO = 17;
     private static final Integer TAM_GRANDE = 22;
     private static final Integer[] TAMANHOS = { TAM_NORMAL, TAM_MEDIO,
         TAM_GRANDE };
