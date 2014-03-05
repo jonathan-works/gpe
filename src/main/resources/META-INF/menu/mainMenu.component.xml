@@ -20,7 +20,6 @@
             <value>menu.documentos/variavel.menuText:/Variavel/listView.seam</value>
             <value>menu.documentos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
             
-            <value>menu.cadBasicos/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
             <value>menu.cadBasicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
             <value>menu.cadBasicos/pessoaJuridica.menuText:/PessoaJuridica/listView.seam</value>
             
@@ -32,6 +31,7 @@
             <value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>
             <value>menu.administracao/log.menuText:/Consulta/Log/list.seam</value>
             <value>menu.administracao/contaTwitter.twitterSysMenuText:/ContaTwitter/Sistema/listView.seam</value>
+            <value>menu.administracao/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
             
             <value>menu.painel/painel.menuText:/Painel/list.seam</value>
             <value>menu.painel/bam.menuText:/BAM/listView.seam</value>
