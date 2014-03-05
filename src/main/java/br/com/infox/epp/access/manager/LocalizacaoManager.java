@@ -21,7 +21,11 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
         return getDao().getLocalizacoesEstrutura();
     }
 
-    public List<Localizacao> getLocalizacoes(Collection<Integer> ids) {
+    public List<Localizacao> getLocalizacoes(final Collection<Integer> ids) {
     	return getDao().getLocalizacoes(ids);
+    }
+    
+    public boolean isLocalizacaoAncestor(final Localizacao ancestor, final Localizacao localizacao) {
+        return getDao().isLocalizacaoAncestor(ancestor, localizacao);
     }
 }
