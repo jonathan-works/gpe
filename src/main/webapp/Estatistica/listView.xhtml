@@ -5,6 +5,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:a="http://richfaces.org/a4j"
@@ -16,51 +17,136 @@
 	    <rich:panel >
 	        <ui:param
 	            name="tempoMedioProcesso"
-	            value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}" />
+	            value="0" />
 	        <ui:param
-	            name="home"
-	            value="#{tempoMedioTarefaAction}" />
-	        <wi:dataTable
-	            values="#{tempoMedioTarefaList.list(15)}"
-	            bean="#{tempoMedioTarefaList}"
-	            tableTitle="[#{tempoMedioProcesso}] Tempo médio: #{tempoMedioProcesso.getTempoMedioFormatado()} dia(s). Prazo: #{tempoMedioProcesso.prazo} dia(s)"
-	            id="tempoMedioTarefaList"
-	            rowId="#{row.idTarefa}"
-	            showGrid="#{tempoMedioTarefaList.entity.tempoMedioProcesso != null}">
-	            <ui:define name="searchForm">
-	                <wi:searchForm
-	                    formId="pesquisarTempoMedioProcesso"
-	                    formTitle="#{messages['searchForm.title']}"
-	                    opened="true">
-	                    <wi:selectOneMenuEntity
-	                        id="naturezaCategoriaFluxo"
-	                        label="#{messages['tempoMedioTarefaList.tempoMedioProcesso']}"
-	                        value="#{tempoMedioTarefaList.entity.tempoMedioProcesso}"
-	                        items="#{tempoMedioTarefaAction.listTempoMedioProcesso}"
-	                        showLabel="#{messages['tempoMedioProcesso.tempoMedioProcessoListCombo']}" />
-	                </wi:searchForm>
-	            </ui:define>
+	        	name="id"
+	        	value="tempoMedioTarefaList" />
+			
+	        <h:outputStylesheet library="styleSkinInfox" name="datatable.css" />
+		    <s:div id="#{id}SearchForm"
+		        styleClass="dtable-search-form">
+	            <ui:param name="formId" value="pesquisarTempoMedioProcesso" />
+			    <h:form id="#{formId}">
+			        <f:validateBean disabled="true">
+		                <s:div styleClass="edit">
+		                    <rich:collapsiblePanel
+		                        expanded="true"
+		                        header="#{messages['searchForm.title']}"
+		                        switchType="client">
+		                        <ui:param name="template"
+		                            value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
+		                        <wi:selectOneMenuEntity
+			                    	id="naturezaCategoriaFluxo"
+			                    	label="#{messages['naturezaCategoriaFluxo.tableTitle']}"
+			                    	value="#{tempoMedioTarefaList.naturezaCategoriaFluxo}"
+			                    	items="#{tempoMediaTarefaAction.naturezaCategoriaFluxoList}"
+			                    	showLabel="#{messages['crud.select.select']}"
+			                    />
+			                    <wi:inputDate
+			                    	id="dataInicio"
+			                    	label="#{messages['temposMedios.dataInicio']}"
+			                    	value="#{tempoMedioTarefaList.dataInicio}" 
+			                    >
+			                    </wi:inputDate>
+			                    <wi:inputDate
+			                    	id="dataFim"
+			                    	label="#{messages['temposMedios.dataFim']}"
+			                    	value="#{tempoMedioTarefaList.dataFim}" 
+			                    >
+			                    </wi:inputDate>
+	                            <s:div>
+	                                <wi:commandButton
+	                                	id="searchButton"
+	                                    value="Pesquisar"
+	                                    reRender="pageBody">
+	                                    <a:param assignTo="#{tempoMedioTarefaList.page}" value="1" />
+	                                </wi:commandButton>
 	
-	            <ui:define name="toolBar">
-	
-	            </ui:define>
-	
-	            <wi:columnOutputText
-	                columnId="nomeTarefa"
-	                columnHeader="#{messages['temposMedios.descricaoTarefa']}"
-	                value="#{row.nomeTarefa}"
-	                hideOrder="true" />
-	            <wi:columnOutputText
-	                columnId="tempoMedio"
-	                columnHeader="#{messages['temposMedios.tempoMedio']}"
-	                value="#{row.getTempoMedioFormatado()}"
-	                hideOrder="true" />
-	            <wi:columnOutputText
-	                columnId="prazo"
-	                columnHeader="#{messages['temposMedios.prazo']}"
-	                value="#{row.prazo} #{row.tipoPrazo.label}"
-	                hideOrder="true" />
-	        </wi:dataTable>
+	                                <a:region>
+	                                    <a:commandButton id="clearButton"
+	                                        onclick="$('##{formId}').clearForm();showLoading();"
+	                                        oncomplete="hideLoading();"
+	                                        action="#{tempoMedioTarefaList.newInstance()}"
+	                                        value="Limpar" execute="@this"
+	                                        render="pageBody"
+	                                        styleClass="buttons buttons" />
+	                                </a:region>
+	                            </s:div>
+		                    </rich:collapsiblePanel>
+		                </s:div>
+			        </f:validateBean>
+			    </h:form>
+		    </s:div>
+		    <a:region>
+		        <rich:panel
+		        	id="#{id}Panel"
+		        	rendered="#{tempoMedioTarefaList.naturezaCategoriaFluxo != null}"
+		            header="[#{tempoMedioTarefaList.naturezaCategoriaFluxo}] Tempo médio: #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. Prazo: #{tempoMedioTarefaList.prazoFluxo}"
+		            bodyClass="dtable-p-b"
+		            styleClass="dtable-p">
+		            <rich:dataTable
+		             	id="#{id}"
+		            	value="#{tempoMedioTarefaList.list(10)}"
+		            	rowKeyVar="key"
+		                rowClasses=""
+		                styleClass="dtable rf-dt-crud"
+		                var="row"
+		            >
+		                <rich:column
+		                	styleClass="dt-toolbar-col"
+		                >
+		                    <f:facet name="header">
+		                        <s:div>
+		                        </s:div>
+		                    </f:facet>
+		                </rich:column>
+					    <rich:column>
+					        <f:facet name="header">
+					        	<h:outputText value="#{messages['fluxo.tarefa']}"></h:outputText>
+					        </f:facet>
+							<s:div>
+					            <h:outputText value="#{row.tarefa.tarefa}"></h:outputText>
+					        </s:div>					    
+						</rich:column>
+					    <rich:column>
+					        <f:facet name="header">
+					        	<h:outputText value="#{messages['temposMedios.tempoMedio']}"></h:outputText>
+					        </f:facet>
+							<s:div>
+					            <h:outputText value="#{row.tempoMedioFormatado}"></h:outputText>
+					        </s:div>					    
+						</rich:column>
+					    <rich:column>
+					        <f:facet name="header">
+					        	<h:outputText value="#{messages['temposMedios.prazo']}"></h:outputText>
+					        </f:facet>
+							<s:div>
+					            <h:outputText value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.label}">
+					            </h:outputText>
+					        </s:div>					    
+						</rich:column>
+					    <rich:column>
+					        <f:facet name="header">
+					        	<h:outputText value="Número de Processos contabilizados"></h:outputText>
+					        </f:facet>
+							<s:div>
+					            <h:outputText value="#{row.instancias}"></h:outputText>
+					        </s:div>					    
+						</rich:column>
+		            </rich:dataTable>
+		            <h:outputText
+		                value="Foram encontrados:  #{tempoMedioTarefaList.resultCount} resultados"
+		                styleClass="dt-res-count"
+					/>
+		            <s:div rendered="#{tempoMedioTarefaList.nextExists or tempoMedioTarefaList.previousExists}">
+		                <h:form>
+		                	<ui:param name="bean" value="#{tempoMedioTarefaList}" />
+		                    <ui:include src="/WEB-INF/xhtml/tags/grid/inputNumberSlider.xhtml" />
+		                </h:form>
+		            </s:div>
+		            
+		        </rich:panel>
+		    </a:region>
 	    </rich:panel>
     </ui:define>
 
