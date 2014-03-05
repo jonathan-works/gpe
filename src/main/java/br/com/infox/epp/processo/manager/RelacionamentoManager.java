@@ -7,10 +7,10 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.processo.dao.RelacionamentoDAO;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.entity.Relacionamento;
-import br.com.itx.util.EntityUtil;
 
 @AutoCreate
 @Name(RelacionamentoManager.NAME)

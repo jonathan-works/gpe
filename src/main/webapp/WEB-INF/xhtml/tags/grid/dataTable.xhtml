@@ -10,7 +10,8 @@
     xmlns:wi="http://www.itx.com.br/jsf">
     <h:outputStylesheet library="styleSkinInfox" name="datatable.css" />
     <s:div id="#{id}SearchForm"
-        styleClass="dtable-search-form #{searchFormStyleClass}">
+        styleClass="dtable-search-form #{searchFormStyleClass}"
+        rendered="#{empty showSearchForm ? true : showSearchForm}">
         <ui:insert name="searchForm" />
     </s:div>
     <a:region>

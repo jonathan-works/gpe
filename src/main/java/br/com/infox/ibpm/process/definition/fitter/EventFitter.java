@@ -14,8 +14,8 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.ProcessDefinition;
 
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.ibpm.event.handler.EventHandler;
-import br.com.itx.util.ReflectionsUtil;
 
 @Name(EventFitter.NAME)
 @AutoCreate

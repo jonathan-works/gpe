@@ -14,6 +14,7 @@ import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 
 @Name(DocumentoDownloader.NAME)
 @Scope(ScopeType.EVENT)
@@ -24,6 +25,9 @@ public class DocumentoDownloader {
 
     @In
     DocumentoBinManager documentoBinManager;
+    
+    @In
+    private ProcessoDocumentoManager processoDocumentoManager;
 
     public static final String NAME = "documentoDownloader";
 
@@ -55,4 +59,7 @@ public class DocumentoDownloader {
         }
     }
 
+    public void downloadDocumento(String idDocumento) {
+    	downloadDocumento(processoDocumentoManager.find(Integer.valueOf(idDocumento)));
+    }
 }

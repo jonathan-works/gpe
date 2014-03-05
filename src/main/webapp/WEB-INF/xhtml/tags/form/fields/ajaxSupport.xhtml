@@ -14,13 +14,13 @@
     <ui:param name="ajaxSingle" value="#{wi:get(ajaxSingle, true)}" />
 
     <a:ajax event="change" status=":status"
-        listener="#{util.invokeMethod(action)}"
+        listener="#{elFunctions.invokeMethod(action)}"
         onbeforesubmit="#{onclick}" oncomplete="#{oncomplete}"
         render="#{reRender}" onbegin="#{onsubmit}" />
     <c:if test="#{event.equals('onclick')}">
 
         <a:ajax event="click" status=":status"
-            listener="#{util.invokeMethod(action)}"
+            listener="#{elFunctions.invokeMethod(action)}"
             onbeforesubmit="#{onclick}" oncomplete="#{oncomplete}"
             render="#{reRender}" onbegin="#{onsubmit}" />
     </c:if>

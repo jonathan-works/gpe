@@ -35,7 +35,7 @@ import br.com.infox.epp.mail.entity.ListaEmail;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class InfoxMailNode extends MailNode {
 

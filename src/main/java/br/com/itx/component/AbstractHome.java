@@ -1,13 +1,7 @@
 package br.com.itx.component;
 
-import static br.com.infox.constants.WarningConstants.RAWTYPES;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static org.jboss.seam.faces.FacesMessages.instance;
-
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
@@ -33,13 +27,13 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
-import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 /**
- * Deprecated 
- * use {@link br.com.infox.core.crud.AbstractCrudAction} or {@link br.com.infox.core.controller.AbstractController} instead
+ * Deprecated use {@link br.com.infox.core.crud.AbstractCrudAction} or
+ * {@link br.com.infox.core.controller.AbstractController} instead
  * */
 @SuppressWarnings(UNCHECKED)
 @Deprecated
@@ -93,12 +87,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         return MSG_REGISTRO_CADASTRADO;
     }
 
-    /**
-     * Lista dos campos que não devem ser limpados ao realizar inclusão no
-     * formulario
-     */
-    private List<String> lockedFields = new ArrayList<String>();
-
     public String getTab() {
         return tab;
     }
@@ -140,20 +128,10 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
      */
     public void newInstance() {
         oldEntity = null;
-
         getEntityManager().clear();
-
-        if (!lockedFields.isEmpty()) {
-            try {
-                clearUnlocked();
-            } catch (Exception e) {
-                LOG.error(".newInstance()", e);
-            }
-        } else {
-            setId(null);
-            clearForm();
-            instance = createInstance();
-        }
+        setId(null);
+        clearForm();
+        instance = createInstance();
     }
 
     @Override
@@ -480,60 +458,6 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 
     private String getInstanceClassName() {
         return getInstance() != null ? getInstance().getClass().getName() : "";
-    }
-
-    /**
-     * Verifica se o registro está na lista para controlar o ícone do cadeado.
-     * 
-     * @param idField - Nome do atributo da Entity referente ao campo
-     * @param homeRef - Home da Entity do atributo informado
-     */
-    @SuppressWarnings(RAWTYPES)
-    public void toggleFields(String idField, AbstractHome homeRef) {
-        if (homeRef.getLockedFields().contains(idField)) {
-            homeRef.getLockedFields().remove(idField);
-        } else {
-            homeRef.getLockedFields().add(idField);
-        }
-    }
-
-    /**
-     * Limpa todos os campos que não foram marcados.
-     * 
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws InvocationTargetException
-     * @throws IllegalArgumentException
-     */
-    public void clearUnlocked() throws InstantiationException, IllegalAccessException, InvocationTargetException {
-        PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(getInstance());
-        T t = (T) getInstance().getClass().newInstance();
-        for (PropertyDescriptor pd : pds) {
-            if (lockedFields.contains(pd.getName())) {
-                ComponentUtil.setValue(t, pd.getName(), pd.getReadMethod().invoke(getInstance()));
-            }
-        }
-        setId(null);
-        clearForm();
-        instance = t;
-    }
-
-    /**
-     * Retorna a lista dos campos que não devem ser limpados.
-     * 
-     * @return
-     */
-    public List<String> getLockedFields() {
-        return lockedFields;
-    }
-
-    /**
-     * Seta a lista dos campos que não devem ser limpados.
-     * 
-     * @param lockedFields - Lista dos campos que não devem ser limpados
-     */
-    public void setLockedFields(List<String> lockedFields) {
-        this.lockedFields = lockedFields;
     }
 
     private void rollbackTransactionIfNeeded() {

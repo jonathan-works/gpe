@@ -32,10 +32,11 @@
                 required="true" />
         </h:panelGroup>
         <ui:define name="buttons">
-            <wi:commandButton id="pessoaJuridicaSaveButton"
+            <a:commandButton id="pessoaJuridicaSaveButton"
                 action="#{partesController.includePessoaJuridica()}"
-                reRender="buscaDiv, pessoasListDiv, storeDiv, pessoaJuridicaForm"
-                value="#{messages['crud.persist']}" />
+                render="buscaDiv, pessoasListDiv, storeDiv, pessoaJuridicaForm"
+                value="#{messages['crud.persist']}" 
+                styleClass="buttons #{wi:get(styleClass, 'buttons')}"/>
         </ui:define>
 
     </wi:dataForm>

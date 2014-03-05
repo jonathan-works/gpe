@@ -27,10 +27,12 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.itx.component.Util;
+import br.com.infox.jsf.function.ElFunctions;
+import br.com.infox.seam.path.PathResolver;
 
 public class Indexer {
 
@@ -39,13 +41,12 @@ public class Indexer {
     private static final LogProvider LOG = Logging.getLogProvider(Indexer.class);
 
     public static File getIndexerPath() {
-        Util util = new Util();
-        String fileName = util.eval("indexerFileName");
+        String fileName = getIndexerFileName();
         if (fileName == null) {
             String path = System.getProperty("user.home");
             StringBuilder sb = new StringBuilder();
             sb.append(path).append(File.separatorChar);
-            sb.append(util.getContextPath().substring(1));
+            sb.append(getPathResolver().getContextPath().substring(1));
             sb.append(File.separatorChar).append("indexer");
             fileName = sb.toString();
         }
@@ -106,6 +107,15 @@ public class Indexer {
     public Query getQuery(String searchText, String[] fields) throws ParseException {
         QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, analyzer);
         return parser.parse(searchText);
+    }
+    
+    private static PathResolver getPathResolver(){
+        return (PathResolver) Component.getInstance(PathResolver.NAME);
+    }
+    
+    private static String getIndexerFileName(){
+        ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
+        return elFunctions.evaluateExpression("indexerFileName");
     }
 
 }

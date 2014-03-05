@@ -8,6 +8,9 @@
 }
 .mp-help {
 	cursor:help;
+	float: right;
+    top: -16px;
+    position: relative;
 }
 .mp-close {
 	cursor:pointer;

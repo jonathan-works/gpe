@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.system.entity.Parametro;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ParametroList.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -57,7 +57,7 @@
                                         <ui:param name="reRender"
                                             value="#{empty props.reRender ? reRender : props.reRender}" />
                                         <ui:param name="readonly"
-                                            value="#{empty props.readonly ? false : util.eval(props.readonly)}" />
+                                            value="#{empty props.readonly ? false : elFunctions.evaluateExpression(props.readonly)}" />
                                         <ui:param name="maxlength"
                                             value="#{props.length}" />
                                         <ui:param name="bypassUpdate"
@@ -92,11 +92,11 @@
                                     <ui:param name="reRender"
                                         value="#{empty props.reRender ? reRender : props.reRender}" />
                                     <ui:param name="readonly"
-                                        value="#{empty props.readonly ? false : util.eval(props.readonly)}" />
+                                        value="#{empty props.readonly ? false : elFunctions.evaluateExpression(props.readonly)}" />
                                     <ui:param name="maxlength"
                                         value="#{props.length}" />
                                     <ui:param name="type"
-                                        value="#{f.type.startsWith('documentoIdentificacaoHome') ? 'docsIdentificacao/'.concat(util.eval(f.type)) : f.type }" />
+                                        value="#{f.type.startsWith('documentoIdentificacaoHome') ? 'docsIdentificacao/'.concat(elFunctions.evaluateExpression(f.type)) : f.type }" />
                                     <ui:include
                                         src="/WEB-INF/xhtml/components/form/#{f.type}.xhtml" />
                                 </c:forEach>
@@ -105,7 +105,7 @@
                                 <s:div
                                     rendered="#{canEdit and !empty form.fields and form.hasRequiredField()}">
                                     <img
-                                        src="#{util.contextPath}#{a4jSkin.imgIconBalao}" />
+                                        src="#{pathResolver.contextPath}#{a4jSkin.imgIconBalao}" />
                                     <span class="required">*</span>
 		                   Campos Obrigatórios                                                       	
 		                

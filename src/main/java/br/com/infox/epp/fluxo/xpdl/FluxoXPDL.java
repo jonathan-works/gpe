@@ -2,7 +2,10 @@ package br.com.infox.epp.fluxo.xpdl;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
@@ -20,7 +23,6 @@ import br.com.infox.epp.fluxo.xpdl.lane.LaneXPDL;
 import br.com.infox.epp.fluxo.xpdl.lane.LanesXPDLFactory;
 import br.com.infox.epp.fluxo.xpdl.transition.TransitionsXPDL;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
-import br.com.itx.util.XmlUtil;
 
 public final class FluxoXPDL implements Serializable {
 
@@ -30,11 +32,14 @@ public final class FluxoXPDL implements Serializable {
 	private List<LaneXPDL> lanes;
 	private ActivitiesXPDL activities;
 	private TransitionsXPDL transitions;
+	
+	private Set<String> mensagens;
 
 	private FluxoXPDL(List<LaneXPDL> lanes, ActivitiesXPDL activities, TransitionsXPDL transitions) throws IllegalXPDLException {
 		this.lanes = lanes;
 		this.activities = activities;
 		this.transitions = transitions;
+		this.mensagens = new HashSet<>();
 	}
 
 	/**
@@ -64,6 +69,9 @@ public final class FluxoXPDL implements Serializable {
 		
 		for (ActivityXPDL activity : activities.getActivities()) {
 			Node node = activity.toNode();
+			if (definition.getNode(node.getName()) != null) {
+			    mensagens.add("Já existe um nó com o nome " + node.getName());
+			}
 			definition.addNode(node);
 			if(activity instanceof AssignTaskXPDL) {
 				AssignTaskXPDL assign = (AssignTaskXPDL) activity;
@@ -72,6 +80,10 @@ public final class FluxoXPDL implements Serializable {
 		}
 		
 		addEvents(definition);
+		
+		if (!mensagens.isEmpty()) {
+		    throw new IllegalXPDLException(createExceptionMessage());
+		}
 		return definition;
 	}
 	
@@ -149,4 +161,17 @@ public final class FluxoXPDL implements Serializable {
 		event.addAction(action);
 	}
 
+    public Set<String> getMensagens() {
+        return Collections.unmodifiableSet(mensagens);
+    }
+
+    public String createExceptionMessage() {
+        StringBuilder sb = new StringBuilder("Foram encontrados erros ao importar o XPDL:\n");
+        for (String mensagem : mensagens) {
+            sb.append("\t");
+            sb.append(mensagem);
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }

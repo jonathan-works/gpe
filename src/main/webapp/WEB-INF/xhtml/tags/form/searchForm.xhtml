@@ -29,7 +29,6 @@
                                 label="Mostrar resultado que atenda a:"
                                 value="#{bean.restrictionLogicOperator}"
                                 rendered="#{wi:get(showLogicOperator, false)}"
-                                showLock="false"
                                 optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
                                 items="#{'and,or'.split(',')}" />
 
@@ -47,7 +46,7 @@
                                     <a:commandButton id="clearButton"
                                         onclick="$('##{formId}').clearForm();showLoading();"
                                         oncomplete="hideLoading();"
-                                        action="#{util.invokeMethod(clearAction)}"
+                                        action="#{elFunctions.invokeMethod(clearAction)}"
                                         value="Limpar" execute="@this"
                                         render="#{wi:get(clearReRender, 'pageBody')}"
                                         styleClass="buttons buttons" />

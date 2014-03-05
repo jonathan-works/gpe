@@ -11,9 +11,9 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.epp.imagem.query.ImagemBinQuery;
-import br.com.itx.util.FileUtil;
 
 @Name(ImagemBinDAO.NAME)
 @AutoCreate

@@ -16,7 +16,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ValidaDocumentoAction.NAME)
 public class ValidaDocumentoAction {

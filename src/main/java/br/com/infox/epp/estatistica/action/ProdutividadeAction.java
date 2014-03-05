@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -25,7 +26,7 @@ import br.com.infox.epp.estatistica.manager.ProdutividadeManager;
 import br.com.infox.epp.estatistica.query.ProdutividadeQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.itx.component.Util;
+import br.com.infox.seam.path.PathResolver;
 
 @Name(ProdutividadeAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -198,7 +199,8 @@ public class ProdutividadeAction implements Serializable {
     }
     
     private void exportarXLS(String template, List<ProdutividadeBean> beanList) throws ExcelExportException {
-        String urlTemplate = new Util().getContextRealPath() + template;
+        PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+        String urlTemplate = pathResolver.getContextRealPath() + template;
         Map<String, Object> map = new HashMap<String, Object>();
         StringBuilder className = new StringBuilder(ProdutividadeBean.class.getSimpleName());
         className = className.replace(0, 1, className.substring(0, 1).toLowerCase());

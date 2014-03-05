@@ -12,7 +12,7 @@ import javax.persistence.Query;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.util.ArrayUtil;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class EntityNode<E> implements Serializable {
 

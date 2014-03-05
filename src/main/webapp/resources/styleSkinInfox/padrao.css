@@ -1,5 +1,9 @@
 /*LAYOUT GERAL DA PÁGINA*/
 
+.padding-top-5 {
+    padding-top: 5px;
+}
+
 .tree-p.rf-cp.rf-tgp {
 	border-color:#fff;
 	display:inline-table;
@@ -550,6 +554,13 @@ select {
 	z-index: 1000;
 }
 
+.lateral-editor-ajuda {
+	position: relative;
+	right: -700px;
+	top: -600px;
+	width: 420px;
+}
+
 form {
 	margin:0;
 	padding:0;
@@ -569,10 +580,6 @@ form {
 
 #javax_faces_developmentstage_messages {
 	display:none;
-}
-
-.img-upl-div {
-	display:inline-block;
 }
 
 /* Workaround para o bug RF-12332 do Richfaces. Ver https://issues.jboss.org/browse/RF-12332 */

@@ -12,7 +12,6 @@
     <s:decorate id="#{f.id}DecorationProvisorio"
         template="/WEB-INF/xhtml/components/templates/edit.xhtml"
         rendered="#{usuarioLoginCrudAction.managed}">
-        <ui:param name="showLock" value="false" />
 
         <wi:selectBooleanRadio id="#{id}Provisorio"
             value="#{usuarioLoginCrudAction.instance.provisorio}"

@@ -147,7 +147,7 @@
                                 <ui:param name="header"
                                     value="#{empty props.header ? c.header : expressions.createValueExpression(props.header).value}" />
                                 <ui:param name="columnRendered"
-                                    value="#{empty props.columnRendered ? true : util.eval(props.columnRendered)}" />
+                                    value="#{empty props.columnRendered ? true : elFunctions.evaluateExpression(props.columnRendered)}" />
                                 <rich:column
                                     rendered="#{columnRendered}">
                                     <f:facet name="header">

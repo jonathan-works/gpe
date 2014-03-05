@@ -7,7 +7,7 @@
     xmlns:wi="http://www.itx.com.br/jsf">
     <s:span rendered="#{wi:get(rendered, 'true')}" styleClass="tb-rprt">
         <s:link
-            view="#{empty reportPath ? util.viewIdDirectory.concat('report.xhtml') : reportPath}"
+            view="#{empty reportPath ? pathResolver.viewIdDirectory.concat('report.xhtml') : reportPath}"
             target="_blank">
             <h:graphicImage url="#{a4jSkin.imgIconPDF}"
                 title="Gerar PDF" />

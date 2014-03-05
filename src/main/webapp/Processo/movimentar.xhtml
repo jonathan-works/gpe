@@ -15,11 +15,6 @@
     <ui:define name="title">#{pageTitle}</ui:define>
     <ui:define name="contentTitle">
     	#{pageTitle}
-		<h:graphicImage
-			id="helpBtn"
-			styleClass="mp-help" 
-			value="#{a4jSkin.imgIconHelp}"
-		/>    	
     </ui:define>
     <ui:define name="scripts">
     	<h:outputScript library="js/components" name="Modal.js" />
@@ -41,15 +36,6 @@
                         infox.hideLoading();
                     }
                 }
-                invoke(["infox.Modal"],function(Modal) {
-                	var panelTeste = new Modal({id:'mp_taskNodeDescription'});
-                	$("#helpBtn").click(function show() {
-                		panelTeste.show();
-                    });
-                	$("#mp_taskNodeCloseBtn").click(function hide() {
-                    	panelTeste.hide();
-                    });
-                });
             </script>
     </ui:define>
 
@@ -73,7 +59,7 @@
         </h:form>
 
         <infox:tabPanel switchType="ajax" rendered="#{checkPermission}"
-            activeTab="#{home.tab}">
+            activeTab="#{home.tab}" id="movimentarTabPanel">
             <h:form rendered="#{!isUsuarioExterno}">
                 <infox:tabHeaders />
             </h:form>
@@ -127,6 +113,21 @@
             <infox:tab id="tabSaida" name="tabSaida"
                 rendered="#{processoHome.managed}" status=":status"
                 title="Saída">
+                
+                <h:graphicImage id="helpBtn" styleClass="mp-help" value="#{a4jSkin.imgIconHelp}" />
+                
+                <script>
+	                invoke(["infox.Modal"],function(Modal) {
+	                    var panelTeste = new Modal({id:'mp_taskNodeDescription'});
+	                    $("#movimentarTabPanel\\:helpBtn").click(function show() {
+	                        panelTeste.show();
+	                    });
+	                    $("#mp_taskNodeCloseBtn").click(function hide() {
+	                        panelTeste.hide();
+	                    });
+	                });
+                </script>
+                
                 <c:if test="#{not taskPageAction.hasTaskPage}">
                     <wi:form canEdit="true"
                         formTitle="#{taskInstance.name}"

@@ -1,9 +1,14 @@
 package br.com.infox.epp.processo.consulta.action;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.controller.AbstractController;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 
@@ -15,6 +20,7 @@ public class ConsultaController extends AbstractController {
     
     private ProcessoEpa processoEpa;
     @In private ProcessoEpaManager processoEpaManager;
+    @In private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
     
     @Override
     public void setId(Object id) {
@@ -31,4 +37,7 @@ public class ConsultaController extends AbstractController {
         this.processoEpa = processoEpa;
     }
 
+    public List<ProcessoDocumento> getProcessoDocumentoList() {
+        return sigiloDocumentoPermissaoManager.getDocumentosPermitidos(processoEpa, Authenticator.getUsuarioLogado());
+    }
 }

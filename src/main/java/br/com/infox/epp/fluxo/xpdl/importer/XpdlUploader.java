@@ -23,5 +23,4 @@ public class XpdlUploader implements FileUploadListener {
     public byte[] getData() {
         return data;
     }
-
 }

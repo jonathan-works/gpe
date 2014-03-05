@@ -12,7 +12,7 @@ import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NatCatFluxoLocalizacaoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FluxoLocalizacaoCrudAction.NAME)
 public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLocalizacao, NatCatFluxoLocalizacaoManager> {

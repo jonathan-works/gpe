@@ -27,7 +27,7 @@
 			<f:selectItem
                  itemLabel="[Todos]" />
 			<f:selectItems
-                 value="#{wi:get(items, util.splitAsList('true:Ativo,false:Inativo'))}" />
+                 value="#{wi:get(items, selectItemFunctions.createFromString('true:Ativo,false:Inativo'))}" />
             <ui:insert />
 		</h:selectOneMenu>
 	</s:decorate>

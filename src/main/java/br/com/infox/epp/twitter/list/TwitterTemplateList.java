@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(TwitterTemplateList.NAME)
 @Scope(ScopeType.CONVERSATION)

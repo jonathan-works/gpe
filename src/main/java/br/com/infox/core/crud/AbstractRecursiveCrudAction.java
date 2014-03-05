@@ -13,7 +13,7 @@ import br.com.infox.core.exception.RecursiveException;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.persistence.RecursiveManager;
-import br.com.itx.util.EntityUtil;
+import br.com.infox.core.util.EntityUtil;
 
 @SuppressWarnings(UNCHECKED)
 public abstract class AbstractRecursiveCrudAction<E extends Recursive<E>, M extends Manager<? extends DAO<E>, E>> extends 

@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -14,7 +15,7 @@ import org.jboss.seam.security.Identity;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.epp.access.util.SecurityUtil;
-import br.com.itx.component.Util;
+import br.com.infox.seam.path.PathResolver;
 
 /**
  * Monta o menu do usuário baseado nas permissões de acesso às páginas
@@ -85,7 +86,8 @@ public class Menu implements Serializable {
         }
     	
     	RecursoCreator roleCreator = new RecursoCreator();
-    	Files.walkFileTree(new File(new Util().getContextRealPath()).toPath(), roleCreator);
+    	PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+    	Files.walkFileTree(new File(pathResolver.getContextRealPath()).toPath(), roleCreator);
 	}
 
     protected void buildItem(String key, String url) {

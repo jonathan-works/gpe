@@ -12,14 +12,14 @@
         <h:form>
             <c:if test="#{not empty reportPath}">
                 <s:link
-                    view="#{empty reportPath ? util.viewIdDirectory.concat('excelReport.xhtml') : reportPath}"
+                    view="#{empty reportPath ? pathResolver.viewIdDirectory.concat('excelReport.xhtml') : reportPath}"
                     target="_blank">
                     <h:graphicImage url="/img/excel.png"
                         title="Gerar Excel" />
                 </s:link>
             </c:if>
             <a:region>
-                <h:commandLink action="#{util.invokeMethod(action)}">
+                <h:commandLink action="#{elFunctions.invokeMethod(action)}">
                     <h:graphicImage url="/img/excel.png"
                         title="Gerar Excel" />
                 </h:commandLink>

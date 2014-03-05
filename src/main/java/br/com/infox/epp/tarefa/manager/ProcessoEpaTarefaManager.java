@@ -12,7 +12,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.DateRange;
+import br.com.infox.core.time.DateRange;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;

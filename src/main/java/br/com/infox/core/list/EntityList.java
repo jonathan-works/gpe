@@ -25,10 +25,10 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.ExcelExportException;
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ExcelExportUtil;
-import br.com.itx.component.Util;
-import br.com.itx.util.EntityUtil;
-import br.com.itx.util.ReflectionsUtil;
+import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.seam.path.PathResolver;
 
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
@@ -330,7 +330,8 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     }
 
     private void exportarXLS(String template, List<E> beanList) throws ExcelExportException {
-        String urlTemplate = new Util().getContextRealPath() + template;
+        PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+        String urlTemplate = pathResolver.getContextRealPath() + template;
         Map<String, Object> map = new HashMap<String, Object>();
         StringBuilder className = new StringBuilder(getEntityName());
         className = className.replace(0, 1, className.substring(0, 1).toLowerCase());

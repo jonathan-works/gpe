@@ -21,7 +21,7 @@ import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
 import br.com.infox.epp.twitter.util.TwitterUtil;
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class JbpmMail extends org.jbpm.mail.Mail {
 	private static final long serialVersionUID = 1L;

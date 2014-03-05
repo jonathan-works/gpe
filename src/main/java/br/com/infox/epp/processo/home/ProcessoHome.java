@@ -33,10 +33,15 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.seam.context.ContextFacade;
+import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.Util;
-import br.com.itx.util.ComponentUtil;
 
+/**
+ * Deprecated : A superclasse AbstractHome está em processo de remoção, assim as
+ * funções de ProcessoHome estão sendo repassadas a novos componentes
+ * */
+@Deprecated
 @Name(ProcessoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoHome extends AbstractHome<Processo> {
@@ -116,7 +121,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     private void avisarNaoHaPermissaoParaAcessarProcesso() {
-        Util.setToEventContext("canClosePanel", true);
+        ContextFacade.setToEventContext("canClosePanel", true);
         FacesMessages.instance().clear();
         FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: "
                 + getInstance().getNumeroProcesso());

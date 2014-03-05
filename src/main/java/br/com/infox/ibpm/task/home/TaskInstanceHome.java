@@ -43,6 +43,7 @@ import org.richfaces.function.RichFunction;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -59,10 +60,10 @@ import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.util.UserHandler;
+import br.com.infox.jsf.function.ElFunctions;
+import br.com.infox.seam.context.ContextFacade;
+import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
-import br.com.itx.component.Util;
-import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.EntityUtil;
 
 @Name(TaskInstanceHome.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -205,7 +206,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void completeUpdate() {
         Contexts.getBusinessProcessContext().flush();
-        Util.setToEventContext(UPDATED_VAR_NAME, true);
+        ContextFacade.setToEventContext(UPDATED_VAR_NAME, true);
         updateIndex();
         updateTransitions();
         // Necessário para gravar a prioridade do processo ao clicar no botão
@@ -571,7 +572,8 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public List<ModeloDocumento> getModeloItems(String variavel) {
-        String listaModelos = (String) new Util().eval(variavel);
+        ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
+        String listaModelos = elFunctions.evaluateExpression(variavel);
         return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
     }
 

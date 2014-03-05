@@ -68,14 +68,11 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     }
     
     private boolean inativarFilhos(final Localizacao localizacao) {
-        if (localizacao.getItemTipoDocumentoList().size() <= 0) {
-            localizacao.setAtivo(Boolean.FALSE);
-            for (int i = 0, quantidadeFilhos = localizacao.getLocalizacaoList().size(); i < quantidadeFilhos; i++) {
-                inativarFilhos(localizacao.getLocalizacaoList().get(i));
-            }
-            return Boolean.TRUE;
+        localizacao.setAtivo(Boolean.FALSE);
+        for (int i = 0, quantidadeFilhos = localizacao.getLocalizacaoList().size(); i < quantidadeFilhos; i++) {
+            inativarFilhos(localizacao.getLocalizacaoList().get(i));
         }
-        return Boolean.FALSE;
+        return Boolean.TRUE;
     }
     
     public List<Localizacao> getLocalizacoesEstrutura(){

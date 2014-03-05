@@ -28,6 +28,7 @@ import org.jbpm.taskmgmt.def.Task;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
@@ -35,8 +36,7 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
-import br.com.itx.util.ComponentUtil;
-import br.com.itx.util.ReflectionsUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
 

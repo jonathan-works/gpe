@@ -44,7 +44,7 @@
                     id="certificadoDigitalDiv">
                     <div id="divApplet">
                         <wi:appletAssinatura id="certificacao"
-                            urlDownloadFile="#{util.urlProject}/downloadCaList.seam"
+                            urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
                             formId="formValidar"
                             certificationChainField="#{rich:clientId('certChain')}"
                             signatureField="#{rich:clientId('signature')}"

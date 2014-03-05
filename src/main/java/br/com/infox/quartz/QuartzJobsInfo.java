@@ -29,7 +29,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 
-import br.com.itx.util.ComponentUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(QuartzJobsInfo.NAME)
 @Scope(ScopeType.APPLICATION)
@@ -38,149 +38,145 @@ import br.com.itx.util.ComponentUtil;
 @Install(dependencies = { QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER })
 public class QuartzJobsInfo implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(QuartzJobsInfo.class);
-	public static final String NAME = "quartzJobsInfo";
+    private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(QuartzJobsInfo.class);
+    public static final String NAME = "quartzJobsInfo";
 
-	private static Pattern patternExpr = Pattern
-			.compile("^AsynchronousInvocation\\((.*)\\)$");
+    private static Pattern patternExpr = Pattern.compile("^AsynchronousInvocation\\((.*)\\)$");
 
-	public static Scheduler getScheduler() {
-		return QuartzDispatcher.instance().getScheduler();
-	}
+    public static Scheduler getScheduler() {
+        return QuartzDispatcher.instance().getScheduler();
+    }
 
-	public List<Map<String, Object>> getDetailJobsInfo() {
-		List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
-		try {
-			Scheduler scheduler = getScheduler();
-			String[] jobGroupNames = scheduler.getJobGroupNames();
-			for (String groupName : jobGroupNames) {
-				List<Map<String, Object>> mapInfoGroup = getListMapInfoGroupFromJobs(groupName);
-				maps.addAll(mapInfoGroup);
-			}
-		} catch (SchedulerException e) {
-			FacesMessages.instance().add(Severity.ERROR,
-					"Erro ao obter os detalhes dos jobs do quartz.", e);
-		}
-		return maps;
-	}
+    public List<Map<String, Object>> getDetailJobsInfo() {
+        List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
+        try {
+            Scheduler scheduler = getScheduler();
+            String[] jobGroupNames = scheduler.getJobGroupNames();
+            for (String groupName : jobGroupNames) {
+                List<Map<String, Object>> mapInfoGroup = getListMapInfoGroupFromJobs(groupName);
+                maps.addAll(mapInfoGroup);
+            }
+        } catch (SchedulerException e) {
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao obter os detalhes dos jobs do quartz.", e);
+        }
+        return maps;
+    }
 
-	private List<Map<String, Object>> getListMapInfoGroupFromJobs(
-			String groupName) throws SchedulerException {
-		Scheduler scheduler = getScheduler();
-		String[] jobNames = scheduler.getJobNames(groupName);
-		List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
-		for (String jobName : jobNames) {
-			JobDetail jobDetail = scheduler.getJobDetail(jobName, groupName);
-			Trigger[] triggersOfJob = scheduler.getTriggersOfJob(jobName,
-					groupName);
-			for (Trigger trigger : triggersOfJob) {
-				maps.add(getTrigerDetailMap(jobDetail, trigger));
-			}
-		}
-		return maps;
-	}
+    private List<Map<String, Object>> getListMapInfoGroupFromJobs(
+            String groupName) throws SchedulerException {
+        Scheduler scheduler = getScheduler();
+        String[] jobNames = scheduler.getJobNames(groupName);
+        List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
+        for (String jobName : jobNames) {
+            JobDetail jobDetail = scheduler.getJobDetail(jobName, groupName);
+            Trigger[] triggersOfJob = scheduler.getTriggersOfJob(jobName, groupName);
+            for (Trigger trigger : triggersOfJob) {
+                maps.add(getTrigerDetailMap(jobDetail, trigger));
+            }
+        }
+        return maps;
+    }
 
-	private Map<String, Object> getTrigerDetailMap(JobDetail jobDetail,
-			Trigger trigger) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		String jobName = trigger.getJobName();
-		JobDataMap jobDataMap = jobDetail.getJobDataMap();
-		map.put("triggerName", trigger.getName());
-		map.put("jobName", jobName);
-		map.put("groupName", jobDetail.getGroup());
-		map.put("nextFireTime", trigger.getNextFireTime());
-		map.put("previousFireTime", trigger.getPreviousFireTime());
-		String jobExpression = getJobExpression(jobDataMap);
-		map.put("jobExpression", jobExpression);
-		map.put("jobValid", isJobValid(jobExpression));
-		if (trigger instanceof CronTrigger) {
-			CronTrigger cronTrigger = (CronTrigger) trigger;
-			map.put("cronExpression", cronTrigger.getCronExpression());
-		}
-		return map;
-	}
+    private Map<String, Object> getTrigerDetailMap(JobDetail jobDetail,
+            Trigger trigger) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String jobName = trigger.getJobName();
+        JobDataMap jobDataMap = jobDetail.getJobDataMap();
+        map.put("triggerName", trigger.getName());
+        map.put("jobName", jobName);
+        map.put("groupName", jobDetail.getGroup());
+        map.put("nextFireTime", trigger.getNextFireTime());
+        map.put("previousFireTime", trigger.getPreviousFireTime());
+        String jobExpression = getJobExpression(jobDataMap);
+        map.put("jobExpression", jobExpression);
+        map.put("jobValid", isJobValid(jobExpression));
+        if (trigger instanceof CronTrigger) {
+            CronTrigger cronTrigger = (CronTrigger) trigger;
+            map.put("cronExpression", cronTrigger.getCronExpression());
+        }
+        return map;
+    }
 
-	public static String getJobExpression(JobDataMap dataMap) {
-		Collection<?> values = dataMap.values();
-		if (values != null && !values.isEmpty()) {
-			String dataJobDetail = values.iterator().next().toString();
-			Matcher matcher = patternExpr.matcher(dataJobDetail);
-			if (matcher.find()) {
-				return matcher.group(1);
-			}
-			return dataJobDetail;
-		}
-		return null;
-	}
+    public static String getJobExpression(JobDataMap dataMap) {
+        Collection<?> values = dataMap.values();
+        if (values != null && !values.isEmpty()) {
+            String dataJobDetail = values.iterator().next().toString();
+            Matcher matcher = patternExpr.matcher(dataJobDetail);
+            if (matcher.find()) {
+                return matcher.group(1);
+            }
+            return dataJobDetail;
+        }
+        return null;
+    }
 
-	/**
-	 * Test se o a expressão do job é valida.
-	 * 
-	 * @param jobExpression
-	 * @return
-	 */
-	private boolean isJobValid(String jobExpression) {
-		if (jobExpression == null || jobExpression.indexOf('.') == -1) {
-			return false;
-		}
-		String[] split = jobExpression.split("\\.");
-		String componentName = split[0];
-		Object component = ComponentUtil.getComponent(componentName);
-		if (component == null) {
-			return false;
-		}
-		String medothName = split[1].replaceAll("[()]", "");
-		return isMethodValid(component, medothName);
-	}
+    /**
+     * Test se o a expressão do job é valida.
+     * 
+     * @param jobExpression
+     * @return
+     */
+    private boolean isJobValid(String jobExpression) {
+        if (jobExpression == null || jobExpression.indexOf('.') == -1) {
+            return false;
+        }
+        String[] split = jobExpression.split("\\.");
+        String componentName = split[0];
+        Object component = ComponentUtil.getComponent(componentName);
+        if (component == null) {
+            return false;
+        }
+        String medothName = split[1].replaceAll("[()]", "");
+        return isMethodValid(component, medothName);
+    }
 
-	private boolean isMethodValid(Object component, String medothName) {
-		try {
-			component.getClass().getDeclaredMethod(medothName, Date.class,
-					String.class);
-			return true;
-		} catch (Exception e) {
-			LOG.error(".isMethodValid(component, medothName)", e);
-		}
-		try {
-			component.getClass().getDeclaredMethod(medothName, String.class);
-			return true;
-		} catch (Exception e) {
-			LOG.error(".isMethodValid(component, medothName)", e);
-		}
-		return false;
-	}
+    private boolean isMethodValid(Object component, String medothName) {
+        try {
+            component.getClass().getDeclaredMethod(medothName, Date.class, String.class);
+            return true;
+        } catch (Exception e) {
+            LOG.error(".isMethodValid(component, medothName)", e);
+        }
+        try {
+            component.getClass().getDeclaredMethod(medothName, String.class);
+            return true;
+        } catch (Exception e) {
+            LOG.error(".isMethodValid(component, medothName)", e);
+        }
+        return false;
+    }
 
-	public void triggerJob(String jobName, String groupName) {
-		try {
-			getScheduler().triggerJob(jobName, groupName);
-			FacesMessages.instance().add(Severity.INFO,
-					"Job executado com sucesso: " + jobName);
-		} catch (SchedulerException e) {
-			FacesMessages.instance().add(Severity.ERROR,
-					"Erro ao executar job " + jobName, e);
-			LOG.error(".triggerJob()", e);
-		}
-	}
+    public void triggerJob(String jobName, String groupName) {
+        try {
+            getScheduler().triggerJob(jobName, groupName);
+            FacesMessages.instance().add(Severity.INFO, "Job executado com sucesso: "
+                    + jobName);
+        } catch (SchedulerException e) {
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao executar job "
+                    + jobName, e);
+            LOG.error(".triggerJob()", e);
+        }
+    }
 
-	public void deleteJob(String jobName, String groupName) {
-		try {
-			getScheduler().deleteJob(jobName, groupName);
-			FacesMessages.instance().add(Severity.INFO,
-					"Job removido com sucesso: " + jobName);
-		} catch (SchedulerException e) {
-			FacesMessages.instance().add(Severity.ERROR,
-					"Erro ao remover job " + jobName, e);
-			LOG.error(".deleteJob()", e);
-		}
-	}
+    public void deleteJob(String jobName, String groupName) {
+        try {
+            getScheduler().deleteJob(jobName, groupName);
+            FacesMessages.instance().add(Severity.INFO, "Job removido com sucesso: "
+                    + jobName);
+        } catch (SchedulerException e) {
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao remover job "
+                    + jobName, e);
+            LOG.error(".deleteJob()", e);
+        }
+    }
 
-	@Create
-	public void addGlobalTriggerListener() throws SchedulerException {
-		Scheduler scheduler = QuartzJobsInfo.getScheduler();
-		if (scheduler.getGlobalTriggerListeners().isEmpty()) {
-			scheduler.addGlobalTriggerListener(new TriggerListenerLog());
-		}
-	}
+    @Create
+    public void addGlobalTriggerListener() throws SchedulerException {
+        Scheduler scheduler = QuartzJobsInfo.getScheduler();
+        if (scheduler.getGlobalTriggerListeners().isEmpty()) {
+            scheduler.addGlobalTriggerListener(new TriggerListenerLog());
+        }
+    }
 
 }

@@ -13,7 +13,7 @@
         <s:fragment rendered="#{empty rendered ? true : rendered}">
             <applet width="#{empty width ? '140' : width}" height="25"
                 id="certificacao#{id}" code="SmartCardSignerApplet"
-                archive="#{util.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
+                archive="#{pathResolver.contextPath}/certificado/InfoxSmartCardSignerApplet.jar">
                 <param name="formId" value="#{formId}" />
                 <param name="signButtonCaption"
                     value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" />
@@ -21,7 +21,7 @@
                     value="#{certificationChainField}" />
                 <param name="signatureField" value="#{signatureField}" />
                 <param name="urlDownload"
-                    value="#{util.urlProject}/certificado/" />
+                    value="#{pathResolver.urlProject}/certificado/" />
                 <param name="getDataFunction" value="#{getDataFunction}" />
                 <param name="useBase64Function"
                     value="#{useBase64Function}" />
@@ -33,12 +33,12 @@
                     value="#{functionPosSignError}" />
                 <param name="urlDownloadFile" value="#{urlDownloadFile}" />
                 <param name="urlConfigProviderFile"
-                    value="#{util.urlProject}/certificado/providerConfig.conf" />
+                    value="#{pathResolver.urlProject}/certificado/providerConfig.conf" />
                 <param name="debug"
                     value="#{empty debug ? false : debug}" />
                 <param name="dataAtual" value="#{currentDatetime}" />
                 <param name="caListDownloadFile"
-                    value="#{util.urlProject}/downloadCaList.seam" />
+                    value="#{pathResolver.urlProject}/downloadCaList.seam" />
                 <param name="loginMode"
                     value="#{empty loginMode ? false : loginMode}" />
                 <param name="useProviderDll"

@@ -14,7 +14,10 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_EJBQL = "select o from ProcessoDocumento o";
+    private static final String DEFAULT_EJBQL = "select o from ProcessoDocumento o where "
+            + "(not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
+            + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true and "
+            + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o)))";
     private static final String DEFAULT_ORDER = "dataInclusao desc";
 
     public static final String NAME = "processoDocumentoList";

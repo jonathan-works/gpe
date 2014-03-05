@@ -25,7 +25,7 @@
 		</a:outputPanel>
 
 		<a:commandLink execute="@this" target="#{idProcesso}popUpFluxo"
-			onclick="window.open('#{util.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+			onclick="window.open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 			
 			<f:param name="idProcesso" value="#{idProcesso}" />
 			
@@ -36,7 +36,7 @@
 		</a:commandLink>
 		
 		<a:commandLink execute="@this" rendered="#{empty owner}" target="#{idProcesso}popUpFluxo"
-				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+				onclick="window.open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 				
 				<f:param name="idProcesso" value="#{idProcesso}" />
 				
@@ -48,7 +48,7 @@
 			
 		<a:commandLink execute="@this" rendered="#{owner == authenticator.getUsuarioLogado()}"
 				target="#{idProcesso}popUpFluxo"
-				onclick="window.open('#{util.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+				onclick="window.open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 				
 				<f:param name="idProcesso" value="#{idProcesso}" />
 				
