@@ -7,6 +7,8 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
     <ui:param name="home" value="#{recursoCrudAction}" />
@@ -64,6 +66,25 @@
                 <wi:commandButtonSave />
             </ui:define>
         </wi:dataForm>
+    </ui:define>
+
+    <ui:define name="tabs">
+
+        <infox:tab id="papeisTab"
+            rendered="#{recursoCrudAction.isManaged()}"
+            title="#{messages['recursoPapel.titleTab']}"
+            name="papeisTab"
+            action="#{recursoPapelController.setRecurso(recursoCrudAction.instance)}">
+
+            <a:region>
+                <wi:pickList id="recurso"
+                    targetCaption="Papéis que possuem acesso ao recurso:"
+                    value="#{recursoPapelController.papeis}"
+                    itemValues="#{recursoPapelController.papeisDisponiveis}"
+                    itemLabel="#{var}" />
+            </a:region>
+
+        </infox:tab>
     </ui:define>
 
 </ui:composition>
