@@ -60,5 +60,9 @@ public class PapelDAO extends DAO<Papel> {
         parameters.put(PARAM_LOCALIZACAO, localizacao);
         return getNamedResultList(PAPEIS_BY_LOCALIZACAO, parameters);
     }
+    
+    public List<String> getListaDeNomesDosPapeis(){
+        return getResultList("select distinct identificador from Papel", null);
+    }
 
 }

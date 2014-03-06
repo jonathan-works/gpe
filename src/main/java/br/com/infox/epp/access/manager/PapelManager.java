@@ -46,4 +46,7 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
         return getDao().getPapeisDeUsuarioByLocalizacao(localizacao);
     }
 
+    public List<String> getListaDeNomesDosPapeis(){
+        return getDao().getListaDeNomesDosPapeis();
+    }
 }
