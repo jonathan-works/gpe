@@ -88,10 +88,8 @@
         <infox:tab rendered="#{home.managed}"
             title="Tipos de Modelo de Documento" id="tipoModelo"
             name="tipoModelo">
-
             <wi:ajaxDiv id="divM2MVar">
                 <s:div styleClass="Associated">
-
                     <wi:dataTable
                         values="#{associatedTipoModeloVariavelList.list(15)}"
                         bean="#{associatedTipoModeloVariavelList}"
@@ -101,26 +99,19 @@
                         styleClass="Associated-dt"
                         panelStyleClass="rf-dt-crud"
                         searchFormStyleClass="hidden">
-
                         <ui:define name="searchForm" />
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
-
                             <a:region>
-
                                 <a:commandLink limitRender="true"
                                     render="divM2MVar"
                                     action="#{variavelTipoModeloDocumentoCrudAction.removeTipoModeloVariavel(row)}"
                                     rendered="true">
-
                                     <h:graphicImage
                                         url="/img/grid/copyRight.gif"
                                         title="Remover" />
-
                                 </a:commandLink>
-
                             </a:region>
-
                         </ui:define>
                         <wi:columnOutputText
                             columnId="tipoModeloDocumento"
@@ -130,13 +121,9 @@
                             columnId="tipoModeloDocumento.grupoModeloDocumento"
                             columnHeader="#{messages['associatedTipoModeloVariavel.grupoModeloDocumento']}"
                             value="#{row.tipoModeloDocumento.grupoModeloDocumento}" />
-
                     </wi:dataTable>
-
                 </s:div>
-                
                 <s:div styleClass="padding-top-5">
-
                     <wi:dataTable
                         values="#{associativeTipoModeloDocumentoList.list(15)}"
                         bean="#{associativeTipoModeloDocumentoList}"
@@ -144,13 +131,10 @@
                         id="associativeTipoModeloDocumentoList"
                         rowId="#{row.idTipoModeloDocumento}"
                         styleClass="Associative-dt">
-
                         <ui:define name="searchForm">
-
                             <wi:searchForm
                                 formId="pesquisarTipoModeloDocumentoForm"
                                 formTitle="#{messages['searchForm.title']}">
-
                                 <wi:inputText id="tipoModeloDocumento"
                                     label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
                                     value="#{associativeTipoModeloDocumentoList.entity.tipoModeloDocumento}"
@@ -166,28 +150,20 @@
                                 <wi:selectSituacaoOneMenu id="ativo"
                                     label="#{messages['field.situacao']}"
                                     value="#{associativeTipoModeloDocumentoList.entity.ativo}" />
-
                             </wi:searchForm>
-
                         </ui:define>
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
-
                             <a:region>
-
                                 <a:commandLink limitRender="true"
                                     render="divM2MVar"
                                     action="#{variavelTipoModeloDocumentoCrudAction.addTipoModeloVariavel(row)}"
                                     rendered="true">
-
                                     <h:graphicImage
                                         url="/img/grid/copyLeft.gif"
                                         title="Adicionar" />
-
                                 </a:commandLink>
-
                             </a:region>
-
                         </ui:define>
                         <wi:columnOutputText
                             columnId="tipoModeloDocumento"
@@ -203,12 +179,9 @@
                         <wi:columnSituacao columnId="ativo"
                             columnHeader="#{messages['field.situacao']}"
                             value="#{row.ativo}" />
-
                     </wi:dataTable>
-
                 </s:div>
             </wi:ajaxDiv>
-
         </infox:tab>
 
     </ui:define>

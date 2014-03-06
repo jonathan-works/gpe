@@ -103,20 +103,21 @@
                     value="#{row.ativo}" />
             </wi:dataTable>
         </infox:tab>
+        
         <infox:tab id="variaveis" status=":status"
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.variaveis']}"
             name="variaveis">
             <wi:ajaxDiv id="divM2MVar">
-                <div class="picklist-div">
+                <s:div styleClass="Associated">
                     <wi:dataTable
                         values="#{associatedVariavelTipoModeloList.list(15)}"
                         bean="#{associatedVariavelTipoModeloList}"
                         tableTitle="#{messages['associatedVariavelTipoModelo.tableTitle']}"
                         id="associatedVariavelTipoModeloList"
                         rowId="#{row.idVariavelTipoModelo}"
-                        panelStyleClass="picklist"
-                        styleClass="picklist-dt"
+                        panelStyleClass="rf-dt-crud"
+                        styleClass="Associated-dt"
                         searchFormStyleClass="hidden">
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
@@ -138,16 +139,15 @@
                             columnHeader="#{messages['associatedVariavelTipoModelo.valorVariavel']}"
                             value="#{row.variavel.valorVariavel}" />
                     </wi:dataTable>
-                </div>
-                <div class="picklist-div">
+                </s:div>
+                <s:div styleClass="padding-top-5">
                     <wi:dataTable
                         values="#{associativeVariavelList.list(15)}"
                         bean="#{associativeVariavelList}"
                         tableTitle="#{messages['associativeVariavel.tableTitle']}"
                         id="associativeVariavelList"
                         rowId="#{row.idVariavel}"
-                        panelStyleClass="picklist"
-                        styleClass="picklist-dt">
+                        styleClass="Associative-dt">
                         <ui:define name="searchForm">
                             <wi:searchForm
                                 formId="pesquisarTipoModeloDocumento"
@@ -186,7 +186,7 @@
                             columnHeader="#{messages['field.situacao']}"
                             value="#{row.ativo}" />
                     </wi:dataTable>
-                </div>
+                </s:div>
             </wi:ajaxDiv>
         </infox:tab>
         <infox:tab id="papeis" status=":status"
