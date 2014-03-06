@@ -6,9 +6,7 @@ import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.Selector;
-import org.jboss.seam.util.Strings;
 
 import br.com.infox.seam.path.PathResolver;
 
