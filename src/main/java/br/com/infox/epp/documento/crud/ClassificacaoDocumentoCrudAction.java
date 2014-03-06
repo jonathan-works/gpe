@@ -16,11 +16,11 @@ public class ClassificacaoDocumentoCrudAction extends AbstractCrudAction<TipoPro
     public static final String NAME = "classificacaoDocumentoCrudAction";
     
     @Override
-    public String save() {
-        if (!getInstance().getNumera()){
-            getInstance().setTipoNumeracao(null);
+    protected void beforeSave() {
+        final TipoProcessoDocumento tipoProcessoDocumento = getInstance();
+        if (!tipoProcessoDocumento.getNumera()){
+            tipoProcessoDocumento.setTipoNumeracao(null);
         }
-        return super.save();
     }
-
+    
 }
