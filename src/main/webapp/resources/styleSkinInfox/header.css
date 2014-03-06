@@ -1,26 +1,22 @@
 .banner {
-	width:100%;
-	position:relative;
 }
 .banner-lft, .banner-ctr, .banner-rgt {
 	display:inline-block;
 	vertical-align: top;
 }
-.banner-lft {
-	width:20%;
+.banner-lft,.banner-rgt {
+	width:34%;
 }
 .banner-ctr {
     text-align:center;
-    width:50%;
+    width:32%;
 }
 .banner-title {
 	margin-top:15px;
 }
 
 .banner-rgt {
-	right:0;
     text-align: right;
-    width:30%;
 }
 .divBg {
 	width:100%;

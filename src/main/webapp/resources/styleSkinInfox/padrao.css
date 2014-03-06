@@ -71,13 +71,11 @@
     height: calc(100% - 2px);
 }
 .pageBody {
-    height: calc(100% - 108px);
-    position: relative;
+    height: calc(100% - 109px);
 }
 /* FIM LAYOUT GERAL */
 /* MENU */
 .rf-tb.menu-tb {
-    position: relative;
 }
 .LinkMenu {
     text-decoration: none;
@@ -114,6 +112,8 @@ h1 {
 #html, #body {
     height: 100%;
     width: 100%;
+    min-width:1024px;
+    min-height:627px;
 }
 #body {
     margin: 0px;

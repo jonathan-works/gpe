@@ -81,7 +81,7 @@
 		        <rich:panel
 		        	id="#{id}Panel"
 		        	rendered="#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo != null}"
-		            header="[#{tempoMedioTarefaList.naturezaCategoriaFluxo}] Tempo médio: #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. Prazo: #{tempoMedioTarefaList.prazoFluxo}"
+		            header="[#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}] Tempo médio: #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. Prazo: #{tempoMedioTarefaList.prazoFluxo}"
 		            bodyClass="dtable-p-b"
 		            styleClass="dtable-p">
 		            <rich:dataTable
