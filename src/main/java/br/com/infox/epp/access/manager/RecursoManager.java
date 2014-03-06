@@ -47,5 +47,9 @@ public class RecursoManager extends Manager<RecursoDAO, Recurso> {
         }
         return nomes;
     }
+    
+    public List<String> getPapeisAssociadosARecurso(Recurso recurso) {
+        return getDao().getPapeisAssociadosARecurso(recurso);
+    }
 
 }

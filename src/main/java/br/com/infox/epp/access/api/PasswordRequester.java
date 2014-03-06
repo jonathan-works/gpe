@@ -8,9 +8,9 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.exception.BusinessException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.seam.exception.BusinessException;
 
 @Name(PasswordRequester.NAME)
 public class PasswordRequester {

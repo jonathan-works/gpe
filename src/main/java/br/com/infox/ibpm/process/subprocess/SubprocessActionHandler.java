@@ -14,7 +14,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
-import br.com.infox.core.exception.ApplicationException;
+import br.com.infox.seam.exception.ApplicationException;
 
 @Name("subprocessActionHandler")
 @BypassInterceptors

@@ -13,8 +13,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.seam.exception.ApplicationException;
 
 /**
  * 

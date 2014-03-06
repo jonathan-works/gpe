@@ -23,7 +23,6 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.exception.RedirectToLoginApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.CertificateManager;
@@ -31,6 +30,7 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(CertificateAuthenticator.NAME)
 public class CertificateAuthenticator implements Serializable {

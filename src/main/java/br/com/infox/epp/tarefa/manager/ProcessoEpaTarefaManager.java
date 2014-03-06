@@ -12,7 +12,6 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.time.DateRange;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -25,6 +24,7 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
+import br.com.infox.util.time.DateRange;
 
 @Name(ProcessoEpaTarefaManager.NAME)
 @AutoCreate

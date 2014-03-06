@@ -1,4 +1,4 @@
-package br.com.infox.core.collection;
+package br.com.infox.util.collection;
 
 import java.util.Collection;
 import java.util.HashMap;

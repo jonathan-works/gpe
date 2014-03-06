@@ -20,7 +20,6 @@ import org.junit.runner.RunWith;
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
-import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.action.UsuarioLocalizacaoCrudAction;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.api.RolesMap;
@@ -98,6 +97,7 @@ import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.Variavel;
+import br.com.infox.seam.exception.BusinessException;
 
 @RunWith(Arquillian.class)
 public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocalizacao> {

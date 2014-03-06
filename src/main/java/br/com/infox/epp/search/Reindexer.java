@@ -24,7 +24,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import br.com.infox.core.transaction.TransactionService;
+import br.com.infox.seam.transaction.TransactionService;
 
 @Name("reindexer")
 @BypassInterceptors

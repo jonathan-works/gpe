@@ -17,8 +17,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.collection.Factory;
-import br.com.infox.core.collection.LazyMap;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
@@ -26,6 +24,8 @@ import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumentoPermissao;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
+import br.com.infox.util.collection.Factory;
+import br.com.infox.util.collection.LazyMap;
 
 @Name(SigiloDocumentoPermissaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)

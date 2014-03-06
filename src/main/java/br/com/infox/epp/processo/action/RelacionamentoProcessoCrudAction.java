@@ -9,7 +9,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.Messages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
@@ -18,6 +17,7 @@ import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.RelacionamentoManager;
 import br.com.infox.epp.processo.manager.RelacionamentoProcessoManager;
 import br.com.infox.epp.processo.manager.TipoRelacionamentoProcessoManager;
+import br.com.infox.seam.exception.ApplicationException;
 
 @Name(RelacionamentoProcessoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -1,4 +1,4 @@
-package br.com.infox.core.time;
+package br.com.infox.util.time;
 
 import java.util.Date;
 
