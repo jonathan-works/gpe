@@ -1,18 +1,46 @@
 package br.com.infox.core.list;
 
+import static java.text.MessageFormat.format;
+
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.manager.GenericManager;
 
+/**
+ * 
+ * @author Erik Liberal
+ *
+ */
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractPageableList<E> implements PageableList<E>, Serializable {
+
+    private final class HashMapExtension<K, V> extends HashMap<K, V> {
+        private static final long serialVersionUID = 932116907388087006L;
+
+        private boolean isDirty=false;
+        
+        @Override
+        public V put(K key, V value) {
+            this.isDirty = true;
+            return super.put(key, value);
+        }
+
+        @Override
+        public void putAll(Map<? extends K, ? extends V> m) {
+            this.isDirty = true;
+            super.putAll(m);
+        }
+    }
 
     private static final int DEFAULT_MAX_AMMOUNT = 15;
     
@@ -20,9 +48,10 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     private Integer page;
     private Integer pageCount;
     private List<E> resultList;
-    private HashMap<String, Object> parameters;
+    private HashMapExtension<String, Object> parameters;
+    private HashMap<String, String> searchCriteria;
+    private HashMap<String, Object> params;
     private GenericManager genericManager;
-    private boolean isDirty;
     
     @Override
     public List<E> list() {
@@ -33,16 +62,74 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     }
     
     protected abstract String getQuery();
+
+    private String capitalizeFirstLetter(String value) {
+        String string;
+        if ("".equals(value)) {
+            string = "";
+        } else {
+            final StringBuilder sb = new StringBuilder();
+            sb.append(value.substring(0, 1).toUpperCase());
+            sb.append(value.substring(1));
+            string = sb.toString();   
+        }
+        return string;
+    }
+    
+    private String resolveParameters() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        params = new HashMap<>();
+        int i=0;
+        StringBuilder sb = new StringBuilder(getQuery());
+        for (String key : searchCriteria.keySet()) {
+            final String[] split = key.split("\\.");
+            
+            if (parameters.containsKey(split[0])) {
+                Object val = null;
+                int j;
+                for (j = 0; j < split.length; j++) {
+                    if (j==0) {
+                        val = parameters.get(split[j]);
+                    } else if (val != null ){
+                        val = val.getClass().getMethod(format("get{0}", capitalizeFirstLetter(split[j]))).invoke(val);
+                    }
+                }
+                if (val != null) {
+                    if (i++==0) {
+                        sb.append(" where ");
+                    } else {
+                        sb.append(" and ");
+                    }
+                    sb.append(searchCriteria.get(key));
+                    params.put(split[j-1], val);
+                }
+            }
+        }
+        sb.append(" ").append(getGroupBy());
+        return sb.toString();
+    }
+    
+    protected String getGroupBy() {
+        return "";
+    }
+    
+    protected abstract void initCriteria();
     
     @Override
     public List<E> list(final int maxAmmount) {
-        this.maxAmmount = maxAmmount;
-        if (this.resultList == null || isDirty()) {
-            beforeInitList();
-            this.resultList = genericManager.getResultList(getQuery(), parameters);
-            this.isDirty = false;
+        List<E> truncList = null;
+        try {
+            this.maxAmmount = maxAmmount;
+            if (this.resultList == null || isDirty()) {
+                beforeInitList();
+                final String resolveParameters = resolveParameters();
+                this.resultList = genericManager.getResultList(resolveParameters, params);
+                this.parameters.isDirty = false;
+            }
+            truncList = truncList();
+        } catch (Exception e) {
+            throw new ApplicationException(e.getMessage(), e);
         }
-        return truncList();
+        return truncList;
     }
     
     private List<E> truncList() {
@@ -58,6 +145,7 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     
     @Override
     public void newInstance() {
+        clearParameters();
     }
 
     @Override
@@ -110,26 +198,31 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     }
 
     protected boolean isDirty() {
-        return this.isDirty;
+        return this.parameters.isDirty;
     }
 
     @Create
     public void init() {
         this.genericManager = (GenericManager) Component.getInstance(GenericManager.NAME);
-        this.parameters = new HashMap<>();
-        this.isDirty = false;
+        this.parameters = new HashMapExtension<>();
+        this.searchCriteria = new HashMap<>();
+        initCriteria();
     }
 
     protected void addParameter(String key, Object value) {
         this.parameters.put(key, value);
-        this.isDirty = true;
     }
     
     protected void clearParameters() {
         this.parameters.clear();
     }
     
-    public HashMap<String, Object> getParameters() {
+    public Map<String, Object> getParameters() {
         return parameters;
     }
+
+    protected void addSearchCriteria(String field, String expression) {
+        this.searchCriteria.put(field, expression);
+    }
+    
 }

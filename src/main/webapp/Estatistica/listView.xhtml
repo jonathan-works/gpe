@@ -38,20 +38,20 @@
 		                        <wi:selectOneMenuEntity
 			                    	id="naturezaCategoriaFluxo"
 			                    	label="#{messages['naturezaCategoriaFluxo.tableTitle']}"
-			                    	value="#{tempoMedioTarefaList.naturezaCategoriaFluxo}"
+			                    	value="#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}"
 			                    	items="#{tempoMediaTarefaAction.naturezaCategoriaFluxoList}"
 			                    	showLabel="#{messages['crud.select.select']}"
 			                    />
 			                    <wi:inputDate
 			                    	id="dataInicio"
 			                    	label="#{messages['temposMedios.dataInicio']}"
-			                    	value="#{tempoMedioTarefaList.dataInicio}" 
+			                    	value="#{tempoMedioTarefaList.parameters.dataInicio}" 
 			                    >
 			                    </wi:inputDate>
 			                    <wi:inputDate
 			                    	id="dataFim"
 			                    	label="#{messages['temposMedios.dataFim']}"
-			                    	value="#{tempoMedioTarefaList.dataFim}" 
+			                    	value="#{tempoMedioTarefaList.parameters.dataFim}" 
 			                    >
 			                    </wi:inputDate>
 	                            <s:div>
@@ -80,7 +80,7 @@
 		    <a:region>
 		        <rich:panel
 		        	id="#{id}Panel"
-		        	rendered="#{tempoMedioTarefaList.naturezaCategoriaFluxo != null}"
+		        	rendered="#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo != null}"
 		            header="[#{tempoMedioTarefaList.naturezaCategoriaFluxo}] Tempo médio: #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. Prazo: #{tempoMedioTarefaList.prazoFluxo}"
 		            bodyClass="dtable-p-b"
 		            styleClass="dtable-p">
