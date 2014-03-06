@@ -17,29 +17,33 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 @AutoCreate
 public class PapelManager extends Manager<PapelDAO, Papel> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "papelManager";
-	
-	public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento){
-		return getDao().getPapeisNaoAssociadosATipoModeloDocumento(tipoModeloDocumento);
-	}
-	
-	public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento){
-		return getDao().getPapeisNaoAssociadosATipoProcessoDocumento(tipoProcessoDocumento);
-	}
-	
-	public Papel getPapelByIdentificador(String identificador){
-		return getDao().getPapelByIndentificador(identificador);
-	}
-	
-	public List<Papel> getPapeisByListaDeIdentificadores(List<String> identificadores){
-		if(identificadores == null || identificadores.isEmpty()) {
-			return new ArrayList<Papel>();
-		}
-		return getDao().getPapeisByListaDeIdentificadores(identificadores);
-	}
-	public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao){
-		return getDao().getPapeisDeUsuarioByLocalizacao(localizacao);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "papelManager";
+
+    public List<Papel> getPapeisNaoAssociadosATipoModeloDocumento(
+            TipoModeloDocumento tipoModeloDocumento) {
+        return getDao().getPapeisNaoAssociadosATipoModeloDocumento(tipoModeloDocumento);
+    }
+
+    public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(
+            TipoProcessoDocumento tipoProcessoDocumento) {
+        return getDao().getPapeisNaoAssociadosATipoProcessoDocumento(tipoProcessoDocumento);
+    }
+
+    public Papel getPapelByIdentificador(String identificador) {
+        return getDao().getPapelByIndentificador(identificador);
+    }
+
+    public List<Papel> getPapeisByListaDeIdentificadores(
+            List<String> identificadores) {
+        if (identificadores == null || identificadores.isEmpty()) {
+            return new ArrayList<Papel>();
+        }
+        return getDao().getPapeisByListaDeIdentificadores(identificadores);
+    }
+
+    public List<Papel> getPapeisDeUsuarioByLocalizacao(Localizacao localizacao) {
+        return getDao().getPapeisDeUsuarioByLocalizacao(localizacao);
+    }
 
 }
