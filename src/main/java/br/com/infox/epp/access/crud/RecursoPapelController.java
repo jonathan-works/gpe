@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
+import br.com.infox.seam.security.operation.UpdateResourcesOperation;
 
 @Name(RecursoPapelController.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -23,7 +24,7 @@ public class RecursoPapelController {
     private List<String> papeisDisponiveis;
     
     @In private RecursoManager recursoManager;
-    @In PapelManager papelManager;
+    @In private PapelManager papelManager;
     
     public Recurso getRecurso() {
         return recurso;
@@ -49,5 +50,12 @@ public class RecursoPapelController {
     private List<String> getPapeisAssociadosARecurso(){
         return papeis = recursoManager.getPapeisAssociadosARecurso(recurso);
     }
-
+    
+    public String save() {
+        final UpdateResourcesOperation resourcesOperation = new UpdateResourcesOperation(recurso.getIdentificador(), getPapeis(), getPapeisDisponiveis());
+        resourcesOperation.run();
+        recursoManager.flush();
+        return "updated";
+    }
+    
 }

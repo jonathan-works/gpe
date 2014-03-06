@@ -76,13 +76,21 @@
             name="papeisTab"
             action="#{recursoPapelController.setRecurso(recursoCrudAction.instance)}">
 
-            <a:region>
-                <wi:pickList id="recurso"
-                    targetCaption="Papéis que possuem acesso ao recurso:"
-                    value="#{recursoPapelController.papeis}"
-                    itemValues="#{recursoPapelController.papeisDisponiveis}"
-                    itemLabel="#{var}" />
-            </a:region>
+            <wi:dataForm formId="papel"
+                formTitle="#{messages['form.title']}">
+                <a:region>
+                    <wi:pickList id="recurso"
+                        targetCaption="Papéis que possuem acesso direto ao recurso:"
+                        value="#{recursoPapelController.papeis}"
+                        itemValues="#{recursoPapelController.papeisDisponiveis}"
+                        itemLabel="#{var}" />
+                </a:region>
+                <ui:define name="buttons">
+                    <wi:commandButton id="papeisButton"
+                        action="recursoPapelController.save()"
+                        value="#{messages['crud.update']}" />
+                </ui:define>
+            </wi:dataForm>
 
         </infox:tab>
     </ui:define>
