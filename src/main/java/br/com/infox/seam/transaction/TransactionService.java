@@ -1,4 +1,4 @@
-package br.com.infox.core.transaction;
+package br.com.infox.seam.transaction;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
