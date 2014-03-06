@@ -1,4 +1,4 @@
-package br.com.infox.core.exception;
+package br.com.infox.seam.exception;
 
 import java.text.MessageFormat;
 

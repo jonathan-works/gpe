@@ -19,8 +19,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.transaction.Transaction;
 
-import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.seam.exception.ApplicationException;
 
 @Scope(ScopeType.EVENT)
 @AutoCreate

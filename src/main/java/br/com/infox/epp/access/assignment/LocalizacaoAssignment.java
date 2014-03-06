@@ -18,10 +18,10 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
-import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.transaction.TransactionService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(LocalizacaoAssignment.NAME)

@@ -8,7 +8,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.transaction.UserTransaction;
 
-import br.com.infox.core.exception.ApplicationException;
+import br.com.infox.seam.exception.ApplicationException;
 
 @Name(TransactionService.NAME)
 @Scope(ScopeType.APPLICATION)

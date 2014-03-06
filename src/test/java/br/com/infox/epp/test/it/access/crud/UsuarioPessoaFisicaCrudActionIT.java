@@ -17,7 +17,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.crud.UsuarioLoginCrudAction;
 import br.com.infox.epp.access.crud.UsuarioPessoaFisicaCrudAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
@@ -40,6 +39,7 @@ import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
+import br.com.infox.seam.exception.BusinessException;
 
 @RunWith(Arquillian.class)
 public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisica>{
