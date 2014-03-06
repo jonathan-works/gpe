@@ -77,7 +77,7 @@
             action="#{recursoPapelController.setRecurso(recursoCrudAction.instance)}">
 
             <wi:dataForm formId="papel"
-                formTitle="#{messages['form.title']}">
+                formTitle="Recurso: #{recursoCrudAction.instance.nome}">
                 <a:region>
                     <wi:pickList id="recurso"
                         targetCaption="Papéis que possuem acesso direto ao recurso:"
