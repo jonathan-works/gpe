@@ -32,6 +32,12 @@ public class RecursoDAO extends DAO<Recurso> {
         return ((Long)getNamedSingleResult(COUNT_RECURSO_BY_IDENTIFICADOR, parameters)) > 0;
     }
     
+    public Recurso getRecursoByIdentificador(String identificador){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(IDENTIFICADOR_PARAM, identificador);
+        return getNamedSingleResult(RECURSO_BY_IDENTIFICADOR, parameters);
+    }
+    
     public List<Recurso> getRecursosFromPermissoes(List<Permissao> permissoes){
         List<String> identificadores = getListaIdentificadoresFromPermissoes(permissoes);
         if (identificadores == null || identificadores.isEmpty()){

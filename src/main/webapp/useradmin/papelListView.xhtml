@@ -11,22 +11,16 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-
     <ui:param name="home" value="#{papelCrudAction}" />
-
     <ui:define name="title">Papéis</ui:define>
-
     <ui:define name="searchGrid">
 
         <wi:dataTable values="#{papelList.list(15)}" bean="#{papelList}"
             tableTitle="#{messages['papel.tableTitle']}" id="papelList"
             rowId="#{row.idPapel}">
-
             <ui:define name="searchForm">
-
                 <wi:searchForm formId="pesquisarPapelForm"
                     formTitle="#{messages['searchForm.title']}">
-
                     <wi:inputText id="nome"
                         label="#{messages['papel.nome']}"
                         value="#{papelList.entity.nome}" maxlength="100" />
@@ -34,9 +28,7 @@
                         label="#{messages['papel.identificador']}"
                         value="#{papelList.entity.identificador}"
                         maxlength="100" />
-
                 </wi:searchForm>
-
             </ui:define>
             <wi:columnOutputText columnId="nome"
                 columnHeader="#{messages['papel.nome']}"
@@ -49,10 +41,7 @@
                 <wi:toolBarEdit id="papelListedit" />
                 <wi:toolBarRemove />
             </ui:define>
-
         </wi:dataTable>
-
-
     </ui:define>
 
     <ui:define name="form">
@@ -62,50 +51,40 @@
             persistAction="papelCrudAction.save()">
             <ui:include src="papelEdit.xhtml" />
         </wi:dataForm>
-
     </ui:define>
 
     <ui:define name="tabs">
-
         <infox:tab id="tabPapeis" status=":status"
             title="Visão Hierárquica" name="tabPapeis"
             rendered="#{home.managed}">
-
             <h:form>
                 <a:commandButton styleClass="buttons" value="Inverter"
                     render="@form" execute="@this"
-                    action="#{rolesTree.inverter}" />
-
+                    action="#{rolesTree.inverter}" eventsQueue="editQueue"/>
                 <span> <h:outputText
                         rendered="#{rolesTree.invertida}"
                         value="Estrutura dos papéis que cedem permissões " />
                     <h:outputText rendered="#{!rolesTree.invertida}"
                         value="Estrutura dos papéis que recebem permissões " />
-
                 </span>
                 <rich:tree data="#{item}" selectionType="ajax"
-                    render="pageBody"
-                    nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
-                    var="item">
-
+                    render="pageBody" var="item"
+                    selectionChangeListener="#{rolesTree.processTreeSelectionChange}">
                     <rich:treeModelRecursiveAdaptor
                         roots="#{rolesTree.roots}" nodes="#{item.nodes}">
-
                         <rich:treeNode
                             iconCollapsed="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
                             iconExpanded="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
                             iconLeaf="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif">
-
-                            <h:outputText value="#{item.entity}" />
-
+                           #{item.entity}"
                         </rich:treeNode>
-
+                        <rich:treeModelAdaptor
+                            nodes="#{item.entity.recursos}">
+                            <rich:treeNode iconLeaf="/img/resource.gif"> #{item} </rich:treeNode>
+                        </rich:treeModelAdaptor>
                     </rich:treeModelRecursiveAdaptor>
-
                 </rich:tree>
             </h:form>
         </infox:tab>
-
     </ui:define>
-
 </ui:composition>

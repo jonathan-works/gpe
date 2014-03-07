@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.query.PapelQuery.ID_PAPEL_PARAM;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
@@ -10,6 +11,7 @@ import static br.com.infox.epp.access.query.PapelQuery.PARAM_LISTA_IDENTIFICADOR
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_PROCESSO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PERMISSOES_BY_PAPEL;
 
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +65,12 @@ public class PapelDAO extends DAO<Papel> {
     
     public List<String> getListaDeNomesDosPapeis(){
         return getResultList("select distinct identificador from Papel", null);
+    }
+    
+    public List<String> getListaPermissoes(Papel papel){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_PAPEL_PARAM, papel.getIdPapel());
+        return getNamedResultList(PERMISSOES_BY_PAPEL, parameters);
     }
 
 }
