@@ -15,9 +15,6 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 @Name(LocalizacaoCrudAction.NAME)
 public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizacao, LocalizacaoManager> {
     
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "localizacaoCrudAction";
