@@ -37,6 +37,9 @@ public class UpdateRolesOperation extends RunAsOperation {
         this.rolesToExclude = rolesToExclude;
         this.availableResourcesList = availableResourcesList;
         this.selectedResourcesList = selectedResourcesList;
+        for (String resource : selectedResourcesList) {
+            availableResourcesList.remove(resource);
+        }
     }
 
     @Override
