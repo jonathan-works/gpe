@@ -3,224 +3,232 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-	
-	<ui:define name="baseHead">
-		<h:outputStylesheet
-        library="styleSkinInfox"
-        name="login.css" />
-		<ui:param name="useCertLogin"  value="#{certificateAuthenticator.certificateLogin}" />
-	</ui:define>
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
 
-	<ui:define name="baseBody">
-		<h:outputScript library="js/components" name="Modal.js" />
-		<script type="text/javascript">
-			invoke(["infox.Modal"],function(Modal) {
-				$("#btnTrocar").click( function (){
-					var isHidden = $(".novaSenha").toggleClass("visible").is(':hidden');
-					$("#btnTrocar").val(isHidden ? "#{messages['login.trocarSenhaBtn']}" :"#{messages['login.naoTrocarSenhaBtn']}");
-					$(".input_login.passwd").val('');
-				});
-				var panelTeste = new Modal({id:'panelTeste'});
-				$("#btnTrocarSenha").click(panelTeste.show);
-				$("#btnTrocarSenha2").click(panelTeste.hide);
-				$("##{rich:clientId('closeBtn')}").click(panelTeste.hide);
-			});
-        </script>
-		<s:div id="pageBody" styleClass="loginPageBody">
-			<div class="corpoSuperior" />
-			<div class="corpoInferior" />
-			<div id="seletorSkinLogin" class="seletorSkinsLogin" >
-				<h:commandButton
-					id="consultaExterna"
-					value="Consulta Externa" 
-					class="input_button"
-					onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam'" />
-				<ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
-					<ui:param name="id" value="login" />
-				    <ui:param name="mostrarMenu" value="true" />
-				</ui:include>
-			</div>
-			<h:form id="login">
-				<div id="blocoCentralLogin" class="blocoCentralLogin" >
-					<div id="logo" class="logo">
-					    <h:graphicImage
-							title="Logo"
-							styleClass="logo"
-							url="#{a4jSkin.imgLogoLogin}"/>
-			    	</div>
-			    	
-					<div id="bg_login" class="bg_login login">
-						<s:div rendered="#{not useCertLogin}">
-							<div>
-								<h:outputLabel for="username"
-											   rendered="#{not useCertLogin}"
-											   class="login-lbl"
-											   value="#{messages['login.nomeUsuario']}">
-								</h:outputLabel>
-								<h:inputText id="username"
-											 value="#{credentials.username}"
-											 class="input_login label-general"
-											 rendered="#{not useCertLogin}"/>
-							</div>
-							<div>
-								<h:outputLabel for="password"
-										       rendered="#{not useCertLogin}"
-										       class="login-lbl"
-										       value="#{messages['login.senha']}">
-								</h:outputLabel>
-								<h:inputSecret id="password" 
-											   value="#{credentials.password}"
-											   rendered="#{not useCertLogin}"
-											   class="input_login label-general" />
-							</div>
-							<div class="novaSenha">
-								<h:outputLabel for="newPassword1"
-											   rendered="#{not useCertLogin}"
-											   class="login-lbl"
-											   value="#{messages['login.novaSenha']}">
-								</h:outputLabel>
-								<h:inputSecret id="newPassword1"
-											   class="input_login label-general passwd"
-											   value="#{authenticator.newPassword1}" />
-							</div>
-							<div class="novaSenha">
-								<h:outputLabel for="newPassword2"
-											   rendered="#{not useCertLogin}"
-											   class="login-lbl"
-											   value="#{messages['login.confirmacaoNovaSenha']}">
-								</h:outputLabel>	
-								<h:inputSecret id="newPassword2"
-											   class="input_login label-general passwd"
-											   value="#{authenticator.newPassword2}"/>							
-							</div>
-						</s:div>
-						<s:div styleClass="cert-div" rendered="#{useCertLogin}">
-							<wi:appletAssinatura id="certificacao"
-					            urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-					            formId="#{rich:clientId('login')}"
-					            certificationChainField="#{rich:clientId('certChain')}"
-					            signatureField="#{rich:clientId('signature')}"
-								signButtonCaption="#{messages['signature.loginBtn']}"
-					            getDataFunction="''"
-					            useBase64Function="'true'"
-								functionPreSign="RichFaces.$('mp_formValidar').show();"	
-								functionPosSign="RichFaces.$('mp_formValidar').hide();"
-								functionPosSignOk="submitForm();"
-								debug="false"
-					            loginMode="true"
-					            useProviderDll="false"
-					            rendered="#{useCertLogin}">
-					        </wi:appletAssinatura>
-				
-							<h:inputHidden
-								id="signature" 
-								value="#{certificateAuthenticator.assinatura}">
-							</h:inputHidden>
-								
-							<h:inputHidden
-								id="certChain" 
-								value="#{certificateAuthenticator.certChain}">
-							</h:inputHidden>				
-									
-					        <a:jsFunction
-					        	name="submitForm" 
-					        	action="#{certificateAuthenticator.authenticate()}"
-					        	execute="signature, certChain, certChainStringLog, @this"
-					        	render="DialogMessage"
-			                    limitRender="true"
-							/>
-						</s:div>
-					</div>
-					<s:div rendered="#{not useCertLogin}">
-						<div id="bg_login_inferior" class="bg_login_inferior login">
-							<h:commandButton
-								id="btnEntrar"
-								value="#{messages['login.entrarBtn']}" 
-								class="input_button"
-								action="#{authenticator.login()}"/>
-					
-					        <input
-					        	class="input_button"
-					        	id="btnTrocar"
-								type="button"
-								value="#{messages['login.trocarSenhaBtn']}" />
-							
-							<input
-								class="input_button"
-								id="btnTrocarSenha"
-								type="button"
-								value="#{messages['login.requisitarSenhaBtn']}"/>
-				        </div>
-			        </s:div>
-				</div>
-				
-			</h:form>
-			
-			<rich:popupPanel id="panelTeste" width="370" height="255">
-				<f:facet name="header">#{messages['login.requisitarSenha']}</f:facet>			
-				<f:facet name="controls">
-					<h:panelGroup>
-						<h:graphicImage
-							id="closeBtn" 
-							value="/img/closeMP.gif"/>
-					</h:panelGroup>
-				</f:facet>			
-				<h:form id="gerarSenha" rendered="#{not useCertLogin}">
-					<div class="bg_login">
-						<div>
-							<h:outputLabel for="login"
-										   class="login-lbl"
-										   value="#{messages['login.nomeUsuario']}">
-							</h:outputLabel>
-							<h:inputText id="login"
-										 class="input_login label-general"
-										 value="#{passwordRequester.login}" />
-						</div>
-						<div>
-							<h:outputLabel for="email"
-										   class="login-lbl"
-										   value="#{messages['login.emailUsuario']}">
-							</h:outputLabel>
-							<h:inputText id="email"
-										 class="input_login label-general"
-										 value="#{passwordRequester.email}"/>
-						</div>
-					</div>
-					<div class="bg_login_inferior">
-						<h:commandButton id="confirma"
-										 class="input_button"
-										 value="#{messages['login.confirmaTrocaSenhaBtn']}"
-										 action="#{passwordRequester.requisitarNovaSenha()}" /> 
-					
-						<input class="input_button"
-							   id="btnTrocarSenha2" 
-						       type="button"
-						       value="#{messages['login.cancelaTrocaSenhaBtn']}" />
-					</div>
-				</h:form>
-			</rich:popupPanel>
-			
-			<rich:popupPanel id="mp_formValidar" height="100" width="250"
-							 rendered="#{useCertLogin}" resizeable="false">
-				<f:facet name="header">
-					<h:outputText value="#{messages['certificate.waitInit']}" />
-				</f:facet>
-				<div >
-					<h:graphicImage url="/img/ajax-loader.gif" />
-				</div>
-			</rich:popupPanel>					
-					
-			<wi:messages></wi:messages>
-		</s:div>
-	</ui:define>
-	
+    <ui:define name="baseHead">
+        <h:outputStylesheet library="styleSkinInfox" name="login.css" />
+        <ui:param name="useCertLogin"
+            value="#{certificateAuthenticator.certificateLogin}" />
+    </ui:define>
+
+    <ui:define name="baseBody">
+        <h:outputScript library="js/components" name="Modal.js" />
+        <script type="text/javascript">
+									invoke(
+											[ "infox.Modal" ],
+											function(Modal) {
+												$("#btnTrocar")
+														.click(
+																function() {
+																	var isHidden = $(
+																			".novaSenha")
+																			.toggleClass(
+																					"visible")
+																			.is(
+																					':hidden');
+																	$(
+																			"#btnTrocar")
+																			.val(
+																					isHidden ? "#{messages['login.trocarSenhaBtn']}"
+																							: "#{messages['login.naoTrocarSenhaBtn']}");
+																	$(
+																			".input_login.passwd")
+																			.val(
+																					'');
+																});
+												var panelTeste = new Modal({
+													id : 'panelTeste'
+												});
+												$("#btnTrocarSenha").click(
+														panelTeste.show);
+												$("#btnTrocarSenha2").click(
+														panelTeste.hide);
+												$(
+														"##{rich:clientId('closeBtn')}")
+														.click(panelTeste.hide);
+											});
+								</script>
+        <s:div id="pageBody" styleClass="loginPageBody">
+            <div class="corpoSuperior" />
+            <div class="corpoInferior" />
+            <div id="seletorSkinLogin" class="seletorSkinsLogin">
+                <h:commandButton id="consultaExterna"
+                    value="Consulta Externa" class="input_button"
+                    onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam'" />
+                <ui:include
+                    src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
+                    <ui:param name="id" value="login" />
+                    <ui:param name="mostrarMenu" value="true" />
+                </ui:include>
+            </div>
+            <h:form id="login">
+                <div id="blocoCentralLogin" class="blocoCentralLogin">
+                    <div id="logo" class="logo">
+                        <h:graphicImage title="Logo" styleClass="logo"
+                            url="#{a4jSkin.imgLogoLogin}" />
+                    </div>
+
+                    <div id="bg_login" class="bg_login login">
+                        <s:div rendered="#{not useCertLogin}">
+                            <div>
+                                <h:outputLabel for="username"
+                                    rendered="#{not useCertLogin}"
+                                    class="login-lbl"
+                                    value="#{messages['login.nomeUsuario']}">
+                                </h:outputLabel>
+                                <h:inputText id="username"
+                                    value="#{credentials.username}"
+                                    class="input_login label-general"
+                                    rendered="#{not useCertLogin}" />
+                            </div>
+                            <div>
+                                <h:outputLabel for="password"
+                                    rendered="#{not useCertLogin}"
+                                    class="login-lbl"
+                                    value="#{messages['login.senha']}">
+                                </h:outputLabel>
+                                <h:inputSecret id="password"
+                                    value="#{credentials.password}"
+                                    rendered="#{not useCertLogin}"
+                                    class="input_login label-general" />
+                            </div>
+                            <div class="novaSenha">
+                                <h:outputLabel for="newPassword1"
+                                    rendered="#{not useCertLogin}"
+                                    class="login-lbl"
+                                    value="#{messages['login.novaSenha']}">
+                                </h:outputLabel>
+                                <h:inputSecret id="newPassword1"
+                                    class="input_login label-general passwd"
+                                    value="#{authenticator.newPassword1}" />
+                            </div>
+                            <div class="novaSenha">
+                                <h:outputLabel for="newPassword2"
+                                    rendered="#{not useCertLogin}"
+                                    class="login-lbl"
+                                    value="#{messages['login.confirmacaoNovaSenha']}">
+                                </h:outputLabel>
+                                <h:inputSecret id="newPassword2"
+                                    class="input_login label-general passwd"
+                                    value="#{authenticator.newPassword2}" />
+                            </div>
+                        </s:div>
+                        <s:div styleClass="cert-div"
+                            rendered="#{useCertLogin}">
+                            <wi:appletAssinatura id="certificacao"
+                                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+                                formId="#{rich:clientId('login')}"
+                                certificationChainField="#{rich:clientId('certChain')}"
+                                signatureField="#{rich:clientId('signature')}"
+                                signButtonCaption="#{messages['signature.loginBtn']}"
+                                getDataFunction="''"
+                                useBase64Function="'true'"
+                                functionPreSign="RichFaces.$('mp_formValidar').show();"
+                                functionPosSign="RichFaces.$('mp_formValidar').hide();"
+                                functionPosSignOk="submitForm();"
+                                debug="false" loginMode="true"
+                                useProviderDll="false"
+                                rendered="#{useCertLogin}">
+                            </wi:appletAssinatura>
+
+                            <h:inputHidden id="signature"
+                                value="#{certificateAuthenticator.assinatura}">
+                            </h:inputHidden>
+
+                            <h:inputHidden id="certChain"
+                                value="#{certificateAuthenticator.certChain}">
+                            </h:inputHidden>
+
+                            <a:jsFunction name="submitForm"
+                                action="#{certificateAuthenticator.authenticate()}"
+                                execute="signature, certChain, certChainStringLog, @this"
+                                render="DialogMessage"
+                                limitRender="true" />
+                        </s:div>
+                    </div>
+                    <s:div rendered="#{not useCertLogin}">
+                        <div id="bg_login_inferior"
+                            class="bg_login_inferior login">
+                            <h:commandButton id="btnEntrar"
+                                value="#{messages['login.entrarBtn']}"
+                                class="input_button"
+                                action="#{authenticator.login()}" />
+
+                            <input class="input_button" id="btnTrocar"
+                                type="button"
+                                value="#{messages['login.trocarSenhaBtn']}" />
+
+                            <input class="input_button"
+                                id="btnTrocarSenha" type="button"
+                                value="#{messages['login.requisitarSenhaBtn']}" />
+                        </div>
+                    </s:div>
+                </div>
+
+            </h:form>
+
+            <rich:popupPanel id="panelTeste" width="370" height="255">
+                <f:facet name="header">#{messages['login.requisitarSenha']}</f:facet>
+                <f:facet name="controls">
+                    <h:panelGroup>
+                        <h:graphicImage id="closeBtn"
+                            value="/img/closeMP.gif" />
+                    </h:panelGroup>
+                </f:facet>
+                <h:form id="gerarSenha" rendered="#{not useCertLogin}">
+                    <div class="bg_login">
+                        <div>
+                            <h:outputLabel for="login" class="login-lbl"
+                                value="#{messages['login.nomeUsuario']}">
+                            </h:outputLabel>
+                            <h:inputText id="login"
+                                class="input_login label-general"
+                                value="#{passwordRequester.login}" />
+                        </div>
+                        <div>
+                            <h:outputLabel for="email" class="login-lbl"
+                                value="#{messages['login.emailUsuario']}">
+                            </h:outputLabel>
+                            <h:inputText id="email"
+                                class="input_login label-general"
+                                value="#{passwordRequester.email}" />
+                        </div>
+                    </div>
+                    <div class="bg_login_inferior">
+                        <h:commandButton id="confirma"
+                            class="input_button"
+                            value="#{messages['login.confirmaTrocaSenhaBtn']}"
+                            action="#{passwordRequester.requisitarNovaSenha()}" />
+
+                        <input class="input_button" id="btnTrocarSenha2"
+                            type="button"
+                            value="#{messages['login.cancelaTrocaSenhaBtn']}" />
+                    </div>
+                </h:form>
+            </rich:popupPanel>
+
+            <rich:popupPanel id="mp_formValidar" height="100"
+                width="250" rendered="#{useCertLogin}"
+                resizeable="false">
+                <f:facet name="header">
+                    <h:outputText
+                        value="#{messages['certificate.waitInit']}" />
+                </f:facet>
+                <div>
+                    <h:graphicImage url="/img/ajax-loader.gif" />
+                </div>
+            </rich:popupPanel>
+
+            <wi:messages></wi:messages>
+        </s:div>
+    </ui:define>
+
 </ui:composition>
