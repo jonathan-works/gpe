@@ -17,6 +17,8 @@ import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_T
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.PERMISSOES_BY_PAPEL;
+import static br.com.infox.epp.access.query.PapelQuery.PERMISSOES_BY_PAPEL_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.SEQUENCE_PAPEL;
 import static br.com.infox.epp.access.query.PapelQuery.TABLE_PAPEL;
 
@@ -29,6 +31,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
@@ -43,6 +47,9 @@ import org.hibernate.annotations.ForeignKey;
 import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
 
+import br.com.infox.epp.access.dao.PapelDAO;
+import br.com.infox.seam.util.ComponentUtil;
+
 @Entity
 @Table(name = TABLE_PAPEL, schema = PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
 @NamedQueries({
@@ -51,6 +58,9 @@ import org.jboss.seam.annotations.security.management.RoleName;
     @NamedQuery(name = PAPEIS_BY_IDENTIFICADORES, query = PAPEIS_BY_IDENTIFICADORES_QUERY),
     @NamedQuery(name = PAPEIS_BY_LOCALIZACAO, query = PAPEIS_BY_LOCALIZACAO_QUERY),
     @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY) })
+@NamedNativeQueries({
+    @NamedNativeQuery(name=PERMISSOES_BY_PAPEL, query=PERMISSOES_BY_PAPEL_QUERY)
+})
 public class Papel implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -153,5 +163,11 @@ public class Papel implements java.io.Serializable {
         int result = 1;
         result = prime * result + getIdPapel();
         return result;
+    }
+    
+    @Transient
+    public List<String> getRecursos(){
+        PapelDAO pd = ComponentUtil.getComponent(PapelDAO.NAME);
+        return pd.getListaPermissoes(this);
     }
 }

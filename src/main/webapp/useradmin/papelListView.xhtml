@@ -68,17 +68,20 @@
                         value="Estrutura dos papéis que recebem permissões " />
                 </span>
                 <rich:tree data="#{item}" selectionType="ajax"
-                    render="pageBody"
-                    nodeSelectListener="#{rolesTree.processTreeSelectionChange}"
-                    var="item">
+                    render="pageBody" var="item"
+                    nodeSelectListener="#{rolesTree.processTreeSelectionChange}">
                     <rich:treeModelRecursiveAdaptor
                         roots="#{rolesTree.roots}" nodes="#{item.nodes}">
                         <rich:treeNode
                             iconCollapsed="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
                             iconExpanded="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
                             iconLeaf="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif">
-                            <h:outputText value="#{item.entity}" />
+                           #{item.entity}"
                         </rich:treeNode>
+                        <rich:treeModelAdaptor
+                            nodes="#{item.entity.recursos}">
+                            <rich:treeNode iconLeaf="/img/resource.gif"> #{item} </rich:treeNode>
+                        </rich:treeModelAdaptor>
                     </rich:treeModelRecursiveAdaptor>
                 </rich:tree>
             </h:form>
