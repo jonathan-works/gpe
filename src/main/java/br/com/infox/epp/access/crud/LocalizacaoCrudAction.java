@@ -28,6 +28,9 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     
     public boolean hasPermissionToEdit() {
         final Localizacao localizacaoUsuarioLogado = Authenticator.getLocalizacaoAtual();
+        if (getInstance().getIdLocalizacao() == null) {
+            return true;
+        }
         return getManager().isLocalizacaoAncestor(localizacaoUsuarioLogado, getInstance());
     }
     
