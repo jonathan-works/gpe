@@ -1,13 +1,22 @@
 package br.com.infox.epp.access.component.tree;
 
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
+
+import java.util.ArrayList;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.faces.Redirect;
+import org.richfaces.component.UITree;
+import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.access.crud.RecursoCrudAction;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(RolesTreeHandler.ROLES_TREE)
 @Scope(ScopeType.PAGE)
@@ -74,6 +83,32 @@ public class RolesTreeHandler extends AbstractTreeHandler<Papel> {
 
     public boolean getInvertida() {
         return invertida;
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    @Override
+    public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
+        // Considerando single selection
+        Object selectionKey = new ArrayList<Object>(ev.getNewSelection()).get(0);
+        UITree tree = (UITree) ev.getSource();
+        setTreeId(":" + tree.getClientId());
+
+        Object key = tree.getRowKey();
+        tree.setRowKey(selectionKey);
+        Object node = tree.getRowData();
+        if (node instanceof EntityNode) {
+            EntityNode<Papel> en = (EntityNode<Papel>) tree.getRowData();
+            tree.setRowKey(key);
+            setSelected(en.getEntity());
+            closeParentPanel(tree);
+            raiseEvents(en);
+        } else if (node instanceof String) {
+            RecursoCrudAction rca = ComponentUtil.getComponent(RecursoCrudAction.NAME);
+            rca.setRecurso((String) node);
+            final Redirect redirect = Redirect.instance();
+            redirect.setViewId("/useradmin/recursoListView.xhtml");
+            redirect.execute();
+        }
     }
 
 }

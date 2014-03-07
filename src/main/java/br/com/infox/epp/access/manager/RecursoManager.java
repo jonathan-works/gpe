@@ -22,6 +22,10 @@ public class RecursoManager extends Manager<RecursoDAO, Recurso> {
         return getDao().existsRecurso(identificador);
     }
     
+    public Recurso getRecursoByIdentificador(String identificador) {
+        return getDao().getRecursoByIdentificador(identificador);
+    }
+    
     public List<Recurso> getRecursosFromPermissoes(List<Permissao> permissoes){
         return getDao().getRecursosFromPermissoes(permissoes);
     }

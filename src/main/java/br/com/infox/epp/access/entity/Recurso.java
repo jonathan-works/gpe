@@ -10,7 +10,7 @@ import static br.com.infox.epp.access.query.RecursoQuery.PAPEIS_FROM_RECURSO_QUE
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES;
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES_QUERY;
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_NOT_IN_IDENTIFICADORES;
-import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_NOT_IN_IDENTIFICADORES_QUERY;
+import static br.com.infox.epp.access.query.RecursoQuery.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +33,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name=RECURSOS_FROM_IDENTIFICADORES, query=RECURSOS_FROM_IDENTIFICADORES_QUERY),
     @NamedQuery(name=RECURSOS_NOT_IN_IDENTIFICADORES, query=RECURSOS_NOT_IN_IDENTIFICADORES_QUERY),
     @NamedQuery(name=COUNT_RECURSO_BY_IDENTIFICADOR, query=COUNT_RECURSO_BY_IDENTIFICADOR_QUERY),
+    @NamedQuery(name=RECURSO_BY_IDENTIFICADOR, query=RECURSO_BY_IDENTIFICADOR_QUERY)
 })
 @NamedNativeQueries({
     @NamedNativeQuery(name=PAPEIS_FROM_RECURSO, query=PAPEIS_FROM_RECURSO_QUERY)

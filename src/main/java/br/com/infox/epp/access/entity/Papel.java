@@ -58,9 +58,7 @@ import br.com.infox.seam.util.ComponentUtil;
     @NamedQuery(name = PAPEIS_BY_IDENTIFICADORES, query = PAPEIS_BY_IDENTIFICADORES_QUERY),
     @NamedQuery(name = PAPEIS_BY_LOCALIZACAO, query = PAPEIS_BY_LOCALIZACAO_QUERY),
     @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY) })
-@NamedNativeQueries({
-    @NamedNativeQuery(name=PERMISSOES_BY_PAPEL, query=PERMISSOES_BY_PAPEL_QUERY)
-})
+@NamedNativeQueries({ @NamedNativeQuery(name = PERMISSOES_BY_PAPEL, query = PERMISSOES_BY_PAPEL_QUERY) })
 public class Papel implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -164,9 +162,9 @@ public class Papel implements java.io.Serializable {
         result = prime * result + getIdPapel();
         return result;
     }
-    
+
     @Transient
-    public List<String> getRecursos(){
+    public List<String> getRecursos() {
         PapelDAO pd = ComponentUtil.getComponent(PapelDAO.NAME);
         return pd.getListaPermissoes(this);
     }
