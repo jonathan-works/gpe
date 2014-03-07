@@ -69,7 +69,7 @@
                 </span>
                 <rich:tree data="#{item}" selectionType="ajax"
                     render="pageBody" var="item"
-                    nodeSelectListener="#{rolesTree.processTreeSelectionChange}">
+                    selectionChangeListener="#{rolesTree.processTreeSelectionChange}">
                     <rich:treeModelRecursiveAdaptor
                         roots="#{rolesTree.roots}" nodes="#{item.nodes}">
                         <rich:treeNode

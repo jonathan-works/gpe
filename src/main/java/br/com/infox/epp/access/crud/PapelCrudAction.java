@@ -341,11 +341,6 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     public void treeSelected(final Papel papel) {
         setPapelId(papel.getIdPapel());
         setTab("form");
-        if (papel.getIdentificador().startsWith("/")) {
-            final Redirect redirect = Redirect.instance();
-            redirect.setViewId("/useradmin/recursoListView.xhtml");
-            redirect.execute();
-        }
     }
 
     public static PapelCrudAction instance() {
