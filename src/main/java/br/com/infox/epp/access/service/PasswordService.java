@@ -65,6 +65,7 @@ public class PasswordService {
             throw new LoginException("Usuário não encontrado");
         }
         final String plainTextPassword = gerarNovaSenha(usuario);
+        changePassword(usuario, plainTextPassword);
         accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, plainTextPassword);
     }
     
@@ -75,11 +76,13 @@ public class PasswordService {
         } else {
             senha = RandomStringUtils.randomAlphabetic(PASSWORD_LENGTH);
         }
-        
-        usuario.setSenha(senha);
+        return senha;
+    }
+    
+    public void changePassword(final UsuarioLogin usuario, final String newPassword) throws DAOException {
+        usuario.setSenha(newPassword);
         new ChangePasswordOperation(usuario.getLogin(), usuario.getSenha()).run();
         usuarioLoginManager.update(usuario);
-        return senha;
     }
     
 }
