@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
@@ -50,9 +51,12 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.epp.system.entity.Parametro;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.infox.seam.security.operation.ChangePasswordOperation;
 
 @Name(Authenticator.NAME)
 @Install(precedence=Install.APPLICATION)
@@ -154,9 +158,8 @@ public class Authenticator {
 	
 	private void trocarSenhaUsuario(final UsuarioLogin usuario) throws LoginException, DAOException {
 		if (newPassword1.equals(newPassword2)){
-		    new ChangePasswordOperation(usuario.getLogin(), newPassword1).run();
-			usuario.setProvisorio(false);
-			getUsuarioLoginDAO().update(usuario);
+			PasswordService passwordService = (PasswordService) Component.getInstance(PasswordService.NAME);
+			passwordService.changePassword(usuario, newPassword1);
 			getMessagesHandler().add("Senha alterada com sucesso.");
 		} else {
 		    throw new LoginException("Nova senha não confere com a confirmação!");
@@ -167,18 +170,61 @@ public class Authenticator {
         return FacesMessages.instance();
     }
 	
+    
+    
 	public void login(){
-		//verificar se o login existe
-		Identity identity = Identity.instance();
-		Credentials credentials = identity.getCredentials();
-		String login = credentials.getUsername();
-		UsuarioLogin user = getUsuarioLoginManager().getUsuarioLoginByLogin(login);
-		if(user == null) {
-			getMessagesHandler().add(Severity.ERROR, "Login inválido.");
-			return;
-		}
-		identity.login();
+		final Identity identity = Identity.instance();
+		final Credentials credentials = identity.getCredentials();
+        if (loginExists(credentials) || ldapLoginExists(credentials)) {
+            identity.login();
+        } else {
+            getMessagesHandler().add(Severity.ERROR, "Login inválido.");
+        }
 	}
+
+    private boolean loginExists(final Credentials credentials) {
+		final String login = credentials.getUsername();
+		final UsuarioLogin user = getUsuarioLoginManager().getUsuarioLoginByLogin(login);
+        boolean loginExists = user != null;
+        return loginExists;
+    }
+
+    private boolean ldapLoginExists(final Credentials credentials) {
+        boolean ldapUserExists = false;
+	    try {
+	        final LDAPManager ldapManager = (LDAPManager) Component.getInstance(LDAPManager.NAME);
+	        UsuarioLogin user = ldapManager.autenticarLDAP(credentials.getUsername(), credentials.getPassword(), getProviderUrl(), getDomainName());
+            user = getUsuarioLoginManager().persist(user);
+            ldapUserExists = user != null;
+        } catch (NamingException | DAOException e) {
+            LOG.warn("ldapException", e);
+        }
+        return ldapUserExists;
+    }
+
+    private String getDomainName() {
+        final ParametroManager parametroManager = (ParametroManager) Component.getInstance(ParametroManager.NAME);
+        final Parametro parametro = parametroManager.getParametro("ldapDomainName");
+        String result = null;
+        if (parametro != null) {
+            result = parametro.getValorVariavel();
+        } else {
+            result = "infoxad.com.br";
+        }
+        return result;
+    }
+
+    private String getProviderUrl() {
+        final ParametroManager parametroManager = (ParametroManager) Component.getInstance(ParametroManager.NAME);
+        final Parametro parametro = parametroManager.getParametro("ldapProviderUrl");
+        String result = null;
+        if (parametro != null) {
+            result = parametro.getValorVariavel();
+        } else {
+            result = "ldap://172.20.1.241:389";
+        }
+        return result;
+    }
 	
 	@Observer(Identity.EVENT_LOGIN_FAILED)
 	public void loginFailed(Object obj) throws LoginException {
