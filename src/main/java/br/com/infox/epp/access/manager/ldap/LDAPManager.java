@@ -2,6 +2,7 @@ package br.com.infox.epp.access.manager.ldap;
 
 import static java.text.MessageFormat.format;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 
 import javax.naming.Context;
@@ -24,7 +25,8 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 
 @Name(LDAPManager.NAME)
 @Scope(ScopeType.EVENT)
-public class LDAPManager {
+public class LDAPManager implements Serializable {
+    private static final long serialVersionUID = 2543253079848485017L;
     public static final String NAME = "ldapAuthenticationManager";
     private static final String CONTEXT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
     
