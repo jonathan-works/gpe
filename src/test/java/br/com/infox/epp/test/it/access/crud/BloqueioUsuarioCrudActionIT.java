@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
-import br.com.infox.core.exception.BusinessException;
 import br.com.infox.epp.access.crud.BloqueioUsuarioCrudAction;
 import br.com.infox.epp.access.crud.UsuarioLoginCrudAction;
 import br.com.infox.epp.access.dao.BloqueioUsuarioDAO;
@@ -42,6 +41,7 @@ import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
+import br.com.infox.seam.exception.BusinessException;
 
 @RunWith(Arquillian.class)
 public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuario> {

@@ -10,12 +10,12 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.util.RandomStringUtils;
 import org.richfaces.component.util.Strings;
 
-import br.com.infox.core.exception.BusinessException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.security.operation.ChangePasswordOperation;
 
 @Name(PasswordService.NAME)

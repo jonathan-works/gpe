@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
@@ -13,30 +12,21 @@
 
 
     <ui:define name="title">#{messages['categoria.titlePage']}</ui:define>
-    <ui:param
-        name="home"
-        value="#{categoriaCrudAction}" />
-    <ui:param
-        name="crudAction"
-        value="#{categoriaCrudAction}" />    
+    <ui:param name="home" value="#{categoriaCrudAction}" />
+    <ui:param name="crudAction" value="#{categoriaCrudAction}" />
     <ui:define name="searchGrid">
-        <wi:dataTable
-            values="#{categoriaList.list(15)}"
+        <wi:dataTable values="#{categoriaList.list(15)}"
             bean="#{categoriaList}"
             tableTitle="#{messages['categoria.tableTitle']}"
-            id="categoriaList"
-            rowId="#{row.idCategoria}"
+            id="categoriaList" rowId="#{row.idCategoria}"
             actionInactive="categoriaCrudAction.inactive">
             <ui:define name="searchForm">
-                <wi:searchForm
-                    formId="pesquisarCategoriaForm"
+                <wi:searchForm formId="pesquisarCategoriaForm"
                     formTitle="#{messages['searchForm.title']}">
-                    <wi:inputText
-                        id="categoria"
+                    <wi:inputText id="categoria"
                         value="#{categoriaList.entity.categoria}"
                         label="#{messages['categoria.categoria']}" />
-                    <wi:selectSituacaoOneMenu
-                        id="ativo"
+                    <wi:selectSituacaoOneMenu id="ativo"
                         label="#{messages['field.situacao']}"
                         value="#{categoriaList.entity.ativo}" />
                 </wi:searchForm>
@@ -46,51 +36,39 @@
                 <wi:toolBarInactive
                     actionInactive="categoriaCrudAction.inactive(row)" />
             </ui:define>
-            <wi:columnOutputText
-                columnId="categoria"
+            <wi:columnOutputText columnId="categoria"
                 columnHeader="#{messages['categoria.categoria']}"
                 value="#{row.categoria}" />
-            <wi:columnSituacao
-                columnId="ativo"
+            <wi:columnSituacao columnId="ativo"
                 columnHeader="#{messages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
-        <wi:dataForm
-            formId="categoriaForm"
+        <wi:dataForm formId="categoriaForm"
             formTitle="#{messages['form.title']}">
-            <wi:inputText
-                id="categoria"
-                value="#{crudAction.instance.categoria}"
-                required="true"
+            <wi:inputText id="categoria"
+                value="#{crudAction.instance.categoria}" required="true"
                 label="#{messages['categoria.categoria']}" />
-            <wi:selectSituacaoRadio
-                id="ativo"
-                required="false"
+            <wi:selectSituacaoRadio id="ativo" required="false"
                 label="#{messages['field.situacao']}"
                 value="#{crudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>
     <ui:define name="tabs">
-        <infox:tab
-            id="categoriaItemTab"
+        <infox:tab id="categoriaItemTab"
             rendered="#{crudAction.isManaged()}"
             title="#{messages['categoriaItem.titleTab']}"
             name="categoriaItemTab">
             <s:div id="categoriaItemFormDiv">
-                <wi:dataForm
-                    formId="categoriaItemForm"
+                <wi:dataForm formId="categoriaItemForm"
                     formTitle="#{messages['form.title']} #{crudAction.instance.categoria}">
-                    <wi:tree
-                        id="itemTree"
+                    <wi:tree id="itemTree"
                         assignTo="categoriaItemCrudAction.item"
-                        tree="#{itemTree}"
-                        required="true"
+                        tree="#{itemTree}" required="true"
                         label="#{messages['categoriaItem.item']}" />
                     <ui:define name="buttons">
-                        <wi:commandButton
-                            id="saveButton"
+                        <wi:commandButton id="saveButton"
                             action="categoriaItemCrudAction.save()"
                             reRender="categoriaItemFormDiv, categoriaItemDiv, categoriaItemTab"
                             value="#{messages['crud.persist']}" />
@@ -98,28 +76,21 @@
                 </wi:dataForm>
             </s:div>
             <s:div id="categoriaItemDiv">
-                <wi:dataTable
-                    id="categoriaItemTable"
-                    values="#{crudAction.instance.categoriaItemList}"
-                    var="row"
-                    rows="10">
-                    <f:facet name="header">
-                        <h:outputText
-                            value="#{messages['categoriaItem.titleDataTable']} - #{crudAction.instance.categoria}" />
-                    </f:facet>
+                <wi:dataTable id="categoriaItemTable"
+                    values="#{categoriaItemList.list(15)}"
+                    bean="#{categoriaItemList}"
+                    tableTitle="#{messages['categoriaItem.titleDataTable']} - #{crudAction.instance.categoria}"
+                    var="row" rows="10">
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
-                        <wi:toolBarRemove
-                            id="toolBarRemove"
+                        <wi:toolBarRemove id="toolBarRemove"
                             reRender="categoriaItemFormDiv, categoriaItemDiv"
                             actionRemove="categoriaItemCrudAction.remove(row)" />
                     </ui:define>
-                    <wi:columnOutputText
-                        columnId="item"
+                    <wi:columnOutputText columnId="item"
                         columnHeader="#{messages['categoriaItem.item']}"
                         value="#{row.item.caminhoCompletoToString()}"
-                        hideOrder="true">
-                        
+                        hideOrder="true" styleClass="rf-dt-c-left">
                     </wi:columnOutputText>
                 </wi:dataTable>
 

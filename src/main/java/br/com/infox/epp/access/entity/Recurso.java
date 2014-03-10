@@ -5,15 +5,19 @@ import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.access.query.RecursoQuery.COUNT_RECURSO_BY_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.RecursoQuery.COUNT_RECURSO_BY_IDENTIFICADOR_QUERY;
+import static br.com.infox.epp.access.query.RecursoQuery.PAPEIS_FROM_RECURSO;
+import static br.com.infox.epp.access.query.RecursoQuery.PAPEIS_FROM_RECURSO_QUERY;
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES;
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES_QUERY;
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_NOT_IN_IDENTIFICADORES;
-import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_NOT_IN_IDENTIFICADORES_QUERY;
+import static br.com.infox.epp.access.query.RecursoQuery.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -28,7 +32,11 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name=RECURSOS_FROM_IDENTIFICADORES, query=RECURSOS_FROM_IDENTIFICADORES_QUERY),
     @NamedQuery(name=RECURSOS_NOT_IN_IDENTIFICADORES, query=RECURSOS_NOT_IN_IDENTIFICADORES_QUERY),
-    @NamedQuery(name=COUNT_RECURSO_BY_IDENTIFICADOR, query=COUNT_RECURSO_BY_IDENTIFICADOR_QUERY)
+    @NamedQuery(name=COUNT_RECURSO_BY_IDENTIFICADOR, query=COUNT_RECURSO_BY_IDENTIFICADOR_QUERY),
+    @NamedQuery(name=RECURSO_BY_IDENTIFICADOR, query=RECURSO_BY_IDENTIFICADOR_QUERY)
+})
+@NamedNativeQueries({
+    @NamedNativeQuery(name=PAPEIS_FROM_RECURSO, query=PAPEIS_FROM_RECURSO_QUERY)
 })
 public class Recurso implements java.io.Serializable {
 

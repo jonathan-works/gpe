@@ -14,7 +14,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.exception.ApplicationException;
+import br.com.infox.seam.exception.ApplicationException;
 
 /**
  * Classe responsável por incluir a página referente a variavel

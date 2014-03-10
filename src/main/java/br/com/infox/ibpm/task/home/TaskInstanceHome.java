@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.component.EditableValueHolder;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -38,10 +37,8 @@ import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.richfaces.function.RichFunction;
 
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.exception.ApplicationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
@@ -62,6 +59,7 @@ import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.seam.context.ContextFacade;
+import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
 
@@ -70,8 +68,6 @@ import br.com.itx.component.AbstractHome;
 public class TaskInstanceHome implements Serializable {
 
     private static final String MOVIMENTAR_PATH = "/Processo/movimentar.seam";
-    private static final String CAN_CLOSE_PANEL = "canClosePanel";
-    private static final String TASK_COMPLETED = "taskCompleted";
     private static final String ASSINATURA_OBRIGATORIA = "A assinatura é obrigatória para esta classificação de documento";
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
@@ -110,6 +106,9 @@ public class TaskInstanceHome implements Serializable {
     @In
     private UserHandler userHandler;
     private URL urlRetornoAcessoExterno;
+    
+    private boolean canClosePanelVal;
+    private boolean taskCompleted;
 
     public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
@@ -365,8 +364,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarPaginaDeMovimentacao(ProcessoHome processoHome) {
-        EditableValueHolder taskCompleted = (EditableValueHolder) RichFunction.findComponent(TASK_COMPLETED);
-        taskCompleted.setValue(true);
+        setTaskCompleted(true);
         if (!canClosePanel()) {
             redirectToMovimentar(processoHome);
         } else if (isUsuarioExterno()) {
@@ -397,15 +395,14 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private boolean canClosePanel() {
-        EditableValueHolder canClosePanelVal = (EditableValueHolder) RichFunction.findComponent(CAN_CLOSE_PANEL);
         if (this.currentTaskInstance == null) {
-            canClosePanelVal.setValue(true);
+            setCanClosePanelVal(true);
             return true;
         } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance.getId())) {
             setTaskId(currentTaskInstance.getId());
             return false;
         } else {
-            canClosePanelVal.setValue(true);
+            setCanClosePanelVal(true);
             return true;
         }
     }
@@ -647,6 +644,22 @@ public class TaskInstanceHome implements Serializable {
 
     public void setUrlRetornoAcessoExterno(URL urlRetornoAcessoExterno) {
         this.urlRetornoAcessoExterno = urlRetornoAcessoExterno;
+    }
+
+    public boolean isCanClosePanelVal() {
+        return canClosePanelVal;
+    }
+
+    public void setCanClosePanelVal(boolean canClosePanelVal) {
+        this.canClosePanelVal = canClosePanelVal;
+    }
+
+    public boolean isTaskCompleted() {
+        return taskCompleted;
+    }
+
+    public void setTaskCompleted(boolean taskCompleted) {
+        this.taskCompleted = taskCompleted;
     }
 
 }

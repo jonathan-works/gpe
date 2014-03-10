@@ -8,7 +8,7 @@
 	<restrict>#{security.checkPage()}</restrict>
 	<description>Localizacao: #{localizacaoCrudAction.instance}</description>
 	
-	<begin-conversation join="true" flush-mode="MANUAL"/>
+	<begin-conversation join="true"/>
 	<param name="id" value="#{localizacaoCrudAction.id}" converterId="integerConverter"/>
 
 	<param name="tab" value="#{localizacaoCrudAction.tab}"/>

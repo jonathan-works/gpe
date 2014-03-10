@@ -1,6 +1,6 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.RecursoQuery.COUNT_RECURSO_BY_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.RecursoQuery.*;
 import static br.com.infox.epp.access.query.RecursoQuery.IDENTIFICADOR_PARAM;
 import static br.com.infox.epp.access.query.RecursoQuery.LISTA_IDENTIFICADORES_PARAM;
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES;
@@ -32,6 +32,12 @@ public class RecursoDAO extends DAO<Recurso> {
         return ((Long)getNamedSingleResult(COUNT_RECURSO_BY_IDENTIFICADOR, parameters)) > 0;
     }
     
+    public Recurso getRecursoByIdentificador(String identificador){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(IDENTIFICADOR_PARAM, identificador);
+        return getNamedSingleResult(RECURSO_BY_IDENTIFICADOR, parameters);
+    }
+    
     public List<Recurso> getRecursosFromPermissoes(List<Permissao> permissoes){
         List<String> identificadores = getListaIdentificadoresFromPermissoes(permissoes);
         if (identificadores == null || identificadores.isEmpty()){
@@ -58,6 +64,12 @@ public class RecursoDAO extends DAO<Recurso> {
             identificadores.add(permissao.getAlvo());
         }
         return identificadores;
+    }
+    
+    public List<String> getPapeisAssociadosARecurso(Recurso recurso) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(ID_RECURSO_PARAM, recurso.getIdRecurso());
+        return getNamedResultList(PAPEIS_FROM_RECURSO, parameters);
     }
 
 }

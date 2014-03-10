@@ -15,9 +15,6 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 @Name(LocalizacaoCrudAction.NAME)
 public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizacao, LocalizacaoManager> {
     
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "localizacaoCrudAction";
@@ -31,6 +28,9 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     
     public boolean hasPermissionToEdit() {
         final Localizacao localizacaoUsuarioLogado = Authenticator.getLocalizacaoAtual();
+        if (getInstance().getIdLocalizacao() == null) {
+            return true;
+        }
         return getManager().isLocalizacaoAncestor(localizacaoUsuarioLogado, getInstance());
     }
     

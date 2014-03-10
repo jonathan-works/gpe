@@ -1,4 +1,4 @@
-package br.com.infox.core.collection;
+package br.com.infox.util.collection;
 
 public interface Factory<K, V> {
     V create(K key);
