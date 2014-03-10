@@ -5,6 +5,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.persistence.Column;
@@ -48,6 +49,19 @@ public final class EntityUtil implements Serializable {
         }
 
         return getId(cl);
+    }
+    
+    public static Object getIdValue(Object objId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        if (!EntityUtil.isEntity(objId)) {
+            throw new IllegalArgumentException("O objeto não é uma entidade: "
+                    + objId.getClass().getName());
+        }
+        Class<?> cl = objId.getClass();
+        if (cl.getName().indexOf("javassist") > -1) {
+            cl = cl.getSuperclass();
+        }
+
+        return getId(cl).getReadMethod().invoke(objId);
     }
 
     /**
