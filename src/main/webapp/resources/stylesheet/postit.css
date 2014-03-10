@@ -1,0 +1,19 @@
+.note{
+    height:15%;
+    padding:15px;
+    width:15%;
+    position:relative;
+    overflow:hidden;
+    float: right;
+
+    font-family: Arial, sans-serif;
+    font-size: #{skinZoom.skinZoom+3}px;
+    
+    background-color:#FDFB8C;
+    border:1px solid #DEDC65;
+
+    /* Adding a CSS3 shadow below the note, in the browsers which support it: */
+    -moz-box-shadow:2px 2px 0 #DDDDDD;
+    -webkit-box-shadow:2px 2px 0 #DDDDDD;
+    box-shadow:2px 2px 0 #DDDDDD;
+}

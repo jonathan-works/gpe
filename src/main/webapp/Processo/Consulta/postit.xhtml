@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
 
-	<div style="display:inline-block">
-		<h:graphicImage url="/img/clip.png" />
-		<span>
-			<div>
-				<b>#{task.name}</b>
-			</div>
-			<div>
-				Por: #{userHandler.getUsuarioByTarefa(task)}
-			</div>
-			<div>
-				Em:
-				<h:outputText value="#{task.start}">
-					<s:convertDateTime />
-				</h:outputText>
-			</div>
-		</span>
-	</div>
+    <h:outputStylesheet name="postit.css" library="stylesheet" />
+    <div id="postit" class="note" style="display: inline-block">
+        <div class="body">
+            <b>#{task.name}</b>
+        </div>
+        <div class="author">Por:
+            #{userHandler.getUsuarioByTarefa(task)}</div>
+        <span class="data">Em: <h:outputText
+                value="#{task.start}">
+                <s:convertDateTime />
+            </h:outputText></span>
+    </div>
+
 </ui:composition>
