@@ -80,3 +80,7 @@
 .p-list-search.dtable-search-form, .dtable-p.p-list-panel.rf-p,.p-list-dtable.dtable.rf-dt {
 	width:100%;
 }
+
+.rf-dt-c-left{
+    text-align: left;
+}

@@ -79,11 +79,8 @@
                 <wi:dataTable id="categoriaItemTable"
                     values="#{categoriaItemList.list(15)}"
                     bean="#{categoriaItemList}"
+                    tableTitle="#{messages['categoriaItem.titleDataTable']} - #{crudAction.instance.categoria}"
                     var="row" rows="10">
-                    <f:facet name="header">
-                        <h:outputText
-                            value="#{messages['categoriaItem.titleDataTable']} - #{crudAction.instance.categoria}" />
-                    </f:facet>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBarRemove id="toolBarRemove"
@@ -93,8 +90,7 @@
                     <wi:columnOutputText columnId="item"
                         columnHeader="#{messages['categoriaItem.item']}"
                         value="#{row.item.caminhoCompletoToString()}"
-                        hideOrder="true">
-
+                        hideOrder="true" styleClass="rf-dt-c-left">
                     </wi:columnOutputText>
                 </wi:dataTable>
 

@@ -18,7 +18,7 @@ public class CategoriaItemList extends EntityList<CategoriaItem> {
     public static final String NAME = "categoriaItemList";
     
     private static final String DEFAULT_EJBQL = "select o from CategoriaItem o";
-    private static final String DEFAULT_ORDER = "item";
+    private static final String DEFAULT_ORDER = "item.caminhoCompleto";
 
     @Override
     protected void addSearchFields() {
