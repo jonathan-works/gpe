@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <page xmlns="http://jboss.org/schema/seam/pages"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
-	  login-required="true">
-	
-	<restrict>#{security.checkPage()}</restrict>
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
+login-required="true">
+	<restrict>
+		#{security.checkPage()}
+	</restrict>
 	<begin-conversation join="true" />
-
 	<param name="id" value="#{categoriaCrudAction.id}"
-		   converterId="integerConverter" />
+	converterId="integerConverter" />
 	<param name="tab" value="#{categoriaCrudAction.tab}" />
-	
-	<action execute="#{categoriaItemCrudAction.setCategoria(categoriaCrudAction.instance)}" 
-            if="#{categoriaCrudAction.isManaged()}"/>
+	<action execute="#{categoriaItemCrudAction.setCategoria(categoriaCrudAction.instance)}"
+	if="#{categoriaCrudAction.isManaged()}"/>
+	<action execute="#{categoriaItemList.entity.setCategoria(categoriaCrudAction.instance)}"
+	if="#{categoriaCrudAction.isManaged()}"/>
 </page>
