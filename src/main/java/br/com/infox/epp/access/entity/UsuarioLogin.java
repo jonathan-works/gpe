@@ -140,6 +140,7 @@ public class UsuarioLogin implements Serializable {
         this.tipoUsuario = UsuarioEnum.H;
         this.ativo = Boolean.TRUE;
         this.provisorio = Boolean.FALSE;
+        this.bloqueio = Boolean.FALSE;
     }
 
     public UsuarioLogin(final String nomeUsuario, final String email,
@@ -151,6 +152,7 @@ public class UsuarioLogin implements Serializable {
         this.tipoUsuario = tipoUsuario;
         this.ativo = ativo;
         this.provisorio = Boolean.FALSE;
+        this.bloqueio = Boolean.FALSE;
     }
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO)
@@ -400,8 +402,9 @@ public class UsuarioLogin implements Serializable {
         this.temContaTwitter = temContaTwitter;
     }
 
-    @Column(name = "ds_salt", length = 16)
+    @Column(name = "ds_salt", length = 16, nullable=false)
     @PasswordSalt
+    @NotNull
     public String getSalt() {
         return salt;
     }
