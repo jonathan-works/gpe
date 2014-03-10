@@ -1,13 +1,13 @@
 .note{
     height:15%;
     padding:15px;
-    width:15%;
+    width:20%;
     position:relative;
     overflow:hidden;
     float: right;
 
     font-family: Arial, sans-serif;
-    font-size: #{skinZoom.skinZoom+3}px;
+    font-size: #{skinZoom.skinZoom}px;
     
     background-color:#FDFB8C;
     border:1px solid #DEDC65;
