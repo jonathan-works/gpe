@@ -18,8 +18,8 @@
     </ui:define>
     <ui:define name="scripts">
     	<h:outputScript library="js/components" name="Modal.js" />
-    	<h:inputHidden id="taskCompleted"></h:inputHidden>
-        <h:inputHidden id="canClosePanel"></h:inputHidden>
+    	<h:inputHidden id="taskCompleted" value="#{taskInstanceHome.taskCompleted}"></h:inputHidden>
+        <h:inputHidden id="canClosePanel" value="#{taskInstanceHome.canClosePanelVal}"></h:inputHidden>
             <script type="text/javascript">
                 function verifyFields() {
                     if ($('#taskCompleted').val() != '') {
