@@ -1,23 +1,23 @@
-jQuery(document).bind('keydown', 'home', function(){
-		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:dataScroller:onscroll', {'page': 'first'})
-	 });
-
-jQuery(document).bind('keydown', 'left', function(){
-		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:dataScroller:onscroll', {'page': 'fastrewind'})
-	 });
-
-jQuery(document).bind('keydown', 'right', function(){
-		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:dataScroller:onscroll', {'page': 'fastforward'})
-	 });
-
-jQuery(document).bind('keydown', 'end', function(){
-		Event.fire(document.getElementById("documento:docScroller_table"), 'rich:dataScroller:onscroll', {'page': 'last'})
-	 });
+function mapKeys() {
+	jQuery(document).keydown(function paginator(event) {
+		console.log(event);
+		if (event.keyCode===36) {
+			RichFaces.$('documento:docScroller').first();
+		}
+		if (event.keyCode===37) {
+			RichFaces.$('documento:docScroller').previous();
+		}
+		if (event.keyCode===39) {
+			RichFaces.$('documento:docScroller').next();
+		}
+		if (event.keyCode===35) {
+			RichFaces.$('documento:docScroller').last();
+		}
+	});
+}
 	 
 jQuery(document).ready(init);
 
-jQuery(document).ready(pageFocus);
-	 
 function pageFocus(){
   jQuery("#areaPagina").focus();
 }			 
@@ -25,7 +25,7 @@ function pageFocus(){
 function init() {
   var sheets = document.styleSheets;
   for (var i = 0; i < sheets.length; i++) {
-	 if (sheets[i].href.indexOf("paginator.css") != -1) {
+	 if (sheets[i] != null && sheets[i].href != null && sheets[i].href.indexOf("paginator.css") != -1) {
 	   if (sheets[i].cssRules) {
 	     rules = sheets[i].cssRules;
 	    } else {
@@ -51,4 +51,6 @@ function init() {
     }
   }
   
+  mapKeys();
+  pageFocus(); 
 }
