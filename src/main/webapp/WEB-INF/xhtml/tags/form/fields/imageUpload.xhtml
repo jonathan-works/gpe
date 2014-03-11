@@ -15,8 +15,8 @@
     <ui:param name="imageBean"
         value="#{wi:get(imageBean, imageFileUploader)}" />
 
-    <s:div rendered="#{wi:get(rendered, true)}">
-        <rich:collapsiblePanel id="uploadImagem" switchType="ajax"
+    <s:div rendered="#{wi:get(rendered, true)}" styleClass="img-panel-cont">
+        <rich:collapsiblePanel id="#{wi:get(editorId, false)}ImagePanel" switchType="ajax"
             expanded="#{wi:get(opened, 'false')}"
             header="Álbum de imagens">
             <rich:fileUpload id="upload" execute="@this"
