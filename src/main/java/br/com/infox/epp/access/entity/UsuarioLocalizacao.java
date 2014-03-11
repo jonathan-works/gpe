@@ -40,7 +40,7 @@ public class UsuarioLocalizacao implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(UsuarioLocalizacao.class);
 
-	private int idUsuarioLocalizacao;
+	private Integer idUsuarioLocalizacao;
 	private Localizacao localizacao;
 	private UsuarioLogin usuario;
 	private Boolean responsavelLocalizacao;
@@ -73,11 +73,11 @@ public class UsuarioLocalizacao implements java.io.Serializable {
 	@Id
 	@GeneratedValue(generator = GENERATOR)
 	@Column(name = ID_USUARIO_LOCALIZACAO, unique = true, nullable = false)
-	public int getIdUsuarioLocalizacao() {
+	public Integer getIdUsuarioLocalizacao() {
 		return this.idUsuarioLocalizacao;
 	}
 
-	public void setIdUsuarioLocalizacao(int idUsuarioLocalizacao) {
+	public void setIdUsuarioLocalizacao(Integer idUsuarioLocalizacao) {
 		this.idUsuarioLocalizacao = idUsuarioLocalizacao;
 	}
 	@ManyToOne(fetch = EAGER)
@@ -144,32 +144,39 @@ public class UsuarioLocalizacao implements java.io.Serializable {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof UsuarioLocalizacao)) {
-			return false;
-		}
-		UsuarioLocalizacao other = (UsuarioLocalizacao) obj;
-		if (getIdUsuarioLocalizacao() != other.getIdUsuarioLocalizacao()) {
-			return false;
-		}
-		return true;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime
+                * result
+                + ((idUsuarioLocalizacao == null) ? 0 : idUsuarioLocalizacao
+                        .hashCode());
+        return result;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdUsuarioLocalizacao();
-		return result;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof UsuarioLocalizacao)) {
+            return false;
+        }
+        UsuarioLocalizacao other = (UsuarioLocalizacao) obj;
+        if (idUsuarioLocalizacao == null) {
+            if (other.idUsuarioLocalizacao != null) {
+                return false;
+            }
+        } else if (!idUsuarioLocalizacao.equals(other.idUsuarioLocalizacao)) {
+            return false;
+        }
+        return true;
+    }
 
-	public void setContabilizar(Boolean contabilizar) {
+    public void setContabilizar(Boolean contabilizar) {
 		this.contabilizar = contabilizar;
 	}
 

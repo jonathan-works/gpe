@@ -27,6 +27,6 @@ public class UsuarioLocalizacaoManager extends Manager<UsuarioLocalizacaoDAO, Us
         if (existeUsuarioLocalizacao(usuarioLocalizacao)) {
             throw new DAOException("#{messages['constraintViolation.uniqueViolation']}");
         }
-        return super.persist(usuarioLocalizacao);
+        return getDao().persist(usuarioLocalizacao);
     }
 }
