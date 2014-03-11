@@ -14,10 +14,11 @@ import java.util.HashMap;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.core.tree.TreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -38,11 +39,11 @@ public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLoca
 
     @SuppressWarnings(UNCHECKED)
     private void limparArvores() {
-        clearTree((AbstractTreeHandler<Localizacao>) Component.getInstance(LocalizacaoEstruturaTreeHandler.NAME));
-        clearTree((AbstractTreeHandler<Papel>) Component.getInstance(PapelTreeHandler.NAME));
+        clearTree((TreeHandler<Localizacao>) Component.getInstance(LocalizacaoEstruturaTreeHandler.NAME));
+        clearTree((TreeHandler<Papel>) Component.getInstance(PapelTreeHandler.NAME));
     }
 
-    private <T> void clearTree(final AbstractTreeHandler<T> handler) {
+    private <T> void clearTree(final TreeHandler<T> handler) {
         if (handler != null) {
             handler.clearTree();
         }
@@ -105,4 +106,12 @@ public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLoca
         this.usuarioGerenciado = usuarioGerenciado;
         getInstance().setUsuario(usuarioGerenciado);
     }
+    //TODO encontrar melhor maneira de resolver esta situação
+    @Observer(LocalizacaoEstruturaTreeHandler.EVENT_SELECT_LOC_ESTRUTURA)
+    public void evtSetLocalizacaoEstrutura(Localizacao localizacao, Localizacao estrutura) {
+        final UsuarioLocalizacao instance = getInstance();
+        instance.setLocalizacao(localizacao);
+        instance.setEstrutura(estrutura);
+    }
+    
 }

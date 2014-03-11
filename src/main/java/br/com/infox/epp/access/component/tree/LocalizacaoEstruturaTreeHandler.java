@@ -21,14 +21,19 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
 
     @Override
     protected String getQueryRoots() {
-        StringBuilder sb = new StringBuilder("select n from Localizacao n ");
+        final StringBuilder sb = new StringBuilder("select n from Localizacao n ");
         sb.append("where ");
-        usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
-        Localizacao loc = getUsuarioLocalizacaoAtual().getEstrutura() != null ? getUsuarioLocalizacaoAtual().getEstrutura() : getUsuarioLocalizacaoAtual().getLocalizacao();
-        sb.append(" n.idLocalizacao = " + loc.getIdLocalizacao());
-        sb.append(" ");
-        sb.append("order by localizacao");
+        sb.append(" n.idLocalizacao = " + getIdLocalizacao());
+        sb.append(" order by localizacao");
         return sb.toString();
+    }
+
+    private Integer getIdLocalizacao() {
+        usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
+        final UsuarioLocalizacao usuarioLocalizacao = getUsuarioLocalizacaoAtual();
+        final Localizacao estrutura = usuarioLocalizacao.getEstrutura();
+        final Localizacao loc = estrutura != null ? estrutura : usuarioLocalizacao.getLocalizacao();
+        return loc.getIdLocalizacao();
     }
 
     @Override
@@ -53,15 +58,16 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
     }
 
     @Override
-    protected void raiseEvents(EntityNode<Localizacao> en) {
+    protected void raiseEvents(final EntityNode<Localizacao> en) {
         Events.instance().raiseEvent(EVENT_SELECT_LOC_ESTRUTURA, getSelected(), getEstrutura(en));
     }
 
-    private Localizacao getEstrutura(EntityNode<Localizacao> en) {
+    private Localizacao getEstrutura(final EntityNode<Localizacao> en) {
         EntityNode<Localizacao> parent = en.getParent();
         while (parent != null) {
-            if (parent.getEntity().getEstruturaFilho() != null) {
-                return parent.getEntity();
+            final Localizacao parentEntity = parent.getEntity();
+            if (parentEntity.getEstruturaFilho() != null) {
+                return parentEntity;
             }
             parent = parent.getParent();
         }
@@ -69,7 +75,7 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
     }
 
     public void setUsuarioLocalizacaoAtual(
-            UsuarioLocalizacao usuarioLocalizacaoAtual) {
+            final UsuarioLocalizacao usuarioLocalizacaoAtual) {
         this.usuarioLocalizacaoAtual = usuarioLocalizacaoAtual;
     }
 
