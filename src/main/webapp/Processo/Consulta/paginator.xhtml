@@ -15,23 +15,28 @@
         <h:outputScript name="paginator.js" library="js" />
         <h:outputStylesheet name="paginator.css" library="stylesheet" />
 
-        <h:form id="documento">
+        <h:form id="documento" styleClass="doc-pag-form">
             <rich:dataTable id="documentosGrid" columnsWidth="70%,30%"
                 value="#{processoHandler.taskDocumentList}" var="task"
                 first="#{processoHandler.inicio}" rows="1"
-                styleClass="dtable">
+                styleClass="dtable doc-pag-form">
 
                 <rich:column>
                     <f:facet name="header">#{messages['processoDocumentoBin.documento']}</f:facet>
                     <div id="areaPagina">
-                        <ui:include src="postit.xhtml" />
+
                         <div id="pagina">
+                            <div class="post-it-cont">
+                                <ui:include src="postit.xhtml" />
+                            </div>
                             <rich:dataTable
                                 value="#{variableHandler.getTaskVariables(task.id)}"
                                 var="v">
                                 <rich:column>
-                                    <h:outputText value="#{v.label}" />
-
+                                    <div>
+                                        <h:outputText value="#{v.label}"
+                                            styleClass="bold" />
+                                    </div>
                                     <h:outputText
                                         value="#{search.getTextoDestacado(v)}"
                                         escape="false" />
