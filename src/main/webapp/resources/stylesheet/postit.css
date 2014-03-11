@@ -1,19 +1,31 @@
-.note{
-    height:15%;
-    padding:15px;
-    width:20%;
+.post-it-cont {
     position:relative;
+    display:block;
+    height:123px;
+    width:100%;
+}
+.note{
+    width:164px;
+    height:91px;
+    padding:15px;
+    position:absolute;
+    right:0;
+    top:0;
     overflow:hidden;
-    float: right;
 
     font-family: Arial, sans-serif;
     font-size: #{skinZoom.skinZoom}px;
     
     background-color:#FDFB8C;
     border:1px solid #DEDC65;
-
-    /* Adding a CSS3 shadow below the note, in the browsers which support it: */
-    -moz-box-shadow:2px 2px 0 #DDDDDD;
-    -webkit-box-shadow:2px 2px 0 #DDDDDD;
-    box-shadow:2px 2px 0 #DDDDDD;
+}
+.post-it-cont:before {
+    background-color:#DDD;
+    right:-3px;
+    top:3px;
+    width:196px;
+    height:123px;
+    content:"";
+    position:absolute;
+    display:block;
 }

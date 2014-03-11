@@ -1,7 +1,6 @@
 #areaPagina {
-    height: 400px;
     padding: 10px 40px 10px 40px;
-    overflow-y: scroll;
+    overflow: auto;
 }
 
 #pagina {
@@ -15,8 +14,12 @@
 .dtable {
     width: 100%;
 }
-.pageBody {
-    height: calc(100% - 76px);
+html, body, .clean-pageBody {
+    height: 100%;
+}
+
+html, body {
+    margin: 0;
 }
 
 .rf-dt {
@@ -25,4 +28,20 @@
 
 .rf-dt-thd {
     color: #000;
+}
+
+.conteudo.minimal {
+    height: calc(100% - 99px);
+}
+
+.doc-pag-form {
+    height: 100%;
+}
+
+.rf-dt.dtable.doc-pag-form{
+    height: calc(100% - 20px);
+}
+
+.bold {
+    font-weight:700;
 }
