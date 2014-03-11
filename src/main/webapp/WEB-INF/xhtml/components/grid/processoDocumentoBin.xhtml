@@ -14,40 +14,41 @@
 
     <div id="teste">
 
-        <span class="#{var.ativo ? '' : 'inativo'}" />
+        <span class="#{row.ativo ? '' : 'inativo'}" />
 
         <h:commandLink
-            action="#{documentoHtmlView.setViewInstance(var)}"
+            action="#{documentoHtmlView.setViewInstance(row)}"
             onclick="openPopUp('PopUpDocumentoBin', '')"
             rendered="#{isModelo}" target="PopUpDocumentoBin">
             <h:graphicImage title="Visualizar" url="/img/view.gif" />
         </h:commandLink>
 
         <h:commandLink target="idPdf#{row}" rendered="#{!isModelo}"
-            action="#{documentoDownloader.downloadDocumento(var)}">
+            action="#{documentoDownloader.downloadDocumento(row)}">
             <h:graphicImage value="/img/pdf.gif"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})" />
         </h:commandLink>
 
-        <s:link target="idJan#{var.idProcessoDocumento}"
+        <s:link target="idJan#{row.idProcessoDocumento}"
             rendered="#{not empty bin.signature}"
             view="/Processo/Consulta/validaDocumento.xhtml"
-            onclick="openPopUp('idJan#{var.idProcessoDocumento}', 'about:blank');">
+            onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');">
 
             <h:graphicImage title="Validar Assinatura Digital"
                 alt="Validar Assinatura Digital" url="/img/lock.png" />
-            <f:param value="#{var.idProcessoDocumento}"
+            <f:param value="#{row.idProcessoDocumento}"
                 name="idProcessoDocumento" />
 
         </s:link>
-        <s:link target="idJan#{var.idProcessoDocumento}"
+        <s:link target="idJan#{row.idProcessoDocumento}"
             rendered="#{empty bin.signature}"
             view="/Processo/Consulta/assinaDocumento.xhtml"
-            onclick="infox.abrirPopUp('idJan#{var.idProcessoDocumento}');">
+            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
 
-            <h:graphicImage title="Assinar Documento #{var.idProcessoDocumento}"
+            <h:graphicImage
+                title="Assinar Documento #{row.idProcessoDocumento}"
                 alt="Assinar Documento" url="/img/lock_unlock.png" />
-            <f:param value="#{var.idProcessoDocumento}"
+            <f:param value="#{row.idProcessoDocumento}"
                 name="idProcessoDocumento" />
         </s:link>
 

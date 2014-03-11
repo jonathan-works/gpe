@@ -30,6 +30,10 @@ html, body {
     color: #000;
 }
 
+.dtable-p.rf-p.anexos {
+    width: 100%;
+}
+
 .conteudo.minimal {
     height: calc(100% - 99px);
 }
