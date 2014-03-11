@@ -598,3 +598,7 @@ div.rf-trn {
 .tree-inactive {
     text-decoration: line-through;
 }
+
+.img-panel-cont {
+	display:inline-block;
+}
