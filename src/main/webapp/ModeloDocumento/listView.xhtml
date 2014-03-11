@@ -74,16 +74,16 @@
             <wi:selectSituacaoRadio id="ativo"
                 label="#{messages['field.situacao']}"
                 value="#{modeloDocumentoCrudAction.instance.ativo}" />
-            <wi:editor id="modeloDocumento"
-                label="#{messages['modeloDocumento.modeloDocumento']}"
-                value="#{modeloDocumentoCrudAction.instance.modeloDocumento}"
-                showVariables="true" required="true" />
-            <a:region>
-
-                <wi:imageUpload imageBean="#{imageFileUploader}"
-                    editorId="modeloDocumento" />
-
-            </a:region>
+            <div class="decoration-div">
+	            <wi:editor id="modeloDocumento"
+	                label="#{messages['modeloDocumento.modeloDocumento']}"
+	                value="#{modeloDocumentoCrudAction.instance.modeloDocumento}"
+	                showVariables="true" required="true" />
+	            <a:region>
+	                <wi:imageUpload imageBean="#{imageFileUploader}"
+	                    editorId="modeloDocumento" />
+	            </a:region>
+            </div>
 
         </wi:dataForm>
 
