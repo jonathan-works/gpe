@@ -51,9 +51,8 @@
                 </rich:column>
 
             </rich:dataTable>
-
-            <rich:dataScroller maxPages="10" oncomplete="pageFocus()"
-                stepControls="hide" id="docScroller"
+            <rich:dataScroller maxPages="10" fastStep="1"
+                stepControls="hide" id="docScroller" execute="@this"
                 for="documentosGrid" page="#{processoHandler.inicio}" />
         </h:form>
     </ui:define>
