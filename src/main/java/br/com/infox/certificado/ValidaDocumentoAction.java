@@ -80,7 +80,7 @@ public class ValidaDocumentoAction {
             setValido(validaDocumento.verificaAssinaturaDocumento());
             setDadosCertificado(validaDocumento.getDadosCertificado());
         } catch (ValidaDocumentoException | CertificadoException e) {
-            LOG.error(".validaDocumento(bin, certChain, signature)", e);;
+            LOG.error(".validaDocumento(bin, certChain, signature)", e);
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getMessage());
         }
     }
