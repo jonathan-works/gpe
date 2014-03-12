@@ -17,7 +17,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.system.manager.ParametroManager;
 
 @Name(UsuarioLoginManager.NAME)
 @AutoCreate
@@ -30,14 +29,6 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     private PasswordService passwordService;
     @In
     private AccessMailService accessMailService;
-    @In
-    private PapelManager papelManager;
-    @In
-    private LocalizacaoManager localizacaoManager;
-    @In
-    private UsuarioLocalizacaoManager usuarioLocalizacaoManager;
-    @In
-    private ParametroManager parametroManager;
 
     public boolean usuarioExpirou(final UsuarioLogin usuarioLogin) {
         boolean result = Boolean.FALSE;
