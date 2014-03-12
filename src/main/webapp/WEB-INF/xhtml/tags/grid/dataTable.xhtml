@@ -21,7 +21,7 @@
             styleClass="dtable-p #{panelStyleClass}">
 
             <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key"
-                rowClasses="#{rowClasses}"
+                rowClasses="#{rowClasses} zebra-row"
                 styleClass="dtable rf-dt-crud #{styleClass}" var="row">
                 <rich:column styleClass="dt-toolbar-col"
                     rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"

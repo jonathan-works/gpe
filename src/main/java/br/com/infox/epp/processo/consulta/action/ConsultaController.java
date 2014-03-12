@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.consulta.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
@@ -22,6 +23,16 @@ public class ConsultaController extends AbstractController {
     @In private ProcessoEpaManager processoEpaManager;
     @In private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
     
+    private boolean showAllDocuments = false;
+    
+    public boolean isShowAllDocuments() {
+        return showAllDocuments;
+    }
+
+    public void setShowAllDocuments(boolean showAllDocuments) {
+        this.showAllDocuments = showAllDocuments;
+    }
+
     @Override
     public void setId(Object id) {
         this.setProcessoEpa(processoEpaManager.find(Integer.valueOf((String)id)));
@@ -37,7 +48,32 @@ public class ConsultaController extends AbstractController {
         this.processoEpa = processoEpa;
     }
 
-    public List<ProcessoDocumento> getProcessoDocumentoList() {
-        return sigiloDocumentoPermissaoManager.getDocumentosPermitidos(processoEpa, Authenticator.getUsuarioLogado());
+    public List<ProcessoDocumento> getProcessoDocumentoList(Long idTask) {
+        List<ProcessoDocumento> list = sigiloDocumentoPermissaoManager.getDocumentosPermitidos(processoEpa, Authenticator.getUsuarioLogado());
+        list = filtrarPorTarefa(list, idTask);
+        return filtrarAnexos(list);
+    }
+
+    private List<ProcessoDocumento> filtrarPorTarefa(List<ProcessoDocumento> list, Long taskId) {
+        if (!showAllDocuments && taskId != null) {
+            List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
+            for (ProcessoDocumento documento : list) {
+                if (taskId.equals(documento.getIdJbpmTask())) {
+                    ret.add(documento);
+                }
+            }
+            return ret;
+        }
+        return list;
+    }
+
+    private List<ProcessoDocumento> filtrarAnexos(List<ProcessoDocumento> list) {
+        List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
+        for (ProcessoDocumento documento : list) {
+            if (documento.getAnexo() != null && documento.getAnexo()) {
+                ret.add(documento);
+            }
+        }
+        return ret;
     }
 }

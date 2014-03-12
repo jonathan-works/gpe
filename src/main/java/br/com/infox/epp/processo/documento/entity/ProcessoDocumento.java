@@ -58,6 +58,7 @@ public class ProcessoDocumento implements java.io.Serializable {
     private Integer numeroDocumento;
     private Boolean ativo = Boolean.TRUE;
     private Boolean documentoSigiloso = Boolean.FALSE;
+    private Boolean anexo = Boolean.FALSE;
     private Papel papel;
     private UsuarioLogin usuarioAlteracao;
     private Localizacao localizacao;
@@ -175,6 +176,16 @@ public class ProcessoDocumento implements java.io.Serializable {
     public void setDocumentoSigiloso(Boolean documentoSigiloso) {
         this.documentoSigiloso = documentoSigiloso;
     }
+    
+    @Column(name = "in_anexo", nullable = false)
+    @NotNull
+    public Boolean getAnexo() {
+        return anexo;
+    }
+
+    public void setAnexo(Boolean anexo) {
+        this.anexo = anexo;
+    }
 
     @Override
     public String toString() {
@@ -245,4 +256,5 @@ public class ProcessoDocumento implements java.io.Serializable {
         result = prime * result + getIdProcessoDocumento();
         return result;
     }
+
 }

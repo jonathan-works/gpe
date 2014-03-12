@@ -10,7 +10,7 @@
 
     <div class="anexos">
         <wi:dataTable
-            values="#{consultaController.getProcessoDocumentoList()}"
+            values="#{consultaController.getProcessoDocumentoList(task.id)}"
             tableTitle="#{messages['anexosProcesso.titleView']}"
             id="documentosAnexadosList"
             rowId="#{row.idProcessoDocumento}" panelStyleClass="anexos">
@@ -30,10 +30,18 @@
                 columnHeader="#{messages['anexosProcesso.dataInclusao']}"
                 value="#{row.processoDocumentoBin.dataInclusao}">
                 <ui:define name="outputText">
-                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
                 </ui:define>
             </wi:columnOutputText>
         </wi:dataTable>
     </div>
+    <s:div style="padding-top: 10px;">
+        <wi:selectBooleanRadio id="sistema"
+            label="#{messages['anexosProcesso.showAllDocuments']}"
+            value="#{consultaController.showAllDocuments}">
+            <a:ajax execute="@this" event="change"
+                render="documentosAnexadosList"></a:ajax>
+        </wi:selectBooleanRadio>
+    </s:div>
 
 </ui:composition>
