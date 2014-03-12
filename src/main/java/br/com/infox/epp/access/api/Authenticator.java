@@ -184,8 +184,7 @@ public class Authenticator {
     private boolean loginExists(final Credentials credentials) {
         final String login = credentials.getUsername();
         final UsuarioLogin user = getUsuarioLoginManager().getUsuarioLoginByLogin(login);
-        boolean loginExists = user != null;
-        return loginExists;
+        return user != null;
     }
 
     private boolean ldapLoginExists(final Credentials credentials) {
