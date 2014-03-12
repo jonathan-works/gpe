@@ -260,7 +260,7 @@ public class CertificateManager {
                         && name.matches(pattern)) { // filter according to the
                                                     // path
                     String entry = name.substring(path.length());
-                    int checkSubdir = entry.indexOf("/");
+                    int checkSubdir = entry.indexOf('/');
                     if (checkSubdir >= 0) {
                         // if it is a subdirectory, we just return the directory
                         // name
