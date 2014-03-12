@@ -51,12 +51,6 @@
                         items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                         value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"
                         noSelectionLabel="[Todos]" />
-                    <wi:selectOneMenuEnum
-                        id="visibilidade"
-                        label="#{messages['tipoProcessoDocumento.visibilidade']}"
-                        items="#{classificacaoDocumentoFacade.getVisibilidadeEnumValues()}"
-                        value="#{tipoProcessoDocumentoList.entity.visibilidade}"
-                        noSelectionLabel="[Todos]" />
                     <wi:selectSituacaoOneMenu
                         id="ativo"
                         label="#{messages['field.situacao']}"
@@ -78,10 +72,6 @@
                 columnId="inTipoDocumento"
                 columnHeader="#{messages['tipoProcessoDocumento.uso']}"
                 value="#{row.inTipoDocumento}" />
-            <wi:columnEnum
-                columnId="visibilidade"
-                columnHeader="#{messages['tipoProcessoDocumento.visibilidade']}"
-                value="#{row.visibilidade}" />
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{messages['field.situacao']}"
