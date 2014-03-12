@@ -10,7 +10,9 @@ import static br.com.infox.epp.access.query.RecursoQuery.PAPEIS_FROM_RECURSO_QUE
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES;
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_FROM_IDENTIFICADORES_QUERY;
 import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_NOT_IN_IDENTIFICADORES;
-import static br.com.infox.epp.access.query.RecursoQuery.*;
+import static br.com.infox.epp.access.query.RecursoQuery.RECURSOS_NOT_IN_IDENTIFICADORES_QUERY;
+import static br.com.infox.epp.access.query.RecursoQuery.RECURSO_BY_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.RecursoQuery.RECURSO_BY_IDENTIFICADOR_QUERY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
