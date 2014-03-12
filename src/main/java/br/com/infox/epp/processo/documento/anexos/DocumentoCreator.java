@@ -42,6 +42,7 @@ abstract class DocumentoCreator {
 
     protected void newInstance() {
         setProcessoDocumento(new ProcessoDocumento());
+        getProcessoDocumento().setAnexo(true);
         getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
     }
 
