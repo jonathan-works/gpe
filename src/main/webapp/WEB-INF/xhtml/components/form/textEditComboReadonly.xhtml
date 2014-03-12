@@ -14,7 +14,7 @@
         <wi:selectOneMenuEntity id="#{id}TipoProcDoc"
             label="#{messages['processoDocumento.classificacaoDocumento']}"
             value="#{props.tipoProcessoDocumentoRO}"
-            items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(true)}"
+            items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
             required="true" disabled="#{readonly ? true : false}"
             noSelectionLabel="Selecione...">
         </wi:selectOneMenuEntity>

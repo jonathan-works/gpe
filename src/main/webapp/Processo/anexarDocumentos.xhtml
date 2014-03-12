@@ -18,7 +18,7 @@
             <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
                 label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                 value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
-                items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(false)}"
+                items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                 required="true" noSelectionLabel="Selecione...">
             </wi:selectOneMenuEntity>
         </s:div>
@@ -60,7 +60,7 @@
                     id="#{f.id}tipoProcessoDocumentoPdf"
                     label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                     value="#{documentoUploader.processoDocumento.tipoProcessoDocumento}"
-                    items="#{classificacaoDocumentoFacade.getTipoProcessoDocumentoInterno(false)}"
+                    items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                     required="true" noSelectionLabel="Selecione...">
                 </wi:selectOneMenuEntity>
             </s:div>

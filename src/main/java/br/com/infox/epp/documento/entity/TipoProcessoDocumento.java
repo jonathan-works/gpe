@@ -2,10 +2,8 @@ package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO_QUERY;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO_QUERY;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO_QUERY;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +38,12 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @NamedQueries({
     @NamedQuery(name = LIST_TIPO_PROCESSO_DOCUMENTO,
             query = LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
-    @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO,
-            query = TIPO_PROCESSO_DOCUMENTO_INTERNO_TEXTO_QUERY),
-    @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO,
-            query = TIPO_PROCESSO_DOCUMENTO_INTERNO_ANEXO_QUERY) })
+    @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_USEABLE,
+            query = TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY) })
 public class TipoProcessoDocumento implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
-    private int idTipoProcessoDocumento;
+    private Integer idTipoProcessoDocumento;
     private String tipoProcessoDocumento;
     private String codigoDocumento;
     private String tipoProcessoDocumentoObservacao;
@@ -63,6 +59,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     private Boolean publico;
 
     public TipoProcessoDocumento() {
+        visibilidade = VisibilidadeEnum.A;
     }
 
     @SequenceGenerator(name = "generator",
@@ -199,6 +196,17 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime
+                * result
+                + ((idTipoProcessoDocumento == null) ? 0
+                        : idTipoProcessoDocumento.hashCode());
+        return result;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -210,17 +218,15 @@ public class TipoProcessoDocumento implements java.io.Serializable {
             return false;
         }
         TipoProcessoDocumento other = (TipoProcessoDocumento) obj;
-        if (getIdTipoProcessoDocumento() != other.getIdTipoProcessoDocumento()) {
+        if (idTipoProcessoDocumento == null) {
+            if (other.idTipoProcessoDocumento != null) {
+                return false;
+            }
+        } else if (!idTipoProcessoDocumento
+                .equals(other.idTipoProcessoDocumento)) {
             return false;
         }
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + getIdTipoProcessoDocumento();
-        return result;
-    }
 }

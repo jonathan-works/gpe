@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 
@@ -40,7 +41,7 @@ public class TipoProcessoDocumentoManager extends Manager<TipoProcessoDocumentoD
 		return tipoProcessoDocumentoRO;
 	}
 	
-	public List<TipoProcessoDocumento> getTipoProcessoDocumentoInterno(boolean isModelo){
-		return getDao().getTipoProcessoDocumentoInterno(isModelo);
+	public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, Papel papel) {
+	    return getDao().getUseableTipoProcessoDocumento(isModelo, papel);
 	}
 }
