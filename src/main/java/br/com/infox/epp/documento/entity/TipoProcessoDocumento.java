@@ -68,11 +68,11 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     @GeneratedValue(generator = "generator")
     @Column(name = "id_tipo_processo_documento", unique = true,
             nullable = false)
-    public int getIdTipoProcessoDocumento() {
+    public Integer getIdTipoProcessoDocumento() {
         return this.idTipoProcessoDocumento;
     }
 
-    public void setIdTipoProcessoDocumento(int idTipoProcessoDocumento) {
+    public void setIdTipoProcessoDocumento(Integer idTipoProcessoDocumento) {
         this.idTipoProcessoDocumento = idTipoProcessoDocumento;
     }
 
