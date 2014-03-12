@@ -50,7 +50,7 @@ public class PartesController extends AbstractPartesController {
     }
 
     @Override
-    public void includePessoaFisica(){
+    public void includePessoaFisica() {
         try {
             pessoaFisicaManager.persist(getPessoaFisica());
             includePessoa(getPessoaFisica());
@@ -60,44 +60,48 @@ public class PartesController extends AbstractPartesController {
             setPessoaFisica(new PessoaFisica());
         }
     }
-    
+
     @Override
-    public void includePessoaJuridica(){
+    public void includePessoaJuridica() {
         try {
             pessoaJuridicaManager.persist(getPessoaJuridica());
             includePessoa(getPessoaJuridica());
         } catch (DAOException e) {
-            LOG.error("Não foi possível inserir a pessoa " + getPessoaJuridica(), e);
+            LOG.error("Não foi possível inserir a pessoa "
+                    + getPessoaJuridica(), e);
         } finally {
             setPessoaJuridica(new PessoaJuridica());
         }
     }
-    
+
     @Override
-    public boolean apenasPessoaFisica(){
+    public boolean apenasPessoaFisica() {
         return ParteProcessoEnum.F.equals(getNatureza().getTipoPartes());
     }
-    
+
     @Override
-    public boolean apenasPessoaJuridica(){
+    public boolean apenasPessoaJuridica() {
         return ParteProcessoEnum.J.equals(getNatureza().getTipoPartes());
     }
-    
-    private void includePessoa(Pessoa pessoa){
-        if (!pessoas.contains(pessoa)){
+
+    private void includePessoa(Pessoa pessoa) {
+        if (!pessoas.contains(pessoa)) {
             pessoas.add(pessoa);
         } else {
-            FacesMessages.instance().add(Severity.WARN, pessoa + "já cadastrada na lista de partes");
+            FacesMessages.instance().add(Severity.WARN, pessoa
+                    + "já cadastrada na lista de partes");
         }
     }
-    
-    public void removePessoa(Pessoa pessoa){
+
+    public void removePessoa(Pessoa pessoa) {
         pessoas.remove(pessoa);
     }
-    
+
     @Override
-    public boolean podeAdicionarPartes(){
-        return natureza != null && natureza.getHasPartes() && (natureza.getNumeroPartes() == 0 || pessoas.size() < natureza.getNumeroPartes());
+    public boolean podeAdicionarPartes() {
+        return natureza != null
+                && natureza.getHasPartes()
+                && (natureza.getNumeroPartes() == 0 || pessoas.size() < natureza.getNumeroPartes());
     }
 
 }

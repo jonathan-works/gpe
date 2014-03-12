@@ -16,39 +16,35 @@ import br.com.infox.quartz.QuartzConstant;
 
 public class TarefaTimerStarter {
 
-	private static final String DEFAULT_CRON_EXPRESSION = "0 0/30 * * * ?";
-	private static final LogProvider LOG = Logging
-			.getLogProvider(TarefaTimerStarter.class);
-	public static final String NAME = "tarefaTimerStarter";
+    private static final String DEFAULT_CRON_EXPRESSION = "0 0/30 * * * ?";
+    private static final LogProvider LOG = Logging.getLogProvider(TarefaTimerStarter.class);
+    public static final String NAME = "tarefaTimerStarter";
 
-	public static final String ID_INICIAR_TASK_TIMER_PARAMETER = "idTaskTimerParameter";
-	private static final Properties QUARTZ_PROPERTIES = ClassLoaderUtil
-			.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
+    public static final String ID_INICIAR_TASK_TIMER_PARAMETER = "idTaskTimerParameter";
+    private static final Properties QUARTZ_PROPERTIES = ClassLoaderUtil.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
 
-	public TarefaTimerStarter() {}
+    public TarefaTimerStarter() {
+    }
 
-	@Create
-	public void init() throws SchedulerException, DAOException {
-		if (!Boolean.parseBoolean(QUARTZ_PROPERTIES
-				.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {
-			return;
-		}
+    @Create
+    public void init() throws SchedulerException, DAOException {
+        if (!Boolean.parseBoolean(QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {
+            return;
+        }
 
-		String idIniciarFluxoTimer = null;
-		final BamTimerManager bamTimerManager = (BamTimerManager) Component.getInstance(BamTimerManager.NAME);
-		try {
-			idIniciarFluxoTimer = bamTimerManager.getParametro(ID_INICIAR_TASK_TIMER_PARAMETER);
-		} catch (IllegalArgumentException e) {
-			LOG.error("TarefaTimerStarter.init()", e);
-		}
-		if (idIniciarFluxoTimer == null) {
-		    final String cronExpression = QUARTZ_PROPERTIES.getProperty(
-	                QuartzConstant.QUARTZ_CRON_EXPRESSION,
-	                DEFAULT_CRON_EXPRESSION);
-		    final TarefaTimerProcessor processor = (TarefaTimerProcessor) Component.getInstance(TarefaTimerProcessor.NAME);
-		    
-		    bamTimerManager.createTimerInstance(cronExpression, ID_INICIAR_TASK_TIMER_PARAMETER, "ID do timer do sistema", processor);
-		}
-	}
+        String idIniciarFluxoTimer = null;
+        final BamTimerManager bamTimerManager = (BamTimerManager) Component.getInstance(BamTimerManager.NAME);
+        try {
+            idIniciarFluxoTimer = bamTimerManager.getParametro(ID_INICIAR_TASK_TIMER_PARAMETER);
+        } catch (IllegalArgumentException e) {
+            LOG.error("TarefaTimerStarter.init()", e);
+        }
+        if (idIniciarFluxoTimer == null) {
+            final String cronExpression = QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_CRON_EXPRESSION, DEFAULT_CRON_EXPRESSION);
+            final TarefaTimerProcessor processor = (TarefaTimerProcessor) Component.getInstance(TarefaTimerProcessor.NAME);
+
+            bamTimerManager.createTimerInstance(cronExpression, ID_INICIAR_TASK_TIMER_PARAMETER, "ID do timer do sistema", processor);
+        }
+    }
 
 }

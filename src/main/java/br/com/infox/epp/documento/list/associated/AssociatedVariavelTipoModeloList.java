@@ -12,33 +12,32 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 
 @Name(AssociatedVariavelTipoModeloList.NAME)
 @Scope(ScopeType.PAGE)
-public class AssociatedVariavelTipoModeloList extends
-		EntityList<VariavelTipoModelo> {
+public class AssociatedVariavelTipoModeloList extends EntityList<VariavelTipoModelo> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "associatedVariavelTipoModeloList";
-	
-	private static final String DEFAULT_EJBQL = "select o from VariavelTipoModelo o";
-	private static final String DEFAULT_ORDER = "variavel";
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "associatedVariavelTipoModeloList";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String DEFAULT_EJBQL = "select o from VariavelTipoModelo o";
+    private static final String DEFAULT_ORDER = "variavel";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

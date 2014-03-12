@@ -18,13 +18,14 @@ import br.com.infox.epp.documento.entity.Variavel;
 @AutoCreate
 public class VariavelDAO extends DAO<Variavel> {
 
-	public static final String NAME = "variavelDAO";
-	private static final long serialVersionUID = 1L;
-	
-	public List<Variavel> getVariaveisByTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento){
-	    Map<String, Object> parameters = new HashMap<>();
-	    parameters.put(PARAM_TIPO, tipoModeloDocumento);
-	    return getNamedResultList(VARIAVEL_BY_TIPO_MODELO_DOCUMENTO, parameters);
-	}
+    public static final String NAME = "variavelDAO";
+    private static final long serialVersionUID = 1L;
+
+    public List<Variavel> getVariaveisByTipoModeloDocumento(
+            TipoModeloDocumento tipoModeloDocumento) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_TIPO, tipoModeloDocumento);
+        return getNamedResultList(VARIAVEL_BY_TIPO_MODELO_DOCUMENTO, parameters);
+    }
 
 }

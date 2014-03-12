@@ -34,60 +34,59 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @Entity
 @Table(name = TABLE_NAME)
 @NamedQueries({
-	@NamedQuery(name = NAMED_QUERY_USUARIO_POSSUI_PERMISSAO, query = QUERY_USUARIO_POSSUI_PERMISSAO),
-	@NamedQuery(name = NAMED_QUERY_INATIVAR_PERMISSOES, query = QUERY_INATIVAR_PERMISSOES),
-	@NamedQuery(name = NAMED_QUERY_PERMISSOES_DO_SIGILO, query = QUERY_PERMISSOES_DO_SIGILO)
-})
+    @NamedQuery(name = NAMED_QUERY_USUARIO_POSSUI_PERMISSAO, query = QUERY_USUARIO_POSSUI_PERMISSAO),
+    @NamedQuery(name = NAMED_QUERY_INATIVAR_PERMISSOES, query = QUERY_INATIVAR_PERMISSOES),
+    @NamedQuery(name = NAMED_QUERY_PERMISSOES_DO_SIGILO, query = QUERY_PERMISSOES_DO_SIGILO) })
 public class SigiloProcessoPermissao implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
-	@GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-	@Column(name = COLUMN_ID)
-	private Integer id;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = COLUMN_ID_SIGILO_PROCESSO, nullable = false)
-	private SigiloProcesso sigiloProcesso;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
-	private UsuarioLogin usuario;
-	
-	@Column(name = COLUMN_ATIVO, nullable = false)
-	private Boolean ativo;
-	
-	public Integer getId() {
-		return id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    private static final long serialVersionUID = 1L;
 
-	public SigiloProcesso getSigiloProcesso() {
-		return sigiloProcesso;
-	}
-	
-	public void setSigiloProcesso(SigiloProcesso sigiloProcesso) {
-		this.sigiloProcesso = sigiloProcesso;
-	}
-	
-	public UsuarioLogin getUsuario() {
-		return usuario;
-	}
-	
-	public void setUsuario(UsuarioLogin usuario) {
-		this.usuario = usuario;
-	}
-	
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
+    @Id
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = COLUMN_ID)
+    private Integer id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = COLUMN_ID_SIGILO_PROCESSO, nullable = false)
+    private SigiloProcesso sigiloProcesso;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
+    private UsuarioLogin usuario;
+
+    @Column(name = COLUMN_ATIVO, nullable = false)
+    private Boolean ativo;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public SigiloProcesso getSigiloProcesso() {
+        return sigiloProcesso;
+    }
+
+    public void setSigiloProcesso(SigiloProcesso sigiloProcesso) {
+        this.sigiloProcesso = sigiloProcesso;
+    }
+
+    public UsuarioLogin getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioLogin usuario) {
+        this.usuario = usuario;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 }

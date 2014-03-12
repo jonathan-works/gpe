@@ -36,9 +36,9 @@ public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso>
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo, int start, int count) {
-        return createQueryVariaveisProcessoByFluxo(fluxo).setFirstResult(start)
-                .setMaxResults(count).getResultList();
+    public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo,
+            int start, int count) {
+        return createQueryVariaveisProcessoByFluxo(fluxo).setFirstResult(start).setMaxResults(count).getResultList();
     }
 
     public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
@@ -48,8 +48,7 @@ public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso>
     }
 
     private Query createQueryVariaveisProcessoByFluxo(Fluxo fluxo) {
-        return getEntityManager().createNamedQuery(LIST_BY_FLUXO, DefinicaoVariavelProcesso.class)
-                .setParameter(PARAM_FLUXO, fluxo);
+        return getEntityManager().createNamedQuery(LIST_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo);
     }
 
     public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {

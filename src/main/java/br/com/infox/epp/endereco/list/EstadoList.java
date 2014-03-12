@@ -13,32 +13,32 @@ import br.com.infox.epp.endereco.entity.Estado;
 @Name(EstadoList.NAME)
 @Scope(ScopeType.PAGE)
 public class EstadoList extends EntityList<Estado> {
-	
-	public static final String NAME = "estadoList";
-	private static final long serialVersionUID = 1L;
-	
-	private static final String DEFAULT_EJBQL = "select o from Estado o";
-	private static final String DEFAULT_ORDER = "estado";
 
-	@Override
-	protected void addSearchFields() {
-		addSearchField("estado", SearchCriteria.IGUAL);
+    public static final String NAME = "estadoList";
+    private static final long serialVersionUID = 1L;
 
-	}
+    private static final String DEFAULT_EJBQL = "select o from Estado o";
+    private static final String DEFAULT_ORDER = "estado";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("estado", SearchCriteria.IGUAL);
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

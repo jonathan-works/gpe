@@ -3,7 +3,7 @@ package br.com.infox.core.controller;
 import java.io.Serializable;
 
 public interface Controller extends Serializable {
-    
+
     /**
      * Id na página para a tab de pesquisa no tabPanel.
      */
@@ -13,8 +13,8 @@ public interface Controller extends Serializable {
      * Id na página para a tab de formulário no tabPanel.
      */
     String TAB_FORM = "form";
-	
-	/**
+
+    /**
      * Método que retorna o Id da instância gerênciada.
      * 
      * @return Id da instância gerênciada.
@@ -42,12 +42,12 @@ public interface Controller extends Serializable {
      * @param tab Será definida como a aba atual.
      */
     void setTab(String tab);
-    
+
     /**
      * Ao mudar para a aba de pesquisa é criada uma nova instancia.
      */
     void onClickSearchTab();
-    
+
     /**
      * Ação executada ao entrar na aba de formulário.
      */

@@ -18,8 +18,8 @@ public class PaginaManager extends Manager<PaginaDAO, Pagina> {
     public Pagina getPaginaByUrl(String url) {
         return getDao().getPaginaByUrl(url);
     }
-    
-    public Pagina criarNovaPagina(String url) throws DAOException{
+
+    public Pagina criarNovaPagina(String url) throws DAOException {
         Pagina page = new Pagina();
         page.setUrl(url);
         page.setDescricao(url);

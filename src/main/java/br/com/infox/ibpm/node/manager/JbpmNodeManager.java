@@ -13,15 +13,16 @@ import br.com.infox.ibpm.node.dao.JbpmNodeDAO;
 @AutoCreate
 public class JbpmNodeManager extends Manager<JbpmNodeDAO, Void> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "jbpmNodeManager";
-	
-	public void atualizarNodesModificados(Map<BigInteger, String> modifiedNodes){
-		getDao().atualizarNodesModificados(modifiedNodes);
-	}
-	
-	public BigInteger findNodeIdByIdProcessDefinitionAndName(BigInteger idProcessDefinition, String taskName){
-		return getDao().findNodeIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "jbpmNodeManager";
+
+    public void atualizarNodesModificados(Map<BigInteger, String> modifiedNodes) {
+        getDao().atualizarNodesModificados(modifiedNodes);
+    }
+
+    public BigInteger findNodeIdByIdProcessDefinitionAndName(
+            BigInteger idProcessDefinition, String taskName) {
+        return getDao().findNodeIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
+    }
 
 }

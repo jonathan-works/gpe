@@ -46,7 +46,8 @@ public class NaturezaCategoriaFluxoDAO extends DAO<NaturezaCategoriaFluxo> {
         return getNamedResultList(LIST_BY_NATUREZA, parameters);
     }
 
-    public NaturezaCategoriaFluxo getByRelationship(Natureza natureza, Categoria categoria, Fluxo fluxo) {
+    public NaturezaCategoriaFluxo getByRelationship(Natureza natureza,
+            Categoria categoria, Fluxo fluxo) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_NATUREZA, natureza);
         parameters.put(PARAM_CATEGORIA, categoria);
@@ -54,7 +55,8 @@ public class NaturezaCategoriaFluxoDAO extends DAO<NaturezaCategoriaFluxo> {
         return getNamedSingleResult(LIST_BY_RELATIONSHIP, parameters);
     }
 
-    public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(Fluxo fluxo) {
+    public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(
+            Fluxo fluxo) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_FLUXO, fluxo);
         return getNamedResultList(ATIVOS_BY_FLUXO, parameters);

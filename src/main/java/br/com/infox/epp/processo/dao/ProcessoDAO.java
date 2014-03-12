@@ -31,9 +31,9 @@ import br.com.infox.ibpm.util.JbpmUtil;
 @AutoCreate
 public class ProcessoDAO extends DAO<Processo> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "processoDAO";
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "processoDAO";
+
     public void anulaActorId(String actorId) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ACTOR_ID, actorId);
@@ -44,8 +44,8 @@ public class ProcessoDAO extends DAO<Processo> {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
         executeNamedQueryUpdate(APAGA_ACTOR_ID_DO_PROCESSO, parameters);
-	}
-	
+    }
+
     @Transactional(TransactionPropagationType.REQUIRED)
     public void anularTodosActorId() {
         executeNamedQueryUpdate(ANULA_TODOS_OS_ACTOR_IDS);
@@ -70,16 +70,17 @@ public class ProcessoDAO extends DAO<Processo> {
         parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
         executeNamedQueryUpdate(REMOVE_PROCESSO_DA_CAIXA_ATUAL, parameters);
     }
-	
-    public List<Processo> findProcessosByIdProcessoAndActorId(int idProcesso, String login){
+
+    public List<Processo> findProcessosByIdProcessoAndActorId(int idProcesso,
+            String login) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, idProcesso);
         parameters.put(PARAM_ACTOR_ID, login);
         return getNamedResultList(LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, parameters);
-	}
-	
+    }
+
     public void atualizarProcessos() {
         JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY).executeUpdate();
     }
-    
+
 }

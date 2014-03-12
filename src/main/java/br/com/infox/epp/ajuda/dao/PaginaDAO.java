@@ -16,13 +16,13 @@ import br.com.infox.epp.ajuda.entity.Pagina;
 @AutoCreate
 public class PaginaDAO extends DAO<Pagina> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "paginaDAO";
-	
-	public Pagina getPaginaByUrl(String url){
-	    Map<String, Object> parameters = new HashMap<>();
-	    parameters.put(PARAM_URL, url);
-	    return getNamedSingleResult(PAGINA_BY_URL, parameters);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "paginaDAO";
+
+    public Pagina getPaginaByUrl(String url) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_URL, url);
+        return getNamedSingleResult(PAGINA_BY_URL, parameters);
+    }
 
 }

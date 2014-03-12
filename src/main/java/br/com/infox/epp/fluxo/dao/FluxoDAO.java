@@ -68,15 +68,15 @@ public class FluxoDAO extends DAO<Fluxo> {
         return getNamedSingleResult(COUNT_PROCESSOS_BY_FLUXO, parameters);
     }
 
-	public boolean existeFluxoComCodigo(String codigo) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+    public boolean existeFluxoComCodigo(String codigo) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_CODIGO, codigo);
         return (Long) getNamedSingleResult(COUNT_FLUXO_BY_CODIGO, parameters) > 0;
-	}
+    }
 
-	public boolean existeFluxoComDescricao(String descricao) {
-		Map<String, Object> parameters = new HashMap<String, Object>();
+    public boolean existeFluxoComDescricao(String descricao) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_DESCRICAO, descricao);
         return (Long) getNamedSingleResult(COUNT_FLUXO_BY_DESCRICAO, parameters) > 0;
-	}
+    }
 }

@@ -19,13 +19,15 @@ import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class ProcessoSearcher {
-    
+
     public static final String NAME = "processoSearcher";
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoSearcher.class);
-    
-    @In ProcessoManager processoManager;
-    @In SigiloProcessoService sigiloProcessoService;
-    
+
+    @In
+    ProcessoManager processoManager;
+    @In
+    SigiloProcessoService sigiloProcessoService;
+
     /**
      * Método redireciona para visualização do processo escolhido no paginador
      * 
@@ -38,23 +40,24 @@ public class ProcessoSearcher {
         Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
         Redirect.instance().execute();
     }
-    
+
     /**
      * Método realiza busca de processos no sistema
      * 
-     * Se retornar um processo, este é chamado na
-     * página {@link #visualizarProcesso(Processo)}
+     * Se retornar um processo, este é chamado na página
+     * {@link #visualizarProcesso(Processo)}
      * 
      * @return TRUE se o resultado for um processo, FALSE do contrário
      */
     public boolean searchProcesso(String searchText) {
         Processo processo = searchIdProcesso(searchText);
-        if (processo != null && sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), (ProcessoEpa) processo)) {
-        	visualizarProcesso(processo);
+        if (processo != null
+                && sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), (ProcessoEpa) processo)) {
+            visualizarProcesso(processo);
         }
         return false;
     }
-    
+
     /**
      * Busca o processo pelo seu id
      * 
@@ -69,7 +72,7 @@ public class ProcessoSearcher {
         }
         return processoManager.find(prc);
     }
-    
+
     public String getNumeroProcesso(int idProcesso) {
         return processoManager.getNumeroProcesso(idProcesso);
     }

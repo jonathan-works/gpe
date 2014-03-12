@@ -20,67 +20,67 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = UsuarioTaskInstance.TABLE_NAME, schema="public")
-@NamedNativeQueries({
-    @NamedNativeQuery(name=USUARIO_DA_TAREFA, query=USUARIO_DA_TAREFA_QUERY)
-})
+@Table(name = UsuarioTaskInstance.TABLE_NAME, schema = "public")
+@NamedNativeQueries({ @NamedNativeQuery(name = USUARIO_DA_TAREFA, query = USUARIO_DA_TAREFA_QUERY) })
 public class UsuarioTaskInstance implements Serializable {
-	
-	public static final String TABLE_NAME = "tb_usuario_taskinstance";
-	private static final long serialVersionUID = 1L;
 
-	private Long idTaskInstance;
-	private UsuarioLogin usuario;
-	private Localizacao localizacao;
-	private Papel papel;
+    public static final String TABLE_NAME = "tb_usuario_taskinstance";
+    private static final long serialVersionUID = 1L;
 
-	public UsuarioTaskInstance() {
-	}
-	
-	public UsuarioTaskInstance(final Long idTaskinstance, final UsuarioLogin usuario, final Localizacao localizacao, final Papel papel) {
-		this.idTaskInstance = idTaskinstance;
-		this.usuario = usuario;
-		this.localizacao = localizacao;
-		this.papel = papel;
-	}
-	
-	@Id
-	@Column(name = "id_taskinstance", unique = true, nullable = false)
-	public Long getIdTaskInstance() {
-		return idTaskInstance;
-	}
+    private Long idTaskInstance;
+    private UsuarioLogin usuario;
+    private Localizacao localizacao;
+    private Papel papel;
 
-	public void setIdTaskInstance(Long idTaskInstance) {
-		this.idTaskInstance = idTaskInstance;
-	}
+    public UsuarioTaskInstance() {
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_usuario_login", nullable = false)
-	public UsuarioLogin getUsuario() {
-		return usuario;
-	}
+    public UsuarioTaskInstance(final Long idTaskinstance,
+            final UsuarioLogin usuario, final Localizacao localizacao,
+            final Papel papel) {
+        this.idTaskInstance = idTaskinstance;
+        this.usuario = usuario;
+        this.localizacao = localizacao;
+        this.papel = papel;
+    }
 
-	public void setUsuario(UsuarioLogin usuario) {
-		this.usuario = usuario;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_papel", nullable = false)
-	public Papel getPapel() {
-		return papel;
-	}
-	
-	public void setPapel(Papel papel) {
-		this.papel = papel;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_localizacao", nullable = false)
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
-	
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
+    @Id
+    @Column(name = "id_taskinstance", unique = true, nullable = false)
+    public Long getIdTaskInstance() {
+        return idTaskInstance;
+    }
+
+    public void setIdTaskInstance(Long idTaskInstance) {
+        this.idTaskInstance = idTaskInstance;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_usuario_login", nullable = false)
+    public UsuarioLogin getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioLogin usuario) {
+        this.usuario = usuario;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_papel", nullable = false)
+    public Papel getPapel() {
+        return papel;
+    }
+
+    public void setPapel(Papel papel) {
+        this.papel = papel;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_localizacao", nullable = false)
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 }

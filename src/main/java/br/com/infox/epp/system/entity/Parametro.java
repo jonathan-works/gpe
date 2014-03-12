@@ -28,8 +28,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name = "tb_parametro", schema = "public")
-@NamedQueries({ @NamedQuery(name = LIST_PARAMETROS_ATIVOS,
-        query = LIST_PARAMETROS_ATIVOS_QUERY) })
+@NamedQueries({ @NamedQuery(name = LIST_PARAMETROS_ATIVOS, query = LIST_PARAMETROS_ATIVOS_QUERY) })
 public class Parametro implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,8 +46,7 @@ public class Parametro implements java.io.Serializable {
     public Parametro() {
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_parametro")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_parametro")
     @Id
     @GeneratedValue(generator = "generator")
     @Column(name = "id_parametro", unique = true, nullable = false)
@@ -70,8 +68,7 @@ public class Parametro implements java.io.Serializable {
         this.usuarioModificacao = usuarioModificacao;
     }
 
-    @Column(name = "nm_variavel", nullable = false,
-            length = LengthConstants.NOME_PADRAO, unique = true)
+    @Column(name = "nm_variavel", nullable = false, length = LengthConstants.NOME_PADRAO, unique = true)
     @NotNull
     @Size(max = LengthConstants.NOME_PADRAO)
     public String getNomeVariavel() {
@@ -82,8 +79,7 @@ public class Parametro implements java.io.Serializable {
         this.nomeVariavel = nomeVariavel;
     }
 
-    @Column(name = "ds_variavel", nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = "ds_variavel", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @NotNull
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
     public String getDescricaoVariavel() {
@@ -109,7 +105,7 @@ public class Parametro implements java.io.Serializable {
     public Date getDataAtualizacao() {
         return this.dataAtualizacao;
     }
-    
+
     @Transient
     public String getDataAtualizacaoFormatada() {
         return DateFormat.getDateInstance().format(dataAtualizacao);
@@ -139,8 +135,7 @@ public class Parametro implements java.io.Serializable {
         this.ativo = ativo;
     }
 
-    @Column(name = "ds_esquema_tabela_id",
-            length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
+    @Column(name = "ds_esquema_tabela_id", length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
     @Size(max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
     public String getEsquemaTabelaId() {
         return this.esquemaTabelaId;

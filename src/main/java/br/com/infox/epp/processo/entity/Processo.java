@@ -69,22 +69,15 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Table(name = TABLE_PROCESSO, schema = PUBLIC)
 @Inheritance(strategy = JOINED)
 @NamedNativeQueries(value = {
-    @NamedNativeQuery(name = APAGA_ACTOR_ID_DO_PROCESSO,
-            query = APAGA_ACTOR_ID_DO_PROCESSO_QUERY),
-    @NamedNativeQuery(name = REMOVE_PROCESSO_DA_CAIXA_ATUAL,
-            query = REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY),
-    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS,
-            query = ATUALIZAR_PROCESSOS_QUERY),
-    @NamedNativeQuery(name = ANULA_TODOS_OS_ACTOR_IDS,
-            query = ANULA_TODOS_OS_ACTOR_IDS_QUERY),
-    @NamedNativeQuery(name = MOVER_PROCESSO_PARA_CAIXA,
-            query = MOVER_PROCESSO_PARA_CAIXA_QUERY),
+    @NamedNativeQuery(name = APAGA_ACTOR_ID_DO_PROCESSO, query = APAGA_ACTOR_ID_DO_PROCESSO_QUERY),
+    @NamedNativeQuery(name = REMOVE_PROCESSO_DA_CAIXA_ATUAL, query = REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY),
+    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS, query = ATUALIZAR_PROCESSOS_QUERY),
+    @NamedNativeQuery(name = ANULA_TODOS_OS_ACTOR_IDS, query = ANULA_TODOS_OS_ACTOR_IDS_QUERY),
+    @NamedNativeQuery(name = MOVER_PROCESSO_PARA_CAIXA, query = MOVER_PROCESSO_PARA_CAIXA_QUERY),
     @NamedNativeQuery(name = ANULA_ACTOR_ID, query = ANULA_ACTOR_ID_QUERY) })
 @NamedQueries(value = {
-    @NamedQuery(name = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID,
-            query = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
-    @NamedQuery(name = MOVER_PROCESSOS_PARA_CAIXA,
-            query = MOVER_PROCESSOS_PARA_CAIXA_QUERY) })
+    @NamedQuery(name = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
+    @NamedQuery(name = MOVER_PROCESSOS_PARA_CAIXA, query = MOVER_PROCESSOS_PARA_CAIXA_QUERY) })
 public class Processo implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -128,8 +121,7 @@ public class Processo implements java.io.Serializable {
         this.usuarioCadastroProcesso = usuarioCadastroProcesso;
     }
 
-    @Column(name = NUMERO_PROCESSO, nullable = false,
-            length = NUMERACAO_PROCESSO)
+    @Column(name = NUMERO_PROCESSO, nullable = false, length = NUMERACAO_PROCESSO)
     @NotNull
     @Size(max = NUMERACAO_PROCESSO)
     public String getNumeroProcesso() {
@@ -173,11 +165,10 @@ public class Processo implements java.io.Serializable {
         this.duracao = duracao;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = PROCESSO_ATTRIBUTE)
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = PROCESSO_ATTRIBUTE)
     @OrderBy("dataInclusao DESC")
     public List<ProcessoDocumento> getProcessoDocumentoList() {
-        
+
         return this.processoDocumentoList;
     }
 
@@ -230,18 +221,13 @@ public class Processo implements java.io.Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         Processo other = (Processo) obj;
         if (idProcesso == null) {
-            if (other.idProcesso != null)
-                return false;
-        } else if (!idProcesso.equals(other.idProcesso))
-            return false;
+            if (other.idProcesso != null) return false;
+        } else if (!idProcesso.equals(other.idProcesso)) return false;
         return true;
     }
 

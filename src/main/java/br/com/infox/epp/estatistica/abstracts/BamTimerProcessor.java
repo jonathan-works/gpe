@@ -14,16 +14,20 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 public abstract class BamTimerProcessor {
     private static final LogProvider LOG = Logging.getLogProvider(BamTimerProcessor.class);
-    
-    public abstract QuartzTriggerHandle increaseTimeSpent(@IntervalCron String cron);
+
+    public abstract QuartzTriggerHandle increaseTimeSpent(
+            @IntervalCron String cron);
+
     protected abstract String getParameterName();
+
     protected abstract ProcessoEpaTarefaManager getProcessoEpaTarefamanager();
+
     protected abstract BamTimerManager getBamTimerManager();
 
     protected final QuartzTriggerHandle updateTarefasNaoFinalizadas(PrazoEnum d) {
         String idTaskTimer = getBamTimerManager().getParametro(getParameterName());
         QuartzTriggerHandle handle = new QuartzTriggerHandle(idTaskTimer);
-        
+
         Trigger trigger = null;
         try {
             trigger = handle.getTrigger();

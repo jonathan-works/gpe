@@ -10,6 +10,6 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 @AutoCreate
 public class VariavelTipoModeloDAO extends DAO<VariavelTipoModelo> {
 
-	public static final String NAME = "variavelTipoModeloDAO";
-	private static final long serialVersionUID = 1L;
+    public static final String NAME = "variavelTipoModeloDAO";
+    private static final long serialVersionUID = 1L;
 }

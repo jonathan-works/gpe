@@ -22,7 +22,8 @@ public final class AnnotationUtil {
      * @param annotationClass @interface da anotação a ser pesquisada.
      * @return Nome do atributo
      */
-    private static String getAnnotationField(Class<? extends Object> classObj, Class<? extends Annotation> annotationClass) {
+    private static String getAnnotationField(Class<? extends Object> classObj,
+            Class<? extends Annotation> annotationClass) {
         for (Method m : classObj.getMethods()) {
             if (!m.isAnnotationPresent(annotationClass)) {
                 continue;
@@ -52,7 +53,8 @@ public final class AnnotationUtil {
      * @param annotationClass anotação a ser pesquisada nos métodos do objeto
      * @return Valor do atributo
      */
-    public static Object getAnnotatedAttributeValue(Object object, Class<? extends Annotation> annotationClass) {
+    public static Object getAnnotatedAttributeValue(Object object,
+            Class<? extends Annotation> annotationClass) {
         String fieldName = getAnnotationField(object.getClass(), annotationClass);
         return ComponentUtil.getValue(object, fieldName);
     }

@@ -31,10 +31,10 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
     private static final String R5 = "o.naturezaCategoriaFluxo.categoria = #{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}";
     private static final String R6 = "cast(o.dataInicio as date) >= #{consultaProcessoEpaList.dataInicio}";
     private static final String R7 = "cast(o.dataInicio as date) <= #{consultaProcessoEpaList.dataFim}";
-    
+
     private Date dataInicio;
     private Date dataFim;
-    
+
     @Override
     public void newInstance() {
         super.newInstance();
@@ -68,7 +68,7 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
-    
+
     public Date getDataInicio() {
         return dataInicio;
     }

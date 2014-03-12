@@ -29,28 +29,31 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(ModeloDocumentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocumento, ModeloDocumentoManager> {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "modeloDocumentoCrudAction";
-    
+
     private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoCrudAction.class);
-    
+
     private ModeloDocumento modeloDocumentoAnterior;
-    
-    @In private VariavelManager variavelManager;
-    @In private TipoModeloDocumentoPapelManager tipoModeloDocumentoPapelManager;
-    @In private HistoricoModeloDocumentoManager historicoModeloDocumentoManager;
-    
+
+    @In
+    private VariavelManager variavelManager;
+    @In
+    private TipoModeloDocumentoPapelManager tipoModeloDocumentoPapelManager;
+    @In
+    private HistoricoModeloDocumentoManager historicoModeloDocumentoManager;
+
     @Override
     public void newInstance() {
         modeloDocumentoAnterior = null;
         super.newInstance();
     }
-    
+
     @Override
     public void setId(Object id) {
         super.setId(id);
@@ -64,19 +67,19 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
             LOG.error(".updateOldInstance()", e);
         }
     }
-    
+
     @Override
     protected void afterSave(String ret) {
         updateOldInstance();
     }
-    
+
     @Override
     protected void beforeSave() {
-    	gravarHistorico();
+        gravarHistorico();
     }
-    
+
     private void gravarHistorico() {
-        if (haModificacoesNoModelo()){
+        if (haModificacoesNoModelo()) {
             HistoricoModeloDocumento historico = new HistoricoModeloDocumento();
             historico.setTituloModeloDocumento(modeloDocumentoAnterior.getTituloModeloDocumento());
             historico.setDescricaoModeloDocumento(modeloDocumentoAnterior.getModeloDocumento());
@@ -85,19 +88,20 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
             historico.setModeloDocumento(getInstance());
             historico.setUsuarioAlteracao((UsuarioLogin) ComponentUtil.getComponent(Authenticator.USUARIO_LOGADO));
             try {
-				historicoModeloDocumentoManager.persist(historico);
-			} catch (DAOException e) {
-				LOG.error(".gravarHistorico()", e);
-			}
+                historicoModeloDocumentoManager.persist(historico);
+            } catch (DAOException e) {
+                LOG.error(".gravarHistorico()", e);
+            }
         }
-        
+
     }
 
     private boolean haModificacoesNoModelo() {
-        return modeloDocumentoAnterior != null && getInstance().hasChanges(modeloDocumentoAnterior);
+        return modeloDocumentoAnterior != null
+                && getInstance().hasChanges(modeloDocumentoAnterior);
     }
-    
-    public void restaurar(HistoricoModeloDocumento historicoModeloDocumento){
+
+    public void restaurar(HistoricoModeloDocumento historicoModeloDocumento) {
         if (historicoModeloDocumento == null) {
             return;
         }
@@ -113,14 +117,14 @@ public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocument
         getInstance().setTipoModeloDocumento(historicoModeloDocumento.getModeloDocumento().getTipoModeloDocumento());
         getInstance().setTituloModeloDocumento(historicoModeloDocumento.getTituloModeloDocumento());
     }
-    
+
     public List<Variavel> getVariaveis() {
         if (getInstance().getTipoModeloDocumento() != null) {
             return variavelManager.getVariaveisByTipoModeloDocumento(getInstance().getTipoModeloDocumento());
         }
         return new ArrayList<Variavel>();
     }
-    
+
     public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos() {
         return tipoModeloDocumentoPapelManager.getTiposModeloDocumentoPermitidos();
     }

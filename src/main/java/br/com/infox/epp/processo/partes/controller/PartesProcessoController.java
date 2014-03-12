@@ -31,12 +31,17 @@ public class PartesProcessoController extends AbstractPartesController {
     private static final LogProvider LOG = Logging.getLogProvider(PartesProcessoController.class);
 
     private ProcessoEpa processoEpa;
-    
-    @In private ActionMessagesService actionMessagesService;
-    @In private ParteProcessoManager parteProcessoManager;
-    @In private PessoaFisicaManager pessoaFisicaManager;
-    @In private PessoaJuridicaManager pessoaJuridicaManager;
-    @In private ProcessoEpaManager processoEpaManager;
+
+    @In
+    private ActionMessagesService actionMessagesService;
+    @In
+    private ParteProcessoManager parteProcessoManager;
+    @In
+    private PessoaFisicaManager pessoaFisicaManager;
+    @In
+    private PessoaJuridicaManager pessoaJuridicaManager;
+    @In
+    private ProcessoEpaManager processoEpaManager;
 
     public void setProcessoEpa(ProcessoEpa processoEpa) {
         this.processoEpa = processoEpa;
@@ -47,8 +52,8 @@ public class PartesProcessoController extends AbstractPartesController {
     private Natureza getNatureza() {
         return processoEpa.getNaturezaCategoriaFluxo().getNatureza();
     }
-    
-    public List<ParteProcesso> getPartes(){
+
+    public List<ParteProcesso> getPartes() {
         if (Authenticator.isUsuarioAtualResponsavel()) {
             return processoEpa.getPartes();
         } else {
@@ -78,12 +83,13 @@ public class PartesProcessoController extends AbstractPartesController {
             processoEpaManager.refresh(processoEpa);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
-            LOG.error("Não foi possível inserir a pessoa " + getPessoaJuridica(), e);
+            LOG.error("Não foi possível inserir a pessoa "
+                    + getPessoaJuridica(), e);
         } finally {
             setPessoaJuridica(new PessoaJuridica());
         }
     }
-    
+
     @Override
     public boolean apenasPessoaFisica() {
         return ParteProcessoEnum.F.equals(getNatureza().getTipoPartes());
@@ -99,11 +105,11 @@ public class PartesProcessoController extends AbstractPartesController {
         return getNatureza().getHasPartes()
                 && (getNatureza().getNumeroPartes() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas().size() < getNatureza().getNumeroPartes());
     }
-    
+
     public boolean podeInativarPartes() {
         return getPartesAtivas().size() > QUANTIDADE_MINIMA_PARTES;
     }
-    
+
     private List<ParteProcesso> getPartesAtivas() {
         List<ParteProcesso> partesAtivas = new ArrayList<>();
         for (ParteProcesso pp : processoEpa.getPartes()) {

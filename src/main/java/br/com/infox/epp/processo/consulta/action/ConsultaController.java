@@ -18,13 +18,15 @@ public class ConsultaController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaController";
-    
+
     private ProcessoEpa processoEpa;
-    @In private ProcessoEpaManager processoEpaManager;
-    @In private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
-    
+    @In
+    private ProcessoEpaManager processoEpaManager;
+    @In
+    private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
+
     private boolean showAllDocuments = false;
-    
+
     public boolean isShowAllDocuments() {
         return showAllDocuments;
     }
@@ -35,9 +37,9 @@ public class ConsultaController extends AbstractController {
 
     @Override
     public void setId(Object id) {
-        this.setProcessoEpa(processoEpaManager.find(Integer.valueOf((String)id)));
+        this.setProcessoEpa(processoEpaManager.find(Integer.valueOf((String) id)));
         super.setId(id);
-        
+
     }
 
     public ProcessoEpa getProcessoEpa() {
@@ -54,7 +56,8 @@ public class ConsultaController extends AbstractController {
         return filtrarAnexos(list);
     }
 
-    private List<ProcessoDocumento> filtrarPorTarefa(List<ProcessoDocumento> list, Long taskId) {
+    private List<ProcessoDocumento> filtrarPorTarefa(
+            List<ProcessoDocumento> list, Long taskId) {
         if (!showAllDocuments && taskId != null) {
             List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
             for (ProcessoDocumento documento : list) {

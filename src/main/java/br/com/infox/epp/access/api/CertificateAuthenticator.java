@@ -50,8 +50,8 @@ public class CertificateAuthenticator implements Serializable {
     public static final String NAME = "certificateAuthenticator";
     private String assinatura;
     private String certChain;
-    private boolean certificateLogin=false;
-    
+    private boolean certificateLogin = false;
+
     @In
     private UsuarioLoginManager usuarioLoginManager;
     @In
@@ -61,19 +61,19 @@ public class CertificateAuthenticator implements Serializable {
 
     public void authenticate() {
         String cpf = null;
-        
+
         try {
             final Certificado c = new Certificado(certChain);
             cpf = extractCpf(c);
             checkValidadeCertificado(c);
-            
+
             final UsuarioLogin usuario = checkValidadeUsuarioLogin(cpf);
-            
+
             final boolean loggedIn = login(usuario.getLogin());
             if (loggedIn) {
                 final PessoaFisica pessoaFisica = usuario.getPessoaFisica();
                 if (pessoaFisica.getCertChain() == null) {
-                    persistCertChain(usuario.getPessoaFisica());    
+                    persistCertChain(usuario.getPessoaFisica());
                 }
                 raiseLoginEvents();
             }
@@ -84,7 +84,7 @@ public class CertificateAuthenticator implements Serializable {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
         }
-        
+
     }
 
     private UsuarioLogin checkValidadeUsuarioLogin(final String cpf) throws LoginException {
@@ -95,7 +95,7 @@ public class CertificateAuthenticator implements Serializable {
         final UsuarioLogin usuarioLogin;
         usuarioLogin = usuarioLoginManager.getUsuarioLoginByPessoaFisica(pessoaFisica);
         if (usuarioLogin == null) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_SEM_USUARIO_LOGIN));                
+            throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_SEM_USUARIO_LOGIN));
         }
         if (!usuarioLogin.isHumano()) {
             throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA));
@@ -106,7 +106,8 @@ public class CertificateAuthenticator implements Serializable {
         if (usuarioLogin.getBloqueio()) {
             throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO));
         }
-        if (usuarioLogin.getProvisorio() && new Date().after(usuarioLogin.getDataExpiracao())) {
+        if (usuarioLogin.getProvisorio()
+                && new Date().after(usuarioLogin.getDataExpiracao())) {
             throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO));
         }
         return usuarioLogin;
@@ -147,7 +148,7 @@ public class CertificateAuthenticator implements Serializable {
             }
         }
     }
-    
+
     private String extractCpf(final Certificado c) throws LoginException {
         String cpf;
         final String[] split = c.getCn().split(":");
@@ -185,5 +186,5 @@ public class CertificateAuthenticator implements Serializable {
     public void setCertificateLogin(final boolean certificateLogin) {
         this.certificateLogin = certificateLogin;
     }
-    
+
 }

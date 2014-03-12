@@ -17,12 +17,12 @@ import br.com.infox.epp.fluxo.entity.FluxoPapel;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class FluxoPapelManager extends Manager<FluxoPapelDAO, FluxoPapel> {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "fluxoPapelManager";
+    public static final String NAME = "fluxoPapelManager";
 
-	public List<FluxoPapel> listByFluxo(Fluxo fluxo) {
-		return getDao().listByFluxo(fluxo);
-	}
-	
+    public List<FluxoPapel> listByFluxo(Fluxo fluxo) {
+        return getDao().listByFluxo(fluxo);
+    }
+
 }

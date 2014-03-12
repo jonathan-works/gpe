@@ -28,23 +28,24 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
-    
+
     public Integer getNextSequencial(Processo processo) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PROCESSO, processo);
         parameters.put(PARAM_TIPO_PROCESSO, TipoNumeracaoEnum.S);
         return getNamedSingleResult(NEXT_SEQUENCIAL, parameters);
     }
-    
-    public String getModeloDocumentoByIdProcessoDocumento(Integer idProcessoDocumento){
+
+    public String getModeloDocumentoByIdProcessoDocumento(
+            Integer idProcessoDocumento) {
         ProcessoDocumento processoDocumento = find(idProcessoDocumento);
         if (processoDocumento != null) {
             return processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
         }
         return null;
     }
-    
-    public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask){
+
+    public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_JDBPM_TASK_PARAM, idJbpmTask);
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();

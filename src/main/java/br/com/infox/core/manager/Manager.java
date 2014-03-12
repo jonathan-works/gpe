@@ -73,8 +73,9 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
             final Map<String, Object> params) {
         return dao.getSingleResult(query, params);
     }
-    
-    public <X> List<X> getResultList(final String query, final Map<String, Object> params) {
+
+    public <X> List<X> getResultList(final String query,
+            final Map<String, Object> params) {
         return dao.getResultList(query, params);
     }
 

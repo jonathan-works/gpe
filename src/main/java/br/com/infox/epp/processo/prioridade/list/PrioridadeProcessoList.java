@@ -14,38 +14,36 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 @Name(PrioridadeProcessoList.NAME)
 @BypassInterceptors
 @Scope(ScopeType.PAGE)
-public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso>{
+public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso> {
 
-	
-	public static final String NAME = "prioridadeProcessoList";
+    public static final String NAME = "prioridadeProcessoList";
 
-	private static final long serialVersionUID = 1L;
-	
-	private static final String DEFAULT_EJBQL = "select o from PrioridadeProcesso o";
-	private static final String DEFAULT_ORDER = "peso";
-	
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("peso", SearchCriteria.MAIOR);
-		addSearchField("descricaoPrioridade", SearchCriteria.CONTENDO);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-		
-	}
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String DEFAULT_EJBQL = "select o from PrioridadeProcesso o";
+    private static final String DEFAULT_ORDER = "peso";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("peso", SearchCriteria.MAIOR);
+        addSearchField("descricaoPrioridade", SearchCriteria.CONTENDO);
+        addSearchField("ativo", SearchCriteria.IGUAL);
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    }
+
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

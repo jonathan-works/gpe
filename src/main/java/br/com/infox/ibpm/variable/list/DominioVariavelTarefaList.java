@@ -16,28 +16,28 @@ import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 @AutoCreate
 public class DominioVariavelTarefaList extends EntityList<DominioVariavelTarefa> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "dominioVariavelTarefaList";
-	private static final String DEFAULT_EJBQL = "select o from DominioVariavelTarefa o";
-	private static final String DEFAULT_ORDER = "nome";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "dominioVariavelTarefaList";
+    private static final String DEFAULT_EJBQL = "select o from DominioVariavelTarefa o";
+    private static final String DEFAULT_ORDER = "nome";
 
-	@Override
-	protected void addSearchFields() {
-		addSearchField("nome", SearchCriteria.CONTENDO);
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("nome", SearchCriteria.CONTENDO);
+    }
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 }

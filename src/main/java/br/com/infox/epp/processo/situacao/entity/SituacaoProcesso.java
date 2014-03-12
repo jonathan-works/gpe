@@ -36,173 +36,166 @@ import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 
 @Entity
-@Table(name = SituacaoProcesso.TABLE_NAME, schema="public")
+@Table(name = SituacaoProcesso.TABLE_NAME, schema = "public")
 @NamedQueries({
-    @NamedQuery(name=TAREFAS_TREE_ROOTS, query=TAREFAS_TREE_QUERY_ROOTS),
-    @NamedQuery(name=TAREFAS_TREE_CHILDREN, query=TAREFAS_TREE_QUERY_CHILDREN),
-    @NamedQuery(name=TAREFAS_TREE_CAIXAS, query=TAREFAS_TREE_QUERY_CAIXAS),
-    @NamedQuery(name=PROCESSOS_ABERTOS, query=PROCESSOS_ABERTOS_QUERY),
-    @NamedQuery(name=PROCESSOS_ABERTOS_EM_CAIXA, query=PROCESSOS_ABERTOS_EM_CAIXA_QUERY),
-    @NamedQuery(name=PROCESSOS_ABERTOS_SEM_CAIXA, query=PROCESSOS_ABERTOS_SEM_CAIXA_QUERY),
-    @NamedQuery(name=COUNT_TAREFAS_ATIVAS_BY_TASK_ID, query=COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY)
-})
-@FilterDefs({ 
+    @NamedQuery(name = TAREFAS_TREE_ROOTS, query = TAREFAS_TREE_QUERY_ROOTS),
+    @NamedQuery(name = TAREFAS_TREE_CHILDREN, query = TAREFAS_TREE_QUERY_CHILDREN),
+    @NamedQuery(name = TAREFAS_TREE_CAIXAS, query = TAREFAS_TREE_QUERY_CAIXAS),
+    @NamedQuery(name = PROCESSOS_ABERTOS, query = PROCESSOS_ABERTOS_QUERY),
+    @NamedQuery(name = PROCESSOS_ABERTOS_EM_CAIXA, query = PROCESSOS_ABERTOS_EM_CAIXA_QUERY),
+    @NamedQuery(name = PROCESSOS_ABERTOS_SEM_CAIXA, query = PROCESSOS_ABERTOS_SEM_CAIXA_QUERY),
+    @NamedQuery(name = COUNT_TAREFAS_ATIVAS_BY_TASK_ID, query = COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY) })
+@FilterDefs({
     @FilterDef(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, parameters = {
-   		@ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO),
-   		@ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL) 
-  	}),
-  	@FilterDef(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, parameters = {
-  		@ParamDef(type = SigiloProcessoFilter.TYPE_INT, name = SigiloProcessoFilter.PARAM_ID_USUARIO)
-  	})
-})
-@Filters({ 
+        @ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO),
+        @ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL) }),
+    @FilterDef(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, parameters = { @ParamDef(type = SigiloProcessoFilter.TYPE_INT, name = SigiloProcessoFilter.PARAM_ID_USUARIO) }) })
+@Filters({
     @Filter(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, condition = SituacaoProcessoFilter.CONDITION_PAPEL_LOCALIZACAO),
-    @Filter(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, condition = SigiloProcessoFilter.CONDITION_FILTER_SIGILO_PROCESSO)
-})
+    @Filter(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, condition = SigiloProcessoFilter.CONDITION_FILTER_SIGILO_PROCESSO) })
 public class SituacaoProcesso implements java.io.Serializable {
 
-	public static final String TABLE_NAME = "vs_situacao_processo";
-	private static final long serialVersionUID = 1L;
-	
-	private Long id;
-	private String pooledActor;
-	private String nomeFluxo;
-	private String nomeTarefa;
-	private String nomeCaixa;
-	private Integer idFluxo;
-	private Integer idTarefa;
-	private Integer idCaixa;
-	private Integer idProcesso;
-	private Long idProcessInstance;
-	private Long idTaskInstance;
-	private Long idTask;
-	private String actorId;
-	
-	public SituacaoProcesso() {
-	}
+    public static final String TABLE_NAME = "vs_situacao_processo";
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name="id_situacao_processo", insertable=false, updatable=false)
-	public Long getIdSituacaoProcesso() {
-		return id;
-	}
+    private Long id;
+    private String pooledActor;
+    private String nomeFluxo;
+    private String nomeTarefa;
+    private String nomeCaixa;
+    private Integer idFluxo;
+    private Integer idTarefa;
+    private Integer idCaixa;
+    private Integer idProcesso;
+    private Long idProcessInstance;
+    private Long idTaskInstance;
+    private Long idTask;
+    private String actorId;
 
-	public void setIdSituacaoProcesso(Long id) {
-		this.id= id;
-	}
-	
-	@Override
-	public String toString() {
-		return MessageFormat.format("{0}:{1}:{2}:{3}", nomeFluxo, nomeTarefa, 
-				nomeCaixa, idProcesso);
-	}
+    public SituacaoProcesso() {
+    }
 
-	@Column(name="nm_pooled_actor", insertable=false, updatable=false)
-	public String getPooledActor() {
-		return pooledActor;
-	}
+    @Id
+    @Column(name = "id_situacao_processo", insertable = false, updatable = false)
+    public Long getIdSituacaoProcesso() {
+        return id;
+    }
 
-	public void setPooledActor(String pooledActor) {
-		this.pooledActor = pooledActor;
-	}
+    public void setIdSituacaoProcesso(Long id) {
+        this.id = id;
+    }
 
-	@Column(name="nm_fluxo", insertable=false, updatable=false)
-	public String getNomeFluxo() {
-		return nomeFluxo;
-	}
+    @Override
+    public String toString() {
+        return MessageFormat.format("{0}:{1}:{2}:{3}", nomeFluxo, nomeTarefa, nomeCaixa, idProcesso);
+    }
 
-	public void setNomeFluxo(String nomeFluxo) {
-		this.nomeFluxo = nomeFluxo;
-	}
+    @Column(name = "nm_pooled_actor", insertable = false, updatable = false)
+    public String getPooledActor() {
+        return pooledActor;
+    }
 
-	@Column(name="nm_tarefa", insertable=false, updatable=false)
-	public String getNomeTarefa() {
-		return nomeTarefa;
-	}
+    public void setPooledActor(String pooledActor) {
+        this.pooledActor = pooledActor;
+    }
 
-	public void setNomeTarefa(String nomeTarefa) {
-		this.nomeTarefa = nomeTarefa;
-	}
+    @Column(name = "nm_fluxo", insertable = false, updatable = false)
+    public String getNomeFluxo() {
+        return nomeFluxo;
+    }
 
-	@Column(name="nm_caixa", insertable=false, updatable=false)
-	public String getNomeCaixa() {
-		return nomeCaixa;
-	}
+    public void setNomeFluxo(String nomeFluxo) {
+        this.nomeFluxo = nomeFluxo;
+    }
 
-	public void setNomeCaixa(String nomeCaixa) {
-		this.nomeCaixa = nomeCaixa;
-	}
+    @Column(name = "nm_tarefa", insertable = false, updatable = false)
+    public String getNomeTarefa() {
+        return nomeTarefa;
+    }
 
-	@Column(name="id_processo", insertable=false, updatable=false)
-	public Integer getIdProcesso() {
-		return idProcesso;
-	}
+    public void setNomeTarefa(String nomeTarefa) {
+        this.nomeTarefa = nomeTarefa;
+    }
 
-	public void setIdProcesso(Integer idProcesso) {
-		this.idProcesso = idProcesso;
-	}
+    @Column(name = "nm_caixa", insertable = false, updatable = false)
+    public String getNomeCaixa() {
+        return nomeCaixa;
+    }
 
-	@Column(name="id_process_instance", insertable=false, updatable=false)
-	public Long getIdProcessInstance() {
-		return idProcessInstance;
-	}
+    public void setNomeCaixa(String nomeCaixa) {
+        this.nomeCaixa = nomeCaixa;
+    }
 
-	public void setIdProcessInstance(Long idProcessInstance) {
-		this.idProcessInstance = idProcessInstance;
-	}
+    @Column(name = "id_processo", insertable = false, updatable = false)
+    public Integer getIdProcesso() {
+        return idProcesso;
+    }
 
-	@Column(name="id_task_instance", insertable=false, updatable=false)
-	public Long getIdTaskInstance() {
-		return idTaskInstance;
-	}
+    public void setIdProcesso(Integer idProcesso) {
+        this.idProcesso = idProcesso;
+    }
 
-	public void setIdTaskInstance(Long idTaskInstance) {
-		this.idTaskInstance = idTaskInstance;
-	}
+    @Column(name = "id_process_instance", insertable = false, updatable = false)
+    public Long getIdProcessInstance() {
+        return idProcessInstance;
+    }
 
-	@Column(name="id_task", insertable=false, updatable=false)
-	public Long getIdTask() {
-		return idTask;
-	}
+    public void setIdProcessInstance(Long idProcessInstance) {
+        this.idProcessInstance = idProcessInstance;
+    }
 
-	public void setIdTask(Long idTask) {
-		this.idTask = idTask;
-	}
+    @Column(name = "id_task_instance", insertable = false, updatable = false)
+    public Long getIdTaskInstance() {
+        return idTaskInstance;
+    }
 
-	@Column(name="nm_actorid", insertable=false, updatable=false)
-	public String getActorId() {
-		return actorId;
-	}
+    public void setIdTaskInstance(Long idTaskInstance) {
+        this.idTaskInstance = idTaskInstance;
+    }
 
-	public void setActorId(String actorId) {
-		this.actorId = actorId;
-	}
+    @Column(name = "id_task", insertable = false, updatable = false)
+    public Long getIdTask() {
+        return idTask;
+    }
 
-	public void setIdCaixa(Integer idCaixa) {
-		this.idCaixa = idCaixa;
-	}
+    public void setIdTask(Long idTask) {
+        this.idTask = idTask;
+    }
 
-	@Column(name="id_caixa", insertable=false, updatable=false)
-	public Integer getIdCaixa() {
-		return idCaixa;
-	}
-	
-	@Column(name="id_tarefa", insertable=false, updatable=false)
-	public Integer getIdTarefa() {
-		return idTarefa;
-	}
+    @Column(name = "nm_actorid", insertable = false, updatable = false)
+    public String getActorId() {
+        return actorId;
+    }
 
-	public void setIdTarefa(Integer idTarefa) {
-		this.idTarefa = idTarefa;
-	}
+    public void setActorId(String actorId) {
+        this.actorId = actorId;
+    }
 
-	public void setIdFluxo(Integer idFluxo) {
-		this.idFluxo = idFluxo;
-	}
+    public void setIdCaixa(Integer idCaixa) {
+        this.idCaixa = idCaixa;
+    }
 
-	@Column(name="id_fluxo", insertable=false, updatable=false)
-	public Integer getIdFluxo() {
-		return idFluxo;
-	}	
-	
+    @Column(name = "id_caixa", insertable = false, updatable = false)
+    public Integer getIdCaixa() {
+        return idCaixa;
+    }
+
+    @Column(name = "id_tarefa", insertable = false, updatable = false)
+    public Integer getIdTarefa() {
+        return idTarefa;
+    }
+
+    public void setIdTarefa(Integer idTarefa) {
+        this.idTarefa = idTarefa;
+    }
+
+    public void setIdFluxo(Integer idFluxo) {
+        this.idFluxo = idFluxo;
+    }
+
+    @Column(name = "id_fluxo", insertable = false, updatable = false)
+    public Integer getIdFluxo() {
+        return idFluxo;
+    }
+
 }

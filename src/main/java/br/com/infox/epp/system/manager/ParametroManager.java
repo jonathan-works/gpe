@@ -13,13 +13,13 @@ import br.com.infox.epp.system.entity.Parametro;
 @AutoCreate
 public class ParametroManager extends Manager<ParametroDAO, Parametro> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "parametroManager";
-	
-	public Parametro getParametro(String nome) {
-		return getDao().getParametroByNomeVariavel(nome);
-	}
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "parametroManager";
+
+    public Parametro getParametro(String nome) {
+        return getDao().getParametroByNomeVariavel(nome);
+    }
+
     public List<Parametro> listParametrosAtivos() {
         return getDao().listParametrosAtivos();
     }

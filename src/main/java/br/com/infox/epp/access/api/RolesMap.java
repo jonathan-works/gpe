@@ -24,49 +24,45 @@ import org.jboss.seam.util.Reflections;
 @Startup
 public class RolesMap {
 
-	public static final String NAME = "rolesMap";
-	private static final LogProvider LOG = Logging.getLogProvider(RolesMap.class);
-	
-	private Map<String,Set<String>> roles = new HashMap<String, Set<String>>();
+    public static final String NAME = "rolesMap";
+    private static final LogProvider LOG = Logging.getLogProvider(RolesMap.class);
 
-	public Set<String> getChildrenRoles(String role) {
-		if (roles.containsKey(role)) {
-			return roles.get(role);
-		}
-		Set<String> children = getChildren(role);
-		roles.put(role, children);
-		return children;
-	}
+    private Map<String, Set<String>> roles = new HashMap<String, Set<String>>();
 
-	/**
-	 * Busca os roles recursivamente, usando 
-	 * JpaIdentityStore.addRoleAndMemberships
-	 * 
-	 * @param role
-	 * @return
-	 */
-	private Set<String> getChildren(String role) {
-		Set<String> roleSet = new HashSet<String>();
-		try {
-			Method method = JpaIdentityStore.class
-				.getDeclaredMethod("addRoleAndMemberships", 
-				String.class, Set.class);
-			method.setAccessible(true);
-			Reflections.invokeAndWrap(method, 
-					IdentityManager.instance().getIdentityStore(),
-					role, roleSet);
-		} catch (Exception e) {
-		    LOG.error(".getChildren()", e);
-		}
-		return roleSet;
-	}
-	
-	public void clear() {
-		roles.clear();
-	}
-	
-	public static final RolesMap instance() {
-		 return (RolesMap) Component.getInstance(NAME, ScopeType.APPLICATION);
-	}
+    public Set<String> getChildrenRoles(String role) {
+        if (roles.containsKey(role)) {
+            return roles.get(role);
+        }
+        Set<String> children = getChildren(role);
+        roles.put(role, children);
+        return children;
+    }
+
+    /**
+     * Busca os roles recursivamente, usando
+     * JpaIdentityStore.addRoleAndMemberships
+     * 
+     * @param role
+     * @return
+     */
+    private Set<String> getChildren(String role) {
+        Set<String> roleSet = new HashSet<String>();
+        try {
+            Method method = JpaIdentityStore.class.getDeclaredMethod("addRoleAndMemberships", String.class, Set.class);
+            method.setAccessible(true);
+            Reflections.invokeAndWrap(method, IdentityManager.instance().getIdentityStore(), role, roleSet);
+        } catch (Exception e) {
+            LOG.error(".getChildren()", e);
+        }
+        return roleSet;
+    }
+
+    public void clear() {
+        roles.clear();
+    }
+
+    public static final RolesMap instance() {
+        return (RolesMap) Component.getInstance(NAME, ScopeType.APPLICATION);
+    }
 
 }

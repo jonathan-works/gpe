@@ -10,12 +10,13 @@ import javax.faces.validator.ValidatorException;
 @FacesValidator(value = ItensComboFluxoValidator.VALIDATOR_ID)
 public class ItensComboFluxoValidator implements Validator {
 
-	public static final String VALIDATOR_ID = "itensComboFluxoValidator";
-	
-	@Override
-	public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-		if (value != null && ((String) value).contains(":")) {
-			throw new ValidatorException(new FacesMessage("Não pode conter :"));
-		}
-	}
+    public static final String VALIDATOR_ID = "itensComboFluxoValidator";
+
+    @Override
+    public void validate(FacesContext context, UIComponent component,
+            Object value) throws ValidatorException {
+        if (value != null && ((String) value).contains(":")) {
+            throw new ValidatorException(new FacesMessage("Não pode conter :"));
+        }
+    }
 }

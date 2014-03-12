@@ -23,14 +23,17 @@ import br.com.infox.seam.util.ComponentUtil;
 public class BamTimerManager extends Manager<GenericDAO, Object> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "bamTimerManager";
-    
-    public void createTimerInstance(String cronExpression, String idIniciarProcessoTimerParameter, String description, BamTimerProcessor processor) throws SchedulerException, DAOException {
+
+    public void createTimerInstance(String cronExpression,
+            String idIniciarProcessoTimerParameter, String description,
+            BamTimerProcessor processor) throws SchedulerException, DAOException {
         QuartzTriggerHandle handle = processor.increaseTimeSpent(cronExpression);
         Trigger trigger = handle.getTrigger();
         saveSystemParameter(idIniciarProcessoTimerParameter, trigger.getName(), description);
     }
 
-    private void saveSystemParameter(String nomeVariavel,String valorVariavel, String descricaoVariavel) throws DAOException {
+    private void saveSystemParameter(String nomeVariavel, String valorVariavel,
+            String descricaoVariavel) throws DAOException {
         Parametro p = new Parametro();
         p.setNomeVariavel(nomeVariavel);
         p.setValorVariavel(valorVariavel);
@@ -40,14 +43,14 @@ public class BamTimerManager extends Manager<GenericDAO, Object> {
         p.setAtivo(true);
         persist(p);
     }
-    
+
     public String getParametro(String nome) {
         String valor = ComponentUtil.getComponent(nome, ScopeType.APPLICATION);
         if (valor == null) {
-            final HashMap<String,Object> params = new HashMap<>();
+            final HashMap<String, Object> params = new HashMap<>();
             params.put("nome", nome);
             final String hql = "select p from Parametro p where nomeVariavel = :nome";
-            
+
             final GenericDAO dao = ComponentUtil.getComponent(GenericDAO.NAME);
             final Parametro result = (Parametro) dao.getSingleResult(hql, params);
             if (result != null) {

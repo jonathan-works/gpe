@@ -35,10 +35,8 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Entity
-@Table(name=TABLE_NAT_CAT_FLUXO_LOCALIZACAO, schema=PUBLIC,
-    uniqueConstraints={
-        @UniqueConstraint(columnNames={ID_NAT_CAT_FLUXO, ID_LOCALIZACAO})
-})
+@Table(name = TABLE_NAT_CAT_FLUXO_LOCALIZACAO, schema = PUBLIC, uniqueConstraints = { @UniqueConstraint(columnNames = {
+    ID_NAT_CAT_FLUXO, ID_LOCALIZACAO }) })
 @NamedQueries(value = {
     @NamedQuery(name = GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF, query = GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF_QUERY),
     @NamedQuery(name = COUNT_NCF_LOCALIZACAO_BY_LOC_NCF, query = COUNT_NCF_LOCALIZACAO_BY_LOC_NCF_QUERY),
@@ -46,17 +44,18 @@ import br.com.infox.epp.access.entity.Localizacao;
     @NamedQuery(name = LIST_BY_NAT_CAT_FLUXO, query = LIST_BY_NAT_CAT_FLUXO_QUERY) })
 public class NatCatFluxoLocalizacao implements java.io.Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Integer idNatCatFluxoLocalizacao;
-	private NaturezaCategoriaFluxo naturezaCategoriaFluxo;	
-	private Localizacao localizacao;
-	private Boolean heranca = Boolean.FALSE;
-	
-	public NatCatFluxoLocalizacao() {
+    private Integer idNatCatFluxoLocalizacao;
+    private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
+    private Localizacao localizacao;
+    private Boolean heranca = Boolean.FALSE;
+
+    public NatCatFluxoLocalizacao() {
     }
-	
-    public NatCatFluxoLocalizacao(final NaturezaCategoriaFluxo naturezaCategoriaFluxo,
+
+    public NatCatFluxoLocalizacao(
+            final NaturezaCategoriaFluxo naturezaCategoriaFluxo,
             final Localizacao localizacao, final boolean heranca) {
         this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
         this.localizacao = localizacao;
@@ -64,51 +63,53 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
     }
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAT_CAT_FLUXO_LOCALIZACAO)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_NAT_CAT_FLUXO_LOCALIZACAO, unique = true, nullable = false)
-	public Integer getIdNatCatFluxoLocalizacao() {
-		return idNatCatFluxoLocalizacao;
-	}
-	public void setIdNatCatFluxoLocalizacao(Integer idNatCatFluxoLocalizacao) {
-		this.idNatCatFluxoLocalizacao = idNatCatFluxoLocalizacao;
-	}
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_NAT_CAT_FLUXO_LOCALIZACAO, unique = true, nullable = false)
+    public Integer getIdNatCatFluxoLocalizacao() {
+        return idNatCatFluxoLocalizacao;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_NAT_CAT_FLUXO, nullable=false)
-	@NotNull(message = "#{messages['beanValidation.notNull']}")
-	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
-		return naturezaCategoriaFluxo;
-	}
-	
-	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
-		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_LOCALIZACAO, nullable=false)
-	@NotNull(message = "#{messages['beanValidation.notNull']}")
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
+    public void setIdNatCatFluxoLocalizacao(Integer idNatCatFluxoLocalizacao) {
+        this.idNatCatFluxoLocalizacao = idNatCatFluxoLocalizacao;
+    }
 
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_NAT_CAT_FLUXO, nullable = false)
+    @NotNull(message = "#{messages['beanValidation.notNull']}")
+    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
+        return naturezaCategoriaFluxo;
+    }
 
-	public void setHeranca(Boolean heranca) {
-		this.heranca = heranca;
-	}
-	
-	@Column(name=HERANCA, nullable=false)
-	public Boolean getHeranca() {
-		return heranca;
-	}
-	
-	@Transient
-	public boolean isAtivo(){
-		return (naturezaCategoriaFluxo.isAtivo() && localizacao.getAtivo());
-	}
+    public void setNaturezaCategoriaFluxo(
+            NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
+        this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_LOCALIZACAO, nullable = false)
+    @NotNull(message = "#{messages['beanValidation.notNull']}")
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
+
+    public void setHeranca(Boolean heranca) {
+        this.heranca = heranca;
+    }
+
+    @Column(name = HERANCA, nullable = false)
+    public Boolean getHeranca() {
+        return heranca;
+    }
+
+    @Transient
+    public boolean isAtivo() {
+        return (naturezaCategoriaFluxo.isAtivo() && localizacao.getAtivo());
+    }
 
     @Override
     public int hashCode() {
@@ -141,5 +142,5 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
         }
         return true;
     }
-	
+
 }

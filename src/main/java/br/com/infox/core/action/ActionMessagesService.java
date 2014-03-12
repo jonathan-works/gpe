@@ -23,10 +23,11 @@ import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 @AutoCreate
 public class ActionMessagesService implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "actionMessagesService";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "actionMessagesService";
 
-	public String handleBeanViolationException(final ConstraintViolationException e) {
+    public String handleBeanViolationException(
+            final ConstraintViolationException e) {
         final StatusMessages messages = getMessagesHandler();
         messages.clear();
         for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
@@ -54,8 +55,8 @@ public class ActionMessagesService implements Serializable {
         }
         return null;
     }
-    
+
     private StatusMessages getMessagesHandler() {
-    	return FacesMessages.instance();
+        return FacesMessages.instance();
     }
 }

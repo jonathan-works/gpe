@@ -13,15 +13,17 @@ import br.com.infox.ibpm.task.dao.JbpmTaskDAO;
 @AutoCreate
 public class JbpmTaskManager extends Manager<JbpmTaskDAO, Void> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "jbpmTaskManager";
-	
-	public void atualizarTarefasModificadas(Map<BigInteger, String> modifiedTasks){
-		getDao().atualizarTarefasModificadas(modifiedTasks);
-	}
-	
-	public BigInteger findTaskIdByIdProcessDefinitionAndName(BigInteger idProcessDefinition, String taskName){
-		return getDao().findTaskIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
-	}
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "jbpmTaskManager";
+
+    public void atualizarTarefasModificadas(
+            Map<BigInteger, String> modifiedTasks) {
+        getDao().atualizarTarefasModificadas(modifiedTasks);
+    }
+
+    public BigInteger findTaskIdByIdProcessDefinitionAndName(
+            BigInteger idProcessDefinition, String taskName) {
+        return getDao().findTaskIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
+    }
+
 }

@@ -44,8 +44,8 @@ import br.com.infox.epp.search.Reindexer;
 
 @Entity
 @Table(name = TABLE_AJUDA, schema = PUBLIC)
-@NamedQueries(value = { 
-    @NamedQuery(name = AJUDA_FIND_ALL, query=AJUDA_FIND_ALL_QUERY),
+@NamedQueries(value = {
+    @NamedQuery(name = AJUDA_FIND_ALL, query = AJUDA_FIND_ALL_QUERY),
     @NamedQuery(name = AJUDA_BY_URL, query = AJUDA_BY_URL_QUERY) })
 @Analyzer(impl = BrazilianAnalyzer.class)
 @Indexed

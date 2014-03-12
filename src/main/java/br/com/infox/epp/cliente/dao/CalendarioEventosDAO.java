@@ -13,6 +13,6 @@ import br.com.infox.epp.cliente.entity.CalendarioEventos;
 @AutoCreate
 public class CalendarioEventosDAO extends DAO<CalendarioEventos> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "calendarioEventosDAO";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "calendarioEventosDAO";
 }

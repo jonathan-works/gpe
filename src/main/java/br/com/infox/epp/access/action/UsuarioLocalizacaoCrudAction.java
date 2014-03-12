@@ -106,12 +106,14 @@ public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLoca
         this.usuarioGerenciado = usuarioGerenciado;
         getInstance().setUsuario(usuarioGerenciado);
     }
-    //TODO encontrar melhor maneira de resolver esta situação
+
+    // TODO encontrar melhor maneira de resolver esta situação
     @Observer(LocalizacaoEstruturaTreeHandler.EVENT_SELECT_LOC_ESTRUTURA)
-    public void evtSetLocalizacaoEstrutura(Localizacao localizacao, Localizacao estrutura) {
+    public void evtSetLocalizacaoEstrutura(Localizacao localizacao,
+            Localizacao estrutura) {
         final UsuarioLocalizacao instance = getInstance();
         instance.setLocalizacao(localizacao);
         instance.setEstrutura(estrutura);
     }
-    
+
 }

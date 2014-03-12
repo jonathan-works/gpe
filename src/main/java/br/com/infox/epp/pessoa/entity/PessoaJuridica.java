@@ -33,8 +33,7 @@ public class PessoaJuridica extends Pessoa {
         setTipoPessoa(TipoPessoaEnum.J);
     }
 
-    @Column(name = "nr_cnpj", nullable = false, unique = true,
-            length = LengthConstants.NUMERO_RAZAO_SOCIAL)
+    @Column(name = "nr_cnpj", nullable = false, unique = true, length = LengthConstants.NUMERO_RAZAO_SOCIAL)
     @Size(max = LengthConstants.NUMERO_RAZAO_SOCIAL)
     @NotNull
     public String getCnpj() {
@@ -45,8 +44,7 @@ public class PessoaJuridica extends Pessoa {
         this.cnpj = cnpj;
     }
 
-    @Column(name = "nm_razao_social", nullable = false,
-            length = LengthConstants.NOME_PADRAO)
+    @Column(name = "nm_razao_social", nullable = false, length = LengthConstants.NOME_PADRAO)
     @Size(max = LengthConstants.NOME_PADRAO)
     @NotNull
     public String getRazaoSocial() {

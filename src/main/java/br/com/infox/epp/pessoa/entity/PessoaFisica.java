@@ -24,12 +24,9 @@ import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 
 @Entity
-@Table(schema = "public", name = PessoaFisica.TABLE_NAME,
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
+@Table(schema = "public", name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
 @PrimaryKeyJoinColumn(name = "id_pessoa_fisica", columnDefinition = "integer")
-@NamedQueries({
-    @NamedQuery(name=SEARCH_BY_CPF, query=SEARCH_BY_CPF_QUERY)
-})
+@NamedQueries({ @NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY) })
 public class PessoaFisica extends Pessoa {
     public static final String EVENT_LOAD = "evtCarregarPessoaFisica";
     public static final String TABLE_NAME = "tb_pessoa_fisica";

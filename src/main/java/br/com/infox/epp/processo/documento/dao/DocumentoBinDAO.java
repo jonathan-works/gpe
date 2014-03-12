@@ -16,10 +16,10 @@ public class DocumentoBinDAO extends DAO<DocumentoBin> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoBinDAO";
-    
-    @In 
+
+    @In
     private transient EntityManager entityManagerBin;
-    
+
     @Override
     protected EntityManager getEntityManager() {
         return entityManagerBin;
@@ -28,14 +28,14 @@ public class DocumentoBinDAO extends DAO<DocumentoBin> {
     public byte[] getData(int idDocumentoBin) {
         return find(idDocumentoBin).getDocumentoBin();
     }
-    
+
     /**
      * Grava o arquivo binário na base de arquivos Bin com o respctivo Id da
      * tabela ProcessoDocumentoBin.
      * 
      * @param idDocumentoBin Id da Tabela
      * @param file Arquivo do tipo byte[]
-     * @throws DAOException 
+     * @throws DAOException
      */
     public DocumentoBin gravarBinario(int idDocumentoBin, byte[] file) throws DAOException {
         return persist(createDocumentoBin(idDocumentoBin, file));

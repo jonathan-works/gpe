@@ -29,61 +29,58 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Papel;
 
 @Entity
-@Table(name=TABLE_FLUXO_PAPEL, schema=PUBLIC, uniqueConstraints={
-    @UniqueConstraint(columnNames={ID_FLUXO, ID_PAPEL})
-})
-@NamedQueries(value={
-    @NamedQuery(name=LIST_BY_FLUXO, query=LIST_BY_FLUXO_QUERY)
-})
-public class FluxoPapel implements Serializable{
+@Table(name = TABLE_FLUXO_PAPEL, schema = PUBLIC, uniqueConstraints = { @UniqueConstraint(columnNames = {
+    ID_FLUXO, ID_PAPEL }) })
+@NamedQueries(value = { @NamedQuery(name = LIST_BY_FLUXO, query = LIST_BY_FLUXO_QUERY) })
+public class FluxoPapel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-	private Integer idFluxoPapel;
-	private Fluxo fluxo;	
-	private Papel papel;
-	
-	public FluxoPapel() {
-	}
-	
-	public FluxoPapel(final Fluxo fluxo, final Papel papel) {
-	    this.fluxo = fluxo;
-	    this.papel = papel;
-	}
-	
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO_PAPEL)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_FLUXO_PAPEL, unique = true, nullable = false)
-	public Integer getIdFluxoPapel() {
-		return idFluxoPapel;
-	}
-	
-	public void setIdFluxoPapel(Integer idFluxoPapel) {
-		this.idFluxoPapel = idFluxoPapel;
-	}
+    private Integer idFluxoPapel;
+    private Fluxo fluxo;
+    private Papel papel;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_FLUXO, nullable=false)
-	@NotNull
-	public Fluxo getFluxo() {
-		return fluxo;
-	}
+    public FluxoPapel() {
+    }
 
-	public void setFluxo(Fluxo fluxo) {
-		this.fluxo = fluxo;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_PAPEL, nullable=false)
-	@NotNull
-	public Papel getPapel() {
-		return papel;
-	}
+    public FluxoPapel(final Fluxo fluxo, final Papel papel) {
+        this.fluxo = fluxo;
+        this.papel = papel;
+    }
 
-	public void setPapel(Papel papel) {
-		this.papel = papel;
-	}
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO_PAPEL)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_FLUXO_PAPEL, unique = true, nullable = false)
+    public Integer getIdFluxoPapel() {
+        return idFluxoPapel;
+    }
+
+    public void setIdFluxoPapel(Integer idFluxoPapel) {
+        this.idFluxoPapel = idFluxoPapel;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_FLUXO, nullable = false)
+    @NotNull
+    public Fluxo getFluxo() {
+        return fluxo;
+    }
+
+    public void setFluxo(Fluxo fluxo) {
+        this.fluxo = fluxo;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_PAPEL, nullable = false)
+    @NotNull
+    public Papel getPapel() {
+        return papel;
+    }
+
+    public void setPapel(Papel papel) {
+        this.papel = papel;
+    }
 
     @Override
     public int hashCode() {
@@ -115,5 +112,5 @@ public class FluxoPapel implements Serializable{
         }
         return true;
     }
-	
+
 }

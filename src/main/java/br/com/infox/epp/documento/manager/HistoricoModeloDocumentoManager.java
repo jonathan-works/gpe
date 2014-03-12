@@ -14,15 +14,16 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 @Name(HistoricoModeloDocumentoManager.NAME)
 @AutoCreate
 public class HistoricoModeloDocumentoManager extends Manager<HistoricoModeloDocumentoDAO, HistoricoModeloDocumento> {
-    
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "historicoModeloDocumentoManager";
-    
-    public List<ModeloDocumento> listModelosDoHistorico(){
+
+    public List<ModeloDocumento> listModelosDoHistorico() {
         return getDao().listModelosDoHistorico();
     }
-    
-    public List<UsuarioLogin> listUsuariosQueAlteraramModelo(ModeloDocumento modeloDocumento){
+
+    public List<UsuarioLogin> listUsuariosQueAlteraramModelo(
+            ModeloDocumento modeloDocumento) {
         return getDao().listUsuariosQueAlteraramModelo(modeloDocumento);
     }
 

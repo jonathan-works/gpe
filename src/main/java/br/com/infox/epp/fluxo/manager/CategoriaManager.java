@@ -14,14 +14,14 @@ import br.com.infox.epp.fluxo.entity.Categoria;
 @AutoCreate
 public class CategoriaManager extends Manager<CategoriaDAO, Categoria> {
 
-	private static final long serialVersionUID = 2649821908249070536L;
+    private static final long serialVersionUID = 2649821908249070536L;
 
-	public static final String NAME = "categoriaManager";
+    public static final String NAME = "categoriaManager";
 
-	@In
-	private CategoriaDAO categoriaDAO;
-	
-	public List<Object[]> listProcessoByCategoria() {
-		return categoriaDAO.listProcessoByCategoria();
-	}
+    @In
+    private CategoriaDAO categoriaDAO;
+
+    public List<Object[]> listProcessoByCategoria() {
+        return categoriaDAO.listProcessoByCategoria();
+    }
 }

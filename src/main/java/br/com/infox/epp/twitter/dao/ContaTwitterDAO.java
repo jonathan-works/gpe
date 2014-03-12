@@ -27,25 +27,25 @@ public class ContaTwitterDAO extends DAO<ContaTwitter> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "contaTwitterDAO";
-    
+
     public ContaTwitter getContaTwitterByLocalizacao(Localizacao localizacao) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(LOCALIZACAO_PARAM, localizacao);
         return getNamedSingleResult(CONTA_TWITTER_BY_LOCALIZACAO, parameters);
     }
-    
+
     public ContaTwitter getContaTwitterByUsuario(UsuarioLogin usuario) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(USUARIO_PARAM, usuario);
         return getNamedSingleResult(CONTA_TWITTER_BY_USUARIO, parameters);
     }
-    
+
     public ContaTwitter getContaTwitterByIdUsuario(Integer idUsuario) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_USUARIO_PARAM, idUsuario);
         return getNamedSingleResult(CONTA_TWITTER_BY_ID_USUARIO, parameters);
     }
-    
+
     public List<ContaTwitter> listaContasTwitter(int idGrupoEmail) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_GRUPO_EMAIL_PARAM, idGrupoEmail);

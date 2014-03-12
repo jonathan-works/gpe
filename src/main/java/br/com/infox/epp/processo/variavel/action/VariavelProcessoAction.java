@@ -19,42 +19,44 @@ import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 @Scope(ScopeType.CONVERSATION)
 public class VariavelProcessoAction implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "variavelProcessoAction";
-	
-	private Boolean possuiVariaveis;
-	private List<VariavelProcesso> variaveis;
-	private ProcessoEpa processoEpa;
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "variavelProcessoAction";
 
-    @In private VariavelProcessoService variavelProcessoService;
-    @In private ProcessoEpaManager processoEpaManager;
-	
-	public Boolean possuiVariaveis() {
-		if (this.possuiVariaveis == null) {
-			this.possuiVariaveis = !getVariaveis().isEmpty();
-		}
-		return this.possuiVariaveis;
-	}
-	
-	public List<VariavelProcesso> getVariaveis() {
-		if (this.variaveis == null) {
-			this.variaveis = variavelProcessoService.getVariaveis(processoEpa);
-		}
-		return this.variaveis;
-	}
+    private Boolean possuiVariaveis;
+    private List<VariavelProcesso> variaveis;
+    private ProcessoEpa processoEpa;
 
-	public void setProcessoEpa(ProcessoEpa processoEpa) {
-		this.processoEpa = processoEpa;
-	}
-	
-	public void setProcesso(Processo processo) {
-		this.processoEpa = processoEpaManager.find(processo.getIdProcesso());
-	}
-	
-	public void save() {
-		for (VariavelProcesso variavel : getVariaveis()) {
-			variavelProcessoService.save(variavel);
-		}
-		FacesMessages.instance().add("#{messages['VariavelProcesso_updated']}");
-	}
+    @In
+    private VariavelProcessoService variavelProcessoService;
+    @In
+    private ProcessoEpaManager processoEpaManager;
+
+    public Boolean possuiVariaveis() {
+        if (this.possuiVariaveis == null) {
+            this.possuiVariaveis = !getVariaveis().isEmpty();
+        }
+        return this.possuiVariaveis;
+    }
+
+    public List<VariavelProcesso> getVariaveis() {
+        if (this.variaveis == null) {
+            this.variaveis = variavelProcessoService.getVariaveis(processoEpa);
+        }
+        return this.variaveis;
+    }
+
+    public void setProcessoEpa(ProcessoEpa processoEpa) {
+        this.processoEpa = processoEpa;
+    }
+
+    public void setProcesso(Processo processo) {
+        this.processoEpa = processoEpaManager.find(processo.getIdProcesso());
+    }
+
+    public void save() {
+        for (VariavelProcesso variavel : getVariaveis()) {
+            variavelProcessoService.save(variavel);
+        }
+        FacesMessages.instance().add("#{messages['VariavelProcesso_updated']}");
+    }
 }

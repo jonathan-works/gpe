@@ -12,49 +12,49 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 /**
  * 
  * @author Erik Liberal
- *
+ * 
  */
 @Name(TempoMedioTarefaList.NAME)
 public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa> {
     private static final String GROUP_BY = "group by t, ncf";
 
     private static final String QUERY = "select new br.com.infox.epp.estatistica.entity.TempoMedioTarefa(t, ncf, count(pet) , avg(pet.tempoGasto))"
-    +" from ProcessoEpaTarefa pet"
-    +" inner join pet.processoEpa p with pet.tempoGasto > 0"
-    +" inner join p.naturezaCategoriaFluxo ncf"
-    +" right join pet.tarefa t";
+            + " from ProcessoEpaTarefa pet"
+            + " inner join pet.processoEpa p with pet.tempoGasto > 0"
+            + " inner join p.naturezaCategoriaFluxo ncf"
+            + " right join pet.tarefa t";
 
     public static final String NAME = "tempoMedioTarefaList";
-	
-	private static final long serialVersionUID = 1L;
-	
-	private static final String TEMPLATE = "/Estatistica/tempoMedioTarefaTemplate.xls";
+
+    private static final long serialVersionUID = 1L;
+
+    private static final String TEMPLATE = "/Estatistica/tempoMedioTarefaTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "relatorioTemposMedios.xls";
 
-	private double tempoMedioProcesso;
-	
-	@Override
-	protected void initCriteria() {
+    private double tempoMedioProcesso;
+
+    @Override
+    protected void initCriteria() {
         addSearchCriteria("naturezaCategoriaFluxo.natureza", "(ncf.natureza=:natureza or pet is null)");
         addSearchCriteria("naturezaCategoriaFluxo.categoria", "(ncf.categoria=:categoria or pet is null)");
         addSearchCriteria("naturezaCategoriaFluxo.fluxo", "t.fluxo=:fluxo");
         addSearchCriteria("dataInicio", "cast(pet.dataInicio as timestamp) >= cast(:dataInicio as timestamp)");
         addSearchCriteria("dataFim", "cast(pet.dataFim as timestamp) >= cast(:dataFim as timestamp)");
-	}
-	
-	@Override
-	protected String getQuery() {
+    }
+
+    @Override
+    protected String getQuery() {
         return QUERY;
-	}
-    
+    }
+
     @Override
     protected String getGroupBy() {
         return GROUP_BY;
     }
-	
+
     public void exportarXLS() {
     }
-    
+
     public String getTemplate() {
         return TEMPLATE;
     }
@@ -74,11 +74,11 @@ public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa>
         }
         return this.tempoMedioProcesso;
     }
-    
+
     public String getTempoMedioProcessoFormatado() {
         return format("{0,number,#.##} {1}", getTempoMedioProcesso(), PrazoEnum.D.getLabel());
     }
-    
+
     public String getPrazoFluxo() {
         String result = "";
         final NaturezaCategoriaFluxo naturezaCategoriaFluxo = (NaturezaCategoriaFluxo) getParameters().get("naturezaCategoriaFluxo");

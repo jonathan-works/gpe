@@ -14,11 +14,12 @@ import br.com.infox.epp.documento.entity.Variavel;
 @AutoCreate
 public class VariavelManager extends Manager<VariavelDAO, Variavel> {
 
-	public static final String NAME = "variavelManager";
-	private static final long serialVersionUID = 1L;
-	
-	public List<Variavel> getVariaveisByTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento){
-		return getDao().getVariaveisByTipoModeloDocumento(tipoModeloDocumento);
-	}
+    public static final String NAME = "variavelManager";
+    private static final long serialVersionUID = 1L;
+
+    public List<Variavel> getVariaveisByTipoModeloDocumento(
+            TipoModeloDocumento tipoModeloDocumento) {
+        return getDao().getVariaveisByTipoModeloDocumento(tipoModeloDocumento);
+    }
 
 }

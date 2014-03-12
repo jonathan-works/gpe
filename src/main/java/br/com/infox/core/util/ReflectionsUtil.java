@@ -59,8 +59,9 @@ public final class ReflectionsUtil {
             LOG.error(".setValue()", e);
         }
     }
-    
-    public static boolean hasAnnotation(PropertyDescriptor pd, Class<? extends Annotation> annotation) {
+
+    public static boolean hasAnnotation(PropertyDescriptor pd,
+            Class<? extends Annotation> annotation) {
         Method readMethod = pd.getReadMethod();
         if (readMethod != null) {
             if (readMethod.isAnnotationPresent(annotation)) {

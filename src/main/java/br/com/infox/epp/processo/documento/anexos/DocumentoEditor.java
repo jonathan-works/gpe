@@ -30,5 +30,5 @@ public class DocumentoEditor extends DocumentoCreator {
     protected ProcessoDocumento gravarDocumento() throws DAOException {
         return processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
     }
-    
+
 }

@@ -1,7 +1,7 @@
 package br.com.infox.ibpm.node.constants;
 
 public interface NodeTypeConstants {
-    
+
     String START_STATE = "StartState";
     String TASK = "Task";
     String DECISION = "Decision";

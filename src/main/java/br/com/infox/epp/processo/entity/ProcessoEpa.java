@@ -52,21 +52,14 @@ import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 @PrimaryKeyJoinColumn
 @NamedQueries(value = {
     @NamedQuery(name = LIST_ALL_NOT_ENDED, query = LIST_ALL_NOT_ENDED_QUERY),
-    @NamedQuery(name = PROCESSO_EPA_BY_ID_JBPM,
-            query = PROCESSO_EPA_BY_ID_JBPM_QUERY),
-    @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO,
-            query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
+    @NamedQuery(name = PROCESSO_EPA_BY_ID_JBPM, query = PROCESSO_EPA_BY_ID_JBPM_QUERY),
+    @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO, query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
     @NamedQuery(name = ITEM_DO_PROCESSO, query = ITEM_DO_PROCESSO_QUERY),
-    @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO,
-            query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
-    @NamedQuery(name = DATA_INICIO_PRIMEIRA_TAREFA,
-            query = DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
-    @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO,
-            query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
-    @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP,
-            query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
-    @NamedQuery(name=GET_PROCESSO_BY_NUMERO_PROCESSO,
-            query=GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY) })
+    @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
+    @NamedQuery(name = DATA_INICIO_PRIMEIRA_TAREFA, query = DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
+    @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
+    @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
+    @NamedQuery(name = GET_PROCESSO_BY_NUMERO_PROCESSO, query = GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY) })
 public class ProcessoEpa extends Processo {
 
     private static final long serialVersionUID = 1L;

@@ -16,16 +16,17 @@ import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
 @Name(TipoModeloDocumentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class TipoModeloDocumentoCrudAction extends AbstractCrudAction<TipoModeloDocumento, TipoModeloDocumentoManager> {
-    
+
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "tipoModeloDocumentoCrudAction";
-	
-	@In private ModeloDocumentoManager modeloDocumentoManager;
-	
-	public List<ModeloDocumento> getListaDeModeloDocumento(){
-		final TipoModeloDocumento tipoModeloDocumento = getInstance();
+
+    @In
+    private ModeloDocumentoManager modeloDocumentoManager;
+
+    public List<ModeloDocumento> getListaDeModeloDocumento() {
+        final TipoModeloDocumento tipoModeloDocumento = getInstance();
         return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(tipoModeloDocumento.getGrupoModeloDocumento(), tipoModeloDocumento);
-	}
-	
+    }
+
 }

@@ -17,7 +17,7 @@ import org.jboss.seam.util.Strings;
 public class SelectItemFunctions {
 
     public static final String NAME = "selectItemFunctions";
-    
+
     /**
      * Gera uma lista de SelectItem partindo de uma String separada por vírgula
      * 
@@ -39,7 +39,7 @@ public class SelectItemFunctions {
         }
         return l;
     }
-    
+
     /**
      * Método que trata a expressão a ser mostrada nas opções chamadas pelo
      * componente s:selectItems

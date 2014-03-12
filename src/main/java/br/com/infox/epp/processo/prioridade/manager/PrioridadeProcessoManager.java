@@ -14,6 +14,6 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 @AutoCreate
 public class PrioridadeProcessoManager extends Manager<PrioridadeProcessoDAO, PrioridadeProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "prioridadeProcessoManager";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "prioridadeProcessoManager";
 }

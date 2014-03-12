@@ -25,40 +25,39 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 @Name(TarefaTimerProcessor.NAME)
 @AutoCreate
 public class TarefaTimerProcessor extends BamTimerProcessor {
-	public static final String NAME = "tarefaTimerProcessor";
+    public static final String NAME = "tarefaTimerProcessor";
 
-	@In
-	private ProcessoEpaTarefaManager processoEpaTarefaManager;
-	@In
+    @In
+    private ProcessoEpaTarefaManager processoEpaTarefaManager;
+    @In
     private BamTimerManager bamTimerManager;
-	
-	/**
-	 * Incrementa o tempo de cada tarefa, verificando se está dentro do turno da
-	 * sua localização.
-	 * 
-	 * @param cron
-	 *            - que está em execução
-	 * @return null
-	 */
-	@Asynchronous
-	@Transactional
-	public QuartzTriggerHandle increaseTimeSpent(@IntervalCron String cron) {
-		return updateTarefasNaoFinalizadas(PrazoEnum.H);
-	}
-	
-	@Override
-	protected ProcessoEpaTarefaManager getProcessoEpaTarefamanager() {
-	    return processoEpaTarefaManager;
-	}
-	
-	@Override
-	protected BamTimerManager getBamTimerManager() {
-	    return bamTimerManager;
-	}
-	
-	@Override
-	protected String getParameterName() {
-	    return TarefaTimerStarter.ID_INICIAR_TASK_TIMER_PARAMETER;
-	}
-	
+
+    /**
+     * Incrementa o tempo de cada tarefa, verificando se está dentro do turno da
+     * sua localização.
+     * 
+     * @param cron - que está em execução
+     * @return null
+     */
+    @Asynchronous
+    @Transactional
+    public QuartzTriggerHandle increaseTimeSpent(@IntervalCron String cron) {
+        return updateTarefasNaoFinalizadas(PrazoEnum.H);
+    }
+
+    @Override
+    protected ProcessoEpaTarefaManager getProcessoEpaTarefamanager() {
+        return processoEpaTarefaManager;
+    }
+
+    @Override
+    protected BamTimerManager getBamTimerManager() {
+        return bamTimerManager;
+    }
+
+    @Override
+    protected String getParameterName() {
+        return TarefaTimerStarter.ID_INICIAR_TASK_TIMER_PARAMETER;
+    }
+
 }

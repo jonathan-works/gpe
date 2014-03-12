@@ -208,7 +208,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public boolean checkAccess(int idProcesso, String login) {
         return !getDao().findProcessosByIdProcessoAndActorId(idProcesso, login).isEmpty();
     }
-    
+
     public String getNumeroProcesso(int idProcesso) {
         Processo processo = find(idProcesso);
         if (processo != null) {

@@ -23,88 +23,91 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
 
     private static final long serialVersionUID = 1L;
     private static final String DESCRICAO_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:descricaoFluxoDecoration:descricaoFluxo";
-	private static final String COD_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:codFluxoDecoration:codFluxo";
+    private static final String COD_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:codFluxoDecoration:codFluxo";
     private static final LogProvider LOG = Logging.getLogProvider(FluxoCrudAction.class);
     public static final String NAME = "fluxoCrudAction";
-    
+
     private boolean replica = false;
-    
+
     public String criarReplica() {
-    	this.replica = true;
-    	if (!verificarReplica()) {
-    		return null;
-    	}
+        this.replica = true;
+        if (!verificarReplica()) {
+            return null;
+        }
         final Fluxo fluxo = getInstance();
         getManager().detach(fluxo);
         fluxo.setIdFluxo(null);
         setId(null);
         final String ret = save();
         if (PERSISTED.equals(ret)) {
-        	this.replica = false;
+            this.replica = false;
         }
         return ret;
     }
 
-	private boolean verificarReplica() {
-		final boolean existeFluxoComCodigo = getManager().existeFluxoComCodigo(getInstance().getCodFluxo());
-		final boolean existeFluxoComDescricao = getManager().existeFluxoComDescricao(getInstance().getFluxo());
-		
-		if (existeFluxoComCodigo) {
-			final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.codigoDuplicado']}");
-			FacesContext.getCurrentInstance().addMessage(COD_FLUXO_COMPONENT_ID, message);
-		}
-		if (existeFluxoComDescricao) {
-			final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.descricaoDuplicada']}");
-			FacesContext.getCurrentInstance().addMessage(DESCRICAO_FLUXO_COMPONENT_ID, message);
-		}
-		
-		return !existeFluxoComCodigo && !existeFluxoComDescricao;
-	}
-    
+    private boolean verificarReplica() {
+        final boolean existeFluxoComCodigo = getManager().existeFluxoComCodigo(getInstance().getCodFluxo());
+        final boolean existeFluxoComDescricao = getManager().existeFluxoComDescricao(getInstance().getFluxo());
+
+        if (existeFluxoComCodigo) {
+            final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.codigoDuplicado']}");
+            FacesContext.getCurrentInstance().addMessage(COD_FLUXO_COMPONENT_ID, message);
+        }
+        if (existeFluxoComDescricao) {
+            final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.descricaoDuplicada']}");
+            FacesContext.getCurrentInstance().addMessage(DESCRICAO_FLUXO_COMPONENT_ID, message);
+        }
+
+        return !existeFluxoComCodigo && !existeFluxoComDescricao;
+    }
+
     @Override
     protected boolean isInstanceValid() {
         final Fluxo fluxo = getInstance();
         final Date dataFimPublicacao = fluxo.getDataFimPublicacao();
         final Date dataInicioPublicacao = fluxo.getDataInicioPublicacao();
-        final boolean instanceValid = dataInicioPublicacao != null && (dataFimPublicacao == null || !dataFimPublicacao.before(dataInicioPublicacao));
+        final boolean instanceValid = dataInicioPublicacao != null
+                && (dataFimPublicacao == null || !dataFimPublicacao.before(dataInicioPublicacao));
         if (!instanceValid) {
             getMessagesHandler().add(ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
         }
         return instanceValid;
     }
-    
+
     @Override
     protected void beforeSave() {
         final SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         final String dataHoje = formato.format(new Date());
         final Fluxo fluxo = getInstance();
         final String dataInicio = formato.format(fluxo.getDataInicioPublicacao());
-        
-        if (dataHoje.equals(dataInicio)){
+
+        if (dataHoje.equals(dataInicio)) {
             fluxo.setPublicado(TRUE);
         }
     }
-    
-    //TODO: rever como proceder em relação a usuarioPublicado. Esta implementação estava fora de uso
-//    @Override
-//    public String save() {
-//        try {
-//            final String ret = super.save();
-//            final UsuarioLogin usuarioPublicacao = getInstance().getUsuarioPublicacao();
-//            if (usuarioPublicacao != null) {
-//                final List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
-//                        .getFluxoList();
-//                if (!usuarioPublicacaoList.contains(getInstance())) {
-//                    fluxoManager.refresh(usuarioPublicacao);
-//                }
-//            }
-//            return ret;
-//        } catch (final Exception e){
-//            LOG.error(e.getMessage(), e);
-//            return null;
-//        }
-//    }
-    
+
+    // TODO: rever como proceder em relação a usuarioPublicado. Esta
+    // implementação estava fora de uso
+    // @Override
+    // public String save() {
+    // try {
+    // final String ret = super.save();
+    // final UsuarioLogin usuarioPublicacao =
+    // getInstance().getUsuarioPublicacao();
+    // if (usuarioPublicacao != null) {
+    // final List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
+    // .getFluxoList();
+    // if (!usuarioPublicacaoList.contains(getInstance())) {
+    // fluxoManager.refresh(usuarioPublicacao);
+    // }
+    // }
+    // return ret;
+    // } catch (final Exception e){
+    // LOG.error(e.getMessage(), e);
+    // return null;
+    // }
+    // }
+
     @Override
     public String inactive(final Fluxo fluxo) {
         setInstanceId(fluxo.getIdFluxo());
@@ -119,8 +122,8 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
             return null;
         }
     }
-    
+
     public boolean isReplica() {
-		return replica;
-	}
+        return replica;
+    }
 }

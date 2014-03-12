@@ -23,41 +23,41 @@ import br.com.infox.core.constants.LengthConstants;
 @Table(name = TABLE_NAME)
 public class DominioVariavelTarefa implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
-	@GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-	@Column(name = COLUMN_ID)
-	private Integer id;
-	
-	@Column(name = COLUMN_DOMINIO, nullable = false, columnDefinition = "TEXT")
-	private String dominio;
-	
-	@Column(name = COLUMN_NOME, nullable = false, length = LengthConstants.NOME_MEDIO)
-	private String nome;
-	
-	public Integer getId() {
-		return id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	
-	public String getDominio() {
-		return dominio;
-	}
-	
-	public void setDominio(String dominio) {
-		this.dominio = dominio;
-	}
-	
-	public String getNome() {
-		return nome;
-	}
-	
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    @Id
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = COLUMN_ID)
+    private Integer id;
+
+    @Column(name = COLUMN_DOMINIO, nullable = false, columnDefinition = "TEXT")
+    private String dominio;
+
+    @Column(name = COLUMN_NOME, nullable = false, length = LengthConstants.NOME_MEDIO)
+    private String nome;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDominio() {
+        return dominio;
+    }
+
+    public void setDominio(String dominio) {
+        this.dominio = dominio;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 }

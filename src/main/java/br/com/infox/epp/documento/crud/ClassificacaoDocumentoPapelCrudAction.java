@@ -14,21 +14,23 @@ import br.com.infox.epp.documento.manager.TipoProcessoDocumentoPapelManager;
 
 @Name(ClassificacaoDocumentoPapelCrudAction.NAME)
 public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<TipoProcessoDocumentoPapel, TipoProcessoDocumentoPapelManager> {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "classificacaoDocumentoPapelCrudAction";
-    
-    @In private PapelManager papelManager;
-    
-    public void setTipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {
+
+    @In
+    private PapelManager papelManager;
+
+    public void setTipoProcessoDocumento(
+            TipoProcessoDocumento tipoProcessoDocumento) {
         newInstance();
         getInstance().setTipoProcessoDocumento(tipoProcessoDocumento);
     }
-    
+
     public List<Papel> papelItems() {
         return papelManager.getPapeisNaoAssociadosATipoProcessoDocumento(getInstance().getTipoProcessoDocumento());
     }

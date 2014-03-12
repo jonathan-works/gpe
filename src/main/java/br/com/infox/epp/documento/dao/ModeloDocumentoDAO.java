@@ -45,7 +45,8 @@ public class ModeloDocumentoDAO extends DAO<ModeloDocumento> {
         return getNamedResultList(MODELO_BY_GRUPO_AND_TIPO, parameters);
     }
 
-    public List<ModeloDocumento> getModelosDocumentoInListaModelos(List<Integer> ids) {
+    public List<ModeloDocumento> getModelosDocumentoInListaModelos(
+            List<Integer> ids) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_LISTA_IDS, ids);
         return getNamedResultList(MODELO_BY_LISTA_IDS, parameters);

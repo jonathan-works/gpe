@@ -46,12 +46,9 @@ import br.com.infox.core.constants.LengthConstants;
 @Entity
 @Table(name = TABLE_BLOQUEIO_USUARIO, schema = PUBLIC)
 @NamedQueries(value = {
-    @NamedQuery(name = SAVE_DATA_DESBLOQUEIO,
-            query = SAVE_DATA_DESBLOQUEIO_QUERY),
-    @NamedQuery(name = BLOQUEIO_MAIS_RECENTE,
-            query = BLOQUEIO_MAIS_RECENTE_QUERY) })
-@NamedNativeQueries(value = { @NamedNativeQuery(name = UNDO_BLOQUEIO,
-        query = UNDO_BLOQUEIO_NATIVE_QUERY) })
+    @NamedQuery(name = SAVE_DATA_DESBLOQUEIO, query = SAVE_DATA_DESBLOQUEIO_QUERY),
+    @NamedQuery(name = BLOQUEIO_MAIS_RECENTE, query = BLOQUEIO_MAIS_RECENTE_QUERY) })
+@NamedNativeQueries(value = { @NamedNativeQuery(name = UNDO_BLOQUEIO, query = UNDO_BLOQUEIO_NATIVE_QUERY) })
 public class BloqueioUsuario implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,8 +69,7 @@ public class BloqueioUsuario implements java.io.Serializable {
         this.motivoBloqueio = motivoBloqueio;
     }
 
-    @SequenceGenerator(name = GENERATOR,
-            sequenceName = SEQUENCE_BLOQUEIO_USUARIO)
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_BLOQUEIO_USUARIO)
     @Id
     @GeneratedValue(generator = GENERATOR)
     @Column(name = ID_BLOQUEIO_USUARIO, unique = true, nullable = false)
@@ -118,8 +114,7 @@ public class BloqueioUsuario implements java.io.Serializable {
         this.dataPrevisaoDesbloqueio = dataPrevisaoDesbloqueio;
     }
 
-    @Column(name = MOTIVO_BLOQUEIO, nullable = false,
-            length = LengthConstants.DESCRICAO_ENTIDADE)
+    @Column(name = MOTIVO_BLOQUEIO, nullable = false, length = LengthConstants.DESCRICAO_ENTIDADE)
     @NotNull
     @Size(min = 1, max = LengthConstants.DESCRICAO_ENTIDADE)
     public String getMotivoBloqueio() {

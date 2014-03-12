@@ -14,32 +14,32 @@ import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 
 @Name(CalendarioEventosCrudAction.NAME)
 public class CalendarioEventosCrudAction extends AbstractCrudAction<CalendarioEventos, CalendarioEventosManager> {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
     public static final String NAME = "calendarioEventosCrudAction";
-    
-    private void setData()  {
-        if (getInstance().getDataEvento() == null)   {
+
+    private void setData() {
+        if (getInstance().getDataEvento() == null) {
             return;
         }
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String[] stringData = sdf.format(getInstance().getDataEvento()).split("/");
         getInstance().setDia(Integer.parseInt(stringData[0]));
         getInstance().setMes(Integer.parseInt(stringData[1]));
-        if (getInstance().getRepeteAno())    {
+        if (getInstance().getRepeteAno()) {
             getInstance().setAno(null);
         } else {
             getInstance().setAno(Integer.parseInt(stringData[2]));
         }
     }
-    
+
     public void setId(Object id) {
         boolean changed = ((id != null) && !id.equals(getId()));
         super.setId(id);
-        if (changed)    {
+        if (changed) {
             ajustarData();
         }
     }
@@ -47,8 +47,8 @@ public class CalendarioEventosCrudAction extends AbstractCrudAction<CalendarioEv
     private void ajustarData() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DATE, getInstance().getDia());
-        calendar.set(Calendar.MONTH, getInstance().getMes()-1);
-        if (getInstance().getAno() == null)  {
+        calendar.set(Calendar.MONTH, getInstance().getMes() - 1);
+        if (getInstance().getAno() == null) {
             getInstance().setRepeteAno(Boolean.TRUE);
             calendar.set(Calendar.YEAR, Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date())));
         } else {
@@ -57,20 +57,20 @@ public class CalendarioEventosCrudAction extends AbstractCrudAction<CalendarioEv
         }
         getInstance().setDataEvento(calendar.getTime());
     }
-    
+
     @Override
     protected boolean isInstanceValid() {
         setData();
         return super.isInstanceValid();
     }
-    
+
     @Override
     public void newInstance() {
         super.newInstance();
         limparTreeDeLocalizacao();
     }
-    
-    private void limparTreeDeLocalizacao(){
+
+    private void limparTreeDeLocalizacao() {
         final LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
         if (ret != null) {
             ret.clearTree();

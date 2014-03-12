@@ -55,8 +55,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     public ProcessoDocumentoBin() {
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_processo_documento_bin")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_documento_bin")
     @Id
     @GeneratedValue(generator = "generator")
     @Column(name = "id_processo_documento_bin", unique = true, nullable = false)
@@ -98,8 +97,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
         this.modeloDocumento = modeloDocumento;
     }
 
-    @Column(name = "ds_md5_documento", nullable = false,
-            length = LengthConstants.DESCRICAO_MD5)
+    @Column(name = "ds_md5_documento", nullable = false, length = LengthConstants.DESCRICAO_MD5)
     @NotNull
     @Size(max = LengthConstants.DESCRICAO_MD5)
     public String getMd5Documento() {
@@ -110,8 +108,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
         this.md5Documento = md5Documento;
     }
 
-    @Column(name = "nm_arquivo",
-            length = LengthConstants.DESCRICAO_NOME_ARQUIVO)
+    @Column(name = "nm_arquivo", length = LengthConstants.DESCRICAO_NOME_ARQUIVO)
     @Size(max = LengthConstants.DESCRICAO_NOME_ARQUIVO)
     public String getNomeArquivo() {
         return this.nomeArquivo;
@@ -151,8 +148,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = "processoDocumentoBin")
+        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
     public List<ProcessoDocumento> getProcessoDocumentoList() {
         return this.processoDocumentoList;
     }
@@ -200,8 +196,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
         return "0 Kb";
     }
 
-    @Column(name = "ds_nome_usuario_ultimo_assinar",
-            length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = "ds_nome_usuario_ultimo_assinar", length = LengthConstants.DESCRICAO_PADRAO)
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
     public String getUsuarioUltimoAssinar() {
         return usuarioUltimoAssinar;

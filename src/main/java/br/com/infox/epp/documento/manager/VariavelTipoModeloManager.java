@@ -10,6 +10,6 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 @Name(VariavelTipoModeloManager.NAME)
 @AutoCreate
 public class VariavelTipoModeloManager extends Manager<VariavelTipoModeloDAO, VariavelTipoModelo> {
-	private static final long serialVersionUID = 4455754174682600299L;
-	public static final String NAME = "variavelTipoModeloManager";
+    private static final long serialVersionUID = 4455754174682600299L;
+    public static final String NAME = "variavelTipoModeloManager";
 }

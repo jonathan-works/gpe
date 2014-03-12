@@ -11,7 +11,8 @@ public final class HibernateUtil {
     private HibernateUtil() {
     }
 
-    public static void setFilterParameter(String filterName, String parameterName, Object paremeterValue) {
+    public static void setFilterParameter(String filterName,
+            String parameterName, Object paremeterValue) {
         Filter enabledFilter = getEnabledFilter(filterName);
         enabledFilter.setParameter(parameterName, paremeterValue);
     }

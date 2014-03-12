@@ -6,7 +6,7 @@ public interface RecursoQuery {
     String COUNT_RECURSO_BY_IDENTIFICADOR = "countRecursoByIdentificador";
     String COUNT_RECURSO_BY_IDENTIFICADOR_QUERY = "select count(o) from Recurso o where o.identificador = :"
             + IDENTIFICADOR_PARAM;
-    
+
     String RECURSO_BY_IDENTIFICADOR = "recursoByIdentificador";
     String RECURSO_BY_IDENTIFICADOR_QUERY = "select o from Recurso o where o.identificador = :"
             + IDENTIFICADOR_PARAM;

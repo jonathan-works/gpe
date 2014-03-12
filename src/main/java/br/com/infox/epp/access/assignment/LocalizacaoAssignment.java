@@ -68,7 +68,7 @@ public class LocalizacaoAssignment implements Serializable {
         }
         return inserted;
     }
-    
+
     /**
      * Verifica se todos os elementos do Array são null
      * 

@@ -18,7 +18,7 @@ public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionam
 
     public static final String NAME = "relacionamentoManager";
     private static final long serialVersionUID = 1L;
-    
+
     public Relacionamento getRelacionamentoByProcesso(final ProcessoEpa processo) {
         Relacionamento relacionamento = null;
         if (processo != null) {
@@ -26,7 +26,7 @@ public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionam
         }
         return relacionamento;
     }
-    
+
     @Override
     public Relacionamento persist(final Relacionamento o) throws DAOException {
         final RelacionamentoDAO relacionamentoDAO = getDao();

@@ -11,13 +11,13 @@ import br.com.infox.epp.system.manager.ParametroManager;
 
 @Name(ParametroCrudAction.NAME)
 public class ParametroCrudAction extends AbstractCrudAction<Parametro, ParametroManager> {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
     public static final String NAME = "parametroCrudAction";
-    
+
     @Override
     protected boolean isInstanceValid() {
         getInstance().setUsuarioModificacao(Authenticator.getUsuarioLogado());

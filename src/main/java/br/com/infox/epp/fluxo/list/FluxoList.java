@@ -20,7 +20,7 @@ public class FluxoList extends EntityList<Fluxo> {
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_EJBQL = "select o from Fluxo o";
     private static final String DEFAULT_ORDER = "fluxo";
-    
+
     public static final String NAME = "fluxoList";
 
     @Override
@@ -45,34 +45,36 @@ public class FluxoList extends EntityList<Fluxo> {
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
-    
+
     @Override
     public List<Fluxo> getResultList() {
-		setEjbql(getEjbqlRestrictedWithDataPublicacao());
-    	return super.getResultList();
+        setEjbql(getEjbqlRestrictedWithDataPublicacao());
+        return super.getResultList();
     }
 
     public static final FluxoList instance() {
         return ComponentUtil.getComponent(FluxoList.NAME);
     }
-    
+
     private String getEjbqlRestrictedWithDataPublicacao() {
-    	if (getEntity().getDataInicioPublicacao() == null && getEntity().getDataFimPublicacao() == null) {
-    		return getDefaultEjbql();
-    	}
-    	
-    	StringBuilder sb = new StringBuilder(getDefaultEjbql());
-    	sb.append(" where ");
-    	
-    	if (getEntity().getDataInicioPublicacao() != null && getEntity().getDataFimPublicacao() != null) {
-    		sb.append("o.dataInicioPublicacao >= #{fluxoList.entity.dataInicioPublicacao}");
-    		sb.append(" and o.dataFimPublicacao <= #{fluxoList.entity.dataFimPublicacao}");
-    	} else if (getEntity().getDataInicioPublicacao() != null) {
-    		sb.append("o.dataInicioPublicacao >= #{fluxoList.entity.dataInicioPublicacao}");
-    	} else {
-    		sb.append("o.dataFimPublicacao <= #{fluxoList.entity.dataFimPublicacao}");
-    	}
-    	
-    	return sb.toString();
+        if (getEntity().getDataInicioPublicacao() == null
+                && getEntity().getDataFimPublicacao() == null) {
+            return getDefaultEjbql();
+        }
+
+        StringBuilder sb = new StringBuilder(getDefaultEjbql());
+        sb.append(" where ");
+
+        if (getEntity().getDataInicioPublicacao() != null
+                && getEntity().getDataFimPublicacao() != null) {
+            sb.append("o.dataInicioPublicacao >= #{fluxoList.entity.dataInicioPublicacao}");
+            sb.append(" and o.dataFimPublicacao <= #{fluxoList.entity.dataFimPublicacao}");
+        } else if (getEntity().getDataInicioPublicacao() != null) {
+            sb.append("o.dataInicioPublicacao >= #{fluxoList.entity.dataInicioPublicacao}");
+        } else {
+            sb.append("o.dataFimPublicacao <= #{fluxoList.entity.dataFimPublicacao}");
+        }
+
+        return sb.toString();
     }
 }

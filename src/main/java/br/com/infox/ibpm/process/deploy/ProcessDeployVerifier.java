@@ -88,7 +88,8 @@ public class ProcessDeployVerifier {
                 LOG.error(".init()", e);
             }
         }
-        LOG.info(MessageFormat.format("Tempo de publicacao: {0}", new Date().getTime() - time));
+        LOG.info(MessageFormat.format("Tempo de publicacao: {0}", new Date().getTime()
+                - time));
     }
 
     private boolean verify(List<String> processNames, Fluxo f) {

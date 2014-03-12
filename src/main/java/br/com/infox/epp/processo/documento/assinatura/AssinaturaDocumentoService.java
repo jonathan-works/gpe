@@ -23,7 +23,7 @@ public class AssinaturaDocumentoService implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "assinaturaDocumentoService";
-    
+
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
@@ -34,7 +34,8 @@ public class AssinaturaDocumentoService implements Serializable {
 
     public Boolean isDocumentoAssinado(Integer idDoc) {
         ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDoc);
-        return processoDocumento != null && isDocumentoAssinado(processoDocumento);
+        return processoDocumento != null
+                && isDocumentoAssinado(processoDocumento);
     }
 
     public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded,

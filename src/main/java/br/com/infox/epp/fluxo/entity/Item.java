@@ -39,8 +39,7 @@ import br.com.infox.epp.fluxo.query.ItemQuery;
 
 @Entity
 @Table(name = TABLE_ITEM, schema = PUBLIC)
-@NamedQueries(value={ @NamedQuery(name = ItemQuery.GET_FOLHAS,
-        query = ItemQuery.GET_FOLHAS_QUERY) })
+@NamedQueries(value = { @NamedQuery(name = ItemQuery.GET_FOLHAS, query = ItemQuery.GET_FOLHAS_QUERY) })
 public class Item implements Serializable, Recursive<Item> {
 
     private static final long serialVersionUID = 1L;
@@ -92,8 +91,7 @@ public class Item implements Serializable, Recursive<Item> {
         this.itemPai = itemPai;
     }
 
-    @Column(name = CODIGO_ITEM, length = LengthConstants.DESCRICAO_PEQUENA,
-            nullable = false)
+    @Column(name = CODIGO_ITEM, length = LengthConstants.DESCRICAO_PEQUENA, nullable = false)
     @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA)
     @NotNull
     public String getCodigoItem() {
@@ -104,8 +102,7 @@ public class Item implements Serializable, Recursive<Item> {
         this.codigoItem = codigoItem;
     }
 
-    @Column(name = DESCRICAO_ITEM, nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = DESCRICAO_ITEM, nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @Size(min = 1, max = LengthConstants.DESCRICAO_PADRAO)
     @NotNull
     public String getDescricaoItem() {
@@ -127,8 +124,7 @@ public class Item implements Serializable, Recursive<Item> {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = ITEM_PAI_ATTRIBUTE)
+        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = ITEM_PAI_ATTRIBUTE)
     public List<Item> getItemList() {
         return this.itemList;
     }

@@ -28,8 +28,7 @@ import br.com.infox.epp.access.entity.Papel;
 
 @Entity
 @Table(name = TABLE_TIPO_MODELO_DOCUMENTO_PAPEL, schema = PUBLIC)
-@NamedQueries({ @NamedQuery(name = TIPOS_MODELO_DOCUMENTO_PERMITIDOS,
-        query = TIPOS_MODELO_DOCUMENTO_PERMITIDOS_QUERY) })
+@NamedQueries({ @NamedQuery(name = TIPOS_MODELO_DOCUMENTO_PERMITIDOS, query = TIPOS_MODELO_DOCUMENTO_PERMITIDOS_QUERY) })
 public class TipoModeloDocumentoPapel implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,12 +37,10 @@ public class TipoModeloDocumentoPapel implements Serializable {
     private TipoModeloDocumento tipoModeloDocumento;
     private Papel papel;
 
-    @SequenceGenerator(name = GENERATOR,
-            sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO_PAPEL)
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO_PAPEL)
     @Id
     @GeneratedValue(generator = GENERATOR)
-    @Column(name = ID_TIPO_MODELO_DOCUMENTO_PAPEL, unique = true,
-            nullable = false)
+    @Column(name = ID_TIPO_MODELO_DOCUMENTO_PAPEL, unique = true, nullable = false)
     public int getIdTipoModeloDocumentoPapel() {
         return idTipoModeloDocumentoPapel;
     }

@@ -10,6 +10,6 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 @AutoCreate
 public class TipoModeloDocumentoDAO extends DAO<TipoModeloDocumento> {
 
-	public static final String NAME = "tipoModeloDocumentoDAO";
-	private static final long serialVersionUID = 1L;
+    public static final String NAME = "tipoModeloDocumentoDAO";
+    private static final long serialVersionUID = 1L;
 }

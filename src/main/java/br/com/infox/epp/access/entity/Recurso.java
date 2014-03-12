@@ -28,16 +28,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "tb_recurso", schema=PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))
+@Table(name = "tb_recurso", schema = PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))
 @NamedQueries({
-    @NamedQuery(name=RECURSOS_FROM_IDENTIFICADORES, query=RECURSOS_FROM_IDENTIFICADORES_QUERY),
-    @NamedQuery(name=RECURSOS_NOT_IN_IDENTIFICADORES, query=RECURSOS_NOT_IN_IDENTIFICADORES_QUERY),
-    @NamedQuery(name=COUNT_RECURSO_BY_IDENTIFICADOR, query=COUNT_RECURSO_BY_IDENTIFICADOR_QUERY),
-    @NamedQuery(name=RECURSO_BY_IDENTIFICADOR, query=RECURSO_BY_IDENTIFICADOR_QUERY)
-})
-@NamedNativeQueries({
-    @NamedNativeQuery(name=PAPEIS_FROM_RECURSO, query=PAPEIS_FROM_RECURSO_QUERY)
-})
+    @NamedQuery(name = RECURSOS_FROM_IDENTIFICADORES, query = RECURSOS_FROM_IDENTIFICADORES_QUERY),
+    @NamedQuery(name = RECURSOS_NOT_IN_IDENTIFICADORES, query = RECURSOS_NOT_IN_IDENTIFICADORES_QUERY),
+    @NamedQuery(name = COUNT_RECURSO_BY_IDENTIFICADOR, query = COUNT_RECURSO_BY_IDENTIFICADOR_QUERY),
+    @NamedQuery(name = RECURSO_BY_IDENTIFICADOR, query = RECURSO_BY_IDENTIFICADOR_QUERY) })
+@NamedNativeQueries({ @NamedNativeQuery(name = PAPEIS_FROM_RECURSO, query = PAPEIS_FROM_RECURSO_QUERY) })
 public class Recurso implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,15 +42,15 @@ public class Recurso implements java.io.Serializable {
     private int idRecurso;
     private String nome;
     private String identificador;
-    
-    public Recurso(){
-        
+
+    public Recurso() {
+
     }
-    
-    public Recurso(String nome, String identificador){
+
+    public Recurso(String nome, String identificador) {
         this.nome = nome;
         this.identificador = identificador;
-        
+
     }
 
     @SequenceGenerator(name = GENERATOR, sequenceName = "public.sq_tb_recurso")
@@ -68,8 +65,8 @@ public class Recurso implements java.io.Serializable {
         this.idRecurso = idRecurso;
     }
 
-    @Column(name = "ds_nome", length=DESCRICAO_PADRAO)
-    @Size(max=DESCRICAO_PADRAO)
+    @Column(name = "ds_nome", length = DESCRICAO_PADRAO)
+    @Size(max = DESCRICAO_PADRAO)
     public String getNome() {
         return this.nome;
     }
@@ -79,7 +76,7 @@ public class Recurso implements java.io.Serializable {
     }
 
     @Column(name = "ds_identificador", length = DESCRICAO_PADRAO)
-    @Size(max=DESCRICAO_PADRAO)
+    @Size(max = DESCRICAO_PADRAO)
     @NotNull
     public String getIdentificador() {
         return this.identificador;
@@ -88,7 +85,7 @@ public class Recurso implements java.io.Serializable {
     public void setIdentificador(String identificador) {
         this.identificador = identificador;
     }
-    
+
     @Override
     public String toString() {
         if (this.nome == null) {
@@ -101,7 +98,7 @@ public class Recurso implements java.io.Serializable {
     public boolean getAtivo() {
         return true;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

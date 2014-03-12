@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.manager;
 
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -17,7 +16,7 @@ public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskIns
 
     public TaskInstanceManager() {
     }
-    
+
     public void removeUsuario(final Long idTaskInstance) throws DAOException {
         getDao().removeUsuario(idTaskInstance);
     }

@@ -50,7 +50,7 @@ public class CertificateManager {
     private List<X509Certificate> listCertificadosCA;
 
     @Observer({ "org.jboss.seam.postInitialization",
-            "org.jboss.seam.postReInitialization" })
+        "org.jboss.seam.postReInitialization" })
     public synchronized void init() {
         listCertificadosCA = new ArrayList<X509Certificate>();
         acceptedCaNameList = new ArrayList<String>();
@@ -70,26 +70,22 @@ public class CertificateManager {
     }
 
     private void populateListMap() throws CertificateException {
-        CertificateFactory certFactory = CertificateFactory
-                .getInstance("X.509");
+        CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
 
         List<URL> files = new ArrayList<URL>();
-            try {
-                files = getResourceListing(CertificateManager.class,
-                        "certificados/", "(.*crt$|.*cer$)");
-            } catch (Exception e) {
-                LOG.error("CertificadosCaCheckManager.populateListMap()", e);
-            }
+        try {
+            files = getResourceListing(CertificateManager.class, "certificados/", "(.*crt$|.*cer$)");
+        } catch (Exception e) {
+            LOG.error("CertificadosCaCheckManager.populateListMap()", e);
+        }
 
         InputStream is = null;
         for (URL fileCert : files) {
             try {
                 is = fileCert.openStream();
-                X509Certificate x509Cert = (X509Certificate) certFactory
-                        .generateCertificate(is);
+                X509Certificate x509Cert = (X509Certificate) certFactory.generateCertificate(is);
                 listCertificadosCA.add(x509Cert);
-                String cnName = Certificado.getCNValue(x509Cert.getSubjectDN()
-                        .getName());
+                String cnName = Certificado.getCNValue(x509Cert.getSubjectDN().getName());
                 acceptedCaNameList.add(cnName);
                 acceptedCaNameSb.append(cnName);
                 acceptedCaNameSb.append(BR);
@@ -103,15 +99,12 @@ public class CertificateManager {
 
     }
 
-    public void verificaCertificado(String certChain)
-            throws CertificadoException, CertificateException {
-        X509Certificate[] x509Certificates = DigitalSignatureUtils
-                .loadCertFromBase64String(certChain);
+    public void verificaCertificado(String certChain) throws CertificadoException, CertificateException {
+        X509Certificate[] x509Certificates = DigitalSignatureUtils.loadCertFromBase64String(certChain);
         verificaCertificado(x509Certificates);
     }
 
-    public void verificaCertificado(X509Certificate[] certChain)
-            throws CertificateException {
+    public void verificaCertificado(X509Certificate[] certChain) throws CertificateException {
         X509Certificate certificate = certChain[0];
         boolean valid = true;
 
@@ -143,8 +136,7 @@ public class CertificateManager {
         for (int i = 0; i < certChain.length; i++) {
             X509Certificate cert = certChain[i];
             try {
-                DigitalSignatureUtils.verifyCertificate(cert,
-                        aTrustedCertificates);
+                DigitalSignatureUtils.verifyCertificate(cert, aTrustedCertificates);
                 LOG.info("Certificado Verificado com sucesso. ");
                 return;
             } catch (CertificateExpiredException e) {
@@ -170,8 +162,7 @@ public class CertificateManager {
     public void download() {
         byte[] data = getAcceptedCa().getBytes();
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletResponse response = (HttpServletResponse) facesContext
-                .getExternalContext().getResponse();
+        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
         response.setContentType("text/plain");
         response.setContentLength(data.length);
         String file = "file.txt";
@@ -184,8 +175,8 @@ public class CertificateManager {
             out.flush();
             facesContext.responseComplete();
         } catch (IOException ex) {
-            FacesMessages.instance().add(Severity.ERROR,
-                    "Error while downloading the file: " + file);
+            FacesMessages.instance().add(Severity.ERROR, "Error while downloading the file: "
+                    + file);
         }
     }
 
@@ -199,11 +190,9 @@ public class CertificateManager {
      * JARs.
      * 
      * @author Greg Briggs
-     * @param clazz
-     *            Any java class that lives in the same place as the resources
-     *            you want.
-     * @param path
-     *            Should end with "/", but not start with one.
+     * @param clazz Any java class that lives in the same place as the resources
+     *        you want.
+     * @param path Should end with "/", but not start with one.
      * @return Just the name of each member item, not the full paths.
      * @throws URISyntaxException
      * @throws IOException
@@ -238,9 +227,12 @@ public class CertificateManager {
         }
         if (dirURL.getProtocol().equals("jar")) {
             /* A JAR path */
-            String jarPath = dirURL.getPath().substring(5,
-                    dirURL.getPath().indexOf("!")); // strip out only the JAR
-                                                    // file
+            String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); // strip
+                                                                                           // out
+                                                                                           // only
+                                                                                           // the
+                                                                                           // JAR
+                                                                                           // file
             JarFile jar = null;
             Enumeration<JarEntry> entries = null;
             try {
@@ -251,9 +243,9 @@ public class CertificateManager {
                     jar.close();
                 }
             }
-                                                            // in jar
+            // in jar
             List<URL> result = new ArrayList<URL>(); // avoid duplicates in case
-                                                        // it is a subdirectory
+                                                     // it is a subdirectory
             while (entries != null && entries.hasMoreElements()) {
                 String name = entries.nextElement().getName();
                 if (name.startsWith(path) && !name.equals(path)

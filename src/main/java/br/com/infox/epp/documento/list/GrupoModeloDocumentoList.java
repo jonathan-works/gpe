@@ -15,37 +15,37 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 public class GrupoModeloDocumentoList extends EntityList<GrupoModeloDocumento> {
 
-	public static final String NAME = "grupoModeloDocumentoList";
-	private static final long serialVersionUID = 1L;
-	
-	private static final String TEMPLATE = "/GrupoModeloDocumento/grupoModeloDocumentoTemplate.xls";
+    public static final String NAME = "grupoModeloDocumentoList";
+    private static final long serialVersionUID = 1L;
+
+    private static final String TEMPLATE = "/GrupoModeloDocumento/grupoModeloDocumentoTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "GruposModeloDocumento.xls";
-	
-	private static final String DEFAULT_EJBQL = "select o from GrupoModeloDocumento o";
-	private static final String DEFAULT_ORDER = "grupoModeloDocumento";
-	
-	public static final GrupoModeloDocumentoList instance() {
-		return ComponentUtil.getComponent(NAME);
-	}
-	
-	protected void addSearchFields() {
-		addSearchField("grupoModeloDocumento", SearchCriteria.CONTENDO);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-	}
 
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    private static final String DEFAULT_EJBQL = "select o from GrupoModeloDocumento o";
+    private static final String DEFAULT_ORDER = "grupoModeloDocumento";
 
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    public static final GrupoModeloDocumentoList instance() {
+        return ComponentUtil.getComponent(NAME);
+    }
 
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
-	
-	@Override
+    protected void addSearchFields() {
+        addSearchField("grupoModeloDocumento", SearchCriteria.CONTENDO);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+    }
+
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
     public String getDownloadXlsName() {
         return DOWNLOAD_XLS_NAME;
     }

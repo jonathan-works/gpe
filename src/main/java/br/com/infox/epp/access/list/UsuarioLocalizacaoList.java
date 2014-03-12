@@ -14,29 +14,30 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 @Scope(ScopeType.CONVERSATION)
 public class UsuarioLocalizacaoList extends EntityList<UsuarioLocalizacao> {
 
-	private static final long serialVersionUID = 1L;
-	// Não pode ser usuarioLocalizacaoList por causa da variável de sessão que o Authenticator cria
-	public static final String NAME = "usuarioLocalizacaoEntityList";
-	private static final String DEFAULT_EJBQL = "select o from UsuarioLocalizacao o";
-	private static final String DEFAULT_ORDER = "o.localizacao";
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("usuario", SearchCriteria.IGUAL);
-	}
-	
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
-	
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
-	
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    private static final long serialVersionUID = 1L;
+    // Não pode ser usuarioLocalizacaoList por causa da variável de sessão que o
+    // Authenticator cria
+    public static final String NAME = "usuarioLocalizacaoEntityList";
+    private static final String DEFAULT_EJBQL = "select o from UsuarioLocalizacao o";
+    private static final String DEFAULT_ORDER = "o.localizacao";
+
+    @Override
+    protected void addSearchFields() {
+        addSearchField("usuario", SearchCriteria.IGUAL);
+    }
+
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 }

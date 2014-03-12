@@ -13,8 +13,9 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, UsuarioLoginManager> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginCrudAction";
-    
-    @In private PasswordService passwordService;
+
+    @In
+    private PasswordService passwordService;
 
     @Override
     public void newInstance() {
@@ -24,8 +25,8 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
         usuarioLogin.setProvisorio(Boolean.FALSE);
     }
 
-    public UsuarioEnum[] getTiposDeUsuario(){
+    public UsuarioEnum[] getTiposDeUsuario() {
         return UsuarioEnum.values();
     }
-    
+
 }

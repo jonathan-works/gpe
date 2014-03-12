@@ -36,93 +36,91 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
 @Table(name = TABLE_NAME)
-@NamedQueries({
-	@NamedQuery(name = NAMED_QUERY_SIGILO_PROCESSO_ATIVO, query = QUERY_SIGILO_PROCESSO_ATIVO)
-})
+@NamedQueries({ @NamedQuery(name = NAMED_QUERY_SIGILO_PROCESSO_ATIVO, query = QUERY_SIGILO_PROCESSO_ATIVO) })
 public class SigiloProcesso implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
-	@GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-	@Column(name = COLUMN_ID)
-	private Integer id;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = COLUMN_ID_PROCESSO_EPA, nullable = false)
-	private ProcessoEpa processo;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
-	private UsuarioLogin usuario;
-	
-	@Column(name = COLUMN_SIGILOSO, nullable = false)
-	private Boolean sigiloso;
-	
-	@Column(name = COLUMN_MOTIVO, nullable = false, columnDefinition = "TEXT")
-	private String motivo;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = COLUMN_DATA_INCLUSAO, nullable = false)
-	private Date dataInclusao;
-	
-	@Column(name = COLUMN_ATIVO, nullable = false)
-	private Boolean ativo;
-	
-	public Integer getId() {
-		return id;
-	}
+    private static final long serialVersionUID = 1L;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Id
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = COLUMN_ID)
+    private Integer id;
 
-	public ProcessoEpa getProcesso() {
-		return processo;
-	}
-	
-	public void setProcesso(ProcessoEpa processo) {
-		this.processo = processo;
-	}
-	
-	public UsuarioLogin getUsuario() {
-		return usuario;
-	}
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = COLUMN_ID_PROCESSO_EPA, nullable = false)
+    private ProcessoEpa processo;
 
-	public void setUsuario(UsuarioLogin usuario) {
-		this.usuario = usuario;
-	}
-	
-	public Boolean getSigiloso() {
-		return sigiloso;
-	}
-	
-	public void setSigiloso(Boolean sigiloso) {
-		this.sigiloso = sigiloso;
-	}
-	
-	public String getMotivo() {
-		return motivo;
-	}
-	
-	public void setMotivo(String motivo) {
-		this.motivo = motivo;
-	}
-	
-	public Date getDataInclusao() {
-		return dataInclusao;
-	}
-	
-	public void setDataInclusao(Date dataInclusao) {
-		this.dataInclusao = dataInclusao;
-	}
-	
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
+    private UsuarioLogin usuario;
+
+    @Column(name = COLUMN_SIGILOSO, nullable = false)
+    private Boolean sigiloso;
+
+    @Column(name = COLUMN_MOTIVO, nullable = false, columnDefinition = "TEXT")
+    private String motivo;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = COLUMN_DATA_INCLUSAO, nullable = false)
+    private Date dataInclusao;
+
+    @Column(name = COLUMN_ATIVO, nullable = false)
+    private Boolean ativo;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public ProcessoEpa getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(ProcessoEpa processo) {
+        this.processo = processo;
+    }
+
+    public UsuarioLogin getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioLogin usuario) {
+        this.usuario = usuario;
+    }
+
+    public Boolean getSigiloso() {
+        return sigiloso;
+    }
+
+    public void setSigiloso(Boolean sigiloso) {
+        this.sigiloso = sigiloso;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public Date getDataInclusao() {
+        return dataInclusao;
+    }
+
+    public void setDataInclusao(Date dataInclusao) {
+        this.dataInclusao = dataInclusao;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 }

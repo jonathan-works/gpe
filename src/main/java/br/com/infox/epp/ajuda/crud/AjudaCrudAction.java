@@ -18,21 +18,23 @@ import br.com.infox.epp.ajuda.manager.PaginaManager;
 
 @Name(AjudaCrudAction.NAME)
 public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
     public static final String NAME = "ajudaCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(AjudaCrudAction.class);
-    
+
     private String viewId;
     private Pagina pagina;
     private Ajuda oldInstance;
-    
-    @In private AjudaManager ajudaManager;
-    @In private PaginaManager paginaManager;
-    
+
+    @In
+    private AjudaManager ajudaManager;
+    @In
+    private PaginaManager paginaManager;
+
     public String getViewId() {
         return viewId;
     }
@@ -41,13 +43,13 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
         this.viewId = viewId;
         createInstance();
     }
-    
+
     @Override
     public void newInstance() {
         super.newInstance();
         createInstance();
     }
-    
+
     private Ajuda createInstance() {
         setInstance(new Ajuda());
         Ajuda ajuda = ajudaManager.getAjudaByPaginaUrl(viewId);
@@ -85,19 +87,19 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
         }
         return ret;
     }
-    
+
     private Pagina getPagina() {
         if (pagina == null) {
             return paginaManager.getPaginaByUrl(viewId);
         }
         return pagina;
     }
-    
-    public void recuperar(HistoricoAjuda historico){
+
+    public void recuperar(HistoricoAjuda historico) {
         getInstance().setTexto(historico.getTexto());
         save();
     }
-    
+
     public Integer getOldInstanceId() {
         if (this.oldInstance != null) {
             return this.oldInstance.getIdAjuda();

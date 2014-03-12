@@ -46,16 +46,16 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
     protected static final String MSG_REGISTRO_CADASTRADO = "Registro já cadastrado!";
 
     private static final LogProvider LOG = Logging.getLogProvider(AbstractAction.class);
-    
+
     @In
     private ActionMessagesService actionMessagesService;
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
-	@Create
+    @Create
     public void init() {
-    	this.manager = (M) Component.getInstance(getManagerName());
+        this.manager = (M) Component.getInstance(getManagerName());
     }
-    
+
     protected T find(Object id) {
         return getManager().find(id);
     }
@@ -204,12 +204,12 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
     protected M getManager() {
         return manager;
     }
-    
+
     @SuppressWarnings(WarningConstants.UNCHECKED)
-	protected String getManagerName() {
-    	ParameterizedType superType = (ParameterizedType) getClass().getGenericSuperclass();
-		Class<M> managerClass = (Class<M>) superType.getActualTypeArguments()[1];
-		Name name = managerClass.getAnnotation(Name.class);
-		return name.value();
+    protected String getManagerName() {
+        ParameterizedType superType = (ParameterizedType) getClass().getGenericSuperclass();
+        Class<M> managerClass = (Class<M>) superType.getActualTypeArguments()[1];
+        Name name = managerClass.getAnnotation(Name.class);
+        return name.value();
     }
 }

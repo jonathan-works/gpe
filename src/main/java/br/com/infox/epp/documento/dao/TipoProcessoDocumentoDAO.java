@@ -19,11 +19,12 @@ import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 @Name(TipoProcessoDocumentoDAO.NAME)
 @AutoCreate
 public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento> {
-	
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "tipoProcessoDocumentoDAO";
-	
-    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, Papel papel) {
+
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "tipoProcessoDocumentoDAO";
+
+    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(
+            boolean isModelo, Papel papel) {
         final HashMap<String, Object> parameters = new HashMap<>();
         TipoDocumentoEnum tipoDocumento;
         if (isModelo) {
@@ -36,7 +37,8 @@ public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento> {
         return getNamedResultList(TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE, parameters);
     }
 
-    public boolean isAssinaturaObrigatoria(TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
+    public boolean isAssinaturaObrigatoria(
+            TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
         HashMap<String, Object> params = new HashMap<String, Object>(0);
         params.put(TIPO_PROCESSO_DOCUMENTO_PARAM, tipoProcessoDocumento);
         params.put(PAPEL_PARAM, papel);

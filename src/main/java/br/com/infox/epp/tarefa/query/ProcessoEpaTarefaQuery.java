@@ -23,26 +23,31 @@ public interface ProcessoEpaTarefaQuery {
             + "inner join pt.processoEpa p "
             + "inner join p.naturezaCategoriaFluxo ncf "
             + "inner join ncf.categoria c " + "inner join ncf.fluxo f ";
-    
+
     String PARAM_CATEGORIA = "categoria";
     String FORA_PRAZO_FLUXO = "listForaPrazoFluxo";
-    String FORA_PRAZO_FLUXO_QUERY = BASE_QUERY_FORA_FLUXO + "where p.porcentagem > 100 "
-            + "and pt.dataFim is null and c = :" + PARAM_CATEGORIA;
-    
+    String FORA_PRAZO_FLUXO_QUERY = BASE_QUERY_FORA_FLUXO
+            + "where p.porcentagem > 100 " + "and pt.dataFim is null and c = :"
+            + PARAM_CATEGORIA;
+
     String FORA_PRAZO_TAREFA = "listForaPrazoTarefa";
-    String FORA_PRAZO_TAREFA_QUERY = BASE_QUERY_FORA_FLUXO + "where pt.porcentagem > 100 "
+    String FORA_PRAZO_TAREFA_QUERY = BASE_QUERY_FORA_FLUXO
+            + "where pt.porcentagem > 100 "
             + "and pt.dataFim is null and c = :" + PARAM_CATEGORIA;
-    
+
     String TAREFA_PROXIMA_LIMITE = "listTarefaPertoLimite";
-    String TAREFA_PROXIMA_LIMITE_QUERY = BASE_QUERY_FORA_FLUXO + "where pt.porcentagem <= 100 "
+    String TAREFA_PROXIMA_LIMITE_QUERY = BASE_QUERY_FORA_FLUXO
+            + "where pt.porcentagem <= 100 "
             + "and pt.porcentagem >= 70 and pt.dataFim is null";
-    
+
     String PARAM_ID_TAREFA = "idTarefa";
     String PARAM_ID_PROCESSO = "idProcesso";
     String PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA = "findProcessoEpaTarefaByIdProcessoAndIdTarefa";
-    String PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY = "select new map(pet.taskInstance as idTaskInstance) " +
-            "from ProcessoEpaTarefa pet " +
-            "where pet.tarefa.idTarefa=:" + PARAM_ID_TAREFA + 
-            " and pet.processoEpa.idProcesso=:" + PARAM_ID_PROCESSO;
+    String PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY = "select new map(pet.taskInstance as idTaskInstance) "
+            + "from ProcessoEpaTarefa pet "
+            + "where pet.tarefa.idTarefa=:"
+            + PARAM_ID_TAREFA
+            + " and pet.processoEpa.idProcesso=:"
+            + PARAM_ID_PROCESSO;
 
 }

@@ -11,7 +11,7 @@ import br.com.infox.epp.documento.manager.GrupoModeloDocumentoManager;
 @Name(GrupoModeloDocumentoCrudAtion.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class GrupoModeloDocumentoCrudAtion extends AbstractCrudAction<GrupoModeloDocumento, GrupoModeloDocumentoManager> {
-    
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "grupoModeloDocumentoCrudAtion";
 

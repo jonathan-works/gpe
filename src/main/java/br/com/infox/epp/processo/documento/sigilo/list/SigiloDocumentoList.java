@@ -16,38 +16,38 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 @AutoCreate
 public class SigiloDocumentoList extends EntityList<SigiloProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloDocumentoList";
-	
-	private static final String DEFAULT_EJBQL = "select o from SigiloDocumento o where o.documento = #{sigiloDocumentoList.documento}";
-	private static final String DEFAULT_ORDER = "dataInclusao desc";
-	
-	private ProcessoDocumento documento;
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloDocumentoList";
 
-	@Override
-	protected void addSearchFields() {
-	}
+    private static final String DEFAULT_EJBQL = "select o from SigiloDocumento o where o.documento = #{sigiloDocumentoList.documento}";
+    private static final String DEFAULT_ORDER = "dataInclusao desc";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private ProcessoDocumento documento;
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
 
-	public ProcessoDocumento getDocumento() {
-		return documento;
-	}
-	
-	public void setDocumento(ProcessoDocumento documento) {
-		this.documento = documento;
-	}
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    public ProcessoDocumento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(ProcessoDocumento documento) {
+        this.documento = documento;
+    }
 }

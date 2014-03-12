@@ -24,7 +24,7 @@ import br.com.infox.seam.exception.BusinessException;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class AccessMailService {
-    
+
     private static final String CAMPO_LOGIN = "Seu login &eacute;:";
     private static final String CAMPO_SENHA = "Sua senha nova &eacute;:";
     private static final String CAMPO_USUARIO = "Caro,";
@@ -34,11 +34,14 @@ public class AccessMailService {
     private static final String LOGIN = "login";
 
     public static final String NAME = "accessMailService";
-    
-    @In private ModeloDocumentoManager modeloDocumentoManager;
-    @In private ParametroManager parametroManager;
-    @In(create=true) private EMailData emailData;
-    
+
+    @In
+    private ModeloDocumentoManager modeloDocumentoManager;
+    @In
+    private ParametroManager parametroManager;
+    @In(create = true)
+    private EMailData emailData;
+
     private String resolveTipoDeEmail(String parametro) {
         String nomeParam = null;
         if (LOGIN.equals(parametro)) {
@@ -48,8 +51,9 @@ public class AccessMailService {
         }
         return nomeParam;
     }
-    
-    public void enviarEmailDeMudancaDeSenha(final String parametro, final UsuarioLogin usuario, final String password) throws BusinessException {
+
+    public void enviarEmailDeMudancaDeSenha(final String parametro,
+            final UsuarioLogin usuario, final String password) throws BusinessException {
         final String nomeParametro = resolveTipoDeEmail(parametro);
         final ModeloDocumento modelo = findModelo(nomeParametro);
         if (modelo != null) {
@@ -60,7 +64,7 @@ public class AccessMailService {
         }
     }
 
-    private ModeloDocumento findModelo(String nomeParametro){
+    private ModeloDocumento findModelo(String nomeParametro) {
         final Parametro parametro = parametroManager.getParametro(nomeParametro);
         ModeloDocumento result = null;
         if (parametro != null) {
@@ -71,8 +75,9 @@ public class AccessMailService {
         }
         return result;
     }
-    
-    private void enviarEmailModelo(ModeloDocumento modelo, UsuarioLogin usuario, String password) {
+
+    private void enviarEmailModelo(ModeloDocumento modelo,
+            UsuarioLogin usuario, String password) {
         String conteudo = resolverConteudo(modelo, usuario, password);
 
         emailData.setUseHtmlBody(true);
@@ -83,7 +88,8 @@ public class AccessMailService {
         new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
     }
 
-    private String resolverConteudo(ModeloDocumento modelo, UsuarioLogin usuario, String password) {
+    private String resolverConteudo(ModeloDocumento modelo,
+            UsuarioLogin usuario, String password) {
         String conteudo = modeloDocumentoManager.evaluateModeloDocumento(modelo);
         conteudo = substitute(conteudo, CAMPO_USUARIO, usuario.getNomeUsuario());
         conteudo = substitute(conteudo, CAMPO_LOGIN, usuario.getLogin());
@@ -91,7 +97,8 @@ public class AccessMailService {
         return conteudo;
     }
 
-    private String substitute(String conteudoDocumento, String campo, String valor){
+    private String substitute(String conteudoDocumento, String campo,
+            String valor) {
         Pattern pattern = Pattern.compile(campo);
         Matcher matcher = pattern.matcher(conteudoDocumento);
         return matcher.replaceFirst(campo + " " + valor);

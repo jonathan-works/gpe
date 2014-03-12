@@ -14,33 +14,33 @@ import br.com.infox.epp.access.entity.Localizacao;
 @Scope(ScopeType.PAGE)
 public class LocalizacaoList extends EntityList<Localizacao> {
 
-	public static final String NAME = "localizacaoList";
-	private static final long serialVersionUID = 1L;
-	
-	private static final String DEFAULT_EJBQL = "select o from Localizacao o";
-	private static final String DEFAULT_ORDER = "caminhoCompleto";
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("localizacao", SearchCriteria.CONTENDO);
-		addSearchField("localizacaoPai", SearchCriteria.IGUAL);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-		addSearchField("estrutura", SearchCriteria.IGUAL);
-	}
+    public static final String NAME = "localizacaoList";
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String DEFAULT_EJBQL = "select o from Localizacao o";
+    private static final String DEFAULT_ORDER = "caminhoCompleto";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("localizacao", SearchCriteria.CONTENDO);
+        addSearchField("localizacaoPai", SearchCriteria.IGUAL);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+        addSearchField("estrutura", SearchCriteria.IGUAL);
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

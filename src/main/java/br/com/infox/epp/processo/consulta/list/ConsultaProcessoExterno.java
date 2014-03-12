@@ -17,10 +17,11 @@ public class ConsultaProcessoExterno extends EntityList<ProcessoEpa> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoExterno";
-    
-    private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o where " + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
+
+    private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o where "
+            + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     private static final String DEFAULT_ORDER = "dataInicio ASC";
-    
+
     private boolean exibirTable = false;
 
     @Override
@@ -42,17 +43,17 @@ public class ConsultaProcessoExterno extends EntityList<ProcessoEpa> {
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
-    
-    public void exibirTable(){
+
+    public void exibirTable() {
         exibirTable = true;
     }
-    
-    public void esconderTable(){
+
+    public void esconderTable() {
         newInstance();
         exibirTable = false;
     }
-    
-    public boolean isExibirTable(){
+
+    public boolean isExibirTable() {
         return this.exibirTable;
     }
 

@@ -43,8 +43,7 @@ public class HistoricoAjuda implements java.io.Serializable {
     private Pagina pagina;
     private UsuarioLogin usuario;
 
-    @SequenceGenerator(name = GENERATOR,
-            sequenceName = SEQUENCE_HISTORICO_AJUDA)
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_HISTORICO_AJUDA)
     @Id
     @GeneratedValue(generator = GENERATOR)
     @Column(name = ID_HISTORICO_AJUDA, unique = true, nullable = false)

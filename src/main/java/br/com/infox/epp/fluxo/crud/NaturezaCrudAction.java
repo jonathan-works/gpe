@@ -9,10 +9,10 @@ import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 
 @Name(NaturezaCrudAction.NAME)
 public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaManager> {
-    
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "naturezaCrudAction";
-    
+
     @Override
     protected boolean isInstanceValid() {
         final Natureza natureza = getInstance();
@@ -21,22 +21,23 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
             return false;
         }
         if (hasPartes) {
-            return natureza.getTipoPartes() != null && natureza.getNumeroPartes() != null;
+            return natureza.getTipoPartes() != null
+                    && natureza.getNumeroPartes() != null;
         } else {
             return true;
         }
     }
-    
+
     @Override
     protected void beforeSave() {
         final Natureza natureza = getInstance();
-        if (!natureza.getHasPartes()){
+        if (!natureza.getHasPartes()) {
             natureza.setTipoPartes(null);
             natureza.setNumeroPartes(null);
         }
     }
-    
-    public ParteProcessoEnum[] getTiposDePartes(){
+
+    public ParteProcessoEnum[] getTiposDePartes() {
         return ParteProcessoEnum.values();
     }
 

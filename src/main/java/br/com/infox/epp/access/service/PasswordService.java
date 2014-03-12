@@ -23,11 +23,13 @@ import br.com.infox.seam.security.operation.ChangePasswordOperation;
 @AutoCreate
 public class PasswordService {
     public static final String NAME = "passwordService";
-    
+
     private static final int PASSWORD_LENGTH = 8;
-    
-    @In private AccessMailService accessMailService;
-    @In private UsuarioLoginManager usuarioLoginManager;
+
+    @In
+    private AccessMailService accessMailService;
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
 
     public void requisitarNovaSenha(final boolean usingLogin, final String value) throws LoginException, BusinessException, DAOException {
         if (Strings.isEmpty(value)) {
@@ -44,7 +46,7 @@ public class PasswordService {
         }
         recoverUsuario(usuario, mode);
     }
-    
+
     public void requisitarNovaSenha(final String email, final String login) throws LoginException, BusinessException, DAOException {
         UsuarioLogin usuario;
         String mode;
@@ -59,7 +61,7 @@ public class PasswordService {
         }
         recoverUsuario(usuario, mode);
     }
-    
+
     private void recoverUsuario(UsuarioLogin usuario, String tipoParametro) throws LoginException, BusinessException, DAOException {
         if (usuario == null) {
             throw new LoginException("Usuário não encontrado");
@@ -68,9 +70,9 @@ public class PasswordService {
         changePassword(usuario, plainTextPassword);
         accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, plainTextPassword);
     }
-    
+
     private String gerarNovaSenha(final UsuarioLogin usuario) throws DAOException {
-    	String senha;
+        String senha;
         if (ParametroUtil.LOGIN_USUARIO_EXTERNO.equals(usuario.getLogin())) {
             senha = "";
         } else {
@@ -78,11 +80,12 @@ public class PasswordService {
         }
         return senha;
     }
-    
-    public void changePassword(final UsuarioLogin usuario, final String newPassword) throws DAOException {
+
+    public void changePassword(final UsuarioLogin usuario,
+            final String newPassword) throws DAOException {
         usuario.setSenha(newPassword);
         new ChangePasswordOperation(usuario.getLogin(), usuario.getSenha()).run();
         usuarioLoginManager.update(usuario);
     }
-    
+
 }

@@ -88,16 +88,13 @@ import br.com.infox.epp.system.entity.EntityLog;
     @UniqueConstraint(columnNames = "id_pessoa_fisica") })
 @NamedQueries(value = {
     @NamedQuery(name = USUARIO_LOGIN_NAME, query = USUARIO_LOGIN_QUERY),
-    @NamedQuery(name = USUARIO_BY_LOGIN_TASK_INSTANCE,
-            query = USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY),
+    @NamedQuery(name = USUARIO_BY_LOGIN_TASK_INSTANCE, query = USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY),
     @NamedQuery(name = USUARIO_BY_EMAIL, query = USUARIO_LOGIN_EMAIL_QUERY),
     @NamedQuery(name = INATIVAR_USUARIO, query = INATIVAR_USUARIO_QUERY),
     @NamedQuery(name = USUARIO_BY_PESSOA, query = USUARIO_BY_PESSOA_QUERY) })
 @NamedNativeQueries({
-    @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE,
-            query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
-    @NamedNativeQuery(name = ACTORID_TAREFA_ATUAL_BY_PROCESSO,
-            query = ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY) })
+    @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE, query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
+    @NamedNativeQuery(name = ACTORID_TAREFA_ATUAL_BY_PROCESSO, query = ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY) })
 public class UsuarioLogin implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -167,8 +164,7 @@ public class UsuarioLogin implements Serializable {
         this.idUsuarioLogin = idUsuarioLogin;
     }
 
-    @Column(name = EMAIL, length = DESCRICAO_PADRAO, unique = true,
-            nullable = false)
+    @Column(name = EMAIL, length = DESCRICAO_PADRAO, unique = true, nullable = false)
     @Size(max = DESCRICAO_PADRAO)
     @NotNull
     public String getEmail() {
@@ -190,8 +186,7 @@ public class UsuarioLogin implements Serializable {
         this.senha = senha;
     }
 
-    @Column(name = LOGIN, unique = true, nullable = false,
-            length = DESCRICAO_PADRAO)
+    @Column(name = LOGIN, unique = true, nullable = false, length = DESCRICAO_PADRAO)
     @Size(max = DESCRICAO_PADRAO)
     @NotNull
     @UserPrincipal
@@ -245,11 +240,8 @@ public class UsuarioLogin implements Serializable {
 
     @UserRoles
     @ManyToMany
-    @JoinTable(name = "tb_usuario_papel", schema = PUBLIC,
-            joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "id_papel"))
-    @ForeignKey(name = "tb_usuario_papel_usuario_fk",
-            inverseName = "tb_usuario_papel_papel_fk")
+    @JoinTable(name = "tb_usuario_papel", schema = PUBLIC, joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_papel"))
+    @ForeignKey(name = "tb_usuario_papel_usuario_fk", inverseName = "tb_usuario_papel_papel_fk")
     public Set<Papel> getPapelSet() {
         return this.papelSet;
     }
@@ -315,8 +307,7 @@ public class UsuarioLogin implements Serializable {
         this.dataExpiracao = dataExpiracao;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = "usuario")
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuario")
     public List<ProcessoDocumentoBin> getProcessoDocumentoBinList() {
         return this.processoDocumentoBinList;
     }
@@ -326,8 +317,7 @@ public class UsuarioLogin implements Serializable {
         this.processoDocumentoBinList = processoDocumentoBinList;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = "usuarioPublicacao")
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioPublicacao")
     public List<Fluxo> getFluxoList() {
         return this.fluxoList;
     }
@@ -336,8 +326,7 @@ public class UsuarioLogin implements Serializable {
         this.fluxoList = fluxoList;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = "usuario", orphanRemoval = true)
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuario", orphanRemoval = true)
     @OrderBy("idUsuarioLocalizacao")
     public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
         return this.usuarioLocalizacaoList;
@@ -348,8 +337,7 @@ public class UsuarioLogin implements Serializable {
         this.usuarioLocalizacaoList = usuarioLocalizacaoList;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = "usuarioCadastroProcesso")
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioCadastroProcesso")
     public List<Processo> getProcessoListForIdUsuarioCadastroProcesso() {
         return this.processoListForIdUsuarioCadastroProcesso;
     }
@@ -359,8 +347,7 @@ public class UsuarioLogin implements Serializable {
         this.processoListForIdUsuarioCadastroProcesso = processoListForIdUsuarioCadastroProcesso;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = "usuario")
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuario")
     public List<BloqueioUsuario> getBloqueioUsuarioList() {
         return this.bloqueioUsuarioList;
     }
@@ -369,8 +356,7 @@ public class UsuarioLogin implements Serializable {
         this.bloqueioUsuarioList = bloqueioUsuarioList;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = "usuarioInclusao")
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioInclusao")
     public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioInclusao() {
         return this.processoDocumentoListForIdUsuarioInclusao;
     }
@@ -380,8 +366,7 @@ public class UsuarioLogin implements Serializable {
         this.processoDocumentoListForIdUsuarioInclusao = processoDocumentoListForIdUsuarioInclusao;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = "usuario")
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuario")
     public List<EntityLog> getEntityLogList() {
         return entityLogList;
     }
@@ -402,7 +387,7 @@ public class UsuarioLogin implements Serializable {
         this.temContaTwitter = temContaTwitter;
     }
 
-    @Column(name = "ds_salt", length = 16, nullable=false)
+    @Column(name = "ds_salt", length = 16, nullable = false)
     @PasswordSalt
     @NotNull
     public String getSalt() {

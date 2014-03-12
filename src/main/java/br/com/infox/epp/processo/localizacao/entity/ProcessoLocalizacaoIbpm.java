@@ -35,134 +35,133 @@ import br.com.infox.epp.system.annotation.Ignore;
 @NamedQueries({
     @NamedQuery(name = LIST_BY_TASK_INSTANCE, query = LIST_BY_TASK_INSTANCE_QUERY),
     @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, query = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY),
-    @NamedQuery(name=COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, query=COUNT_PROCESSO_LOC_IBPM_BY_IDP_LOC_AND_PAPEL_QUERY),
-    @NamedQuery(name=DELETE_BY_PROCESS_ID_AND_TASK_ID, query=DELETE_BY_PROCESS_ID_AND_TASK_ID_QUERY),
-    @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, query = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY) 
-})
+    @NamedQuery(name = COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, query = COUNT_PROCESSO_LOC_IBPM_BY_IDP_LOC_AND_PAPEL_QUERY),
+    @NamedQuery(name = DELETE_BY_PROCESS_ID_AND_TASK_ID, query = DELETE_BY_PROCESS_ID_AND_TASK_ID_QUERY),
+    @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, query = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY) })
 public class ProcessoLocalizacaoIbpm implements java.io.Serializable {
 
-	public static final String TABLE_NAME = "tb_processo_localizacao_ibpm";
+    public static final String TABLE_NAME = "tb_processo_localizacao_ibpm";
 
-	private static final long serialVersionUID = 1L;
-	
-	private int idProcessoLocalizacaoIbpm;
-	private Processo processo;
-	private Long idProcessInstanceJbpm;
-	private Localizacao localizacao;
-	private Papel papel;
-	private Long idTaskJbpm;
-	private boolean contabilizar;
-	private Long idTaskInstance;
+    private static final long serialVersionUID = 1L;
 
-	public ProcessoLocalizacaoIbpm() {
-	}
+    private int idProcessoLocalizacaoIbpm;
+    private Processo processo;
+    private Long idProcessInstanceJbpm;
+    private Localizacao localizacao;
+    private Papel papel;
+    private Long idTaskJbpm;
+    private boolean contabilizar;
+    private Long idTaskInstance;
 
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_localizacao_ibpm")
-	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_processo_localizacao", unique = true, nullable = false)
-	public int getIdProcessoLocalizacaoIbpm() {
-		return idProcessoLocalizacaoIbpm;
-	}
-	
-	public void setIdProcessoLocalizacaoIbpm(int idProcessoLocalizacaoIbpm) {
-		this.idProcessoLocalizacaoIbpm = idProcessoLocalizacaoIbpm;
-	}
+    public ProcessoLocalizacaoIbpm() {
+    }
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_processo", nullable = false, updatable = false)
-	@NotNull
-	public Processo getProcesso() {
-		return processo;
-	}
-	
-	public void setProcesso(Processo processo) {
-		this.processo = processo;
-	}
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_localizacao_ibpm")
+    @Id
+    @GeneratedValue(generator = "generator")
+    @Column(name = "id_processo_localizacao", unique = true, nullable = false)
+    public int getIdProcessoLocalizacaoIbpm() {
+        return idProcessoLocalizacaoIbpm;
+    }
 
-	@Column(name = "id_processinstance_jbpm")
-	public Long getIdProcessInstanceJbpm() {
-		return idProcessInstanceJbpm;
-	}
-	
-	public void setIdProcessInstanceJbpm(Long idProcessInstanceJbpm) {
-		this.idProcessInstanceJbpm = idProcessInstanceJbpm;
-	}
+    public void setIdProcessoLocalizacaoIbpm(int idProcessoLocalizacaoIbpm) {
+        this.idProcessoLocalizacaoIbpm = idProcessoLocalizacaoIbpm;
+    }
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_localizacao", nullable = false)
-	@NotNull
-	public Localizacao getLocalizacao() {
-		return this.localizacao;
-	}
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_processo", nullable = false, updatable = false)
+    @NotNull
+    public Processo getProcesso() {
+        return processo;
+    }
 
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_papel")	
-	public Papel getPapel() {
-		return papel;
-	}
+    @Column(name = "id_processinstance_jbpm")
+    public Long getIdProcessInstanceJbpm() {
+        return idProcessInstanceJbpm;
+    }
 
-	public void setPapel(Papel papel) {
-		this.papel = papel;
-	}
-	
-	@Column(name = "id_task_jbpm", nullable = false)
-	@NotNull
-	public Long getIdTaskJbpm() {
-		return idTaskJbpm;
-	}
-	
-	public void setIdTaskJbpm(Long idTaskJbpm) {
-		this.idTaskJbpm = idTaskJbpm;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof ProcessoLocalizacaoIbpm)) {
-			return false;
-		}
-		ProcessoLocalizacaoIbpm other = (ProcessoLocalizacaoIbpm) obj;
-		if (getIdProcessoLocalizacaoIbpm() != other.getIdProcessoLocalizacaoIbpm()) {
-			return false;
-		}
-		return true;
-	}
+    public void setIdProcessInstanceJbpm(Long idProcessInstanceJbpm) {
+        this.idProcessInstanceJbpm = idProcessInstanceJbpm;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdProcessoLocalizacaoIbpm();
-		return result;
-	}
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_localizacao", nullable = false)
+    @NotNull
+    public Localizacao getLocalizacao() {
+        return this.localizacao;
+    }
 
-	public void setContabilizar(boolean contabilizar) {
-		this.contabilizar = contabilizar;
-	}
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 
-	@Column(name="in_contabilizar", nullable=false)
-	@NotNull
-	public boolean getContabilizar() {
-		return contabilizar;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_papel")
+    public Papel getPapel() {
+        return papel;
+    }
 
-	public void setIdTaskInstance(Long idTaskInstance) {
-		this.idTaskInstance = idTaskInstance;
-	}
+    public void setPapel(Papel papel) {
+        this.papel = papel;
+    }
 
-	@Column(name="id_task_instance", nullable=false)
-	@NotNull
-	public Long getIdTaskInstance() {
-		return idTaskInstance;
-	}
+    @Column(name = "id_task_jbpm", nullable = false)
+    @NotNull
+    public Long getIdTaskJbpm() {
+        return idTaskJbpm;
+    }
+
+    public void setIdTaskJbpm(Long idTaskJbpm) {
+        this.idTaskJbpm = idTaskJbpm;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ProcessoLocalizacaoIbpm)) {
+            return false;
+        }
+        ProcessoLocalizacaoIbpm other = (ProcessoLocalizacaoIbpm) obj;
+        if (getIdProcessoLocalizacaoIbpm() != other.getIdProcessoLocalizacaoIbpm()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getIdProcessoLocalizacaoIbpm();
+        return result;
+    }
+
+    public void setContabilizar(boolean contabilizar) {
+        this.contabilizar = contabilizar;
+    }
+
+    @Column(name = "in_contabilizar", nullable = false)
+    @NotNull
+    public boolean getContabilizar() {
+        return contabilizar;
+    }
+
+    public void setIdTaskInstance(Long idTaskInstance) {
+        this.idTaskInstance = idTaskInstance;
+    }
+
+    @Column(name = "id_task_instance", nullable = false)
+    @NotNull
+    public Long getIdTaskInstance() {
+        return idTaskInstance;
+    }
 }

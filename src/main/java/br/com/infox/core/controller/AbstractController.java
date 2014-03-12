@@ -5,7 +5,7 @@ import org.jboss.seam.annotations.Scope;
 
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractController implements Controller {
-    
+
     /**
      * 
      */
@@ -32,11 +32,11 @@ public abstract class AbstractController implements Controller {
     public void setId(Object id) {
         this.id = id;
     }
-    
+
     @Override
     public void onClickFormTab() {
     }
-    
+
     @Override
     public void onClickSearchTab() {
     }

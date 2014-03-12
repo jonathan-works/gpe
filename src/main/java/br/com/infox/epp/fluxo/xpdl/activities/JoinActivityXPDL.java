@@ -6,19 +6,19 @@ import org.jdom2.Element;
 
 public class JoinActivityXPDL extends ActivityXPDL {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public JoinActivityXPDL(Element element, String name) {
-		super(element, name);
-	}
+    public JoinActivityXPDL(Element element, String name) {
+        super(element, name);
+    }
 
-	@Override
-	public Node toNode() {
-		if (node == null) {
-			node = new Join();
-			node.setName(this.getName());
-		}
-		return node;
-	}
+    @Override
+    public Node toNode() {
+        if (node == null) {
+            node = new Join();
+            node.setName(this.getName());
+        }
+        return node;
+    }
 
 }

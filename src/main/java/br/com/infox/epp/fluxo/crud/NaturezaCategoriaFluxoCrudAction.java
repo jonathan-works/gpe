@@ -8,7 +8,7 @@ import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 
 @Name(NaturezaCategoriaFluxoCrudAction.NAME)
 public class NaturezaCategoriaFluxoCrudAction extends AbstractCrudAction<NaturezaCategoriaFluxo, NaturezaCategoriaFluxoManager> {
-    
+
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "naturezaCategoriaFluxoCrudAction";

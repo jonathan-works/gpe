@@ -21,22 +21,25 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 @Scope(ScopeType.EVENT)
 public class SigiloDocumentoPermissaoManager extends Manager<SigiloDocumentoPermissaoDAO, SigiloDocumentoPermissao> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloDocumentoPermissaoManager";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloDocumentoPermissaoManager";
 
-	public boolean possuiPermissao(SigiloDocumento sigiloDocumento, UsuarioLogin usuario) {
-		return getDao().possuiPermissao(sigiloDocumento, usuario);
-	}
+    public boolean possuiPermissao(SigiloDocumento sigiloDocumento,
+            UsuarioLogin usuario) {
+        return getDao().possuiPermissao(sigiloDocumento, usuario);
+    }
 
-	public boolean possuiPermissao(Set<Integer> idsDocumentosSelecionados, UsuarioLogin usuario) {
-		return getDao().possuiPermissao(idsDocumentosSelecionados, usuario);
-	}
-	
-	public void inativarPermissoes(SigiloDocumento sigiloDocumento) {
-		getDao().inativarPermissoes(sigiloDocumento);
-	}
-	
-	public List<ProcessoDocumento> getDocumentosPermitidos(ProcessoEpa processo, UsuarioLogin usuario) {
-	    return getDao().getDocumentosPermitidos(processo, usuario);
-	}
+    public boolean possuiPermissao(Set<Integer> idsDocumentosSelecionados,
+            UsuarioLogin usuario) {
+        return getDao().possuiPermissao(idsDocumentosSelecionados, usuario);
+    }
+
+    public void inativarPermissoes(SigiloDocumento sigiloDocumento) {
+        getDao().inativarPermissoes(sigiloDocumento);
+    }
+
+    public List<ProcessoDocumento> getDocumentosPermitidos(
+            ProcessoEpa processo, UsuarioLogin usuario) {
+        return getDao().getDocumentosPermitidos(processo, usuario);
+    }
 }

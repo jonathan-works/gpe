@@ -13,10 +13,10 @@ import br.com.infox.seam.exception.ApplicationException;
 @Name(TransactionService.NAME)
 @Scope(ScopeType.APPLICATION)
 public class TransactionService {
-    
+
     public static final String NAME = "transactionService";
     private static final LogProvider LOG = Logging.getLogProvider(TransactionService.class);
-    
+
     public static boolean beginTransaction() {
         try {
             UserTransaction ut = Transaction.instance();

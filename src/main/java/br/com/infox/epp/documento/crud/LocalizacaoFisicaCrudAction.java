@@ -13,43 +13,44 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(LocalizacaoFisicaCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class LocalizacaoFisicaCrudAction extends AbstractRecursiveCrudAction<LocalizacaoFisica, LocalizacaoFisicaManager> {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
     public static final String NAME = "localizacaoFisicaCrudAction";
-    
+
     public String inactive(LocalizacaoFisica localizacaoFisica) {
         inactiveRecursive(localizacaoFisica);
         return super.inactive(localizacaoFisica);
     }
-    
+
     @Override
     protected boolean isInstanceValid() {
-        if (getInstance().getLocalizacaoFisicaPai() != null && !getInstance().getLocalizacaoFisicaPai().getAtivo()){
+        if (getInstance().getLocalizacaoFisicaPai() != null
+                && !getInstance().getLocalizacaoFisicaPai().getAtivo()) {
             getInstance().setAtivo(false);
         }
         return super.isInstanceValid();
     }
-    
+
     @Override
     public String save() {
-        if (!getInstance().getAtivo()){
+        if (!getInstance().getAtivo()) {
             inactiveRecursive(getInstance());
         }
         return super.save();
     }
-    
+
     @Override
     public void newInstance() {
-    	super.newInstance();
-    	limparTrees();
+        super.newInstance();
+        limparTrees();
     }
-    
-    protected void limparTrees(){
+
+    protected void limparTrees() {
         LocalizacaoFisicaTreeHandler lfth = ComponentUtil.getComponent(LocalizacaoFisicaTreeHandler.NAME);
         lfth.clearTree();
     }
-    
+
 }

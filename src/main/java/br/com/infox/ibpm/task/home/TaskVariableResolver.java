@@ -17,12 +17,13 @@ import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 final class TaskVariableResolver extends TaskVariable {
-	
-	private static final LogProvider LOG = Logging.getLogProvider(TaskVariableResolver.class);
-    
+
+    private static final LogProvider LOG = Logging.getLogProvider(TaskVariableResolver.class);
+
     private Object value;
-    
-    public TaskVariableResolver(VariableAccess variableAccess, TaskInstance taskInstance) {
+
+    public TaskVariableResolver(VariableAccess variableAccess,
+            TaskInstance taskInstance) {
         super(variableAccess, taskInstance);
     }
 
@@ -34,19 +35,18 @@ final class TaskVariableResolver extends TaskVariable {
         this.value = value;
     }
 
-    public void resolveWhenMonetario(){
+    public void resolveWhenMonetario() {
         if ("numberMoney".equals(type) && value != null) {
             String val = String.valueOf(value);
             try {
                 value = Float.parseFloat(val);
             } catch (NumberFormatException e) {
-            	LOG.warn(".resolveWhenMonetario()", e);
-                value = Float.parseFloat(val.replace(".", "")
-                        .replace(",", "."));
+                LOG.warn(".resolveWhenMonetario()", e);
+                value = Float.parseFloat(val.replace(".", "").replace(",", "."));
             }
         }
     }
-    
+
     public void resolveWhenEditor(boolean assinar) throws CertificadoException {
         Integer valueInt = salvarProcessoDocumento(assinar);
         if (valueInt != null && valueInt != 0) {
@@ -57,33 +57,34 @@ final class TaskVariableResolver extends TaskVariable {
             }
         }
     }
-    
-    public boolean isEditor(){
-        return type.startsWith("textEditCombo") || "textEditSignature".equals(type);
+
+    public boolean isEditor() {
+        return type.startsWith("textEditCombo")
+                || "textEditSignature".equals(type);
     }
-    
+
     private String getLabel() {
         return JbpmUtil.instance().getMessages().get(name);
     }
-    
-    private Integer getIdDocumento(){
+
+    private Integer getIdDocumento() {
         if (taskInstance.getVariable(variableAccess.getMappedName()) != null) {
             return (Integer) taskInstance.getVariable(variableAccess.getMappedName());
         } else {
             return null;
         }
     }
-    
-    private Integer salvarProcessoDocumento(boolean assinar) throws CertificadoException{
-        return ProcessoHome.instance()
-        .salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinar, getLabel());
+
+    private Integer salvarProcessoDocumento(boolean assinar) throws CertificadoException {
+        return ProcessoHome.instance().salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinar, getLabel());
     }
-    
-    public void atribuirValorDaVariavelNoContexto(){
+
+    public void atribuirValorDaVariavelNoContexto() {
         Contexts.getBusinessProcessContext().set(variableAccess.getMappedName(), value);
     }
-    
-    private Object getValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis) {
+
+    private Object getValueFromMapaDeVariaveis(
+            Map<String, Object> mapaDeVariaveis) {
         if (mapaDeVariaveis == null) {
             return null;
         }
@@ -96,8 +97,9 @@ final class TaskVariableResolver extends TaskVariable {
         }
         return null;
     }
-    
-    public void assignValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis){
+
+    public void assignValueFromMapaDeVariaveis(
+            Map<String, Object> mapaDeVariaveis) {
         value = getValueFromMapaDeVariaveis(mapaDeVariaveis);
     }
 }

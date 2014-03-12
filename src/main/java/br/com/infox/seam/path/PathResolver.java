@@ -14,7 +14,7 @@ import org.jboss.seam.contexts.ServletLifecycle;
 @Name(PathResolver.NAME)
 @Scope(ScopeType.APPLICATION)
 @AutoCreate
-public class PathResolver implements Serializable{
+public class PathResolver implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pathResolver";
@@ -26,10 +26,10 @@ public class PathResolver implements Serializable{
         FacesContext fc = FacesContext.getCurrentInstance();
         return fc.getExternalContext().getRequestContextPath();
     }
-    
+
     public final String getContextPath(String relativePath) {
         FacesContext fc = FacesContext.getCurrentInstance();
-        return fc.getExternalContext().getRequestContextPath()+relativePath;
+        return fc.getExternalContext().getRequestContextPath() + relativePath;
     }
 
     /**
@@ -38,11 +38,11 @@ public class PathResolver implements Serializable{
     public String getContextRealPath() {
         return ServletLifecycle.getServletContext().getRealPath("");
     }
-    
+
     public final String getRealPath(String relativePath) {
         return ServletLifecycle.getServletContext().getRealPath(relativePath);
     }
-    
+
     /**
      * @return Retorna o diretório do JSF View Id, ou seja, o diretório da
      *         página atual.

@@ -15,15 +15,17 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 @AutoCreate
 public class UsuarioLocalizacaoManager extends Manager<UsuarioLocalizacaoDAO, UsuarioLocalizacao> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "usuarioLocalizacaoManager";
-	
-	public boolean existeUsuarioLocalizacao(UsuarioLocalizacao usuarioLocalizacao) {
-		return getDao().existeUsuarioLocalizacao(usuarioLocalizacao);
-	}
-    
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "usuarioLocalizacaoManager";
+
+    public boolean existeUsuarioLocalizacao(
+            UsuarioLocalizacao usuarioLocalizacao) {
+        return getDao().existeUsuarioLocalizacao(usuarioLocalizacao);
+    }
+
     @Override
-    public UsuarioLocalizacao persist(final UsuarioLocalizacao usuarioLocalizacao) throws DAOException {
+    public UsuarioLocalizacao persist(
+            final UsuarioLocalizacao usuarioLocalizacao) throws DAOException {
         if (existeUsuarioLocalizacao(usuarioLocalizacao)) {
             throw new DAOException("#{messages['constraintViolation.uniqueViolation']}");
         }

@@ -24,5 +24,5 @@ public class RelacionamentoDAO extends DAO<Relacionamento> {
         parameters.put(ID_PROCESSO, processo);
         return getNamedSingleResult(RELACIONAMENTO_BY_PROCESSO, parameters);
     }
-    
+
 }

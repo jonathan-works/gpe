@@ -14,31 +14,31 @@ import br.com.infox.epp.access.entity.Recurso;
 @Scope(ScopeType.PAGE)
 public class RecursoList extends EntityList<Recurso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "recursoList";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "recursoList";
 
-	public static final String DEFAULT_EJBQL = "select o from Recurso o";
-	public static final String DEFAULT_ORDER = "o.nome";
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("nome", SearchCriteria.CONTENDO);
-		addSearchField("identificador", SearchCriteria.CONTENDO);
-	}
+    public static final String DEFAULT_EJBQL = "select o from Recurso o";
+    public static final String DEFAULT_ORDER = "o.nome";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("nome", SearchCriteria.CONTENDO);
+        addSearchField("identificador", SearchCriteria.CONTENDO);
+    }
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

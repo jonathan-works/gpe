@@ -17,5 +17,5 @@ public class TaskInstanceDAO extends DAO<UsuarioTaskInstance> {
     public void removeUsuario(final Long idTaskInstance) throws DAOException {
         remove(find(idTaskInstance));
     }
-    
+
 }

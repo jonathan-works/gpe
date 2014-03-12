@@ -15,15 +15,15 @@ public class ListaEmailManager extends Manager<ListaEmailDAO, ListaEmail> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "listaEmailManager";
-    
-    public Integer getMaxIdGrupoEmailInListaEmail(){
+
+    public Integer getMaxIdGrupoEmailInListaEmail() {
         return getDao().getMaxIdGrupoEmailInListaEmail();
     }
-    
-    public List<ListaEmail> getListaEmailByIdGrupoEmail(Integer idGrupoEmail){
+
+    public List<ListaEmail> getListaEmailByIdGrupoEmail(Integer idGrupoEmail) {
         return getDao().getListaEmailByIdGrupoEmail(idGrupoEmail);
     }
-    
+
     public List<String> resolve(int idGrupoEmail) {
         return getDao().resolve(idGrupoEmail);
     }

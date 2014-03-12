@@ -145,15 +145,16 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
         parameters.put(QUERY_PARAM_PROCESSO_EPA, processoEpa);
         return getNamedSingleResult(DATA_INICIO_PRIMEIRA_TAREFA, parameters);
     }
-    
+
     public Double getMediaTempoGasto(Fluxo fluxo, SituacaoPrazoEnum prazoEnum) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_FLUXO, fluxo);
         parameters.put(PARAM_SITUACAO, prazoEnum);
         return getNamedSingleResult(TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, parameters);
     }
-    
-    public ProcessoEpa getProcessoEpaByNumeroProcesso(final String numeroProcesso) {
+
+    public ProcessoEpa getProcessoEpaByNumeroProcesso(
+            final String numeroProcesso) {
         final HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(NUMERO_PROCESSO, numeroProcesso);
         return getNamedSingleResult(GET_PROCESSO_BY_NUMERO_PROCESSO, parameters);

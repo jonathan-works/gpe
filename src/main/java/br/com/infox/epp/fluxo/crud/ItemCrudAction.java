@@ -18,7 +18,7 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item, ItemManage
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "itemCrudAction";
-    
+
     @Override
     public String save() {
         getInstance().setAtivo(paiPermiteAtivo() && isAtivo());
@@ -38,21 +38,21 @@ public class ItemCrudAction extends AbstractRecursiveCrudAction<Item, ItemManage
 
     private void inativaFilhosSeInativo() {
         final Item instance = getInstance();
-        if (!instance.getAtivo()){
+        if (!instance.getAtivo()) {
             inactiveRecursive(instance);
         }
     }
 
     @Override
     public void newInstance() {
-    	super.newInstance();
-    	limparTrees();
+        super.newInstance();
+        limparTrees();
     }
-    
-    protected void limparTrees(){
+
+    protected void limparTrees() {
         final ItemTreeHandler ith = ComponentUtil.getComponent(ItemTreeHandler.NAME);
         if (ith != null) {
-            ith.clearTree();   
+            ith.clearTree();
         }
     }
 }

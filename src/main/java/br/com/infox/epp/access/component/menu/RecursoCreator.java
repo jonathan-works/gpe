@@ -24,43 +24,44 @@ import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 class RecursoCreator extends SimpleFileVisitor<Path> {
-	private static final String PAGE_XML_EXTENSION = ".page.xml";
-	private static final String XHTML_EXTENSION = ".xhtml";
-	private static final String SEAM_EXTENSION = ".seam";
-	private static final String ADMIN_ROLE = "admin";
-	
-	private static final LogProvider LOG = Logging.getLogProvider(RecursoCreator.class);
-	
-	@Override
-	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		if (!isPageXml(file)) {
-			return FileVisitResult.CONTINUE;
-		}
-		
-		Path xhtmlFile;
-		try {
-			xhtmlFile = file.resolveSibling(file.getFileName().toString().replace(PAGE_XML_EXTENSION, XHTML_EXTENSION));
-		} catch (InvalidPathException e) {
-			LOG.warn(".visitFile(file, attrs)", e);
-			return FileVisitResult.CONTINUE;
-		}
-		PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
-		Path war = new File(pathResolver.getContextRealPath()).toPath();
-		
-		String relativeXhtmlFile = xhtmlFile.toString().replace(war.toString(), "").replace(XHTML_EXTENSION, SEAM_EXTENSION);
-		
-		createRoleIfNeeded(SecurityUtil.PAGES_PREFIX + relativeXhtmlFile.replace("\\", "/"));
-		
-		return FileVisitResult.CONTINUE;
-	}
+    private static final String PAGE_XML_EXTENSION = ".page.xml";
+    private static final String XHTML_EXTENSION = ".xhtml";
+    private static final String SEAM_EXTENSION = ".seam";
+    private static final String ADMIN_ROLE = "admin";
 
-	private boolean isPageXml(Path file) {
-		return file.getFileName().toString().endsWith(PAGE_XML_EXTENSION);
-	}
-	
+    private static final LogProvider LOG = Logging.getLogProvider(RecursoCreator.class);
+
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        if (!isPageXml(file)) {
+            return FileVisitResult.CONTINUE;
+        }
+
+        Path xhtmlFile;
+        try {
+            xhtmlFile = file.resolveSibling(file.getFileName().toString().replace(PAGE_XML_EXTENSION, XHTML_EXTENSION));
+        } catch (InvalidPathException e) {
+            LOG.warn(".visitFile(file, attrs)", e);
+            return FileVisitResult.CONTINUE;
+        }
+        PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+        Path war = new File(pathResolver.getContextRealPath()).toPath();
+
+        String relativeXhtmlFile = xhtmlFile.toString().replace(war.toString(), "").replace(XHTML_EXTENSION, SEAM_EXTENSION);
+
+        createRoleIfNeeded(SecurityUtil.PAGES_PREFIX
+                + relativeXhtmlFile.replace("\\", "/"));
+
+        return FileVisitResult.CONTINUE;
+    }
+
+    private boolean isPageXml(Path file) {
+        return file.getFileName().toString().endsWith(PAGE_XML_EXTENSION);
+    }
+
     private void createRoleIfNeeded(final String pageRole) {
         RecursoManager recursoManager = ComponentUtil.getComponent(RecursoManager.NAME);
-        if (recursoManager.existsRecurso(pageRole)){
+        if (recursoManager.existsRecurso(pageRole)) {
             return;
         }
         Recurso recurso = new Recurso(pageRole, pageRole);

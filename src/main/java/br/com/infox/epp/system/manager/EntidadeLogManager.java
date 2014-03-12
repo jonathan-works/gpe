@@ -14,15 +14,15 @@ import br.com.infox.epp.system.entity.EntityLog;
 @AutoCreate
 public class EntidadeLogManager extends Manager<EntidadeLogDAO, EntityLog> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "entidadeLogManager";
-	
-	public List<UsuarioLogin> getUsuariosQuePossuemRegistrosDeLog(){
-		return getDao().getUsuariosQuePossuemRegistrosDeLog();
-	}
-	
-	public List<String> getEntidadesQuePodemPossuirLog(){
-		return getDao().getEntidadesQuePodemPossuirLog();
-	}
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "entidadeLogManager";
+
+    public List<UsuarioLogin> getUsuariosQuePossuemRegistrosDeLog() {
+        return getDao().getUsuariosQuePossuemRegistrosDeLog();
+    }
+
+    public List<String> getEntidadesQuePodemPossuirLog() {
+        return getDao().getEntidadesQuePodemPossuirLog();
+    }
+
 }

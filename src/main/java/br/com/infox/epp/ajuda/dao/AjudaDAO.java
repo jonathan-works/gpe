@@ -40,10 +40,10 @@ public class AjudaDAO extends DAO<Ajuda> {
     private static final LogProvider LOG = Logging.getLogProvider(AjudaDAO.class);
     private static final Class<Ajuda> CLASS = Ajuda.class;
     public static final String NAME = "ajudaDAO";
-    
+
     private static final String INDICES_CRIADOS = "----------- Indices criados -------------";
     private static final String CRIANDO_INDICES = "----------- Criando indices -------------";
-    
+
     @In
     private SessionAssistant sessionAssistant;
 
@@ -52,9 +52,9 @@ public class AjudaDAO extends DAO<Ajuda> {
         parameters.put(PARAM_URL, url);
         return getNamedSingleResult(AJUDA_BY_URL, parameters);
     }
-    
+
     @SuppressWarnings({ RAWTYPES, UNCHECKED })
-    public List pesquisar(String textoPesquisa) throws ParseException{
+    public List pesquisar(String textoPesquisa) throws ParseException {
         Query luceneQuery = getLuceneQuery(textoPesquisa);
         FullTextQuery textQuery = getEntityManager().createFullTextQuery(luceneQuery, CLASS);
         List resultado = new ArrayList<>();
@@ -72,13 +72,13 @@ public class AjudaDAO extends DAO<Ajuda> {
         parser.setAllowLeadingWildcard(true);
         return parser.parse("+" + textoPesquisa + "+");
     }
-    
+
     @Override
     protected FullTextEntityManager getEntityManager() {
         return (FullTextEntityManager) super.getEntityManager();
     }
-    
-    public void reindexarAjuda(){
+
+    public void reindexarAjuda() {
         LOG.info(CRIANDO_INDICES);
         Session session = sessionAssistant.getSession();
         org.hibernate.Query query = session.createQuery(AJUDA_FIND_ALL_QUERY);

@@ -11,9 +11,9 @@ import br.com.infox.epp.fluxo.manager.CategoriaManager;
 @Name(CategoriaCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class CategoriaCrudAction extends AbstractCrudAction<Categoria, CategoriaManager> {
-	
+
     private static final long serialVersionUID = 1L;
-    
+
     public static final String NAME = "categoriaCrudAction";
-    
+
 }

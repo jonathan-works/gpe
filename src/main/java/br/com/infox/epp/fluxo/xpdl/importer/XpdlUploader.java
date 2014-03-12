@@ -10,7 +10,7 @@ import org.richfaces.model.UploadedFile;
 @Name(XpdlUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class XpdlUploader implements FileUploadListener {
-    
+
     public static final String NAME = "xpdlUploader";
     private byte[] data;
 
@@ -19,7 +19,7 @@ public class XpdlUploader implements FileUploadListener {
         final UploadedFile ui = event.getUploadedFile();
         this.data = ui.getData();
     }
-    
+
     public byte[] getData() {
         return data;
     }

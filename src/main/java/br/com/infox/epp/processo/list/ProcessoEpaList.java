@@ -20,54 +20,56 @@ import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 @BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class ProcessoEpaList extends EntityList<ProcessoEpa> {
-	public static final String NAME = "processoEpaList";
-	
-	private static final long serialVersionUID = 1L;
+    public static final String NAME = "processoEpaList";
 
-	private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o where " + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
-	private static final String DEFAULT_ORDER = "dataInicio DESC";
-	private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.entity.dataInicio}";
-	private static final String R2 = "cast(dataFim as date)<= #{processoEpaList.entity.dataFim}";
-	
-	private List<UsuarioLogin> listaUsuarios;
-	
-	@SuppressWarnings(UNCHECKED)
-	private void iniciaListaUsuarios()	{
-		StringBuilder sb = new StringBuilder();
-		sb.append("select distinct user from Processo o ");
-		sb.append("join o.usuarioCadastroProcesso user");
-		listaUsuarios = getEntityManager().createQuery(sb.toString()).getResultList();
-	}
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("numeroProcesso", SearchCriteria.IGUAL);
-		addSearchField("usuarioCadastroProcesso", SearchCriteria.IGUAL);
-		addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL, R1);
-		addSearchField("dataFim", SearchCriteria.MENOR_IGUAL, R2);
-		iniciaListaUsuarios();
-	}
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o where "
+            + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
+    private static final String DEFAULT_ORDER = "dataInicio DESC";
+    private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.entity.dataInicio}";
+    private static final String R2 = "cast(dataFim as date)<= #{processoEpaList.entity.dataFim}";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    private List<UsuarioLogin> listaUsuarios;
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @SuppressWarnings(UNCHECKED)
+    private void iniciaListaUsuarios() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select distinct user from Processo o ");
+        sb.append("join o.usuarioCadastroProcesso user");
+        listaUsuarios = getEntityManager().createQuery(sb.toString()).getResultList();
+    }
 
-	public List<UsuarioLogin> getListaUsuarios() {
-		return listaUsuarios;
-	}
-	public void setListaUsuarios(List<UsuarioLogin> listaUsuarios)	{
-		this.listaUsuarios = listaUsuarios;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("numeroProcesso", SearchCriteria.IGUAL);
+        addSearchField("usuarioCadastroProcesso", SearchCriteria.IGUAL);
+        addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL, R1);
+        addSearchField("dataFim", SearchCriteria.MENOR_IGUAL, R2);
+        iniciaListaUsuarios();
+    }
+
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    public List<UsuarioLogin> getListaUsuarios() {
+        return listaUsuarios;
+    }
+
+    public void setListaUsuarios(List<UsuarioLogin> listaUsuarios) {
+        this.listaUsuarios = listaUsuarios;
+    }
 
 }

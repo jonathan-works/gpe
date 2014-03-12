@@ -15,34 +15,34 @@ import br.com.infox.epp.pessoa.entity.Pessoa;
 @BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class PessoaList extends EntityList<Pessoa> {
-	
-	private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "pessoaList";
-	
-	private static final String DEFAULT_EJBQL = "select o from Pessoa o";
-	private static final String DEFAULT_ORDER = "nome";
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected void addSearchFields() {
-		addSearchField("nome", SearchCriteria.CONTENDO);
-		addSearchField("tipoPessoa", SearchCriteria.CONTENDO);
-		addSearchField("ativo", SearchCriteria.IGUAL);		
-	}
+    public static final String NAME = "pessoaList";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String DEFAULT_EJBQL = "select o from Pessoa o";
+    private static final String DEFAULT_ORDER = "nome";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("nome", SearchCriteria.CONTENDO);
+        addSearchField("tipoPessoa", SearchCriteria.CONTENDO);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
-	
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
 }

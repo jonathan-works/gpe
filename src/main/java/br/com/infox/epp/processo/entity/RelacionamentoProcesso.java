@@ -41,14 +41,13 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name=TABLE_NAME, schema=PUBLIC, uniqueConstraints={
-    @UniqueConstraint(columnNames={ID_PROCESSO}),
-    @UniqueConstraint(columnNames={NUMERO_PROCESSO})
-})
-@NamedQueries(value={@NamedQuery(name=RELACIONAMENTO_BY_PROCESSO, query=RELACIONAMENTO_BY_PROCESSO_QUERY)})
+@Table(name = TABLE_NAME, schema = PUBLIC, uniqueConstraints = {
+    @UniqueConstraint(columnNames = { ID_PROCESSO }),
+    @UniqueConstraint(columnNames = { NUMERO_PROCESSO }) })
+@NamedQueries(value = { @NamedQuery(name = RELACIONAMENTO_BY_PROCESSO, query = RELACIONAMENTO_BY_PROCESSO_QUERY) })
 public class RelacionamentoProcesso implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     private Integer idRelacionamentoProcesso;
     private TipoRelacionamentoProcesso tipoRelacionamentoProcesso;
     private ProcessoEpa processo;
@@ -58,11 +57,12 @@ public class RelacionamentoProcesso implements Serializable {
     private String motivo;
     private String nomeUsuario;
     private Boolean ativo;
-    
+
     public RelacionamentoProcesso() {
     }
-    
-    public RelacionamentoProcesso(TipoRelacionamentoProcesso tipoRelacionamentoProcesso,
+
+    public RelacionamentoProcesso(
+            TipoRelacionamentoProcesso tipoRelacionamentoProcesso,
             Relacionamento relacionamento, ProcessoEpa processo, String motivo) {
         this.tipoRelacionamentoProcesso = tipoRelacionamentoProcesso;
         this.relacionamento = relacionamento;
@@ -72,91 +72,101 @@ public class RelacionamentoProcesso implements Serializable {
     }
 
     @Id
-    @GeneratedValue(generator=GENERATOR)
-    @Column(name=ID_RELACIONAMENTO_PROCESSO, unique=true, nullable=false)
-    @SequenceGenerator(name=GENERATOR, sequenceName=SEQUENCE_NAME)
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_RELACIONAMENTO_PROCESSO, unique = true, nullable = false)
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
     public Integer getIdRelacionamentoProcesso() {
         return idRelacionamentoProcesso;
     }
-    public void setIdRelacionamentoProcesso(final Integer idRelacionamentoProcesso) {
+
+    public void setIdRelacionamentoProcesso(
+            final Integer idRelacionamentoProcesso) {
         this.idRelacionamentoProcesso = idRelacionamentoProcesso;
     }
 
     @NotNull
-    @ManyToOne(fetch=LAZY)
-    @JoinColumn(name=ID_TIPO_RELACIONAMENTO_PROCESSO, nullable=false)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = ID_TIPO_RELACIONAMENTO_PROCESSO, nullable = false)
     public TipoRelacionamentoProcesso getTipoRelacionamentoProcesso() {
         return tipoRelacionamentoProcesso;
     }
+
     public void setTipoRelacionamentoProcesso(
             final TipoRelacionamentoProcesso tipoRelacionamentoProcesso) {
         this.tipoRelacionamentoProcesso = tipoRelacionamentoProcesso;
     }
 
-    @ManyToOne(fetch=LAZY)
-    @JoinColumn(name=ID_PROCESSO, nullable=true, unique=true)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = ID_PROCESSO, nullable = true, unique = true)
     public ProcessoEpa getProcesso() {
         return processo;
     }
+
     public void setProcesso(final ProcessoEpa processo) {
         this.processo = processo;
     }
 
     @NotNull
-    @Length(min=FLAG, max=NUMERACAO_PROCESSO)
-    @Column(name=NUMERO_PROCESSO, length=NUMERACAO_PROCESSO, nullable=false, unique=true)
+    @Length(min = FLAG, max = NUMERACAO_PROCESSO)
+    @Column(name = NUMERO_PROCESSO, length = NUMERACAO_PROCESSO, nullable = false, unique = true)
     public String getNumeroProcesso() {
         return numeroProcesso;
     }
+
     public void setNumeroProcesso(String numeroProcesso) {
         this.numeroProcesso = numeroProcesso;
     }
-    
+
     @NotNull
-    @ManyToOne(fetch=LAZY)
-    @JoinColumn(name=ID_RELACIONAMENTO, nullable=false)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = ID_RELACIONAMENTO, nullable = false)
     public Relacionamento getRelacionamento() {
         return relacionamento;
     }
+
     public void setRelacionamento(final Relacionamento relacionamento) {
         this.relacionamento = relacionamento;
     }
 
     @NotNull
     @Temporal(TIMESTAMP)
-    @Column(name=DATA_RELACIONAMENTO, nullable=false)
+    @Column(name = DATA_RELACIONAMENTO, nullable = false)
     public Date getDataRelacionamento() {
         return dataRelacionamento;
     }
+
     public void setDataRelacionamento(final Date dataRelacionamento) {
         this.dataRelacionamento = dataRelacionamento;
     }
 
     @NotNull
-    @Length(min=FLAG)
-    @Column(name=MOTIVO, nullable=false)
+    @Length(min = FLAG)
+    @Column(name = MOTIVO, nullable = false)
     public String getMotivo() {
         return motivo;
     }
+
     public void setMotivo(final String motivo) {
         this.motivo = motivo;
     }
 
     @NotNull
-    @Length(min=FLAG, max=DESCRICAO_MEDIA)
-    @Column(name=NOME_USUARIO, length=DESCRICAO_MEDIA, nullable=false)
+    @Length(min = FLAG, max = DESCRICAO_MEDIA)
+    @Column(name = NOME_USUARIO, length = DESCRICAO_MEDIA, nullable = false)
     public String getNomeUsuario() {
         return nomeUsuario;
     }
+
     public void setNomeUsuario(final String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
     }
 
     @NotNull
-    @Column(name=ATIVO, nullable=false)
+    @Column(name = ATIVO, nullable = false)
     public Boolean getAtivo() {
         return ativo;
     }
+
     public void setAtivo(final Boolean ativo) {
         this.ativo = ativo;
     }
@@ -170,7 +180,7 @@ public class RelacionamentoProcesso implements Serializable {
                 + ((idRelacionamentoProcesso == null) ? 0 : idRelacionamentoProcesso.hashCode());
         return result;
     }
-    
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
@@ -192,5 +202,5 @@ public class RelacionamentoProcesso implements Serializable {
         }
         return true;
     }
-    
+
 }

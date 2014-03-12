@@ -12,5 +12,5 @@ public class RelacionamentoProcessoDAO extends DAO<RelacionamentoProcesso> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "relacionamentoProcessoDAO";
-    
+
 }

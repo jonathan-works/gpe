@@ -20,14 +20,14 @@ import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 @Scope(ScopeType.CONVERSATION)
 public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, CategoriaItemManager> {
     private static final long serialVersionUID = 1L;
-    
+
     public static final String NAME = "categoriaItemCrudAction";
     @In
     private ItemManager itemManager;
 
     private Item item;
     private Categoria categoria;
-    
+
     public Item getItem() {
         return item;
     }
@@ -49,33 +49,33 @@ public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, C
             instance.setCategoria(categoria);
             inserted = PERSISTED.equals(super.save()) || inserted;
         }
-        
+
         limparTreeDeItem();
         return inserted ? PERSISTED : null;
     }
-    
+
     @Override
     public void newInstance() {
         super.newInstance();
         this.item = null;
     }
-    
+
     @Override
     protected void afterSave(final String ret) {
         if (PERSISTED.equals(ret)) {
             newInstance();
         }
     }
-    
+
     private void limparTreeDeItem() {
         final ItemTreeHandler ite = (ItemTreeHandler) Component.getInstance(ItemTreeHandler.NAME);
         if (ite != null) {
             ite.clearTree();
         }
     }
-    
+
     @Override
-    public String remove(final CategoriaItem categoriaItem){
+    public String remove(final CategoriaItem categoriaItem) {
         categoria.getCategoriaItemList().remove(categoriaItem);
         return super.remove(categoriaItem);
     }

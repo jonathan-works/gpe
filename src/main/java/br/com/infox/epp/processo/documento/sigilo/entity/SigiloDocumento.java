@@ -42,84 +42,83 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Entity
 @Table(name = TABLE_NAME)
 @NamedQueries({
-	@NamedQuery(name = NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO, query = QUERY_SIGILO_DOCUMENTO_ATIVO),
-	@NamedQuery(name = NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO, query = QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO),
-	@NamedQuery(name = NAMED_QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO, query = QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO),
-	@NamedQuery(name = NAMED_QUERY_INATIVAR_SIGILOS, query = QUERY_INATIVAR_SIGILOS)
-})
+    @NamedQuery(name = NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO, query = QUERY_SIGILO_DOCUMENTO_ATIVO),
+    @NamedQuery(name = NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO, query = QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO),
+    @NamedQuery(name = NAMED_QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO, query = QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO),
+    @NamedQuery(name = NAMED_QUERY_INATIVAR_SIGILOS, query = QUERY_INATIVAR_SIGILOS) })
 public class SigiloDocumento implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
-	@GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-	@Column(name = COLUMN_ID)
-	private Integer id;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = COLUMN_ID_PROCESSO_DOCUMENTO, nullable = false)
-	private ProcessoDocumento documento;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
-	private UsuarioLogin usuario;
-	
-	@Column(name = COLUMN_MOTIVO, nullable = false, columnDefinition = "TEXT")
-	private String motivo;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = COLUMN_DATA_INCLUSAO, nullable = false)
-	private Date dataInclusao;
-	
-	@Column(name = COLUMN_ATIVO, nullable = false)
-	private Boolean ativo;
-	
-	public Integer getId() {
-		return id;
-	}
+    private static final long serialVersionUID = 1L;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    @Id
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = COLUMN_ID)
+    private Integer id;
 
-	public ProcessoDocumento getDocumento() {
-		return documento;
-	}
-	
-	public void setDocumento(ProcessoDocumento documento) {
-		this.documento = documento;
-	}
-	
-	public UsuarioLogin getUsuario() {
-		return usuario;
-	}
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = COLUMN_ID_PROCESSO_DOCUMENTO, nullable = false)
+    private ProcessoDocumento documento;
 
-	public void setUsuario(UsuarioLogin usuario) {
-		this.usuario = usuario;
-	}
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
+    private UsuarioLogin usuario;
 
-	public String getMotivo() {
-		return motivo;
-	}
-	
-	public void setMotivo(String motivo) {
-		this.motivo = motivo;
-	}
-	
-	public Date getDataInclusao() {
-		return dataInclusao;
-	}
-	
-	public void setDataInclusao(Date dataInclusao) {
-		this.dataInclusao = dataInclusao;
-	}
-	
-	public Boolean getAtivo() {
-		return ativo;
-	}
-	
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
+    @Column(name = COLUMN_MOTIVO, nullable = false, columnDefinition = "TEXT")
+    private String motivo;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = COLUMN_DATA_INCLUSAO, nullable = false)
+    private Date dataInclusao;
+
+    @Column(name = COLUMN_ATIVO, nullable = false)
+    private Boolean ativo;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public ProcessoDocumento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(ProcessoDocumento documento) {
+        this.documento = documento;
+    }
+
+    public UsuarioLogin getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioLogin usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public Date getDataInclusao() {
+        return dataInclusao;
+    }
+
+    public void setDataInclusao(Date dataInclusao) {
+        this.dataInclusao = dataInclusao;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 }

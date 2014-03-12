@@ -25,32 +25,32 @@ public class RecursoDAO extends DAO<Recurso> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "recursoDAO";
-    
-    public boolean existsRecurso(String identificador){
+
+    public boolean existsRecurso(String identificador) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(IDENTIFICADOR_PARAM, identificador);
-        return ((Long)getNamedSingleResult(COUNT_RECURSO_BY_IDENTIFICADOR, parameters)) > 0;
+        return ((Long) getNamedSingleResult(COUNT_RECURSO_BY_IDENTIFICADOR, parameters)) > 0;
     }
-    
-    public Recurso getRecursoByIdentificador(String identificador){
+
+    public Recurso getRecursoByIdentificador(String identificador) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(IDENTIFICADOR_PARAM, identificador);
         return getNamedSingleResult(RECURSO_BY_IDENTIFICADOR, parameters);
     }
-    
-    public List<Recurso> getRecursosFromPermissoes(List<Permissao> permissoes){
+
+    public List<Recurso> getRecursosFromPermissoes(List<Permissao> permissoes) {
         List<String> identificadores = getListaIdentificadoresFromPermissoes(permissoes);
-        if (identificadores == null || identificadores.isEmpty()){
+        if (identificadores == null || identificadores.isEmpty()) {
             return Collections.emptyList();
         }
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(LISTA_IDENTIFICADORES_PARAM, identificadores);
         return getNamedResultList(RECURSOS_FROM_IDENTIFICADORES, parameters);
     }
-    
-    public List<Recurso> getRecursosWithoutPermissoes(List<Permissao> permissoes){
+
+    public List<Recurso> getRecursosWithoutPermissoes(List<Permissao> permissoes) {
         List<String> identificadores = getListaIdentificadoresFromPermissoes(permissoes);
-        if (identificadores == null || identificadores.isEmpty()){
+        if (identificadores == null || identificadores.isEmpty()) {
             return Collections.emptyList();
         }
         Map<String, Object> parameters = new HashMap<>();
@@ -58,14 +58,15 @@ public class RecursoDAO extends DAO<Recurso> {
         return getNamedResultList(RECURSOS_NOT_IN_IDENTIFICADORES, parameters);
     }
 
-    private List<String> getListaIdentificadoresFromPermissoes(List<Permissao> permissoes) {
+    private List<String> getListaIdentificadoresFromPermissoes(
+            List<Permissao> permissoes) {
         List<String> identificadores = new ArrayList<>();
         for (Permissao permissao : permissoes) {
             identificadores.add(permissao.getAlvo());
         }
         return identificadores;
     }
-    
+
     public List<String> getPapeisAssociadosARecurso(Recurso recurso) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_RECURSO_PARAM, recurso.getIdRecurso());

@@ -15,8 +15,8 @@ public class NaturezaManager extends Manager<NaturezaDAO, Natureza> {
     private static final long serialVersionUID = 2649821908249070536L;
 
     public static final String NAME = "naturezaManager";
-    
-    public void lockNatureza(Natureza natureza) throws DAOException{
+
+    public void lockNatureza(Natureza natureza) throws DAOException {
         if (!natureza.getLocked()) {
             natureza.setLocked(true);
             update(natureza);

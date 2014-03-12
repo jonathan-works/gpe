@@ -25,13 +25,19 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginManager";
-    
-    @In private PasswordService passwordService;
-    @In private AccessMailService accessMailService;
-    @In private PapelManager papelManager;
-    @In private LocalizacaoManager localizacaoManager;
-    @In private UsuarioLocalizacaoManager usuarioLocalizacaoManager;
-    @In private ParametroManager parametroManager;
+
+    @In
+    private PasswordService passwordService;
+    @In
+    private AccessMailService accessMailService;
+    @In
+    private PapelManager papelManager;
+    @In
+    private LocalizacaoManager localizacaoManager;
+    @In
+    private UsuarioLocalizacaoManager usuarioLocalizacaoManager;
+    @In
+    private ParametroManager parametroManager;
 
     public boolean usuarioExpirou(final UsuarioLogin usuarioLogin) {
         boolean result = Boolean.FALSE;
@@ -54,16 +60,17 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public UsuarioLogin getUsuarioLoginByLogin(final String login) {
         return getDao().getUsuarioLoginByLogin(login);
     }
-    
-    public String getActorIdTarefaAtual(Integer idProcesso){
+
+    public String getActorIdTarefaAtual(Integer idProcesso) {
         return getDao().getActorIdTarefaAtual(idProcesso);
     }
-    
+
     public String getUsuarioByTarefa(TaskInstance taskInstance) {
         return getDao().getUsuarioByTarefa(taskInstance);
     }
-    
-    public UsuarioLogin getUsuarioLoginByPessoaFisica(final PessoaFisica pessoaFisica) {
+
+    public UsuarioLogin getUsuarioLoginByPessoaFisica(
+            final PessoaFisica pessoaFisica) {
         return getDao().getUsuarioLoginByPessoaFisica(pessoaFisica);
     }
 
@@ -71,7 +78,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         if (!usuario.getProvisorio()) {
             usuario.setDataExpiracao(null);
         }
-        if (!usuario.isHumano()){
+        if (!usuario.isHumano()) {
             usuario.setPessoaFisica(null);
         }
         if (usuario.getSenha() == null || "".equals(usuario.getSenha())) {
@@ -82,7 +89,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
             usuario.setSalt("");
         }
     }
-    
+
     public UsuarioLogin createLDAPUser(final UsuarioLogin usuario) throws DAOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         validarPermanencia(usuario);
         final String password = usuario.getSenha();
@@ -92,7 +99,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         // ADICIONAR LOCALIZAÇÃO, PAPEL E ESTRUTURA PADRÃO
         return persisted;
     }
-    
+
     @Override
     public UsuarioLogin persist(final UsuarioLogin usuario) throws DAOException {
         validarPermanencia(usuario);
@@ -103,10 +110,9 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
             passwordService.changePassword(persisted, password);
             accessMailService.enviarEmailDeMudancaDeSenha("email", persisted, password);
             return persisted;
-        } catch (IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new DAOException(e);
         }
     }
-    
+
 }

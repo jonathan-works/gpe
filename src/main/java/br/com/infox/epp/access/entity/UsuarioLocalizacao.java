@@ -31,28 +31,30 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 @Entity
-@Table(name = TABLE_USUARIO_LOCALIZACAO, schema=PUBLIC, 
-		uniqueConstraints = @UniqueConstraint(columnNames={USUARIO, PAPEL, LOCALIZACAO, ESTRUTURA}))
+@Table(name = TABLE_USUARIO_LOCALIZACAO, schema = PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = {
+    USUARIO, PAPEL, LOCALIZACAO, ESTRUTURA }))
 @Inheritance(strategy = InheritanceType.JOINED)
-
 public class UsuarioLocalizacao implements java.io.Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(UsuarioLocalizacao.class);
 
-	private Integer idUsuarioLocalizacao;
-	private Localizacao localizacao;
-	private UsuarioLogin usuario;
-	private Boolean responsavelLocalizacao;
-	private Papel papel;
-	private Localizacao estrutura;
-	private Boolean contabilizar;
+    private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(UsuarioLocalizacao.class);
 
-	public UsuarioLocalizacao() {
-	    this.contabilizar = Boolean.TRUE;
-	}
+    private Integer idUsuarioLocalizacao;
+    private Localizacao localizacao;
+    private UsuarioLogin usuario;
+    private Boolean responsavelLocalizacao;
+    private Papel papel;
+    private Localizacao estrutura;
+    private Boolean contabilizar;
 
-    public UsuarioLocalizacao(final UsuarioLogin usuario, final Localizacao localizacao, final Localizacao estrutura, final Papel papel, final boolean contabilizar, final boolean responsavelLocalizacao) {
+    public UsuarioLocalizacao() {
+        this.contabilizar = Boolean.TRUE;
+    }
+
+    public UsuarioLocalizacao(final UsuarioLogin usuario,
+            final Localizacao localizacao, final Localizacao estrutura,
+            final Papel papel, final boolean contabilizar,
+            final boolean responsavelLocalizacao) {
         this.usuario = usuario;
         this.localizacao = localizacao;
         this.estrutura = estrutura;
@@ -60,97 +62,102 @@ public class UsuarioLocalizacao implements java.io.Serializable {
         this.contabilizar = Boolean.valueOf(contabilizar);
         this.responsavelLocalizacao = Boolean.valueOf(responsavelLocalizacao);
     }
-	
-	public UsuarioLocalizacao(final UsuarioLogin usuario, final Localizacao localizacao, final Localizacao estrutura, final Papel papel) {
-	    this(usuario, localizacao, estrutura, papel, Boolean.TRUE, Boolean.FALSE);
-	}
-    
-    public UsuarioLocalizacao(final UsuarioLogin usuario, final Localizacao localizacao, final Localizacao estrutura, final Papel papel, final boolean responsavelLocalizacao) {
+
+    public UsuarioLocalizacao(final UsuarioLogin usuario,
+            final Localizacao localizacao, final Localizacao estrutura,
+            final Papel papel) {
+        this(usuario, localizacao, estrutura, papel, Boolean.TRUE, Boolean.FALSE);
+    }
+
+    public UsuarioLocalizacao(final UsuarioLogin usuario,
+            final Localizacao localizacao, final Localizacao estrutura,
+            final Papel papel, final boolean responsavelLocalizacao) {
         this(usuario, localizacao, estrutura, papel, Boolean.TRUE, responsavelLocalizacao);
     }
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO_LOCALIZACAO)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_USUARIO_LOCALIZACAO, unique = true, nullable = false)
-	public Integer getIdUsuarioLocalizacao() {
-		return this.idUsuarioLocalizacao;
-	}
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO_LOCALIZACAO)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_USUARIO_LOCALIZACAO, unique = true, nullable = false)
+    public Integer getIdUsuarioLocalizacao() {
+        return this.idUsuarioLocalizacao;
+    }
 
-	public void setIdUsuarioLocalizacao(Integer idUsuarioLocalizacao) {
-		this.idUsuarioLocalizacao = idUsuarioLocalizacao;
-	}
-	@ManyToOne(fetch = EAGER)
-	@JoinColumn(name = LOCALIZACAO, nullable = false)
-	@NotNull
-	public Localizacao getLocalizacao() {
-		return this.localizacao;
-	}
+    public void setIdUsuarioLocalizacao(Integer idUsuarioLocalizacao) {
+        this.idUsuarioLocalizacao = idUsuarioLocalizacao;
+    }
 
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
-	
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = PAPEL)
-	@NotNull
-	public Papel getPapel() {
-		return papel;
-	}
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = LOCALIZACAO, nullable = false)
+    @NotNull
+    public Localizacao getLocalizacao() {
+        return this.localizacao;
+    }
 
-	public void setPapel(Papel papel) {
-		this.papel = papel;
-	}
-	
-	@ManyToOne(fetch = EAGER)
-	@JoinColumn(name = USUARIO, nullable = false)
-	@NotNull
-	public UsuarioLogin getUsuario() {
-		return this.usuario;
-	}
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 
-	public void setUsuario(UsuarioLogin usuario) {
-		this.usuario = usuario;
-	}
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = PAPEL)
+    @NotNull
+    public Papel getPapel() {
+        return papel;
+    }
 
-	@Column(name = RESPONSAVEL_LOCALIZACAO, nullable = false)
-	@NotNull
-	public Boolean getResponsavelLocalizacao() {
-		return this.responsavelLocalizacao;
-	}
+    public void setPapel(Papel papel) {
+        this.papel = papel;
+    }
 
-	public void setResponsavelLocalizacao(Boolean responsavelLocalizacao) {
-		this.responsavelLocalizacao = responsavelLocalizacao;
-	}
-	
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = ESTRUTURA)
-	public Localizacao getEstrutura() {
-		return estrutura;
-	}
-	
-	public void setEstrutura(Localizacao estrutura) {
-		this.estrutura = estrutura;
-	}
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = USUARIO, nullable = false)
+    @NotNull
+    public UsuarioLogin getUsuario() {
+        return this.usuario;
+    }
 
-	@Override
-	public String toString() {
-		try {
-			return (estrutura == null ? "" : estrutura + "/") + localizacao + "/" + papel;
-		} catch (Exception e) {
-			LOG.warn(".toString()", e);
-			return super.toString();
-		}
-	}
-	
-	@Override
+    public void setUsuario(UsuarioLogin usuario) {
+        this.usuario = usuario;
+    }
+
+    @Column(name = RESPONSAVEL_LOCALIZACAO, nullable = false)
+    @NotNull
+    public Boolean getResponsavelLocalizacao() {
+        return this.responsavelLocalizacao;
+    }
+
+    public void setResponsavelLocalizacao(Boolean responsavelLocalizacao) {
+        this.responsavelLocalizacao = responsavelLocalizacao;
+    }
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = ESTRUTURA)
+    public Localizacao getEstrutura() {
+        return estrutura;
+    }
+
+    public void setEstrutura(Localizacao estrutura) {
+        this.estrutura = estrutura;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return (estrutura == null ? "" : estrutura + "/") + localizacao
+                    + "/" + papel;
+        } catch (Exception e) {
+            LOG.warn(".toString()", e);
+            return super.toString();
+        }
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime
                 * result
-                + ((idUsuarioLocalizacao == null) ? 0 : idUsuarioLocalizacao
-                        .hashCode());
+                + ((idUsuarioLocalizacao == null) ? 0 : idUsuarioLocalizacao.hashCode());
         return result;
     }
 
@@ -177,12 +184,12 @@ public class UsuarioLocalizacao implements java.io.Serializable {
     }
 
     public void setContabilizar(Boolean contabilizar) {
-		this.contabilizar = contabilizar;
-	}
+        this.contabilizar = contabilizar;
+    }
 
-	@Column(name=CONTABILIZAR, nullable=false)
-	public Boolean getContabilizar() {
-		return contabilizar;
-	}
+    @Column(name = CONTABILIZAR, nullable = false)
+    public Boolean getContabilizar() {
+        return contabilizar;
+    }
 
 }

@@ -71,7 +71,8 @@ public class ProcessoEpaTarefaDAO extends DAO<ProcessoEpaTarefa> {
         return getNamedResultList(TAREFA_PROXIMA_LIMITE);
     }
 
-    public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(final Integer idProcesso, final Integer idTarefa) {
+    public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(
+            final Integer idProcesso, final Integer idTarefa) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, idProcesso);
         parameters.put(PARAM_ID_TAREFA, idTarefa);

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public final class DateUtil {
-    
+
     public static final int MILESIMOS_DO_SEGUNDO = 1000;
 
     public static final int SEGUNDOS_DO_MINUTO = 60;
@@ -16,9 +16,9 @@ public final class DateUtil {
 
     public static final int QUANTIDADE_DIAS_SEMANA = 7;
     public static final int QUANTIDADE_MESES_ANO = 12;
-    
-    private DateUtil(){
-        
+
+    private DateUtil() {
+
     }
 
     /**

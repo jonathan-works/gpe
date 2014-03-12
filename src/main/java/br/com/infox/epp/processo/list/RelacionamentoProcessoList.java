@@ -14,12 +14,12 @@ import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
 @Scope(ScopeType.CONVERSATION)
 public class RelacionamentoProcessoList extends EntityList<RelacionamentoProcesso> {
     private static final long serialVersionUID = 1L;
-    
+
     private static final String DEFAULT_EJBQL = "select o from RelacionamentoProcesso o";
     private static final String DEFAULT_ORDER = "dataRelacionamento";
-    
+
     private static final String R1 = "o.relacionamento=#{relacionamentoProcessoCrudAction.instance.relacionamento}";
-    
+
     public static final String NAME = "relacionamentoProcessoList";
 
     @Override

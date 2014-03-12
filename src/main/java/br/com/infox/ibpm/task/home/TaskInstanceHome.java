@@ -106,7 +106,7 @@ public class TaskInstanceHome implements Serializable {
     @In
     private UserHandler userHandler;
     private URL urlRetornoAcessoExterno;
-    
+
     private boolean canClosePanelVal;
     private boolean taskCompleted;
 
@@ -314,7 +314,7 @@ public class TaskInstanceHome implements Serializable {
         }
         return currentTaskInstance;
     }
-    
+
     public String getTaskNodeDescription() {
         if (currentTaskInstance == null) {
             currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();

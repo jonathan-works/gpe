@@ -103,7 +103,7 @@ public class BamAction extends AbstractController {
         try {
             processoEpaManager.updateTempoGastoProcessoEpa();
             for (ProcessoEpa processo : processoEpaManager.listAllNotEnded()) {
-            	corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
+                corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
             }
         } catch (DAOException e) {
             instance().add(Severity.ERROR, "forceUpdateFinalizadasProcesso()", e);
@@ -135,7 +135,7 @@ public class BamAction extends AbstractController {
         try {
             processoEpaManager.updateTempoGastoProcessoEpa();
             for (ProcessoEpa processo : processoEpaManager.listAllNotEnded()) {
-            	corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
+                corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
             }
         } catch (DAOException e) {
             instance().add(Severity.ERROR, "forceUpdateProcesso()", e);
@@ -148,27 +148,28 @@ public class BamAction extends AbstractController {
     }
 
     public void updateBAM() {
-    	forceUpdateTarefasFinalizadas();
-    	forceUpdateTarefasNaoFinalizadas();
+        forceUpdateTarefasFinalizadas();
+        forceUpdateTarefasNaoFinalizadas();
     }
-    
-    private void corrigirSituacaoPrazoProcesso(ProcessoEpa processo, Integer porcentagem) throws DAOException {
-		if (porcentagem != null && porcentagem > 100) {
-			return;
-		}
-		
-		if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.TAT) {
-			processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-		} else if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.PAT) {
-			processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-			for (ProcessoEpaTarefa tarefa : processo.getProcessoEpaTarefaList()) {
-				if (tarefa.getPorcentagem() > 100) {
-					processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
-					break;
-				}
-			}
-		}
-		
-		processoEpaManager.update(processo);
-	}
+
+    private void corrigirSituacaoPrazoProcesso(ProcessoEpa processo,
+            Integer porcentagem) throws DAOException {
+        if (porcentagem != null && porcentagem > 100) {
+            return;
+        }
+
+        if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.TAT) {
+            processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        } else if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.PAT) {
+            processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+            for (ProcessoEpaTarefa tarefa : processo.getProcessoEpaTarefaList()) {
+                if (tarefa.getPorcentagem() > 100) {
+                    processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
+                    break;
+                }
+            }
+        }
+
+        processoEpaManager.update(processo);
+    }
 }

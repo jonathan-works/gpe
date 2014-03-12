@@ -52,13 +52,13 @@ public class Menu implements Serializable {
     public void setItems(List<String> items) {
         dropMenus = new ArrayList<MenuItem>();
         boolean ok = true;
-        
+
         try {
-        	discoverAndCreateRolesIfNeeded();
+            discoverAndCreateRolesIfNeeded();
         } catch (IOException e) {
-        	LOG.error("Não foi possível descobrir e criar os recursos", e);
+            LOG.error("Não foi possível descobrir e criar os recursos", e);
         }
-        
+
         for (String key : items) {
             try {
                 String[] split = key.split(":");
@@ -81,14 +81,14 @@ public class Menu implements Serializable {
     }
 
     private void discoverAndCreateRolesIfNeeded() throws IOException {
-    	if (pagesChecked || !Identity.instance().isLoggedIn()) {
-        	return;
+        if (pagesChecked || !Identity.instance().isLoggedIn()) {
+            return;
         }
-    	
-    	RecursoCreator roleCreator = new RecursoCreator();
-    	PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
-    	Files.walkFileTree(new File(pathResolver.getContextRealPath()).toPath(), roleCreator);
-	}
+
+        RecursoCreator roleCreator = new RecursoCreator();
+        PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
+        Files.walkFileTree(new File(pathResolver.getContextRealPath()).toPath(), roleCreator);
+    }
 
     protected void buildItem(String key, String url) {
         String formatedKey = getFormatedKey(key);

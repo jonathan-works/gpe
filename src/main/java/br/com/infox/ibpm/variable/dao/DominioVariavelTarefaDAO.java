@@ -13,6 +13,6 @@ import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 @AutoCreate
 public class DominioVariavelTarefaDAO extends DAO<DominioVariavelTarefa> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "dominioVariavelTarefaDAO";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "dominioVariavelTarefaDAO";
 }

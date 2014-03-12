@@ -15,48 +15,48 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.PAGE)
 public class PessoaJuridicaList extends EntityList<PessoaJuridica> {
 
-	public static final String NAME = "pessoaJuridicaList";
+    public static final String NAME = "pessoaJuridicaList";
 
-	private static final long serialVersionUID = 1L;
-	
-	private static final String TEMPLATE = "/PessoaJuridica/pessoaJuridicaTemplate.xls";
+    private static final long serialVersionUID = 1L;
+
+    private static final String TEMPLATE = "/PessoaJuridica/pessoaJuridicaTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "PessoaJuridica.xls";
-	
-	private static final String DEFAULT_EJBQL = "select o from PessoaJuridica o";
-	private static final String DEFAULT_ORDER = "nome";
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("cnpj", SearchCriteria.IGUAL);
-		addSearchField("nome", SearchCriteria.CONTENDO);
-		addSearchField("razaoSocial", SearchCriteria.CONTENDO);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-	}
-	
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
-	
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
-	
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
-	
-	public static PessoaJuridicaList instance(){
-		return ComponentUtil.getComponent(PessoaJuridicaList.NAME);
-	}
-    
+
+    private static final String DEFAULT_EJBQL = "select o from PessoaJuridica o";
+    private static final String DEFAULT_ORDER = "nome";
+
+    @Override
+    protected void addSearchFields() {
+        addSearchField("cnpj", SearchCriteria.IGUAL);
+        addSearchField("nome", SearchCriteria.CONTENDO);
+        addSearchField("razaoSocial", SearchCriteria.CONTENDO);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+    }
+
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    public static PessoaJuridicaList instance() {
+        return ComponentUtil.getComponent(PessoaJuridicaList.NAME);
+    }
+
     @Override
     public String getTemplate() {
         return TEMPLATE;
     }
-    
+
     @Override
     public String getDownloadXlsName() {
         return DOWNLOAD_XLS_NAME;

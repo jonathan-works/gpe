@@ -38,7 +38,8 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
         return getNamedSingleResult(USUARIO_BY_EMAIL, parameters);
     }
 
-    public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance, String actorId) {
+    public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance,
+            String actorId) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_LOGIN, actorId);
         parameters.put(PARAM_ID_TASK_INSTANCE, idTaskInstance);
@@ -56,23 +57,24 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
         parameters.put(PARAM_LOGIN, login);
         return getNamedSingleResult(USUARIO_LOGIN_NAME, parameters);
     }
-    
-    public String getActorIdTarefaAtual(Integer idProcesso){
+
+    public String getActorIdTarefaAtual(Integer idProcesso) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_PROCESSO_PARAM, idProcesso);
         return getNamedSingleResult(ACTORID_TAREFA_ATUAL_BY_PROCESSO, parameters);
     }
-    
+
     public String getUsuarioByTarefa(TaskInstance taskInstance) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_TASK_INSTANCE, taskInstance.getId());
         return getNamedSingleResult(USUARIO_BY_ID_TASK_INSTANCE, parameters);
     }
 
-    public UsuarioLogin getUsuarioLoginByPessoaFisica(final PessoaFisica pessoaFisica) {
+    public UsuarioLogin getUsuarioLoginByPessoaFisica(
+            final PessoaFisica pessoaFisica) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PESSOA_FISICA, pessoaFisica);
         return getNamedSingleResult(USUARIO_BY_PESSOA, parameters);
     }
-    
+
 }

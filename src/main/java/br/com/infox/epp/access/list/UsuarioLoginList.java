@@ -14,33 +14,33 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @Scope(ScopeType.PAGE)
 public class UsuarioLoginList extends EntityList<UsuarioLogin> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "usuarioLoginList";
-	
-	private static final String DEFAULT_EJBQL = "select o from UsuarioLogin o";
-	private static final String DEFAULT_ORDER = "nomeUsuario";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "usuarioLoginList";
 
-	@Override
-	protected void addSearchFields() {
-		addSearchField("nomeUsuario", SearchCriteria.CONTENDO);
-		addSearchField("bloqueio",SearchCriteria.IGUAL);
-		addSearchField("provisorio",SearchCriteria.IGUAL);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-	}
+    private static final String DEFAULT_EJBQL = "select o from UsuarioLogin o";
+    private static final String DEFAULT_ORDER = "nomeUsuario";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("nomeUsuario", SearchCriteria.CONTENDO);
+        addSearchField("bloqueio", SearchCriteria.IGUAL);
+        addSearchField("provisorio", SearchCriteria.IGUAL);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+    }
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

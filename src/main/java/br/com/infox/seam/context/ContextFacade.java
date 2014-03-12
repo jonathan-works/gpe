@@ -20,19 +20,19 @@ public class ContextFacade {
 
     public static final String NAME = "contextFacade";
     private static final LogProvider LOG = Logging.getLogProvider(ContextFacade.class);
-    
+
     public String getSessionContextsAsString() {
         return getContextsAsString(Contexts.getSessionContext());
     }
-    
+
     public String getApplicationContextsAsString() {
         return getContextsAsString(Contexts.getApplicationContext());
     }
-    
+
     public String getConversationContextsAsString() {
         return getContextsAsString(Contexts.getConversationContext());
     }
-    
+
     private String getContextsAsString(Context context) {
         StringBuilder sb = new StringBuilder();
         for (String name : context.getNames()) {
@@ -47,7 +47,7 @@ public class ContextFacade {
         }
         return sb.toString();
     }
-    
+
     /**
      * Recupera um ServltContext do builder.
      * 
@@ -62,12 +62,12 @@ public class ContextFacade {
         }
         return wiSc.getContext(webapp);
     }
-    
+
     public static void setToEventContext(String var, Object object) {
         Contexts.getEventContext().set(var, object);
     }
-    
-    //TODO encontrar um lugar melhor para esse método
+
+    // TODO encontrar um lugar melhor para esse método
     public boolean isAjaxRequest() {
         ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(FacesContext.getCurrentInstance());
         return context != null && context.isAjaxRequest();

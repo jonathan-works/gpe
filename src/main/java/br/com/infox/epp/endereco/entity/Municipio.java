@@ -35,8 +35,7 @@ public class Municipio implements java.io.Serializable {
     public Municipio() {
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_municipio")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_municipio")
     @Id
     @GeneratedValue(generator = "generator")
     @Column(name = "id_municipio", unique = true, nullable = false)
@@ -48,8 +47,7 @@ public class Municipio implements java.io.Serializable {
         this.idMunicipio = idMunicipio;
     }
 
-    @Column(name = "ds_municipio",
-            length = LengthConstants.DESCRICAO_PADRAO_METADE)
+    @Column(name = "ds_municipio", length = LengthConstants.DESCRICAO_PADRAO_METADE)
     @Size(max = LengthConstants.DESCRICAO_PADRAO_METADE)
     public String getMunicipio() {
         return this.municipio;

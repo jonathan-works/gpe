@@ -15,46 +15,46 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 public class TwitterTemplateList extends EntityList<TwitterTemplate> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "twitterTemplateList";
-	
-	private static final String TEMPLATE = "/ModeloDocumento/TwitterTemplate/modeloTwitterTemplate.xls";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "twitterTemplateList";
+
+    private static final String TEMPLATE = "/ModeloDocumento/TwitterTemplate/modeloTwitterTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "ModelosDocumento.xls";
-	
-	private static final String DEFAULT_EJBQL = "select o from TwitterTemplate o";
-	private static final String DEFAULT_ORDER = "titulo";
 
-	public static final TwitterTemplateList instance() {
-	    return ComponentUtil.getComponent(NAME);
-	}
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("titulo", SearchCriteria.CONTENDO);
-		addSearchField("mensagem", SearchCriteria.CONTENDO);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-	}
+    private static final String DEFAULT_EJBQL = "select o from TwitterTemplate o";
+    private static final String DEFAULT_ORDER = "titulo";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    public static final TwitterTemplateList instance() {
+        return ComponentUtil.getComponent(NAME);
+    }
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("titulo", SearchCriteria.CONTENDO);
+        addSearchField("mensagem", SearchCriteria.CONTENDO);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
-    
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
     @Override
     public String getTemplate() {
         return TEMPLATE;
     }
-    
+
     @Override
     public String getDownloadXlsName() {
         return DOWNLOAD_XLS_NAME;

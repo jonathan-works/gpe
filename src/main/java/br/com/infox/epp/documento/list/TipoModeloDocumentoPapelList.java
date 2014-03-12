@@ -12,35 +12,33 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 
 @Name(TipoModeloDocumentoPapelList.NAME)
 @Scope(ScopeType.PAGE)
-public class TipoModeloDocumentoPapelList extends
-		EntityList<TipoModeloDocumentoPapel> {
+public class TipoModeloDocumentoPapelList extends EntityList<TipoModeloDocumentoPapel> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "tipoModeloDocumentoPapelList";
-	
-	public static final String DEFAULT_EJBQL = "select o from TipoModeloDocumentoPapel o";
-	public static final String DEFAULT_ORDER = "o.papel.nome";
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "tipoModeloDocumentoPapelList";
 
-	@Override
-	protected void addSearchFields() {
-		addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
+    public static final String DEFAULT_EJBQL = "select o from TipoModeloDocumentoPapel o";
+    public static final String DEFAULT_ORDER = "o.papel.nome";
 
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    }
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
 
 }

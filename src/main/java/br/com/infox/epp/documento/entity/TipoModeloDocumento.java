@@ -34,10 +34,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = TABLE_TIPO_MODELO_DOCUMENTO, schema = PUBLIC,
-        uniqueConstraints = {
-            @UniqueConstraint(columnNames = { TIPO_MODELO_DOCUMENTO }),
-            @UniqueConstraint(columnNames = { ABREVIACAO }) })
+@Table(name = TABLE_TIPO_MODELO_DOCUMENTO, schema = PUBLIC, uniqueConstraints = {
+    @UniqueConstraint(columnNames = { TIPO_MODELO_DOCUMENTO }),
+    @UniqueConstraint(columnNames = { ABREVIACAO }) })
 public class TipoModeloDocumento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,15 +55,15 @@ public class TipoModeloDocumento implements Serializable {
     }
 
     public TipoModeloDocumento(final GrupoModeloDocumento grupoModeloDocumento,
-            final String tipoModeloDocumento, final String abreviacao, final Boolean ativo) {
+            final String tipoModeloDocumento, final String abreviacao,
+            final Boolean ativo) {
         this.grupoModeloDocumento = grupoModeloDocumento;
         this.tipoModeloDocumento = tipoModeloDocumento;
         this.abreviacao = abreviacao;
         this.ativo = ativo;
     }
 
-    @SequenceGenerator(name = GENERATOR,
-            sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO)
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR)
     @Column(name = ID_TIPO_MODELO_DOCUMENTO, unique = true, nullable = false)
@@ -88,10 +87,9 @@ public class TipoModeloDocumento implements Serializable {
         this.grupoModeloDocumento = grupoModeloDocumento;
     }
 
-    @Column(name = TIPO_MODELO_DOCUMENTO, nullable = false,
-            length = DESCRICAO_PADRAO_METADE)
+    @Column(name = TIPO_MODELO_DOCUMENTO, nullable = false, length = DESCRICAO_PADRAO_METADE)
     @NotNull
-    @Size(min= FLAG, max = DESCRICAO_PADRAO_METADE)
+    @Size(min = FLAG, max = DESCRICAO_PADRAO_METADE)
     public String getTipoModeloDocumento() {
         return this.tipoModeloDocumento;
     }
@@ -100,10 +98,9 @@ public class TipoModeloDocumento implements Serializable {
         this.tipoModeloDocumento = tipoModeloDocumento;
     }
 
-    @Column(name = ABREVIACAO, nullable = false,
-            length = DESCRICAO_ABREVIADA, unique = true)
+    @Column(name = ABREVIACAO, nullable = false, length = DESCRICAO_ABREVIADA, unique = true)
     @NotNull
-    @Size(min= FLAG, max = DESCRICAO_ABREVIADA)
+    @Size(min = FLAG, max = DESCRICAO_ABREVIADA)
     public String getAbreviacao() {
         return this.abreviacao;
     }
@@ -113,8 +110,7 @@ public class TipoModeloDocumento implements Serializable {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = TIPO_MODELO_DOCUMENTO_ATTRIBUTE)
+        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = TIPO_MODELO_DOCUMENTO_ATTRIBUTE)
     public List<ModeloDocumento> getModeloDocumentoList() {
         return this.modeloDocumentoList;
     }
@@ -124,8 +120,7 @@ public class TipoModeloDocumento implements Serializable {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = TIPO_MODELO_DOCUMENTO_ATTRIBUTE)
+        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = TIPO_MODELO_DOCUMENTO_ATTRIBUTE)
     public List<VariavelTipoModelo> getVariavelTipoModeloList() {
         return variavelTipoModeloList;
     }
@@ -156,25 +151,19 @@ public class TipoModeloDocumento implements Serializable {
         int result = 1;
         result = prime
                 * result
-                + ((idTipoModeloDocumento == null) ? 0 : idTipoModeloDocumento
-                        .hashCode());
+                + ((idTipoModeloDocumento == null) ? 0 : idTipoModeloDocumento.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         TipoModeloDocumento other = (TipoModeloDocumento) obj;
         if (idTipoModeloDocumento == null) {
-            if (other.idTipoModeloDocumento != null)
-                return false;
-        } else if (!idTipoModeloDocumento.equals(other.idTipoModeloDocumento))
-            return false;
+            if (other.idTipoModeloDocumento != null) return false;
+        } else if (!idTipoModeloDocumento.equals(other.idTipoModeloDocumento)) return false;
         return true;
     }
 

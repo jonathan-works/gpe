@@ -16,38 +16,38 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 @AutoCreate
 public class SigiloProcessoList extends EntityList<SigiloProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloProcessoList";
-	
-	private static final String DEFAULT_EJBQL = "select o from SigiloProcesso o where o.processo = #{sigiloProcessoList.processo}";
-	private static final String DEFAULT_ORDER = "dataInclusao desc";
-	
-	private ProcessoEpa processo;
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloProcessoList";
 
-	@Override
-	protected void addSearchFields() {
-	}
+    private static final String DEFAULT_EJBQL = "select o from SigiloProcesso o where o.processo = #{sigiloProcessoList.processo}";
+    private static final String DEFAULT_ORDER = "dataInclusao desc";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private ProcessoEpa processo;
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
-	
-	public ProcessoEpa getProcesso() {
-		return processo;
-	}
-	
-	public void setProcesso(ProcessoEpa processo) {
-		this.processo = processo;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    public ProcessoEpa getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(ProcessoEpa processo) {
+        this.processo = processo;
+    }
 }

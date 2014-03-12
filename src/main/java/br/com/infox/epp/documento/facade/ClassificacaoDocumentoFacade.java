@@ -17,26 +17,27 @@ import br.com.infox.epp.documento.type.VisibilidadeEnum;
 @Name(ClassificacaoDocumentoFacade.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ClassificacaoDocumentoFacade {
-    
-    @In TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
-    
+
+    @In
+    TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
+
     public static final String NAME = "classificacaoDocumentoFacade";
-    
+
     public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
         return TipoDocumentoEnum.values();
     }
-    
+
     public TipoNumeracaoEnum[] getTipoNumeracaoEnumValues() {
         return TipoNumeracaoEnum.values();
     }
-    
-    public VisibilidadeEnum[] getVisibilidadeEnumValues(){
+
+    public VisibilidadeEnum[] getVisibilidadeEnumValues() {
         return VisibilidadeEnum.values();
     }
-    
-    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo){
+
+    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(
+            boolean isModelo) {
         return tipoProcessoDocumentoManager.getUseableTipoProcessoDocumento(isModelo, Authenticator.getPapelAtual());
     }
-    
 
 }

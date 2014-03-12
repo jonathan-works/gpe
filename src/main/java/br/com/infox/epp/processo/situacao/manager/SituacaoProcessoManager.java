@@ -14,19 +14,20 @@ import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 @AutoCreate
 public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, SituacaoProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "situacaoProcessoManager";
-	
-	public boolean existemTarefasEmAberto(long taskId){
-		return getDao().getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
-	}
-	
-	public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
-		return getDao().getProcessosAbertosByIdTarefa(idTarefa, selected);
-	}
-	
-	public boolean canOpenTask(long currentTaskId) {
-	    return getDao().canOpenTask(currentTaskId);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "situacaoProcessoManager";
+
+    public boolean existemTarefasEmAberto(long taskId) {
+        return getDao().getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
+    }
+
+    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa,
+            Map<String, Object> selected) {
+        return getDao().getProcessosAbertosByIdTarefa(idTarefa, selected);
+    }
+
+    public boolean canOpenTask(long currentTaskId) {
+        return getDao().canOpenTask(currentTaskId);
+    }
 
 }

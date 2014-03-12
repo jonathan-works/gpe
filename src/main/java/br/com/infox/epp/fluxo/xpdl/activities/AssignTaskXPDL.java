@@ -4,6 +4,6 @@ import org.jbpm.graph.def.ProcessDefinition;
 
 public interface AssignTaskXPDL {
 
-	void assignTask(ProcessDefinition definition);
-	
+    void assignTask(ProcessDefinition definition);
+
 }

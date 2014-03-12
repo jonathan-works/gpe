@@ -10,6 +10,6 @@ import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 @Name(LocalizacaoFisicaManager.NAME)
 @AutoCreate
 public class LocalizacaoFisicaManager extends Manager<LocalizacaoFisicaDAO, LocalizacaoFisica> {
-	private static final long serialVersionUID = 4455754174682600299L;
-	public static final String NAME = "localizacaoFisicaManager";
+    private static final long serialVersionUID = 4455754174682600299L;
+    public static final String NAME = "localizacaoFisicaManager";
 }

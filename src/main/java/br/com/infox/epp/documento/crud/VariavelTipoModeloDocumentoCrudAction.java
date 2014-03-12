@@ -11,41 +11,41 @@ import br.com.infox.epp.documento.manager.VariavelTipoModeloManager;
 
 @Name(VariavelTipoModeloDocumentoCrudAction.NAME)
 public class VariavelTipoModeloDocumentoCrudAction extends AbstractCrudAction<VariavelTipoModelo, VariavelTipoModeloManager> {
-	
-	/**
+
+    /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "variavelTipoModeloDocumentoCrudAction";
-	
-	private Variavel variavelAtual;
 
-	public Variavel getVariavelAtual() {
-		return variavelAtual;
-	}
+    private Variavel variavelAtual;
 
-	public void setVariavelAtual(Variavel variavelAtual) {
-		this.variavelAtual = variavelAtual;
-	}
-	
-	@Override
-	protected void beforeSave() {
-		getInstance().setVariavel(variavelAtual);
-	}
-	
-	@Override
-	protected void afterSave(String ret) {
-		newInstance();
-	}
-	
-	public void addTipoModeloVariavel(TipoModeloDocumento obj) {
-		getInstance().setTipoModeloDocumento(obj);
-		save();
-		FacesMessages.instance().clear();
-	}
-	
-	public void removeTipoModeloVariavel(VariavelTipoModelo obj) {
-		remove(obj);
-	}	
+    public Variavel getVariavelAtual() {
+        return variavelAtual;
+    }
+
+    public void setVariavelAtual(Variavel variavelAtual) {
+        this.variavelAtual = variavelAtual;
+    }
+
+    @Override
+    protected void beforeSave() {
+        getInstance().setVariavel(variavelAtual);
+    }
+
+    @Override
+    protected void afterSave(String ret) {
+        newInstance();
+    }
+
+    public void addTipoModeloVariavel(TipoModeloDocumento obj) {
+        getInstance().setTipoModeloDocumento(obj);
+        save();
+        FacesMessages.instance().clear();
+    }
+
+    public void removeTipoModeloVariavel(VariavelTipoModelo obj) {
+        remove(obj);
+    }
 }

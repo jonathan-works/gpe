@@ -13,7 +13,7 @@ import br.com.infox.epp.twitter.entity.TwitterTemplate;
 @Scope(ScopeType.EVENT)
 public class TwitterTemplateDAO extends DAO<TwitterTemplate> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "twitterTemplateDAO";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "twitterTemplateDAO";
 
 }

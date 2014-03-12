@@ -1,6 +1,5 @@
 package br.com.infox.certificado;
 
-
 import java.math.BigInteger;
 import java.security.Principal;
 import java.security.PrivateKey;
@@ -35,22 +34,22 @@ public class Certificado {
     private Date dataValidadeFim;
     private BigInteger serialNumber;
     private String nomeCertificadora;
-    
+
     public Certificado(X509Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
         this.certChain = Arrays.copyOf(certChain, certChain.length);
         this.mainCertificate = (X509Certificate) this.certChain[0];
         this.privateKey = privateKey;
         processSubject();
     }
-    
+
     public Certificado(X509Certificate[] certChain) throws CertificadoException {
         this(certChain, null);
-    }    
+    }
 
     public Certificado(String certChainBase64) throws CertificadoException {
         this(DigitalSignatureUtils.loadCertFromBase64String(certChainBase64), null);
-    }        
-    
+    }
+
     public String getC() {
         return c;
     }
@@ -58,18 +57,18 @@ public class Certificado {
     public String getCn() {
         return cn;
     }
-    
+
     public String getNome() {
-    	return cn.split(":")[0];
+        return cn.split(":")[0];
     }
-    
+
     public String getDocumentoIdentificador() {
-    	if (cn.indexOf(':') > 0) {
-    		return cn.split(":")[1];
-    	} 
-    	return null;
+        if (cn.indexOf(':') > 0) {
+            return cn.split(":")[1];
+        }
+        return null;
     }
-    
+
     public String getEmail() {
         return email;
     }
@@ -109,33 +108,33 @@ public class Certificado {
     public BigInteger getSerialNumber() {
         return serialNumber;
     }
-    
+
     public String getSerialNumberHex() {
         return serialNumber.toString(HEX_NUMBER);
     }
-    
 
     public final void setSerialNumber(BigInteger serialNumber) {
         this.serialNumber = serialNumber;
     }
 
     public static String getCNValue(String cn) {
-    	String cnToken = "CN=";
-		String nomeCertificadora = cn.substring(cn.indexOf(cnToken) + cnToken.length());
+        String cnToken = "CN=";
+        String nomeCertificadora = cn.substring(cn.indexOf(cnToken)
+                + cnToken.length());
         nomeCertificadora = nomeCertificadora.substring(0, nomeCertificadora.indexOf(','));
         return nomeCertificadora;
     }
-    
+
     private void processSubject() throws CertificadoException {
         Principal dados = mainCertificate.getSubjectDN();
-        
+
         String dadosEmissor = mainCertificate.getIssuerDN().getName();
         try {
-        	nomeCertificadora = getCNValue(dadosEmissor);
+            nomeCertificadora = getCNValue(dadosEmissor);
         } catch (RuntimeException e) {
             throw new CertificadoException("Erro ao obter o nome da unidade certificadora.", e);
-        }   
-        
+        }
+
         Map<String, String> map = gerarMapDadosCertificado(dados.getName());
 
         dataValidadeFim = mainCertificate.getNotAfter();
@@ -152,23 +151,22 @@ public class Certificado {
         email = map.get("EMAILADDRESS");
 
         // Recupera o OU
-        ou1 = getValue(map,("OU1"));
-        ou2 = getValue(map,("OU2"));
-        ou3 = getValue(map,("OU3"));
-        ou4 = getValue(map,("OU4"));
-        ou5 = getValue(map,("OU5"));
+        ou1 = getValue(map, ("OU1"));
+        ou2 = getValue(map, ("OU2"));
+        ou3 = getValue(map, ("OU3"));
+        ou4 = getValue(map, ("OU4"));
+        ou5 = getValue(map, ("OU5"));
 
         // Recupera o O
         o = map.get("O");
 
     }
-    
+
     private String getValue(Map<String, String> map, String key) {
-    	String value = map.get(key);
-    	return value == null ? "" : value;
+        String value = map.get(key);
+        return value == null ? "" : value;
     }
 
-    
     private Map<String, String> gerarMapDadosCertificado(String subjectDN) {
         String[] dados = subjectDN.split(", ");
         Map<String, String> map = new HashMap<String, String>();
@@ -189,10 +187,10 @@ public class Certificado {
     public String toString() {
         return cn;
     }
-    
+
     public String getNomeCertificadora() {
-		return nomeCertificadora;
-	}
+        return nomeCertificadora;
+    }
 
     public X509Certificate[] getCertChain() {
         return ArrayUtil.copyOf(certChain);
@@ -201,18 +199,18 @@ public class Certificado {
     public PrivateKey getPrivateKey() {
         return privateKey;
     }
-    
+
     public X509Certificate getMainCertificate() {
-		return mainCertificate;
-	}
-    
+        return mainCertificate;
+    }
+
     public boolean isValidoParaSistema(List<String> acceptedCaList) {
         for (String name : acceptedCaList) {
-			if (name.equals(nomeCertificadora)) {
-				return true;
-			}
-		}
+            if (name.equals(nomeCertificadora)) {
+                return true;
+            }
+        }
         return false;
     }
-    
+
 }

@@ -103,7 +103,7 @@ public class ProcessBuilder implements Serializable {
     private boolean needToPublic;
 
     private Fluxo fluxo;
-    
+
     private Boolean importacaoConcluida;
     private Set<String> mensagensImportacao;
 
@@ -466,11 +466,11 @@ public class ProcessBuilder implements Serializable {
     public Set<String> getMensagensImportacao() {
         return mensagensImportacao;
     }
-    
+
     public Boolean getImportacaoConcluida() {
         return importacaoConcluida;
     }
-    
+
     public void importarXPDL(byte[] bytes, Fluxo fluxo) {
         FluxoXPDL fluxoXPDL = null;
         try {
@@ -488,7 +488,7 @@ public class ProcessBuilder implements Serializable {
             }
         }
     }
-    
+
     public void clearImportacao() {
         importacaoConcluida = null;
         mensagensImportacao = null;

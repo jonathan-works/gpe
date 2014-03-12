@@ -10,10 +10,10 @@ public interface HistoricoModeloDocumentoQuery {
     String DATA_ALTERACAO = "dt_alteracao";
     String TITULO_MODELO_DOCUMENTO = "ds_titulo_modelo_documento";
     String CONTEUDO_MODELO_DOCUMENTO = "ds_modelo_documento";
-    
+
     String LIST_MODELO = "listModeloDocumento";
     String LIST_MODELO_QUERY = "select distinct o.modeloDocumento from HistoricoModeloDocumento o";
-    
+
     String LIST_USUARIO = "listUsarioAlteracao";
     String LIST_USUARIO_PARAM_MODELO = "modeloDocumento";
     String LIST_USUARIO_QUERY = "select distinct o.usuarioAlteracao from HistoricoModeloDocumento o where o.modeloDocumento=:"

@@ -10,24 +10,25 @@ import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 
 @Name(DocumentoFisicoCrudAction.NAME)
 public class DocumentoFisicoCrudAction extends AbstractCrudAction<DocumentoFisico, DocumentoFisicoManager> {
-	
-	/**
+
+    /**
      * 
      */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "documentoFisicoCrudAction";
-	
-	private List<DocumentoFisico> documentoFisicoList;
-	
-	public List<DocumentoFisico> getDocumentoFisicoList() {
-		if (documentoFisicoList == null){
-			setDocumentoFisicoList(getManager().findAll());
-		}
-		return documentoFisicoList;
-	}
-	public void setDocumentoFisicoList(List<DocumentoFisico> documentoFisicoList) {
-		this.documentoFisicoList = documentoFisicoList;
-	}
+
+    private List<DocumentoFisico> documentoFisicoList;
+
+    public List<DocumentoFisico> getDocumentoFisicoList() {
+        if (documentoFisicoList == null) {
+            setDocumentoFisicoList(getManager().findAll());
+        }
+        return documentoFisicoList;
+    }
+
+    public void setDocumentoFisicoList(List<DocumentoFisico> documentoFisicoList) {
+        this.documentoFisicoList = documentoFisicoList;
+    }
 
 }

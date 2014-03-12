@@ -11,8 +11,8 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
 
 /**
- * Deprecated : Utilizada apenas para o XPDL, cuja funcionalidade será totalmente
- * reimplementada
+ * Deprecated : Utilizada apenas para o XPDL, cuja funcionalidade será
+ * totalmente reimplementada
  * */
 @Deprecated
 public final class XmlUtil {

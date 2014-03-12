@@ -23,25 +23,26 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 @AutoCreate
 public class UsuarioLocalizacaoDAO extends DAO<UsuarioLocalizacao> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "usuarioLocalizacaoDAO";
-	
-	public boolean existeUsuarioLocalizacao(final UsuarioLocalizacao usuarioLocalizacao) {
-		final StringBuilder hql = new StringBuilder(EXISTE_USUARIO_LOCALIZACAO_QUERY);
-		if (usuarioLocalizacao.getEstrutura() != null) {
-			hql.append(ESTRUTURA_CONDITION);
-		} else {
-			hql.append(ESTRUTURA_NULL_CONDITION);
-		}
-		
-		final HashMap<String, Object> params = new HashMap<>();
-		params.put(PARAM_USUARIO, usuarioLocalizacao.getUsuario());
-		params.put(PARAM_PAPEL, usuarioLocalizacao.getPapel());
-		params.put(PARAM_LOCALIZACAO, usuarioLocalizacao.getLocalizacao());
-		if (usuarioLocalizacao.getEstrutura() != null) {
-		    params.put(PARAM_ESTRUTURA, usuarioLocalizacao.getEstrutura());
-		}
-		
-		return (Long) getSingleResult(hql.toString(), params) > 0;
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "usuarioLocalizacaoDAO";
+
+    public boolean existeUsuarioLocalizacao(
+            final UsuarioLocalizacao usuarioLocalizacao) {
+        final StringBuilder hql = new StringBuilder(EXISTE_USUARIO_LOCALIZACAO_QUERY);
+        if (usuarioLocalizacao.getEstrutura() != null) {
+            hql.append(ESTRUTURA_CONDITION);
+        } else {
+            hql.append(ESTRUTURA_NULL_CONDITION);
+        }
+
+        final HashMap<String, Object> params = new HashMap<>();
+        params.put(PARAM_USUARIO, usuarioLocalizacao.getUsuario());
+        params.put(PARAM_PAPEL, usuarioLocalizacao.getPapel());
+        params.put(PARAM_LOCALIZACAO, usuarioLocalizacao.getLocalizacao());
+        if (usuarioLocalizacao.getEstrutura() != null) {
+            params.put(PARAM_ESTRUTURA, usuarioLocalizacao.getEstrutura());
+        }
+
+        return (Long) getSingleResult(hql.toString(), params) > 0;
+    }
 }

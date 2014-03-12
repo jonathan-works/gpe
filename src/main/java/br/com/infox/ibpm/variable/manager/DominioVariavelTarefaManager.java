@@ -14,6 +14,6 @@ import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 @AutoCreate
 public class DominioVariavelTarefaManager extends Manager<DominioVariavelTarefaDAO, DominioVariavelTarefa> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "dominioVariavelTarefaManager";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "dominioVariavelTarefaManager";
 }

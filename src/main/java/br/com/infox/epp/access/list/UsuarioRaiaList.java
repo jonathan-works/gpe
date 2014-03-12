@@ -21,99 +21,99 @@ import br.com.infox.epp.fluxo.manager.FluxoManager;
 @AutoCreate
 public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "usuarioRaiaList";
-	
-	private static final String DEFAULT_EJBQL = "select u.* from tb_usuario_login u "
-			+ "where u.id_pessoa_fisica is not null "
-			+ "and exists (select 1 from tb_usuario_localizacao ul where ul.id_usuario = u.id_usuario_login ";
-	
-	private static final String DEFAULT_ORDER = "u.nm_usuario";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "usuarioRaiaList";
 
-	@In
-	private LocalizacaoManager localizacaoManager;
-	
-	@In
-	private FluxoManager fluxoManager;
-	
-	private List<Localizacao> localizacoes;
-	private Localizacao localizacao;
-	
-	public UsuarioRaiaList() {
-		setNativeQuery(true);
-		setResultClass(UsuarioLogin.class);
-	}
-	
-	@Override
-	protected void addSearchFields() {
-	}
+    private static final String DEFAULT_EJBQL = "select u.* from tb_usuario_login u "
+            + "where u.id_pessoa_fisica is not null "
+            + "and exists (select 1 from tb_usuario_localizacao ul where ul.id_usuario = u.id_usuario_login ";
 
-	@Override
-	protected String getDefaultEjbql() {
-		StringBuilder sb = new StringBuilder(DEFAULT_EJBQL);
-		if (localizacoes != null) {
-			sb.append("and ul.id_localizacao in (");
-			for (Localizacao localizacao : localizacoes) {
-				sb.append(localizacao.getIdLocalizacao());
-				sb.append(",");
-			}
-			sb.deleteCharAt(sb.length()-1);
-			sb.append("))");
-		}
-		return sb.toString();
-	}
+    private static final String DEFAULT_ORDER = "u.nm_usuario";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @In
+    private LocalizacaoManager localizacaoManager;
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @In
+    private FluxoManager fluxoManager;
 
-	public List<Localizacao> getLocalizacoes() {
-		return localizacoes;
-	}
-	
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
-	
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
-	
-	public void loadLocalizacoes(Fluxo fluxo) {
-		this.localizacoes = localizacaoManager.getLocalizacoes(fluxoManager.getIdsLocalizacoesRaias(fluxo));
-		refreshQuery();
-	}
-	
-	@Override
-	public void newInstance() {
-		super.newInstance();
-		this.localizacao = null;
-		refreshQuery();
-	}
-	
-	public void refreshQuery() {
-		StringBuilder sb = new StringBuilder();
-		
-		if (getLocalizacao() != null) {
-			sb.append(DEFAULT_EJBQL);
-			sb.append(" and ul.id_localizacao = ");
-			sb.append(getLocalizacao().getIdLocalizacao());
-			sb.append(") ");
-		} else {
-			sb.append(getDefaultEjbql());
-		}
-		
-		if (getEntity().getNomeUsuario() != null) {
-			sb.append(" and u.nm_usuario ilike '%");
-			sb.append(getEntity().getNomeUsuario());
-			sb.append("%'");
-		}
-		setEjbql(sb.toString());
-	}
+    private List<Localizacao> localizacoes;
+    private Localizacao localizacao;
+
+    public UsuarioRaiaList() {
+        setNativeQuery(true);
+        setResultClass(UsuarioLogin.class);
+    }
+
+    @Override
+    protected void addSearchFields() {
+    }
+
+    @Override
+    protected String getDefaultEjbql() {
+        StringBuilder sb = new StringBuilder(DEFAULT_EJBQL);
+        if (localizacoes != null) {
+            sb.append("and ul.id_localizacao in (");
+            for (Localizacao localizacao : localizacoes) {
+                sb.append(localizacao.getIdLocalizacao());
+                sb.append(",");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            sb.append("))");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    public List<Localizacao> getLocalizacoes() {
+        return localizacoes;
+    }
+
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
+
+    public void loadLocalizacoes(Fluxo fluxo) {
+        this.localizacoes = localizacaoManager.getLocalizacoes(fluxoManager.getIdsLocalizacoesRaias(fluxo));
+        refreshQuery();
+    }
+
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        this.localizacao = null;
+        refreshQuery();
+    }
+
+    public void refreshQuery() {
+        StringBuilder sb = new StringBuilder();
+
+        if (getLocalizacao() != null) {
+            sb.append(DEFAULT_EJBQL);
+            sb.append(" and ul.id_localizacao = ");
+            sb.append(getLocalizacao().getIdLocalizacao());
+            sb.append(") ");
+        } else {
+            sb.append(getDefaultEjbql());
+        }
+
+        if (getEntity().getNomeUsuario() != null) {
+            sb.append(" and u.nm_usuario ilike '%");
+            sb.append(getEntity().getNomeUsuario());
+            sb.append("%'");
+        }
+        setEjbql(sb.toString());
+    }
 }

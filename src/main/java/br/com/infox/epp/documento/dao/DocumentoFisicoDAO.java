@@ -21,6 +21,7 @@ public class DocumentoFisicoDAO extends DAO<DocumentoFisico> {
 
     /**
      * Lista todos os papeis relacionados a um determinado fluxo.
+     * 
      * @param fluxo que se deseja obter os papeis.
      * @return
      */

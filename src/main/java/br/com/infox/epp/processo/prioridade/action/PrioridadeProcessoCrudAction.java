@@ -11,8 +11,8 @@ import br.com.infox.epp.processo.prioridade.manager.PrioridadeProcessoManager;
 @Name(PrioridadeProcessoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class PrioridadeProcessoCrudAction extends AbstractCrudAction<PrioridadeProcesso, PrioridadeProcessoManager> {
-    
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "prioridadeProcessoCrudAction";
-    
+
 }

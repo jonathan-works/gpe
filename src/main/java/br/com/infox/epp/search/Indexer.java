@@ -108,12 +108,12 @@ public class Indexer {
         QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, analyzer);
         return parser.parse(searchText);
     }
-    
-    private static PathResolver getPathResolver(){
+
+    private static PathResolver getPathResolver() {
         return (PathResolver) Component.getInstance(PathResolver.NAME);
     }
-    
-    private static String getIndexerFileName(){
+
+    private static String getIndexerFileName() {
         ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
         return elFunctions.evaluateExpression("indexerFileName");
     }

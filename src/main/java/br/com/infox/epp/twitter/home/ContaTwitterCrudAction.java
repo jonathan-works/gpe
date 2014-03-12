@@ -47,12 +47,12 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
     private UsuarioLogin usuario;
     private String pin;
     private boolean requesting = false;
-    
+
     @In
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private LocalizacaoManager localizacaoManager;
-    
+
     public boolean usuarioLogadoHasTwitter() {
         return Authenticator.getUsuarioLogado().getTemContaTwitter();
     }
@@ -100,7 +100,8 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                         try {
                             usuarioLoginManager.merge(usuario);
                         } catch (DAOException e) {
-                            LOG.error("Não foi possível associar o twitter " + getInstance().getScreenName() 
+                            LOG.error("Não foi possível associar o twitter "
+                                    + getInstance().getScreenName()
                                     + " ao usuário " + usuario, e);
                         }
                     }
@@ -109,9 +110,10 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                     if (!usuario.getTemContaTwitter()) {
                         usuario.setTemContaTwitter(true);
                         try {
-                        	usuarioLoginManager.merge(usuario);
+                            usuarioLoginManager.merge(usuario);
                         } catch (DAOException e) {
-                            LOG.error("Não foi possível associar o twitter " + getInstance().getScreenName() 
+                            LOG.error("Não foi possível associar o twitter "
+                                    + getInstance().getScreenName()
                                     + " ao usuário " + usuario, e);
                         }
                         TwitterUtil.restart();
@@ -122,7 +124,8 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                     try {
                         localizacaoManager.merge(localizacao);
                     } catch (DAOException e) {
-                        LOG.error("Não foi possível associar o twitter " + getInstance().getScreenName() 
+                        LOG.error("Não foi possível associar o twitter "
+                                + getInstance().getScreenName()
                                 + " à localização " + localizacao, e);
                     }
                 break;
@@ -180,7 +183,8 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                     try {
                         usuarioLoginManager.merge(usr);
                     } catch (DAOException e) {
-                        LOG.error("Não foi possível remover o twitter do usuário " + usr, e);
+                        LOG.error("Não foi possível remover o twitter do usuário "
+                                + usr, e);
                     }
                 break;
                 case L:
@@ -189,7 +193,8 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                     try {
                         localizacaoManager.merge(loc);
                     } catch (DAOException e) {
-                        LOG.error("Não foi possível remover o twitter da localização" + loc, e);
+                        LOG.error("Não foi possível remover o twitter da localização"
+                                + loc, e);
                     }
                 break;
             }

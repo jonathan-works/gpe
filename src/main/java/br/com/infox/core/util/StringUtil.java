@@ -5,7 +5,7 @@ import java.util.List;
 import org.jboss.seam.util.Strings;
 
 public final class StringUtil {
-	
+
     private StringUtil() {
     }
 

@@ -42,7 +42,7 @@ public class NaturezaCategoriaFluxoFacade implements Serializable {
     public List<Categoria> getCategoriaList() {
         return categoriaList;
     }
-    
+
     public List<Fluxo> getFluxoList() {
         return fluxoList;
     }

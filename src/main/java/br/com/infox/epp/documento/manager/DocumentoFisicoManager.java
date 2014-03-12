@@ -15,14 +15,14 @@ import br.com.infox.epp.processo.entity.Processo;
 @AutoCreate
 public class DocumentoFisicoManager extends Manager<DocumentoFisicoDAO, DocumentoFisico> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "documentoFisicoManager";
+    public static final String NAME = "documentoFisicoManager";
 
-	@In
-	private DocumentoFisicoDAO documentoFisicoDAO;
-	
-	public List<DocumentoFisico> listByProcesso(Processo processo) {
-		return documentoFisicoDAO.listByProcesso(processo);
-	}
+    @In
+    private DocumentoFisicoDAO documentoFisicoDAO;
+
+    public List<DocumentoFisico> listByProcesso(Processo processo) {
+        return documentoFisicoDAO.listByProcesso(processo);
+    }
 }

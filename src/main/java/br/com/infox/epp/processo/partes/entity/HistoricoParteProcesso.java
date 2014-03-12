@@ -47,12 +47,10 @@ public class HistoricoParteProcesso {
         ativo = parteProcessoAtual.getAtivo();
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_historico_parte_processo")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_historico_parte_processo")
     @Id
     @GeneratedValue(generator = "generator")
-    @Column(name = "id_historico_parte_processo", unique = true,
-            nullable = false)
+    @Column(name = "id_historico_parte_processo", unique = true, nullable = false)
     public Integer getIdHistoricoParteProcesso() {
         return idHistoricoParteProcesso;
     }
@@ -82,8 +80,7 @@ public class HistoricoParteProcesso {
         this.dataModificacao = dataModificacao;
     }
 
-    @Column(name = "ds_motivo_modificacao", nullable = false,
-            length = LengthConstants.DESCRICAO_MEDIA)
+    @Column(name = "ds_motivo_modificacao", nullable = false, length = LengthConstants.DESCRICAO_MEDIA)
     @Size(max = LengthConstants.DESCRICAO_MEDIA)
     public String getMotivoModificacao() {
         return motivoModificacao;

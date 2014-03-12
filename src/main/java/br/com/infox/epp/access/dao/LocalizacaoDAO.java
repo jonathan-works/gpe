@@ -21,24 +21,25 @@ import br.com.infox.epp.access.entity.Localizacao;
 @Name(LocalizacaoDAO.NAME)
 @AutoCreate
 public class LocalizacaoDAO extends DAO<Localizacao> {
-	
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "localizacaoDAO";
-	
-	public List<Localizacao> getLocalizacoesEstrutura(){
-	    return getNamedResultList(LOCALIZACOES_ESTRUTURA);
-	}
 
-	public List<Localizacao> getLocalizacoes(final Collection<Integer> ids) {
-		final Map<String, Object> params = new HashMap<>();
-		params.put(QUERY_PARAM_ID_LOCALIZACAO, ids);
-		return getNamedResultList(LOCALIZACOES_BY_IDS, params);
-	}
-	
-	public boolean isLocalizacaoAncestor(final Localizacao localizacaoAncestor, final Localizacao localizacao) {
-	    final Map<String, Object> params = new HashMap<>();
-	    params.put(CAMINHO_COMPLETO, localizacaoAncestor.getCaminhoCompleto());
-	    params.put(LOCALIZACAO_ATTRIBUTE, localizacao);
-	    return getNamedSingleResult(IS_LOCALIZACAO_ANCESTOR, params) != null;
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "localizacaoDAO";
+
+    public List<Localizacao> getLocalizacoesEstrutura() {
+        return getNamedResultList(LOCALIZACOES_ESTRUTURA);
+    }
+
+    public List<Localizacao> getLocalizacoes(final Collection<Integer> ids) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put(QUERY_PARAM_ID_LOCALIZACAO, ids);
+        return getNamedResultList(LOCALIZACOES_BY_IDS, params);
+    }
+
+    public boolean isLocalizacaoAncestor(final Localizacao localizacaoAncestor,
+            final Localizacao localizacao) {
+        final Map<String, Object> params = new HashMap<>();
+        params.put(CAMINHO_COMPLETO, localizacaoAncestor.getCaminhoCompleto());
+        params.put(LOCALIZACAO_ATTRIBUTE, localizacao);
+        return getNamedSingleResult(IS_LOCALIZACAO_ANCESTOR, params) != null;
+    }
 }

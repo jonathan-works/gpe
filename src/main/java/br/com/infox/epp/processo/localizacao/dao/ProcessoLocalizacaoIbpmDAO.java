@@ -68,7 +68,8 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, parameters);
     }
 
-    public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId, Long processId) {
+    public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId,
+            Long processId) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PROCESS_ID, processId);
         parameters.put(PARAM_TASK_ID, taskId);

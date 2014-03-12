@@ -36,7 +36,8 @@ public class ProcessoDocumentoManager extends Manager<ProcessoDocumentoDAO, Proc
         return find(idProcessoDocumento).getProcessoDocumentoBin().getModeloDocumento();
     }
 
-    public ProcessoDocumento gravarDocumentoNoProcesso(Processo processo, ProcessoDocumento processoDocumento) throws DAOException {
+    public ProcessoDocumento gravarDocumentoNoProcesso(Processo processo,
+            ProcessoDocumento processoDocumento) throws DAOException {
         processoDocumento.setProcesso(processo);
         processoDocumento.setNumeroDocumento(getNextNumeracao(processoDocumento));
         processoDocumento.setProcessoDocumentoBin(processoDocumentoBinManager.createProcessoDocumentoBin(processoDocumento));
@@ -49,7 +50,8 @@ public class ProcessoDocumentoManager extends Manager<ProcessoDocumentoDAO, Proc
         return processoDocumento;
     }
 
-    public ProcessoDocumento createProcessoDocumento(Processo processo, String label, ProcessoDocumentoBin bin,
+    public ProcessoDocumento createProcessoDocumento(Processo processo,
+            String label, ProcessoDocumentoBin bin,
             TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
         ProcessoDocumento doc = new ProcessoDocumento();
         doc.setProcessoDocumentoBin(bin);

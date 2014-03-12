@@ -10,6 +10,6 @@ import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 @AutoCreate
 public class LocalizacaoFisicaDAO extends DAO<LocalizacaoFisica> {
 
-	public static final String NAME = "localizacaoFisicaDAO";
-	private static final long serialVersionUID = 1L;
+    public static final String NAME = "localizacaoFisicaDAO";
+    private static final long serialVersionUID = 1L;
 }

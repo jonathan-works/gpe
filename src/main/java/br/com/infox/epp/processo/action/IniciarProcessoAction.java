@@ -49,15 +49,15 @@ public class IniciarProcessoAction {
     private Item itemDoProcesso;
     private ProcessoEpa processoEpa;
     private List<ItemBean> itemList;
-    
+
     private String viewId;
 
     public void iniciarProcesso() {
         newProcessoEpa();
         enviarProcessoParaJbpm();
     }
-    
-    public void iniciarProcesso(List<Pessoa> pessoas){
+
+    public void iniciarProcesso(List<Pessoa> pessoas) {
         newProcessoEpa();
         inserirPartes(pessoas);
         enviarProcessoParaJbpm();

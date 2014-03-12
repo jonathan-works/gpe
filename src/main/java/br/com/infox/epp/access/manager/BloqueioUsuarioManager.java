@@ -15,28 +15,29 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @AutoCreate
 public class BloqueioUsuarioManager extends Manager<BloqueioUsuarioDAO, BloqueioUsuario> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "bloqueioUsuarioManager";
-	
-	@In private BloqueioUsuarioDAO bloqueioUsuarioDAO;
-	
-	public Date getDataParaDesbloqueio(UsuarioLogin usuarioLogin){
-		assert usuarioLogin.getBloqueio();
-		BloqueioUsuario bloqueioUsuario = bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
-		return bloqueioUsuario.getDataPrevisaoDesbloqueio();
-	}
-	
-	public void desfazerBloqueioUsuario(UsuarioLogin usuarioLogin) {
-		BloqueioUsuario bloqueioUsuario = bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
-		assert bloqueioUsuario.getDataDesbloqueio() != null;
-		bloqueioUsuarioDAO.desfazerBloqueioUsuario(bloqueioUsuario);
-	}
-	
-	public boolean liberarUsuarioBloqueado(UsuarioLogin usuarioLogin){
-		return getDataParaDesbloqueio(usuarioLogin).before(new Date());
-	}
-	
-	public BloqueioUsuario getUltimoBloqueio(UsuarioLogin usuarioLogin){
-	    return bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "bloqueioUsuarioManager";
+
+    @In
+    private BloqueioUsuarioDAO bloqueioUsuarioDAO;
+
+    public Date getDataParaDesbloqueio(UsuarioLogin usuarioLogin) {
+        assert usuarioLogin.getBloqueio();
+        BloqueioUsuario bloqueioUsuario = bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
+        return bloqueioUsuario.getDataPrevisaoDesbloqueio();
+    }
+
+    public void desfazerBloqueioUsuario(UsuarioLogin usuarioLogin) {
+        BloqueioUsuario bloqueioUsuario = bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
+        assert bloqueioUsuario.getDataDesbloqueio() != null;
+        bloqueioUsuarioDAO.desfazerBloqueioUsuario(bloqueioUsuario);
+    }
+
+    public boolean liberarUsuarioBloqueado(UsuarioLogin usuarioLogin) {
+        return getDataParaDesbloqueio(usuarioLogin).before(new Date());
+    }
+
+    public BloqueioUsuario getUltimoBloqueio(UsuarioLogin usuarioLogin) {
+        return bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
+    }
 }

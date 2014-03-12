@@ -16,45 +16,45 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(NatCatFluxoLocalizacaoList.NAME)
 @Scope(ScopeType.PAGE)
 public class NatCatFluxoLocalizacaoList extends EntityList<NatCatFluxoLocalizacao> {
-	
-	public static final String NAME = "natCatFluxoLocalizacaoList";
 
-	private static final long serialVersionUID = 1L;
-	
-	private static final String DEFAULT_EJBQL = "select o from NatCatFluxoLocalizacao o";
-	private static final String DEFAULT_ORDER = "naturezaCategoriaFluxo.natureza";
-	
-	public static final NatCatFluxoLocalizacaoList instance() {
-		return ComponentUtil.getComponent(NAME);
-	}
-	
-	public void setFluxo(Fluxo fluxo){
-	    newInstance();
-	    getEntity().setNaturezaCategoriaFluxo(new NaturezaCategoriaFluxo());
-	    getEntity().getNaturezaCategoriaFluxo().setFluxo(fluxo);
-	}
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL);
-		addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL);
-		addSearchField("naturezaCategoriaFluxo.fluxo", SearchCriteria.IGUAL);
-		addSearchField("localizacao", SearchCriteria.IGUAL);
-	}
+    public static final String NAME = "natCatFluxoLocalizacaoList";
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    private static final long serialVersionUID = 1L;
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String DEFAULT_EJBQL = "select o from NatCatFluxoLocalizacao o";
+    private static final String DEFAULT_ORDER = "naturezaCategoriaFluxo.natureza";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
-	
+    public static final NatCatFluxoLocalizacaoList instance() {
+        return ComponentUtil.getComponent(NAME);
+    }
+
+    public void setFluxo(Fluxo fluxo) {
+        newInstance();
+        getEntity().setNaturezaCategoriaFluxo(new NaturezaCategoriaFluxo());
+        getEntity().getNaturezaCategoriaFluxo().setFluxo(fluxo);
+    }
+
+    @Override
+    protected void addSearchFields() {
+        addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL);
+        addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL);
+        addSearchField("naturezaCategoriaFluxo.fluxo", SearchCriteria.IGUAL);
+        addSearchField("localizacao", SearchCriteria.IGUAL);
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
 }

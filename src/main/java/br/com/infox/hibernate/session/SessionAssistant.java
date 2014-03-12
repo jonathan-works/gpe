@@ -19,14 +19,14 @@ import org.jboss.seam.annotations.Name;
 public class SessionAssistant {
 
     public static final String NAME = "sessionAssistant";
-    
+
     @In
     private transient EntityManager entityManager;
-    
+
     public Session getSession() {
         return (Session) entityManager.getDelegate();
     }
-    
+
     public Connection getConnection() throws NamingException, SQLException {
         SessionImpl sessionImpl = (SessionImpl) entityManager.unwrap(Session.class);
         SessionFactoryImpl sessionFactoryImpl = (SessionFactoryImpl) sessionImpl.getSessionFactory();

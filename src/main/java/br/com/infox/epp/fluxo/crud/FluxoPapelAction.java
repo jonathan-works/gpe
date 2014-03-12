@@ -16,80 +16,80 @@ import br.com.infox.epp.fluxo.manager.FluxoPapelManager;
 
 @Name(FluxoPapelAction.NAME)
 public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel, FluxoPapelManager> {
-	private static final long serialVersionUID = 1L;
-	private static final LogProvider LOG = Logging.getLogProvider(FluxoPapelAction.class);
+    private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(FluxoPapelAction.class);
 
-	public static final String NAME = "fluxoPapelAction";
+    public static final String NAME = "fluxoPapelAction";
 
-	private PapelTreeHandler papelTreeHandler = new PapelTreeHandler();
-	private List<FluxoPapel> fluxoPapelList;
-	private Fluxo fluxo;
-	
-	@Override
-	protected void beforeSave() {
-	    getInstance().setFluxo(fluxo);
-	}
-	
-	@Override
-	protected void afterSave() {
-		newInstance();
-		listByNatureza();
-	}
-	
-	@Override
-	public String remove(final FluxoPapel obj) {
-		final String remove = super.remove(obj);
-		if(remove != null) {
-		    listByNatureza();
-		}
-		return remove;
-	}
+    private PapelTreeHandler papelTreeHandler = new PapelTreeHandler();
+    private List<FluxoPapel> fluxoPapelList;
+    private Fluxo fluxo;
 
-	public void removeAll() {
-	    boolean allValid = true;
-		for (final Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
-			final FluxoPapel nl = iterator.next();
-			try {
-				getManager().remove(nl);
-			} catch (final Exception e) {
-			    LOG.error(".removeAll()", e);
-			    allValid = false;
-			}
-			iterator.remove();
-		}
-		final StatusMessages messages = getMessagesHandler();
-		messages.clear();
-        if (allValid) {
-		    messages.add("Registros removidos com sucesso!");
-		} else {
-		    messages.add("Houve erro na remoção de alguns dos itens");
-		}
+    @Override
+    protected void beforeSave() {
+        getInstance().setFluxo(fluxo);
+    }
+
+    @Override
+    protected void afterSave() {
+        newInstance();
         listByNatureza();
-	}
-		
-	public void init(final Fluxo fluxo) {
-		this.fluxo = fluxo;
-		listByNatureza();
-	}
+    }
 
-	private void listByNatureza() {
-		setFluxoPapelList(getManager().listByFluxo(fluxo));
-	}
+    @Override
+    public String remove(final FluxoPapel obj) {
+        final String remove = super.remove(obj);
+        if (remove != null) {
+            listByNatureza();
+        }
+        return remove;
+    }
 
-	public void setPapelTreeHandler(final PapelTreeHandler papelTreeHandler) {
-		this.papelTreeHandler = papelTreeHandler;
-	}
+    public void removeAll() {
+        boolean allValid = true;
+        for (final Iterator<FluxoPapel> iterator = getFluxoPapelList().iterator(); iterator.hasNext();) {
+            final FluxoPapel nl = iterator.next();
+            try {
+                getManager().remove(nl);
+            } catch (final Exception e) {
+                LOG.error(".removeAll()", e);
+                allValid = false;
+            }
+            iterator.remove();
+        }
+        final StatusMessages messages = getMessagesHandler();
+        messages.clear();
+        if (allValid) {
+            messages.add("Registros removidos com sucesso!");
+        } else {
+            messages.add("Houve erro na remoção de alguns dos itens");
+        }
+        listByNatureza();
+    }
 
-	public PapelTreeHandler getPapelTreeHandler() {
-		return papelTreeHandler;
-	}
+    public void init(final Fluxo fluxo) {
+        this.fluxo = fluxo;
+        listByNatureza();
+    }
 
-	public void setFluxoPapelList(final List<FluxoPapel> fluxoPapelList) {
-		this.fluxoPapelList = fluxoPapelList;
-	}
+    private void listByNatureza() {
+        setFluxoPapelList(getManager().listByFluxo(fluxo));
+    }
 
-	public List<FluxoPapel> getFluxoPapelList() {
-		return fluxoPapelList;
-	}	
-	
+    public void setPapelTreeHandler(final PapelTreeHandler papelTreeHandler) {
+        this.papelTreeHandler = papelTreeHandler;
+    }
+
+    public PapelTreeHandler getPapelTreeHandler() {
+        return papelTreeHandler;
+    }
+
+    public void setFluxoPapelList(final List<FluxoPapel> fluxoPapelList) {
+        this.fluxoPapelList = fluxoPapelList;
+    }
+
+    public List<FluxoPapel> getFluxoPapelList() {
+        return fluxoPapelList;
+    }
+
 }

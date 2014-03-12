@@ -31,8 +31,7 @@ public class EntityLogDetail implements java.io.Serializable {
     public EntityLogDetail() {
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_log_detalhe")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_log_detalhe")
     @Id
     @GeneratedValue(generator = "generator")
     @Column(name = "id_log_detalhe", unique = true, nullable = false)

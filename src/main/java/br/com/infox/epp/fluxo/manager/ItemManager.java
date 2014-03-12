@@ -19,12 +19,12 @@ public class ItemManager extends Manager<ItemDAO, Item> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "itemManager";
-    
+
     public Set<Item> getFolhas(final Integer idPai) {
         final Item pai = find(idPai);
         return getFolhas(pai);
     }
-    
+
     public Set<Item> getFolhas(final Item pai) {
         Set<Item> result = null;
         if (pai != null) {

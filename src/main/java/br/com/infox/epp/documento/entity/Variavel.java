@@ -33,8 +33,7 @@ import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = TABLE_VARIAVEL, schema = PUBLIC)
-@NamedQueries(value = { @NamedQuery(name = VARIAVEL_BY_TIPO_MODELO_DOCUMENTO,
-        query = VARIAVEL_BY_TIPO_MODELO_QUERY) })
+@NamedQueries(value = { @NamedQuery(name = VARIAVEL_BY_TIPO_MODELO_DOCUMENTO, query = VARIAVEL_BY_TIPO_MODELO_QUERY) })
 public class Variavel implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,8 +60,7 @@ public class Variavel implements java.io.Serializable {
         this.idVariavel = idVariavel;
     }
 
-    @Column(name = DESCRICAO_VARIAVEL, nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO, unique = true)
+    @Column(name = DESCRICAO_VARIAVEL, nullable = false, length = LengthConstants.DESCRICAO_PADRAO, unique = true)
     @NotNull
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
     public String getVariavel() {
@@ -77,8 +75,7 @@ public class Variavel implements java.io.Serializable {
         this.variavel = var;
     }
 
-    @Column(name = VALOR_VARIAVEL, nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
+    @Column(name = VALOR_VARIAVEL, nullable = false, length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
     @NotNull
     @Size(max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
     public String getValorVariavel() {
@@ -100,8 +97,7 @@ public class Variavel implements java.io.Serializable {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = VARIAVEL_ATTRIBUTE)
+        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = VARIAVEL_ATTRIBUTE)
     public List<VariavelTipoModelo> getVariavelTipoModeloList() {
         return variavelTipoModeloList;
     }

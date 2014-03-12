@@ -4,10 +4,10 @@ import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 
 public class IllegalActivityXPDLException extends IllegalXPDLException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public IllegalActivityXPDLException(String msg) {
-		super(msg);
-	}
+    public IllegalActivityXPDLException(String msg) {
+        super(msg);
+    }
 
 }

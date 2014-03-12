@@ -44,8 +44,7 @@ public abstract class Pessoa implements Serializable {
         this.idPessoa = idPessoa;
     }
 
-    @Column(name = "tp_pessoa", nullable = false,
-            columnDefinition = "varchar(1)", length = LengthConstants.FLAG)
+    @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG)
     @Enumerated(EnumType.STRING)
     public TipoPessoaEnum getTipoPessoa() {
         return tipoPessoa;
@@ -55,8 +54,7 @@ public abstract class Pessoa implements Serializable {
         this.tipoPessoa = tipoPessoa;
     }
 
-    @Column(name = "nm_pessoa", nullable = false,
-            length = LengthConstants.NOME_ATRIBUTO)
+    @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO)
     @Size(max = LengthConstants.NOME_ATRIBUTO)
     @NotNull
     public String getNome() {

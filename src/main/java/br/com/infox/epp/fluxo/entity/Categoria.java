@@ -34,8 +34,7 @@ import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = TABLE_CATEGORIA, schema = PUBLIC)
-@NamedQueries(value = { @NamedQuery(name = LIST_PROCESSO_EPP_BY_CATEGORIA,
-        query = LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY) })
+@NamedQueries(value = { @NamedQuery(name = LIST_PROCESSO_EPP_BY_CATEGORIA, query = LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY) })
 public class Categoria implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -66,8 +65,7 @@ public class Categoria implements Serializable {
         this.idCategoria = idCategoria;
     }
 
-    @Column(name = DESCRICAO_CATEGORIA,
-            length = LengthConstants.DESCRICAO_PEQUENA, nullable = false)
+    @Column(name = DESCRICAO_CATEGORIA, length = LengthConstants.DESCRICAO_PEQUENA, nullable = false)
     @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA)
     @NotNull
     public String getCategoria() {
@@ -93,8 +91,7 @@ public class Categoria implements Serializable {
         return categoria;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = CATEGORIA_ATTRIBUTE,
-            cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = CATEGORIA_ATTRIBUTE, cascade = CascadeType.ALL)
     public List<CategoriaItem> getCategoriaItemList() {
         return categoriaItemList;
     }

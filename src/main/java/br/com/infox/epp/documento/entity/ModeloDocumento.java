@@ -39,14 +39,11 @@ import br.com.infox.core.constants.LengthConstants;
 @Entity
 @Table(name = TABLE_MODELO_DOCUMENTO, schema = PUBLIC)
 @Inheritance(strategy = InheritanceType.JOINED)
-@NamedQueries(
-        value = {
-            @NamedQuery(name = LIST_ATIVOS, query = LIST_ATIVOS_QUERY),
-            @NamedQuery(name = MODELO_BY_TITULO, query = MODELO_BY_TITULO_QUERY),
-            @NamedQuery(name = MODELO_BY_GRUPO_AND_TIPO,
-                    query = MODELO_BY_GRUPO_AND_TIPO_QUERY),
-            @NamedQuery(name = MODELO_BY_LISTA_IDS,
-                    query = MODELO_BY_LISTA_IDS_QUERY) })
+@NamedQueries(value = {
+    @NamedQuery(name = LIST_ATIVOS, query = LIST_ATIVOS_QUERY),
+    @NamedQuery(name = MODELO_BY_TITULO, query = MODELO_BY_TITULO_QUERY),
+    @NamedQuery(name = MODELO_BY_GRUPO_AND_TIPO, query = MODELO_BY_GRUPO_AND_TIPO_QUERY),
+    @NamedQuery(name = MODELO_BY_LISTA_IDS, query = MODELO_BY_LISTA_IDS_QUERY) })
 public class ModeloDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,8 +57,7 @@ public class ModeloDocumento implements java.io.Serializable {
     public ModeloDocumento() {
     }
 
-    @SequenceGenerator(name = GENERATOR,
-            sequenceName = SEQUENCE_MODELO_DOCUMENTO)
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR)
     @Column(name = ID_MODELO_DOCUMENTO, unique = true, nullable = false)
@@ -84,8 +80,7 @@ public class ModeloDocumento implements java.io.Serializable {
         this.tipoModeloDocumento = tipoModeloDocumento;
     }
 
-    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO_METADE)
+    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = LengthConstants.DESCRICAO_PADRAO_METADE)
     @Size(max = LengthConstants.DESCRICAO_PADRAO_METADE)
     @NotNull
     public String getTituloModeloDocumento() {

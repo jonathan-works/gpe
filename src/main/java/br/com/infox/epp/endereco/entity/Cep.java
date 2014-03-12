@@ -22,13 +22,9 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.endereco.filter.CepFilter;
 
 @Entity
-@Table(name = Cep.TABLE_NAME, schema = "public",
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cep" }) })
-@FilterDefs(value = { @FilterDef(name = CepFilter.FILTER_CEP_ESTADO,
-        parameters = { @ParamDef(type = "string",
-                name = CepFilter.FILTER_PARAM_NUMERO_CEP) }) })
-@Filter(name = CepFilter.FILTER_CEP_ESTADO,
-        condition = CepFilter.CONDITION_CEP_ESTADO)
+@Table(name = Cep.TABLE_NAME, schema = "public", uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cep" }) })
+@FilterDefs(value = { @FilterDef(name = CepFilter.FILTER_CEP_ESTADO, parameters = { @ParamDef(type = "string", name = CepFilter.FILTER_PARAM_NUMERO_CEP) }) })
+@Filter(name = CepFilter.FILTER_CEP_ESTADO, condition = CepFilter.CONDITION_CEP_ESTADO)
 public class Cep implements java.io.Serializable {
 
     public static final String TABLE_NAME = "tb_cep";
@@ -57,8 +53,7 @@ public class Cep implements java.io.Serializable {
         this.idCep = idCep;
     }
 
-    @Column(name = "nr_cep", nullable = false, length = LengthConstants.CEP,
-            unique = true)
+    @Column(name = "nr_cep", nullable = false, length = LengthConstants.CEP, unique = true)
     @Size(max = LengthConstants.CEP)
     @NotNull
     public String getNumeroCep() {

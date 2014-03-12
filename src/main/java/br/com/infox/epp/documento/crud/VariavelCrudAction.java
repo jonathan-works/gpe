@@ -8,8 +8,8 @@ import br.com.infox.epp.documento.manager.VariavelManager;
 
 @Name(VariavelCrudAction.NAME)
 public class VariavelCrudAction extends AbstractCrudAction<Variavel, VariavelManager> {
-	
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "variavelCrudAction";
-	
+
 }

@@ -17,19 +17,19 @@ public class ContaTwitterManager extends Manager<ContaTwitterDAO, ContaTwitter> 
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "contaTwitterManager";
-    
-    public ContaTwitter getContaTwitterByLocalizacao(Localizacao localizacao){
+
+    public ContaTwitter getContaTwitterByLocalizacao(Localizacao localizacao) {
         return getDao().getContaTwitterByLocalizacao(localizacao);
     }
-    
-    public ContaTwitter getContaTwitterByUsuario(UsuarioLogin usuario){
+
+    public ContaTwitter getContaTwitterByUsuario(UsuarioLogin usuario) {
         return getDao().getContaTwitterByUsuario(usuario);
     }
-    
+
     public ContaTwitter getContaTwitterByIdUsuario(Integer idUsuario) {
         return getDao().getContaTwitterByIdUsuario(idUsuario);
     }
-    
+
     public List<ContaTwitter> listaContasTwitter(int idGrupoEmail) {
         return getDao().listaContasTwitter(idGrupoEmail);
     }

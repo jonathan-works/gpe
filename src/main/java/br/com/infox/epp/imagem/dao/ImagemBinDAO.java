@@ -19,20 +19,21 @@ import br.com.infox.epp.imagem.query.ImagemBinQuery;
 @AutoCreate
 public class ImagemBinDAO extends DAO<ImagemBin> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "imagemBinDAO";
-	
-	public List<ImagemBin> getTodasAsImagens() {
-		return getNamedResultList(ImagemBinQuery.LIST_IMAGENS);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "imagemBinDAO";
+
+    public List<ImagemBin> getTodasAsImagens() {
+        return getNamedResultList(ImagemBinQuery.LIST_IMAGENS);
+    }
 
     public void persistImageBin(ImagemBin imagemBin) throws DAOException {
         persist(imagemBin);
     }
-    
+
     /**
      * Metodo que recebe um array de bytes e um File indicando o destino e salva
      * os bytes no arquivo de destino.
+     * 
      * @param bytesOrigem
      * @param fileDestino
      * @throws IOException

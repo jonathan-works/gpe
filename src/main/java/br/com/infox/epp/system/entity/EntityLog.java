@@ -141,8 +141,7 @@ public class EntityLog implements java.io.Serializable {
         this.dataLog = dataLog;
     }
 
-    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY,
-            mappedBy = "entityLog")
+    @OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "entityLog")
     public List<EntityLogDetail> getLogDetalheList() {
         return entityLogDetailList;
     }

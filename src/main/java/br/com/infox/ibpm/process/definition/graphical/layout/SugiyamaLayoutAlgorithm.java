@@ -279,8 +279,7 @@ public class SugiyamaLayoutAlgorithm {
 
         // Error Msg if the graph has no roots
         if (roots.size() == 0) {
-            JOptionPane.showMessageDialog(null, "The Graph is not a DAG. Can't use Sugiyama Algorithm!", 
-                    null, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "The Graph is not a DAG. Can't use Sugiyama Algorithm!", null, JOptionPane.ERROR_MESSAGE);
         }
         return roots;
     }
@@ -804,7 +803,7 @@ public class SugiyamaLayoutAlgorithm {
                                 + " exact: "
                                 + NumberFormat.getInstance().format(tmp)
                                 + "...");
-                        System.out.println(moved ? "success": "can't move");
+                        System.out.println(moved ? "success" : "can't move");
 
                     }
                 }

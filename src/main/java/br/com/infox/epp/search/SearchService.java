@@ -46,15 +46,15 @@ public class SearchService {
         Document doc = Jsoup.parse(text);
         return highlightText(query, doc.body().text(), true);
     }
-    
-    public String pesquisaEmTexto(String textoPesquisa, String texto){
+
+    public String pesquisaEmTexto(String textoPesquisa, String texto) {
         QueryParser parser = new QueryParser(Version.LUCENE_36, "texto", SearchService.getAnalyzer());
         try {
             Query query = parser.parse(textoPesquisa);
             return SearchService.highlightText(query, texto, false);
         } catch (ParseException e) {
-            LOG.error("Não foi possível fazer parser do texto { Pesquisa por " + textoPesquisa 
-                    + " em " + texto + "}", e);
+            LOG.error("Não foi possível fazer parser do texto { Pesquisa por "
+                    + textoPesquisa + " em " + texto + "}", e);
             return "";
         }
     }

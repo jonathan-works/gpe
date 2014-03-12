@@ -9,18 +9,18 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Scope(ScopeType.CONVERSATION)
 public abstract class Fitter {
-    
+
     private ProcessBuilder pb;
-    
-	public abstract void clear();
-	
-	protected ProcessBuilder getProcessBuilder() {
+
+    public abstract void clear();
+
+    protected ProcessBuilder getProcessBuilder() {
         return pb;
     }
 
     @Create
-	public void init() {
-	    pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
-	}
-	
+    public void init() {
+        pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+    }
+
 }

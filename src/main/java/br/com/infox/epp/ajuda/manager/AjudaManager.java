@@ -22,19 +22,19 @@ public class AjudaManager extends Manager<AjudaDAO, Ajuda> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "ajudaManager";
-    
+
     @In
     private GenericManager genericManager;
 
     public Ajuda getAjudaByPaginaUrl(String url) {
         return getDao().getAjudaByPaginaUrl(url);
     }
-    
+
     @SuppressWarnings(RAWTYPES)
-    public List pesquisar(String textoPesquisa) throws ParseException{
+    public List pesquisar(String textoPesquisa) throws ParseException {
         return getDao().pesquisar(textoPesquisa);
     }
-    
+
     public void gravarHistorico(Ajuda oldAjuda) throws DAOException {
         HistoricoAjuda historico = new HistoricoAjuda();
         historico.setDataRegistro(oldAjuda.getDataRegistro());
@@ -48,8 +48,8 @@ public class AjudaManager extends Manager<AjudaDAO, Ajuda> {
             throw new DAOException("Não foi possível atualizar o histórico da ajuda", e);
         }
     }
-    
-    public void reindexarAjuda(){
+
+    public void reindexarAjuda() {
         getDao().reindexarAjuda();
     }
 

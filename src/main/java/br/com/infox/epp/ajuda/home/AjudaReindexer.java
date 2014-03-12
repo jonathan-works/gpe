@@ -10,12 +10,12 @@ import br.com.infox.epp.ajuda.manager.AjudaManager;
 @Name(AjudaReindexer.NAME)
 @Scope(ScopeType.PAGE)
 public class AjudaReindexer {
-    
+
     public static final String NAME = "ajudaReindexer";
 
     @In
     private AjudaManager ajudaManager;
-    
+
     public void reindex() {
         ajudaManager.reindexarAjuda();
     }

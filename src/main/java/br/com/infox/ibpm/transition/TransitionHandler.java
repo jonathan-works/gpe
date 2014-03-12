@@ -17,145 +17,150 @@ import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 public class TransitionHandler implements Serializable {
 
-	private static final long serialVersionUID = 4373236937521654740L;
+    private static final long serialVersionUID = 4373236937521654740L;
 
-	private Transition transition;
-	
-	/**
-	 * Usado para definir se a transição será visível na saída do nó para o 
-	 * usuário. 
-	 */
-	private boolean showTransitionButton;
+    private Transition transition;
 
-	public TransitionHandler(Transition transition) {
-		this.transition = transition;
-		this.showTransitionButton = "#{true}".equals(transition.getCondition());
-	}
+    /**
+     * Usado para definir se a transição será visível na saída do nó para o
+     * usuário.
+     */
+    private boolean showTransitionButton;
 
-	public String getName() {
-		return transition.getName();
-	}
+    public TransitionHandler(Transition transition) {
+        this.transition = transition;
+        this.showTransitionButton = "#{true}".equals(transition.getCondition());
+    }
 
-	public void setName(String name) {
-		name = name.trim();
-		if (name != null && !name.equals(transition.getName())) {
-			transition.setName(name);
-		}
-	}
-	
-	public Transition getTransition() {
-		return transition;
-	}
-	
-	public void setFrom(String from) {
-		transition.setFrom(NodeConverter.getAsObject(from));
-	}
+    public String getName() {
+        return transition.getName();
+    }
 
-	public String getFrom() {
-		return transition.getFrom() == null ? null : transition.getFrom().toString();
-	}
+    public void setName(String name) {
+        name = name.trim();
+        if (name != null && !name.equals(transition.getName())) {
+            transition.setName(name);
+        }
+    }
 
-	public String getFromName() {
-		return transition.getFrom() == null ? null : transition.getFrom().getName();
-	}
-	
-	public void setTo(String to) {
-		transition.setTo(NodeConverter.getAsObject(to));
-	}
+    public Transition getTransition() {
+        return transition;
+    }
 
-	public String getTo() {
-		return transition.getTo() == null ? null : transition.getTo().toString();
-	}
+    public void setFrom(String from) {
+        transition.setFrom(NodeConverter.getAsObject(from));
+    }
 
-	public String getToName() {
-		return transition.getTo() == null ? null : transition.getTo().getName();
-	}
+    public String getFrom() {
+        return transition.getFrom() == null ? null : transition.getFrom().toString();
+    }
 
-	public static List<TransitionHandler> getList(Collection<Transition> transitions) {
-		List<TransitionHandler> list = new ArrayList<TransitionHandler>();
-		for (Transition t : transitions) {
-			list.add(new TransitionHandler(t));
-		}
-		return list;
-	}
+    public String getFromName() {
+        return transition.getFrom() == null ? null : transition.getFrom().getName();
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getName()).append(" [");
-		if (getFrom() != null) {
-			sb.append(getFromName());
-		}
-		sb.append(" -> ");
-		if (getTo() != null) {
-			sb.append(getToName());
-		}
-		sb.append("]");
-		return sb.toString();
-	}
-	
-	public static String asString(TransitionHandler th) {
-		if (th == null) {
-			return null;
-		}
-		return th.getFromName() + " -> " + th.getToName();	
-	}
-	
-	public static TransitionHandler asObject(String name, List<TransitionHandler> transitions ) {
-		if (name == null) {
-			return null;
-		} 
-		for (TransitionHandler t : transitions) {
-			if (t.toString().equals(name)) {
-				return t;
-			}
-		}
-		return null;
-	}
+    public void setTo(String to) {
+        transition.setTo(NodeConverter.getAsObject(to));
+    }
 
-	public void setShowTransitionButton(boolean showTransitionButton) {
-		this.showTransitionButton = showTransitionButton;
-	}
+    public String getTo() {
+        return transition.getTo() == null ? null : transition.getTo().toString();
+    }
 
-	public boolean getShowTransitionButton() {
-		return showTransitionButton;
-	}
+    public String getToName() {
+        return transition.getTo() == null ? null : transition.getTo().getName();
+    }
 
-	@SuppressWarnings(UNCHECKED)
-	public boolean isInDecisionNode() {
-		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
-		Node currentNode = nodeFitter.getCurrentNode();
-		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Decision)) {
-			return isInNode(currentNode.getLeavingTransitions());
-		}
-		return false;
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public boolean isInForkNode() {
-		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
-		Node currentNode = nodeFitter.getCurrentNode();
-		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Fork)) {
-			return isInNode(currentNode.getLeavingTransitions());
-		}
-		return false;
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public boolean isInJoinNode() {
-		NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
-		Node currentNode = nodeFitter.getCurrentNode();
-		if (currentNode != null && currentNode.getNodeType().equals(NodeType.Join)) {
-			return isInNode(currentNode.getArrivingTransitions());
-		}
-		return false;
-	}
-	
-	public boolean canDefineCondition() {
-		return isInForkNode() || isInJoinNode();
-	}
-	
-	private boolean isInNode(Collection<Transition> transitions) {
-		return transitions != null && transitions.contains(this.transition);
-	}
+    public static List<TransitionHandler> getList(
+            Collection<Transition> transitions) {
+        List<TransitionHandler> list = new ArrayList<TransitionHandler>();
+        for (Transition t : transitions) {
+            list.add(new TransitionHandler(t));
+        }
+        return list;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getName()).append(" [");
+        if (getFrom() != null) {
+            sb.append(getFromName());
+        }
+        sb.append(" -> ");
+        if (getTo() != null) {
+            sb.append(getToName());
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    public static String asString(TransitionHandler th) {
+        if (th == null) {
+            return null;
+        }
+        return th.getFromName() + " -> " + th.getToName();
+    }
+
+    public static TransitionHandler asObject(String name,
+            List<TransitionHandler> transitions) {
+        if (name == null) {
+            return null;
+        }
+        for (TransitionHandler t : transitions) {
+            if (t.toString().equals(name)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public void setShowTransitionButton(boolean showTransitionButton) {
+        this.showTransitionButton = showTransitionButton;
+    }
+
+    public boolean getShowTransitionButton() {
+        return showTransitionButton;
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public boolean isInDecisionNode() {
+        NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+        Node currentNode = nodeFitter.getCurrentNode();
+        if (currentNode != null
+                && currentNode.getNodeType().equals(NodeType.Decision)) {
+            return isInNode(currentNode.getLeavingTransitions());
+        }
+        return false;
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public boolean isInForkNode() {
+        NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+        Node currentNode = nodeFitter.getCurrentNode();
+        if (currentNode != null
+                && currentNode.getNodeType().equals(NodeType.Fork)) {
+            return isInNode(currentNode.getLeavingTransitions());
+        }
+        return false;
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public boolean isInJoinNode() {
+        NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+        Node currentNode = nodeFitter.getCurrentNode();
+        if (currentNode != null
+                && currentNode.getNodeType().equals(NodeType.Join)) {
+            return isInNode(currentNode.getArrivingTransitions());
+        }
+        return false;
+    }
+
+    public boolean canDefineCondition() {
+        return isInForkNode() || isInJoinNode();
+    }
+
+    private boolean isInNode(Collection<Transition> transitions) {
+        return transitions != null && transitions.contains(this.transition);
+    }
 }

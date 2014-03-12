@@ -16,7 +16,7 @@ import br.com.infox.seam.util.ComponentUtil;
 public class UpdateRolesOperation extends RunAsOperation {
     private static final String ACCESS = "access";
     private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
-    
+
     private final IdentityManager identityManager = IdentityManager.instance();
     private final RoleAction roleaction = ComponentUtil.getComponent(ROLE_ACTION);
     private final List<String> roleGroup;
@@ -28,7 +28,8 @@ public class UpdateRolesOperation extends RunAsOperation {
 
     public UpdateRolesOperation(final List<String> roleGroup,
             final String role, final Collection<String> rolesToInclude,
-            final Collection<String> rolesToExclude, final Collection<String> availableResourcesList,
+            final Collection<String> rolesToExclude,
+            final Collection<String> availableResourcesList,
             final Collection<String> selectedResourcesList) {
         super(Boolean.TRUE);
         this.roleGroup = roleGroup;
@@ -50,7 +51,7 @@ public class UpdateRolesOperation extends RunAsOperation {
                 this.removePapeisImplicitos(papel, roleGroup);
             }
         }
-        
+
         roleaction.setRole(role);
         roleaction.setGroups(roleGroup);
         roleaction.save();
@@ -76,16 +77,18 @@ public class UpdateRolesOperation extends RunAsOperation {
 
     /**
      * Remove o papel da lista, recursivamente
+     * 
      * @param papel
      */
-    private void removePapeisImplicitos(final String papel, final Collection<String> list) {
+    private void removePapeisImplicitos(final String papel,
+            final Collection<String> list) {
         for (final String p : this.identityManager.getRoleGroups(papel)) {
             list.remove(p);
             removePapeisImplicitos(p, list);
         }
     }
-    
-    private void updatePermissions(){
+
+    private void updatePermissions() {
         if (availableResourcesList == null) {
             return;
         }
@@ -94,7 +97,8 @@ public class UpdateRolesOperation extends RunAsOperation {
         permissionManager.grantPermissions(addPermissions(role, selectedResourcesList));
     }
 
-    private List<Permission> addPermissions(final String identificador, final Collection<String> permissionsToAdd) {
+    private List<Permission> addPermissions(final String identificador,
+            final Collection<String> permissionsToAdd) {
         final List<Permission> result = new ArrayList<>();
         for (final String recurso : permissionsToAdd) {
             result.add(new Permission(recurso, ACCESS, new Role(identificador)));

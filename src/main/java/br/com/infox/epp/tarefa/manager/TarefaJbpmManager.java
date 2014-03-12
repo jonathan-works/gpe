@@ -11,11 +11,11 @@ import br.com.infox.epp.tarefa.entity.TarefaJbpm;
 @AutoCreate
 public class TarefaJbpmManager extends Manager<TarefaJbpmDAO, TarefaJbpm> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "tarefaJbpmManager";
-	
-	public void inserirVersoesTarefas() {
-		getDao().inserirVersoesTarefas();
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "tarefaJbpmManager";
+
+    public void inserirVersoesTarefas() {
+        getDao().inserirVersoesTarefas();
+    }
 
 }

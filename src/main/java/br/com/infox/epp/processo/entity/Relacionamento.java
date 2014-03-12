@@ -16,22 +16,23 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name=TABLE_NAME, schema=PUBLIC)
+@Table(name = TABLE_NAME, schema = PUBLIC)
 public class Relacionamento implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer idRelacionamento;
-    
+
     @Id
-    @GeneratedValue(generator=GENERATOR)
-    @Column(name=ID_RELACIONAMENTO, unique=true, nullable=false)
-    @SequenceGenerator(name=GENERATOR, sequenceName=SEQUENCE_NAME)
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_RELACIONAMENTO, unique = true, nullable = false)
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
     public Integer getIdRelacionamento() {
         return this.idRelacionamento;
     }
+
     public void setIdRelacionamento(final Integer idRelacionamento) {
         this.idRelacionamento = idRelacionamento;
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -41,7 +42,7 @@ public class Relacionamento implements Serializable {
                 + ((idRelacionamento == null) ? 0 : idRelacionamento.hashCode());
         return result;
     }
-    
+
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {

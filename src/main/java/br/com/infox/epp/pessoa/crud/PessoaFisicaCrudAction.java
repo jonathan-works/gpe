@@ -8,7 +8,7 @@ import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 
 @Name(PessoaFisicaCrudAction.NAME)
 public class PessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica, PessoaFisicaManager> {
-	
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pessoaFisicaCrudAction";
 

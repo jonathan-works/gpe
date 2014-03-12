@@ -23,30 +23,33 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 @Scope(ScopeType.EVENT)
 public class SigiloDocumentoPermissaoDAO extends DAO<SigiloDocumentoPermissao> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloDocumentoPermissaoDAO";
-	
-	public boolean possuiPermissao(SigiloDocumento sigiloDocumento, UsuarioLogin usuario) {
-		Map<String, Object> params = new HashMap<>();
-		params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_USUARIO, usuario);
-		params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_SIGILO_DOCUMENTO, sigiloDocumento);
-		return getNamedSingleResult(SigiloDocumentoPermissaoQuery.NAMED_QUERY_USUARIO_POSSUI_PERMISSAO, params) != null;
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloDocumentoPermissaoDAO";
 
-	public boolean possuiPermissao(Set<Integer> idsDocumentosSelecionados, UsuarioLogin usuario) {
-		Map<String, Object> params = new HashMap<>();
-		params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_USUARIO, usuario);
-		params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_IDS_DOCUMENTO, idsDocumentosSelecionados);
-		return getNamedSingleResult(SigiloDocumentoPermissaoQuery.NAMED_QUERY_USUARIO_POSSUI_PERMISSAO_DOCUMENTOS, params) != null;
-	}
-	
-	public void inativarPermissoes(SigiloDocumento sigiloDocumento) {
-		Map<String, Object> params = new HashMap<>();
-		params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_SIGILO_DOCUMENTO, sigiloDocumento);
-		executeNamedQueryUpdate(SigiloDocumentoPermissaoQuery.NAMED_QUERY_INATIVAR_PERMISSOES, params);
-	}
+    public boolean possuiPermissao(SigiloDocumento sigiloDocumento,
+            UsuarioLogin usuario) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_USUARIO, usuario);
+        params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_SIGILO_DOCUMENTO, sigiloDocumento);
+        return getNamedSingleResult(SigiloDocumentoPermissaoQuery.NAMED_QUERY_USUARIO_POSSUI_PERMISSAO, params) != null;
+    }
 
-    public List<ProcessoDocumento> getDocumentosPermitidos(ProcessoEpa processo, UsuarioLogin usuario) {
+    public boolean possuiPermissao(Set<Integer> idsDocumentosSelecionados,
+            UsuarioLogin usuario) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_USUARIO, usuario);
+        params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_IDS_DOCUMENTO, idsDocumentosSelecionados);
+        return getNamedSingleResult(SigiloDocumentoPermissaoQuery.NAMED_QUERY_USUARIO_POSSUI_PERMISSAO_DOCUMENTOS, params) != null;
+    }
+
+    public void inativarPermissoes(SigiloDocumento sigiloDocumento) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_SIGILO_DOCUMENTO, sigiloDocumento);
+        executeNamedQueryUpdate(SigiloDocumentoPermissaoQuery.NAMED_QUERY_INATIVAR_PERMISSOES, params);
+    }
+
+    public List<ProcessoDocumento> getDocumentosPermitidos(
+            ProcessoEpa processo, UsuarioLogin usuario) {
         Map<String, Object> params = new HashMap<>();
         params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_PROCESSO, processo);
         params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_USUARIO, usuario);

@@ -19,7 +19,7 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class UserHandler {
-    
+
     private static final LogProvider LOG = Logging.getLogProvider(UserHandler.class);
     public static final String NAME = "userHandler";
 
@@ -27,7 +27,8 @@ public class UserHandler {
     private TaskInstance taskInstance;
     private String usuarioProcesso, usuarioTarefa;
 
-    @In private UsuarioLoginManager usuarioLoginManager;
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
 
     public String getActorIdTarefaAtual(Integer idProcesso) {
         if (this.idProcesso == null || !this.idProcesso.equals(idProcesso)) {

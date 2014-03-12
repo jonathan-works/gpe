@@ -11,9 +11,9 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 public class PrazoCombo {
 
     public static final String NAME = "prazoCombo";
-    
+
     public PrazoEnum[] getTipoPrazoList() {
         return PrazoEnum.values();
     }
-    
+
 }

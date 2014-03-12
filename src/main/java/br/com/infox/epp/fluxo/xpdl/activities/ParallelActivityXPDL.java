@@ -7,19 +7,19 @@ import br.com.infox.epp.fluxo.xpdl.element.ParallelNodeXPDL;
 
 public class ParallelActivityXPDL extends ActivityXPDL {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public ParallelActivityXPDL(Element element, String name) {
-		super(element, name);
-	}
+    public ParallelActivityXPDL(Element element, String name) {
+        super(element, name);
+    }
 
-	@Override
-	public Node toNode() {
-		if(node == null) {
-			node = new ParallelNodeXPDL();
-			node.setName(this.getName());
-		}
-		return node;
-	}
+    @Override
+    public Node toNode() {
+        if (node == null) {
+            node = new ParallelNodeXPDL();
+            node.setName(this.getName());
+        }
+        return node;
+    }
 
 }

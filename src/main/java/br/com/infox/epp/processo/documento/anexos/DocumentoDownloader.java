@@ -20,25 +20,25 @@ import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class DocumentoDownloader {
-    
+
     private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
     @In
     DocumentoBinManager documentoBinManager;
-    
+
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
     public static final String NAME = "documentoDownloader";
 
-    public void downloadDocumento(ProcessoDocumento documento){
-        ProcessoDocumentoBin pdBin= documento.getProcessoDocumentoBin();
-        byte [] data = documentoBinManager.getData(pdBin.getIdProcessoDocumentoBin());
+    public void downloadDocumento(ProcessoDocumento documento) {
+        ProcessoDocumentoBin pdBin = documento.getProcessoDocumentoBin();
+        byte[] data = documentoBinManager.getData(pdBin.getIdProcessoDocumentoBin());
         String fileName = pdBin.getNomeArquivo();
         String contentType = "application/" + pdBin.getExtensao();
         FileDownloader.download(data, contentType, fileName);
     }
-    
+
     /**
      * Recebe o número de bytes e retorna o número em Kb (kilobytes).
      * 
@@ -60,6 +60,6 @@ public class DocumentoDownloader {
     }
 
     public void downloadDocumento(String idDocumento) {
-    	downloadDocumento(processoDocumentoManager.find(Integer.valueOf(idDocumento)));
+        downloadDocumento(processoDocumentoManager.find(Integer.valueOf(idDocumento)));
     }
 }

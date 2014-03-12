@@ -8,19 +8,19 @@ import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
 
 @Name(ClassificacaoDocumentoCrudAction.NAME)
 public class ClassificacaoDocumentoCrudAction extends AbstractCrudAction<TipoProcessoDocumento, TipoProcessoDocumentoManager> {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 1L;
     public static final String NAME = "classificacaoDocumentoCrudAction";
-    
+
     @Override
     protected void beforeSave() {
         final TipoProcessoDocumento tipoProcessoDocumento = getInstance();
-        if (!tipoProcessoDocumento.getNumera()){
+        if (!tipoProcessoDocumento.getNumera()) {
             tipoProcessoDocumento.setTipoNumeracao(null);
         }
     }
-    
+
 }

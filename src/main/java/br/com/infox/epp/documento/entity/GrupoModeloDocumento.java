@@ -40,14 +40,14 @@ public class GrupoModeloDocumento implements java.io.Serializable {
 
     public GrupoModeloDocumento() {
     }
-    
-    public GrupoModeloDocumento(final String grupoModeloDocumento, final Boolean ativo) {
+
+    public GrupoModeloDocumento(final String grupoModeloDocumento,
+            final Boolean ativo) {
         this.grupoModeloDocumento = grupoModeloDocumento;
         this.ativo = ativo;
     }
 
-    @SequenceGenerator(name = GENERATOR,
-            sequenceName = SEQUENCE_GRUPO_MODELO_DOCUMENTO)
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_GRUPO_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR)
     @Column(name = ID_GRUPO_MODELO_DOCUMENTO, unique = true, nullable = false)
@@ -59,9 +59,8 @@ public class GrupoModeloDocumento implements java.io.Serializable {
         this.idGrupoModeloDocumento = idGrupoModeloDocumento;
     }
 
-    @Column(name = DESCRICAO_GRUPO_MODELO_DOCUMENTO, nullable = false,
-            length = DESCRICAO_PEQUENA, unique = true)
-    @Size(min=FLAG, max = DESCRICAO_PEQUENA)
+    @Column(name = DESCRICAO_GRUPO_MODELO_DOCUMENTO, nullable = false, length = DESCRICAO_PEQUENA, unique = true)
+    @Size(min = FLAG, max = DESCRICAO_PEQUENA)
     @NotNull
     public String getGrupoModeloDocumento() {
         return this.grupoModeloDocumento;
@@ -71,8 +70,7 @@ public class GrupoModeloDocumento implements java.io.Serializable {
         this.grupoModeloDocumento = grupoModeloDocumento;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = "grupoModeloDocumento")
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = FetchType.LAZY, mappedBy = "grupoModeloDocumento")
     public List<TipoModeloDocumento> getTipoModeloDocumentoList() {
         return this.tipoModeloDocumentoList;
     }
@@ -103,26 +101,20 @@ public class GrupoModeloDocumento implements java.io.Serializable {
         int result = 1;
         result = prime
                 * result
-                + ((idGrupoModeloDocumento == null) ? 0
-                        : idGrupoModeloDocumento.hashCode());
+                + ((idGrupoModeloDocumento == null) ? 0 : idGrupoModeloDocumento.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         GrupoModeloDocumento other = (GrupoModeloDocumento) obj;
         if (idGrupoModeloDocumento == null) {
-            if (other.idGrupoModeloDocumento != null)
-                return false;
-        } else if (!idGrupoModeloDocumento.equals(other.idGrupoModeloDocumento))
-            return false;
+            if (other.idGrupoModeloDocumento != null) return false;
+        } else if (!idGrupoModeloDocumento.equals(other.idGrupoModeloDocumento)) return false;
         return true;
     }
-    
+
 }

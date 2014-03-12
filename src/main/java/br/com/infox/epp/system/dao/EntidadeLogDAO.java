@@ -15,21 +15,21 @@ import br.com.infox.epp.system.entity.EntityLog;
 @AutoCreate
 public class EntidadeLogDAO extends DAO<EntityLog> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "entidadeLogDAO";
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<UsuarioLogin> getUsuariosQuePossuemRegistrosDeLog(){
-		String hql = "select o from UsuarioLogin o " +
-				"where o.entityLogList.size > 0 " +
-				"order by o.idUsuarioLogin";
-		return (List<UsuarioLogin>) getEntityManager().createQuery(hql).getResultList();
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<String> getEntidadesQuePodemPossuirLog(){
-		String hql = "select distinct o.nomeEntidade as entidade from EntityLog o order by o.nomeEntidade";
-		return (List<String>) getEntityManager().createQuery(hql).getResultList();
-	}
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "entidadeLogDAO";
+
+    @SuppressWarnings(UNCHECKED)
+    public List<UsuarioLogin> getUsuariosQuePossuemRegistrosDeLog() {
+        String hql = "select o from UsuarioLogin o "
+                + "where o.entityLogList.size > 0 "
+                + "order by o.idUsuarioLogin";
+        return (List<UsuarioLogin>) getEntityManager().createQuery(hql).getResultList();
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public List<String> getEntidadesQuePodemPossuirLog() {
+        String hql = "select distinct o.nomeEntidade as entidade from EntityLog o order by o.nomeEntidade";
+        return (List<String>) getEntityManager().createQuery(hql).getResultList();
+    }
+
 }

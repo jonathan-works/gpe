@@ -36,12 +36,9 @@ import br.com.infox.epp.access.entity.Papel;
 @Entity
 @Table(name = TABLE_LISTA_EMAIL, schema = PUBLIC)
 @NamedQueries({
-    @NamedQuery(name = LISTA_EMAIL_BY_ID_GRUPO,
-            query = LISTA_EMAIL_BY_ID_GRUPO_QUERY),
-    @NamedQuery(name = RESOLVE_LISTA_EMAIL_BY_ID_GRUPO,
-            query = RESOLVE_LISTA_EMAIL_BY_ID_GRUPO_QUERY),
-    @NamedQuery(name = MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL,
-            query = MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY) })
+    @NamedQuery(name = LISTA_EMAIL_BY_ID_GRUPO, query = LISTA_EMAIL_BY_ID_GRUPO_QUERY),
+    @NamedQuery(name = RESOLVE_LISTA_EMAIL_BY_ID_GRUPO, query = RESOLVE_LISTA_EMAIL_BY_ID_GRUPO_QUERY),
+    @NamedQuery(name = MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL, query = MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL_QUERY) })
 public class ListaEmail implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

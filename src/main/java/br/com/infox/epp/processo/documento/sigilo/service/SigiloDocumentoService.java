@@ -20,28 +20,29 @@ import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermiss
 @Scope(ScopeType.CONVERSATION)
 public class SigiloDocumentoService implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloDocumentoService";
-	
-	@In
-	private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
-	
-	@In
-	private SigiloDocumentoManager sigiloDocumentoManager;
-	
-	public boolean possuiPermissao(ProcessoDocumento documento, UsuarioLogin usuario) {
-		SigiloDocumento sigiloDocumento = sigiloDocumentoManager.getSigiloDocumentoAtivo(documento);
-		if (sigiloDocumento != null) {
-			return sigiloDocumentoPermissaoManager.possuiPermissao(sigiloDocumento, usuario);
-		}
-		return true;
-	}
-	
-	public void gravarSigiloDocumento(SigiloDocumento sigiloDocumento) throws DAOException {
-		SigiloDocumento sigiloDocumentoAtivo = sigiloDocumentoManager.getSigiloDocumentoAtivo(sigiloDocumento.getDocumento());
-		if (sigiloDocumentoAtivo != null) {
-			sigiloDocumentoPermissaoManager.inativarPermissoes(sigiloDocumentoAtivo);
-		}
-		sigiloDocumentoManager.persist(sigiloDocumento);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloDocumentoService";
+
+    @In
+    private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
+
+    @In
+    private SigiloDocumentoManager sigiloDocumentoManager;
+
+    public boolean possuiPermissao(ProcessoDocumento documento,
+            UsuarioLogin usuario) {
+        SigiloDocumento sigiloDocumento = sigiloDocumentoManager.getSigiloDocumentoAtivo(documento);
+        if (sigiloDocumento != null) {
+            return sigiloDocumentoPermissaoManager.possuiPermissao(sigiloDocumento, usuario);
+        }
+        return true;
+    }
+
+    public void gravarSigiloDocumento(SigiloDocumento sigiloDocumento) throws DAOException {
+        SigiloDocumento sigiloDocumentoAtivo = sigiloDocumentoManager.getSigiloDocumentoAtivo(sigiloDocumento.getDocumento());
+        if (sigiloDocumentoAtivo != null) {
+            sigiloDocumentoPermissaoManager.inativarPermissoes(sigiloDocumentoAtivo);
+        }
+        sigiloDocumentoManager.persist(sigiloDocumento);
+    }
 }

@@ -11,15 +11,15 @@ import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 
 @Scope(ScopeType.CONVERSATION)
 abstract class AbstractPartesController {
-    
+
     private PessoaFisica pessoaFisica = new PessoaFisica();
     private PessoaJuridica pessoaJuridica = new PessoaJuridica();
-    
+
     @In
     private PessoaFisicaManager pessoaFisicaManager;
     @In
     private PessoaJuridicaManager pessoaJuridicaManager;
-    
+
     public PessoaFisica getPessoaFisica() {
         return pessoaFisica;
     }
@@ -55,11 +55,15 @@ abstract class AbstractPartesController {
             getPessoaJuridica().setAtivo(true);
         }
     }
-    
+
     public abstract boolean podeAdicionarPartes();
+
     public abstract void includePessoaFisica();
+
     public abstract void includePessoaJuridica();
+
     public abstract boolean apenasPessoaFisica();
+
     public abstract boolean apenasPessoaJuridica();
 
 }

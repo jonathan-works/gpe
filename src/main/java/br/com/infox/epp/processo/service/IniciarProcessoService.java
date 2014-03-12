@@ -37,7 +37,7 @@ public class IniciarProcessoService {
 
     @In
     private ProcessoEpaManager processoEpaManager;
-    
+
     @In
     private NaturezaManager naturezaManager;
 
@@ -84,7 +84,8 @@ public class IniciarProcessoService {
         return businessProcess.getProcessId();
     }
 
-    private void createJbpmVariables(ProcessoEpa processoEpa, ContextInstance contextInstance) {
+    private void createJbpmVariables(ProcessoEpa processoEpa,
+            ContextInstance contextInstance) {
         List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
         for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
             contextInstance.setVariable(variavelProcesso.getNome(), null);

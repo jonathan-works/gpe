@@ -23,31 +23,32 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @AutoCreate
 public class BloqueioUsuarioDAO extends DAO<BloqueioUsuario> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "bloqueioUsuarioDAO";
-	
-	public BloqueioUsuario getBloqueioUsuarioMaisRecente(UsuarioLogin usuarioLogin){
-	    Map<String,Object> parameters = new HashMap<String,Object>();
-	    parameters.put(PARAM_USUARIO, usuarioLogin);
-	    return getNamedSingleResult(BLOQUEIO_MAIS_RECENTE, parameters);
-	}
-	
-	public void desfazerBloqueioUsuario(BloqueioUsuario bloqueioUsuario) {
-		desbloquearUsuario(bloqueioUsuario.getUsuario());
-		gravarDesbloqueio(bloqueioUsuario);
-	}
-	
-	private void desbloquearUsuario(UsuarioLogin usuarioLogin){
-	    Map<String,Object> parameters = new HashMap<String,Object>();
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "bloqueioUsuarioDAO";
+
+    public BloqueioUsuario getBloqueioUsuarioMaisRecente(
+            UsuarioLogin usuarioLogin) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put(PARAM_USUARIO, usuarioLogin);
+        return getNamedSingleResult(BLOQUEIO_MAIS_RECENTE, parameters);
+    }
+
+    public void desfazerBloqueioUsuario(BloqueioUsuario bloqueioUsuario) {
+        desbloquearUsuario(bloqueioUsuario.getUsuario());
+        gravarDesbloqueio(bloqueioUsuario);
+    }
+
+    private void desbloquearUsuario(UsuarioLogin usuarioLogin) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_ID_USUARIO, usuarioLogin.getIdUsuarioLogin());
         executeNamedQueryUpdate(UNDO_BLOQUEIO_NATIVE_QUERY, parameters);
-	}
-	
-	private void gravarDesbloqueio(BloqueioUsuario bloqueioUsuario){
-	    Map<String,Object> parameters = new HashMap<String,Object>();
+    }
+
+    private void gravarDesbloqueio(BloqueioUsuario bloqueioUsuario) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_BLOQUEIO, bloqueioUsuario);
         parameters.put(PARAM_DATA_DESBLOQUEIO, new Date());
         executeNamedQueryUpdate(SAVE_DATA_DESBLOQUEIO, parameters);
-	}
+    }
 
 }

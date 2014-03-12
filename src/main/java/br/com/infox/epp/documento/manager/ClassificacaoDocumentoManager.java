@@ -15,11 +15,11 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @AutoCreate
 public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocumentoDAO, TipoProcessoDocumento> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "classificacaoDocumentoManager";
-	
-	public List<ProcessoDocumento> getProcessoDocumentoByTask(TaskInstance task){
-		return getDao().getProcessoDocumentoByTask(task);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "classificacaoDocumentoManager";
+
+    public List<ProcessoDocumento> getProcessoDocumentoByTask(TaskInstance task) {
+        return getDao().getProcessoDocumentoByTask(task);
+    }
 
 }

@@ -1,6 +1,5 @@
 package br.com.infox.epp.imagem.startup;
 
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
@@ -14,10 +13,11 @@ import br.com.infox.epp.imagem.manager.ImagemBinManager;
 @Scope(ScopeType.APPLICATION)
 @Startup
 public class ImageFileStarter {
-    
+
     public static final String NAME = "imageFileStarter";
-    
-    @In private ImagemBinManager imagemBinManager;
+
+    @In
+    private ImagemBinManager imagemBinManager;
 
     public ImageFileStarter() {
     }

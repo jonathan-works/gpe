@@ -14,10 +14,10 @@ import org.jboss.seam.log.Logging;
 @Name(ElFunctions.NAME)
 @Scope(ScopeType.APPLICATION)
 public class ElFunctions {
-    
+
     public static final String NAME = "elFunctions";
     private static final LogProvider LOG = Logging.getLogProvider(ElFunctions.class);
-    
+
     /**
      * Cria um method expression para a string informada no parametro.
      * 
@@ -32,7 +32,7 @@ public class ElFunctions {
             LOG.info(MessageFormat.format("invokeMethod: {0}", sb));
         }
     }
-    
+
     /**
      * Cria um valor de expressão a partir de um método do Seam.
      * 

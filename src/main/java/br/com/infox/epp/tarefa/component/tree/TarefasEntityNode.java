@@ -15,145 +15,148 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.seam.util.ComponentUtil;
 
-public class TarefasEntityNode<E> extends EntityNode<Map<String,Object>> {
-	
-	private static final long serialVersionUID = 1L;
-	private List<TarefasEntityNode<E>> rootNodes;
-	private List<TarefasEntityNode<E>> nodes;
-	private List<EntityNode<E>> caixas;
-	private List<Query> queryCaixas = new ArrayList<Query>();
-	
-	public TarefasEntityNode(String queryChildren) {
-		super(queryChildren);
-	}
+public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
 
-	public TarefasEntityNode(String[] queryChildren, List<Query> queryCaixas) {
-		super(queryChildren);
-		this.queryCaixas = queryCaixas;
-	}
+    private static final long serialVersionUID = 1L;
+    private List<TarefasEntityNode<E>> rootNodes;
+    private List<TarefasEntityNode<E>> nodes;
+    private List<EntityNode<E>> caixas;
+    private List<Query> queryCaixas = new ArrayList<Query>();
 
-	public TarefasEntityNode(EntityNode<Map<String,Object>> parent, 
-			Map<String,Object> entity,
-			String[] queryChildren, List<Query> queryCaixas) {
-		super(parent, entity, queryChildren);
-		this.queryCaixas = queryCaixas;
-	}
+    public TarefasEntityNode(String queryChildren) {
+        super(queryChildren);
+    }
 
-	@SuppressWarnings(UNCHECKED)
-	public List<EntityNode<E>> getCaixas() {
-		if (caixas == null) {
-			caixas = new ArrayList<EntityNode<E>>();
-			boolean parent = true;
-			for (Query query : queryCaixas) {
-				if (!isLeaf()) {
-					List<E> children = (List<E>) getCaixasList(query, getEntity()); 
-					for (E n : children) {
-						if (!n.equals(getIgnore())) {
-							EntityNode<E> node = (EntityNode<E>) createChildNode((Map<String, Object>) n);
-							node.setIgnore((E) getIgnore());
-							node.setLeaf(!parent);
-							caixas.add(node);
-						}
-					}
-					parent = false;
-				}
-			}
-			
-			Events.instance().raiseEvent("entityNodesPostGetNodes", caixas);
-		}
-		return caixas;
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<TarefasEntityNode<E>> getRootsFluxos(Query queryRoots) {
-		if (rootNodes == null) {
-			rootNodes = new ArrayList<TarefasEntityNode<E>>();
-			List<E> roots = queryRoots.getResultList();
-			for (E e : roots) {
-				if (!e.equals(getIgnore())) {
-					TarefasEntityNode<Map<String, Object>> node = createRootNode((Map<String, Object>) e);
-					node.setIgnore(getIgnore());
-					rootNodes.add((TarefasEntityNode<E>) node);
-				}
-			}
-		}
-		return rootNodes;
-	}	
-	
-	@SuppressWarnings(UNCHECKED)
-	public List<TarefasEntityNode<E>> getNodesTarefas() {
-		if (nodes == null) {
-			nodes = new ArrayList<TarefasEntityNode<E>>();
-			boolean parent = true;
-			for (String query : getQueryChildrenList()) {
-				if (!isLeaf()) {
-					List<E> children = (List<E>) getChildrenList(query, getEntity()); 
-					for (E n : children) {
-						if (!n.equals(getIgnore())) {
-							TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
-							node.setIgnore(getIgnore());
-							node.setLeaf(!parent);
-							nodes.add((TarefasEntityNode<E>) node);
-						}
-					}
-					parent = false;
-				}
-			}
-			
-			Events.instance().raiseEvent("entityNodesPostGetNodes", nodes);
-		}
-		return nodes;
-	}
-	
-	@Override
-	protected TarefasEntityNode<Map<String,Object>> createRootNode(Map<String,Object> n) {
-		return new TarefasEntityNode<Map<String,Object>>(null, n, getQueryChildren(), queryCaixas);
-	}
-	
+    public TarefasEntityNode(String[] queryChildren, List<Query> queryCaixas) {
+        super(queryChildren);
+        this.queryCaixas = queryCaixas;
+    }
+
+    public TarefasEntityNode(EntityNode<Map<String, Object>> parent,
+            Map<String, Object> entity, String[] queryChildren,
+            List<Query> queryCaixas) {
+        super(parent, entity, queryChildren);
+        this.queryCaixas = queryCaixas;
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public List<EntityNode<E>> getCaixas() {
+        if (caixas == null) {
+            caixas = new ArrayList<EntityNode<E>>();
+            boolean parent = true;
+            for (Query query : queryCaixas) {
+                if (!isLeaf()) {
+                    List<E> children = (List<E>) getCaixasList(query, getEntity());
+                    for (E n : children) {
+                        if (!n.equals(getIgnore())) {
+                            EntityNode<E> node = (EntityNode<E>) createChildNode((Map<String, Object>) n);
+                            node.setIgnore((E) getIgnore());
+                            node.setLeaf(!parent);
+                            caixas.add(node);
+                        }
+                    }
+                    parent = false;
+                }
+            }
+
+            Events.instance().raiseEvent("entityNodesPostGetNodes", caixas);
+        }
+        return caixas;
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public List<TarefasEntityNode<E>> getRootsFluxos(Query queryRoots) {
+        if (rootNodes == null) {
+            rootNodes = new ArrayList<TarefasEntityNode<E>>();
+            List<E> roots = queryRoots.getResultList();
+            for (E e : roots) {
+                if (!e.equals(getIgnore())) {
+                    TarefasEntityNode<Map<String, Object>> node = createRootNode((Map<String, Object>) e);
+                    node.setIgnore(getIgnore());
+                    rootNodes.add((TarefasEntityNode<E>) node);
+                }
+            }
+        }
+        return rootNodes;
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    public List<TarefasEntityNode<E>> getNodesTarefas() {
+        if (nodes == null) {
+            nodes = new ArrayList<TarefasEntityNode<E>>();
+            boolean parent = true;
+            for (String query : getQueryChildrenList()) {
+                if (!isLeaf()) {
+                    List<E> children = (List<E>) getChildrenList(query, getEntity());
+                    for (E n : children) {
+                        if (!n.equals(getIgnore())) {
+                            TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
+                            node.setIgnore(getIgnore());
+                            node.setLeaf(!parent);
+                            nodes.add((TarefasEntityNode<E>) node);
+                        }
+                    }
+                    parent = false;
+                }
+            }
+
+            Events.instance().raiseEvent("entityNodesPostGetNodes", nodes);
+        }
+        return nodes;
+    }
+
     @Override
-    protected List<Map<String, Object>> getChildrenList(String hql, Map<String, Object> entity) {
+    protected TarefasEntityNode<Map<String, Object>> createRootNode(
+            Map<String, Object> n) {
+        return new TarefasEntityNode<Map<String, Object>>(null, n, getQueryChildren(), queryCaixas);
+    }
+
+    @Override
+    protected List<Map<String, Object>> getChildrenList(String hql,
+            Map<String, Object> entity) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("idFluxo", entity.get("idFluxo"));
         GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
         return genericDAO.getResultList(hql, parameters);
     }
-	
-	@SuppressWarnings(UNCHECKED)
-	protected List<Map<String,Object>> getCaixasList(Query query, Map<String,Object> entity) {
-		return query.setParameter("taskId", entity.get("idTarefa"))
-				.getResultList();
-	}
 
-	@Override
-	public String getType() {
-		return (String) getEntity().get("type");
-	}
-	
-	@Override
-	protected TarefasEntityNode<Map<String,Object>> createChildNode(Map<String,Object> n) {
-		return new TarefasEntityNode<Map<String,Object>>(this, n, getQueryChildren(), queryCaixas);
-	}
+    @SuppressWarnings(UNCHECKED)
+    protected List<Map<String, Object>> getCaixasList(Query query,
+            Map<String, Object> entity) {
+        return query.setParameter("taskId", entity.get("idTarefa")).getResultList();
+    }
 
-	public Integer getTarefaId() {
-	    if (getEntity() != null) {
+    @Override
+    public String getType() {
+        return (String) getEntity().get("type");
+    }
+
+    @Override
+    protected TarefasEntityNode<Map<String, Object>> createChildNode(
+            Map<String, Object> n) {
+        return new TarefasEntityNode<Map<String, Object>>(this, n, getQueryChildren(), queryCaixas);
+    }
+
+    public Integer getTarefaId() {
+        if (getEntity() != null) {
             return (Integer) getEntity().get("idTarefa");
         }
         return 0;
-	}
-	
-	public Integer getTaskId() { 
-		if (getEntity() != null) {
-			return ((Long) getEntity().get("idTask")).intValue();
-		}
-		return 0;
-	}
+    }
 
-	public void setQueryCaixas(List<Query> queryCaixas) {
-		this.queryCaixas = queryCaixas;
-	}
+    public Integer getTaskId() {
+        if (getEntity() != null) {
+            return ((Long) getEntity().get("idTask")).intValue();
+        }
+        return 0;
+    }
 
-	public List<Query> getQueryCaixas() {
-		return queryCaixas;
-	}
+    public void setQueryCaixas(List<Query> queryCaixas) {
+        this.queryCaixas = queryCaixas;
+    }
+
+    public List<Query> getQueryCaixas() {
+        return queryCaixas;
+    }
 
 }

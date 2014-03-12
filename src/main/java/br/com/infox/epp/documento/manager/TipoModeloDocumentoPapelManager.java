@@ -13,11 +13,11 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 @AutoCreate
 public class TipoModeloDocumentoPapelManager extends Manager<TipoModeloDocumentoPapelDAO, TipoModeloDocumentoPapel> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "tipoModeloDocumentoPapelManager";
-	
-	public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos(){
-		return getDao().getTiposModeloDocumentoPermitidos();
-	}
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "tipoModeloDocumentoPapelManager";
+
+    public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos() {
+        return getDao().getTiposModeloDocumentoPermitidos();
+    }
+
 }

@@ -15,19 +15,19 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class ProcessoLocalizacaoIbpmManager implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String NAME = "processoLocalizacaoIbpmManager";
+    public static final String NAME = "processoLocalizacaoIbpmManager";
 
-	@In
-	private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-	
-	public Localizacao listByTaskInstance(Long idTaskInstance) {
-		return processoLocalizacaoIbpmDAO.listByTaskInstance(idTaskInstance);
-	}
-	
-	public void deleteByTaskIdAndProcessId(Long taskId, Long processId){
-		processoLocalizacaoIbpmDAO.deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(taskId, processId);
-	}
-	
+    @In
+    private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
+
+    public Localizacao listByTaskInstance(Long idTaskInstance) {
+        return processoLocalizacaoIbpmDAO.listByTaskInstance(idTaskInstance);
+    }
+
+    public void deleteByTaskIdAndProcessId(Long taskId, Long processId) {
+        processoLocalizacaoIbpmDAO.deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(taskId, processId);
+    }
+
 }

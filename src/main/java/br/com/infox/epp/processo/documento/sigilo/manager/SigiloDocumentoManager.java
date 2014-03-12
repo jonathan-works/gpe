@@ -16,24 +16,24 @@ import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 @Scope(ScopeType.EVENT)
 public class SigiloDocumentoManager extends Manager<SigiloDocumentoDAO, SigiloDocumento> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloDocumentoManager";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloDocumentoManager";
 
-	public SigiloDocumento getSigiloDocumentoAtivo(ProcessoDocumento documento) {
-		return getDao().getSigiloDocumentoAtivo(documento);
-	}
-	
-	public SigiloDocumento getSigiloDocumentoAtivo(Integer idDocumento) {
-		return getDao().getSigiloDocumentoAtivo(idDocumento);
-	}
-	
-	public boolean isSigiloso(Integer idDocumento) {
-		return getDao().isSigiloso(idDocumento);
-	}
-	
-	@Override
-	public SigiloDocumento persist(SigiloDocumento o) throws DAOException {
-		getDao().inativarSigilos(o.getDocumento());
-		return super.persist(o);
-	}
+    public SigiloDocumento getSigiloDocumentoAtivo(ProcessoDocumento documento) {
+        return getDao().getSigiloDocumentoAtivo(documento);
+    }
+
+    public SigiloDocumento getSigiloDocumentoAtivo(Integer idDocumento) {
+        return getDao().getSigiloDocumentoAtivo(idDocumento);
+    }
+
+    public boolean isSigiloso(Integer idDocumento) {
+        return getDao().isSigiloso(idDocumento);
+    }
+
+    @Override
+    public SigiloDocumento persist(SigiloDocumento o) throws DAOException {
+        getDao().inativarSigilos(o.getDocumento());
+        return super.persist(o);
+    }
 }

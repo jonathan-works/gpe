@@ -22,25 +22,25 @@ public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<Histo
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "historicoModeloDocumentoCrudAction";
-    
+
     private HistoricoModeloDocumento selecionado;
-    
+
     private List<ModeloDocumento> modeloDocumentoList;
     private List<UsuarioLogin> usuarioAlteracaoList;
-    
+
     public HistoricoModeloDocumento getSelecionado() {
         return selecionado;
     }
-    
+
     public void setSelecionado(HistoricoModeloDocumento selecionado) {
         this.selecionado = selecionado;
     }
-    
+
     public void setModeloDocumento(ModeloDocumento modeloDocumento) {
         setModeloDocumentoList(getManager().listModelosDoHistorico());
         setUsuarioAlteracaoList(getManager().listUsuariosQueAlteraramModelo(modeloDocumento));
     }
-    
+
     public List<UsuarioLogin> getUsuarioAlteracaoList() {
         return usuarioAlteracaoList;
     }
@@ -48,7 +48,7 @@ public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<Histo
     public void setUsuarioAlteracaoList(List<UsuarioLogin> usuarioAlteracaoList) {
         this.usuarioAlteracaoList = usuarioAlteracaoList;
     }
-    
+
     public List<ModeloDocumento> getModeloDocumentoList() {
         return modeloDocumentoList;
     }
@@ -57,5 +57,5 @@ public class HistoricoModeloDocumentoCrudAction extends AbstractCrudAction<Histo
             List<ModeloDocumento> historicoModeloDocumentoList) {
         this.modeloDocumentoList = historicoModeloDocumentoList;
     }
-    
+
 }

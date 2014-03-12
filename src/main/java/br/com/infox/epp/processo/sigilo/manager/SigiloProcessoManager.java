@@ -15,18 +15,18 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 @AutoCreate
 public class SigiloProcessoManager extends Manager<SigiloProcessoDAO, SigiloProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloProcessoManager";
-	
-	public SigiloProcesso getSigiloProcessoAtivo(ProcessoEpa processoEpa) {
-		return getDao().getSigiloProcessoAtivo(processoEpa);
-	}
-	
-	public boolean isSigiloso(ProcessoEpa processoEpa) {
-		SigiloProcesso sigiloProcesso = getSigiloProcessoAtivo(processoEpa);
-		if (sigiloProcesso != null) {
-			return sigiloProcesso.getSigiloso();
-		}
-		return false;
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloProcessoManager";
+
+    public SigiloProcesso getSigiloProcessoAtivo(ProcessoEpa processoEpa) {
+        return getDao().getSigiloProcessoAtivo(processoEpa);
+    }
+
+    public boolean isSigiloso(ProcessoEpa processoEpa) {
+        SigiloProcesso sigiloProcesso = getSigiloProcessoAtivo(processoEpa);
+        if (sigiloProcesso != null) {
+            return sigiloProcesso.getSigiloso();
+        }
+        return false;
+    }
 }

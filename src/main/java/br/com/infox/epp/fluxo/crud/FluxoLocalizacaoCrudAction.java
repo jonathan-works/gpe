@@ -23,21 +23,24 @@ public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLo
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "fluxoLocalizacaoCrudAction";
-    
-    @In NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
-    
-    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo(){
+
+    @In
+    NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
+
+    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
         return getInstance().getNaturezaCategoriaFluxo();
     }
-    
-    public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo){
+
+    public void setNaturezaCategoriaFluxo(
+            NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
         getInstance().setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
     }
-    
-    public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(Fluxo fluxo) {
+
+    public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(
+            Fluxo fluxo) {
         return naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
     }
-    
+
     @Override
     protected void afterSave(String ret) {
         newInstance();
@@ -48,5 +51,5 @@ public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLo
         LocalizacaoTreeHandler treeHandler = ComponentUtil.getComponent("localizacaoTree");
         treeHandler.clearTree();
     }
-    
+
 }

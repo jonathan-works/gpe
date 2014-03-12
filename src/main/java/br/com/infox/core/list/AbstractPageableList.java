@@ -19,7 +19,7 @@ import br.com.infox.seam.exception.ApplicationException;
 /**
  * 
  * @author Erik Liberal
- *
+ * 
  */
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractPageableList<E> implements PageableList<E>, Serializable {
@@ -27,8 +27,8 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     private final class HashMapExtension<K, V> extends HashMap<K, V> {
         private static final long serialVersionUID = 932116907388087006L;
 
-        private boolean isDirty=false;
-        
+        private boolean isDirty = false;
+
         @Override
         public V put(K key, V value) {
             this.isDirty = true;
@@ -43,7 +43,7 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     }
 
     private static final int DEFAULT_MAX_AMMOUNT = 15;
-    
+
     private Integer maxAmmount;
     private Integer page;
     private Integer pageCount;
@@ -52,15 +52,15 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     private HashMap<String, String> searchCriteria;
     private HashMap<String, Object> params;
     private GenericManager genericManager;
-    
+
     @Override
     public List<E> list() {
         return list(DEFAULT_MAX_AMMOUNT);
     }
-    
-    protected void beforeInitList(){
+
+    protected void beforeInitList() {
     }
-    
+
     protected abstract String getQuery();
 
     private String capitalizeFirstLetter(String value) {
@@ -71,49 +71,49 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
             final StringBuilder sb = new StringBuilder();
             sb.append(value.substring(0, 1).toUpperCase());
             sb.append(value.substring(1));
-            string = sb.toString();   
+            string = sb.toString();
         }
         return string;
     }
-    
+
     private String resolveParameters() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         params = new HashMap<>();
-        int i=0;
+        int i = 0;
         StringBuilder sb = new StringBuilder(getQuery());
         for (String key : searchCriteria.keySet()) {
             final String[] split = key.split("\\.");
-            
+
             if (parameters.containsKey(split[0])) {
                 Object val = null;
                 int j;
                 for (j = 0; j < split.length; j++) {
-                    if (j==0) {
+                    if (j == 0) {
                         val = parameters.get(split[j]);
-                    } else if (val != null ){
+                    } else if (val != null) {
                         val = val.getClass().getMethod(format("get{0}", capitalizeFirstLetter(split[j]))).invoke(val);
                     }
                 }
                 if (val != null) {
-                    if (i++==0) {
+                    if (i++ == 0) {
                         sb.append(" where ");
                     } else {
                         sb.append(" and ");
                     }
                     sb.append(searchCriteria.get(key));
-                    params.put(split[j-1], val);
+                    params.put(split[j - 1], val);
                 }
             }
         }
         sb.append(" ").append(getGroupBy());
         return sb.toString();
     }
-    
+
     protected String getGroupBy() {
         return "";
     }
-    
+
     protected abstract void initCriteria();
-    
+
     @Override
     public List<E> list(final int maxAmmount) {
         List<E> truncList = null;
@@ -131,18 +131,18 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
         }
         return truncList;
     }
-    
+
     private List<E> truncList() {
-        final int fromIndex = (page-1) * maxAmmount;
+        final int fromIndex = (page - 1) * maxAmmount;
         final int toIndex = maxAmmount * page;
         final int listSize = this.resultList.size();
         return resultList.subList(fromIndex, toIndex > listSize ? listSize : toIndex);
     }
 
     protected boolean areEqual(final Object obj1, final Object obj2) {
-        return obj1==obj2 || obj1 != null && obj1.equals(obj2);
+        return obj1 == obj2 || obj1 != null && obj1.equals(obj2);
     }
-    
+
     @Override
     public void newInstance() {
         clearParameters();
@@ -183,12 +183,12 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
             if (size % maxAmmount == 0) {
                 pageCount = estimatedPageCount;
             } else {
-                pageCount = estimatedPageCount+1;
+                pageCount = estimatedPageCount + 1;
             }
         }
         return pageCount;
     }
-    
+
     @Override
     public Integer getResultCount() {
         if (resultList == null) {
@@ -212,11 +212,11 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     protected void addParameter(String key, Object value) {
         this.parameters.put(key, value);
     }
-    
+
     protected void clearParameters() {
         this.parameters.clear();
     }
-    
+
     public Map<String, Object> getParameters() {
         return parameters;
     }
@@ -224,5 +224,5 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     protected void addSearchCriteria(String field, String expression) {
         this.searchCriteria.put(field, expression);
     }
-    
+
 }

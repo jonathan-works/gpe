@@ -9,11 +9,11 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
 public final class JbpmEvents {
-    
-    private JbpmEvents(){
+
+    private JbpmEvents() {
         super();
     }
-    
+
     private static final LogProvider LOG = Logging.getLogProvider(JbpmEvents.class);
 
     public static void raiseEvent(ExecutionContext context) {

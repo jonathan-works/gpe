@@ -31,104 +31,104 @@ import br.com.infox.util.collection.LazyMap;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class SigiloDocumentoPermissaoAction implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloDocumentoPermissaoAction";
-	private static final LogProvider LOG = Logging.getLogProvider(SigiloDocumentoPermissaoAction.class);
 
-	@In
-	private SigiloDocumentoController sigiloDocumentoController;
-	
-	@In
-	private SigiloDocumentoManager sigiloDocumentoManager;
-	
-	@In
-	private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
-	
-	@In
-	private UsuarioLoginManager usuarioLoginManager;
-	
-	@In
-	private ActionMessagesService actionMessagesService;
-	
-	private Map<Integer, Boolean> permissoesMap;
-	private Map<Integer, Boolean> usuariosMap;
-	private Set<Integer> idsDocumentosSelecionados;
-	
-	@Create
-	public void init() {
-		this.permissoesMap = new LazyMap<>(new Factory<Integer, Boolean> () {
-			@Override
-			public Boolean create(Integer idProcessoDocumento) {
-				return false;
-			}
-		});
-		
-		this.usuariosMap = new LazyMap<>(new Factory<Integer, Boolean>() {
-			@Override
-			public Boolean create(Integer key) {
-				inicializarDocumentosSelecionados();
-				SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager = (SigiloDocumentoPermissaoManager) Component.getInstance(SigiloDocumentoPermissaoManager.NAME);
-				UsuarioLoginManager usuarioLoginManager = (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
-				return sigiloDocumentoPermissaoManager.possuiPermissao(idsDocumentosSelecionados, usuarioLoginManager.find(key));
-			}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloDocumentoPermissaoAction";
+    private static final LogProvider LOG = Logging.getLogProvider(SigiloDocumentoPermissaoAction.class);
 
-			private void inicializarDocumentosSelecionados() {
-				if (idsDocumentosSelecionados == null) {
-					idsDocumentosSelecionados = new HashSet<>();
-					for (Integer idDocumento : permissoesMap.keySet()) {
-						if (permissoesMap.get(idDocumento)) {
-							idsDocumentosSelecionados.add(idDocumento);
-						}
-					}
-				}
-			}
-		});
-	}
-	
-	public Map<Integer, Boolean> getPermissoesMap() {
-		return permissoesMap;
-	}
-	
-	public Map<Integer, Boolean> getUsuariosMap() {
-		return usuariosMap;
-	}
-	
-	public void gravarPermissoes() {
-		try {
-			for (Integer idDocumento : idsDocumentosSelecionados) {
-				SigiloDocumento sigiloDocumento = sigiloDocumentoManager.getSigiloDocumentoAtivo(idDocumento);
-				sigiloDocumentoPermissaoManager.inativarPermissoes(sigiloDocumento);
-				for (Integer idUsuario : usuariosMap.keySet()) {
-					if (usuariosMap.get(idUsuario)) {
-						UsuarioLogin usuario = usuarioLoginManager.find(idUsuario);
-						SigiloDocumentoPermissao permissao = new SigiloDocumentoPermissao();
-						permissao.setAtivo(true);
-						permissao.setSigiloDocumento(sigiloDocumento);
-						permissao.setUsuario(usuario);
-						sigiloDocumentoPermissaoManager.persist(permissao);
-					}
-				}
-			}
-			resetarPermissoes();
-			FacesMessages.instance().add(SigiloDocumentoController.MSG_REGISTRO_ALTERADO);
-		} catch (DAOException e) {
-			LOG.error(e);
-			actionMessagesService.handleDAOException(e);
-		}
-	}
-	
-	public void resetarPermissoes() {
-		sigiloDocumentoController.setFragmentoARenderizar(null);
-		init();
-	}
-	
-	public boolean canManagePermissions() {
-	    for (Boolean b : permissoesMap.values()) {
-	        if (b) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
+    @In
+    private SigiloDocumentoController sigiloDocumentoController;
+
+    @In
+    private SigiloDocumentoManager sigiloDocumentoManager;
+
+    @In
+    private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
+
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
+
+    @In
+    private ActionMessagesService actionMessagesService;
+
+    private Map<Integer, Boolean> permissoesMap;
+    private Map<Integer, Boolean> usuariosMap;
+    private Set<Integer> idsDocumentosSelecionados;
+
+    @Create
+    public void init() {
+        this.permissoesMap = new LazyMap<>(new Factory<Integer, Boolean>() {
+            @Override
+            public Boolean create(Integer idProcessoDocumento) {
+                return false;
+            }
+        });
+
+        this.usuariosMap = new LazyMap<>(new Factory<Integer, Boolean>() {
+            @Override
+            public Boolean create(Integer key) {
+                inicializarDocumentosSelecionados();
+                SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager = (SigiloDocumentoPermissaoManager) Component.getInstance(SigiloDocumentoPermissaoManager.NAME);
+                UsuarioLoginManager usuarioLoginManager = (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
+                return sigiloDocumentoPermissaoManager.possuiPermissao(idsDocumentosSelecionados, usuarioLoginManager.find(key));
+            }
+
+            private void inicializarDocumentosSelecionados() {
+                if (idsDocumentosSelecionados == null) {
+                    idsDocumentosSelecionados = new HashSet<>();
+                    for (Integer idDocumento : permissoesMap.keySet()) {
+                        if (permissoesMap.get(idDocumento)) {
+                            idsDocumentosSelecionados.add(idDocumento);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public Map<Integer, Boolean> getPermissoesMap() {
+        return permissoesMap;
+    }
+
+    public Map<Integer, Boolean> getUsuariosMap() {
+        return usuariosMap;
+    }
+
+    public void gravarPermissoes() {
+        try {
+            for (Integer idDocumento : idsDocumentosSelecionados) {
+                SigiloDocumento sigiloDocumento = sigiloDocumentoManager.getSigiloDocumentoAtivo(idDocumento);
+                sigiloDocumentoPermissaoManager.inativarPermissoes(sigiloDocumento);
+                for (Integer idUsuario : usuariosMap.keySet()) {
+                    if (usuariosMap.get(idUsuario)) {
+                        UsuarioLogin usuario = usuarioLoginManager.find(idUsuario);
+                        SigiloDocumentoPermissao permissao = new SigiloDocumentoPermissao();
+                        permissao.setAtivo(true);
+                        permissao.setSigiloDocumento(sigiloDocumento);
+                        permissao.setUsuario(usuario);
+                        sigiloDocumentoPermissaoManager.persist(permissao);
+                    }
+                }
+            }
+            resetarPermissoes();
+            FacesMessages.instance().add(SigiloDocumentoController.MSG_REGISTRO_ALTERADO);
+        } catch (DAOException e) {
+            LOG.error(e);
+            actionMessagesService.handleDAOException(e);
+        }
+    }
+
+    public void resetarPermissoes() {
+        sigiloDocumentoController.setFragmentoARenderizar(null);
+        init();
+    }
+
+    public boolean canManagePermissions() {
+        for (Boolean b : permissoesMap.values()) {
+            if (b) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -24,8 +24,7 @@ public class JbpmVariavelLabel implements java.io.Serializable {
     public JbpmVariavelLabel() {
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_jbpm_variavel_label")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_jbpm_variavel_label")
     @Id
     @GeneratedValue(generator = "generator")
     @Column(name = "id_jbpm_variavel_label", unique = true, nullable = false)
@@ -37,8 +36,7 @@ public class JbpmVariavelLabel implements java.io.Serializable {
         this.idJbpmVariavelLabel = idJbpmVariavelLabel;
     }
 
-    @Column(name = "nm_variavel", nullable = false,
-            length = LengthConstants.NOME_PADRAO, unique = true)
+    @Column(name = "nm_variavel", nullable = false, length = LengthConstants.NOME_PADRAO, unique = true)
     @Size(max = LengthConstants.NOME_PADRAO)
     @NotNull
     public String getNomeVariavel() {
@@ -49,8 +47,7 @@ public class JbpmVariavelLabel implements java.io.Serializable {
         this.nomeVariavel = variavel;
     }
 
-    @Column(name = "ds_label_variavel", nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = "ds_label_variavel", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @Size(max = LengthConstants.NOME_PADRAO)
     @NotNull
     public String getLabelVariavel() {

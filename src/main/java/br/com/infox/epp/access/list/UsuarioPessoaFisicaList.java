@@ -17,16 +17,16 @@ public class UsuarioPessoaFisicaList extends EntityList<PessoaFisica> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioPessoaFisicaList";
-    
+
     private static final String DEFAULT_EJBQL = "select p from UsuarioLogin ul inner join ul.pessoaFisica p ";
     private static final String DEFAULT_ORDER = "p.idPessoa";
     private static final String R1 = "ul = #{usuarioPessoaFisicaList.usuario}";
-    
+
     private UsuarioLogin usuario;
 
     @Override
     protected void addSearchFields() {
-    	addSearchField("ul", SearchCriteria.IGUAL, R1);
+        addSearchField("ul", SearchCriteria.IGUAL, R1);
     }
 
     @Override

@@ -7,12 +7,11 @@ import br.com.infox.ibpm.process.definition.graphical.layout.view.JbpmCellViewFa
 
 public class JbpmGraph extends JGraph {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public JbpmGraph(GraphModel model) {
-		super(model);
-		getGraphLayoutCache().setFactory(new JbpmCellViewFactory());
-	}
-	
-	
+    public JbpmGraph(GraphModel model) {
+        super(model);
+        getGraphLayoutCache().setFactory(new JbpmCellViewFactory());
+    }
+
 }

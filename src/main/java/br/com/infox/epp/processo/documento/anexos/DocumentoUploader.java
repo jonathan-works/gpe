@@ -27,13 +27,15 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     public static final String NAME = "documentoUploader";
     private static final int TAMANHO_MAXIMO_ARQUIVO = 2097152;
-    
+
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
-    
+
     private boolean isValido;
-    
-    @In private ProcessoDocumentoManager processoDocumentoManager;
-    @In private DocumentoBinManager documentoBinManager;
+
+    @In
+    private ProcessoDocumentoManager processoDocumentoManager;
+    @In
+    private DocumentoBinManager documentoBinManager;
 
     public boolean isValido() {
         return isValido;
@@ -42,7 +44,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     public void setValido(boolean isValido) {
         this.isValido = isValido;
     }
-    
+
     @Override
     protected void newInstance() {
         super.newInstance();
@@ -63,14 +65,14 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         bin().setModeloDocumento(null);
         FacesMessages.instance().add(Messages.instance().get("processoDocumento.doneLabel"));
     }
-    
-    private ProcessoDocumentoBin bin(){
+
+    private ProcessoDocumentoBin bin() {
         if (getProcessoDocumento().getProcessoDocumentoBin() == null) {
             getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
         }
         return getProcessoDocumento().getProcessoDocumentoBin();
     }
-    
+
     private String getFileType(String nomeArquivo) {
         String ret = "";
         if (nomeArquivo != null) {
@@ -78,11 +80,11 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         }
         return ret;
     }
-    
+
     private String getMD5(byte[] data) {
         return MD5Encoder.encode(data);
     }
-    
+
     @Override
     protected LogProvider getLogger() {
         return LOG;
@@ -94,17 +96,17 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
         return pd;
     }
-    
+
     private boolean isDocumentoBinValido(final UploadedFile file) {
         if (file == null) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Nenhum documento selecionado.");
             return false;
-        } if (file.getSize() > TAMANHO_MAXIMO_ARQUIVO) {
+        }
+        if (file.getSize() > TAMANHO_MAXIMO_ARQUIVO) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de 1.5MB!");
             return false;
         }
         return true;
     }
-    
 
 }

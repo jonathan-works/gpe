@@ -33,7 +33,7 @@ import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
  */
 /**
  * @author erikliberal
- *
+ * 
  * @param <T>
  * @param <M>
  */
@@ -78,13 +78,14 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
 
     protected void beforeSave() {
     }
-    
+
     /**
-     * Deprecated
-     * use {@link #AbstractCrudAction.afterSave(String)}.{@link #afterSave(String)} instead
+     * Deprecated use {@link #AbstractCrudAction.afterSave(String)}.
+     * {@link #afterSave(String)} instead
      */
     @Deprecated
-    protected void afterSave() {}
+    protected void afterSave() {
+    }
 
     protected void afterSave(final String ret) {
     }
@@ -149,8 +150,6 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
         return currentId != null && !"".equals(currentId);
     }
 
-    
-    
     /**
      * Registra ou altera a instância atual.
      * 
@@ -168,7 +167,8 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
         final boolean persistFailed = ret == null
                 || (!PERSISTED.equals(ret) && !wasManaged);
         if (ret != null) {
-            //TODO: assim que os testes de crud estiverem prontos, jogar essas duas invocações para fora desse if
+            // TODO: assim que os testes de crud estiverem prontos, jogar essas
+            // duas invocações para fora desse if
             afterSave();
             afterSave(ret);
 
@@ -203,7 +203,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
             messages.add(MSG_REGISTRO_REMOVIDO);
         }
     }
-    
+
     public void setInstanceId(final Object id) {
         setId(id, false);
     }

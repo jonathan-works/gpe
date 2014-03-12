@@ -26,21 +26,21 @@ import br.com.infox.epp.tarefa.entity.Tarefa;
 @AutoCreate
 public class TarefaDAO extends DAO<Tarefa> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "tarefaDAO";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "tarefaDAO";
 
-	public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
-	    Map<String, Object> parameters = new HashMap<>();
-	    parameters.put(PARAM_ID_TAREFA, tarefa.getIdTarefa());
-	    List<Object[]> list = getNamedResultList(PREVIOUS_NODES, parameters);
-		List<SelectItem> previousTasksItems = new ArrayList<SelectItem>();
-		previousTasksItems.add(new SelectItem(null,"Selecione a Tarefa Anterior"));
-		for(Object[] obj : list) {
-			previousTasksItems.add(new SelectItem(obj[0], obj[1].toString()));
-		}
-		return previousTasksItems;
-	}
-	
+    public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_TAREFA, tarefa.getIdTarefa());
+        List<Object[]> list = getNamedResultList(PREVIOUS_NODES, parameters);
+        List<SelectItem> previousTasksItems = new ArrayList<SelectItem>();
+        previousTasksItems.add(new SelectItem(null, "Selecione a Tarefa Anterior"));
+        for (Object[] obj : list) {
+            previousTasksItems.add(new SelectItem(obj[0], obj[1].toString()));
+        }
+        return previousTasksItems;
+    }
+
     /**
      * Popula a tabela tb_tarefa com todas as tarefas de todos os fluxos,
      * considerando como chave o nome da tarefa task.name_
@@ -48,15 +48,15 @@ public class TarefaDAO extends DAO<Tarefa> {
     public void encontrarNovasTarefas() {
         executeNamedQueryUpdate(NOVAS_TAREFAS);
     }
-    
-    public Tarefa getTarefa(long idJbpmTask){
+
+    public Tarefa getTarefa(long idJbpmTask) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_JBPM_TASK_PARAM, idJbpmTask);
         return getNamedSingleResult(TAREFA_BY_ID_JBPM_TASK, parameters);
     }
-    
+
     public Tarefa getTarefa(String tarefa, String fluxo) {
-        if(tarefa == null || fluxo == null) {
+        if (tarefa == null || fluxo == null) {
             return null;
         }
         Map<String, Object> parameters = new HashMap<>();

@@ -39,137 +39,135 @@ import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
-@Table(name = Tarefa.TABLE_NAME, schema="public")
+@Table(name = Tarefa.TABLE_NAME, schema = "public")
 @NamedNativeQueries({
-    @NamedNativeQuery(name=PREVIOUS_NODES, query=PREVIOUS_NODES_QUERY),
-    @NamedNativeQuery(name=NOVAS_TAREFAS, query=NOVAS_TAREFAS_QUERY)
-})
+    @NamedNativeQuery(name = PREVIOUS_NODES, query = PREVIOUS_NODES_QUERY),
+    @NamedNativeQuery(name = NOVAS_TAREFAS, query = NOVAS_TAREFAS_QUERY) })
 @NamedQueries({
-    @NamedQuery(name=TAREFA_BY_TAREFA_AND_FLUXO, query=TAREFA_BY_TAREFA_AND_FLUXO_QUERY),
-    @NamedQuery(name=TAREFA_BY_ID_JBPM_TASK, query=TAREFA_BY_ID_JBPM_TASK_QUERY)
-})
+    @NamedQuery(name = TAREFA_BY_TAREFA_AND_FLUXO, query = TAREFA_BY_TAREFA_AND_FLUXO_QUERY),
+    @NamedQuery(name = TAREFA_BY_ID_JBPM_TASK, query = TAREFA_BY_ID_JBPM_TASK_QUERY) })
 public class Tarefa implements java.io.Serializable {
 
-	public static final String TABLE_NAME = "tb_tarefa";
+    public static final String TABLE_NAME = "tb_tarefa";
 
-	private static final long serialVersionUID = 1L;
-	
-	private int idTarefa;
-	private String tarefa;
-	private Fluxo fluxo;
-	private Integer prazo;
-	private PrazoEnum tipoPrazo;
-	
-	private List<TarefaJbpm> tarefaJbpmList = new ArrayList<TarefaJbpm>(0);
-	private List<Caixa> caixaList = new ArrayList<Caixa>(0);
-	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tarefa")
-	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_tarefa", unique = true, nullable = false)
-	public int getIdTarefa() {
-		return idTarefa;
-	}
-	
-	public void setIdTarefa(int idTarefa) {
-		this.idTarefa = idTarefa;
-	}
-	
-	@Column(name = "ds_tarefa", nullable= false, length=LengthConstants.DESCRICAO_MEDIA, unique=true)
-	@NotNull
-	@Size(max=LengthConstants.DESCRICAO_MEDIA)
-	public String getTarefa() {
-		return tarefa;
-	}
-	
-	public void setTarefa(String tarefa) {
-		this.tarefa = tarefa;
-	}
+    private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_fluxo", nullable=false)
-	public Fluxo getFluxo() {
-		return fluxo;
-	}
-	
-	public void setFluxo(Fluxo fluxo) {
-		this.fluxo = fluxo;
-	}
+    private int idTarefa;
+    private String tarefa;
+    private Fluxo fluxo;
+    private Integer prazo;
+    private PrazoEnum tipoPrazo;
 
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="tarefa")
-	@OrderBy("idJbpmTask DESC")
-	public List<TarefaJbpm> getTarefaJbpmList() {
-		return tarefaJbpmList;
-	}
+    private List<TarefaJbpm> tarefaJbpmList = new ArrayList<TarefaJbpm>(0);
+    private List<Caixa> caixaList = new ArrayList<Caixa>(0);
 
-	public void setTarefaJbpmList(List<TarefaJbpm> tarefaJbpmList) {
-		this.tarefaJbpmList = tarefaJbpmList;
-	}
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tarefa")
+    @Id
+    @GeneratedValue(generator = "generator")
+    @Column(name = "id_tarefa", unique = true, nullable = false)
+    public int getIdTarefa() {
+        return idTarefa;
+    }
 
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="tarefa")
-	public List<Caixa> getCaixaList() {
-		return caixaList;
-	}
+    public void setIdTarefa(int idTarefa) {
+        this.idTarefa = idTarefa;
+    }
 
-	public void setCaixaList(List<Caixa> caixaList) {
-		this.caixaList = caixaList;
-	}
+    @Column(name = "ds_tarefa", nullable = false, length = LengthConstants.DESCRICAO_MEDIA, unique = true)
+    @NotNull
+    @Size(max = LengthConstants.DESCRICAO_MEDIA)
+    public String getTarefa() {
+        return tarefa;
+    }
 
-	@Transient
-	public Long getLastIdJbpmTask() {
-		if(tarefaJbpmList == null || tarefaJbpmList.size() == 0) {
-			return null;
-		}
-		return tarefaJbpmList.get(0).getIdJbpmTask();
-	}
+    public void setTarefa(String tarefa) {
+        this.tarefa = tarefa;
+    }
 
-	@Override
-	public String toString() {
-		return tarefa;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Tarefa)) {
-			return false;
-		}
-		Tarefa other = (Tarefa) obj;
-		if (getIdTarefa() != other.getIdTarefa()) {
-			return false;
-		}
-		return true;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_fluxo", nullable = false)
+    public Fluxo getFluxo() {
+        return fluxo;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdTarefa();
-		return result;
-	}
+    public void setFluxo(Fluxo fluxo) {
+        this.fluxo = fluxo;
+    }
 
-	public void setPrazo(Integer prazo) {
-		this.prazo = prazo;
-	}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tarefa")
+    @OrderBy("idJbpmTask DESC")
+    public List<TarefaJbpm> getTarefaJbpmList() {
+        return tarefaJbpmList;
+    }
 
-	@Column(name="nr_prazo")
-	public Integer getPrazo() {
-		return prazo;
-	}
+    public void setTarefaJbpmList(List<TarefaJbpm> tarefaJbpmList) {
+        this.tarefaJbpmList = tarefaJbpmList;
+    }
 
-	public void setTipoPrazo(PrazoEnum tipoPrazo) {
-		this.tipoPrazo = tipoPrazo;
-	}
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tarefa")
+    public List<Caixa> getCaixaList() {
+        return caixaList;
+    }
 
-	@Column(name="tp_prazo")
-	@Enumerated(EnumType.STRING)
-	public PrazoEnum getTipoPrazo() {
-		return tipoPrazo;
-	}
+    public void setCaixaList(List<Caixa> caixaList) {
+        this.caixaList = caixaList;
+    }
+
+    @Transient
+    public Long getLastIdJbpmTask() {
+        if (tarefaJbpmList == null || tarefaJbpmList.size() == 0) {
+            return null;
+        }
+        return tarefaJbpmList.get(0).getIdJbpmTask();
+    }
+
+    @Override
+    public String toString() {
+        return tarefa;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Tarefa)) {
+            return false;
+        }
+        Tarefa other = (Tarefa) obj;
+        if (getIdTarefa() != other.getIdTarefa()) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getIdTarefa();
+        return result;
+    }
+
+    public void setPrazo(Integer prazo) {
+        this.prazo = prazo;
+    }
+
+    @Column(name = "nr_prazo")
+    public Integer getPrazo() {
+        return prazo;
+    }
+
+    public void setTipoPrazo(PrazoEnum tipoPrazo) {
+        this.tipoPrazo = tipoPrazo;
+    }
+
+    @Column(name = "tp_prazo")
+    @Enumerated(EnumType.STRING)
+    public PrazoEnum getTipoPrazo() {
+        return tipoPrazo;
+    }
 }

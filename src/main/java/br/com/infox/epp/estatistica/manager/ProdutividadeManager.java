@@ -17,14 +17,14 @@ import br.com.infox.epp.estatistica.dao.ProdutividadeDAO;
 @Scope(ScopeType.EVENT)
 public class ProdutividadeManager extends Manager<ProdutividadeDAO, ProdutividadeBean> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "produtividadeManager";
-	
-	public List<ProdutividadeBean> listProdutividade(Map<String, Object> params) {
-		return getDao().listProdutividade(params);
-	}
-	
-	public Long totalProdutividades(Map<String, Object> params) {
-		return getDao().totalProdutividades(params);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "produtividadeManager";
+
+    public List<ProdutividadeBean> listProdutividade(Map<String, Object> params) {
+        return getDao().listProdutividade(params);
+    }
+
+    public Long totalProdutividades(Map<String, Object> params) {
+        return getDao().totalProdutividades(params);
+    }
 }

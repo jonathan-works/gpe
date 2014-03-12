@@ -17,22 +17,24 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 @AutoCreate
 public class NaturezaCategoriaFluxoManager extends Manager<NaturezaCategoriaFluxoDAO, NaturezaCategoriaFluxo> {
 
-	private static final long serialVersionUID = -1441750117108371132L;
+    private static final long serialVersionUID = -1441750117108371132L;
 
-	public static final String NAME = "naturezaCategoriaFluxoManager";
+    public static final String NAME = "naturezaCategoriaFluxoManager";
 
-	@In
-	private NaturezaCategoriaFluxoDAO naturezaCategoriaFluxoDAO;
-	
-	public List<NaturezaCategoriaFluxo> listByNatureza(Natureza natureza) {
-		return naturezaCategoriaFluxoDAO.listByNatureza(natureza);
-	}
+    @In
+    private NaturezaCategoriaFluxoDAO naturezaCategoriaFluxoDAO;
 
-    public NaturezaCategoriaFluxo getByRelationship(Natureza natureza, Categoria categoria, Fluxo fluxo) {
+    public List<NaturezaCategoriaFluxo> listByNatureza(Natureza natureza) {
+        return naturezaCategoriaFluxoDAO.listByNatureza(natureza);
+    }
+
+    public NaturezaCategoriaFluxo getByRelationship(Natureza natureza,
+            Categoria categoria, Fluxo fluxo) {
         return naturezaCategoriaFluxoDAO.getByRelationship(natureza, categoria, fluxo);
     }
-    
-    public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(Fluxo fluxo){
+
+    public List<NaturezaCategoriaFluxo> getActiveNaturezaCategoriaFluxoListByFluxo(
+            Fluxo fluxo) {
         return naturezaCategoriaFluxoDAO.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
     }
 }

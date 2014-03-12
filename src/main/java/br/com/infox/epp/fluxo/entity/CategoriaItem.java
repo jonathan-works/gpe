@@ -29,61 +29,59 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name=TABLE_CATEGORIA_ITEM, schema=PUBLIC,
-    uniqueConstraints={@UniqueConstraint(columnNames={ID_CATEGORIA, ID_ITEM})
-})
-@NamedQueries(value={
-    @NamedQuery(name=LIST_BY_CATEGORIA, query=LIST_BY_CATEGORIA_QUERY),
-    @NamedQuery(name=COUNT_BY_CATEGORIA_ITEM, query=COUNT_BY_CATEGORIA_ITEM_QUERY)
-})
+@Table(name = TABLE_CATEGORIA_ITEM, schema = PUBLIC, uniqueConstraints = { @UniqueConstraint(columnNames = {
+    ID_CATEGORIA, ID_ITEM }) })
+@NamedQueries(value = {
+    @NamedQuery(name = LIST_BY_CATEGORIA, query = LIST_BY_CATEGORIA_QUERY),
+    @NamedQuery(name = COUNT_BY_CATEGORIA_ITEM, query = COUNT_BY_CATEGORIA_ITEM_QUERY) })
 public class CategoriaItem implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Integer idCategoriaItem;
-	private Categoria categoria;
-	private Item item;
-	
-	public CategoriaItem(){
-	    
-	}
-	
-	public CategoriaItem(Categoria categoria, Item item){
-	    this.categoria = categoria;
-	    this.item = item;
-	}
-	
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA_ITEM)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_CATEGORIA_ITEM, unique = true, nullable = false)
-	public Integer getIdCategoriaItem() {
-		return idCategoriaItem;
-	}
-	
-	public void setIdCategoriaItem(Integer idCategoriaItem) {
-		this.idCategoriaItem = idCategoriaItem;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_ITEM, nullable=false)
-	@NotNull
-	public Item getItem() {
-		return item;
-	}
-	
-	public void setItem(Item item) {
-		this.item = item;
-	}
+    private Integer idCategoriaItem;
+    private Categoria categoria;
+    private Item item;
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
+    public CategoriaItem() {
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_CATEGORIA, nullable=false)
-	public Categoria getCategoria() {
-		return categoria;
-	}
+    }
+
+    public CategoriaItem(Categoria categoria, Item item) {
+        this.categoria = categoria;
+        this.item = item;
+    }
+
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA_ITEM)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_CATEGORIA_ITEM, unique = true, nullable = false)
+    public Integer getIdCategoriaItem() {
+        return idCategoriaItem;
+    }
+
+    public void setIdCategoriaItem(Integer idCategoriaItem) {
+        this.idCategoriaItem = idCategoriaItem;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_ITEM, nullable = false)
+    @NotNull
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_CATEGORIA, nullable = false)
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
     @Override
     public int hashCode() {
@@ -105,5 +103,5 @@ public class CategoriaItem implements Serializable {
         } else if (!idCategoriaItem.equals(other.idCategoriaItem)) return false;
         return true;
     }
-	
+
 }

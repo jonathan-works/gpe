@@ -41,8 +41,7 @@ import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Entity
 @Table(name = TABLE_CAIXA, schema = PUBLIC)
-@NamedQueries(value = { @NamedQuery(name = REMOVE_BY_ID,
-        query = REMOVE_BY_ID_QUERY) })
+@NamedQueries(value = { @NamedQuery(name = REMOVE_BY_ID, query = REMOVE_BY_ID_QUERY) })
 public class Caixa implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -100,8 +99,7 @@ public class Caixa implements java.io.Serializable {
         this.tarefa = tarefa;
     }
 
-    @Column(name = NOME_INDICE, length = LengthConstants.NOME_PADRAO,
-            nullable = false)
+    @Column(name = NOME_INDICE, length = LengthConstants.NOME_PADRAO, nullable = false)
     @Size(max = LengthConstants.NOME_PADRAO)
     public String getNomeIndice() {
         return nomeIndice;
@@ -121,8 +119,7 @@ public class Caixa implements java.io.Serializable {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = CAIXA_ATTRIBUTE)
+        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = CAIXA_ATTRIBUTE)
     public List<Processo> getProcessoList() {
         return processoList;
     }

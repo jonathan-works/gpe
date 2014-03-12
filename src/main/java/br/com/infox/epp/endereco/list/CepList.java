@@ -18,54 +18,56 @@ import br.com.infox.epp.endereco.entity.Estado;
 @BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class CepList extends EntityList<Cep> {
-	
-	public static final String NAME = "cepList";
 
-	private static final long serialVersionUID = 1L;
-	private Estado estado;
-	
-	private static final String DEFAULT_EJBQL = "select o from Cep o";
-	private static final String DEFAULT_ORDER = "numeroCep";
-	private static final String R1 = "o.municipio.estado = #{cepList.estado}";
-	 
-	protected void addSearchFields() {
-		addSearchField("numeroCep", SearchCriteria.CONTENDO);
-		addSearchField("nomeLogradouro", SearchCriteria.CONTENDO);
-		addSearchField("nomeBairro", SearchCriteria.CONTENDO);
-		addSearchField("municipio", SearchCriteria.IGUAL);
-		addSearchField("municipio.estado", SearchCriteria.IGUAL, R1);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-	}
+    public static final String NAME = "cepList";
 
-	protected Map<String, String> getCustomColumnsOrder() {
-		Map<String, String> order = new HashMap<String, String>();
-		order.put("municipio", "municipio.municipio");
-		order.put("municipio.estado", "municipio.estado.estado");
-		return order;
-	}
+    private static final long serialVersionUID = 1L;
+    private Estado estado;
 
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String DEFAULT_EJBQL = "select o from Cep o";
+    private static final String DEFAULT_ORDER = "numeroCep";
+    private static final String R1 = "o.municipio.estado = #{cepList.estado}";
 
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    protected void addSearchFields() {
+        addSearchField("numeroCep", SearchCriteria.CONTENDO);
+        addSearchField("nomeLogradouro", SearchCriteria.CONTENDO);
+        addSearchField("nomeBairro", SearchCriteria.CONTENDO);
+        addSearchField("municipio", SearchCriteria.IGUAL);
+        addSearchField("municipio.estado", SearchCriteria.IGUAL, R1);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+    }
 
-	public void setEstado(Estado estado) {
-		this.estado = estado;
-	}
+    protected Map<String, String> getCustomColumnsOrder() {
+        Map<String, String> order = new HashMap<String, String>();
+        order.put("municipio", "municipio.municipio");
+        order.put("municipio.estado", "municipio.estado.estado");
+        return order;
+    }
 
-	public Estado getEstado() {
-		return estado;
-	}
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
     @Override
     public void newInstance() {
         estado = null;
         super.newInstance();
     }
-	public static CepList instance() {
-		return (CepList) Component.getInstance(NAME);
-	}
-	
+
+    public static CepList instance() {
+        return (CepList) Component.getInstance(NAME);
+    }
+
 }

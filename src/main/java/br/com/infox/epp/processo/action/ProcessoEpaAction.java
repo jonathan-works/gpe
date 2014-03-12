@@ -11,10 +11,10 @@ import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 @Name(ProcessoEpaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoEpaAction extends AbstractAction<ProcessoEpa, ProcessoEpaManager> {
-	public static final String NAME = "processoEpaAction";
-	
-	public boolean alternarContabilizar(ProcessoEpa processoEpa) {
-		return UPDATED.equals(update(processoEpa));
-	}
-	
+    public static final String NAME = "processoEpaAction";
+
+    public boolean alternarContabilizar(ProcessoEpa processoEpa) {
+        return UPDATED.equals(update(processoEpa));
+    }
+
 }

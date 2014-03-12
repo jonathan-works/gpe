@@ -13,48 +13,47 @@ import br.com.infox.epp.documento.entity.Variavel;
 
 @Name(AssociativeTipoModeloDocumentoList.NAME)
 @Scope(ScopeType.PAGE)
-public class AssociativeTipoModeloDocumentoList extends
-		EntityList<TipoModeloDocumento> {
+public class AssociativeTipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "associativeTipoModeloDocumentoList";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "associativeTipoModeloDocumentoList";
 
-	private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o where o not in "
-			+ "(select v.tipoModeloDocumento from VariavelTipoModelo v where v.variavel = #{associativeTipoModeloDocumentoList.variavelToIgnore})";
-	private static final String DEFAULT_ORDER = "tipoModeloDocumento";
-	
-	private Variavel variavelToIgnore;
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("grupoModeloDocumento", SearchCriteria.IGUAL);
-		addSearchField("grupoModeloDocumento.idGrupoModeloDocumento", SearchCriteria.IGUAL);
-		addSearchField("tipoModeloDocumento", SearchCriteria.CONTENDO);
-		addSearchField("abreviacao", SearchCriteria.CONTENDO);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-	}
+    private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o where o not in "
+            + "(select v.tipoModeloDocumento from VariavelTipoModelo v where v.variavel = #{associativeTipoModeloDocumentoList.variavelToIgnore})";
+    private static final String DEFAULT_ORDER = "tipoModeloDocumento";
 
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private Variavel variavelToIgnore;
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    @Override
+    protected void addSearchFields() {
+        addSearchField("grupoModeloDocumento", SearchCriteria.IGUAL);
+        addSearchField("grupoModeloDocumento.idGrupoModeloDocumento", SearchCriteria.IGUAL);
+        addSearchField("tipoModeloDocumento", SearchCriteria.CONTENDO);
+        addSearchField("abreviacao", SearchCriteria.CONTENDO);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
 
-	public Variavel getVariavelToIgnore() {
-		return variavelToIgnore;
-	}
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
 
-	public void setVariavelToIgnore(Variavel variavelToIgnore) {
-		this.variavelToIgnore = variavelToIgnore;
-	}
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
+    public Variavel getVariavelToIgnore() {
+        return variavelToIgnore;
+    }
+
+    public void setVariavelToIgnore(Variavel variavelToIgnore) {
+        this.variavelToIgnore = variavelToIgnore;
+    }
 
 }

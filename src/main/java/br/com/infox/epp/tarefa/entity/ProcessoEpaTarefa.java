@@ -38,140 +38,139 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
-@Table(name=ProcessoEpaTarefa.TABLE_NAME, schema="public")
+@Table(name = ProcessoEpaTarefa.TABLE_NAME, schema = "public")
 @NamedQueries({
     @NamedQuery(name = GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE, query = GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY),
     @NamedQuery(name = TAREFA_NOT_ENDED_BY_TIPO_PRAZO, query = TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY),
-    @NamedQuery(name = PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA, query=PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY),
-    @NamedQuery(name = FORA_PRAZO_FLUXO, query=FORA_PRAZO_FLUXO_QUERY),
-    @NamedQuery(name=FORA_PRAZO_TAREFA, query=FORA_PRAZO_TAREFA_QUERY),
-    @NamedQuery(name=TAREFA_PROXIMA_LIMITE, query=TAREFA_PROXIMA_LIMITE_QUERY),
+    @NamedQuery(name = PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA, query = PROCESSO_EPA_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY),
+    @NamedQuery(name = FORA_PRAZO_FLUXO, query = FORA_PRAZO_FLUXO_QUERY),
+    @NamedQuery(name = FORA_PRAZO_TAREFA, query = FORA_PRAZO_TAREFA_QUERY),
+    @NamedQuery(name = TAREFA_PROXIMA_LIMITE, query = TAREFA_PROXIMA_LIMITE_QUERY),
     @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY) })
 public class ProcessoEpaTarefa implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public static final String TABLE_NAME = "tb_processo_epa_tarefa";
-	
-	private int idProcessoTarefa;
-	private ProcessoEpa processoEpa;
-	private Tarefa tarefa;
-	private Date dataInicio;
-	private Date dataFim;
-	private Date ultimoDisparo;
-	private Integer porcentagem;
-	private Integer tempoGasto;
-	private Integer tempoPrevisto;
-	private Long taskInstance;
-	
-	@SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_epa_tarefa")
-	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "id_processo_epa_tarefa", unique = true, nullable = false)
-	public int getIdProcessoTarefa() {
-		return idProcessoTarefa;
-	}
-	
-	public void setIdProcessoTarefa(int idProcessoTarefa) {
-		this.idProcessoTarefa = idProcessoTarefa;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_processo", nullable=false)
-	@NotNull
-	public ProcessoEpa getProcessoEpa() {
-		return processoEpa;
-	}
-	
-	public void setProcessoEpa(ProcessoEpa processo) {
-		this.processoEpa = processo;
-	}
+    public static final String TABLE_NAME = "tb_processo_epa_tarefa";
 
-	public void setTarefa(Tarefa tarefa) {
-		this.tarefa = tarefa;
-	}
+    private int idProcessoTarefa;
+    private ProcessoEpa processoEpa;
+    private Tarefa tarefa;
+    private Date dataInicio;
+    private Date dataFim;
+    private Date ultimoDisparo;
+    private Integer porcentagem;
+    private Integer tempoGasto;
+    private Integer tempoPrevisto;
+    private Long taskInstance;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_tarefa", nullable=false)
-	@NotNull
-	public Tarefa getTarefa() {
-		return tarefa;
-	}
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_epa_tarefa")
+    @Id
+    @GeneratedValue(generator = "generator")
+    @Column(name = "id_processo_epa_tarefa", unique = true, nullable = false)
+    public int getIdProcessoTarefa() {
+        return idProcessoTarefa;
+    }
 
-	public void setDataInicio(Date dataInicio) {
-		this.dataInicio = dataInicio;
-	}
+    public void setIdProcessoTarefa(int idProcessoTarefa) {
+        this.idProcessoTarefa = idProcessoTarefa;
+    }
 
-	@Column(name="dt_inicio", nullable=false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull
-	public Date getDataInicio() {
-		return dataInicio;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_processo", nullable = false)
+    @NotNull
+    public ProcessoEpa getProcessoEpa() {
+        return processoEpa;
+    }
 
-	public void setDataFim(Date dataFim) {
-		this.dataFim = dataFim;
-	}
+    public void setProcessoEpa(ProcessoEpa processo) {
+        this.processoEpa = processo;
+    }
 
-	@Column(name="dt_fim")
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getDataFim() {
-		return dataFim;
-	}
+    public void setTarefa(Tarefa tarefa) {
+        this.tarefa = tarefa;
+    }
 
-	public void setTaskInstance(Long taskInstance) {
-		this.taskInstance = taskInstance;
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_tarefa", nullable = false)
+    @NotNull
+    public Tarefa getTarefa() {
+        return tarefa;
+    }
 
-	@Column(name = "id_task_instance", nullable = false)
-	public Long getTaskInstance() {
-		return this.taskInstance;
-	}
-	
-	public void setUltimoDisparo(Date ultimoDisparo) {
-		this.ultimoDisparo = ultimoDisparo;
-	}
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
 
-	@Column(name="dt_ultimo_disparo", nullable=false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull
-	public Date getUltimoDisparo() {
-		return ultimoDisparo;
-	}
+    @Column(name = "dt_inicio", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    public Date getDataInicio() {
+        return dataInicio;
+    }
 
-	public void setTempoGasto(Integer tempoGasto) {
-		this.tempoGasto = tempoGasto;
-	}
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
+    }
 
-	@Column(name="nr_tempo_gasto", nullable=false)
-	@NotNull
-	public Integer getTempoGasto() {
-		return tempoGasto;
-	}
-	
-	@Transient
-	public String getTempoGastoFormatado() {
-		return PrazoEnum.formatTempo(tempoGasto, tarefa.getTipoPrazo());
-	}
+    @Column(name = "dt_fim")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date getDataFim() {
+        return dataFim;
+    }
 
-	public void setTempoPrevisto(Integer tempoPrevisto) {
-		this.tempoPrevisto = tempoPrevisto;
-	}
+    public void setTaskInstance(Long taskInstance) {
+        this.taskInstance = taskInstance;
+    }
 
-	@Column(name="nr_tempo_previsto", nullable=false)
-	@NotNull
-	public Integer getTempoPrevisto() {
-		return tempoPrevisto;
-	}
+    @Column(name = "id_task_instance", nullable = false)
+    public Long getTaskInstance() {
+        return this.taskInstance;
+    }
 
-	public void setPorcentagem(Integer porcentagem) {
-		this.porcentagem = porcentagem;
-	}
+    public void setUltimoDisparo(Date ultimoDisparo) {
+        this.ultimoDisparo = ultimoDisparo;
+    }
 
-	@Column(name="nr_porcentagem")
-	public Integer getPorcentagem() {
-		return porcentagem;
-	}
+    @Column(name = "dt_ultimo_disparo", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    public Date getUltimoDisparo() {
+        return ultimoDisparo;
+    }
 
+    public void setTempoGasto(Integer tempoGasto) {
+        this.tempoGasto = tempoGasto;
+    }
+
+    @Column(name = "nr_tempo_gasto", nullable = false)
+    @NotNull
+    public Integer getTempoGasto() {
+        return tempoGasto;
+    }
+
+    @Transient
+    public String getTempoGastoFormatado() {
+        return PrazoEnum.formatTempo(tempoGasto, tarefa.getTipoPrazo());
+    }
+
+    public void setTempoPrevisto(Integer tempoPrevisto) {
+        this.tempoPrevisto = tempoPrevisto;
+    }
+
+    @Column(name = "nr_tempo_previsto", nullable = false)
+    @NotNull
+    public Integer getTempoPrevisto() {
+        return tempoPrevisto;
+    }
+
+    public void setPorcentagem(Integer porcentagem) {
+        this.porcentagem = porcentagem;
+    }
+
+    @Column(name = "nr_porcentagem")
+    public Integer getPorcentagem() {
+        return porcentagem;
+    }
 
 }

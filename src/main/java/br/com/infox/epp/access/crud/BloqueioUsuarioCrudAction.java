@@ -16,12 +16,12 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 
 @Name(BloqueioUsuarioCrudAction.NAME)
 public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuario, BloqueioUsuarioManager> {
-    
+
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "bloqueioUsuarioCrudAction";
     private static final LogProvider LOG = Logging.getLogProvider(BloqueioUsuarioCrudAction.class);
-    
+
     @In
     private UsuarioLoginManager usuarioLoginManager;
 
@@ -75,9 +75,10 @@ public class BloqueioUsuarioCrudAction extends AbstractCrudAction<BloqueioUsuari
     protected void afterSave(final String ret) {
         if (UPDATED.equals(ret) || PERSISTED.equals(ret)) {
             try {
-            	usuarioLoginManager.update(this.usuarioAtual);
+                usuarioLoginManager.update(this.usuarioAtual);
             } catch (final DAOException e) {
-                LOG.error("Não foi possível atualizar as modificações em " + usuarioAtual, e);
+                LOG.error("Não foi possível atualizar as modificações em "
+                        + usuarioAtual, e);
             }
         }
     }

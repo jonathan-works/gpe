@@ -12,52 +12,51 @@ import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.seam.util.ComponentUtil;
 
-
 @Name(TipoModeloDocumentoList.NAME)
 @BypassInterceptors
 @Scope(ScopeType.CONVERSATION)
 public class TipoModeloDocumentoList extends EntityList<TipoModeloDocumento> {
-	public static final String NAME = "tipoModeloDocumentoList";
-	private static final long serialVersionUID = 1L;
-	
-	private static final String TEMPLATE = "/TipoModeloDocumento/tipoModeloDocumentoTemplate.xls";
+    public static final String NAME = "tipoModeloDocumentoList";
+    private static final long serialVersionUID = 1L;
+
+    private static final String TEMPLATE = "/TipoModeloDocumento/tipoModeloDocumentoTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "TiposModeloDocumento.xls";
 
-	private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o";
-	private static final String DEFAULT_ORDER = "grupoModeloDocumento";
-	
-	public static final TipoModeloDocumentoList instance() {
-		return ComponentUtil.getComponent(NAME);
-	}
-	
-	@Override
-	protected void addSearchFields() {
-		addSearchField("grupoModeloDocumento", SearchCriteria.IGUAL);
-		addSearchField("tipoModeloDocumento", SearchCriteria.CONTENDO);
-		addSearchField("abreviacao", SearchCriteria.CONTENDO);
-		addSearchField("ativo", SearchCriteria.IGUAL);
-	}
-	
-	@Override
-	protected String getDefaultEjbql() {
-		return DEFAULT_EJBQL;
-	}
+    private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o";
+    private static final String DEFAULT_ORDER = "grupoModeloDocumento";
 
-	@Override
-	protected String getDefaultOrder() {
-		return DEFAULT_ORDER;
-	}
+    public static final TipoModeloDocumentoList instance() {
+        return ComponentUtil.getComponent(NAME);
+    }
 
-	@Override
-	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
-	}
-    
+    @Override
+    protected void addSearchFields() {
+        addSearchField("grupoModeloDocumento", SearchCriteria.IGUAL);
+        addSearchField("tipoModeloDocumento", SearchCriteria.CONTENDO);
+        addSearchField("abreviacao", SearchCriteria.CONTENDO);
+        addSearchField("ativo", SearchCriteria.IGUAL);
+    }
+
+    @Override
+    protected String getDefaultEjbql() {
+        return DEFAULT_EJBQL;
+    }
+
+    @Override
+    protected String getDefaultOrder() {
+        return DEFAULT_ORDER;
+    }
+
+    @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        return null;
+    }
+
     @Override
     public String getTemplate() {
         return TEMPLATE;
     }
-    
+
     @Override
     public String getDownloadXlsName() {
         return DOWNLOAD_XLS_NAME;

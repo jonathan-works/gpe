@@ -21,25 +21,25 @@ import br.com.infox.seam.exception.ApplicationException;
 
 @Name(RelacionamentoProcessoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class RelacionamentoProcessoCrudAction extends AbstractCrudAction<RelacionamentoProcesso,RelacionamentoProcessoManager> {
+public class RelacionamentoProcessoCrudAction extends AbstractCrudAction<RelacionamentoProcesso, RelacionamentoProcessoManager> {
 
     public static final String NAME = "relacionamentoProcessoCrudAction";
     private static final long serialVersionUID = 1L;
-    
+
     @In
     private RelacionamentoManager relacionamentoManager;
     @In
     private ProcessoEpaManager processoEpaManager;
     @In
     private TipoRelacionamentoProcessoManager tipoRelacionamentoProcessoManager;
-    
+
     private ProcessoEpa processo;
     private List<TipoRelacionamentoProcesso> tipoRelacionamentoProcessoList;
-    
+
     public ProcessoEpa getProcesso() {
         return processo;
     }
-    
+
     @Override
     protected void beforeSave() {
         try {
@@ -49,7 +49,7 @@ public class RelacionamentoProcessoCrudAction extends AbstractCrudAction<Relacio
             getInstance().setProcesso(processo);
             if (relacionamento == null) {
                 final Relacionamento relacionamentoByProcesso = relacionamentoManager.getRelacionamentoByProcesso(processo);
-                final RelacionamentoProcesso primaryRelacProc = new RelacionamentoProcesso(relacionamentoProcesso.getTipoRelacionamentoProcesso(), relacionamentoByProcesso,this.processo,relacionamentoProcesso.getMotivo());
+                final RelacionamentoProcesso primaryRelacProc = new RelacionamentoProcesso(relacionamentoProcesso.getTipoRelacionamentoProcesso(), relacionamentoByProcesso, this.processo, relacionamentoProcesso.getMotivo());
                 if (relacionamentoByProcesso == null) {
                     relacionamento = getManager().persist(relacionamentoProcesso).getRelacionamento();
                 } else {
@@ -62,7 +62,7 @@ public class RelacionamentoProcessoCrudAction extends AbstractCrudAction<Relacio
             throw new ApplicationException(Messages.instance().get("relacionamento.persist.error"), e);
         }
     }
-    
+
     @Override
     protected void afterSave(String ret) {
         if (ret != null) {
@@ -71,7 +71,7 @@ public class RelacionamentoProcessoCrudAction extends AbstractCrudAction<Relacio
             setProcesso(processoEpaManager.find(idProcesso));
         }
     }
-    
+
     public void setProcesso(final ProcessoEpa processo) {
         this.processo = processo;
         final Relacionamento relacionamento = relacionamentoManager.getRelacionamentoByProcesso(processo);
@@ -89,5 +89,5 @@ public class RelacionamentoProcessoCrudAction extends AbstractCrudAction<Relacio
             List<TipoRelacionamentoProcesso> tipoRelacionamentoProcessoList) {
         this.tipoRelacionamentoProcessoList = tipoRelacionamentoProcessoList;
     }
-    
+
 }

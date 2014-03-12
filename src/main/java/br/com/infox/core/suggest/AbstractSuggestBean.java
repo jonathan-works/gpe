@@ -29,7 +29,7 @@ public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Seri
     private static final long serialVersionUID = 1L;
 
     protected static final String INPUT_PARAMETER = "input";
-    
+
     @In
     protected EntityManager entityManager;
 

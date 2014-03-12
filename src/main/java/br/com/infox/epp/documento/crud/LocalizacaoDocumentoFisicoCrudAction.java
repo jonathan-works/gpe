@@ -30,7 +30,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
     private List<LocalizacaoFisica> localizacaoFisicaList;
     private List<DocumentoFisico> documentoFisicoList;
     private Processo processo;
-    
+
     public void setProcesso(Processo processo) {
         this.processo = processo;
         localizacaoFisicaList = new LocalizacaoFisicaList().getResultList();

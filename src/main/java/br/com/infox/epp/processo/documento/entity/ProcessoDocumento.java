@@ -66,8 +66,7 @@ public class ProcessoDocumento implements java.io.Serializable {
     public ProcessoDocumento() {
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_processo_documento")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_documento")
     @Id
     @GeneratedValue(generator = "generator")
     @Column(name = "id_processo_documento", unique = true, nullable = false)
@@ -134,8 +133,7 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.processo = processo;
     }
 
-    @Column(name = "ds_processo_documento", nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = "ds_processo_documento", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @NotNull
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
     public String getProcessoDocumento() {
@@ -176,7 +174,7 @@ public class ProcessoDocumento implements java.io.Serializable {
     public void setDocumentoSigiloso(Boolean documentoSigiloso) {
         this.documentoSigiloso = documentoSigiloso;
     }
-    
+
     @Column(name = "in_anexo", nullable = false)
     @NotNull
     public Boolean getAnexo() {

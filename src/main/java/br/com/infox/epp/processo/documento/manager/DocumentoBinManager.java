@@ -14,12 +14,12 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoBinManager";
-    
+
     public byte[] getData(int idDocumentoBin) {
         return getDao().getData(idDocumentoBin);
     }
-    
-    public DocumentoBin salvarBinario(int idDocumentoBin, byte[] file) throws DAOException{
+
+    public DocumentoBin salvarBinario(int idDocumentoBin, byte[] file) throws DAOException {
         return getDao().gravarBinario(idDocumentoBin, file);
     }
 

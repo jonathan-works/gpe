@@ -22,22 +22,23 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 @Name(AssinadorDocumento.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class AssinadorDocumento extends AbstractController {
-    
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "assinadorDocumento";
     private static final LogProvider LOG = Logging.getLogProvider(AssinadorDocumento.class);
 
-    
     private String certChain;
     private String signature;
     private boolean houveErroAoAssinar = false;
-    
+
     private ProcessoDocumento processoDocumento;
     private ProcessoDocumentoBin processoDocumentoBin;
-    
-    @In AssinaturaDocumentoService assinaturaDocumentoService;
-    @In GenericManager genericManager;
-    
+
+    @In
+    AssinaturaDocumentoService assinaturaDocumentoService;
+    @In
+    GenericManager genericManager;
+
     public String getCertChain() {
         return certChain;
     }
@@ -66,7 +67,8 @@ public class AssinadorDocumento extends AbstractController {
         return processoDocumentoBin;
     }
 
-    public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {
+    public void setProcessoDocumentoBin(
+            ProcessoDocumentoBin processoDocumentoBin) {
         this.processoDocumentoBin = processoDocumentoBin;
     }
 
@@ -82,7 +84,7 @@ public class AssinadorDocumento extends AbstractController {
             this.setHouveErroAoAssinar(true);
             return;
         }
-//        setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
+        // setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
         processoDocumento.setLocalizacao(Authenticator.getLocalizacaoAtual());
         processoDocumento.setPapel(Authenticator.getPapelAtual());
         getProcessoDocumentoBin().setUsuarioUltimoAssinar(Authenticator.getUsuarioLogado().getNomeUsuario());
@@ -93,11 +95,12 @@ public class AssinadorDocumento extends AbstractController {
         try {
             genericManager.update(processoDocumento);
         } catch (DAOException e) {
-            LOG.error("Não foi possível assinar o documento " + processoDocumento, e);
+            LOG.error("Não foi possível assinar o documento "
+                    + processoDocumento, e);
         }
         FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
     }
-    
+
     @Override
     public void setId(Object id) {
         super.setId(id);

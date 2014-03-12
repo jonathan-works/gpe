@@ -14,6 +14,6 @@ import br.com.infox.epp.cliente.entity.CalendarioEventos;
 @AutoCreate
 public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, CalendarioEventos> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "calendarioEventosManager";
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "calendarioEventosManager";
 }

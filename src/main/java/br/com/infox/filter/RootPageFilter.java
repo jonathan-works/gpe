@@ -15,20 +15,22 @@ import javax.servlet.http.HttpServletResponse;
 @WebFilter(urlPatterns = "/")
 public class RootPageFilter implements Filter {
 
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		
-	}
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		httpResponse.sendRedirect(httpResponse.encodeRedirectURL(httpRequest.getContextPath() + "/home.seam"));
-	}
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response,
+            FilterChain chain) throws IOException, ServletException {
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        httpResponse.sendRedirect(httpResponse.encodeRedirectURL(httpRequest.getContextPath()
+                + "/home.seam"));
+    }
+
+    @Override
+    public void destroy() {
+    }
 
 }

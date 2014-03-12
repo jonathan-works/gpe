@@ -17,8 +17,9 @@ public class ProcessoDocumentoBinManager extends Manager<ProcessoDocumentoBinDAO
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoBinManager";
-    
-    public ProcessoDocumentoBin createProcessoDocumentoBin(ProcessoDocumento processoDocumento) throws DAOException{
+
+    public ProcessoDocumentoBin createProcessoDocumentoBin(
+            ProcessoDocumento processoDocumento) throws DAOException {
         ProcessoDocumentoBin bin = processoDocumento.getProcessoDocumentoBin();
         bin.setUsuario(Authenticator.getUsuarioLogado());
         if (bin.getMd5Documento() == null) {

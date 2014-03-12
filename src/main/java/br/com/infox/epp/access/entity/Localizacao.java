@@ -51,11 +51,10 @@ import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 
 @Entity
 @Table(name = TABLE_LOCALIZACAO, schema = PUBLIC)
-@NamedQueries(value = { 
-	@NamedQuery(name = LOCALIZACOES_ESTRUTURA, query = LOCALIZACOES_ESTRUTURA_QUERY),
-	@NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY),
-	@NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY)
-})
+@NamedQueries(value = {
+    @NamedQuery(name = LOCALIZACOES_ESTRUTURA, query = LOCALIZACOES_ESTRUTURA_QUERY),
+    @NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY),
+    @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY) })
 public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     private static final long serialVersionUID = 1L;
@@ -111,8 +110,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.idLocalizacao = idLocalizacao;
     }
 
-    @Column(name = DESCRICAO_LOCALIZACAO, nullable = false,
-            length = DESCRICAO_PADRAO, unique = true)
+    @Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO, unique = true)
     @Size(max = DESCRICAO_PADRAO)
     @NotNull
     public String getLocalizacao() {
@@ -143,8 +141,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.localizacaoPai = localizacaoPai;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = LOCALIZACAO_ATTRIBUTE)
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = LOCALIZACAO_ATTRIBUTE)
     public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
         return this.usuarioLocalizacaoList;
     }
@@ -154,8 +151,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.usuarioLocalizacaoList = usuarioLocalizacaoList;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY,
-            mappedBy = LOCALIZACAO_PAI_ATTRIBUTE)
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = LOCALIZACAO_PAI_ATTRIBUTE)
     @OrderBy(LOCALIZACAO_ATTRIBUTE)
     public List<Localizacao> getLocalizacaoList() {
         return this.localizacaoList;

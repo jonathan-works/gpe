@@ -6,19 +6,19 @@ import org.jdom2.Element;
 
 public class EndActivityXPDL extends ActivityXPDL {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public EndActivityXPDL(Element element, String name) {
-		super(element, name);
-	}
+    public EndActivityXPDL(Element element, String name) {
+        super(element, name);
+    }
 
-	@Override
-	public Node toNode() {
-		if(node == null) {
-			node = new EndState();
-			node.setName(this.getName());
-		}
-		return node;
-	}
+    @Override
+    public Node toNode() {
+        if (node == null) {
+            node = new EndState();
+            node.setName(this.getName());
+        }
+        return node;
+    }
 
 }

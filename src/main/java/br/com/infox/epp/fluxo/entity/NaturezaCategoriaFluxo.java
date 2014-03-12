@@ -41,103 +41,102 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
-@Table(name=TABLE_NATUREZA_CATEGORIA_FLUXO, schema=PUBLIC, 
-    uniqueConstraints={
-        @UniqueConstraint(columnNames={ID_NATUREZA, ID_CATEGORIA, ID_FLUXO})
-})
-@NamedQueries(value={
-    @NamedQuery(name=ATIVOS_BY_FLUXO, query=ATIVOS_BY_FLUXO_QUERY),
-    @NamedQuery(name=LIST_BY_RELATIONSHIP, query=BY_RELATIONSHIP_QUERY),
-    @NamedQuery(name=LIST_BY_NATUREZA, query=LIST_BY_NATUREZA_QUERY)
-})
-public class NaturezaCategoriaFluxo implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@Table(name = TABLE_NATUREZA_CATEGORIA_FLUXO, schema = PUBLIC, uniqueConstraints = { @UniqueConstraint(columnNames = {
+    ID_NATUREZA, ID_CATEGORIA, ID_FLUXO }) })
+@NamedQueries(value = {
+    @NamedQuery(name = ATIVOS_BY_FLUXO, query = ATIVOS_BY_FLUXO_QUERY),
+    @NamedQuery(name = LIST_BY_RELATIONSHIP, query = BY_RELATIONSHIP_QUERY),
+    @NamedQuery(name = LIST_BY_NATUREZA, query = LIST_BY_NATUREZA_QUERY) })
+public class NaturezaCategoriaFluxo implements Serializable {
 
-	private Integer idNaturezaCategoriaFluxo;
-	private Natureza natureza;
-	private Categoria categoria;
-	private Fluxo fluxo;
-	
-	private List<ProcessoEpa> processoEpaList = new ArrayList<ProcessoEpa>(0);
-	
-	private List<NatCatFluxoLocalizacao> natCatFluxoLocalizacaoList = 
-		new ArrayList<NatCatFluxoLocalizacao>(0);
-	
-	public NaturezaCategoriaFluxo() {
-	}
-	
-	public NaturezaCategoriaFluxo(final Natureza natureza, final Categoria categoria, final Fluxo fluxo) {
-	    this.natureza = natureza;
-	    this.categoria = categoria;
-	    this.fluxo = fluxo;
-	}
-	
-	
-	public void setIdNaturezaCategoriaFluxo(Integer idNaturezaCategoriaFluxo) {
-		this.idNaturezaCategoriaFluxo = idNaturezaCategoriaFluxo;
-	}
+    private static final long serialVersionUID = 1L;
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATRUEZA_CATEGORIA_FLUXO)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_NATUREZA_CATEGORIA_FLUXO, unique = true, nullable = false)
-	public Integer getIdNaturezaCategoriaFluxo() {
-		return idNaturezaCategoriaFluxo;
-	}
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_NATUREZA, nullable=false)
-	@NotNull(message = "#{messages['beanValidation.notNull']}")
-	public Natureza getNatureza() {
-		return natureza;
-	}
-	
-	public void setNatureza(Natureza natureza) {
-		this.natureza = natureza;
-	}
+    private Integer idNaturezaCategoriaFluxo;
+    private Natureza natureza;
+    private Categoria categoria;
+    private Fluxo fluxo;
 
-	public void setFluxo(Fluxo fluxo) {
-		this.fluxo = fluxo;
-	}
+    private List<ProcessoEpa> processoEpaList = new ArrayList<ProcessoEpa>(0);
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_FLUXO, nullable=false)
-	@NotNull(message = "#{messages['beanValidation.notNull']}")
-	public Fluxo getFluxo() {
-		return fluxo;
-	}
+    private List<NatCatFluxoLocalizacao> natCatFluxoLocalizacaoList = new ArrayList<NatCatFluxoLocalizacao>(0);
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
+    public NaturezaCategoriaFluxo() {
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_CATEGORIA, nullable=false)
-	@NotNull(message = "#{messages['beanValidation.notNull']}")
-	public Categoria getCategoria() {
-		return categoria;
-	}
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE)
-	public List<NatCatFluxoLocalizacao> getNatCatFluxoLocalizacaoList() {
-		return natCatFluxoLocalizacaoList;
-	}
-	
-	public void setNatCatFluxoLocalizacaoList(List<NatCatFluxoLocalizacao> naturezaLocalizacaoList) {
-		this.natCatFluxoLocalizacaoList = naturezaLocalizacaoList;
-	}
-	
-	@Override
-	public String toString() {
-		return format("{0} - {1} - {2}", natureza, categoria, fluxo);
-	}
-	
-	@Override
+    public NaturezaCategoriaFluxo(final Natureza natureza,
+            final Categoria categoria, final Fluxo fluxo) {
+        this.natureza = natureza;
+        this.categoria = categoria;
+        this.fluxo = fluxo;
+    }
+
+    public void setIdNaturezaCategoriaFluxo(Integer idNaturezaCategoriaFluxo) {
+        this.idNaturezaCategoriaFluxo = idNaturezaCategoriaFluxo;
+    }
+
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATRUEZA_CATEGORIA_FLUXO)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_NATUREZA_CATEGORIA_FLUXO, unique = true, nullable = false)
+    public Integer getIdNaturezaCategoriaFluxo() {
+        return idNaturezaCategoriaFluxo;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_NATUREZA, nullable = false)
+    @NotNull(message = "#{messages['beanValidation.notNull']}")
+    public Natureza getNatureza() {
+        return natureza;
+    }
+
+    public void setNatureza(Natureza natureza) {
+        this.natureza = natureza;
+    }
+
+    public void setFluxo(Fluxo fluxo) {
+        this.fluxo = fluxo;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_FLUXO, nullable = false)
+    @NotNull(message = "#{messages['beanValidation.notNull']}")
+    public Fluxo getFluxo() {
+        return fluxo;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_CATEGORIA, nullable = false)
+    @NotNull(message = "#{messages['beanValidation.notNull']}")
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE)
+    public List<NatCatFluxoLocalizacao> getNatCatFluxoLocalizacaoList() {
+        return natCatFluxoLocalizacaoList;
+    }
+
+    public void setNatCatFluxoLocalizacaoList(
+            List<NatCatFluxoLocalizacao> naturezaLocalizacaoList) {
+        this.natCatFluxoLocalizacaoList = naturezaLocalizacaoList;
+    }
+
+    @Override
+    public String toString() {
+        return format("{0} - {1} - {2}", natureza, categoria, fluxo);
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (idNaturezaCategoriaFluxo==null ? 0 : idNaturezaCategoriaFluxo.hashCode());
+        result = prime
+                * result
+                + (idNaturezaCategoriaFluxo == null ? 0 : idNaturezaCategoriaFluxo.hashCode());
         return result;
     }
 
@@ -160,17 +159,17 @@ public class NaturezaCategoriaFluxo implements Serializable{
     }
 
     public void setProcessoEpaList(List<ProcessoEpa> processoEpaList) {
-		this.processoEpaList = processoEpaList;
-	}
+        this.processoEpaList = processoEpaList;
+    }
 
-	@OneToMany(fetch=FetchType.LAZY, mappedBy=NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE)
-	public List<ProcessoEpa> getProcessoEpaList() {
-		return processoEpaList;
-	}
-	
-	@Transient
-	public boolean isAtivo(){
-		return true;
-	}
-	
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE)
+    public List<ProcessoEpa> getProcessoEpaList() {
+        return processoEpaList;
+    }
+
+    @Transient
+    public boolean isAtivo() {
+        return true;
+    }
+
 }

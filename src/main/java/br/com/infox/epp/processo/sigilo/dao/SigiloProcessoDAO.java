@@ -20,12 +20,12 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 @AutoCreate
 public class SigiloProcessoDAO extends DAO<SigiloProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "sigiloProcessoDAO";
-	
-	public SigiloProcesso getSigiloProcessoAtivo(ProcessoEpa processoEpa) {
-		Map<String, Object> params = new HashMap<>();
-		params.put(QUERY_PARAM_PROCESSO, processoEpa);
-		return getNamedSingleResult(NAMED_QUERY_SIGILO_PROCESSO_ATIVO, params);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "sigiloProcessoDAO";
+
+    public SigiloProcesso getSigiloProcessoAtivo(ProcessoEpa processoEpa) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(QUERY_PARAM_PROCESSO, processoEpa);
+        return getNamedSingleResult(NAMED_QUERY_SIGILO_PROCESSO_ATIVO, params);
+    }
 }

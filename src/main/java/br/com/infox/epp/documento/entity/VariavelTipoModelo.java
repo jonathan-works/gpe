@@ -21,73 +21,72 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-
 @Entity
-@Table(name = TABLE_VARIAVEL_TIPO_MODELO, schema=PUBLIC)
+@Table(name = TABLE_VARIAVEL_TIPO_MODELO, schema = PUBLIC)
 public class VariavelTipoModelo implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	private Integer idVariavelTipoModelo;
-	private Variavel variavel;
-	private TipoModeloDocumento tipoModeloDocumento;
-		
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL_TIPO_MODELO)
-	@Id
-	@GeneratedValue(generator = GENERATOR)
-	@Column(name = ID_VARIAVEL_TIPO_MODELO, unique = true, nullable = false)
-	public Integer getIdVariavelTipoModelo() {
-		return idVariavelTipoModelo;
-	}
+    private static final long serialVersionUID = 1L;
+    private Integer idVariavelTipoModelo;
+    private Variavel variavel;
+    private TipoModeloDocumento tipoModeloDocumento;
 
-	public void setIdVariavelTipoModelo(Integer idVariavelTipoModelo) {
-		this.idVariavelTipoModelo = idVariavelTipoModelo;
-	}
+    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL_TIPO_MODELO)
+    @Id
+    @GeneratedValue(generator = GENERATOR)
+    @Column(name = ID_VARIAVEL_TIPO_MODELO, unique = true, nullable = false)
+    public Integer getIdVariavelTipoModelo() {
+        return idVariavelTipoModelo;
+    }
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_VARIAVEL, nullable = false)
-	@NotNull
-	public Variavel getVariavel() {
-		return variavel;
-	}
+    public void setIdVariavelTipoModelo(Integer idVariavelTipoModelo) {
+        this.idVariavelTipoModelo = idVariavelTipoModelo;
+    }
 
-	public void setVariavel(Variavel variavel) {
-		this.variavel = variavel;
-	}
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_VARIAVEL, nullable = false)
+    @NotNull
+    public Variavel getVariavel() {
+        return variavel;
+    }
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = ID_TIPO_MODELO_DOCUMENTO, nullable = false)
-	@NotNull
-	public TipoModeloDocumento getTipoModeloDocumento() {
-		return tipoModeloDocumento;
-	}
+    public void setVariavel(Variavel variavel) {
+        this.variavel = variavel;
+    }
 
-	public void setTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
-		this.tipoModeloDocumento = tipoModeloDocumento;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getIdVariavelTipoModelo() == null) {
-			return false;
-		}
-		if (!(obj instanceof VariavelTipoModelo)) {
-			return false;
-		}
-		VariavelTipoModelo other = (VariavelTipoModelo) obj;
-		return getIdVariavelTipoModelo().equals(other.getIdVariavelTipoModelo());
-	}
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_TIPO_MODELO_DOCUMENTO, nullable = false)
+    @NotNull
+    public TipoModeloDocumento getTipoModeloDocumento() {
+        return tipoModeloDocumento;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdVariavelTipoModelo();
-		return result;
-	}
+    public void setTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
+        this.tipoModeloDocumento = tipoModeloDocumento;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getIdVariavelTipoModelo() == null) {
+            return false;
+        }
+        if (!(obj instanceof VariavelTipoModelo)) {
+            return false;
+        }
+        VariavelTipoModelo other = (VariavelTipoModelo) obj;
+        return getIdVariavelTipoModelo().equals(other.getIdVariavelTipoModelo());
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + getIdVariavelTipoModelo();
+        return result;
+    }
 }

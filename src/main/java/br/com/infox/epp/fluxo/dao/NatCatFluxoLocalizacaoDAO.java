@@ -29,21 +29,24 @@ public class NatCatFluxoLocalizacaoDAO extends DAO<NatCatFluxoLocalizacao> {
     private static final long serialVersionUID = -4306540893162078405L;
     public static final String NAME = "natCatFluxoLocalizacaoDAO";
 
-    public void deleteByNatCatFluxoAndLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao l) {
+    public void deleteByNatCatFluxoAndLocalizacao(NaturezaCategoriaFluxo ncf,
+            Localizacao l) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);
         executeNamedQueryUpdate(DELETE_BY_NAT_CAT_FLUXO_AND_LOCALIZACAO, parameters);
     }
 
-    public NatCatFluxoLocalizacao getByNatCatFluxoAndLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao l) {
+    public NatCatFluxoLocalizacao getByNatCatFluxoAndLocalizacao(
+            NaturezaCategoriaFluxo ncf, Localizacao l) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);
         return getNamedSingleResult(GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF, parameters);
     }
 
-    public boolean existsNatCatFluxoLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao l) {
+    public boolean existsNatCatFluxoLocalizacao(NaturezaCategoriaFluxo ncf,
+            Localizacao l) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);
@@ -51,14 +54,16 @@ public class NatCatFluxoLocalizacaoDAO extends DAO<NatCatFluxoLocalizacao> {
         return resultCount != null && resultCount > 0;
     }
 
-    public List<NaturezaCategoriaFluxo> listByLocalizacaoAndPapel(Localizacao l, Papel p) {
+    public List<NaturezaCategoriaFluxo> listByLocalizacaoAndPapel(
+            Localizacao l, Papel p) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);
         parameters.put(QUERY_PARAM_PAPEL, p);
         return getNamedResultList(LIST_BY_LOCALIZACAO_AND_PAPEL, parameters);
     }
 
-    public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(NaturezaCategoriaFluxo ncf) {
+    public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(
+            NaturezaCategoriaFluxo ncf) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
         return getNamedResultList(LIST_BY_NAT_CAT_FLUXO, parameters);

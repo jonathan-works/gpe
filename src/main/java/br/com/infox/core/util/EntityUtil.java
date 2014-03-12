@@ -50,7 +50,7 @@ public final class EntityUtil implements Serializable {
 
         return getId(cl);
     }
-    
+
     public static Object getIdValue(Object objId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         if (!EntityUtil.isEntity(objId)) {
             throw new IllegalArgumentException("O objeto não é uma entidade: "

@@ -14,34 +14,36 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 @AutoCreate
 public class TipoProcessoDocumentoManager extends Manager<TipoProcessoDocumentoDAO, TipoProcessoDocumento> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "tipoProcessoDocumentoManager";
-	
-	private TipoProcessoDocumento tipoProcessoDocumento;
-	private TipoProcessoDocumento tipoProcessoDocumentoRO;
-	
-	public void limpar(){
-		tipoProcessoDocumento = null;
-	}
-	
-	public TipoProcessoDocumento getTipoProcessoDocumento() {
-		return tipoProcessoDocumento;
-	}
-	
-	public void setTipoProcessoDocumento(
-			TipoProcessoDocumento tipoProcessoDocumento) {	
-			this.tipoProcessoDocumento = tipoProcessoDocumento;		
-	}
-	
-	public void setTipoProcessoDocumentoRO(TipoProcessoDocumento tipoProcessoDocumentoRO) {
-		this.tipoProcessoDocumentoRO = tipoProcessoDocumentoRO;
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "tipoProcessoDocumentoManager";
 
-	public TipoProcessoDocumento getTipoProcessoDocumentoRO() {
-		return tipoProcessoDocumentoRO;
-	}
-	
-	public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, Papel papel) {
-	    return getDao().getUseableTipoProcessoDocumento(isModelo, papel);
-	}
+    private TipoProcessoDocumento tipoProcessoDocumento;
+    private TipoProcessoDocumento tipoProcessoDocumentoRO;
+
+    public void limpar() {
+        tipoProcessoDocumento = null;
+    }
+
+    public TipoProcessoDocumento getTipoProcessoDocumento() {
+        return tipoProcessoDocumento;
+    }
+
+    public void setTipoProcessoDocumento(
+            TipoProcessoDocumento tipoProcessoDocumento) {
+        this.tipoProcessoDocumento = tipoProcessoDocumento;
+    }
+
+    public void setTipoProcessoDocumentoRO(
+            TipoProcessoDocumento tipoProcessoDocumentoRO) {
+        this.tipoProcessoDocumentoRO = tipoProcessoDocumentoRO;
+    }
+
+    public TipoProcessoDocumento getTipoProcessoDocumentoRO() {
+        return tipoProcessoDocumentoRO;
+    }
+
+    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(
+            boolean isModelo, Papel papel) {
+        return getDao().getUseableTipoProcessoDocumento(isModelo, papel);
+    }
 }

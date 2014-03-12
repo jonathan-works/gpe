@@ -17,60 +17,59 @@ import org.jboss.seam.log.Logging;
 import org.jgraph.JGraph;
 
 public class Util {
-	
-	private static final LogProvider LOG = Logging.getLogProvider(Util.class);
 
-	public static RenderedImage toImage(JGraph graph) {
-		Object[] cells = graph.getRoots();
-		if (cells.length > 0) {
-			Rectangle bounds = graph.getCellBounds(cells).getBounds();
-			graph.toScreen(bounds);
+    private static final LogProvider LOG = Logging.getLogProvider(Util.class);
 
-			// Create a Buffered Image
-			Dimension d = bounds.getSize();
-			BufferedImage img = new BufferedImage(d.width + 10, d.height + 10,
-					BufferedImage.TYPE_INT_RGB);
-			Graphics2D graphics = img.createGraphics();
-			graphics.setColor(graph.getBackground());
-			graphics.fillRect(0, 0, img.getWidth(), img.getHeight());
-			graphics.translate(-bounds.x + 5, -bounds.y + 5);
+    public static RenderedImage toImage(JGraph graph) {
+        Object[] cells = graph.getRoots();
+        if (cells.length > 0) {
+            Rectangle bounds = graph.getCellBounds(cells).getBounds();
+            graph.toScreen(bounds);
 
-			Object[] selection = graph.getSelectionCells();
-			boolean gridVisible = graph.isGridVisible();
-			graph.setGridVisible(false);
-			graph.clearSelection();
+            // Create a Buffered Image
+            Dimension d = bounds.getSize();
+            BufferedImage img = new BufferedImage(d.width + 10, d.height + 10, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = img.createGraphics();
+            graphics.setColor(graph.getBackground());
+            graphics.fillRect(0, 0, img.getWidth(), img.getHeight());
+            graphics.translate(-bounds.x + 5, -bounds.y + 5);
 
-			graph.paint(graphics);
+            Object[] selection = graph.getSelectionCells();
+            boolean gridVisible = graph.isGridVisible();
+            graph.setGridVisible(false);
+            graph.clearSelection();
 
-			graph.setSelectionCells(selection);
-			graph.setGridVisible(gridVisible);
+            graph.paint(graphics);
 
-			return img;
-		}
-		return null;
-	}
+            graph.setSelectionCells(selection);
+            graph.setGridVisible(gridVisible);
 
-	public static ImageIcon readImageIcon(String path) {
-		if (null == path) {
-			return null;
-		}
-		URL url = Thread.currentThread().getContextClassLoader().getResource(path);
-		return null == url ? null : new ImageIcon(url);
-	}
+            return img;
+        }
+        return null;
+    }
 
-	public static void writeText(File file, boolean append, String text) {
-		if (file != null && text != null) {
-			try {
-				if (file.getParentFile() != null) {
-					file.getParentFile().mkdirs();
-				}	
-				FileWriter out = new FileWriter(file, append);
-				out.write(text);
-				out.close();
-			} catch (IOException e) {
-				LOG.error(".writeText(file, append, text)", e);
-			}
-		}	
-	}
+    public static ImageIcon readImageIcon(String path) {
+        if (null == path) {
+            return null;
+        }
+        URL url = Thread.currentThread().getContextClassLoader().getResource(path);
+        return null == url ? null : new ImageIcon(url);
+    }
+
+    public static void writeText(File file, boolean append, String text) {
+        if (file != null && text != null) {
+            try {
+                if (file.getParentFile() != null) {
+                    file.getParentFile().mkdirs();
+                }
+                FileWriter out = new FileWriter(file, append);
+                out.write(text);
+                out.close();
+            } catch (IOException e) {
+                LOG.error(".writeText(file, append, text)", e);
+            }
+        }
+    }
 
 }

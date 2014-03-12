@@ -17,39 +17,41 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 @AutoCreate
 public class DefinicaoVariavelProcessoManager extends Manager<DefinicaoVariavelProcessoDAO, DefinicaoVariavelProcesso> {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "definicaoVariavelProcessoManager";
-	public static final String JBPM_VARIABLE_TYPE = "processo";
-	
-	public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo) {
-		return getDao().listVariaveisByFluxo(fluxo);
-	}
-	
-	public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo, int start, int count) {
-		return getDao().listVariaveisByFluxo(fluxo, start, count);
-	}
-	
-	public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
-		return getDao().getTotalVariaveisByFluxo(fluxo);
-	}
-	
-	public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
-		return getDao().getDefinicao(fluxo, nome);
-	}
-	
-	public String getNomeAmigavel(DefinicaoVariavelProcesso variavelProcesso) {
-		if (variavelProcesso == null || variavelProcesso.getNome() == null) {
-			return null;
-		}
-		String[] nome = variavelProcesso.getNome().split(":");
-		if (nome.length == 1) {
-			return nome[0];
-		}
-		return nome[1];
-	}
-	
-	public void setNome(DefinicaoVariavelProcesso variavelProcesso, String nomeAmigavel) {
-		String nome = nomeAmigavel.replace(' ', '_').replace('/', '_');
-		variavelProcesso.setNome(JBPM_VARIABLE_TYPE + ":" + nome);
-	}
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "definicaoVariavelProcessoManager";
+    public static final String JBPM_VARIABLE_TYPE = "processo";
+
+    public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo) {
+        return getDao().listVariaveisByFluxo(fluxo);
+    }
+
+    public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo,
+            int start, int count) {
+        return getDao().listVariaveisByFluxo(fluxo, start, count);
+    }
+
+    public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
+        return getDao().getTotalVariaveisByFluxo(fluxo);
+    }
+
+    public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
+        return getDao().getDefinicao(fluxo, nome);
+    }
+
+    public String getNomeAmigavel(DefinicaoVariavelProcesso variavelProcesso) {
+        if (variavelProcesso == null || variavelProcesso.getNome() == null) {
+            return null;
+        }
+        String[] nome = variavelProcesso.getNome().split(":");
+        if (nome.length == 1) {
+            return nome[0];
+        }
+        return nome[1];
+    }
+
+    public void setNome(DefinicaoVariavelProcesso variavelProcesso,
+            String nomeAmigavel) {
+        String nome = nomeAmigavel.replace(' ', '_').replace('/', '_');
+        variavelProcesso.setNome(JBPM_VARIABLE_TYPE + ":" + nome);
+    }
 }

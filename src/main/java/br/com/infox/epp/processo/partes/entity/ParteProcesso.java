@@ -36,8 +36,7 @@ public class ParteProcesso implements Serializable {
         this.pessoa = pessoa;
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_parte_processo")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_parte_processo")
     @Id
     @Column(name = "id_parte_processo")
     @GeneratedValue(generator = "generator")

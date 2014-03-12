@@ -25,8 +25,7 @@ import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = TABLE_PAGINA, schema = PUBLIC)
-@NamedQueries(value = { @NamedQuery(name = PAGINA_BY_URL,
-        query = PAGINA_BY_URL_QUERY) })
+@NamedQueries(value = { @NamedQuery(name = PAGINA_BY_URL, query = PAGINA_BY_URL_QUERY) })
 public class Pagina implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,8 +49,7 @@ public class Pagina implements java.io.Serializable {
         this.idPagina = idPagina;
     }
 
-    @Column(name = DESCRICAO, nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = DESCRICAO, nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
     @NotNull
     public String getDescricao() {
@@ -62,8 +60,7 @@ public class Pagina implements java.io.Serializable {
         this.descricao = descricao;
     }
 
-    @Column(name = URL, nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = URL, nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
     @NotNull
     public String getUrl() {

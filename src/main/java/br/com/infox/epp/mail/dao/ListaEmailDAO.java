@@ -21,17 +21,17 @@ public class ListaEmailDAO extends DAO<ListaEmail> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "listaEmailDAO";
-    
-    public Integer getMaxIdGrupoEmailInListaEmail(){
+
+    public Integer getMaxIdGrupoEmailInListaEmail() {
         return getNamedSingleResult(MAXIMO_ID_GRUPO_EMAIL_IN_LISTA_EMAIL);
     }
-    
-    public List<ListaEmail> getListaEmailByIdGrupoEmail(Integer idGrupoEmail){
+
+    public List<ListaEmail> getListaEmailByIdGrupoEmail(Integer idGrupoEmail) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_GRUPO_EMAIL_PARAM, idGrupoEmail);
         return getNamedResultList(LISTA_EMAIL_BY_ID_GRUPO, parameters);
     }
-    
+
     public List<String> resolve(int idGrupoEmail) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_GRUPO_EMAIL_PARAM, idGrupoEmail);

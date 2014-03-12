@@ -20,22 +20,25 @@ import br.com.infox.epp.search.SearchService;
 @Name(AjudaView.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class AjudaView {
-    
+
     public static final String NAME = "ajudaView";
-    
+
     private Ajuda instance;
-    
+
     private String tab;
     private String viewId;
     private Pagina pagina;
     private String textoPesquisa;
     @SuppressWarnings(RAWTYPES)
     private List resultado;
-    
-    @In private AjudaManager ajudaManager;
-    @In private PaginaManager paginaManager;
-    @In private SearchService searchService;
-    
+
+    @In
+    private AjudaManager ajudaManager;
+    @In
+    private PaginaManager paginaManager;
+    @In
+    private SearchService searchService;
+
     public Ajuda getInstance() {
         return instance;
     }
@@ -55,15 +58,15 @@ public class AjudaView {
     public String getView() {
         return null;
     }
-    
+
     public String getViewId() {
         return viewId;
     }
-    
+
     public void setView(String view) {
         setViewId(view, true);
     }
-    
+
     public void setViewId(String viewId, boolean clearSearch) {
         this.viewId = viewId;
         this.pagina = null;
@@ -72,7 +75,7 @@ public class AjudaView {
             setTextoPesquisa(null);
         }
     }
-    
+
     private Ajuda createInstance() {
         instance = new Ajuda();
         Ajuda ajuda = ajudaManager.getAjudaByPaginaUrl(viewId);
@@ -82,18 +85,18 @@ public class AjudaView {
         instance.setPagina(getPagina());
         return instance;
     }
-    
+
     private Pagina getPagina() {
         if (pagina == null) {
             return verificaPagina();
         }
         return pagina;
     }
-    
+
     private Pagina verificaPagina() {
         return paginaManager.getPaginaByUrl(viewId);
     }
-    
+
     public String getTextoPesquisa() {
         return textoPesquisa;
     }
@@ -102,8 +105,8 @@ public class AjudaView {
         this.resultado = null;
         this.textoPesquisa = textoPesquisa;
     }
-    
-    @SuppressWarnings({RAWTYPES})
+
+    @SuppressWarnings({ RAWTYPES })
     public List getResultadoPesquisa() throws ParseException {
         if (getTextoPesquisa() == null) {
             return new ArrayList<>();
@@ -113,7 +116,7 @@ public class AjudaView {
         }
         return resultado;
     }
-    
+
     public String getTexto() {
         String texto = null;
         if (instance != null) {
@@ -124,7 +127,7 @@ public class AjudaView {
         }
         return texto;
     }
-    
+
     public void setId(Integer id) {
         setInstance(ajudaManager.find(id));
     }

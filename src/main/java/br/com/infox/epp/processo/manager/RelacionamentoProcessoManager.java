@@ -24,7 +24,7 @@ public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcess
 
     @In
     private RelacionamentoManager relacionamentoManager;
-    
+
     @Override
     public RelacionamentoProcesso persist(final RelacionamentoProcesso instance) throws DAOException {
         if (instance.getAtivo() == null) {
@@ -48,5 +48,5 @@ public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcess
             throw new DAOException(e);
         }
     }
-    
+
 }

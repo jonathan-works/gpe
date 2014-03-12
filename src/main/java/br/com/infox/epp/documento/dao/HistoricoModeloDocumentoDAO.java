@@ -22,12 +22,13 @@ public class HistoricoModeloDocumentoDAO extends DAO<HistoricoModeloDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "historicoModeloDocumentoDAO";
-    
-    public List<ModeloDocumento> listModelosDoHistorico(){
+
+    public List<ModeloDocumento> listModelosDoHistorico() {
         return getNamedResultList(LIST_MODELO);
     }
-    
-    public List<UsuarioLogin> listUsuariosQueAlteraramModelo(ModeloDocumento modeloDocumento){
+
+    public List<UsuarioLogin> listUsuariosQueAlteraramModelo(
+            ModeloDocumento modeloDocumento) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(LIST_USUARIO_PARAM_MODELO, modeloDocumento);
         return getNamedResultList(LIST_USUARIO, parameters);

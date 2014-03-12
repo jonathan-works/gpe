@@ -14,18 +14,18 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 
 @Name(LocalizacaoCrudAction.NAME)
 public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizacao, LocalizacaoManager> {
-    
+
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "localizacaoCrudAction";
-    
+
     @Override
     public void newInstance() {
         limparTrees();
         super.newInstance();
         getInstance().setEstrutura(Boolean.FALSE);
     }
-    
+
     public boolean hasPermissionToEdit() {
         final Localizacao localizacaoUsuarioLogado = Authenticator.getLocalizacaoAtual();
         if (getInstance().getIdLocalizacao() == null) {
@@ -33,46 +33,48 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
         }
         return getManager().isLocalizacaoAncestor(localizacaoUsuarioLogado, getInstance());
     }
-    
+
     @Override
     protected boolean isInstanceValid() {
         final Localizacao localizacao = getInstance();
-        
+
         final Boolean isEstrutura = localizacao.getEstrutura();
         if (isEstrutura != null) {
-            if (isEstrutura){
+            if (isEstrutura) {
                 localizacao.setEstruturaFilho(null);
                 localizacao.setLocalizacaoPai(null);
             } else {
                 final Localizacao localizacaoPai = localizacao.getLocalizacaoPai();
-                if (localizacaoPai != null && localizacaoPai.equals(localizacao.getEstruturaFilho())) {
-                	final StatusMessages messagesHandler = getMessagesHandler();
+                if (localizacaoPai != null
+                        && localizacaoPai.equals(localizacao.getEstruturaFilho())) {
+                    final StatusMessages messagesHandler = getMessagesHandler();
                     messagesHandler.clear();
-                	messagesHandler.add("#{messages['localizacao.localizacaoPaiIgualEstruturaFilho']}");
-                	return Boolean.FALSE;
+                    messagesHandler.add("#{messages['localizacao.localizacaoPaiIgualEstruturaFilho']}");
+                    return Boolean.FALSE;
                 }
             }
         }
         return super.isInstanceValid();
     }
-    
-    protected void limparTrees(){
+
+    protected void limparTrees() {
         final LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
         if (ret != null) {
             ret.clearTree();
         }
     }
-    
+
     @Override
     protected String update() {
         String ret = null;
         final Localizacao localizacao = getInstance();
-        if ((localizacao.getAtivo() != null) && (localizacao.getAtivo() || inativarFilhos(localizacao))) {
+        if ((localizacao.getAtivo() != null)
+                && (localizacao.getAtivo() || inativarFilhos(localizacao))) {
             ret = super.update();
         }
         return ret;
     }
-    
+
     private boolean inativarFilhos(final Localizacao localizacao) {
         localizacao.setAtivo(Boolean.FALSE);
         for (int i = 0, quantidadeFilhos = localizacao.getLocalizacaoList().size(); i < quantidadeFilhos; i++) {
@@ -80,8 +82,8 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
         }
         return Boolean.TRUE;
     }
-    
-    public List<Localizacao> getLocalizacoesEstrutura(){
+
+    public List<Localizacao> getLocalizacoesEstrutura() {
         return getManager().getLocalizacoesEstrutura();
     }
 

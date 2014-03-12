@@ -36,10 +36,8 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Table(name = "tb_tipo_processo_documento", schema = "public")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
-    @NamedQuery(name = LIST_TIPO_PROCESSO_DOCUMENTO,
-            query = LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
-    @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_USEABLE,
-            query = TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY) })
+    @NamedQuery(name = LIST_TIPO_PROCESSO_DOCUMENTO, query = LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
+    @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_USEABLE, query = TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY) })
 public class TipoProcessoDocumento implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -62,12 +60,10 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         visibilidade = VisibilidadeEnum.A;
     }
 
-    @SequenceGenerator(name = "generator",
-            sequenceName = "public.sq_tb_tipo_processo_documento")
+    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tipo_processo_documento")
     @Id
     @GeneratedValue(generator = "generator")
-    @Column(name = "id_tipo_processo_documento", unique = true,
-            nullable = false)
+    @Column(name = "id_tipo_processo_documento", unique = true, nullable = false)
     public Integer getIdTipoProcessoDocumento() {
         return this.idTipoProcessoDocumento;
     }
@@ -76,8 +72,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         this.idTipoProcessoDocumento = idTipoProcessoDocumento;
     }
 
-    @Column(name = "ds_tipo_processo_documento", nullable = false,
-            length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = "ds_tipo_processo_documento", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @NotNull
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
     public String getTipoProcessoDocumento() {
@@ -119,8 +114,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY,
-            mappedBy = "tipoProcessoDocumento")
+        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "tipoProcessoDocumento")
     public List<ProcessoDocumento> getProcessoDocumentoList() {
         return this.processoDocumentoList;
     }
@@ -159,8 +153,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         this.numera = numera;
     }
 
-    @Column(name = "ds_tipo_processo_documento_observacao",
-            length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
+    @Column(name = "ds_tipo_processo_documento_observacao", length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
     @Size(max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
     public String getTipoProcessoDocumentoObservacao() {
         return this.tipoProcessoDocumentoObservacao;
@@ -201,8 +194,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         int result = 1;
         result = prime
                 * result
-                + ((idTipoProcessoDocumento == null) ? 0
-                        : idTipoProcessoDocumento.hashCode());
+                + ((idTipoProcessoDocumento == null) ? 0 : idTipoProcessoDocumento.hashCode());
         return result;
     }
 
@@ -222,8 +214,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
             if (other.idTipoProcessoDocumento != null) {
                 return false;
             }
-        } else if (!idTipoProcessoDocumento
-                .equals(other.idTipoProcessoDocumento)) {
+        } else if (!idTipoProcessoDocumento.equals(other.idTipoProcessoDocumento)) {
             return false;
         }
         return true;

@@ -10,6 +10,6 @@ import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 @Name(GrupoModeloDocumentoManager.NAME)
 @AutoCreate
 public class GrupoModeloDocumentoManager extends Manager<GrupoModeloDocumentoDAO, GrupoModeloDocumento> {
-	private static final long serialVersionUID = 4455754174682600299L;
-	public static final String NAME = "grupoModeloDocumentoManager";
+    private static final long serialVersionUID = 4455754174682600299L;
+    public static final String NAME = "grupoModeloDocumentoManager";
 }
