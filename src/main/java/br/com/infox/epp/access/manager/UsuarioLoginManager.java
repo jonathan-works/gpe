@@ -88,8 +88,6 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         final String password = usuario.getSenha();
         final Object id = EntityUtil.getIdValue(super.persist(usuario));
         final UsuarioLogin persisted = find(id);
-        System.out.println(usuario.getSenha());
-        System.out.println(persisted.getSenha());
         passwordService.changePassword(persisted, password);
         // ADICIONAR LOCALIZAÇÃO, PAPEL E ESTRUTURA PADRÃO
         return persisted;
