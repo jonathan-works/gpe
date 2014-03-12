@@ -39,8 +39,7 @@ public class UpdateResourcesOperation extends RunAsOperation {
     }
     
     private Permission createPermission(final String identificador) {
-        Permission p = new Permission(resource, ACCESS, new Role(identificador));
-        return p;
+        return new Permission(resource, ACCESS, new Role(identificador));
     }
 
 }
