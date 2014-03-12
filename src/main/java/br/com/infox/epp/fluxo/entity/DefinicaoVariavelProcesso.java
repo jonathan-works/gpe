@@ -109,19 +109,37 @@ public class DefinicaoVariavelProcesso implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof DefinicaoVariavelProcesso)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof DefinicaoVariavelProcesso)) {
+            return false;
+        }
         DefinicaoVariavelProcesso other = (DefinicaoVariavelProcesso) obj;
         if (fluxo == null) {
-            if (other.fluxo != null) return false;
-        } else if (!fluxo.equals(other.fluxo)) return false;
+            if (other.fluxo != null) {
+                return false;
+            }
+        } else if (!fluxo.equals(other.fluxo)) {
+            return false;
+        }
         if (id == null) {
-            if (other.id != null) return false;
-        } else if (!id.equals(other.id)) return false;
+            if (other.id != null) {
+                return false;
+            }
+        } else if (!id.equals(other.id)) {
+            return false;
+        }
         if (nome == null) {
-            if (other.nome != null) return false;
-        } else if (!nome.equals(other.nome)) return false;
+            if (other.nome != null) {
+                return false;
+            }
+        } else if (!nome.equals(other.nome)) {
+            return false;
+        }
         return true;
     }
 }

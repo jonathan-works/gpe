@@ -157,13 +157,23 @@ public class TipoModeloDocumento implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
         TipoModeloDocumento other = (TipoModeloDocumento) obj;
         if (idTipoModeloDocumento == null) {
-            if (other.idTipoModeloDocumento != null) return false;
-        } else if (!idTipoModeloDocumento.equals(other.idTipoModeloDocumento)) return false;
+            if (other.idTipoModeloDocumento != null) {
+                return false;
+            }
+        } else if (!idTipoModeloDocumento.equals(other.idTipoModeloDocumento)) {
+            return false;
+        }
         return true;
     }
 

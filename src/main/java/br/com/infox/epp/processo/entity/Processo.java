@@ -221,13 +221,23 @@ public class Processo implements java.io.Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
         Processo other = (Processo) obj;
         if (idProcesso == null) {
-            if (other.idProcesso != null) return false;
-        } else if (!idProcesso.equals(other.idProcesso)) return false;
+            if (other.idProcesso != null) {
+                return false;
+            }
+        } else if (!idProcesso.equals(other.idProcesso)) {
+            return false;
+        }
         return true;
     }
 
