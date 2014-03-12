@@ -5,6 +5,10 @@
 	height:695px;
 }
 }
+html,body {
+	height:100%;
+	margin:0;
+}
 .pd-xml.textarea{
 	min-height:465px;
 	resize:none;

@@ -2,6 +2,10 @@
 	width:100%;
 	height:calc(100% - 2px);
 }
+html, body {
+	height:100%;
+	margin:0;
+}
 .ui-widget-content {
 }
 .ui-tabs-panel.ui-widget-content.ui-corner-bottom {
