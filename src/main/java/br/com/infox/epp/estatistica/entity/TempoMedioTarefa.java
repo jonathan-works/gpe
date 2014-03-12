@@ -64,8 +64,8 @@ public class TempoMedioTarefa implements Serializable{
         final StringBuilder sb = new StringBuilder();
         final PrazoEnum tipoPrazo = tarefa.getTipoPrazo();
         if (PrazoEnum.H.equals(tipoPrazo)) {
-            int hours = ((int) (this.mediaTempoGasto / 60));
-            int minutes = ((int) (this.mediaTempoGasto % 60));
+            int hours = (int) (this.mediaTempoGasto / 60);
+            int minutes = (int) (this.mediaTempoGasto % 60);
             if (hours < 10) {
                 sb.append("0");
             }
