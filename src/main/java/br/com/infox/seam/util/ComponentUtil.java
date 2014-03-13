@@ -5,13 +5,17 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
+import org.hibernate.AnnotationException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.log.LogProvider;
@@ -123,6 +127,51 @@ public final class ComponentUtil {
     @SuppressWarnings(UNCHECKED)
     public static <C> C getComponent(String componentName, ScopeType scopeType) {
         return (C) Component.getInstance(componentName, scopeType);
+    }
+
+    /**
+     * Retorna o valor do atributo que possui a anotação informada.
+     * 
+     * @param object Objeto em que será pesquisada o método que possui a
+     *        anotação
+     * @param annotationClass anotação a ser pesquisada nos métodos do objeto
+     * @return Valor do atributo
+     */
+    public static Object getAnnotatedAttributeValue(Object object,
+            Class<? extends Annotation> annotationClass) {
+        String fieldName = getAnnotationField(object.getClass(), annotationClass);
+        return getValue(object, fieldName);
+    }
+
+    /**
+     * Retorna o nome do atributo que possui a anotação informada.
+     * 
+     * @param classObj Classe em que será pesquisada o método que possui a
+     *        anotação
+     * @param annotationClass @interface da anotação a ser pesquisada.
+     * @return Nome do atributo
+     */
+    private static String getAnnotationField(Class<? extends Object> classObj,
+            Class<? extends Annotation> annotationClass) {
+        for (Method m : classObj.getMethods()) {
+            if (!m.isAnnotationPresent(annotationClass)) {
+                continue;
+            }
+
+            String fieldName = m.getName();
+            fieldName = fieldName.startsWith("is") ? fieldName.substring(2) : fieldName.substring(3);
+            return Character.toLowerCase(fieldName.charAt(0))
+                    + fieldName.substring(1);
+        }
+
+        for (Field f : classObj.getDeclaredFields()) {
+            if (f.isAnnotationPresent(annotationClass)) {
+                return f.getName();
+            }
+        }
+
+        String msg = MessageFormat.format("Missing annotation @{0}", annotationClass.getSimpleName());
+        throw new AnnotationException(msg);
     }
 
 }

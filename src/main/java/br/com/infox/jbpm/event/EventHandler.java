@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.event.handler;
+package br.com.infox.jbpm.event;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
@@ -12,7 +12,7 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 
-import br.com.infox.core.handler.ActionTemplateHandler;
+import br.com.infox.jbpm.action.ActionTemplateHandler;
 
 public class EventHandler implements Serializable {
 

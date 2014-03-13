@@ -23,6 +23,7 @@ import br.com.infox.epp.fluxo.xpdl.lane.LaneXPDL;
 import br.com.infox.epp.fluxo.xpdl.lane.LanesXPDLFactory;
 import br.com.infox.epp.fluxo.xpdl.transition.TransitionsXPDL;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
+import br.com.infox.jbpm.event.JbpmEvents;
 
 public final class FluxoXPDL implements Serializable {
 
@@ -142,7 +143,7 @@ public final class FluxoXPDL implements Serializable {
     private void addEvents(ProcessDefinition definition) {
         String[] supportedEventTypes = definition.getSupportedEventTypes();
         for (String e : supportedEventTypes) {
-            addEvent(e, "br.com.infox.ibpm.event.JbpmEvents.raiseEvent(executionContext)", new Script(), definition);
+            addEvent(e, JbpmEvents.PATH_TO_JBPM_EVENTS_RAISER, new Script(), definition);
         }
     }
 

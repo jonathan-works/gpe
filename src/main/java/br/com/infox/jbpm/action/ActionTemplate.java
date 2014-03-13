@@ -1,4 +1,4 @@
-package br.com.infox.core.action;
+package br.com.infox.jbpm.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;

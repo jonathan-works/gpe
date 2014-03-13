@@ -1,4 +1,4 @@
-package br.com.infox.core.handler;
+package br.com.infox.jbpm.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,8 +13,6 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-
-import br.com.infox.core.action.ActionTemplate;
 
 @Name("actionTemplateHandler")
 @Scope(ScopeType.SESSION)

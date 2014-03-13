@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.event;
+package br.com.infox.jbpm.event;
 
 import org.jboss.seam.core.Events;
 import org.jboss.seam.log.LogProvider;
@@ -15,6 +15,7 @@ public final class JbpmEvents {
     }
 
     private static final LogProvider LOG = Logging.getLogProvider(JbpmEvents.class);
+    public static final String PATH_TO_JBPM_EVENTS_RAISER = "br.com.infox.jbpm.event.JbpmEvents.raiseEvent(executionContext)";
 
     public static void raiseEvent(ExecutionContext context) {
 

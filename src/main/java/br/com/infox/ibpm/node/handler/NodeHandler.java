@@ -17,7 +17,7 @@ import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.ibpm.event.handler.EventHandler;
+import br.com.infox.jbpm.event.EventHandler;
 
 public class NodeHandler implements Serializable {
 

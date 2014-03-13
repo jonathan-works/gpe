@@ -1,21 +1,16 @@
 package br.com.infox.epp.access.crud;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.access.type.UsuarioEnum;
 
 @Name(UsuarioLoginCrudAction.NAME)
 public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, UsuarioLoginManager> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginCrudAction";
-
-    @In
-    private PasswordService passwordService;
 
     @Override
     public void newInstance() {

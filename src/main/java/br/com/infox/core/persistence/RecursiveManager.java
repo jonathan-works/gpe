@@ -10,7 +10,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.RecursiveException;
-import br.com.infox.core.util.AnnotationUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 /**
@@ -108,7 +107,7 @@ public final class RecursiveManager {
      */
     private static <E extends Recursive<E>> boolean verifyParent(E object) {
         try {
-            Integer id = (Integer) AnnotationUtil.getAnnotatedAttributeValue(object, Id.class);
+            Integer id = (Integer) ComponentUtil.getAnnotatedAttributeValue(object, Id.class);
             return hasParentDuplicity(object, id);
         } catch (AnnotationException | InvalidTargetObjectTypeException e) {
             LOG.error(".verifyParent()", e);
@@ -120,7 +119,7 @@ public final class RecursiveManager {
             Integer checkId) throws InvalidTargetObjectTypeException {
         E dad = o.getParent();
         if (dad != null) {
-            Integer id = (Integer) AnnotationUtil.getAnnotatedAttributeValue(dad, Id.class);
+            Integer id = (Integer) ComponentUtil.getAnnotatedAttributeValue(dad, Id.class);
             if (id != null && id.equals(checkId)) {
                 return true;
             }

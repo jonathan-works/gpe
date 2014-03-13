@@ -116,8 +116,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
     public List<LocalizacaoTurno> listByLocalizacao(Localizacao localizacao) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_LOCALIZACAO, localizacao);
-        List<LocalizacaoTurno> resultList = getNamedResultList(LIST_BY_LOCALIZACAO, parameters);
-        return resultList;
+        return getNamedResultList(LIST_BY_LOCALIZACAO, parameters);
     }
 
     public List<LocalizacaoTurno> listByHoraInicioFim(Localizacao l,
@@ -126,8 +125,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);
         parameters.put(QUERY_PARAM_HORA_INICIO, horaInicio);
         parameters.put(QUERY_PARAM_HORA_FIM, horaFim);
-        List<LocalizacaoTurno> resultList = getNamedResultList(LIST_BY_HORA_INICIO_FIM, parameters);
-        return resultList;
+        return getNamedResultList(LIST_BY_HORA_INICIO_FIM, parameters);
     }
 
     public Integer countByHoraInicioFim(Localizacao l, Time horaInicio,

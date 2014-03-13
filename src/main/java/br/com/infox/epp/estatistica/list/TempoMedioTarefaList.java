@@ -29,7 +29,6 @@ public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa>
     private static final long serialVersionUID = 1L;
 
     private static final String TEMPLATE = "/Estatistica/tempoMedioTarefaTemplate.xls";
-    private static final String DOWNLOAD_XLS_NAME = "relatorioTemposMedios.xls";
 
     private double tempoMedioProcesso;
 
