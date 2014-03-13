@@ -5,10 +5,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 
-import br.com.infox.core.action.ActionTemplate;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jbpm.action.ActionTemplate;
 
 @Name(ModeloDocumentoAction.NAME)
 @Scope(ScopeType.SESSION)

@@ -15,6 +15,7 @@ public final class JbpmEvents {
     }
 
     private static final LogProvider LOG = Logging.getLogProvider(JbpmEvents.class);
+    public static final String PATH_TO_JBPM_EVENTS_RAISER = "br.com.infox.jbpm.event.JbpmEvents.raiseEvent(executionContext)";
 
     public static void raiseEvent(ExecutionContext context) {
 
