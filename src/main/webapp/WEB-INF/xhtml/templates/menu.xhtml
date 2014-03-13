@@ -33,7 +33,7 @@
             <rich:toolbarGroup>
                 <h:form>
                     <s:link view="/home.xhtml" styleClass="LinkMenu"
-                        value="Home" />
+                        value="#{messages['menu.home']}" />
                 </h:form>
             </rich:toolbarGroup>
             <c:forEach items="#{mainMenu.dropMenus}" var="drop">
@@ -55,11 +55,11 @@
         </c:if>
         <rich:toolbarGroup location="right">
             <h:form>
-                <s:link view="/login.xhtml" value="Login"
+                <s:link view="/login.xhtml" value="#{messages['menu.login']}"
                     styleClass="LinkMenu"
                     rendered="#{not identity.loggedIn}" />
                 <s:link view="/home.xhtml" action="#{identity.logout}"
-                    styleClass="LinkMenu" value="Logout"
+                    styleClass="LinkMenu" value="#{messages['menu.logout']}"
                     rendered="#{identity.loggedIn}" />
             </h:form>
             <wi:helpIcon />
