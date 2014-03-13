@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.application;
+package br.com.infox.jbpm.application;
 
 import static org.jboss.seam.annotations.Install.BUILT_IN;
 
