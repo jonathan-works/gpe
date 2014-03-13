@@ -47,7 +47,7 @@
                                         onclick="$('##{formId}').clearForm();showLoading();"
                                         oncomplete="hideLoading();"
                                         action="#{elFunctions.invokeMethod(clearAction)}"
-                                        value="Limpar" execute="@this"
+                                        value="#{messages['button.limpar']}" execute="@this"
                                         render="#{wi:get(clearReRender, 'pageBody')}"
                                         styleClass="buttons buttons" />
                                 </a:region>
