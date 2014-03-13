@@ -29,7 +29,6 @@ public class TipoProcessoDocumentoList extends EntityList<TipoProcessoDocumento>
         addSearchField("codigoDocumento", SearchCriteria.CONTENDO);
         addSearchField("tipoProcessoDocumento", SearchCriteria.CONTENDO);
         addSearchField("inTipoDocumento", SearchCriteria.IGUAL);
-        addSearchField("visibilidade", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
     }
 
