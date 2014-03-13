@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
-<ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf">
-	<ui:param
-		name="selectable"
-		value="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}" />
-	<h:form id="papeisUsuarioForm" styleClass="painelUsuario">
-		<c:if test="#{selectable}">
-			<wi:selectOneMenuEntity
-				value="#{authenticator.localizacaoAtualCombo}"
-				id="usuarioLocalizacao"
-				template="/WEB-INF/xhtml/components/templates/display.xhtml"
-				onchange="this.form.submit()"
-				items="#{authenticator.usuarioLocalizacaoListItems}"
-				label="#{usuarioLogado}"
-				labelClass="painelUsuario-label"
-				valueClass="painelUsuario-select">
-			</wi:selectOneMenuEntity>
-		</c:if>
-		<c:if test="#{not selectable}">
-			<h:outputText styleClass="painelUsuario-label" value="#{usuarioLogado}" />
-			<h:outputText value="#{authenticator.localizacaoAtualCombo}" />
-		</c:if>
-	</h:form>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <ui:param name="selectable"
+    value="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}" />
+  <div class="painelUsuario">
+
+    <c:if test="#{selectable}">
+      <h:form id="papeisUsuarioForm">
+        <wi:selectOneMenuEntity
+          value="#{authenticator.localizacaoAtualCombo}"
+          id="usuarioLocalizacao"
+          template="/WEB-INF/xhtml/components/templates/display.xhtml"
+          onchange="this.form.submit()"
+          items="#{authenticator.usuarioLocalizacaoListItems}"
+          label="#{usuarioLogado}" labelClass="painelUsuario-label"
+          valueClass="painelUsuario-select">
+        </wi:selectOneMenuEntity>
+      </h:form>
+    </c:if>
+
+    <c:if test="#{not selectable}">
+      <h:outputText styleClass="painelUsuario-label"
+        value="#{usuarioLogado}" />
+      <h:outputText value="#{authenticator.localizacaoAtualCombo}" />
+    </c:if>
+  </div>
 
 </ui:composition>
