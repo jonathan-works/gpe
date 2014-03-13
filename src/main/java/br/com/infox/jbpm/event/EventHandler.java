@@ -1,4 +1,4 @@
-package br.com.infox.ibpm.event.handler;
+package br.com.infox.jbpm.event;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
