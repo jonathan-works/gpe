@@ -18,10 +18,9 @@
     <ui:param name="useCertLogin"
       value="#{certificateAuthenticator.certificateLogin}" />
   </ui:define>
-
-  <ui:define name="baseBody">
+  <ui:define name="scripts">
     <h:outputScript library="js/components" name="Modal.js" />
-    <script type="text/javascript">
+    <h:outputScript>
           invoke([ "infox.Modal" ], function(Modal) {
             $("#btnTrocar").click(
                 function() {
@@ -39,7 +38,9 @@
             $("#btnTrocarSenha2").click(panelTeste.hide);
             $("##{rich:clientId('closeBtn')}").click(panelTeste.hide);
           });
-        </script>
+	</h:outputScript>
+  </ui:define>
+  <ui:define name="baseBody">
     <s:div id="pageBody" styleClass="loginPageBody">
       <div class="corpoSuperior" />
       <div class="corpoInferior" />

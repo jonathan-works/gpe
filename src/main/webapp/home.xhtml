@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- $Id: home.xhtml 704 2010-08-12 23:21:10Z jplacerda $ -->
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml"
+  xmlns:wi="http://www.itx.com.br/jsf">
 
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    template="/WEB-INF/xhtml/templates/template.xhtml"
-    xmlns:wi="http://www.itx.com.br/jsf">
+  <ui:define name="body">
 
-    <ui:define name="body">
+    <h:messages globalOnly="true" styleClass="message" />
 
-        <h:messages globalOnly="true" styleClass="message" />
-
-    </ui:define>
+  </ui:define>
 </ui:composition>
