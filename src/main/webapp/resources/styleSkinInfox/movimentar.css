@@ -2,7 +2,7 @@
 	width:100%;
 	height:calc(100% - 2px);
 }
-html, body {
+#html, #body {
 	height:100%;
 	margin:0;
 }
@@ -12,7 +12,6 @@ html, body {
 }
 .mp-help {
 	cursor:help;
-	float: right;
     top: -16px;
     position: relative;
 }
@@ -36,10 +35,20 @@ html, body {
 	height:85px;
 	display:inline-block;
 	background:transparent;
+	width:100%;
 }
 .tituloPagina.minimal {
 	height:25px;
 }
 .conteudo.minimal {
 	height:calc(100% - 129px);
+}
+.banner-rgt.minimal,.banner-lft.minimal {
+  display:inline-block;
+  width:calc(50% - 2px);
+}
+.banner-rgt.minimal,.painelUsuario-label.name.minimal {
+  text-align:right;
+  color:#FFF;
+  font-weight:900;
 }
