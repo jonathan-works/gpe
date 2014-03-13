@@ -40,14 +40,14 @@
     </h:outputScript>
     <h:outputScript rendered="#{processoHome.tab=='tabSaida'}">
       invoke([ "infox.Modal" ], function(Modal) {
-        console.log(Modal);
         var panelTeste = new Modal({
-          id : 'mp_taskNodeDescription'
+          id : "#{rich:clientId('mp_taskNodeDescription')}"
         });
-        $("#movimentarTabPanel\\:helpBtn").click(function show() {
+        $(".mp-help").click(function show() {
           panelTeste.show();
         });
-        $("#mp_taskNodeCloseBtn").click(function hide() {
+        
+        #{rich:jQuery('mp_taskNodeCloseBtn')}.click(function hide() {
           panelTeste.hide();
         });
       });
@@ -124,9 +124,6 @@
       <infox:tab id="tabSaida" name="tabSaida"
         rendered="#{processoHome.managed}" status=":status"
         title="Saída">
-
-        <h:graphicImage id="helpBtn" styleClass="mp-help"
-          value="#{a4jSkin.imgIconHelp}" />
 
         <c:if test="#{not taskPageAction.hasTaskPage}">
           <wi:form canEdit="true" formTitle="#{taskInstance.name}"

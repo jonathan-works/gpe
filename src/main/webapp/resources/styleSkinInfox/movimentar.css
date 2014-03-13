@@ -1,19 +1,11 @@
-.clean-pageBody {
-	width:100%;
-	height:calc(100% - 2px);
-}
-#html, #body {
-	height:100%;
-	margin:0;
-}
 .ui-widget-content {
 }
 .ui-tabs-panel.ui-widget-content.ui-corner-bottom {
 }
 .mp-help {
 	cursor:help;
-    top: -16px;
-    position: relative;
+    right: 28px;
+    position: absolute;
 }
 .mp-close {
 	cursor:pointer;
@@ -30,25 +22,4 @@
 }
 .applet-div.hidden {
 	visibility:hidden;
-}
-.banner.minimal {
-	height:85px;
-	display:inline-block;
-	background:transparent;
-	width:100%;
-}
-.tituloPagina.minimal {
-	height:25px;
-}
-.conteudo.minimal {
-	height:calc(100% - 129px);
-}
-.banner-rgt.minimal,.banner-lft.minimal {
-  display:inline-block;
-  width:calc(50% - 2px);
-}
-.banner-rgt.minimal,.painelUsuario-label.name.minimal {
-  text-align:right;
-  color:#FFF;
-  font-weight:900;
 }
