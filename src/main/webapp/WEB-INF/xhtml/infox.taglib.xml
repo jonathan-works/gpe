@@ -316,11 +316,6 @@
 		<source>tags/grid/dataTable.xhtml</source>
 	</tag>
 
-	<tag>
-		<tag-name>datalist</tag-name>
-		<source>tags/grid/datalist.xhtml</source>
-	</tag>
-
 	<!-- Columns --> 
 	
 	<tag>
