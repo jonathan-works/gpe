@@ -22,7 +22,7 @@
 
                 <wi:inputText id="#{rowId}Situacao"
                     label="#{messages['field.situacao']}"
-                    value="#{historicoModeloDocumentoCrudAction.selecionado.ativo ? 'Ativo' : 'Inativo'}"
+                    value="#{historicoModeloDocumentoCrudAction.selecionado.ativo ? messages['entity.ativo'] : messages['entity.inativo']}"
                     readonly="true" />
                 <s:div id="editorROModeloDocumento">
                     <wi:editor id="#{rowId}ModeloDocumento"
