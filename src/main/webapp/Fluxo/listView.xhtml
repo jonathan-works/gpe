@@ -97,7 +97,8 @@
                 value="#{fluxoCrudAction.instance.dataFimPublicacao}" />
             <wi:selectBooleanRadio id="publicado"
                 label="#{messages['fluxo.publicado']}"
-                value="#{fluxoCrudAction.instance.publicado}" />
+                value="#{fluxoCrudAction.instance.publicado}" 
+                disabled="#{not fluxoCrudAction.instance.publicado}"/>
             <wi:selectSituacaoRadio id="ativo"
                 label="#{messages['field.situacao']}"
                 value="#{fluxoCrudAction.instance.ativo}" />
