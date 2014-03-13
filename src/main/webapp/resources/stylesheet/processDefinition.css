@@ -1,14 +1,6 @@
 .pointer {
 	cursor:pointer;
 }
-.pageBody {
-	height:695px;
-}
-}
-html,body {
-	height:100%;
-	margin:0;
-}
 .pd-xml.textarea{
 	min-height:465px;
 	resize:none;
@@ -19,7 +11,7 @@ html,body {
 }
 
 .conteudo.minimal {
-	height:calc(100% - 100px);
+	height:calc(100% - 125px);
 }
 
  .swimlane-list,  .swimlane-form, .node-instance-e, .node-instance-l {

@@ -14,7 +14,7 @@
   <ui:param name="pageTitle" value="#{messages['processo.titlePage']}" />
   <ui:define name="title">#{pageTitle}</ui:define>
   <ui:define name="contentTitle">
-    </ui:define>
+  </ui:define>
   <ui:define name="scripts">
     <h:outputScript library="js/components" name="Modal.js" />
     <h:inputHidden id="taskCompleted"
@@ -65,7 +65,18 @@
     <h:outputStylesheet library="styleSkinInfox" name="movimentar.css" />
   </ui:define>
   <ui:define name="body">
-
+    <rich:collapsiblePanel expanded="false"
+      header="#{messages['processo.titleView']} #{processoHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoHome.instance.itemDoProcesso}"
+      switchType="client">
+      <ul>
+        <li class="hor-list-item">
+          <div>#{messages['processo.dataInicio']}</div> <span>#{processoHome.instance.dataInicio}</span>
+        </li>
+        <li class="hor-list-item">
+          <div>#{messages['processo.usuarioCadastroProcesso']}</div> <span>#{processoHome.instance.usuarioCadastroProcesso}</span>
+        </li>
+      </ul>
+    </rich:collapsiblePanel>
     <h:form>
 
       <a:jsFunction name="renderButtons" render="taskButtonsDiv" />
