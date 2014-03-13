@@ -2,6 +2,10 @@ package br.com.infox.util.time;
 
 import java.util.Date;
 
+/**
+ * @author erik
+ *
+ */
 public class DateRange {
     private long start;
     private long end;

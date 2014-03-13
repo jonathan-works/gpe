@@ -7,6 +7,12 @@ import java.util.Set;
 
 import br.com.infox.constants.WarningConstants;
 
+/**
+ * @author gabriel
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class LazyMap<K, V> implements Map<K, V> {
 
     private Map<K, V> wrapped;
