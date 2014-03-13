@@ -127,7 +127,7 @@
                         </rich:column>
                     </rich:dataTable>
                     <h:outputText
-                        value="Foram encontrados:  #{tempoMedioTarefaList.resultCount} resultados"
+                        value="#{messages['list.resultPrefix']} #{tempoMedioTarefaList.resultCount} #{messages['list.resultSufix']}"
                         styleClass="dt-res-count" />
                     <s:div
                         rendered="#{tempoMedioTarefaList.nextExists or tempoMedioTarefaList.previousExists}">
