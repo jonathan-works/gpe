@@ -35,7 +35,7 @@
                             <s:div
                                 rendered="#{wi:get(showButtons, true)}">
                                 <wi:commandButton id="searchButton"
-                                    value="Pesquisar"
+                                    value="#{messages['button.pesquisar']}"
                                     action="#{searchAction}"
                                     reRender="#{wi:get(searchReRender, 'pageBody')}">
                                     <a:param assignTo="#{bean.page}"

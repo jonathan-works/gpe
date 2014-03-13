@@ -6,7 +6,7 @@
 
     <wi:columnOutputText columnId="#{wi:get(columnId, 'ativo')}"
         value="#{row.ativo ? 'Ativo' : 'Inativo'}"
-        columnHeader="Situação"
+        columnHeader="#{messages['entity.situacao']}"
         columnStyle="text-align:center; #{columnStyle}"
         columnWidth="#{wi:get(columnWidth, '10%')}" />
 
