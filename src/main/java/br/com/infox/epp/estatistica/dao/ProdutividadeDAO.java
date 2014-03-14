@@ -139,7 +139,11 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
         produtividade.setPapel((String) o[INDEX_PAPEL]);
         produtividade.setQuantidadeTarefas(((BigInteger) o[INDEX_QUANTIDADE_TAREFAS]).longValue());
         produtividade.setTarefa((String) o[INDEX_TAREFA]);
-        produtividade.setTempoPrevisto(PrazoEnum.formatTempo((Integer) o[INDEX_TEMPO_PREVISTO], tipoPrazo));
+        Integer tempo = (Integer) o[INDEX_TEMPO_PREVISTO];
+        if (tempo != null) {
+            tempo *= 60;
+        }
+        produtividade.setTempoPrevisto(PrazoEnum.formatTempo(tempo, tipoPrazo));
         produtividade.setUsuario((String) o[INDEX_USUARIO]);
         return produtividade;
     }

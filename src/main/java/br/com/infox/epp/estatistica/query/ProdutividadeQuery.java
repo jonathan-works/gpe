@@ -9,7 +9,7 @@ public interface ProdutividadeQuery {
     String PARAM_START = "start";
     String PARAM_COUNT = "count";
 
-    String BASE_QUERY = "SELECT pet.nr_tempo_previsto, l.ds_localizacao, p.ds_nome, pes.nm_pessoa, "
+    String BASE_QUERY = "SELECT t.nr_prazo, l.ds_localizacao, p.ds_nome, pes.nm_pessoa, "
             + "	t.ds_tarefa, AVG(pet.nr_tempo_gasto) AS media_tempo_gasto, MIN(pet.nr_tempo_gasto) AS min_tempo_gasto,"
             + " MAX(pet.nr_tempo_gasto) AS max_tempo_gasto, COUNT(pet.id_processo_epa_tarefa) AS quantidade_tarefas,"
             + " t.tp_prazo"
@@ -23,7 +23,7 @@ public interface ProdutividadeQuery {
     String INNER_JOIN_FLUXO = " INNER JOIN tb_processo_epa proc ON (proc.id_processo = pet.id_processo)"
             + " INNER JOIN tb_natureza_categoria_fluxo ncf ON (ncf.id_natureza_categoria_fluxo = proc.id_natureza_categoria_fluxo)";
 
-    String GROUP_BY = " GROUP BY t.id_tarefa, pet.nr_tempo_previsto, l.ds_localizacao, p.ds_nome, pes.nm_pessoa";
+    String GROUP_BY = " GROUP BY t.id_tarefa, t.nr_prazo, l.ds_localizacao, p.ds_nome, pes.nm_pessoa";
 
     String ORDER_BY = " ORDER BY pes.nm_pessoa";
 
