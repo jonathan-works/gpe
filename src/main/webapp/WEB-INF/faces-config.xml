@@ -10,6 +10,8 @@
         <message-bundle>messages</message-bundle>
         <locale-config>
             <supported-locale>fr</supported-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>en_us</supported-locale>
             <default-locale>pt_BR</default-locale>
             
         </locale-config>
