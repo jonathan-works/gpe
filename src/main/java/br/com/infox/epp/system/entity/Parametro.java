@@ -33,7 +33,7 @@ public class Parametro implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idParametro;
+    private Integer idParametro;
     private String nomeVariavel;
     private String descricaoVariavel;
     private String valorVariavel;
@@ -41,7 +41,6 @@ public class Parametro implements java.io.Serializable {
     private Boolean sistema;
     private UsuarioLogin usuarioModificacao;
     private Boolean ativo;
-    private String esquemaTabelaId;
 
     public Parametro() {
     }
@@ -50,11 +49,11 @@ public class Parametro implements java.io.Serializable {
     @Id
     @GeneratedValue(generator = "generator")
     @Column(name = "id_parametro", unique = true, nullable = false)
-    public int getIdParametro() {
+    public Integer getIdParametro() {
         return this.idParametro;
     }
 
-    public void setIdParametro(int idParametro) {
+    public void setIdParametro(Integer idParametro) {
         this.idParametro = idParametro;
     }
 
@@ -135,19 +134,18 @@ public class Parametro implements java.io.Serializable {
         this.ativo = ativo;
     }
 
-    @Column(name = "ds_esquema_tabela_id", length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
-    @Size(max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
-    public String getEsquemaTabelaId() {
-        return this.esquemaTabelaId;
-    }
-
-    public void setEsquemaTabelaId(String esquemaTabelaId) {
-        this.esquemaTabelaId = esquemaTabelaId;
-    }
-
     @Override
     public String toString() {
         return nomeVariavel;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((idParametro == null) ? 0 : idParametro.hashCode());
+        return result;
     }
 
     @Override
@@ -162,17 +160,14 @@ public class Parametro implements java.io.Serializable {
             return false;
         }
         Parametro other = (Parametro) obj;
-        if (getIdParametro() != other.getIdParametro()) {
+        if (idParametro == null) {
+            if (other.idParametro != null) {
+                return false;
+            }
+        } else if (!idParametro.equals(other.idParametro)) {
             return false;
         }
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + getIdParametro();
-        return result;
-    }
 }

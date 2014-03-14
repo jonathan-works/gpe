@@ -16,6 +16,5 @@
 	<param name="dataAtualizacao" value="#{parametroList.entity.dataAtualizacao}" />
 	<param name="sistema" value="#{parametroList.entity.sistema}" />
 	<param name="usuarioModificacao" value="#{parametroList.entity.usuarioModificacao}" />
-	<param name="esquemaTabelaId" value="#{parametroList.entity.esquemaTabelaId}" />
 	
 </page>
