@@ -105,7 +105,7 @@
                 items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                 value="#{classificacaoDocumentoCrudAction.instance.inTipoDocumento}"
                 required="true"
-                noSelectionLabel="#{messages['comboBox.select']}" />
+                noSelectionLabel="#{messages['crud.select.select']}" />
             <wi:selectOneMenuEnum
                 id="visibilidade"
                 label="#{messages['tipoProcessoDocumento.visibilidade']}"
@@ -137,7 +137,7 @@
                     items="#{classificacaoDocumentoFacade.getTipoNumeracaoEnumValues()}"
                     value="#{classificacaoDocumentoCrudAction.instance.tipoNumeracao}"
                     required="true"
-                    noSelectionLabel="#{messages['comboBox.select']}" />
+                    noSelectionLabel="#{messages['crud.select.select']}" />
 
             </s:div>
             <wi:selectBooleanRadio
