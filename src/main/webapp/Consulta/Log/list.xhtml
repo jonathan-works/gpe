@@ -89,22 +89,26 @@
 
                     <wi:columnOutputText columnId="nomeEntidade"
                         columnHeader="#{messages['entidadeLog.nomeEntidade']}"
-                        value="#{row.nomeEntidade}" />
+                        value="#{row.nomeEntidade}"
+                        styleClass="left-column" />
                     <wi:columnOutputText columnId="idEntidade"
                         columnHeader="#{messages['entidadeLog.idEntidade']}"
-                        value="#{row.idEntidade}" />
+                        value="#{row.idEntidade}"
+                        styleClass="left-column" />
                     <wi:columnOutputText columnId="ip"
                         columnHeader="#{messages['entidadeLog.ip']}"
-                        value="#{row.ip}" />
+                        value="#{row.ip}" styleClass="left-column" />
                     <wi:columnDateTime columnId="dataLog"
                         columnHeader="#{messages['entidadeLog.dataLog']}"
-                        value="#{row.dataLog}" pattern="dd/MM/yy kk:mm" />
+                        value="#{row.dataLog}" pattern="dd/MM/yy kk:mm"
+                        styleClass="left-column" />
                     <wi:columnOutputText columnId="usuario"
                         columnHeader="#{messages['entidadeLog.usuario']}"
-                        value="#{row.usuario}" />
+                        value="#{row.usuario}" styleClass="left-column" />
                     <wi:columnEnum columnId="tipoOperacao"
                         columnHeader="#{messages['entidadeLog.tipoOperacao']}"
-                        value="#{row.tipoOperacao}" />
+                        value="#{row.tipoOperacao}"
+                        styleClass="left-column" />
                 </wi:dataTable>
             </rich:panel>
         </h:form>
