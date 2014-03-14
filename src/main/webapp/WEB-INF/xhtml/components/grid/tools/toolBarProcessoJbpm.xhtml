@@ -23,16 +23,16 @@
           draggingClass="caixa-drag"
           rejectClass="caixa-rejt"
         >
-          <span class="caixa-ind-lbl">Processo: #{row.numeroProcesso}</span>
+          <span class="caixa-ind-lbl">#{messages['processo.titlePage']}: #{row.numeroProcesso}</span>
         </rich:dragIndicator>
       </rich:dragSource>
 
-      <h:graphicImage url="/img/annotate.gif" title="Mover para caixa" />
+      <h:graphicImage url="/img/annotate.gif" title="#{messages['caixa.moverCaixa']}" />
 
     </a:outputPanel>
 
     <a:commandLink execute="@this" target="#{idProcesso}popUpFluxo"
-      onclick="window.open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+      onclick="open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 
       <f:param name="idProcesso" value="#{idProcesso}" />
 
@@ -44,7 +44,7 @@
 
     <a:commandLink execute="@this" rendered="#{empty owner}"
       target="#{idProcesso}popUpFluxo"
-      onclick="window.open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 
       <f:param name="idProcesso" value="#{idProcesso}" />
 
@@ -57,7 +57,7 @@
     <a:commandLink execute="@this"
       rendered="#{owner == authenticator.getUsuarioLogado()}"
       target="#{idProcesso}popUpFluxo"
-      onclick="window.open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 
       <f:param name="idProcesso" value="#{idProcesso}" />
 
@@ -74,12 +74,12 @@
     <a:commandLink
       action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}"
       execute="@this" render="painelProcessos, pageBodyDialogMessage"
-      onclick="if (!confirm('Liberar tarefa?')) return false;"
+      onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
       limitRender="true"
       rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and authenticator.isUsuarioAtualResponsavel())}">
 
       <h:graphicImage url="/img/role.gif"
-        title="Liberar tarefa bloqueada pelo servidor #{owner}" />
+        title="#{messages['painel.list.liberarTarefaServidor']} #{owner}" />
 
     </a:commandLink>
 

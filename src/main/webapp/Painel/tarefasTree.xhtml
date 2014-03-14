@@ -48,7 +48,9 @@
                 id="menuTaskNode"
                 rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
-                <rich:menuItem label="Nova caixa" icon="/img/add.gif"
+                <rich:menuItem
+                  label="#{messages['caixa.menu.novaCaixa']}"
+                  icon="/img/add.gif"
                   onclick="#{rich:component('novaCaixaPanel')}.show()" />
 
               </rich:contextMenu>
@@ -70,13 +72,13 @@
                   target="caixaNode"
                   rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
-                  <rich:menuItem label="Editar caixa"
+                  <rich:menuItem label="#{messages['caixa.menu.editaCaixa']}"
                     icon="/img/edit.gif"
                     action="#{painelUsuarioHome.editaCaixa()}" />
 
-                  <rich:menuItem label="Remover a caixa"
+                  <rich:menuItem label="#{messages['caixa.menu.removerCaixa']}"
                     icon="/img/remove.png"
-                    onclick="confirm('Confirma?')" render="tarefasDiv"
+                    onclick="return confirm(\'#{messages['caixa.confirm.remove']}\');" render="tarefasDiv"
                     action="#{caixaCrudAction.remove}">
 
                     <f:setPropertyActionListener

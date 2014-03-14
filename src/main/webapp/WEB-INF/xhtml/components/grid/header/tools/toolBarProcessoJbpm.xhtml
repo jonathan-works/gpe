@@ -8,7 +8,6 @@
   xmlns:s="http://jboss.org/schema/seam/taglib">
 
   <h:form>
-
     <a:outputPanel>
 
       <rich:dragSource type="task#{painelUsuarioHome.tarefaId}"
@@ -16,15 +15,13 @@
         dragIndicator="indicator">
         <rich:dragIndicator id="indicator" acceptClass="caixa-acpt"
           draggingClass="caixa-drag" rejectClass="caixa-rejt">
-          <span class="caixa-ind-lbl">Todos os Processos</span>
+          <span class="caixa-ind-lbl">#{messages['processo.caixa.todosProcessos']}</span>
         </rich:dragIndicator>
       </rich:dragSource>
-
       <h:graphicImage url="/img/multipleImages.gif"
-        title="Mover todos os processos para caixa" />
+        title="#{messages['processo.caixa.moverTodosProcessos']}" />
 
     </a:outputPanel>
-
   </h:form>
 
 </ui:composition>
