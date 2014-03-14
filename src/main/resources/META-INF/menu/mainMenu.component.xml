@@ -15,7 +15,7 @@
             <value>menu.documentos/menu.modeloDocumento/grupoModeloDocumento.menuText:/GrupoModeloDocumento/listView.seam</value>
             <value>menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>
             <value>menu.documentos/menu.modeloDocumento/modeloDocumento.menuText:/ModeloDocumento/listView.seam</value>
-            <value>menu.documentos/menu.modeloDocumento/twitterTemplate.menuText:/ModeloDocumento/TwitterTemplate/listView.xhtml</value>
+            <value>menu.documentos/menu.modeloDocumento/twitterTemplate.menuText:/ModeloDocumento/TwitterTemplate/listView.seam</value>
             <value>menu.documentos/tipoProcessoDocumento.menuText:/ClassificacaoDocumento/listView.seam</value>
             <value>menu.documentos/variavel.menuText:/Variavel/listView.seam</value>
             <value>menu.documentos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
