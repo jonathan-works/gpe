@@ -14,11 +14,11 @@
 .dtable {
     width: 100%;
 }
-html, body, .clean-pageBody {
+#html, #body, .clean-pageBody {
     height: 100%;
 }
 
-html, body {
+#html, #body {
     margin: 0;
 }
 
