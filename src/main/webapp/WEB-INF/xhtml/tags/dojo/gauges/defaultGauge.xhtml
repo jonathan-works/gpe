@@ -24,7 +24,7 @@
      -->
     <ui:param name="id" value="#{wi:get(id, 'default')}" />
     <ui:param name="value" value="#{wi:get(value,0)}" />
-    <script type="text/javascript">
+    <h:outputScript>
 	   	invoke(["infox.DefaultGauge"],function(DefaultGauge) {
 	   		DefaultGauge({
 	    	    id:"#{id}DefaultGauge",
@@ -42,19 +42,19 @@
 	    	    baseUrl:"#{pathResolver.getContextPath()}/resources/js/dojo/"
 	    	});
 	   	});
-    </script>
+    </h:outputScript>
     <div id="#{id}DefaultGaugeContainer" class="gaugeContainer">
         <div id="#{id}DefaultGaugeHeader" class="rf-p-h">#{label}</div>
         <div id="#{id}DefaultGauge" class="gauge"></div>
         <s:div id="gaugeAjaxDiv#{id}">
             <span>#{wi:get(indicatorLabel, '')}: #{value}</span>
-            <script type="text/javascript">
+            <h:outputScript>
 	        	invoke(["infox.DefaultGauge.instance.#{id}DefaultGauge"],function(Gauge) {
 		        	try {
 		        		Gauge.updateValue(#{value});
 		        	} catch(e) {}	        		
 	        	});
-			</script>
+			</h:outputScript>
         </s:div>
     </div>
 
