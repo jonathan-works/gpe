@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib">
 
-	<h:form>
-	
-		<a:outputPanel>
-		
-			<rich:dragSource type="task#{painelUsuarioHome.tarefaId}" dragValue="#{consultaProcessoEpaList.resultList}" />
-	
-    		<h:graphicImage url="/img/multipleImages.gif" title="Mover todos os processos para caixa" />
+  <h:form>
 
-		</a:outputPanel>
-    	
-	</h:form>
-	
+    <a:outputPanel>
+
+      <rich:dragSource type="task#{painelUsuarioHome.tarefaId}"
+        dragValue="#{consultaProcessoEpaList.resultList}"
+        dragIndicator="indicator">
+        <rich:dragIndicator id="indicator" acceptClass="caixa-acpt"
+          draggingClass="caixa-drag" rejectClass="caixa-rejt">
+          <span class="caixa-ind-lbl">Todos os Processos</span>
+        </rich:dragIndicator>
+      </rich:dragSource>
+
+      <h:graphicImage url="/img/multipleImages.gif"
+        title="Mover todos os processos para caixa" />
+
+    </a:outputPanel>
+
+  </h:form>
+
 </ui:composition>
