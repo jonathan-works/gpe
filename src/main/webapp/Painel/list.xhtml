@@ -1,142 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id: list.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:infox="http://www.infox.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-    <ui:param name="pageTitle" value="#{messages['painel.titlePage']}" />
-    <ui:define name="title">#{pageTitle}</ui:define>
+  <ui:param name="pageTitle" value="#{messages['painel.titlePage']}" />
+  <ui:define name="title">#{pageTitle}</ui:define>
 
-    <ui:define name="body">
-        <a:region>
-            <script>
+  <ui:define name="body">
+    <a:region>
+      <h:outputScript>
 				function atualizaPainelFluxo() {
 					location = '#{pathResolver.contextPath}/Painel/list.seam';
 				}
-			</script>
-            <div class="p-caixas">
-                <infox:tabPanel id="tabPainelUsuario" switchType="ajax"
-                    status=":status">
-                    <h:form>
-                        <infox:tabHeaders />
-                    </h:form>
-                    <infox:tab id="caixas" name="caixas"
-                        render="painelProcessos" limitRender="true"
-                        action="#{tarefasTree.clearTree()}"
-                        title="#{messages['caixa.tab']}">
-                        <s:div id="tarefasDiv">
-                            <ui:include src="tarefasTree.xhtml" />
-                        </s:div>
-                    </infox:tab>
-                </infox:tabPanel>
-            </div>
-            <s:div id="painelProcessos" styleClass="p-list">
-                <s:div id="processos"
-                    rendered="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}">
-
-                    <wi:dataTable
-                        values="#{consultaProcessoEpaList.list(10)}"
-                        bean="#{consultaProcessoEpaList}"
-                        styleClass="p-list-dtable"
-                        tableTitle="#{messages['consultaProcesso.processos']}"
-                        id="consultaProcessoEpaList"
-                        rowId="#{row.idProcesso}"
-                        searchFormStyleClass="p-list-search"
-                        panelStyleClass="p-list-panel" hideOrder="true">
-                        <ui:define name="searchForm">
-                            <wi:searchForm opened="false"
-                                formId="consultaProcessoForm"
-                                formTitle="#{messages['searchForm.title']}"
-                                searchReRender="painelProcessos"
-                                clearAction="consultaProcessoEpaList.newInstance()"
-                                clearReRender="painelProcessos">
-                                <wi:inputText id="numeroProcesso"
-                                    label="#{messages['consultaProcesso.numeroProcesso']}"
-                                    value="#{consultaProcessoEpaList.entity.numeroProcesso}" />
-                                <wi:inputDataPeriodo id="periodo"
-                                    label="Período"
-                                    valueDateFrom="#{consultaProcessoEpaList.dataInicio}"
-                                    valueDateTo="#{consultaProcessoEpaList.dataFim}" />
-                                <wi:selectOneMenuEntity id="natureza"
-                                    label="#{messages['natureza.tableTitle']}"
-                                    value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.natureza}"
-                                    noSelectionLabel="#{messages['crud.select.select']}"
-                                    items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-                                <wi:selectOneMenuEntity id="categoria"
-                                    label="#{messages['categoria.tableTitle']}"
-                                    value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}"
-                                    noSelectionLabel="#{messages['crud.select.select']}"
-                                    inNewLine="true"
-                                    items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-                            </wi:searchForm>
-                        </ui:define>
-                        <wi:columnOutputText columnId="numeroProcesso"
-                            columnHeader="#{messages['consultaProcesso.numeroProcesso']}"
-                            value="#{row.numeroProcesso}" />
-                        <wi:columnOutputText
-                            columnId="usuarioSolicitante"
-                            columnHeader="#{messages['consultaProcesso.usuarioCadastroProcesso']}"
-                            value="#{row.usuarioCadastroProcesso}" />
-                        <wi:columnDateTime columnId="dataInicio"
-                            columnHeader="#{messages['consultaProcesso.dataInicio']}"
-                            value="#{row.dataInicio}" />
-                        <wi:columnOutputText columnId="natureza"
-                            columnHeader="#{messages['consultaProcesso.natureza']}"
-                            value="#{row.naturezaCategoriaFluxo.natureza}" />
-                        <wi:columnOutputText columnId="categoria"
-                            columnHeader="#{messages['consultaProcesso.categoria']}"
-                            value="#{row.naturezaCategoriaFluxo.categoria}" />
-                        <wi:columnOutputText columnId="itemDoProcesso"
-                            columnHeader="#{messages['consultaProcesso.item']}"
-                            value="#{row.itemDoProcesso}" />
-                        <wi:columnOutputText
-                            columnId="prioridadeProcesso"
-                            columnHeader="#{messages['prioridadeProcesso.tableTitle']}"
-                            value="#{row.prioridadeProcesso}" />
-
-                        <infox:dynamicColumns
-                            columns="#{painelUsuarioHome.dynamicColumns}" />
-
-                        <ui:define name="headerToolBar">
-                            <ui:include
-                                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
-                        </ui:define>
-                        <ui:define name="toolBar">
-                            <ui:include
-                                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml" />
-                        </ui:define>
-                    </wi:dataTable>
-                </s:div>
+			</h:outputScript>
+      <div class="p-caixas">
+        <infox:tabPanel id="tabPainelUsuario" switchType="ajax"
+          status=":status">
+          <h:form>
+            <infox:tabHeaders />
+          </h:form>
+          <infox:tab id="caixas" name="caixas" render="painelProcessos"
+            limitRender="true" action="#{tarefasTree.clearTree()}"
+            title="#{messages['caixa.tab']}">
+            <s:div id="tarefasDiv">
+              <ui:include src="tarefasTree.xhtml" />
             </s:div>
+          </infox:tab>
+        </infox:tabPanel>
+      </div>
+      <s:div id="painelProcessos" styleClass="p-list">
+        <s:div id="processos"
+          rendered="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}">
 
-            <rich:popupPanel id="novaCaixaPanel" height="120" left="40">
-                <f:facet name="header">
-                    <h:outputText
-                        value="#{messages['caixa.titleNovaCaixa']}" />
-                </f:facet>
-                <f:facet name="controls">
-                    <span
-                        onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
-                </f:facet>
-                <h:form id="modalForm">
-                    <wi:inputText id="nomeCaixa"
-                        label="#{messages['caixa.nomeCaixa']}"
-                        value="#{caixaCrudAction.instance.nomeCaixa}" />
-                    <a:commandButton value="#{messages['crud.persist']}"
-                        styleClass="buttons"
-                        action="#{caixaCrudAction.addCaixa(painelUsuarioHome.tarefaId)}"
-                        oncomplete="#{rich:component('novaCaixaPanel')}.hide()"
-                        render="tarefasDiv,painelProcessos" />
-                </h:form>
-            </rich:popupPanel>
-        </a:region>
-    </ui:define>
+          <wi:dataTable values="#{consultaProcessoEpaList.list(10)}"
+            bean="#{consultaProcessoEpaList}" styleClass="p-list-dtable"
+            tableTitle="#{messages['consultaProcesso.processos']}"
+            id="consultaProcessoEpaList" rowId="#{row.idProcesso}"
+            searchFormStyleClass="p-list-search"
+            panelStyleClass="p-list-panel" hideOrder="true">
+            <ui:define name="searchForm">
+              <wi:searchForm opened="false"
+                formId="consultaProcessoForm"
+                formTitle="#{messages['searchForm.title']}"
+                searchReRender="painelProcessos"
+                clearAction="consultaProcessoEpaList.newInstance()"
+                clearReRender="painelProcessos">
+                <wi:inputText id="numeroProcesso"
+                  label="#{messages['consultaProcesso.numeroProcesso']}"
+                  value="#{consultaProcessoEpaList.entity.numeroProcesso}" />
+                <wi:inputDataPeriodo id="periodo" label="Período"
+                  valueDateFrom="#{consultaProcessoEpaList.dataInicio}"
+                  valueDateTo="#{consultaProcessoEpaList.dataFim}" />
+                <wi:selectOneMenuEntity id="natureza"
+                  label="#{messages['natureza.tableTitle']}"
+                  value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.natureza}"
+                  noSelectionLabel="#{messages['crud.select.select']}"
+                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
+                <wi:selectOneMenuEntity id="categoria"
+                  label="#{messages['categoria.tableTitle']}"
+                  value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}"
+                  noSelectionLabel="#{messages['crud.select.select']}"
+                  inNewLine="true"
+                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+              </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="numeroProcesso"
+              columnHeader="#{messages['consultaProcesso.numeroProcesso']}"
+              value="#{row.numeroProcesso}" />
+            <wi:columnOutputText columnId="usuarioSolicitante"
+              columnHeader="#{messages['consultaProcesso.usuarioCadastroProcesso']}"
+              value="#{row.usuarioCadastroProcesso}" />
+            <wi:columnDateTime columnId="dataInicio"
+              columnHeader="#{messages['consultaProcesso.dataInicio']}"
+              value="#{row.dataInicio}" />
+            <wi:columnOutputText columnId="natureza"
+              columnHeader="#{messages['consultaProcesso.natureza']}"
+              value="#{row.naturezaCategoriaFluxo.natureza}" />
+            <wi:columnOutputText columnId="categoria"
+              columnHeader="#{messages['consultaProcesso.categoria']}"
+              value="#{row.naturezaCategoriaFluxo.categoria}" />
+            <wi:columnOutputText columnId="itemDoProcesso"
+              columnHeader="#{messages['consultaProcesso.item']}"
+              value="#{row.itemDoProcesso}" />
+            <wi:columnOutputText columnId="prioridadeProcesso"
+              columnHeader="#{messages['prioridadeProcesso.tableTitle']}"
+              value="#{row.prioridadeProcesso}" />
+
+            <infox:dynamicColumns
+              columns="#{painelUsuarioHome.dynamicColumns}" />
+
+            <ui:define name="headerToolBar">
+              <ui:include
+                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
+            </ui:define>
+            <ui:define name="toolBar">
+              <ui:include
+                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml" />
+            </ui:define>
+          </wi:dataTable>
+        </s:div>
+      </s:div>
+
+      <rich:popupPanel id="novaCaixaPanel" height="120" left="40">
+        <f:facet name="header">
+          <h:outputText value="#{messages['caixa.titleNovaCaixa']}" />
+        </f:facet>
+        <f:facet name="controls">
+          <span onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
+        </f:facet>
+        <h:form id="modalForm">
+          <wi:inputText id="nomeCaixa"
+            label="#{messages['caixa.nomeCaixa']}"
+            value="#{caixaCrudAction.instance.nomeCaixa}" />
+          <a:commandButton value="#{messages['crud.persist']}"
+            styleClass="buttons"
+            action="#{caixaCrudAction.addCaixa(painelUsuarioHome.tarefaId)}"
+            oncomplete="#{rich:component('novaCaixaPanel')}.hide()"
+            render="tarefasDiv,painelProcessos" />
+        </h:form>
+      </rich:popupPanel>
+    </a:region>
+  </ui:define>
 </ui:composition>
