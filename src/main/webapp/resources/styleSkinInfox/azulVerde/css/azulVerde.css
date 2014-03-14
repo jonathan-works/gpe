@@ -114,3 +114,26 @@
 .login-lbl {
     color: #616161;
 }
+.ui-draggable:after {
+}
+.rf-tr-nd.rf-drp-hvr {
+  /*background-color:#FFFF00;*/
+}
+.rf-tr-nd.rf-drp-hlight {
+  border:1px solid #5B7961;
+}
+.caixa-drag {
+  border:1px solid #5B7961;
+  background-color:#D4F2D6;
+  color:#5B7961;
+  cursor:all-scroll;
+}
+.caixa-drag:before {
+  content:url("/epp/img/dragDropDefault.gif");
+}
+.caixa-drag.caixa-acpt:before {
+  content:url("/epp/img/dragDropAccept.gif")
+}
+.caixa-drag.caixa-rejt:before {
+  content:url("/epp/img/dragDropReject.gif")
+}
