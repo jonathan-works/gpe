@@ -28,7 +28,8 @@ import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.pessoa.entity.Pessoa;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
@@ -57,15 +58,18 @@ public class IniciarProcessoAction {
         enviarProcessoParaJbpm();
     }
 
-    public void iniciarProcesso(List<Pessoa> pessoas) {
+    public void iniciarProcesso(List<PessoaFisica> pessoasFisicas, List<PessoaJuridica> pessoasJuridicas) {
         newProcessoEpa();
-        inserirPartes(pessoas);
+        inserirPartes(pessoasFisicas, pessoasJuridicas);
         enviarProcessoParaJbpm();
     }
 
-    private void inserirPartes(List<Pessoa> pessoas) {
+    private void inserirPartes(List<PessoaFisica> pessoasFisicas, List<PessoaJuridica> pessoasJuridicas) {
         if (necessitaPartes()) {
-            for (Pessoa p : pessoas) {
+            for (PessoaFisica p : pessoasFisicas) {
+                processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
+            }
+            for (PessoaJuridica p : pessoasJuridicas) {
                 processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
             }
         }

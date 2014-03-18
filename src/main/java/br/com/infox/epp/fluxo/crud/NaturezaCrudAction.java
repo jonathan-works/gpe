@@ -12,6 +12,12 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "naturezaCrudAction";
+    
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        getInstance().setHasPartes(false);
+    }
 
     @Override
     protected boolean isInstanceValid() {
@@ -22,7 +28,7 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
         }
         if (hasPartes) {
             return natureza.getTipoPartes() != null
-                    && natureza.getNumeroPartes() != null;
+                    && natureza.getNumeroPartesFisicas() != null;
         } else {
             return true;
         }
@@ -33,7 +39,12 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
         final Natureza natureza = getInstance();
         if (!natureza.getHasPartes()) {
             natureza.setTipoPartes(null);
-            natureza.setNumeroPartes(null);
+            natureza.setNumeroPartesFisicas(null);
+            natureza.setNumeroPartesJuridicas(null);
+        } else if (natureza.apenasPessoaFisica()) {
+            natureza.setNumeroPartesJuridicas(null);
+        } else if (natureza.apenasPessoaJuridica()) {
+            natureza.setNumeroPartesFisicas(null);
         }
     }
 

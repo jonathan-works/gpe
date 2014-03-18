@@ -63,7 +63,7 @@
                 label="#{messages['natureza.hasPartes']}"
                 value="#{naturezaCrudAction.instance.hasPartes}"
                 disabled="#{naturezaCrudAction.instance.locked}">
-                <a:ajax event="change" render="partesDiv"
+                <a:ajax event="change" render="partesDiv, numeroPartesDiv"
                     limitRender="true" status=":status" execute="@this" />
             </wi:selectBooleanRadio>
             <wi:selectSituacaoRadio id="ativo"
@@ -77,13 +77,26 @@
                     value="#{naturezaCrudAction.instance.tipoPartes}"
                     required="true" noSelectionLabel="Selecione... "
                     disabled="#{naturezaCrudAction.instance.locked}"
-                    rendered="#{naturezaCrudAction.instance.hasPartes}" />
-                <wi:inputNumber id="numeroPartes"
-                    label="#{messages['natureza.numeroPartes']}"
+                    rendered="#{naturezaCrudAction.instance.hasPartes}">
+                    <a:ajax event="change"
+                        render="numeroPartesDiv"
+                        limitRender="true" status=":status"
+                        execute="@this" />
+                </wi:selectOneMenuEnum>
+            </s:div>
+            <s:div id="numeroPartesDiv">
+                <wi:inputNumber id="numeroPartesFisicas"
+                    label="#{messages['natureza.numeroPartesFisicas']}"
                     required="true"
-                    value="#{naturezaCrudAction.instance.numeroPartes}"
+                    value="#{naturezaCrudAction.instance.numeroPartesFisicas}"
                     disabled="#{naturezaCrudAction.instance.locked}"
-                    rendered="#{naturezaCrudAction.instance.hasPartes}" />
+                    rendered="#{naturezaCrudAction.instance.hasPartes and !naturezaCrudAction.instance.apenasPessoaJuridica()}" />
+                <wi:inputNumber id="numeroPartesJuridicas"
+                    label="#{messages['natureza.numeroPartesJuridicas']}"
+                    required="true"
+                    value="#{naturezaCrudAction.instance.numeroPartesJuridicas}"
+                    disabled="#{naturezaCrudAction.instance.locked}"
+                    rendered="#{naturezaCrudAction.instance.hasPartes and !naturezaCrudAction.instance.apenasPessoaFisica()}" />
             </s:div>
         </wi:dataForm>
     </ui:define>

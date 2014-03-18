@@ -9,7 +9,8 @@ import static br.com.infox.epp.fluxo.query.NaturezaQuery.DESCRICAO_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.ID_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.LOCKED;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.NATUREZA_ATTRIBUTE;
-import static br.com.infox.epp.fluxo.query.NaturezaQuery.NUMERO_PARTES;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.NUMERO_PARTES_FISICAS;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.NUMERO_PARTES_JURIDICAS;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.OBRIGATORIO_PARTES;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.SEQUENCE_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.TABLE_NATUREZA;
@@ -44,7 +45,8 @@ public class Natureza implements java.io.Serializable {
     private String natureza;
     private Boolean hasPartes;
     private ParteProcessoEnum tipoPartes;
-    private Integer numeroPartes;
+    private Integer numeroPartesFisicas;
+    private Integer numeroPartesJuridicas;
     private Boolean locked = Boolean.FALSE;
     private Boolean ativo;
 
@@ -59,7 +61,7 @@ public class Natureza implements java.io.Serializable {
         this.natureza = natureza;
         this.hasPartes = hasPartes;
         this.tipoPartes = tipoPartes;
-        this.numeroPartes = numeroPartes;
+        this.numeroPartesFisicas = numeroPartes;
         this.ativo = ativo;
     }
 
@@ -105,13 +107,22 @@ public class Natureza implements java.io.Serializable {
         this.tipoPartes = tipoPartes;
     }
 
-    @Column(name = NUMERO_PARTES)
-    public Integer getNumeroPartes() {
-        return numeroPartes;
+    @Column(name = NUMERO_PARTES_FISICAS)
+    public Integer getNumeroPartesFisicas() {
+        return numeroPartesFisicas;
     }
 
-    public void setNumeroPartes(Integer numeroPartes) {
-        this.numeroPartes = numeroPartes;
+    public void setNumeroPartesFisicas(Integer numeroPartesFisicas) {
+        this.numeroPartesFisicas = numeroPartesFisicas;
+    }
+    
+    @Column(name = NUMERO_PARTES_JURIDICAS)
+    public Integer getNumeroPartesJuridicas(){
+        return numeroPartesJuridicas;
+    }
+    
+    public void setNumeroPartesJuridicas(Integer numeroPartesJuridicas) {
+        this.numeroPartesJuridicas = numeroPartesJuridicas;
     }
 
     @Column(name = LOCKED, nullable = false)
@@ -174,6 +185,14 @@ public class Natureza implements java.io.Serializable {
             return false;
         }
         return true;
+    }
+    
+    public boolean apenasPessoaFisica() {
+        return ParteProcessoEnum.F.equals(getTipoPartes());
+    }
+
+    public boolean apenasPessoaJuridica() {
+        return ParteProcessoEnum.J.equals(getTipoPartes());
     }
 
 }

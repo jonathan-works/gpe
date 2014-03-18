@@ -42,7 +42,7 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
             crudActions.setEntityValue("natureza", entity.getNatureza()); //*
             crudActions.setEntityValue("hasPartes", entity.getHasPartes());
             crudActions.setEntityValue("tipoPartes", entity.getTipoPartes());
-            crudActions.setEntityValue("numeroPartes", entity.getNumeroPartes());
+            crudActions.setEntityValue("numeroPartes", entity.getNumeroPartesFisicas());
             crudActions.setEntityValue("ativo", entity.getAtivo());
         }
     };

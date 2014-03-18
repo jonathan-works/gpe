@@ -12,7 +12,6 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Natureza;
-import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
@@ -26,7 +25,8 @@ public class PartesController extends AbstractPartesController {
     private static final LogProvider LOG = Logging.getLogProvider(PartesController.class);
 
     private Natureza natureza;
-    private List<Pessoa> pessoas = new ArrayList<>();
+    private List<PessoaFisica> pessoasFisicas = new ArrayList<>();
+    private List<PessoaJuridica> pessoasJuridicas = new ArrayList<PessoaJuridica>();
 
     @In
     private PessoaFisicaManager pessoaFisicaManager;
@@ -41,19 +41,27 @@ public class PartesController extends AbstractPartesController {
         this.natureza = natureza;
     }
 
-    public List<Pessoa> getPessoas() {
-        return pessoas;
+    public List<PessoaFisica> getPessoasFisicas() {
+        return pessoasFisicas;
     }
 
-    public void setPessoas(List<Pessoa> pessoas) {
-        this.pessoas = pessoas;
+    public void setPessoasFisicas(List<PessoaFisica> pessoas) {
+        this.pessoasFisicas = pessoas;
+    }
+
+    public List<PessoaJuridica> getPessoasJuridicas() {
+        return pessoasJuridicas;
+    }
+
+    public void setPessoasJuridicas(List<PessoaJuridica> pessoasJuridicas) {
+        this.pessoasJuridicas = pessoasJuridicas;
     }
 
     @Override
     public void includePessoaFisica() {
         try {
             pessoaFisicaManager.persist(getPessoaFisica());
-            includePessoa(getPessoaFisica());
+            includePessoaFisica(getPessoaFisica());
         } catch (DAOException e) {
             LOG.error("Não foi possível inserir a pessoa " + getPessoaFisica(), e);
         } finally {
@@ -65,7 +73,7 @@ public class PartesController extends AbstractPartesController {
     public void includePessoaJuridica() {
         try {
             pessoaJuridicaManager.persist(getPessoaJuridica());
-            includePessoa(getPessoaJuridica());
+            includePessoaJuridica(getPessoaJuridica());
         } catch (DAOException e) {
             LOG.error("Não foi possível inserir a pessoa "
                     + getPessoaJuridica(), e);
@@ -84,24 +92,47 @@ public class PartesController extends AbstractPartesController {
         return ParteProcessoEnum.J.equals(getNatureza().getTipoPartes());
     }
 
-    private void includePessoa(Pessoa pessoa) {
-        if (!pessoas.contains(pessoa)) {
-            pessoas.add(pessoa);
+    private void includePessoaFisica(PessoaFisica pessoa) {
+        if (!pessoasFisicas.contains(pessoa)) {
+            pessoasFisicas.add(pessoa);
         } else {
             FacesMessages.instance().add(Severity.WARN, pessoa
                     + "já cadastrada na lista de partes");
         }
     }
 
-    public void removePessoa(Pessoa pessoa) {
-        pessoas.remove(pessoa);
+    public void removePessoaFisica(PessoaFisica pessoa) {
+        pessoasFisicas.remove(pessoa);
+    }
+    
+    private void includePessoaJuridica(PessoaJuridica pessoa) {
+        if (!getPessoasJuridicas().contains(pessoa)) {
+            getPessoasJuridicas().add(pessoa);
+        } else {
+            FacesMessages.instance().add(Severity.WARN, pessoa
+                    + "já cadastrada na lista de partes");
+        }
+    }
+
+    public void removePessoaJuridica(PessoaJuridica pessoa) {
+        getPessoasJuridicas().remove(pessoa);
     }
 
     @Override
-    public boolean podeAdicionarPartes() {
+    public boolean podeAdicionarPartesFisicas() {
+        return hasPartes()
+                && (natureza.getNumeroPartesFisicas() == 0 || pessoasFisicas.size() < natureza.getNumeroPartesFisicas());
+    }
+
+    @Override
+    public boolean podeAdicionarPartesJuridicas() {
+        return hasPartes()
+                && (natureza.getNumeroPartesJuridicas() == 0 || getPessoasJuridicas().size() < natureza.getNumeroPartesJuridicas());
+    }
+
+    private boolean hasPartes() {
         return natureza != null
-                && natureza.getHasPartes()
-                && (natureza.getNumeroPartes() == 0 || pessoas.size() < natureza.getNumeroPartes());
+                && natureza.getHasPartes();
     }
 
 }

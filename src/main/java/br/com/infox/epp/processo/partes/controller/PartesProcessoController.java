@@ -101,9 +101,9 @@ public class PartesProcessoController extends AbstractPartesController {
     }
 
     @Override
-    public boolean podeAdicionarPartes() {
+    public boolean podeAdicionarPartesFisicas() {
         return getNatureza().getHasPartes()
-                && (getNatureza().getNumeroPartes() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas().size() < getNatureza().getNumeroPartes());
+                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas().size() < getNatureza().getNumeroPartesFisicas());
     }
 
     public boolean podeInativarPartes() {
@@ -118,6 +118,12 @@ public class PartesProcessoController extends AbstractPartesController {
             }
         }
         return partesAtivas;
+    }
+
+    @Override
+    public boolean podeAdicionarPartesJuridicas() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
