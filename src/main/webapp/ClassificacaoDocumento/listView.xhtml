@@ -106,13 +106,6 @@
                 value="#{classificacaoDocumentoCrudAction.instance.inTipoDocumento}"
                 required="true"
                 noSelectionLabel="#{messages['crud.select.select']}" />
-            <wi:selectOneMenuEnum
-                id="visibilidade"
-                label="#{messages['tipoProcessoDocumento.visibilidade']}"
-                items="#{classificacaoDocumentoFacade.getVisibilidadeEnumValues()}"
-                value="#{classificacaoDocumentoCrudAction.instance.visibilidade}"
-                required="true"
-                noSelectionLabel="Selecione..." />
             <wi:selectOneRadio
                 id="numera"
                 label="#{messages['tipoProcessoDocumento.numera']}"

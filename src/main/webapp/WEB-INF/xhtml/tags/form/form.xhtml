@@ -11,12 +11,6 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-                <script type="text/javascript">
-                    window.addEventListener("load", function() {
-                        alert("Remover a referência para este menu");
-                    });
-                </script>
-
     <c:if test="#{! empty form}">
         <ui:param name="formId"
             value="#{empty formId ? form.formId.concat('Form') : formId}" />
