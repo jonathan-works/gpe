@@ -10,7 +10,7 @@ import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 
 @Scope(ScopeType.CONVERSATION)
-abstract class AbstractPartesController {
+public abstract class AbstractPartesController {
 
     private PessoaFisica pessoaFisica = new PessoaFisica();
     private PessoaJuridica pessoaJuridica = new PessoaJuridica();
