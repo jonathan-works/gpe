@@ -20,24 +20,24 @@
   </ui:define>
   <ui:define name="scripts">
     <h:outputScript library="js/components" name="Modal.js" />
-    <h:outputScript>
-          invoke([ "infox.Modal" ], function(Modal) {
-            $("#btnTrocar").click(
-                function() {
-                  var isHidden = $(".novaSenha").toggleClass("visible").is(
-                      ':hidden');
-                  $("#btnTrocar").val(
-                      isHidden ? "#{messages['login.trocarSenhaBtn']}"
-                          : "#{messages['login.naoTrocarSenhaBtn']}");
-                  $(".input_login.passwd").val('');
-                });
-            var panelTeste = new Modal({
-              id : 'panelTeste'
-            });
-            $("#btnTrocarSenha").click(panelTeste.show);
-            $("#btnTrocarSenha2").click(panelTeste.hide);
-            $("##{rich:clientId('closeBtn')}").click(panelTeste.hide);
-          });
+    <h:outputScript target="body">
+      invoke([ "infox.Modal" ], function(Modal) {
+        var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
+        function toggleButton() {
+          $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{messages['login.trocarSenhaBtn']}" : "#{messages['login.naoTrocarSenhaBtn']}");
+          $(".input_login.passwd").val("");
+        }
+        function showPanel() {
+          requestPasswordPanel.show();
+        }
+        function hidePanel() {
+          requestPasswordPanel.hide();
+        }
+        $("#btnTrocar").click(toggleButton);
+        $("#btnTrocarSenha").click(showPanel);
+        $("#btnTrocarSenha2").click(hidePanel);
+        $("##{rich:clientId('closeBtn')}").click(hidePanel);
+      });
 	</h:outputScript>
   </ui:define>
   <ui:define name="baseBody">
@@ -146,7 +146,7 @@
 
       </h:form>
 
-      <rich:popupPanel id="panelTeste" width="370" height="255">
+      <rich:popupPanel id="requestPasswordPanel" width="370" height="255">
         <f:facet name="header">#{messages['login.requisitarSenha']}</f:facet>
         <f:facet name="controls">
           <h:panelGroup>
