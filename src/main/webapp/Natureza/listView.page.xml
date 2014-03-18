@@ -10,5 +10,9 @@ login-required="true">
     <param name="id" value="#{naturezaCrudAction.id}"
     converterId="integerConverter" />
     <param name="tab" value="#{naturezaCrudAction.tab}" />
+    <action execute="#{naturezaCategoriaFluxoCrudAction.instance.setNatureza(naturezaCrudAction.instance)}"
+    if="#{naturezaCrudAction.tab eq 'naturezaCategoriaFluxoTab'}"/>
+    <action execute="#{naturezaCategoriaFluxoList.entity.setNatureza(naturezaCrudAction.instance)}"
+    if="#{naturezaCrudAction.tab eq 'naturezaCategoriaFluxoTab'}"/>
 
 </page>

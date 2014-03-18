@@ -10,7 +10,6 @@
             <value>menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
             <value>menu.fluxos/item.menuText:/Item/listView.seam</value>
             <value>menu.fluxos/natureza.menuText:/Natureza/listView.seam</value>
-            <value>menu.fluxos/naturezaCategoriaFluxo.menuText:/NaturezaCategoriaFluxo/listView.seam</value>
             
             <value>menu.documentos/menu.modeloDocumento/grupoModeloDocumento.menuText:/GrupoModeloDocumento/listView.seam</value>
             <value>menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>
@@ -19,9 +18,6 @@
             <value>menu.documentos/tipoProcessoDocumento.menuText:/ClassificacaoDocumento/listView.seam</value>
             <value>menu.documentos/variavel.menuText:/Variavel/listView.seam</value>
             <value>menu.documentos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
-            
-            <value>menu.cadBasicos/pessoaFisica.menuText:/PessoaFisica/listView.seam</value>
-            <value>menu.cadBasicos/pessoaJuridica.menuText:/PessoaJuridica/listView.seam</value>
             
             <value>menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>
             <value>menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
