@@ -12,5 +12,11 @@ public class NaturezaCategoriaFluxoCrudAction extends AbstractCrudAction<Naturez
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "naturezaCategoriaFluxoCrudAction";
+    
+    @Override
+    protected void afterSave(String ret) {
+        super.afterSave(ret);
+        newInstance();
+    }
 
 }

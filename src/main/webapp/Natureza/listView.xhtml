@@ -7,6 +7,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
@@ -56,8 +57,8 @@
             formTitle="#{messages['form.title']}">
             <wi:inputText id="natureza"
                 value="#{naturezaCrudAction.instance.natureza}"
-                required="true" label="#{messages['natureza.natureza']}" 
-                disabled="#{naturezaCrudAction.instance.locked}"/>
+                required="true" label="#{messages['natureza.natureza']}"
+                disabled="#{naturezaCrudAction.instance.locked}" />
             <wi:selectBooleanRadio id="hasPartes"
                 label="#{messages['natureza.hasPartes']}"
                 value="#{naturezaCrudAction.instance.hasPartes}"
@@ -68,8 +69,8 @@
             <wi:selectSituacaoRadio id="ativo"
                 label="#{messages['field.situacao']}"
                 value="#{naturezaCrudAction.instance.ativo}" />
-                
-            <s:div id="partesDiv" >
+
+            <s:div id="partesDiv">
                 <wi:selectOneMenuEnum id="tipoDasPartes"
                     label="#{messages['natureza.tipoDasPartes']}"
                     items="#{naturezaCrudAction.getTiposDePartes()}"
@@ -82,9 +83,66 @@
                     required="true"
                     value="#{naturezaCrudAction.instance.numeroPartes}"
                     disabled="#{naturezaCrudAction.instance.locked}"
-                    rendered="#{naturezaCrudAction.instance.hasPartes}"/>
+                    rendered="#{naturezaCrudAction.instance.hasPartes}" />
             </s:div>
         </wi:dataForm>
+    </ui:define>
+
+    <ui:define name="tabs">
+        <infox:tab id="naturezaCategoriaFluxoTab"
+            rendered="#{naturezaCrudAction.isManaged()}"
+            title="#{messages['naturezaCategoriaFluxo.titleTab']}"
+            name="naturezaCategoriaFluxoTab"
+            action="#{naturezaCategoriaFluxoCrudAction.instance.setNatureza(naturezaCrudAction.instance)}">
+            <s:div id="naturezaCategoriaFluxoFormDiv">
+                <wi:dataForm formId="naturezaCategoriaFluxoForm"
+                    formTitle="#{messages['form.title']} - #{naturezaCrudAction.instance.natureza}">
+                    <wi:selectOneMenuEntity id="categorias"
+                        label="#{messages['naturezaCategoriaFluxo.categoria']}"
+                        value="#{naturezaCategoriaFluxoCrudAction.instance.categoria}"
+                        required="true"
+                        items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}"
+                        inactiveCond="#{not item.ativo}"
+                        noSelectionLabel="#{messages['crud.select.select']}" />
+                    <wi:selectOneMenuEntity id="fluxo"
+                        label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+                        value="#{naturezaCategoriaFluxoCrudAction.instance.fluxo}"
+                        required="true"
+                        items="#{naturezaCategoriaFluxoFacade.getFluxoList()}"
+                        inactiveCond="#{not item.ativo}"
+                        noSelectionLabel="#{messages['crud.select.select']}" />
+                    <ui:define name="buttons">
+                        <wi:commandButton id="saveButton"
+                            action="naturezaCategoriaFluxoCrudAction.save()"
+                            reRender="naturezaCategoriaFluxoFormDiv, naturezaCategoriaFluxoDiv, naturezaCategoriaFluxoTab"
+                            value="#{messages['crud.persist']}" />
+                    </ui:define>
+                </wi:dataForm>
+            </s:div>
+            <s:div id="naturezaCategoriaFluxoDiv">
+                <wi:dataTable id="naturezaCategoriaFluxoTable"
+                    values="#{naturezaCategoriaFluxoList.list(15)}"
+                    bean="#{naturezaCategoriaFluxoList}"
+                    tableTitle="#{messages['naturezaCategoriaFluxo.titleDataTable']} - #{naturezaCrudAction.instance.natureza}"
+                    var="row" rows="10">
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <wi:toolBarRemove id="toolBarRemove"
+                            reRender="naturezaCategoriaFluxoFormDiv, naturezaCategoriaFluxoDiv"
+                            actionRemove="naturezaCategoriaFluxoCrudAction.remove(row)" />
+                    </ui:define>
+                    <wi:columnOutputText columnId="categoria"
+                        columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+                        value="#{row.categoria}" hideOrder="true"
+                        styleClass="rf-dt-c-left" />
+                    <wi:columnOutputText columnId="fluxo"
+                        columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+                        value="#{row.fluxo}" hideOrder="true"
+                        styleClass="rf-dt-c-left" />
+                </wi:dataTable>
+
+            </s:div>
+        </infox:tab>
     </ui:define>
 
 </ui:composition>
