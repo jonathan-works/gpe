@@ -16,6 +16,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
@@ -52,13 +53,33 @@ public class PartesProcessoController extends AbstractPartesController {
     private Natureza getNatureza() {
         return processoEpa.getNaturezaCategoriaFluxo().getNatureza();
     }
-
-    public List<ParteProcesso> getPartes() {
+    
+    public List<ParteProcesso> getPartesFisicas() {
+        List<ParteProcesso> fisicas = filtrar(processoEpa.getPartes(), TipoPessoaEnum.F);
         if (Authenticator.isUsuarioAtualResponsavel()) {
-            return processoEpa.getPartes();
+            return fisicas;
         } else {
-            return getPartesAtivas();
+            return getPartesAtivas(fisicas);
         }
+    }
+
+    public List<ParteProcesso> getPartesJuridicas() {
+        List<ParteProcesso> juridicas = filtrar(processoEpa.getPartes(), TipoPessoaEnum.J);
+        if (Authenticator.isUsuarioAtualResponsavel()) {
+            return juridicas;
+        } else {
+            return getPartesAtivas(juridicas);
+        }
+    }
+    
+    private List<ParteProcesso> filtrar(List<ParteProcesso> partes, TipoPessoaEnum tipoParte) {
+        List<ParteProcesso> filtrado = new ArrayList<ParteProcesso>();
+        for (ParteProcesso parte: partes) {
+            if (tipoParte.equals(parte.getPessoa().getTipoPessoa())) {
+                filtrado.add(parte);
+            }
+        }
+        return filtrado;
     }
 
     @Override
@@ -101,18 +122,28 @@ public class PartesProcessoController extends AbstractPartesController {
     }
 
     @Override
-    public boolean podeAdicionarPartes() {
+    public boolean podeAdicionarPartesFisicas() {
         return getNatureza().getHasPartes()
-                && (getNatureza().getNumeroPartes() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas().size() < getNatureza().getNumeroPartes());
+                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
+    }
+    
+    @Override
+    public boolean podeAdicionarPartesJuridicas() {
+        return getNatureza().getHasPartes()
+                && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
     }
 
-    public boolean podeInativarPartes() {
-        return getPartesAtivas().size() > QUANTIDADE_MINIMA_PARTES;
+    public boolean podeInativarPartesFisicas() {
+        return getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
+    }
+    
+    public boolean podeInativarPartesJuridicas() {
+        return getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
     }
 
-    private List<ParteProcesso> getPartesAtivas() {
+    private List<ParteProcesso> getPartesAtivas(List<ParteProcesso> partes) {
         List<ParteProcesso> partesAtivas = new ArrayList<>();
-        for (ParteProcesso pp : processoEpa.getPartes()) {
+        for (ParteProcesso pp : partes) {
             if (pp.getAtivo()) {
                 partesAtivas.add(pp);
             }

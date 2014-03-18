@@ -26,6 +26,10 @@
             <wi:columnOutputText columnId="pessoa.tipoPessoa"
                 columnHeader="#{messages['parteProcesso.tipoPessoa']}"
                 value="#{row.pessoa.tipoPessoa.label}" />
+            <wi:columnSituacao columnId="ativo"
+                rendered="#{isUsuarioAtualResponsavel}"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
         </wi:dataTable>
     </s:div>
 

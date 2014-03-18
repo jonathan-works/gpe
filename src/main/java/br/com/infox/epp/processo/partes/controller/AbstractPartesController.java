@@ -56,7 +56,9 @@ abstract class AbstractPartesController {
         }
     }
 
-    public abstract boolean podeAdicionarPartes();
+    public abstract boolean podeAdicionarPartesFisicas();
+    
+    public abstract boolean podeAdicionarPartesJuridicas();
 
     public abstract void includePessoaFisica();
 

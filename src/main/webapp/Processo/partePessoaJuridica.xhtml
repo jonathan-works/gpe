@@ -6,11 +6,11 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:a="http://richfaces.org/a4j"
     xmlns:rich="http://richfaces.org/rich">
-
-    <s:div id="includePessoaJuridicaDiv">
+    
+    <s:div id="includePessoaJuridicaDiv" styleClass="padding-top-5">
         <wi:dataForm formId="pessoaJuridicaForm"
             formTitle="#{messages['form.title']}" panelWidth="70%"
-            rendered="#{isUsuarioAtualResponsavel and partesProcessoController.podeAdicionarPartes() and !partesProcessoController.apenasPessoaFisica()}">
+            rendered="#{isUsuarioAtualResponsavel and partesProcessoController.podeAdicionarPartesJuridicas() and !partesProcessoController.apenasPessoaFisica()}">
             <wi:inputCnpj id="cnpj"
                 value="#{partesProcessoController.pessoaJuridica.cnpj}"
                 label="#{messages['pessoaJuridica.cnpj']}"
@@ -37,6 +37,5 @@
                     value="#{messages['crud.persist']}" />
             </ui:define>
         </wi:dataForm>
-        <br />
     </s:div>
 </ui:composition>
