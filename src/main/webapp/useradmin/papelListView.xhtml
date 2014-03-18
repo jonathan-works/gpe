@@ -55,11 +55,13 @@
 
     <ui:define name="tabs">
         <infox:tab id="tabPapeis" status=":status"
-            title="Visão Hierárquica" name="tabPapeis">
+            title="Visão Hierárquica" name="tabPapeis"
+            action="#{rolesTree.clearTree()}">
             <h:form>
                 <a:commandButton styleClass="buttons" value="Inverter"
                     render="@form" execute="@this"
-                    action="#{rolesTree.inverter}" eventsQueue="editQueue"/>
+                    action="#{rolesTree.inverter}"
+                    eventsQueue="editQueue" />
                 <span> <h:outputText
                         rendered="#{rolesTree.invertida}"
                         value="Estrutura dos papéis que cedem permissões " />
@@ -75,7 +77,7 @@
                             iconCollapsed="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
                             iconExpanded="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif"
                             iconLeaf="/img/#{item.entity.identificador.startsWith('/') ? 'resource' : 'role'}.gif">
-                           #{item.entity}"
+                           #{item.entity}
                         </rich:treeNode>
                         <rich:treeModelAdaptor
                             nodes="#{item.entity.recursos}">
