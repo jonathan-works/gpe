@@ -50,7 +50,7 @@
                         label="#{messages['tipoProcessoDocumento.uso']}"
                         items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                         value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"
-                        noSelectionLabel="[Todos]" />
+                        noSelectionLabel="#{messages['crud.select.all']}" />
                     <wi:selectSituacaoOneMenu
                         id="ativo"
                         label="#{messages['field.situacao']}"
