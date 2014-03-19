@@ -31,14 +31,16 @@
                             </f:facet>
                             <rich:column>
                                 <f:facet name="header">
-                                    <wi:commandLink id="recadastrarLink"
+                                    <wi:toolBar id="recadastrarLink"
                                         rendered="#{contaTwitterCrudAction.managed}"
                                         onclick="if(!confirm('Deseja inativar este registro?')) return false;"
                                         action="contaTwitterCrudAction.remove()"
-                                        reRender="contaTwitterForm">
-                                        <wi:toolBarGraphicImage
-                                            url="/img/remove.png" />
-                                    </wi:commandLink>
+                                        render="idTwitterBody"
+                                        url="/img/remove.png"
+                                        limitToList="true"
+                                        status=":status"
+                                        title="Remover registro">
+                                    </wi:toolBar>
                                 </f:facet>
                             </rich:column>
                             <rich:column>
