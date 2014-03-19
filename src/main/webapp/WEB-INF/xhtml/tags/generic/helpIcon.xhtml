@@ -7,7 +7,7 @@
     <h:form>
         <h:commandLink action="/help/show.xhtml" target="helpwnd"
             actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}">
-            <h:graphicImage url="#{a4jSkin.imgIconHelp}" title="Ajuda"
+            <h:graphicImage url="#{a4jSkin.imgIconHelp}" title="#{messages['ajuda.ajudaBtn']}"
                 onclick="openPopUp('helpwnd', 'about:blank');" />
         </h:commandLink>
     </h:form>

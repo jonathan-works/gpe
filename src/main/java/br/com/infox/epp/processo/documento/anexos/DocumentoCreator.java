@@ -10,7 +10,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 
-abstract class DocumentoCreator {
+public abstract class DocumentoCreator {
 
     private Processo processo;
     private ProcessoDocumento processoDocumento;

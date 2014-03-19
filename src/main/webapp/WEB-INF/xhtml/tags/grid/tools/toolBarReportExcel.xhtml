@@ -15,13 +15,14 @@
                     view="#{empty reportPath ? pathResolver.viewIdDirectory.concat('excelReport.xhtml') : reportPath}"
                     target="_blank">
                     <h:graphicImage url="/img/excel.png"
-                        title="Gerar Excel" />
+                        title="#{messages['report.exportXLS']}" />
                 </s:link>
             </c:if>
             <a:region>
-                <h:commandLink action="#{elFunctions.invokeMethod(action)}">
+                <h:commandLink
+                    action="#{elFunctions.invokeMethod(action)}">
                     <h:graphicImage url="/img/excel.png"
-                        title="Gerar Excel" />
+                        title="#{messages['report.exportXLS']}" />
                 </h:commandLink>
             </a:region>
         </h:form>

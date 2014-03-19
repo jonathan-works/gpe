@@ -13,7 +13,7 @@
 <h:head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Ajuda</title>
+    <title>#{messages['ajuda.titlePage']}</title>
     <h:outputStylesheet library="stylesheet" name="theme.css" />
     <h:outputStylesheet library="styleSkinInfox" name="padrao.css" />
     <link rel="icon" href="#{pathResolver.contextPath}/favicon.ico"
@@ -64,7 +64,7 @@
                 styleClass="sem-resultado-ajuda" />
             <rich:tabPanel id="helpPanel" height="650px"
                 switchType="client" activeItem="#{ajudaView.tab}">
-                <rich:tab id="help" header="Ajuda" name="help">
+                <rich:tab id="help" header="#{messages['ajuda.panelHeader']}" name="help">
                     <s:div id="helpLink" styleClass="help-link">
                         <h:outputLink
                             value="#{pathResolver.contextPath}/help/show.seam?viewId=#{ajudaView.viewId}">
