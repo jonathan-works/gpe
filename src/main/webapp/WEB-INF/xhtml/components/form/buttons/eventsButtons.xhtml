@@ -20,7 +20,7 @@
                 limitRender="true" styleClass="buttons"
                 rendered="#{!home.managed}" />
             <a:commandButton id="new" eventsQueue="editQueue"
-                render=":pageBody" limitRender="true" value="Novo"
+                render=":pageBody" limitRender="true" value="#{messages['crud.new']}"
                 styleClass="buttons" action="#{home.newInstance}"
                 rendered="#{home.managed}" />
         </a:region>
