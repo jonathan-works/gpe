@@ -132,9 +132,9 @@
 
       </infox:tab>
 
-      <infox:tab id="tabSaida" name="#{messages['movimentar.saida.titleTab']}"
+      <infox:tab id="tabSaida" name="tabSaida"
         rendered="#{processoHome.managed}" status=":status"
-        title="Saída">
+        title="#{messages['movimentar.saida.titleTab']}">
 
         <c:if test="#{not taskPageAction.hasTaskPage}">
           <wi:form canEdit="true" formTitle="#{taskInstance.name}"
