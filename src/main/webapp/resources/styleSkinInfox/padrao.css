@@ -121,14 +121,15 @@ h1 {
 #html,#body {
   height: 100%;
   width: 100%;
-  min-width: 1024px;
-  min-height: 627px;
+  min-width: 874px;
+  min-height: 600px;
 }
 
 #body {
   margin: 0px;
   font-family: Arial, sans-serif;
   color: #616161;
+  overflow:hidden;
 }
 
 .dtable-p-b.rf-p-b {
