@@ -9,7 +9,7 @@
     xmlns:rich="http://richfaces.org/rich"
     template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
 
-    <ui:define name="title">Ajuda</ui:define>
+    <ui:define name="title">#{messages['ajuda.titlePage']}</ui:define>
 
     <ui:define name="baseBody">
         <s:div id="formAjuda">
@@ -29,38 +29,44 @@
                     </wi:commandButton>
 
                 </ui:define>
-                
+
                 <s:div styleClass="lateral-editor-ajuda">
-	                <wi:imageUpload imageBean="#{helpFileUploader}" />
-	                
-	                <s:div id="gridAjuda" styleClass="padding-top-5">
-			            <wi:dataTable values="#{historicoAjudaList.list(15)}"
-			                bean="#{historicoAjudaList}"
-			                tableTitle="Histórico das revisões"
-			                panelStyleClass="grid-lateral-editor-ajuda"
-			                id="historicoAjudaId" rowId="#{row.idHistoricoAjuda}"
-			                showSearchForm="false" inForm="true">
-			                
-			                <ui:define name="headerToolBar" />
-			
-			                <wi:columnDateTime columnId="dataRegistro"
-			                    columnHeader="Data" value="#{row.dataRegistro}"
-			                    showTime="true" />
-			
-			                <wi:columnOutputText columnId="usuario"
-			                    columnHeader="Usuário" value="#{row.usuario}" />
-			
-			                <ui:define name="toolBar">
-			                    <wi:toolBar id="recuperarRevisao"
-			                        url="/img/grid/copyLeft.gif"
-			                        title="Recuperar revisão" render="formAjuda, gridAjuda"
-			                        action="ajudaCrudAction.recuperar(row)"
-			                        limitToList="true"
-			                        oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})" />
-			                    <wi:toolBarTextPreview value="#{row.texto}" />
-			                </ui:define>
-			            </wi:dataTable>
-    		        </s:div>
+                    <wi:imageUpload imageBean="#{helpFileUploader}" />
+
+                    <s:div id="gridAjuda" styleClass="padding-top-5">
+                        <wi:dataTable
+                            values="#{historicoAjudaList.list(15)}"
+                            bean="#{historicoAjudaList}"
+                            tableTitle="Histórico das revisões"
+                            panelStyleClass="grid-lateral-editor-ajuda"
+                            id="historicoAjudaId"
+                            rowId="#{row.idHistoricoAjuda}"
+                            showSearchForm="false" inForm="true">
+
+                            <ui:define name="headerToolBar" />
+
+                            <wi:columnDateTime columnId="dataRegistro"
+                                columnHeader="Data"
+                                value="#{row.dataRegistro}"
+                                showTime="true" />
+
+                            <wi:columnOutputText columnId="usuario"
+                                columnHeader="Usuário"
+                                value="#{row.usuario}" />
+
+                            <ui:define name="toolBar">
+                                <wi:toolBar id="recuperarRevisao"
+                                    url="/img/grid/copyLeft.gif"
+                                    title="Recuperar revisão"
+                                    render="formAjuda, gridAjuda"
+                                    action="ajudaCrudAction.recuperar(row)"
+                                    limitToList="true"
+                                    oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})" />
+                                <wi:toolBarTextPreview
+                                    value="#{row.texto}" />
+                            </ui:define>
+                        </wi:dataTable>
+                    </s:div>
                 </s:div>
             </wi:dataForm>
         </s:div>

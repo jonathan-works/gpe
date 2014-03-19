@@ -14,7 +14,7 @@
         <wi:dataTable values="#{parteProcessoList.list(15)}"
             bean="#{parteProcessoList}"
             tableTitle="#{messages['parteProcesso.tableTitle']}"
-            id="parteProcessoList">
+            id="parteProcessoList" showSearchForm="false">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar" />
             <wi:columnOutputText columnId="pessoa.nome"

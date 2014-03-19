@@ -1,109 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-			    xmlns:s="http://jboss.org/schema/seam/taglib"
-			    xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:wi="http://www.itx.com.br/jsf"
-			    xmlns:h="http://java.sun.com/jsf/html"
-			    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-			    xmlns:a="http://richfaces.org/a4j"
-			    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-                      
-	<ui:define name="title">#{messages['calendarioEventos.titlePage']}</ui:define>
-	
-	<ui:param name="home" value="#{calendarioEventosCrudAction}" />
-	<ui:param name="list" value="#{calendarioEventosList}" />
-	
-	<ui:define name="searchGrid">   
-	    <wi:dataTable values="#{list.list(15)}"
-					  bean="#{list}"
-					  tableTitle="#{messages['calendarioEventos.tableTitle']}"
-					  id="calendarioEventosList"
-					  rowId="#{row.idCalendarioEvento}" >
-			<ui:define name="searchForm">
-				<wi:searchForm formId="pesquisarCalendarioEventosForm"
-							   formTitle="#{messages['searchForm.title']}">
-					<wi:tree id="localizacao"
-							 label="#{messages['calendarioEventos.localizacao']}"
-							 assignTo="calendarioEventosList.entity.localizacao"
-							 tree="#{localizacaoTree}" />
-					<wi:inputText id="descricaoEvento"
-								  label="#{messages['calendarioEventos.descricaoEvento']}"
-								  value="#{list.entity.descricaoEvento}"
-								  maxlength="100" />
-					<wi:inputText id="dia"
-									label="#{messages['calendarioEventos.dia']}"
-									value="#{list.entity.dia}"
-                                    onkeyup="onlyPositiveNumber(this); clamp(this,1,31)"
-                                    converterId="integerConverter"
-                                    maxlength="2">
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{messages['calendarioEventos.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{calendarioEventosCrudAction}" />
+    <ui:param name="list" value="#{calendarioEventosList}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{list.list(15)}" bean="#{list}"
+            tableTitle="#{messages['calendarioEventos.tableTitle']}"
+            id="calendarioEventosList" rowId="#{row.idCalendarioEvento}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarCalendarioEventosForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:tree id="localizacao"
+                        label="#{messages['calendarioEventos.localizacao']}"
+                        assignTo="calendarioEventosList.entity.localizacao"
+                        tree="#{localizacaoTree}" />
+                    <wi:inputText id="descricaoEvento"
+                        label="#{messages['calendarioEventos.descricaoEvento']}"
+                        value="#{list.entity.descricaoEvento}"
+                        maxlength="100" />
+                    <wi:inputText id="dia"
+                        label="#{messages['calendarioEventos.dia']}"
+                        value="#{list.entity.dia}"
+                        onkeyup="onlyPositiveNumber(this); clamp(this,1,31)"
+                        converterId="integerConverter" maxlength="2">
                     </wi:inputText>
-					<wi:inputText id="mes"
-									label="#{messages['calendarioEventos.mes']}"
-									value="#{list.entity.mes}"
-                                    onkeyup="onlyPositiveNumber(this); clamp(this,1,12)"
-                                    converterId="integerConverter"
-                                    maxlength="2" >
+                    <wi:inputText id="mes"
+                        label="#{messages['calendarioEventos.mes']}"
+                        value="#{list.entity.mes}"
+                        onkeyup="onlyPositiveNumber(this); clamp(this,1,12)"
+                        converterId="integerConverter" maxlength="2">
                     </wi:inputText>
-					<wi:inputText id="ano"
-									label="#{messages['calendarioEventos.ano']}"
-									value="#{list.entity.ano}"
-                                    onkeyup="onlyPositiveNumber(this)"
-                                    converterId="integerConverter"
-                                    maxlength="4" >
+                    <wi:inputText id="ano"
+                        label="#{messages['calendarioEventos.ano']}"
+                        value="#{list.entity.ano}"
+                        onkeyup="onlyPositiveNumber(this)"
+                        converterId="integerConverter" maxlength="4">
                     </wi:inputText>
-				</wi:searchForm>
-			</ui:define>
-			
-			<ui:define name="toolBar">
-				<wi:toolBarEdit  />
-				<wi:toolBar
-					id="#{row.id}Remove"
-			        action="calendarioEventosCrudAction.remove(row)"
-			        rendered="true"
-			        limitToList="true"
-			        status=":status"
-			        render="searchGridRegion,modalPanelMessages"
-			        onclick="if(!confirm('Deseja remover este registro?')) return false;"
-			        url="/img/remove.png"
-			        title="Remover registro" />
-			</ui:define>
-			
-			<wi:columnOutputText columnId="localizacao"
-								 columnHeader="#{messages['calendarioEventos.localizacao']}"
-								 value="#{row.localizacao}" />
-			<wi:columnOutputText columnId="descricaoEvento"
-								 columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
-								 value="#{row.descricaoEvento}" />
-			<wi:columnOutputText columnId="dataEvento"
-                                 hideOrder="true"
-								 columnHeader="#{messages['calendarioEventos.dataEvento']}"
-								 value="#{row.stringDataEvento}" />
-		</wi:dataTable>
-	</ui:define>
-	
-	<ui:define name="form">
-		<wi:dataForm formId="calendarioEventosForm"
-					 formTitle="#{messages['form.title']}">
-			<wi:tree id="localizacao"
-					 label="#{messages['calendarioEventos.localizacao']}"
-					 assignTo="calendarioEventosCrudAction.instance.localizacao"
-					 tree="#{localizacaoTree}"
-					 required="true" />
-			<wi:inputText id="descricaoEvento"
-						  label="#{messages['calendarioEventos.descricaoEvento']}"
-						  value="#{home.instance.descricaoEvento}"
-						  maxlength="100"
-						  required="true" />
-			<wi:inputDate id="dataNascimento"
-							value="#{home.instance.dataEvento}"
-							label="#{messages['calendarioEventos.dataEvento']}"
-							required="true"/>
-			<wi:selectBooleanCheckbox id="periodico"
-        								label="#{messages['calendarioEventos.periodico']}"
-        								value="#{home.instance.repeteAno}"/>
-			
-		</wi:dataForm>
-	</ui:define>
+                </wi:searchForm>
+            </ui:define>
+
+            <ui:define name="toolBar">
+                <wi:toolBarEdit />
+                <wi:toolBar id="#{row.id}Remove"
+                    action="calendarioEventosCrudAction.remove(row)"
+                    rendered="true" limitToList="true" status=":status"
+                    render="searchGridRegion,modalPanelMessages"
+                    onclick="if(!confirm('Deseja remover este registro?')) return false;"
+                    url="/img/remove.png" title="Remover registro" />
+            </ui:define>
+
+            <wi:columnOutputText columnId="localizacao"
+                columnHeader="#{messages['calendarioEventos.localizacao']}"
+                value="#{row.localizacao}" />
+            <wi:columnOutputText columnId="descricaoEvento"
+                columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
+                value="#{row.descricaoEvento}" />
+            <wi:columnOutputText columnId="dataEvento" hideOrder="true"
+                columnHeader="#{messages['calendarioEventos.dataEvento']}"
+                value="#{row.stringDataEvento}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="calendarioEventosForm"
+            formTitle="#{messages['form.title']}">
+            <wi:tree id="localizacao"
+                label="#{messages['calendarioEventos.localizacao']}"
+                assignTo="calendarioEventosCrudAction.instance.localizacao"
+                tree="#{localizacaoTree}" required="true" />
+            <wi:inputText id="descricaoEvento"
+                label="#{messages['calendarioEventos.descricaoEvento']}"
+                value="#{home.instance.descricaoEvento}" maxlength="100"
+                required="true" />
+            <wi:inputDate id="dataNascimento"
+                value="#{home.instance.dataEvento}"
+                label="#{messages['calendarioEventos.dataEvento']}"
+                required="true" />
+            <wi:selectBooleanCheckbox id="periodico"
+                label="#{messages['calendarioEventos.periodico']}"
+                value="#{home.instance.repeteAno}" />
+
+        </wi:dataForm>
+    </ui:define>
 
 </ui:composition>

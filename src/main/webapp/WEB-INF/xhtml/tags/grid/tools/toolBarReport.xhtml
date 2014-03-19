@@ -10,7 +10,7 @@
             view="#{empty reportPath ? pathResolver.viewIdDirectory.concat('report.xhtml') : reportPath}"
             target="_blank">
             <h:graphicImage url="#{a4jSkin.imgIconPDF}"
-                title="Gerar PDF" />
+                title="#{messages['report.exportPDF']}" />
         </s:link>
     </s:span>
 

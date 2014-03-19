@@ -6,15 +6,15 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
-    xmlns:a="http://richfaces.org/a4j"
+    xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/template.xhtml">
 
     <ui:define name="body">
         <rich:panel header="Reindex">
             <h:form>
-                <a:commandButton value="Reindex Ajuda"
+                <wi:commandButton id="ajudaReindexer" value="#{messages['ajuda.reindexer']}"
                     action="#{ajudaReindexer.reindex}" />
-                <a:commandButton value="Reindex Documentos"
+                <wi:commandButton id="documentoRendexer" value="#{messages['processoDocumento.reindexer']}"
                     action="#{reindexer.execute}" />
             </h:form>
         </rich:panel>

@@ -52,7 +52,7 @@
 
                     <ui:define name="toolBar">
                         <wi:toolBar url="#{a4jSkin.imgIconView}"
-                            title="Selecionar" action="#{consultaExternaController.selectProcesso(row)}"/>
+                            title="#{messages['button.selecionar']}" action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
                     <wi:columnOutputText columnId="numeroProcesso"
@@ -105,7 +105,7 @@
                     </ui:define>
 
                     <ui:define name="toolBar">
-                        <wi:toolBar url="#{a4jSkin.imgIconView}" title="Selecionar" 
+                        <wi:toolBar url="#{a4jSkin.imgIconView}" title="#{messages['button.selecionar']}" 
                             action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
