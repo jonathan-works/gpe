@@ -43,10 +43,10 @@
 
             <infox:tab id="tabEntrada" name="tabEntrada"
                 rendered="#{!empty taskInstanceView.fields}"
-                status=":status" title="Entrada">
+                status=":status" title="#{messages['movimentar.entrada.titleTab']}">
                 <ui:decorate id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">Entrada</ui:define>
+                    <ui:define name="title">#{messages['movimentar.entrada.titleTab']}</ui:define>
                     <wi:form canEdit="true"
                         formTitle="#{taskInstance.name}"
                         home="#{taskInstanceHome}"

@@ -14,7 +14,7 @@
         template="#{template}">
         <ui:define name="label">#{label}</ui:define>
         <h:selectOneMenu id="#{id}" value="#{value}">
-            <f:selectItem itemLabel="[Todos]" />
+            <f:selectItem itemLabel="#{messages['crud.select.all']}" />
             <f:selectItems
                 value="#{wi:get(items, selectItemFunctions.createFromString('true:Sim,false:Não'))}" />
         </h:selectOneMenu>

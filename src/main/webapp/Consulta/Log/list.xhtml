@@ -29,13 +29,13 @@
               <wi:selectOneMenu id="nomeEntidade"
                 value="#{entidadeLogList.instance.nomeEntidade}"
                 items="#{entidadeLogList.nomesDasEntidades}"
-                noSelectionLabel="[Todos]"
+                noSelectionLabel="#{messages['crud.select.all']}"
                 label="#{messages['entidadeLog.nomeEntidade']}" />
 
               <wi:selectOneMenuEntity id="usuario"
                 value="#{entidadeLogList.instance.usuario}"
                 items="#{entidadeLogList.usuariosQuePossuemLogs}"
-                noSelectionLabel="[Todos]"
+                noSelectionLabel="#{messages['crud.select.all']}"
                 label="#{messages['entidadeLog.usuario']}" />
 
               <wi:inputText id="ip"

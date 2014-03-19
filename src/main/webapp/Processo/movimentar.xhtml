@@ -124,7 +124,7 @@
 
       <infox:tab id="tabEntrada" name="tabEntrada"
         rendered="#{!empty taskInstanceView.fields}" status=":status"
-        title="Entrada">
+        title="#{messages['movimentar.entrada.titleTab']}">
 
         <wi:form canEdit="true" formTitle="#{taskInstance.name}"
           home="#{taskInstanceHome}" form="#{taskInstanceView}" />
@@ -134,7 +134,7 @@
 
       <infox:tab id="tabSaida" name="tabSaida"
         rendered="#{processoHome.managed}" status=":status"
-        title="Saída">
+        title="#{messages['movimentar.saida.titleTab']}">
 
         <c:if test="#{not taskPageAction.hasTaskPage}">
           <wi:form canEdit="true" formTitle="#{taskInstance.name}"

@@ -14,7 +14,7 @@
     
     <script type="text/javascript">
         window.addEventListener("load", function() {
-            alert("Remover a referência para este menu");
+            alert("Remover a referência para este saveClear_model");
         });
     </script>
 
@@ -52,7 +52,7 @@
         <a:commandButton id="new" status=":status"
             eventsQueue="editQueue" oncomplete="#{oncomplete}"
             render="pageBody" limitRender="true" execute="@this"
-            value="Novo" styleClass="buttons"
+            value="#{messages['crud.new']}" styleClass="buttons"
             action="#{home.newInstance}"
             rendered="#{home.managed and !isUploadForm}" />
 
