@@ -72,6 +72,13 @@ public class ProcessoEpaTarefaManagerTest {
             DateRange result = assertIncrementoByLocalizacaoTurno(fim, inicio, inicioTurno, fimTurno);
             Assert.assertEquals(135, result.get(DateRange.MINUTES));
         }
+        {
+            Calendar inicio = new GregorianCalendar(2013, 5, 15, 14, 00);
+            Calendar fim = new GregorianCalendar(2013, 5, 15, 18, 00);
+            
+            DateRange result = assertIncrementoByLocalizacaoTurno(fim, inicio, inicioTurno, fimTurno);
+            Assert.assertEquals(0, result.get(DateRange.MINUTES));
+        }
 	}
 
     private DateRange assertIncrementoByLocalizacaoTurno(Calendar fim, Calendar inicio, Calendar inicioTurno,

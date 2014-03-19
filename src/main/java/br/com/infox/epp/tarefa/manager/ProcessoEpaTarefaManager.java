@@ -244,9 +244,13 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
     private DateRange getIncrementoLocalizacaoTurno(final Calendar dataDisparo,
             final Calendar ultimaAtualizacao, final Calendar inicioTurno,
             final Calendar fimTurno) {
+        if (dataDisparo.before(inicioTurno) || ultimaAtualizacao.after(fimTurno)) {
+            return new DateRange(ultimaAtualizacao.getTime(), ultimaAtualizacao.getTime());
+        }
         final Date beginning = inicioTurno.after(ultimaAtualizacao) ? inicioTurno.getTime() : ultimaAtualizacao.getTime();
         final Date end = fimTurno.before(dataDisparo) ? fimTurno.getTime() : dataDisparo.getTime();
-        return new DateRange(beginning, end);
+        final DateRange dateRange = new DateRange(beginning, end);
+        return dateRange;
     }
 
     private int calcularTempoGastoDias(Date dataDisparo,

@@ -20,7 +20,7 @@ public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa>
 
     private static final String QUERY = "select new br.com.infox.epp.estatistica.entity.TempoMedioTarefa(t, ncf, count(pet) , avg(pet.tempoGasto))"
             + " from ProcessoEpaTarefa pet"
-            + " inner join pet.processoEpa p with pet.tempoGasto > 0"
+            + " inner join pet.processoEpa p"
             + " inner join p.naturezaCategoriaFluxo ncf"
             + " right join pet.tarefa t";
 
