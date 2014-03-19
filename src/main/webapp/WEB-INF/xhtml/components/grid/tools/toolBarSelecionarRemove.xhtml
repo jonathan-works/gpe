@@ -9,39 +9,27 @@
 
 
     <h:form>
-
         <div>
-
             <a:region renderRegionOnly="false">
-
                 <a:commandLink action="#{home.setTab()}"
                     status=":status" render=":pageBody"
                     limitRender="true" id="#{gridId}Edit">
-
                     <h:graphicImage url="#{a4jSkin.imgIconView}"
                         title="#{messages['button.selecionar']}" />
                     <f:param name="id" value="#{row[bean.key]}" />
-
                 </a:commandLink>
-
                 <a:commandLink action="#{home.remove(row)}"
                     rendered="#{canEdit}" limitRender="true"
                     status=":status" render=":#{gridId}"
                     onclick="if(!confirm('Confirma?')) return false;">
-
                     <h:graphicImage url="/img/remove.png"
-                        title="Remover registro" />
+                        title="#{messages['button.delete']}" />
                     <f:param name="firstResult"
                         value="#{bean.firstResult}" />
                     <f:param name="page" value="#{bean.page}" />
-
                 </a:commandLink>
-
             </a:region>
-
         </div>
-
     </h:form>
-
 
 </ui:composition>

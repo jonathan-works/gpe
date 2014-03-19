@@ -32,7 +32,7 @@
         <h:outputText value="#{targetLabel}" />
         <rich:pickList id="#{id}" value="#{value}"
             addAllText="Adiciona todos" addText="Adicionar"
-            removeAllText="Remover todos" removeText="Remover"
+            removeAllText="Remover todos" removeText="#{messages['button.delete']}"
             listHeight="#{listsHeight}" moveControlsVerticalAlign="top"
             sourceListWidth="#{sourceListWidth}"
             targetListWidth="#{targetListWidth}" switchByClick="true"
