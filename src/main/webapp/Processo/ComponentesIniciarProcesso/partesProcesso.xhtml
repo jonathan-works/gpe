@@ -64,7 +64,7 @@
                     action="#{action.iniciarProcesso(partesController.pessoasFisicas, partesController.pessoasJuridicas)}"
                     rendered="#{!partesController.pessoasFisicas.isEmpty() or !partesController.pessoasJuridicas.isEmpty()}"
                     render="includePessoaFisicaDiv, pessoasFisicasListDiv"
-                    value="Iniciar Processo"
+                    value="#{messages['processo.iniciarBtn']}"
                     styleClass="buttons #{wi:get(styleClass, 'buttons')}"
                     oncomplete="window.open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1'); window.location='#{pathResolver.contextPath}/Painel/list.seam';" />
             </s:div>
