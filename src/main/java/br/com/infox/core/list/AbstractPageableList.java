@@ -141,7 +141,7 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
             LOG.error("AbstractPageableList.list(int)", e);
             FacesMessages.instance().add(Severity.ERROR, Messages.instance().get("list.resolveFilter.error"));
         } catch (Exception e) {
-            throw new ApplicationException(e.getMessage(), e);
+            throw new ApplicationException("list.error", e);
         }
         return truncList;
     }
