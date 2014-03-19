@@ -8,6 +8,10 @@
     xmlns:jsp="http://java.sun.com/JSP/Page"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib">
+    
+    <h:outputScript>
+        alert('Remover referência a components-grid-tools-include-removeButton');
+    </h:outputScript>
 
     <a:commandLink action="#{home.remove(row)}" rendered="#{canEdit}"
         limitRender="true" status=":status"

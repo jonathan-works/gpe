@@ -19,7 +19,7 @@
                 <a:commandLink status=":status" render=":pageBody"
                     limitRender="true" id="#{gridId}Edit">
                     <h:graphicImage url="#{a4jSkin.imgIconView}"
-                        title="Selecionar" />
+                        title="#{messages['button.selecionar']}" />
                     <f:param name="id"
                         value="#{treeMode ? row.entity[bean.key] : row[bean.key]}" />
                     <f:param name="tab" value="form" />
@@ -32,7 +32,7 @@
                 onclick="if(!confirm('Esta ação irá inativar todos os filhos deste registro. Confirma?')) return false;">
 
                 <h:graphicImage url="/img/remove.png"
-                    title="Inativar registro" />
+                    title="#{messages['button.inativar']}" />
                 <f:param name="firstResult" value="#{bean.firstResult}" />
                 <f:param name="page" value="#{bean.page}" />
 

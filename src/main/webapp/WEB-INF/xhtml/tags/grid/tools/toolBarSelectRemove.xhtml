@@ -9,17 +9,16 @@
 
     <ui:param name="removeAction"
         value="#{empty removeAction ? 'home.remove(row)' : removeAction}" />
-
     <div>
         <a:region renderRegionOnly="false">
             <a:commandLink action="#{home.setInstance(row)}"
                 status=":status" render="#{reRender}" limitRender="true"
                 id="#{gridId}Edit">
                 <wi:toolBarGraphicImage url="#{a4jSkin.imgIconView}"
-                    title="Selecionar" />
+                    title="#{messages['button.selecionar']}" />
             </a:commandLink>
-
-            <a:commandLink action="#{elFunctions.invokeMethod(removeAction)}"
+            <a:commandLink
+                action="#{elFunctions.invokeMethod(removeAction)}"
                 rendered="#{wi:get(canEdit,true)}" limitRender="true"
                 status=":status" render="#{reRender}"
                 onclick="if(!confirm('Confirma?')) return false;">
@@ -28,5 +27,4 @@
             </a:commandLink>
         </a:region>
     </div>
-
 </ui:composition>
