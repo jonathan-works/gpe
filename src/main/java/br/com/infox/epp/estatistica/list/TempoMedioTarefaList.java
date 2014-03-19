@@ -39,10 +39,12 @@ public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa>
         addSearchCriteria("naturezaCategoriaFluxo.fluxo", "t.fluxo=:fluxo");
         addSearchCriteria("dataInicio", "cast(pet.dataInicio as timestamp) >= cast(:dataInicio as timestamp)");
         addSearchCriteria("dataFim", "cast(pet.dataFim as timestamp) >= cast(:dataFim as timestamp)");
+        addSearchCriteria("tipoPrazo", "(not t.tipoPrazo is null and true=:tipoPrazo)");
     }
 
     @Override
     protected String getQuery() {
+        this.getParameters().put("tipoPrazo", true);
         return QUERY;
     }
 
