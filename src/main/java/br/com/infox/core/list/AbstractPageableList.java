@@ -31,13 +31,17 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
 
         @Override
         public V put(K key, V value) {
-            this.isDirty = true;
-            return super.put(key, value);
+            final V storedValue = super.get(key);
+            if (storedValue == null || !storedValue.equals(value)) {
+                this.isDirty = true;
+                return super.put(key, value);
+            } else {
+                return storedValue;
+            }
         }
 
         @Override
         public void putAll(Map<? extends K, ? extends V> m) {
-            this.isDirty = true;
             super.putAll(m);
         }
     }
@@ -124,6 +128,7 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
                 final String resolveParameters = resolveParameters();
                 this.resultList = genericManager.getResultList(resolveParameters, params);
                 this.parameters.isDirty = false;
+                this.pageCount = null;
             }
             truncList = truncList();
         } catch (Exception e) {
