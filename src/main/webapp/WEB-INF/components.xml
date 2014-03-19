@@ -90,6 +90,7 @@
 
     <core:resource-loader>
         <core:bundle-names>
+            <value>standard_messages</value>
             <value>entity_messages</value>
             <value>messages</value>
         </core:bundle-names>
