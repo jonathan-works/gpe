@@ -31,7 +31,7 @@
     <s:div styleClass="pick-cont">
         <h:outputText value="#{targetLabel}" />
         <rich:pickList id="#{id}" value="#{value}"
-            addAllText="Adiciona todos" addText="Adicionar"
+            addAllText="Adiciona todos" addText="#{messages['button.add']}"
             removeAllText="#{messages['button.deleteAll']}" removeText="#{messages['button.delete']}"
             listHeight="#{listsHeight}" moveControlsVerticalAlign="top"
             sourceListWidth="#{sourceListWidth}"
