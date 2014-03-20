@@ -174,7 +174,7 @@
                         label="#{messages['tipoProcessoDocumentoPapel.papel']}"
                         items="#{classificacaoDocumentoPapelCrudAction.papelItems()}"
                         value="#{classificacaoDocumentoPapelCrudAction.instance.papel}"
-                        noSelectionLabel="Selecione..."
+                        noSelectionLabel="#{messages['crud.select.select']}"
                         required="true" />
                     <wi:selectBooleanRadio
                         id="obrigatorio"
