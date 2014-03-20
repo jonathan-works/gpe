@@ -256,8 +256,8 @@
                 formTitle="#{messages['form.title']}"
                 home="#{bloqueioUsuarioCrudAction}"
                 requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
-                <wi:outputText id="bloqueio"
-                    value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? 'Sim': 'Não'}"
+                <wi:columnBoolean id="bloqueio"
+                    value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
                     label="#{messages['usuario.bloqueio']}" />
                 <wi:inputDate id="dataDesbloqueio"
                     label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
