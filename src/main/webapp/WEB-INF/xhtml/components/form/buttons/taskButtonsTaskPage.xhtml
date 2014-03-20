@@ -48,7 +48,7 @@
             value="#{processoHome.instance.prioridadeProcesso}">
             <s:selectItems value="#{prioridadeProcessoList.list()}"
                 var="p" label="#{p.descricaoPrioridade}"
-                noSelectionLabel="Selecione..." />
+                noSelectionLabel="#{messages['crud.select.select']}" />
             <s:convertEntity />
         </h:selectOneMenu>
     </ui:fragment>

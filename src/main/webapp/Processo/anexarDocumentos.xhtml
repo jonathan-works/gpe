@@ -19,7 +19,7 @@
                 label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                 value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
                 items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
-                required="true" noSelectionLabel="Selecione...">
+                required="true" noSelectionLabel="#{messages['crud.select.select']}">
             </wi:selectOneMenuEntity>
         </s:div>
         <wi:selectBooleanCheckbox id="documentoSigiloso"
@@ -61,7 +61,7 @@
                     label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                     value="#{documentoUploader.processoDocumento.tipoProcessoDocumento}"
                     items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
-                    required="true" noSelectionLabel="Selecione...">
+                    required="true" noSelectionLabel="#{messages['crud.select.select']}">
                 </wi:selectOneMenuEntity>
             </s:div>
             <wi:selectBooleanCheckbox id="documentoSigilosoPdf"

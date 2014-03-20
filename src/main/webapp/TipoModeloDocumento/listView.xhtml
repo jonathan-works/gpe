@@ -201,7 +201,7 @@
                         label="#{messages['tipoModeloDocumento.papel']}"
                         items="#{tipoModeloDocumentoPapelCrudAction.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}"
                         value="#{tipoModeloDocumentoPapelCrudAction.instance.papel}"
-                        required="true" showLabel="Selecione..." />
+                        required="true" showLabel="#{messages['crud.select.select']}" />
                     <ui:define name="buttons">
                         <wi:commandButtonPersist
                             home="#{tipoModeloDocumentoPapelCrudAction}"

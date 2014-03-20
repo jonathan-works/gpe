@@ -75,7 +75,7 @@
                     label="#{messages['natureza.tipoDasPartes']}"
                     items="#{naturezaCrudAction.getTiposDePartes()}"
                     value="#{naturezaCrudAction.instance.tipoPartes}"
-                    required="true" noSelectionLabel="Selecione... "
+                    required="true" noSelectionLabel="#{messages['crud.select.select']}"
                     disabled="#{naturezaCrudAction.instance.locked}"
                     rendered="#{naturezaCrudAction.instance.hasPartes}">
                     <a:ajax event="change"
