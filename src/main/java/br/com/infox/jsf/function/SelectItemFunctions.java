@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.util.Strings;
 
 @Name(SelectItemFunctions.NAME)
@@ -30,11 +31,13 @@ public class SelectItemFunctions {
     public List<SelectItem> createFromString(String values) {
         List<SelectItem> l = new ArrayList<SelectItem>();
         for (String s : values.split(",")) {
-            if (s.indexOf(":") == -1) {
-                l.add(new SelectItem(s));
+            final String[] split = s.split(":");
+            final String value = split[0];
+            if (split.length < 2) {
+                l.add(new SelectItem(value));
             } else {
-                String[] value = s.split(":");
-                l.add(new SelectItem(value[0], value[1]));
+                final String label = Messages.instance().get(split[1]);
+                l.add(new SelectItem(value, label));
             }
         }
         return l;
