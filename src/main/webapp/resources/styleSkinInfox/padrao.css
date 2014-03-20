@@ -112,7 +112,6 @@
 }
 
 h1 {
-  font-family: Arial, sans-serif;
   color: #578BB8;
   font-size: 1.6em;
   margin-top: 0;
@@ -127,7 +126,7 @@ h1 {
 
 #body {
   margin: 0px;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Verdana, sans-serif;
   color: #616161;
   overflow:hidden;
 }
@@ -358,7 +357,6 @@ select {
 }
 
 .reqSenha label {
-  font-family: Arial, sans-serif;
   margin: 0;
 }
 
@@ -544,7 +542,6 @@ select {
 }
 
 .label-general,.label-header,.label-button,.label-tab,.label-menu {
-  font-family: arial, sans-serif;
 }
 
 .resultado-pesquisa-ajuda.label-general {
