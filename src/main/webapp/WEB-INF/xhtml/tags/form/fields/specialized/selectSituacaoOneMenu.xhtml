@@ -16,7 +16,7 @@
         <ui:define name="label">#{wi:get(label, 'Situação')}</ui:define>
         <h:selectOneMenu id="#{id}" value="#{value}"
             immediate="#{immediate}">
-            <f:selectItem itemLabel="[Todos]" />
+            <f:selectItem itemLabel="#{messages['crud.select.all']}" />
             <f:selectItems
                 value="#{wi:get(items, selectItemFunctions.createFromString('true:Ativo,false:Inativo'))}" />
             <ui:insert />

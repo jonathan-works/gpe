@@ -27,7 +27,7 @@
             rendered="#{processoHome.managed and !isUsuarioExterno}"
             onmouseup="showLoading()"
             oncomplete="#{oncomplete};hideLoading();close()"
-            render="#{reRenderSave}" value="Liberar Tarefa"
+            render="#{reRenderSave}" value="#{messages['movimentar.liberarTarefa']}"
             styleClass="buttons"
             action="#{taskInstanceHome.removeUsuario()}" />
 

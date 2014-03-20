@@ -1,99 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns:wi="http://www.itx.com.br/jsf"
-  xmlns:rich="http://richfaces.org/rich"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:a="http://richfaces.org/a4j"
-  xmlns:dojo="http://www.itx.com.br/dojo"
-  template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml"
->
-  <ui:define name="title">#{messages['produtividade.pageTitle']}</ui:define>
-  <ui:define name="body">
-    <wi:dataTable
-      values="#{produtividadeAction.list(15)}"
-      bean="#{produtividadeAction}"
-      tableTitle="#{messages['produtividade.tableTitle']}"
-      id="produtividadeList"
-      hideOrder="true"
-    >
-      <ui:define name="searchForm">
-        <wi:searchForm
-          formId="pesquisaFluxoForm"
-          formTitle="#{messages['searchForm.title']}"
-          clearAction="produtividadeAction.clear"
-        >
-          <wi:selectOneMenuEntity
-            id="comboFluxo"
-            value="#{produtividadeAction.fluxo}"
-            label="#{messages['naturezaCategoriaFluxo.fluxo']}"
-            items="#{produtividadeAction.fluxoList}"
-            noSelectionLabel="Selecione..."
-          />
-          <wi:suggest
-            id="suggestUsuario"
-            suggestProvider="#{usuarioSuggestBean}"
-            value="#{produtividadeAction.usuario}"
-            label="#{messages['usuario.usuario']}"
-          />
-          <wi:inputDataPeriodo
-            id="periodo"
-            valueDateFrom="#{produtividadeAction.dataInicio}"
-            valueDateTo="#{produtividadeAction.dataFim}"
-            label="Período"
-          />
-        </wi:searchForm>
-      </ui:define>
-      <ui:define name="toolBar" />
-      <wi:columnOutputText
-        columnId="usuario"
-        columnHeader="#{messages['usuario.usuario']}"
-        value="#{row.usuario}"
-      />
-      <wi:columnOutputText
-        columnId="localizacao"
-        columnHeader="#{messages['produtividade.localizacao']}"
-        value="#{row.localizacao}"
-      />
-      <wi:columnOutputText
-        columnId="papel"
-        columnHeader="#{messages['produtividade.papel']}"
-        value="#{row.papel}"
-      />
-      <wi:columnOutputText
-        columnId="tarefa"
-        columnHeader="#{messages['produtividade.tarefa']}"
-        value="#{row.tarefa}"
-      />
-      <wi:columnOutputText
-        columnId="quantidade"
-        columnHeader="#{messages['produtividade.quantidade']}"
-        value="#{row.quantidadeTarefas}"
-      />
-      <wi:columnOutputText
-        columnId="tempoMedio"
-        columnHeader="#{messages['produtividade.tempoMedio']}"
-        value="#{row.mediaTempoGasto}"
-      />
-      <wi:columnOutputText
-        columnId="tempoPrevisto"
-        columnHeader="#{messages['produtividade.tempoPrevisto']}"
-        value="#{row.tempoPrevisto}"
-      />
-      <wi:columnOutputText
-        columnId="tempoMinimo"
-        columnHeader="#{messages['produtividade.tempoMinimo']}"
-        value="#{row.minimoTempoGasto}"
-      />
-      <wi:columnOutputText
-        columnId="tempoMaximo"
-        columnHeader="#{messages['produtividade.tempoMaximo']}"
-        value="#{row.maximoTempoGasto}"
-      />
-    </wi:dataTable>
-  </ui:define>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:dojo="http://www.itx.com.br/dojo"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="title">#{messages['produtividade.pageTitle']}</ui:define>
+    <ui:define name="body">
+        <wi:dataTable values="#{produtividadeAction.list(15)}"
+            bean="#{produtividadeAction}"
+            tableTitle="#{messages['produtividade.tableTitle']}"
+            id="produtividadeList" hideOrder="true">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisaFluxoForm"
+                    formTitle="#{messages['searchForm.title']}"
+                    clearAction="produtividadeAction.clear">
+                    <wi:selectOneMenuEntity id="comboFluxo"
+                        value="#{produtividadeAction.fluxo}"
+                        label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+                        items="#{produtividadeAction.fluxoList}"
+                        noSelectionLabel="Selecione..." />
+                    <wi:suggest id="suggestUsuario"
+                        suggestProvider="#{usuarioSuggestBean}"
+                        value="#{produtividadeAction.usuario}"
+                        label="#{messages['usuario.usuario']}" />
+                    <wi:inputDataPeriodo id="periodo"
+                        valueDateFrom="#{produtividadeAction.dataInicio}"
+                        valueDateTo="#{produtividadeAction.dataFim}"
+                        label="#{messages['data.inputPeriodo']}" />
+                </wi:searchForm>
+            </ui:define>
+            <ui:define name="toolBar" />
+            <wi:columnOutputText columnId="usuario"
+                columnHeader="#{messages['usuario.usuario']}"
+                value="#{row.usuario}" />
+            <wi:columnOutputText columnId="localizacao"
+                columnHeader="#{messages['produtividade.localizacao']}"
+                value="#{row.localizacao}" />
+            <wi:columnOutputText columnId="papel"
+                columnHeader="#{messages['produtividade.papel']}"
+                value="#{row.papel}" />
+            <wi:columnOutputText columnId="tarefa"
+                columnHeader="#{messages['produtividade.tarefa']}"
+                value="#{row.tarefa}" />
+            <wi:columnOutputText columnId="quantidade"
+                columnHeader="#{messages['produtividade.quantidade']}"
+                value="#{row.quantidadeTarefas}" />
+            <wi:columnOutputText columnId="tempoMedio"
+                columnHeader="#{messages['produtividade.tempoMedio']}"
+                value="#{row.mediaTempoGasto}" />
+            <wi:columnOutputText columnId="tempoPrevisto"
+                columnHeader="#{messages['produtividade.tempoPrevisto']}"
+                value="#{row.tempoPrevisto}" />
+            <wi:columnOutputText columnId="tempoMinimo"
+                columnHeader="#{messages['produtividade.tempoMinimo']}"
+                value="#{row.minimoTempoGasto}" />
+            <wi:columnOutputText columnId="tempoMaximo"
+                columnHeader="#{messages['produtividade.tempoMaximo']}"
+                value="#{row.maximoTempoGasto}" />
+        </wi:dataTable>
+    </ui:define>
 </ui:composition>
