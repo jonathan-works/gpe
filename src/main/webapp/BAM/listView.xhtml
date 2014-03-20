@@ -1,215 +1,281 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:dojo="http://www.itx.com.br/dojo"
-    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-
-    <ui:define name="title">#{messages['bam.pageTitle']}</ui:define>
-
-    <ui:param name="home" value="#{bamAction}" />
-    <ui:param name="showFormTab"
-        value="#{not empty processoEpaTarefaList.entity.processoEpa}" />
-    <ui:define name="head">
-        <h:outputScript name="dojo.js" library="js/dojo" />
-        <h:outputScript name="defaultGauge.js"
-            library="js/dojoCustom/gauges" />
-        <h:outputScript name="progressBarGauge.js"
-            library="js/dojoCustom/gauges" />
-    </ui:define>
-
-    <ui:define name="searchGrid">
-        <wi:dataTable values="#{processoEpaNaoFinalizadoList.list(15)}"
-            bean="#{processoEpaNaoFinalizadoList}"
-            tableTitle="#{messages['bam.tableTitle']}"
-            id="processoEpaNaoFinalizadoList"
-            rowId="#{row.idProcessoTarefa}" toolBarColumnWidth="69px"
-            hideOrder="true">
-            <ui:define name="searchForm">
-                <wi:searchForm formId="pesquisaFluxoForm"
-                    formTitle="#{messages['searchForm.title']}">
-
-                    <wi:selectOneMenuEntity id="comboFluxo"
-                        value="#{processoEpaNaoFinalizadoList.fluxo}"
-                        label="#{messages['naturezaCategoriaFluxo.fluxo']}"
-                        items="#{processoEpaNaoFinalizadoList.fluxoList}" />
-                    <wi:selectOneMenuEnum id="tipoDeprocesso"
-                        label="#{messages['bam.tipoAtraso']}"
-                        items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
-                        value="#{processoEpaNaoFinalizadoList.entity.processoEpa.situacaoPrazo}" />
-                </wi:searchForm>
-                <dojo:defaultGauge id="processo"
-                    max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-                    width="250" height="200" radius="50"
-                    label="#{messages['bam.medidorProcSel']}"
-                    draggable="false"
-                    indicatorLabel="#{messages['bam.tempoMedio']} (dias)"
-                    value="#{processoEpaNaoFinalizadoList.mediaTempoGastoDesdeInicioProcesso}" />
-            </ui:define>
-            <ui:define name="headerToolBar" />
-            <ui:define name="toolBar">
-                <div class="tbar-div">
-                    <h:graphicImage value="/img/balao.png"
-                        rendered="#{not (row.processoEpa.situacaoPrazo == 'SAT')}" />
-                    <h:form id="#{row.processoEpa.numeroProcesso}Form">
-                        <h:selectBooleanCheckbox
-                            id="#{row.processoEpa.numeroProcesso}Contab"
-                            styleClass="checkbox"
-                            value="#{row.processoEpa.contabilizar}"
-                            required="false" disabled="false">
-                            <a:ajax event="change"
-                                listener="#{processoEpaAction.alternarContabilizar(row.processoEpa)}"
-                                render="processoListPanel gaugeAjaxDivprocesso"
-                                limitRender="true" status=":status"
-                                rendered="true" execute="@this">
-                            </a:ajax>
-
-                        </h:selectBooleanCheckbox>
-                    </h:form>
-                    <wi:toolBarEdit
-                        action="#{processoEpaTarefaList.entity.setProcessoEpa(row.processoEpa)}" />
-                </div>
-            </ui:define>
-
-            <wi:columnOutputText columnId="numeroProcesso"
-                columnHeader="#{messages['processo.menuText']}"
-                value="#{row.processoEpa.numeroProcesso}"
-                hideOrder="true" />
-
-            <wi:columnOutputText columnId="fluxo"
-                columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
-                value="#{row.processoEpa.naturezaCategoriaFluxo.fluxo}"
-                hideOrder="true" />
-
-            <wi:columnDateTime columnId="dataInicio"
-                columnHeader="#{messages['processo.dataInicio']}"
-                value="#{row.processoEpa.dataInicio}" />
-
-            <wi:columnOutputText columnId="naturezaCategoriaItem"
-                columnHeader="#{messages['processoEpa.naturezaCategoriaItem']}"
-                value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processoEpa)}"
-                hideOrder="true" />
-
-            <wi:columnOutputText columnId="prioridadeProcesso"
-                columnHeader="#{messages['bam.prioridade']}"
-                value="#{row.processoEpa.prioridadeProcesso}" />
-
-            <wi:columnDateTime columnId="dataChegadaTarefa"
-                columnHeader="#{messages['processoEpa.dataChegadaTarefa']}"
-                value="#{row.dataInicio}" />
-
-            <ui:param name="task"
-                value="#{bamAction.getTaskInstance(row.taskInstance)}" />
-            <rich:column styleClass="defaultCell">
-                <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
-                <span> <h:graphicImage url="/img/localizacao.gif"
-                        rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
-                    <h:outputText
-                        value="#{jbpmUtil.getLocalizacao(task)}" />
-                </span>
-                <span> <h:graphicImage url="/img/usuario.gif"
-                        rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
-                    <h:outputText
-                        value=" #{userHandler.getUsuario(task.actorId)}" />
-                </span>
-            </rich:column>
-
-            <wi:columnOutputText columnId="tempoGastoTarefa"
-                columnHeader="#{messages['processoEpa.tempoGastoTarefa']}"
-                value="#{row.tempoGastoFormatado}" />
-
-            <wi:columnOutputText columnId="tempoDesdeInicio"
-                columnHeader="#{messages['processoEpa.tempoDesdeInicioDias']}"
-                value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processoEpa)}"
-                hideOrder="true" />
-
-        </wi:dataTable>
-    </ui:define>
-
-    <ui:define name="form">
-        <wi:dataTable values="#{processoEpaTarefaList.list(15)}"
-            bean="#{processoEpaTarefaList}"
-            tableTitle="Processo #{processoEpaTarefaList.entity.processoEpa.numeroProcesso} - Tarefas"
-            showToolbarColumn="false" panelWidth="97%"
-            showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
-            rowClasses="#{processoEpaTarefaList.rowClasses()}"
-            id="processoTarefaDataTable">
-            <ui:define name="toolBar"></ui:define>
-            <ui:define name="headerToolBar"></ui:define>
-            <wi:columnOutputText columnId="medidor"
-                columnHeader="#{messages['bam.medidor']}"
-                hideOrder="true" columnWidth="60">
-                <dojo:progressBarGauge id="#{row.idProcessoTarefa}"
-                    width="60" height="13" barWidth="60" barHeight="13"
-                    min="0" max="100" value="#{row.porcentagem}"
-                    hideTicks="true">
-                </dojo:progressBarGauge>
-            </wi:columnOutputText>
-
-            <wi:columnOutputText columnId="tarefa" columnHeader="Tarefa"
-                value="#{row.tarefa.tarefa}" />
-
-            <ui:param name="task"
-                value="#{bamAction.getTaskInstance(row.taskInstance)}" />
-            <rich:column styleClass="defaultCell">
-                <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
-                <span> <h:graphicImage url="/img/localizacao.gif"
-                        rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
-                    <h:outputText
-                        value="#{jbpmUtil.getLocalizacao(task)}" />
-                </span>
-                <span> <h:graphicImage url="/img/usuario.gif"
-                        rendered="#{!empty userHandler.getUsuario(task.actorId)}" />
-                    <h:outputText
-                        value=" #{userHandler.getUsuario(task.actorId)}" />
-                </span>
-            </rich:column>
-
-            <ui:param name="prazoEstourado"
-                value="#{row.porcentagem > 100}" />
-            <ui:param name="porc"
-                value="#{prazoEstourado ? '> 100' : row.porcentagem}" />
-            <wi:columnOutputText columnId="porcentagem" columnHeader="%"
-                value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}" />
-
-
-            <rich:column styleClass="defaultCell">
-                <f:facet name="header">#{messages['processo.dataInicio']}</f:facet>
-                <h:outputText value="#{row.dataInicio}">
-                    <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
-                </h:outputText>
-            </rich:column>
-
-            <rich:column styleClass="defaultCell">
-                <f:facet name="header">#{messages['processo.dataFim']}</f:facet>
-                <h:outputText value="#{row.dataFim}">
-                    <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
-                </h:outputText>
-            </rich:column>
-
-            <wi:columnOutputText columnId="tempoGasto"
-                columnHeader="#{messages['processoEpa.tempoGasto']}"
-                value="#{row.getTempoGastoFormatado()}" />
-
-            <wi:columnOutputText columnId="tempoPrevisto"
-                columnHeader="#{messages['temposMedios.prazo']}"
-                value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}" />
-        </wi:dataTable>
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:dojo="http://www.itx.com.br/dojo"
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+>
+  <ui:define name="title">#{messages['bam.pageTitle']}</ui:define>
+  <ui:param
+    name="home"
+    value="#{bamAction}"
+  />
+  <ui:param
+    name="showFormTab"
+    value="#{not empty processoEpaTarefaList.entity.processoEpa}"
+  />
+  <ui:define name="head">
+    <h:outputScript
+      name="dojo.js"
+      library="js/dojo"
+    />
+    <h:outputScript
+      name="defaultGauge.js"
+      library="js/dojoCustom/gauges"
+    />
+    <h:outputScript
+      name="progressBarGauge.js"
+      library="js/dojoCustom/gauges"
+    />
+  </ui:define>
+  <ui:define name="searchGrid">
+    <wi:dataTable
+      values="#{processoEpaNaoFinalizadoList.list(15)}"
+      bean="#{processoEpaNaoFinalizadoList}"
+      tableTitle="#{messages['bam.tableTitle']}"
+      id="processoEpaNaoFinalizadoList"
+      rowId="#{row.idProcessoTarefa}"
+      toolBarColumnWidth="69px"
+      hideOrder="true"
+    >
+      <ui:define name="searchForm">
+        <wi:searchForm
+          formId="pesquisaFluxoForm"
+          formTitle="#{messages['searchForm.title']}"
+        >
+          <wi:selectOneMenuEntity
+            id="comboFluxo"
+            value="#{processoEpaNaoFinalizadoList.fluxo}"
+            label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+            items="#{processoEpaNaoFinalizadoList.fluxoList}"
+          />
+          <wi:selectOneMenuEnum
+            id="tipoDeprocesso"
+            label="#{messages['bam.tipoAtraso']}"
+            items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
+            value="#{processoEpaNaoFinalizadoList.entity.processoEpa.situacaoPrazo}"
+          />
+        </wi:searchForm>
         <dojo:defaultGauge
-            id="#{processoEpaTarefaList.entity.processoEpa.numeroProcesso}"
-            max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-            width="210" height="200" radius="50"
-            label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
-            draggable="true"
-            indicatorLabel="#{messages['processoEpa.tempoGasto']} (dias)"
-            value="#{processoEpaTarefaList.diasDesdeInicioProcesso}" />
-    </ui:define>
-
+          id="processo"
+          max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+          width="250"
+          height="200"
+          radius="50"
+          label="#{messages['bam.medidorProcSel']}"
+          draggable="false"
+          indicatorLabel="#{messages['bam.tempoMedio']} (dias)"
+          value="#{processoEpaNaoFinalizadoList.mediaTempoGastoDesdeInicioProcesso}"
+        />
+      </ui:define>
+      <ui:define name="headerToolBar" />
+      <ui:define name="toolBar">
+        <div class="tbar-div">
+          <h:graphicImage
+            value="/img/balao.png"
+            rendered="#{not (row.processoEpa.situacaoPrazo == 'SAT')}"
+          />
+          <h:form id="#{row.processoEpa.numeroProcesso}Form">
+            <h:selectBooleanCheckbox
+              id="#{row.processoEpa.numeroProcesso}Contab"
+              styleClass="checkbox"
+              value="#{row.processoEpa.contabilizar}"
+              required="false"
+              disabled="false"
+            >
+              <a:ajax
+                event="change"
+                listener="#{processoEpaAction.alternarContabilizar(row.processoEpa)}"
+                render="processoListPanel gaugeAjaxDivprocesso"
+                limitRender="true"
+                status=":status"
+                rendered="true"
+                execute="@this"
+              >
+              </a:ajax>
+            </h:selectBooleanCheckbox>
+          </h:form>
+          <wi:toolBarEdit
+            action="#{processoEpaTarefaList.entity.setProcessoEpa(row.processoEpa)}"
+          />
+        </div>
+      </ui:define>
+      <wi:columnOutputText
+        columnId="numeroProcesso"
+        columnHeader="#{messages['processo.menuText']}"
+        value="#{row.processoEpa.numeroProcesso}"
+        hideOrder="true"
+      />
+      <wi:columnOutputText
+        columnId="fluxo"
+        columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+        value="#{row.processoEpa.naturezaCategoriaFluxo.fluxo}"
+        hideOrder="true"
+      />
+      <wi:columnDateTime
+        columnId="dataInicio"
+        columnHeader="#{messages['processo.dataInicio']}"
+        value="#{row.processoEpa.dataInicio}"
+      />
+      <wi:columnOutputText
+        columnId="naturezaCategoriaItem"
+        columnHeader="#{messages['processoEpa.naturezaCategoriaItem']}"
+        value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processoEpa)}"
+        hideOrder="true"
+      />
+      <wi:columnOutputText
+        columnId="prioridadeProcesso"
+        columnHeader="#{messages['bam.prioridade']}"
+        value="#{row.processoEpa.prioridadeProcesso}"
+      />
+      <wi:columnDateTime
+        columnId="dataChegadaTarefa"
+        columnHeader="#{messages['processoEpa.dataChegadaTarefa']}"
+        value="#{row.dataInicio}"
+      />
+      <ui:param
+        name="task"
+        value="#{bamAction.getTaskInstance(row.taskInstance)}"
+      />
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
+        <span> <h:graphicImage
+            url="/img/localizacao.gif"
+            rendered="#{!empty jbpmUtil.getLocalizacao(task)}"
+          /> <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
+        </span>
+        <span> <h:graphicImage
+            url="/img/usuario.gif"
+            rendered="#{!empty userHandler.getUsuario(task.actorId)}"
+          /> <h:outputText
+            value=" #{userHandler.getUsuario(task.actorId)}"
+          />
+        </span>
+      </rich:column>
+      <wi:columnOutputText
+        columnId="tempoGastoTarefa"
+        columnHeader="#{messages['processoEpa.tempoGastoTarefa']}"
+        value="#{row.tempoGastoFormatado}"
+      />
+      <wi:columnOutputText
+        columnId="tempoDesdeInicio"
+        columnHeader="#{messages['processoEpa.tempoDesdeInicioDias']}"
+        value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processoEpa)}"
+        hideOrder="true"
+      />
+    </wi:dataTable>
+  </ui:define>
+  <ui:define name="form">
+    <dojo:defaultGauge
+      id="#{processoEpaTarefaList.entity.processoEpa.numeroProcesso}"
+      max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+      width="210"
+      height="200"
+      radius="50"
+      label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
+      draggable="true"
+      containerStyleClass="organized"
+      indicatorLabel="#{messages['processoEpa.tempoGasto']} (dias)"
+      value="#{processoEpaTarefaList.diasDesdeInicioProcesso}"
+    />
+    <wi:dataTable
+      values="#{processoEpaTarefaList.list(15)}"
+      bean="#{processoEpaTarefaList}"
+      tableTitle="Processo #{processoEpaTarefaList.entity.processoEpa.numeroProcesso} - Tarefas"
+      showToolbarColumn="false"
+      showSearchForm="false"
+      panelWidth="97%"
+      styleClass="organized"
+      showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
+      id="processoTarefaDataTable"
+    >
+      <ui:define name="toolBar"></ui:define>
+      <ui:define name="headerToolBar"></ui:define>
+      <wi:columnOutputText
+        columnId="medidor"
+        columnHeader="#{messages['bam.medidor']}"
+        hideOrder="true"
+        columnWidth="60"
+      >
+        <dojo:progressBarGauge
+          id="#{row.idProcessoTarefa}"
+          width="60"
+          height="13"
+          barWidth="60"
+          barHeight="13"
+          min="0"
+          max="100"
+          value="#{row.porcentagem}"
+          hideTicks="true"
+        >
+        </dojo:progressBarGauge>
+      </wi:columnOutputText>
+      <wi:columnOutputText
+        columnId="tarefa"
+        columnHeader="Tarefa"
+        value="#{row.tarefa.tarefa}"
+      />
+      <ui:param
+        name="task"
+        value="#{bamAction.getTaskInstance(row.taskInstance)}"
+      />
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
+        <span> <h:graphicImage
+            url="/img/localizacao.gif"
+            rendered="#{!empty jbpmUtil.getLocalizacao(task)}"
+          /> <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
+        </span>
+        <span> <h:graphicImage
+            url="/img/usuario.gif"
+            rendered="#{!empty userHandler.getUsuario(task.actorId)}"
+          /> <h:outputText
+            value=" #{userHandler.getUsuario(task.actorId)}"
+          />
+        </span>
+      </rich:column>
+      <ui:param
+        name="prazoEstourado"
+        value="#{row.porcentagem > 100}"
+      />
+      <ui:param
+        name="porc"
+        value="#{prazoEstourado ? '> 100' : row.porcentagem}"
+      />
+      <wi:columnOutputText
+        columnId="porcentagem"
+        columnHeader="%"
+        value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}"
+      />
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header">#{messages['processo.dataInicio']}</f:facet>
+        <h:outputText value="#{row.dataInicio}">
+          <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+        </h:outputText>
+      </rich:column>
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header">#{messages['processo.dataFim']}</f:facet>
+        <h:outputText value="#{row.dataFim}">
+          <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+        </h:outputText>
+      </rich:column>
+      <wi:columnOutputText
+        columnId="tempoGasto"
+        columnHeader="#{messages['processoEpa.tempoGasto']}"
+        value="#{row.getTempoGastoFormatado()}"
+      />
+      <wi:columnOutputText
+        columnId="tempoPrevisto"
+        columnHeader="#{messages['temposMedios.prazo']}"
+        value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}"
+      />
+    </wi:dataTable>
+  </ui:define>
 </ui:composition>
