@@ -27,10 +27,10 @@
             </infox:tab>
             <infox:tab id="tabAnexos" name="tabAnexos" immediate="true"
                 action="#{processoDocumentoList.entity.setProcesso(consultaController.processoEpa)}"
-                status=":status" title="Documentos do Processo">
+                status=":status" title="#{messages['processo.documentos']}">
                 <wi:dataTable values="#{processoDocumentoList.list(15)}"
                     bean="#{processoDocumentoList}"
-                    tableTitle="Documentos do Processo"
+                    tableTitle="#{messages['processo.documentos']}"
                     id="processoDocumentoList"
                     rowId="#{row.idProcessoDocumento}"
                     showSearchForm="false">

@@ -8,343 +8,369 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf">
-
+    xmlns:wi="http://www.itx.com.br/jsf"
+>
     <s:div id="nodes">
-
         <s:div id="divNodesGeral">
-
-            <s:div id="nodesDiv" styleClass="node-instance-p">
-
+            <s:div
+                id="nodesDiv"
+                styleClass="node-instance-p"
+            >
                 <s:div styleClass="node-instance-l">
-                
                     <ui:decorate template="dataTable.xhtml">
-                    
-                        <ui:param name="values" value="#{nodeFitter.nodes}" />
-                        
-                        <ui:param name="styleClass" value="tabelaVariaveis" />
-                        
-                        <ui:param name="id" value="nodesTable" />
-                        
-                        <ui:param name="style" value="width:100%" />
-                        
+                        <ui:param
+                            name="values"
+                            value="#{nodeFitter.nodes}"
+                        />
+                        <ui:param
+                            name="styleClass"
+                            value="tabelaVariaveis"
+                        />
+                        <ui:param
+                            name="id"
+                            value="nodesTable"
+                        />
+                        <ui:param
+                            name="style"
+                            value="width:100%"
+                        />
                         <ui:define name="headerToolBar">
-                        
-                        	<h:form>
-                        	
-                            	<a:commandLink action="#{nodeFitter.setCurrentNode(null)}" render="nodesDiv" limitRender="true">
-
-                                	<h:graphicImage title="Adicionar nó" url="/img/add.gif" />
-
-                       	     	</a:commandLink>
-                       	     	
-                       	    </h:form>
-
-                        </ui:define>
-                        
-                        <ui:define name="toolBar">
-
                             <h:form>
-
-                                <h:graphicImage title="Excluir nó" url="/img/remove.png" styleClass="opacityHover" 
-                                	rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}">
-
-                                    <a:ajax event="click"
-                                    	listener="#{nodeFitter.removeNode(row)}"
+                                <a:commandLink
+                                    action="#{nodeFitter.setCurrentNode(null)}"
+                                    render="nodesDiv"
+                                    limitRender="true"
+                                >
+                                    <h:graphicImage
+                                        title="Adicionar nó"
+                                        url="/img/add.gif"
+                                    />
+                                </a:commandLink>
+                            </h:form>
+                        </ui:define>
+                        <ui:define name="toolBar">
+                            <h:form>
+                                <h:graphicImage
+                                    title="Excluir nó"
+                                    url="/img/remove.png"
+                                    styleClass="opacityHover"
+                                    rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}"
+                                >
+                                    <a:ajax
+                                        event="click"
+                                        listener="#{nodeFitter.removeNode(row)}"
                                         onbeforesubmit="if(!confirm('Confirma?')) return false;"
                                         execute="@this"
                                         render="nodesDiv"
-                                        limitRender="true" />
-
+                                        limitRender="true"
+                                    />
                                 </h:graphicImage>
-                                
-                                <h:graphicImage title="Subir na ordem" rendered="#{key != 0}" url="/img/jbpm/up.gif" styleClass="opacityHover">
-
-                                    <a:ajax event="click" listener="#{nodeFitter.moveUp(row)}" execute="@this" render="nodesTable" limitRender="true" />
-
+                                <h:graphicImage
+                                    title="Subir na ordem"
+                                    rendered="#{key != 0}"
+                                    url="/img/jbpm/up.gif"
+                                    styleClass="opacityHover"
+                                >
+                                    <a:ajax
+                                        event="click"
+                                        listener="#{nodeFitter.moveUp(row)}"
+                                        execute="@this"
+                                        render="nodesTable"
+                                        limitRender="true"
+                                    />
                                 </h:graphicImage>
-                                
-                                <h:graphicImage title="Descer na ordem"
+                                <h:graphicImage
+                                    title="Descer na ordem"
                                     rendered="#{key lt nodeFitter.nodes.size - 1}"
                                     url="/img/jbpm/down.gif"
-                                    styleClass="opacityHover">
-
-                                    <a:ajax event="click" listener="#{nodeFitter.moveDown(row)}" execute="@this" render="nodesTable" limitRender="true" />
-
+                                    styleClass="opacityHover"
+                                >
+                                    <a:ajax
+                                        event="click"
+                                        listener="#{nodeFitter.moveDown(row)}"
+                                        execute="@this"
+                                        render="nodesTable"
+                                        limitRender="true"
+                                    />
                                 </h:graphicImage>
-
                             </h:form>
-
                         </ui:define>
-                        
                         <ui:define name="columns">
-
                             <rich:column>
-
                                 <f:facet name="header">Nós</f:facet>
-                                
-                                <ui:param name="current" value="#{row == nodeFitter.currentNode}" />
-                                
-                                <ui:param name="styleNodeName" value="#{current ? 'font-weight:bold' : ''}" />
-                                
+                                <ui:param
+                                    name="current"
+                                    value="#{row == nodeFitter.currentNode}"
+                                />
+                                <ui:param
+                                    name="styleNodeName"
+                                    value="#{current ? 'font-weight:bold' : ''}"
+                                />
                                 <h:form>
-                                
-	                                <a:commandLink action="#{nodeFitter.setCurrentNode(row)}" render="divNodesGeral" execute="@this" limitRender="true">
-	
-	                                    <a:outputPanel>
-	
-	                                        <h:panelGrid columns="2" cellspacing="0" cellpadding="0">
-	
-	                                            <h:graphicImage url="/img/jbpm/#{nodeFitter.getIcon(row)}.gif" title="#{row.nodeType}" />
-	                                            
-	                                            <h:outputText value="#{row.name}" title="#{nodeFitter.getMessage(row)}" />
-	
-	                                        </h:panelGrid>
-	
-	                                    </a:outputPanel>
-	
-	                                </a:commandLink>
-	                                
-	                            </h:form>
-
+                                    <a:commandLink
+                                        action="#{nodeFitter.setCurrentNode(row)}"
+                                        render="divNodesGeral"
+                                        execute="@this"
+                                        limitRender="true"
+                                    >
+                                        <a:outputPanel>
+                                            <h:panelGrid
+                                                columns="2"
+                                                cellspacing="0"
+                                                cellpadding="0"
+                                            >
+                                                <h:graphicImage
+                                                    url="/img/jbpm/#{nodeFitter.getIcon(row)}.gif"
+                                                    title="#{row.nodeType}"
+                                                />
+                                                <h:outputText
+                                                    value="#{row.name}"
+                                                    title="#{nodeFitter.getMessage(row)}"
+                                                />
+                                            </h:panelGrid>
+                                        </a:outputPanel>
+                                    </a:commandLink>
+                                </h:form>
                             </rich:column>
-
                         </ui:define>
-
                     </ui:decorate>
-
                 </s:div>
-
-                <s:div id="nodeDiv" styleClass="node-instance-e">
-
-                    <rich:panel bodyClass="panel" rendered="#{!empty nodeFitter.currentNode}">
-
+                <s:div
+                    id="nodeDiv"
+                    styleClass="node-instance-e"
+                >
+                    <rich:panel
+                        bodyClass="panel"
+                        rendered="#{!empty nodeFitter.currentNode}"
+                    >
                         <f:facet name="header">
-
-                            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-
-                                <h:graphicImage url="/img/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif" title="#{nodeFitter.currentNode.nodeType}" />
-								
-								<h:outputText value="#{nodeFitter.nodeName}" />
-								                                
+                            <h:panelGrid
+                                columns="2"
+                                cellpadding="0"
+                                cellspacing="0"
+                            >
+                                <h:graphicImage
+                                    url="/img/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif"
+                                    title="#{nodeFitter.currentNode.nodeType}"
+                                />
+                                <h:outputText
+                                    value="#{nodeFitter.nodeName}"
+                                />
                             </h:panelGrid>
-
                         </f:facet>
-
-                        <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
-
+                        <s:fragment
+                            rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}"
+                        >
                             <ui:include src="transition.xhtml">
-
-                                <ui:param name="type" value="from" />
-
+                                <ui:param
+                                    name="type"
+                                    value="from"
+                                />
                             </ui:include>
-
                         </s:fragment>
-
-                        <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}">
-
+                        <s:fragment
+                            rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}"
+                        >
                             <ui:include src="transition.xhtml">
-
-                                <ui:param name="type" value="to" />
-
+                                <ui:param
+                                    name="type"
+                                    value="to"
+                                />
                             </ui:include>
-
                         </s:fragment>
-                        
-                        <s:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
-
+                        <s:fragment
+                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}"
+                        >
                             <ui:include src="tasks.xhtml" />
-
                         </s:fragment>
-
-                        <s:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
-
+                        <s:fragment
+                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}"
+                        >
                             <ui:include src="timers.xhtml" />
-
                         </s:fragment>
-
                         <s:div rendered="#{! empty nodeFitter.nodeForm}">
-
-							<h:form>
-
-                            	<ui:include src="forms/#{nodeFitter.nodeForm}.xhtml" />
-                            	
-                           	</h:form>
-
+                            <h:form>
+                                <ui:include
+                                    src="forms/#{nodeFitter.nodeForm}.xhtml"
+                                />
+                            </h:form>
                         </s:div>
-
-						<h:form>
-
-	                        <rich:collapsiblePanel switchType="ajax" expanded="false" header="#{messages['jbpm.taskNode.description']}">
-								
-	                            <wi:editor id="nodeDescription" label="" value="#{nodeFitter.currentNode.description}">
-	
-	                                <a:ajax event="change" execute="@this" limitRender="true" />
-	
-	                            </wi:editor>
-		                            
-	                        </rich:collapsiblePanel>
-	                        
-	                    </h:form>
-
-						<h:form>
-
-	                        <rich:collapsiblePanel switchType="ajax" expanded="false" header="Eventos">
-	
-	                            <ui:include src="events.xhtml">
-	
-	                                <ui:param name="parent" value="#{nodeFitter.nodeHandler}" />
-	                                <ui:param name="id" value="nodeEvent" />
-	
-	                            </ui:include>
-	
-	                        </rich:collapsiblePanel>
-	                        
-	                	</h:form>
-
+                        <h:form>
+                            <rich:collapsiblePanel
+                                switchType="ajax"
+                                expanded="false"
+                                header="#{messages['jbpm.taskNode.description']}"
+                            >
+                                <wi:editor
+                                    id="nodeDescription"
+                                    label=""
+                                    value="#{nodeFitter.currentNode.description}"
+                                >
+                                    <a:ajax
+                                        event="change"
+                                        execute="@this"
+                                        limitRender="true"
+                                    />
+                                </wi:editor>
+                            </rich:collapsiblePanel>
+                        </h:form>
+                        <h:form>
+                            <rich:collapsiblePanel
+                                switchType="ajax"
+                                expanded="false"
+                                header="Eventos"
+                            >
+                                <ui:include src="events.xhtml">
+                                    <ui:param
+                                        name="parent"
+                                        value="#{nodeFitter.nodeHandler}"
+                                    />
+                                    <ui:param
+                                        name="id"
+                                        value="nodeEvent"
+                                    />
+                                </ui:include>
+                            </rich:collapsiblePanel>
+                        </h:form>
                     </rich:panel>
-                    
                     <br />
-                    
-                    <rich:panel header="Novo nó" rendered="#{empty nodeFitter.currentNode}">
-
-                        <rich:dataTable id="nodeTypes" value="#{nodeFitter.nodeTypes}" var="node" >
-
-                            <f:facet name="header"><h:outputText value="Tipo de nó" /></f:facet>
-                            
-                            <rich:column filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
-                            
-                            	<h:graphicImage url="/img/jbpm/${node[0]}.gif" />
-                            
+                    <rich:panel
+                        header="Novo nó"
+                        rendered="#{empty nodeFitter.currentNode}"
+                    >
+                        <rich:dataTable
+                            id="nodeTypes"
+                            value="#{nodeFitter.nodeTypes}"
+                            var="node"
+                        >
+                            <f:facet name="header">
+                                <h:outputText value="Tipo de nó" />
+                            </f:facet>
+                            <rich:column
+                                filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}"
+                            >
+                                <h:graphicImage
+                                    url="/img/jbpm/${node[0]}.gif"
+                                />
                             </rich:column>
-                            
-                            <rich:column filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
-                            
-                            	<h:outputText value="#{node[1]}" />
-                            	
+                            <rich:column
+                                filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}"
+                            >
+                                <h:outputText value="#{node[1]}" />
                             </rich:column>
-                            
-                            <rich:column filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
-
-								<h:form>
-									
-	                                <h:graphicImage url="/img/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
-	
-	                                    <a:ajax event="click"
-	                                        listener="#{nodeFitter.setNewNodeType(node[0])}"
-	                                        execute="@this"
-	                                        render="nodeTypes,inTransition"
-	                                        limitRender="true" />
-	
-	                                </h:graphicImage>
-	                                
-	                             </h:form>
-
+                            <rich:column
+                                filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}"
+                            >
+                                <h:form>
+                                    <h:graphicImage
+                                        url="/img/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif"
+                                    >
+                                        <a:ajax
+                                            event="click"
+                                            listener="#{nodeFitter.setNewNodeType(node[0])}"
+                                            execute="@this"
+                                            render="nodeTypes,inTransition"
+                                            limitRender="true"
+                                        />
+                                    </h:graphicImage>
+                                </h:form>
                             </rich:column>
-
                         </rich:dataTable>
-
                         <s:div>
-
-							<h:form>
-                            
-	                            <s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml" id="newNodeNameDecoration">
-	
-	                                <ui:define name="label">Nome:</ui:define>
-	                                
-	                                <h:inputText id="newNodeName"
-	                                    styleClass="inputText"
-	                                    value="#{nodeFitter.newNodeName}"
-	                                    required="true">
-	
-	                                    <f:validator validatorId="nodeNameValidator" />
-	
-	                                </h:inputText>
-	
-	                            </s:decorate>
-	                            
-	                            <s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml" id="afterDecoration">
-	
-	                                <ui:define name="label">Inserir após:</ui:define>
-	                                
-	                                <h:selectOneMenu id="after" value="#{nodeFitter.newNodeAfter}" required="true">
-	
-	                                    <f:selectItems value="#{nodeFitter.nodesItems}" />
-	                                    
-	                                </h:selectOneMenu>
-	
-	                            </s:decorate>
-	                            
-	                            <s:div id="inTransition">
-	
-	                                <s:decorate rendered="#{nodeFitter.newNodeType != 'EndState'}" 
-	                                	template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-	                                	id="inTransitionDecoration">
-	
-	                                    <ui:define name="label">Na transição:</ui:define>
-	                                    
-	                                    <h:selectOneMenu id="inTransition" value="#{transitionFitter.newNodeTransitionName}" required="true">
-	
-	                                        <f:selectItems value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}" />
-	                                        
-	                                    </h:selectOneMenu>
-	
-	                                </s:decorate>
-	
-	                            </s:div>
-	                            
-	                            <a:commandButton styleClass="buttons"
-	                                value="Inserir"
-	                                render="nodesDiv"
-	                                execute="@form"
-	                                action="#{nodeFitter.addNewNode()}"
-	                                limitRender="true" />
-	                                
-							</h:form>
-	
+                            <h:form>
+                                <s:decorate
+                                    template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+                                    id="newNodeNameDecoration"
+                                >
+                                    <ui:define name="label">Nome:</ui:define>
+                                    <h:inputText
+                                        id="newNodeName"
+                                        styleClass="inputText"
+                                        value="#{nodeFitter.newNodeName}"
+                                        required="true"
+                                    >
+                                        <f:validator
+                                            validatorId="nodeNameValidator"
+                                        />
+                                    </h:inputText>
+                                </s:decorate>
+                                <s:decorate
+                                    template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+                                    id="afterDecoration"
+                                >
+                                    <ui:define name="label">Inserir após:</ui:define>
+                                    <h:selectOneMenu
+                                        id="after"
+                                        value="#{nodeFitter.newNodeAfter}"
+                                        required="true"
+                                    >
+                                        <f:selectItems
+                                            value="#{nodeFitter.nodesItems}"
+                                        />
+                                    </h:selectOneMenu>
+                                </s:decorate>
+                                <s:div id="inTransition">
+                                    <s:decorate
+                                        rendered="#{nodeFitter.newNodeType != 'EndState'}"
+                                        template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+                                        id="inTransitionDecoration"
+                                    >
+                                        <ui:define name="label">Na transição:</ui:define>
+                                        <h:selectOneMenu
+                                            id="inTransition"
+                                            value="#{transitionFitter.newNodeTransitionName}"
+                                            required="true"
+                                        >
+                                            <f:selectItems
+                                                value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}"
+                                            />
+                                        </h:selectOneMenu>
+                                    </s:decorate>
+                                </s:div>
+                                <a:commandButton
+                                    styleClass="buttons"
+                                    value="Inserir"
+                                    render="nodesDiv"
+                                    execute="@form"
+                                    action="#{nodeFitter.addNewNode()}"
+                                    limitRender="true"
+                                />
+                            </h:form>
                         </s:div>
-
                     </rich:panel>
-
                 </s:div>
-
             </s:div>
-
         </s:div>
-
-        <wi:modalPanel id="transitionCondition"
+        <wi:modalPanel
+            id="transitionCondition"
             height="150"
             width="550"
             resizeable="false"
-            labelHeader="Condição para a transição">
-
-			<h:form id="transitionConditionForm">
-
-	            <div>
-	
-	                <wi:inputTextarea id="conditionInput"
-	                    value="#{transitionFitter.getCurrentTransition().condition}"
-	                    widthDiv="500px"
-	                    label="Expressão:">
-	
-	                    <a:ajax event="change"
-	                        execute="@this"
-	                        render="transitiontoTable,transitionfromTable"
-	                        limitRender="true" />
-	
-	                </wi:inputTextarea>
-	                
-	                <a:commandButton type="button"
-	                    onclick="#{rich:component('transitionCondition')}.hide()"
-	                    styleClass="buttons buttons"
-	                    value="OK" />
-	
-	            </div>
-	            
-	    	</h:form>
-
+            labelHeader="Condição para a transição"
+        >
+            <h:form id="transitionConditionForm">
+                <div>
+                    <wi:inputTextarea
+                        id="conditionInput"
+                        value="#{transitionFitter.getCurrentTransition().condition}"
+                        widthDiv="500px"
+                        label="Expressão:"
+                    >
+                        <a:ajax
+                            event="change"
+                            execute="@this"
+                            render="transitiontoTable,transitionfromTable"
+                            limitRender="true"
+                        />
+                    </wi:inputTextarea>
+                    <a:commandButton
+                        type="button"
+                        onclick="#{rich:component('transitionCondition')}.hide()"
+                        styleClass="buttons buttons"
+                        value="OK"
+                    />
+                </div>
+            </h:form>
         </wi:modalPanel>
-        
-    </s:div>   
-
+    </s:div>
 </ui:composition>
