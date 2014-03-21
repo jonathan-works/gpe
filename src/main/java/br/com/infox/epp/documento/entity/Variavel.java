@@ -62,7 +62,7 @@ public class Variavel implements java.io.Serializable {
 
     @Column(name = DESCRICAO_VARIAVEL, nullable = false, length = LengthConstants.DESCRICAO_PADRAO, unique = true)
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
+    @Size(min = 2, max = LengthConstants.DESCRICAO_PADRAO)
     public String getVariavel() {
         return this.variavel;
     }

@@ -54,7 +54,7 @@
     <rich:collapsiblePanel
         switchType="client"
         expanded="false"
-        header="Upload"
+        header="#{messages['fileUpload.header']}"
     >
         <s:div id="uploaderDiv">
             <s:div style="clear: both">
@@ -79,7 +79,7 @@
             <s:div id="tipoDocumentoDivPdf">
                 <wi:fileUpload
                     id="uploadArquivo"
-                    label="Arquivo"
+                    label="#{messages['fileUpload.type.file']}"
                     reRender="buttonsPdfDiv"
                 >
                 </wi:fileUpload>
