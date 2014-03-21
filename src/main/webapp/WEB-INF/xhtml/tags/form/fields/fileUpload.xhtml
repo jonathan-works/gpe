@@ -18,7 +18,7 @@
         <ui:param name="accept"
             value="#{wi:get(accept, 'application/pdf')}" />
         <ui:param name="tipMessage"
-            value="#{accept == 'application/pdf' ? 'Somente arquivo PDF com tamanho máximo de 2MB' : tipMessage}" />
+            value="#{accept == 'application/pdf' ? messages['fileUpload.restriction.pdf'] : tipMessage}" />
 
         <ui:define name="label">#{label}</ui:define>
         <rich:fileUpload id="#{id}" execute="@this" status=":status"

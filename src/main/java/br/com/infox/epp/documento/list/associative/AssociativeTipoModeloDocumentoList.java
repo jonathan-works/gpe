@@ -19,10 +19,10 @@ public class AssociativeTipoModeloDocumentoList extends EntityList<TipoModeloDoc
     public static final String NAME = "associativeTipoModeloDocumentoList";
 
     private static final String DEFAULT_EJBQL = "select o from TipoModeloDocumento o where o not in "
-            + "(select v.tipoModeloDocumento from VariavelTipoModelo v where v.variavel = #{associativeTipoModeloDocumentoList.variavelToIgnore})";
+            + "(select vti.tipoModeloDocumento from VariavelTipoModelo vti inner join vti.variavel v where v.variavel = #{associativeTipoModeloDocumentoList.variavelToIgnore})";
     private static final String DEFAULT_ORDER = "tipoModeloDocumento";
 
-    private Variavel variavelToIgnore;
+    private String variavelToIgnore = ".";
 
     @Override
     protected void addSearchFields() {
@@ -48,11 +48,11 @@ public class AssociativeTipoModeloDocumentoList extends EntityList<TipoModeloDoc
         return null;
     }
 
-    public Variavel getVariavelToIgnore() {
+    public String getVariavelToIgnore() {
         return variavelToIgnore;
     }
 
-    public void setVariavelToIgnore(Variavel variavelToIgnore) {
+    public void setVariavelToIgnore(String variavelToIgnore) {
         this.variavelToIgnore = variavelToIgnore;
     }
 

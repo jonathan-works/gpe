@@ -15,7 +15,7 @@
 	
 	<action execute="#{associatedTipoModeloVariavelList.entity.setVariavel(variavelCrudAction.instance)}" 
             if="#{variavelCrudAction.tab eq 'tipoModelo'}"/>
-    <action execute="#{associativeTipoModeloDocumentoList.setVariavelToIgnore(variavelCrudAction.instance)}" 
+    <action execute="#{associativeTipoModeloDocumentoList.setVariavelToIgnore(variavelCrudAction.instance.variavel)}" 
             if="#{variavelCrudAction.tab eq 'tipoModelo'}"/>
     <action execute="#{variavelTipoModeloDocumentoCrudAction.setVariavelAtual(variavelCrudAction.instance)}" 
             if="#{variavelCrudAction.tab eq 'tipoModelo'}"/>

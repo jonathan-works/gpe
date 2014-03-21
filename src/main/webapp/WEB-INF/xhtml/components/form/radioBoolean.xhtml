@@ -8,7 +8,7 @@
 
     <ui:param name="sim" value="#{empty sim ? props.sim : sim}" />
 
-    <wi:selectOneRadio valueList="true:Sim,false:Não"
+    <wi:selectOneRadio valueList="true:crud.yes,false:crud.no"
         boxChecked="#{sim ? 0 : 1}" disabled="#{props.disabled}">
         <ui:insert />
     </wi:selectOneRadio>
