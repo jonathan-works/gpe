@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-    xmlns:f="http://java.sun.com/jsf/core">
-    <!-- 
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.ajax4jsf.org/rich"
+  xmlns:f="http://java.sun.com/jsf/core"
+>
+  <!-- 
     	Propriedades que podem ser passadas como atributo
     	- id			: Representa o id global do componente, ideal que não seja duplicado
     	- angle			: Ângulo de abertura do medidor. Ideal que seja menor que 350 e maior que 0
@@ -22,40 +23,68 @@
     	- draggable		: Boolean que determina se o medidor pode ser movido pela tela dentro de seus limites
     	- indicatorLabel: String que irá aparecer antecedendo o valor representado pela agulha
      -->
-    <ui:param name="id" value="#{wi:get(id, 'default')}" />
-    <ui:param name="value" value="#{wi:get(value,0)}" />
-    <h:outputScript>
-	   	invoke(["infox.DefaultGauge"],function(DefaultGauge) {
-	   		DefaultGauge({
-	    	    id:"#{id}DefaultGauge",
-	    	    containerId:"#{id}DefaultGaugeContainer",
-	    	    angle:#{wi:get(angle,300)},
-	    	    radius:#{wi:get(radius,150)},
-	    	    min:#{wi:get(min,0)},
-	    	    max:#{wi:get(max,100)},
-	    	    value:#{value},
-	    	    hideValues:#{wi:get(hideValues,false)},
-	    	    tickInterval:#{wi:get(tickInterval, max/4)},
-	    	    width:#{wi:get(width, radius*4)},
-	    	    height:#{wi:get(height, radius*4)},
-	    	    draggable:#{wi:get(draggable, false)},
-	    	    baseUrl:"#{pathResolver.getContextPath()}/resources/js/dojo/"
-	    	});
-	   	});
-    </h:outputScript>
-    <div id="#{id}DefaultGaugeContainer" class="gaugeContainer #{wi:get(containerStyleClass,'')}">
-        <div id="#{id}DefaultGaugeHeader" class="rf-p-h">#{label}</div>
-        <div id="#{id}DefaultGauge" class="gauge"></div>
-        <s:div id="gaugeAjaxDiv#{id}">
-            <span>#{wi:get(indicatorLabel, '')}: #{value}</span>
-            <h:outputScript>
-	        	invoke(["infox.DefaultGauge.instance.#{id}DefaultGauge"],function(Gauge) {
-		        	try {
-		        		Gauge.updateValue(#{value});
-		        	} catch(e) {}	        		
-	        	});
-			</h:outputScript>
-        </s:div>
-    </div>
-
+  <ui:param
+    name="id"
+    value="#{wi:get(id, 'default')}"
+  />
+  <ui:param
+    name="value"
+    value="#{wi:get(value,0)}"
+  />
+  <h:outputScript>
+    invoke(["infox.DefaultGauge"],function(DefaultGauge) {
+      DefaultGauge({
+        id:"#{id}DefaultGauge",
+        containerId:"#{id}DefaultGaugeContainer",
+        angle:#{wi:get(angle,300)},
+        radius:#{wi:get(radius,150)},
+        min:#{wi:get(min,0)},
+        max:#{wi:get(max,100)},
+        value:#{value},
+        hideValues:#{wi:get(hideValues,false)},
+        tickInterval:#{wi:get(tickInterval, max/4)},
+        width:#{wi:get(width, radius*4)},
+        height:#{wi:get(height, radius*4)},
+        draggable:#{wi:get(draggable, false)},
+        baseUrl:"#{pathResolver.getContextPath()}/resources/js/dojo/",
+        colors:{
+          background:'#{a4jSkin.defaultGaugeBackground}',
+          core:{
+            inner:'#{a4jSkin.defaultGaugeInnerCore}',
+            outer:'#{a4jSkin.defaultGaugeOuterCore}'
+          },
+          indicators:{
+            over75:'#{a4jSkin.defaultGaugeIndicatorOver75}',
+            over25:'#{a4jSkin.defaultGaugeIndicatorOver25}',
+            base:'#{a4jSkin.defaultGaugeIndicatorBase}',
+            needle:'#{a4jSkin.defaultGaugeNeedleIndicator}'
+          },
+          ticks:'#{a4jSkin.defaultGaugeTicks}'
+        }
+      });
+    });
+  </h:outputScript>
+  <div
+    id="#{id}DefaultGaugeContainer"
+    class="gaugeContainer #{wi:get(containerStyleClass,'')}"
+  >
+    <div
+      id="#{id}DefaultGaugeHeader"
+      class="rf-p-h"
+    >#{label}</div>
+    <div
+      id="#{id}DefaultGauge"
+      class="gauge"
+    ></div>
+    <s:div id="gaugeAjaxDiv#{id}">
+      <span>#{wi:get(indicatorLabel, '')}: #{value}</span>
+      <h:outputScript>
+        invoke(["infox.DefaultGauge.instance.#{id}DefaultGauge"],function(Gauge) {
+          try {
+            Gauge.updateValue(#{value});
+          } catch(e) {}	        		
+        });
+      </h:outputScript>
+    </s:div>
+  </div>
 </ui:composition>
