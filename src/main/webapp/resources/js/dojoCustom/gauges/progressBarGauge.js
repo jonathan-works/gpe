@@ -5,13 +5,15 @@ namespace("infox.ProgressBarGauge", function ProgressBarGauge(args) {
 			return Math.min(Math.max(value || 0, min), max);
 		}
 
+		var $colors = args.colors || {};
+		
 		function $getColor(value) {
 			if (value <= 0.25) {
-				return "#00CC00";
+				return $colors.base || "#00CC00";
 			} else if (value <= 0.75) {
-				return "#CCCC00";
+				return $colors.over25 || "#CCCC00";
 			} else {
-				return "#CC0000";
+				return $colors.over75 || "#CC0000";
 			}
 		}
 		var $width = args.width || 300;
@@ -29,7 +31,7 @@ namespace("infox.ProgressBarGauge", function ProgressBarGauge(args) {
 			dataX : args.barPosX || 0,
 			hideValues : false,
 			useTooltip : false,
-			background : 'rgba(0,0,0,0)'
+			background : $colors.background || "transparent"
 		};
 
 		var $min = args.min || 0;
@@ -38,7 +40,7 @@ namespace("infox.ProgressBarGauge", function ProgressBarGauge(args) {
 			low : $min,
 			high : $max,
 			hover : $min + " - " + $max,
-			color : args.backgroundColor || "#CCCCCC"
+			color : $colors.core || "#CCCCCC"
 		} ];
 
 		if (!args.hideTicks) {
