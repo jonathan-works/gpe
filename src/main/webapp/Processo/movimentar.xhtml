@@ -166,7 +166,7 @@
       <infox:tab id="tabAnexos" name="tabAnexos"
         rendered="#{processoHome.managed}" status=":status"
         action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
-        title="Documentos do Processo">
+        title="#{messages['processo.documentos']}">
         <wi:dataTable values="#{processoDocumentoList.list(15)}"
           bean="#{processoDocumentoList}"
           tableTitle="#{messages['processo.documentos']} #{home.instance}"
