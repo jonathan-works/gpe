@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.api;
 
+import static java.text.MessageFormat.format;
+
 import java.io.Serializable;
 import java.security.Principal;
 import java.security.cert.CertificateException;
@@ -34,6 +36,7 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(CertificateAuthenticator.NAME)
 public class CertificateAuthenticator implements Serializable {
+    private static final String CERTIFICATE_ERROR_UNKNOWN = "certificate.error.unknown";
     private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO = "certificate.error.usuarioLoginProvisorioExpirado";
     private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO = "certificate.error.usuarioLoginBloqueado";
     private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO = "certificate.error.usuarioLoginInativo";
@@ -80,7 +83,10 @@ public class CertificateAuthenticator implements Serializable {
         } catch (final CertificateExpiredException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
-        } catch (CertificadoException | LoginException | CertificateException | DAOException e) {
+        } catch (final CertificateException e) {
+            LOG.error(AUTHENTICATE, e);
+            throw new RedirectToLoginApplicationException(format(Messages.instance().get(CERTIFICATE_ERROR_UNKNOWN), e.getCause().toString()), e);
+        } catch (CertificadoException | LoginException | DAOException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
         }
