@@ -1,7 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.seam.messages.MessagesUtil.internacionalize;
+import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
 
 import java.io.Serializable;
 import java.math.BigInteger;

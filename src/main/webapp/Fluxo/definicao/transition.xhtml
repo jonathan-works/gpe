@@ -20,7 +20,7 @@
                     url="/img/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif"
                 />
                 <h:outputText
-                    value="Transições que #{type == 'from' ? 'chegam ao' : 'saem do'} nó"
+                    value="#{type == 'from' ? messages['process.transitions.arriving'] : messages['process.transitions.leaving']}"
                 />
             </h:panelGrid>
         </f:facet>

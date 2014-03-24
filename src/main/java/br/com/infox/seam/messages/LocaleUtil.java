@@ -2,9 +2,9 @@ package br.com.infox.seam.messages;
 
 import org.jboss.seam.international.Messages;
 
-public class MessagesUtil {
+public class LocaleUtil {
 
-    private MessagesUtil() {
+    private LocaleUtil() {
     }
 
     /**

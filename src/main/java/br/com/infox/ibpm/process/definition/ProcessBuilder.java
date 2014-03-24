@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.process.definition;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
@@ -130,9 +131,9 @@ public class ProcessBuilder implements Serializable {
         instance.getTaskMgmtDefinition().setStartTask(
                 taskFitter.getStartTaskHandler().getTask());
 
-        StartState startState = new StartState("Início");
+        StartState startState = new StartState(internacionalize("process.node.first"));
         instance.addNode(startState);
-        EndState endState = new EndState("Término");
+        EndState endState = new EndState(internacionalize("process.node.last"));
         instance.addNode(endState);
         Transition t = new Transition();
         t.setName(endState.getName());

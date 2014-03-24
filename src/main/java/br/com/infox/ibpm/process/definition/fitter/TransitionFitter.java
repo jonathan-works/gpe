@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -226,7 +227,7 @@ public class TransitionFitter extends Fitter implements Serializable {
     public List<SelectItem> getTransitionsItems(List<Node> nodes) {
         if (transitionsItems == null) {
             transitionsItems = new ArrayList<SelectItem>();
-            transitionsItems.add(new SelectItem(null, "[Selecione...]"));
+            transitionsItems.add(new SelectItem(null, internacionalize("process.transition.select")));
             for (Node n : nodes) {
                 if (n.getLeavingTransitions() != null) {
                     for (TransitionHandler t : TransitionHandler.getList(n.getLeavingTransitions())) {
