@@ -42,7 +42,7 @@
                                     limitRender="true"
                                 >
                                     <h:graphicImage
-                                        title="Adicionar nó"
+                                        title="#{messages['process.node.add']}"
                                         url="/img/add.gif"
                                     />
                                 </a:commandLink>
@@ -51,7 +51,7 @@
                         <ui:define name="toolBar">
                             <h:form>
                                 <h:graphicImage
-                                    title="Excluir nó"
+                                    title="#{messages['process.node.remove']}"
                                     url="/img/remove.png"
                                     styleClass="opacityHover"
                                     rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}"
@@ -66,7 +66,7 @@
                                     />
                                 </h:graphicImage>
                                 <h:graphicImage
-                                    title="Subir na ordem"
+                                    title="#{messages['process.node.up']}"
                                     rendered="#{key != 0}"
                                     url="/img/jbpm/up.gif"
                                     styleClass="opacityHover"
@@ -80,7 +80,7 @@
                                     />
                                 </h:graphicImage>
                                 <h:graphicImage
-                                    title="Descer na ordem"
+                                    title="#{messages['process.node.down']}"
                                     rendered="#{key lt nodeFitter.nodes.size - 1}"
                                     url="/img/jbpm/down.gif"
                                     styleClass="opacityHover"
@@ -97,7 +97,7 @@
                         </ui:define>
                         <ui:define name="columns">
                             <rich:column>
-                                <f:facet name="header">Nós</f:facet>
+                                <f:facet name="header">#{messages['process.nodes']}</f:facet>
                                 <ui:param
                                     name="current"
                                     value="#{row == nodeFitter.currentNode}"
@@ -235,7 +235,7 @@
                     </rich:panel>
                     <br />
                     <rich:panel
-                        header="Novo nó"
+                        header="#{messages['process.node.new']}"
                         rendered="#{empty nodeFitter.currentNode}"
                     >
                         <rich:dataTable
@@ -244,7 +244,7 @@
                             var="node"
                         >
                             <f:facet name="header">
-                                <h:outputText value="Tipo de nó" />
+                                <h:outputText value="#{messages['process.node.type']}" />
                             </f:facet>
                             <rich:column
                                 filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}"
@@ -282,7 +282,7 @@
                                     template="/WEB-INF/xhtml/components/templates/edit.xhtml"
                                     id="newNodeNameDecoration"
                                 >
-                                    <ui:define name="label">Nome:</ui:define>
+                                    <ui:define name="label">#{messages['process.node.name']}</ui:define>
                                     <h:inputText
                                         id="newNodeName"
                                         styleClass="inputText"
@@ -298,7 +298,7 @@
                                     template="/WEB-INF/xhtml/components/templates/edit.xhtml"
                                     id="afterDecoration"
                                 >
-                                    <ui:define name="label">Inserir após:</ui:define>
+                                    <ui:define name="label">#{messages['process.node.after']}</ui:define>
                                     <h:selectOneMenu
                                         id="after"
                                         value="#{nodeFitter.newNodeAfter}"
@@ -315,7 +315,7 @@
                                         template="/WEB-INF/xhtml/components/templates/edit.xhtml"
                                         id="inTransitionDecoration"
                                     >
-                                        <ui:define name="label">Na transição:</ui:define>
+                                        <ui:define name="label">#{messages['process.node.at']}</ui:define>
                                         <h:selectOneMenu
                                             id="inTransition"
                                             value="#{transitionFitter.newNodeTransitionName}"
