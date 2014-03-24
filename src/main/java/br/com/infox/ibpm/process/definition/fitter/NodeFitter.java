@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.seam.messages.MessagesUtil.internacionalize;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -22,7 +23,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.ExceptionHandler;
@@ -332,7 +332,7 @@ public class NodeFitter extends Fitter implements Serializable {
             List<Node> list = getProcessBuilder().getInstance().getNodes();
             if (list != null) {
                 nodesItems = new ArrayList<SelectItem>();
-                nodesItems.add(new SelectItem(null, Messages.instance().get("process.task.select")));
+                nodesItems.add(new SelectItem(null, internacionalize("process.task.select")));
                 for (Node node : list) {
                     nodesItems.add(new SelectItem(node.toString(), node.getName()));
                 }
@@ -431,15 +431,15 @@ public class NodeFitter extends Fitter implements Serializable {
 
     public List<String[]> getNodeTypes() {
         List<String[]> list = new ArrayList<String[]>();
-        list.add(new String[] { NodeTypeConstants.START_STATE, "Nó inicial" });
-        list.add(new String[] { NodeTypeConstants.TASK, "Tarefa" });
-        list.add(new String[] { NodeTypeConstants.DECISION, "Decisão" });
-        list.add(new String[] { NodeTypeConstants.MAIL_NODE, "Email" });
-        list.add(new String[] { NodeTypeConstants.FORK, "Separação" });
-        list.add(new String[] { NodeTypeConstants.JOIN, "Junção" });
-        list.add(new String[] { NodeTypeConstants.PROCESS_STATE, "SubProcesso" });
-        list.add(new String[] { NodeTypeConstants.NODE, "Sistema" });
-        list.add(new String[] { NodeTypeConstants.END_STATE, "Nó Final" });
+        list.add(new String[] { NodeTypeConstants.START_STATE, internacionalize("process.node.type.start") });
+        list.add(new String[] { NodeTypeConstants.TASK, internacionalize("process.node.type.task") });
+        list.add(new String[] { NodeTypeConstants.DECISION, internacionalize("process.node.type.decision") });
+        list.add(new String[] { NodeTypeConstants.MAIL_NODE, internacionalize("process.node.type.mail") });
+        list.add(new String[] { NodeTypeConstants.FORK, internacionalize("process.node.type.fork") });
+        list.add(new String[] { NodeTypeConstants.JOIN, internacionalize("process.node.type.join") });
+        list.add(new String[] { NodeTypeConstants.PROCESS_STATE, internacionalize("process.node.type.subprocess") });
+        list.add(new String[] { NodeTypeConstants.NODE, internacionalize("process.node.type.system") });
+        list.add(new String[] { NodeTypeConstants.END_STATE, internacionalize("process.node.type.end") });
         return list;
     }
 
@@ -511,4 +511,5 @@ public class NodeFitter extends Fitter implements Serializable {
             getCurrentNode().setName(null);
         }
     }
+    
 }
