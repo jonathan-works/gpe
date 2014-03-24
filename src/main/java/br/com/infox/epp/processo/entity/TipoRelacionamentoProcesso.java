@@ -71,7 +71,8 @@ public class TipoRelacionamentoProcesso implements Serializable {
         int result = 1;
         result = prime
                 * result
-                + ((idTipoRelacionamento == null) ? 0 : idTipoRelacionamento.hashCode());
+                + ((idTipoRelacionamento == null) ? 0 : idTipoRelacionamento
+                        .hashCode());
         return result;
     }
 

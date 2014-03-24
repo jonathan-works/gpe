@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:a="http://richfaces.org/a4j"
   xmlns:c="http://java.sun.com/jsp/jstl/core"
@@ -9,18 +10,28 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:infox="http://www.infox.com.br/jsf"
-  template="/WEB-INF/xhtml/templates/minimal.xhtml">
-
-  <ui:param name="pageTitle" value="#{messages['processo.titlePage']}" />
+  template="/WEB-INF/xhtml/templates/minimal.xhtml"
+>
+  <ui:param
+    name="pageTitle"
+    value="#{messages['processo.titlePage']}"
+  />
   <ui:define name="title">#{pageTitle}</ui:define>
   <ui:define name="contentTitle">
   </ui:define>
   <ui:define name="scripts">
-    <h:outputScript library="js/components" name="Modal.js" />
-    <h:inputHidden id="taskCompleted"
-      value="#{taskInstanceHome.taskCompleted}"></h:inputHidden>
-    <h:inputHidden id="canClosePanel"
-      value="#{taskInstanceHome.canClosePanelVal}"></h:inputHidden>
+    <h:outputScript
+      library="js/components"
+      name="Modal.js"
+    />
+    <h:inputHidden
+      id="taskCompleted"
+      value="#{taskInstanceHome.taskCompleted}"
+    ></h:inputHidden>
+    <h:inputHidden
+      id="canClosePanel"
+      value="#{taskInstanceHome.canClosePanelVal}"
+    ></h:inputHidden>
     <h:outputScript>
       function verifyFields() {
         if ($('#taskCompleted').val() != '') {
@@ -53,21 +64,38 @@
       });
     </h:outputScript>
   </ui:define>
-
-  <ui:param name="home" value="#{processoHome}" />
-  <ui:param name="showMenu" value="false" />
-  <ui:param name="checkPermission"
-    value="#{processoHome.checarVisibilidade()}" />
-  <ui:param name="isUsuarioExterno"
-    value="#{authenticator.usuarioExterno ? 'true':'false'}" />
-  <ui:param name="showMsg" value="#{!isUsuarioExterno}" />
+  <ui:param
+    name="home"
+    value="#{processoHome}"
+  />
+  <ui:param
+    name="showMenu"
+    value="false"
+  />
+  <ui:param
+    name="checkPermission"
+    value="#{processoHome.checarVisibilidade()}"
+  />
+  <ui:param
+    name="isUsuarioExterno"
+    value="#{authenticator.usuarioExterno ? 'true':'false'}"
+  />
+  <ui:param
+    name="showMsg"
+    value="#{!isUsuarioExterno}"
+  />
   <ui:define name="head">
-    <h:outputStylesheet library="styleSkinInfox" name="movimentar.css" />
+    <h:outputStylesheet
+      library="styleSkinInfox"
+      name="movimentar.css"
+    />
   </ui:define>
   <ui:define name="body">
-    <rich:collapsiblePanel expanded="false"
+    <rich:collapsiblePanel
+      expanded="false"
       header="#{messages['processo.titleView']} #{processoHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoHome.instance.itemDoProcesso}"
-      switchType="client">
+      switchType="client"
+    >
       <ul>
         <li class="hor-list-item">
           <div>#{messages['processo.dataInicio']}</div> <span>#{processoHome.instance.dataInicio}</span>
@@ -78,317 +106,422 @@
       </ul>
     </rich:collapsiblePanel>
     <h:form>
-
-      <a:jsFunction name="renderButtons" render="taskButtonsDiv" />
-
+      <a:jsFunction
+        name="renderButtons"
+        render="taskButtonsDiv"
+      />
     </h:form>
-
-    <infox:tabPanel switchType="ajax" rendered="#{checkPermission}"
-      activeTab="#{home.tab}" id="movimentarTabPanel">
+    <infox:tabPanel
+      switchType="ajax"
+      rendered="#{checkPermission}"
+      activeTab="#{home.tab}"
+      id="movimentarTabPanel"
+    >
       <h:form rendered="#{!isUsuarioExterno}">
         <infox:tabHeaders />
       </h:form>
-
-      <infox:tab id="tabFluxo" name="tabFluxo"
-        rendered="#{!processoHome.managed}" status=":status"
-        title="Escolher fluxo" action="#{processoHome.limpar()}">
-
+      <infox:tab
+        id="tabFluxo"
+        name="tabFluxo"
+        rendered="#{!processoHome.managed}"
+        status=":status"
+        title="Escolher fluxo"
+        action="#{processoHome.limpar()}"
+      >
       </infox:tab>
-
-      <infox:tab id="tabVariaveisProcesso" name="tabVariaveisProcesso"
+      <infox:tab
+        id="tabVariaveisProcesso"
+        name="tabVariaveisProcesso"
         rendered="#{variavelProcessoAction.possuiVariaveis()}"
-        title="#{messages['variavelProcesso.variaveisProcesso']}">
-
+        title="#{messages['variavelProcesso.variaveisProcesso']}"
+      >
         <h:form>
-
           <rich:panel>
-
-            <ui:repeat var="variavel"
-              value="#{variavelProcessoAction.variaveis}">
-
+            <ui:repeat
+              var="variavel"
+              value="#{variavelProcessoAction.variaveis}"
+            >
               <wi:inputText
                 id="variavel-#{variavel.nome.replace(':', '_')}"
-                label="#{variavel.label}" value="#{variavel.valor}" />
-
+                label="#{variavel.label}"
+                value="#{variavel.valor}"
+              />
             </ui:repeat>
-
           </rich:panel>
-
-          <a:commandButton value="Gravar"
+          <a:commandButton
+            value="Gravar"
             action="#{variavelProcessoAction.save}"
-            render="@form, pageBodyDialogMessage" />
-
+            render="@form, pageBodyDialogMessage"
+          />
         </h:form>
-
       </infox:tab>
-
-      <infox:tab id="tabEntrada" name="tabEntrada"
-        rendered="#{!empty taskInstanceView.fields}" status=":status"
-        title="#{messages['movimentar.entrada.titleTab']}">
-
-        <wi:form canEdit="true" formTitle="#{taskInstance.name}"
-          home="#{taskInstanceHome}" form="#{taskInstanceView}" />
-
-
+      <infox:tab
+        id="tabEntrada"
+        name="tabEntrada"
+        rendered="#{!empty taskInstanceView.fields}"
+        status=":status"
+        title="#{messages['movimentar.entrada.titleTab']}"
+      >
+        <wi:form
+          canEdit="true"
+          formTitle="#{taskInstance.name}"
+          home="#{taskInstanceHome}"
+          form="#{taskInstanceView}"
+        />
       </infox:tab>
-
-      <infox:tab id="tabSaida" name="tabSaida"
-        rendered="#{processoHome.managed}" status=":status"
-        title="#{messages['movimentar.saida.titleTab']}">
-
+      <infox:tab
+        id="tabSaida"
+        name="tabSaida"
+        rendered="#{processoHome.managed}"
+        status=":status"
+        title="#{messages['movimentar.saida.titleTab']}"
+      >
         <c:if test="#{not taskPageAction.hasTaskPage}">
-          <wi:form canEdit="true" formTitle="#{taskInstance.name}"
+          <wi:form
+            canEdit="true"
+            formTitle="#{taskInstance.name}"
             home="#{taskInstanceForm.home}"
-            reRenderSave="taskInstanceForm" form="#{taskInstaceForm}" />
-
+            reRenderSave="taskInstanceForm"
+            form="#{taskInstaceForm}"
+          />
         </c:if>
         <c:if test="#{taskPageAction.hasTaskPage}">
-
           <ui:include src="#{taskPageAction.taskPagePath}" />
-
         </c:if>
-
       </infox:tab>
-
-      <infox:tab id="tabAnexar" name="tabAnexar"
-        rendered="#{processoHome.managed}" status=":status"
+      <infox:tab
+        id="tabAnexar"
+        name="tabAnexar"
+        rendered="#{processoHome.managed}"
+        status=":status"
         title="#{messages['processoDocumento.anexarDocumento']}"
-        action="#{anexoController.onClickTabAnexar(processoHome.instance)}">
-        <wi:dataForm formId="anexarDocumentosForm"
-          formTitle="#{messages['form.title']}" isUploadForm="true">
+        action="#{anexoController.onClickTabAnexar(processoHome.instance)}"
+      >
+        <wi:dataForm
+          formId="anexarDocumentosForm"
+          formTitle="#{messages['form.title']}"
+          isUploadForm="true"
+        >
           <ui:include src="anexarDocumentos.xhtml" />
           <ui:define name="buttons" />
         </wi:dataForm>
-
-
       </infox:tab>
-
-      <infox:tab id="tabAnexos" name="tabAnexos"
-        rendered="#{processoHome.managed}" status=":status"
+      <infox:tab
+        id="tabAnexos"
+        name="tabAnexos"
+        rendered="#{processoHome.managed}"
+        status=":status"
         action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
-        title="#{messages['processo.documentos']}">
-        <wi:dataTable values="#{processoDocumentoList.list(15)}"
+        title="#{messages['processo.documentos']}"
+      >
+        <wi:dataTable
+          values="#{processoDocumentoList.list(15)}"
           bean="#{processoDocumentoList}"
           tableTitle="#{messages['processo.documentos']} #{home.instance}"
-          id="processoDocumentoList" rowId="#{row.idProcessoDocumento}"
-          searchFormStyleClass="hidden">
-
+          id="processoDocumentoList"
+          rowId="#{row.idProcessoDocumento}"
+          searchFormStyleClass="hidden"
+        >
           <ui:define name="headerToolBar" />
-          <wi:columnOutputText columnId="usuarioInclusao"
+          <wi:columnOutputText
+            columnId="usuarioInclusao"
             columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-            value="#{row.usuarioInclusao}" />
-          <wi:columnDateTime columnId="dataInclusao"
+            value="#{row.usuarioInclusao}"
+          />
+          <wi:columnDateTime
+            columnId="dataInclusao"
             columnHeader="#{messages['processoDocumento.dataInclusao']}"
-            value="#{row.dataInclusao}" />
-          <wi:columnOutputText columnId="processoDocumento"
+            value="#{row.dataInclusao}"
+          />
+          <wi:columnOutputText
+            columnId="processoDocumento"
             columnHeader="#{messages['processoDocumentoBin.documento']}"
-            value="#{row.processoDocumento}" />
+            value="#{row.processoDocumento}"
+          />
           <ui:define name="toolBar">
-            <s:link target="idJan#{row.idProcessoDocumento}"
+            <s:link
+              target="idJan#{row.idProcessoDocumento}"
               rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
               view="/Processo/Consulta/validaDocumento.xhtml"
-              onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
-              <h:graphicImage title="#{messages['assinaturas.validar']}"
+              onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');"
+            >
+              <h:graphicImage
+                title="#{messages['assinaturas.validar']}"
                 alt="#{messages['assinaturas.validar']}"
-                url="/img/lock.png" />
-              <f:param value="#{row.idProcessoDocumento}"
-                name="idProcessoDocumento" />
+                url="/img/lock.png"
+              />
+              <f:param
+                value="#{row.idProcessoDocumento}"
+                name="idProcessoDocumento"
+              />
             </s:link>
-
-            <s:link target="idJan#{row.idProcessoDocumento}"
+            <s:link
+              target="idJan#{row.idProcessoDocumento}"
               rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
               view="/Processo/Consulta/assinaDocumento.xhtml"
-              onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
-              <h:graphicImage title="#{messages['assinaturas.assinar']}"
+              onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');"
+            >
+              <h:graphicImage
+                title="#{messages['assinaturas.assinar']}"
                 alt="#{messages['assinaturas.assinar']}"
-                url="/img/lock_unlock.png" />
-              <f:param value="#{row.idProcessoDocumento}"
-                name="idProcessoDocumento" />
-
+                url="/img/lock_unlock.png"
+              />
+              <f:param
+                value="#{row.idProcessoDocumento}"
+                name="idProcessoDocumento"
+              />
             </s:link>
           </ui:define>
-
         </wi:dataTable>
-
       </infox:tab>
-
-      <infox:tab id="tabMovimentacoes" name="tabMovimentacoes"
-        rendered="#{processoHome.managed}" status=":status"
-        title="#{messages['movimentar.movimentacoesProcesso']}">
+      <infox:tab
+        id="tabMovimentacoes"
+        name="tabMovimentacoes"
+        rendered="#{processoHome.managed}"
+        status=":status"
+        title="#{messages['movimentar.movimentacoesProcesso']}"
+      >
         <ui:include
-          src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
-
+          src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml"
+        />
       </infox:tab>
-
-      <ui:param name="action"
-        value="#{localizacaoDocumentoFisicoCrudAction}" />
-      <infox:tab id="documentoFisicoTab" name="documentoFisicoTab"
+      <ui:param
+        name="action"
+        value="#{localizacaoDocumentoFisicoCrudAction}"
+      />
+      <infox:tab
+        id="documentoFisicoTab"
+        name="documentoFisicoTab"
         rendered="#{home.isManaged()}"
         action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
-        title="#{messages['documentoFisico.titleTab']}">
-        <wi:dataForm formId="documentoFisicoForm"
-          formTitle="#{messages['form.title']}">
-
-          <wi:tree id="localizacaoFisica"
+        title="#{messages['documentoFisico.titleTab']}"
+      >
+        <wi:dataForm
+          formId="documentoFisicoForm"
+          formTitle="#{messages['form.title']}"
+        >
+          <wi:tree
+            id="localizacaoFisica"
             assignTo="localizacaoDocumentoFisicoCrudAction.instance.localizacaoFisica"
             tree="#{localizacaoFisicaTree}"
             label="#{messages['documentoFisico.localizacaoFisica']}"
             required="true"
-            noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}" />
-
-          <wi:inputText id="descricaoDocumentoFisico"
+            noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}"
+          />
+          <wi:inputText
+            id="descricaoDocumentoFisico"
             label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
             required="true"
             value="#{action.instance.descricaoDocumentoFisico}"
-            maxlength="150" />
+            maxlength="150"
+          />
           <ui:define name="buttons">
-
-            <wi:commandButton id="saveDocumentoFisicoButton"
+            <wi:commandButton
+              id="saveDocumentoFisicoButton"
               action="localizacaoDocumentoFisicoCrudAction.save"
               reRender="documentoFisicoForm, documentoFisicoDiv, pageBodyDialogMessage"
-              value="#{messages['crud.persist']}" />
-
+              value="#{messages['crud.persist']}"
+            />
           </ui:define>
-
         </wi:dataForm>
         <s:div id="documentoFisicoDiv">
-          <wi:dataTable id="documentoFisicoTable2"
+          <wi:dataTable
+            id="documentoFisicoTable2"
             values="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
-            var="row" rows="10" searchFormStyleClass="hidden">
+            var="row"
+            rows="10"
+            searchFormStyleClass="hidden"
+          >
             <ui:define name="toolBar">
-              <wi:toolBarInactive id="toolBarInactivate"
+              <wi:toolBarInactive
+                id="toolBarInactivate"
                 reRender="documentoFisicoDiv, pageBodyDialogMessage"
-                actionInactive="localizacaoDocumentoFisicoCrudAction.inactive(row)" />
+                actionInactive="localizacaoDocumentoFisicoCrudAction.inactive(row)"
+              />
             </ui:define>
             <ui:define name="headerToolBar" />
-            <wi:columnOutputText columnId="localizacaoFisica"
+            <wi:columnOutputText
+              columnId="localizacaoFisica"
               columnHeader="#{messages['documentoFisico.localizacaoFisica']}"
               value="#{row.localizacaoFisica.caminhoCompletoToString()}"
-              hideOrder="true" />
-            <wi:columnOutputText columnId="descricao"
+              hideOrder="true"
+            />
+            <wi:columnOutputText
+              columnId="descricao"
               columnHeader="#{messages['documentoFisico.descricaoDocumentoFisico']}"
-              value="#{row.descricaoDocumentoFisico}" hideOrder="true" />
+              value="#{row.descricaoDocumentoFisico}"
+              hideOrder="true"
+            />
           </wi:dataTable>
         </s:div>
-
       </infox:tab>
-      <infox:tab id="relacionamentoProcessoTab"
-        name="relacionamentoProcessoTab" rendered="#{home.isManaged()}"
-        title="#{messages['relacionamentoProcesso.titleTab']}">
+      <infox:tab
+        id="relacionamentoProcessoTab"
+        name="relacionamentoProcessoTab"
+        rendered="#{home.isManaged()}"
+        title="#{messages['relacionamentoProcesso.titleTab']}"
+      >
         <s:div id="relacionamentoProcessoFormDiv">
-          <wi:dataForm formId="relacionamentoProcessoForm"
+          <wi:dataForm
+            formId="relacionamentoProcessoForm"
             formTitle="#{messages['form.title']}"
-            home="#{relacionamentoProcessoCrudAction}">
-            <wi:inputText id="labelNumeroProcesso"
+            home="#{relacionamentoProcessoCrudAction}"
+          >
+            <wi:inputText
+              id="labelNumeroProcesso"
               label="#{messages['relacionamentoProcesso.numeroProcesso']}"
-              required="true" maxlength="30"
+              required="true"
+              maxlength="30"
               value="#{relacionamentoProcessoCrudAction.instance.numeroProcesso}"
-              disabled="#{relacionamentoProcessoCrudAction.managed}">
+              disabled="#{relacionamentoProcessoCrudAction.managed}"
+            >
             </wi:inputText>
-            <wi:selectOneMenuEntity id="tipoRelacionamento"
-              value="#{relacionamentoProcessoCrudAction.instance.tipoRelacionamentoProcesso}"
+            <wi:selectOneMenuEntity
+              id="tipoRelacionamento"
+              value="#{relacionamentoProcessoCrudAction.relacionamento.tipoRelacionamentoProcesso}"
               label="#{messages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
               items="#{relacionamentoProcessoCrudAction.tipoRelacionamentoProcessoList}"
-              required="true" hideNoSelectionLabel="false"
-              noSelectionLabel="#{messages['crud.select.select']}">
+              required="true"
+              hideNoSelectionLabel="false"
+              noSelectionLabel="#{messages['crud.select.select']}"
+            >
             </wi:selectOneMenuEntity>
-            <wi:inputTextarea id="motivo"
+            <wi:inputTextarea
+              id="motivo"
               label="#{messages['relacionamentoProcesso.motivo']}"
-              value="#{relacionamentoProcessoCrudAction.instance.motivo}"
-              required="true">
+              value="#{relacionamentoProcessoCrudAction.relacionamento.motivo}"
+              required="true"
+            >
             </wi:inputTextarea>
-            <wi:selectSituacaoRadio id="ativo"
+            <wi:selectSituacaoRadio
+              id="ativo"
               label="#{messages['field.situacao']}"
               rendered="#{relacionamentoProcessoCrudAction.managed}"
-              value="#{relacionamentoProcessoCrudAction.instance.ativo}" />
+              value="#{relacionamentoProcessoCrudAction.relacionamento.ativo}"
+            />
             <ui:define name="buttons">
-              <wi:commandButton id="persistButton"
+              <wi:commandButton
+                id="persistButton"
                 action="relacionamentoProcessoCrudAction.save()"
                 reRender="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
                 value="#{relacionamentoProcessoCrudAction.isManaged() ? messages['crud.update'] : messages['crud.persist']}"
-                execute="relacionamentoProcessoFormDiv">
+                execute="relacionamentoProcessoFormDiv"
+              >
               </wi:commandButton>
             </ui:define>
           </wi:dataForm>
         </s:div>
         <s:div id="relacionamentoProcessoDTDiv">
-          <h:panelGroup id="dtable"
-            rendered="#{not empty relacionamentoProcessoCrudAction.instance.relacionamento}">
-            <wi:dataTable id="relProcDt2"
+          <h:panelGroup
+            id="dtable"
+            rendered="#{not empty relacionamentoProcessoCrudAction.instance.relacionamento}"
+          >
+            <wi:dataTable
+              id="relProcDt2"
               bean="#{relacionamentoProcessoList}"
               values="#{relacionamentoProcessoList.list(15)}"
               tableTitle="#{messages['relacionamentoProcesso.processosRelacionados']}"
               rowId="#{row.idRelacionamentoProcesso}"
               searchFormStyleClass="hidden"
-              panelStyleClass="rel-proc-dt">
+              panelStyleClass="rel-proc-dt"
+            >
               <ui:define name="headerToolBar" />
               <ui:define name="toolBar">
-                <wi:toolBarEdit id="#{id}Edit"
+                <wi:toolBarEdit
+                  id="#{id}Edit"
                   action="#{relacionamentoProcessoCrudAction.setId(row.idRelacionamentoProcesso)}"
-                  render="relacionamentoProcessoFormDiv pageBodyDialogMessage" />
-                <wi:toolBarInactive id="#{id}Inactivate"
+                  render="relacionamentoProcessoFormDiv pageBodyDialogMessage"
+                />
+                <wi:toolBarInactive
+                  id="#{id}Inactivate"
                   actionInactive="relacionamentoProcessoCrudAction.inactive(row)"
-                  reRender="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage" />
+                  reRender="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
+                />
               </ui:define>
-
-              <wi:columnOutputText columnId="numeroProcesso"
+              <wi:columnOutputText
+                columnId="numeroProcesso"
                 columnHeader="#{messages['relacionamentoProcesso.numeroProcesso']}"
-                value="#{row.numeroProcesso}" />
-              <wi:columnOutputText columnId="motivo"
+                value="#{row.numeroProcesso}"
+              />
+              <wi:columnOutputText
+                columnId="motivo"
                 columnHeader="#{messages['relacionamentoProcesso.motivo']}"
-                value="#{row.motivo}" />
-              <wi:columnOutputText columnId="nomeUsuario"
+                value="#{row.motivo}"
+              />
+              <wi:columnOutputText
+                columnId="nomeUsuario"
                 columnHeader="#{messages['relacionamentoProcesso.nomeUsuario']}"
-                value="#{row.nomeUsuario}" />
-              <wi:columnOutputText columnId="dataRelacionamento"
+                value="#{row.nomeUsuario}"
+              />
+              <wi:columnOutputText
+                columnId="dataRelacionamento"
                 columnHeader="#{messages['relacionamentoProcesso.dataRelacionamento']}"
-                value="#{row.dataRelacionamento}" />
-              <wi:columnSituacao columnId="ativo"
-                columnHeader="#{messages['field.ativo']}">
+                value="#{row.dataRelacionamento}"
+              />
+              <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{messages['field.ativo']}"
+              >
               </wi:columnSituacao>
             </wi:dataTable>
           </h:panelGroup>
         </s:div>
       </infox:tab>
-
-      <infox:tab id="tabPartesDoProcesso" name="tabPartesDoProcesso"
+      <infox:tab
+        id="tabPartesDoProcesso"
+        name="tabPartesDoProcesso"
         status=":status"
         action="#{partesProcessoController.setProcessoEpa(home.instance)}"
         rendered="#{home.hasPartes()}"
-        title="#{messages['parteProcesso.partes']}">
+        title="#{messages['parteProcesso.partes']}"
+      >
         <ui:include src="parteProcessoGrid.xhtml" />
-
       </infox:tab>
-
     </infox:tabPanel>
-
     <c:if test="#{!checkPermission}">
-
-      <wi:outputText id="error"
-        value="#{messages['movimentar.noPermission']}" />
-
+      <wi:outputText
+        id="error"
+        value="#{messages['movimentar.noPermission']}"
+      />
     </c:if>
-    <ui:param name="modalWidth" value="640" />
-    <ui:param name="modalHeight" value="480" />
-    <rich:popupPanel id="mp_taskNodeDescription" height="#{modalHeight}"
-      width="#{modalWidth}" show="false" modal="true" moveable="true"
-      resizeable="false" styleClass="popup-help"
-      domElementAttachment="parent">
+    <ui:param
+      name="modalWidth"
+      value="640"
+    />
+    <ui:param
+      name="modalHeight"
+      value="480"
+    />
+    <rich:popupPanel
+      id="mp_taskNodeDescription"
+      height="#{modalHeight}"
+      width="#{modalWidth}"
+      show="false"
+      modal="true"
+      moveable="true"
+      resizeable="false"
+      styleClass="popup-help"
+      domElementAttachment="parent"
+    >
       <f:facet name="header">
         <h:outputText value="#{messages['jbpm.taskNode.description']}" />
       </f:facet>
       <f:facet name="controls">
         <h:panelGroup>
-          <h:graphicImage id="mp_taskNodeCloseBtn" styleClass="mp-close"
-            value="/img/closeMP.gif" />
+          <h:graphicImage
+            id="mp_taskNodeCloseBtn"
+            styleClass="mp-close"
+            value="/img/closeMP.gif"
+          />
         </h:panelGroup>
       </f:facet>
-      <wi:editor id="taskNodeDescription"
+      <wi:editor
+        id="taskNodeDescription"
         value="#{taskInstanceHome.taskNodeDescription}"
-        width="#{modalWidth-15}" height="#{modalHeight-90}"
-        readonly="true"></wi:editor>
+        width="#{modalWidth-15}"
+        height="#{modalHeight-90}"
+        readonly="true"
+      ></wi:editor>
     </rich:popupPanel>
-
   </ui:define>
-
 </ui:composition>

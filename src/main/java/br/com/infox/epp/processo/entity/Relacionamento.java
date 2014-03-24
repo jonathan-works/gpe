@@ -1,25 +1,46 @@
 package br.com.infox.epp.processo.entity;
 
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MEDIA;
+import static br.com.infox.core.constants.LengthConstants.FLAG;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.core.persistence.ORConstants.PUBLIC;
+import static br.com.infox.epp.processo.query.RelacionamentoQuery.DATA_RELACIONAMENTO;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.ID_RELACIONAMENTO;
+import static br.com.infox.epp.processo.query.RelacionamentoQuery.MOTIVO;
+import static br.com.infox.epp.processo.query.RelacionamentoQuery.NOME_USUARIO;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.SEQUENCE_NAME;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.TABLE_NAME;
+import static br.com.infox.epp.processo.query.TipoRelacionamentoProcessoQuery.ID_TIPO_RELACIONAMENTO_PROCESSO;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = TABLE_NAME, schema = PUBLIC)
 public class Relacionamento implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer idRelacionamento;
+    private String motivo;
+    private TipoRelacionamentoProcesso tipoRelacionamentoProcesso;
+    private String nomeUsuario;
+    private Date dataRelacionamento;
+    private Boolean ativo;
 
     @Id
     @GeneratedValue(generator = GENERATOR)
@@ -31,6 +52,61 @@ public class Relacionamento implements Serializable {
 
     public void setIdRelacionamento(final Integer idRelacionamento) {
         this.idRelacionamento = idRelacionamento;
+    }
+
+    @NotNull
+    @Temporal(TIMESTAMP)
+    @Column(name = DATA_RELACIONAMENTO, nullable = false)
+    public Date getDataRelacionamento() {
+        return dataRelacionamento;
+    }
+
+    public void setDataRelacionamento(final Date dataRelacionamento) {
+        this.dataRelacionamento = dataRelacionamento;
+    }
+
+    @NotNull
+    @Length(min = FLAG)
+    @Column(name = MOTIVO, nullable = false)
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(final String motivo) {
+        this.motivo = motivo;
+    }
+
+    @NotNull
+    @Length(min = FLAG, max = DESCRICAO_MEDIA)
+    @Column(name = NOME_USUARIO, length = DESCRICAO_MEDIA, nullable = false)
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
+
+    public void setNomeUsuario(final String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
+    }
+
+    @NotNull
+    @Column(name = ATIVO, nullable = false)
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(final Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    @NotNull
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = ID_TIPO_RELACIONAMENTO_PROCESSO, nullable = false)
+    public TipoRelacionamentoProcesso getTipoRelacionamentoProcesso() {
+        return tipoRelacionamentoProcesso;
+    }
+
+    public void setTipoRelacionamentoProcesso(
+            final TipoRelacionamentoProcesso tipoRelacionamentoProcesso) {
+        this.tipoRelacionamentoProcesso = tipoRelacionamentoProcesso;
     }
 
     @Override
