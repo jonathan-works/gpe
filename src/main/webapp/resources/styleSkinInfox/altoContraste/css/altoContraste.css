@@ -1,92 +1,105 @@
-/* CSS para as Paginas */	
-#html, #body {
-	background: #FFF; /* Cor fixa para Browsers antigos */
-}	
-
-.subBorda {	  
-	color:#FFF;
-	background-color: #000; /* Cor fixa para Browsers antigos */
+/* CSS para as Paginas */
+#html,#body {
+  background: #FFF; /* Cor fixa para Browsers antigos */
 }
 
-.banner .clock, .banner .center, .banner label {
-	color:#000;
+.subBorda {
+  color: #FFF;
+  background-color: #000; /* Cor fixa para Browsers antigos */
+}
+
+.banner .clock,.banner .center,.banner label {
+  color: #000;
 }
 
 .banner .divBg {
-	color:#FFF;
-	background-color:#000;
+  color: #FFF;
+  background-color: #000;
+}
+
+.ui-menu-item>.ui-corner-all {
+  color: #000;
+  background: #FFF;
+}
+
+.ui-menu-item>.ui-corner-all.ui-state-focus {
+  background: #000;
+  color: #FFF;
 }
 
 .banner {
-	background: #FFF; /* Cor fixa para Browsers antigos */
+  background: #FFF; /* Cor fixa para Browsers antigos */
 }
 
 /* Pagina do Login*/
 .corpoSuperior {
-	background: #FFF; /* Old browsers */
+  background: #FFF; /* Old browsers */
 }
 
 .corpoInferior {
-	background: #c6c6c6;
+  background: #FFF;
 }
 
-
 .bg_login_inferior {
-	background-color: #FFF;
-	border: 1px solid #000;
+  background-color: #FFF;
+  border: 1px solid #000;
 }
 
 .banner .divBg label {
-	color:#FFF;
+  color: #FFF;
 }
 
-.bg_login, .corpoInferior, .newPasswd {
-	background-color: #000;
-	border: 1px solid #000;
+.bg_login,.corpoInferior,.newPasswd {
+  background-color: #000;
+  border: 1px solid #000;
 }
 
-.login .input_login, .reqSenha .input_login {
-	background-color: #FFF; /* Old browsers */
-	border: 2px solid #FFF;
+.login .input_login,.reqSenha .input_login {
+  background-color: #FFF; /* Old browsers */
+  border: 2px solid #FFF;
 }
 
 .bg_login_inferior .input_button {
-	background-color:#FFF;
-	border:1px solid #000;
-	color:#000;
+  background-color: #FFF;
+  border: 1px solid #000;
+  color: #000;
 }
 
 .reqSenha label {
-    color: #FFF;
-    font-family: Arial,sans-serif;
-    margin: 0;
+  color: #FFF;
+  font-family: Arial, sans-serif;
+  margin: 0;
 }
 
 .login-lbl {
-	color:#FFF;
+  color: #FFF;
 }
 
 /*Aba ativa*/
-.ui-widget-header > .ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active {
-	background:#000;
+.ui-widget-header>.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active
+  {
+  background: #000;
 }
 /* texto */
-.ui-widget-header > .ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active > a {
-	color:#FFF;
+.ui-widget-header>.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active>a
+  {
+  color: #FFF;
 }
 
 /*Aba inativa*/
-.ui-widget-header > .ui-state-default.ui-corner-top {
-	background:#FFF;
+.ui-widget-header>.ui-state-default.ui-corner-top {
+  background: #FFF;
 }
 /* texto */
-.ui-widget-header > .ui-state-default.ui-corner-top > a {
-	color:#000;
+.ui-widget-header>.ui-state-default.ui-corner-top>a {
+  color: #000;
 }
 
 /*Aba desabilitada*/
-.ui-widget-header > .ui-state-default.ui-corner-top.ui-state-disabled {
+.ui-widget-header>.ui-state-default.ui-corner-top.ui-state-disabled {
+  
 }
 /* texto */
-.ui-widget-header > .ui-state-default.ui-corner-top.ui-state-disabled > a {
+.ui-widget-header>.ui-state-default.ui-corner-top.ui-state-disabled>a {
+  
 }
