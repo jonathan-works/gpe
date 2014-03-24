@@ -211,10 +211,10 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         }
         TipoProcessoDocumento other = (TipoProcessoDocumento) obj;
         if (idTipoProcessoDocumento == null) {
-            if (other.idTipoProcessoDocumento != null) {
+            if (other.getIdTipoProcessoDocumento() != null) {
                 return false;
             }
-        } else if (!idTipoProcessoDocumento.equals(other.idTipoProcessoDocumento)) {
+        } else if (!idTipoProcessoDocumento.equals(other.getIdTipoProcessoDocumento())) {
             return false;
         }
         return true;
