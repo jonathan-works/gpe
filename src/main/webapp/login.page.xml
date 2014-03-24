@@ -3,19 +3,21 @@
 <!-- $Id: login.page.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
 
 <page
-xmlns="http://jboss.org/schema/seam/pages"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd">
+	xmlns="http://jboss.org/schema/seam/pages"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd">
 
-    <action execute="#{authenticator.unAuthenticate()}" />
-    <param name="loginComAssinatura" value="#{certificateAuthenticator.certificateLogin}"/>
-    <navigation from-action="#{identity.login}">
-        <rule if="#{identity.loggedIn and !usuarioLogado.provisorio}">
-            <redirect view-id="/home.xhtml" />
-        </rule>
-        <rule if="#{identity.loggedIn and usuarioLogado.provisorio}">
-            <redirect view-id="/trocarSenha.xhtml" />
-        </rule>
-    </navigation>
+	<action execute="#{authenticator.unAuthenticate()}" />
+	
+	<param name="loginComAssinatura" value="#{certificateAuthenticator.certificateLogin}"/>
+
+	<navigation from-action="#{identity.login}">
+		<rule if="#{identity.loggedIn and !usuarioLogado.provisorio}">
+			<redirect view-id="/home.xhtml" />
+		</rule>
+		<rule if="#{identity.loggedIn and usuarioLogado.provisorio}">
+			<redirect view-id="/trocarSenha.xhtml" />
+		</rule>
+	</navigation>
 
 </page>
