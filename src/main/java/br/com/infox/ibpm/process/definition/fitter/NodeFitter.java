@@ -22,6 +22,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.ExceptionHandler;
@@ -331,7 +332,7 @@ public class NodeFitter extends Fitter implements Serializable {
             List<Node> list = getProcessBuilder().getInstance().getNodes();
             if (list != null) {
                 nodesItems = new ArrayList<SelectItem>();
-                nodesItems.add(new SelectItem(null, "Selecione uma tarefa..."));
+                nodesItems.add(new SelectItem(null, Messages.instance().get("process.task.select")));
                 for (Node node : list) {
                     nodesItems.add(new SelectItem(node.toString(), node.getName()));
                 }
