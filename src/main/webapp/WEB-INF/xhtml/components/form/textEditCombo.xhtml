@@ -16,7 +16,7 @@
             value="#{processoHome.tipoProcessoDocumento}"
             items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
             required="true" disabled="#{readonly ? true : false}"
-            noSelectionLabel="#{messages['crud.select.select']}">
+            showLabelSelecione="true">
         </wi:selectOneMenuEntity>
     </s:div>
 
