@@ -98,7 +98,7 @@
             rendered="#{authenticator.isUsuarioAtualResponsavel()}"
         >
             <h:outputText
-                value="Prioridade:"
+                value="#{messages['prioridadeProcesso.comboBox']}"
                 style="margin-left: 40px;"
             />
             <h:selectOneMenu
@@ -108,7 +108,7 @@
                     value="#{prioridadeProcessoList.list()}"
                     var="p"
                     label="#{p.descricaoPrioridade}"
-                    noSelectionLabel="#{messages['crud.select.select']}"
+                    showLabelSelecione="true"
                 />
                 <s:convertEntity />
             </h:selectOneMenu>

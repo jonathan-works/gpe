@@ -131,7 +131,7 @@
                         widthDiv="100px"
                         label="#{messages['process.timer.prazo.unidade']}"
                         items="#{node.dueDateDefaultUnit.values()}"
-                        noSelectionLabel="#{messages['crud.select.select']}"
+                        showLabelSelecione="true"
                         optionText="label"
                     >
                         <a:ajax
@@ -157,7 +157,7 @@
                         value="#{timer.transitionName}"
                         label="#{messages['process.timer.transition']}"
                         items="#{node.getTransitions()}"
-                        noSelectionLabel="#{messages['crud.select.select']}"
+                        showLabelSelecione="true"
                     >
                         <a:ajax
                             execute="@this"

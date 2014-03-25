@@ -75,7 +75,7 @@
                     label="#{messages['natureza.tipoDasPartes']}"
                     items="#{naturezaCrudAction.getTiposDePartes()}"
                     value="#{naturezaCrudAction.instance.tipoPartes}"
-                    required="true" noSelectionLabel="#{messages['crud.select.select']}"
+                    required="true" showLabelSelecione="true"
                     disabled="#{naturezaCrudAction.instance.locked}"
                     rendered="#{naturezaCrudAction.instance.hasPartes}">
                     <a:ajax event="change"
@@ -116,14 +116,14 @@
                         required="true"
                         items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}"
                         inactiveCond="#{not item.ativo}"
-                        noSelectionLabel="#{messages['crud.select.select']}" />
+                        showLabelSelecione="true" />
                     <wi:selectOneMenuEntity id="fluxo"
                         label="#{messages['naturezaCategoriaFluxo.fluxo']}"
                         value="#{naturezaCategoriaFluxoCrudAction.instance.fluxo}"
                         required="true"
                         items="#{naturezaCategoriaFluxoFacade.getFluxoList()}"
                         inactiveCond="#{not item.ativo}"
-                        noSelectionLabel="#{messages['crud.select.select']}" />
+                        showLabelSelecione="true" />
                     <ui:define name="buttons">
                         <wi:commandButton id="saveButton"
                             action="naturezaCategoriaFluxoCrudAction.save()"

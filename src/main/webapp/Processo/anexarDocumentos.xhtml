@@ -23,7 +23,7 @@
                 value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
                 items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                 required="true"
-                noSelectionLabel="#{messages['crud.select.select']}"
+                showLabelSelecione="true"
             >
             </wi:selectOneMenuEntity>
         </s:div>
@@ -72,7 +72,7 @@
                     value="#{documentoUploader.processoDocumento.tipoProcessoDocumento}"
                     items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                     required="true"
-                    noSelectionLabel="#{messages['crud.select.select']}"
+                    showLabelSelecione="true"
                 >
                 </wi:selectOneMenuEntity>
             </s:div>

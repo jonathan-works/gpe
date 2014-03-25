@@ -12,7 +12,7 @@
     <h:form id="itemProcessoForm">
         <s:div id="itemDiv"
             rendered="#{action.renderedByItem and !action.renderizarCadastroPartes}">
-            <wi:dataTable values="#{action.itemList}" tableTitle="Itens"
+            <wi:dataTable values="#{action.itemList}" tableTitle="#{messages['item.reportTitle']}"
                 id="itemTable" rowId="#{row.idItem}"
                 searchFormStyleClass="hidden">
                 <ui:define name="headerToolBar" />

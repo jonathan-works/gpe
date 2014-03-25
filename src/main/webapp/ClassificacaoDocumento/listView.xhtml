@@ -105,7 +105,7 @@
                 items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                 value="#{classificacaoDocumentoCrudAction.instance.inTipoDocumento}"
                 required="true"
-                noSelectionLabel="#{messages['crud.select.select']}" />
+                showLabelSelecione="true" />
             <wi:selectOneRadio
                 id="numera"
                 label="#{messages['tipoProcessoDocumento.numera']}"
@@ -130,7 +130,7 @@
                     items="#{classificacaoDocumentoFacade.getTipoNumeracaoEnumValues()}"
                     value="#{classificacaoDocumentoCrudAction.instance.tipoNumeracao}"
                     required="true"
-                    noSelectionLabel="#{messages['crud.select.select']}" />
+                    showLabelSelecione="true" />
 
             </s:div>
             <wi:selectBooleanRadio
@@ -174,7 +174,7 @@
                         label="#{messages['tipoProcessoDocumentoPapel.papel']}"
                         items="#{classificacaoDocumentoPapelCrudAction.papelItems()}"
                         value="#{classificacaoDocumentoPapelCrudAction.instance.papel}"
-                        noSelectionLabel="#{messages['crud.select.select']}"
+                        showLabelSelecione="true"
                         required="true" />
                     <wi:selectBooleanRadio
                         id="obrigatorio"
