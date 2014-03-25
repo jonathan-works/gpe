@@ -101,7 +101,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             membros = new ArrayList<>();
             membrosMap = new HashMap<>();
             final List<Principal> list = new ArrayList<>();
-            new PopulateRoleMembersListOperation(getInstance().getIdentificador(), list).run();
+            new PopulateRoleMembersListOperation(getInstance()
+                    .getIdentificador(), list).run();
             if (list.isEmpty()) {
                 return new ArrayList<>();
             }
@@ -109,7 +110,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             for (final Principal principal : list) {
                 idPapeis.add(principal.getName());
             }
-            final List<Papel> papelList = getManager().getPapeisByListaDeIdentificadores(idPapeis);
+            final List<Papel> papelList = getManager()
+                    .getPapeisByListaDeIdentificadores(idPapeis);
             for (final Papel papel : papelList) {
                 final String id = papel.getIdentificador();
                 membros.add(id);
@@ -192,9 +194,12 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             papeisDisponiveis = new HashMap<>();
         }
         if (!papeisDisponiveis.containsKey(removeMembros)) {
-            final List<String> assignableRoles = getRoleaction().getAssignableRoles();
+            final List<String> assignableRoles = getRoleaction()
+                    .getAssignableRoles();
             papeisDisponiveis.put(removeMembros, assignableRoles);
-            removePapeisImplicitos(assignableRoles, getPapeis());
+            final List<String> papeisImplicitos = getPapeis();
+            removePapeisImplicitos(assignableRoles, papeisImplicitos);
+            assignableRoles.remove(getInstance().getIdentificador());
             removeRecursos(assignableRoles);
             if (isManaged() && removeMembros) {
                 removeMembros(getInstance().getIdentificador(), assignableRoles);
@@ -204,7 +209,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             if (papelMap == null) {
                 papelMap = new HashMap<>();
             }
-            final List<Papel> papelList = getManager().getPapeisByListaDeIdentificadores(assignableRoles);
+            final List<Papel> papelList = getManager()
+                    .getPapeisByListaDeIdentificadores(assignableRoles);
             for (final Papel p : papelList) {
                 papelMap.put(p.getIdentificador(), p);
             }
@@ -219,8 +225,10 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             final String identificador_ = getInstance().getIdentificador();
             if (IdentityManager.instance().roleExists(identificador_)) {
                 final Role role = new Role(identificador_);
-                final List<Permissao> permissoes = (List<Permissao>) PermissionManager.instance().getPermissoesFromRole(role);
-                recursos = recursoManager.getIdentificadorRecursosFromPermissoes(permissoes);
+                final List<Permissao> permissoes = (List<Permissao>) PermissionManager
+                        .instance().getPermissoesFromRole(role);
+                recursos = recursoManager
+                        .getIdentificadorRecursosFromPermissoes(permissoes);
             } else {
                 recursos = new ArrayList<String>();
             }
@@ -247,11 +255,13 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     public List<String> getRecursosDisponiveis() {
         if (recursosDisponiveis == null) {
             recursosDisponiveis = new ArrayList<>();
-            if (IdentityManager.instance().roleExists(getInstance().getIdentificador())) {
+            if (IdentityManager.instance().roleExists(
+                    getInstance().getIdentificador())) {
                 final List<Recurso> listaRecursos = recursoManager.findAll();
                 recursoMap = new HashMap<>();
                 for (final Recurso recurso : listaRecursos) {
-                    final String identificadorRecurso = recurso.getIdentificador();
+                    final String identificadorRecurso = recurso
+                            .getIdentificador();
                     recursosDisponiveis.add(identificadorRecurso);
                     recursoMap.put(identificadorRecurso, recurso);
                 }
@@ -261,7 +271,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     }
 
     private void removeRecursos(final List<String> roles) {
-        for (final Iterator<String> iterator = roles.iterator(); iterator.hasNext();) {
+        for (final Iterator<String> iterator = roles.iterator(); iterator
+                .hasNext();) {
             final String papelId = iterator.next();
             if (papelId.startsWith("/")) {
                 iterator.remove();
@@ -312,7 +323,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     @Override
     protected boolean isInstanceValid() {
         boolean result = Boolean.TRUE;
-        if (IdentityManager.instance().roleExists(getInstance().getIdentificador())
+        if (IdentityManager.instance().roleExists(
+                getInstance().getIdentificador())
                 && !isManaged()) {
             getMessagesHandler().clear();
             getMessagesHandler().add(CONSTRAINT_VIOLATION_UNIQUE_VIOLATION);
@@ -330,7 +342,9 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             final Collection<String> rolesToExclude = membrosMap.keySet();
             final Collection<String> availableResourcesList = getRecursosDisponiveis();
             final Collection<String> selectedResourcesList = getRecursos();
-            final UpdateRolesOperation operation = new UpdateRolesOperation(roleGroup, role, rolesToInclude, rolesToExclude, availableResourcesList, selectedResourcesList);
+            final UpdateRolesOperation operation = new UpdateRolesOperation(
+                    roleGroup, role, rolesToInclude, rolesToExclude,
+                    availableResourcesList, selectedResourcesList);
             operation.run();
             getManager().flush();
         }
