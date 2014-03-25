@@ -147,7 +147,7 @@
                     action="fluxoCrudAction.criarReplica()"
                     reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
                     rendered="#{fluxoCrudAction.managed or fluxoCrudAction.replica}"
-                    value="#{messages['fluxo.incluir']}"
+                    value="#{messages['fluxo.exportar']}"
                 />
                 <wi:commandButton
                     id="definicao"
@@ -246,7 +246,7 @@
                             value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
                             required="true"
                             label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
-                            noSelectionLabel="Selecione um registro..."
+                            showLabelSelecione="true"
                             items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoCrudAction.instance)}"
                         />
                         <wi:tree

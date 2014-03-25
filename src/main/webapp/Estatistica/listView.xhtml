@@ -73,7 +73,7 @@
             <a:region>
                 <rich:panel id="#{id}Panel"
                     rendered="#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo != null}"
-                    header="[#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}] Tempo médio: #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. Prazo: #{tempoMedioTarefaList.prazoFluxo}"
+                    header="[#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}] #{messages['temposMedios.dataTable']} #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. #{messages['temposMedios.prazo.dataTable']} #{tempoMedioTarefaList.prazoFluxo}"
                     bodyClass="dtable-p-b" styleClass="dtable-p">
                     <rich:dataTable id="#{id}"
                         value="#{tempoMedioTarefaList.list(10)}"

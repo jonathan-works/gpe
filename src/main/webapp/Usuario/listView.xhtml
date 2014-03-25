@@ -70,14 +70,14 @@
                 label="#{messages['usuario.nome']}"
                 value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
                 required="true" />
-            <wi:inputText id="email" label="E-mail"
+            <wi:inputText id="email" label="#{messages['usuarioLogin.email']}"
                 value="#{usuarioLoginCrudAction.instance.email}"
                 required="true">
 
                 <f:validator validatorId="emailValidator" />
 
             </wi:inputText>
-            <wi:inputText id="login" label="Login"
+            <wi:inputText id="login" label="#{messages['usuarioLogin.login']}"
                 value="#{usuarioLoginCrudAction.instance.login}"
                 required="true" maxlength="15" />
             <wi:selectOneMenuEnum id="tipoUsuario"
@@ -256,7 +256,7 @@
                 formTitle="#{messages['form.title']}"
                 home="#{bloqueioUsuarioCrudAction}"
                 requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
-                <wi:columnBoolean id="bloqueio"
+                <wi:outputText id="bloqueio"
                     value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
                     label="#{messages['usuario.bloqueio']}" />
                 <wi:inputDate id="dataDesbloqueio"
