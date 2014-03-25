@@ -623,3 +623,8 @@ div.rf-trn {
 .caixa-ind-lbl {
   width:200px;
 }
+.ui-tabs-panel.ui-widget-content.ui-corner-bottom.papelTab {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+}
