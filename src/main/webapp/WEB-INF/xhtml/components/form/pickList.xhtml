@@ -8,6 +8,10 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <h:outputScript name="alert">
+        alert("Remover referência para esta picklist");
+    </h:outputScript>
 
     <ui:param name="listsHeight" value="#{wi:get(listsHeight, '300px')}" />
     <ui:param name="sourceListWidth"
@@ -31,7 +35,7 @@
     <s:div styleClass="pick-cont">
         <h:outputText value="#{targetLabel}" />
         <rich:pickList id="#{id}" value="#{value}"
-            addAllText="Adiciona todos" addText="#{messages['button.add']}"
+            addAllText="#{messages['button.addAll']}" addText="#{messages['button.add']}"
             removeAllText="#{messages['button.deleteAll']}" removeText="#{messages['button.delete']}"
             listHeight="#{listsHeight}" moveControlsVerticalAlign="top"
             sourceListWidth="#{sourceListWidth}"
