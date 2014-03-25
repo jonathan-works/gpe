@@ -25,7 +25,7 @@
             />
             <ui:define name="toolBar">
                 <h:graphicImage
-                    title="Excluir destinatário"
+                    title="#{messages['process.mail.receiver.remove']}"
                     url="/img/remove.png"
                     style="cursor: pointer"
                 >
@@ -41,22 +41,22 @@
             </ui:define>
             <ui:define name="columns">
                 <rich:column>
-                    <f:facet name="header">Estrutura</f:facet>
+                    <f:facet name="header">#{messages['process.mail.receiver.estrutura']}</f:facet>
                     <h:outputText value="#{row.estrutura}" />
                 </rich:column>
                 <rich:column>
-                    <f:facet name="header">Localização</f:facet>
+                    <f:facet name="header">#{messages['process.mail.receiver.localizacao']}</f:facet>
                     <h:outputText value="#{row.localizacao}" />
                 </rich:column>
                 <rich:column>
-                    <f:facet name="header">Papel</f:facet>
+                    <f:facet name="header">#{messages['process.mail.receiver.papel']}</f:facet>
                     <h:outputText value="#{row.papel}" />
                 </rich:column>
                 <f:facet name="footer">
                     <rich:columnGroup>
                         <rich:column>
                             <h:graphicImage
-                                title="Adicionar destinatários"
+                                title="#{messages['process.mail.receiver.add']}"
                                 id="novoLocPapel"
                                 url="/img/add.gif"
                                 style="cursor: pointer"
@@ -97,7 +97,7 @@
                     </rich:columnGroup>
                 </f:facet>
                 <f:facet name="header">
-                    <h:outputText value="Destinatários" />
+                    <h:outputText value="#{messages['process.mail.receivers']}" />
                 </f:facet>
             </ui:define>
         </ui:decorate>
@@ -160,7 +160,7 @@
             </wi:selectOneMenuEntity>
             <wi:inputText
                 id="to"
-                label="Para"
+                label="#{messages['process.mail.to']}"
                 rendered="#{!isExpression}"
                 value="#{nodeFitter.currentNode.to}"
             >
@@ -172,15 +172,15 @@
             </wi:inputText>
             <wi:inputText
                 id="toExpession"
-                label="Para"
+                label="#{messages['process.mail.to']}"
                 rendered="#{isExpression}"
                 disabled="true"
                 readonly="true"
-                value="[Gerado pela tabela acima...]"
+                value="#{messages['process.mail.to.generated']}"
             />
             <wi:inputText
                 id="subject"
-                label="Assunto"
+                label="#{messages['process.mail.subject']}"
                 value="#{nodeFitter.currentNode.subject}"
             >
                 <a:ajax
