@@ -16,7 +16,7 @@
                 id="taskName"
                 value="#{taskFitter.taskName}"
                 widthDiv="230px"
-                label="Nome"
+                label="#{messages['process.task.name']}"
             >
                 <a:ajax
                     event="change"
@@ -30,7 +30,7 @@
             <wi:selectOneMenu
                 id="swimlaneTask"
                 items="#{swimlaneFitter.swimlaneList}"
-                label="Atribuir a"
+                label="#{messages['process.task.responsavel']}"
                 widthDiv="230px"
                 noSelectionLabel="#{messages['crud.select.select']}"
                 value="#{t.swimlaneName}"
@@ -43,7 +43,7 @@
             </wi:selectOneMenu>
             <wi:inputNumber
                 id="prazo"
-                label="Prazo para Término"
+                label="#{messages['process.task.prazo']}"
                 value="#{taskFitter.tarefaAtual.prazo}"
                 rendered="#{taskFitter.currentJbpmTaskPersisted}"
             >
@@ -56,10 +56,10 @@
             </wi:inputNumber>
             <wi:selectOneMenuEnum
                 id="tipoPrazo"
-                label="Unidade"
+                label="#{messages['process.task.prazo.unidade']}"
                 value="#{taskFitter.tarefaAtual.tipoPrazo}"
                 items="#{prazoCombo.tipoPrazoList}"
-                noSelectionLabel="Selecione um registro..."
+                noSelectionLabel="#{messages['crud.select.select']}"
                 rendered="#{taskFitter.currentJbpmTaskPersisted}"
             >
                 <a:ajax
@@ -95,7 +95,7 @@
                             limitRender="true"
                         >
                             <h:graphicImage
-                                title="Adicionar variável"
+                                title="#{messages['process.task.addVariable']}"
                                 url="/img/add.gif"
                             />
                         </a:commandLink>
@@ -113,7 +113,7 @@
                         styleClass="opacityHover"
                     >
                         <h:graphicImage
-                            title="Excluir variável"
+                            title="#{messages['process.task.removeVariable']}"
                             url="/img/remove.png"
                         />
                     </a:commandLink>
@@ -127,7 +127,7 @@
                         oncomplete="#{rich:component('actionTemplatePanel')}.show()"
                     >
                         <h:graphicImage
-                            title="Adicionar modelo de documento"
+                            title="#{messages['process.task.var.modelo']}"
                             rendered="#{empty var.modeloList}"
                             url="/img/newfile.gif"
                         />
@@ -142,7 +142,7 @@
             </div>
         </rich:column>
         <rich:column>
-            <f:facet name="header">Variável</f:facet>
+            <f:facet name="header">#{messages['process.task.var']}</f:facet>
             <h:form>
                 <s:div id="varDiv">
                     <h:inputText
@@ -181,7 +181,7 @@
             </h:form>
         </rich:column>
         <rich:column>
-            <f:facet name="header">Label</f:facet>
+            <f:facet name="header">#{messages['process.task.var.label']}</f:facet>
             <h:form>
                 <s:div id="varLabel">
                     <h:inputText value="#{var.label}">
@@ -196,7 +196,7 @@
             </h:form>
         </rich:column>
         <rich:column>
-            <f:facet name="header">Escrita</f:facet>
+            <f:facet name="header">#{messages['process.task.var.modo']}</f:facet>
             <h:form>
                 <h:selectBooleanCheckbox
                     id="writable"
@@ -213,7 +213,7 @@
             </h:form>
         </rich:column>
         <rich:column>
-            <f:facet name="header">Obrig.</f:facet>
+            <f:facet name="header">#{messages['process.task.var.required']}</f:facet>
             <h:form>
                 <h:selectBooleanCheckbox
                     id="required"
@@ -230,7 +230,7 @@
             </h:form>
         </rich:column>
         <rich:column>
-            <f:facet name="header">Tipo</f:facet>
+            <f:facet name="header">#{messages['process.task.var.type']}</f:facet>
             <h:form id="formVariableType">
                 <wi:selectOneMenu
                     id="type"

@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
-     xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:a="http://richfaces.org/a4j"
-     xmlns:s="http://jboss.org/schema/seam/taglib"
-     xmlns:f="http://java.sun.com/jsf/core"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:rich="http://richfaces.org/rich"
-     xmlns:wi="http://www.itx.com.br/jsf">
-
-<s:div id="#{id}Action">
-
-	<a:commandLink id="#{id}Link"
-             render="actionTemplate"
-             onclick="idTextarea='form:nodes:nodeEventeventSubView:nodeEventAction:nodeEventActionExpressionDecoration:nodeEventActionExpression'"
-             action="#{event.setTemplate()}"
-             limitRender="true"
-             rendered="false"
-             oncomplete="#{rich:component('actionTemplatePanel')}.show()">
-             
-		<h:graphicImage url="/img/jbpm/wizard.gif" title="Assistente para expressão" />
-		
-	</a:commandLink>
-	
-	<wi:inputTextarea id="#{id}ActionExpression" value="#{event.currentAction.actionExpression}" label="Expressão" showCounter="false">
-			
-		<a:ajax event="change" limitRender="true" execute="@this"/>
-		
-	</wi:inputTextarea>
-	
-</s:div>
-
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf"
+>
+    <s:div id="#{id}Action">
+        <a:commandLink
+            id="#{id}Link"
+            render="actionTemplate"
+            onclick="idTextarea='form:nodes:nodeEventeventSubView:nodeEventAction:nodeEventActionExpressionDecoration:nodeEventActionExpression'"
+            action="#{event.setTemplate()}"
+            limitRender="true"
+            rendered="false"
+            oncomplete="#{rich:component('actionTemplatePanel')}.show()"
+        >
+            <h:graphicImage
+                url="/img/jbpm/wizard.gif"
+                title="Assistente para expressão"
+            />
+        </a:commandLink>
+        <wi:inputTextarea
+            id="#{id}ActionExpression"
+            value="#{event.currentAction.actionExpression}"
+            label="#{messages['process.events.action.expression']}"
+            showCounter="false"
+        >
+            <a:ajax
+                event="change"
+                limitRender="true"
+                execute="@this"
+            />
+        </wi:inputTextarea>
+    </s:div>
 </ui:composition>

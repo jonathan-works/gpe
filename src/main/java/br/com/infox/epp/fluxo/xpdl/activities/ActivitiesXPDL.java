@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.xpdl.activities;
 
+import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,7 +160,7 @@ public class ActivitiesXPDL implements Serializable {
             if (node instanceof EndState) {
                 if (endState == null) {
                     endState = node;
-                    endState.setName("Término");
+                    endState.setName(internacionalize("process.node.last"));
                 } else {
                     iter.remove();
 

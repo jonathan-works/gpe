@@ -20,7 +20,7 @@
                     url="/img/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif"
                 />
                 <h:outputText
-                    value="Transições que #{type == 'from' ? 'chegam ao' : 'saem do'} nó"
+                    value="#{type == 'from' ? messages['process.transitions.arriving'] : messages['process.transitions.leaving']}"
                 />
             </h:panelGrid>
         </f:facet>
@@ -50,7 +50,7 @@
                             limitRender="true"
                         >
                             <h:graphicImage
-                                title="Adicionar transição"
+                                title="#{messages['process.transition.add']}"
                                 url="/img/add.gif"
                             />
                         </a:commandLink>
@@ -109,7 +109,7 @@
                 </div>
             </rich:column>
             <rich:column rendered="#{type=='from'}">
-                <f:facet name="header">Nó Origem</f:facet>
+                <f:facet name="header">#{messages['process.transition.origin']}</f:facet>
                 <h:form>
                     <h:selectOneMenu
                         id="from"
@@ -136,7 +136,7 @@
                 </h:form>
             </rich:column>
             <rich:column rendered="#{type=='to'}">
-                <f:facet name="header">Nó Destino</f:facet>
+                <f:facet name="header">#{messages['process.transition.destination']}</f:facet>
                 <h:form>
                     <h:selectOneMenu
                         id="to"
@@ -164,7 +164,7 @@
                 </h:form>
             </rich:column>
             <rich:column id="transitionName">
-                <f:facet name="header">Nome</f:facet>
+                <f:facet name="header">#{messages['process.transition.name']}</f:facet>
                 <h:form>
                     <h:inputText
                         value="#{transition.name}"
@@ -179,7 +179,7 @@
                     </h:inputText>
                     <a:commandLink
                         render="nodesDiv"
-                        title="Ir para o nó"
+                        title="#{messages['process.transition.goto']}"
                         execute="@this"
                         action="#{nodeFitter.setCurrentNode(transition, type)}"
                         limitRender="true"
@@ -196,7 +196,7 @@
                 </h:form>
             </rich:column>
             <rich:column id="showTransitionButtonColumn">
-                <f:facet name="header">Ocultar</f:facet>
+                <f:facet name="header">#{messages['process.transition.ocultar']}</f:facet>
                 <h:form>
                     <center>
                         <h:selectBooleanCheckbox
