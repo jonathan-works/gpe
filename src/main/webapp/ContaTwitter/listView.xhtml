@@ -61,7 +61,7 @@
                             <s:div rendered="#{!home.managed}">
                                 <wi:commandButton id="includeButton"
                                     action="#{home.setRequesting(true)}"
-                                    value="Incluir Twitter"
+                                    value="#{messages['contaTwitter.include']}"
                                     rendered="#{!home.requesting}"
                                     reRender="idTwitterBody"
                                     onclick="window.open('#{home.getAuthorizationURL()}', 'Autorizar Aplicação' ,'');" />
