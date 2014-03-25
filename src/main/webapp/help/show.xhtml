@@ -48,7 +48,7 @@
         <h:form>
             <h:panelGrid columns="2">
                 <h:panelGroup>
-                    <h:outputLabel value="Pesquisar: " for="searchText" />
+                    <h:outputLabel value="#{messages['ajuda.search']} " for="searchText" />
                     <h:inputText id="searchText"
                         value="#{ajudaView.textoPesquisa}" />
                 </h:panelGroup>
@@ -59,7 +59,7 @@
         </h:form>
 
         <s:div id="resultado">
-            <h:outputText value="Nenhum resultado encontrado."
+            <h:outputText value="#{messages['ajuda.noResult']}"
                 rendered="#{empty ajudaView.resultadoPesquisa and !empty ajudaView.textoPesquisa}"
                 styleClass="sem-resultado-ajuda" />
             <rich:tabPanel id="helpPanel" height="650px"
@@ -69,7 +69,7 @@
                         <h:outputLink
                             value="#{pathResolver.contextPath}/help/show.seam?viewId=#{ajudaView.viewId}">
                             <h:graphicImage url="link.gif"
-                                title="Utilize esse link para fazer referência a essa página" />
+                                title="#{messages['ajuda.link']}" />
                         </h:outputLink>
                         <h:graphicImage url="#{a4jSkin.imgIconEdit}"
                             title="Editar conteúdo"
@@ -83,7 +83,7 @@
 
                 <rich:tab id="search"
                     rendered="#{!empty ajudaView.resultadoPesquisa and !empty ajudaView.textoPesquisa}"
-                    header="Resultado da pesquisa" name="search">
+                    header="#{messages['ajuda.result']}" name="search">
 
                     <h:form>
                         <h:dataTable id="helpResult"
