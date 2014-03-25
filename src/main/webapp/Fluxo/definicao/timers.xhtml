@@ -43,7 +43,7 @@
                         >
                             <h:graphicImage
                                 url="/img/add.gif"
-                                title="Novo temporizador"
+                                title="#{messages['process.timer.new']}"
                             />
                         </a:commandLink>
                     </h:form>
@@ -51,7 +51,7 @@
                 <ui:define name="toolBar">
                     <h:form>
                         <h:graphicImage
-                            title="Excluir temporizador"
+                            title="#{messages['process.timer.remove']}"
                             url="/img/remove.png"
                         >
                             <a:ajax
@@ -67,7 +67,7 @@
                 </ui:define>
                 <ui:define name="columns">
                     <rich:column>
-                        <f:facet name="header">#{messages['process.timers']}</f:facet>
+                        <f:facet name="header">#{messages['process.timer']}</f:facet>
                         <ui:param
                             name="current"
                             value="#{row == nodeFitter.nodeHandler.currentTimer}"
@@ -104,7 +104,7 @@
                     <wi:inputText
                         id="name"
                         value="#{node.timerName}"
-                        label="Nome"
+                        label="#{messages['process.timer.name']}"
                     >
                         <a:ajax
                             execute="@this"
@@ -117,7 +117,7 @@
                         id="duedate"
                         value="#{node.dueDateValue}"
                         widthDiv="50px"
-                        label="Prazo"
+                        label="#{messages['process.timer.prazo']}"
                     >
                         <a:ajax
                             execute="@this"
@@ -129,9 +129,9 @@
                         id="unit"
                         value="#{node.dueDateUnit}"
                         widthDiv="100px"
-                        label="Unidade"
+                        label="#{messages['process.timer.prazo.unidade']}"
                         items="#{node.dueDateDefaultUnit.values()}"
-                        noSelectionLabel="[Selecione...]"
+                        noSelectionLabel="#{messages['crud.select.select']}"
                         optionText="label"
                     >
                         <a:ajax
@@ -144,7 +144,7 @@
                         id="business"
                         value="#{node.dueDateBusiness}"
                         widthDiv="40px"
-                        label="Comercial?"
+                        label="#{messages['process.timer.business']}"
                     >
                         <a:ajax
                             execute="@this"
@@ -155,9 +155,9 @@
                     <wi:selectOneMenu
                         id="transition"
                         value="#{timer.transitionName}"
-                        label="Transição"
+                        label="#{messages['process.timer.transition']}"
                         items="#{node.getTransitions()}"
-                        noSelectionLabel="[Selecione...]"
+                        noSelectionLabel="#{messages['crud.select.select']}"
                     >
                         <a:ajax
                             execute="@this"
