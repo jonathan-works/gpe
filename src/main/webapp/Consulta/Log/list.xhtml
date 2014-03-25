@@ -24,7 +24,7 @@
           showGrid="#{entidadeLogList.instance.inPesquisa}">
           <ui:define name="searchForm">
             <wi:searchForm formId="pesquisarLogForm"
-              formTitle="#{searchForm.title}" showLogicOperator="false"
+              formTitle="#{messages['searchForm.title']}" showLogicOperator="false"
               showButtons="false">
               <wi:selectOneMenu id="nomeEntidade"
                 value="#{entidadeLogList.instance.nomeEntidade}"
