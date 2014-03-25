@@ -90,8 +90,8 @@ public class CertificateManager {
                 acceptedCaNameSb.append(cnName);
                 acceptedCaNameSb.append(BR);
                 is.close();
-            } catch (IOException e) {
-                LOG.error("CertificadosCaCheckManager.populateListMap()", e);
+            } catch (IOException | CertificateException e) {
+                LOG.error("Erro ao gerar certificado para " + fileCert, e);
             } finally {
                 FileUtil.close(is);
             }
@@ -200,7 +200,7 @@ public class CertificateManager {
     public static List<URL> getResourceListing(Class<? extends Object> clazz,
             String path, String pattern) throws URISyntaxException, IOException {
         URL dirURL = clazz.getClassLoader().getResource(path);
-        if (dirURL.getProtocol().equals("vfsfile")) {
+        if (dirURL.getProtocol().equals("vfsfile") || dirURL.getProtocol().equals("vfs")) {
             dirURL = new URL("file", dirURL.getHost(), dirURL.getFile());
         }
         if (dirURL.getProtocol().equals("file")) {
