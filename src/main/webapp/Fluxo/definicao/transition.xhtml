@@ -60,7 +60,7 @@
                     <div>
                         <h:form>
                             <h:graphicImage
-                                title="Definir condição"
+                                title="#{messages['process.transition.condition.define']}"
                                 rendered="#{empty transition.transition.condition and transition.canDefineCondition()}"
                                 url="/img/help_dis.gif"
                                 styleClass="opacityHover"
@@ -75,7 +75,7 @@
                                 />
                             </h:graphicImage>
                             <h:graphicImage
-                                title="Editar condição"
+                                title="#{messages['process.transition.condition.edit']}"
                                 rendered="#{!empty transition.transition.condition and transition.transition.condition != '#{true}' and transition.canDefineCondition()}}"
                                 styleClass="opacityHover"
                                 url="/img/help.gif"
@@ -90,7 +90,7 @@
                                 />
                             </h:graphicImage>
                             <h:graphicImage
-                                title="Excluir transição"
+                                title="#{messages['process.transition.remove']}"
                                 url="/img/remove.png"
                                 styleClass="opacityHover"
                                 rendered="#{type eq 'to'}"
