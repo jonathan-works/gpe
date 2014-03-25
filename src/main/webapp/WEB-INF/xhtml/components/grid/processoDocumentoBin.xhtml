@@ -1,57 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:jsp="http://java.sun.com/JSP/Page"
     xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib">
-
-    <ui:param name="bin" value="#{empty bin ? c.value : bin}" />
-    <ui:param name="isModelo" value="#{not empty bin.modeloDocumento}" />
-
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+>
+    <ui:param
+        name="bin"
+        value="#{empty bin ? c.value : bin}"
+    />
+    <ui:param
+        name="isModelo"
+        value="#{not empty bin.modeloDocumento}"
+    />
     <div id="teste">
-
         <span class="#{row.ativo ? '' : 'inativo'}" />
-
         <h:commandLink
             action="#{documentoHtmlView.setViewInstance(row)}"
             onclick="openPopUp('PopUpDocumentoBin', '')"
-            rendered="#{isModelo}" target="PopUpDocumentoBin">
-            <h:graphicImage title="Visualizar" url="/img/view.gif" />
+            rendered="#{isModelo}"
+            target="PopUpDocumentoBin"
+        >
+            <h:graphicImage
+                title="Visualizar"
+                url="/img/view.gif"
+            />
         </h:commandLink>
-
-        <h:commandLink target="idPdf#{row}" rendered="#{!isModelo}"
-            action="#{documentoDownloader.downloadDocumento(row)}">
-            <h:graphicImage value="/img/pdf.gif"
-                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})" />
+        <h:commandLink
+            target="idPdf#{row}"
+            rendered="#{!isModelo}"
+            action="#{documentoDownloader.downloadDocumento(row)}"
+        >
+            <h:graphicImage
+                value="/img/pdf.gif"
+                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"
+            />
         </h:commandLink>
-
-        <s:link target="idJan#{row.idProcessoDocumento}"
+        <s:link
+            target="idJan#{row.idProcessoDocumento}"
             rendered="#{not empty bin.signature}"
             view="/Processo/Consulta/validaDocumento.xhtml"
-            onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');">
-
-            <h:graphicImage title="Validar Assinatura Digital"
-                alt="Validar Assinatura Digital" url="/img/lock.png" />
-            <f:param value="#{row.idProcessoDocumento}"
-                name="idProcessoDocumento" />
-
+            onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');"
+        >
+            <h:graphicImage
+                title="Validar Assinatura Digital"
+                alt="Validar Assinatura Digital"
+                url="/img/lock.png"
+            />
+            <f:param
+                value="#{row.idProcessoDocumento}"
+                name="idProcessoDocumento"
+            />
         </s:link>
-        <s:link target="idJan#{row.idProcessoDocumento}"
+        <s:link
+            target="idJan#{row.idProcessoDocumento}"
             rendered="#{empty bin.signature}"
             view="/Processo/Consulta/assinaDocumento.xhtml"
-            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
-
+            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');"
+        >
             <h:graphicImage
                 title="Assinar Documento #{row.idProcessoDocumento}"
-                alt="Assinar Documento" url="/img/lock_unlock.png" />
-            <f:param value="#{row.idProcessoDocumento}"
-                name="idProcessoDocumento" />
+                alt="Assinar Documento"
+                url="/img/lock_unlock.png"
+            />
+            <f:param
+                value="#{row.idProcessoDocumento}"
+                name="idProcessoDocumento"
+            />
         </s:link>
-
     </div>
-
 </ui:composition>
