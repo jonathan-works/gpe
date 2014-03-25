@@ -365,22 +365,22 @@
           <wi:dataForm
             formId="relacionamentoProcessoForm"
             formTitle="#{messages['form.title']}"
-            home="#{relacionamentoProcessoCrudAction}"
+            home="#{relacionamentoCrudAction}"
           >
             <wi:inputText
               id="labelNumeroProcesso"
               label="#{messages['relacionamentoProcesso.numeroProcesso']}"
               required="true"
               maxlength="30"
-              value="#{relacionamentoProcessoCrudAction.instance.numeroProcesso}"
-              disabled="#{relacionamentoProcessoCrudAction.managed}"
+              value="#{relacionamentoCrudAction.processoRelacionado}"
+              disabled="#{relacionamentoCrudAction.managed}"
             >
             </wi:inputText>
             <wi:selectOneMenuEntity
               id="tipoRelacionamento"
-              value="#{relacionamentoProcessoCrudAction.relacionamento.tipoRelacionamentoProcesso}"
+              value="#{relacionamentoCrudAction.instance.tipoRelacionamentoProcesso}"
               label="#{messages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
-              items="#{relacionamentoProcessoCrudAction.tipoRelacionamentoProcessoList}"
+              items="#{relacionamentoCrudAction.tipoRelacionamentoProcessoList}"
               required="true"
               hideNoSelectionLabel="false"
               noSelectionLabel="#{messages['crud.select.select']}"
@@ -389,22 +389,22 @@
             <wi:inputTextarea
               id="motivo"
               label="#{messages['relacionamentoProcesso.motivo']}"
-              value="#{relacionamentoProcessoCrudAction.relacionamento.motivo}"
+              value="#{relacionamentoCrudAction.instance.motivo}"
               required="true"
             >
             </wi:inputTextarea>
             <wi:selectSituacaoRadio
               id="ativo"
               label="#{messages['field.situacao']}"
-              rendered="#{relacionamentoProcessoCrudAction.managed}"
-              value="#{relacionamentoProcessoCrudAction.relacionamento.ativo}"
+              rendered="#{relacionamentoCrudAction.managed}"
+              value="#{relacionamentoCrudAction.instance.ativo}"
             />
             <ui:define name="buttons">
               <wi:commandButton
                 id="persistButton"
-                action="relacionamentoProcessoCrudAction.save()"
+                action="relacionamentoCrudAction.save()"
                 reRender="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
-                value="#{relacionamentoProcessoCrudAction.isManaged() ? messages['crud.update'] : messages['crud.persist']}"
+                value="#{relacionamentoCrudAction.isManaged() ? messages['crud.update'] : messages['crud.persist']}"
                 execute="relacionamentoProcessoFormDiv"
               >
               </wi:commandButton>
@@ -414,7 +414,7 @@
         <s:div id="relacionamentoProcessoDTDiv">
           <h:panelGroup
             id="dtable"
-            rendered="#{not empty relacionamentoProcessoCrudAction.instance.relacionamento}"
+            rendered="#{not empty relacionamentoCrudAction.processo}"
           >
             <wi:dataTable
               id="relProcDt2"
@@ -429,13 +429,19 @@
               <ui:define name="toolBar">
                 <wi:toolBarEdit
                   id="#{id}Edit"
-                  action="#{relacionamentoProcessoCrudAction.setId(row.idRelacionamentoProcesso)}"
+                  action="#{relacionamentoCrudAction.setEditMode(row.numeroProcesso, row.relacionamento.idRelacionamento)}"
                   render="relacionamentoProcessoFormDiv pageBodyDialogMessage"
                 />
-                <wi:toolBarInactive
+                <wi:toolBar
                   id="#{id}Inactivate"
-                  actionInactive="relacionamentoProcessoCrudAction.inactive(row)"
-                  reRender="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
+                  action="relacionamentoCrudAction.inactive(row.relacionamento)"
+                  rendered="#{row.relacionamento.ativo}"
+                  limitToList="true"
+                  status=":status"
+                  render="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
+                  onclick="return confirm(\'#{messages['crud.confirmInactivate']}\');"
+                  url="/img/remove.png"
+                  title="#{messages['button.inactive']}"
                 />
               </ui:define>
               <wi:columnOutputText
@@ -444,25 +450,27 @@
                 value="#{row.numeroProcesso}"
               />
               <wi:columnOutputText
-                columnId="motivo"
+                columnId="relacionamento.motivo"
                 columnHeader="#{messages['relacionamentoProcesso.motivo']}"
-                value="#{row.motivo}"
+                value="#{row.relacionamento.motivo}"
               />
               <wi:columnOutputText
-                columnId="nomeUsuario"
+                columnId="relacionamento.nomeUsuario"
                 columnHeader="#{messages['relacionamentoProcesso.nomeUsuario']}"
-                value="#{row.nomeUsuario}"
+                value="#{row.relacionamento.nomeUsuario}"
               />
               <wi:columnOutputText
-                columnId="dataRelacionamento"
+                columnId="relacionamento.dataRelacionamento"
                 columnHeader="#{messages['relacionamentoProcesso.dataRelacionamento']}"
-                value="#{row.dataRelacionamento}"
+                value="#{row.relacionamento.dataRelacionamento}"
               />
-              <wi:columnSituacao
-                columnId="ativo"
-                columnHeader="#{messages['field.ativo']}"
-              >
-              </wi:columnSituacao>
+              <wi:columnOutputText
+                columnId="relacionamento.ativo"
+                value="#{row.relacionamento.ativo ? messages['entity.ativo'] : messages['entity.inativo']}"
+                columnHeader="#{messages['entity.situacao']}"
+                columnStyle="text-align:center;"
+                columnWidth="10%"
+              />
             </wi:dataTable>
           </h:panelGroup>
         </s:div>

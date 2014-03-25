@@ -15,11 +15,11 @@ import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
 public class RelacionamentoProcessoList extends EntityList<RelacionamentoProcesso> {
     private static final long serialVersionUID = 1L;
 
-    private static final String DEFAULT_EJBQL = "select o from RelacionamentoProcesso o";
-    private static final String DEFAULT_ORDER = "relacionamento.dataRelacionamento";
+    private static final String DEFAULT_EJBQL = "select o from RelacionamentoProcesso o inner join o.relacionamento r";
+    private static final String DEFAULT_ORDER = "r.dataRelacionamento";
 
-    private static final String R1 = "o.relacionamento in (select r.relacionamento from RelacionamentoProcesso r where r.processo=#{relacionamentoProcessoCrudAction.processo})";
-    private static final String R2 = "o.processo != #{relacionamentoProcessoCrudAction.processo}";
+    private static final String R1 = "r in (select r2 from RelacionamentoProcesso rp inner join rp.relacionamento r2 where rp.numeroProcesso=#{relacionamentoCrudAction.processo})";
+    private static final String R2 = "o.numeroProcesso != #{relacionamentoCrudAction.processo}";
 
     public static final String NAME = "relacionamentoProcessoList";
 

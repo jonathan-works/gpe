@@ -10,5 +10,6 @@ public interface RelacionamentoProcessoQuery {
     String RELACIONAMENTO_BY_PROCESSO = "relacionamentoByProcesso";
     String RELACIONAMENTO_BY_PROCESSO_QUERY = "select r from RelacionamentoProcesso rp inner join rp.relacionamento r where rp.processo=:"
             + ID_PROCESSO;
+    
     String NUMERO_PROCESSO = "nr_processo";
 }

@@ -47,10 +47,9 @@ public class RelacionamentoProcesso implements Serializable {
     }
 
     public RelacionamentoProcesso(Relacionamento relacionamento,
-            ProcessoEpa processo) {
+            String numeroProcesso) {
         this.relacionamento = relacionamento;
-        this.numeroProcesso = processo.getNumeroProcesso();
-        this.processo = processo;
+        this.numeroProcesso = numeroProcesso;
     }
 
     @Id
