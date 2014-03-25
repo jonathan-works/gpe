@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:f="http://java.sun.com/jsf/core"
@@ -7,13 +8,21 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:a="http://richfaces.org/a4j"
     xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-
+    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml"
+>
     <ui:define name="baseBody">
-        <s:div id="pageBody" styleClass="pageBody">
-            <wi:messages formId="pageBody" globalOnly="true" />
-            <ui:param name="isBinario"
-                value="#{assinadorDocumento.processoDocumentoBin.isBinario()}" />
+        <s:div
+            id="pageBody"
+            styleClass="pageBody"
+        >
+            <wi:messages
+                formId="pageBody"
+                globalOnly="true"
+            />
+            <ui:param
+                name="isBinario"
+                value="#{assinadorDocumento.processoDocumentoBin.isBinario()}"
+            />
             <script>
             var documento= {
                     useBase64:function useBase64() {
@@ -33,17 +42,21 @@
                     }
             };
         </script>
-
             <rich:panel id="painel">
                 <f:facet name="header">Informações: </f:facet>
-                <f:view form="#{processoDocumentoView}" columns="1"
-                    title="Documento" opened="false" />
-
+                <f:view
+                    form="#{processoDocumentoView}"
+                    columns="1"
+                    title="Documento"
+                    opened="false"
+                />
                 <s:div
                     rendered="#{not assinadorDocumento.houveErroAoAssinar}"
-                    id="certificadoDigitalDiv">
+                    id="certificadoDigitalDiv"
+                >
                     <div id="divApplet">
-                        <wi:appletAssinatura id="certificacao"
+                        <wi:appletAssinatura
+                            id="certificacao"
                             urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
                             formId="formValidar"
                             certificationChainField="#{rich:clientId('certChain')}"
@@ -51,8 +64,10 @@
                             getDataFunction="documento.getData()"
                             functionPreSign="showLoading()"
                             functionPosSign="hideLoading();documento.postValidate();"
-                            debug="false" loginMode="false"
-                            useProviderDll="false">
+                            debug="false"
+                            loginMode="false"
+                            useProviderDll="false"
+                        >
                         </wi:appletAssinatura>
                     </div>
                     <h:form id="formValidar">
@@ -61,21 +76,25 @@
                             opener.location.reload();
                         }
                         </script>
-                        <h:inputHidden id="certChain"
-                            value="#{assinadorDocumento.certChain}" />
-                        <h:inputHidden id="signature"
-                            value="#{assinadorDocumento.signature}" />
-
-                        <a:jsFunction name="submitForm"
+                        <h:inputHidden
+                            id="certChain"
+                            value="#{assinadorDocumento.certChain}"
+                        />
+                        <h:inputHidden
+                            id="signature"
+                            value="#{assinadorDocumento.signature}"
+                        />
+                        <a:jsFunction
+                            name="submitForm"
                             action="#{assinadorDocumento.assinarDocumento()}"
                             oncomplete="if (!event.data) close();"
                             execute="@form"
                             data="#{assinadorDocumento.houveErroAoAssinar}"
-                            render="painel, pageBodyDialogMessage" />
+                            render="painel, pageBodyDialogMessage"
+                        />
                     </h:form>
                 </s:div>
             </rich:panel>
         </s:div>
     </ui:define>
-
 </ui:composition>
