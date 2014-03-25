@@ -40,13 +40,13 @@
                         >
                             <h:graphicImage
                                 url="/img/add.gif"
-                                title="Novo evento"
+                                title="#{messages['process.events.new']}"
                             />
                         </a:commandLink>
                     </ui:define>
                     <ui:define name="toolBar">
                         <h:graphicImage
-                            title="Excluir"
+                            title="#{messages['process.events.remove']}"
                             url="/img/remove.png"
                         >
                             <a:ajax
@@ -61,7 +61,7 @@
                     </ui:define>
                     <ui:define name="columns">
                         <rich:column>
-                            <f:facet name="header">Eventos</f:facet>
+                            <f:facet name="header">#{messages['process.events']}</f:facet>
                             <a:commandLink
                                 execute="@this"
                                 action="#{parent.setCurrentEvent(row)}"
@@ -122,13 +122,13 @@
                             >
                                 <h:graphicImage
                                     url="/img/add.gif"
-                                    title="Nova ação"
+                                    title="#{messages['process.events.action.new']}"
                                 />
                             </a:commandLink>
                         </ui:define>
                         <ui:define name="toolBar">
                             <h:graphicImage
-                                title="Excluir"
+                                title="#{messages['process.events.action.remove']}"
                                 url="/img/remove.png"
                             >
                                 <a:ajax
@@ -143,7 +143,7 @@
                         </ui:define>
                         <ui:define name="columns">
                             <rich:column>
-                                <f:facet name="header">Ações</f:facet>
+                                <f:facet name="header">#{messages['process.events.actions']}</f:facet>
                                 <a:commandLink
                                     execute="@this"
                                     action="#{event.setCurrentAction(row)}"
@@ -161,7 +161,7 @@
                                                 url="/img/jbpm/#{event.getIcon(row)}.gif"
                                             />
                                             <h:outputText
-                                                value="#{empty row.name ? 'Ação '.concat(key + 1) : row.name}"
+                                                value="#{empty row.name ? messages['process.events.action'].concat(key + 1) : row.name}"
                                             />
                                         </h:panelGrid>
                                     </a:outputPanel>
