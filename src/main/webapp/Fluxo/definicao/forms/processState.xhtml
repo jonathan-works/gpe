@@ -11,9 +11,9 @@
         <h:form>
             <wi:selectOneMenu
                 id="cmbSubProcessName"
-                label="Sub processo"
+                label="#{messages['process.subprocess']}"
                 items="#{jbpmUtil.processNames}"
-                noSelectionLabel="Selecione..."
+                showLabelSelecione="true"
                 value="#{nodeFitter.nodeHandler.subProcessName}"
             >
                 <a:ajax
