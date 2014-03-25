@@ -348,7 +348,7 @@
             height="150"
             width="550"
             resizeable="false"
-            labelHeader="Condição para a transição"
+            labelHeader="#{messages['process.transition.condition']}"
         >
             <h:form id="transitionConditionForm">
                 <div>
@@ -356,7 +356,7 @@
                         id="conditionInput"
                         value="#{transitionFitter.getCurrentTransition().condition}"
                         widthDiv="500px"
-                        label="Expressão:"
+                        label="#{messages['process.transition.condition.expression']}"
                     >
                         <a:ajax
                             event="change"
