@@ -73,13 +73,13 @@
         >
             <wi:outputText
                 id="identificador"
-                label="Identificador"
+                label="#{messages['recurso.identificador']}"
                 value="#{recursoCrudAction.instance.identificador}"
             >
             </wi:outputText>
             <wi:inputText
                 id="nome"
-                label="Nome"
+                label="#{messages['recurso.nome']}"
                 value="#{recursoCrudAction.instance.nome}"
                 required="true"
             />
@@ -98,12 +98,12 @@
         >
             <wi:dataForm
                 formId="papel"
-                formTitle="Recurso: #{recursoCrudAction.instance.nome}"
+                formTitle="#{messages['recurso.papelTitleForm']} - #{recursoCrudAction.instance.nome}"
             >
                 <a:region>
                     <wi:pickList
                         id="recurso"
-                        targetCaption="Papéis que possuem acesso direto ao recurso:"
+                        targetCaption="#{messages['recurso.papeis']}"
                         value="#{recursoPapelController.papeis}"
                         itemValues="#{recursoPapelController.papeisDisponiveis}"
                         itemLabel="#{var}"
