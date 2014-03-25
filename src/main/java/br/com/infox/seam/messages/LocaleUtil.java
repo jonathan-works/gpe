@@ -1,5 +1,6 @@
 package br.com.infox.seam.messages;
 
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.international.Messages;
 
 public class LocaleUtil {
@@ -13,7 +14,10 @@ public class LocaleUtil {
      * @return a tradução do propriedade
      * */
     public static String internacionalize(String property) {
-        return Messages.instance().get(property);
+        if (Contexts.isSessionContextActive()) {
+            return Messages.instance().get(property);
+        }
+        return property;
     }
 
 }
