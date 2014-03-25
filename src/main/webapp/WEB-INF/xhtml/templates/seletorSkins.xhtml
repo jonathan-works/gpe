@@ -31,7 +31,7 @@
 	</div>
 	
 	<rich:popupPanel id="#{id}-skinPanel" height="100">
-		<f:facet name="header">Esquema de cores da aplicação</f:facet>
+		<f:facet name="header">#{messages['skin.title']}</f:facet>
 		<f:facet name="controls">
 			<h:panelGroup>
 				<h:graphicImage value="/img/closeMP.gif"
@@ -40,7 +40,7 @@
 			</f:facet>
 			<s:decorate template="/WEB-INF/xhtml/components/templates/edit.xhtml">
 				<ui:define name="label">
-					<h:outputText value="Escolha o esquema:" styleClass="label" />
+					<h:outputText value="#{messages['skin.choice']}" styleClass="label" />
 				</ui:define>
 				<h:form>
 					<h:selectOneMenu value="#{wiSkin.skin}" styleClass="PaletteMenu"
