@@ -1,24 +1,25 @@
 package br.com.infox.epp.painel.caixa;
 
-import java.text.MessageFormat;
+import static java.text.MessageFormat.format;
+
 import java.util.List;
 
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.infox.ibpm.event.JbpmEventsHandler;
 import br.com.infox.seam.util.ComponentUtil;
-import br.com.itx.component.AbstractHome;
 
 @Name(CaixaCrudAction.NAME)
 public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
@@ -46,15 +47,16 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
     }
 
     public void addCaixa(int idTarefa) {
-        getInstance().setTarefa(tarefaManager.find(idTarefa));
-        getInstance().setNomeIndice(MessageFormat.format("{0}-{1}", getInstance().getNomeCaixa(), idTarefa));
+        final Caixa caixa = getInstance();
+        caixa.setTarefa(tarefaManager.find(idTarefa));
+        caixa.setNomeIndice(format("{0}-{1}", caixa.getNomeCaixa(), idTarefa));
         save();
         newInstance();
     }
 
     @Override
     protected void afterSave(String ret) {
-        if (AbstractHome.PERSISTED.equals(ret)) {
+        if (AbstractAction.PERSISTED.equals(ret)) {
             JbpmEventsHandler.updatePostDeploy();
             TarefasTreeHandler.clearActiveTree();
         }
@@ -66,8 +68,9 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
         String ret = super.update();
         try {
             if (PostgreSQLErrorCode.valueOf(ret) == PostgreSQLErrorCode.UNIQUE_VIOLATION) {
-                FacesMessages.instance().clear();
-                FacesMessages.instance().add(Severity.ERROR, "Já existe uma caixa na mesma tarefa com o nó anterior especificado.");
+                final StatusMessages messages = getMessagesHandler();
+                messages.clear();
+                messages.add(Severity.ERROR, "Já existe uma caixa na mesma tarefa com o nó anterior especificado.");
             }
         } catch (IllegalArgumentException e) {
             LOG.warn(".update()", e);
@@ -104,9 +107,9 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
         if (getInstance() != null) {
             remove();
         } else {
-            FacesMessages.instance().add(Severity.ERROR, "Por favor, selecione a caixa que deseja excluir!");
+            getMessagesHandler().add(Severity.ERROR, "Por favor, selecione a caixa que deseja excluir!");
         }
-        TarefasTreeHandler tree = ComponentUtil.getComponent("tarefasTree");
+        final TarefasTreeHandler tree = ComponentUtil.getComponent(TarefasTreeHandler.NAME);
         tree.clearTree();
     }
 }
