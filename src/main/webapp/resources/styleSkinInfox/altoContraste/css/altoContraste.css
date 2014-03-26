@@ -103,3 +103,10 @@
 .ui-widget-header>.ui-state-default.ui-corner-top.ui-state-disabled>a {
   
 }
+.rf-ddm-itm.rf-ddm-itm-sel,.rf-ddm-lbl.rf-ddm-sel {
+  background:#000;
+  color:#FFF;
+}
+.rf-ddm-itm.rf-ddm-itm-sel > .rf-ddm-itm-lbl,.rf-ddm-lbl.rf-ddm-sel > .rf-ddm-lbl-dec {
+  color:#FFF;
+}
