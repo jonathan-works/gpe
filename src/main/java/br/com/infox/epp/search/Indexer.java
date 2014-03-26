@@ -3,6 +3,7 @@ package br.com.infox.epp.search;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -59,6 +60,12 @@ public class Indexer {
 
     public Indexer(File indexPath) throws IOException {
         directory = FSDirectory.open(indexPath);
+    }
+    
+    public void updatePdfIndex(String conteudo, Long taskId) {
+        Map<String, String> fields = new HashMap<String, String>();
+        fields.put("conteudo", conteudo);
+        index(taskId + "", new HashMap<String, String>(), fields);
     }
 
     public void index(String id, Map<String, String> storedFields,

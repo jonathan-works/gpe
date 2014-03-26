@@ -1,5 +1,8 @@
 package br.com.infox.epp.processo.documento.anexos;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -14,12 +17,15 @@ import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
 import br.com.infox.core.file.encode.MD5Encoder;
+import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.search.Indexer;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 
 @Name(DocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -36,6 +42,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private ProcessoDocumentoManager processoDocumentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
+    private InputStream inputStream;
 
     public boolean isValido() {
         return isValido;
@@ -55,6 +62,12 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
         newInstance();
         final UploadedFile ui = fileUploadEvent.getUploadedFile();
+        try {
+            inputStream = ui.getInputStream();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         setValido(isDocumentoBinValido(ui));
         bin().setUsuario(Authenticator.getUsuarioLogado());
         bin().setNomeArquivo(ui.getName());
@@ -94,6 +107,14 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     protected ProcessoDocumento gravarDocumento() throws DAOException {
         ProcessoDocumento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
         documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
+        if (TaskInstanceHome.instance().getTaskId() != null) {
+            try {
+                Indexer indexer = new Indexer();
+                indexer.updatePdfIndex(InfoxPdfReader.readPdfFromInputStream(inputStream), TaskInstanceHome.instance().getTaskId());
+            } catch (IOException e) {
+                LOG.error("Não foi possível indexar o documento " + pd.getProcessoDocumento(), e);
+            }
+        }
         return pd;
     }
 
