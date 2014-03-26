@@ -67,7 +67,7 @@
 
     </a:commandLink>
 
-    <h:graphicImage url="/img/role.gif"
+    <h:graphicImage url="#{a4jSkin.imgIconRole}"
       rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and !authenticator.isUsuarioAtualResponsavel())}"
       title="Processo bloqueado pelo servidor #{owner}" />
 
@@ -77,7 +77,7 @@
       onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
       limitRender="true"
       rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and authenticator.isUsuarioAtualResponsavel())}">
-      <h:graphicImage url="/img/role.gif"
+      <h:graphicImage url="#{a4jSkin.imgIconRole}"
         title="#{messages['painel.list.liberarTarefaServidor']} #{owner}" />
     </a:commandLink>
   </h:form>
