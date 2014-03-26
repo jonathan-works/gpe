@@ -69,3 +69,6 @@ textarea,select {
 .label-general.resultado-pesquisa-ajuda {
     color:'#{a4jSkin.headerTextColor}';
 }
+.suggest {
+  background-image: url("#{a4jSkin.imgBgSuggest}");
+}

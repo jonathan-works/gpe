@@ -252,7 +252,6 @@ th.banner, td.banner {
 }
 
 .suggest {
-    background-image: url("../img/suggest.png");
     background-position: right center;
     background-repeat: no-repeat;
     /*Padding para o texto não sobrepor a imagem*/
