@@ -47,7 +47,7 @@
                             <div>
                                 <h:outputText value="#{v.texto}"
                                     escape="false" />
-                                <b>···</b>
+                                <h:outputText rendered="#{not empty v.nomePdf}" value="#{messages['search.foundAtPdf']} #{v.nomePdf}"/>
                             </div>
                         </div>
                     </h:column>
