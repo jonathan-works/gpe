@@ -27,7 +27,7 @@
         >
             <h:graphicImage
                 title="#{messages['processoDocumento.visualizar']}"
-                url="/img/view.gif"
+                url="#{a4jSkin.imgIconView}"
             />
         </h:commandLink>
         <h:commandLink
@@ -36,7 +36,7 @@
             action="#{documentoDownloader.downloadDocumento(row)}"
         >
             <h:graphicImage
-                value="/img/pdf.gif"
+                value="#{a4jSkin.imgIconPDF}"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"
             />
         </h:commandLink>
