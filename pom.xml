@@ -99,14 +99,14 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <type>jar</type>
-            <version>4.2.7.SP1.infox</version><!--$NO-MVN-MAN-VER$ -->
+            <version>4.2.11.infox.Final</version><!--$NO-MVN-MAN-VER$ -->
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <type>jar</type>
-            <version>4.2.7.SP1.infox</version><!--$NO-MVN-MAN-VER$ -->
+            <version>4.2.11.infox.Final</version><!--$NO-MVN-MAN-VER$ -->
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -132,7 +132,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-infinispan</artifactId>
-            <version>4.2.7.SP1.infox</version><!--$NO-MVN-MAN-VER$ -->
+            <version>4.2.11.infox.Final</version><!--$NO-MVN-MAN-VER$ -->
             <scope>provided</scope>
         </dependency>
         <dependency>

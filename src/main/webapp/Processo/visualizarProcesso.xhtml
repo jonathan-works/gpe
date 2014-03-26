@@ -131,13 +131,13 @@
                 name="tabMovimentacoes"
                 rendered="#{processoHome.managed}"
                 status=":status"
-                title="Movimentações do Processo"
+                title="#{messages['acaoProcesso.menuText']}"
             >
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml"
                 >
-                    <ui:define name="title">Movimentações do Processo</ui:define>
+                    <ui:define name="title">#{messages['acaoProcesso.menuText']}</ui:define>
                     <ui:include
                         src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml"
                     />

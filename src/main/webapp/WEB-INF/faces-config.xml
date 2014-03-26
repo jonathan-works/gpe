@@ -10,11 +10,10 @@
         <message-bundle>messages</message-bundle>
         <locale-config>
             <default-locale>pt_BR</default-locale>
+            <supported-locale>pt_BR</supported-locale>
             <supported-locale>fr</supported-locale>
             <supported-locale>en</supported-locale>
             <supported-locale>en_us</supported-locale>
-            
-            
         </locale-config>
     </application>
     <component>

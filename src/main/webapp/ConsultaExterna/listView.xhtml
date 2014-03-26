@@ -144,13 +144,13 @@
                         <h:panelGrid columns="2" width="100%"
                             columnClasses="viewColumn">
                             <wi:outputText id="dataInicio"
-                                label="Data de Início"
+                                label="#{messages['processo.dataInicio']}"
                                 value="#{controller.processoEpa.dataInicio}">
                                 <f:convertDateTime
                                     pattern="dd/MM/yyyy kk:mm" />
                             </wi:outputText>
                             <wi:outputText id="usuarioCadastroProcesso"
-                                label="Usuário Cadastro Processo"
+                                label="#{messages['processo.usuarioCadastroProcesso']}"
                                 value="#{controller.processoEpa.usuarioCadastroProcesso.nomeUsuario}" />
                         </h:panelGrid>
                     </rich:collapsiblePanel>
@@ -168,13 +168,13 @@
                                 value="#{controller.processoEpa.processoEpaTarefaList}"
                                 rowKeyVar="key" var="task">
                                 <rich:column styleClass="defaultCell">
-                                    <f:facet name="header">Tarefa</f:facet>
+                                    <f:facet name="header">#{messages['tarefa.tarefa']}</f:facet>
                                     <h:outputText value="#{task.tarefa}" />
                                 </rich:column>
 
                                 <rich:column style="text-align: center"
                                     styleClass="defaultCell">
-                                    <f:facet name="header">Início</f:facet>
+                                    <f:facet name="header">#{messages['tarefa.inicio']}</f:facet>
                                     <h:outputText value="#{task.dataInicio}">
                                         <s:convertDateTime
                                             pattern="dd/MM/yy kk:mm:ss" />
@@ -183,7 +183,7 @@
 
                                 <rich:column style="text-align: center"
                                     styleClass="defaultCell">
-                                    <f:facet name="header">Término</f:facet>
+                                    <f:facet name="header">#{messages['tarefa.termino']}</f:facet>
                                     <h:outputText value="#{task.dataFim}">
                                         <s:convertDateTime
                                             pattern="dd/MM/yy kk:mm:ss" />
@@ -191,7 +191,7 @@
                                 </rich:column>
                                 <rich:column style="text-align:center"
                                     styleClass="defaultCell">
-                                    <f:facet name="header">Documentos</f:facet>
+                                    <f:facet name="header">#{messages['tarefa.documentos']}</f:facet>
                                     <rich:dataTable
                                         value="#{controller.getAnexosPublicos(task)}"
                                         rowKeyVar="key" var="doc">

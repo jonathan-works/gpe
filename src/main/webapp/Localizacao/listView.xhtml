@@ -104,7 +104,7 @@
                     items="#{localizacaoCrudAction.getLocalizacoesEstrutura()}"
                     rendered="#{!localizacaoCrudAction.instance.estrutura}"
                 	readonly="#{not isEditable}"
-                    noSelectionLabel="#{messages['crud.select.select']}" />
+                    showLabelSelecione="true" />
             </h:panelGroup>
             <wi:selectSituacaoRadio id="ativo"
                 label="#{messages['field.situacao']}" required="true"

@@ -32,7 +32,7 @@
                 items="#{swimlaneFitter.swimlaneList}"
                 label="#{messages['process.task.responsavel']}"
                 widthDiv="230px"
-                noSelectionLabel="#{messages['crud.select.select']}"
+                showLabelSelecione="true"
                 value="#{t.swimlaneName}"
             >
                 <a:ajax
@@ -59,7 +59,7 @@
                 label="#{messages['process.task.prazo.unidade']}"
                 value="#{taskFitter.tarefaAtual.tipoPrazo}"
                 items="#{prazoCombo.tipoPrazoList}"
-                noSelectionLabel="#{messages['crud.select.select']}"
+                showLabelSelecione="true"
                 rendered="#{taskFitter.currentJbpmTaskPersisted}"
             >
                 <a:ajax
