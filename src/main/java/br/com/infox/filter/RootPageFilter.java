@@ -25,8 +25,8 @@ public class RootPageFilter implements Filter {
             FilterChain chain) throws IOException, ServletException {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        httpResponse.sendRedirect(httpResponse.encodeRedirectURL(httpRequest.getContextPath()
-                + "/home.seam"));
+        httpResponse.sendRedirect(httpResponse.encodeRedirectURL(httpRequest
+                .getContextPath() + "/login.seam"));
     }
 
     @Override
