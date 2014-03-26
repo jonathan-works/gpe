@@ -62,10 +62,12 @@ public class Indexer {
         directory = FSDirectory.open(indexPath);
     }
     
-    public void updatePdfIndex(String conteudo, Long taskId) {
+    public void updatePdfIndex(String conteudo, Long taskId, String nomeArquivo) {
         Map<String, String> fields = new HashMap<String, String>();
+        Map<String, String> storedfields = new HashMap<String, String>();
         fields.put("conteudo", conteudo);
-        index(taskId + "", new HashMap<String, String>(), fields);
+        storedfields.put("nomePdf", nomeArquivo);
+        index(taskId + "", storedfields, fields);
     }
 
     public void index(String id, Map<String, String> storedFields,

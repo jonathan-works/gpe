@@ -110,7 +110,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         if (TaskInstanceHome.instance().getTaskId() != null) {
             try {
                 Indexer indexer = new Indexer();
-                indexer.updatePdfIndex(InfoxPdfReader.readPdfFromInputStream(inputStream), TaskInstanceHome.instance().getTaskId());
+                indexer.updatePdfIndex(InfoxPdfReader.readPdfFromInputStream(inputStream), TaskInstanceHome.instance().getTaskId(), pd.getProcessoDocumento());
             } catch (IOException e) {
                 LOG.error("Não foi possível indexar o documento " + pd.getProcessoDocumento(), e);
             }
