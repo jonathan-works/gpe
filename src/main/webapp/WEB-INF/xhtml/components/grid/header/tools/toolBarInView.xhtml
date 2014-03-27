@@ -27,7 +27,7 @@
             rendered="#{wiacsSecurity.checkPage(viewId.concat('/edit.seam'))}"
             id="#{gridId}Create">
 
-            <h:graphicImage url="/img/add.gif"
+            <h:graphicImage url="#{a4jSkin.imgIconAdd}"
                 title="Adicionar novo registro"
                 onclick="Richfaces.showModalPanel('#{modalPanelId}')" />
             <f:param name="id" />
