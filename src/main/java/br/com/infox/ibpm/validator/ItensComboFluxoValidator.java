@@ -12,9 +12,12 @@ public class ItensComboFluxoValidator implements Validator {
 
     public static final String VALIDATOR_ID = "itensComboFluxoValidator";
 
+    /**
+     * @throws ValidatorException
+     * */
     @Override
     public void validate(FacesContext context, UIComponent component,
-            Object value) throws ValidatorException {
+            Object value) {
         if (value != null && ((String) value).contains(":")) {
             throw new ValidatorException(new FacesMessage("Não pode conter :"));
         }
