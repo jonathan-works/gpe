@@ -63,6 +63,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
 
     @In
     private RecursoManager recursoManager;
+    
+    @In IdentityManager identityManager;
 
     private final Comparator<String> papelComparator = new Comparator<String>() {
         @Override
@@ -168,7 +170,8 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
 
     public List<String> getPapeis() {
         if (papeis == null) {
-            papeis = getRoleaction().getGroups();
+            getRoleaction().setRole(getInstance().getIdentificador());
+            papeis = identityManager.getRoleGroups(getInstance().getIdentificador());
             if (papeis == null) {
                 papeis = new ArrayList<>();
             }
