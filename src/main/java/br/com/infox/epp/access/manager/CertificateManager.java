@@ -200,7 +200,8 @@ public class CertificateManager {
     public static List<URL> getResourceListing(Class<? extends Object> clazz,
             String path, String pattern) throws URISyntaxException, IOException {
         URL dirURL = clazz.getClassLoader().getResource(path);
-        if (dirURL.getProtocol().equals("vfsfile") || dirURL.getProtocol().equals("vfs")) {
+        if (dirURL.getProtocol().equals("vfsfile")
+                || dirURL.getProtocol().equals("vfs")) {
             dirURL = new URL("file", dirURL.getHost(), dirURL.getFile());
         }
         if (dirURL.getProtocol().equals("file")) {
@@ -244,18 +245,17 @@ public class CertificateManager {
                 }
             }
             // in jar
-            List<URL> result = new ArrayList<URL>(); // avoid duplicates in case
-                                                     // it is a subdirectory
+            List<URL> result = new ArrayList<URL>(); 
+            // avoid duplicates in case it is a subdirectory
             while (entries != null && entries.hasMoreElements()) {
                 String name = entries.nextElement().getName();
                 if (name.startsWith(path) && !name.equals(path)
-                        && name.matches(pattern)) { // filter according to the
-                                                    // path
+                        && name.matches(pattern)) { 
+                    // filter according to the path
                     String entry = name.substring(path.length());
                     int checkSubdir = entry.indexOf('/');
                     if (checkSubdir >= 0) {
-                        // if it is a subdirectory, we just return the directory
-                        // name
+                        // if it is a subdirectory, we just return the directory name
                         entry = entry.substring(0, checkSubdir);
                     }
                     URL u = new URL("jar:file:" + jarPath + "!/" + name);

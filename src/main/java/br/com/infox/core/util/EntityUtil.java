@@ -51,7 +51,14 @@ public final class EntityUtil implements Serializable {
         return getId(cl);
     }
 
-    public static Object getIdValue(Object objId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    /**
+     * Retorna o id de uma entidade
+     * 
+     * @param objId a entidade da qual se deseja descobri o id
+     * 
+     * @throws IllegalArgumentException quando o objeto não é uma entidade
+     * */
+    public static Object getIdValue(Object objId) throws IllegalAccessException, InvocationTargetException {
         if (!EntityUtil.isEntity(objId)) {
             throw new IllegalArgumentException("O objeto não é uma entidade: "
                     + objId.getClass().getName());

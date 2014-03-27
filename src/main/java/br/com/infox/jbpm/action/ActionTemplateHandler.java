@@ -19,6 +19,7 @@ import org.jboss.seam.log.Logging;
 @BypassInterceptors
 public class ActionTemplateHandler implements Serializable {
 
+    private static final String ACTION_TEMPLATE = "actionTemplate";
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(ActionTemplateHandler.class);
 
@@ -62,17 +63,17 @@ public class ActionTemplateHandler implements Serializable {
         for (ActionTemplate act : getTemplateList()) {
             String exp = "#{" + act.getExpression();
             if (expression.startsWith(exp)) {
-                Contexts.getConversationContext().set("actionTemplate", act);
+                Contexts.getConversationContext().set(ACTION_TEMPLATE, act);
                 act.extractParameters(expression);
                 return;
             }
         }
-        Contexts.getConversationContext().set("actionTemplate", getEmptyExpressionTemplate());
+        Contexts.getConversationContext().set(ACTION_TEMPLATE, getEmptyExpressionTemplate());
         return;
     }
 
     public void setCurrentTemplate(ActionTemplate template) {
-        Contexts.getConversationContext().set("actionTemplate", template);
+        Contexts.getConversationContext().set(ACTION_TEMPLATE, template);
         template.extractParameters(null);
     }
 

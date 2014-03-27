@@ -47,11 +47,6 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
         }
 
         @Override
-        public void putAll(Map<? extends K, ? extends V> m) {
-            super.putAll(m);
-        }
-        
-        @Override
         public void clear() {
             this.isDirty = true;
             super.clear();
@@ -99,7 +94,11 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
         return string;
     }
 
-    private String resolveParameters() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    /**
+     * @throws SecurityException
+     * @throws IllegalArgumentException
+     * */
+    private String resolveParameters() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         params = new HashMap<>();
         int i = 0;
         StringBuilder sb = new StringBuilder(getQuery());

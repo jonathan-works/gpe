@@ -17,8 +17,7 @@ public interface SigiloDocumentoPermissaoQuery {
     String QUERY_USUARIO_POSSUI_PERMISSAO = "select o from SigiloDocumentoPermissao o where o.ativo = true and "
             + "o.sigiloDocumento = :"
             + QUERY_PARAM_SIGILO_DOCUMENTO
-            + " and "
-            + "o.usuario = :" + QUERY_PARAM_USUARIO;
+            + " and o.usuario = :" + QUERY_PARAM_USUARIO;
 
     String NAMED_QUERY_INATIVAR_PERMISSOES = "SigiloDocumentoPermissao.inativarPermissoes";
     String QUERY_INATIVAR_PERMISSOES = "update SigiloDocumentoPermissao o set o.ativo = false where o.sigiloDocumento = :"

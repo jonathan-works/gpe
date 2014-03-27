@@ -81,13 +81,16 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         }
     }
 
-    public UsuarioLogin createLDAPUser(final UsuarioLogin usuario) throws DAOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    /**
+     * @throws IllegalArgumentException
+     * */
+    public UsuarioLogin createLDAPUser(final UsuarioLogin usuario) throws DAOException, IllegalAccessException, InvocationTargetException {
         validarPermanencia(usuario);
         final String password = usuario.getSenha();
         final Object id = EntityUtil.getIdValue(super.persist(usuario));
         final UsuarioLogin persisted = find(id);
         passwordService.changePassword(persisted, password);
-        // ADICIONAR LOCALIZAÇÃO, PAPEL E ESTRUTURA PADRÃO
+        //TODO ADICIONAR LOCALIZAÇÃO, PAPEL E ESTRUTURA PADRÃO?
         return persisted;
     }
 
