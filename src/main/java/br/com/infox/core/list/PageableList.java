@@ -4,23 +4,23 @@ import java.util.List;
 
 public interface PageableList<E> extends Pageable {
 
-    public abstract List<E> list();
+    List<E> list();
 
-    public abstract List<E> list(int maxAmmount);
+    List<E> list(int maxAmmount);
 
-    public abstract void newInstance();
+    void newInstance();
 
-    public abstract void setPage(Integer page);
+    void setPage(Integer page);
 
-    public abstract boolean isPreviousExists();
+    boolean isPreviousExists();
 
-    public abstract boolean isNextExists();
+    boolean isNextExists();
 
-    public abstract Integer getPage();
+    Integer getPage();
 
-    public abstract Integer getPageCount();
+    Integer getPageCount();
 
-    public abstract Integer getResultCount();
+    Integer getResultCount();
     
     String getOrderedColumn();
     
