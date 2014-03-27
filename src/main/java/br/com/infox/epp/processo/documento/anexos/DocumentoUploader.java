@@ -65,8 +65,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         try {
             inputStream = ui.getInputStream();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Não foi possível recuperar o inputStream do arquivo carregado", e);
         }
         setValido(isDocumentoBinValido(ui));
         bin().setUsuario(Authenticator.getUsuarioLogado());

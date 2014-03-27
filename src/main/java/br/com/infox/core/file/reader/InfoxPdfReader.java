@@ -3,10 +3,15 @@ package br.com.infox.core.file.reader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 public class InfoxPdfReader {
+    
+    private static final LogProvider LOG = Logging.getLogProvider(InfoxPdfReader.class);
     
     private InfoxPdfReader(){
     }
@@ -20,8 +25,7 @@ public class InfoxPdfReader {
                 sb.append(PdfTextExtractor.getTextFromPage(reader, 1));
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Não foi possível recuperar o conteúdo do pdf", e);
         }
         return sb.toString();
     }
