@@ -4,10 +4,10 @@
 }
 
 select {
-	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgBgSelect}");
+	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/select.png");
 }
 .rich-calendar-input,.inputText {
-	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgBgInputText}");
+	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/input_text01.png");
 }
 
 .tree-b {
@@ -21,32 +21,32 @@ textarea,select {
 	background:'#{a4jSkin.bgColorInputTextareaSelect}';
 }
 .inputTextMiniW69 {
-	background-image: url("#{pathResolver.contextPath}#{a4jSkin.inputTextMiniW69}");
+	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/inputTextMini-W69.png");
 }
 .inputTextMiniW25,.foneDDD {
-	background-image: url("#{pathResolver.contextPath}#{a4jSkin.inputTextMiniW25}");
+	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/inputTextMini-W25.png");
 }
 .foneNormal {
-	background-image: url("#{pathResolver.contextPath}#{a4jSkin.inputTextMiniW100}");
+	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/inputTextMini-W100.png");
 }
 .buttons {
 	border-color:"#{a4jSkin.borderColorButton}";
 }
 .rf-cp-hdr.tree-hdr {
-	background-image:url("#{pathResolver.contextPath}#{a4jSkin.imgBgInputTree}");
+	background-image:url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/tree.png");
 	background-color:transparent;
 }
 .suggest {
-	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgBgSuggest}")	!important;
+	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/suggest.png")	!important;
 }
 .modPesqEsq { 
-	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgBgPesqCanto}");
+	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/imgBgPes1.png");
 }
 .modPesqBg {
-	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgBgPesqMeio}");
+	background-image: url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/imgBgPes2.png");
 }
 .modPesqInputText {
-	background-image:url("#{pathResolver.contextPath}#{a4jSkin.imgBgInputTextPesq}");
+	background-image:url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/img_textPesq.png");
 }
 .required {
 	color:'#{a4jSkin.bgColorRequired}';
@@ -70,5 +70,5 @@ textarea,select {
     color:'#{a4jSkin.headerTextColor}';
 }
 .suggest {
-  background-image: url("#{a4jSkin.imgBgSuggest}");
+  background-image: url("#{a4jSkin.imgFolder}/suggest.png");
 }

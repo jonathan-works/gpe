@@ -81,7 +81,7 @@
                    <h:form rendered="#{sigiloDocumentoPermissaoAction.canManagePermissions() and (empty sigiloDocumentoController.fragmentoARenderizar or sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO')}">
 	                   <a:commandLink style="cursor: default"
 	                       execute="@this" limitRender="true" render="documentosTable, informacoesAdicionais">
-	                       <h:graphicImage url="#{a4jSkin.imgIconAdd}" title="#{messages['sigiloDocumento.gerenciarPermissoes']}" style="cursor: pointer" />
+	                       <h:graphicImage url="#{a4jSkin.imgFolder}/add.gif" title="#{messages['sigiloDocumento.gerenciarPermissoes']}" style="cursor: pointer" />
 	                       <f:setPropertyActionListener target="#{sigiloDocumentoController.fragmentoARenderizar}" value="PERMISSOES_SIGILO" />
 	                       <f:setPropertyActionListener target="#{sigiloDocumentoList.documento}" value="#{row}" />
 	                   </a:commandLink>

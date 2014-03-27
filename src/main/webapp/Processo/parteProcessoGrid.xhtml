@@ -30,7 +30,7 @@
                 <wi:toolBar
                     rendered="#{isUsuarioAtualResponsavel and !row.ativo and partesProcessoController.podeAdicionarPartesFisicas()}"
                     action="#{parteProcessoCrudAction.setInstance(row)}"
-                    reRender="parteProcessoListDiv" url="#{a4jSkin.imgIconAdd}"
+                    reRender="parteProcessoListDiv" url="#{a4jSkin.imgFolder}/add.gif"
                     id="inativo" />
             </ui:define>
             <wi:columnOutputText columnId="pessoa.nome"
@@ -57,7 +57,7 @@
                 <wi:toolBar
                     rendered="#{isUsuarioAtualResponsavel and !row.ativo and partesProcessoController.podeAdicionarPartesJuridicas()}"
                     action="#{parteProcessoCrudAction.setInstance(row)}"
-                    reRender="parteProcessoListDiv" url="#{a4jSkin.imgIconAdd}"
+                    reRender="parteProcessoListDiv" url="#{a4jSkin.imgFolder}/add.gif"
                     id="inativo" />
             </ui:define>
             <wi:columnOutputText columnId="pessoa.nome"

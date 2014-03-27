@@ -21,7 +21,7 @@
                         limitRender="true">
                         <h:graphicImage
                             title="#{messages['processBuilder.addSwimlane']}"
-                            url="#{a4jSkin.imgIconAdd}" />
+                            url="#{a4jSkin.imgFolder}/add.gif" />
                     </a:commandLink>
                 </h:form>
             </ui:define>
@@ -108,7 +108,7 @@
                                 <h:graphicImage
                                     title="#{messages['processBuilder.swimlane.addLocalPapel']}"
                                     styleClass="pointer"
-                                    id="novoLocPapel" url="#{a4jSkin.imgIconAdd}">
+                                    id="novoLocPapel" url="#{a4jSkin.imgFolder}/add.gif">
                                     <a:ajax event="click"
                                         listener="#{swimlaneFitter.currentSwimlane.addLocalPapel()}"
                                         execute="@this, swimlaneName, localPapeis"

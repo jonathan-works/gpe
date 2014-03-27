@@ -69,10 +69,10 @@
                     rendered="#{!empty tree.selected}"
                     action="#{tree.clearTree(rich:clientId(id.concat('Tree')))}"
                     immediate="true" render="#{id}Form">
-                    <h:graphicImage value="#{a4jSkin.imgIconClear}"
+                    <h:graphicImage value="#{a4jSkin.imgFolder}/clear.gif"
                         title="#{messages['button.limpar']}" />
                 </a:commandLink>
-                <h:graphicImage value="#{a4jSkin.imgIconClearOff}"
+                <h:graphicImage value="#{a4jSkin.imgFolder}/clear_off.gif"
                     rendered="#{empty tree.selected}" title="#{messages['button.limpar']}" />
             </s:div>
 

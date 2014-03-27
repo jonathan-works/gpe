@@ -32,20 +32,20 @@
                         value="#{search.searchText}" /></td>
                 <td class="modPesqBg"><h:commandButton
                         action="/Pesquisa/searchResult.xhtml"
-                        image="#{a4jSkin.imgBgButtonPesq}" /></td>
+                        image="#{a4jSkin.imgFolder}/imgPes.png" /></td>
                 <td class="modPesqBg" valign="top"><h:graphicImage
-                        url="#{a4jSkin.imgIconPalette}"
+                        url="#{a4jSkin.imgFolder}/palette.gif"
                         title="Alterar o esquema de cores"
                         onclick="Richfaces.showModalPanel('skinPanel')" />
 
                     <h:commandButton action="#{skinZoom.setTmNormal()}"
-                        image="#{a4jSkin.imgIconZoomNormal}" />
+                        image="#{a4jSkin.imgFolder}/zoom-normal.png" />
 
                     <h:commandButton action="#{skinZoom.setTmMedio()}"
-                        image="#{a4jSkin.imgIconZoomMedio}" />
+                        image="#{a4jSkin.imgFolder}/zoom-medio.png" />
 
                     <h:commandButton action="#{skinZoom.setTmGrande()}"
-                        image="#{a4jSkin.imgIconZoomGrande}" />
+                        image="#{a4jSkin.imgFolder}/zoom-grande.png" />
                 </td>
             </tr>
         </table>

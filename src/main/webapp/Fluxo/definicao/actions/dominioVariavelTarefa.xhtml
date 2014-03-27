@@ -49,7 +49,7 @@
                             <ui:define name="toolBar">
                                 <h:form>
 	                                <a:commandLink execute="@this" render="defaultTabPanel" limitRender="true">
-	                                   <h:graphicImage url="#{a4jSkin.imgIconEdit}" title="Editar" />
+	                                   <h:graphicImage url="#{a4jSkin.imgFolder}/edit.gif" title="Editar" />
 								       <f:setPropertyActionListener
 								            target="#{dominioVariavelTarefaCrudAction.id}" value="#{row.id}" />
 								       <f:setPropertyActionListener
@@ -59,7 +59,7 @@
                                         onbegin="showLoading()" execute="@this" limitRender="true" 
                                         oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()">
                                         <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.instance}" value="#{row}" />
-                                        <h:graphicImage url="#{a4jSkin.imgIconView}" title="#{messages['dominioVariavelTarefa.select']}" />
+                                        <h:graphicImage url="#{a4jSkin.imgFolder}/view.gif" title="#{messages['dominioVariavelTarefa.select']}" />
                                     </a:commandLink>
                                 </h:form>
                             </ui:define>

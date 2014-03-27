@@ -17,23 +17,23 @@
         >
             <h:graphicImage
                 styleClass="palette-img-inpt"
-                url="#{a4jSkin.imgIconPalette}"
+                url="#{a4jSkin.imgFolder}/palette.gif"
                 onclick="#{rich:component(id.concat('-skinPanel'))}.show()"
             />
             <h:commandButton
                 styleClass="palette-img-inpt"
                 action="#{skinZoom.setTmNormal()}"
-                image="#{a4jSkin.imgIconZoomNormal}"
+                image="#{a4jSkin.imgFolder}/zoom-normal.png"
             />
             <h:commandButton
                 styleClass="palette-img-inpt"
                 action="#{skinZoom.setTmMedio()}"
-                image="#{a4jSkin.imgIconZoomMedio}"
+                image="#{a4jSkin.imgFolder}/zoom-medio.png"
             />
             <h:commandButton
                 styleClass="palette-img-inpt"
                 action="#{skinZoom.setTmGrande()}"
-                image="#{a4jSkin.imgIconZoomGrande}"
+                image="#{a4jSkin.imgFolder}/zoom-grande.png"
             />
         </h:form>
     </div>
