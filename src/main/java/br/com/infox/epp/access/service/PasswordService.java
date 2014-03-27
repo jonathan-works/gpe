@@ -31,7 +31,11 @@ public class PasswordService {
     @In
     private UsuarioLoginManager usuarioLoginManager;
 
-    public void requisitarNovaSenha(final boolean usingLogin, final String value) throws LoginException, BusinessException, DAOException {
+    /**
+     * @deprecated use {@link requisitarNovaSenha(email, login)} instead.
+     * */
+    @Deprecated
+    public void requisitarNovaSenha(final boolean usingLogin, final String value) throws LoginException, DAOException {
         if (Strings.isEmpty(value)) {
             throw new LoginException("É preciso informar o login ou o e-mail do usuário");
         }
@@ -47,7 +51,18 @@ public class PasswordService {
         recoverUsuario(usuario, mode);
     }
 
-    public void requisitarNovaSenha(final String email, final String login) throws LoginException, BusinessException, DAOException {
+    /**
+     * Inicia uma requisição de nova senha para o usuário baseado no e-mail ou
+     * no login (note que um dos parâmetros pode ser nulo, mas não os dois
+     * simultaneamente)
+     * @param email o e-mail do usuário
+     * @param login o login do usuário
+     * 
+     * @throws BusinessException caso o sistema não consiga enviar o email
+     * @throws LoginException caso o método seja invocado com ambos os parâmetros nulos
+     * @throws DAOException caso não seja possível gerar/gravar uma nova senha
+     * */
+    public void requisitarNovaSenha(final String email, final String login) throws LoginException, DAOException {
         UsuarioLogin usuario;
         String mode;
         if (!login.isEmpty()) {
@@ -62,7 +77,7 @@ public class PasswordService {
         recoverUsuario(usuario, mode);
     }
 
-    private void recoverUsuario(UsuarioLogin usuario, String tipoParametro) throws LoginException, BusinessException, DAOException {
+    private void recoverUsuario(UsuarioLogin usuario, String tipoParametro) throws LoginException, DAOException {
         if (usuario == null) {
             throw new LoginException("Usuário não encontrado");
         }
