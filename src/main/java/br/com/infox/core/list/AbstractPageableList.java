@@ -47,11 +47,6 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
         }
 
         @Override
-        public void putAll(Map<? extends K, ? extends V> m) {
-            super.putAll(m);
-        }
-        
-        @Override
         public void clear() {
             this.isDirty = true;
             super.clear();
