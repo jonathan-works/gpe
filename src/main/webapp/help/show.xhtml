@@ -65,7 +65,7 @@
         <div class="status-ajuda">
             <a:status id="status">
                 <f:facet name="start">
-                    <h:graphicImage value="/img/spinner.gif" />
+                    <h:graphicImage value="#{a4jSkin.imgFolder}/spinner.gif" />
                 </f:facet>
             </a:status>
         </div>
@@ -84,7 +84,7 @@
                 <a:commandButton
                     render="resultado"
                     limitRender="true"
-                    image="/img/grid/arrow-next-off.gif"
+                    image="#{a4jSkin.imgFolder}/grid/arrow-next-off.gif"
                     oncomplete="if (#{rich:component('helpPanel')}.getItems().length &gt; 1) #{rich:component('helpPanel')}.switchToItem('search');"
                 />
             </h:panelGrid>

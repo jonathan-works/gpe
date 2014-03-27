@@ -21,8 +21,8 @@
 
         <rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
 
-          <rich:treeNode iconCollapsed="/img/globe16.png"
-            iconExpanded="/img/globe16.png" iconLeaf="/img/messages.gif">
+          <rich:treeNode iconCollapsed="#{a4jSkin.imgFolder}/globe16.png"
+            iconExpanded="#{a4jSkin.imgFolder}/globe16.png" iconLeaf="#{a4jSkin.imgFolder}/messages.gif">
 
             <h:outputText value="#{node.entity.nomeFluxo}" />
 
@@ -31,9 +31,9 @@
           <rich:treeModelAdaptor nodes="#{node.nodesTarefas}">
 
             <rich:treeNode id="taskNode"
-              iconCollapsed="/img/messages.gif"
-              iconExpanded="/img/messages.gif"
-              iconLeaf="/img/messages.gif">
+              iconCollapsed="#{a4jSkin.imgFolder}/messages.gif"
+              iconExpanded="#{a4jSkin.imgFolder}/messages.gif"
+              iconLeaf="#{a4jSkin.imgFolder}/messages.gif">
 
               <h:outputText value="#{node.entity.nomeTarefa}" />
 
@@ -60,9 +60,9 @@
             <rich:treeModelAdaptor nodes="#{node.caixas}">
 
               <rich:treeNode id="caixaNode"
-                iconCollapsed="/img/message.gif"
-                iconExpanded="/img/message.gif"
-                iconLeaf="/img/message.gif">
+                iconCollapsed="#{a4jSkin.imgFolder}/message.gif"
+                iconExpanded="#{a4jSkin.imgFolder}/message.gif"
+                iconLeaf="#{a4jSkin.imgFolder}/message.gif">
 
                 <h:outputText value="#{node.entity.nomeCaixa}" />
 
@@ -77,7 +77,7 @@
                     action="#{painelUsuarioHome.editaCaixa()}" />
 
                   <rich:menuItem label="#{messages['caixa.menu.removerCaixa']}"
-                    icon="/img/remove.png"
+                    icon="#{a4jSkin.imgFolder}/remove.png"
                     onclick="return confirm(\'#{messages['caixa.confirm.remove']}\');" render="tarefasDiv"
                     action="#{caixaCrudAction.remove}">
 

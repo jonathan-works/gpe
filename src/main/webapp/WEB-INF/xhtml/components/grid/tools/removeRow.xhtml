@@ -18,7 +18,7 @@
             limitRender="true"
             action="#{expressions.createMethodExpression(removeExpression).invoke(null)}"
             rendered="#{canEdit}">
-            <h:graphicImage url="/img/grid/copyRight.gif"
+            <h:graphicImage url="#{a4jSkin.imgFolder}/grid/copyRight.gif"
                 title="#{messages['button.delete']}" />
         </a:commandLink>
     </h:form>

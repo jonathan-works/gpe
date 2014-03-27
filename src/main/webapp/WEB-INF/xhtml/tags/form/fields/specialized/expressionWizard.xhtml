@@ -18,7 +18,7 @@
 		invoke(["infox.ExpressionWizard"],function(ExpressionWizard){
 			new ExpressionWizard({
 				inputId:"#{rich:clientId(id)}TextDecoration:#{id}Text",
-				imagePath:"#{pathResolver.contextPath}/img/jbpm/wizard.gif",
+				imagePath:"#{pathResolver.contextPath}#{a4jSkin.imgFolder}/jbpm/wizard.gif",
 				id:"#{rich:clientId(id)}Div",
 				variables:{
 					boolean:#{nodeFitter.currentNode.getBooleanVariables()},

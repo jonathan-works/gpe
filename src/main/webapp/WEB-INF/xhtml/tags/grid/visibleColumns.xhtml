@@ -31,7 +31,7 @@
                                      url="#{a4jSkin.imgFolder}/add.gif"
                                      title="Mostrar coluna"
 									rendered="#{!visible}"/&gt;
-								<h:graphicImage url="/img/removeCol.png" title="Esconder coluna"
+								<h:graphicImage url="#{a4jSkin.imgFolder}/removeCol.png" title="Esconder coluna"
                                     rendered="#{visible}" />
                             </a:commandLink>
                             <a:commandLink rendered="#{key != 0}"
@@ -39,7 +39,7 @@
                                 limitRender="true" status="status"
                                 action="#{bean.moveColumnUp(col)}"
                                 styleClass="opacityHover">
-                                     url="/img/jbpm/up.gif"
+                                     url="#{a4jSkin.imgFolder}/jbpm/up.gif"
                                      title="Subir"
                                      rendered="#{visible}" /&gt;
 							</a:commandLink>
@@ -49,7 +49,7 @@
                                 limitRender="true" status="status"
                                 action="#{bean.moveColumnDown(col)}"
                                 styleClass="opacityHover">
-                                     url="/img/jbpm/down.gif"
+                                     url="#{a4jSkin.imgFolder}/jbpm/down.gif"
                                      title="Descer"
                                      rendered="#{visible}" /&gt;
 							</a:commandLink>

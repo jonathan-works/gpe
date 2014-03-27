@@ -47,7 +47,7 @@
                     <ui:define name="toolBar">
                         <h:graphicImage
                             title="#{messages['process.events.remove']}"
-                            url="/img/remove.png"
+                            url="#{a4jSkin.imgFolder}/remove.png"
                         >
                             <a:ajax
                                 event="click"
@@ -129,7 +129,7 @@
                         <ui:define name="toolBar">
                             <h:graphicImage
                                 title="#{messages['process.events.action.remove']}"
-                                url="/img/remove.png"
+                                url="#{a4jSkin.imgFolder}/remove.png"
                             >
                                 <a:ajax
                                     event="click"
@@ -158,7 +158,7 @@
                                             cellspacing="0"
                                         >
                                             <h:graphicImage
-                                                url="/img/jbpm/#{event.getIcon(row)}.gif"
+                                                url="#{a4jSkin.imgFolder}/jbpm/#{event.getIcon(row)}.gif"
                                             />
                                             <h:outputText
                                                 value="#{empty row.name ? messages['process.events.action'].concat(key + 1) : row.name}"

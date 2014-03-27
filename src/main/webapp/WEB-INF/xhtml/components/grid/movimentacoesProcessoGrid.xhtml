@@ -25,14 +25,14 @@
             <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
             <div>
 
-                <h:graphicImage url="/img/localizacao.gif"
+                <h:graphicImage url="#{a4jSkin.imgFolder}/localizacao.gif"
                     rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
                 <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
 
             </div>
             <s:div id="usuarioTarefaDiv">
 
-                <h:graphicImage url="/img/usuario.gif"
+                <h:graphicImage url="#{a4jSkin.imgFolder}/usuario.gif"
                     rendered="#{!empty userHandler.getUsuarioByTarefa(task)}" />
                 <h:outputText
                     value="#{userHandler.getUsuarioByTarefa(task)} " />
@@ -43,7 +43,7 @@
                     onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
                     limitRender="true" oncomplete="close()"
                     rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
-                    <h:graphicImage url="/img/unlocked.gif"
+                    <h:graphicImage url="#{a4jSkin.imgFolder}/unlocked.gif"
                         title="#{messages['movimentar.liberarTarefa']}" />
                 </a:commandLink>
 
@@ -83,7 +83,7 @@
                 <h:graphicImage url="#{a4jSkin.imgFolder}/view.gif" />
                 <h:graphicImage
                     rendered="#{!empty processoHandler.getAnexos(task)}"
-                    url="/img/anexo.gif" />
+                    url="#{a4jSkin.imgFolder}/anexo.gif" />
                 <f:param name="inicio" value="#{key + 1}" />
 
             </s:link>

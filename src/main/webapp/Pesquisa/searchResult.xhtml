@@ -63,20 +63,20 @@
                     <h:commandButton id="firstPage"
                         action="#{search.firstPage()}"
                         disabled="#{!search.previousPageAvailable}"
-                        image="/img/grid/arrow-first#{search.previousPageAvailable ? '' : '-off'}.gif" />
+                        image="#{a4jSkin.imgFolder}/grid/arrow-first#{search.previousPageAvailable ? '' : '-off'}.gif" />
                     <h:commandButton id="previousPage"
                         action="#{search.previousPage()}"
                         disabled="#{!search.previousPageAvailable}"
-                        image="/img/grid/arrow-previous#{search.previousPageAvailable ? '' : '-off'}.gif" />
+                        image="#{a4jSkin.imgFolder}/grid/arrow-previous#{search.previousPageAvailable ? '' : '-off'}.gif" />
 
                     <h:commandButton id="nextPage"
                         action="#{search.nextPage()}"
                         disabled="#{!search.nextPageAvailable}"
-                        image="/img/grid/arrow-next#{search.nextPageAvailable ? '' : '-off'}.gif" />
+                        image="#{a4jSkin.imgFolder}/grid/arrow-next#{search.nextPageAvailable ? '' : '-off'}.gif" />
                     <h:commandButton id="lastPage"
                         action="#{search.lastPage()}"
                         disabled="#{!search.nextPageAvailable}"
-                        image="/img/grid/arrow-last#{search.nextPageAvailable ? '' : '-off'}.gif" />
+                        image="#{a4jSkin.imgFolder}/grid/arrow-last#{search.nextPageAvailable ? '' : '-off'}.gif" />
                 </h:panelGrid>
             </h:form>
         </s:div>

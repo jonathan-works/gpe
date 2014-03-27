@@ -203,7 +203,7 @@
             status=":status"
             render="usuarioPessoaFisica, pageBodyDialogMessage"
             onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
-            url="/img/remove.png"
+            url="#{a4jSkin.imgFolder}/remove.png"
             title="#{messages['crud.remove']}"
           />
         </ui:define>
@@ -244,8 +244,8 @@
                 id="localizacao"
                 assignTo="usuarioLocalizacaoCrudAction.instance.localizacao"
                 tree="#{localizacaoEstruturaTree}"
-                icon="/img/nivelTree.gif"
-                iconLeaf="/img/file.gif"
+                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                 label="#{messages['usuarioLocalizacao.localizacao']}"
                 required="true"
               />
@@ -253,8 +253,8 @@
                 id="papel"
                 assignTo="usuarioLocalizacaoCrudAction.instance.papel"
                 tree="#{papelTree}"
-                icon="/img/nivelTree.gif"
-                iconLeaf="/img/file.gif"
+                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                 label="#{messages['usuarioLocalizacao.papel']}"
                 required="true"
               />
@@ -290,7 +290,7 @@
                 status=":status"
                 render="localizacaoUsuario, localizacaoUsuarioFormMessages"
                 onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
-                url="/img/remove.png"
+                url="#{a4jSkin.imgFolder}/remove.png"
                 title="#{messages['crud.remove']}"
               />
             </ui:define>

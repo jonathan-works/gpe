@@ -30,7 +30,7 @@
                 <h:form>
                     <h:graphicImage
                         title="#{messages['processBuilder.removeSwimlane']}"
-                        url="/img/remove.png"
+                        url="#{a4jSkin.imgFolder}/remove.png"
                         styleClass="opacityHover pointer">
                         <a:ajax event="click"
                             listener="#{swimlaneFitter.removeSwimlane(row)}"
@@ -78,7 +78,7 @@
                 <ui:define name="toolBar">
                     <h:graphicImage
                         title="#{messages['processBuilder.swimlane.removeLocalPapel']}"
-                        url="/img/remove.png">
+                        url="#{a4jSkin.imgFolder}/remove.png">
                         <a:ajax event="click"
                             listener="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
                             execute="@this"

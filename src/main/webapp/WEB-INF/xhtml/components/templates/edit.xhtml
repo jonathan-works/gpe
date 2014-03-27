@@ -35,7 +35,7 @@
 
                 <c:if test="#{not empty tipMessage}">
                     <h:graphicImage id="#{fieldId}EditTipImg"
-                        url="/img/help.gif" />
+                        url="#{a4jSkin.imgFolder}/help.gif" />
                     <rich:tooltip for="#{fieldId}EditTipImg"
                         value="#{tipMessage}">
                     </rich:tooltip>

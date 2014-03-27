@@ -114,7 +114,7 @@
                     >
                         <h:graphicImage
                             title="#{messages['process.task.removeVariable']}"
-                            url="/img/remove.png"
+                            url="#{a4jSkin.imgFolder}/remove.png"
                         />
                     </a:commandLink>
                     <a:commandLink
@@ -130,13 +130,13 @@
                         <h:graphicImage
                             title="#{messages['process.task.var.modelo']}"
                             rendered="#{empty var.modeloList}"
-                            url="/img/newfile.gif"
+                            url="#{a4jSkin.imgFolder}/newfile.gif"
                         />
                         <h:graphicImage
                             title="#{var.modeloDocumentoList.toString()}"
                             rendered="#{!empty var.modeloList}"
                             status=":status"
-                            url="/img/file.gif"
+                            url="#{a4jSkin.imgFolder}/file.gif"
                         />
                     </a:commandLink>
                 </h:form>

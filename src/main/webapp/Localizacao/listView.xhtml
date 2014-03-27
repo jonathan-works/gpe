@@ -34,8 +34,8 @@
                     <wi:tree id="localizacaoPai"
                         assignTo="localizacaoList.entity.localizacaoPai"
                         tree="#{localizacaoTree}"
-                        icon="/img/nivelTree.gif"
-                        iconLeaf="/img/file.gif"
+                        icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                        iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                         label="#{messages['localizacao.localizacaoPai']}" />
                     <wi:selectBooleanMenu id="estrutura"
                         label="#{messages['localizacao.estrutura']}"
@@ -92,8 +92,8 @@
             <h:panelGroup id="notEstrutura">
                 <wi:tree id="localizacaoPai"
                     assignTo="localizacaoCrudAction.instance.localizacaoPai"
-                    tree="#{localizacaoTree}" icon="/img/nivelTree.gif"
-                    iconLeaf="/img/file.gif"
+                    tree="#{localizacaoTree}" icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                    iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                     rendered="#{!localizacaoCrudAction.instance.estrutura}"
                     label="#{messages['localizacao.localizacaoPai']}"
                 	readonly="#{not isEditable}"

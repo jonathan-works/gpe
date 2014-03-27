@@ -19,13 +19,13 @@
                     <s:conversationPropagation type="none" />
                     <f:param name="id" value="#{mainId}" />
                     <h:graphicImage title="Visualizar"
-                        url="/img/show.gif" />
+                        url="#{a4jSkin.imgFolder}/show.gif" />
                 </s:link>
                 <a:commandLink action="#{home.remove(row)}"
                     rendered="#{canEdit}" limitRender="true"
                     status=":status" render=":#{gridId}"
                     onclick="if(!confirm('Confirma?')) return false;">
-                    <h:graphicImage url="/img/remove.png"
+                    <h:graphicImage url="#{a4jSkin.imgFolder}/remove.png"
                         title="#{messages['button.delete']}" />
                     <f:param name="firstResult"
                         value="#{bean.firstResult}" />

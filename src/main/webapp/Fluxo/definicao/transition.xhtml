@@ -17,7 +17,7 @@
                 cellspacing="0"
             >
                 <h:graphicImage
-                    url="/img/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif"
+                    url="#{a4jSkin.imgFolder}/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif"
                 />
                 <h:outputText
                     value="#{type == 'from' ? messages['process.transitions.arriving'] : messages['process.transitions.leaving']}"
@@ -62,7 +62,7 @@
                             <h:graphicImage
                                 title="#{messages['process.transition.condition.define']}"
                                 rendered="#{empty transition.transition.condition and transition.canDefineCondition()}"
-                                url="/img/help_dis.gif"
+                                url="#{a4jSkin.imgFolder}/help_dis.gif"
                                 styleClass="opacityHover"
                             >
                                 <a:ajax
@@ -78,7 +78,7 @@
                                 title="#{messages['process.transition.condition.edit']}"
                                 rendered="#{!empty transition.transition.condition and transition.transition.condition != '#{true}' and transition.canDefineCondition()}}"
                                 styleClass="opacityHover"
-                                url="/img/help.gif"
+                                url="#{a4jSkin.imgFolder}/help.gif"
                             >
                                 <a:ajax
                                     event="click"
@@ -91,7 +91,7 @@
                             </h:graphicImage>
                             <h:graphicImage
                                 title="#{messages['process.transition.remove']}"
-                                url="/img/remove.png"
+                                url="#{a4jSkin.imgFolder}/remove.png"
                                 styleClass="opacityHover"
                                 rendered="#{type eq 'to'}"
                             >
@@ -185,11 +185,11 @@
                         limitRender="true"
                     >
                         <h:graphicImage
-                            url="/img/jbpm/up.gif"
+                            url="#{a4jSkin.imgFolder}/jbpm/up.gif"
                             rendered="#{type == 'from'}"
                         />
                         <h:graphicImage
-                            url="/img/jbpm/down.gif"
+                            url="#{a4jSkin.imgFolder}/jbpm/down.gif"
                             rendered="#{type == 'to'}"
                         />
                     </a:commandLink>

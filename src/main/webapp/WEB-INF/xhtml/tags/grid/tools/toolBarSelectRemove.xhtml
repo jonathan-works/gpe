@@ -22,7 +22,7 @@
                 rendered="#{wi:get(canEdit,true)}" limitRender="true"
                 status=":status" render="#{reRender}"
                 onclick="if(!confirm('Confirma?')) return false;">
-                <wi:toolBarGraphicImage url="/img/remove.png"
+                <wi:toolBarGraphicImage url="#{a4jSkin.imgFolder}/remove.png"
                     title="#{messages['button.delete']}" />
             </a:commandLink>
         </a:region>

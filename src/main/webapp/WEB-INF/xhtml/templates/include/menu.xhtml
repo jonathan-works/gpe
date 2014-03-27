@@ -32,7 +32,7 @@
                         value="#{search.searchText}" /></td>
                 <td class="modPesqBg"><h:commandButton
                         action="/Pesquisa/searchResult.xhtml"
-                        image="#{a4jSkin.imgFolder}/imgPes.png" /></td>
+                        image="#{a4jSkin.imgFolder}#{a4jSkin.imgFolder}Pes.png" /></td>
                 <td class="modPesqBg" valign="top"><h:graphicImage
                         url="#{a4jSkin.imgFolder}/palette.gif"
                         title="Alterar o esquema de cores"
@@ -111,7 +111,7 @@
         <f:facet name="header">#{messages['skin.title']}</f:facet>
         <f:facet name="controls">
             <h:panelGroup>
-                <h:graphicImage value="/img/closeMP.gif"
+                <h:graphicImage value="#{a4jSkin.imgFolder}/closeMP.gif"
                     onclick="Richfaces.hideModalPanel('skinPanel')" />
             </h:panelGroup>
         </f:facet>

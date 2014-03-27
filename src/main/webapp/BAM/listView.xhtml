@@ -79,7 +79,7 @@
       <ui:define name="toolBar">
         <div class="tbar-div">
           <h:graphicImage
-            value="/img/balao.png"
+            value="#{a4jSkin.imgFolder}/balao.png"
             rendered="#{not (row.processoEpa.situacaoPrazo == 'SAT')}"
           />
           <h:form id="#{row.processoEpa.numeroProcesso}Form">
@@ -147,12 +147,12 @@
       <rich:column styleClass="defaultCell">
         <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
         <span> <h:graphicImage
-            url="/img/localizacao.gif"
+            url="#{a4jSkin.imgFolder}/localizacao.gif"
             rendered="#{!empty jbpmUtil.getLocalizacao(task)}"
           /> <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
         </span>
         <span> <h:graphicImage
-            url="/img/usuario.gif"
+            url="#{a4jSkin.imgFolder}/usuario.gif"
             rendered="#{!empty userHandler.getUsuario(task.actorId)}"
           /> <h:outputText
             value=" #{userHandler.getUsuario(task.actorId)}"
@@ -229,12 +229,12 @@
       <rich:column styleClass="defaultCell">
         <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
         <span> <h:graphicImage
-            url="/img/localizacao.gif"
+            url="#{a4jSkin.imgFolder}/localizacao.gif"
             rendered="#{!empty jbpmUtil.getLocalizacao(task)}"
           /> <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
         </span>
         <span> <h:graphicImage
-            url="/img/usuario.gif"
+            url="#{a4jSkin.imgFolder}/usuario.gif"
             rendered="#{!empty userHandler.getUsuario(task.actorId)}"
           /> <h:outputText
             value=" #{userHandler.getUsuario(task.actorId)}"

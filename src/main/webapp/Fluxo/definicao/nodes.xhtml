@@ -52,7 +52,7 @@
                             <h:form>
                                 <h:graphicImage
                                     title="#{messages['process.node.remove']}"
-                                    url="/img/remove.png"
+                                    url="#{a4jSkin.imgFolder}/remove.png"
                                     styleClass="opacityHover"
                                     rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}"
                                 >
@@ -68,7 +68,7 @@
                                 <h:graphicImage
                                     title="#{messages['process.node.up']}"
                                     rendered="#{key != 0}"
-                                    url="/img/jbpm/up.gif"
+                                    url="#{a4jSkin.imgFolder}/jbpm/up.gif"
                                     styleClass="opacityHover"
                                 >
                                     <a:ajax
@@ -82,7 +82,7 @@
                                 <h:graphicImage
                                     title="#{messages['process.node.down']}"
                                     rendered="#{key lt nodeFitter.nodes.size - 1}"
-                                    url="/img/jbpm/down.gif"
+                                    url="#{a4jSkin.imgFolder}/jbpm/down.gif"
                                     styleClass="opacityHover"
                                 >
                                     <a:ajax
@@ -120,7 +120,7 @@
                                                 cellpadding="0"
                                             >
                                                 <h:graphicImage
-                                                    url="/img/jbpm/#{nodeFitter.getIcon(row)}.gif"
+                                                    url="#{a4jSkin.imgFolder}/jbpm/#{nodeFitter.getIcon(row)}.gif"
                                                     title="#{row.nodeType}"
                                                 />
                                                 <h:outputText
@@ -150,7 +150,7 @@
                                 cellspacing="0"
                             >
                                 <h:graphicImage
-                                    url="/img/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif"
+                                    url="#{a4jSkin.imgFolder}/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif"
                                     title="#{nodeFitter.currentNode.nodeType}"
                                 />
                                 <h:outputText
@@ -252,7 +252,7 @@
                                 filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}"
                             >
                                 <h:graphicImage
-                                    url="/img/jbpm/${node[0]}.gif"
+                                    url="#{a4jSkin.imgFolder}/jbpm/${node[0]}.gif"
                                 />
                             </rich:column>
                             <rich:column
@@ -265,7 +265,7 @@
                             >
                                 <h:form>
                                     <h:graphicImage
-                                        url="/img/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif"
+                                        url="#{a4jSkin.imgFolder}/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif"
                                     >
                                         <a:ajax
                                             event="click"
