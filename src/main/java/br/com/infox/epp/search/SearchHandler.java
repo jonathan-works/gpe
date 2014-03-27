@@ -93,7 +93,7 @@ public class SearchHandler implements Serializable {
                 m.put("taskId", ti.getId());
                 m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
                 if (s == null || "".equals(s)) {
-                    m.put("nomePdf", d.get("nomePdf"));
+                    m.put("nomeArquivo", d.get("nomePdf"));
                 }
                 searchResult.add(m);
             }
