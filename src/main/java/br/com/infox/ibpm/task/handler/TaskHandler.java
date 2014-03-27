@@ -14,10 +14,12 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
+import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class TaskHandler implements Serializable {
 
@@ -73,6 +75,8 @@ public class TaskHandler implements Serializable {
     }
 
     public void setCurrentVariable(String name) {
+        AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
+        associativeModeloDocumentoList.refreshModelosAssociados();
         if (variables == null) {
             return;
         }
@@ -85,6 +89,8 @@ public class TaskHandler implements Serializable {
 
     public void setCurrentVariable(VariableAccessHandler var) {
         currentVariable = var;
+        AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
+        associativeModeloDocumentoList.refreshModelosAssociados();
         StringBuilder sb = new StringBuilder();
         sb.append("#{modeloDocumento.set('").append(currentVariable.getName()).append("'");
         if (currentVariable.getModeloList() != null) {
