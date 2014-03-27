@@ -1,49 +1,31 @@
 package br.com.infox.epp.documento.list.associative;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 
-import br.com.infox.core.list.EntityList;
-import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.list.AbstractPageableList;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 
 @Name(AssociativeModeloDocumentoList.NAME)
 @Scope(ScopeType.PAGE)
-public class AssociativeModeloDocumentoList extends EntityList<ModeloDocumento> {
+public class AssociativeModeloDocumentoList extends AbstractPageableList<ModeloDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "associativeModeloDocumentoList";
 
     private static final String DEFAULT_EJBQL = "select o from ModeloDocumento o";
-    private static final String DEFAULT_ORDER = "tituloModeloDocumento";
 
     @In(required = false)
     private TaskFitter taskFitter;
-
-    @Override
-    protected void addSearchFields() {
-        addSearchField("tituloModeloDocumento", SearchCriteria.CONTENDO);
-        addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
-        addSearchField("ativo", SearchCriteria.IGUAL);
-    }
-
-    @Override
-    protected String getDefaultEjbql() {
-        if (validateFitter()) {
-            return DEFAULT_EJBQL;
-        } else {
-            return DEFAULT_EJBQL
-                    + " where o not in (#{taskFitter.currentTask.currentVariable.modeloDocumentoList})";
-        }
-    }
-
+    
+    private List<ModeloDocumento> modelosAssociados = new ArrayList<>();
+    
     private boolean validateFitter() {
         return taskFitter == null
                 || taskFitter.getCurrentTask() == null
@@ -53,26 +35,31 @@ public class AssociativeModeloDocumentoList extends EntityList<ModeloDocumento> 
     }
 
     @Override
-    protected String getDefaultOrder() {
-        return DEFAULT_ORDER;
+    protected void initCriteria() {
+        addSearchCriteria("tituloModeloDocumento", "lower(o.tituloModeloDocumento) like concat('%', lower(:tituloModeloDocumento), '%')");
+        addSearchCriteria("tipoModeloDocumento", "o.tipoModeloDocumento = :tipoModeloDocumento");
+        addSearchCriteria("ativo", "o.ativo = :ativo");
     }
 
     @Override
-    protected Map<String, String> getCustomColumnsOrder() {
-        return null;
+    protected String getQuery() {
+        return DEFAULT_EJBQL;
     }
 
+    public void refreshModelosAssociados() {
+        modelosAssociados.clear();
+        removeParameter("modelosAssociados");
+        removeSearchCriteria("modelosAssociados");
+        if (!validateFitter()) {
+            addSearchCriteria("modelosAssociados", "o not in :modelosAssociados");
+            modelosAssociados.addAll(taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList());
+            addParameter("modelosAssociados", modelosAssociados);
+        }
+    }
+    
     @Override
-    public List<ModeloDocumento> getResultList() {
-        setEjbql(getDefaultEjbql());
-        return super.getResultList();
+    public void newInstance() {
+        super.newInstance();
+        refreshModelosAssociados();
     }
-
-    @Override
-    @Transactional
-    public Long getResultCount() {
-        setEjbql(getDefaultEjbql());
-        return super.getResultCount();
-    }
-
 }

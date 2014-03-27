@@ -32,6 +32,7 @@ import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
+import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -308,8 +309,14 @@ public class VariableAccessHandler implements Serializable {
         modeloList.add(modelo.getIdModeloDocumento());
         EntityList modeloDocumentoList = ComponentUtil.getComponent(AssociatedTipoModeloVariavelList.NAME);
         modeloDocumentoList.getResultList().add(modelo);
+        refreshModelosAssociados();
         mudouModelo = true;
         updateModelo();
+    }
+
+    private void refreshModelosAssociados() {
+        AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
+        associativeModeloDocumentoList.refreshModelosAssociados();
     }
 
     public void removeModelo(ModeloDocumento modelo) {
@@ -317,6 +324,7 @@ public class VariableAccessHandler implements Serializable {
         modeloList.remove(Integer.valueOf(modelo.getIdModeloDocumento()));
         EntityList<VariavelTipoModelo> modeloDocumentoList = ComponentUtil.getComponent(AssociatedTipoModeloVariavelList.NAME);
         modeloDocumentoList.getResultList().remove(modelo);
+        refreshModelosAssociados();
         mudouModelo = true;
         updateModelo();
     }

@@ -54,7 +54,7 @@
                 </div>
                 <div class="picklist-div">
                     <wi:dataTable
-                        values="#{associativeModeloDocumentoList.list(15)}"
+                        values="#{associativeModeloDocumentoList.list(2)}"
                         bean="#{associativeModeloDocumentoList}"
                         tableTitle="#{messages['associativeModeloDocumento.tableTitle']}"
                         id="associativeModeloDocumentoList"
@@ -66,11 +66,14 @@
                             <wi:searchForm
                                 formId="pesquisarModeloDocumentoForm"
                                 formTitle="#{messages['searchForm.title']}"
+                                searchReRender="modeloDocumentoDiv"
+                                clearReRender="modeloDocumentoDiv"
+                                clearAction="associativeModeloDocumentoList.newInstance"
                             >
                                 <wi:inputText
                                     id="tituloModeloDocumento"
                                     label="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
-                                    value="#{associativeModeloDocumentoList.entity.tituloModeloDocumento}"
+                                    value="#{associativeModeloDocumentoList.parameters.tituloModeloDocumento}"
                                     maxlength="150"
                                 />
                             </wi:searchForm>

@@ -21,5 +21,9 @@ public interface PageableList<E> extends Pageable {
     public abstract Integer getPageCount();
 
     public abstract Integer getResultCount();
+    
+    String getOrderedColumn();
+    
+    void setOrderedColumn(String orderedColumn);
 
 }

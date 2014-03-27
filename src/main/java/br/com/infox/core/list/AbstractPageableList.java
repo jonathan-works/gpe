@@ -50,18 +50,31 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
         public void putAll(Map<? extends K, ? extends V> m) {
             super.putAll(m);
         }
+        
+        @Override
+        public void clear() {
+            this.isDirty = true;
+            super.clear();
+        }
+        
+        @Override
+        public V remove(Object key) {
+            this.isDirty = true;
+            return super.remove(key);
+        }
     }
 
     private static final int DEFAULT_MAX_AMMOUNT = 15;
 
     private Integer maxAmmount;
-    private Integer page;
+    private Integer page = 1;
     private Integer pageCount;
     private List<E> resultList;
     private HashMapExtension<String, Object> parameters;
     private HashMap<String, String> searchCriteria;
     private HashMap<String, Object> params;
     private GenericManager genericManager;
+    private String orderedColumn;
 
     @Override
     public List<E> list() {
@@ -115,11 +128,19 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
             }
         }
         sb.append(" ").append(getGroupBy());
+        sb.append(" ").append(getOrderBy());
         return sb.toString();
     }
 
     protected String getGroupBy() {
         return "";
+    }
+    
+    protected String getOrderBy() {
+        if (orderedColumn == null || orderedColumn.isEmpty()) {
+            return "";
+        }
+        return "order by " + orderedColumn;
     }
 
     protected abstract void initCriteria();
@@ -184,7 +205,11 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
         }
         final Integer count = getPageCount();
         if (page > count) {
-            page = count;
+            if (count == 0) {
+                page = 1;
+            } else {
+                page = count;
+            }
         }
         return page;
     }
@@ -226,6 +251,10 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     protected void addParameter(String key, Object value) {
         this.parameters.put(key, value);
     }
+    
+    protected void removeParameter(String key) {
+        this.parameters.remove(key);
+    }
 
     protected void clearParameters() {
         this.parameters.clear();
@@ -238,5 +267,18 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
     protected void addSearchCriteria(String field, String expression) {
         this.searchCriteria.put(field, expression);
     }
-
+    
+    protected void removeSearchCriteria(String field) {
+        this.searchCriteria.remove(field);
+    }
+    
+    @Override
+    public String getOrderedColumn() {
+        return orderedColumn;
+    }
+    
+    @Override
+    public void setOrderedColumn(String orderedColumn) {
+        this.orderedColumn = orderedColumn;
+    }
 }
