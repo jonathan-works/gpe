@@ -9,7 +9,6 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.epp.documento.entity.Variavel;
 
 @Name(AssociativeTipoModeloDocumentoList.NAME)
 @Scope(ScopeType.PAGE)
