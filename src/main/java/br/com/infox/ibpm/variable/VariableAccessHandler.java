@@ -91,6 +91,7 @@ public class VariableAccessHandler implements Serializable {
         if (!auxiliarName.equals(this.name)) {
             this.name = auxiliarName;
             if ("page".equals(type) && !pageExists()) {
+                this.name = "";
                 return;
             }
             ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
@@ -208,6 +209,7 @@ public class VariableAccessHandler implements Serializable {
         }
         if ("page".equals(type) && !pageExists()) {
             setWritable(true);
+            this.name = "";
             return;
         }
         ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
