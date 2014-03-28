@@ -108,9 +108,9 @@
             nodes="#{item.nodes}"
           >
             <rich:treeNode
-              iconCollapsed="#{item.entity.identificador.startsWith('/') ? a4jSkin.imgIconResource : a4jSkin.imgIconRole}"
-              iconExpanded="#{item.entity.identificador.startsWith('/') ? a4jSkin.imgIconResource : a4jSkin.imgIconRole}"
-              iconLeaf="#{item.entity.identificador.startsWith('/') ? a4jSkin.imgIconResource : a4jSkin.imgIconRole}"
+              iconCollapsed="#{a4jSkin.imgFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
+              iconExpanded="#{a4jSkin.imgFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
+              iconLeaf="#{a4jSkin.imgFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
             >
               #{item.entity}
             </rich:treeNode>
