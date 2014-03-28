@@ -155,7 +155,7 @@
                         <a:ajax
                             execute="@this"
                             event="change"
-                            render="varDiv, varLabel"
+                            render="varDiv, varLabel, pageBodyDialogMessage"
                             limitRender="true"
                         />
                     </h:inputText>
@@ -241,13 +241,14 @@
                     items="#{typeFitter.typeList}"
                     optionLabel="#{typeFitter.getTypeLabel(item)}"
                     widthDiv="100%"
+                    required="true"
                 >
                     <a:ajax
                         event="change"
                         execute="true"
                         status=":status"
                         listener="#{t.clearHasTaskPage()}"
-                        render="addVarDiv, @form"
+                        render="addVarDiv, @form, pageBodyDialogMessage, varDiv"
                         limitRender="true"
                     />
                 </wi:selectOneMenu>
