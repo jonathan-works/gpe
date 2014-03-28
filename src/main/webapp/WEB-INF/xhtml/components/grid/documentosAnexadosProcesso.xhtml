@@ -13,7 +13,8 @@
             values="#{consultaController.getProcessoDocumentoList(task.id)}"
             tableTitle="#{messages['anexosProcesso.titleView']}"
             id="documentosAnexadosList"
-            rowId="#{row.idProcessoDocumento}" panelStyleClass="anexos">
+            rowId="#{row.idProcessoDocumento}" panelStyleClass="anexos"
+            hideOrder="true">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <ui:include src="processoDocumentoBin.xhtml">
