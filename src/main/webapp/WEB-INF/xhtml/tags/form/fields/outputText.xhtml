@@ -13,7 +13,7 @@
         value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
 
     <s:decorate id="#{id}Decoration" template="#{template}"
-        rendered="#{wi:get(rendered,true)}">
+        rendered="#{wi:get(rendered,true)}" styleClass="decoration-div">
         <ui:define name="label">#{label}</ui:define>
         <h:outputText id="#{id}" value="#{value}" escape="#{escape}">
             <ui:insert />

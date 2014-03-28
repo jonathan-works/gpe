@@ -261,8 +261,10 @@ public class ProcessBuilder implements Serializable {
 
             List<Transition> transitions = node.getLeavingTransitions();
             for (Transition t : transitions) {
-                hasFoundEndState = findPathToEndState(t.getTo(), visitedNodes,
+                if (t.getTo() != null) {
+                    hasFoundEndState = findPathToEndState(t.getTo(), visitedNodes,
                         hasFoundEndState);
+                }
             }
         }
         return hasFoundEndState;
