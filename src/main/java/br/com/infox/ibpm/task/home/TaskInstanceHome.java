@@ -231,7 +231,7 @@ public class TaskInstanceHome implements Serializable {
     private void updateVariable(VariableAccess variableAccess) {
         TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess, taskInstance);
         variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
-        variableResolver.resolveWhenMonetario();
+        variableResolver.resolve();
         if (variableAccess.isWritable()) {
             if (variableResolver.isEditor()) {
                 try {

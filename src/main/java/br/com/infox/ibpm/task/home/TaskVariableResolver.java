@@ -1,8 +1,11 @@
 package br.com.infox.ibpm.task.home;
 
+import java.text.ParseException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.swing.text.DateFormatter;
 
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
@@ -34,16 +37,22 @@ final class TaskVariableResolver extends TaskVariable {
     public void setValue(Object value) {
         this.value = value;
     }
-
-    public void resolveWhenMonetario() {
+    
+    public void resolve() {
         if ("numberMoney".equals(type) && value != null) {
             String val = String.valueOf(value);
             try {
                 value = Float.parseFloat(val);
             } catch (NumberFormatException e) {
-                LOG.warn(".resolveWhenMonetario()", e);
                 value = Float.parseFloat(val.replace(".", "").replace(",", "."));
             }
+        } else if ("date".equals(type) && value != null) {
+            try {
+                value = new DateFormatter().valueToString(value);
+            } catch (ParseException e) {
+                LOG.warn(".resolveWhenDate()", e);
+            }
+            
         }
     }
 
