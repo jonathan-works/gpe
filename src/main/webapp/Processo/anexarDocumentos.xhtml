@@ -5,8 +5,7 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns="http://www.w3.org/1999/xhtml"
->
+    xmlns="http://www.w3.org/1999/xhtml">
     <s:div id="editorDiv">
         <s:div style="clear: both">
             <wi:inputText
@@ -14,8 +13,7 @@
                 value="#{documentoEditor.processoDocumento.processoDocumento}"
                 disabled="false"
                 required="true"
-                label="#{messages['processo.anexarDocumentoDescricao']}"
-            >
+                label="#{messages['processo.anexarDocumentoDescricao']}">
             </wi:inputText>
             <wi:selectOneMenuEntity
                 id="#{f.id}tipoProcessoDocumento"
@@ -23,8 +21,7 @@
                 value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
                 items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                 required="true"
-                showLabelSelecione="true"
-            >
+                showLabelSelecione="true">
             </wi:selectOneMenuEntity>
         </s:div>
         <s:div id="tipoDocumentoDiv">
@@ -33,9 +30,8 @@
                 label="#{messages['tipoProcessoDocumento.modelo']}"
                 value="#{documentoEditor.processoDocumento.processoDocumentoBin.modeloDocumento}"
                 requiredField="false"
-                required="false"
-                showVariables="false"
-            >
+                required="true"
+                showVariables="false">
             </wi:editor>
         </s:div>
         <s:div id="buttonsDiv">
@@ -45,8 +41,7 @@
                 value="#{messages['processo.anexarDocumentoBtn']}"
                 execute="editorDiv"
                 reRender="@form,pageBodyDialogMessage, buttonsDiv"
-                styleClass="buttons"
-            >
+                styleClass="buttons">
             </wi:commandButton>
         </s:div>
     </s:div>
@@ -54,8 +49,7 @@
     <rich:collapsiblePanel
         switchType="client"
         expanded="false"
-        header="#{messages['fileUpload.header']}"
-    >
+        header="#{messages['fileUpload.header']}">
         <s:div id="uploaderDiv">
             <s:div style="clear: both">
                 <wi:inputText
@@ -63,8 +57,7 @@
                     value="#{documentoUploader.processoDocumento.processoDocumento}"
                     disabled="false"
                     required="true"
-                    label="#{messages['processo.anexarDocumentoDescricao']}"
-                >
+                    label="#{messages['processo.anexarDocumentoDescricao']}">
                 </wi:inputText>
                 <wi:selectOneMenuEntity
                     id="#{f.id}tipoProcessoDocumentoPdf"
@@ -72,16 +65,14 @@
                     value="#{documentoUploader.processoDocumento.tipoProcessoDocumento}"
                     items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                     required="true"
-                    showLabelSelecione="true"
-                >
+                    showLabelSelecione="true">
                 </wi:selectOneMenuEntity>
             </s:div>
             <s:div id="tipoDocumentoDivPdf">
                 <wi:fileUpload
                     id="uploadArquivo"
                     label="#{messages['fileUpload.type.file']}"
-                    reRender="buttonsPdfDiv"
-                >
+                    reRender="buttonsPdfDiv">
                 </wi:fileUpload>
             </s:div>
             <s:div id="buttonsPdfDiv">
@@ -92,8 +83,7 @@
                     execute="uploaderDiv"
                     reRender="@form,pageBodyDialogMessage"
                     styleClass="buttons"
-                    rendered="#{documentoUploader.valido}"
-                >
+                    rendered="#{documentoUploader.valido}">
                 </wi:commandButton>
             </s:div>
         </s:div>
@@ -105,22 +95,22 @@
             tableTitle="#{messages['documentoEditor.titleView']}"
             id="processoDocumentoDaSessao"
             rowId="#{row.idProcessoDocumento}"
-        >
+            showSearchForm="false">
             <wi:columnOutputText
                 columnId="usuarioInclusao"
                 columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-                value="#{row.usuarioInclusao}"
-            />
+                hideOrder="true"
+                value="#{row.usuarioInclusao}" />
             <wi:columnDateTime
                 columnId="dataInclusao"
                 columnHeader="#{messages['processoDocumento.dataInclusao']}"
-                value="#{row.dataInclusao}"
-            />
+                hideOrder="true"
+                value="#{row.dataInclusao}" />
             <wi:columnOutputText
                 columnId="processoDocumento"
                 columnHeader="#{messages['processoDocumentoBin.documento']}"
-                value="#{row.processoDocumento}"
-            />
+                hideOrder="true"
+                value="#{row.processoDocumento}" />
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar" />
         </wi:dataTable>
@@ -128,26 +118,26 @@
     <br />
     <s:div id="documentosDaSessao">
         <wi:dataTable
+            showSearchForm="false"
             values="#{documentoUploader.documentosDaSessao}"
             tableTitle="#{messages['documentoUploader.titleView']}"
             id="documentoDaSessao"
-            rowId="#{row.idProcessoDocumento}"
-        >
+            rowId="#{row.idProcessoDocumento}">
             <wi:columnOutputText
                 columnId="usuarioInclusao"
                 columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-                value="#{row.usuarioInclusao}"
-            />
+                hideOrder="true"
+                value="#{row.usuarioInclusao}" />
             <wi:columnDateTime
                 columnId="dataInclusao"
                 columnHeader="#{messages['processoDocumento.dataInclusao']}"
-                value="#{row.dataInclusao}"
-            />
+                hideOrder="true"
+                value="#{row.dataInclusao}" />
             <wi:columnOutputText
                 columnId="processoDocumento"
                 columnHeader="#{messages['processoDocumentoBin.documento']}"
-                value="#{row.processoDocumento}"
-            />
+                hideOrder="true"
+                value="#{row.processoDocumento}" />
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar" />
         </wi:dataTable>
