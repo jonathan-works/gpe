@@ -29,12 +29,12 @@
             value="#{taskInstanceHome.canClosePanelVal}"></h:inputHidden>
         <h:outputScript>
       function verifyFields() {
-        if ($('#taskCompleted').val() != '') {
+        if ($('#taskCompleted').val() === 'true') {
           try {
             opener.atualizaPainelFluxo();
           } catch (e) {
           }
-          if ($('#canClosePanel').val() != '') {
+          if ($('#canClosePanel').val() === 'true') {
             close();
           } else {
             location = location.href;
