@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="http://java.sun.com/jsf/html">
-
-    <h:form>
-        <h:commandLink action="/help/show.xhtml" target="helpwnd"
-            actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}">
-            <h:graphicImage url="#{a4jSkin.imgFolder}/question-verde.png" title="#{messages['ajuda.ajudaBtn']}"
-                onclick="openPopUp('helpwnd', 'about:blank');" />
-        </h:commandLink>
-    </h:form>
-
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html">
+  <h:form>
+    <h:commandLink
+      action="/help/show.xhtml"
+      target="helpwnd"
+      actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}">
+      <h:graphicImage
+        url="#{a4jSkin.imgFolder}/question"
+        title="#{messages['ajuda.ajudaBtn']}"
+        onclick="openPopUp('helpwnd', 'about:blank');" />
+    </h:commandLink>
+  </h:form>
 </ui:composition>
