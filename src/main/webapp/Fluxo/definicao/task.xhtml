@@ -109,7 +109,7 @@
                     <a:commandLink
                         action="#{t.removeVar(var)}"
                         execute="@this"
-                        onclick="return confirm('Confirma?');"
+                        onclick="return confirm(\'#{messages['processBuilder.confirm']}\');"
                         render="varTable"
                         limitRender="true"
                         styleClass="opacityHover"

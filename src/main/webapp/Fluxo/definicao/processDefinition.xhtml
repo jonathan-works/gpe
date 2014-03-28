@@ -1,174 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:infox="http://www.infox.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/minimal.xhtml"
->
-    <ui:define name="title">#{messages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
-    <ui:define name="head">
-        <h:outputStylesheet
-            name="processDefinition.css"
-            library="stylesheet"
-        />
-        <h:outputScript
-            name="jbpmGraph.js"
-            library="js"
-        />
-        <h:outputScript
-            name="underscore.js"
-            library="js"
-        />
-    </ui:define>
-    <ui:define name="body">
-        <ui:param
-            name="def"
-            value="#{processBuilder.instance}"
-        />
-        <infox:tabPanel
-            switchType="ajax"
-            activeTab="#{processBuilder.tab}"
-            id="processDefinition"
-        >
-            <h:form>
-                <infox:tabHeaders />
-            </h:form>
-            <infox:tab
-                name="propriedadesTab"
-                id="propriedadesTab"
-                title="#{messages['processBuilder.properties']}"
-            >
-                <rich:panel header="#{messages['processBuilder.info']}">
-                    <h:form>
-                        <wi:inputText
-                            id="codFluxo"
-                            label="#{messages['fluxo.codFluxo']}"
-                            value="#{processBuilder.id}"
-                            readonly="true"
-                        >
-                            <f:validator
-                                validatorId="jsfComponentIdValidator"
-                            />
-                        </wi:inputText>
-                        <wi:inputText
-                            id="nome"
-                            label="#{messages['fluxo.fluxo']}"
-                            value="#{def.name}"
-                            readonly="true"
-                        />
-                        <wi:inputTextarea
-                            id="description"
-                            value="#{def.description}"
-                            label="#{messages['processBuilder.description']}"
-                            showCounter="false"
-                        >
-                            <a:ajax
-                                event="change"
-                                execute="@this"
-                            />
-                        </wi:inputTextarea>
-                    </h:form>
-                </rich:panel>
-                <rich:panel
-                    header="#{messages['processBuilder.definicaoVariavelProcesso']}"
-                    rendered="#{processBuilder.exists}"
-                >
-                    <ui:include src="definicaoVariavelProcesso.xhtml" />
-                </rich:panel>
-                <rich:panel
-                    styleClass="SwimlanePanel"
-                    header="#{messages['processBuilder.swimlanes']}"
-                    rendered="#{processBuilder.exists}"
-                >
-                    <ui:include src="swimlanes.xhtml" />
-                </rich:panel>
-            </infox:tab>
-            <infox:tab
-                name="nodesTab"
-                id="nodesTab"
-                rendered="#{processBuilder.exists}"
-                title="#{messages['processBuilder.nodes']}"
-            >
-                <ui:include src="nodes.xhtml" />
-            </infox:tab>
-            <infox:tab
-                name="xmlTab"
-                id="xmlTab"
-                rendered="#{processBuilder.exists}"
-                title="#{messages['processBuilder.xml']}"
-            >
-                <ui:include src="xmlEdit.xhtml" />
-            </infox:tab>
-            <infox:tab
-                name="graphTab"
-                id="graphTab"
-                title="#{messages['processBuilder.graph']}"
-            >
-                <ui:include src="graph.xhtml" />
-            </infox:tab>
-        </infox:tabPanel>
-        <h:form id="processDefinitionButtonsForm">
-            <a:commandButton
-                id="gravar"
-                actionListener="#{processBuilder.prepareUpdate}"
-                action="#{processBuilder.update}"
-                value="#{messages['processBuilder.saveBtn']}"
-                rendered="#{processBuilder.exists}"
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}"
-            />
-            <a:commandButton
-                id="publicar"
-                actionListener="#{processBuilder.prepareUpdate}"
-                action="#{processBuilder.deploy}"
-                value="#{messages['processBuilder.deployBtn']}"
-                rendered="#{processBuilder.exists}"
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}"
-            />
-            <a:commandButton
-                id="novoProcesso"
-                actionListener="#{processBuilder.prepareUpdate}"
-                action="#{processBuilder.update}"
-                value="#{messages['processBuilder.saveBtn']}"
-                rendered="#{!processBuilder.exists}"
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}"
-            />
-            <a:commandButton
-                id="new"
-                action="#{processBuilder.clearDefinition}"
-                value="#{messages['processBuilder.newBtn']}"
-                render=":processDefinition, @form"
-                onclick="return confirm('#{messages['processBuilder.confirmNew']}')"
-                rendered="#{processBuilder.exists}"
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}"
-            />
-        </h:form>
-        <s:div id="actionTemplate">
-            <wi:modalPanel
-                id="actionTemplatePanel"
-                height="550"
-                width="920"
-            >
-                <c:if
-                    test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}"
-                >
-                    <ui:include src="actions/#{actionTemplate.fileName}" />
-                </c:if>
-            </wi:modalPanel>
-        </s:div>
-        <wi:modalPanel
-            id="dominioVariavelTarefaPanel"
-            height="550"
-            width="920"
-            onbeforehide="renderDominio()"
-        >
-            <ui:include src="actions/dominioVariavelTarefa.xhtml" />
-        </wi:modalPanel>
-    </ui:define>
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  template="/WEB-INF/xhtml/templates/minimal.xhtml">
+  <ui:define name="title">#{messages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
+  <ui:define name="head">
+    <h:outputStylesheet
+      name="processDefinition.css"
+      library="stylesheet" />
+    <h:outputScript
+      name="jbpmGraph.js"
+      library="js" />
+    <h:outputScript
+      name="underscore.js"
+      library="js" />
+  </ui:define>
+  <ui:define name="body">
+    <ui:param
+      name="def"
+      value="#{processBuilder.instance}" />
+    <infox:tabPanel
+      switchType="ajax"
+      activeTab="#{processBuilder.tab}"
+      id="processDefinition">
+      <h:form>
+        <infox:tabHeaders />
+      </h:form>
+      <infox:tab
+        name="propriedadesTab"
+        id="propriedadesTab"
+        title="#{messages['processBuilder.properties']}">
+        <rich:panel header="#{messages['processBuilder.info']}">
+          <h:form>
+            <wi:inputText
+              id="codFluxo"
+              label="#{messages['fluxo.codFluxo']}"
+              value="#{processBuilder.id}"
+              readonly="true">
+              <f:validator validatorId="jsfComponentIdValidator" />
+            </wi:inputText>
+            <wi:inputText
+              id="nome"
+              label="#{messages['fluxo.fluxo']}"
+              value="#{def.name}"
+              readonly="true" />
+            <wi:inputTextarea
+              id="description"
+              value="#{def.description}"
+              label="#{messages['processBuilder.description']}"
+              showCounter="false">
+              <a:ajax
+                event="change"
+                execute="@this" />
+            </wi:inputTextarea>
+          </h:form>
+        </rich:panel>
+        <rich:panel
+          header="#{messages['processBuilder.definicaoVariavelProcesso']}"
+          rendered="#{processBuilder.exists}">
+          <ui:include src="definicaoVariavelProcesso.xhtml" />
+        </rich:panel>
+        <rich:panel
+          styleClass="SwimlanePanel"
+          header="#{messages['processBuilder.swimlanes']}"
+          rendered="#{processBuilder.exists}">
+          <ui:include src="swimlanes.xhtml" />
+        </rich:panel>
+      </infox:tab>
+      <infox:tab
+        name="nodesTab"
+        id="nodesTab"
+        rendered="#{processBuilder.exists}"
+        title="#{messages['processBuilder.nodes']}">
+        <ui:include src="nodes.xhtml" />
+      </infox:tab>
+      <infox:tab
+        name="xmlTab"
+        id="xmlTab"
+        rendered="#{processBuilder.exists}"
+        title="#{messages['processBuilder.xml']}">
+        <ui:include src="xmlEdit.xhtml" />
+      </infox:tab>
+      <infox:tab
+        name="graphTab"
+        id="graphTab"
+        title="#{messages['processBuilder.graph']}">
+        <ui:include src="graph.xhtml" />
+      </infox:tab>
+    </infox:tabPanel>
+    <h:form id="processDefinitionButtonsForm">
+      <a:commandButton
+        id="gravar"
+        actionListener="#{processBuilder.prepareUpdate}"
+        action="#{processBuilder.update}"
+        value="#{messages['processBuilder.saveBtn']}"
+        rendered="#{processBuilder.exists}"
+        styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
+      <a:commandButton
+        id="publicar"
+        actionListener="#{processBuilder.prepareUpdate}"
+        action="#{processBuilder.deploy}"
+        value="#{messages['processBuilder.deployBtn']}"
+        rendered="#{processBuilder.exists}"
+        styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
+      <a:commandButton
+        id="novoProcesso"
+        actionListener="#{processBuilder.prepareUpdate}"
+        action="#{processBuilder.update}"
+        value="#{messages['processBuilder.saveBtn']}"
+        rendered="#{!processBuilder.exists}"
+        styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
+      <a:commandButton
+        id="new"
+        action="#{processBuilder.clearDefinition}"
+        value="#{messages['processBuilder.newBtn']}"
+        render=":processDefinition, @form"
+        onclick="return confirm('#{messages['processBuilder.confirmNew']}')"
+        rendered="#{processBuilder.exists}"
+        styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
+    </h:form>
+    <s:div id="actionTemplate">
+      <wi:modalPanel
+        id="actionTemplatePanel"
+        height="550"
+        width="920">
+        <c:if
+          test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}">
+          <ui:include src="actions/#{actionTemplate.fileName}" />
+        </c:if>
+      </wi:modalPanel>
+    </s:div>
+    <wi:modalPanel
+      id="dominioVariavelTarefaPanel"
+      height="550"
+      width="920"
+      onbeforehide="renderDominio()">
+      <ui:include src="actions/dominioVariavelTarefa.xhtml" />
+    </wi:modalPanel>
+  </ui:define>
 </ui:composition>

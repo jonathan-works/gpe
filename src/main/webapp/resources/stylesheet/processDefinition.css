@@ -30,3 +30,12 @@
  	width:100%;
  	min-width:800px;
  }
+ .link {
+  text-decoration:none;
+ }
+ .link:hover{
+  text-decoration:underline;
+ }
+ .bold-link {
+  font-weight:900;
+ }
