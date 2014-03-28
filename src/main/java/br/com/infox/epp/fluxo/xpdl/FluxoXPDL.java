@@ -23,6 +23,7 @@ import br.com.infox.epp.fluxo.xpdl.lane.LaneXPDL;
 import br.com.infox.epp.fluxo.xpdl.lane.LanesXPDLFactory;
 import br.com.infox.epp.fluxo.xpdl.transition.TransitionsXPDL;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
+import br.com.infox.ibpm.node.converter.NodeNameFixer;
 import br.com.infox.jbpm.event.JbpmEvents;
 
 public final class FluxoXPDL implements Serializable {
@@ -73,6 +74,12 @@ public final class FluxoXPDL implements Serializable {
             Node node = activity.toNode();
             if (definition.getNode(node.getName()) != null) {
                 mensagens.add("Já existe um nó com o nome " + node.getName());
+            }
+            String fixedName = NodeNameFixer.fixCharsInNodeName(node.getName());
+            if (fixedName.equals("")) {
+                mensagens.add("O nó " + node.getName() + " possui um nome inválido");
+            } else {
+                node.setName(fixedName);
             }
             definition.addNode(node);
             if (activity instanceof AssignTaskXPDL) {
