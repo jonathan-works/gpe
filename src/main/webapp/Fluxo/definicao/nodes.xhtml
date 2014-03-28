@@ -291,9 +291,11 @@
                                         value="#{nodeFitter.newNodeName}"
                                         required="true"
                                     >
+                                        <a:ajax event="change" execute="@this" render="@form" limitRender="true"/>
                                         <f:validator
                                             validatorId="nodeNameValidator"
                                         />
+                                        <f:converter converterId="nodeNameConverter" />
                                     </h:inputText>
                                 </s:decorate>
                                 <s:decorate
