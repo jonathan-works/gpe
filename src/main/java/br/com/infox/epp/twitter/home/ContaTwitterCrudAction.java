@@ -32,9 +32,9 @@ import br.com.infox.epp.twitter.util.TwitterUtil;
 @Scope(ScopeType.CONVERSATION)
 public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, ContaTwitterManager> {
 
-    /**
-     * 
-     */
+    private static final String ASSOCIATION_TO_USER = " ao usuário ";
+    private static final String ASSOCIATION_NOT_POSSIBLE = "Não foi possível associar o twitter ";
+
     private static final long serialVersionUID = 1L;
     private static final int UNAUTHORIZED = 401;
     public static final String NAME = "contaTwitterCrudAction";
@@ -100,9 +100,9 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                         try {
                             usuarioLoginManager.update(usuario);
                         } catch (DAOException e) {
-                            LOG.error("Não foi possível associar o twitter "
+                            LOG.error(ASSOCIATION_NOT_POSSIBLE
                                     + getInstance().getScreenName()
-                                    + " ao usuário " + usuario, e);
+                                    + ASSOCIATION_TO_USER + usuario, e);
                         }
                     }
                 break;
@@ -112,9 +112,9 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                         try {
                             usuarioLoginManager.update(usuario);
                         } catch (DAOException e) {
-                            LOG.error("Não foi possível associar o twitter "
+                            LOG.error(ASSOCIATION_NOT_POSSIBLE
                                     + getInstance().getScreenName()
-                                    + " ao usuário " + usuario, e);
+                                    + ASSOCIATION_TO_USER + usuario, e);
                         }
                         TwitterUtil.restart();
                     }
@@ -124,7 +124,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                     try {
                         localizacaoManager.update(localizacao);
                     } catch (DAOException e) {
-                        LOG.error("Não foi possível associar o twitter "
+                        LOG.error(ASSOCIATION_NOT_POSSIBLE
                                 + getInstance().getScreenName()
                                 + " à localização " + localizacao, e);
                     }

@@ -52,8 +52,17 @@ public class AccessMailService {
         return nomeParam;
     }
 
+    /**
+     * Envia um e-mail informando a nova senha para o usuário que solicitou a mudança
+     * 
+     * @param parametro o tipo de modelo a ser utilizado (com/sem login)
+     * @param usuario o usuário que solicitou a mudança
+     * @param password a senha gerada
+     * 
+     * @throws BusinessException caso não seja possível enviar o e-mail
+     * */
     public void enviarEmailDeMudancaDeSenha(final String parametro,
-            final UsuarioLogin usuario, final String password) throws BusinessException {
+            final UsuarioLogin usuario, final String password) {
         final String nomeParametro = resolveTipoDeEmail(parametro);
         final ModeloDocumento modelo = findModelo(nomeParametro);
         if (modelo != null) {
