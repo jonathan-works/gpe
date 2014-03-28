@@ -31,7 +31,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
         if (getInstance().getIdLocalizacao() == null) {
             return true;
         }
-        return getManager().isLocalizacaoAncestor(localizacaoUsuarioLogado, getInstance());
+        return getManager().isLocalizacaoAncestor(localizacaoUsuarioLogado, getInstance()) && !getInstance().equals(localizacaoUsuarioLogado);
     }
 
     @Override
