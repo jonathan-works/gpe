@@ -24,8 +24,16 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.apache.lucene.analysis.br.BrazilianAnalyzer;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -43,6 +51,8 @@ import br.com.infox.epp.processo.entity.Processo;
 @NamedQueries({
     @NamedQuery(name = LIST_ANEXOS_PUBLICOS, query = LIST_ANEXOS_PUBLICOS_QUERY),
     @NamedQuery(name = NEXT_SEQUENCIAL, query = NEXT_SEQUENCIAL_QUERY) })
+@Analyzer(impl = BrazilianAnalyzer.class)
+@Indexed
 public class ProcessoDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -253,6 +263,12 @@ public class ProcessoDocumento implements java.io.Serializable {
         int result = 1;
         result = prime * result + getIdProcessoDocumento();
         return result;
+    }
+    
+    @Transient
+    @Field(index = Index.YES, store = Store.NO, name = "texto")
+    public String getTextoIndexavel() {
+        return getProcessoDocumentoBin().getModeloDocumento();
     }
 
 }
