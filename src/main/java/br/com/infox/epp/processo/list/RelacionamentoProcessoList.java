@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.list;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -41,7 +42,13 @@ public class RelacionamentoProcessoList extends EntityList<RelacionamentoProcess
 
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
-        return null;
+        final HashMap<String, String> columnsOrder = new HashMap<>();
+        columnsOrder.put("numeroProcesso", "o.numeroProcesso");
+        columnsOrder.put("motivo", "o.relacionamento.motivo");
+        columnsOrder.put("nomeUsuario", "o.relacionamento.nomeUsuario");
+        columnsOrder.put("dataRelacionamento", "o.relacionamento.dataRelacionamento");
+        columnsOrder.put("ativo", "o.relacionamento.ativo");
+        return columnsOrder;
     }
 
 }

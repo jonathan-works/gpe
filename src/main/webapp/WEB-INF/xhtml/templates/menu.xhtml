@@ -29,11 +29,6 @@
   </h:outputScript>
   <rich:toolbar styleClass="menu-tb" itemClass="label-menu">
     <c:if test="#{mostrarMenu}">
-      <rich:toolbarGroup>
-        <h:form>
-          <s:link view="/home.xhtml" styleClass="LinkMenu" value="#{messages['menu.home']}" />
-        </h:form>
-      </rich:toolbarGroup>
       <c:forEach items="#{mainMenu.dropMenus}" var="drop">
         <h:form rendered="#{empty drop.url}">
           <rich:dropDownMenu label="#{drop.label}">
