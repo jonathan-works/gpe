@@ -28,8 +28,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.apache.lucene.analysis.br.BrazilianAnalyzer;
-import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -51,7 +49,6 @@ import br.com.infox.epp.processo.entity.Processo;
 @NamedQueries({
     @NamedQuery(name = LIST_ANEXOS_PUBLICOS, query = LIST_ANEXOS_PUBLICOS_QUERY),
     @NamedQuery(name = NEXT_SEQUENCIAL, query = NEXT_SEQUENCIAL_QUERY) })
-@Analyzer(impl = BrazilianAnalyzer.class)
 @Indexed(index="IndexProcessoDocumento")
 public class ProcessoDocumento implements java.io.Serializable {
 

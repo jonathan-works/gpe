@@ -32,8 +32,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.apache.lucene.analysis.br.BrazilianAnalyzer;
-import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -47,7 +45,6 @@ import br.com.infox.epp.search.Reindexer;
 @NamedQueries(value = {
     @NamedQuery(name = AJUDA_FIND_ALL, query = AJUDA_FIND_ALL_QUERY),
     @NamedQuery(name = AJUDA_BY_URL, query = AJUDA_BY_URL_QUERY) })
-@Analyzer(impl = BrazilianAnalyzer.class)
 @Indexed(index="IndexAjuda")
 public class Ajuda implements java.io.Serializable {
 
