@@ -25,7 +25,8 @@ import br.com.infox.seam.exception.BusinessException;
 
 @Name(RelacionamentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class RelacionamentoCrudAction extends AbstractCrudAction<Relacionamento, RelacionamentoManager> {
+public class RelacionamentoCrudAction extends
+        AbstractCrudAction<Relacionamento, RelacionamentoManager> {
 
     public static final String NAME = "relacionamentoCrudAction";
     private static final long serialVersionUID = 1L;
@@ -42,22 +43,24 @@ public class RelacionamentoCrudAction extends AbstractCrudAction<Relacionamento,
     public String getProcesso() {
         return processo;
     }
-    
+
     public void setEditMode(String numeroProcesso, Object id) {
         setId(id);
         this.processoRelacionado = numeroProcesso;
     }
-    
+
     @Override
     public String inactive(Relacionamento t) {
         return super.inactive((Relacionamento) HibernateUtil.removeProxy(t));
     }
-    
+
     @Override
     protected boolean isInstanceValid() {
-        return isManaged() || !relacionamentoProcessoManager.existeRelacionamento(processo, processoRelacionado);
+        return (getInstance().getMotivo().trim().length() < 1)
+                && (isManaged() || !relacionamentoProcessoManager
+                        .existeRelacionamento(processo, processoRelacionado));
     }
-    
+
     @Override
     protected void beforeSave() {
         final Relacionamento relacionamento = getInstance();
@@ -65,17 +68,24 @@ public class RelacionamentoCrudAction extends AbstractCrudAction<Relacionamento,
             relacionamento.setAtivo(Boolean.TRUE);
         }
         relacionamento.setDataRelacionamento(new Date());
-        relacionamento.setNomeUsuario(Authenticator.getUsuarioLogado().getNomeUsuario());
+        relacionamento.setNomeUsuario(Authenticator.getUsuarioLogado()
+                .getNomeUsuario());
     }
-    
+
     @Override
     protected void afterSave(String ret) {
         if (AbstractAction.PERSISTED.equals(ret)) {
             try {
-                Relacionamento relacionamento = getManager().find(EntityUtil.getIdValue(getInstance()));
-                relacionamentoProcessoManager.persist(new RelacionamentoProcesso(relacionamento, processo));
-                relacionamentoProcessoManager.persist(new RelacionamentoProcesso(relacionamento, processoRelacionado));
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | DAOException e) {
+                Relacionamento relacionamento = getManager().find(
+                        EntityUtil.getIdValue(getInstance()));
+                relacionamentoProcessoManager
+                        .persist(new RelacionamentoProcesso(relacionamento,
+                                processo));
+                relacionamentoProcessoManager
+                        .persist(new RelacionamentoProcesso(relacionamento,
+                                processoRelacionado));
+            } catch (IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | DAOException e) {
                 throw new BusinessException("", e);
             }
             newInstance();
@@ -87,14 +97,15 @@ public class RelacionamentoCrudAction extends AbstractCrudAction<Relacionamento,
         super.newInstance();
         processoRelacionado = "";
     }
-    
+
     public void setProcesso(final String processo) {
         this.processo = processo;
     }
 
     public List<TipoRelacionamentoProcesso> getTipoRelacionamentoProcessoList() {
         if (tipoRelacionamentoProcessoList == null) {
-            tipoRelacionamentoProcessoList = tipoRelacionamentoProcessoManager.findAll();
+            tipoRelacionamentoProcessoList = tipoRelacionamentoProcessoManager
+                    .findAll();
         }
         return tipoRelacionamentoProcessoList;
     }
