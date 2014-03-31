@@ -10,101 +10,84 @@
   xmlns:infox="http://www.infox.com.br/jsf"
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
-  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
->
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
   <ui:define name="title">#{messages['usuario.titlePage']}</ui:define>
   <ui:param
     name="home"
-    value="#{usuarioLoginCrudAction}"
-  />
+    value="#{usuarioLoginCrudAction}" />
   <ui:define name="searchGrid">
     <wi:dataTable
       values="#{usuarioLoginList.list(15)}"
       bean="#{usuarioLoginList}"
       tableTitle="#{messages['usuario.tableTitle']}"
       id="usuarioLoginList"
-      rowId="#{row.idUsuarioLogin}"
-    >
+      rowId="#{row.idUsuarioLogin}">
       <ui:define name="searchForm">
         <wi:searchForm
           formId="pesquisarUsuarioLoginForm"
-          formTitle="#{messages['searchForm.title']}"
-        >
+          formTitle="#{messages['searchForm.title']}">
           <wi:inputText
             id="nome"
             label="#{messages['usuarioLogin.nome']}"
             value="#{usuarioLoginList.entity.nomeUsuario}"
-            maxlength="150"
-          />
+            maxlength="150" />
           <wi:selectBooleanMenu
             id="bloqueio"
             label="#{messages['usuarioLogin.bloqueio']}"
-            value="#{usuarioLoginList.entity.bloqueio}"
-          />
+            value="#{usuarioLoginList.entity.bloqueio}" />
           <wi:selectBooleanMenu
             id="provisorio"
             label="#{messages['usuarioLogin.provisorio']}"
-            value="#{usuarioLoginList.entity.provisorio}"
-          />
+            value="#{usuarioLoginList.entity.provisorio}" />
           <wi:selectSituacaoOneMenu
             id="ativo"
             label="#{messages['field.situacao']}"
-            value="#{usuarioLoginList.entity.ativo}"
-          />
+            value="#{usuarioLoginList.entity.ativo}" />
         </wi:searchForm>
       </ui:define>
       <wi:columnOutputText
         columnId="nomeUsuario"
         columnHeader="#{messages['usuarioLogin.nome']}"
-        value="#{row.nomeUsuario}"
-      />
+        value="#{row.nomeUsuario}" />
       <wi:columnOutputText
         columnId="usuarioLocalizacaoList"
         columnHeader="#{messages['usuarioLogin.localizacoes']}"
-        hideOrder="true"
-      >
+        hideOrder="true">
         <ui:repeat
           var="usuarioLoc"
-          value="#{row.usuarioLocalizacaoList}"
-        >
+          value="#{row.usuarioLocalizacaoList}">
           <div>#{usuarioLoc}</div>
         </ui:repeat>
       </wi:columnOutputText>
       <wi:columnBoolean
         columnId="bloqueio"
         columnHeader="#{messages['usuarioLogin.bloqueio']}"
-        value="#{row.bloqueio}"
-      />
+        value="#{row.bloqueio}" />
       <wi:columnBoolean
         columnId="provisorio"
         columnHeader="#{messages['usuarioLogin.provisorio']}"
-        value="#{row.provisorio}"
-      />
+        value="#{row.provisorio}" />
       <wi:columnSituacao
         columnId="ativo"
         columnHeader="#{messages['field.situacao']}"
-        value="#{row.ativo}"
-      />
+        value="#{row.ativo}" />
       <ui:define name="headerToolBar" />
     </wi:dataTable>
   </ui:define>
   <ui:define name="form">
     <wi:dataForm
       formId="usuarioForm"
-      formTitle="#{messages['form.title']}"
-    >
+      formTitle="#{messages['form.title']}">
       <wi:inputText
         id="nomeUsuario"
         label="#{messages['usuario.nome']}"
         value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
-        required="true"
-      />
+        required="true" />
       <wi:inputText
         id="email"
         label="#{messages['usuarioLogin.email']}"
         value="#{usuarioLoginCrudAction.instance.email}"
-        required="true"
-      >
+        required="true">
         <f:validator validatorId="emailValidator" />
       </wi:inputText>
       <wi:inputText
@@ -112,29 +95,24 @@
         label="#{messages['usuarioLogin.login']}"
         value="#{usuarioLoginCrudAction.instance.login}"
         required="true"
-        maxlength="15"
-      />
+        maxlength="15" />
       <wi:selectOneMenuEnum
         id="tipoUsuario"
         label="#{messages['usuario.tipoUsuario']}"
         items="#{usuarioLoginCrudAction.tiposDeUsuario}"
         value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
         showLabelSelecione="true"
-        required="true"
-      >
+        required="true">
       </wi:selectOneMenuEnum>
       <wi:selectSituacaoRadio
         id="ativo"
         label="#{messages['field.situacao']}"
-        value="#{usuarioLoginCrudAction.instance.ativo}"
-      />
+        value="#{usuarioLoginCrudAction.instance.ativo}" />
       <ui:include
-        src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml"
-      >
+        src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
         <ui:param
           name="id"
-          value="usuarioProvisorio"
-        />
+          value="usuarioProvisorio" />
       </ui:include>
     </wi:dataForm>
   </ui:define>
@@ -144,42 +122,36 @@
       rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
       title="#{messages['usuario.pessoaFisica']}"
       name="usuarioPessoaFisica"
-      action="#{usuarioPessoaFisicaCrudAction.newInstance()}"
-    >
+      action="#{usuarioPessoaFisicaCrudAction.newInstance()}">
       <wi:dataForm
         formId="usuarioPessoaFisicaForm"
         formTitle="#{messages['form.title']}"
         home="#{usuarioPessoaFisicaCrudAction}"
-        rendered="#{empty usuarioLoginCrudAction.instance.pessoaFisica}"
-      >
+        rendered="#{empty usuarioLoginCrudAction.instance.pessoaFisica}">
         <s:div id="pessoaFisicaRegion">
           <wi:inputCpf
             id="cpf"
             label="CPF"
             value="#{usuarioPessoaFisicaCrudAction.instance.cpf}"
             assignTo="#{usuarioPessoaFisicaCrudAction.instance.cpf}"
-            required="true"
-          >
+            required="true">
             <a:ajax
               event="blur"
               listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
               execute="@this"
               render="pessoaFisicaRegion"
-              limitRender="true"
-            />
+              limitRender="true" />
           </wi:inputCpf>
           <wi:inputText
             id="nome"
             value="#{usuarioPessoaFisicaCrudAction.instance.nome}"
             label="#{messages['pessoaFisica.nome']}"
-            required="true"
-          />
+            required="true" />
           <wi:inputDate
             id="dataNascimento"
             value="#{usuarioPessoaFisicaCrudAction.instance.dataNascimento}"
             label="#{messages['pessoaFisica.dataNascimento']}"
-            required="true"
-          />
+            required="true" />
         </s:div>
         <ui:define name="buttons">
           <wi:commandButtonSave home="#{usuarioPessoaFisicaCrudAction}" />
@@ -192,8 +164,7 @@
         id="usuarioPessoaFisicaList"
         rowId="#{row.idPessoa}"
         listReRender="divGridLU"
-        hideOrder="true"
-      >
+        hideOrder="true">
         <ui:define name="headerToolBar" />
         <ui:define name="toolBar">
           <wi:toolBar
@@ -204,24 +175,20 @@
             render="usuarioPessoaFisica, pageBodyDialogMessage"
             onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
             url="#{a4jSkin.imgFolder}/remove.png"
-            title="#{messages['crud.remove']}"
-          />
+            title="#{messages['crud.remove']}" />
         </ui:define>
         <wi:columnOutputText
           columnId="cpf"
           columnHeader="#{messages['pessoaFisica.cpf']}"
-          value="#{row.cpf}"
-        />
+          value="#{row.cpf}" />
         <wi:columnOutputText
           columnId="nome"
           columnHeader="#{messages['pessoaFisica.nome']}"
-          value="#{row.nome}"
-        />
+          value="#{row.nome}" />
         <wi:columnDateTime
           columnId="dataNascimento"
           columnHeader="#{messages['pessoaFisica.dataNascimento']}"
-          value="#{row.dataNascimento}"
-        />
+          value="#{row.dataNascimento}" />
       </wi:dataTable>
     </infox:tab>
     <infox:tab
@@ -230,16 +197,14 @@
       rendered="#{home.managed}"
       action="#{usuarioLocalizacaoCrudAction.newInstance}"
       title="#{messages['localizacao.usuarioLocalizacaoList']}"
-      name="localizacaoUsuario"
-    >
+      name="localizacaoUsuario">
       <s:div>
         <wi:ajaxDiv id="divGridLU">
           <s:div id="cadastroUsuarioLocalizacao">
             <wi:dataForm
               formId="localizacaoUsuarioForm"
               formTitle="#{messages['form.title']}"
-              home="#{usuarioLocalizacaoCrudAction}"
-            >
+              home="#{usuarioLocalizacaoCrudAction}">
               <wi:tree
                 id="localizacao"
                 assignTo="usuarioLocalizacaoCrudAction.instance.localizacao"
@@ -247,8 +212,7 @@
                 icon="#{a4jSkin.imgFolder}/nivelTree.gif"
                 iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                 label="#{messages['usuarioLocalizacao.localizacao']}"
-                required="true"
-              />
+                required="true" />
               <wi:tree
                 id="papel"
                 assignTo="usuarioLocalizacaoCrudAction.instance.papel"
@@ -256,20 +220,17 @@
                 icon="#{a4jSkin.imgFolder}/nivelTree.gif"
                 iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                 label="#{messages['usuarioLocalizacao.papel']}"
-                required="true"
-              />
+                required="true" />
               <wi:selectBooleanRadio
                 id="responsavelLocalizacao"
                 value="#{usuarioLocalizacaoCrudAction.instance.responsavelLocalizacao}"
-                label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}"
-              />
+                label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}" />
               <ui:define name="buttons">
                 <wi:commandButton
                   id="saveButton"
                   action="usuarioLocalizacaoCrudAction.save"
                   reRender="localizacaoUsuario, pageBodyDialogMessage"
-                  value="#{messages['crud.persist']}"
-                />
+                  value="#{messages['crud.persist']}" />
               </ui:define>
             </wi:dataForm>
           </s:div>
@@ -279,8 +240,7 @@
             tableTitle="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioLoginCrudAction.instance)}"
             id="usuarioLocalizacaoList"
             rowId="#{row.idUsuarioLocalizacao}"
-            listReRender="divGridLU"
-          >
+            listReRender="divGridLU">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
               <wi:toolBar
@@ -288,27 +248,23 @@
                 rendered="true"
                 limitToList="true"
                 status=":status"
-                render="localizacaoUsuario, localizacaoUsuarioFormMessages"
-                onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
+                render="localizacaoUsuario pageBodyDialogMessage"
+                onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
                 url="#{a4jSkin.imgFolder}/remove.png"
-                title="#{messages['crud.remove']}"
-              />
+                title="#{messages['crud.remove']}" />
             </ui:define>
             <wi:columnOutputText
               columnId="localizacao"
               columnHeader="#{messages['usuarioLocalizacao.localizacao']}"
-              value="#{row.localizacao}"
-            />
+              value="#{row.localizacao}" />
             <wi:columnOutputText
               columnId="papel"
               columnHeader="#{messages['usuarioLocalizacao.papel']}"
-              value="#{row.papel}"
-            />
+              value="#{row.papel}" />
             <wi:columnBoolean
               columnId="responsavelLocalizacao"
               columnHeader="#{messages['usuarioLocalizacao.responsavelLocalizacao']}"
-              value="#{row.responsavelLocalizacao}"
-            />
+              value="#{row.responsavelLocalizacao}" />
           </wi:dataTable>
         </wi:ajaxDiv>
       </s:div>
@@ -317,27 +273,23 @@
       id="historicoBloqueioUsuario"
       rendered="#{home.isManaged()}"
       title="#{messages['bloqueioUsuario.historicoBloqueio']}"
-      name="historicoBloqueioUsuario"
-    >
+      name="historicoBloqueioUsuario">
       <wi:dataForm
         formId="bloqueioUsuarioForm"
         formTitle="#{messages['form.title']}"
         home="#{bloqueioUsuarioCrudAction}"
-        requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-      >
+        requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
         <wi:outputText
           id="bloqueio"
           value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-          label="#{messages['usuario.bloqueio']}"
-        />
+          label="#{messages['usuario.bloqueio']}" />
         <wi:inputDate
           id="dataDesbloqueio"
           label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
           value="#{bloqueioUsuarioCrudAction.instance.dataPrevisaoDesbloqueio}"
           rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
           future="true"
-          required="false"
-        />
+          required="false" />
         <wi:inputText
           id="motivoBloqueio"
           label="#{messages['bloqueioUsuario.motivoBloqueio']}"
@@ -345,23 +297,20 @@
           rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
           required="true"
           showRequired="true"
-          maxlength="50"
-        />
+          maxlength="50" />
         <ui:define name="buttons">
           <wi:commandButton
             id="bloqueioButton"
             rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
             value="#{messages['usuario.bloquear']}"
             action="bloqueioUsuarioCrudAction.bloquear"
-            reRender="historicoBloqueioUsuario, pageBodyDialogMessage"
-          />
+            reRender="historicoBloqueioUsuario, pageBodyDialogMessage" />
           <wi:commandButton
             id="desbloqueioButton"
             rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
             value="#{messages['usuario.desbloquear']}"
             action="bloqueioUsuarioCrudAction.desbloquear"
-            reRender="historicoBloqueioUsuario, pageBodyDialogMessage"
-          />
+            reRender="historicoBloqueioUsuario, pageBodyDialogMessage" />
         </ui:define>
       </wi:dataForm>
       <s:div>
@@ -371,30 +320,25 @@
           tableTitle="#{messages['bloqueioUsuario.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
           id="bloqueioUsuarioList"
           rowId="#{row.idBloqueioUsuario}"
-          showToolbarColumn="false"
-        >
+          showToolbarColumn="false">
           <ui:define name="headerToolBar" />
           <ui:define name="toolBar" />
           <wi:columnDateTime
             columnId="dataBloqueio"
             columnHeader="#{messages['bloqueioUsuario.dataBloqueio']}"
-            value="#{row.dataBloqueio}"
-          />
+            value="#{row.dataBloqueio}" />
           <wi:columnDateTime
             columnId="dataPrevisaoDesbloqueio"
             columnHeader="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
-            value="#{row.dataPrevisaoDesbloqueio}"
-          />
+            value="#{row.dataPrevisaoDesbloqueio}" />
           <wi:columnOutputText
             columnId="motivoBloqueio"
             columnHeader="#{messages['bloqueioUsuario.motivoBloqueio']}"
-            value="#{row.motivoBloqueio}"
-          />
+            value="#{row.motivoBloqueio}" />
           <wi:columnDateTime
             columnId="dataDesbloqueio"
             columnHeader="#{messages['bloqueioUsuario.dataDesbloqueio']}"
-            value="#{row.dataDesbloqueio}"
-          />
+            value="#{row.dataDesbloqueio}" />
         </wi:dataTable>
       </s:div>
     </infox:tab>

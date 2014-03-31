@@ -92,9 +92,8 @@ public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLoca
 
     @Override
     public String remove(final UsuarioLocalizacao usuarioLocalizacao) {
-        setInstance(usuarioLocalizacao);
-        final String ret = super.remove(getInstance());
-        newInstance();
+        usuarioGerenciado.getUsuarioLocalizacaoList().remove(usuarioLocalizacao);
+        final String ret = super.remove(usuarioLocalizacao);
         return ret;
     }
 
