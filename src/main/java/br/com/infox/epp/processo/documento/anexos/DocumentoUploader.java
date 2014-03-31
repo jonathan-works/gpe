@@ -106,13 +106,15 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     @Override
     protected ProcessoDocumento gravarDocumento() throws DAOException {
+        String texto = InfoxPdfReader.readPdfFromInputStream(inputStream);
         ProcessoDocumento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+        bin().setModeloDocumento(texto);
         documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
             try {
                 InfoxDocumentIndexer indexer = new InfoxDocumentIndexer();
                 Map<String, String> fields = new HashMap<String, String>();
                 Map<String, String> storedfields = new HashMap<String, String>();
-                fields.put("conteudo", InfoxPdfReader.readPdfFromInputStream(inputStream));
+                fields.put("conteudo", texto);
                 storedfields.put("nomeArquivo", pd.getProcessoDocumento());
                 storedfields.put("idProcesso", pd.getProcesso().getIdProcesso() + "");
                 if (TaskInstanceHome.instance().getTaskId() != null) {
