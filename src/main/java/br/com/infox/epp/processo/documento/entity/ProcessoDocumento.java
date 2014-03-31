@@ -52,7 +52,7 @@ import br.com.infox.epp.processo.entity.Processo;
     @NamedQuery(name = LIST_ANEXOS_PUBLICOS, query = LIST_ANEXOS_PUBLICOS_QUERY),
     @NamedQuery(name = NEXT_SEQUENCIAL, query = NEXT_SEQUENCIAL_QUERY) })
 @Analyzer(impl = BrazilianAnalyzer.class)
-@Indexed
+@Indexed(index="IndexProcessoDocumento")
 public class ProcessoDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

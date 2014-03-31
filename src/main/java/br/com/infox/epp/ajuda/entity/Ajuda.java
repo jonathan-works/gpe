@@ -48,7 +48,7 @@ import br.com.infox.epp.search.Reindexer;
     @NamedQuery(name = AJUDA_FIND_ALL, query = AJUDA_FIND_ALL_QUERY),
     @NamedQuery(name = AJUDA_BY_URL, query = AJUDA_BY_URL_QUERY) })
 @Analyzer(impl = BrazilianAnalyzer.class)
-@Indexed
+@Indexed(index="IndexAjuda")
 public class Ajuda implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
