@@ -1,11 +1,9 @@
 package br.com.infox.ibpm.task.home;
 
-import java.text.ParseException;
+import java.text.DateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.swing.text.DateFormatter;
 
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
@@ -48,11 +46,10 @@ final class TaskVariableResolver extends TaskVariable {
             }
         } else if ("date".equals(type) && value != null) {
             try {
-                value = new DateFormatter().valueToString(value);
-            } catch (ParseException e) {
+                value = DateFormat.getDateInstance( DateFormat.MEDIUM).format(value);
+            } catch (IllegalArgumentException e) {
                 LOG.warn(".resolveWhenDate()", e);
             }
-            
         }
     }
 
