@@ -7,13 +7,11 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:wi="http://www.itx.com.br/jsf"
->
+  xmlns:wi="http://www.itx.com.br/jsf">
   <s:decorate
     id="#{id}Decoration"
     template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-    rendered="#{empty rendered or rendered}"
-  >
+    rendered="#{empty rendered or rendered}">
     <ui:define name="label">#{label}</ui:define>
     <h:selectOneRadio
       id="#{id}"
@@ -22,18 +20,15 @@
       required="#{required}"
       onchange="#{onchange}"
       onclick="#{onclick}"
-      styleClass="radio"
-      boxChecked="#{sim ? 0 : 1}"
-    >
+      styleClass="radio">
       <f:selectItems
-        value="#{selectItemFunctions.createFromString('true:crud.yes,false:crud.no') }"
-      />
+        value="#{selectItemFunctions.createFromString('true:crud.yes,false:crud.no') }" />
       <ui:insert />
     </h:selectOneRadio>
     <h:outputScript>
       invoke(["infox.escapeId"],function(EscapeId) {
       	$(EscapeId("##{rich:clientId(id)}:#{empty boxChecked ? 0 : boxChecked}"))
-      	.attr({checked:true});
+      	.attr({checked:#{empty value ? true : value}});
       });
 	</h:outputScript>
   </s:decorate>
