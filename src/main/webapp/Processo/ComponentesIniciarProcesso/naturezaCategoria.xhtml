@@ -25,17 +25,17 @@
                         rendered="#{row.hasItens()}"
                         action="#{action.onSelectNatCatFluxo(row)}">
                         <h:graphicImage
-                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif"
-                            title="Processo com itens" />
+                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif" />
                     </h:commandLink>
                     <a:commandLink
                         rendered="#{not row.hasItens() and row.necessitaPartes()}"
                         action="#{action.onSelectNatCatFluxo(row)}"
                         oncomplete="#{partesController.setNatureza(action.natureza)}"
-                        execute="@this" render="@all" limitRender="true">
+                        execute="@this"
+                        render="@all"
+                        limitRender="true">
                         <h:graphicImage
-                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif"
-                            title="Processo sem itens mas com partes" />
+                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif" />
                     </a:commandLink>
                     <a:commandLink
                         rendered="#{not row.hasItens() and not row.necessitaPartes()}"
@@ -45,8 +45,7 @@
                         limitRender="true"
                         oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{pathResolver.contextPath}/Painel/list.seam';">
                         <h:graphicImage
-                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif"
-                            title="Processo sem itens e sem partes" />
+                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif" />
                     </a:commandLink>
                 </ui:define>
                 <wi:columnOutputText
