@@ -53,13 +53,14 @@
                         <h:graphicImage
                             title="#{messages['process.timer.remove']}"
                             url="#{a4jSkin.imgFolder}/remove.png"
+                            styleClass="cursor-pointer"
                         >
                             <a:ajax
                                 event="click"
                                 listener="#{node.removeTimer(row)}"
                                 onbeforesubmit="if(!confirm('Confirma?')) return false;"
                                 execute="@this"
-                                render="timersDiv"
+                                render="timersDiv,timerDiv"
                                 limitRender="true"
                             />
                         </h:graphicImage>
