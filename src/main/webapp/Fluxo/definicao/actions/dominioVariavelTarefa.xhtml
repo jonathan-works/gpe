@@ -86,7 +86,9 @@
                                     value="#{dominioVariavelTarefaCrudAction.instance.nome}" required="true"/>
                         <wi:inputTextarea id="dominio" label="#{messages['dominioVariavelTarefa.dominio']}"
                             required="true" value="#{dominioVariavelTarefaCrudAction.instance.dominio}" 
-                            showCounter="false"/>
+                            showCounter="false">
+                            <f:validator validatorId="dominioVariavelTarefaValidator" />
+                        </wi:inputTextarea>
                             
                         <ui:define name="buttons">
                             <wi:commandButtonSave reRender="defaultTabPanel pageBodyDialogMessage" />
