@@ -17,7 +17,8 @@ public interface LocalizacaoQuery {
     String QUERY_PARAM_ID_LOCALIZACAO = "idLocalizacao";
 
     String LOCALIZACOES_ESTRUTURA = "localizacoesEstrutura";
-    String LOCALIZACOES_ESTRUTURA_QUERY = "select o from Localizacao o where o.estrutura = true order by o.localizacao";
+    String LOCALIZACOES_ESTRUTURA_QUERY = "select o from Localizacao o where o.estrutura = true and o.caminhoCompleto like concat(:"
+            + CAMINHO_COMPLETO + ",'%') order by o.localizacao";
 
     String LOCALIZACOES_BY_IDS = "Localizacao.localizacoesByIds";
     String LOCALIZACOES_BY_IDS_QUERY = "select o from Localizacao o where o.idLocalizacao in :"

@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.api.Authenticator.getLocalizacaoAtual;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
@@ -26,7 +27,9 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
     public static final String NAME = "localizacaoDAO";
 
     public List<Localizacao> getLocalizacoesEstrutura() {
-        return getNamedResultList(LOCALIZACOES_ESTRUTURA);
+        final Map<String, Object> params = new HashMap<>();
+        params.put(CAMINHO_COMPLETO, getLocalizacaoAtual().getCaminhoCompleto());
+        return getNamedResultList(LOCALIZACOES_ESTRUTURA, params);
     }
 
     public List<Localizacao> getLocalizacoes(final Collection<Integer> ids) {
