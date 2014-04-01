@@ -2,6 +2,7 @@ package br.com.infox.epp.system.variables;
 
 import static br.com.infox.epp.access.api.Authenticator.getLocalizacaoAtual;
 import static br.com.infox.epp.access.api.Authenticator.getUsuarioLocalizacaoAtual;
+import static br.com.infox.epp.access.api.Authenticator.getPapelAtual;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -15,6 +16,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.home.ProcessoHome;
 
 /**
@@ -26,12 +28,13 @@ import br.com.infox.epp.processo.home.ProcessoHome;
 @Name(ExternalVariables.NAME)
 @Scope(ScopeType.EVENT)
 public class ExternalVariables implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     private static final String NULL_STRING = "-";
     private static final int INT_ZERO_VALUE = 0;
 
+    private static final String PARTES_PROCESSO_ATUAL = "partesProcessoAtual";
+    private static final String PAPEL_USUARIO_LOGADO = "papelUsuarioLogado";
     private static final String NUMERO_PROCESSO_ATUAL = "numeroProcessoAtual";
     private static final String USUARIO_LOGADO = "usuarioLogado";
     private static final String LOCALIZACAO_USUARIO_LOGADO = "localizacaoUsuarioLogado";
@@ -60,6 +63,11 @@ public class ExternalVariables implements Serializable {
     public String getLocalizacaoUsuarioLogado() {
         return extractObjectStringValue(getLocalizacaoAtual());
     }
+    
+    @Factory(PAPEL_USUARIO_LOGADO)
+    public String getPapelUsuarioLogado() {
+        return extractObjectStringValue(getPapelAtual());
+    }
 
     @Factory(PERFIL_USUARIO_LOGADO)
     public String getPerfilUsuarioLogado() {
@@ -75,6 +83,19 @@ public class ExternalVariables implements Serializable {
             result = NULL_STRING;
         } else {
             result = processo.getNumeroProcesso();
+        }
+        return result;
+    }
+    
+    @Factory(PARTES_PROCESSO_ATUAL)
+    public String getPartesProcessoAtual() {
+        final ProcessoEpa processo = (ProcessoEpa) ((ProcessoHome) Component
+                .getInstance(ProcessoHome.NAME)).getInstance();
+        String result;
+        if (processo == null) {
+            result = NULL_STRING;
+        } else {
+            result = extractObjectStringValue(processo.getPartes());
         }
         return result;
     }
