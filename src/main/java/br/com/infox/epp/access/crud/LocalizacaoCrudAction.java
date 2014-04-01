@@ -42,7 +42,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
         if (isEstrutura != null) {
             if (isEstrutura) {
                 localizacao.setEstruturaFilho(null);
-                localizacao.setLocalizacaoPai(null);
+                localizacao.setLocalizacaoPai(Authenticator.getLocalizacaoAtual());
             } else {
                 final Localizacao localizacaoPai = localizacao.getLocalizacaoPai();
                 if (localizacaoPai != null
