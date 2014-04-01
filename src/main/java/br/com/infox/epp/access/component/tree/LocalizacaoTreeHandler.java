@@ -19,8 +19,7 @@ public class LocalizacaoTreeHandler extends AbstractTreeHandler<Localizacao> {
 
     @Override
     protected String getQueryRoots() {
-        return "select n from Localizacao n " + "where localizacaoPai is null "
-                + "order by localizacao";
+        return "select n from Localizacao n where n=#{authenticator.getLocalizacaoAtual()} order by n.localizacao";
     }
 
     @Override
