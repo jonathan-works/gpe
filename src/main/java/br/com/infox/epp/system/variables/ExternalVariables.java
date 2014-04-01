@@ -14,6 +14,14 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.access.api.Authenticator;
 
+/**
+ * @author erikliberal
+ * Classe criada para gerenciar variáveis que deverão ser
+ * utilizadas pelo usuário final, a exemplo em modelos de
+ * documento. Por motivos de segurança todos os valores
+ * resultantes devem ser tipos primitivos ou encapsulamento de
+ * valores primitivos
+ */
 @Name(ExternalVariables.NAME)
 @Scope(ScopeType.EVENT)
 public class ExternalVariables implements Serializable {
