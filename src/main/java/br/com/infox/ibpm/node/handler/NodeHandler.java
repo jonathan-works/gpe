@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jbpm.graph.def.Action;
@@ -16,6 +17,7 @@ import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
 
+import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.jbpm.event.EventHandler;
 
@@ -214,6 +216,7 @@ public class NodeHandler implements Serializable {
         e.addAction(c);
     }
 
+    @SuppressWarnings(WarningConstants.UNCHECKED)
     public void removeTimer(CreateTimerAction timer) {
         if (timer.equals(currentTimer)) {
             currentTimer = null;
@@ -221,7 +224,15 @@ public class NodeHandler implements Serializable {
         timerList.remove(timer);
         Event e = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
         e.removeAction(timer);
-
+        e = node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
+        Iterator<Action> it = e.getActions().iterator();
+        while (it.hasNext()) {
+            Action action = it.next();
+            if (action instanceof CancelTimerAction && ((CancelTimerAction) action).getTimerName().equals(timer.getTimerName())) {
+                e.removeAction(action);
+            }
+            break;
+        }
     }
 
     public void setDueDateValue(String dueDateValue) {
