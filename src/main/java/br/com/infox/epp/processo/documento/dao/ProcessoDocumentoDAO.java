@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.dao;
 
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.ID_JDBPM_TASK_PARAM;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
@@ -73,7 +74,7 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         return (FullTextEntityManager) super.getEntityManager();
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(UNCHECKED)
     public List<ProcessoDocumento> pesquisar(String searchPattern) {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
