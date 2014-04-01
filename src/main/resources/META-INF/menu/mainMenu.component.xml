@@ -6,10 +6,11 @@
     <component name="mainMenu" class="br.com.infox.epp.access.component.menu.Menu" scope="session">
 
         <property name="items">
-            <value>menu.fluxos/categoria.menuText:/Categoria/listView.seam</value>
             <value>menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
-            <value>menu.fluxos/item.menuText:/Item/listView.seam</value>
-            <value>menu.fluxos/natureza.menuText:/Natureza/listView.seam</value>
+            <value>menu.fluxos/menu.agrupamento/natureza.menuText:/Natureza/listView.seam</value>
+            <value>menu.fluxos/menu.agrupamento/categoria.menuText:/Categoria/listView.seam</value>
+            <value>menu.fluxos/menu.agrupamento/item.menuText:/Item/listView.seam</value>
+            
             
             <value>menu.documentos/menu.modeloDocumento/grupoModeloDocumento.menuText:/GrupoModeloDocumento/listView.seam</value>
             <value>menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>
