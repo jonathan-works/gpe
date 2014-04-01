@@ -1,38 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:a="http://richfaces.org/a4j"
     xmlns:wi="http://www.itx.com.br/jsf">
-
     <h:form id="NaturezaCategoriaForm">
         <s:div
             rendered="#{!action.renderedByItem and !action.renderizarCadastroPartes}">
-            <wi:dataTable values="#{natCatProcessoList.list(15)}"
-                bean="#{natCatProcessoList}" tableTitle=""
+            <wi:dataTable
+                values="#{natCatProcessoList.list(15)}"
+                bean="#{natCatProcessoList}"
+                tableTitle=""
                 id="natCatProcessoList"
                 rowId="#{row.idNaturezaCategoriaFluxo}"
                 searchFormStyleClass="hidden">
                 <ui:define name="headerToolBar" />
                 <ui:define name="toolBar">
                     <h:commandLink
+                        rendered="#{row.hasItens()}"
                         action="#{action.onSelectNatCatFluxo(row)}">
-                        <h:graphicImage value="#{a4jSkin.imgFolder}/jbpm/StartState.gif" />
+                        <h:graphicImage
+                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif"
+                            title="Processo com itens" />
                     </h:commandLink>
+                    <a:commandLink
+                        rendered="#{not row.hasItens() and row.necessitaPartes()}"
+                        action="#{action.onSelectNatCatFluxo(row)}"
+                        oncomplete="#{partesController.setNatureza(action.natureza)}"
+                        execute="@this" render="@all" limitRender="true">
+                        <h:graphicImage
+                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif"
+                            title="Processo sem itens mas com partes" />
+                    </a:commandLink>
+                    <a:commandLink
+                        rendered="#{not row.hasItens() and not row.necessitaPartes()}"
+                        action="#{action.onSelectNatCatFluxo(row)}"
+                        execute="@this"
+                        render="@this"
+                        limitRender="true"
+                        oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{pathResolver.contextPath}/Painel/list.seam';">
+                        <h:graphicImage
+                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif"
+                            title="Processo sem itens e sem partes" />
+                    </a:commandLink>
                 </ui:define>
-                <wi:columnOutputText columnId="natureza"
+                <wi:columnOutputText
+                    columnId="natureza"
                     columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
                     value="#{row.natureza}" />
-                <wi:columnOutputText columnId="categoria"
+                <wi:columnOutputText
+                    columnId="categoria"
                     columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
                     value="#{row.categoria}" />
-                <wi:columnOutputText columnId="fluxo"
+                <wi:columnOutputText
+                    columnId="fluxo"
                     columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
                     value="#{row.fluxo}" />
-
             </wi:dataTable>
         </s:div>
     </h:form>

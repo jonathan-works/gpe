@@ -147,7 +147,7 @@ public class ProcessoEpa extends Processo {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_item_processo", nullable = false)
+    @JoinColumn(name = "id_item_processo")
     public Item getItemDoProcesso() {
         return itemDoProcesso;
     }

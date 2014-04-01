@@ -58,13 +58,15 @@ public class IniciarProcessoAction {
         enviarProcessoParaJbpm();
     }
 
-    public void iniciarProcesso(List<PessoaFisica> pessoasFisicas, List<PessoaJuridica> pessoasJuridicas) {
+    public void iniciarProcesso(List<PessoaFisica> pessoasFisicas,
+            List<PessoaJuridica> pessoasJuridicas) {
         newProcessoEpa();
         inserirPartes(pessoasFisicas, pessoasJuridicas);
         enviarProcessoParaJbpm();
     }
 
-    private void inserirPartes(List<PessoaFisica> pessoasFisicas, List<PessoaJuridica> pessoasJuridicas) {
+    private void inserirPartes(List<PessoaFisica> pessoasFisicas,
+            List<PessoaJuridica> pessoasJuridicas) {
         if (necessitaPartes()) {
             for (PessoaFisica p : pessoasFisicas) {
                 processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
@@ -110,7 +112,13 @@ public class IniciarProcessoAction {
                 itemList.add(new ItemBean(ca.getItem()));
             }
             if (itemList.isEmpty()) {
-                getMessagesHandler().add(Severity.ERROR, "Não há itens cadastrados para a categoria escolhida");
+                if (!necessitaPartes()) {
+                    iniciarProcesso();
+                    redirectIfExternalUser();
+                } else {
+                    renderizarCadastroPartes = Boolean.TRUE;
+                    renderedByItem = Boolean.FALSE;
+                }
             } else {
                 setRenderedByItem(Boolean.TRUE);
             }
@@ -122,16 +130,20 @@ public class IniciarProcessoAction {
         renderedByItem = hasSelectedItem();
         if (!necessitaPartes()) {
             iniciarProcesso();
-            if (Authenticator.instance().isUsuarioExterno()) {
-                final Redirect redirect = Redirect.instance();
-                redirect.setViewId("/Processo/movimentar.seam");
-                redirect.setParameter("cid", Conversation.instance().getId());
-                redirect.setParameter("idProcesso", getProcessoEpa().getIdProcesso());
-                redirect.execute();
-            }
+            redirectIfExternalUser();
         } else {
             renderizarCadastroPartes = Boolean.TRUE;
             renderedByItem = Boolean.FALSE;
+        }
+    }
+
+    private void redirectIfExternalUser() {
+        if (Authenticator.instance().isUsuarioExterno()) {
+            final Redirect redirect = Redirect.instance();
+            redirect.setViewId("/Processo/movimentar.seam");
+            redirect.setParameter("cid", Conversation.instance().getId());
+            redirect.setParameter("idProcesso", getProcessoEpa().getIdProcesso());
+            redirect.execute();
         }
     }
 

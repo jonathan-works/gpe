@@ -53,7 +53,7 @@ public class PartesProcessoController extends AbstractPartesController {
     private Natureza getNatureza() {
         return processoEpa.getNaturezaCategoriaFluxo().getNatureza();
     }
-    
+
     public List<ParteProcesso> getPartesFisicas() {
         List<ParteProcesso> fisicas = filtrar(processoEpa.getPartes(), TipoPessoaEnum.F);
         if (Authenticator.isUsuarioAtualResponsavel()) {
@@ -71,10 +71,11 @@ public class PartesProcessoController extends AbstractPartesController {
             return getPartesAtivas(juridicas);
         }
     }
-    
-    private List<ParteProcesso> filtrar(List<ParteProcesso> partes, TipoPessoaEnum tipoParte) {
+
+    private List<ParteProcesso> filtrar(List<ParteProcesso> partes,
+            TipoPessoaEnum tipoParte) {
         List<ParteProcesso> filtrado = new ArrayList<ParteProcesso>();
-        for (ParteProcesso parte: partes) {
+        for (ParteProcesso parte : partes) {
             if (tipoParte.equals(parte.getPessoa().getTipoPessoa())) {
                 filtrado.add(parte);
             }
@@ -124,19 +125,21 @@ public class PartesProcessoController extends AbstractPartesController {
     @Override
     public boolean podeAdicionarPartesFisicas() {
         return getNatureza().getHasPartes()
+                && !apenasPessoaJuridica()
                 && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
     }
-    
+
     @Override
     public boolean podeAdicionarPartesJuridicas() {
         return getNatureza().getHasPartes()
+                && !apenasPessoaFisica()
                 && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
     }
 
     public boolean podeInativarPartesFisicas() {
         return getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
     }
-    
+
     public boolean podeInativarPartesJuridicas() {
         return getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
     }

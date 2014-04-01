@@ -104,7 +104,7 @@ public class PartesController extends AbstractPartesController {
     public void removePessoaFisica(PessoaFisica pessoa) {
         pessoasFisicas.remove(pessoa);
     }
-    
+
     private void includePessoaJuridica(PessoaJuridica pessoa) {
         if (!getPessoasJuridicas().contains(pessoa)) {
             getPessoasJuridicas().add(pessoa);
@@ -121,18 +121,19 @@ public class PartesController extends AbstractPartesController {
     @Override
     public boolean podeAdicionarPartesFisicas() {
         return hasPartes()
+                && !apenasPessoaJuridica()
                 && (natureza.getNumeroPartesFisicas() == 0 || pessoasFisicas.size() < natureza.getNumeroPartesFisicas());
     }
 
     @Override
     public boolean podeAdicionarPartesJuridicas() {
         return hasPartes()
+                && !apenasPessoaFisica()
                 && (natureza.getNumeroPartesJuridicas() == 0 || getPessoasJuridicas().size() < natureza.getNumeroPartesJuridicas());
     }
 
     private boolean hasPartes() {
-        return natureza != null
-                && natureza.getHasPartes();
+        return natureza != null && natureza.getHasPartes();
     }
 
 }

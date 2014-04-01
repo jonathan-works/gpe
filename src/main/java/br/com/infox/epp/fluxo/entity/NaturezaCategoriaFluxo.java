@@ -171,5 +171,15 @@ public class NaturezaCategoriaFluxo implements Serializable {
     public boolean isAtivo() {
         return true;
     }
+    
+    @Transient
+    public boolean hasItens() {
+        return !getCategoria().getCategoriaItemList().isEmpty();
+    }
+    
+    @Transient
+    public boolean necessitaPartes() {
+        return getNatureza().getHasPartes();
+    }
 
 }
