@@ -60,7 +60,7 @@ public class JpdlXmlWriter {
     private Writer writer = null;
     private List<String> problems = new ArrayList<String>();
     private boolean useNamespace = true;
-    private Map<String, CreateTimerAction> timers;
+    private Map<String, Action> timers;
 
     public JpdlXmlWriter(Writer writer) {
         if (writer == null) {
@@ -299,7 +299,7 @@ public class JpdlXmlWriter {
     }
 
     private void writeNode(Element element, org.jbpm.graph.def.Node node) {
-        timers = new HashMap<String, CreateTimerAction>();
+        timers = new HashMap<>();
         if (node.getDescription() != null) {
             Element description = addElement(element, "description");
             description.addCDATA(node.getDescription());
@@ -408,26 +408,10 @@ public class JpdlXmlWriter {
 
     private boolean writeAction(Element parentElement, Action action) {
         boolean valid = false;
-        if (action instanceof CreateTimerAction) {
-            CreateTimerAction timer = (CreateTimerAction) action;
-            timers.put(timer.getTimerName(), timer);
+        if (writeTimer(parentElement, action)) {
             return false;
         }
-        if (action instanceof CancelTimerAction) {
-            CancelTimerAction cancel = (CancelTimerAction) action;
-            String name = cancel.getTimerName();
-            CreateTimerAction create = timers.get(name);
-            if (create == null) {
-                return false;
-            }
-            Element node = parentElement.getParent();
-            Element timer = addElement(node, "timer");
-            timer.addAttribute(ELEMENT_NAME, name);
-            timer.addAttribute("duedate", create.getDueDate());
-            timer.addAttribute("repeat", create.getRepeat());
-            timer.addAttribute("transition", create.getTransitionName());
-            return false;
-        }
+        
         String actionName = ActionTypes.getActionName(action.getClass());
         Element actionElement = parentElement.addElement(actionName);
 
@@ -453,6 +437,45 @@ public class JpdlXmlWriter {
             }
         }
         return valid;
+    }
+
+    private boolean writeTimer(Element parentElement, Action action) {
+        String name;
+        boolean isCreateTimer = false;
+        
+        if (action instanceof CreateTimerAction) {
+            CreateTimerAction timer = (CreateTimerAction) action;
+            name = timer.getTimerName();
+            isCreateTimer = true;
+        } else if (action instanceof CancelTimerAction) {
+            CancelTimerAction timer = (CancelTimerAction) action;
+            name = timer.getTimerName();
+        } else {
+            return false;
+        }
+        
+        Action firstTimer = timers.get(name);
+        
+        if (firstTimer == null) {
+            timers.put(name, action);
+        } else {
+            CreateTimerAction create;
+            if (isCreateTimer) {
+                create = (CreateTimerAction) action;
+            } else {
+                create = (CreateTimerAction) firstTimer;
+            }
+            
+            Element node = parentElement.getParent();
+            Element timer = addElement(node, "timer");
+            timer.addAttribute(ELEMENT_NAME, name);
+            timer.addAttribute("duedate", create.getDueDate());
+            timer.addAttribute("repeat", create.getRepeat());
+            timer.addAttribute("transition", create.getTransitionName());
+            return true;
+        }
+        
+        return false;
     }
 
     private void writeComment(Element element, String comment) {
