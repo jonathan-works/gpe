@@ -56,6 +56,8 @@ import br.com.infox.epp.search.SearchHandler;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
+import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
+import br.com.infox.ibpm.task.entity.TaskConteudo;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.jsf.function.ElFunctions;
@@ -326,14 +328,35 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public void updateIndex() {
-        String conteudo = Reindexer.getTextoIndexavel(SearchHandler.getConteudo(taskInstance));
-        try {
-            Indexer indexer = new Indexer();
-            Map<String, String> fields = new HashMap<String, String>();
-            fields.put("conteudo", conteudo);
-            indexer.index(taskInstance.getId() + "", new HashMap<String, String>(), fields);
-        } catch (IOException e) {
-            LOG.error(".updateIndex()", e);
+        // String conteudo =
+        // Reindexer.getTextoIndexavel(SearchHandler.getConteudo(taskInstance));
+        // try {
+        // Indexer indexer = new Indexer();
+        // Map<String, String> fields = new HashMap<String, String>();
+        // fields.put("conteudo", conteudo);
+        // indexer.index(taskInstance.getId() + "", new HashMap<String,
+        // String>(), fields);
+        // } catch (IOException e) {
+        // LOG.error(".updateIndex()", e);
+        // }
+        TaskConteudoDAO taskConteudoDAO = ComponentUtil.getComponent(TaskConteudoDAO.NAME);
+        TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
+        if (taskConteudo != null) {
+            try {
+                taskConteudoDAO.update(taskConteudo);
+            } catch (DAOException e) {
+                LOG.error("Não foi possível reindexar o conteúdo da TaskInstance "
+                        + getTaskId(), e);
+            }
+        } else {
+            taskConteudo = new TaskConteudo();
+            taskConteudo.setIdTaskInstance(getTaskId());
+            try {
+                taskConteudoDAO.persist(taskConteudo);
+            } catch (DAOException e) {
+                LOG.error("Não foi possível indexar o conteúdo da TaskInstance "
+                        + getTaskId(), e);
+            }
         }
     }
 
