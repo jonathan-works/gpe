@@ -39,7 +39,8 @@
                             tableTitle="#{messages['dominioVariavelTarefa.list']}">
                             
                             <ui:define name="searchForm">
-                                <wi:searchForm formId="pesquisarDominioVariavelTarefaForm" formTitle="#{messages['dominioVariavelTarefa.form']}">
+                                <wi:searchForm formId="pesquisarDominioVariavelTarefaForm" formTitle="#{messages['dominioVariavelTarefa.form']}"
+                                    searchReRender="search" clearReRender="search">
                                     <wi:inputText id="nome" label="#{messages['dominioVariavelTarefa.nome']}"
                                         value="#{dominioVariavelTarefaList.entity.nome}" />
                                 </wi:searchForm>
