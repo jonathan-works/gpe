@@ -368,7 +368,9 @@ public class Authenticator {
      */
     public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
         UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_ATUAL);
-        usuarioLocalizacao = getUsuarioLocalizacaoDAO().find(usuarioLocalizacao.getIdUsuarioLocalizacao());
+        if (usuarioLocalizacao != null) {
+            usuarioLocalizacao = getUsuarioLocalizacaoDAO().find(usuarioLocalizacao.getIdUsuarioLocalizacao());
+        }
         return usuarioLocalizacao;
     }
 
