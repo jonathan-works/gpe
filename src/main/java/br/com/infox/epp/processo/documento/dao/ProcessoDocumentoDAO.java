@@ -12,7 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.lucene.search.Query;
+import org.hibernate.Session;
+import org.hibernate.search.FullTextQuery;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
@@ -21,6 +29,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.hibernate.session.SessionAssistant;
 
 @Name(ProcessoDocumentoDAO.NAME)
 @AutoCreate
@@ -28,6 +37,9 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
+    
+    @In
+    private SessionAssistant sessionAssistant;
 
     public Integer getNextSequencial(Processo processo) {
         Map<String, Object> parameters = new HashMap<>();
@@ -55,5 +67,19 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
             query = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
         }
         return getNamedResultList(query, parameters);
+    }
+    
+    protected FullTextEntityManager getFullTextEntityManager() {
+        return (FullTextEntityManager) super.getEntityManager();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<ProcessoDocumento> pesquisar(String searchPattern) {
+        Session session = sessionAssistant.getSession();
+        FullTextSession fullTextSession = Search.getFullTextSession(session);
+        final QueryBuilder queryBuilder = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(ProcessoDocumento.class).get();
+        Query luceneQuery = queryBuilder.keyword().onField("texto").matching(searchPattern).createQuery();
+        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery);
+        return hibernateQuery.list();
     }
 }

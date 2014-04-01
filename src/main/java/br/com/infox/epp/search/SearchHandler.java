@@ -276,5 +276,13 @@ public class SearchHandler implements Serializable {
         }
         return texto;
     }
+    
+    public String getTab() {
+        return "documentos";
+    }
+    
+    public void setTab(String tab) {
+        
+    }
 
 }
