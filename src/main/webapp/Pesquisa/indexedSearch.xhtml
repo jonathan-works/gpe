@@ -65,7 +65,7 @@
                                     <s:link
                                         target="_blank"
                                         view="/Processo/Consulta/paginator.xhtml"
-                                        value="Processo: #{processoSearcher.getNumeroProcesso(document.processo.idProcesso)} - #{document.idJbpmTask}">
+                                        value="Processo: #{processoSearcher.getNumeroProcesso(document.processo.idProcesso)} #{processoDocumentoSearch.getNameTarefa(document.idJbpmTask)}">
                                         <f:param
                                             name="inicio"
                                             value="0" />
