@@ -50,7 +50,7 @@ public class ProcessoDocumentoSearch {
         this.resultadoPesquisa = resultadoPesquisa;
     }
 
-    public void pesquisar() {
+    private void pesquisar() {
         setResultadoPesquisa(processoDocumentoDAO.pesquisar(getPalavraPesquisada()));
     }
 

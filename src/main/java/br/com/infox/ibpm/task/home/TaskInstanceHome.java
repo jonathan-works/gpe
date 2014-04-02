@@ -341,6 +341,7 @@ public class TaskInstanceHome implements Serializable {
         // }
         TaskConteudoDAO taskConteudoDAO = ComponentUtil.getComponent(TaskConteudoDAO.NAME);
         TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
+        int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
         if (taskConteudo != null) {
             try {
                 taskConteudoDAO.update(taskConteudo);

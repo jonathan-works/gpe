@@ -26,6 +26,52 @@
                 immediate="true"
                 status=":status"
                 title="#{messages['indexedSearch.conteudo']}">
+                <div>
+                    <h:panelGroup
+                        rendered="#{taskConteudoSearch.resultadoPesquisa.size() gt 0}">
+                        <h:outputText
+                            value="#{search.firstRow} #{messages['indexedSearch.to']} #{search.lastRow}"
+                            style="font-weight: bold" />
+                        <h:outputText
+                            value=" #{messages['search.currentPage']} " />
+                    </h:panelGroup>
+                    <h:outputText
+                        value="#{taskConteudoSearch.resultadoPesquisa.size()}"
+                        style="font-weight: bold" />
+                    <h:outputText
+                        value=" #{messages['indexedSearch.about']} " />
+                    <h:outputText
+                        value="#{taskConteudoSearch.palavraPesquisada}"
+                        style="font-weight: bold" />
+                </div>
+                <h:form>
+                    <h:dataTable
+                        id="conteudoSearchResult"
+                        rows="#{taskConteudoSearch.pageSize}"
+                        rendered="#{! empty taskConteudoSearch.resultadoPesquisa}"
+                        value="#{taskConteudoSearch.resultadoPesquisa}"
+                        var="taskConteudo">
+                        <h:column>
+                            <div>
+                                <s:link
+                                    target="_blank"
+                                    view="/Processo/Consulta/paginator.xhtml"
+                                    value="Processo: #{taskConteudo.numeroProcesso} #{processoDocumentoSearch.getNameTarefa(taskConteudo.idTaskInstance)}">
+                                    <f:param
+                                        name="inicio"
+                                        value="0" />
+                                    <f:param
+                                        name="taskId"
+                                        value="#{taskConteudo.idTaskInstance}" />
+                                </s:link>
+                                <div>
+                                    <h:outputText
+                                        value="bestFragments" />
+                                </div>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
             </infox:tab>
             <infox:tab
                 id="documentos"
@@ -36,13 +82,13 @@
                 title="#{messages['indexedSearch.documentoTitleTab']}">
                 <s:div id="resultado">
                     <div>
-                        <div>#{messages['indexedSearch.documentos']}</div>
                         <h:panelGroup
                             rendered="#{processoDocumentoSearch.resultadoPesquisa.size() gt 0}">
                             <h:outputText
                                 value="#{search.firstRow} #{messages['indexedSearch.to']} #{search.lastRow}"
                                 style="font-weight: bold" />
-                            <h:outputText value=" de " />
+                            <h:outputText
+                                value=" #{messages['search.currentPage']} " />
                         </h:panelGroup>
                         <h:outputText
                             value="#{processoDocumentoSearch.resultadoPesquisa.size()}"

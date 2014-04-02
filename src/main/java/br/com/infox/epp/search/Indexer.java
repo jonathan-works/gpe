@@ -41,6 +41,7 @@ public class Indexer {
     private Directory directory;
     private static final LogProvider LOG = Logging.getLogProvider(Indexer.class);
 
+    @Deprecated
     public static File getIndexerPath() {
         String fileName = getIndexerFileName();
         if (fileName == null) {
@@ -54,14 +55,17 @@ public class Indexer {
         return new File(fileName);
     }
 
+    @Deprecated
     public Indexer() throws IOException {
         this(getIndexerPath());
     }
 
+    @Deprecated
     public Indexer(File indexPath) throws IOException {
         directory = FSDirectory.open(indexPath);
     }
     
+    @Deprecated
     public void updatePdfIndex(String conteudo, Long taskId, String nomeArquivo) {
         Map<String, String> fields = new HashMap<String, String>();
         Map<String, String> storedfields = new HashMap<String, String>();
@@ -70,6 +74,7 @@ public class Indexer {
         index(taskId + "", storedfields, fields);
     }
 
+    @Deprecated
     public void index(String id, Map<String, String> storedFields,
             Map<String, String> fields) {
         try {
@@ -91,6 +96,7 @@ public class Indexer {
 
     }
 
+    @Deprecated
     public List<Document> search(String searchText, String[] fields,
             int maxResult) {
         List<Document> list = new ArrayList<Document>();
@@ -113,15 +119,18 @@ public class Indexer {
         return list;
     }
 
+    @Deprecated
     public Query getQuery(String searchText, String[] fields) throws ParseException {
         QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, analyzer);
         return parser.parse(searchText);
     }
 
+    @Deprecated
     private static PathResolver getPathResolver() {
         return (PathResolver) Component.getInstance(PathResolver.NAME);
     }
 
+    @Deprecated
     private static String getIndexerFileName() {
         ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
         return elFunctions.evaluateExpression("indexerFileName");

@@ -29,10 +29,12 @@ import br.com.infox.seam.transaction.TransactionService;
 @Name("reindexer")
 @BypassInterceptors
 @Scope(ScopeType.EVENT)
+@Deprecated
 public class Reindexer {
 
     private static final LogProvider LOG = Logging.getLogProvider(Reindexer.class);
 
+    
     @SuppressWarnings(UNCHECKED)
     public void execute() {
         LOG.warn("----------- Criando indices de documentos das tarefas -------------");

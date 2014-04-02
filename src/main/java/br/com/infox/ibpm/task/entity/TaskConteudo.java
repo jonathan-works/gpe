@@ -6,7 +6,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import br.com.infox.core.persistence.ORConstants;
 
@@ -20,6 +23,8 @@ public class TaskConteudo {
     private Long idTaskInstance;
     private String conteudo;
 
+    private Integer numeroProcesso;
+
     @Id
     @Column(name="id_taskinstance", unique=true, nullable=false)
     @NotNull
@@ -32,12 +37,22 @@ public class TaskConteudo {
     }
 
     @Column(name="ds_conteudo", nullable=false)
+    @Field(index = Index.YES, store = Store.NO, name = "conteudo")
     public String getConteudo() {
         return conteudo;
     }
 
     public void setConteudo(String conteudo) {
         this.conteudo = conteudo;
+    }
+    
+    @Column(name="nr_processo", nullable=false)
+    public Integer getNumeroProcesso() {
+        return numeroProcesso;
+    }
+    
+    public void setNumeroProcesso(Integer numeroProcesso) {
+        this.numeroProcesso = numeroProcesso;
     }
 
 }

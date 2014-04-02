@@ -52,6 +52,8 @@ public class SearchHandler implements Serializable {
     private ProcessoDocumentoManager processoDocumentoManager;
     @In
     private ProcessoSearcher processoSearcher;
+    
+    private String tab;
 
     public String getSearchText() {
         return searchText;
@@ -278,11 +280,11 @@ public class SearchHandler implements Serializable {
     }
     
     public String getTab() {
-        return "documentos";
+        return tab;
     }
     
     public void setTab(String tab) {
-        
+        this.tab = tab;
     }
-
+    
 }
