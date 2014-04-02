@@ -46,7 +46,7 @@
             style="margin-left: 40px;" />
         <h:selectOneMenu
             value="#{processoHome.instance.prioridadeProcesso}">
-            <s:selectItems value="#{prioridadeProcessoList.list()}"
+            <s:selectItems value="#{prioridadeProcessoList.listAtivos()}"
                 var="p" label="#{p.descricaoPrioridade}"
                 showLabelSelecione="true" />
             <s:convertEntity />

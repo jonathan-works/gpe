@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.prioridade.manager;
 
+import java.util.List;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -16,4 +18,8 @@ public class PrioridadeProcessoManager extends Manager<PrioridadeProcessoDAO, Pr
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "prioridadeProcessoManager";
+    
+    public List<PrioridadeProcesso> listPrioridadesAtivas() {
+        return getDao().listPrioridadesAtivas();
+    }
 }

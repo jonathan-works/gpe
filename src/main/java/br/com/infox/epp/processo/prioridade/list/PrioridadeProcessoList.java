@@ -1,18 +1,19 @@
 package br.com.infox.epp.processo.prioridade.list;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
+import br.com.infox.epp.processo.prioridade.manager.PrioridadeProcessoManager;
 
 @Name(PrioridadeProcessoList.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
 public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso> {
 
@@ -22,6 +23,9 @@ public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso> {
 
     private static final String DEFAULT_EJBQL = "select o from PrioridadeProcesso o";
     private static final String DEFAULT_ORDER = "peso";
+    
+    @In
+    private PrioridadeProcessoManager prioridadeProcessoManager;
 
     @Override
     protected void addSearchFields() {
@@ -46,4 +50,7 @@ public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso> {
         return null;
     }
 
+    public List<PrioridadeProcesso> listAtivos() {
+        return prioridadeProcessoManager.listPrioridadesAtivas();
+    }
 }

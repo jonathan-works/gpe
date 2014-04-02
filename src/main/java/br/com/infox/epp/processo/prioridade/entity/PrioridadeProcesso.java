@@ -6,11 +6,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.com.infox.epp.processo.prioridade.query.PrioridadeProcessoQuery;
+
 @Entity
 @Table(schema = "public", name = PrioridadeProcesso.TABLE_NAME)
+@NamedQueries({
+    @NamedQuery(name = PrioridadeProcessoQuery.NAMED_QUERY_PRIORIDADES_ATIVAS, query = PrioridadeProcessoQuery.QUERY_PRIORIDADES_ATIVAS)
+})
 public class PrioridadeProcesso implements Serializable, Comparable<PrioridadeProcesso> {
 
     public static final String TABLE_NAME = "tb_prioridade_processo";
