@@ -116,6 +116,12 @@
                 action="#{parteProcessoList.entity.setProcesso(consultaController.processoEpa)}">
                 <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
             </infox:tab>
+            <div>
+            <button
+                onclick="infox.redirect({url:'#{pathResolver.contextPath}/Processo/Consulta/listView.seam'})"
+                class="buttons branco">#{messages['page.return']}</button>
+        </div>
         </infox:tabPanel>
+        
     </ui:define>
 </ui:composition>

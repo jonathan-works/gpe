@@ -60,7 +60,7 @@ textarea,select {
 	border-color:'#{a4jSkin.tableBorderColor}';
 	border-width:'#{a4jSkin.tableBorderWidth}';
 }
-.rf-dt-hdr,.rf-dt-shdr {
+.rf-dt-hdr,.rf-dt-shdr, .buttons.branco {
 	background-color:'#{a4jSkin.headerBackgroundColor}';
 }
 .rf-dt-hdr-c {
