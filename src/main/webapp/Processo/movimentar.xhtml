@@ -295,10 +295,10 @@
                         rows="10"
                         searchFormStyleClass="hidden">
                         <ui:define name="toolBar">
-                            <wi:toolBarInactive
+                            <wi:toolBarRemove
                                 id="toolBarInactivate"
                                 reRender="documentoFisicoDiv, pageBodyDialogMessage"
-                                actionInactive="localizacaoDocumentoFisicoCrudAction.inactive(row)" />
+                                actionRemove="localizacaoDocumentoFisicoCrudAction.remove(row)" />
                         </ui:define>
                         <ui:define name="headerToolBar" />
                         <wi:columnOutputText
