@@ -12,6 +12,9 @@
 	padding: 2px;
 	overflow: auto;
 }
+.full-sized.dtable-p.rf-p {
+  width:100%;
+}
 .dtable-p.rf-p {
 	display: inline-block;
 	width:calc(100% - 291px);
