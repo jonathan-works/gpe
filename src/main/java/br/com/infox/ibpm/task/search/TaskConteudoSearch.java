@@ -29,16 +29,17 @@ import br.com.infox.ibpm.task.entity.TaskConteudo;
 public class TaskConteudoSearch {
 
     public static final String NAME = "taskConteudoSearch";
-    
+
     @In
     private TaskConteudoDAO taskConteudoDAO;
-    @In private ProcessoManager processoManager;
-    
+    @In
+    private ProcessoManager processoManager;
+
     private static final Integer PAGE_SIZE = 15;
 
     private String palavraPesquisada;
     private List<TaskConteudo> resultadoPesquisa = new ArrayList<TaskConteudo>();
-    
+
     public Integer getPageSize() {
         return PAGE_SIZE;
     }
@@ -63,25 +64,27 @@ public class TaskConteudoSearch {
     private void pesquisar() {
         setResultadoPesquisa(taskConteudoDAO.pesquisar(getPalavraPesquisada()));
     }
-    
+
     public String getBestFragments(TaskConteudo taskConteudo) throws ParseException {
         String[] fields = new String[] { "conteudo" };
         QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, new BrazilianAnalyzer(Version.LUCENE_36));
         Query query = parser.parse(getPalavraPesquisada());
         return SearchService.getBestFragments(query, taskConteudo.getConteudo());
     }
-    
+
     /**
      * Método redireciona para visualização do processo escolhido no paginador
      * 
      * @param processo Processo a ser visualizado no paginador
      */
     public void visualizarProcesso(int idProcesso) {
-        Processo processo = processoManager.find(idProcesso);
-        Redirect.instance().setConversationPropagationEnabled(false);
-        Redirect.instance().setViewId("/Processo/Consulta/paginator.xhtml");
-        Redirect.instance().setParameter("id", processo.getIdProcesso());
-        Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
-        Redirect.instance().execute();
+        if (idProcesso != 0) {
+            Processo processo = processoManager.find(idProcesso);
+            Redirect.instance().setConversationPropagationEnabled(false);
+            Redirect.instance().setViewId("/Processo/Consulta/paginator.xhtml");
+            Redirect.instance().setParameter("id", processo.getIdProcesso());
+            Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
+            Redirect.instance().execute();
+        }
     }
 }

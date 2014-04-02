@@ -9,6 +9,7 @@ import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.P
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_TIPO_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.USUARIO_PARAM;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,13 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         final QueryBuilder queryBuilder = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(ProcessoDocumento.class).get();
         Query luceneQuery = queryBuilder.keyword().onField("texto").matching(searchPattern).createQuery();
         FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery);
-        return hibernateQuery.list();
+        List<ProcessoDocumento> temp = hibernateQuery.list();
+        List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
+        for (ProcessoDocumento documento : temp) {
+            if (documento.getAnexo()) {
+                ret.add(documento);
+            }
+        }
+        return ret;
     }
 }
