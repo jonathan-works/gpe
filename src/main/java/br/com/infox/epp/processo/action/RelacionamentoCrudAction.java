@@ -56,7 +56,7 @@ public class RelacionamentoCrudAction extends
 
     @Override
     protected boolean isInstanceValid() {
-        return (getInstance().getMotivo().trim().length() < 1)
+        return (getInstance().getMotivo().trim().length() > 0)
                 && (isManaged() || !relacionamentoProcessoManager
                         .existeRelacionamento(processo, processoRelacionado));
     }
