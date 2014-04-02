@@ -32,7 +32,7 @@ textarea,select {
 .buttons {
 	border-color:"#{a4jSkin.borderColorButton}";
 }
-.rf-cp-hdr.tree-hdr {
+.tree-hdr > .rf-cp-gr {
 	background-image:url("#{pathResolver.contextPath}#{a4jSkin.imgFolder}/tree.png");
 	background-color:transparent;
 }

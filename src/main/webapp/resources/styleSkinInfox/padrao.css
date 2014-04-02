@@ -428,14 +428,23 @@ select {
   border-width: 1px;
   border-radius: 5px;
 }
-
+.tree-cont {
+  min-width:200px;
+  position:relative;
+}
+.rf-cp-b.tree-b {
+  width:100%;
+  overflow:auto;
+}
 .rf-cp-hdr.tree-hdr {
-  border-width: 0px;
+  border:1px solid #c0c0c0;
   font-weight: normal;
+  padding: 0px;
+}
+.tree-hdr > .rf-cp-gr {
   background-size: auto 100%;
   background-position: right bottom;
   background-repeat:no-repeat;
-  padding: 0px;
 }
 
 .suggest {
