@@ -85,7 +85,7 @@ public class TaskListenerService implements Serializable {
     public void onEndProcess(ExecutionContext context) throws DAOException {
         Processo processo = JbpmUtil.getProcesso();
         if (processo == null) {
-            throw new ApplicationException("Erro ao criar o processo. Verifique a configuração das raias na definição do fluxo.");
+            throw new ApplicationException("Erro ao criar o processo - Defição de fluxo imcompleta. Contate o administrador do sistema.");
         }
         processo.setDataFim(new Date());
         processoManager.update(processo);
