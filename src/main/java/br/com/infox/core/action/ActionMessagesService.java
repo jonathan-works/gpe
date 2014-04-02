@@ -29,6 +29,7 @@ public class ActionMessagesService implements Serializable {
     public String handleBeanViolationException(
             final ConstraintViolationException e) {
         final StatusMessages messages = getMessagesHandler();
+        messages.clearGlobalMessages();
         messages.clear();
         for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
             final String message = format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());

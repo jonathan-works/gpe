@@ -47,6 +47,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
     protected static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
     protected static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
     protected static final String MSG_REGISTRO_REMOVIDO = "#{messages['entity_deleted']}";
+    protected static final String MSG_REGISTRO_NAO_REMOVIDO_FK = "#{messages['constraintViolation.foreignKeyViolation']}";
     private static final LogProvider LOG = Logging.getLogProvider(AbstractCrudAction.class);
 
     /**
@@ -201,6 +202,8 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
             messages.add(MSG_REGISTRO_ALTERADO);
         } else if (REMOVED.equals(ret)) {
             messages.add(MSG_REGISTRO_REMOVIDO);
+        } else if (PostgreSQLErrorCode.FOREIGN_KEY_VIOLATION.name().equals(ret)) {
+            messages.add(MSG_REGISTRO_NAO_REMOVIDO_FK);
         }
     }
 
