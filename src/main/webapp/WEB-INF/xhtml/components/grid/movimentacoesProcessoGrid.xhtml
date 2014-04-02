@@ -1,96 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf">
-
-    <rich:dataTable value="#{processoHandler.taskInstanceList}"
-        rowKeyVar="key" var="task">
-
-        <rich:column styleClass="defaultCell">
-
-            <f:facet name="header">#{messages['fluxo.tarefa']}</f:facet>
-            <h:outputText value="#{task.name}" />
-
-        </rich:column>
-
-        <rich:column styleClass="defaultCell">
-
-            <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
-            <div>
-
-                <h:graphicImage url="#{a4jSkin.imgFolder}/localizacao.gif"
-                    rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
-                <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
-
-            </div>
-            <s:div id="usuarioTarefaDiv">
-
-                <h:graphicImage url="#{a4jSkin.imgFolder}/usuario.gif"
-                    rendered="#{!empty userHandler.getUsuarioByTarefa(task)}" />
-                <h:outputText
-                    value="#{userHandler.getUsuarioByTarefa(task)} " />
-                <a:commandLink
-                    action="#{taskInstanceHome.removeUsuario(task)}"
-                    execute="@this"
-                    render="usuarioTarefaDiv, pageBodyDialogMessage"
-                    onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
-                    limitRender="true" oncomplete="close()"
-                    rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
-                    <h:graphicImage url="#{a4jSkin.imgFolder}/unlocked.gif"
-                        title="#{messages['movimentar.liberarTarefa']}" />
-                </a:commandLink>
-
-            </s:div>
-
-        </rich:column>
-
-        <rich:column styleClass="defaultCell">
-
-            <f:facet name="header">#{messages['processo.dataInicio']}</f:facet>
-            <h:outputText value="#{task.start}">
-
-                <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
-
-            </h:outputText>
-
-        </rich:column>
-
-        <rich:column styleClass="defaultCell">
-
-            <f:facet name="header">#{messages['processo.dataFim']}</f:facet>
-            <h:outputText value="#{task.end}">
-
-                <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
-
-            </h:outputText>
-
-        </rich:column>
-
-        <rich:column styleClass="defaultCell">
-
-            <f:facet name="header"></f:facet>
-            <s:link target="_blank"
-                rendered="#{processoHandler.taskDocumentList.contains(task)}"
-                view="/Processo/Consulta/paginator.seam">
-
-                <h:graphicImage url="#{a4jSkin.imgFolder}/view.gif" />
-                <h:graphicImage
-                    rendered="#{!empty processoHandler.getAnexos(task)}"
-                    url="#{a4jSkin.imgFolder}/anexo.gif" />
-                <f:param name="inicio" value="#{key + 1}" />
-
-            </s:link>
-
-        </rich:column>
-
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <rich:panel
+    header="#{messages['acaoProcesso.menuText']}"
+    id="movimentacoesProcessoPanel"
+    bodyClass="dtable-p-b"
+    styleClass="dtable-p full-sized">
+    <rich:dataTable
+      id="movimentacoesProcessoTable"
+      value="#{processoHandler.taskInstanceList}"
+      rowKeyVar="key"
+      rowClasses="zebra-row"
+      styleClass="dtable rf-dt-crud"
+      var="task">
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header">#{messages['fluxo.tarefa']}</f:facet>
+        <h:outputText value="#{task.name}" />
+      </rich:column>
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
+        <div>
+          <h:graphicImage
+            url="#{a4jSkin.imgFolder}/localizacao.gif"
+            rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
+          <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
+        </div>
+        <s:div id="usuarioTarefaDiv">
+          <h:graphicImage
+            url="#{a4jSkin.imgFolder}/usuario.gif"
+            rendered="#{!empty userHandler.getUsuarioByTarefa(task)}" />
+          <h:outputText value="#{userHandler.getUsuarioByTarefa(task)} " />
+          <a:commandLink
+            action="#{taskInstanceHome.removeUsuario(task)}"
+            execute="@this"
+            render="usuarioTarefaDiv, pageBodyDialogMessage"
+            onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
+            limitRender="true"
+            oncomplete="close()"
+            rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
+            <h:graphicImage
+              url="#{a4jSkin.imgFolder}/unlocked.gif"
+              title="#{messages['movimentar.liberarTarefa']}" />
+          </a:commandLink>
+        </s:div>
+      </rich:column>
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header">#{messages['processo.dataInicio']}</f:facet>
+        <h:outputText value="#{task.start}">
+          <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+        </h:outputText>
+      </rich:column>
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header">#{messages['processo.dataFim']}</f:facet>
+        <h:outputText value="#{task.end}">
+          <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
+        </h:outputText>
+      </rich:column>
+      <rich:column styleClass="defaultCell">
+        <f:facet name="header"></f:facet>
+        <s:link
+          target="_blank"
+          rendered="#{processoHandler.taskDocumentList.contains(task)}"
+          view="/Processo/Consulta/paginator.seam">
+          <h:graphicImage url="#{a4jSkin.imgFolder}/view.gif" />
+          <h:graphicImage
+            rendered="#{!empty processoHandler.getAnexos(task)}"
+            url="#{a4jSkin.imgFolder}/anexo.gif" />
+          <f:param
+            name="inicio"
+            value="#{key + 1}" />
+        </s:link>
+      </rich:column>
     </rich:dataTable>
-
-
+  </rich:panel>
 </ui:composition>
