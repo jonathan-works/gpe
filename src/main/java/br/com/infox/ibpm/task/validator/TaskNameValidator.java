@@ -11,6 +11,7 @@ import org.jboss.seam.Component;
 import org.jbpm.graph.def.Node;
 import org.jbpm.taskmgmt.def.Task;
 
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 
@@ -24,6 +25,10 @@ public class TaskNameValidator implements Validator {
             Object value) {
         NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
         TaskFitter taskFitter = (TaskFitter) Component.getInstance(TaskFitter.NAME);
+        
+        if (ProcessBuilder.instance().existemProcessosAssociadosAoFluxo()) {
+            throw new ValidatorException(new FacesMessage("Esta ação não pode ser executada quando possuir fluxo instanciado"));
+        }
 
         for (Node node : nodeFitter.getNodes()) {
             Task task = taskFitter.getCurrentTask().getTask();

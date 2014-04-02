@@ -47,9 +47,9 @@
                   <a:ajax
                     event="click"
                     listener="#{nodeFitter.removeNode(row)}"
-                    onbeforesubmit="return confirm(\'messages['processBuilder.confirm']\');"
+                    onbeforesubmit="return confirm(\'#{messages['processBuilder.confirm']}\');"
                     execute="@this"
-                    render="nodesDiv"
+                    render="nodesDiv, pageBodyDialogMessage"
                     limitRender="true" />
                 </h:graphicImage>
                 <h:graphicImage

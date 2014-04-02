@@ -23,6 +23,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.ExceptionHandler;
@@ -45,6 +46,7 @@ import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.converter.NodeConverter;
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.node.manager.JbpmNodeManager;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.seam.util.ComponentUtil;
@@ -75,7 +77,7 @@ public class NodeFitter extends Fitter implements Serializable {
     private JbpmNodeManager jbpmNodeManager;
     @In
     private TransitionFitter transitionFitter;
-
+    
     @SuppressWarnings(UNCHECKED)
     public void addNewNode() {
         Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
@@ -210,6 +212,11 @@ public class NodeFitter extends Fitter implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public void removeNode(Node node) {
+        if (ProcessBuilder.instance().existemProcessosAssociadosAoFluxo()) {
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add("Esta ação não pode ser executada quando possuir fluxo instanciado");
+            return;
+        }
         nodes.remove(node);
         getProcessBuilder().getInstance().removeNode(node);
         if (node.equals(currentNode)) {
@@ -512,4 +519,11 @@ public class NodeFitter extends Fitter implements Serializable {
         }
     }
     
+    public boolean canRemove(Node node) {
+        String nodeType = node.getNodeType().toString();
+        if (nodeType.equals(NodeTypeConstants.START_STATE) || nodeType.equals(NodeTypeConstants.JOIN)) {
+            return false;
+        }
+        return !getProcessBuilder().existemProcessosAssociadosAoFluxo();
+    }
 }

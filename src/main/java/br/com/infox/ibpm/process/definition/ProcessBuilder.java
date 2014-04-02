@@ -98,6 +98,8 @@ public class ProcessBuilder implements Serializable {
     private JsfComponentTreeValidator jsfComponentTreeValidator;
     @In
     private GenericManager genericManager;
+    @In
+    private FluxoManager fluxoManager;
 
     private String id;
     private ProcessDefinition instance;
@@ -534,5 +536,9 @@ public class ProcessBuilder implements Serializable {
     public void clearImportacao() {
         importacaoConcluida = null;
         mensagensImportacao = null;
+    }
+    
+    public boolean existemProcessosAssociadosAoFluxo() {
+        return fluxoManager.existemProcessosAssociadosAFluxo(getFluxo());
     }
 }

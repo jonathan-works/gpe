@@ -211,4 +211,8 @@ public class TaskFitter extends Fitter implements Serializable {
         }
         return null;
     }
+    
+    public boolean canChangeCurrentTaskName() {
+        return currentTask != null && !getProcessBuilder().existemProcessosAssociadosAoFluxo();
+    }
 }
