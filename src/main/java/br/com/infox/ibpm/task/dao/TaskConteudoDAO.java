@@ -50,7 +50,7 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
                 Object conteudo = ti.getVariable(v.getMappedName());
                 if (v.isWritable() && conteudo != null) {
                     conteudo = JbpmUtil.instance().getConteudo(v, ti);
-                    sb.append(VariableHandler.getLabel(v.getVariableName())).append(": ").append(conteudo).append("\n");
+                    sb.append(VariableHandler.getLabel(v.getVariableName())).append(conteudo).append("\n");
                 }
             }
         }

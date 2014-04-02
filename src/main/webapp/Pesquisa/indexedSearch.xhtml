@@ -56,17 +56,18 @@
                                 <s:link
                                     target="_blank"
                                     view="/Processo/Consulta/paginator.xhtml"
+                                    onclick="#{taskConteudoSearch.visualizarProcesso(taskConteudo.numeroProcesso)}"
                                     value="Processo: #{taskConteudo.numeroProcesso} #{processoDocumentoSearch.getNameTarefa(taskConteudo.idTaskInstance)}">
                                     <f:param
                                         name="inicio"
                                         value="0" />
                                     <f:param
                                         name="taskId"
-                                        value="#{taskConteudo.idTaskInstance}" />
+                                        value="#{taskConteudo.numeroProcesso}" />
                                 </s:link>
                                 <div>
                                     <h:outputText
-                                        value="bestFragments" />
+                                        value="#{taskConteudoSearch.getBestFragments(taskConteudo)}" escape="false"/>
                                 </div>
                             </div>
                         </h:column>

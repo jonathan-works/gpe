@@ -26,6 +26,7 @@ import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
@@ -148,7 +149,7 @@ public class JbpmUtil {
     public Object getConteudo(VariableAccess var, TaskInstance taskInstance) {
         String type = var.getMappedName().split(":")[0];
         Object variable = taskInstance.getVariable(var.getMappedName());
-
+        
         if (isTypeEditor(type)) {
             Integer id = (Integer) variable;
             if (id != null) {
@@ -159,6 +160,12 @@ public class JbpmUtil {
                     variable = processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
                 }
             }
+        } else if ("sim_nao".equals(type)) {
+            variable = Boolean.valueOf(variable.toString()) ? "Sim" : "Não";
+        } else if ("numberMoney".equalsIgnoreCase(type)) {
+            variable = String.format(FloatFormatConstants.F2, variable);
+        } else {
+            variable = variable.toString();
         }
         return variable;
     }

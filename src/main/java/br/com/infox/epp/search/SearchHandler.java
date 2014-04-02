@@ -74,6 +74,7 @@ public class SearchHandler implements Serializable {
      * @throws IOException Ao construir o Indexer
      * @throws ParseException Ao retornar a busca no método getQuery do Indexer
      */
+    @Deprecated
     private void searchIndexer() throws IOException, ParseException {
         searchResult = new ArrayList<Map<String, Object>>();
         InfoxDocumentIndexer indexer = new InfoxDocumentIndexer();
@@ -112,6 +113,7 @@ public class SearchHandler implements Serializable {
      * @throws IOException Ao construir o Indexer
      * @throws ParseException Ao retornar a busca no método getQuery do Indexer
      */
+    @Deprecated
     private void searchIndexerOld() throws IOException, ParseException {
         searchResult = new ArrayList<Map<String, Object>>();
         InfoxDocumentIndexer indexer = new InfoxDocumentIndexer();
@@ -149,6 +151,7 @@ public class SearchHandler implements Serializable {
      * é Numero de Processo, Id de Processo ({@link #searchProcesso()}), ou se é
      * texto normal ({@link #searchIndexer()})
      */
+    @Deprecated
     public void search() {
         if (searchText == null || "".equals(searchText.trim())) {
             return;
@@ -166,6 +169,7 @@ public class SearchHandler implements Serializable {
     }
 
     @SuppressWarnings(UNCHECKED)
+    @Deprecated
     public static String getConteudo(TaskInstance ti) {
         StringBuilder sb = new StringBuilder();
         TaskController taskController = ti.getTask().getTaskController();

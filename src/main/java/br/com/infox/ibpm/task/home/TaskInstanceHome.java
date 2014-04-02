@@ -351,6 +351,7 @@ public class TaskInstanceHome implements Serializable {
             }
         } else {
             taskConteudo = new TaskConteudo();
+            taskConteudo.setNumeroProcesso(idProcesso);
             taskConteudo.setIdTaskInstance(getTaskId());
             try {
                 taskConteudoDAO.persist(taskConteudo);

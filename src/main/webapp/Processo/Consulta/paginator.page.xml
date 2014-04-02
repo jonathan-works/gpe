@@ -10,5 +10,6 @@ login-required="true"
     <param name="idProcesso" value="#{consultaController.id}"/>
     <param name="inicio" value="#{processoHandler.inicio}"/>
     <param name="taskId" value="#{processoHandler.taskId}"/>
+    <param name="idJbpm" value="#{org.jboss.seam.bpm.businessProcess.processId}" />
 
 </page>

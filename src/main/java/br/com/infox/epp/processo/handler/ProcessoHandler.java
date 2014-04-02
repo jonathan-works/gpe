@@ -135,6 +135,12 @@ public class ProcessoHandler implements Serializable {
             inicio = getTaskDocumentList().indexOf(taskInstance) + 1;
         }
     }
+    
+    public void setProcessId(long processId) {
+        if (processId != 0) {
+            BusinessProcess.instance().setProcessId(processId);
+        }
+    }
 
     public Item getItemDoProcesso(int idProcesso) {
         return processoEpaManager.getItemDoProcesso(idProcesso);

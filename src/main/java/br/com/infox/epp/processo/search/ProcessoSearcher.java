@@ -40,7 +40,7 @@ public class ProcessoSearcher {
         Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
         Redirect.instance().execute();
     }
-
+    
     /**
      * Método realiza busca de processos no sistema
      * 
