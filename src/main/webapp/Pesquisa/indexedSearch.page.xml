@@ -6,6 +6,8 @@ xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/s
 login-required="true"
 >
 
+    <restrict>#{security.checkPage()}</restrict>
+
     <param name="tab" value="#{search.tab}"/>
     <begin-conversation join="true" />
     <action execute="#{processoDocumentoSearch.setPalavraPesquisada(search.searchText)}"/>
