@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    <wi:dataReport
+        title="#{messages['localizacao.titlePage']}"
+        columns="4"
+        widths="4 4 2 2"
+        headerText="#{fluxoList.criteria}">
+        <wi:reportColumnHeader
+            title="#{messages['localizacao.localizacao']}" />
+        <wi:reportColumnHeader
+            title="#{messages['localizacao.localizacaoPai']}" />
+        <wi:reportColumnHeader title="#{messages['localizacao.estrutura']}" />
+        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
+        <ui:repeat
+            var="row"
+            value="#{localizacaoList.list()}">
+            <wi:reportColumn value="#{row.localizacao}" />
+            <wi:reportColumn value="#{row.localizacaoPai}" />
+            <wi:reportColumnBoolean value="#{row.estrutura}" />
+            <wi:reportColumnSituacao
+                value="#{row.ativo}"
+                columnAlign="center" />
+        </ui:repeat>
+    </wi:dataReport>
+</ui:composition>

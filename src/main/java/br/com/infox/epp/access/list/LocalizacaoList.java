@@ -17,6 +17,9 @@ public class LocalizacaoList extends EntityList<Localizacao> {
     public static final String NAME = "localizacaoList";
     private static final long serialVersionUID = 1L;
 
+    private static final String TEMPLATE = "/Localizacao/localizacaoTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Localizacoes.xls";
+
     private static final String DEFAULT_EJBQL = "select o from Localizacao o";
     private static final String DEFAULT_ORDER = "caminhoCompleto";
 
@@ -42,6 +45,16 @@ public class LocalizacaoList extends EntityList<Localizacao> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
+    }
+
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
     }
 
 }
