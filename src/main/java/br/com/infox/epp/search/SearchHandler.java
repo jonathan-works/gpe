@@ -186,6 +186,7 @@ public class SearchHandler implements Serializable {
         return sb.toString();
     }
 
+    @Deprecated
     public int getResultSize() {
         if (resultSize == null) {
             search();
@@ -193,29 +194,35 @@ public class SearchHandler implements Serializable {
         return resultSize;
     }
 
+    @Deprecated
     public int getPage() {
         return page;
     }
 
+    @Deprecated
     public void setPage(int page) {
         this.page = page;
     }
 
+    @Deprecated
     public void nextPage() {
         page++;
         search();
     }
 
+    @Deprecated
     public void previousPage() {
         page--;
         search();
     }
 
+    @Deprecated
     public void firstPage() {
         page = 0;
         search();
     }
 
+    @Deprecated
     public void lastPage() {
         page = (resultSize / pageSize);
         if (resultSize % pageSize == 0) {
@@ -223,32 +230,39 @@ public class SearchHandler implements Serializable {
         }
         search();
     }
-
+    
+    @Deprecated
     public boolean isNextPageAvailable() {
         return resultSize > ((page * pageSize) + pageSize);
     }
 
+    @Deprecated
     public boolean isPreviousPageAvailable() {
         return page > 0;
     }
 
+    @Deprecated
     public int getPageSize() {
         return pageSize;
     }
 
+    @Deprecated
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize > maxPageSize ? maxPageSize : pageSize;
     }
-
+    
+    @Deprecated
     public long getFirstRow() {
         return page * pageSize + 1;
     }
 
+    @Deprecated
     public long getLastRow() {
         return (page * pageSize + pageSize) > resultSize ? resultSize : page
                 * pageSize + pageSize;
     }
 
+    @Deprecated
     public String getTextoDestacado(Variavel v) {
         Object value = v.getValue();
         if (value == null) {
