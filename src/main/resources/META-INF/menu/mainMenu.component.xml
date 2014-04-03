@@ -6,6 +6,8 @@
     <component name="mainMenu" class="br.com.infox.epp.access.component.menu.Menu" scope="session">
 
         <property name="items">
+            <value>menu.documentacao/documentacao.menuText:/Documentacao/documentacao.seam</value>
+        
             <value>menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
             <value>menu.fluxos/menu.agrupamento/natureza.menuText:/Natureza/listView.seam</value>
             <value>menu.fluxos/menu.agrupamento/categoria.menuText:/Categoria/listView.seam</value>
