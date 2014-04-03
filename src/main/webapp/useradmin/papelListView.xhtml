@@ -24,6 +24,7 @@
       tableTitle="#{messages['papel.tableTitle']}"
       id="papelList"
       rowId="#{row.idPapel}"
+      reportPath="/useradmin/reportPapel.xhtml"
     >
       <ui:define name="searchForm">
         <wi:searchForm
@@ -54,7 +55,6 @@
         columnHeader="#{messages['papel.identificador']}"
         value="#{row.identificador}"
       />
-      <ui:define name="headerToolBar" />
       <ui:define name="toolBar">
         <wi:toolBarEdit id="papelListedit" />
         <wi:toolBarRemove />
