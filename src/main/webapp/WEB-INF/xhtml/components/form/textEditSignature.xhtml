@@ -18,13 +18,13 @@
             label="#{messages['processoDocumento.classificacaoDocumento']}"
             value="#{processoHome.tipoProcessoDocumento}"
             items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
-            required="true" showLabelSelecione="true">
+            required="true" showLabelSelecione="true" readonly="#{not empty processoHome.signature}">
             <a:ajax event="change" render="appletDiv" execute="@this" limitRender="true"/>
         </wi:selectOneMenuEntity>
     </s:div>
 
     <s:div id="#{id}EditorDiv">
-        <wi:editor id="#{editorId}" value="#{home.instance[id]}" />
+        <wi:editor id="#{editorId}" value="#{home.instance[id]}" readonly="#{not empty processoHome.signature}"/>
     </s:div>
 
     <a:jsFunction name="submitForm" action="#{home.assinarDocumento()}"
