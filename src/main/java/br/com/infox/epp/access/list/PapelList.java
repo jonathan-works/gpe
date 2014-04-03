@@ -26,6 +26,8 @@ public class PapelList extends EntityList<Papel> {
 
     private static final String R1 = "lower(nome) like concat('%',lower(#{papelList.entity.nome}),'%')";
     private static final String R2 = "lower(identificador) like concat('%',lower(#{papelList.entity.identificador}),'%')";
+    private static final String TEMPLATE = "/useradmin/PapelReportTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Papel.xls";
 
     @Override
     protected void addSearchFields() {
@@ -48,4 +50,14 @@ public class PapelList extends EntityList<Papel> {
         return null;
     }
 
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
+    
 }
