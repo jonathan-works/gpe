@@ -63,6 +63,9 @@
                                     <f:param
                                         name="taskId"
                                         value="#{taskConteudo.idTaskInstance}" />
+                                    <f:param
+                                        name="idProcesso"
+                                        value="#{taskConteudo.numeroProcesso}" />
                                 </s:link>
                                 <div>
                                     <h:outputText
@@ -112,7 +115,6 @@
                                     <s:link
                                         target="_blank"
                                         view="/Processo/Consulta/paginator.xhtml"
-                                        action="#{taskConteudoSearch.visualizarProcesso(document.processo.idProcesso)}"
                                         value="Processo: #{processoSearcher.getNumeroProcesso(document.processo.idProcesso)} #{processoDocumentoSearch.getNameTarefa(document.idJbpmTask)}">
                                         <f:param
                                             name="inicio"
@@ -120,6 +122,12 @@
                                         <f:param
                                             name="taskId"
                                             value="#{document.idJbpmTask}" />
+                                        <f:param
+                                            name="processoId"
+                                            value="#{document.processo.idJbpm}" />
+                                        <f:param
+                                            name="idProcesso"
+                                            value="#{document.processo.idProcesso}" />
                                     </s:link>
                                     <div>
                                         <h:outputText
