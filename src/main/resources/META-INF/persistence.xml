@@ -36,6 +36,8 @@
                 value="filesystem" />
             <property name="hibernate.search.lucene_version"
                 value="LUCENE_36" />
+            <property name="hibernate.search.analyzer"
+                value="org.apache.lucene.analysis.br.BrazilianAnalyzer" />
 
             <property name="jboss.entity.manager.factory.jndi.name"
                 value="java:jboss/EPAPersistenceUnit" />

@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.documento.anexos;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -24,8 +26,8 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.infox.epp.search.Indexer;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.index.InfoxDocumentIndexer;
 
 @Name(DocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -104,16 +106,25 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     @Override
     protected ProcessoDocumento gravarDocumento() throws DAOException {
+        String texto = InfoxPdfReader.readPdfFromInputStream(inputStream);
         ProcessoDocumento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+        bin().setModeloDocumento(texto);
         documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
-        if (TaskInstanceHome.instance().getTaskId() != null) {
             try {
-                Indexer indexer = new Indexer();
-                indexer.updatePdfIndex(InfoxPdfReader.readPdfFromInputStream(inputStream), TaskInstanceHome.instance().getTaskId(), pd.getProcessoDocumento());
+                InfoxDocumentIndexer indexer = new InfoxDocumentIndexer();
+                Map<String, String> fields = new HashMap<String, String>();
+                Map<String, String> storedfields = new HashMap<String, String>();
+                fields.put("conteudo", texto);
+                storedfields.put("nomeArquivo", pd.getProcessoDocumento());
+                storedfields.put("idProcesso", pd.getProcesso().getIdProcesso() + "");
+                if (TaskInstanceHome.instance().getTaskId() != null) {
+                    storedfields.put("taskId", TaskInstanceHome.instance().getTaskId() + "");
+                }
+                indexer.index(pd.getIdProcessoDocumento() + "", storedfields, fields);
             } catch (IOException e) {
-                LOG.error("Não foi possível indexar o documento " + pd.getProcessoDocumento(), e);
+                LOG.error("Não foi possível indexar o documento "
+                        + pd.getProcessoDocumento(), e);
             }
-        }
         return pd;
     }
 

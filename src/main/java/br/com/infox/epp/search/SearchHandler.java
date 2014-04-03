@@ -33,6 +33,7 @@ import br.com.infox.epp.processo.search.ProcessoSearcher;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.Variavel;
+import br.com.infox.index.InfoxDocumentIndexer;
 
 @Name("search")
 @Scope(ScopeType.CONVERSATION)
@@ -51,6 +52,8 @@ public class SearchHandler implements Serializable {
     private ProcessoDocumentoManager processoDocumentoManager;
     @In
     private ProcessoSearcher processoSearcher;
+    
+    private String tab;
 
     public String getSearchText() {
         return searchText;
@@ -64,6 +67,45 @@ public class SearchHandler implements Serializable {
     public List<Map<String, Object>> getSearchResult() {
         return searchResult;
     }
+    
+    /**
+     * Método que realiza a busca indexada pelo conteúdo do site
+     * 
+     * @throws IOException Ao construir o Indexer
+     * @throws ParseException Ao retornar a busca no método getQuery do Indexer
+     */
+    @Deprecated
+    private void searchIndexer() throws IOException, ParseException {
+        searchResult = new ArrayList<Map<String, Object>>();
+        InfoxDocumentIndexer indexer = new InfoxDocumentIndexer();
+        String[] fields = new String[] { "conteudo" };
+        Query query = indexer.getQuery(searchText, fields);
+        List<Document> search = indexer.search(searchText, fields, 200);
+//        Session session = ManagedJbpmContext.instance().getSession();
+
+        for (Document d : search) {
+//            long taskId = Long.parseLong(d.get("id"));
+//            TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
+
+//            if (ti == null) {
+//                LOG.warn("Task não encontrada: " + taskId);
+//            } else {
+//            String texto = d.get("conteudo");
+//                String s = SearchService.getBestFragments(query, d.get("conteudo"));
+                Map<String, Object> m = new HashMap<String, Object>();
+//                m.put("texto", s);
+                m.put("processo", d.get("idProcesso"));
+//                m.put("taskName", ti.getTask().getName());
+                m.put("taskId", d.get("taskId"));
+//                m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
+//                if (s == null || "".equals(s)) {
+                    m.put("nomeArquivo", d.get("nomeArquivo"));
+//                }
+                searchResult.add(m);
+            }
+//        }
+        resultSize = searchResult.size();
+    }
 
     /**
      * Método que realiza a busca indexada pelo conteúdo do site
@@ -71,9 +113,10 @@ public class SearchHandler implements Serializable {
      * @throws IOException Ao construir o Indexer
      * @throws ParseException Ao retornar a busca no método getQuery do Indexer
      */
-    private void searchIndexer() throws IOException, ParseException {
+    @Deprecated
+    private void searchIndexerOld() throws IOException, ParseException {
         searchResult = new ArrayList<Map<String, Object>>();
-        Indexer indexer = new Indexer();
+        InfoxDocumentIndexer indexer = new InfoxDocumentIndexer();
         String[] fields = new String[] { "conteudo", "texto" };
         Query query = indexer.getQuery(searchText, fields);
         List<Document> search = indexer.search(searchText, fields, 200);
@@ -108,6 +151,7 @@ public class SearchHandler implements Serializable {
      * é Numero de Processo, Id de Processo ({@link #searchProcesso()}), ou se é
      * texto normal ({@link #searchIndexer()})
      */
+    @Deprecated
     public void search() {
         if (searchText == null || "".equals(searchText.trim())) {
             return;
@@ -125,6 +169,7 @@ public class SearchHandler implements Serializable {
     }
 
     @SuppressWarnings(UNCHECKED)
+    @Deprecated
     public static String getConteudo(TaskInstance ti) {
         StringBuilder sb = new StringBuilder();
         TaskController taskController = ti.getTask().getTaskController();
@@ -237,5 +282,13 @@ public class SearchHandler implements Serializable {
         }
         return texto;
     }
-
+    
+    public String getTab() {
+        return tab;
+    }
+    
+    public void setTab(String tab) {
+        this.tab = tab;
+    }
+    
 }

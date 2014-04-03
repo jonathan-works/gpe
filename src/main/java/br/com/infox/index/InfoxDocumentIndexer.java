@@ -1,9 +1,8 @@
-package br.com.infox.epp.search;
+package br.com.infox.index;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,8 +15,8 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -32,73 +31,47 @@ import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.seam.path.PathResolver;
 
-public class Indexer {
+public class InfoxDocumentIndexer {
 
     private Analyzer analyzer = new LimitTokenCountAnalyzer(new BrazilianAnalyzer(Version.LUCENE_36), Integer.MAX_VALUE);
     private Directory directory;
-    private static final LogProvider LOG = Logging.getLogProvider(Indexer.class);
+    private static final LogProvider LOG = Logging.getLogProvider(InfoxDocumentIndexer.class);
 
-    @Deprecated
-    public static File getIndexerPath() {
-        String fileName = getIndexerFileName();
-        if (fileName == null) {
-            String path = System.getProperty("user.home");
-            StringBuilder sb = new StringBuilder();
-            sb.append(path).append(File.separatorChar);
-            sb.append(getPathResolver().getContextPath().substring(1));
-            sb.append(File.separatorChar).append("indexer");
-            fileName = sb.toString();
-        }
-        return new File(fileName);
+    public InfoxDocumentIndexer() throws IOException {
+        directory = FSDirectory.open(getIndexerPath());
     }
 
-    @Deprecated
-    public Indexer() throws IOException {
-        this(getIndexerPath());
+    private static File getIndexerPath() {
+        String path = System.getProperty("user.home");
+        StringBuilder sb = new StringBuilder();
+        sb.append(path).append(File.separatorChar);
+        sb.append(getPathResolver().getContextPath().substring(1));
+        sb.append(File.separatorChar).append("index");
+        return new File(sb.toString());
     }
 
-    @Deprecated
-    public Indexer(File indexPath) throws IOException {
-        directory = FSDirectory.open(indexPath);
-    }
-    
-    @Deprecated
-    public void updatePdfIndex(String conteudo, Long taskId, String nomeArquivo) {
-        Map<String, String> fields = new HashMap<String, String>();
-        Map<String, String> storedfields = new HashMap<String, String>();
-        fields.put("conteudo", conteudo);
-        storedfields.put("nomePdf", nomeArquivo);
-        index(taskId + "", storedfields, fields);
-    }
-
-    @Deprecated
-    public void index(String id, Map<String, String> storedFields,
-            Map<String, String> fields) {
+    public void index(String idDocument, Map<String, String> storedFields, Map<String, String> fields) {
         try {
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_36, analyzer).setOpenMode(OpenMode.CREATE_OR_APPEND);
             IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
             Document doc = new Document();
-            doc.add(new Field("id", id, Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field("idDocument", idDocument, Field.Store.YES, Field.Index.ANALYZED));
             for (Entry<String, String> e : fields.entrySet()) {
                 doc.add(new Field(e.getKey(), e.getValue(), Field.Store.NO, Field.Index.ANALYZED));
             }
             for (Entry<String, String> e : storedFields.entrySet()) {
                 doc.add(new Field(e.getKey(), e.getValue(), Field.Store.YES, Field.Index.ANALYZED));
             }
-            writer.updateDocument(new Term("id", id), doc);
+            writer.updateDocument(new Term("idDocument", idDocument), doc);
             writer.close();
         } catch (Exception e) {
             LOG.error(".index()", e);
         }
-
     }
-
-    @Deprecated
-    public List<Document> search(String searchText, String[] fields,
-            int maxResult) {
+    
+    public List<Document> search(String searchText, String[] fields, int maxResult) {
         List<Document> list = new ArrayList<Document>();
         try {
             IndexReader indexReader = IndexReader.open(directory);
@@ -118,22 +91,14 @@ public class Indexer {
         }
         return list;
     }
-
-    @Deprecated
+    
     public Query getQuery(String searchText, String[] fields) throws ParseException {
         QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, analyzer);
         return parser.parse(searchText);
     }
-
-    @Deprecated
+    
     private static PathResolver getPathResolver() {
         return (PathResolver) Component.getInstance(PathResolver.NAME);
-    }
-
-    @Deprecated
-    private static String getIndexerFileName() {
-        ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
-        return elFunctions.evaluateExpression("indexerFileName");
     }
 
 }
