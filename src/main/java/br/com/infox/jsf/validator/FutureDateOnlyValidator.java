@@ -13,12 +13,12 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.international.Messages;
 
-@org.jboss.seam.annotations.faces.Validator(id = FutureDateValidator.NAME)
-@Name(FutureDateValidator.NAME)
+@org.jboss.seam.annotations.faces.Validator(id = FutureDateOnlyValidator.NAME)
+@Name(FutureDateOnlyValidator.NAME)
 @BypassInterceptors
-public class FutureDateValidator implements Validator {
+public class FutureDateOnlyValidator implements Validator {
 
-    static final String NAME = "futureDateValidator";
+    static final String NAME = "futureDateOnlyValidator";
 
     public void validate(FacesContext context, UIComponent component,
             Object value) {
@@ -33,7 +33,7 @@ public class FutureDateValidator implements Validator {
         dataAtual.set(Calendar.SECOND, 0);
         dataAtual.set(Calendar.MILLISECOND, 0);
         if (data.equals(dataAtual) || data.before(dataAtual)) {
-            throw new ValidatorException(new FacesMessage(Messages.instance().get("validator.Date.FUTURE")));
+            throw new ValidatorException(new FacesMessage(Messages.instance().get("validator.Date.FUTURE_ONLY")));
         }
     }
 }

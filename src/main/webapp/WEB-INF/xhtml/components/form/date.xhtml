@@ -43,7 +43,7 @@
             reRender="#{empty props.reRender ? reRender : props.reRender}"
             showApplyButton="#{empty props.showApplyButton ? (empty showApplyButton ? false : showApplyButton) : props.showApplyButton}">
             <c:if test="#{future}">
-                <f:validator validatorId="futureDateValidator" />
+                <f:validator validatorId="futureDateOnlyValidator" />
             </c:if>
             <c:if test="#{past}">
                 <f:validator validatorId="pastDateValidator" />
