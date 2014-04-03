@@ -12,6 +12,9 @@
     xmlns:f="http://java.sun.com/jsf/core"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="body">
+        <h:outputStylesheet
+            library="styleSkinInfox"
+            name="datatable.css" />
         <infox:tabPanel
             id="defaultTabPanel"
             switchType="ajax"
@@ -27,31 +30,24 @@
                 status=":status"
                 title="#{messages['indexedSearch.conteudo']}">
                 <div>
-                    <h:panelGroup
-                        rendered="#{taskConteudoSearch.resultadoPesquisa.size() gt 0}">
-                        <h:outputText
-                            value="#{search.firstRow} #{messages['indexedSearch.to']} #{search.lastRow}"
-                            style="font-weight: bold" />
-                        <h:outputText
-                            value=" #{messages['search.currentPage']} " />
-                    </h:panelGroup>
                     <h:outputText
                         value="#{taskConteudoSearch.resultadoPesquisa.size()}"
                         style="font-weight: bold" />
                     <h:outputText
-                        value=" #{messages['indexedSearch.about']} " />
+                        value=" #{messages['indexedSearch.resultAbout']} " />
                     <h:outputText
                         value="#{taskConteudoSearch.palavraPesquisada}"
                         style="font-weight: bold" />
                 </div>
                 <h:form>
-                    <h:dataTable
+                    <rich:dataTable
                         id="conteudoSearchResult"
                         rows="#{taskConteudoSearch.pageSize}"
                         rendered="#{! empty taskConteudoSearch.resultadoPesquisa}"
                         value="#{taskConteudoSearch.resultadoPesquisa}"
-                        var="taskConteudo">
-                        <h:column>
+                        var="taskConteudo"
+                        styleClass="full-sized">
+                        <rich:column>
                             <div>
                                 <s:link
                                     target="_blank"
@@ -73,8 +69,11 @@
                                         escape="false" />
                                 </div>
                             </div>
-                        </h:column>
-                    </h:dataTable>
+                        </rich:column>
+                    </rich:dataTable>
+                    <rich:dataScroller
+                        for="conteudoSearchResult"
+                        maxPages="10" />
                 </h:form>
             </infox:tab>
             <infox:tab
@@ -86,31 +85,24 @@
                 title="#{messages['indexedSearch.documentoTitleTab']}">
                 <s:div id="resultado">
                     <div>
-                        <h:panelGroup
-                            rendered="#{processoDocumentoSearch.resultadoPesquisa.size() gt 0}">
-                            <h:outputText
-                                value="#{search.firstRow} #{messages['indexedSearch.to']} #{search.lastRow}"
-                                style="font-weight: bold" />
-                            <h:outputText
-                                value=" #{messages['search.currentPage']} " />
-                        </h:panelGroup>
                         <h:outputText
                             value="#{processoDocumentoSearch.resultadoPesquisa.size()}"
                             style="font-weight: bold" />
                         <h:outputText
-                            value=" #{messages['indexedSearch.about']} " />
+                            value=" #{messages['indexedSearch.resultAbout']} " />
                         <h:outputText
                             value="#{processoDocumentoSearch.palavraPesquisada}"
                             style="font-weight: bold" />
                     </div>
                     <h:form>
-                        <h:dataTable
+                        <rich:dataTable
                             id="searchResult"
                             rows="#{processoDocumentoSearch.pageSize}"
                             rendered="#{! empty processoDocumentoSearch.resultadoPesquisa}"
                             value="#{processoDocumentoSearch.resultadoPesquisa}"
-                            var="document">
-                            <h:column>
+                            var="document"
+                            styleClass="full-sized">
+                            <rich:column>
                                 <div>
                                     <s:link
                                         target="_blank"
@@ -134,8 +126,11 @@
                                             value="#{messages['indexedSearch.foundAt']} #{document.processoDocumento}" />
                                     </div>
                                 </div>
-                            </h:column>
-                        </h:dataTable>
+                            </rich:column>
+                        </rich:dataTable>
+                        <rich:dataScroller
+                            for="conteudoSearchResult"
+                            maxPages="10" />
                     </h:form>
                 </s:div>
             </infox:tab>
