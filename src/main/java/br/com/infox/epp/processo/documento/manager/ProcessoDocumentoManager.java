@@ -68,8 +68,7 @@ public class ProcessoDocumentoManager extends Manager<ProcessoDocumentoDAO, Proc
     public Integer getNextNumeracao(TipoProcessoDocumento tipoProcessoDoc,
             Processo processo) {
         Integer result = null;
-        if (tipoProcessoDoc.getNumera()
-                && tipoProcessoDoc.getTipoNumeracao().equals(TipoNumeracaoEnum.S)) {
+        if (tipoProcessoDoc.getTipoNumeracao().equals(TipoNumeracaoEnum.S)) {
             Integer next = getDao().getNextSequencial(processo);
             if (next == null) {
                 result = 1;
