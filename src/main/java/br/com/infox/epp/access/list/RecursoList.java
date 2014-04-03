@@ -19,6 +19,9 @@ public class RecursoList extends EntityList<Recurso> {
 
     public static final String DEFAULT_EJBQL = "select o from Recurso o";
     public static final String DEFAULT_ORDER = "o.nome";
+    
+    private static final String TEMPLATE = "/useradmin/RecursoReportTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Recurso.xls";
 
     @Override
     protected void addSearchFields() {
@@ -41,4 +44,14 @@ public class RecursoList extends EntityList<Recurso> {
         return null;
     }
 
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
+    
 }
