@@ -106,33 +106,15 @@
                 value="#{classificacaoDocumentoCrudAction.instance.inTipoDocumento}"
                 required="true"
                 showLabelSelecione="true" />
-            <wi:selectOneRadio
-                id="numera"
-                label="#{messages['tipoProcessoDocumento.numera']}"
-                value="#{classificacaoDocumentoCrudAction.instance.numera}"
-                valueList="true:Sim, false:Não">
 
-                <a:ajax 
-                    event="change"
-                    render="mascaraDiv"
-                    limitRender="true"
-                    status=":status"
-                    execute="@this"/>
+            <wi:selectOneMenuEnum
+                id="tipoNumeracaoCombo"
+                label="#{messages['classificacaoDocumento.tipoNumeracao']}"
+                items="#{classificacaoDocumentoFacade.getTipoNumeracaoEnumValues()}"
+                value="#{classificacaoDocumentoCrudAction.instance.tipoNumeracao}"
+                required="true"
+                showLabelSelecione="true" />
 
-            </wi:selectOneRadio>
-
-            <s:div id="mascaraDiv">
-
-                <wi:selectOneMenuEnum
-                    id="tipoNumeracaoCombo"
-                    rendered="#{classificacaoDocumentoCrudAction.instance.numera}"
-                    label="#{messages['classificacaoDocumento.tipoNumeracao']}"
-                    items="#{classificacaoDocumentoFacade.getTipoNumeracaoEnumValues()}"
-                    value="#{classificacaoDocumentoCrudAction.instance.tipoNumeracao}"
-                    required="true"
-                    showLabelSelecione="true" />
-
-            </s:div>
             <wi:selectBooleanRadio
                 id="sistema"
                 label="#{messages['tipoProcessoDocumento.sistema']}"

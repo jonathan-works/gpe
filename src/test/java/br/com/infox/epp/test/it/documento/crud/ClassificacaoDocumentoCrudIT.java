@@ -53,7 +53,6 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
         instance.setTipoProcessoDocumento(tipoProcessoDocumento);
         instance.setInTipoDocumento(tipoDocumento);
         instance.setVisibilidade(visibilidade);
-        instance.setNumera(numera);
         instance.setTipoNumeracao(tipoNumeracao);
         instance.setSistema(sistema);
         instance.setPublico(publico);
@@ -70,7 +69,6 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
             crudActions.setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
             crudActions.setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
             crudActions.setEntityValue("visibilidade", entity.getVisibilidade());
-            crudActions.setEntityValue("numera", entity.getNumera());
             crudActions.setEntityValue("tipoNumeracao", entity.getTipoNumeracao());
             crudActions.setEntityValue("sistema", entity.getSistema());
             crudActions.setEntityValue("publico", entity.getPublico());
@@ -93,7 +91,6 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
                 && areEquals(crudActions.getEntityValue("tipoProcessoDocumento"),entity.getTipoProcessoDocumento())
                 && areEquals(crudActions.getEntityValue("inTipoDocumento"),entity.getInTipoDocumento())
                 && areEquals(crudActions.getEntityValue("visibilidade"),entity.getVisibilidade())
-                && areEquals(crudActions.getEntityValue("numera"),entity.getNumera())
                 && areEquals(crudActions.getEntityValue("tipoNumeracao"),entity.getTipoNumeracao())
                 && areEquals(crudActions.getEntityValue("sistema"),entity.getSistema())
                 && areEquals(crudActions.getEntityValue("publico"),entity.getPublico())

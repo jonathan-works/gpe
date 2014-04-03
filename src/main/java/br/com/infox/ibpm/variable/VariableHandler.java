@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
@@ -17,6 +18,8 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(VariableHandler.NAME)
@@ -26,6 +29,9 @@ public class VariableHandler implements Serializable {
     public static final String NAME = "variableHandler";
 
     private static final LogProvider LOG = Logging.getLogProvider(VariableHandler.class);
+    
+    @In
+    private ProcessoDocumentoManager processoDocumentoManager;
 
     public List<Variavel> getVariables(long taskId) {
         return getVariables(taskId, false);
@@ -82,4 +88,12 @@ public class VariableHandler implements Serializable {
         return (VariableHandler) Component.getInstance(NAME);
     }
 
+    public String getNumeroDocumentoTarefa(long taskId) {
+        for (Variavel variavel : getTaskVariables(taskId)) {
+            if (JbpmUtil.isTypeEditor(variavel.getType())) {
+                return " - Doc. Nr: " + processoDocumentoManager.find(variavel.getValue()).getNumeroDocumento();
+            }
+        }
+        return null;
+    }
 }

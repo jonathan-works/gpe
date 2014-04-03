@@ -6,7 +6,7 @@ import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.L
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_PROCESSO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_TIPO_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_TIPO_NUMERACAO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.USUARIO_PARAM;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
     public Integer getNextSequencial(Processo processo) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_TIPO_PROCESSO, TipoNumeracaoEnum.S);
+        parameters.put(PARAM_TIPO_NUMERACAO, TipoNumeracaoEnum.S);
         return getNamedSingleResult(NEXT_SEQUENCIAL, parameters);
     }
 

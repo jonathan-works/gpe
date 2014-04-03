@@ -49,7 +49,6 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     private TipoNumeracaoEnum tipoNumeracao;
     private VisibilidadeEnum visibilidade;
     private Boolean ativo;
-    private Boolean numera = Boolean.FALSE;
     private Boolean sistema = Boolean.FALSE;
 
     private List<ProcessoDocumento> processoDocumentoList = new ArrayList<ProcessoDocumento>(0);
@@ -142,15 +141,6 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 
     public void setVisibilidade(VisibilidadeEnum visibilidade) {
         this.visibilidade = visibilidade;
-    }
-
-    @Column(name = "in_numera")
-    public Boolean getNumera() {
-        return this.numera;
-    }
-
-    public void setNumera(Boolean numera) {
-        this.numera = numera;
     }
 
     @Column(name = "ds_tipo_processo_documento_observacao", length = LengthConstants.DESCRICAO_PADRAO_DOBRO)

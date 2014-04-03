@@ -204,6 +204,10 @@
                     searchFormStyleClass="hidden">
                     <ui:define name="headerToolBar" />
                     <wi:columnOutputText
+                        columnId="numeroDocumento"
+                        columnHeader="#{messages['processoDocumento.numeroDocumento']}"
+                        value="#{row.numeroDocumento}" />
+                    <wi:columnOutputText
                         columnId="usuarioInclusao"
                         columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
                         value="#{row.usuarioInclusao}" />
