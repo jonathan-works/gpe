@@ -17,6 +17,9 @@ public class VariavelList extends EntityList<Variavel> {
 
     public static final String NAME = "variavelList";
     private static final long serialVersionUID = 1L;
+    
+    private static final String TEMPLATE = "/Variavel/variavelTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Variaveis.xls";
 
     private static final String DEFAULT_EJBQL = "select o from Variavel o";
     private static final String DEFAULT_ORDER = "variavel";
@@ -45,6 +48,16 @@ public class VariavelList extends EntityList<Variavel> {
 
     public static VariavelList instance() {
         return ComponentUtil.getComponent(VariavelList.NAME);
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
     }
 
 }
