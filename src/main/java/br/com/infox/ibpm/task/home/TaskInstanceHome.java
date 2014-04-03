@@ -46,6 +46,7 @@ import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
@@ -105,6 +106,8 @@ public class TaskInstanceHome implements Serializable {
     private ModeloDocumentoManager modeloDocumentoManager;
     @In
     private UserHandler userHandler;
+    @In
+    private AssinaturaDocumentoService assinaturaDocumentoService;
     private URL urlRetornoAcessoExterno;
 
     private boolean canClosePanelVal;
@@ -662,4 +665,7 @@ public class TaskInstanceHome implements Serializable {
         this.taskCompleted = taskCompleted;
     }
 
+    public boolean podeRenderizarApplet() {
+        return faltaAssinatura(ProcessoHome.instance().getTipoProcessoDocumento());
+    }
 }
