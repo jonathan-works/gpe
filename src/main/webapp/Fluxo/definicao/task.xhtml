@@ -274,15 +274,16 @@
                         value="#{not empty dominio ? '?id='.concat(dominio.id).concat('&amp;tab=form') : ''}"
                     />
                     <f:facet name="header">
-                        <h:outputText value="Domínio" />
+                        <h:outputText value="Valor" />
                     </f:facet>
                     <wi:outputText
                         id="dominioAtual"
-                        label="Domínio atual"
+                        label="Valor atual"
                         value="#{empty var.dominioVariavelTarefa ? 'Nenhum' : var.dominioVariavelTarefa.nome}"
                     />
+                    <div />
                     <a:commandLink
-                        value="Configurar domínio"
+                        value="Configurar valor"
                         onclick="showLoading()"
                         limitRender="true"
                         render="dominioVariavelTarefaPanel"
@@ -296,12 +297,13 @@
                         />
                     </a:commandLink>
                     <a:commandLink
-                        value="Remover domínio"
+                        value="Remover valor"
                         onclick="showLoading()"
                         limitRender="true"
                         render="definicaoDominio"
                         execute="@this"
                         oncomplete="hideLoading();"
+                        rendered="#{not empty var.dominioVariavelTarefa}"
                     >
                         <f:setPropertyActionListener
                             target="#{var.dominioVariavelTarefa}"
