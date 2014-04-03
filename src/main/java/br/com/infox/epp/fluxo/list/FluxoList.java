@@ -18,8 +18,12 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.PAGE)
 public class FluxoList extends EntityList<Fluxo> {
     private static final long serialVersionUID = 1L;
+    
     private static final String DEFAULT_EJBQL = "select o from Fluxo o";
     private static final String DEFAULT_ORDER = "fluxo";
+    
+    private static final String TEMPLATE = "/Fluxo/fluxoTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Fluxos.xls";
 
     public static final String NAME = "fluxoList";
 
@@ -76,5 +80,15 @@ public class FluxoList extends EntityList<Fluxo> {
         }
 
         return sb.toString();
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
     }
 }

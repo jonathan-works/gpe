@@ -47,6 +47,7 @@ import static br.com.infox.epp.fluxo.query.FluxoQuery.TABLE_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.XML_FLUXO;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +66,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -275,5 +277,19 @@ public class Fluxo implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     public List<FluxoPapel> getFluxoPapelList() {
         return fluxoPapelList;
+    }
+
+    @Transient
+    public String getDataInicioFormatada() {
+        return DateFormat.getDateInstance().format(dataInicioPublicacao);
+    }
+
+    @Transient
+    public String getDataFimFormatada() {
+        if (dataFimPublicacao != null) {
+            return DateFormat.getDateInstance().format(dataFimPublicacao);
+        } else {
+            return "";
+        }
     }
 }
