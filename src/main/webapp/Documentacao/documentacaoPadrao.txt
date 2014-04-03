@@ -73,7 +73,7 @@
 <p>
 	<span style="font-size: small;"><b>Figura 01.</b></span></p>
 <p>
-	<span style="font-size: small;"><b><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura1.jpg" /></b></span></p>
+	<span style="font-size: small;"><b><img alt="" src="/img/help/localizacao/11/figura1.jpg" /></b></span></p>
 <p>
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.2. Ao clicar no bot&atilde;o <b>Incluir</b>, ser&atilde;o exibidos novos bot&otilde;es:<br />
 	<br />
@@ -89,13 +89,13 @@
 <p>
 	<b><span style="font-size: small;">Figura 02.</span></b></p>
 <p>
-	<span style="font-size: small;"><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura2.jpg" />&nbsp;</span></p>
+	<span style="font-size: small;"><img alt="" src="/img/help/localizacao/11/figura2.jpg" />&nbsp;</span></p>
 <p>
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.3. O exemplo que ser&aacute; exibido a seguir contempla um passo a passo de como montar um fluxo a partir da importa&ccedil;&atilde;o de um arquivo <b>XPDL</b>. Ou seja, ser&aacute; usado o bot&atilde;o <b>Importar XPDL</b>, conforme exibido na <b>Figura 02</b>. O arquivo para importa&ccedil;&atilde;o pode ser gerado a partir da modelagem da <b>Figura 03</b>, no Bizagi. Neste caso, ser&aacute; usado um arquivo existente. As instru&ccedil;&otilde;es para cria&ccedil;&atilde;o do arquivo XPDL encontram-se no sub-item <b>1.2.3.1</b>.</span></p>
 <p>
 	<b><span style="font-size: small;">Figura 03.</span></b></p>
 <p>
-	<span style="font-size: small;"><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura3.jpg" /></span></p>
+	<span style="font-size: small;"><img alt="" src="/img/help/localizacao/11/figura3.jpg" /></span></p>
 <p>
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.3.1. <b>Baixando o arquivo XPDL</b> &ndash; clique <span style="color: #3366ff;"><b>aqui </b></span>para baixar o arquivo XPDL, de nome fluxo.xpdl, salve na sua &aacute;rea de trabalho e siga os passos dos demais <b>sub-itens</b>.<br />
 	<br />
@@ -113,21 +113,21 @@
 <p>
 	<span style="font-size: small;"><b>Figura 04.</b></span></p>
 <p>
-	<span style="font-size: small;"><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura4.jpg" /><br />
+	<span style="font-size: small;"><img alt="" src="/img/help/localizacao/11/figura4.jpg" /><br />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
 <p>
-	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.2.4.1.1. Para realizar a associa&ccedil;&atilde;o das Raias &agrave;s Localiza&ccedil;&otilde;es e Pap&eacute;is, basta informar o nome da Raia e adicionar os Pap&eacute;is e Localiza&ccedil;&otilde;es mostrados na Figura 04. Depois, basta acionar com um clique o bot&atilde;o <img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/btn_mais.jpg" />. A Raia ser&aacute; inserida com sucesso.<br />
+	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.2.4.1.1. Para realizar a associa&ccedil;&atilde;o das Raias &agrave;s Localiza&ccedil;&otilde;es e Pap&eacute;is, basta informar o nome da Raia e adicionar os Pap&eacute;is e Localiza&ccedil;&otilde;es mostrados na Figura 04. Depois, basta acionar com um clique o bot&atilde;o <img alt="" src="/img/help/localizacao/11/btn_mais.jpg" />. A Raia ser&aacute; inserida com sucesso.<br />
 	<br />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.4.1.2. Adicione tamb&eacute;m as Raias Compras e Gestor, conforme Figuras 05 e 06 a seguir:</span></p>
 <p>
 	<span style="font-size: small;"><b>Figura 05.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura5.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/figura5.jpg" /></p>
 <p>
 	<br />
 	<span style="font-size: small;"><b>Figura 06.</b></span></p>
 <p>
-	<span style="font-size: small;"><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura6.png" /><br />
+	<span style="font-size: small;"><img alt="" src="/img/help/localizacao/11/figura6.png" /><br />
 	<br />
 	&nbsp;&nbsp;&nbsp; &nbsp;<br />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.4.1.3 Ap&oacute;s inserir as Raias, &eacute; preciso publicar o Fluxo atrav&eacute;s da inser&ccedil;&atilde;o de um clique no bot&atilde;o Publicar. Esta a&ccedil;&atilde;o permite que o sistema grave as altera&ccedil;&otilde;es realizadas e que o sistema passe a enxergar o Fluxo importado;<br />
@@ -148,13 +148,13 @@
 <p>
 	<span style="font-size: small;"><b>Figura 08.</b></span></p>
 <p>
-	<span style="font-size: small;"><b><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura8.jpg" /></b><br />
+	<span style="font-size: small;"><b><img alt="" src="/img/help/localizacao/11/figura8.jpg" /></b><br />
 	<br />
 	<b>&nbsp;</b></span></p>
 <p>
 	<span style="font-size: small;"><b>Figura 09.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura9.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/figura9.jpg" /></p>
 <p>
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp; &nbsp;<br />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.4.2.2. <b>Analisar pedido de compra</b> 2&ndash; N&oacute; do tipo Tarefa que deve ter as seguintes especificidades: atribui&ccedil;&atilde;o &agrave; Raia <b>Gestor</b>; adi&ccedil;&atilde;o da vari&aacute;vel solicita&ccedil;ao_compra, do tipo Editor; e da vari&aacute;vel aprovacaoSolicitacao, do tipo Booleano, conforme ilustrado na figura 10.</span></p>
@@ -162,14 +162,14 @@
 	<br />
 	<span style="font-size: small;"><b>Figura 10.</b></span></p>
 <p>
-	<span style="font-size: small;"><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura10.jpg" /></span></p>
+	<span style="font-size: small;"><img alt="" src="/img/help/localizacao/11/figura10.jpg" /></span></p>
 <p>
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp; &nbsp;<br />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.2.4.2.3. <b>Aprovado </b>&ndash; N&oacute; do tipo Decis&atilde;o, que deve ter a seguinte especificidade: adi&ccedil;&atilde;o da express&atilde;o <b>#{aprovacaoSolicitacao?&#39;Sim&#39;:&#39;N&atilde;o&#39;}</b>, conforme ilustrado na figura 11.<br />
 	<br />
 	<b>&nbsp;Figura 11.</b></span></p>
 <p>
-	<span style="font-size: small;"><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura11.jpg" /><br />
+	<span style="font-size: small;"><img alt="" src="/img/help/localizacao/11/figura11.jpg" /><br />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
 <p>
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.4.2.4. <b> Realizar cota&ccedil;&atilde;o</b> &ndash; N&oacute; do tipo Tarefa, que deve ter as seguintes especificidades: atribui&ccedil;&atilde;o &agrave; Raia <b>Compras</b>; adi&ccedil;&atilde;o das vari&aacute;veis <b> Fornecedor </b>e <b>Produto</b>, ambas do Tipo <b>Texto</b>; e adi&ccedil;&atilde;o da vari&aacute;vel Valor, do Tipo <b>Monet&aacute;rio</b>, conforme ilustrado na figura 12.</span><br />
@@ -177,7 +177,7 @@
 <p>
 	<span style="font-size: small;"><b>Figura 12.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura12.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/figura12.jpg" /></p>
 <p>
 	<br />
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.4.2.5. <b>Verificar valor</b> &ndash; N&oacute; do tipo Decis&atilde;o, que deve ter a seguinte especificidade: adi&ccedil;&atilde;o da express&atilde;o <b>#{(valor&lt;=1000)?&#39;&lt;= R$ 1000,00&#39;:&#39;&gt;R$ 1000,00&#39;}</b>, conforme ilustrado na figura 13.</span><br />
@@ -185,7 +185,7 @@
 <p>
 	<span style="font-size: small;"><b>Figura 13.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/fig13.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/fig13.jpg" /></p>
 <p>
 	<br />
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.4.2.6. <b>Efetuar compra</b> &ndash; N&oacute; do tipo Tarefa, que deve ter as seguintes especificidades: atribui&ccedil;&atilde;o &agrave; Raia <b>Compras</b>; adi&ccedil;&atilde;o da Vari&aacute;vel <b> comprovanteCompra</b>, do Tipo <b>Editor</b>; e adi&ccedil;&atilde;o do Modelo de Documento <b>Comprovante de Compra</b>, conforme ilustrado nas figuras 14 e 15.<br />
@@ -193,13 +193,13 @@
 <p>
 	<span style="font-size: small;"><b>Figura 14.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/fig14.png" /></p>
+	<img alt="" src="/img/help/localizacao/11/fig14.png" /></p>
 <p>
 	&nbsp;</p>
 <p>
 	<span style="font-size: small;"><b>Figura 15.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura15.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/figura15.jpg" /></p>
 <p>
 	&nbsp;</p>
 <p>
@@ -207,14 +207,14 @@
 	<br />
 	<b>&nbsp;Figura 16.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/fig16.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/fig16.jpg" /></p>
 <p>
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
 <p>
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.2.4.2.8. <b> Aprovada </b>- N&oacute; do tipo Decis&atilde;o, que deve ter a seguinte especificidade: adi&ccedil;&atilde;o da express&atilde;o<b> #{aprovarCotacao?&#39;Sim&#39;:&#39;N&atilde;o&#39;}</b>, conforme ilustrado na figura 17.<br />
 	<b>Figura 17.</b></span></p>
 <p>
-	<span style="font-size: small;"><b><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura17.png" /></b><br />
+	<span style="font-size: small;"><b><img alt="" src="/img/help/localizacao/11/figura17.png" /></b><br />
 	<br />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
 <p>
@@ -222,11 +222,11 @@
 	<br />
 	<b>&nbsp;Figura 18.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/fig18.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/fig18.jpg" /></p>
 <p>
 	<span style="font-size: small;"><b>Figura 19.</b></span></p>
 <p>
-	<span style="font-size: small;"><b><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura19.jpg" /></b><br />
+	<span style="font-size: small;"><b><img alt="" src="/img/help/localizacao/11/figura19.jpg" /></b><br />
 	<br />
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
 <p>
@@ -236,12 +236,12 @@
 <p>
 	<span style="font-size: small;"><b>Figura 20.</b></span></p>
 <p>
-	<span style="font-size: small;"><b><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura20.jpg" /></b></span><br />
+	<span style="font-size: small;"><b><img alt="" src="/img/help/localizacao/11/figura20.jpg" /></b></span><br />
 	&nbsp;</p>
 <p>
 	<span style="font-size: small;"><b>Figura 21.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura21.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/figura21.jpg" /></p>
 <p>
 	<br />
 	<br />
@@ -249,7 +249,7 @@
 	<br />
 	<b>Figura 22.</b></span></p>
 <p>
-	<img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura22.jpg" /></p>
+	<img alt="" src="/img/help/localizacao/11/figura22.jpg" /></p>
 <p>
 	<br />
 	<span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>&nbsp;<b>Conclus&atilde;o</b>: Ap&oacute;s o preenchimento das especificidades da &uacute;ltima tarefa, &eacute; preciso novamente Publicar o Fluxo atrav&eacute;s do acionamento do bot&atilde;o <b>Publicar</b>. Isso far&aacute; com que o sistema enxergue todas as altera&ccedil;&otilde;es realizadas no fluxo.</i></span><br />
@@ -260,7 +260,7 @@
 <p>
 	&nbsp;</p>
 <p>
-	<span style="font-size: small;"><img alt="" src="http://tesla.infox.com.br/epp/img/help/localizacao/11/figura23.jpg" style="float: left;" />&nbsp;</span></p>
+	<span style="font-size: small;"><img alt="" src="/img/help/localizacao/11/figura23.jpg" style="float: left;" />&nbsp;</span></p>
 <p>
 	&nbsp;</p>
 <p>
