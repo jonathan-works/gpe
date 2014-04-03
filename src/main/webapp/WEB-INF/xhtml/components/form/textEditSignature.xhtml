@@ -18,16 +18,17 @@
             label="#{messages['processoDocumento.classificacaoDocumento']}"
             value="#{processoHome.tipoProcessoDocumento}"
             items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
-            required="true" showLabelSelecione="true">
+            required="true" showLabelSelecione="true" readonly="#{not empty processoHome.signature}">
+            <a:ajax event="change" render="appletDiv" execute="@this" limitRender="true"/>
         </wi:selectOneMenuEntity>
     </s:div>
 
     <s:div id="#{id}EditorDiv">
-        <wi:editor id="#{editorId}" value="#{home.instance[id]}" />
+        <wi:editor id="#{editorId}" value="#{home.instance[id]}" readonly="#{not empty processoHome.signature}"/>
     </s:div>
 
     <a:jsFunction name="submitForm" action="#{home.assinarDocumento()}"
-        render="signatureDiv pageBodyDialogMessage"
+        render="signatureDiv appletDiv #{id}EditorDiv pageBodyDialogMessage"
         oncomplete="infox.editor['#{id}Editor'].postSign()" />
     <s:div id="signatureDiv">
         <h:inputHidden id="#{idCertChain}"
@@ -45,7 +46,8 @@
             useBase64Function="infox.editor['#{editorId}'].useBase64()"
             functionPreSign="infox.showLoading();"
             functionPosSign="submitForm()" debug="false"
-            loginMode="false" useProviderDll="false">
+            loginMode="false" useProviderDll="false"
+            rendered="#{taskInstanceHome.podeRenderizarApplet()}">
         </wi:appletAssinatura>
     </s:div>
     <script type="text/javascript">
