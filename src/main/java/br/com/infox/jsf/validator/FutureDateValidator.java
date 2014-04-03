@@ -25,10 +25,8 @@ public class FutureDateValidator implements Validator {
         if (value == null) {
             return;
         }
-
         Calendar data = Calendar.getInstance();
         data.setTime((Date) value);
-
         Calendar dataAtual = Calendar.getInstance();
         dataAtual.set(Calendar.HOUR, 0);
         dataAtual.set(Calendar.MINUTE, 0);
