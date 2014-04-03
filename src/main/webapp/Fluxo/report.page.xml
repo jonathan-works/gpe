@@ -9,7 +9,7 @@ xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/s
     <param name="restrictionLogicOperator" value="#{fluxoList.restrictionLogicOperator}" />
     <param name="codFluxo" value="#{fluxoList.entity.codFluxo}"/>
     <param name="fluxo" value="#{fluxoList.entity.fluxo}"/>
-    <param name="publicado" value="#{fluxList.entity.publicado}"/>
+    <param name="publicado" value="#{fluxoList.entity.publicado}"/>
     <param name="ativo" value="#{fluxoList.entity.ativo}"/>
 
 </page>

@@ -16,6 +16,9 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginList";
+    
+    private static final String TEMPLATE = "/Usuario/usuarioTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Usuarios.xls";
 
     private static final String DEFAULT_EJBQL = "select o from UsuarioLogin o";
     private static final String DEFAULT_ORDER = "nomeUsuario";
@@ -41,6 +44,16 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
     }
 
 }
