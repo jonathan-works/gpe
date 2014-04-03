@@ -10,10 +10,12 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.international.Messages;
 
 @org.jboss.seam.annotations.faces.Validator(id = PastDateOnlyValidator.NAME)
 @Name(PastDateOnlyValidator.NAME)
+@BypassInterceptors
 public class PastDateOnlyValidator implements Validator {
 
     public static final String NAME = "pastDateOnlyValidator";
