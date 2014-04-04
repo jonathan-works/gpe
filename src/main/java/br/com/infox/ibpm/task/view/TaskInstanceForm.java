@@ -155,6 +155,10 @@ public class TaskInstanceForm implements Serializable {
                             selectItens.add(new SelectItem(pair[0], pair[1]));
                         }
                         ff.getProperties().put("items", selectItens);
+                    } else if("date".equals(type)) {
+                        Map<String, Object> props = new HashMap<String, Object>();
+                        props.put("tipoValidacao", tokens[2]);
+                        ff.setProperties(props);
                     }
                 }
             }

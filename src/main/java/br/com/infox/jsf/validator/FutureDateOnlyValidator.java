@@ -13,30 +13,27 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.international.Messages;
 
-@org.jboss.seam.annotations.faces.Validator(id = FutureDateValidator.NAME)
-@Name(FutureDateValidator.NAME)
+@org.jboss.seam.annotations.faces.Validator(id = FutureDateOnlyValidator.NAME)
+@Name(FutureDateOnlyValidator.NAME)
 @BypassInterceptors
-public class FutureDateValidator implements Validator {
+public class FutureDateOnlyValidator implements Validator {
 
-    public static final String NAME = "futureDateValidator";
+    static final String NAME = "futureDateOnlyValidator";
 
     public void validate(FacesContext context, UIComponent component,
             Object value) {
         if (value == null) {
             return;
         }
-
         Calendar data = Calendar.getInstance();
         data.setTime((Date) value);
         Calendar dataAtual = Calendar.getInstance();
-        dataAtual.set(Calendar.HOUR, 0);
-        dataAtual.set(Calendar.MINUTE, 0);
-        dataAtual.set(Calendar.SECOND, 0);
-        dataAtual.set(Calendar.MILLISECOND, 0);
-        if (data != null && data.before(dataAtual)) {
-            throw new ValidatorException(new FacesMessage(Messages.instance().get("validator.Date.FUTURE")));
+        dataAtual.set(Calendar.HOUR, 23);
+        dataAtual.set(Calendar.MINUTE, 59);
+        dataAtual.set(Calendar.SECOND, 59);
+        dataAtual.set(Calendar.MILLISECOND, 999);
+        if (data.equals(dataAtual) || data.before(dataAtual)) {
+            throw new ValidatorException(new FacesMessage(Messages.instance().get("validator.Date.FUTURE_ONLY")));
         }
-
     }
-
 }

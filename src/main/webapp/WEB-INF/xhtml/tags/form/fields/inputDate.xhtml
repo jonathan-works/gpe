@@ -37,7 +37,7 @@
             showApplyButton="#{wi:get(showApplyButton, false)}">
 
             <c:if test="#{wi:get(future, false)}">
-                <f:validator validatorId="futureDateValidator" />
+                <f:validator validatorId="futureDateOnlyValidator" />
             </c:if>
             <c:if test="#{wi:get(past, false)}">
                 <f:validator validatorId="pastDateValidator" />

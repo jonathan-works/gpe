@@ -37,6 +37,7 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
+import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
@@ -55,6 +56,8 @@ public class VariableAccessHandler implements Serializable {
     private boolean mudouModelo;
     private DominioVariavelTarefa dominioVariavelTarefa;
     private boolean possuiDominio = false;
+    private ValidacaoDataEnum validacaoDataEnum;
+    private boolean isData = false;
 
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -64,8 +67,12 @@ public class VariableAccessHandler implements Serializable {
             String[] tokens = mappedName.split(":");
             this.type = tokens[0];
             if (tokens.length >= 3) {
-                DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
+                if ("date".equals(type)) {
+                    this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
+                } else {
+                    DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+                    this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
+                }
             }
         } else {
             this.type = "default";
@@ -76,10 +83,15 @@ public class VariableAccessHandler implements Serializable {
         access[1] = variableAccess.isWritable();
         access[2] = variableAccess.isRequired();
         this.possuiDominio = tipoPossuiDominio(this.type);
+        this.isData = isTipoData(this.type);
     }
 
     private boolean tipoPossuiDominio(String type) {
         return "enumeracao".equals(type);
+    }
+
+    private boolean isTipoData(String type) {
+        return "date".equals(type);
     }
 
     public String getName() {
@@ -215,6 +227,7 @@ public class VariableAccessHandler implements Serializable {
         ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
                 + name);
         this.possuiDominio = tipoPossuiDominio(type);
+        this.isData = isTipoData(type);
     }
 
     public boolean isReadable() {
@@ -434,4 +447,28 @@ public class VariableAccessHandler implements Serializable {
     public boolean isPossuiDominio() {
         return possuiDominio;
     }
+
+    public boolean isData() {
+        return isData;
+    }
+
+    public ValidacaoDataEnum[] getTypeDateValues() {
+        return ValidacaoDataEnum.values();
+    }
+
+    public ValidacaoDataEnum getValidacaoDataEnum() {
+        return validacaoDataEnum;
+    }
+
+    public void setValidacaoDataEnum(ValidacaoDataEnum validacaoDataEnum) {
+        this.validacaoDataEnum = validacaoDataEnum;
+        if (this.validacaoDataEnum != null) {
+            ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
+                    + name + ":" + this.validacaoDataEnum.toString());
+        } else {
+            ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
+                    + name);
+        }
+    }
+
 }

@@ -4,8 +4,8 @@ import br.com.infox.core.type.Displayable;
 
 public enum ValidacaoDataEnum implements Displayable {
 
-    P("Passadas"), PA("Passadas e atual"), F("Futuras"), FA("Futuras e atual"),
-    G("Geral");
+    P("Passada"), PA("Passada ou atual"), F("Futura"), FA("Futura ou atual"),
+    L("Livre");
     
     private String label;
 
@@ -16,6 +16,20 @@ public enum ValidacaoDataEnum implements Displayable {
     @Override
     public String getLabel() {
         return label;
+    }
+    
+    public String getProperty() {
+        if (this.equals(P)) {
+            return "pastOnly";
+        } else if (this.equals(PA)) {
+            return "past";
+        } else if (this.equals(F)) {
+            return "futureOnly";
+        } else if (this.equals(FA)) {
+            return "future";
+        } else {
+            return "";
+        }
     }
 
 }
