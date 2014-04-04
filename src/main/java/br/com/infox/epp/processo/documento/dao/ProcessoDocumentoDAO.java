@@ -30,6 +30,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.session.SessionAssistant;
 
@@ -39,9 +40,11 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
-    
+
     @In
     private SessionAssistant sessionAssistant;
+    @In
+    private SigiloDocumentoService sigiloDocumentoService;
 
     public Integer getNextSequencial(Processo processo) {
         Map<String, Object> parameters = new HashMap<>();
@@ -70,11 +73,11 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         }
         return getNamedResultList(query, parameters);
     }
-    
+
     protected FullTextEntityManager getFullTextEntityManager() {
         return (FullTextEntityManager) super.getEntityManager();
     }
-    
+
     @SuppressWarnings(UNCHECKED)
     public List<ProcessoDocumento> pesquisar(String searchPattern) {
         Session session = sessionAssistant.getSession();
@@ -87,6 +90,13 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         for (ProcessoDocumento documento : temp) {
             if (documento.getAnexo()) {
                 ret.add(documento);
+            }
+        }
+        UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+        for (ProcessoDocumento documento : ret) {
+            
+            if (!sigiloDocumentoService.possuiPermissao(documento, usuarioLogado)){
+                ret.remove(documento);
             }
         }
         return ret;
