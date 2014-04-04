@@ -178,7 +178,7 @@
         name="tabAnexar"
         rendered="#{processoHome.managed}"
         status=":status"
-        title="#{messages['movimentar.anexar.titleTab']} #{processoHome.instance.numeroProcesso}"
+        title="#{messages['movimentar.anexar.titleTab']}"
         action="#{anexoController.onClickTabAnexar(processoHome.instance)}">
         <wi:dataForm
           formId="anexarDocumentosForm"
@@ -194,7 +194,7 @@
         rendered="#{processoHome.managed}"
         status=":status"
         action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
-        title="#{messages['movimentar.documentos.titleTab']} #{processoHome.instance.numeroProcesso}">
+        title="#{messages['movimentar.documentos.titleTab']}">
         <wi:dataTable
           values="#{processoDocumentoList.list(15)}"
           bean="#{processoDocumentoList}"
@@ -255,7 +255,7 @@
         name="tabMovimentacoes"
         rendered="#{processoHome.managed}"
         status=":status"
-        title="#{messages['movimentar.movimentacoes.titleTab']} #{processoHome.instance.numeroProcesso}">
+        title="#{messages['movimentar.movimentacoes.titleTab']}">
         <ui:include
           src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
       </infox:tab>

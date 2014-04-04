@@ -12,6 +12,26 @@
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
     <ui:define name="title">#{messages['consultaProcesso.titlePage']}</ui:define>
     <ui:define name="body">
+        <rich:collapsiblePanel
+            switchType="client"
+            header="#{messages['processo.titleView']} #{consultaController.processoEpa.numeroProcesso}"
+            expanded="false">
+            <h:panelGrid
+                columns="2"
+                width="100%"
+                columnClasses="viewColumn">
+                <wi:outputText
+                    id="dataInicio"
+                    label="#{messages['processo.dataInicio']}"
+                    value="#{consultaController.processoEpa.dataInicio}">
+                    <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
+                </wi:outputText>
+                <wi:outputText
+                    id="usuarioCadastroProcesso"
+                    label="#{messages['processo.usuarioCadastroProcesso']}"
+                    value="#{consultaController.processoEpa.usuarioCadastroProcesso}" />
+            </h:panelGrid>
+        </rich:collapsiblePanel>
         <infox:tabPanel
             headerSpacing="2"
             activeTab="#{consultaController.tab}">
