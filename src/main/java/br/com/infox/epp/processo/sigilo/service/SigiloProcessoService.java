@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.sigilo.service;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -10,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
@@ -46,6 +48,11 @@ public class SigiloProcessoService implements Serializable {
             sigiloProcessoManager.update(sigiloProcessoAtivo);
         }
         sigiloProcessoManager.persist(sigiloProcesso);
+        SigiloProcessoPermissao permissaoPadrao = new SigiloProcessoPermissao();
+        permissaoPadrao.setAtivo(true);
+        permissaoPadrao.setSigiloProcesso(sigiloProcesso);
+        permissaoPadrao.setUsuario(Authenticator.getUsuarioLogado());
+        gravarPermissoes(sigiloProcesso.getProcesso(), Arrays.asList(permissaoPadrao));
     }
 
     public void gravarPermissoes(ProcessoEpa processo,
