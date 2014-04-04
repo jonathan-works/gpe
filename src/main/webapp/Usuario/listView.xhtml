@@ -288,7 +288,7 @@
                     label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
                     value="#{bloqueioUsuarioCrudAction.instance.dataPrevisaoDesbloqueio}"
                     rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-                    future="true"
+                    futureOnly"true"
                     required="false" />
                 <wi:inputText
                     id="motivoBloqueio"

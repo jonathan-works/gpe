@@ -13,11 +13,8 @@
         name="dataCorrenteMenor"
         value="#{empty dataCorrenteMenor ? props.dataCorrenteMenor : dataCorrenteMenor}" />
     <ui:param
-        name="future"
-        value="#{wi:get(props.future, false)}" />
-    <ui:param
-        name="past"
-        value="#{wi:get(props.past, false)}" />
+        name="tipoValidacao"
+        value="#{wi:get(props.tipoValidacao, '')}" />
     <h:outputScript
         library="js"
         name="components.js" />
@@ -42,10 +39,16 @@
             onchanged="#{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}"
             reRender="#{empty props.reRender ? reRender : props.reRender}"
             showApplyButton="#{empty props.showApplyButton ? (empty showApplyButton ? false : showApplyButton) : props.showApplyButton}">
-            <c:if test="#{future}">
+            <c:if test="#{tipoValidacao eq 'F'}">
                 <f:validator validatorId="futureDateOnlyValidator" />
             </c:if>
-            <c:if test="#{past}">
+            <c:if test="#{tipoValidacao eq 'P'}">
+                <f:validator validatorId="pastDateOnlyValidator" />
+            </c:if>
+            <c:if test="#{tipoValidacao eq 'FA'}">
+                <f:validator validatorId="futureDateValidator" />
+            </c:if>
+            <c:if test="#{tipoValidacao eq 'PA'}">
                 <f:validator validatorId="pastDateValidator" />
             </c:if>
             <ui:insert />

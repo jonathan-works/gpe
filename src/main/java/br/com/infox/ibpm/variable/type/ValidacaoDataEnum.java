@@ -17,5 +17,19 @@ public enum ValidacaoDataEnum implements Displayable {
     public String getLabel() {
         return label;
     }
+    
+    public String getProperty() {
+        if (this.equals(P)) {
+            return "pastOnly";
+        } else if (this.equals(PA)) {
+            return "past";
+        } else if (this.equals(F)) {
+            return "futureOnly";
+        } else if (this.equals(FA)) {
+            return "future";
+        } else {
+            return "";
+        }
+    }
 
 }
