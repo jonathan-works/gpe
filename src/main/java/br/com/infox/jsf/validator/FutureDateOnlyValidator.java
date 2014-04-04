@@ -28,10 +28,10 @@ public class FutureDateOnlyValidator implements Validator {
         Calendar data = Calendar.getInstance();
         data.setTime((Date) value);
         Calendar dataAtual = Calendar.getInstance();
-        dataAtual.set(Calendar.HOUR, 0);
-        dataAtual.set(Calendar.MINUTE, 0);
-        dataAtual.set(Calendar.SECOND, 0);
-        dataAtual.set(Calendar.MILLISECOND, 0);
+        dataAtual.set(Calendar.HOUR, 23);
+        dataAtual.set(Calendar.MINUTE, 59);
+        dataAtual.set(Calendar.SECOND, 59);
+        dataAtual.set(Calendar.MILLISECOND, 999);
         if (data.equals(dataAtual) || data.before(dataAtual)) {
             throw new ValidatorException(new FacesMessage(Messages.instance().get("validator.Date.FUTURE_ONLY")));
         }
