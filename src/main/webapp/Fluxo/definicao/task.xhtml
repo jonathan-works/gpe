@@ -229,6 +229,31 @@
                     oncomplete="hideLoading();"
                     onbegin="showLoading();"
                     action="#{dominioVariavelTarefaCrudAction.reset}" />
+                <a:jsFunction
+                    name="renderData"
+                    execute="@this"
+                    render="definicaoTipoData"
+                    limitRender="true"
+                    oncomplete="hideLoading();"
+                    onbegin="showLoading();" />
+                <rich:panel
+                    id="definicaoTipoData"
+                    rendered="#{var.data}">
+                    <wi:selectOneMenuEnum
+                        id="tipoDeData"
+                        label="#{messages['data.tipoData']}"
+                        showLabelSelecione="true"
+                        items="#{var.getTypeDateValues()}"
+                        value="#{var.validacaoDataEnum}">
+                        <a:ajax
+                            event="change"
+                            execute="@this"
+                            status=":status"
+                            listener="#{t.clearHasTaskPage()}"
+                            render="addVarDiv, @this, pageBodyDialogMessage, varDiv"
+                            limitRender="true" />
+                    </wi:selectOneMenuEnum>
+                </rich:panel>
                 <rich:panel
                     id="definicaoDominio"
                     rendered="#{var.possuiDominio}">

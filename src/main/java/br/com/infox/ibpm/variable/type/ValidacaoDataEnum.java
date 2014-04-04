@@ -4,8 +4,8 @@ import br.com.infox.core.type.Displayable;
 
 public enum ValidacaoDataEnum implements Displayable {
 
-    P("Passadas"), PA("Passadas e atual"), F("Futuras"), FA("Futuras e atual"),
-    G("Geral");
+    P("Passada"), PA("Passada ou atual"), F("Futura"), FA("Futura ou atual"),
+    L("Livre");
     
     private String label;
 
