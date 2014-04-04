@@ -21,6 +21,8 @@ import org.jbpm.graph.exe.ExecutionContext;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.ApplicationException;
+import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.messages.LocaleUtil;
 import br.com.infox.seam.transaction.TransactionService;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -56,7 +58,7 @@ public class LocalizacaoAssignment implements Serializable {
             currentTaskInstance = TaskInstance.instance();
         }
         if (localPapel == null || allNullElements(localPapel)) {
-            return false;
+            throw new BusinessException(LocaleUtil.internacionalize("process.swimlane.notDefined"));
         }
         if (currentTaskInstance == null || processo == null) {
             return false;
@@ -77,7 +79,8 @@ public class LocalizacaoAssignment implements Serializable {
      */
     private boolean allNullElements(String[] o) {
         for (int i = 0; i < o.length; i++) {
-            if (o[i] != null) {
+            
+            if (o[i] != null && o[i].trim().length()!=0) {
                 return false;
             }
         }
