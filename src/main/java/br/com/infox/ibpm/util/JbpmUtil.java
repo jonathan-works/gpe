@@ -32,6 +32,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
@@ -154,8 +155,11 @@ public class JbpmUtil {
             Integer id = (Integer) variable;
             if (id != null) {
                 ProcessoDocumento processoDocumento = processoDocumentoManager().find(id);
+                SigiloDocumentoManager sigiloDocumentoManager = ComponentUtil.getComponent(SigiloDocumentoManager.NAME);
                 if (processoDocumento == null) {
                     LOG.warn("ProcessoDocumento não encontrado: " + id);
+                } else if (sigiloDocumentoManager.isSigiloso(processoDocumento.getIdProcessoDocumento())){
+                    variable = "";
                 } else {
                     variable = processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
                 }
