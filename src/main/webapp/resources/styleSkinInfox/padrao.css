@@ -597,7 +597,7 @@ form {
 .ui-tabs-panel.ui-widget-content.ui-corner-bottom {
   background: white;
   margin: 1px 0 0 3px;
-  overflow: auto;
+  overflow: visible;
 }
 
 #javax_faces_developmentstage_messages {
@@ -636,4 +636,9 @@ div.rf-trn {
 
 .margin-top-div {
   margin:15px 0 0 0;
+}
+
+.img-doc {
+  height:auto;
+  max-width:100%;
 }
