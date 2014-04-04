@@ -116,7 +116,7 @@ public class SwimlaneHandler implements Serializable {
 
     private void buildExpression() {
         if (getLocalPapelList().isEmpty()) {
-            swimlane.setPooledActorsExpression(null);
+            swimlane.setPooledActorsExpression("#{localizacaoAssignment.getPooledActors()}");
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append("#{localizacaoAssignment.getPooledActors('");
