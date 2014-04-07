@@ -10,6 +10,7 @@ import static br.com.infox.epp.processo.query.RelacionamentoQuery.MOTIVO;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.SEQUENCE_NAME;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.TABLE_NAME;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.NOME_USUARIO;
+
 import static br.com.infox.epp.processo.query.TipoRelacionamentoProcessoQuery.ID_TIPO_RELACIONAMENTO_PROCESSO;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.TemporalType.TIMESTAMP;
