@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import br.com.infox.epp.processo.prioridade.query.PrioridadeProcessoQuery;
 
 @Entity
-@Table(schema = "public", name = PrioridadeProcesso.TABLE_NAME)
+@Table(name = PrioridadeProcesso.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = PrioridadeProcessoQuery.NAMED_QUERY_PRIORIDADES_ATIVAS, query = PrioridadeProcessoQuery.QUERY_PRIORIDADES_ATIVAS)
 })
