@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.Jbpm;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jbpm.job.executor.EppJobExecutorThread;
 import org.jbpm.job.executor.JobExecutor;
 
 /**
@@ -36,6 +37,7 @@ public class JobExecutorLauncher {
     public void init() {
         try {
             JobExecutor jobExecutor = Jbpm.instance().getJbpmConfiguration().getJobExecutor();
+            jobExecutor.setJobExecutorThread(EppJobExecutorThread.class);
             jobExecutor.start();
         } catch (RuntimeException e) {
             LOG.error(".init()", e);
