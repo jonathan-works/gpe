@@ -11,10 +11,8 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
-import br.com.infox.core.persistence.ORConstants;
-
 @Entity
-@Table(name=TaskConteudo.TABLE_NAME, schema=ORConstants.PUBLIC)
+@Table(name=TaskConteudo.TABLE_NAME)
 @Indexed(index="IndexTaskContent")
 public class TaskConteudo {
 

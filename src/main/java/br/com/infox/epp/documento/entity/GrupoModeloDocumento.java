@@ -4,7 +4,6 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.GrupoModeloDocumentoQuery.DESCRICAO_GRUPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.GrupoModeloDocumentoQuery.ID_GRUPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.GrupoModeloDocumentoQuery.SEQUENCE_GRUPO_MODELO_DOCUMENTO;
@@ -20,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = TABLE_GRUPO_MODELO_DOCUMENTO, schema = PUBLIC)
+@Table(name = TABLE_GRUPO_MODELO_DOCUMENTO)
 public class GrupoModeloDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,7 +49,7 @@ public class GrupoModeloDocumento implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_GRUPO_MODELO_DOCUMENTO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_GRUPO_MODELO_DOCUMENTO, unique = true, nullable = false)
     public Integer getIdGrupoModeloDocumento() {
         return this.idGrupoModeloDocumento;

@@ -48,7 +48,7 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
 @Entity
-@Table(name = ProcessoEpa.TABLE_NAME, schema = "public")
+@Table(name = ProcessoEpa.TABLE_NAME)
 @PrimaryKeyJoinColumn
 @NamedQueries(value = {
     @NamedQuery(name = LIST_ALL_NOT_ENDED, query = LIST_ALL_NOT_ENDED_QUERY),

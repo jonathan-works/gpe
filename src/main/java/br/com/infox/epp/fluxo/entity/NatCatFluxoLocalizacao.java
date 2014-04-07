@@ -1,7 +1,6 @@
 package br.com.infox.epp.fluxo.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.COUNT_NCF_LOCALIZACAO_BY_LOC_NCF_QUERY;
 import static br.com.infox.epp.fluxo.query.NatCatFluxoLocalizacaoQuery.GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF;
@@ -21,6 +20,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,7 +35,7 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Entity
-@Table(name = TABLE_NAT_CAT_FLUXO_LOCALIZACAO, schema = PUBLIC, uniqueConstraints = { @UniqueConstraint(columnNames = {
+@Table(name = TABLE_NAT_CAT_FLUXO_LOCALIZACAO, uniqueConstraints = { @UniqueConstraint(columnNames = {
     ID_NAT_CAT_FLUXO, ID_LOCALIZACAO }) })
 @NamedQueries(value = {
     @NamedQuery(name = GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF, query = GET_NAT_CAT_FLUXO_LOCALIZACAO_BY_LOC_NCF_QUERY),
@@ -64,7 +64,7 @@ public class NatCatFluxoLocalizacao implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAT_CAT_FLUXO_LOCALIZACAO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_NAT_CAT_FLUXO_LOCALIZACAO, unique = true, nullable = false)
     public Integer getIdNatCatFluxoLocalizacao() {
         return idNatCatFluxoLocalizacao;

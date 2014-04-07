@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,7 +28,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = "tb_parametro", schema = "public")
+@Table(name = "tb_parametro")
 @NamedQueries({ @NamedQuery(name = LIST_PARAMETROS_ATIVOS, query = LIST_PARAMETROS_ATIVOS_QUERY) })
 public class Parametro implements java.io.Serializable {
 
@@ -45,9 +46,9 @@ public class Parametro implements java.io.Serializable {
     public Parametro() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_parametro")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_parametro")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_parametro", unique = true, nullable = false)
     public Integer getIdParametro() {
         return this.idParametro;

@@ -2,7 +2,6 @@ package br.com.infox.epp.processo.entity;
 
 import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_TODOS_OS_ACTOR_IDS;
@@ -45,6 +44,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
@@ -66,7 +66,7 @@ import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
 @Entity
-@Table(name = TABLE_PROCESSO, schema = PUBLIC)
+@Table(name = TABLE_PROCESSO)
 @Inheritance(strategy = JOINED)
 @NamedNativeQueries(value = {
     @NamedNativeQuery(name = APAGA_ACTOR_ID_DO_PROCESSO, query = APAGA_ACTOR_ID_DO_PROCESSO_QUERY),
@@ -101,7 +101,7 @@ public class Processo implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PROCESSO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_PROCESSO, unique = true, nullable = false)
     public Integer getIdProcesso() {
         return this.idProcesso;

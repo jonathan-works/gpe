@@ -17,7 +17,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 
 @Entity
-@Table(schema = "public", name = PessoaJuridica.TABLE_NAME)
+@Table(name = PessoaJuridica.TABLE_NAME)
 @PrimaryKeyJoinColumn(name = "id_pessoa_juridica", columnDefinition = "integer")
 @NamedQueries({ @NamedQuery(name = SEARCH_BY_CNPJ, query = SEARCH_BY_CNPJ_QUERY) })
 public class PessoaJuridica extends Pessoa {

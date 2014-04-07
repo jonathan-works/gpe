@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +23,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.endereco.filter.CepFilter;
 
 @Entity
-@Table(name = Cep.TABLE_NAME, schema = "public", uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cep" }) })
+@Table(name = Cep.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cep" }) })
 @FilterDefs(value = { @FilterDef(name = CepFilter.FILTER_CEP_ESTADO, parameters = { @ParamDef(type = "string", name = CepFilter.FILTER_PARAM_NUMERO_CEP) }) })
 @Filter(name = CepFilter.FILTER_CEP_ESTADO, condition = CepFilter.CONDITION_CEP_ESTADO)
 public class Cep implements java.io.Serializable {
@@ -41,9 +42,9 @@ public class Cep implements java.io.Serializable {
     public Cep() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_cep")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_cep")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_cep", unique = true, nullable = false)
     public int getIdCep() {
         return this.idCep;

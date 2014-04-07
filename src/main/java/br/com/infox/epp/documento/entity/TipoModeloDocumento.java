@@ -5,7 +5,6 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO_METAD
 import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ABREVIACAO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ID_GRUPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ID_TIPO_MODELO_DOCUMENTO;
@@ -23,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,7 +34,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = TABLE_TIPO_MODELO_DOCUMENTO, schema = PUBLIC, uniqueConstraints = {
+@Table(name = TABLE_TIPO_MODELO_DOCUMENTO, uniqueConstraints = {
     @UniqueConstraint(columnNames = { TIPO_MODELO_DOCUMENTO }),
     @UniqueConstraint(columnNames = { ABREVIACAO }) })
 public class TipoModeloDocumento implements Serializable {
@@ -65,7 +65,7 @@ public class TipoModeloDocumento implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_TIPO_MODELO_DOCUMENTO, unique = true, nullable = false)
     public Integer getIdTipoModeloDocumento() {
         return this.idTipoModeloDocumento;

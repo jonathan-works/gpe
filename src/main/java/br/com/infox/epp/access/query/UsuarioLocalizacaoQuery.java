@@ -3,7 +3,7 @@ package br.com.infox.epp.access.query;
 public interface UsuarioLocalizacaoQuery {
 
     String TABLE_USUARIO_LOCALIZACAO = "tb_usuario_localizacao";
-    String SEQUENCE_USUARIO_LOCALIZACAO = "public.sq_tb_usuario_localizacao";
+    String SEQUENCE_USUARIO_LOCALIZACAO = "sq_tb_usuario_localizacao";
     String ID_USUARIO_LOCALIZACAO = "id_usuario_localizacao";
     String USUARIO = "id_usuario";
     String PAPEL = "id_papel";

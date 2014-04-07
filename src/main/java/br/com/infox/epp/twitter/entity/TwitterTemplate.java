@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -13,7 +14,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = TwitterTemplate.TABLE_NAME, schema = "public")
+@Table(name = TwitterTemplate.TABLE_NAME)
 public class TwitterTemplate implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,9 +26,9 @@ public class TwitterTemplate implements Serializable {
     private String mensagem;
     private Boolean ativo;
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_twitter_template")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_twitter_template")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_twitter_template")
     public Integer getIdTwitterTemplate() {
         return idTwitterTemplate;

@@ -1,7 +1,6 @@
 package br.com.infox.epp.painel.caixa;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.painel.caixa.CaixaQuery.CAIXA_ATTRIBUTE;
 import static br.com.infox.epp.painel.caixa.CaixaQuery.DESCRICAO_CAIXA;
 import static br.com.infox.epp.painel.caixa.CaixaQuery.ID_CAIXA;
@@ -23,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -40,7 +40,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Entity
-@Table(name = TABLE_CAIXA, schema = PUBLIC)
+@Table(name = TABLE_CAIXA)
 @NamedQueries(value = { @NamedQuery(name = REMOVE_BY_ID, query = REMOVE_BY_ID_QUERY) })
 public class Caixa implements java.io.Serializable {
 
@@ -60,7 +60,7 @@ public class Caixa implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TABLE_CAIXA)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_CAIXA, unique = true, nullable = false)
     public int getIdCaixa() {
         return idCaixa;

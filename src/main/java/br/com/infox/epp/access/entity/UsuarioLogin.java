@@ -5,7 +5,6 @@ import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.constants.LengthConstants.NOME_ATRIBUTO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.BLOQUEIO;
@@ -49,6 +48,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -83,7 +83,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
 
 @Entity
-@Table(name = TABLE_USUARIO_LOGIN, schema = PUBLIC, uniqueConstraints = {
+@Table(name = TABLE_USUARIO_LOGIN, uniqueConstraints = {
     @UniqueConstraint(columnNames = LOGIN),
     @UniqueConstraint(columnNames = "id_pessoa_fisica") })
 @NamedQueries(value = {
@@ -154,7 +154,7 @@ public class UsuarioLogin implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_USUARIO, unique = true, nullable = false)
     public Integer getIdUsuarioLogin() {
         return idUsuarioLogin;
@@ -240,7 +240,7 @@ public class UsuarioLogin implements Serializable {
 
     @UserRoles
     @ManyToMany
-    @JoinTable(name = "tb_usuario_papel", schema = PUBLIC, joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_papel"))
+    @JoinTable(name = "tb_usuario_papel", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_papel"))
     @ForeignKey(name = "tb_usuario_papel_usuario_fk", inverseName = "tb_usuario_papel_papel_fk")
     public Set<Papel> getPapelSet() {
         return this.papelSet;

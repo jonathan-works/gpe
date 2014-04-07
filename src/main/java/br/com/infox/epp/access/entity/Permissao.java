@@ -1,7 +1,6 @@
 package br.com.infox.epp.access.entity;
 
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_GRANDE;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.access.query.PermissaoQuery.ACAO;
 import static br.com.infox.epp.access.query.PermissaoQuery.ALVO;
 import static br.com.infox.epp.access.query.PermissaoQuery.DESTINATARIO;
@@ -25,7 +24,7 @@ import org.jboss.seam.annotations.security.permission.PermissionTarget;
 import org.jboss.seam.annotations.security.permission.PermissionUser;
 
 @Entity
-@Table(name = TABLE_PERMISSAO, schema = PUBLIC)
+@Table(name = TABLE_PERMISSAO)
 public class Permissao implements Serializable {
     private static final long serialVersionUID = 1L;
 

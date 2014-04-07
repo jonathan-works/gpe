@@ -2,7 +2,6 @@ package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.CONTEUDO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.DATA_ALTERACAO;
 import static br.com.infox.epp.documento.query.HistoricoModeloDocumentoQuery.ID_HISTORICO_MODELO_DOCUMENTO;
@@ -23,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -37,7 +37,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = TABLE_HISTORICO_MODELO_DOCUMENTO, schema = PUBLIC)
+@Table(name = TABLE_HISTORICO_MODELO_DOCUMENTO)
 @NamedQueries(value = {
     @NamedQuery(name = LIST_MODELO, query = LIST_MODELO_QUERY),
     @NamedQuery(name = LIST_USUARIO, query = LIST_USUARIO_QUERY) })
@@ -55,7 +55,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_HISTORICO_MODELO_DOCUMENTO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_HISTORICO_MODELO_DOCUMENTO, unique = true, nullable = false)
     public int getIdHistoricoModeloDocumento() {
         return idHistoricoModeloDocumento;

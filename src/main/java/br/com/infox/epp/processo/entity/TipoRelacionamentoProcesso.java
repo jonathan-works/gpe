@@ -4,7 +4,6 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.processo.query.TipoRelacionamentoProcessoQuery.ID_TIPO_RELACIONAMENTO_PROCESSO;
 import static br.com.infox.epp.processo.query.TipoRelacionamentoProcessoQuery.SEQUENCE_NAME;
 import static br.com.infox.epp.processo.query.TipoRelacionamentoProcessoQuery.TABLE_NAME;
@@ -15,6 +14,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = TABLE_NAME, schema = PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = { TIPO_RELACIONAMENTO }))
+@Table(name = TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = { TIPO_RELACIONAMENTO }))
 public class TipoRelacionamentoProcesso implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -33,7 +33,7 @@ public class TipoRelacionamentoProcesso implements Serializable {
     private Boolean ativo;
 
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_TIPO_RELACIONAMENTO_PROCESSO, unique = true, nullable = false)
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
     public Integer getIdTipoRelacionamento() {
