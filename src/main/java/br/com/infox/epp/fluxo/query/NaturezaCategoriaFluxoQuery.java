@@ -3,7 +3,7 @@ package br.com.infox.epp.fluxo.query;
 public interface NaturezaCategoriaFluxoQuery {
 
     String TABLE_NATUREZA_CATEGORIA_FLUXO = "tb_natureza_categoria_fluxo";
-    String SEQUENCE_NATRUEZA_CATEGORIA_FLUXO = "public.sq_tb_natureza_categoria_fluxo";
+    String SEQUENCE_NATRUEZA_CATEGORIA_FLUXO = "sq_tb_natureza_categoria_fluxo";
     String ID_NATUREZA_CATEGORIA_FLUXO = "id_natureza_categoria_fluxo";
     String ID_NATUREZA = "id_natureza";
     String ID_CATEGORIA = "id_categoria";

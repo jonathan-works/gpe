@@ -2,7 +2,6 @@ package br.com.infox.epp.access.entity;
 
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.access.query.RecursoQuery.COUNT_RECURSO_BY_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.RecursoQuery.COUNT_RECURSO_BY_IDENTIFICADOR_QUERY;
 import static br.com.infox.epp.access.query.RecursoQuery.PAPEIS_FROM_RECURSO;
@@ -17,6 +16,7 @@ import static br.com.infox.epp.access.query.RecursoQuery.RECURSO_BY_IDENTIFICADO
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "tb_recurso", schema = PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))
+@Table(name = "tb_recurso", uniqueConstraints = @UniqueConstraint(columnNames = "ds_identificador"))
 @NamedQueries({
     @NamedQuery(name = RECURSOS_FROM_IDENTIFICADORES, query = RECURSOS_FROM_IDENTIFICADORES_QUERY),
     @NamedQuery(name = RECURSOS_NOT_IN_IDENTIFICADORES, query = RECURSOS_NOT_IN_IDENTIFICADORES_QUERY),
@@ -55,9 +55,9 @@ public class Recurso implements java.io.Serializable {
 
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = "public.sq_tb_recurso")
+    @SequenceGenerator(name = GENERATOR, sequenceName = "sq_tb_recurso")
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_recurso", unique = true, nullable = false)
     public int getIdRecurso() {
         return this.idRecurso;

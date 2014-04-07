@@ -19,4 +19,4 @@ delete from tb_processo_documento_bin;
 delete from tb_processo_epa;
 delete from tb_processo;
 
-SELECT setval('public.sq_tb_processo', 1, true);
+SELECT setval('sq_tb_processo', 1, true);

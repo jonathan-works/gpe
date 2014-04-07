@@ -5,7 +5,7 @@ import java.io.Serializable;
 public interface BloqueioUsuarioQuery extends Serializable {
 
     String TABLE_BLOQUEIO_USUARIO = "tb_bloqueio_usuario";
-    String SEQUENCE_BLOQUEIO_USUARIO = "public.sq_tb_bloqueio_usuario";
+    String SEQUENCE_BLOQUEIO_USUARIO = "sq_tb_bloqueio_usuario";
     String ID_BLOQUEIO_USUARIO = "id_bloqueio_usuario";
     String ID_USUARIO = "id_usuario";
     String DATA_BLOQUEIO = "dt_bloqueio";
@@ -21,7 +21,7 @@ public interface BloqueioUsuarioQuery extends Serializable {
 
     String PARAM_ID_USUARIO = "id_usuario";
     String UNDO_BLOQUEIO = "undoBloqueio";
-    String UNDO_BLOQUEIO_NATIVE_QUERY = "update public.tb_usuario set in_bloqueio=false where id_usuario = :"
+    String UNDO_BLOQUEIO_NATIVE_QUERY = "update tb_usuario set in_bloqueio=false where id_usuario = :"
             + PARAM_ID_USUARIO;
 
     String PARAM_BLOQUEIO = "bloqueio";

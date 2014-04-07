@@ -72,7 +72,7 @@ public class JbpmEventsHandler implements Serializable {
     @Observer(ProcessBuilder.POST_DEPLOY_EVENT)
     public static void updatePostDeploy() {
         try {
-            getProcessoManager().atualizarProcessos();
+        	getProcessoManager().atualizarProcessos();
             getTarefaManager().encontrarNovasTarefas();
             getTarefaJbpmManager().inserirVersoesTarefas();
         } catch (IllegalStateException | TransactionRequiredException exception) {

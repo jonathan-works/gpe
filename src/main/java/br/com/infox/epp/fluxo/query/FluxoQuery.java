@@ -8,7 +8,7 @@ package br.com.infox.epp.fluxo.query;
 public interface FluxoQuery {
 
     String TABLE_FLUXO = "tb_fluxo";
-    String SEQUENCE_FLUXO = "public.sq_tb_fluxo";
+    String SEQUENCE_FLUXO = "sq_tb_fluxo";
     String ID_FLUXO = "id_fluxo";
     String ID_USUARIO_PUBLICACAO = "id_usuario_publicacao";
     String CODIGO_FLUXO = "cd_fluxo";

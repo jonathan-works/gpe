@@ -2,7 +2,6 @@ package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.DESCRICAO_LOCALIZACAO_FISICA;
 import static br.com.infox.epp.documento.query.LocalizacaoFisicaQuery.ID_LOCALIZACAO_FISICA;
@@ -20,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,7 +33,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.persistence.Recursive;
 
 @Entity
-@Table(schema = PUBLIC, name = TABLE_LOCALIZACAO_FISICA)
+@Table(name = TABLE_LOCALIZACAO_FISICA)
 public class LocalizacaoFisica implements Serializable, Recursive<LocalizacaoFisica> {
 
     private static final long serialVersionUID = 1L;
@@ -47,7 +47,7 @@ public class LocalizacaoFisica implements Serializable, Recursive<LocalizacaoFis
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO_FISICA)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_LOCALIZACAO_FISICA, unique = true, nullable = false)
     public int getIdLocalizacaoFisica() {
         return idLocalizacaoFisica;

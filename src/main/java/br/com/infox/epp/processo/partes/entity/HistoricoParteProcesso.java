@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,7 +21,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = HistoricoParteProcesso.TABLE_NAME, schema = "public")
+@Table(name = HistoricoParteProcesso.TABLE_NAME)
 public class HistoricoParteProcesso {
 
     public static final String TABLE_NAME = "tb_historico_parte_processo";
@@ -47,9 +48,9 @@ public class HistoricoParteProcesso {
         ativo = parteProcessoAtual.getAtivo();
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_historico_parte_processo")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_historico_parte_processo")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_historico_parte_processo", unique = true, nullable = false)
     public Integer getIdHistoricoParteProcesso() {
         return idHistoricoParteProcesso;

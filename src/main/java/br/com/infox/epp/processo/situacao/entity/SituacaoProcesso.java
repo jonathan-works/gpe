@@ -36,7 +36,7 @@ import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 
 @Entity
-@Table(name = SituacaoProcesso.TABLE_NAME, schema = "public")
+@Table(name = SituacaoProcesso.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = TAREFAS_TREE_ROOTS, query = TAREFAS_TREE_QUERY_ROOTS),
     @NamedQuery(name = TAREFAS_TREE_CHILDREN, query = TAREFAS_TREE_QUERY_CHILDREN),

@@ -17,7 +17,6 @@
     -->
 
     <!-- hibernate dialect -->
-    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 
     <!-- JDBC connection properties (begin) ===
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
@@ -37,10 +36,7 @@
 	<property name="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property>
 	<property name="hibernate.cache.use_second_level_cache">true</property>
 	<property name="hibernate.id.new_generator_mappings">false</property>
-	<!--
-	rodrigo
-	<property name="hibernate.default_schema" value="jbpm" />
-	-->
+
     <!-- JTA transaction properties (end) -->
 
     <!-- CMT transaction properties (begin) ===

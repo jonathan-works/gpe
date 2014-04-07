@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -30,7 +31,7 @@ import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = "tb_processo_documento_bin", schema = "public")
+@Table(name = "tb_processo_documento_bin")
 public class ProcessoDocumentoBin implements java.io.Serializable {
 
     private static final float BYTES_IN_A_KILOBYTE = 1024f;
@@ -55,9 +56,9 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     public ProcessoDocumentoBin() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_documento_bin")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_processo_documento_bin")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_documento_bin", unique = true, nullable = false)
     @NotNull
     public int getIdProcessoDocumentoBin() {

@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,7 +18,7 @@ import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
-@Table(name = ParteProcesso.TABLE_NAME, schema = "public")
+@Table(name = ParteProcesso.TABLE_NAME)
 public class ParteProcesso implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,10 +37,10 @@ public class ParteProcesso implements Serializable {
         this.pessoa = pessoa;
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_parte_processo")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_parte_processo")
     @Id
     @Column(name = "id_parte_processo")
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     public Integer getIdParteProcesso() {
         return idParteProcesso;
     }

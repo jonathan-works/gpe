@@ -4,13 +4,12 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MEDIA;
 import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.DATA_RELACIONAMENTO;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.ID_RELACIONAMENTO;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.MOTIVO;
-import static br.com.infox.epp.processo.query.RelacionamentoQuery.NOME_USUARIO;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.SEQUENCE_NAME;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.TABLE_NAME;
+import static br.com.infox.epp.processo.query.RelacionamentoQuery.NOME_USUARIO;
 import static br.com.infox.epp.processo.query.TipoRelacionamentoProcessoQuery.ID_TIPO_RELACIONAMENTO_PROCESSO;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.TemporalType.TIMESTAMP;
@@ -21,6 +20,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -32,7 +32,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = TABLE_NAME, schema = PUBLIC)
+@Table(name = TABLE_NAME)
 public class Relacionamento implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer idRelacionamento;
@@ -43,7 +43,7 @@ public class Relacionamento implements Serializable {
     private Boolean ativo;
 
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_RELACIONAMENTO, unique = true, nullable = false)
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
     public Integer getIdRelacionamento() {

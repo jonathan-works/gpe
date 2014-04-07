@@ -24,6 +24,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -37,7 +38,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
 @Entity
-@Table(name = LocalizacaoTurno.TABLE_NAME, schema = "public")
+@Table(name = LocalizacaoTurno.TABLE_NAME)
 @NamedQueries(value = {
     @NamedQuery(name = LIST_BY_LOCALIZACAO, query = LIST_BY_LOCALIZACAO_QUERY),
     @NamedQuery(name = LIST_BY_HORA_INICIO_FIM, query = LIST_BY_HORA_INICIO_FIM_QUERY),
@@ -59,9 +60,9 @@ public class LocalizacaoTurno implements Serializable {
     private Integer tempoTurno;
     private DiaSemanaEnum diaSemana;
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_localizacao_turno")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_localizacao_turno")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_localizacao_turno", unique = true, nullable = false)
     public int getIdLocalizacaoTurno() {
         return idLocalizacaoTurno;

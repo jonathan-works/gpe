@@ -1,7 +1,6 @@
 package br.com.infox.epp.fluxo.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ATIVOS_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ATIVOS_BY_FLUXO_QUERY;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.BY_RELATIONSHIP_QUERY;
@@ -25,6 +24,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -41,7 +41,7 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
-@Table(name = TABLE_NATUREZA_CATEGORIA_FLUXO, schema = PUBLIC, uniqueConstraints = { @UniqueConstraint(columnNames = {
+@Table(name = TABLE_NATUREZA_CATEGORIA_FLUXO, uniqueConstraints = { @UniqueConstraint(columnNames = {
     ID_NATUREZA, ID_CATEGORIA, ID_FLUXO }) })
 @NamedQueries(value = {
     @NamedQuery(name = ATIVOS_BY_FLUXO, query = ATIVOS_BY_FLUXO_QUERY),
@@ -76,7 +76,7 @@ public class NaturezaCategoriaFluxo implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATRUEZA_CATEGORIA_FLUXO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_NATUREZA_CATEGORIA_FLUXO, unique = true, nullable = false)
     public Integer getIdNaturezaCategoriaFluxo() {
         return idNaturezaCategoriaFluxo;

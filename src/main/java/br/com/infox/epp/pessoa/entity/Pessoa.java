@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -20,7 +21,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 
 @Entity
-@Table(name = Pessoa.TABLE_NAME, schema = "public")
+@Table(name = Pessoa.TABLE_NAME)
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Pessoa implements Serializable {
 
@@ -32,9 +33,9 @@ public abstract class Pessoa implements Serializable {
     private String nome;
     private Boolean ativo;
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_pessoa")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_pessoa")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_pessoa", unique = true, nullable = false)
     public Integer getIdPessoa() {
         return idPessoa;

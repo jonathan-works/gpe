@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -38,7 +39,7 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
-@Table(name = ProcessoEpaTarefa.TABLE_NAME, schema = "public")
+@Table(name = ProcessoEpaTarefa.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE, query = GET_PROCESSO_EPA_TAREFA_BY_TASKINSTNACE_QUERY),
     @NamedQuery(name = TAREFA_NOT_ENDED_BY_TIPO_PRAZO, query = TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY),
@@ -64,9 +65,9 @@ public class ProcessoEpaTarefa implements Serializable {
     private Integer tempoPrevisto;
     private Long taskInstance;
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_epa_tarefa")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_processo_epa_tarefa")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_epa_tarefa", unique = true, nullable = false)
     public int getIdProcessoTarefa() {
         return idProcessoTarefa;

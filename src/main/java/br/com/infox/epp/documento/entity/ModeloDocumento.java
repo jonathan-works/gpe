@@ -2,7 +2,6 @@ package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.CONTEUDO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.ID_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ModeloDocumentoQuery.ID_TIPO_MODELO_DOCUMENTO;
@@ -22,6 +21,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -37,7 +37,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = TABLE_MODELO_DOCUMENTO, schema = PUBLIC)
+@Table(name = TABLE_MODELO_DOCUMENTO)
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries(value = {
     @NamedQuery(name = LIST_ATIVOS, query = LIST_ATIVOS_QUERY),
@@ -59,7 +59,7 @@ public class ModeloDocumento implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_MODELO_DOCUMENTO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_MODELO_DOCUMENTO, unique = true, nullable = false)
     public int getIdModeloDocumento() {
         return this.idModeloDocumento;

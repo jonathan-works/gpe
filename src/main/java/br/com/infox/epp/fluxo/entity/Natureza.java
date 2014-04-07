@@ -4,7 +4,6 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.DESCRICAO_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.ID_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.LOCKED;
@@ -25,6 +24,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -36,7 +36,7 @@ import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
-@Table(name = TABLE_NATUREZA, schema = PUBLIC)
+@Table(name = TABLE_NATUREZA)
 public class Natureza implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -67,7 +67,7 @@ public class Natureza implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATUREZA)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_NATUREZA, unique = true, nullable = false)
     public Integer getIdNatureza() {
         return idNatureza;

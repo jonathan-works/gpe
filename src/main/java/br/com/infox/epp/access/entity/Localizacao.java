@@ -3,7 +3,6 @@ package br.com.infox.epp.access.entity;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.DESCRICAO_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA;
@@ -33,6 +32,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -50,7 +50,7 @@ import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 
 @Entity
-@Table(name = TABLE_LOCALIZACAO, schema = PUBLIC)
+@Table(name = TABLE_LOCALIZACAO)
 @NamedQueries(value = {
     @NamedQuery(name = LOCALIZACOES_ESTRUTURA, query = LOCALIZACOES_ESTRUTURA_QUERY),
     @NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY),
@@ -100,7 +100,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_LOCALIZACAO, unique = true, nullable = false)
     public Integer getIdLocalizacao() {
         return this.idLocalizacao;

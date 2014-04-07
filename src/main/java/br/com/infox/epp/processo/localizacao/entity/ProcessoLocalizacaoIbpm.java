@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -31,7 +32,7 @@ import br.com.infox.epp.system.annotation.Ignore;
 
 @Entity
 @Ignore
-@Table(name = ProcessoLocalizacaoIbpm.TABLE_NAME, schema = "public")
+@Table(name = ProcessoLocalizacaoIbpm.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = LIST_BY_TASK_INSTANCE, query = LIST_BY_TASK_INSTANCE_QUERY),
     @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, query = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY),
@@ -56,9 +57,9 @@ public class ProcessoLocalizacaoIbpm implements java.io.Serializable {
     public ProcessoLocalizacaoIbpm() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_processo_localizacao_ibpm")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_processo_localizacao_ibpm")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_localizacao", unique = true, nullable = false)
     public int getIdProcessoLocalizacaoIbpm() {
         return idProcessoLocalizacaoIbpm;

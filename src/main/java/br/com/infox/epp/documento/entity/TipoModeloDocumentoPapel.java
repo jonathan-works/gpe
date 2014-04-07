@@ -1,7 +1,6 @@
 package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoPapelQuery.ID_PAPEL;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoPapelQuery.ID_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoPapelQuery.ID_TIPO_MODELO_DOCUMENTO_PAPEL;
@@ -16,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,7 +27,7 @@ import javax.persistence.Table;
 import br.com.infox.epp.access.entity.Papel;
 
 @Entity
-@Table(name = TABLE_TIPO_MODELO_DOCUMENTO_PAPEL, schema = PUBLIC)
+@Table(name = TABLE_TIPO_MODELO_DOCUMENTO_PAPEL)
 @NamedQueries({ @NamedQuery(name = TIPOS_MODELO_DOCUMENTO_PERMITIDOS, query = TIPOS_MODELO_DOCUMENTO_PERMITIDOS_QUERY) })
 public class TipoModeloDocumentoPapel implements Serializable {
 
@@ -39,7 +39,7 @@ public class TipoModeloDocumentoPapel implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO_PAPEL)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_TIPO_MODELO_DOCUMENTO_PAPEL, unique = true, nullable = false)
     public int getIdTipoModeloDocumentoPapel() {
         return idTipoModeloDocumentoPapel;

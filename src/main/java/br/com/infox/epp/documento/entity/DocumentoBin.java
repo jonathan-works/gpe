@@ -1,6 +1,5 @@
 package br.com.infox.epp.documento.entity;
 
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.DocumentoBinQuery.DOCUMENTO_BIN;
 import static br.com.infox.epp.documento.query.DocumentoBinQuery.ID_DOCUMENTO_BIN;
 import static br.com.infox.epp.documento.query.DocumentoBinQuery.TABLE_DOCUMENTO_BIN;
@@ -14,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.core.util.ArrayUtil;
 
 @Entity
-@Table(name = TABLE_DOCUMENTO_BIN, schema = PUBLIC)
+@Table(name = TABLE_DOCUMENTO_BIN)
 public class DocumentoBin implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

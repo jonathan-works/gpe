@@ -15,6 +15,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -33,7 +34,7 @@ import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 
 @Entity
-@Table(name = "tb_tipo_processo_documento", schema = "public")
+@Table(name = "tb_tipo_processo_documento")
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
     @NamedQuery(name = LIST_TIPO_PROCESSO_DOCUMENTO, query = LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
@@ -59,9 +60,9 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         visibilidade = VisibilidadeEnum.A;
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tipo_processo_documento")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_tipo_processo_documento")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tipo_processo_documento", unique = true, nullable = false)
     public Integer getIdTipoProcessoDocumento() {
         return this.idTipoProcessoDocumento;

@@ -18,6 +18,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -39,7 +40,7 @@ import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
-@Table(name = Tarefa.TABLE_NAME, schema = "public")
+@Table(name = Tarefa.TABLE_NAME)
 @NamedNativeQueries({
     @NamedNativeQuery(name = PREVIOUS_NODES, query = PREVIOUS_NODES_QUERY),
     @NamedNativeQuery(name = NOVAS_TAREFAS, query = NOVAS_TAREFAS_QUERY) })
@@ -61,9 +62,9 @@ public class Tarefa implements java.io.Serializable {
     private List<TarefaJbpm> tarefaJbpmList = new ArrayList<TarefaJbpm>(0);
     private List<Caixa> caixaList = new ArrayList<Caixa>(0);
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tarefa")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_tarefa")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tarefa", unique = true, nullable = false)
     public int getIdTarefa() {
         return idTarefa;
