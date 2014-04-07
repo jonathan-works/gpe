@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -18,7 +19,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = "tb_estado", schema = "public")
+@Table(name = "tb_estado")
 public class Estado implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,9 +33,9 @@ public class Estado implements java.io.Serializable {
     public Estado() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_estado")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_estado")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_estado", unique = true, nullable = false)
     public int getIdEstado() {
         return this.idEstado;

@@ -1,7 +1,6 @@
 package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_VARIAVEL;
 import static br.com.infox.epp.documento.query.VariavelTipoModeloQuery.ID_VARIAVEL_TIPO_MODELO;
@@ -14,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -22,7 +22,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = TABLE_VARIAVEL_TIPO_MODELO, schema = PUBLIC)
+@Table(name = TABLE_VARIAVEL_TIPO_MODELO)
 public class VariavelTipoModelo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class VariavelTipoModelo implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL_TIPO_MODELO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_VARIAVEL_TIPO_MODELO, unique = true, nullable = false)
     public Integer getIdVariavelTipoModelo() {
         return idVariavelTipoModelo;

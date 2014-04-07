@@ -3,7 +3,7 @@ package br.com.infox.epp.painel.caixa;
 public interface CaixaQuery {
 
     String TABLE_CAIXA = "tb_caixa";
-    String SEQUENCE_TABLE_CAIXA = "public.sq_tb_caixa";
+    String SEQUENCE_TABLE_CAIXA = "sq_tb_caixa";
     String ID_CAIXA = "id_caixa";
     String NOME_CAIXA = "nm_caixa";
     String DESCRICAO_CAIXA = "ds_caixa";

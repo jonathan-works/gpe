@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,7 +18,7 @@ import br.com.infox.epp.system.annotation.Ignore;
 
 @Ignore
 @Entity
-@Table(name = "tb_log_detalhe", schema = "public")
+@Table(name = "tb_log_detalhe")
 public class EntityLogDetail implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,9 +32,9 @@ public class EntityLogDetail implements java.io.Serializable {
     public EntityLogDetail() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_log_detalhe")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_log_detalhe")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_log_detalhe", unique = true, nullable = false)
     public int getIdLogDetalhe() {
         return idLogDetalhe;

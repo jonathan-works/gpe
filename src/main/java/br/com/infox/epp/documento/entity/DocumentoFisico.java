@@ -2,7 +2,6 @@ package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.DOCUMENTO_FISICO;
 import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.ID_DOCUMENTO_FISICO;
 import static br.com.infox.epp.documento.query.DocumentoFisicoQuery.ID_LOCALIZACAO_FISICA;
@@ -18,6 +17,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -31,7 +31,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
-@Table(schema = PUBLIC, name = TABLE_DOCUMENTO_FISICO)
+@Table(name = TABLE_DOCUMENTO_FISICO)
 @NamedQueries(value = { @NamedQuery(name = LIST_BY_PROCESSO, query = LIST_BY_PROCESSO_QUERY) })
 public class DocumentoFisico implements Serializable {
 
@@ -45,7 +45,7 @@ public class DocumentoFisico implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_DOCUMENTO_FISICO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_DOCUMENTO_FISICO, unique = true, nullable = false)
     public Integer getIdDocumentoFisico() {
         return idDocumentoFisico;

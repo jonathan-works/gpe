@@ -1,7 +1,6 @@
 package br.com.infox.epp.fluxo.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.ID_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.ID_FLUXO_PAPEL;
 import static br.com.infox.epp.fluxo.query.FluxoPapelQuery.ID_PAPEL;
@@ -16,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,7 +29,7 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Papel;
 
 @Entity
-@Table(name = TABLE_FLUXO_PAPEL, schema = PUBLIC, uniqueConstraints = { @UniqueConstraint(columnNames = {
+@Table(name = TABLE_FLUXO_PAPEL, uniqueConstraints = { @UniqueConstraint(columnNames = {
     ID_FLUXO, ID_PAPEL }) })
 @NamedQueries(value = { @NamedQuery(name = LIST_BY_FLUXO, query = LIST_BY_FLUXO_QUERY) })
 public class FluxoPapel implements Serializable {
@@ -50,7 +50,7 @@ public class FluxoPapel implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO_PAPEL)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_FLUXO_PAPEL, unique = true, nullable = false)
     public Integer getIdFluxoPapel() {
         return idFluxoPapel;

@@ -1,7 +1,6 @@
 package br.com.infox.epp.ajuda.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.DATA_REGISTRO;
 import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.ID_HISTORICO_AJUDA;
 import static br.com.infox.epp.ajuda.query.HistoricoAjudaQuery.ID_PAGINA;
@@ -16,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -31,7 +31,7 @@ import org.hibernate.search.annotations.Analyzer;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = TABLE_HISTORICO_AJUDA, schema = PUBLIC)
+@Table(name = TABLE_HISTORICO_AJUDA)
 @Analyzer(impl = BrazilianAnalyzer.class)
 public class HistoricoAjuda implements java.io.Serializable {
 
@@ -45,7 +45,7 @@ public class HistoricoAjuda implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_HISTORICO_AJUDA)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_HISTORICO_AJUDA, unique = true, nullable = false)
     public Integer getIdHistoricoAjuda() {
         return idHistoricoAjuda;

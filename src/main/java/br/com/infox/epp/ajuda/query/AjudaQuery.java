@@ -3,7 +3,7 @@ package br.com.infox.epp.ajuda.query;
 public interface AjudaQuery {
 
     String TABLE_AJUDA = "tb_ajuda";
-    String SEQUENCE_AJUDA = "public.sq_tb_ajuda";
+    String SEQUENCE_AJUDA = "sq_tb_ajuda";
     String ID_AJUDA = "id_ajuda";
     String DATA_REGISTRO = "dt_registro";
     String TEXTO = "ds_texto";

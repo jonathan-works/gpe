@@ -2,7 +2,6 @@ package br.com.infox.epp.fluxo.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.CATEGORIA_ATTRIBUTE;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.DESCRICAO_CATEGORIA;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.ID_CATEGORIA;
@@ -20,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -33,7 +33,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
-@Table(name = TABLE_CATEGORIA, schema = PUBLIC)
+@Table(name = TABLE_CATEGORIA)
 @NamedQueries(value = { @NamedQuery(name = LIST_PROCESSO_EPP_BY_CATEGORIA, query = LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY) })
 public class Categoria implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -55,7 +55,7 @@ public class Categoria implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_CATEGORIA, unique = true, nullable = false)
     public Integer getIdCategoria() {
         return idCategoria;

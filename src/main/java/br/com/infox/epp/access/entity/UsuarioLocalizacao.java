@@ -1,7 +1,6 @@
 package br.com.infox.epp.access.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.CONTABILIZAR;
 import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.ESTRUTURA;
 import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.ID_USUARIO_LOCALIZACAO;
@@ -17,6 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -31,7 +31,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 @Entity
-@Table(name = TABLE_USUARIO_LOCALIZACAO, schema = PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = {
+@Table(name = TABLE_USUARIO_LOCALIZACAO, uniqueConstraints = @UniqueConstraint(columnNames = {
     USUARIO, PAPEL, LOCALIZACAO, ESTRUTURA }))
 @Inheritance(strategy = InheritanceType.JOINED)
 public class UsuarioLocalizacao implements java.io.Serializable {
@@ -77,7 +77,7 @@ public class UsuarioLocalizacao implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO_LOCALIZACAO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_USUARIO_LOCALIZACAO, unique = true, nullable = false)
     public Integer getIdUsuarioLocalizacao() {
         return this.idUsuarioLocalizacao;

@@ -33,7 +33,7 @@ public class LocalizacaoAssignment implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(LocalizacaoAssignment.class);
-    private static final String IBPM_QUERY_INSERT = "insert into public.tb_processo_localizacao_ibpm "
+    private static final String IBPM_QUERY_INSERT = "insert into tb_processo_localizacao_ibpm "
             + "(id_task_jbpm, id_processinstance_jbpm, id_processo, "
             + "id_localizacao, id_papel, in_contabilizar, id_task_instance) "
             + "values (:idTaskJbpm, :idProcessInstance, :idProcesso, "

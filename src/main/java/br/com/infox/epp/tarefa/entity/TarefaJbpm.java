@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = TarefaJbpm.TABLE_NAME, schema = "public", uniqueConstraints = { @UniqueConstraint(columnNames = {
+@Table(name = TarefaJbpm.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = {
     "id_tarefa", "id_jbpm_task" }) })
 @NamedNativeQueries({ @NamedNativeQuery(name = INSERT_TAREFA_VERSIONS, query = INSERT_TAREFA_VERSIONS_QUERY) })
 public class TarefaJbpm implements java.io.Serializable {
@@ -31,9 +32,9 @@ public class TarefaJbpm implements java.io.Serializable {
     private Tarefa tarefa;
     private Long idJbpmTask;
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tarefa_jbpm")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_tarefa_jbpm")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tarefa_jbpm", unique = true, nullable = false)
     public int getIdTarefaJbpm() {
         return idTarefaJbpm;

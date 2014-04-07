@@ -2,7 +2,6 @@ package br.com.infox.epp.fluxo.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.fluxo.query.ItemQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.fluxo.query.ItemQuery.CODIGO_ITEM;
 import static br.com.infox.epp.fluxo.query.ItemQuery.DESCRICAO_ITEM;
@@ -21,6 +20,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -38,7 +38,7 @@ import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.fluxo.query.ItemQuery;
 
 @Entity
-@Table(name = TABLE_ITEM, schema = PUBLIC)
+@Table(name = TABLE_ITEM)
 @NamedQueries(value = { @NamedQuery(name = ItemQuery.GET_FOLHAS, query = ItemQuery.GET_FOLHAS_QUERY) })
 public class Item implements Serializable, Recursive<Item> {
 
@@ -71,7 +71,7 @@ public class Item implements Serializable, Recursive<Item> {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_ITEM)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_ITEM, unique = true, nullable = false)
     public Integer getIdItem() {
         return this.idItem;

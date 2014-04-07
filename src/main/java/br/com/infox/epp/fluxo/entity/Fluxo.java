@@ -18,7 +18,6 @@ import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.CODIGO_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO_QUERY;
@@ -56,6 +55,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -75,7 +75,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
-@Table(name = TABLE_FLUXO, schema = PUBLIC, uniqueConstraints = {
+@Table(name = TABLE_FLUXO, uniqueConstraints = {
     @UniqueConstraint(columnNames = { DESCRICAO_FLUXO }),
     @UniqueConstraint(columnNames = { CODIGO_FLUXO }) })
 @NamedQueries(value = {
@@ -131,7 +131,7 @@ public class Fluxo implements Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_FLUXO, unique = true, nullable = false)
     public Integer getIdFluxo() {
         return this.idFluxo;

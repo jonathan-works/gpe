@@ -9,7 +9,7 @@ public interface SituacaoProcessoFilter {
     String TYPE_DATE = "date";
 
     String FILTER_PAPEL_LOCALIZACAO = "papelLocalizacaoSituacaoProcesso";
-    String CONDITION_PAPEL_LOCALIZACAO = "exists (select 1 from public.tb_processo_localizacao_ibpm tl "
+    String CONDITION_PAPEL_LOCALIZACAO = "exists (select 1 from tb_processo_localizacao_ibpm tl "
             + "where tl.id_processo = id_processo "
             + "and tl.id_task_jbpm = id_task "
             + "and tl.id_localizacao = :idLocalizacao "

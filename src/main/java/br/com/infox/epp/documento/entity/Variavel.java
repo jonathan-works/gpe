@@ -2,7 +2,6 @@ package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.documento.query.VariavelQuery.DESCRICAO_VARIAVEL;
 import static br.com.infox.epp.documento.query.VariavelQuery.ID_VARIAVEL;
 import static br.com.infox.epp.documento.query.VariavelQuery.SEQUENCE_VARIAVEL;
@@ -20,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -32,7 +32,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = TABLE_VARIAVEL, schema = PUBLIC)
+@Table(name = TABLE_VARIAVEL)
 @NamedQueries(value = { @NamedQuery(name = VARIAVEL_BY_TIPO_MODELO_DOCUMENTO, query = VARIAVEL_BY_TIPO_MODELO_QUERY) })
 public class Variavel implements java.io.Serializable {
 
@@ -50,7 +50,7 @@ public class Variavel implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_VARIAVEL, unique = true, nullable = false)
     public int getIdVariavel() {
         return this.idVariavel;

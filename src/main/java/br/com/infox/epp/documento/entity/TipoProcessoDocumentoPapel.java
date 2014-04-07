@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,7 +18,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery;
 
 @Entity
-@Table(name = "tb_tipo_processo_documento_papel", schema = "public")
+@Table(name = "tb_tipo_processo_documento_papel")
 @NamedQueries(value = { @NamedQuery(name = TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA, query = TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA_QUERY) })
 public class TipoProcessoDocumentoPapel implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
@@ -30,9 +31,9 @@ public class TipoProcessoDocumentoPapel implements java.io.Serializable {
     public TipoProcessoDocumentoPapel() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_tipo_processo_documento_papel")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_tipo_processo_documento_papel")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tipo_processo_documento_papel", nullable = false, unique = true)
     public Integer getIdTipoProcessoDocumentoPapel() {
         return idTipoProcessoDocumentoPapel;

@@ -3,7 +3,7 @@ package br.com.infox.epp.fluxo.query;
 public interface CategoriaItemQuery {
 
     String TABLE_CATEGORIA_ITEM = "tb_categoria_item";
-    String SEQUENCE_CATEGORIA_ITEM = "public.sq_tb_categoria_item";
+    String SEQUENCE_CATEGORIA_ITEM = "sq_tb_categoria_item";
     String ID_CATEGORIA_ITEM = "id_categoria_item";
     String ID_CATEGORIA = "id_categoria";
     String ID_ITEM = "id_item";

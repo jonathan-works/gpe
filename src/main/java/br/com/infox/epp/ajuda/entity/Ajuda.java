@@ -1,7 +1,6 @@
 package br.com.infox.epp.ajuda.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL_QUERY;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_FIND_ALL;
@@ -20,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -41,7 +41,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.search.Reindexer;
 
 @Entity
-@Table(name = TABLE_AJUDA, schema = PUBLIC)
+@Table(name = TABLE_AJUDA)
 @NamedQueries(value = {
     @NamedQuery(name = AJUDA_FIND_ALL, query = AJUDA_FIND_ALL_QUERY),
     @NamedQuery(name = AJUDA_BY_URL, query = AJUDA_BY_URL_QUERY) })
@@ -58,7 +58,7 @@ public class Ajuda implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_AJUDA)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_AJUDA, unique = true, nullable = false)
     public Integer getIdAjuda() {
         return idAjuda;

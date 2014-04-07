@@ -20,7 +20,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = UsuarioTaskInstance.TABLE_NAME, schema = "public")
+@Table(name = UsuarioTaskInstance.TABLE_NAME)
 @NamedNativeQueries({ @NamedNativeQuery(name = USUARIO_DA_TAREFA, query = USUARIO_DA_TAREFA_QUERY) })
 public class UsuarioTaskInstance implements Serializable {
 

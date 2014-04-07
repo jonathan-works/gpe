@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +23,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Entity
-@Table(schema = "public", name = CalendarioEventos.TABLE_NAME)
+@Table(name = CalendarioEventos.TABLE_NAME)
 public class CalendarioEventos implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_calendario_eventos";
@@ -36,9 +37,9 @@ public class CalendarioEventos implements Serializable {
     private Date dataEvento;
     private Boolean repeteAno = Boolean.TRUE;
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_calendario_eventos")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_calendario_eventos")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_calendario_evento", unique = true, nullable = false)
     public int getIdCalendarioEvento() {
         return idCalendarioEvento;

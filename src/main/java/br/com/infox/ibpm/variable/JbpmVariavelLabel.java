@@ -3,6 +3,7 @@ package br.com.infox.ibpm.variable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -12,7 +13,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 
 @Entity
-@Table(name = "tb_jbpm_variavel_label", schema = "public")
+@Table(name = "tb_jbpm_variavel_label")
 public class JbpmVariavelLabel implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,9 +25,9 @@ public class JbpmVariavelLabel implements java.io.Serializable {
     public JbpmVariavelLabel() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_jbpm_variavel_label")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_jbpm_variavel_label")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_jbpm_variavel_label", unique = true, nullable = false)
     public int getIdJbpmVariavelLabel() {
         return this.idJbpmVariavelLabel;

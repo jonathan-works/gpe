@@ -31,7 +31,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 
 @Entity
-@Table(name = ContaTwitter.NAME, schema = "public")
+@Table(name = ContaTwitter.NAME)
 @NamedQueries({
     @NamedQuery(name = CONTA_TWITTER_BY_USUARIO, query = CONTA_TWITTER_BY_USUARIO_QUERY),
     @NamedQuery(name = CONTA_TWITTER_BY_ID_USUARIO, query = CONTA_TWITTER_BY_ID_USUARIO_QUERY),

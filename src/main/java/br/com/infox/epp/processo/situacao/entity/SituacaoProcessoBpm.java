@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = SituacaoProcessoBpm.TABLE_NAME, schema = "public")
+@Table(name = SituacaoProcessoBpm.TABLE_NAME)
 public class SituacaoProcessoBpm implements java.io.Serializable {
 
     public static final String TABLE_NAME = "vs_situacao_processo_bpm";

@@ -3,7 +3,6 @@ package br.com.infox.epp.access.entity;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.NOME_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.access.query.PapelQuery.IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.ID_PAPEL;
 import static br.com.infox.epp.access.query.PapelQuery.NOME_PAPEL;
@@ -27,6 +26,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -51,7 +51,7 @@ import br.com.infox.epp.access.dao.PapelDAO;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
-@Table(name = TABLE_PAPEL, schema = PUBLIC, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
+@Table(name = TABLE_PAPEL, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
 @NamedQueries({
     @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY),
     @NamedQuery(name = PAPEL_BY_IDENTIFICADOR, query = PAPEL_BY_IDENTIFICADOR_QUERY),
@@ -79,7 +79,7 @@ public class Papel implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_PAPEL, unique = true, nullable = false)
     public int getIdPapel() {
         return this.idPapel;
@@ -113,7 +113,7 @@ public class Papel implements java.io.Serializable {
 
     @RoleGroups
     @ManyToMany
-    @JoinTable(name = "tb_papel_grupo", schema = PUBLIC, joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "membro_do_grupo"))
+    @JoinTable(name = "tb_papel_grupo", joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "membro_do_grupo"))
     @ForeignKey(name = "tb_papel_grupo_papel_fk", inverseName = "tb_papel_grupo_membro_fk")
     @OrderBy("nome")
     public List<Papel> getGrupos() {

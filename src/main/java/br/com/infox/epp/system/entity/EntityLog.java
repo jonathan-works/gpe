@@ -11,6 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,7 +30,7 @@ import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 
 @Ignore
 @Entity
-@Table(name = "tb_log", schema = "public")
+@Table(name = "tb_log")
 public class EntityLog implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,9 +49,9 @@ public class EntityLog implements java.io.Serializable {
     public EntityLog() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "public.sq_tb_log")
+    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_log")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_log", unique = true, nullable = false)
     public int getIdLog() {
         return idLog;

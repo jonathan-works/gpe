@@ -1,7 +1,6 @@
 package br.com.infox.epp.mail.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.core.persistence.ORConstants.PUBLIC;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_ESTRUTURA;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_GRUPO_EMAIL;
 import static br.com.infox.epp.mail.query.ListaEmailQuery.ID_LISTA_EMAIL;
@@ -22,6 +21,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,7 +34,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 
 @Entity
-@Table(name = TABLE_LISTA_EMAIL, schema = PUBLIC)
+@Table(name = TABLE_LISTA_EMAIL)
 @NamedQueries({
     @NamedQuery(name = LISTA_EMAIL_BY_ID_GRUPO, query = LISTA_EMAIL_BY_ID_GRUPO_QUERY),
     @NamedQuery(name = RESOLVE_LISTA_EMAIL_BY_ID_GRUPO, query = RESOLVE_LISTA_EMAIL_BY_ID_GRUPO_QUERY),
@@ -54,7 +54,7 @@ public class ListaEmail implements java.io.Serializable {
 
     @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LISTA_EMAIL)
     @Id
-    @GeneratedValue(generator = GENERATOR)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_LISTA_EMAIL, unique = true, nullable = false)
     public int getIdListaEmail() {
         return this.idListaEmail;
