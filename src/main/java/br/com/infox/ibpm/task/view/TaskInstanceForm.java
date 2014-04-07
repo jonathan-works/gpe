@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.task.view;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,11 +23,12 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
+import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 
 /**
  * Gera um formulario a partir do controller da tarefa atual (taskInstance) Para
@@ -73,9 +75,9 @@ public class TaskInstanceForm implements Serializable {
             for (VariableAccess var : list) {
                 if (var.isReadable() && var.isWritable()) {
                     String[] tokens = var.getMappedName().split(":");
-                    String type = tokens[0];
+                    VariableType type = VariableType.convertValueOf(tokens[0]);
                     String name = tokens[1];
-                    if ("form".equals(type)) {
+                    if (VariableType.FORM.equals(type)) {
                         String formName = name + "Form";
                         form = (Form) Component.getInstance(formName);
                         if (form != null) {
@@ -110,9 +112,9 @@ public class TaskInstanceForm implements Serializable {
     private void addVariablesToForm(List<VariableAccess> list) {
         if (list != null) {
             for (VariableAccess var : list) {
-                if (var.isReadable() && var.isWritable()) {
+                if (var.isReadable() && var.isWritable() && !var.getAccess().hasAccess("hidden")) {
                     String[] tokens = var.getMappedName().split(":");
-                    String type = tokens[0];
+                    VariableType type = VariableType.convertValueOf(tokens[0]);
                     String name = tokens[1];
                     Object variable = JbpmUtil.getProcessVariable(name
                             + "Modelo");
@@ -132,37 +134,49 @@ public class TaskInstanceForm implements Serializable {
                     ff.setFormId(form.getFormId());
                     ff.setId(var.getVariableName() + "-" + taskInstance.getId());
                     ff.setRequired(var.isRequired() + "");
-                    ff.setLabel(VariableHandler.getLabel(name));
-                    ff.setType(type);
+                    ff.setLabel(var.getVariableName());
+                    ff.setType(type.name());
                     form.getFields().add(ff);
-                    if ("page".equals(type) || "frame".equals(type)) {
-                        String url = name.replaceAll("_", "/");
-                        url = "/" + url
-                                + ("page".equals(type) ? ".seam" : ".xhtml");
-                        String urlParamName = "page".equals(type) ? "url" : "urlFrame";
-                        Map<String, Object> props = new HashMap<String, Object>();
-                        props.put(urlParamName, url);
-                        ff.setProperties(props);
-                    } else if ("enumeracao".equals(type)) {
-                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                        Integer id = Integer.valueOf(tokens[2]);
-                        DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
+                    ff.getProperties().put("pagePath", type.getPath());
+                    switch (type) {
+                        case PAGE:
+                            setPageProperties(name, ff, "seam", "url");
+                            break;
+                        case FRAME:
+                            setPageProperties(name, ff, "xhtml", "urlFrame");
+                            break;
+                        case ENUMERATION:{
+                            DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+                            Integer id = Integer.valueOf(tokens[2]);
+                            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
 
-                        String[] itens = dominio.getDominio().split(";");
-                        List<SelectItem> selectItens = new ArrayList<>();
-                        for (String item : itens) {
-                            String[] pair = item.split("=");
-                            selectItens.add(new SelectItem(pair[0], pair[1]));
+                            String[] itens = dominio.getDominio().split(";");
+                            List<SelectItem> selectItens = new ArrayList<>();
+                            for (String item : itens) {
+                                String[] pair = item.split("=");
+                                selectItens.add(new SelectItem(pair[0], pair[1]));
+                            }
+                            ff.getProperties().put("items", selectItens);
                         }
-                        ff.getProperties().put("items", selectItens);
-                    } else if("date".equals(type)) {
-                        Map<String, Object> props = new HashMap<String, Object>();
-                        props.put("tipoValidacao", tokens[2]);
-                        ff.setProperties(props);
+                        case DATE:{
+                            if (tokens.length < 3) {
+                                ff.getProperties().put("tipoValidacao", ValidacaoDataEnum.L.name());
+                            } else {
+                                ff.getProperties().put("tipoValidacao", tokens[2]);
+                            }
+                        }
+                        default:
+                            break;
                     }
                 }
             }
         }
+    }
+
+    private void setPageProperties(String name, FormField ff, final String suffix,
+            final String propType) {
+        final String url = format("/{0}.{1}", name.replaceAll("_", "/"), suffix );
+        ff.getProperties().put(propType, url);
     }
 
     private void getTaskInstance() {

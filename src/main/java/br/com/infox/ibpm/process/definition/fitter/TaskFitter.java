@@ -3,6 +3,7 @@ package br.com.infox.ibpm.process.definition.fitter;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.jbpm.taskmgmt.def.Task;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.task.manager.JbpmTaskManager;
 
@@ -42,6 +44,7 @@ public class TaskFitter extends Fitter implements Serializable {
     private Tarefa tarefaAtual;
     private Set<Tarefa> tarefasModificadas = new HashSet<>();
     private boolean currentJbpmTaskPersisted;
+    private List<VariableType> typeList;
 
     @In
     private JbpmTaskManager jbpmTaskManager;
@@ -214,5 +217,16 @@ public class TaskFitter extends Fitter implements Serializable {
     
     public boolean canChangeCurrentTaskName() {
         return currentTask != null && !getProcessBuilder().existemProcessosAssociadosAoFluxo();
+    }
+
+    public List<VariableType> getTypeList() {
+        if (typeList == null) {
+            typeList = Arrays.asList(VariableType.values());
+        }
+        return typeList;
+    }
+
+    public void setTypeList(List<VariableType> typeList) {
+        this.typeList = typeList;
     }
 }

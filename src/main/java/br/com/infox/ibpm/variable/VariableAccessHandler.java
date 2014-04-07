@@ -34,6 +34,7 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -48,7 +49,7 @@ public class VariableAccessHandler implements Serializable {
     private VariableAccess variableAccess;
     private String name;
     private String label;
-    private String type;
+    private VariableType type;
     private boolean[] access;
     private List<Integer> modeloList;
     private List<ModeloDocumento> modeloDocumentoList;
@@ -65,9 +66,9 @@ public class VariableAccessHandler implements Serializable {
         String mappedName = variableAccess.getMappedName();
         if (mappedName.indexOf(':') > 0) {
             String[] tokens = mappedName.split(":");
-            this.type = tokens[0];
+            this.type = VariableType.convertValueOf(tokens[0]);
             if (tokens.length >= 3) {
-                if ("date".equals(type)) {
+                if (isTipoData(this.type)) {
                     this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
                 } else {
                     DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
@@ -75,23 +76,24 @@ public class VariableAccessHandler implements Serializable {
                 }
             }
         } else {
-            this.type = "default";
+            this.type = VariableType.STRING;
         }
         this.name = variableAccess.getVariableName();
-        access = new boolean[3];
+        access = new boolean[4];
         access[0] = variableAccess.isReadable();
         access[1] = variableAccess.isWritable();
         access[2] = variableAccess.isRequired();
+        access[3] = variableAccess.getAccess().hasAccess("hidden");
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
     }
 
-    private boolean tipoPossuiDominio(String type) {
-        return "enumeracao".equals(type);
+    private boolean tipoPossuiDominio(VariableType type) {
+        return VariableType.ENUMERATION.equals(type);
     }
 
-    private boolean isTipoData(String type) {
-        return "date".equals(type);
+    private boolean isTipoData(VariableType type) {
+        return VariableType.DATE.equals(type);
     }
 
     public String getName() {
@@ -102,7 +104,7 @@ public class VariableAccessHandler implements Serializable {
         String auxiliarName = name.replace(' ', '_').replace('/', '_');
         if (!auxiliarName.equals(this.name)) {
             this.name = auxiliarName;
-            if ("page".equals(type) && !pageExists()) {
+            if (VariableType.PAGE.equals(type) && !pageExists()) {
                 this.name = "";
                 return;
             }
@@ -193,7 +195,7 @@ public class VariableAccessHandler implements Serializable {
         this.variableAccess = variableAccess;
     }
 
-    public String getType() {
+    public VariableType getType() {
         return type;
     }
 
@@ -208,9 +210,9 @@ public class VariableAccessHandler implements Serializable {
         return true;
     }
 
-    public void setType(String type) {
+    public void setType(VariableType type) {
         this.type = type;
-        if ("form".equals(type)) {
+        if (VariableType.FORM.equals(type)) {
             String nameForm = name + "Form";
             boolean existeForm = Component.getInstance(nameForm) != null;
             if (!existeForm) {
@@ -219,7 +221,7 @@ public class VariableAccessHandler implements Serializable {
                 return;
             }
         }
-        if ("page".equals(type) && !pageExists()) {
+        if (VariableType.PAGE.equals(type) && !pageExists()) {
             setWritable(true);
             this.name = "";
             return;
@@ -255,6 +257,22 @@ public class VariableAccessHandler implements Serializable {
         }
     }
 
+    public boolean isHidden() {
+        return variableAccess.getAccess().hasAccess("hidden");
+    }
+    
+    public void setHidden(boolean hidden) {
+        if (hidden != variableAccess.getAccess().hasAccess("hidden")) {
+            access[3] = hidden;
+            if (hidden) {
+                access[0] = true;
+                access[1] = true;
+                access[2] = false;
+            }
+            ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+        }
+    }
+    
     public boolean isRequired() {
         return variableAccess.getAccess().isRequired();
     }
@@ -265,6 +283,7 @@ public class VariableAccessHandler implements Serializable {
             if (required) {
                 access[0] = true;
                 access[1] = true;
+                access[3] = false;
             }
             ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
         }
@@ -273,25 +292,41 @@ public class VariableAccessHandler implements Serializable {
     private String getAccess() {
         StringBuilder sb = new StringBuilder();
         if (access[2]) {
+            access[3] = false;
+            access[1] = true;
+        }
+        if (access[3]) {
+            access[2] = false;
             access[1] = true;
         }
         if (access[1]) {
             access[0] = true;
         }
         if (access[0]) {
-            sb.append("read,");
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+            sb.append("read");
         }
         if (access[1]) {
-            sb.append("write,");
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+            sb.append("write");
         }
         if (access[2]) {
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
             sb.append("required");
         }
-        String s = sb.toString();
-        if (s.endsWith(",")) {
-            s = s.substring(0, s.length() - 1);
+        if (access[3]) {
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+            sb.append("hidden");
         }
-        return s;
+        return sb.toString();
     }
 
     public List<Integer> getModeloList() {
@@ -351,7 +386,7 @@ public class VariableAccessHandler implements Serializable {
             String[] tokens = v.split(":");
             if (tokens.length > 1 && tokens[1].equals(name)) {
                 this.label = getLabel();
-                setType(tokens[0]);
+                setType(VariableType.convertValueOf(tokens[0]));
                 setWritable(false);
                 if (tokens.length >= 3) {
                     DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
@@ -363,7 +398,7 @@ public class VariableAccessHandler implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public static List<VariableAccessHandler> getList(Task task) {
-        List<VariableAccessHandler> ret = new ArrayList<VariableAccessHandler>();
+        List<VariableAccessHandler> ret = new ArrayList<>();
         if (task.getTaskController() == null) {
             return ret;
         }
@@ -419,11 +454,12 @@ public class VariableAccessHandler implements Serializable {
     // TODO verificar por que tem registro duplicado na base
     private void storeLabel(String name, String label) {
         Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
-        String old = map.get(name);
+        final String mappedVariableName = task.getProcessDefinition().getName()+":"+name;
+        String old = map.get(mappedVariableName);
         if (!label.equals(old)) {
-            map.put(name, label);
+            map.put(task.getProcessDefinition().getName()+":"+name, label);
             JbpmVariavelLabel j = new JbpmVariavelLabel();
-            j.setNomeVariavel(name);
+            j.setNomeVariavel(task.getProcessDefinition().getName()+":"+name);
             j.setLabelVariavel(label);
             try {
                 genericManager().persist(j);
@@ -435,7 +471,7 @@ public class VariableAccessHandler implements Serializable {
 
     public String getLabel() {
         if (!"".equals(name)) {
-            setLabel(VariableHandler.getLabel(name));
+            setLabel(VariableHandler.getLabel(task.getProcessDefinition().getName()+":"+name));
         }
         return this.label;
     }

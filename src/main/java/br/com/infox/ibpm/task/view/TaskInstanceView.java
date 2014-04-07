@@ -20,6 +20,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -74,7 +75,7 @@ public class TaskInstanceView implements Serializable {
             for (VariableAccess var : list) {
                 if (var.isReadable() && !var.isWritable()) {
                     String[] tokens = var.getMappedName().split(":");
-                    String type = tokens[0];
+                    VariableType type = VariableType.valueOf(tokens[0]);
                     String name = tokens[1];
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
@@ -83,44 +84,59 @@ public class TaskInstanceView implements Serializable {
                     ff.setRequired(var.isRequired() + "");
                     ff.setLabel(VariableHandler.getLabel(name));
                     Object value = taskInstance.getVariable(var.getVariableName());
-                    Map<String, Object> properties = new HashMap<String, Object>();
-                    if (type.startsWith("textEdit")) {
-                        ff.setType("textEditComboReadonly");
-                        if (value != null) {
-                            ProcessoDocumento processoDocumento = processoDocumentoManager().find((Integer) value);
-                            if (processoDocumento != null) {
-                                properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
-                                properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
+                    Map<String, Object> properties = ff.getProperties();
+                    
+                    switch (type) {
+                        case EDITOR:
+                        {
+                            ff.setType(type.name());
+                            if (value != null) {
+                                ProcessoDocumento processoDocumento = processoDocumentoManager().find((Integer) value);
+                                if (processoDocumento != null) {
+                                    properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
+                                    properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
+                                }
                             }
                         }
-                    } else if ("numberMoney".equalsIgnoreCase(type)) {
-                        ff.setType(type);
-                        ff.setValue(String.format(FloatFormatConstants.F2, value));
-                    } else if ("enumeracao".equals(type)) {
-                        ff.setType("default");
-                        ff.setValue(value);
-                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                        Integer id = Integer.valueOf(tokens[2]);
-                        DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
+                            break;
+                        case MONETARY:
+                        {
+                            ff.setType(type.name());
+                            ff.setValue(String.format(FloatFormatConstants.F2, value));
+                        }
+                            break;
+                        case ENUMERATION:
+                        {
+                            ff.setType(VariableType.STRING.name());
+                            ff.setValue(value);
+                            DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+                            Integer id = Integer.valueOf(tokens[2]);
+                            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
 
-                        String[] itens = dominio.getDominio().split(";");
-                        for (String item : itens) {
-                            String[] pair = item.split("=");
-                            if (pair[0].equals(value)) {
-                                ff.setValue(pair[1]);
-                                break;
+                            String[] itens = dominio.getDominio().split(";");
+                            for (String item : itens) {
+                                String[] pair = item.split("=");
+                                if (pair[0].equals(value)) {
+                                    ff.setValue(pair[1]);
+                                    break;
+                                }
                             }
                         }
-                    } else {
-                        ff.setType(type);
-                        ff.setValue(value);
+                            break;
+                        default:
+                        {
+                            ff.setType(type.name());
+                            ff.setValue(value);
+                        }
+                            break;
                     }
+                    
                     properties.put("readonly", !var.isWritable());
                     if (value == null && !var.isWritable()
-                            && "textEdit".equals(type)) {
-                        properties.put("rendered", "false");
+                            && VariableType.EDITOR.equals(type)) {
+                        properties.put("rendered", false);
                     }
-                    ff.setProperties(properties);
+                    ff.getProperties().put("pagePath", type.getPath());
                     form.getFields().add(ff);
                 }
             }

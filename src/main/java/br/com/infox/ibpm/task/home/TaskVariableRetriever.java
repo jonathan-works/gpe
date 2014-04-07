@@ -1,5 +1,11 @@
 package br.com.infox.ibpm.task.home;
 
+import static br.com.infox.ibpm.process.definition.variable.VariableType.EDITOR;
+import static br.com.infox.ibpm.process.definition.variable.VariableType.FORM;
+import static br.com.infox.ibpm.process.definition.variable.VariableType.MONETARY;
+
+import java.util.Date;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -17,7 +23,8 @@ final class TaskVariableRetriever extends TaskVariable {
 
     private Object variable;
 
-    private static final LogProvider LOG = Logging.getLogProvider(TaskVariableRetriever.class);
+    private static final LogProvider LOG = Logging
+            .getLogProvider(TaskVariableRetriever.class);
 
     public TaskVariableRetriever(VariableAccess variableAccess,
             TaskInstance taskInstance) {
@@ -25,12 +32,11 @@ final class TaskVariableRetriever extends TaskVariable {
     }
 
     public boolean isEditor() {
-        return type.startsWith("textEditCombo")
-                || "textEditSignature".equals(type);
+        return EDITOR.equals(type);
     }
 
     public boolean isForm() {
-        return "form".equals(type);
+        return FORM.equals(type);
     }
 
     public boolean isWritable() {
@@ -38,7 +44,7 @@ final class TaskVariableRetriever extends TaskVariable {
     }
 
     public boolean isMonetario() {
-        return "numberMoney".equals(type) && (variable != null)
+        return MONETARY.equals(type) && (variable != null)
                 && (variable.getClass().equals(Float.class));
     }
 
@@ -71,17 +77,49 @@ final class TaskVariableRetriever extends TaskVariable {
 
     private Object getConteudo() {
         Object variable = taskInstance.getVariable(getMappedName());
-        if (isEditor()) {
-            Integer idProcessoDocumento = (Integer) variable;
-            if (idProcessoDocumento != null) {
-                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
-                Object modeloDocumento = processoDocumentoManager.getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
-                if (modeloDocumento != null) {
-                    return modeloDocumento;
-                } else {
-                    LOG.warn("ProcessoDocumento não encontrado: "
-                            + idProcessoDocumento);
-                }
+        if (EDITOR.equals(type)) {
+            variable = getConteudoEditor(variable);
+        }
+        if (variable == null && isHidden()) {
+            switch (type) {
+                case EDITOR:
+                case TEXT:
+                case STRING:
+                case ENUMERATION:
+                    variable = "_";
+                    break;
+                case BOOLEAN:
+                    variable = true;
+                    break;
+                case DATE:
+                    variable = new Date();
+                    break;
+                case INTEGER:
+                    variable = "1";
+                    break;
+                case MONETARY:
+                    variable = 0.0f;
+                    break;
+                default:
+                    break;
+                 
+            }        
+        }
+        return variable;
+    }
+
+    private Object getConteudoEditor(Object variable) {
+        Integer idProcessoDocumento = (Integer) variable;
+        if (idProcessoDocumento != null) {
+            ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
+                    .getComponent(ProcessoDocumentoManager.NAME);
+            Object modeloDocumento = processoDocumentoManager
+                    .getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
+            if (modeloDocumento != null) {
+                variable = modeloDocumento;
+            } else {
+                LOG.warn("ProcessoDocumento não encontrado: "
+                        + idProcessoDocumento);
             }
         }
         return variable;
@@ -93,7 +131,8 @@ final class TaskVariableRetriever extends TaskVariable {
 
     public TaskVariableRetriever evaluateWhenDocumentoAssinado() {
         Integer id = (Integer) taskInstance.getVariable(getMappedName());
-        AssinaturaDocumentoService documentoService = (AssinaturaDocumentoService) Component.getInstance(AssinaturaDocumentoService.NAME);
+        AssinaturaDocumentoService documentoService = (AssinaturaDocumentoService) Component
+                .getInstance(AssinaturaDocumentoService.NAME);
         if ((id != null) && (!documentoService.isDocumentoAssinado(id))
                 && isWritable()) {
             ProcessoHome.instance().carregarDadosFluxo(id);

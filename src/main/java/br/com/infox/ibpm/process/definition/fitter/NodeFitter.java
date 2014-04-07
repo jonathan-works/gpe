@@ -412,7 +412,7 @@ public class NodeFitter extends Fitter implements Serializable {
         nodeHandler = new NodeHandler(cNode);
         newNodeType = NodeTypeConstants.TASK;
         getProcessBuilder().getTransitionFitter().clearArrivingAndLeavingTransitions();
-        getProcessBuilder().getTypeFitter().setTypeList(null);
+        getProcessBuilder().getTaskFitter().setTypeList(null);
         if (tf.getCurrentTask() != null) {
             tf.getCurrentTask().clearHasTaskPage();
         }

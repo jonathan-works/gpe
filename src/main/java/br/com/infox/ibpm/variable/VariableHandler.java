@@ -74,12 +74,14 @@ public class VariableHandler implements Serializable {
         if (map.containsKey(name)) {
             return map.get(name);
         } else {
-            if (name.length() > 1) {
-                String label = name.substring(0, 1).toUpperCase()
-                        + name.substring(1);
+            String[] split = name.split(":");
+            String altName = split[split.length-1];
+            if (altName.length() > 1) {
+                String label = altName.substring(0, 1).toUpperCase()
+                        + altName.substring(1);
                 return label.replaceAll("_", " ");
             } else {
-                return name;
+                return altName;
             }
         }
     }

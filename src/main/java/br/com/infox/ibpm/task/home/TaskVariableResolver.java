@@ -15,6 +15,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 final class TaskVariableResolver extends TaskVariable {
@@ -37,14 +38,14 @@ final class TaskVariableResolver extends TaskVariable {
     }
     
     public void resolve() {
-        if ("numberMoney".equals(type) && value != null) {
+        if (VariableType.MONETARY.equals(type) && value != null) {
             String val = String.valueOf(value);
             try {
                 value = Float.parseFloat(val);
             } catch (NumberFormatException e) {
                 value = Float.parseFloat(val.replace(".", "").replace(",", "."));
             }
-        } else if ("date".equals(type) && value != null) {
+        } else if (VariableType.DATE.equals(type) && value != null) {
             try {
                 value = DateFormat.getDateInstance( DateFormat.MEDIUM).format(value);
             } catch (IllegalArgumentException e) {
@@ -65,8 +66,7 @@ final class TaskVariableResolver extends TaskVariable {
     }
 
     public boolean isEditor() {
-        return type.startsWith("textEditCombo")
-                || "textEditSignature".equals(type);
+        return VariableType.EDITOR.equals(type);
     }
 
     private String getLabel() {
