@@ -19,7 +19,9 @@
           label="#{messages['ajuda.texto']}"
           width="660"
           height="450"
-          value="#{ajudaCrudAction.instance.texto}" />
+          value="#{ajudaCrudAction.instance.texto}">
+          <f:converter converterId="internalLinkHelpEditorConverter" />
+        </wi:editor>
         <div />
         <wi:commandButton
           id="ajudaPersistButton"
