@@ -19,11 +19,14 @@ import org.hibernate.Session;
 import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
+import org.hibernate.search.errors.EmptyQueryException;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
@@ -40,6 +43,7 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
+    private static final Log LOG = Logging.getLog(ProcessoDocumentoDAO.class);
 
     @In
     private SessionAssistant sessionAssistant;
@@ -83,10 +87,14 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         final QueryBuilder queryBuilder = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(ProcessoDocumento.class).get();
-        Query luceneQuery = queryBuilder.keyword().onField("texto").matching(searchPattern).createQuery();
-        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery);
-        List<ProcessoDocumento> temp = hibernateQuery.list();
         List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
+        Query luceneQuery;
+        try {
+            luceneQuery = queryBuilder.keyword().onField("texto").matching(searchPattern).createQuery();
+        } catch (EmptyQueryException e) {
+            LOG.warn(".pesquisar()", e);
+            return ret;
+        }
         FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, ProcessoDocumento.class);
         List<ProcessoDocumento> temp = hibernateQuery.list();
         for (ProcessoDocumento documento : temp) {

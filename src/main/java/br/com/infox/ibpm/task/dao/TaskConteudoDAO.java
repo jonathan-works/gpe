@@ -10,12 +10,15 @@ import org.hibernate.Session;
 import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
+import org.hibernate.search.errors.EmptyQueryException;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jboss.seam.log.Log;
+import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -39,6 +42,7 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskConteudoDAO";
+    private static final Log LOG = Logging.getLog(TaskConteudoDAO.class);
 
     @In
     private SessionAssistant sessionAssistant;
@@ -91,10 +95,14 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         final QueryBuilder queryBuilder = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(TaskConteudo.class).get();
-        Query luceneQuery = queryBuilder.keyword().onField("conteudo").matching(searchPattern).createQuery();
-        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery);
-        List<TaskConteudo> taskConteudos = hibernateQuery.list();
+        Query luceneQuery;
         List<TaskConteudo> ret = new ArrayList<TaskConteudo>();
+        try {
+            luceneQuery = queryBuilder.keyword().onField("conteudo").matching(searchPattern).createQuery();
+        } catch (EmptyQueryException e) {
+            LOG.warn(".pesquisar()", e);
+            return ret;
+        }
         FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, TaskConteudo.class);
         List<TaskConteudo> taskConteudos = hibernateQuery.list();
         UsuarioLogin usuario = Authenticator.getUsuarioLogado();
