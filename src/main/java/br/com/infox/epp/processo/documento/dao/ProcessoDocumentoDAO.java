@@ -87,6 +87,8 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery);
         List<ProcessoDocumento> temp = hibernateQuery.list();
         List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
+        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, ProcessoDocumento.class);
+        List<ProcessoDocumento> temp = hibernateQuery.list();
         for (ProcessoDocumento documento : temp) {
             if (documento.getAnexo()) {
                 ret.add(documento);
