@@ -1,7 +1,5 @@
 package br.com.infox.epp.ajuda.dao;
 
-import static br.com.infox.constants.WarningConstants.RAWTYPES;
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_BY_URL;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.AJUDA_FIND_ALL_QUERY;
 import static br.com.infox.epp.ajuda.query.AjudaQuery.PARAM_URL;
@@ -53,11 +51,10 @@ public class AjudaDAO extends DAO<Ajuda> {
         return getNamedSingleResult(AJUDA_BY_URL, parameters);
     }
 
-    @SuppressWarnings({ RAWTYPES, UNCHECKED })
-    public List pesquisar(String textoPesquisa) throws ParseException {
+    public List<Object[]> pesquisar(String textoPesquisa) throws ParseException {
         Query luceneQuery = getLuceneQuery(textoPesquisa);
         FullTextQuery textQuery = getEntityManager().createFullTextQuery(luceneQuery, CLASS);
-        List resultado = new ArrayList<>();
+        List<Object[]> resultado = new ArrayList<>();
         for (Object obj : textQuery.getResultList()) {
             Ajuda ajuda = (Ajuda) obj;
             String fragments = SearchService.getBestFragments(luceneQuery, ajuda.getTexto());

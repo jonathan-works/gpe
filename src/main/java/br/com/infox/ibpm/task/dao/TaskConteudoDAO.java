@@ -95,6 +95,8 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
         FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery);
         List<TaskConteudo> taskConteudos = hibernateQuery.list();
         List<TaskConteudo> ret = new ArrayList<TaskConteudo>();
+        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, TaskConteudo.class);
+        List<TaskConteudo> taskConteudos = hibernateQuery.list();
         UsuarioLogin usuario = Authenticator.getUsuarioLogado();
         for (TaskConteudo tc : taskConteudos) {
             ProcessoEpa processo = getEntityManager().find(ProcessoEpa.class, tc.getNumeroProcesso());
