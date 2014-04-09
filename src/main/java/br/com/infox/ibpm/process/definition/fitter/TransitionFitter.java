@@ -5,6 +5,7 @@ import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class TransitionFitter extends Fitter implements Serializable {
                 }
             }
             if (!(n instanceof StartState)) {
-                Set<Transition> transitionSet = n.getArrivingTransitions();
+                Collection<Transition> transitionSet = n.getArrivingTransitions();
                 if (transitionSet == null || transitionSet.isEmpty()) {
                     nodeMessageMap.put(n, "Nó sem transição de entrada");
                 }
