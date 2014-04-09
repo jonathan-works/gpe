@@ -60,7 +60,6 @@ import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 import br.com.infox.ibpm.process.definition.fitter.SwimlaneFitter;
 import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 import br.com.infox.ibpm.process.definition.fitter.TransitionFitter;
-import br.com.infox.ibpm.process.definition.fitter.TypeFitter;
 import br.com.infox.ibpm.process.definition.graphical.ProcessBuilderGraph;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -92,8 +91,6 @@ public class ProcessBuilder implements Serializable {
     private TaskFitter taskFitter;
     @In
     private NodeFitter nodeFitter;
-    @In
-    private TypeFitter typeFitter;
     @In
     private ProcessBuilderGraph processBuilderGraph;
     @In
@@ -461,10 +458,6 @@ public class ProcessBuilder implements Serializable {
         clear();
     }
 
-    public String getTypeLabel(String type) {
-        return typeFitter.getTypeLabel(type);
-    }
-
     public EventFitter getEventFitter() {
         return eventFitter;
     }
@@ -483,10 +476,6 @@ public class ProcessBuilder implements Serializable {
 
     public NodeFitter getNodeFitter() {
         return nodeFitter;
-    }
-
-    public TypeFitter getTypeFitter() {
-        return typeFitter;
     }
 
     public Fluxo getFluxo() {

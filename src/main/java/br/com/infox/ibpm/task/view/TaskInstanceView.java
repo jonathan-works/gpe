@@ -1,9 +1,10 @@
 package br.com.infox.ibpm.task.view;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.ibpm.process.definition.variable.constants.VariableConstants.DEFAULT_PATH;
+import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +18,10 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -61,20 +63,22 @@ public class TaskInstanceView implements Serializable {
             return form;
         }
         form = new Form();
-        form.setHome("taskInstanceHome");
+        form.setHome(TaskInstanceHome.NAME);
         Template buttons = new Template();
         buttons.setId("empty");
         form.setButtons(buttons);
-        form.setFormId("taskInstanceView");
+        form.setFormId(TaskInstanceView.NAME);
 
         TaskController taskController = taskInstance.getTask().getTaskController();
         if (taskController != null) {
             List<VariableAccess> list = taskController.getVariableAccesses();
 
             for (VariableAccess var : list) {
-                if (var.isReadable() && !var.isWritable()) {
+                final boolean isWritable = var.isWritable();
+                final boolean isReadable = var.isReadable();
+                if (isReadable && !isWritable) {
                     String[] tokens = var.getMappedName().split(":");
-                    String type = tokens[0];
+                    VariableType type = VariableType.valueOf(tokens[0]);
                     String name = tokens[1];
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
@@ -83,44 +87,60 @@ public class TaskInstanceView implements Serializable {
                     ff.setRequired(var.isRequired() + "");
                     ff.setLabel(VariableHandler.getLabel(name));
                     Object value = taskInstance.getVariable(var.getVariableName());
-                    Map<String, Object> properties = new HashMap<String, Object>();
-                    if (type.startsWith("textEdit")) {
-                        ff.setType("textEditComboReadonly");
-                        if (value != null) {
-                            ProcessoDocumento processoDocumento = processoDocumentoManager().find((Integer) value);
-                            if (processoDocumento != null) {
-                                properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
-                                properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
-                            }
-                        }
-                    } else if ("numberMoney".equalsIgnoreCase(type)) {
-                        ff.setType(type);
-                        ff.setValue(String.format(FloatFormatConstants.F2, value));
-                    } else if ("enumeracao".equals(type)) {
-                        ff.setType("default");
-                        ff.setValue(value);
-                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                        Integer id = Integer.valueOf(tokens[2]);
-                        DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
+                    Map<String, Object> properties = ff.getProperties();
 
-                        String[] itens = dominio.getDominio().split(";");
-                        for (String item : itens) {
-                            String[] pair = item.split("=");
-                            if (pair[0].equals(value)) {
-                                ff.setValue(pair[1]);
-                                break;
+                    properties.put("pagePath", type.getPath());
+                    switch (type) {
+                        case EDITOR:
+                        {
+                            ff.setType(type.name());
+                            properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
+                            if (value != null) {
+                                ProcessoDocumento processoDocumento = processoDocumentoManager().find((Integer) value);
+                                if (processoDocumento != null) {
+                                    properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
+                                    properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
+                                }
                             }
                         }
-                    } else {
-                        ff.setType(type);
-                        ff.setValue(value);
+                            break;
+                        case MONETARY:
+                        {
+                            ff.setType(type.name());
+                            ff.setValue(format("{0,number,#.00}", value));
+                        }
+                            break;
+                        case ENUMERATION:
+                        {
+                            ff.setType(VariableType.STRING.name());
+                            ff.setValue(value);
+                            DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+                            Integer id = Integer.valueOf(tokens[2]);
+                            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
+
+                            String[] itens = dominio.getDominio().split(";");
+                            for (String item : itens) {
+                                String[] pair = item.split("=");
+                                if (pair[0].equals(value)) {
+                                    ff.setValue(pair[1]);
+                                    break;
+                                }
+                            }
+                        }
+                            break;
+                        default:
+                        {
+                            ff.setType(type.name());
+                            ff.setValue(value);
+                        }
+                            break;
                     }
+                    
                     properties.put("readonly", !var.isWritable());
                     if (value == null && !var.isWritable()
-                            && "textEdit".equals(type)) {
-                        properties.put("rendered", "false");
+                            && VariableType.EDITOR.equals(type)) {
+                        properties.put("rendered", false);
                     }
-                    ff.setProperties(properties);
                     form.getFields().add(ff);
                 }
             }

@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.Access;
@@ -34,6 +34,7 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -42,13 +43,14 @@ import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
 
+    private static final String COMMA = ",";
     private static final long serialVersionUID = -4113688503786103974L;
     private static final String PREFIX = "#{modeloDocumento.set('";
     private static final LogProvider LOG = Logging.getLogProvider(VariableAccessHandler.class);
     private VariableAccess variableAccess;
     private String name;
     private String label;
-    private String type;
+    private VariableType type;
     private boolean[] access;
     private List<Integer> modeloList;
     private List<ModeloDocumento> modeloDocumentoList;
@@ -65,33 +67,43 @@ public class VariableAccessHandler implements Serializable {
         String mappedName = variableAccess.getMappedName();
         if (mappedName.indexOf(':') > 0) {
             String[] tokens = mappedName.split(":");
-            this.type = tokens[0];
-            if (tokens.length >= 3) {
-                if ("date".equals(type)) {
-                    this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
-                } else {
-                    DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                    this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
-                }
+            this.type = VariableType.convertValueOf(tokens[0]);
+            switch (type) {
+                case DATE:
+                    if (tokens.length < 3) {
+                        this.validacaoDataEnum = ValidacaoDataEnum.L;
+                    } else {
+                        this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
+                    }
+                    break;
+                case ENUMERATION:
+                    if (tokens.length >= 3) {
+                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+                        this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
+                    }
+                    break;
+                default:
+                    break;
             }
         } else {
-            this.type = "default";
+            this.type = VariableType.STRING;
         }
         this.name = variableAccess.getVariableName();
-        access = new boolean[3];
+        access = new boolean[4];
         access[0] = variableAccess.isReadable();
         access[1] = variableAccess.isWritable();
         access[2] = variableAccess.isRequired();
+        access[3] = !variableAccess.isReadable() && variableAccess.isWritable(); 
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
     }
 
-    private boolean tipoPossuiDominio(String type) {
-        return "enumeracao".equals(type);
+    private boolean tipoPossuiDominio(VariableType type) {
+        return VariableType.ENUMERATION.equals(type);
     }
 
-    private boolean isTipoData(String type) {
-        return "date".equals(type);
+    private boolean isTipoData(VariableType type) {
+        return VariableType.DATE.equals(type);
     }
 
     public String getName() {
@@ -102,7 +114,7 @@ public class VariableAccessHandler implements Serializable {
         String auxiliarName = name.replace(' ', '_').replace('/', '_');
         if (!auxiliarName.equals(this.name)) {
             this.name = auxiliarName;
-            if ("page".equals(type) && !pageExists()) {
+            if (VariableType.PAGE.equals(type) && !pageExists()) {
                 this.name = "";
                 return;
             }
@@ -145,7 +157,7 @@ public class VariableAccessHandler implements Serializable {
                 Integer id = modeloList.get(i);
                 newExpression.append(id);
                 if (i < modeloList.size() - 1) {
-                    newExpression.append(",");
+                    newExpression.append(COMMA);
                 }
             }
             newExpression.append(")}");
@@ -193,68 +205,90 @@ public class VariableAccessHandler implements Serializable {
         this.variableAccess = variableAccess;
     }
 
-    public String getType() {
+    public VariableType getType() {
         return type;
     }
 
     private boolean pageExists() {
         String page = "/" + name.replaceAll("_", "/") + ".xhtml";
         String realPath = ServletLifecycle.getServletContext().getRealPath(page);
-        if (!new File(realPath).exists()) {
-            FacesMessages.instance().add(StatusMessage.Severity.INFO, "A página '"
+        final boolean fileExists = new File(realPath).exists();
+        if (!fileExists) {
+            FacesMessages.instance().add(Severity.INFO, "A página '"
                     + page + "' não foi encontrada.");
-            return false;
         }
-        return true;
+        return fileExists;
     }
 
-    public void setType(String type) {
+    public void setType(VariableType type) {
         this.type = type;
-        if ("form".equals(type)) {
-            String nameForm = name + "Form";
-            boolean existeForm = Component.getInstance(nameForm) != null;
-            if (!existeForm) {
-                FacesMessages.instance().add(StatusMessage.Severity.INFO, "O form '"
-                        + nameForm + "' não foi encontrado.");
-                return;
-            }
+        switch (type) {
+            case FORM:
+                String nameForm = name + "Form";
+                boolean existeForm = Component.getInstance(nameForm) != null;
+                if (!existeForm) {
+                    FacesMessages.instance().add(Severity.INFO, "O form '"
+                            + nameForm + "' não foi encontrado.");
+                }   
+                break;
+            case PAGE:
+                if (!pageExists()) {
+                    setWritable(true);
+                    this.name = "";
+                }
+                break;
+
+            default:
+                ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
+                        + name);
+                this.possuiDominio = tipoPossuiDominio(type);
+                this.isData = isTipoData(type);
+                break;
         }
-        if ("page".equals(type) && !pageExists()) {
-            setWritable(true);
-            this.name = "";
-            return;
-        }
-        ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
-                + name);
-        this.possuiDominio = tipoPossuiDominio(type);
-        this.isData = isTipoData(type);
     }
 
     public boolean isReadable() {
-        return variableAccess.getAccess().isReadable();
+        return variableAccess.isReadable();
     }
 
     public void setReadable(boolean readable) {
         if (readable != variableAccess.isReadable()) {
             access[0] = readable;
+            access[3] = !access[0];
             ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
         }
     }
 
     public boolean isWritable() {
-        return variableAccess.getAccess().isWritable();
+        return variableAccess.isWritable();
     }
 
     public void setWritable(boolean writable) {
         if (writable != variableAccess.isWritable()) {
             access[1] = writable;
-            if (writable) {
-                access[0] = true;
+            if (access[1]) {
+                access[0] = !access[3];
             }
             ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
         }
     }
 
+    public boolean isHidden() {
+        return !variableAccess.isReadable() && variableAccess.isWritable();
+    }
+    
+    public void setHidden(boolean hidden) {
+        if (hidden != (!variableAccess.isReadable() && variableAccess.isWritable())) {
+            access[3] = hidden;
+            if (access[3]) {
+                access[0] = false;
+                access[1] = true;
+                access[2] = false;
+            }
+            ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+        }
+    }
+    
     public boolean isRequired() {
         return variableAccess.getAccess().isRequired();
     }
@@ -262,9 +296,10 @@ public class VariableAccessHandler implements Serializable {
     public void setRequired(boolean required) {
         if (required != variableAccess.isRequired()) {
             access[2] = required;
-            if (required) {
+            if (access[2]) {
                 access[0] = true;
                 access[1] = true;
+                access[3] = false;
             }
             ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
         }
@@ -273,25 +308,34 @@ public class VariableAccessHandler implements Serializable {
     private String getAccess() {
         StringBuilder sb = new StringBuilder();
         if (access[2]) {
+            access[3] = false;
             access[1] = true;
-        }
-        if (access[1]) {
+            access[0] = true;
+        } else if (access[3]) {
+            access[2] = false;
+            access[1] = true;
+            access[0] = false;
+        } else if (access[1]) {
             access[0] = true;
         }
+        
         if (access[0]) {
-            sb.append("read,");
+            appendPermission(sb, "read");
         }
         if (access[1]) {
-            sb.append("write,");
+            appendPermission(sb, "write");
         }
         if (access[2]) {
-            sb.append("required");
+            appendPermission(sb, "required");
         }
-        String s = sb.toString();
-        if (s.endsWith(",")) {
-            s = s.substring(0, s.length() - 1);
+        return sb.toString();
+    }
+    
+    private void appendPermission(StringBuilder sb, String permission) {
+        if (sb.length() > 0) {
+            sb.append(COMMA);
         }
-        return s;
+        sb.append(permission);
     }
 
     public List<Integer> getModeloList() {
@@ -317,8 +361,8 @@ public class VariableAccessHandler implements Serializable {
     @SuppressWarnings({ UNCHECKED, RAWTYPES })
     public void addModelo(ModeloDocumento modelo) {
         if (modeloDocumentoList == null) {
-            modeloDocumentoList = new ArrayList<ModeloDocumento>();
-            modeloList = new ArrayList<Integer>();
+            modeloDocumentoList = new ArrayList<>();
+            modeloList = new ArrayList<>();
         }
         modeloDocumentoList.add(modelo);
         modeloList.add(modelo.getIdModeloDocumento());
@@ -351,11 +395,24 @@ public class VariableAccessHandler implements Serializable {
             String[] tokens = v.split(":");
             if (tokens.length > 1 && tokens[1].equals(name)) {
                 this.label = getLabel();
-                setType(tokens[0]);
+                setType(VariableType.convertValueOf(tokens[0]));
                 setWritable(false);
-                if (tokens.length >= 3) {
-                    DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                    setDominioVariavelTarefa(dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2])));
+                switch (type) {
+                    case DATE:
+                        if (tokens.length < 3) {
+                            this.validacaoDataEnum = ValidacaoDataEnum.L;
+                        } else {
+                            this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
+                        }
+                        break;
+                    case ENUMERATION:
+                        if (tokens.length >= 3) {
+                            DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+                            this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -363,7 +420,7 @@ public class VariableAccessHandler implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public static List<VariableAccessHandler> getList(Task task) {
-        List<VariableAccessHandler> ret = new ArrayList<VariableAccessHandler>();
+        List<VariableAccessHandler> ret = new ArrayList<>();
         if (task.getTaskController() == null) {
             return ret;
         }
@@ -419,11 +476,12 @@ public class VariableAccessHandler implements Serializable {
     // TODO verificar por que tem registro duplicado na base
     private void storeLabel(String name, String label) {
         Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
-        String old = map.get(name);
+        final String mappedVariableName = task.getProcessDefinition().getName()+":"+name;
+        String old = map.get(mappedVariableName);
         if (!label.equals(old)) {
-            map.put(name, label);
+            map.put(task.getProcessDefinition().getName()+":"+name, label);
             JbpmVariavelLabel j = new JbpmVariavelLabel();
-            j.setNomeVariavel(name);
+            j.setNomeVariavel(task.getProcessDefinition().getName()+":"+name);
             j.setLabelVariavel(label);
             try {
                 genericManager().persist(j);
@@ -435,7 +493,7 @@ public class VariableAccessHandler implements Serializable {
 
     public String getLabel() {
         if (!"".equals(name)) {
-            setLabel(VariableHandler.getLabel(name));
+            setLabel(VariableHandler.getLabel(task.getProcessDefinition().getName()+":"+name));
         }
         return this.label;
     }

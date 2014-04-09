@@ -16,6 +16,7 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
@@ -131,7 +132,7 @@ public class TaskHandler implements Serializable {
     @SuppressWarnings(UNCHECKED)
     public void newVar() {
         if (!checkNullVariables()) {
-            VariableAccess v = new VariableAccess("", "read,write", "null:");
+            VariableAccess v = new VariableAccess("", "read,write", "NULL:");
             VariableAccessHandler vh = new VariableAccessHandler(v, task);
             variables.add(vh);
             TaskController taskController = task.getTaskController();
@@ -141,13 +142,13 @@ public class TaskHandler implements Serializable {
                 taskController.setVariableAccesses(new ArrayList<VariableAccess>());
             }
             taskController.getVariableAccesses().add(v);
-            ProcessBuilder.instance().getTypeFitter().setTypeList(null);
+            ProcessBuilder.instance().getTaskFitter().setTypeList(null);
         }
     }
 
     private boolean checkNullVariables() {
         for (VariableAccessHandler vah : variables) {
-            if ("null".equals(vah.getType())) {
+            if (VariableType.NULL.equals(vah.getType())) {
                 FacesMessages.instance().add("É obrigatório selecionar um tipo!");
                 return true;
             }
@@ -161,7 +162,7 @@ public class TaskHandler implements Serializable {
         if (v.getType().equals(TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
             hasTaskPage = null;
         }
-        ProcessBuilder.instance().getTypeFitter().setTypeList(null);
+        ProcessBuilder.instance().getTaskFitter().setTypeList(null);
     }
 
     private List<String> populatePreviousVariables(TaskHandlerVisitor visitor) {
@@ -190,7 +191,7 @@ public class TaskHandler implements Serializable {
         if (hasTaskPage == null) {
             if (variables != null) {
                 for (VariableAccessHandler va : variables) {
-                    if (va.getType().equals(TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
+                    if (VariableType.TASK_PAGE.equals(va.getType())) {
                         return true;
                     }
                 }
