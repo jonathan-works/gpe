@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -236,7 +235,7 @@ public class NodeFitter extends Fitter implements Serializable {
             }
             removeTransitions(transitions);
         }
-        Set<Transition> transitionSet = node.getArrivingTransitions();
+        Collection<Transition> transitionSet = node.getArrivingTransitions();
         if (transitionSet != null) {
             removeTransitions(transitionSet);
         }
