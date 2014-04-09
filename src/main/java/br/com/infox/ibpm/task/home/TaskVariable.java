@@ -35,4 +35,8 @@ abstract class TaskVariable {
         return variableAccess.getAccess().hasAccess("hidden");
     }
 
+    public boolean isEditor() {
+        return VariableType.EDITOR.equals(type);
+    }
+
 }
