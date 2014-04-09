@@ -1,9 +1,10 @@
 package br.com.infox.ibpm.task.view;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.ibpm.process.definition.variable.constants.VariableConstants.DEFAULT_PATH;
+import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +18,10 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -62,18 +63,20 @@ public class TaskInstanceView implements Serializable {
             return form;
         }
         form = new Form();
-        form.setHome("taskInstanceHome");
+        form.setHome(TaskInstanceHome.NAME);
         Template buttons = new Template();
         buttons.setId("empty");
         form.setButtons(buttons);
-        form.setFormId("taskInstanceView");
+        form.setFormId(TaskInstanceView.NAME);
 
         TaskController taskController = taskInstance.getTask().getTaskController();
         if (taskController != null) {
             List<VariableAccess> list = taskController.getVariableAccesses();
 
             for (VariableAccess var : list) {
-                if (var.isReadable() && !var.isWritable()) {
+                final boolean isWritable = var.isWritable();
+                final boolean isReadable = var.isReadable();
+                if (isReadable && !isWritable) {
                     String[] tokens = var.getMappedName().split(":");
                     VariableType type = VariableType.valueOf(tokens[0]);
                     String name = tokens[1];
@@ -85,11 +88,13 @@ public class TaskInstanceView implements Serializable {
                     ff.setLabel(VariableHandler.getLabel(name));
                     Object value = taskInstance.getVariable(var.getVariableName());
                     Map<String, Object> properties = ff.getProperties();
-                    
+
+                    properties.put("pagePath", type.getPath());
                     switch (type) {
                         case EDITOR:
                         {
                             ff.setType(type.name());
+                            properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
                             if (value != null) {
                                 ProcessoDocumento processoDocumento = processoDocumentoManager().find((Integer) value);
                                 if (processoDocumento != null) {
@@ -102,7 +107,7 @@ public class TaskInstanceView implements Serializable {
                         case MONETARY:
                         {
                             ff.setType(type.name());
-                            ff.setValue(String.format(FloatFormatConstants.F2, value));
+                            ff.setValue(format("{0,number,#.00}", value));
                         }
                             break;
                         case ENUMERATION:
@@ -136,7 +141,6 @@ public class TaskInstanceView implements Serializable {
                             && VariableType.EDITOR.equals(type)) {
                         properties.put("rendered", false);
                     }
-                    ff.getProperties().put("pagePath", type.getPath());
                     form.getFields().add(ff);
                 }
             }
