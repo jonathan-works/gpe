@@ -1,13 +1,13 @@
 package br.com.infox.ibpm.task.home;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
@@ -15,18 +15,29 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.processo.home.ProcessoHome;
-import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 final class TaskVariableResolver extends TaskVariable {
 
     private static final LogProvider LOG = Logging.getLogProvider(TaskVariableResolver.class);
+    public static final int SUCCESS = 0x1;
+    public static final int FAIL = 0x2;
+    public static final int SIGNED = 0x8;
 
     private Object value;
+    private boolean assinarDocumento;
+    private int resolve;
 
     public TaskVariableResolver(VariableAccess variableAccess,
             TaskInstance taskInstance) {
         super(variableAccess, taskInstance);
+        this.assinarDocumento = false;
+    }
+    
+    public TaskVariableResolver(VariableAccess variableAccess,
+            TaskInstance taskInstance, boolean assinar) {
+        super(variableAccess, taskInstance);
+        this.assinarDocumento = assinar;
     }
 
     public Object getValue() {
@@ -38,55 +49,70 @@ final class TaskVariableResolver extends TaskVariable {
     }
     
     public void resolve() {
-        if (VariableType.MONETARY.equals(type) && value != null) {
-            String val = String.valueOf(value);
-            try {
-                value = Float.parseFloat(val);
-            } catch (NumberFormatException e) {
-                value = Float.parseFloat(val.replace(".", "").replace(",", "."));
-            }
-        } else if (VariableType.DATE.equals(type) && value != null) {
-            try {
-                value = DateFormat.getDateInstance( DateFormat.MEDIUM).format(value);
-            } catch (IllegalArgumentException e) {
-                LOG.warn(".resolveWhenDate()", e);
+        resolve = 0;
+        if (value != null) {
+            switch (type) {
+                case MONETARY:
+                    if (value instanceof String) {
+                        try {
+                            value = NumberFormat.getNumberInstance().parse(value.toString());
+                        } catch (ParseException e) {}
+                    }
+                    atribuirValorDaVariavelNoContexto();
+                    break;
+                case DATE:
+                    if (value instanceof String) {
+                        try {
+                            value = DateFormat.getDateInstance( DateFormat.MEDIUM).parse(value.toString());
+                        } catch (ParseException e) {}
+                    }
+                    atribuirValorDaVariavelNoContexto();
+                    break;
+                case EDITOR:
+                    resolveEditor();
+                    break;
+                default:
+                    atribuirValorDaVariavelNoContexto();
+                    break;
             }
         }
     }
-
-    public void resolveWhenEditor(boolean assinar) throws CertificadoException {
-        Integer valueInt = salvarProcessoDocumento(assinar);
-        if (valueInt != null && valueInt != 0) {
-            this.value = valueInt;
-            atribuirValorDaVariavelNoContexto();
-            if (assinar) {
-                FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
+    
+    private void resolveEditor() {
+        try {
+            ProcessoHome processoHome = ProcessoHome.instance();
+            Integer valueInt = processoHome.salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinarDocumento, getLabel());
+            resolve = resolve | SIGNED;
+            
+            if (valueInt != null && valueInt != 0) {
+                this.value = valueInt;
+                atribuirValorDaVariavelNoContexto();
             }
+        } catch (CertificadoException e) {
+            LOG.error("Falha na assinatura", e);
         }
     }
 
-    public boolean isEditor() {
-        return VariableType.EDITOR.equals(type);
+    public boolean isEditorAssinado() {
+        return (resolve & TaskVariableResolver.SIGNED) == TaskVariableResolver.SIGNED;
     }
-
+    
     private String getLabel() {
         return JbpmUtil.instance().getMessages().get(name);
     }
 
     private Integer getIdDocumento() {
-        if (taskInstance.getVariable(variableAccess.getMappedName()) != null) {
-            return (Integer) taskInstance.getVariable(variableAccess.getMappedName());
+        Object variable = taskInstance.getVariable(variableAccess.getMappedName());
+        if (variable != null) {
+            return (Integer) variable;
         } else {
             return null;
         }
     }
 
-    private Integer salvarProcessoDocumento(boolean assinar) throws CertificadoException {
-        return ProcessoHome.instance().salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinar, getLabel());
-    }
-
     public void atribuirValorDaVariavelNoContexto() {
         Contexts.getBusinessProcessContext().set(variableAccess.getMappedName(), value);
+        resolve = resolve | SUCCESS;
     }
 
     private Object getValueFromMapaDeVariaveis(
@@ -104,8 +130,7 @@ final class TaskVariableResolver extends TaskVariable {
         return null;
     }
 
-    public void assignValueFromMapaDeVariaveis(
-            Map<String, Object> mapaDeVariaveis) {
+    public void assignValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis) {
         value = getValueFromMapaDeVariaveis(mapaDeVariaveis);
     }
 }
