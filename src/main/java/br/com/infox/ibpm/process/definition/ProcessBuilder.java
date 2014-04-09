@@ -61,6 +61,7 @@ import br.com.infox.ibpm.process.definition.fitter.SwimlaneFitter;
 import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 import br.com.infox.ibpm.process.definition.fitter.TransitionFitter;
 import br.com.infox.ibpm.process.definition.graphical.ProcessBuilderGraph;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.jsf.validator.JsfComponentTreeValidator;
@@ -539,5 +540,9 @@ public class ProcessBuilder implements Serializable {
 
     public boolean existemProcessosAssociadosAoFluxo() {
         return fluxoManager.existemProcessosAssociadosAFluxo(getFluxo());
+    }
+    
+    public String getTypeLabel(String type) {
+        return VariableType.convertValueOf(type).getLabel();
     }
 }
