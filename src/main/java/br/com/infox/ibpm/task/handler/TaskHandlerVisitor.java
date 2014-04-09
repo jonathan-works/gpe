@@ -3,8 +3,8 @@ package br.com.infox.ibpm.task.handler;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
@@ -45,12 +45,12 @@ public class TaskHandlerVisitor {
         visitedTasks.add(t);
         Node n = (Node) t.getParent();
         visit((Node) t.getParent());
-        Set<Transition> transitions = n.getArrivingTransitions();
+        Collection<Transition> transitions = n.getArrivingTransitions();
         addVariables(transitions);
     }
 
     @SuppressWarnings(UNCHECKED)
-    private void addVariables(Set<Transition> transitions) {
+    private void addVariables(Collection<Transition> transitions) {
         if (transitions == null) {
             return;
         }
