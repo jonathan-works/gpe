@@ -1,5 +1,8 @@
 package br.com.infox.ibpm.task.home;
 
+import static br.com.infox.ibpm.process.definition.variable.VariableType.FORM;
+import static br.com.infox.ibpm.process.definition.variable.VariableType.MONETARY;
+
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -32,11 +35,27 @@ abstract class TaskVariable {
     }
     
     public boolean isHidden() {
-        return variableAccess.getAccess().hasAccess("hidden");
+        return !variableAccess.isReadable() && variableAccess.isWritable();
     }
 
     public boolean isEditor() {
         return VariableType.EDITOR.equals(type);
+    }
+
+    public boolean isForm() {
+        return FORM.equals(type);
+    }
+    
+    public boolean isVariableType(VariableType varType) {
+        return varType.equals(type);
+    }
+
+    public boolean isWritable() {
+        return variableAccess.isWritable();
+    }
+
+    public boolean isMonetario() {
+        return MONETARY.equals(type);
     }
 
 }
