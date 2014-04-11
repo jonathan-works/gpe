@@ -20,6 +20,7 @@ import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.jbpm.event.EventHandler;
 
 public class NodeHandler implements Serializable {
@@ -47,7 +48,7 @@ public class NodeHandler implements Serializable {
     private Node node;
     private List<EventHandler> eventList;
     private EventHandler currentEvent;
-    private List<CreateTimerAction> timerList = new ArrayList<CreateTimerAction>();
+    private List<CreateTimerAction> timerList = new ArrayList<>();
     private CreateTimerAction currentTimer;
     private String dueDateValue;
     private UnitsEnum dueDateUnit;
@@ -110,7 +111,7 @@ public class NodeHandler implements Serializable {
         Event event = new Event("new-event");
         currentEvent = new EventHandler(event);
         if (eventList == null) {
-            eventList = new ArrayList<EventHandler>();
+            eventList = new ArrayList<>();
         }
         eventList.add(currentEvent);
         node.addEvent(event);
@@ -132,12 +133,12 @@ public class NodeHandler implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public List<String> getSupportedEventTypes() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         List<String> nodeEvents = Arrays.asList(new Node().getSupportedEventTypes());
-        List<String> eventTypes = new ArrayList<String>(nodeEvents);
+        List<String> eventTypes = new ArrayList<>(nodeEvents);
         List<String> taskEvents = Arrays.asList(new Task().getSupportedEventTypes());
-        eventTypes.addAll(new ArrayList<String>(taskEvents));
-        List<String> currentEvents = new ArrayList<String>();
+        eventTypes.addAll(new ArrayList<>(taskEvents));
+        List<String> currentEvents = new ArrayList<>();
         Collection<Event> values = node.getEvents().values();
         for (Event event : values) {
             currentEvents.add(event.getEventType());
@@ -291,7 +292,7 @@ public class NodeHandler implements Serializable {
     }
 
     public List<String> getTransitions() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         if (node.getLeavingTransitions() != null) {
             for (Object t : node.getLeavingTransitions()) {
                 list.add(((Transition) t).getName());
@@ -329,4 +330,10 @@ public class NodeHandler implements Serializable {
         return ReflectionsUtil.getStringValue(node, "subProcessName");
     }
 
+    public List<String> getPreviousVariables() {
+        TaskHandlerVisitor visitor = new TaskHandlerVisitor(false);
+        visitor.visit(getNode());
+        return visitor.getVariables();
+    }
+    
 }
