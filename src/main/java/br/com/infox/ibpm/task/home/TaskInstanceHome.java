@@ -391,9 +391,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void atualizarPaginaDeMovimentacao(ProcessoHome processoHome) {
         setTaskCompleted(true);
-        if (!canClosePanel()) {
-            redirectToMovimentar(processoHome);
-        } else if (isUsuarioExterno()) {
+        if (canClosePanel() && isUsuarioExterno()) {
             redirectToAcessoExterno();
         }
     }
@@ -408,16 +406,6 @@ public class TaskInstanceHome implements Serializable {
         Redirect red = Redirect.instance();
         red.setViewId("/AcessoExterno/externo.seam?urlRetorno="
                 + urlRetornoAcessoExterno.toString());
-        red.setConversationPropagationEnabled(false);
-        red.execute();
-    }
-
-    private void redirectToMovimentar(ProcessoHome processoHome) {
-        Redirect red = Redirect.instance();
-        red.setViewId(MOVIMENTAR_PATH);
-        red.setParameter("idProcesso", processoHome.getInstance()
-                .getIdProcesso());
-        BusinessProcess.instance().getProcessId();
         red.setConversationPropagationEnabled(false);
         red.execute();
     }
@@ -461,6 +449,7 @@ public class TaskInstanceHome implements Serializable {
     private void limparEstado(ProcessoHome processoHome) {
         this.currentTaskInstance = null;
         processoHome.setIdProcessoDocumento(null);
+//        processoHome.newInstance();
     }
 
     private void acusarFaltaDeAssinatura() {

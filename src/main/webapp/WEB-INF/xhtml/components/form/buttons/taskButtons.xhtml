@@ -8,20 +8,16 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
->
+    xmlns:wi="http://www.itx.com.br/jsf">
     <s:div
         id="taskButtonsDiv"
-        styleClass="actionButtons"
-    >
+        styleClass="actionButtons">
         <ui:param
             name="props"
-            value="#{form.buttons.properties}"
-        />
+            value="#{form.buttons.properties}" />
         <ui:param
             name="reRenderSave"
-            value="#{empty reRenderSave ? formId : reRenderSave}"
-        />
+            value="#{empty reRenderSave ? formId : reRenderSave}" />
         <a:commandButton
             id="update"
             status="none"
@@ -31,8 +27,7 @@
             render="#{reRenderSave},:pageBodyDialogMessage"
             value="#{messages['crud.update']}"
             styleClass="buttons"
-            action="#{taskInstanceHome.update(home)}"
-        />
+            action="#{taskInstanceHome.update(home)}" />
         <!-- Implementar -->
         <a:commandButton
             id="unlock"
@@ -40,12 +35,12 @@
             status="none"
             rendered="#{processoHome.managed and !isUsuarioExterno}"
             onmouseup="showLoading()"
+            onbeforedomupdate="reloadPanel();"
             oncomplete="#{oncomplete};hideLoading();close()"
             render="#{reRenderSave}"
             value="#{messages['movimentar.liberarTarefa']}"
             styleClass="buttons"
-            action="#{taskInstanceHome.removeUsuario()}"
-        />
+            action="#{taskInstanceHome.removeUsuario()}" />
         <a:commandButton
             id="persist"
             rendered="#{!empty form.fields and !processoHome.managed and !isUsuarioExterno}"
@@ -55,17 +50,14 @@
             render="#{reRenderSave}"
             value="#{messages['crud.persist']}"
             styleClass="buttons"
-            action="#{taskInstanceHome.persist(home)}"
-        />
+            action="#{taskInstanceHome.persist(home)}" />
         <h:outputText
             styleClass="label-general"
-            value="#{messages['movimentar.next']} "
-        />
+            value="#{messages['movimentar.next']} " />
         <c:if test="#{taskInstanceHome.transitions.size gt 3}">
             <h:selectOneMenu value="#{taskInstanceHome.name}">
                 <f:selectItems
-                    value="#{taskInstanceHome.transtionsSelectItems}"
-                />
+                    value="#{taskInstanceHome.transtionsSelectItems}" />
             </h:selectOneMenu>
             <a:commandButton
                 action="#{taskInstanceHome.end(taskInstanceHome.name)}"
@@ -74,14 +66,12 @@
                 onmouseup="showLoading()"
                 styleClass="buttons"
                 oncomplete="verifyFields();"
-                render=":script,#{reRenderSave},:pageBodyDialogMessage"
-            />
+                render=":script,#{reRenderSave},:pageBodyDialogMessage" />
         </c:if>
         <c:if test="#{taskInstanceHome.transitions.size le 3}">
             <a:repeat
                 value="#{taskInstanceHome.transitions}"
-                var="transition"
-            >
+                var="transition">
                 <a:commandButton
                     status="none"
                     onmouseup="showLoading()"
@@ -89,27 +79,22 @@
                     render=":pageBodyDialogMessage,:script,#{reRenderSave}"
                     value="#{transition.name}"
                     styleClass="buttons"
-                    action="#{taskInstanceHome.end(transition.name)}"
-                >
+                    action="#{taskInstanceHome.end(transition.name)}">
                 </a:commandButton>
             </a:repeat>
         </c:if>
         <ui:fragment
-            rendered="#{authenticator.isUsuarioAtualResponsavel()}"
-        >
+            rendered="#{authenticator.isUsuarioAtualResponsavel()}">
             <h:outputText
                 value="#{messages['prioridadeProcesso.comboBox']}"
-                style="margin-left: 40px;"
-            />
+                style="margin-left: 40px;" />
             <h:selectOneMenu
-                value="#{processoHome.instance.prioridadeProcesso}"
-            >
+                value="#{processoHome.instance.prioridadeProcesso}">
                 <s:selectItems
                     value="#{prioridadeProcessoList.listAtivos()}"
                     var="p"
                     label="#{p.descricaoPrioridade}"
-                    showLabelSelecione="true"
-                />
+                    showLabelSelecione="true" />
                 <s:convertEntity />
             </h:selectOneMenu>
         </ui:fragment>
