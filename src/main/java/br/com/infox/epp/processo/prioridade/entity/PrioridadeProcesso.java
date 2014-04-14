@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -30,7 +31,7 @@ public class PrioridadeProcesso implements Serializable, Comparable<PrioridadePr
 
     @SequenceGenerator(name = "generator", sequenceName = "sq_tb_prioridade_processo")
     @Id
-    @GeneratedValue(generator = "generator")
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_prioridade_processo")
     public Integer getIdPrioridade() {
         return idPrioridade;
