@@ -2,7 +2,6 @@ package br.com.infox.ibpm.task.home;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,7 +37,6 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
@@ -50,9 +48,6 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
-import br.com.infox.epp.search.Indexer;
-import br.com.infox.epp.search.Reindexer;
-import br.com.infox.epp.search.SearchHandler;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
@@ -70,7 +65,6 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.CONVERSATION)
 public class TaskInstanceHome implements Serializable {
 
-    private static final String MOVIMENTAR_PATH = "/Processo/movimentar.seam";
     private static final String ASSINATURA_OBRIGATORIA = "A assinatura é obrigatória para esta classificação de documento";
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
@@ -321,17 +315,6 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public void updateIndex() {
-        // String conteudo =
-        // Reindexer.getTextoIndexavel(SearchHandler.getConteudo(taskInstance));
-        // try {
-        // Indexer indexer = new Indexer();
-        // Map<String, String> fields = new HashMap<String, String>();
-        // fields.put("conteudo", conteudo);
-        // indexer.index(taskInstance.getId() + "", new HashMap<String,
-        // String>(), fields);
-        // } catch (IOException e) {
-        // LOG.error(".updateIndex()", e);
-        // }
         TaskConteudoDAO taskConteudoDAO = ComponentUtil
                 .getComponent(TaskConteudoDAO.NAME);
         TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
@@ -391,9 +374,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void atualizarPaginaDeMovimentacao(ProcessoHome processoHome) {
         setTaskCompleted(true);
-        if (!canClosePanel()) {
-            redirectToMovimentar(processoHome);
-        } else if (isUsuarioExterno()) {
+        if (canClosePanel() && isUsuarioExterno()) {
             redirectToAcessoExterno();
         }
     }
@@ -408,16 +389,6 @@ public class TaskInstanceHome implements Serializable {
         Redirect red = Redirect.instance();
         red.setViewId("/AcessoExterno/externo.seam?urlRetorno="
                 + urlRetornoAcessoExterno.toString());
-        red.setConversationPropagationEnabled(false);
-        red.execute();
-    }
-
-    private void redirectToMovimentar(ProcessoHome processoHome) {
-        Redirect red = Redirect.instance();
-        red.setViewId(MOVIMENTAR_PATH);
-        red.setParameter("idProcesso", processoHome.getInstance()
-                .getIdProcesso());
-        BusinessProcess.instance().getProcessId();
         red.setConversationPropagationEnabled(false);
         red.execute();
     }
