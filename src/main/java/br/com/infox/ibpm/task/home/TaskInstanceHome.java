@@ -367,13 +367,14 @@ public class TaskInstanceHome implements Serializable {
             limparEstado(processoHome);
             update();
             finalizarTaskDoJbpm(transition);
-            atualizarPaginaDeMovimentacao(processoHome);
+            atualizarPaginaDeMovimentacao();
         }
         return null;
     }
 
-    private void atualizarPaginaDeMovimentacao(ProcessoHome processoHome) {
+    private void atualizarPaginaDeMovimentacao() {
         setTaskCompleted(true);
+        //TODO: remover os efeitos colaterais do canClosePanel()
         if (canClosePanel() && isUsuarioExterno()) {
             redirectToAcessoExterno();
         }
