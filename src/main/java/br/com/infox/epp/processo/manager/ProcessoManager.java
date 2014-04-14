@@ -11,7 +11,6 @@ import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -113,9 +112,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
-//            org.jboss.seam.bpm.TaskInstance.instance().setTask(bp.);
-//            TaskInstance task = org.jboss.seam.bpm.TaskInstance.instance();
-//            task.setId(taskInstanceId);
             try {
                 bp.startTask();
                 result = true;

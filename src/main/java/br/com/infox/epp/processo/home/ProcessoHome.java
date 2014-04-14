@@ -33,7 +33,6 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
@@ -87,10 +86,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     public void iniciarTarefaProcesso() {
         try {
-            if (getId() != null && instance == null) {
-                System.out.println(processoManager.find(getId()));
-                setInstance(processoManager.find(getId()));
-            }
             processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
         } catch (java.lang.NullPointerException e) {
             LOG.error("ProcessoHome.iniciarTarefaProcesso()", e);
