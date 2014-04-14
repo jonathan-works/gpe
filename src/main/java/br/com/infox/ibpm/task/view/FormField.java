@@ -8,6 +8,8 @@ import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.ibpm.process.definition.variable.VariableType;
+
 public class FormField implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -63,8 +65,8 @@ public class FormField implements Serializable {
     }
 
     public String getType() {
-        if (type == null || "null".equals(type)) {
-            return "default";
+        if (type == null || VariableType.NULL.name().equals(type)) {
+            return VariableType.STRING.name();
         } else {
             return type;
         }

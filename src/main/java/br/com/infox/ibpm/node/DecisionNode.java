@@ -17,6 +17,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 
 public class DecisionNode extends Node {
@@ -32,8 +33,8 @@ public class DecisionNode extends Node {
     public List<String> getNumberVariables() {
         if (numberVariables == null) {
             List<String> list = new ArrayList<String>();
-            list.add("number");
-            list.add("numberMoney");
+            list.add(VariableType.INTEGER.name());
+            list.add(VariableType.MONETARY.name());
             TaskHandlerVisitor visitor = new TaskHandlerVisitor(false, list);
             visitor.visit(this);
             numberVariables = new ArrayList<String>();
@@ -58,7 +59,7 @@ public class DecisionNode extends Node {
     public List<String> getBooleanVariables() {
         if (booleanVariables == null) {
             List<String> list = new ArrayList<String>();
-            list.add("sim_nao");
+            list.add(VariableType.BOOLEAN.name());
             TaskHandlerVisitor visitor = new TaskHandlerVisitor(false, list);
             visitor.visit(this);
             booleanVariables = new ArrayList<String>();

@@ -223,11 +223,11 @@ public class ProcessBuilder implements Serializable {
                         String[] tokens = variable.getMappedName().split(":");
                         if (tokens.length == 1) {
                             throw new IllegalStateException("Existe uma variável sem nome na tarefa " + node.getName()); 
-                        } else if ("null".equals(tokens[0])) {
+                        } else if (VariableType.NULL.name().equals(tokens[0])) {
                             throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " não possui tipo");
-                        } else if ("date".equals(tokens[0]) && tokens.length < 3) {
+                        } else if (VariableType.DATE.name().equals(tokens[0]) && tokens.length < 3) {
                             throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo data mas não possui tipo de validação");
-                        } else if ("enumeracao".equals(tokens[0]) && tokens.length < 3) {
+                        } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && tokens.length < 3) {
                             throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados mas não possui lista de valores definida");
                         } 
                     }

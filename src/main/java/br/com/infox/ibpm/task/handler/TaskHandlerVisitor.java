@@ -14,6 +14,8 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
+import br.com.infox.ibpm.process.definition.variable.VariableType;
+
 public class TaskHandlerVisitor {
 
     private boolean isMapped;
@@ -83,7 +85,7 @@ public class TaskHandlerVisitor {
                 List<VariableAccess> accesses = tc.getVariableAccesses();
                 for (VariableAccess v : accesses) {
                     String mappedName = v.getMappedName();
-                    if (v.isWritable() && !mappedName.startsWith("page:")) {
+                    if (v.isWritable() && !mappedName.startsWith(VariableType.PAGE.name() + ":")) {
                         String name;
                         if (isMapped) {
                             name = mappedName;

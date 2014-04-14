@@ -132,7 +132,7 @@ public class TaskHandler implements Serializable {
     @SuppressWarnings(UNCHECKED)
     public void newVar() {
         if (!checkNullVariables()) {
-            VariableAccess v = new VariableAccess("", "read,write", "NULL:");
+            VariableAccess v = new VariableAccess("", "read,write", VariableType.NULL.name() + ":");
             VariableAccessHandler vh = new VariableAccessHandler(v, task);
             variables.add(vh);
             TaskController taskController = task.getTaskController();
@@ -176,14 +176,14 @@ public class TaskHandler implements Serializable {
 
     public List<String> getPreviousNumberVariables() {
         List<String> types = new ArrayList<String>();
-        types.add("number");
-        types.add("numberMoney");
+        types.add(VariableType.INTEGER.name());
+        types.add(VariableType.MONETARY.name());
         return populatePreviousVariables(new TaskHandlerVisitor(false, types));
     }
 
     public List<String> getPreviousBoolVariables() {
         List<String> types = new ArrayList<String>();
-        types.add("sim_nao");
+        types.add(VariableType.BOOLEAN.name());
         return populatePreviousVariables(new TaskHandlerVisitor(false, types));
     }
 

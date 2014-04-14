@@ -30,6 +30,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.search.ProcessoSearcher;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.Variavel;
@@ -273,9 +274,9 @@ public class SearchHandler implements Serializable {
         String type = v.getType();
         if (JbpmUtil.isTypeEditor(type)) {
             texto = processoDocumentoManager.valorProcessoDocumento((Integer) value);
-        } else if ("sim_nao".equals(type)) {
+        } else if (VariableType.BOOLEAN.name().equals(type)) {
             texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
-        } else if ("numberMoney".equalsIgnoreCase(type)) {
+        } else if (VariableType.MONETARY.name().equalsIgnoreCase(type)) {
             texto = String.format(FloatFormatConstants.F2, value);
         } else {
             texto = value.toString();

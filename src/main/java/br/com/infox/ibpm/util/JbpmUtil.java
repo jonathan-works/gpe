@@ -34,6 +34,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -160,9 +161,9 @@ public class JbpmUtil {
                     variable = processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
                 }
             }
-        } else if ("sim_nao".equals(type)) {
+        } else if (VariableType.BOOLEAN.name().equals(type)) {
             variable = Boolean.valueOf(variable.toString()) ? "Sim" : "Não";
-        } else if ("numberMoney".equalsIgnoreCase(type)) {
+        } else if (VariableType.MONETARY.name().equalsIgnoreCase(type)) {
             variable = String.format(FloatFormatConstants.F2, variable);
         } else {
             variable = variable.toString();
@@ -184,8 +185,7 @@ public class JbpmUtil {
     }
 
     public static boolean isTypeEditor(String type) {
-        return type.startsWith("textEditCombo")
-                || "textEditSignature".equals(type);
+        return VariableType.EDITOR.name().equals(type);
     }
 
     private ProcessoDocumentoManager processoDocumentoManager() {
