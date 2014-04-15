@@ -32,6 +32,7 @@
  }
  .link {
   text-decoration:none;
+  color: #000
  }
  .link:hover{
   text-decoration:underline;
