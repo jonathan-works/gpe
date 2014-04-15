@@ -152,7 +152,8 @@
                     <a:commandButton
                         value="Gravar"
                         action="#{variavelProcessoAction.save}"
-                        render="@form, pageBodyDialogMessage" />
+                        render="@form, pageBodyDialogMessage"
+                        styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
                 </h:form>
             </infox:tab>
             <infox:tab
