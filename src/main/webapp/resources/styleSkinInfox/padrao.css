@@ -597,7 +597,7 @@ form {
 .ui-tabs-panel.ui-widget-content.ui-corner-bottom {
   background: white;
   margin: 1px 0 0 3px;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: visible;
 }
 
