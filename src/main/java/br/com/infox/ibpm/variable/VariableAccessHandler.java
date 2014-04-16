@@ -113,13 +113,11 @@ public class VariableAccessHandler implements Serializable {
     public void setName(String name) {
         String auxiliarName = name.replace(' ', '_').replace('/', '_');
         if (!auxiliarName.equals(this.name)) {
-            this.name = auxiliarName;
             if (VariableType.PAGE.equals(type) && !pageExists()) {
-                this.name = "";
                 return;
             }
             ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
+            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
                     + auxiliarName);
         }
     }
@@ -132,10 +130,10 @@ public class VariableAccessHandler implements Serializable {
             DominioVariavelTarefa dominioVariavelTarefa) {
         this.dominioVariavelTarefa = dominioVariavelTarefa;
         if (this.dominioVariavelTarefa != null) {
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
+            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
                     + name + ":" + this.dominioVariavelTarefa.getId());
         } else {
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
+            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
                     + name);
         }
     }
@@ -144,7 +142,7 @@ public class VariableAccessHandler implements Serializable {
         if (modeloList != null && mudouModelo) {
             updateModelo();
         }
-        variableAccess = new VariableAccess(name, getAccess(), type + ":"
+        variableAccess = new VariableAccess(name, getAccess(), type.name() + ":"
                 + name);
         return variableAccess;
     }
@@ -523,10 +521,10 @@ public class VariableAccessHandler implements Serializable {
     public void setValidacaoDataEnum(ValidacaoDataEnum validacaoDataEnum) {
         this.validacaoDataEnum = validacaoDataEnum;
         if (this.validacaoDataEnum != null) {
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
+            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
                     + name + ":" + this.validacaoDataEnum.toString());
         } else {
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
+            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
                     + name);
         }
     }
