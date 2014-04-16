@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.task.home;
 
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -65,13 +66,6 @@ final class TaskVariableRetriever extends TaskVariable {
                         LOG.warn("parseDateFail", e);
                     }
                     break;
-                case MONETARY:
-                    try {
-                        variable = NumberFormat.getNumberInstance().parse(variable.toString());
-                    } catch (ParseException e) {
-                        LOG.warn("parseNumberFail", e);
-                    }
-                    break;
                 default:
                     break;
             }
@@ -106,11 +100,6 @@ final class TaskVariableRetriever extends TaskVariable {
             switch (type) {
                 case EDITOR:
                     result = isDocumentoAssinadoValid();
-                    break;
-                case MONETARY:
-                    if (!(variable instanceof String)) {
-                        variable = NumberFormat.getInstance().format(variable);
-                    }
                     break;
                 case FORM:
                     retrieveHomes();

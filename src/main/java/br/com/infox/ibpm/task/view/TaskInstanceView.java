@@ -107,7 +107,7 @@ public class TaskInstanceView implements Serializable {
                         case MONETARY:
                         {
                             ff.setType(type.name());
-                            ff.setValue(format("{0,number,#.00}", value));
+                            ff.setValue(format("{0,number,0.00}", value));
                         }
                             break;
                         case ENUMERATION:

@@ -134,7 +134,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void retrieveVariable(VariableAccess variableAccess) {
-        if (variableAccess.isWritable() && variableAccess.isReadable()) {
+        if (variableAccess.isReadable()) {
             final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
             variableRetriever.retrieveVariableContent();
             if (variableRetriever.isValid()) {

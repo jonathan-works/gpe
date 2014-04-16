@@ -55,7 +55,15 @@ final class TaskVariableResolver extends TaskVariable {
                 case MONETARY:
                     if (value instanceof String) {
                         try {
-                            value = NumberFormat.getNumberInstance().parse(value.toString());
+                            value = NumberFormat.getNumberInstance().parse(value.toString()).doubleValue();
+                        } catch (ParseException e) {}
+                    }
+                    atribuirValorDaVariavelNoContexto();
+                    break;
+                case INTEGER:
+                    if (value instanceof String) {
+                        try {
+                            value = NumberFormat.getNumberInstance().parse(value.toString()).longValue();
                         } catch (ParseException e) {}
                     }
                     atribuirValorDaVariavelNoContexto();
