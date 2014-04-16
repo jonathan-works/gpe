@@ -8,20 +8,16 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
->
+    xmlns:wi="http://www.itx.com.br/jsf">
     <s:div
         id="taskButtonsDiv"
-        styleClass="actionButtons"
-    >
+        styleClass="actionButtons">
         <ui:param
             name="props"
-            value="#{form.buttons.properties}"
-        />
+            value="#{form.buttons.properties}" />
         <ui:param
             name="reRenderSave"
-            value="#{empty reRenderSave ? formId : reRenderSave}"
-        />
+            value="#{empty reRenderSave ? formId : reRenderSave}" />
         <a:commandButton
             id="update"
             rendered="#{!empty form.fields and processoHome.managed}"
@@ -32,8 +28,7 @@
             limitRender="true"
             value="#{messages['crud.update']}"
             styleClass="buttons"
-            action="#{taskInstanceHome.update(home)}"
-        />
+            action="#{taskInstanceHome.update(home)}" />
         <a:commandButton
             id="persist"
             rendered="#{!empty form.fields and !processoHome.managed}"
@@ -43,17 +38,14 @@
             limitRender="true"
             value="#{messages['crud.update']}"
             styleClass="buttons"
-            action="#{taskInstanceHome.persist(home)}"
-        />
+            action="#{taskInstanceHome.persist(home)}" />
         <h:outputText
             value="#{messages['movimentar.next']} "
-            rendered="true"
-        />
+            rendered="true" />
         <c:if test="#{taskInstanceHome.transitions.size gt 3}">
             <h:selectOneMenu value="#{taskInstanceHome.name}">
                 <f:selectItems
-                    value="#{taskInstanceHome.transtionsSelectItems}"
-                />
+                    value="#{taskInstanceHome.transtionsSelectItems}" />
             </h:selectOneMenu>
             <a:commandButton
                 action="#{taskInstanceHome.end(taskInstanceHome.name)}"
@@ -64,14 +56,12 @@
                 eventsQueue="editQueue"
                 oncomplete="#{oncomplete};verifyFields();"
                 render=":script,#{reRenderSave}"
-                limitRender="true"
-            />
+                limitRender="true" />
         </c:if>
         <c:if test="#{taskInstanceHome.transitions.size le 3}">
             <a:repeat
                 value="#{taskInstanceHome.transitions}"
-                var="transition"
-            >
+                var="transition">
                 <a:commandButton
                     status="none"
                     eventsQueue="editQueue"
@@ -81,8 +71,7 @@
                     limitRender="true"
                     value="#{transition.name}"
                     styleClass="buttons buttons"
-                    action="#{taskInstanceHome.end(transition.name)}"
-                />
+                    action="#{taskInstanceHome.end(transition.name)}" />
             </a:repeat>
         </c:if>
     </s:div>
