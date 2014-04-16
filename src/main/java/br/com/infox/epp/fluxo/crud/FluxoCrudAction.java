@@ -112,15 +112,14 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     public String inactive(final Fluxo fluxo) {
         setInstanceId(fluxo.getIdFluxo());
         if (!getManager().existemProcessosAssociadosAFluxo(fluxo)) {
-            final String ret = super.inactive(fluxo);
-            newInstance();
-            return ret;
+            return super.inactive(fluxo);
         } else {
             final String message = "#{messages['fluxo.remocaoProibida']}";
             LOG.error(message);
             getMessagesHandler().add(ERROR, message);
-            return null;
         }
+        newInstance();
+        return null;
     }
 
     public boolean isReplica() {
