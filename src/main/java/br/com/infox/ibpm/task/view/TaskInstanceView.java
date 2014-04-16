@@ -5,8 +5,11 @@ import static br.com.infox.ibpm.process.definition.variable.constants.VariableCo
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.model.SelectItem;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -22,6 +25,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -85,7 +89,8 @@ public class TaskInstanceView implements Serializable {
                     ff.setFormHome(form.getHomeName());
                     ff.setId(var.getVariableName());
                     ff.setRequired(var.isRequired() + "");
-                    ff.setLabel(VariableHandler.getLabel(name));
+                    String label = JbpmUtil.instance().getMessages().get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
+                    ff.setLabel(label);
                     Object value = taskInstance.getVariable(var.getVariableName());
                     Map<String, Object> properties = ff.getProperties();
 
@@ -119,13 +124,12 @@ public class TaskInstanceView implements Serializable {
                             DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
 
                             String[] itens = dominio.getDominio().split(";");
+                            List<SelectItem> selectItens = new ArrayList<>();
                             for (String item : itens) {
                                 String[] pair = item.split("=");
-                                if (pair[0].equals(value)) {
-                                    ff.setValue(pair[1]);
-                                    break;
-                                }
+                                selectItens.add(new SelectItem(pair[0], pair[1]));
                             }
+                            ff.getProperties().put("items", selectItens);
                         }
                             break;
                         default:

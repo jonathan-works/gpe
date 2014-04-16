@@ -116,6 +116,7 @@ public class VariableAccessHandler implements Serializable {
             if (VariableType.PAGE.equals(type) && !pageExists()) {
                 return;
             }
+            this.name = auxiliarName;
             ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
             ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
                     + auxiliarName);
@@ -397,15 +398,15 @@ public class VariableAccessHandler implements Serializable {
                 switch (type) {
                     case DATE:
                         if (tokens.length < 3) {
-                            this.validacaoDataEnum = ValidacaoDataEnum.L;
+                            setValidacaoDataEnum(ValidacaoDataEnum.L);
                         } else {
-                            this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
+                            setValidacaoDataEnum(ValidacaoDataEnum.valueOf(tokens[2]));
                         }
                     break;
                     case ENUMERATION:
                         if (tokens.length >= 3) {
                             DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                            this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
+                            setDominioVariavelTarefa(dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2])));
                         }
                     break;
                     default:

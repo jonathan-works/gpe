@@ -11,8 +11,7 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <s:div>
-        <ui:param name="idMsg" value="#{f.id.split('-')[0]}" />
-        <s:link value="#{jbpmMessages[idMsg]}"
+        <s:link value="#{label}"
             styleClass="buttons linkButton buttons" view="#{props.url}"
             onclick="openPopUp('jbpmPage', 'about:blank');"
             target="jbpmPage" />
