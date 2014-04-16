@@ -11,7 +11,6 @@ public enum VariableType {
     INTEGER(format(DEFAULT_LOCALE,"int"), format(DEFAULT_PATH,"number")),
     BOOLEAN(format(DEFAULT_LOCALE,"bool"), format(DEFAULT_PATH,"sim_nao")),
     DATE(format(DEFAULT_LOCALE,"date"), format(DEFAULT_PATH,"date")),
-    FORM(format(DEFAULT_LOCALE,"form"), format(DEFAULT_PATH,"form")),
     PAGE(format(DEFAULT_LOCALE,"page"), format(DEFAULT_PATH,"page")),
     FRAME(format(DEFAULT_LOCALE,"frame"), format(DEFAULT_PATH,"frame")),
     EDITOR(format(DEFAULT_LOCALE,"editor"), format(DEFAULT_PATH,"textEditSignature")),
@@ -47,8 +46,6 @@ public enum VariableType {
             return TEXT;
         } else if ("date".equals(value) || DATE.name().equals(value)) {
             return DATE;
-        } else if ("form".equals(value) || FORM.name().equals(value)) {
-            return FORM;
         } else if ("page".equals(value) || PAGE.name().equals(value)) {
             return PAGE;
         } else if ("frame".equals(value) || FRAME.name().equals(value)) {

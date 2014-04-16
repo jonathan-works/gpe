@@ -41,17 +41,6 @@ final class TaskVariableRetriever extends TaskVariable {
         return variable != null;
     }
 
-    public void setVariablesHome() {
-        AbstractHome<?> home = ComponentUtil.getComponent(getName() + "Home");
-        home.setId(getVariable());
-    }
-
-    public void retrieveHomes() {
-        if (hasVariable()) {
-            setVariablesHome();
-        }
-    }
-
     private Object getConteudo() {
         Object variable = taskInstance.getVariable(getMappedName());
         if (variable != null) {
@@ -100,9 +89,6 @@ final class TaskVariableRetriever extends TaskVariable {
             switch (type) {
                 case EDITOR:
                     result = isDocumentoAssinadoValid();
-                    break;
-                case FORM:
-                    retrieveHomes();
                     break;
                 default:
                     break;

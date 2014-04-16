@@ -138,11 +138,7 @@ public class TaskInstanceHome implements Serializable {
             final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
             variableRetriever.retrieveVariableContent();
             if (variableRetriever.isValid()) {
-                if (variableRetriever.isForm()) {
-                    varName = variableRetriever.getName();
-                } else {
-                    mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
-                }
+                mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
             }
             setModeloWhenExists(variableRetriever);
         }

@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.home;
 
-import static br.com.infox.ibpm.process.definition.variable.VariableType.FORM;
 import static br.com.infox.ibpm.process.definition.variable.VariableType.MONETARY;
 
 import org.jbpm.context.def.VariableAccess;
@@ -42,10 +41,6 @@ abstract class TaskVariable {
         return VariableType.EDITOR.equals(type);
     }
 
-    public boolean isForm() {
-        return FORM.equals(type);
-    }
-    
     public boolean isVariableType(VariableType varType) {
         return varType.equals(type);
     }
