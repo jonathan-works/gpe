@@ -77,7 +77,7 @@
           <a:commandLink
             action="#{t.newVar()}"
             execute="@this"
-            render="varTable"
+            render="varTable pageBodyDialogMessage"
             limitRender="true">
             <h:graphicImage
               title="#{messages['process.task.addVariable']}"
@@ -124,7 +124,9 @@
       <f:facet name="header">#{messages['process.task.var']}</f:facet>
       <h:form>
         <s:div id="varDiv">
+          <h:message for="varName" />
           <h:inputText
+            id="varName"
             rendered="#{!empty var.name or empty t.previousVariables}"
             value="#{var.name}">
             <a:ajax
@@ -132,6 +134,7 @@
               event="change"
               render="varDiv, varLabel, pageBodyDialogMessage"
               limitRender="true" />
+            <f:validator validatorId="jsfComponentIdValidator" />
           </h:inputText>
           <rich:autocomplete
             value="#{var.name}"
