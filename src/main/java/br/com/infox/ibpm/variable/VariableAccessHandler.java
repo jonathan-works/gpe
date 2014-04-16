@@ -68,9 +68,6 @@ public class VariableAccessHandler implements Serializable {
         if (mappedName.indexOf(':') > 0) {
             String[] tokens = mappedName.split(":");
             this.type = VariableType.convertValueOf(tokens[0]);
-            if (tokens.length > 1) {
-                this.name = tokens[1];
-            }
             switch (type) {
                 case DATE:
                     if (tokens.length < 3) {
@@ -91,7 +88,7 @@ public class VariableAccessHandler implements Serializable {
         } else {
             this.type = VariableType.STRING;
         }
-        setLabel(variableAccess.getVariableName());
+        this.name = variableAccess.getVariableName();
         access = new boolean[4];
         access[0] = variableAccess.isReadable();
         access[1] = variableAccess.isWritable();
@@ -117,24 +114,9 @@ public class VariableAccessHandler implements Serializable {
         String auxiliarName = name.replace(' ', '_').replace('/', '_');
         if (!auxiliarName.equals(this.name)) {
             if (VariableType.PAGE.equals(type) && !pageExists()) {
-                this.name = "";
                 return;
             }
-            this.name = auxiliarName;
-            if (this.label == null || this.label.isEmpty()) {
-                String[] tokens = this.name.split("_");
-                StringBuilder sb = new StringBuilder();
-                for (String token : tokens) {
-                    if (!token.isEmpty()) { 
-                        sb.append(Character.toUpperCase(token.charAt(0)));
-                        if (token.length() > 1) {
-                            sb.append(token.substring(1));
-                        }
-                        sb.append(" ");
-                    }
-                }
-                setLabel(sb.toString().trim());
-            }
+            ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
             ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
                     + auxiliarName);
         }
@@ -226,9 +208,6 @@ public class VariableAccessHandler implements Serializable {
     }
 
     private boolean pageExists() {
-        if (name == null || name.isEmpty()) {
-            return false;
-        }
         String page = "/" + name.replaceAll("_", "/") + ".xhtml";
         String realPath = ServletLifecycle.getServletContext().getRealPath(page);
         final boolean fileExists = new File(realPath).exists();
@@ -246,17 +225,15 @@ public class VariableAccessHandler implements Serializable {
                 String nameForm = name + "Form";
                 boolean existeForm = Component.getInstance(nameForm) != null;
                 if (!existeForm) {
-                    resetVariable();
                     FacesMessages.instance().add(Severity.INFO, "O form '"
                             + nameForm + "' não foi encontrado.");
                     return;
                 }
             break;
             case PAGE:
-            case FRAME:
                 if (!pageExists()) {
                     setWritable(true);
-                    resetVariable();
+                    this.name = "";
                     return;
                 }
             break;
@@ -265,12 +242,6 @@ public class VariableAccessHandler implements Serializable {
                 + ":" + name);
         this.possuiDominio = tipoPossuiDominio(type);
         this.isData = isTipoData(type);
-    }
-
-    private void resetVariable() {
-        this.name = "";
-        this.type = VariableType.NULL;
-        this.label = "";
     }
 
     public boolean isReadable() {
@@ -420,20 +391,21 @@ public class VariableAccessHandler implements Serializable {
         for (String v : visitor.getVariables()) {
             String[] tokens = v.split(":");
             if (tokens.length > 1 && tokens[1].equals(name)) {
+                this.label = getLabel();
                 setType(VariableType.convertValueOf(tokens[0]));
                 setWritable(false);
                 switch (type) {
                     case DATE:
                         if (tokens.length < 3) {
-                            setValidacaoDataEnum(ValidacaoDataEnum.L);
+                            this.validacaoDataEnum = ValidacaoDataEnum.L;
                         } else {
-                            setValidacaoDataEnum(ValidacaoDataEnum.valueOf(tokens[2]));;
+                            this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
                         }
                     break;
                     case ENUMERATION:
                         if (tokens.length >= 3) {
                             DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                            setDominioVariavelTarefa(dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2])));
+                            this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
                         }
                     break;
                     default:
@@ -494,11 +466,35 @@ public class VariableAccessHandler implements Serializable {
         String labelAuxiliar = label.trim();
         if (!labelAuxiliar.equals(this.label) && !"".equals(labelAuxiliar)) {
             this.label = labelAuxiliar;
-            ReflectionsUtil.setValue(variableAccess, "variableName", labelAuxiliar);
+            storeLabel(name, labelAuxiliar);
+        }
+    }
+
+    // TODO verificar por que tem registro duplicado na base
+    private void storeLabel(String name, String label) {
+        Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
+        final String mappedVariableName = task.getProcessDefinition().getName()
+                + ":" + name;
+        String old = map.get(mappedVariableName);
+        if (!label.equals(old)) {
+            map.put(task.getProcessDefinition().getName() + ":" + name, label);
+            JbpmVariavelLabel j = new JbpmVariavelLabel();
+            j.setNomeVariavel(task.getProcessDefinition().getName() + ":"
+                    + name);
+            j.setLabelVariavel(label);
+            try {
+                genericManager().persist(j);
+            } catch (DAOException e) {
+                LOG.error("Não foi possível gravar a JbpmVariavelLabel: " + j, e);
+            }
         }
     }
 
     public String getLabel() {
+        if (!"".equals(name)) {
+            setLabel(VariableHandler.getLabel(task.getProcessDefinition().getName()
+                    + ":" + name));
+        }
         return this.label;
     }
 
