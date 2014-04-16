@@ -75,15 +75,15 @@ public class VariableAccessHandler implements Serializable {
                     } else {
                         this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
                     }
-                    break;
+                break;
                 case ENUMERATION:
                     if (tokens.length >= 3) {
                         DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
                         this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
                     }
-                    break;
+                break;
                 default:
-                    break;
+                break;
             }
         } else {
             this.type = VariableType.STRING;
@@ -93,7 +93,7 @@ public class VariableAccessHandler implements Serializable {
         access[0] = variableAccess.isReadable();
         access[1] = variableAccess.isWritable();
         access[2] = variableAccess.isRequired();
-        access[3] = !variableAccess.isReadable() && variableAccess.isWritable(); 
+        access[3] = !variableAccess.isReadable() && variableAccess.isWritable();
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
     }
@@ -214,8 +214,8 @@ public class VariableAccessHandler implements Serializable {
         String realPath = ServletLifecycle.getServletContext().getRealPath(page);
         final boolean fileExists = new File(realPath).exists();
         if (!fileExists) {
-            FacesMessages.instance().add(Severity.INFO, "A página '"
-                    + page + "' não foi encontrada.");
+            FacesMessages.instance().add(Severity.INFO, "A página '" + page
+                    + "' não foi encontrada.");
         }
         return fileExists;
     }
@@ -229,22 +229,21 @@ public class VariableAccessHandler implements Serializable {
                 if (!existeForm) {
                     FacesMessages.instance().add(Severity.INFO, "O form '"
                             + nameForm + "' não foi encontrado.");
-                }   
-                break;
+                    return;
+                }
+            break;
             case PAGE:
                 if (!pageExists()) {
                     setWritable(true);
                     this.name = "";
+                    return;
                 }
-                break;
-
-            default:
-                ReflectionsUtil.setValue(variableAccess, "mappedName", type + ":"
-                        + name);
-                this.possuiDominio = tipoPossuiDominio(type);
-                this.isData = isTipoData(type);
-                break;
+            break;
         }
+        ReflectionsUtil.setValue(variableAccess, "mappedName", type.name()
+                + ":" + name);
+        this.possuiDominio = tipoPossuiDominio(type);
+        this.isData = isTipoData(type);
     }
 
     public boolean isReadable() {
@@ -276,7 +275,7 @@ public class VariableAccessHandler implements Serializable {
     public boolean isHidden() {
         return !variableAccess.isReadable() && variableAccess.isWritable();
     }
-    
+
     public void setHidden(boolean hidden) {
         if (hidden != (!variableAccess.isReadable() && variableAccess.isWritable())) {
             access[3] = hidden;
@@ -288,7 +287,7 @@ public class VariableAccessHandler implements Serializable {
             ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
         }
     }
-    
+
     public boolean isRequired() {
         return variableAccess.getAccess().isRequired();
     }
@@ -318,7 +317,7 @@ public class VariableAccessHandler implements Serializable {
         } else if (access[1]) {
             access[0] = true;
         }
-        
+
         if (access[0]) {
             appendPermission(sb, "read");
         }
@@ -330,7 +329,7 @@ public class VariableAccessHandler implements Serializable {
         }
         return sb.toString();
     }
-    
+
     private void appendPermission(StringBuilder sb, String permission) {
         if (sb.length() > 0) {
             sb.append(COMMA);
@@ -404,15 +403,15 @@ public class VariableAccessHandler implements Serializable {
                         } else {
                             this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
                         }
-                        break;
+                    break;
                     case ENUMERATION:
                         if (tokens.length >= 3) {
                             DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
                             this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
                         }
-                        break;
+                    break;
                     default:
-                        break;
+                    break;
                 }
             }
         }
@@ -476,12 +475,14 @@ public class VariableAccessHandler implements Serializable {
     // TODO verificar por que tem registro duplicado na base
     private void storeLabel(String name, String label) {
         Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
-        final String mappedVariableName = task.getProcessDefinition().getName()+":"+name;
+        final String mappedVariableName = task.getProcessDefinition().getName()
+                + ":" + name;
         String old = map.get(mappedVariableName);
         if (!label.equals(old)) {
-            map.put(task.getProcessDefinition().getName()+":"+name, label);
+            map.put(task.getProcessDefinition().getName() + ":" + name, label);
             JbpmVariavelLabel j = new JbpmVariavelLabel();
-            j.setNomeVariavel(task.getProcessDefinition().getName()+":"+name);
+            j.setNomeVariavel(task.getProcessDefinition().getName() + ":"
+                    + name);
             j.setLabelVariavel(label);
             try {
                 genericManager().persist(j);
@@ -493,7 +494,8 @@ public class VariableAccessHandler implements Serializable {
 
     public String getLabel() {
         if (!"".equals(name)) {
-            setLabel(VariableHandler.getLabel(task.getProcessDefinition().getName()+":"+name));
+            setLabel(VariableHandler.getLabel(task.getProcessDefinition().getName()
+                    + ":" + name));
         }
         return this.label;
     }
