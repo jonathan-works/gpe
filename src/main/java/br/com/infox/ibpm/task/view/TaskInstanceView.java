@@ -22,6 +22,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -82,10 +83,10 @@ public class TaskInstanceView implements Serializable {
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
                     ff.setFormHome(form.getHomeName());
-                    ff.setId(name);
+                    ff.setId(var.getVariableName());
                     ff.setRequired(var.isRequired() + "");
-                    ff.setLabel(var.getVariableName());
-                    Object value = taskInstance.getVariable(name);
+                    ff.setLabel(VariableHandler.getLabel(name));
+                    Object value = taskInstance.getVariable(var.getVariableName());
                     Map<String, Object> properties = ff.getProperties();
 
                     properties.put("pagePath", type.getPath());
