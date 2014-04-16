@@ -20,6 +20,12 @@
                 value="16" />
             <property name="hibernate.max_fetch_depth" value="2" />
 
+            <property name="hibernate.ejb.event.post-insert"
+                value="br.com.infox.epp.system.log.LogEventListener" />
+            <property name="hibernate.ejb.event.post-update"
+                value="br.com.infox.epp.system.log.LogEventListener" />
+            <property name="hibernate.ejb.event.post-delete"
+                value="br.com.infox.epp.system.log.LogEventListener" />
             <property name="hibernate.id.new_generator_mappings"
                 value="false" />
 
