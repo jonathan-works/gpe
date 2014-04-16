@@ -33,8 +33,3 @@
 .hor-list-item > div {
   font-weight:900; 
 }
-.linkButton.buttons {
-    text-decoration:none;
-    display:inline-block;
-    vertical-align:middle;
-}

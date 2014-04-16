@@ -118,7 +118,6 @@ public class TaskInstanceForm implements Serializable {
                     String name = tokens[1];
                     Object variable = JbpmUtil.getProcessVariable(name
                             + "Modelo");
-                    String label = var.getVariableName();
                     if (variable != null) {
                         FormField ff = new FormField();
                         ff.setFormId(form.getFormId());
@@ -135,16 +134,16 @@ public class TaskInstanceForm implements Serializable {
                     ff.setFormId(form.getFormId());
                     ff.setId(var.getVariableName() + "-" + taskInstance.getId());
                     ff.setRequired(var.isRequired() + "");
-                    ff.setLabel(label);
+                    ff.setLabel(var.getVariableName());
                     ff.setType(type.name());
                     form.getFields().add(ff);
                     ff.getProperties().put("pagePath", type.getPath());
                     switch (type) {
                         case PAGE:
-                            setPageProperties(label, ff, "seam", "url");
+                            setPageProperties(name, ff, "seam", "url");
                             break;
                         case FRAME:
-                            setPageProperties(label, ff, "xhtml", "urlFrame");
+                            setPageProperties(name, ff, "xhtml", "urlFrame");
                             break;
                         case ENUMERATION:{
                             DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);

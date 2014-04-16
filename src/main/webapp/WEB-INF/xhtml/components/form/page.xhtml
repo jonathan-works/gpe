@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j"
     xmlns:f="http://java.sun.com/jsf/core"
@@ -9,11 +9,11 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
+
     <s:div>
-        <s:link
-            value="#{label}"
-            styleClass="linkButton buttons"
-            view="#{props.url}"
+        <ui:param name="idMsg" value="#{f.id.split('-')[0]}" />
+        <s:link value="#{jbpmMessages[idMsg]}"
+            styleClass="buttons linkButton buttons" view="#{props.url}"
             onclick="openPopUp('jbpmPage', 'about:blank');"
             target="jbpmPage" />
     </s:div>
