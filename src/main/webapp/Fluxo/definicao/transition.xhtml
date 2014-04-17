@@ -7,39 +7,32 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
->
+    xmlns:wi="http://www.itx.com.br/jsf">
     <rich:panel bodyClass="panel">
         <f:facet name="header">
             <h:panelGrid
                 columns="2"
                 cellpadding="0"
-                cellspacing="0"
-            >
+                cellspacing="0">
                 <h:graphicImage
-                    url="#{a4jSkin.imgFolder}/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif"
-                />
+                    url="#{a4jSkin.imgFolder}/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif" />
                 <h:outputText
-                    value="#{type == 'from' ? messages['process.transitions.arriving'] : messages['process.transitions.leaving']}"
-                />
+                    value="#{type == 'from' ? messages['process.transitions.arriving'] : messages['process.transitions.leaving']}" />
             </h:panelGrid>
         </f:facet>
         <ui:param
             name="values"
-            value="#{type == 'from' ? transitionFitter.arrivingTransitions : transitionFitter.leavingTransitions}"
-        />
+            value="#{type == 'from' ? transitionFitter.arrivingTransitions : transitionFitter.leavingTransitions}" />
         <rich:dataTable
             value="#{values}"
             id="transition#{type}Table"
             onrowmouseout="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
             onrowmouseover="this.style.backgroundColor='#{a4jSkin.tableSubfooterBackgroundColor}'"
             styleClass="tabelaVariaveis"
-            var="transition"
-        >
+            var="transition">
             <rich:column
                 styleClass="dr-table-subheader rich-table-subheader"
-                rendered="#{type eq 'to'}"
-            >
+                rendered="#{type eq 'to'}">
                 <f:facet name="header">
                     <h:form>
                         <a:commandLink
@@ -47,12 +40,10 @@
                             execute="@this"
                             rendered="#{type.equals('to')}"
                             render="transition#{type}Table,nodesDiv"
-                            limitRender="true"
-                        >
+                            limitRender="true">
                             <h:graphicImage
                                 title="#{messages['process.transition.add']}"
-                                url="#{a4jSkin.imgFolder}/add.gif"
-                            />
+                                url="#{a4jSkin.imgFolder}/add.gif" />
                         </a:commandLink>
                     </h:form>
                 </f:facet>
@@ -63,46 +54,40 @@
                                 title="#{messages['process.transition.condition.define']}"
                                 rendered="#{empty transition.transition.condition and transition.canDefineCondition()}"
                                 url="#{a4jSkin.imgFolder}/help_dis.gif"
-                                styleClass="opacityHover"
-                            >
+                                styleClass="opacityHover">
                                 <a:ajax
                                     event="click"
                                     listener="#{transitionFitter.setCurrentTransition(transition.transition)}"
                                     oncomplete="#{rich:component('transitionCondition')}.show()"
                                     render="transitionCondition"
                                     execute="@this"
-                                    limitRender="true"
-                                />
+                                    limitRender="true" />
                             </h:graphicImage>
                             <h:graphicImage
                                 title="#{messages['process.transition.condition.edit']}"
                                 rendered="#{!empty transition.transition.condition and transition.transition.condition != '#{true}' and transition.canDefineCondition()}}"
                                 styleClass="opacityHover"
-                                url="#{a4jSkin.imgFolder}/help.gif"
-                            >
+                                url="#{a4jSkin.imgFolder}/help.gif">
                                 <a:ajax
                                     event="click"
                                     listener="#{transitionFitter.setCurrentTransition(transition.transition)}"
                                     oncomplete="#{rich:component('transitionCondition')}.show()"
                                     render="transitionCondition"
                                     limitRender="true"
-                                    execute="@this"
-                                />
+                                    execute="@this" />
                             </h:graphicImage>
                             <h:graphicImage
                                 title="#{messages['process.transition.remove']}"
                                 url="#{a4jSkin.imgFolder}/remove.png"
                                 styleClass="opacityHover"
-                                rendered="#{type eq 'to'}"
-                            >
+                                rendered="#{type eq 'to'}">
                                 <a:ajax
                                     event="click"
                                     listener="#{transitionFitter.removeTransition(transition, type)}"
                                     execute="@this"
                                     onbeforesubmit="if(!confirm('Confirma?')) return false;"
                                     render="transition#{type}Table,nodesDiv"
-                                    limitRender="true"
-                                />
+                                    limitRender="true" />
                             </h:graphicImage>
                         </h:form>
                     </div>
@@ -115,24 +100,20 @@
                         id="from"
                         valueChangeListener="#{nodeFitter.transitionChangeListener}"
                         rendered="#{empty transition.from}"
-                        value="#{transition.from}"
-                    >
+                        value="#{transition.from}">
                         <f:selectItems
                             value="#{nodeFitter.getNodesTransitionItems(type)}"
-                            var="v"
-                        />
+                            var="v" />
                         <a:ajax
                             event="change"
                             execute="@this"
                             render="transitionName,nodesDiv"
                             listener="#{transitionFitter.changeTransition(transition, type)}"
-                            limitRender="true"
-                        />
+                            limitRender="true" />
                     </h:selectOneMenu>
                     <h:outputText
                         rendered="#{!empty transition.from}"
-                        value="#{transition.fromName}"
-                    />
+                        value="#{transition.fromName}" />
                 </h:form>
             </rich:column>
             <rich:column rendered="#{type=='to'}">
@@ -143,24 +124,20 @@
                         valueChangeListener="#{nodeFitter.transitionChangeListener}"
                         rendered="#{empty transition.to}"
                         required="true"
-                        value="#{transition.to}"
-                    >
+                        value="#{transition.to}">
                         <f:selectItems
                             value="#{nodeFitter.getNodesTransitionItems(type)}"
-                            var="v"
-                        />
+                            var="v" />
                         <a:ajax
                             event="change"
                             execute="@this"
                             render="transitionName,nodesDiv"
                             listener="#{transitionFitter.changeTransition(transition, type)}"
-                            limitRender="true"
-                        />
+                            limitRender="true" />
                     </h:selectOneMenu>
                     <h:outputText
                         rendered="#{!empty transition.to}"
-                        value="#{transition.toName}"
-                    />
+                        value="#{transition.toName}" />
                 </h:form>
             </rich:column>
             <rich:column id="transitionName">
@@ -168,48 +145,41 @@
                 <h:form>
                     <h:inputText
                         value="#{transition.name}"
-                        required="true"
-                    >
+                        required="true">
                         <a:ajax
                             event="change"
                             execute="@this"
                             render="transition#{type}Table"
-                            limitRender="true"
-                        />
+                            limitRender="true" />
                     </h:inputText>
                     <a:commandLink
                         render="nodesDiv"
                         title="#{messages['process.transition.goto']}"
                         execute="@this"
                         action="#{nodeFitter.setCurrentNode(transition, type)}"
-                        limitRender="true"
-                    >
+                        limitRender="true">
                         <h:graphicImage
                             url="#{a4jSkin.imgFolder}/jbpm/up.gif"
-                            rendered="#{type == 'from'}"
-                        />
+                            rendered="#{type == 'from'}" />
                         <h:graphicImage
                             url="#{a4jSkin.imgFolder}/jbpm/down.gif"
-                            rendered="#{type == 'to'}"
-                        />
+                            rendered="#{type == 'to'}" />
                     </a:commandLink>
                 </h:form>
             </rich:column>
-            <rich:column id="showTransitionButtonColumn">
+            <rich:column id="occulTransitionButtonColumn" rendered="#{type eq 'to'}">
                 <f:facet name="header">#{messages['process.transition.ocultar']}</f:facet>
                 <h:form>
                     <center>
                         <h:selectBooleanCheckbox
-                            id="showTransitionButton"
-                            value="#{transition.showTransitionButton}"
-                        >
+                            id="occultTransitionButton"
+                            value="#{transition.occultTransitionButton}">
                             <a:ajax
                                 event="change"
                                 execute="@this"
                                 listener="#{transitionFitter.setTransitionButton(transition)}"
                                 render="transition#{type}Table"
-                                limitRender="true"
-                            />
+                                limitRender="true" />
                         </h:selectBooleanCheckbox>
                     </center>
                 </h:form>

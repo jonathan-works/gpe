@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.model.SelectItem;
 
@@ -205,10 +204,10 @@ public class TransitionFitter extends Fitter implements Serializable {
      * @param th
      */
     public void setTransitionButton(TransitionHandler th) {
-        if (th.getTransition().getCondition() == null) {
-            th.getTransition().setCondition("#{true}");
+        if (th.getTransition().getDescription() == null || th.getTransition().getDescription().equals("")) {
+            th.getTransition().setDescription(TransitionHandler.OCCULT_TRANSITION);
         } else {
-            th.getTransition().setCondition(null);
+            th.getTransition().setDescription(null);
         }
     }
 

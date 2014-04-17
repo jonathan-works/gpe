@@ -18,6 +18,8 @@ import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 public class TransitionHandler implements Serializable {
 
     private static final long serialVersionUID = 4373236937521654740L;
+    
+    public static final String OCCULT_TRANSITION = "OCCULT_TRANSITION";
 
     private Transition transition;
 
@@ -25,11 +27,11 @@ public class TransitionHandler implements Serializable {
      * Usado para definir se a transição será visível na saída do nó para o
      * usuário.
      */
-    private boolean showTransitionButton;
+    private boolean occultTransitionButton;
 
     public TransitionHandler(Transition transition) {
         this.transition = transition;
-        this.showTransitionButton = "#{true}".equals(transition.getCondition());
+        this.setOccultTransitionButton(transition.getDescription() != null && OCCULT_TRANSITION.contains(transition.getDescription()));
     }
 
     public String getName() {
@@ -115,14 +117,6 @@ public class TransitionHandler implements Serializable {
         return null;
     }
 
-    public void setShowTransitionButton(boolean showTransitionButton) {
-        this.showTransitionButton = showTransitionButton;
-    }
-
-    public boolean getShowTransitionButton() {
-        return showTransitionButton;
-    }
-
     @SuppressWarnings(UNCHECKED)
     public boolean isInDecisionNode() {
         NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
@@ -162,5 +156,13 @@ public class TransitionHandler implements Serializable {
 
     private boolean isInNode(Collection<Transition> transitions) {
         return transitions != null && transitions.contains(this.transition);
+    }
+
+    public boolean isOccultTransitionButton() {
+        return occultTransitionButton;
+    }
+
+    public void setOccultTransitionButton(boolean occultTransitionButton) {
+        this.occultTransitionButton = occultTransitionButton;
     }
 }

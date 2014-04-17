@@ -222,15 +222,6 @@ public class VariableAccessHandler implements Serializable {
     public void setType(VariableType type) {
         this.type = type;
         switch (type) {
-            case FORM:
-                String nameForm = name + "Form";
-                boolean existeForm = Component.getInstance(nameForm) != null;
-                if (!existeForm) {
-                    FacesMessages.instance().add(Severity.INFO, "O form '"
-                            + nameForm + "' não foi encontrado.");
-                    return;
-                }
-            break;
             case PAGE:
                 if (!pageExists()) {
                     setWritable(true);

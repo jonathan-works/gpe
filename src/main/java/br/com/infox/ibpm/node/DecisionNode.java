@@ -57,7 +57,7 @@ public class DecisionNode extends Node {
     }
 
     public List<String> getBooleanVariables() {
-        if (booleanVariables == null) {
+        if (booleanVariables == null || booleanVariables.isEmpty()) {
             List<String> list = new ArrayList<String>();
             list.add(VariableType.BOOLEAN.name());
             TaskHandlerVisitor visitor = new TaskHandlerVisitor(false, list);

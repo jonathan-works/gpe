@@ -78,6 +78,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     private Long tarefaId;
 
+    //TODO confirmar se é método realmente não é mais utilizado e removê-lo
     public void limpar() {
         modeloDocumento = null;
         tipoProcessoDocumento = null;

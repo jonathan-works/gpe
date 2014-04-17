@@ -64,18 +64,6 @@
                 <infox:tabHeaders />
             </h:form>
             <infox:tab
-                id="tabFluxo"
-                name="tabFluxo"
-                rendered="#{!processoHome.managed}"
-                status=":status"
-                title="Escolher fluxo"
-                action="#{processoHome.limpar()}">
-                <h:messages
-                    id="globalMessages"
-                    globalOnly="true"
-                    styleClass="message" />
-            </infox:tab>
-            <infox:tab
                 id="tabEntrada"
                 name="tabEntrada"
                 rendered="#{!empty taskInstanceView.fields}"

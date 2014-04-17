@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.view;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
@@ -17,10 +16,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Unwrap;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
 import org.jbpm.context.def.VariableAccess;
-import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -60,47 +56,20 @@ public class TaskInstanceForm implements Serializable {
 
     private TaskInstance taskInstance;
 
-    @SuppressWarnings(UNCHECKED)
     @Unwrap
     public Form getTaskForm() {
         getTaskInstance();
         if (form != null || taskInstance == null) {
             return form;
         }
-        TaskController taskController = taskInstance.getTask().getTaskController();
         Template buttons = new Template();
         List<VariableAccess> list = null;
-        if (taskController != null) {
-            list = taskController.getVariableAccesses();
-            for (VariableAccess var : list) {
-                if (var.isReadable() && var.isWritable()) {
-                    String[] tokens = var.getMappedName().split(":");
-                    VariableType type = VariableType.convertValueOf(tokens[0]);
-                    String name = tokens[1];
-                    if (VariableType.FORM.equals(type)) {
-                        String formName = name + "Form";
-                        form = (Form) Component.getInstance(formName);
-                        if (form != null) {
-                            buttons.setId(TASK_BUTTONS);
-                            form.setButtons(buttons);
-                            form.setHome(name + "Home");
-                        } else {
-                            FacesMessages.instance().add(StatusMessage.Severity.INFO, "O form '"
-                                    + formName + "' não foi encontrado.");
-                        }
-                        return form;
-                    }
-                }
-            }
-        }
-        if (form == null) {
-            form = new Form();
-            form.setHome(TaskInstanceHome.NAME);
-            form.setFormId("taskInstance");
-            buttons.setId(TASK_BUTTONS);
-            form.setButtons(buttons);
-            addVariablesToForm(list);
-        }
+        form = new Form();
+        form.setHome(TaskInstanceHome.NAME);
+        form.setFormId("taskInstance");
+        buttons.setId(TASK_BUTTONS);
+        form.setButtons(buttons);
+        addVariablesToForm(list);
         return form;
     }
 
