@@ -36,6 +36,7 @@ import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
+import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.jpdl.JpdlException;
@@ -200,6 +201,7 @@ public class ProcessBuilder implements Serializable {
             validateJbpmGraph();
             validateMailNode();
             validateVariables();
+            validateSubProcessNode();
         } catch (IllegalStateException e) {
             FacesMessages.instance().clearGlobalMessages();
             FacesMessages.instance().add(e.getMessage());
@@ -244,6 +246,19 @@ public class ProcessBuilder implements Serializable {
                 InfoxMailNode mailNode = (InfoxMailNode) node;
                 if (Strings.isNullOrEmpty(mailNode.getTo())) {
                     throw new IllegalStateException("O nó de email deve possuir pelo menos um destinatário.");
+                }
+            }
+        }
+    }
+    
+    @SuppressWarnings(UNCHECKED)
+    private void validateSubProcessNode() {
+        List<Node> nodes = getInstance().getNodes();
+        for (Node node : nodes) {
+            if (node instanceof ProcessState) {
+                ProcessState subprocess = (ProcessState) node;
+                if (Strings.isNullOrEmpty(subprocess.getSubProcessName())) {
+                    throw new IllegalStateException("O nó " + subprocess.getName() + " é do tipo subprocesso e deve possuir um fluxo associado.");
                 }
             }
         }
