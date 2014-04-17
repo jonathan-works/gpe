@@ -17,6 +17,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Unwrap;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jbpm.context.def.VariableAccess;
+import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -62,8 +63,12 @@ public class TaskInstanceForm implements Serializable {
         if (form != null || taskInstance == null) {
             return form;
         }
-        Template buttons = new Template();
+        TaskController taskController = taskInstance.getTask().getTaskController();
         List<VariableAccess> list = null;
+        if (taskController != null) {
+            list = taskController.getVariableAccesses();
+        }
+        Template buttons = new Template();
         form = new Form();
         form.setHome(TaskInstanceHome.NAME);
         form.setFormId("taskInstance");
