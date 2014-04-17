@@ -10,3 +10,4 @@ derby.log
 /IndexAjuda
 /IndexProcessoDocumento
 /IndexTaskContent
+.settings/org.hibernate.eclipse.console.prefs
