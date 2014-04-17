@@ -369,6 +369,9 @@ public class JpdlXmlWriter {
             Element condition = transitionElement.addElement("condition");
             condition.addAttribute("expression", transition.getCondition());
         }
+        if (transition.getDescription() != null) {
+            writeDescription(transitionElement, transition.getDescription());
+        }
     }
 
     @SuppressWarnings(UNCHECKED)

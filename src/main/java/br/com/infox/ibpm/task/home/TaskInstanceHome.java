@@ -54,6 +54,7 @@ import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
+import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.seam.context.ContextFacade;
@@ -72,7 +73,6 @@ public class TaskInstanceHome implements Serializable {
     private static final LogProvider LOG = Logging
             .getLogProvider(TaskInstanceHome.class);
     private static final long serialVersionUID = 1L;
-    private static final String OCCULT_TRANSITION = "#{true}";
 
     public static final String NAME = "taskInstanceHome";
 
@@ -594,7 +594,8 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public static boolean hasOcculTransition(Transition transition) {
-        return OCCULT_TRANSITION.equals(transition.getCondition());
+        return transition.getDescription() != null && transition.getDescription().contains(TransitionHandler.OCCULT_TRANSITION);
+//        return OCCULT_TRANSITION.equals(transition.getCondition());
     }
 
     @SuppressWarnings(UNCHECKED)
