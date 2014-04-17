@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.node.handler;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import br.com.infox.jbpm.event.EventHandler;
 
 public class NodeHandler implements Serializable {
 
+    private static final String BASE_DUE_DATE = "1 business hour";
     private static final long serialVersionUID = -236376783694756255L;
 
     public enum UnitsEnum {
@@ -187,33 +189,44 @@ public class NodeHandler implements Serializable {
     }
 
     public void addTimer() {
-        setInternalCurrentTimer(new CreateTimerAction());
-        timerList.add(currentTimer);
-        String timerName = node.getName();
-        if (timerList.size() > 1) {
-            timerName += " " + timerList.size();
+        final CreateTimerAction newTimer = createNewTimerAction();
+        
+        addTimerToEvent(newTimer);
+        
+        setInternalCurrentTimer(newTimer);
+        timerList.add(newTimer);
+    }
+
+    private CreateTimerAction createNewTimerAction() {
+        final CreateTimerAction newTimer = new CreateTimerAction();
+        newTimer.setTimerName(getGeneratedTimerName());
+        newTimer.setDueDate(BASE_DUE_DATE);
+        final List<Transition> leavingTransitions = node.getLeavingTransitions();
+        if (leavingTransitions.size() > 0) {
+            newTimer.setTransitionName(leavingTransitions.get(0).getName());
         }
-        currentTimer.setTimerName(timerName);
-        String dueDate = "1 business hour";
-        currentTimer.setDueDate(dueDate);
-        setDueDate(dueDate);
-        if (node.getLeavingTransitions().size() > 0) {
-            currentTimer.setTransitionName(((Transition) node.getLeavingTransitions().get(0)).getName());
-        }
+        return newTimer;
+    }
+
+    private void addTimerToEvent(CreateTimerAction newTimer) {
         Event e = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
         if (e == null) {
             e = new Event(Event.EVENTTYPE_NODE_ENTER);
             node.addEvent(e);
         }
-        e.addAction(currentTimer);
+        e.addAction(newTimer);
         e = node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
         if (e == null) {
             e = new Event(Event.EVENTTYPE_NODE_LEAVE);
             node.addEvent(e);
         }
-        CancelTimerAction c = new CancelTimerAction();
-        c.setTimerName(currentTimer.getTimerName());
+        final CancelTimerAction c = new CancelTimerAction();
+        c.setTimerName(newTimer.getTimerName());
         e.addAction(c);
+    }
+
+    private String getGeneratedTimerName() {
+        return format("{0} {1}", node.getName(), timerList.size()+1);
     }
 
     @SuppressWarnings(WarningConstants.UNCHECKED)

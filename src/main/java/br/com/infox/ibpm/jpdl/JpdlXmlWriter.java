@@ -439,40 +439,40 @@ public class JpdlXmlWriter {
         return valid;
     }
 
-    private boolean writeTimer(Element parentElement, Action action) {
-        String name;
-        boolean isCreateTimer = false;
+    private void initCreateTimerAction(final Element parentElement, final Action action) {
+        final CreateTimerAction create = (CreateTimerAction) action;
+        final String name = create.getTimerName();
         
-        if (action instanceof CreateTimerAction) {
-            CreateTimerAction timer = (CreateTimerAction) action;
-            name = timer.getTimerName();
-            isCreateTimer = true;
-        } else if (action instanceof CancelTimerAction) {
-            CancelTimerAction timer = (CancelTimerAction) action;
-            name = timer.getTimerName();
-        } else {
-            return false;
-        }
-        
-        Action firstTimer = timers.get(name);
+        final Action firstTimer = timers.get(name);
         
         if (firstTimer == null) {
             timers.put(name, action);
-        } else {
-            CreateTimerAction create;
-            if (isCreateTimer) {
-                create = (CreateTimerAction) action;
-            } else {
-                create = (CreateTimerAction) firstTimer;
-            }
-            
-            Element node = parentElement.getParent();
-            Element timer = addElement(node, "timer");
-            timer.addAttribute(ELEMENT_NAME, name);
-            timer.addAttribute("duedate", create.getDueDate());
-            timer.addAttribute("repeat", create.getRepeat());
-            timer.addAttribute("transition", create.getTransitionName());
+        }
+        
+        final Element node = parentElement.getParent();
+        final Element timer = addElement(node, "timer");
+        timer.addAttribute(ELEMENT_NAME, name);
+        timer.addAttribute("duedate", create.getDueDate());
+        timer.addAttribute("repeat", create.getRepeat());
+        timer.addAttribute("transition", create.getTransitionName());
+    }
+    
+    private void initCancelTimerAction(final Element parentElement, final Action action) {
+        final CancelTimerAction timer = (CancelTimerAction) action;
+        final String name = timer.getTimerName();
+        final Action firstTimer = timers.get(name);
+        
+        if (firstTimer == null) {
+            timers.put(name, action);
+        }
+    }
+    
+    private boolean writeTimer(Element parentElement, Action action) {
+        if (action instanceof CreateTimerAction) {
+            initCreateTimerAction(parentElement, action);
             return true;
+        } else if (action instanceof CancelTimerAction) {
+            initCancelTimerAction(parentElement, action);
         }
         
         return false;
