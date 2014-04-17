@@ -1,37 +1,26 @@
-  ARITH_OP      =: + | - | * | /
-  BOOL_OP       =: AND | OR
-  ARITH_COMP_OP =: BASIC_COMP_OP | GREATER THAN OR EQUAL TO | LESS THAN OR EQUAL TO | GREATER THAN | LESS THAN
-  BASIC_COMP_OP =: EQUAL TO | DIFFERENT THAN
+  ArithOp      =: "+" | "-" | "*" | "/"
+  BoolOp       =: "&&" | "||"
+  ArithCompOp =: {BasicCompOp} | ">=" | "<=" | ">" | "<"
+  BasicCompOp =: "==" | "!="
   
-  VALUE =: ARITHMETIC | STRING | BOOLEAN | DATE | TIMESPAN | TRANSITION | ENUMERATION
+  Value =: {Arithmetic} | {String} | {Boolean} | {Date} | TIMESPAN | TRANSITION | {Enumeration}
   
-  ARITHMETIC =: ( ARITHMETIC ARITH_OP ARITHMETIC ) | [NUMBER_VAR] | NUMBER_CONSTANT | BOOLEAN ? ARITHMETIC : ARITHMETIC
+  Arithmetic =: "(" {Arithmetic} {ArithOp} {Arithmetic} ")" | {Identifier} | NUMBER_CONSTANT | {Boolean} ? {Arithmetic} : {Arithmetic}
   
-  STRING =: [STRING_VAR] | "STRING_CONSTANT" | VALUE + STRING | STRING + VALUE | BOOLEAN ? STRING : STRING
+  String =: {Identifier} | "StringConstant" | {Value} + {String} | {String} + {Value} | {Boolean} ? {String} : {String}
   
-  BOOLEAN =: true | false | [BOOLEAN_VAR] | ( ARITHMETIC ARITH_COMP_OP ARITHMETIC ) | ( ARITHMETIC INARITH_COMP_OP ARITHMETIC ) |
-              | ( STRING BASIC_COMP_OP STRING ) | (DATE ARITH_COMP_OP DATE) | ( BOOLEAN BOOL_OP BOOLEAN ) | NOT BOOLEAN
+  Boolean =: true | false | {Identifier} | ( {Arithmetic} {ArithCompOp} {Arithmetic} ) |
+              | ( {String} {BasicCompOp} {String} ) | ({Date} {ArithCompOp} {Date}) | ( {Boolean} {BoolOp} {Boolean} ) | "!" {Boolean}
   
-  DATE =: DATE_CONSTANT | [DATE_VAR] | DATE + TIMESPAN | DATE - TIMESPAN | BOOLEAN ? DATE : DATE
-  
-  TIMESPAN =: ARITHMETIC TIME_MEASURE
-  
-  TIME_MEASURE =: DAY | MONTH | YEAR
-
-  TRANSITION =: TRANSITION_VALUE | BOOLEAN ? TRANSITION : TRANSITION
-
-  ENUMERATION =: ENUMERATION_VALUE | BOOLEAN ? ENUMERATION : ENUMERATION
-
-  FORM =: STRING
-
-  PAGE =: STRING
-
-  FRAME =: STRING
-  
-  TASK_PAGE =: STRING
-
 EXEMPLOS DE EXPRESSÕES:
   (NUMERO X)          ..  [idade] + 12 .. #{idade+12}
   (NUMERO Y)          ..  ( [X] + ( [Y] + ( [idade] * 5 ) ) ) .. #{(X+(Y+(idade*5)))}
-  (STRING CONCLUSAO)  ..  "nomePaginaPadrao"[tipoPagina][acessoPagina]  .. #{'nomePaginaPadrao'+tipoPagina+acessoPagina}
-  (STRING ASSINATURA) ..  "Atenciosamente, "[nomeUsuario]" "[papelUsuario]" "[dataAtualFormatada]" "()
+  ({String} CONCLUSAO)  ..  "nomePaginaPadrao"[tipoPagina][acessoPagina]  .. #{'nomePaginaPadrao'+tipoPagina+acessoPagina}
+  ({String} ASSINATURA) ..  "Atenciosamente, "[nomeUsuario]" "[papelUsuario]" "[dataAtualFormatada]" "()
+  
+  Teste Arithmetic
+  true ? ((valor1 + 10) - (valor2 * 15)) : ((valor3 / 20) + (valor4 - 5))
+  
+  Teste Boolean
+( {String} {BasicCompOp} {String} ) | ({Date} {ArithCompOp} {Date}) | ( {Boolean} {BoolOp} {Boolean} ) | "!" {Boolean}
+  ( ( ( ( ( true || false ) && ( bool1 || ( {Arithmetic} {ArithCompOp} {Arithmetic} ) ) ) || ( ( ( {Arithmetic} {ArithCompOp} {Arithmetic} ) || ( {Arithmetic} {ArithCompOp} {Arithmetic} ) ) && ( ( {Arithmetic} {ArithCompOp} {Arithmetic} ) || ( {Arithmetic} {ArithCompOp} {Arithmetic} ) ) ) ) && ( ( ( ( {Arithmetic} {ArithCompOp} {Arithmetic} ) || ( {String} {BasicCompOp} {String} ) ) && ( {String} {BasicCompOp} {String} ) ) || false ) ) && true )
