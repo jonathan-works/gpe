@@ -14,6 +14,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.seam.exception.ApplicationException;
 
 /**
@@ -30,7 +31,6 @@ public class TaskPageAction implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskPageAction";
     private String taskPagePath;
-    public static final String TASK_PAGE_COMPONENT_NAME = "taskPage";
     public static final String TASK_PAGE_COMPONENT_PATH = "/taskpages/";
     private static final String TASK_PAGE_SUFFIX = ".xhtml";
     private boolean hasTaskPage = false;
@@ -44,7 +44,7 @@ public class TaskPageAction implements Serializable {
         for (VariableAccess va : variableAccesses) {
             String[] tokens = va.getMappedName().split(":");
             String type = tokens[0];
-            if (type.equals(TASK_PAGE_COMPONENT_NAME)) {
+            if (type.equals(VariableType.TASK_PAGE.name())) {
                 hasTaskPage = true;
                 String pageName = tokens[1] + TASK_PAGE_SUFFIX;
 

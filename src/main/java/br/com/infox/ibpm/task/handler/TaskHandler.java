@@ -17,7 +17,6 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
 import br.com.infox.seam.util.ComponentUtil;
@@ -159,7 +158,7 @@ public class TaskHandler implements Serializable {
     public void removeVar(VariableAccessHandler v) {
         task.getTaskController().getVariableAccesses().remove(v.getVariableAccess());
         variables.remove(v);
-        if (v.getType().equals(TaskPageAction.TASK_PAGE_COMPONENT_NAME)) {
+        if (v.getType() == VariableType.TASK_PAGE) {
             hasTaskPage = null;
         }
         ProcessBuilder.instance().getTaskFitter().setTypeList(null);
