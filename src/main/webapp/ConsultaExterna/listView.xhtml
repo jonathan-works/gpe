@@ -166,7 +166,7 @@
 
                             <rich:dataTable
                                 value="#{controller.processoEpa.processoEpaTarefaList}"
-                                rowKeyVar="key" var="task">
+                                rowKeyVar="key" var="task" styleClass="rf-dt-crud">
                                 <rich:column styleClass="defaultCell">
                                     <f:facet name="header">#{messages['tarefa.nome']}</f:facet>
                                     <h:outputText value="#{task.tarefa}" />
