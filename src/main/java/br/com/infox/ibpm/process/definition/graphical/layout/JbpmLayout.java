@@ -17,7 +17,7 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import org.jboss.seam.core.Expressions;
+import org.jboss.seam.international.Messages;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -36,6 +36,7 @@ import org.jgraph.graph.GraphModel;
 
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 import com.jgraph.layout.JGraphFacade;
@@ -119,11 +120,9 @@ public class JbpmLayout {
             if (mappedName.length == 1) {
                 name = "";
             } else {
-                name = mappedName[1];
+                name = processDefinition.getName() + ":" + mappedName[1];
             }
-            String exp = "#{processBuilder.getTypeLabel('" + mappedName[0]
-                    + "')}";
-            String component = (String) Expressions.instance().createValueExpression(exp).getValue();
+            String component = Messages.instance().get(VariableType.valueOf(mappedName[0]).getLabel());
             sb.append(i).append(": {name:'").append(JbpmUtil.getJbpmMessages().get(name)).append("', type:'").append(component).append("', readonly:'").append(!v.isWritable()).append("'}");
             if (i < list.size() - 1) {
                 sb.append(",");
