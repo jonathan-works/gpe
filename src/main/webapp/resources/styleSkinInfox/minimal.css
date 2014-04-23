@@ -26,3 +26,6 @@
   color:#FFF;
   font-weight:900;
 }
+.pageContent.minimal {
+    height: calc(100% - 53px);
+}

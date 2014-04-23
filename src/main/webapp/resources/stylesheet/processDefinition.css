@@ -40,3 +40,6 @@
  .bold-link {
   font-weight:900;
  }
+ .rf-p-b.panel.processDefinition {
+    overflow-x: auto;
+ }
