@@ -11,3 +11,4 @@ derby.log
 /IndexProcessoDocumento
 /IndexTaskContent
 .settings/org.hibernate.eclipse.console.prefs
+.settings/org.eclipse.wst.common.project.facet.core.xml
