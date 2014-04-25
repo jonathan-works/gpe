@@ -20,7 +20,7 @@
     value="#{id}certChain" />
   <s:div id="#{f.id}TipoDocDiv">
     <wi:selectOneMenuEntity
-      id="tipoProcessoDocumento"
+      id="#{f.id}tipoProcessoDocumento"
       label="#{messages['processoDocumento.classificacaoDocumento']}"
       value="#{processoHome.tipoProcessoDocumento}"
       items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
