@@ -138,9 +138,30 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         if (tipo != null) {
             list = variavelDAO.getVariaveisByTipoModeloDocumento(tipo);
         }
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
+        int flag = 0x0;
         for (Variavel variavel : list) {
-            map.put(variavel.getVariavel(), variavel.getValorVariavel());
+            String valorVariavel = variavel.getValorVariavel();
+            if ("#{loginUsuarioRec}".equals(valorVariavel)) {
+                valorVariavel="<loginUsuarioRec>";
+                flag = flag | 0x1;
+            } else if ("#{senhaUsuarioRec}".equals(valorVariavel)) {
+                valorVariavel="<senhaUsuarioRec>";
+                flag = flag | 0x2;
+            } else if ("#{nomeUsuarioRec}".equals(valorVariavel)) {
+                flag = flag | 0x4;
+                valorVariavel="<nomeUsuarioRec>";
+            }
+            map.put(variavel.getVariavel(), valorVariavel);
+        }
+        if ((flag&0x1) != 0x1) {
+            map.put("loginUsuarioRec", "<loginUsuarioRec>");
+        }
+        if ((flag&0x2) != 0x2) {
+            map.put("senhaUsuarioRec", "<senhaUsuarioRec>");
+        }
+        if ((flag&0x4) != 0x4) {
+            map.put("nomeUsuarioRec", "<nomeUsuarioRec>");
         }
         return map;
     }

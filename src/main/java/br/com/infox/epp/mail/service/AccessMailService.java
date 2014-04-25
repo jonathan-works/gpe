@@ -2,14 +2,14 @@ package br.com.infox.epp.mail.service;
 
 import static java.text.MessageFormat.format;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.international.Messages;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -25,9 +25,13 @@ import br.com.infox.seam.exception.BusinessException;
 @AutoCreate
 public class AccessMailService {
 
-    private static final String CAMPO_LOGIN = "Seu login &eacute;:";
-    private static final String CAMPO_SENHA = "Sua senha nova &eacute;:";
-    private static final String CAMPO_USUARIO = "Caro,";
+    private static final String EXPRESSION_PATTERN = "<{0}>";
+    private static final String USUARIO_MAIL_DEFAULT_FIELD_SENHA = "usuario.mail.defaultField.senha";
+    private static final String USUARIO_MAIL_DEFAULT_FIELD_NOME = "usuario.mail.defaultField.nome";
+    private static final String DEFAULT_EMAIL_LINE = "<div>{0} <span style='color:red'><{1}></span></div>";
+    private static final String CAMPO_LOGIN = "loginUsuarioRec";
+    private static final String CAMPO_SENHA = "senhaUsuarioRec";
+    private static final String CAMPO_USUARIO = "nomeUsuarioRec";
     private static final String MODELO_COM_LOGIN = "tituloModeloEmailMudancaSenhaComLogin";
     private static final String MODELO_SEM_LOGIN = "tituloModeloEmailMudancaSenha";
     private static final String EMAIL = "email";
@@ -65,12 +69,7 @@ public class AccessMailService {
             final UsuarioLogin usuario, final String password) {
         final String nomeParametro = resolveTipoDeEmail(parametro);
         final ModeloDocumento modelo = findModelo(nomeParametro);
-        if (modelo != null) {
-            enviarEmailModelo(modelo, usuario, password);
-        } else {
-            final String errorMessage = format("Erro no envio do e-mail. O parâmetro de sistema '{0}' não foi definido ou possui um valor inválido", nomeParametro);
-            throw new BusinessException(errorMessage);
-        }
+        enviarEmailModelo(modelo, usuario, password);
     }
 
     private ModeloDocumento findModelo(String nomeParametro) {
@@ -81,6 +80,14 @@ public class AccessMailService {
             if (nomeModelo != null && !"false".equals(nomeModelo)) {
                 result = modeloDocumentoManager.getModeloDocumentoByTitulo(nomeModelo);
             }
+        }
+        if (result == null) {
+            result = new ModeloDocumento();
+            StringBuilder defaultEmail = new StringBuilder();
+            Map<String, String> localeMsgs = Messages.instance();
+            defaultEmail.append(format(DEFAULT_EMAIL_LINE, localeMsgs.get(USUARIO_MAIL_DEFAULT_FIELD_NOME), CAMPO_USUARIO));
+            defaultEmail.append(format(DEFAULT_EMAIL_LINE, localeMsgs.get(USUARIO_MAIL_DEFAULT_FIELD_SENHA), CAMPO_SENHA));
+            result.setModeloDocumento(defaultEmail.toString());
         }
         return result;
     }
@@ -93,24 +100,19 @@ public class AccessMailService {
         emailData.setBody(conteudo);
         emailData.getRecipientList().clear();
         emailData.getRecipientList().add(usuario);
-        emailData.setSubject("Senha do Sistema");
+        emailData.setSubject(Messages.instance().get("usuario.senha.generated.subject"));
         new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
     }
 
     private String resolverConteudo(ModeloDocumento modelo,
             UsuarioLogin usuario, String password) {
-        String conteudo = modeloDocumentoManager.evaluateModeloDocumento(modelo);
-        conteudo = substitute(conteudo, CAMPO_USUARIO, usuario.getNomeUsuario());
-        conteudo = substitute(conteudo, CAMPO_LOGIN, usuario.getLogin());
-        conteudo = substitute(conteudo, CAMPO_SENHA, password);
-        return conteudo;
-    }
+        String modeloDocumento = modelo.getModeloDocumento();
 
-    private String substitute(String conteudoDocumento, String campo,
-            String valor) {
-        Pattern pattern = Pattern.compile(campo);
-        Matcher matcher = pattern.matcher(conteudoDocumento);
-        return matcher.replaceFirst(campo + " " + valor);
+        modeloDocumento = modeloDocumentoManager.evaluateModeloDocumento(modelo);
+        modeloDocumento = modeloDocumento.replace(format(EXPRESSION_PATTERN, CAMPO_USUARIO), usuario.getNomeUsuario());
+        modeloDocumento = modeloDocumento.replace(format(EXPRESSION_PATTERN, CAMPO_LOGIN), usuario.getLogin());
+        modeloDocumento = modeloDocumento.replace(format(EXPRESSION_PATTERN, CAMPO_SENHA), password);
+        return modeloDocumento;
     }
 
 }
