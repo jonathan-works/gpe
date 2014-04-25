@@ -4,7 +4,9 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -278,6 +280,8 @@ public class SearchHandler implements Serializable {
             texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
         } else if (VariableType.MONETARY.name().equalsIgnoreCase(type)) {
             texto = String.format(FloatFormatConstants.F2, value);
+        } else if (VariableType.DATE.toString().equals(type)) {
+            texto = DateFormat.getDateInstance().format((Date)value);
         } else {
             texto = value.toString();
         }
