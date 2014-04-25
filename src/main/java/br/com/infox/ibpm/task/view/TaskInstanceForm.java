@@ -115,10 +115,10 @@ public class TaskInstanceForm implements Serializable {
                     ff.getProperties().put("pagePath", type.getPath());
                     switch (type) {
                         case PAGE:
-                            setPageProperties(label, ff, "seam", "url");
+                            setPageProperties(name, ff, "seam", "url");
                             break;
                         case FRAME:
-                            setPageProperties(label, ff, "xhtml", "urlFrame");
+                            setPageProperties(name, ff, "xhtml", "urlFrame");
                             break;
                         case ENUMERATION:{
                             DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
