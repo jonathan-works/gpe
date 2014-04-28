@@ -82,4 +82,10 @@
     margin: 5px;
     padding: 2px 5px 2px 5px;
 }
+.versao {
+	position: fixed;
+	color: gray;
+	font-size: 12pt;
+	bottom: 10px;
+}
 /* Fim */

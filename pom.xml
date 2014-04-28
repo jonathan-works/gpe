@@ -382,7 +382,6 @@
                             <excludes>
                                 <exclude>WEB-INF/web.xml</exclude>
                                 <exclude>WEB-INF/components.xml</exclude>
-                                <exclude>versao.xml</exclude>
                             </excludes>
                         </resource>
                         <resource>
@@ -391,7 +390,6 @@
                             <includes>
                                 <include>WEB-INF/web.xml</include>
                                 <include>WEB-INF/components.xml</include>
-                                <include>versao.xml</include>
                             </includes>
                         </resource>
                     </webResources>
@@ -420,6 +418,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.1.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                         </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+                </configuration>
             </plugin>
         </plugins>
     </build>
