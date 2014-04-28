@@ -12,3 +12,4 @@ derby.log
 /IndexTaskContent
 .settings/org.hibernate.eclipse.console.prefs
 .settings/org.eclipse.wst.common.project.facet.core.xml
+/src/main/resources/git.properties
