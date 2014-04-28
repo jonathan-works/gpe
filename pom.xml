@@ -428,7 +428,7 @@
         <hibernate.search.index_base>./indices/</hibernate.search.index_base>
         <maven.build.timestamp.format>dd/MM/yyyy - HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
-        <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
+        <hibernate.dialect>br.com.infox.hibernate.postgresql.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
     </properties>
     <profiles>
         <profile>
@@ -463,7 +463,7 @@
         <profile>
             <id>postgresql</id>
             <properties>
-                <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
+                <hibernate.dialect>br.com.infox.hibernate.postgresql.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
             </properties>
         </profile>
         <profile>
