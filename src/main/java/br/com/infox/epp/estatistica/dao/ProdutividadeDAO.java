@@ -54,7 +54,7 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
 
     @SuppressWarnings(UNCHECKED)
     public List<ProdutividadeBean> listProdutividade(Map<String, Object> params) {
-        String sql = buildSql(params);
+        String sql = buildOrderedSql(params);
         Query query = setParameters(params, getEntityManager().createNativeQuery(sql));
         query = setPaginationParams(params, query);
         List<Object[]> results = query.getResultList();
@@ -71,7 +71,17 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
         sb.append(sql);
         sb.append(") a");
         Query query = setParameters(params, getEntityManager().createNativeQuery(sb.toString()));
-        return ((BigInteger) query.getSingleResult()).longValue();
+        Object result = query.getSingleResult();
+        if (result instanceof BigInteger) {
+            return ((BigInteger) result).longValue();
+        } else {
+            // SQLServer
+            return new Long((Integer) result);
+        }
+    }
+    
+    private String buildOrderedSql(Map<String, Object> params) {
+        return buildSql(params) + ORDER_BY;
     }
 
     private String buildSql(Map<String, Object> params) {
@@ -93,7 +103,6 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
             sb.append(CONDICAO_DATA_FIM);
         }
         sb.append(GROUP_BY);
-        sb.append(ORDER_BY);
         return sb.toString();
     }
 
@@ -126,18 +135,38 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
     private ProdutividadeBean buildProdutividade(Object[] o) {
         ProdutividadeBean produtividade = new ProdutividadeBean();
 
-        Character c = (Character) o[INDEX_TIPO_PRAZO_TAREFA];
+        String c;
+        if (o[INDEX_TIPO_PRAZO_TAREFA] instanceof Character) {
+            c = ((Character) o[INDEX_TIPO_PRAZO_TAREFA]).toString();
+        } else {
+            // SQLServer
+            c = (String) o[INDEX_TIPO_PRAZO_TAREFA];
+        }
         PrazoEnum tipoPrazo = null;
         if (c != null) {
-            tipoPrazo = PrazoEnum.valueOf(c.toString());
+            tipoPrazo = PrazoEnum.valueOf(c);
         }
 
         produtividade.setLocalizacao((String) o[INDEX_LOCALIZACAO]);
         produtividade.setMaximoTempoGasto(PrazoEnum.formatTempo((Integer) o[INDEX_MAXIMO_TEMPO_GASTO], tipoPrazo));
-        produtividade.setMediaTempoGasto(PrazoEnum.formatTempo(((BigDecimal) o[INDEX_MEDIA_TEMPO_GASTO]).intValue(), tipoPrazo));
+        Integer media;
+        if (o[INDEX_MEDIA_TEMPO_GASTO] instanceof BigDecimal) {
+            media = ((BigDecimal) o[INDEX_MEDIA_TEMPO_GASTO]).intValue();
+        } else {
+            // SQLServer
+            media = (Integer) o[INDEX_MEDIA_TEMPO_GASTO];
+        }
+        produtividade.setMediaTempoGasto(PrazoEnum.formatTempo(media, tipoPrazo));
         produtividade.setMinimoTempoGasto(PrazoEnum.formatTempo((Integer) o[INDEX_MINIMO_TEMPO_GASTO], tipoPrazo));
         produtividade.setPapel((String) o[INDEX_PAPEL]);
-        produtividade.setQuantidadeTarefas(((BigInteger) o[INDEX_QUANTIDADE_TAREFAS]).longValue());
+        Long quantidadeTarefas;
+        if (o[INDEX_QUANTIDADE_TAREFAS] instanceof BigInteger) {
+            quantidadeTarefas = ((BigInteger) o[INDEX_QUANTIDADE_TAREFAS]).longValue();
+        } else {
+            // SQLServer
+            quantidadeTarefas = new Long((Integer) o[INDEX_QUANTIDADE_TAREFAS]);
+        }
+        produtividade.setQuantidadeTarefas(quantidadeTarefas);
         produtividade.setTarefa((String) o[INDEX_TAREFA]);
         Integer tempo = (Integer) o[INDEX_TEMPO_PREVISTO];
         if (tempo != null) {

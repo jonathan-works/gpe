@@ -20,10 +20,10 @@ public interface ProdutividadeQuery {
             + "	INNER JOIN tb_localizacao l ON (l.id_localizacao = ut.id_localizacao)"
             + "	INNER JOIN tb_tarefa t ON (t.id_tarefa = pet.id_tarefa)";
 
-    String INNER_JOIN_FLUXO = " INNER JOIN tb_processo_epa proc ON (proc.id_processo = pet.id_processo)"
-            + " INNER JOIN tb_natureza_categoria_fluxo ncf ON (ncf.id_natureza_categoria_fluxo = proc.id_natureza_categoria_fluxo)";
+    String INNER_JOIN_FLUXO = " INNER JOIN tb_processo_epa pro ON (pro.id_processo = pet.id_processo)"
+            + " INNER JOIN tb_natureza_categoria_fluxo ncf ON (ncf.id_natureza_categoria_fluxo = pro.id_natureza_categoria_fluxo)";
 
-    String GROUP_BY = " GROUP BY t.id_tarefa, t.nr_prazo, l.ds_localizacao, p.ds_nome, pes.nm_pessoa";
+    String GROUP_BY = " GROUP BY t.id_tarefa, t.nr_prazo, l.ds_localizacao, p.ds_nome, pes.nm_pessoa, t.ds_tarefa, t.tp_prazo";
 
     String ORDER_BY = " ORDER BY pes.nm_pessoa";
 
