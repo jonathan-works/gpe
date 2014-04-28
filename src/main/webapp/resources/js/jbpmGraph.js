@@ -21,11 +21,10 @@ function NodeArea(cid) {
 			id: '_' + id, 
 			coords: coords,
 			href: 'javascript:window.location.href = "' + createLink(id, this.cid) + '"',
-			shape: 'rect'
+			shape: 'rect',
+			areaName:title,
 		});
-
-		area[0].addEventListener('mouseover', this.mouseover, false);
-		area[0].addEventListener('mouseout', this.mouseout, false);
+		$(area).hover(this.mouseover, this.mouseout);
 		area[0].areaName = title;
 		area[0].vars = vars;
 		area[0].cond = cond;
@@ -35,15 +34,14 @@ function NodeArea(cid) {
 	
 	this.mouseover = function(event) {
 		var d = $('#divDetail');
-		if (d.css('display') == 'block') {
-			return;
+		if (d.hasClass("hidden")) {
+			d.removeClass("hidden");
 		}
 
 		d.empty();
-		
 		var area = $(event.target);
-		d.append($('<div style="width:100%; text-align:center;font-weight:bold">' + area[0].areaName + '</div>'));
-		
+		d.append($("<div class='graphHint-title'>" + area[0].areaName + "</div>"));
+
 		var inVars = [];
 		var outVars = [];
 		
@@ -78,15 +76,25 @@ function NodeArea(cid) {
 			ulOut.append($('<li>' + v.name + ' (' + v.type + ')' + '</li>'));
 		});
 		
-		d.show();
-		
 		if (area[0].cond != null){
 			var condicao = "Condi\u00E7\u00E3o";
 			d.append($('<p>' + condicao + ': ' + area[0].cond + '</p>'));
 		}
+		var coords = area.attr("coords").split(",");
+		var left = coords[0]-90;
+		var top = coords[1]-(-106);
+		
+
+        d.css({
+          top:top,
+          left:left
+        });
 	};
 
 	this.mouseout = function(event) {
-		$('#divDetail').hide();
+	  var d = $("#divDetail");
+      if (!d.hasClass("hidden")) {
+          d.addClass("hidden");
+      }
 	};
 }
