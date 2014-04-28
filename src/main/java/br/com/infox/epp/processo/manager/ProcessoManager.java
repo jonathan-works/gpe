@@ -130,8 +130,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
             final UsuarioLocalizacao usrLoc) throws DAOException {
         final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
         final String actorId = Actor.instance().getId();
-        iniciaTask(processo, taskInstanceId);
         if (taskInstanceId != null) {
+            iniciaTask(processo, taskInstanceId);
             storeUsuario(taskInstanceId, usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel());
             vinculaUsuario(processo, actorId);
         }
