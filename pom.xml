@@ -428,6 +428,7 @@
         <hibernate.search.index_base>./indices/</hibernate.search.index_base>
         <maven.build.timestamp.format>dd/MM/yyyy - HH:mm</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
+        <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
     </properties>
     <profiles>
         <profile>
@@ -439,6 +440,7 @@
                 <log.jbpm>WARNING</log.jbpm>
                 <log.hibernate.sql>ERROR</log.hibernate.sql>
                 <project.stage>Production</project.stage>
+                <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxSQLServer2012Dialect</hibernate.dialect>
             </properties>
         </profile>
         <profile>
@@ -450,6 +452,18 @@
                 <hibernate.format_sql>true</hibernate.format_sql>
                 <log.jbpm>INFO</log.jbpm>
                 <log.hibernate.sql>INFO</log.hibernate.sql>
+            </properties>
+        </profile>
+        <profile>
+            <id>sqlserver</id>
+            <properties>
+                <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxSQLServer2012Dialect</hibernate.dialect>
+            </properties>
+        </profile>
+        <profile>
+            <id>postgresql</id>
+            <properties>
+                <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
             </properties>
         </profile>
         <profile>
