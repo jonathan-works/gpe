@@ -16,7 +16,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
+import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 
 @Name(ActionMessagesService.NAME)
 @Scope(ScopeType.EVENT)
@@ -39,7 +39,7 @@ public class ActionMessagesService implements Serializable {
     }
 
     public String handleDAOException(final DAOException daoException) {
-        final PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+        final GenericDatabaseErrorCode errorCode = daoException.getDatabaseErrorCode();
         final StatusMessages messages = getMessagesHandler();
         if (errorCode != null) {
             final String ret = errorCode.toString();

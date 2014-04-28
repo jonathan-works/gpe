@@ -8,11 +8,11 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 
 @Name(UsuarioPessoaFisicaCrudAction.NAME)
 public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisica, PessoaFisicaManager> {
@@ -73,7 +73,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
                 usuarioLoginManager.update(usuarioAssociado);
             } catch (final DAOException e) {
                 final String logMessagePattern = ".save()";
-                if (e.getPostgreSQLErrorCode() == PostgreSQLErrorCode.UNIQUE_VIOLATION) {
+                if (e.getDatabaseErrorCode() == GenericDatabaseErrorCode.UNIQUE_VIOLATION) {
                     final StatusMessages messagesHandler = getMessagesHandler();
                     messagesHandler.clear();
                     messagesHandler.add(PESSOA_JA_ASSOCIADA);

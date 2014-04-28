@@ -26,8 +26,8 @@ import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -169,7 +169,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         } catch (PersistenceException e) {
             LOG.error(".remove()", e);
             DAOException daoException = new DAOException(e);
-            PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+            GenericDatabaseErrorCode errorCode = daoException.getDatabaseErrorCode();
             if (errorCode != null) {
                 ret = errorCode.toString();
                 FacesMessages.instance().clear();
@@ -227,7 +227,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         } catch (javax.persistence.PersistenceException e) {
             LOG.error(msg, e);
             DAOException daoException = new DAOException(e);
-            PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+            GenericDatabaseErrorCode errorCode = daoException.getDatabaseErrorCode();
             if (errorCode != null) {
                 ret = errorCode.toString();
                 FacesMessages.instance().clear();
@@ -303,7 +303,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         } catch (javax.persistence.PersistenceException e) {
             LOG.error(msg, e);
             DAOException daoException = new DAOException(e);
-            PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+            GenericDatabaseErrorCode errorCode = daoException.getDatabaseErrorCode();
             if (errorCode != null) {
                 ret = errorCode.toString();
                 FacesMessages.instance().clear();

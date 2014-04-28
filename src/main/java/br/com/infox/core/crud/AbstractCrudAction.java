@@ -17,8 +17,8 @@ import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 
 /**
  * É um abstractAction, porém possui os métodos implementados de Crudable
@@ -195,15 +195,15 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
 
     protected void resolveStatusMessage(String ret) {
         final StatusMessages messages = getMessagesHandler();
-        messages.clear();
         if (PERSISTED.equals(ret)) {
+            messages.clear();
             messages.add(MSG_REGISTRO_CRIADO);
         } else if (UPDATED.equals(ret)) {
+            messages.clear();
             messages.add(MSG_REGISTRO_ALTERADO);
         } else if (REMOVED.equals(ret)) {
+            messages.clear();
             messages.add(MSG_REGISTRO_REMOVIDO);
-        } else if (PostgreSQLErrorCode.FOREIGN_KEY_VIOLATION.name().equals(ret)) {
-            messages.add(MSG_REGISTRO_NAO_REMOVIDO_FK);
         }
     }
 
@@ -279,7 +279,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
     }
 
     protected void onDAOExcecption(final DAOException daoException) {
-        final PostgreSQLErrorCode errorCode = daoException.getPostgreSQLErrorCode();
+        final GenericDatabaseErrorCode errorCode = daoException.getDatabaseErrorCode();
         if (errorCode != null) {
             getMessagesHandler().clear();
             getMessagesHandler().add(daoException.getLocalizedMessage());

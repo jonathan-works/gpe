@@ -3,15 +3,9 @@ package br.com.infox.core.persistence;
 import java.sql.SQLException;
 
 import org.jboss.seam.annotations.ApplicationException;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
-
-import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 
 @ApplicationException(end = false, rollback = false)
 public class DAOException extends Exception {
-
-    private static final LogProvider LOG = Logging.getLogProvider(DAOException.class);
 
     private static final long serialVersionUID = 1L;
     private static final String MSG_UNIQUE_VIOLATION = "#{messages['constraintViolation.uniqueViolation']}";
@@ -19,7 +13,7 @@ public class DAOException extends Exception {
     private static final String MSG_NOT_NULL_VIOLATION = "#{messages['constraintViolation.notNullViolation']}";
     private static final String MSG_CHECK_VIOLATION = "#{messages['constraintViolation.checkViolation']}";
 
-    private PostgreSQLErrorCode postgreSQLErrorCode;
+    private GenericDatabaseErrorCode databaseErrorCode;
     private String localizedMessage;
     private SQLException sqlException;
 
@@ -32,18 +26,18 @@ public class DAOException extends Exception {
 
     public DAOException(Throwable cause) {
         super(cause);
-        this.postgreSQLErrorCode = discoverErrorCode(cause);
+        this.databaseErrorCode = discoverErrorCode(cause);
         setLocalizedMessage();
     }
 
     public DAOException(String message, Throwable cause) {
         super(message, cause);
-        this.postgreSQLErrorCode = discoverErrorCode(cause);
+        this.databaseErrorCode = discoverErrorCode(cause);
         setLocalizedMessage();
     }
 
-    public PostgreSQLErrorCode getPostgreSQLErrorCode() {
-        return postgreSQLErrorCode;
+    public GenericDatabaseErrorCode getDatabaseErrorCode() {
+        return databaseErrorCode;
     }
 
     @Override
@@ -56,11 +50,11 @@ public class DAOException extends Exception {
     }
 
     private void setLocalizedMessage() {
-        if (this.postgreSQLErrorCode == null) {
+        if (this.databaseErrorCode == null) {
             return;
         }
 
-        switch (this.postgreSQLErrorCode) {
+        switch (this.databaseErrorCode) {
             case UNIQUE_VIOLATION:
                 this.localizedMessage = MSG_UNIQUE_VIOLATION;
             break;
@@ -79,23 +73,18 @@ public class DAOException extends Exception {
         }
     }
 
-    private PostgreSQLErrorCode discoverErrorCode(Throwable throwable) {
+    private GenericDatabaseErrorCode discoverErrorCode(Throwable throwable) {
         Throwable current = throwable;
         while (current != null && !(current instanceof SQLException)) {
             current = current.getCause();
         }
         if (current != null) {
             this.sqlException = (SQLException) current;
-            String sqlState = sqlException.getSQLState();
-            try {
-                for (PostgreSQLErrorCode code : PostgreSQLErrorCode.values()) {
-                    if (code.getCode().equals(sqlState)) {
-                        return code;
-                    }
-                }
-            } catch (IllegalArgumentException | NullPointerException e) {
-                LOG.warn("discoverErrorCode(throwable)", e);
-                return null;
+            String exceptionClassName = this.sqlException.getClass().getCanonicalName();
+            if (exceptionClassName.equals("com.microsoft.sqlserver.jdbc.SQLServerException")) {
+                return new SqlServer2012ErrorCodeAdaptor().resolve(sqlException);
+            } else if (exceptionClassName.equals("org.postgresql.util.PSQLException")) {
+                return new PostgreSQLErrorCodeAdaptor().resolve(sqlException);
             }
         }
         return null;
