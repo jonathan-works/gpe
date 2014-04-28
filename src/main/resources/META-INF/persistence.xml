@@ -19,7 +19,9 @@
             <property name="hibernate.default_batch_fetch_size"
                 value="16" />
             <property name="hibernate.max_fetch_depth" value="2" />
-
+            
+            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
+            
             <property name="hibernate.ejb.event.post-insert"
                 value="br.com.infox.epp.system.log.LogEventListener" />
             <property name="hibernate.ejb.event.post-update"
@@ -54,6 +56,8 @@
 
             <property name="hibernate.default_batch_fetch_size"
                 value="16" />
+                
+            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
 
             <property name="hibernate.search.default.directory_provider"
                 value="filesystem" />
