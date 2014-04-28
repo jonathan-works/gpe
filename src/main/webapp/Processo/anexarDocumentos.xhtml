@@ -100,7 +100,8 @@
             tableTitle="#{messages['documentoEditor.titleView']}"
             id="processoDocumentoDaSessao"
             rowId="#{row.idProcessoDocumento}"
-            showSearchForm="false">
+            showSearchForm="false"
+            showToolbarColumn="false">
             <wi:columnOutputText
                 columnId="usuarioInclusao"
                 columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
@@ -127,7 +128,8 @@
             values="#{documentoUploader.documentosDaSessao}"
             tableTitle="#{messages['documentoUploader.titleView']}"
             id="documentoDaSessao"
-            rowId="#{row.idProcessoDocumento}">
+            rowId="#{row.idProcessoDocumento}"
+            showToolbarColumn="false">
             <wi:columnOutputText
                 columnId="usuarioInclusao"
                 columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
