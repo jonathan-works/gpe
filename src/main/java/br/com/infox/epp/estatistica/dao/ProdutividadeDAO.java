@@ -27,8 +27,6 @@ import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_FLUXO;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_START;
 import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_USUARIO;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,13 +69,8 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
         sb.append(sql);
         sb.append(") a");
         Query query = setParameters(params, getEntityManager().createNativeQuery(sb.toString()));
-        Object result = query.getSingleResult();
-        if (result instanceof BigInteger) {
-            return ((BigInteger) result).longValue();
-        } else {
-            // SQLServer
-            return new Long((Integer) result);
-        }
+        Number result = (Number) query.getSingleResult();
+        return result.longValue();
     }
     
     private String buildOrderedSql(Map<String, Object> params) {
@@ -149,23 +142,11 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
 
         produtividade.setLocalizacao((String) o[INDEX_LOCALIZACAO]);
         produtividade.setMaximoTempoGasto(PrazoEnum.formatTempo((Integer) o[INDEX_MAXIMO_TEMPO_GASTO], tipoPrazo));
-        Integer media;
-        if (o[INDEX_MEDIA_TEMPO_GASTO] instanceof BigDecimal) {
-            media = ((BigDecimal) o[INDEX_MEDIA_TEMPO_GASTO]).intValue();
-        } else {
-            // SQLServer
-            media = (Integer) o[INDEX_MEDIA_TEMPO_GASTO];
-        }
+        Integer media = ((Number) o[INDEX_MEDIA_TEMPO_GASTO]).intValue();
         produtividade.setMediaTempoGasto(PrazoEnum.formatTempo(media, tipoPrazo));
         produtividade.setMinimoTempoGasto(PrazoEnum.formatTempo((Integer) o[INDEX_MINIMO_TEMPO_GASTO], tipoPrazo));
         produtividade.setPapel((String) o[INDEX_PAPEL]);
-        Long quantidadeTarefas;
-        if (o[INDEX_QUANTIDADE_TAREFAS] instanceof BigInteger) {
-            quantidadeTarefas = ((BigInteger) o[INDEX_QUANTIDADE_TAREFAS]).longValue();
-        } else {
-            // SQLServer
-            quantidadeTarefas = new Long((Integer) o[INDEX_QUANTIDADE_TAREFAS]);
-        }
+        Long quantidadeTarefas = ((Number) o[INDEX_QUANTIDADE_TAREFAS]).longValue();
         produtividade.setQuantidadeTarefas(quantidadeTarefas);
         produtividade.setTarefa((String) o[INDEX_TAREFA]);
         Integer tempo = (Integer) o[INDEX_TEMPO_PREVISTO];
