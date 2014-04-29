@@ -59,6 +59,7 @@ import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
 
@@ -176,7 +177,7 @@ public class TaskInstanceHome implements Serializable {
         this.update();
     }
 
-    public void update() {
+    public boolean update() {
         prepareForUpdate();
         if (possuiTask()) {
             TaskController taskController = taskInstance.getTask()
@@ -185,11 +186,19 @@ public class TaskInstanceHome implements Serializable {
                     .getComponent(TaskPageAction.NAME);
             if (taskController != null) {
                 if (!taskPageAction.getHasTaskPage()) {
-                    updateVariables(taskController);
+                    try {
+                        updateVariables(taskController);
+                    } catch (BusinessException e) {
+                        LOG.error("", e);
+                        FacesMessages.instance().clear();
+                        FacesMessages.instance().add(e.getMessage());
+                        return false;
+                    }
                 }
                 completeUpdate();
             }
         }
+        return true;
     }
 
     private void prepareForUpdate() {
@@ -360,8 +369,10 @@ public class TaskInstanceHome implements Serializable {
                 acusarFaltaDeAssinatura();
                 return null;
             }
+            if (!update()) {
+                return null;
+            }
             limparEstado(processoHome);
-            update();
             finalizarTaskDoJbpm(transition);
             atualizarPaginaDeMovimentacao();
         }

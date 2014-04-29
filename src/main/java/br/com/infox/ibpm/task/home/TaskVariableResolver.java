@@ -16,6 +16,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.seam.exception.BusinessException;
 
 final class TaskVariableResolver extends TaskVariable {
 
@@ -78,6 +79,12 @@ final class TaskVariableResolver extends TaskVariable {
                     break;
                 case EDITOR:
                     resolveEditor();
+                    break;
+                case TEXT:
+                    if (((String) value).length() > 4000) {
+                        throw new BusinessException("O tamanho do texto excede 4000 caracteres");
+                    }
+                    atribuirValorDaVariavelNoContexto();
                     break;
                 default:
                     atribuirValorDaVariavelNoContexto();
