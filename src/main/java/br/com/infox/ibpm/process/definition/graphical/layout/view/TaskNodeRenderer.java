@@ -38,7 +38,7 @@ public class TaskNodeRenderer extends VertexRenderer {
             int y = getHeight() - 18;
             if (i == -1) {
                 i = 0;
-                name = "<N�o Atribuida>";
+                name = "<Não Atribuida>";
             } else {
                 if (i >= COLORS.length) {
                     i = i - COLORS.length;
