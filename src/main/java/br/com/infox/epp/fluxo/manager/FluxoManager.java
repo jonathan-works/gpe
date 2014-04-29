@@ -73,6 +73,10 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         Set<Integer> idsLocalizacao = new HashSet<Integer>();
 
         for (Swimlane swimlane : swimlanes.values()) {
+            String pooledActorsExpression = swimlane.getPooledActorsExpression();
+            if (pooledActorsExpression == null) {
+                continue;
+            }
             Matcher matcher = p.matcher(swimlane.getPooledActorsExpression());
             if (!matcher.find()) {
                 continue;
