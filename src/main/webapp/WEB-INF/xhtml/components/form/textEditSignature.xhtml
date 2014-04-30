@@ -43,7 +43,7 @@
 	      readonly="#{readonly or not empty processoHome.signature}" />
 	  </s:div>
 	  <a:jsFunction
-	    name="submitForm"
+	    name="#{editorId.replace('-', '')}submitForm"
 	    action="#{home.assinarDocumento()}"
 	    rendered="#{not readonly}"
 	    render="signatureDiv appletDiv #{id}EditorDiv pageBodyDialogMessage"
@@ -71,7 +71,7 @@
 	      getDataFunction="infox.editor['#{editorId}'].instance.getData()"
 	      useBase64Function="infox.editor['#{editorId}'].useBase64()"
 	      functionPreSign="infox.showLoading();"
-	      functionPosSign="submitForm()"
+	      functionPosSign="#{editorId.replace('-', '')}submitForm()"
 	      debug="false"
 	      loginMode="false"
 	      useProviderDll="false"

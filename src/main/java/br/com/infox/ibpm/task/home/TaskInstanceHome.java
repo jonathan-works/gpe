@@ -240,9 +240,10 @@ public class TaskInstanceHome implements Serializable {
             variableResolver.resolve();
             if (variableResolver.isEditor()) {
                 if (assinar && !variableResolver.isEditorAssinado()) {
-                    FacesMessages.instance().add(Messages.instance().get("assinatura.falhaAssinatura"));
+                    assinado = false;
+                } else {
+                    assinado = assinado || assinar;
                 }
-                assinado = assinado || assinar;
                 assinar = Boolean.FALSE;
             } else if (variableResolver.getType() == VariableType.FILE) {
                 Contexts.getBusinessProcessContext().flush();
