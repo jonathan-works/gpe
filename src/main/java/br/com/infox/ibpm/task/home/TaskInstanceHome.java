@@ -150,21 +150,19 @@ public class TaskInstanceHome implements Serializable {
         if (variableAccess.isReadable()) {
             final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
             variableRetriever.retrieveVariableContent();
-            if (variableRetriever.isValid()) {
-                mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
-                if (variableRetriever.isEditor()) {
-                    DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
-                    Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
-                    if (id != null) {
-                        dados.setIdDocumento(id);
-                        ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
-                        ProcessoDocumento pd = processoDocumentoManager.find(id);
-                        dados.setClassificacao(pd.getTipoProcessoDocumento());
-                        dados.setSignature(pd.getProcessoDocumentoBin().getSignature());
-                        dados.setCertChain(pd.getProcessoDocumentoBin().getCertChain());
-                    }
-                    documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
+            mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
+            if (variableRetriever.isEditor()) {
+                DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
+                Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
+                if (id != null) {
+                    dados.setIdDocumento(id);
+                    ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+                    ProcessoDocumento pd = processoDocumentoManager.find(id);
+                    dados.setClassificacao(pd.getTipoProcessoDocumento());
+                    dados.setSignature(pd.getProcessoDocumentoBin().getSignature());
+                    dados.setCertChain(pd.getProcessoDocumentoBin().getCertChain());
                 }
+                documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
             }
             setModeloWhenExists(variableRetriever);
         }

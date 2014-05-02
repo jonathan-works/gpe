@@ -90,29 +90,6 @@ final class TaskVariableRetriever extends TaskVariable {
         variable = getConteudo();
     }
 
-    public boolean isValid() {
-        boolean result = true;
-        if (variable != null) {
-            switch (type) {
-                case EDITOR:
-                    result = isDocumentoAssinadoValid();
-                    break;
-                default:
-                    break;
-            }
-        }
-        return result;
-    }
-    
-    private boolean isDocumentoAssinadoValid() {
-        Integer id = (Integer) taskInstance.getVariable(getMappedName());
-        AssinaturaDocumentoService documentoService = (AssinaturaDocumentoService) Component
-                .getInstance(AssinaturaDocumentoService.NAME);
-        if (id != null && isWritable()) {
-//            ProcessoHome.instance().carregarDadosFluxo(id);
-            return true;
-        }
-        return false;
-    }
+
 
 }
