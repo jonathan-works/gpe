@@ -24,11 +24,12 @@
 	    <wi:selectOneMenuEntity
 	      id="#{f.id}tipoProcessoDocumento"
 	      label="#{messages['processoDocumento.classificacaoDocumento']}"
-	      value="#{processoHome.tipoProcessoDocumento}"
+	      value="#{home.documentosAssinaveis[id].classificacao}"
 	      items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
 	      required="#{not readonly}"
 	      showLabelSelecione="true"
-	      readonly="#{readonly or not empty processoHome.signature}">
+	      readonly="#{readonly or not empty home.documentosAssinaveis[id].signature}"
+	      disabled="#{readonly or not empty home.documentosAssinaveis[id].signature}">
 	      <a:ajax
 	        event="change"
 	        render="appletDiv"
@@ -40,23 +41,23 @@
 	    <wi:editor
 	      id="#{editorId}"
 	      value="#{home.instance[id]}"
-	      readonly="#{readonly or not empty processoHome.signature}" />
+	      readonly="#{readonly or not empty home.documentosAssinaveis[id].signature}" />
 	  </s:div>
 	  <a:jsFunction
 	    name="#{editorId.replace('-', '')}submitForm"
-	    action="#{home.assinarDocumento()}"
+	    action="#{home.assinarDocumento(id)}"
 	    rendered="#{not readonly}"
-	    render="signatureDiv appletDiv #{id}EditorDiv pageBodyDialogMessage"
+	    render="@form pageBodyDialogMessage"
 	    oncomplete="infox.editor['#{id}Editor'].postSign()" />
 	  <s:div
 	    id="signatureDiv"
 	    rendered="#{not readonly}">
 	    <h:inputHidden
 	      id="#{idCertChain}"
-	      value="#{processoHome.certChain}" />
+	      value="#{home.documentosAssinaveis[id].certChain}" />
 	    <h:inputHidden
 	      id="#{idSignature}"
-	      value="#{processoHome.signature}" />
+	      value="#{home.documentosAssinaveis[id].signature}" />
 	  </s:div>
 	  <s:div
 	    id="appletDiv"
@@ -75,7 +76,7 @@
 	      debug="false"
 	      loginMode="false"
 	      useProviderDll="false"
-	      rendered="#{taskInstanceHome.podeRenderizarApplet()}">
+	      rendered="#{taskInstanceHome.podeRenderizarApplet(id)}">
 	    </wi:appletAssinatura>
 	  </s:div>
 	  <h:outputScript rendered="#{not readonly}">
@@ -89,13 +90,10 @@
 					},
 					addSignature:function addSignature() {
 						infox.showLoading();
-						submitForm();
+						#{editorId.replace('-', '')}submitForm();
 					},
 					postSign:function postSign() {
 						infox.hideLoading();
-						if (this.isSigned) {
-							#{rich:jQuery("appletDiv")}.addClass("hidden");
-						}
 					},
 					sign:function sign() {
 						#{rich:jQuery(idSignature)}.val("signature");

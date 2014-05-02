@@ -135,6 +135,9 @@ public class ProcessoHome extends AbstractHome<Processo> {
         Integer result = idDoc;
         try {
             if (processoDocumento != null) {
+                if (assinaturaDocumentoService.isDocumentoAssinado(processoDocumento)) {
+                    return result;
+                }
                 atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
             } else {
                 result = inserirProcessoDocumentoFluxo(value, label, assinado);
@@ -142,6 +145,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
             FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
         } catch (AssinaturaException e) {
             LOG.error("Não foi possível salvar o ProcessoDocumento " + idDoc, e);
+            FacesMessages.instance().clear();
             FacesMessages.instance().add(e.getMessage());
             result = null;
         }

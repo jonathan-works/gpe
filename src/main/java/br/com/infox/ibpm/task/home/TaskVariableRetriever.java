@@ -108,9 +108,8 @@ final class TaskVariableRetriever extends TaskVariable {
         Integer id = (Integer) taskInstance.getVariable(getMappedName());
         AssinaturaDocumentoService documentoService = (AssinaturaDocumentoService) Component
                 .getInstance(AssinaturaDocumentoService.NAME);
-        if ((id != null) && (!documentoService.isDocumentoAssinado(id))
-                && isWritable()) {
-            ProcessoHome.instance().carregarDadosFluxo(id);
+        if (id != null && isWritable()) {
+//            ProcessoHome.instance().carregarDadosFluxo(id);
             return true;
         }
         return false;

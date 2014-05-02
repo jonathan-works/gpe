@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
@@ -29,6 +30,7 @@ import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.util.Strings;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Event;
@@ -45,6 +47,9 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
@@ -90,6 +95,7 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinar = Boolean.FALSE;
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
+    private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
     @In
     private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In
@@ -110,6 +116,7 @@ public class TaskInstanceHome implements Serializable {
     private VariableTypeResolver variableTypeResolver;
     
     private URL urlRetornoAcessoExterno;
+    private String documentoAAssinar;
 
     private boolean canClosePanelVal;
     private boolean taskCompleted;
@@ -119,6 +126,7 @@ public class TaskInstanceHome implements Serializable {
         if (mapaDeVariaveis == null && taskInstance != null) {
             variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
             mapaDeVariaveis = new HashMap<String, Object>();
+            documentosAssinaveis = new HashMap<>();
             retrieveVariables();
         }
     }
@@ -144,6 +152,19 @@ public class TaskInstanceHome implements Serializable {
             variableRetriever.retrieveVariableContent();
             if (variableRetriever.isValid()) {
                 mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
+                if (variableRetriever.isEditor()) {
+                    DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
+                    Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
+                    if (id != null) {
+                        dados.setIdDocumento(id);
+                        ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+                        ProcessoDocumento pd = processoDocumentoManager.find(id);
+                        dados.setClassificacao(pd.getTipoProcessoDocumento());
+                        dados.setSignature(pd.getProcessoDocumentoBin().getSignature());
+                        dados.setCertChain(pd.getProcessoDocumentoBin().getCertChain());
+                    }
+                    documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
+                }
             }
             setModeloWhenExists(variableRetriever);
         }
@@ -175,8 +196,9 @@ public class TaskInstanceHome implements Serializable {
     }
 
     // Método que será chamado pelo botão "Assinar Digitalmente"
-    public void assinarDocumento() {
+    public void assinarDocumento(String idEditor) {
         assinar = Boolean.TRUE;
+        documentoAAssinar = idEditor;
         this.update();
     }
 
@@ -233,13 +255,25 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void updateVariable(VariableAccess variableAccess) {
-        TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess, taskInstance, assinar);
+        boolean documentoCorreto = false;
+        String fieldName = getFieldName(variableAccess.getMappedName().split(":")[1]);
+        if (assinar && fieldName.equals(documentoAAssinar)) {
+            documentoCorreto = true;
+        }
+        TaskVariableResolver variableResolver = new TaskVariableResolver(
+                variableAccess, taskInstance, documentoCorreto);
 
         if (variableAccess.isWritable()) {
+            if (variableResolver.isEditor()) {
+                DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
+                ProcessoHome.instance().setCertChain(dados.getCertChain());
+                ProcessoHome.instance().setSignature(dados.getSignature());
+                ProcessoHome.instance().setTipoProcessoDocumento(dados.getClassificacao());
+            }
             variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
             variableResolver.resolve();
             if (variableResolver.isEditor()) {
-                if (assinar && !variableResolver.isEditorAssinado()) {
+                if (documentoCorreto && !variableResolver.isEditorAssinado()) {
                     assinado = false;
                 } else {
                     assinado = assinado || assinar;
@@ -364,8 +398,7 @@ public class TaskInstanceHome implements Serializable {
         if (checkAccess()) {
             checkCurrentTask();
             ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
-            if (processoHome.getTipoProcessoDocumento() != null
-                    && faltaAssinatura(processoHome.getTipoProcessoDocumento())) {
+            if (faltaAssinatura()) {
                 acusarFaltaDeAssinatura();
                 return null;
             }
@@ -460,6 +493,9 @@ public class TaskInstanceHome implements Serializable {
     private void limparEstado(ProcessoHome processoHome) {
         this.currentTaskInstance = null;
         processoHome.setIdProcessoDocumento(null);
+        processoHome.setCertChain(null);
+        processoHome.setSignature(null);
+        processoHome.setTipoProcessoDocumento(null);
     }
 
     private void acusarFaltaDeAssinatura() {
@@ -468,10 +504,20 @@ public class TaskInstanceHome implements Serializable {
         messages.clear();
         messages.add(Severity.ERROR, ASSINATURA_OBRIGATORIA);
     }
+    
+    private boolean faltaAssinatura() {
+        for (Entry<String, DadosDocumentoAssinavel> entry : documentosAssinaveis.entrySet()) {
+            if (faltaAssinatura(entry.getValue().getClassificacao(), entry.getKey())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    private boolean faltaAssinatura(TipoProcessoDocumento tipoProcessoDocumento) {
+    private boolean faltaAssinatura(TipoProcessoDocumento tipoProcessoDocumento, String idEditor) {
         boolean isObrigatorio = tipoProcessoDocumentoDAO.isAssinaturaObrigatoria(tipoProcessoDocumento, Authenticator.getPapelAtual());
-        return isObrigatorio && !assinado;
+        DadosDocumentoAssinavel dados = documentosAssinaveis.get(idEditor);
+        return isObrigatorio && Strings.isEmpty(dados.getCertChain()) && Strings.isEmpty(dados.getSignature());
     }
 
     private void checkCurrentTask() {
@@ -641,6 +687,8 @@ public class TaskInstanceHome implements Serializable {
     public void clear() {
         this.mapaDeVariaveis = null;
         this.taskInstance = null;
+        this.documentoAAssinar = null;
+        this.documentosAssinaveis = null;
     }
 
     public ModeloDocumento getModeloDocumento() {
@@ -693,7 +741,14 @@ public class TaskInstanceHome implements Serializable {
         this.taskCompleted = taskCompleted;
     }
 
-    public boolean podeRenderizarApplet() {
-        return faltaAssinatura(ProcessoHome.instance().getTipoProcessoDocumento());
+    public boolean podeRenderizarApplet(String idEditor) {
+        if (documentosAssinaveis.get(idEditor) != null) {
+            return faltaAssinatura(documentosAssinaveis.get(idEditor).getClassificacao(), idEditor);
+        }
+        return false;
+    }
+    
+    public Map<String, DadosDocumentoAssinavel> getDocumentosAssinaveis() {
+        return documentosAssinaveis;
     }
 }
