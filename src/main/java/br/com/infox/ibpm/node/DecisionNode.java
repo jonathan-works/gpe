@@ -1,13 +1,17 @@
 package br.com.infox.ibpm.node;
 
+import static java.text.MessageFormat.format;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
+import org.jboss.seam.international.Messages;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmException;
+import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -18,7 +22,8 @@ import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
+import br.com.infox.ibpm.task.handler.VariableCollector;
+import br.com.infox.seam.exception.ApplicationException;
 
 public class DecisionNode extends Node {
     private static final long serialVersionUID = 1L;
@@ -26,48 +31,38 @@ public class DecisionNode extends Node {
     private List<DecisionCondition> decisionConditions = null;
     private Delegation decisionDelegation = null;
     private String decisionExpression = null;
-    private List<String> booleanVariables = null;
-    private List<String> numberVariables = null;
-    private List<String> leavingTransitionList = null;
+    private List<String> booleanVariables = new ArrayList<>();
+    private List<String> numberVariables = new ArrayList<>();
+    private List<String> leavingTransitionList = new ArrayList<>();
 
     public List<String> getNumberVariables() {
-        if (numberVariables == null) {
-            List<String> list = new ArrayList<String>();
-            list.add(VariableType.INTEGER.name());
-            list.add(VariableType.MONETARY.name());
-            TaskHandlerVisitor visitor = new TaskHandlerVisitor(false, list);
-            visitor.visit(this);
-            numberVariables = new ArrayList<String>();
-            for (String string : visitor.getVariables()) {
-                numberVariables.add("\"" + string + "\"");
-            }
-        }
-        return numberVariables;
+        return getProcessedVariables(numberVariables, VariableType.INTEGER, VariableType.MONETARY);
     }
 
     public List<String> getLeavingTransitionList() {
-        if (leavingTransitionList == null) {
-            leavingTransitionList = new ArrayList<String>();
-            for (Object transition : leavingTransitions) {
-                leavingTransitionList.add("\"'"
-                        + ((Transition) transition).getName() + "'\"");
-            }
+        leavingTransitionList = new ArrayList<String>();
+        for (Object transition : leavingTransitions) {
+            leavingTransitionList.add(format("''{0}''", ((Transition) transition).getName()));
         }
         return leavingTransitionList;
     }
 
+    private List<String> getProcessedVariables(List<String> variables, VariableType... types) {
+    	variables.clear();
+        final VariableCollector variableCollector = new VariableCollector(this);
+		final List<VariableAccess> variablesOfTypes = variableCollector.getVariablesOfTypes(types);
+        for (VariableAccess variableAccess : variablesOfTypes) {
+			String[] split = variableAccess.getMappedName().split(":");
+			if (split.length < 2) {
+				throw new ApplicationException(Messages.instance().get("processDefinition.variable.invalid"));
+			}
+			variables.add(format("''{0}''", split[1]));
+		}
+        return variables;
+    }
+    
     public List<String> getBooleanVariables() {
-        if (booleanVariables == null || booleanVariables.isEmpty()) {
-            List<String> list = new ArrayList<String>();
-            list.add(VariableType.BOOLEAN.name());
-            TaskHandlerVisitor visitor = new TaskHandlerVisitor(false, list);
-            visitor.visit(this);
-            booleanVariables = new ArrayList<String>();
-            for (String string : visitor.getVariables()) {
-                booleanVariables.add("\"" + string + "\"");
-            }
-        }
-        return booleanVariables;
+        return getProcessedVariables(booleanVariables, VariableType.BOOLEAN);
     }
 
     public String getDecisionExpression() {

@@ -11,6 +11,7 @@ import java.util.Set;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
@@ -80,7 +81,7 @@ public class VariableCollector {
     
     @SuppressWarnings(UNCHECKED)
     private void visit(final Node node, final VariableType... restrictionTypes) {
-        if (!visitedNodes.contains(node)) {
+        if (!(node instanceof StartState) && !visitedNodes.contains(node)) {
             if (node instanceof TaskNode) {
                 populateVariableAccessForNode((TaskNode)node, restrictionTypes);
             }
