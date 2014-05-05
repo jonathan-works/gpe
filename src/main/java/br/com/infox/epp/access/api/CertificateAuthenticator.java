@@ -85,7 +85,7 @@ public class CertificateAuthenticator implements Serializable {
             throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
         } catch (final CertificateException e) {
             LOG.error(AUTHENTICATE, e);
-            throw new RedirectToLoginApplicationException(format(Messages.instance().get(CERTIFICATE_ERROR_UNKNOWN), e.getCause().toString()), e);
+            throw new RedirectToLoginApplicationException(format(Messages.instance().get(CERTIFICATE_ERROR_UNKNOWN), e.getMessage()), e);
         } catch (CertificadoException | LoginException | DAOException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
