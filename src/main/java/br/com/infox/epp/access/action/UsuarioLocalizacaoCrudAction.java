@@ -11,8 +11,6 @@ import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.PARAM_USUARI
 
 import java.util.HashMap;
 
-import javax.faces.context.FacesContext;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -112,11 +110,9 @@ public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLoca
     @Observer(LocalizacaoEstruturaTreeHandler.EVENT_SELECT_LOC_ESTRUTURA)
     public void evtSetLocalizacaoEstrutura(Localizacao localizacao,
             Localizacao estrutura) {
-        if (FacesContext.getCurrentInstance() != null && FacesContext.getCurrentInstance().getViewRoot().getViewId().equals("/Usuario/listView.xhtml")) {
-            final UsuarioLocalizacao instance = getInstance();
-            instance.setLocalizacao(localizacao);
-            instance.setEstrutura(estrutura);
-        }
+        final UsuarioLocalizacao instance = getInstance();
+        instance.setLocalizacao(localizacao);
+        instance.setEstrutura(estrutura);
     }
 
 }
