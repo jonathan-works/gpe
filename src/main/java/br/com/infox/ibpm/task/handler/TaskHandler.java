@@ -208,4 +208,8 @@ public class TaskHandler implements Serializable {
         visitor.visit(this.task);
     }
 
+    public void processVarTypeChange(VariableAccessHandler var) {
+        clearHasTaskPage();
+        var.limparModelos();
+    }
 }

@@ -86,7 +86,7 @@
         </h:form>
       </f:facet>
       <div>
-        <h:form>
+        <h:form id="toolbarVariableForm">
           <a:commandLink
             action="#{t.removeVar(var)}"
             execute="@this"
@@ -106,7 +106,8 @@
             status=":status"
             action="#{taskFitter.currentTask.setCurrentVariable(var)}"
             styleClass="opacityHover"
-            oncomplete="#{rich:component('actionTemplatePanel')}.show()">
+            oncomplete="#{rich:component('actionTemplatePanel')}.show()"
+            rendered="#{var.type eq 'EDITOR'}">
             <h:graphicImage
               title="#{messages['process.task.var.modelo']}"
               rendered="#{empty var.modeloList}"
@@ -230,8 +231,8 @@
             event="change"
             execute="true"
             status=":status"
-            listener="#{t.clearHasTaskPage()}"
-            render="addVarDiv, @form, pageBodyDialogMessage, varDiv"
+            listener="#{t.processVarTypeChange(var)}"
+            render="addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm"
             limitRender="true" />
         </wi:selectOneMenu>
         <a:jsFunction
