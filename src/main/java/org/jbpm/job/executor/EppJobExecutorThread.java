@@ -7,11 +7,9 @@ import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.contexts.Lifecycle;
 import org.jboss.seam.transaction.Transaction;
-import org.jboss.seam.transaction.UTTransaction;
 import org.jboss.seam.transaction.UserTransaction;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;

@@ -1,8 +1,8 @@
 package br.com.infox.epp.system.variables;
 
 import static br.com.infox.epp.access.api.Authenticator.getLocalizacaoAtual;
-import static br.com.infox.epp.access.api.Authenticator.getUsuarioLocalizacaoAtual;
 import static br.com.infox.epp.access.api.Authenticator.getPapelAtual;
+import static br.com.infox.epp.access.api.Authenticator.getUsuarioLocalizacaoAtual;
 
 import java.io.Serializable;
 import java.text.DateFormat;

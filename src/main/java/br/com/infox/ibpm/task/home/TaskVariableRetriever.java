@@ -1,8 +1,6 @@
 package br.com.infox.ibpm.task.home;
 
 import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 
 import org.jboss.seam.Component;
@@ -15,7 +13,6 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.seam.util.ComponentUtil;
-import br.com.itx.component.AbstractHome;
 
 final class TaskVariableRetriever extends TaskVariable {
 

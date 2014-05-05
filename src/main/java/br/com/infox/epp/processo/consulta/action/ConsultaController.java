@@ -15,7 +15,6 @@ import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermiss
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
-import br.com.infox.jsf.function.JsfFunctions;
 
 @Name(ConsultaController.NAME)
 public class ConsultaController extends AbstractController {
