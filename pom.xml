@@ -113,7 +113,7 @@
             <groupId>br.com.infox.epp</groupId>
             <artifactId>taskpage</artifactId>
             <type>jar</type>
-            <version>0.0.4-SNAPSHOT</version>
+            <version>0.0.5-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
