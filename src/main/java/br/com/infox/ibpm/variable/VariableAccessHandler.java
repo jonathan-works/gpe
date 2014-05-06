@@ -522,9 +522,12 @@ public class VariableAccessHandler implements Serializable {
     }
 
     public void limparModelos() {
-        List<ModeloDocumento> modelos = new ArrayList<>(getModeloDocumentoList());
-        for (ModeloDocumento modelo : modelos) {
-            removeModelo(modelo);
+        List<ModeloDocumento> modelos = getModeloDocumentoList();
+        if (modelos != null) {
+            modelos = new ArrayList<>(modelos);
+            for (ModeloDocumento modelo : modelos) {
+                removeModelo(modelo);
+            }
         }
     }
 }
