@@ -256,9 +256,6 @@
         visitor.visit(current);
       }
     },
-    get childNodes(){
-      implReqrd();
-    },
     get parent() {
     },
     set parent(itm) {
@@ -266,7 +263,7 @@
     get type() {
       implReqrd();
     },
-    get value() {
+    get values() {
       implReqrd();
     },
     get condition() {
@@ -320,7 +317,17 @@
     }
   });
   
+  function mouseEnterDOM(evt) {
+    evt.target.parentNode.classList.add("selected");
+  }
   
+  function mouseLeaveDOM(evt) {
+    evt.target.parentNode.classList.remove("selected");
+  }
+  
+  function mouseClickDOM(evt) {
+    
+  }
     
   function createDOM(params) {
     params = params || {};
@@ -332,6 +339,9 @@
     for(var i=0,l=classes.length;i<l;i++) {
       dom.classList.add(classes[i]);
     }
+    dom.addEventListener("mouseenter", mouseEnterDOM);
+    dom.addEventListener("mouseleave", mouseLeaveDOM);
+    dom.addEventListener("click", mouseClickDOM);
     return dom;
   }
   

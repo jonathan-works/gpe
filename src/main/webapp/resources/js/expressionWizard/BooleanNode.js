@@ -60,36 +60,21 @@
       return pvt.type;
     }
     
-    function destroy() {
+    function clear() {
     }
     
     function getDOM() {
-    }
-    
-    function getChildNodes() {
     }
     
     function getType() {
       return pvt.type;
     }
     
-    function getValue() {
-      return pvt.childNodes[0];
+    function getValues() {
+      return pvt.childNodes.slice(0, pvt.childNodes.length);
     }
     
-    function getValue1() {
-      return pvt.childNodes[0];
-    }
-    
-    function getValue2() {
-      return pvt.childNodes[1];
-    }
-    
-    function getCondition() {
-      return pvt.condition;
-    }
-    
-    function getNodeType() {
+    function nodeType() {
       return "BooleanNode";
     }
     
@@ -107,28 +92,16 @@
           _super.parent = itm;
         }
       },
-      destroy: {
+      clear: {
         get:function() {
-          return destroy;
+          return clear;
         }
-      },
-      childNodes : {
-        get:getChildNodes
       },
       type : {
         get:getType
       },
-      value : {
-        get:getValue
-      },
-      value1 : {
-        get:getValue1
-      },
-      value2 : {
-        get:getValue2
-      },
-      condition : {
-        get:getCondition
+      values : {
+        get:getValues
       },
       toString : {
         get:function() {
@@ -140,10 +113,8 @@
           return valueOf;
         }
       },
-      getNodeType:{
-        get:function() {
-          return getNodeType;
-        }
+      nodeType:{
+        get:nodeType
       }
     });
     
@@ -178,12 +149,12 @@
         case BooleanNode.CONSTANT:
           dom.classList.add("Value");
           pvt.childNodes.push(args.value);
-          dom.appendChild(document.createTextNode(pvt.childNodes[0]==="true"?"VERDADEIRO":"FALSO"));
+          dom.appendChild(container.createDOM({type:"span", text:pvt.childNodes[0]==="true"?"VERDADEIRO":"FALSO"}));
           break;
         case BooleanNode.IDENTIFIER:
           dom.classList.add("Value");
           pvt.childNodes.push(args.value);
-          dom.appendChild(document.createTextNode(["[",pvt.childNodes[0],"]"].join("")));
+          dom.appendChild(container.createDOM({type:"span", text:["[",pvt.childNodes[0],"]"].join("")}));
           break;
         default:
           throw "Missing type value";

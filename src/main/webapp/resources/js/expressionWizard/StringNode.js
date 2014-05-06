@@ -116,12 +116,12 @@
         case StringNode.IDENTIFIER:
           pvt.childNodes.push(args.value);
           
-          dom.appendChild(document.createTextNode(["[",pvt.childNodes[0],"]"].join("")));
+          dom.appendChild(container.createDOM({type:"span", text:["[",pvt.childNodes[0],"]"].join("")}));
           dom.classList.add("Value");
           break;
         case StringNode.CONSTANT:
           pvt.childNodes.push(args.value);
-          dom.appendChild(document.createTextNode(pvt.childNodes[0]));
+          dom.appendChild(container.createDOM({type:"span", text:pvt.childNodes[0]}));
           dom.classList.add("Value");
           break;
         case StringNode.EXPRESSION:
