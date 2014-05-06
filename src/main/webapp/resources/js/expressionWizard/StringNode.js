@@ -99,56 +99,46 @@
       }
     }
     
-    function generateDOM() {
+    (function() {
       var dom = _super.getDOM();
       dom.classList.add("StringNode");
-      switch(pvt.type) {
-        case StringNode.OPERATION:
-          dom.classList.add(pvt.operation);
-          //updateParent(pvt.childNodes[0]);
-          dom.appendChild(document.createTextNode("+"));
-          //updateParent(pvt.childNodes[1]);
-          break;
-        case StringNode.IDENTIFIER:
-        case StringNode.CONSTANT:
-          dom.appendChild(document.createTextNode(pvt.childNodes[0]));
-          dom.classList.add("Value");
-          break;
-        case StringNode.EXPRESSION:
-          dom.classList.add("Expression");
-          dom.appendChild(document.createTextNode("SE"));
-          //updateParent(pvt.condition);
-          dom.appendChild(document.createTextNode("ENTÃO RETORNE"));
-          //updateParent(pvt.childNodes[0]);
-          dom.appendChild(document.createTextNode("SENÃO RETORNE"));
-          //updateParent(pvt.childNodes[1]);
-          break;
-      }
-    }
-    
-    (function() {
       switch(pvt.type) {
         case StringNode.OPERATION:
           pvt.operation = args.operation;
           pvt.childNodes.push(args.value[0]);
           pvt.childNodes.push(args.value[1]);
+          
           updateParent(pvt.childNodes[0]);
+          dom.appendChild(container.createDOM({type:"span", text:"+", classes:["Text","Operator"]}));
           updateParent(pvt.childNodes[1]);
+          dom.classList.add(pvt.operation);
           break;
         case StringNode.IDENTIFIER:
+          pvt.childNodes.push(args.value);
+          
+          dom.appendChild(document.createTextNode(["[",pvt.childNodes[0],"]"].join("")));
+          dom.classList.add("Value");
+          break;
         case StringNode.CONSTANT:
           pvt.childNodes.push(args.value);
+          dom.appendChild(document.createTextNode(pvt.childNodes[0]));
+          dom.classList.add("Value");
           break;
         case StringNode.EXPRESSION:
           pvt.condition = args.condition;
           pvt.childNodes.push(args.value[0]);
           pvt.childNodes.push(args.value[1]);
+          
+          dom.appendChild(container.createDOM({type:"div", text:"SE", classes:["Text"]}));
           updateParent(pvt.condition);
+          dom.appendChild(container.createDOM({type:"div", text:"ENTÃO RETORNE", classes:["Text"]}));
           updateParent(pvt.childNodes[0]);
+          dom.appendChild(container.createDOM({type:"div", text:"SENÃO RETORNE", classes:["Text"]}));
           updateParent(pvt.childNodes[1]);
+          
+          dom.classList.add("Expression");
           break;
       }
-      generateDOM();
     })();
   }
   

@@ -60,22 +60,8 @@
   
   function getVariables(type) {
     type = type || VariableType.STRING;
-    var result = [];
-    function cloneArray(it) {
-      result.push(it);
-    }
-    switch(type) {
-      case VariableType.STRING:
-        variables.str.forEach(cloneArray);
-        break;
-      case VariableType.NUMBER:
-        variables.numb.forEach(cloneArray);
-        break;
-      case VariableType.BOOLEAN:
-        variables.bool.forEach(cloneArray);
-        break;
-    }
-    return result;
+    var result = getVarArrayByType(type);
+    return cloneArray(result);
   }
   
   function setVariables(array, type) {
@@ -93,8 +79,7 @@
     }
   }
   
-  function removeVariable(varName, type) {
-    type = type || VariableType.STRING;
+  function getVarArrayByType(type) {
     var array;
     switch(type) {
       case VariableType.STRING:
@@ -106,7 +91,20 @@
       case VariableType.BOOLEAN:
         array = variables.bool;
         break;
+      default:
+        array = [];
+        break;
     }
+    return array;
+  }
+  
+  function cloneArray(arr) {
+    return arr.slice(0, arr.length);
+  }
+  
+  function removeVariable(varName, type) {
+    type = type || VariableType.STRING;
+    var array = getVarArrayByType(type);
     var index = array.indexOf(varName);
     if (index>=0) {
       array.splice(index,1);
@@ -115,18 +113,10 @@
   
   function addVariable(varName, type) {
     type = type || VariableType.STRING;
-    switch(type) {
-      case VariableType.STRING:
-        variables.str.push(varName);
-        break;
-      case VariableType.NUMBER:
-        variables.numb.push(varName);
-        break;
-      case VariableType.BOOLEAN:
-        variables.bool.push(varName);
-        break;
-    }
+    var array = getVarArrayByType(type);
+    array.push(varName);
   }
+  
   function generateTree(stack, dom) {
     var cache = [];
     var current;
@@ -330,6 +320,21 @@
     }
   });
   
+  
+    
+  function createDOM(params) {
+    params = params || {};
+    var type = params.type || "span";
+    var text = params.text || "";
+    var classes = params.classes || [];
+    var dom = document.createElement(type);
+    dom.appendChild(document.createTextNode(text));
+    for(var i=0,l=classes.length;i<l;i++) {
+      dom.classList.add(classes[i]);
+    }
+    return dom;
+  }
+  
   Object.defineProperties(container, {
     Node:{
       get:function() {
@@ -339,6 +344,11 @@
     checkInit:{
       get:function() {
         return checkInit;
+      }
+    },
+    createDOM:{
+      get:function() {
+        return createDOM;
       }
     }
   });

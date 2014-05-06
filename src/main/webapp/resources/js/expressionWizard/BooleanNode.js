@@ -13,11 +13,11 @@
     function operationToString() {
       var result = "";
       if (pvt.operation === "Or") {
-        result = "||";
+        result = "Ou";
       } else if (pvt.operation === "Not") {
-        result = "!";
+        result = "Negação";
       } else if (pvt.operation === "And") {
-        result = "&&";
+        result = "E";
       } else if (pvt.operation === "GreaterThanEqual") {
         result = ">=";
       } else if (pvt.operation === "GreaterThan") {
@@ -153,62 +153,41 @@
       }
     }
     
-    function constructDOM() {
-      var dom = _super.getDOM();
-      dom.classList.add("BooleanNode");
-      switch(pvt.type) {
-        case BooleanNode.OPERATION:
-          dom.classList.add(pvt.operation);
-          dom.insertBefore(document.createTextNode("("), pvt.childNodes[0].getDOM());
-          dom.insertBefore(document.createTextNode(operationToString()), pvt.childNodes[1].getDOM());
-          //dom.appendChild(document.createTextNode("("));
-          //dom.appendChild(document.createTextNode(operationToString()));
-          dom.appendChild(document.createTextNode(")"));
-          break;
-        case BooleanNode.NOT:
-          dom.classList.add(pvt.operation);
-          dom.insertBefore(document.createTextNode(operationToString()), pvt.childNodes[0].getDOM());
-          break;
-        case BooleanNode.CONSTANT:
-          dom.classList.add("Value");
-          if (pvt.childNodes[0].toLowerCase()==="true") {
-            dom.appendChild(document.createTextNode("VERDADEIRO"));
-          } else if (pvt.childNodes[0].toLowerCase()==="false") {
-            dom.appendChild(document.createTextNode("FALSO"));
-          }
-          break;
-        case BooleanNode.IDENTIFIER:
-          dom.classList.add("Value");
-          dom.appendChild(document.createTextNode(pvt.childNodes[0]));
-          break;
-        default:
-          throw "Missing type value";
-      }
-    }
-    
     (function Constructor() {
       var dom = _super.getDOM();
+      dom.classList.add("BooleanNode");
       switch(pvt.type) {
         case BooleanNode.OPERATION:
           pvt.operation = args.operation;
           pvt.childNodes.push(args.value[0]);
           pvt.childNodes.push(args.value[1]);
+          
+          dom.classList.add(pvt.operation);
+          dom.appendChild(container.createDOM({text:"(", type:"span", classes:["Text"]}));
           updateParent(pvt.childNodes[0]);
+          dom.appendChild(container.createDOM({text:operationToString(), type:"span", classes:["Text", "Operator"]}));
           updateParent(pvt.childNodes[1]);
+          dom.appendChild(container.createDOM({text:")", type:"span", classes:["Text"]}));
           break;
         case BooleanNode.NOT:
           pvt.operation = "Not";
           pvt.childNodes.push(args.value);
+          dom.appendChild(container.createDOM({text:operationToString(), type:"span", classes:["Text", "Operator"]}));
           updateParent(pvt.childNodes[0]);
           break;
         case BooleanNode.CONSTANT:
-        case BooleanNode.IDENTIFIER:
+          dom.classList.add("Value");
           pvt.childNodes.push(args.value);
+          dom.appendChild(document.createTextNode(pvt.childNodes[0]==="true"?"VERDADEIRO":"FALSO"));
+          break;
+        case BooleanNode.IDENTIFIER:
+          dom.classList.add("Value");
+          pvt.childNodes.push(args.value);
+          dom.appendChild(document.createTextNode(["[",pvt.childNodes[0],"]"].join("")));
           break;
         default:
           throw "Missing type value";
       }
-      constructDOM();
     })();
   }
   

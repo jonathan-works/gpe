@@ -43,17 +43,11 @@ public class ExpressionTokenizer {
         list.add("true");
         list.add("false");
         list.add("0");
-        new NodeVisitor() {
-            @Override
-            public void visit(Node node) throws Exception {
-                System.out.println(node.toString());
-            }
-        };
+        list.add("(!(bool1 && bool2) && (-0.05<=(((valor1+2)*3)/100)-1)) ? 'teste'+1+'teste2'+str1 : str1==str2 ? str1 : 'novo'");
         //final NodeJSONBuilder visitor = new NodeJSONBuilder();
         try {
             final StringReader reader = new StringReader(
-                    format("#'{'{0}'}'",
-                            "(bool1 || ((90+0.5)*-10) >= valor1) ? ('ttttsd' + 'constante' + true) : (1 + 'constante' + 0)"));
+                    format("#'{'{0}'}'", list.get(5)));
             final ELParser parser = new ELParser(reader);
             final AstCompositeExpression compositeExpression = parser
                     .CompositeExpression();

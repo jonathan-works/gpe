@@ -150,17 +150,7 @@
     }
     
     function generateDOM() {
-      var dom = _super.getDOM();
-      dom.classList.add("ArithmeticNode");
       switch(pvt.type) {
-        case ArithNode.OPERATION:
-          dom.classList.add(pvt.operation);
-          dom.appendChild(document.createTextNode("("));
-          //updateParent(pvt.childNodes[0]);
-          dom.appendChild(document.createTextNode(operationToString()));
-          //updateParent(pvt.childNodes[1]);
-          dom.appendChild(document.createTextNode(")"));
-          break;
         case ArithNode.NEGATIVE:
           dom.classList.add(pvt.operation);
           dom.appendChild(document.createTextNode(operationToString()));
@@ -184,33 +174,55 @@
     }
 
     (function () {
+      var dom = _super.getDOM();
+      dom.classList.add("ArithmeticNode");
       switch(pvt.type) {
         case ArithNode.OPERATION:
           pvt.operation = args.operation;
           pvt.childNodes.push(args.value[0]);
           pvt.childNodes.push(args.value[1]);
+          
+          dom.appendChild(container.createDOM({type:"span", text:"(", classes:["Text"]}));
           updateParent(pvt.childNodes[0]);
+          dom.appendChild(container.createDOM({type:"span", text:operationToString(), classes:["Text","Operator"]}));
           updateParent(pvt.childNodes[1]);
+          dom.appendChild(container.createDOM({type:"span", text:")", classes:["Text"]}));
+          dom.classList.add(pvt.operation);
           break;
         case ArithNode.NEGATIVE:
           pvt.operation = "Negative";
           pvt.childNodes.push(args.value);
+          
+          dom.appendChild(container.createDOM({type:"span", text:operationToString(), classes:["Text","Operator"]}));
           updateParent(pvt.childNodes[0]);
+          dom.classList.add(pvt.operation);
           break;
         case ArithNode.IDENTIFIER:
+          pvt.childNodes.push(args.value);
+          dom.appendChild(document.createTextNode(["[",pvt.childNodes[0],"]"].join("")));
+          dom.classList.add("Value");
+          break;
         case ArithNode.CONSTANT:
           pvt.childNodes.push(args.value);
+          dom.appendChild(document.createTextNode(pvt.childNodes[0]));
+          dom.classList.add("Value");
           break;
         case ArithNode.EXPRESSION:
           pvt.condition = args.condition;
           pvt.childNodes.push(args.value[0]);
           pvt.childNodes.push(args.value[1]);
+          
+          
+          dom.appendChild(container.createDOM({type:"div", text:"SE", classes:["Text"]}));
           updateParent(pvt.condition);
+          dom.appendChild(container.createDOM({type:"div", text:"ENTÃO RETORNE", classes:["Text"]}));
           updateParent(pvt.childNodes[0]);
+          dom.appendChild(container.createDOM({type:"div", text:"SENÃO RETORNE", classes:["Text"]}));
           updateParent(pvt.childNodes[1]);
+          
+          dom.classList.add("Expression");
           break;
       }
-      generateDOM();
     })();
   }
   
