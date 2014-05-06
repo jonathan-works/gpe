@@ -10,7 +10,7 @@
 }
 
 .tree-b {
-  position: absolute;
+  position: relative;
   z-index: 10;
   background-color: #FFF;
   border-style: solid;
