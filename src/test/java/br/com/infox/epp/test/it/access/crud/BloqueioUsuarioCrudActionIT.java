@@ -32,6 +32,7 @@ import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.dao.VariavelDAO;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.system.dao.ParametroDAO;
@@ -55,7 +56,7 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
                     UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
                     UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
                     ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
-                    ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class)
+                    ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,SendmailCommand.class)
         .createDeployment();
     }
     
