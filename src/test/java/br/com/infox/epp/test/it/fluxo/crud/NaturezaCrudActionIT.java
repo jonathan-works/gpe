@@ -42,7 +42,8 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
             crudActions.setEntityValue("natureza", entity.getNatureza()); //*
             crudActions.setEntityValue("hasPartes", entity.getHasPartes());
             crudActions.setEntityValue("tipoPartes", entity.getTipoPartes());
-            crudActions.setEntityValue("numeroPartes", entity.getNumeroPartesFisicas());
+            crudActions.setEntityValue("numeroPartesFisicas", entity.getNumeroPartesFisicas());
+            crudActions.setEntityValue("numeroPartesJuridicas", entity.getNumeroPartesJuridicas());
             crudActions.setEntityValue("ativo", entity.getAtivo());
         }
     };
@@ -209,7 +210,7 @@ public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza>{
                 crudActions.setEntityValue("hasPartes", !entity.getHasPartes());
                 if (!entity.getHasPartes()) {
                 	crudActions.setEntityValue("tipoPartes", ParteProcessoEnum.A);
-                	crudActions.setEntityValue("numeroPartes", 2);
+                	crudActions.setEntityValue("numeroPartesFisicas", 2);
                 }
                 assertEquals("update fail hasPartes", UPDATED, crudActions.save());
                 assertEquals("attribute changed", false, entity.getHasPartes().equals(crudActions.getEntityValue("hasPartes")));

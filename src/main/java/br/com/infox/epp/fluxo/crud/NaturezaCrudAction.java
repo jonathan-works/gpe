@@ -27,8 +27,19 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
             return false;
         }
         if (hasPartes) {
-            return natureza.getTipoPartes() != null
-                    && natureza.getNumeroPartesFisicas() != null;
+            if (natureza.getTipoPartes() == null) {
+                return false;
+            }
+            switch (natureza.getTipoPartes()) {
+            case F:
+                return natureza.getNumeroPartesFisicas() != null;
+            case J:
+                return natureza.getNumeroPartesJuridicas() != null;
+            case A:
+                return natureza.getNumeroPartesFisicas() != null || natureza.getNumeroPartesJuridicas() != null;
+            default:
+                return false;
+            }
         } else {
             return true;
         }

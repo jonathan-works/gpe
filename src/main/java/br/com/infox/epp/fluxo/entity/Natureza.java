@@ -62,6 +62,22 @@ public class Natureza implements java.io.Serializable {
         this.hasPartes = hasPartes;
         this.tipoPartes = tipoPartes;
         this.numeroPartesFisicas = numeroPartes;
+        if (this.tipoPartes != null) {
+            switch (this.tipoPartes) {
+            case F:
+                this.numeroPartesFisicas = numeroPartes;
+                break;
+            case J:
+                this.numeroPartesJuridicas = numeroPartes;
+                this.numeroPartesFisicas = null;
+                break;
+            case A:
+                this.numeroPartesFisicas = numeroPartes;
+                break;
+            default:
+                break;
+            }
+        }
         this.ativo = ativo;
     }
 
