@@ -20,11 +20,28 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
+import br.com.infox.epp.access.dao.BloqueioUsuarioDAO;
 import br.com.infox.epp.access.dao.LocalizacaoDAO;
+import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
+import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
+import br.com.infox.epp.documento.dao.VariavelDAO;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.mail.entity.EMailData;
+import br.com.infox.epp.mail.service.AccessMailService;
+import br.com.infox.epp.processo.dao.ProcessoDAO;
+import br.com.infox.epp.system.dao.ParametroDAO;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.PersistSuccessTest;
@@ -99,7 +116,13 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
             .addClasses(LocalizacaoCrudAction.class, LocalizacaoManager.class, LocalizacaoTreeHandler.class,
-                        LocalizacaoDAO.class).createDeployment();
+                        LocalizacaoDAO.class, Authenticator.class, UsuarioLoginManager.class,
+                        UsuarioLoginDAO.class, UsuarioLocalizacaoDAO.class, AuthenticatorService.class,
+                        ProcessoDAO.class, BloqueioUsuarioManager.class, BloqueioUsuarioDAO.class,
+                        UsuarioLoginManager.class, UsuarioLocalizacaoComparator.class, PasswordService.class,
+                        AccessMailService.class, ModeloDocumentoManager.class, VariavelDAO.class,
+                        ModeloDocumentoDAO.class, ParametroManager.class, ParametroDAO.class,
+                        EMailData.class).createDeployment();
     }
     
     public static final List<Localizacao> getSuccessfullyPersisted(final ActionContainer<Localizacao> action, final String suffix,final ServletContext servletContext, final HttpSession session) throws Exception {
