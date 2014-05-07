@@ -28,7 +28,7 @@ public class VariableCollector {
     private final ArrayList<Transition> visitedTransitions;
     private final ArrayList<VariableAccess> declaredVariables;
     private final int mode;
-    
+
     public VariableCollector(final Node node) {
         this.node = node;
         this.visitedNodes = new ArrayList<>();
@@ -37,7 +37,7 @@ public class VariableCollector {
         this.transitionsToVisit = null;
         this.mode = NODE;
     }
-    
+
     public VariableCollector(final Collection<Transition> transitionsToVisit) {
         this.node = null;
         this.visitedNodes = new ArrayList<>();
@@ -46,47 +46,48 @@ public class VariableCollector {
         this.transitionsToVisit = transitionsToVisit;
         this.mode = TRANSITIONS;
     }
-    
+
     public VariableCollector(final Transition... transitionsToVisit) {
         this(Arrays.asList(transitionsToVisit));
     }
-    
+
     public List<VariableAccess> getDeclaredVariables() {
         switch (mode) {
             case NODE:
                 visit(node);
-                break;
+            break;
             case TRANSITIONS:
                 visit(transitionsToVisit);
-                break;
+            break;
             default:
-                break;
+            break;
         }
         return this.declaredVariables;
     }
-    
-    public List<VariableAccess> getVariablesOfTypes(final VariableType... restrictionTypes) {
+
+    public List<VariableAccess> getVariablesOfTypes(
+            final VariableType... restrictionTypes) {
         switch (mode) {
             case NODE:
                 visit(node, restrictionTypes);
-                break;
+            break;
             case TRANSITIONS:
                 visit(transitionsToVisit, restrictionTypes);
-                break;
+            break;
             default:
-                break;
+            break;
         }
         return this.declaredVariables;
     }
-    
+
     @SuppressWarnings(UNCHECKED)
     private void visit(final Node node, final VariableType... restrictionTypes) {
         if (!(node instanceof StartState) && !visitedNodes.contains(node)) {
             if (node instanceof TaskNode) {
-                populateVariableAccessForNode((TaskNode)node, restrictionTypes);
+                populateVariableAccessForNode((TaskNode) node, restrictionTypes);
             }
             visitedNodes.add(node);
-            
+
             visit(node.getArrivingTransitions(), restrictionTypes);
         }
     }
@@ -100,7 +101,8 @@ public class VariableCollector {
         }
     }
 
-    private void visit(final Transition transition, final VariableType... restrictionTypes) {
+    private void visit(final Transition transition,
+            final VariableType... restrictionTypes) {
         if (!visitedTransitions.contains(transition)) {
             visitedTransitions.add(transition);
             visit(transition.getFrom(), restrictionTypes);
@@ -108,23 +110,30 @@ public class VariableCollector {
     }
 
     @SuppressWarnings(UNCHECKED)
-    private void populateVariableAccessForNode(final TaskNode node, final VariableType... restrictionTypes) {
-        for (final Task task : (Set<Task>)node.getTasks()) {
+    private void populateVariableAccessForNode(final TaskNode node,
+            final VariableType... restrictionTypes) {
+        for (final Task task : (Set<Task>) node.getTasks()) {
             populateVariableAccessForTask(task, restrictionTypes);
         }
     }
-    
-    private void populateVariableAccessForTask(final Task task, final VariableType... restrictionTypes) {
+
+    private void populateVariableAccessForTask(final Task task,
+            final VariableType... restrictionTypes) {
         populateVariableAccessForTaskController(task.getTaskController(), restrictionTypes);
     }
-    
+
     @SuppressWarnings(UNCHECKED)
-    private void populateVariableAccessForTaskController(final TaskController taskController, final VariableType... restrictionTypes) {
+    private void populateVariableAccessForTaskController(
+            final TaskController taskController,
+            final VariableType... restrictionTypes) {
         final List<VariableType> varTypeRestriction = Arrays.asList(restrictionTypes);
-        for (final VariableAccess variableAccess : (List<VariableAccess>)taskController.getVariableAccesses()) {
-            final String[] split = variableAccess.getMappedName().split(":");
-            if (!declaredVariables.contains(variableAccess) && (varTypeRestriction.size() == 0 || varTypeRestriction.contains(VariableType.valueOf(split[0])))) {
-                declaredVariables.add(variableAccess);
+        if (taskController != null) {
+            for (final VariableAccess variableAccess : (List<VariableAccess>) taskController.getVariableAccesses()) {
+                final String[] split = variableAccess.getMappedName().split(":");
+                if (!declaredVariables.contains(variableAccess)
+                        && (varTypeRestriction.size() == 0 || varTypeRestriction.contains(VariableType.valueOf(split[0])))) {
+                    declaredVariables.add(variableAccess);
+                }
             }
         }
     }
