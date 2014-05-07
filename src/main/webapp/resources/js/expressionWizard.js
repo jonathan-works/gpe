@@ -282,7 +282,7 @@
 								_expression(pNode);
 								pNode.appendChild( createSpan({label:")", onclick:mouseClick}) );
 							} else {
-								pNode.appendChild( createSpan({label:sValue, onclick:mouseClick}) );
+								pNode.appendChild( createSpan({label:"'"+sValue+"'", onclick:mouseClick}) );
 							}
 							setTextArea($expressionDiv.textContent);
 						}
