@@ -22,6 +22,7 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.dao.VariavelDAO;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.system.dao.ParametroDAO;
@@ -43,7 +44,7 @@ public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
                 UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
                 ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
                 ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-                ParametroManager.class,ParametroDAO.class)
+                ParametroManager.class,ParametroDAO.class,SendmailCommand.class)
             .createDeployment()
         ;
     }
