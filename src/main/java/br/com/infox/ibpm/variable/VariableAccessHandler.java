@@ -228,7 +228,9 @@ public class VariableAccessHandler implements Serializable {
                     this.name = "";
                     return;
                 }
-            break;
+                break;
+            default:
+                break;
         }
         ReflectionsUtil.setValue(variableAccess, "mappedName", type.name()
                 + ":" + name);
