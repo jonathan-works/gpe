@@ -22,13 +22,14 @@
       name="tipMessage"
       value="#{accept == 'application/pdf' ? messages['fileUpload.restriction.pdf'] : tipMessage}" />
     <ui:define name="label">#{label}</ui:define>
+    <h:outputText id="file#{id}" value="file#{id}"/>
     <rich:fileUpload
       id="#{id}"
       execute="@this"
       status=":status"
       limitRender="true"
       required="#{wi:get(required, false)}"
-      fileUploadListener="#{documentoUploader.processFileUpload}"
+      fileUploadListener="#{fileUpload.processFileUpload}"
       addLabel="#{messages['processoDocumento.addLabel']}"
       clearAllLabel="#{messages['processoDocumento.clearAllLabel']}"
       clearLabel="#{messages['processoDocumento.clearLabel']}"
@@ -39,7 +40,7 @@
       listHeight="50px"
       immediateUpload="true"
       noDuplicate="true"
-      render="#{reRender}, pageBodyDialogMessage"
+      render="#{id} #{reRender}, pageBodyDialogMessage"
       acceptedTypes="pdf">
     </rich:fileUpload>
   </s:decorate>
