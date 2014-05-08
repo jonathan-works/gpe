@@ -33,33 +33,4 @@ public enum VariableType {
     public String getPath() {
         return path;
     }
-    
-    // TODO: quando em produção remover este método e utilizar valueOf
-    public static VariableType convertValueOf(String value) {
-        if ("sim_nao".equals(value) || BOOLEAN.name().equals(value)) {
-            return BOOLEAN;
-        } else if ("default".equals(value) || STRING.name().equals(value)) {
-            return STRING;
-        } else if ("number".equals(value) || INTEGER.name().equals(value)) {
-            return INTEGER;
-        } else if ("text".equals(value) || TEXT.name().equals(value)) {
-            return TEXT;
-        } else if ("date".equals(value) || DATE.name().equals(value)) {
-            return DATE;
-        } else if ("page".equals(value) || PAGE.name().equals(value)) {
-            return PAGE;
-        } else if ("frame".equals(value) || FRAME.name().equals(value)) {
-            return FRAME;
-        } else if ("textEditSignature".equals(value) || EDITOR.name().equals(value)) {
-            return EDITOR;
-        } else if ("taskPage".equals(value) || TASK_PAGE.name().equals(value)) {
-            return TASK_PAGE;
-        } else if ("numberMoney".equals(value) || MONETARY.name().equals(value)) {
-            return MONETARY;
-        } else if ("enumeracao".equals(value) || ENUMERATION.name().equals(value)) {
-            return ENUMERATION;
-        }
-        return NULL;
-    }
-    
 }

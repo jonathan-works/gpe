@@ -558,6 +558,6 @@ public class ProcessBuilder implements Serializable {
     }
     
     public String getTypeLabel(String type) {
-        return VariableType.convertValueOf(type).getLabel();
+        return VariableType.valueOf(type).getLabel();
     }
 }

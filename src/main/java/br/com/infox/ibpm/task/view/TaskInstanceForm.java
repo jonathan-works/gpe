@@ -90,7 +90,7 @@ public class TaskInstanceForm implements Serializable {
             for (VariableAccess var : list) {
                 if (var.isReadable() && var.isWritable() && !var.getAccess().hasAccess("hidden")) {
                     String[] tokens = var.getMappedName().split(":");
-                    VariableType type = VariableType.convertValueOf(tokens[0]);
+                    VariableType type = VariableType.valueOf(tokens[0]);
                     String name = tokens[1];
                     Object variable = JbpmUtil.getProcessVariable(name
                             + "Modelo");

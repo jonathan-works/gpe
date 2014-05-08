@@ -67,7 +67,7 @@ public class VariableAccessHandler implements Serializable {
         String mappedName = variableAccess.getMappedName();
         if (mappedName.indexOf(':') > 0) {
             String[] tokens = mappedName.split(":");
-            this.type = VariableType.convertValueOf(tokens[0]);
+            this.type = VariableType.valueOf(tokens[0]);
             switch (type) {
                 case DATE:
                     if (tokens.length < 3) {
@@ -386,7 +386,7 @@ public class VariableAccessHandler implements Serializable {
             String[] tokens = v.split(":");
             if (tokens.length > 1 && tokens[1].equals(name)) {
                 this.label = getLabel();
-                setType(VariableType.convertValueOf(tokens[0]));
+                setType(VariableType.valueOf(tokens[0]));
                 setWritable(false);
                 switch (type) {
                     case DATE:
