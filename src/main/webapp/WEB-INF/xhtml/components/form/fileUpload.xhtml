@@ -21,6 +21,7 @@
     <ui:param
       name="tipMessage"
       value="#{accept == 'application/pdf' ? messages['fileUpload.restriction.pdf'] : tipMessage}" />
+      <s:div id="fileUploadDiv">
     <ui:define name="label">#{label}</ui:define>
     <h:outputText id="file#{id}" value="file#{id}"/>
     <rich:fileUpload
@@ -40,8 +41,9 @@
       listHeight="50px"
       immediateUpload="true"
       noDuplicate="true"
-      render="#{id} #{reRender}, pageBodyDialogMessage"
+      render="fileUploadDiv #{id} #{reRender}, pageBodyDialogMessage"
       acceptedTypes="pdf">
     </rich:fileUpload>
+    </s:div>
   </s:decorate>
 </ui:composition>
