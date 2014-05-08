@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -34,7 +35,8 @@ import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
-import br.com.infox.epp.test.crud.PersistSuccessTest;
+import br.com.infox.epp.test.crud.NotUpdatableEntityRemoveSuccessTest;
+import br.com.infox.epp.test.crud.NotUpdatablePersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
@@ -51,7 +53,8 @@ public class NaturezaCategoriaFluxoCrudActionIT extends AbstractCrudTest<Naturez
                         NaturezaCrudActionIT.class, NaturezaManager.class,
                         NaturezaDAO.class,CategoriaManager.class,CategoriaDAO.class,
                         NaturezaCategoriaFluxoManager.class, NaturezaCategoriaFluxoDAO.class,
-                        CategoriaCrudActionIT.class, ParteProcessoEnum.class)
+                        CategoriaCrudActionIT.class, ParteProcessoEnum.class,
+                        NotUpdatableEntityRemoveSuccessTest.class, NotUpdatablePersistSuccessTest.class)
         .createDeployment();
     }
 
@@ -80,7 +83,7 @@ public class NaturezaCategoriaFluxoCrudActionIT extends AbstractCrudTest<Naturez
             for (final Categoria categoria : persistCategoria) {
                 for (final Fluxo fluxo : persistFluxo) {
                     final NaturezaCategoriaFluxo entity = new NaturezaCategoriaFluxo(natureza, categoria, fluxo);
-                    final PersistSuccessTest<NaturezaCategoriaFluxo> test = new PersistSuccessTest<>(NaturezaCategoriaFluxoCrudAction.NAME, initEntity);
+                    final NotUpdatablePersistSuccessTest<NaturezaCategoriaFluxo> test = new NotUpdatablePersistSuccessTest<>(NaturezaCategoriaFluxoCrudAction.NAME, initEntity);
                     final NaturezaCategoriaFluxo naturezaCategoriaFluxo = test.runTest(action, entity, servletContext, session);
                     list.add(naturezaCategoriaFluxo);
                 }
@@ -132,7 +135,19 @@ public class NaturezaCategoriaFluxoCrudActionIT extends AbstractCrudTest<Naturez
         for (final Natureza natureza : naturezaList) {
             for (final Categoria categoria : persistCategoria) {
                 for (final Fluxo fluxo : persistFluxo) {
-                    removeSuccess.runTest(new NaturezaCategoriaFluxo(natureza, categoria, fluxo), servletContext, session);
+                    NotUpdatableEntityRemoveSuccessTest<NaturezaCategoriaFluxo> test = new NotUpdatableEntityRemoveSuccessTest<NaturezaCategoriaFluxo>(NaturezaCategoriaFluxoCrudAction.NAME, initEntity) {
+                        @Override
+                        protected boolean checkManagedEntity() {
+                            String query = "select o.idNaturezaCategoriaFluxo from NaturezaCategoriaFluxo o order by o.idNaturezaCategoriaFluxo desc";
+                            Integer id = invokeMethod(NaturezaCategoriaFluxoManager.NAME, "getSingleResult", Integer.class, new Class[] {String.class, Map.class}, query, null);
+                            if (id == null) {
+                                return false;
+                            }
+                            invokeMethod("setId", Void.class, new Class[] {Object.class}, id);
+                            return true;
+                        }
+                    };
+                    test.runTest(new NaturezaCategoriaFluxo(natureza, categoria, fluxo), servletContext, session);
                 }
             }
         }
