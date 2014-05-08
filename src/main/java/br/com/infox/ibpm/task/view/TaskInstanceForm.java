@@ -3,6 +3,7 @@ package br.com.infox.ibpm.task.view;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.process.definition.variable.constants.VariableConstants;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -101,6 +103,7 @@ public class TaskInstanceForm implements Serializable {
                         Map<String, Object> props = getInNewLineMap();
                         props.put("editorId", var.getVariableName() + "-"
                                 + taskInstance.getId());
+                        props.put("pagePath", MessageFormat.format(VariableConstants.DEFAULT_PATH, "comboModelos"));
                         ff.setProperties(props);
                         form.getFields().add(ff);
                     }
