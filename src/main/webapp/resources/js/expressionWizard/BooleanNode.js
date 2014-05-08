@@ -1,5 +1,19 @@
 (function(container) {
 
+    
+  function mouseEnterDOM(evt) {
+    var sel = document.getElementsByClassName("selected");
+    for(var i=0,l=sel.length;i<l;i++) {
+      sel[i].classList.remove("selected");
+    }
+    var parent = evt.target.parentNode;
+    parent.classList.add("selected");
+  }
+  
+  function mouseLeaveDOM(evt) {
+    evt.target.parentNode.classList.remove("selected");
+  }
+  
   function BooleanNode(args) {
     var _this = container.checkInit(this);
     var _super = new container.Node({parent:args.parent});
@@ -10,47 +24,20 @@
       childNodes : []
     };
 
-    function operationToString() {
-      var result = "";
-      if (pvt.operation === "Or") {
-        result = "Ou";
-      } else if (pvt.operation === "Not") {
-        result = "Negação";
-      } else if (pvt.operation === "And") {
-        result = "E";
-      } else if (pvt.operation === "GreaterThanEqual") {
-        result = ">=";
-      } else if (pvt.operation === "GreaterThan") {
-        result = ">";
-      } else if (pvt.operation === "LessThanEqual") {
-        result = "<=";
-      } else if (pvt.operation === "LessThan") {
-        result = "<";
-      } else if (pvt.operation === "Equal") {
-        result = "==";
-      } else if (pvt.operation === "NotEqual") {
-        result = "!=";
-      } else {
-        throw "Operation not supported";
-      }
-      return result;
-    }
-
     function toString() {
       var result="";
       switch(pvt.type) {
         case BooleanNode.CONSTANT:
-          //result = pvt.childNodes[0];
           result = pvt.childNodes[0].slice(0,1).toUpperCase()+pvt.childNodes[0].slice(1,pvt.childNodes[0].length);
           break;
         case BooleanNode.OPERATION:
-          result = [pvt.operation, pvt.childNodes[0], pvt.childNodes[1]].join();
+          result = [pvt.operation.name, pvt.childNodes[0], pvt.childNodes[1]].join();
           break;
         case BooleanNode.IDENTIFIER:
           result = ["Identifier[",pvt.childNodes[0],"]"].join("");
           break;
         case BooleanNode.NOT:
-          result = [pvt.operation, pvt.childNodes[0].toString()].join();
+          result = [pvt.operation.name, pvt.childNodes[0].toString()].join();
           break;
       }
       return result;
@@ -124,37 +111,160 @@
       }
     }
     
+    function Action(params) {
+      var action = document.createElement("li");
+      action.classList.add("Action");
+      action.textContent = params.text || "";
+      action.addEventListener("click", function(evt) {
+        alert(evt.target.textContent);
+      });
+      return action;
+    }
+    
+    function initBoolOperToolbar() {
+      var toolbar = pvt.toolbar = document.createElement("ul");
+      toolbar.classList.add("toolbar");
+      toolbar.classList.add(pvt.operation.name);
+      toolbar.appendChild(new Action({text:"!"}));
+      toolbar.appendChild(new Action({text:"&&"}));
+      toolbar.appendChild(new Action({text:"||"}));
+      toolbar.addEventListener("mouseleave", mouseLeaveDOM);
+      _super.getDOM().appendChild(toolbar);
+    }
+    
+    function initArithComparOperToolbar() {
+      var toolbar = pvt.toolbar = document.createElement("ul");
+      toolbar.classList.add("toolbar");
+      toolbar.classList.add(pvt.operation.name);
+      toolbar.appendChild(new Action({text:"!"}));
+      toolbar.appendChild(new Action({text:"&&"}));
+      toolbar.appendChild(new Action({text:"=="}));
+      toolbar.appendChild(new Action({text:"!="}));
+      toolbar.appendChild(new Action({text:">="}));
+      toolbar.appendChild(new Action({text:">"}));
+      toolbar.appendChild(new Action({text:"<="}));
+      toolbar.appendChild(new Action({text:"<"}));
+      toolbar.addEventListener("mouseleave", mouseLeaveDOM);
+      _super.getDOM().appendChild(toolbar);
+    }
+    
+    function initNegToolbar() {
+      var toolbar = pvt.toolbar = document.createElement("ul");
+      toolbar.classList.add("toolbar");
+      toolbar.classList.add(pvt.operation.name);
+      toolbar.appendChild(new Action({text:"||"}));
+      toolbar.appendChild(new Action({text:"&&"}));
+      toolbar.appendChild(new Action({text:"!"}));
+      toolbar.addEventListener("mouseleave", mouseLeaveDOM);
+      _super.getDOM().appendChild(toolbar);
+    }
+    
+    function TextContainer(text, type) {
+      var dom = document.createElement(type || "div");
+      dom.appendChild(document.createTextNode(text));
+      dom.classList.add("txt-cont");
+      return dom;
+    }
+    
+    function initValueToolbar() {
+      var toolbar = pvt.toolbar = document.createElement("ul");
+      toolbar.classList.add("toolbar");
+      toolbar.classList.add("Value");
+      toolbar.appendChild(new Action({text:"&&"}));
+      toolbar.appendChild(new Action({text:"||"}));
+      toolbar.appendChild(new Action({text:"!"}));
+      
+      var variable = document.createElement("li");
+      toolbar.appendChild(variable);
+      variable.appendChild(new TextContainer("Variáveis"));
+      var variableMenu = document.createElement("ul");
+      variable.appendChild(variableMenu);
+      
+      var _ = container.Node;
+      var variables = _.getVariables(_.VariableType.NUMBER);
+      for(var i=0, l=variables.length;i<l;i++) {
+        variableMenu.appendChild(new Action({text:variables[i]}));
+      }
+      toolbar.appendChild(new Action({text:"VERDADEIRO"}));
+      toolbar.appendChild(new Action({text:"FALSO"}));
+      toolbar.appendChild(new Action({text:"0==0"}));
+      toolbar.appendChild(new Action({text:"''==''"}));
+      toolbar.appendChild(new Action({text:"true?true:false"}));
+      toolbar.addEventListener("mouseleave", mouseLeaveDOM);
+      _super.getDOM().appendChild(toolbar);
+    }
+    
+    function renderOperationDOM() {
+      var dom = _super.getDOM();
+      dom.classList.add(pvt.operation.name);
+      
+      dom.appendChild(container.createDOM({text:"(", type:"span", classes:["Text"], mouseenter:mouseEnterDOM}));
+      updateParent(pvt.childNodes[0]);
+      dom.appendChild(container.createDOM({text:pvt.operation.label, type:"span", classes:["Text", "Operator"], mouseenter:mouseEnterDOM}));
+      updateParent(pvt.childNodes[1]);
+      dom.appendChild(container.createDOM({text:")", type:"span", classes:["Text"], mouseenter:mouseEnterDOM}));
+      
+      switch(pvt.operation.valueOf()) {
+        case container.BoolOper.AND.valueOf():
+        case container.BoolOper.OR.valueOf():
+          initBoolOperToolbar();
+          break;
+        case container.BoolOper.EQ.valueOf():
+        case container.BoolOper.NEQ.valueOf():
+        case container.BoolOper.GTE.valueOf():
+        case container.BoolOper.GT.valueOf():
+        case container.BoolOper.LTE.valueOf():
+        case container.BoolOper.LT.valueOf():
+          initArithComparOperToolbar();
+          break;
+      }
+    }
+    
+    function setOperation(operation) {
+      
+    }
+    
+    function renderNegationDOM() {
+      var dom = _super.getDOM();
+      dom.classList.add(pvt.operation.name);
+      dom.appendChild(container.createDOM({text:pvt.operation.label, type:"span", classes:["Text", "Operator"], mouseenter:mouseEnterDOM}));
+      updateParent(pvt.childNodes[0]);
+      initNegToolbar();
+    }
+    
+    function renderValueDOM(text) {
+      var dom = _super.getDOM();
+      dom.classList.add("Value");
+      dom.appendChild(container.createDOM({type:"span", text:text, classes:["BooleanNode","Text", "Value"], mouseenter:mouseEnterDOM}));
+      initValueToolbar();
+    }
+    
     (function Constructor() {
       var dom = _super.getDOM();
       dom.classList.add("BooleanNode");
       switch(pvt.type) {
         case BooleanNode.OPERATION:
-          pvt.operation = args.operation;
+          pvt.operation = container.BoolOper.getValueOf(args.operation);
           pvt.childNodes.push(args.value[0]);
           pvt.childNodes.push(args.value[1]);
           
-          dom.classList.add(pvt.operation);
-          dom.appendChild(container.createDOM({text:"(", type:"span", classes:["Text"]}));
-          updateParent(pvt.childNodes[0]);
-          dom.appendChild(container.createDOM({text:operationToString(), type:"span", classes:["Text", "Operator"]}));
-          updateParent(pvt.childNodes[1]);
-          dom.appendChild(container.createDOM({text:")", type:"span", classes:["Text"]}));
+          renderOperationDOM();
           break;
         case BooleanNode.NOT:
-          pvt.operation = "Not";
+          pvt.operation = container.BoolOper.getValueOf("Not");
           pvt.childNodes.push(args.value);
-          dom.appendChild(container.createDOM({text:operationToString(), type:"span", classes:["Text", "Operator"]}));
-          updateParent(pvt.childNodes[0]);
+          
+          renderNegationDOM();
           break;
         case BooleanNode.CONSTANT:
-          dom.classList.add("Value");
           pvt.childNodes.push(args.value);
-          dom.appendChild(container.createDOM({type:"span", text:pvt.childNodes[0]==="true"?"VERDADEIRO":"FALSO"}));
+          
+          renderValueDOM(pvt.childNodes[0]==="true"?"VERDADEIRO":"FALSO");
           break;
         case BooleanNode.IDENTIFIER:
-          dom.classList.add("Value");
           pvt.childNodes.push(args.value);
-          dom.appendChild(container.createDOM({type:"span", text:["[",pvt.childNodes[0],"]"].join("")}));
+          
+          renderValueDOM(["[",pvt.childNodes[0],"]"].join(""));
           break;
         default:
           throw "Missing type value";
@@ -177,17 +287,17 @@
     },
     IDENTIFIER:{
       get:function() {
-        return 0x4;
+        return 0x3;
       }
     },
     NOT:{
       get:function() {
-        return 0x8;
+        return 0x4;
       }
     },
     EXPRESSION:{
       get:function() {
-        return 0x10;
+        return 0x5;
       }
     }
   });

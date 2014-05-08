@@ -306,9 +306,10 @@
         return removeVariable;
       }
     },
-    variables:{
-      get:getVariables,
-      set:setVariables
+    getVariables:{
+      get:function() {
+        return getVariables;
+      }
     },
     generateTree:{
       get:function() {
@@ -319,6 +320,12 @@
   
   function mouseEnterDOM(evt) {
     evt.target.parentNode.classList.add("selected");
+    /*
+    var toolbars = evt.target.getElementsByClassName("toolbar");
+    for(var i=0,l=toolbars.length;i<l;i++) {
+      toolbars[i].classList.add("visible");
+    }
+    //*/
   }
   
   function mouseLeaveDOM(evt) {
@@ -328,20 +335,29 @@
   function mouseClickDOM(evt) {
     
   }
-    
+
   function createDOM(params) {
     params = params || {};
     var type = params.type || "span";
     var text = params.text || "";
+    var mouseenter = params.mouseenter;
+    var mouseleave = params.mouseleave;
+
     var classes = params.classes || [];
     var dom = document.createElement(type);
+    var parentNode = params.parentNode;
     dom.appendChild(document.createTextNode(text));
     for(var i=0,l=classes.length;i<l;i++) {
       dom.classList.add(classes[i]);
     }
-    dom.addEventListener("mouseenter", mouseEnterDOM);
-    dom.addEventListener("mouseleave", mouseLeaveDOM);
-    dom.addEventListener("click", mouseClickDOM);
+    
+    if (typeof mouseenter !== "undefined") {
+      dom.addEventListener("mouseenter", mouseenter);
+    }
+    if (typeof mouseleave !== "undefined") {
+      dom.addEventListener("mouseleave", mouseleave);
+    }
+    
     return dom;
   }
   
