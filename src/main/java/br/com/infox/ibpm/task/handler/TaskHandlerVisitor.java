@@ -85,7 +85,8 @@ public class TaskHandlerVisitor {
                 List<VariableAccess> accesses = tc.getVariableAccesses();
                 for (VariableAccess v : accesses) {
                     String mappedName = v.getMappedName();
-                    if (v.isWritable() && !mappedName.startsWith(VariableType.PAGE.name() + ":")) {
+                    if (v.isWritable() && !mappedName.startsWith(VariableType.PAGE.name() + ":") 
+                            && ((isMapped && !mappedName.startsWith(VariableType.NULL.name() + ":")) || !isMapped)) {
                         String name;
                         if (isMapped) {
                             name = mappedName;
