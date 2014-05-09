@@ -2,10 +2,8 @@ package br.com.infox.ibpm.variable.file;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -29,7 +27,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 
 @Name(FileUpload.NAME)
 @Scope(ScopeType.EVENT)
@@ -49,16 +47,14 @@ public class FileUpload implements FileUploadListener {
     public void processFileUpload(FileUploadEvent event) {
         UploadedFile file = event.getUploadedFile();
         UIComponent uploadFile = event.getComponent();
-        uploadFile.getId();
-        UIComponent outputText = uploadFile.getParent().findComponent("file"+uploadFile.getId());
         ProcessoDocumento processoDocumento = createDocumento(file);
         try {
             processoDocumentoManager.gravarDocumentoNoProcesso(ProcessoHome.instance().getInstance(), processoDocumento);
+            TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), processoDocumento.getIdProcessoDocumento());
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + ProcessoHome.instance().getInstance().getIdProcesso(), e);
         }
-        outputText.getAttributes().put("value", file.getName());
-        uploadFile.setRendered(false);
+        TaskInstanceHome.instance().update();
     }
     
     private ProcessoDocumento createDocumento(final UploadedFile file) {

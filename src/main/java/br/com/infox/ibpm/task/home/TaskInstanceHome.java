@@ -50,6 +50,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
@@ -244,7 +245,11 @@ public class TaskInstanceHome implements Serializable {
                 }
                 assinado = assinado || assinar;
                 assinar = Boolean.FALSE;
+            } else if (variableResolver.getType() == VariableType.FILE) {
+                Contexts.getBusinessProcessContext().flush();
+                retrieveVariable(variableAccess);
             }
+            
         }
     }
 

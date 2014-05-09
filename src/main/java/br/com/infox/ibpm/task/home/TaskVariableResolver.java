@@ -34,7 +34,7 @@ final class TaskVariableResolver extends TaskVariable {
         super(variableAccess, taskInstance);
         this.assinarDocumento = false;
     }
-    
+
     public TaskVariableResolver(VariableAccess variableAccess,
             TaskInstance taskInstance, boolean assinar) {
         super(variableAccess, taskInstance);
@@ -48,7 +48,7 @@ final class TaskVariableResolver extends TaskVariable {
     public void setValue(Object value) {
         this.value = value;
     }
-    
+
     public void resolve() {
         resolve = 0;
         if (value != null) {
@@ -57,48 +57,58 @@ final class TaskVariableResolver extends TaskVariable {
                     if (value instanceof String) {
                         try {
                             value = NumberFormat.getNumberInstance().parse(value.toString()).doubleValue();
-                        } catch (ParseException e) {}
+                        } catch (ParseException e) {
+                        }
                     }
                     atribuirValorDaVariavelNoContexto();
-                    break;
+                break;
                 case INTEGER:
                     if (value instanceof String) {
                         try {
                             value = NumberFormat.getNumberInstance().parse(value.toString()).longValue();
-                        } catch (ParseException e) {}
+                        } catch (ParseException e) {
+                        }
                     }
                     atribuirValorDaVariavelNoContexto();
-                    break;
+                break;
                 case DATE:
                     if (value instanceof String) {
                         try {
-                            value = DateFormat.getDateInstance( DateFormat.MEDIUM).parse(value.toString());
-                        } catch (ParseException e) {}
+                            value = DateFormat.getDateInstance(DateFormat.MEDIUM).parse(value.toString());
+                        } catch (ParseException e) {
+                        }
                     }
                     atribuirValorDaVariavelNoContexto();
-                    break;
+                break;
                 case EDITOR:
                     resolveEditor();
-                    break;
+                break;
                 case TEXT:
                     if (((String) value).length() > 4000) {
                         throw new BusinessException("O tamanho do texto excede 4000 caracteres");
                     }
                     atribuirValorDaVariavelNoContexto();
-                    break;
+                break;
+                case FILE:
+                    if (!(this.value instanceof Integer)) {
+                        this.value = getIdDocumento();
+                    }
+                    atribuirValorDaVariavelNoContexto();
+
+                break;
                 default:
                     atribuirValorDaVariavelNoContexto();
-                    break;
+                break;
             }
         }
     }
-    
+
     private void resolveEditor() {
         try {
             ProcessoHome processoHome = ProcessoHome.instance();
             Integer valueInt = processoHome.salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinarDocumento, getLabel());
             resolve = resolve | SIGNED;
-            
+
             if (valueInt != null && valueInt != 0) {
                 this.value = valueInt;
                 atribuirValorDaVariavelNoContexto();
@@ -111,7 +121,7 @@ final class TaskVariableResolver extends TaskVariable {
     public boolean isEditorAssinado() {
         return (resolve & TaskVariableResolver.SIGNED) == TaskVariableResolver.SIGNED;
     }
-    
+
     private String getLabel() {
         return JbpmUtil.instance().getMessages().get(name);
     }
@@ -145,7 +155,8 @@ final class TaskVariableResolver extends TaskVariable {
         return null;
     }
 
-    public void assignValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis) {
+    public void assignValueFromMapaDeVariaveis(
+            Map<String, Object> mapaDeVariaveis) {
         value = getValueFromMapaDeVariaveis(mapaDeVariaveis);
     }
 }
