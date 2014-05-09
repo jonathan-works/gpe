@@ -1,4 +1,4 @@
-(function (container) {
+(function (K) {
   function Node(args){
     checkInit(this);
     
@@ -8,7 +8,7 @@
     
     function setParent(itm) {
       if (itm !== window) {
-        if (itm instanceof container.Node) {
+        if (itm instanceof K.Node) {
           itm.getDOM().appendChild(pvt.dom);
         } else {
           itm.appendChild(pvt.dom);
@@ -117,44 +117,55 @@
     array.push(varName);
   }
   
+  function BooleanOperation(current, cache, dom) {
+    var oper = K.BoolOper.getValueOf(current);
+    var _value = [];
+    var _type;
+    if (oper.ordinal == K.BoolOper.NOT.ordinal) {
+      _value = cache.pop();
+      _type = K.BooleanNode.NOT;
+    } else {
+      _value = [cache.pop(), cache.pop()];
+      _type = K.BooleanNode.OPERATION;
+    }
+    return new K.BooleanNode({operation:current, value:_value, type:_type, parent:dom});
+  }
+  
   function generateTree(stack, dom) {
     var cache = [];
     var current;
     while(stack.length > 0) {
       current = stack.shift();
-      if (current === "Or" || current === "And" || current === "NotEqual" || current === "Equal" || current === "GreaterThan" || current === "GreaterThanEqual"
-       || current === "LessThan" || current === "LessThanEqual") {
-        cache.push(new container.BooleanNode({operation:current, value:[cache.pop(), cache.pop()], type:container.BooleanNode.OPERATION, parent:dom}));
-       
+      
+      if (K.BoolOper.isBoolOper(current)) {
+        cache.push(BooleanOperation(current, cache, dom));
       } else if (current.indexOf("Integer[")===0) {
-        cache.push(new container.ArithNode({type:container.ArithNode.CONSTANT, value:current.slice("8", current.length-1), parent:dom}));
+        cache.push(new K.ArithNode({type:K.ArithNode.CONSTANT, value:current.slice("8", current.length-1), parent:dom}));
       } else if (current.indexOf("FloatingPoint[")===0) {
          //FloatingPoint
-        cache.push(new container.ArithNode({type:container.ArithNode.CONSTANT, value:current.slice("14", current.length-1), parent:dom}));
+        cache.push(new K.ArithNode({type:K.ArithNode.CONSTANT, value:current.slice("14", current.length-1), parent:dom}));
       } else if (current.indexOf("String[")===0) {
-        cache.push(new container.StringNode({type:container.StringNode.CONSTANT, value:current.slice("7", current.length-1), parent:dom}));
+        cache.push(new K.StringNode({type:K.StringNode.CONSTANT, value:current.slice("7", current.length-1), parent:dom}));
       } else if (current.indexOf("Identifier[")===0) {
         // é variável
         current = current.slice("11",current.length-1);
         if (variables.bool.indexOf(current) >= 0) {
-          cache.push(new container.BooleanNode({value:current, type:container.BooleanNode.IDENTIFIER, parent:dom}));
+          cache.push(new K.BooleanNode({value:current, type:K.BooleanNode.IDENTIFIER, parent:dom}));
         } else if (variables.numb.indexOf(current) >= 0) {
-          cache.push(new container.ArithNode({value:current, type:container.ArithNode.IDENTIFIER, parent:dom}));
+          cache.push(new K.ArithNode({value:current, type:K.ArithNode.IDENTIFIER, parent:dom}));
         } else if (variables.str.indexOf(current) >= 0) {
-          cache.push(new container.StringNode({value:current, type:container.StringNode.IDENTIFIER, parent:dom}));
+          cache.push(new K.StringNode({value:current, type:K.StringNode.IDENTIFIER, parent:dom}));
         } else {
           throw "Identifier ["+current+"] not expected";
         }
-      } else if (current === "Not") {
-        cache.push(new container.BooleanNode({value:cache.pop(), type:container.BooleanNode.NOT, parent:dom}));
       } else if (current === "True" || current === "False") {
-        cache.push(new container.BooleanNode({value:current.toLowerCase(), type:container.BooleanNode.CONSTANT, parent:dom}));
+        cache.push(new K.BooleanNode({value:current, type:K.BooleanNode.CONSTANT, parent:dom}));
       } else if (current === "Mult" || current === "Minus" || current === "Div") {
-        cache.push(new container.ArithNode({type:container.ArithNode.OPERATION, operation:current, value:[cache.pop(), cache.pop()], parent:dom}));
+        cache.push(new K.ArithNode({type:K.ArithNode.OPERATION, operation:current, value:[cache.pop(), cache.pop()], parent:dom}));
       } else if (current === "Plus") {
         cache.push(getStringOrNumberFromPlus({operation:current, value:[cache.pop(), cache.pop()], parent:dom}));
       } else if (current === "Negative") {
-        cache.push(new container.ArithNode({type:container.ArithNode.NEGATIVE, value:cache.pop(), parent:dom}));
+        cache.push(new K.ArithNode({type:K.ArithNode.NEGATIVE, value:cache.pop(), parent:dom}));
        } else if (current === "Choice") {
          cache.push(getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()], parent:dom}));
       } else {
@@ -169,18 +180,18 @@
   
   function calculateValueTypes(obj) {
     var type = 0x0;
-    if (obj.value[0] instanceof container.StringNode) {
+    if (obj.value[0] instanceof K.StringNode) {
       type = 0x1;
-    } else if (obj.value[0] instanceof container.BooleanNode) {
+    } else if (obj.value[0] instanceof K.BooleanNode) {
       type = 0x2;
-    } else if (obj.value[0] instanceof container.ArithNode) {
+    } else if (obj.value[0] instanceof K.ArithNode) {
       type = 0x4;
     }
-    if (obj.value[1] instanceof container.StringNode) {
+    if (obj.value[1] instanceof K.StringNode) {
       type |= 0x1;
-    } else if (obj.value[1] instanceof container.BooleanNode) {
+    } else if (obj.value[1] instanceof K.BooleanNode) {
       type |= 0x2;
-    } else if (obj.value[1] instanceof container.ArithNode) {
+    } else if (obj.value[1] instanceof K.ArithNode) {
       type |= 0x4;
     }
     return type;
@@ -194,12 +205,12 @@
       case 0x3:
       case 0x5:
       case 0x6:
-        obj.type = container.StringNode.OPERATION;
-        result = new container.StringNode(obj);
+        obj.type = K.StringNode.OPERATION;
+        result = new K.StringNode(obj);
         break;
       case 0x4:
-        obj.type = container.ArithNode.OPERATION;
-        result = new container.ArithNode(obj);
+        obj.type = K.ArithNode.OPERATION;
+        result = new K.ArithNode(obj);
         break;
       default:
         throw "Arithmetic combination of values not expected "+obj.value[0].toString()+" "+obj.value[1].toString();
@@ -213,19 +224,19 @@
     
     switch(calculateValueTypes(obj)) {
       case 0x2:
-        obj.type = container.BooleanNode.EXPRESSION;
-        result = new container.BooleanNode(obj);
+        obj.type = K.BooleanNode.EXPRESSION;
+        result = new K.BooleanNode(obj);
         break;
       case 0x4:
-        obj.type = container.ArithNode.OPERATION;
-        result = new container.ArithNode(obj);
+        obj.type = K.ArithNode.OPERATION;
+        result = new K.ArithNode(obj);
         break;
       case 0x1:
       case 0x3:
       case 0x5:
       case 0x6:
-        obj.type = container.StringNode.EXPRESSION;
-        result = new container.StringNode(obj);
+        obj.type = K.StringNode.EXPRESSION;
+        result = new K.StringNode(obj);
         break;
       default:
         throw "Conditional combination of values not expected";
@@ -337,11 +348,16 @@
   }
 
   function createDOM(params) {
+    if (this === window) {
+      throw "Constructor Exception";
+    }
     params = params || {};
     var type = params.type || "span";
     var text = params.text || "";
-    var mouseenter = params.mouseenter;
-    var mouseleave = params.mouseleave;
+    var click = params.click;
+    var mouseenter = params.mouseEnter;
+    var mouseleave = params.mouseLeave;
+    var parent = params.parent;
 
     var classes = params.classes || [];
     var dom = document.createElement(type);
@@ -351,17 +367,24 @@
       dom.classList.add(classes[i]);
     }
     
-    if (typeof mouseenter !== "undefined") {
+    if (typeof mouseenter === "function") {
       dom.addEventListener("mouseenter", mouseenter);
     }
-    if (typeof mouseleave !== "undefined") {
+    if (typeof mouseleave === "function") {
       dom.addEventListener("mouseleave", mouseleave);
+    }
+    if (typeof click === "function") {
+      dom.addEventListener("click", click);
+    }
+    
+    if (typeof parent !== "undefined" && parent instanceof HTMLElement) {
+      parent.appendChild(dom);
     }
     
     return dom;
   }
   
-  Object.defineProperties(container, {
+  Object.defineProperties(K, {
     Node:{
       get:function() {
         return Node;

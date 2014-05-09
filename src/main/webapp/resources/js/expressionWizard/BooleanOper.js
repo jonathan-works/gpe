@@ -1,43 +1,6 @@
-(function(container) {
+(function(K) {
   
-  function Enum(label, ordinal, name) {
-    function getLabel() {
-      return label;
-    }
-    
-    function getOrdinal() {
-      return ordinal;
-    }
-    
-    function getName() {
-      return name;
-    }
-    
-    function valueOf() {
-      return ordinal;
-    }
-    
-    if (this !== window) {
-      Object.defineProperties(this, {
-        label:{
-          get:getLabel
-        },
-        ordinal:{
-          get:getOrdinal
-        },
-        name:{
-          get:getName
-        },
-        valueOf:{
-          get:function() {
-            return valueOf;
-          }
-        }
-      });
-    }
-  }
-  
-  var K = {
+  var V = {
     AND:"And",
     OR:"Or",
     NOT:"Not",
@@ -48,88 +11,108 @@
     LT:"LessThan",
     LTE:"LessThanEqual"
   };
-  
-  var BooleanOper = Object.defineProperties({},{
+  /*current === "Or" || current === "And" || current === "NotEqual" || current === "Equal" || current === "GreaterThan" || current === "GreaterThanEqual"
+       || current === "LessThan" || current === "LessThanEqual"*/
+  var BoolOper = Object.defineProperties({},{
     AND:{
       get:function() {
-        return new Enum("E", 0x1, K.AND);
+        return new K.Enum("E", 0x1, V.AND);
       }
     },
     OR:{
       get:function() {
-        return new Enum("OU", 0x2, K.OR);
+        return new K.Enum("OU", 0x2, V.OR);
       }
     },
     NOT:{
       get:function() {
-        return new Enum("NEGAÇÃO", 0x3, K.NOT);
+        return new K.Enum("NEGAÇÃO", 0x3, V.NOT);
       }
     },
     EQ:{
       get:function() {
-        return new Enum("==", 0x4, K.EQ);
+        return new K.Enum("==", 0x4, V.EQ);
       }
     },
     NEQ:{
       get:function() {
-        return new Enum("!=", 0x5, K.NEQ);
+        return new K.Enum("!=", 0x5, V.NEQ);
       }
     },
     GT:{
       get:function() {
-        return new Enum(">", 0x6, K.GT);
+        return new K.Enum(">", 0x6, V.GT);
       }
     },
     GTE:{
       get:function() {
-        return new Enum(">=", 0x7, K.GTE);
+        return new K.Enum(">=", 0x7, V.GTE);
       }
     },
     LT:{
       get:function() {
-        return new Enum("<", 0x8, K.LT);
+        return new K.Enum("<", 0x8, V.LT);
       }
     },
     LTE:{
       get:function() {
-        return new Enum("<=", 0x9, K.LTE);
+        return new K.Enum("<=", 0x9, V.LTE);
       }
     },
     getValueOf:{
       get:function() {
-        return function valueOf(str) {
-          var _ = BooleanOper;
-          if (str === K.AND) {
+        return function getValueOf(str) {
+          var _ = BoolOper;
+          if (str === V.AND) {
             return _.AND;
-          } else if (str === K.OR) {
+          } else if (str === V.OR) {
             return _.OR;
-          } else if (str === K.NOT) {
+          } else if (str === V.NOT) {
             return _.NOT;
-          } else if (str === K.EQ) {
+          } else if (str === V.EQ) {
             return _.EQ;
-          } else if (str === K.NEQ) {
+          } else if (str === V.NEQ) {
             return _.NEQ;
-          } else if (str === K.GT) {
+          } else if (str === V.GT) {
             return _.GT;
-          } else if (str === K.GTE) {
+          } else if (str === V.GTE) {
             return _.GTE;
-          } else if (str === K.LT) {
+          } else if (str === V.LT) {
             return _.LT;
-          } else if (str === K.LTE) {
+          } else if (str === V.LTE) {
             return _.LTE;
           } else {
-            throw "Exception";
+            throw 0;
           }
         };
       }
     },
-    
+    isBoolOper:{
+      get:function() {
+        return function isBoolOper(str) {
+          var result = true;
+          try {
+            K.BoolOper.getValueOf(str);
+          } catch(e) {
+            result = false;
+          }
+          return result;
+        };
+      }
+    },
+    toString:{
+      get:function () {
+        return function toString() {
+          return "BooleanOper";
+        };
+      }
+    }
   });
   
-  Object.defineProperties(container,{
+  Object.defineProperties(K,{
     BoolOper:{
       get:function() {
-        return BooleanOper;
+        return BoolOper;
       }
     }
   });
