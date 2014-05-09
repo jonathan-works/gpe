@@ -34,6 +34,4 @@ public enum VariableType {
     public String getPath() {
         return path;
     }
-        } else if ("fileUpload".equals(value) || FILE.name().equals(value)) {
-            return FILE;
 }
