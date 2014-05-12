@@ -25,6 +25,16 @@
       return pvt.dom;
     }
     
+    function clear() {
+      var dom = pvt.dom;
+      for(var i=0,l=dom.classList.length; i<l;i++) {
+        dom.classList.remove(dom.classList.item(0));
+      }
+      for(i=0,l=dom.children.length; i<l; i++) {
+        dom.removeChild(dom.children[0]);
+      }
+    }
+    
     Object.defineProperties(this,{
       parent:{
         get:getParent,
@@ -33,6 +43,11 @@
       getDOM:{
         get:function() {
           return getDOM;
+        }
+      },
+      clear:{
+        get:function() {
+          return clear;
         }
       }
     });
@@ -117,60 +132,62 @@
     array.push(varName);
   }
   
-  function BooleanOperation(current, cache, dom) {
-    var oper = K.BoolOper.getValueOf(current);
+  function createBooleanNode(current, cache, dom) {
     var _value = [];
-    var _type;
-    if (oper.ordinal == K.BoolOper.NOT.ordinal) {
-      _value = cache.pop();
-      _type = K.BooleanNode.NOT;
-    } else {
-      _value = [cache.pop(), cache.pop()];
-      _type = K.BooleanNode.OPERATION;
+    var _type = K.BooleanNode.getBooleanNodeType(current);
+    var result;
+    switch(_type) {
+      case K.BooleanNode.CONSTANT:
+      case K.BooleanNode.IDENTIFIER:
+        result = new K.BooleanNode({value:current, type:_type, parent:dom});
+        break;
+      case K.BooleanNode.NOT:
+        result = new K.BooleanNode({operation:current, value:cache.pop(), type:_type, parent:dom});
+        break;
+      case K.BooleanNode.OPERATION:
+        result = new K.BooleanNode({operation:current, value:[cache.pop(), cache.pop()], type:_type, parent:dom});
+        break;
     }
-    return new K.BooleanNode({operation:current, value:_value, type:_type, parent:dom});
+    return result;
   }
   
   function generateTree(stack, dom) {
     var cache = [];
     var current;
+    var result;
     while(stack.length > 0) {
       current = stack.shift();
-      
-      if (K.BoolOper.isBoolOper(current)) {
-        cache.push(BooleanOperation(current, cache, dom));
-      } else if (current.indexOf("Integer[")===0) {
-        cache.push(new K.ArithNode({type:K.ArithNode.CONSTANT, value:current.slice("8", current.length-1), parent:dom}));
-      } else if (current.indexOf("FloatingPoint[")===0) {
+      if (K.BooleanNode.isBooleanNode(current)) {
+        result = createBooleanNode(current, cache, dom);
+      } else if (current.indexOf("Integer")===0 && current.match(/Integer\[[+|-]?[0-9]+\]/g) !== null) {
+        result = new K.ArithNode({type:K.ArithNode.CONSTANT, value:current.slice("8", current.length-1), parent:dom});
+      } else if (current.indexOf("FloatingPoint")===0 && current.match(/FloatingPoint\[[+|-]?[0-9]+([.][0-9]+)?\]/g) !== null) {
          //FloatingPoint
-        cache.push(new K.ArithNode({type:K.ArithNode.CONSTANT, value:current.slice("14", current.length-1), parent:dom}));
-      } else if (current.indexOf("String[")===0) {
-        cache.push(new K.StringNode({type:K.StringNode.CONSTANT, value:current.slice("7", current.length-1), parent:dom}));
-      } else if (current.indexOf("Identifier[")===0) {
+        result = new K.ArithNode({type:K.ArithNode.CONSTANT, value:current.slice("14", current.length-1), parent:dom});
+      } else if (current.indexOf("String")===0 && current.match(/String\['.*']/g) !== null) {
+        result = new K.StringNode({type:K.StringNode.CONSTANT, value:current.slice("7", current.length-1), parent:dom});
+      } else if (current.indexOf("Identifier")===0 && current.match(/Identifier\[[a-zA-Z][a-zA-Z0-9]*\]/g) !== null) {
         // é variável
         current = current.slice("11",current.length-1);
-        if (variables.bool.indexOf(current) >= 0) {
-          cache.push(new K.BooleanNode({value:current, type:K.BooleanNode.IDENTIFIER, parent:dom}));
-        } else if (variables.numb.indexOf(current) >= 0) {
-          cache.push(new K.ArithNode({value:current, type:K.ArithNode.IDENTIFIER, parent:dom}));
+        if (variables.numb.indexOf(current) >= 0) {
+          result = new K.ArithNode({value:current, type:K.ArithNode.IDENTIFIER, parent:dom});
         } else if (variables.str.indexOf(current) >= 0) {
-          cache.push(new K.StringNode({value:current, type:K.StringNode.IDENTIFIER, parent:dom}));
+          result = new K.StringNode({value:current, type:K.StringNode.IDENTIFIER, parent:dom});
         } else {
           throw "Identifier ["+current+"] not expected";
         }
-      } else if (current === "True" || current === "False") {
-        cache.push(new K.BooleanNode({value:current, type:K.BooleanNode.CONSTANT, parent:dom}));
       } else if (current === "Mult" || current === "Minus" || current === "Div") {
-        cache.push(new K.ArithNode({type:K.ArithNode.OPERATION, operation:current, value:[cache.pop(), cache.pop()], parent:dom}));
+        result = new K.ArithNode({type:K.ArithNode.OPERATION, operation:current, value:[cache.pop(), cache.pop()], parent:dom});
       } else if (current === "Plus") {
-        cache.push(getStringOrNumberFromPlus({operation:current, value:[cache.pop(), cache.pop()], parent:dom}));
+        result = getStringOrNumberFromPlus({operation:current, value:[cache.pop(), cache.pop()], parent:dom});
       } else if (current === "Negative") {
-        cache.push(new K.ArithNode({type:K.ArithNode.NEGATIVE, value:cache.pop(), parent:dom}));
+        result = new K.ArithNode({type:K.ArithNode.NEGATIVE, value:cache.pop(), parent:dom});
        } else if (current === "Choice") {
-         cache.push(getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()], parent:dom}));
+         result = getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()], parent:dom});
       } else {
         throw "Parse exception, token "+current+" not found";
       }
+      cache.push(result);
     }
     if (cache.length !== 1) {
       throw "Parse exception. More than one root was found";
@@ -221,7 +238,6 @@
   
   function getCorrectExpression(obj) {
     var result;
-    
     switch(calculateValueTypes(obj)) {
       case 0x2:
         obj.type = K.BooleanNode.EXPRESSION;
@@ -245,8 +261,8 @@
     return result;
   }
   
-  function implReqrd() {
-    throw "Implementation of function required";
+  function implReqrd(str) {
+    throw ["Implementation of function ",str," required"].join("");
   }
   
   Node.prototype = {
@@ -272,16 +288,16 @@
     set parent(itm) {
     },
     get type() {
-      implReqrd();
+      implReqrd("type");
     },
     get values() {
-      implReqrd();
+      implReqrd("values");
     },
     get condition() {
-      implReqrd();
+      implReqrd("condition");
     },
     getNodeType:function getNodeType() {
-      implReqrd();
+      implReqrd("getNodeType");
     }
   };
   
