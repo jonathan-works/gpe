@@ -16,6 +16,7 @@ public enum VariableType {
     EDITOR(format(DEFAULT_LOCALE,"editor"), format(DEFAULT_PATH,"textEditSignature")),
     TASK_PAGE(format(DEFAULT_LOCALE,"taskPage"), format(DEFAULT_PATH,"taskPage")),
     MONETARY(format(DEFAULT_LOCALE,"monetary"), format(DEFAULT_PATH,"numberMoney")),
+    FILE(format(DEFAULT_LOCALE, "file"), format(DEFAULT_PATH, "fileUpload")),
     ENUMERATION(format(DEFAULT_LOCALE,"enum"), format(DEFAULT_PATH,"enumeracao"));
     
     private String label;

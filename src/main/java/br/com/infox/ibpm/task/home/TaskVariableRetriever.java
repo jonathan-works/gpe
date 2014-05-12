@@ -10,6 +10,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.seam.util.ComponentUtil;
@@ -52,6 +53,8 @@ final class TaskVariableRetriever extends TaskVariable {
                         LOG.warn("parseDateFail", e);
                     }
                     break;
+                case FILE:
+                    variable = getNomeFileUploaded(variable);
                 default:
                     break;
             }
@@ -68,6 +71,23 @@ final class TaskVariableRetriever extends TaskVariable {
                     .getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
             if (modeloDocumento != null) {
                 variable = modeloDocumento;
+            } else {
+                LOG.warn("ProcessoDocumento não encontrado: "
+                        + idProcessoDocumento);
+            }
+        }
+        return variable;
+    }
+    
+    private Object getNomeFileUploaded(Object variable) {
+        Integer idProcessoDocumento = (Integer) variable;
+        if (idProcessoDocumento != null) {
+            ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
+                    .getComponent(ProcessoDocumentoManager.NAME);
+            ProcessoDocumento documento = processoDocumentoManager
+                    .find(idProcessoDocumento);
+            if (documento != null) {
+                variable = documento.getProcessoDocumento();
             } else {
                 LOG.warn("ProcessoDocumento não encontrado: "
                         + idProcessoDocumento);

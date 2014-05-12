@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -50,11 +52,13 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.transition.TransitionHandler;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.seam.context.ContextFacade;
@@ -71,8 +75,7 @@ public class TaskInstanceHome implements Serializable {
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
     private static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
-    private static final LogProvider LOG = Logging
-            .getLogProvider(TaskInstanceHome.class);
+    private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "taskInstanceHome";
@@ -146,8 +149,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void setModeloWhenExists(TaskVariableRetriever variableRetriever) {
-        String modelo = getModeloFromProcessInstance(variableRetriever
-                .getName());
+        String modelo = getModeloFromProcessInstance(variableRetriever.getName());
         if (modelo != null) {
             variavelDocumento = variableRetriever.getName();
             if (!variableRetriever.hasVariable()) {
@@ -157,8 +159,8 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private String getModeloFromProcessInstance(String variableName) {
-        return (String) ProcessInstance.instance().getContextInstance()
-                .getVariable(variableName + "Modelo");
+        return (String) ProcessInstance.instance().getContextInstance().getVariable(variableName
+                + "Modelo");
     }
 
     private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
@@ -180,10 +182,8 @@ public class TaskInstanceHome implements Serializable {
     public boolean update() {
         prepareForUpdate();
         if (possuiTask()) {
-            TaskController taskController = taskInstance.getTask()
-                    .getTaskController();
-            TaskPageAction taskPageAction = ComponentUtil
-                    .getComponent(TaskPageAction.NAME);
+            TaskController taskController = taskInstance.getTask().getTaskController();
+            TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
             if (taskController != null) {
                 if (!taskPageAction.getHasTaskPage()) {
                     try {
@@ -232,19 +232,22 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void updateVariable(VariableAccess variableAccess) {
-        TaskVariableResolver variableResolver = new TaskVariableResolver(
-                variableAccess, taskInstance, assinar);
+        TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess, taskInstance, assinar);
 
         if (variableAccess.isWritable()) {
             variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
             variableResolver.resolve();
             if (variableResolver.isEditor()) {
                 if (assinar && !variableResolver.isEditorAssinado()) {
-                    FacesMessages.instance().add(Messages.instance().get("assinatura.falhaAssinatura"));    
+                    FacesMessages.instance().add(Messages.instance().get("assinatura.falhaAssinatura"));
                 }
                 assinado = assinado || assinar;
                 assinar = Boolean.FALSE;
+            } else if (variableResolver.getType() == VariableType.FILE) {
+                Contexts.getBusinessProcessContext().flush();
+                retrieveVariable(variableAccess);
             }
+
         }
     }
 
@@ -320,17 +323,15 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public void updateIndex() {
-        TaskConteudoDAO taskConteudoDAO = ComponentUtil
-                .getComponent(TaskConteudoDAO.NAME);
+        TaskConteudoDAO taskConteudoDAO = ComponentUtil.getComponent(TaskConteudoDAO.NAME);
         TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
         int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
         if (taskConteudo != null) {
             try {
                 taskConteudoDAO.update(taskConteudo);
             } catch (DAOException e) {
-                LOG.error(
-                        "Não foi possível reindexar o conteúdo da TaskInstance "
-                                + getTaskId(), e);
+                LOG.error("Não foi possível reindexar o conteúdo da TaskInstance "
+                        + getTaskId(), e);
             }
         } else {
             taskConteudo = new TaskConteudo();
@@ -339,9 +340,8 @@ public class TaskInstanceHome implements Serializable {
             try {
                 taskConteudoDAO.persist(taskConteudo);
             } catch (DAOException e) {
-                LOG.error(
-                        "Não foi possível indexar o conteúdo da TaskInstance "
-                                + getTaskId(), e);
+                LOG.error("Não foi possível indexar o conteúdo da TaskInstance "
+                        + getTaskId(), e);
             }
         }
     }
@@ -353,23 +353,24 @@ public class TaskInstanceHome implements Serializable {
         } catch (Exception ex) {
             String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
             LOG.warn(action, ex);
-            throw new ApplicationException(ApplicationException.createMessage(
-                    action + ex.getLocalizedMessage(),
-                    "setCurrentTaskInstance()", "TaskInstanceHome", "BPM"), ex);
+            throw new ApplicationException(ApplicationException.createMessage(action
+                    + ex.getLocalizedMessage(), "setCurrentTaskInstance()", "TaskInstanceHome", "BPM"), ex);
         }
     }
 
     public String end(String transition) {
         if (checkAccess()) {
             checkCurrentTask();
-            ProcessoHome processoHome = ComponentUtil
-                    .getComponent(ProcessoHome.NAME);
+            ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
             if (processoHome.getTipoProcessoDocumento() != null
                     && faltaAssinatura(processoHome.getTipoProcessoDocumento())) {
                 acusarFaltaDeAssinatura();
                 return null;
             }
             if (!update()) {
+                return null;
+            }
+            if (!validFileUpload()){
                 return null;
             }
             limparEstado(processoHome);
@@ -379,17 +380,36 @@ public class TaskInstanceHome implements Serializable {
         return null;
     }
 
+    private boolean validFileUpload() {
+        //TODO verificar se é necessária a mesma validação do update para quando não há taskPage
+        if (possuiTask()) {
+            TaskController taskController = taskInstance.getTask().getTaskController();
+            List<VariableAccess> list = taskController.getVariableAccesses();
+            for (VariableAccess var : list) {
+                if (var.isRequired()
+                        && var.getMappedName().split(":")[0].equals("FILE")
+                        && getInstance().get(getFieldName(var.getVariableName())) == null) {
+                    String label = JbpmUtil.instance().getMessages().get(taskInstance.getProcessInstance().getProcessDefinition().getName()
+                            + ":" + var.getVariableName());
+                    FacesMessages.instance().add("O arquivo do campo "
+                            + label + " é obrigatório");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private void atualizarPaginaDeMovimentacao() {
         setTaskCompleted(true);
-        //TODO: remover os efeitos colaterais do canClosePanel()
+        // TODO: remover os efeitos colaterais do canClosePanel()
         if (canClosePanel() && isUsuarioExterno()) {
             redirectToAcessoExterno();
         }
     }
 
     private boolean isUsuarioExterno() {
-        Authenticator authenticator = ComponentUtil
-                .getComponent("authenticator");
+        Authenticator authenticator = ComponentUtil.getComponent("authenticator");
         return authenticator.isUsuarioExterno();
     }
 
@@ -405,8 +425,7 @@ public class TaskInstanceHome implements Serializable {
         if (this.currentTaskInstance == null) {
             setCanClosePanelVal(true);
             return true;
-        } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance
-                .getId())) {
+        } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance.getId())) {
             setTaskId(currentTaskInstance.getId());
             return false;
         } else {
@@ -425,8 +444,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarBam() {
-        ProcessoEpaTarefa pt = processoEpaTarefaManager
-                .getByTaskInstance(taskInstance.getId());
+        ProcessoEpaTarefa pt = processoEpaTarefaManager.getByTaskInstance(taskInstance.getId());
         Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
         try {
@@ -450,17 +468,14 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private boolean faltaAssinatura(TipoProcessoDocumento tipoProcessoDocumento) {
-        boolean isObrigatorio = tipoProcessoDocumentoDAO
-                .isAssinaturaObrigatoria(tipoProcessoDocumento,
-                        Authenticator.getPapelAtual());
+        boolean isObrigatorio = tipoProcessoDocumentoDAO.isAssinaturaObrigatoria(tipoProcessoDocumento, Authenticator.getPapelAtual());
         return isObrigatorio && !assinado;
     }
 
     private void checkCurrentTask() {
         TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
         if (currentTaskInstance != null
-                && (tempTask == null || tempTask.getId() != currentTaskInstance
-                        .getId())) {
+                && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
             acusarUsuarioSemAcesso();
         }
     }
@@ -487,18 +502,13 @@ public class TaskInstanceHome implements Serializable {
 
     public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         try {
-            final Map<String, Object> result = processoEpaTarefaManager
-                    .findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso,
-                            idTarefa);
-            taskInstanceManager.removeUsuario((Long) result
-                    .get("idTaskInstance"));
+            final Map<String, Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
+            taskInstanceManager.removeUsuario((Long) result.get("idTaskInstance"));
             afterLiberarTarefa();
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
-            LOG.error(
-                    ".removeUsuario(idProcesso, idTarefa) - Mais de um resultado",
-                    e);
+            LOG.error(".removeUsuario(idProcesso, idTarefa) - Mais de um resultado", e);
         } catch (IllegalStateException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
         } catch (DAOException e) {
@@ -515,15 +525,13 @@ public class TaskInstanceHome implements Serializable {
     public void removeUsuario() {
         if (BusinessProcess.instance().hasCurrentTask()) {
             try {
-                taskInstanceManager.removeUsuario(BusinessProcess.instance()
-                        .getTaskId());
+                taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
                 afterLiberarTarefa();
             } catch (DAOException e) {
                 LOG.error(".removeUsuario() - ", e);
             }
         } else {
-            FacesMessages.instance().add(
-                    Messages.instance().get("org.jboss.seam.TaskNotFound"));
+            FacesMessages.instance().add(Messages.instance().get("org.jboss.seam.TaskNotFound"));
         }
     }
 
@@ -588,32 +596,29 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public List<ModeloDocumento> getModeloItems(String variavel) {
-        ElFunctions elFunctions = (ElFunctions) Component
-                .getInstance(ElFunctions.NAME);
+        ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
         String listaModelos = elFunctions.evaluateExpression(variavel);
-        return modeloDocumentoManager
-                .getModelosDocumentoInListaModelo(listaModelos);
+        return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
     }
 
     public void assignModeloDocumento(final String id) {
         String modelo = "";
         if (modeloDocumento != null) {
-            modelo = modeloDocumentoManager
-                    .evaluateModeloDocumento(modeloDocumento);
+            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
         }
         mapaDeVariaveis.put(id, modelo);
     }
 
     public static boolean hasOcculTransition(Transition transition) {
-        return transition.getDescription() != null && transition.getDescription().contains(TransitionHandler.OCCULT_TRANSITION);
-//        return OCCULT_TRANSITION.equals(transition.getCondition());
+        return transition.getDescription() != null
+                && transition.getDescription().contains(TransitionHandler.OCCULT_TRANSITION);
+        // return OCCULT_TRANSITION.equals(transition.getCondition());
     }
 
     @SuppressWarnings(UNCHECKED)
     public void updateTransitions() {
         availableTransitions = taskInstance.getAvailableTransitions();
-        leavingTransitions = taskInstance.getTask().getTaskNode()
-                .getLeavingTransitions();
+        leavingTransitions = taskInstance.getTask().getTaskNode().getLeavingTransitions();
     }
 
     /**
@@ -643,8 +648,7 @@ public class TaskInstanceHome implements Serializable {
 
     public void setModeloDocumento(ModeloDocumento modelo) {
         this.modeloDocumento = modelo;
-        mapaDeVariaveis.put(getFieldName(variavelDocumento),
-                modeloDocumentoManager.evaluateModeloDocumento(modelo));
+        mapaDeVariaveis.put(getFieldName(variavelDocumento), modeloDocumentoManager.evaluateModeloDocumento(modelo));
     }
 
     public String getHomeName() {
@@ -688,7 +692,6 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public boolean podeRenderizarApplet() {
-        return faltaAssinatura(ProcessoHome.instance()
-                .getTipoProcessoDocumento());
+        return faltaAssinatura(ProcessoHome.instance().getTipoProcessoDocumento());
     }
 }

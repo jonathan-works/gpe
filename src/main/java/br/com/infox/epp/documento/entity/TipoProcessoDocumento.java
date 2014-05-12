@@ -3,7 +3,7 @@ package br.com.infox.epp.documento.entity;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +38,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
     @NamedQuery(name = LIST_TIPO_PROCESSO_DOCUMENTO, query = LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
+    @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY),
     @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_USEABLE, query = TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY) })
 public class TipoProcessoDocumento implements java.io.Serializable {
     private static final long serialVersionUID = 1L;

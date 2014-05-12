@@ -60,6 +60,7 @@ public class VariableAccessHandler implements Serializable {
     private boolean possuiDominio = false;
     private ValidacaoDataEnum validacaoDataEnum;
     private boolean isData = false;
+    private boolean isFile;
 
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -96,6 +97,7 @@ public class VariableAccessHandler implements Serializable {
         access[3] = !variableAccess.isReadable() && variableAccess.isWritable();
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
+        this.isFile = isTipoFile(this.type);
     }
 
     private boolean tipoPossuiDominio(VariableType type) {
@@ -104,6 +106,10 @@ public class VariableAccessHandler implements Serializable {
 
     private boolean isTipoData(VariableType type) {
         return VariableType.DATE.equals(type);
+    }
+    
+    private boolean isTipoFile(VariableType type) {
+        return VariableType.FILE.equals(type);
     }
 
     public String getName() {
@@ -229,6 +235,9 @@ public class VariableAccessHandler implements Serializable {
                     return;
                 }
                 break;
+            case FILE:
+                setWritable(true);
+                return;
             default:
                 break;
         }
@@ -502,6 +511,10 @@ public class VariableAccessHandler implements Serializable {
 
     public boolean isData() {
         return isData;
+    }
+    
+    public boolean isFile() {
+        return isFile;
     }
 
     public ValidacaoDataEnum[] getTypeDateValues() {

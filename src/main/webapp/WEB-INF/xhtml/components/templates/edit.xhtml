@@ -22,6 +22,7 @@
     <ui:param name="fieldName"
         value="#{(wi:get(fieldId, id)).toString().replaceAll('\\.', '_')}" />
     <ui:param name="fieldId" value="field#{fieldName}" />
+    <ui:param name="renderTipMessage" value="#{wi:get(renderTipMessage, true)}"></ui:param>
 
     <s:fragment
         rendered="#{!excludeFields.matches('.*\\b'.concat(id).concat('\\b.*'))}">
@@ -33,7 +34,8 @@
                         rendered="#{showRequired}">*</s:span>
                 </s:label>
 
-                <c:if test="#{not empty tipMessage}">
+
+                <c:if test="#{not empty tipMessage and renderTipMessage}">
                     <h:graphicImage id="#{fieldId}EditTipImg"
                         url="#{a4jSkin.imgFolder}/help.gif" />
                     <rich:tooltip for="#{fieldId}EditTipImg"

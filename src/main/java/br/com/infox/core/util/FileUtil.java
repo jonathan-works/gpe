@@ -22,5 +22,13 @@ public final class FileUtil {
             }
         }
     }
+    
+    public static String getFileType(String nomeArquivo) {
+        String ret = "";
+        if (nomeArquivo != null) {
+            ret = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
+        }
+        return ret;
+    }
 
 }
