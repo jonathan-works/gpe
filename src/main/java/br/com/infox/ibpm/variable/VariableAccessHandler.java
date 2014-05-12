@@ -237,7 +237,6 @@ public class VariableAccessHandler implements Serializable {
                 break;
             case FILE:
                 setWritable(true);
-                return;
             default:
                 break;
         }
@@ -245,6 +244,7 @@ public class VariableAccessHandler implements Serializable {
                 + ":" + name);
         this.possuiDominio = tipoPossuiDominio(type);
         this.isData = isTipoData(type);
+        this.isFile = isTipoFile(type);
     }
 
     public boolean isReadable() {
