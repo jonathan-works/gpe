@@ -22,6 +22,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
@@ -42,6 +43,8 @@ public class FileUpload implements FileUploadListener {
     private GenericManager genericManager;
     @In
     private ProcessoDocumentoBinManager processoDocumentoBinManager;
+    @In
+    private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
     
     @Override
     public void processFileUpload(FileUploadEvent event) {
@@ -62,7 +65,7 @@ public class FileUpload implements FileUploadListener {
         pd.setProcessoDocumento(file.getName());
         pd.setAnexo(true);
         pd.setProcessoDocumentoBin(createDocumentoBin(file));
-        pd.setTipoProcessoDocumento(genericManager.find(TipoProcessoDocumento.class, 100));
+        pd.setTipoProcessoDocumento(tipoProcessoDocumentoManager.getClassificaoParaAcessoDireto());
         return pd;
     }
 

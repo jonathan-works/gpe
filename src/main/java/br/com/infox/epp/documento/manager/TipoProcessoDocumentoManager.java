@@ -51,4 +51,8 @@ public class TipoProcessoDocumentoManager extends Manager<TipoProcessoDocumentoD
     public boolean existsClassificaoAcessoDireto() {
         return getDao().findByCodigo(CODIGO_CLASSIFICACAO_ACESSO_DIRETO) != null;
     }
+    
+    public TipoProcessoDocumento getClassificaoParaAcessoDireto() {
+        return getDao().findByCodigo(CODIGO_CLASSIFICACAO_ACESSO_DIRETO);
+    }
 }
