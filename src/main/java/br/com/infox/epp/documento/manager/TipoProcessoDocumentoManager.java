@@ -16,6 +16,7 @@ public class TipoProcessoDocumentoManager extends Manager<TipoProcessoDocumentoD
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tipoProcessoDocumentoManager";
+    public static final String CODIGO_CLASSIFICACAO_ACESSO_DIRETO = "acessoDireto";
 
     private TipoProcessoDocumento tipoProcessoDocumento;
     private TipoProcessoDocumento tipoProcessoDocumentoRO;
@@ -45,5 +46,9 @@ public class TipoProcessoDocumentoManager extends Manager<TipoProcessoDocumentoD
     public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(
             boolean isModelo, Papel papel) {
         return getDao().getUseableTipoProcessoDocumento(isModelo, papel);
+    }
+    
+    public boolean existsClassificaoAcessoDireto() {
+        return getDao().findByCodigo(CODIGO_CLASSIFICACAO_ACESSO_DIRETO) != null;
     }
 }

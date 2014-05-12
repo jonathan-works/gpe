@@ -25,4 +25,8 @@ public interface TipoProcessoDocumentoQuery {
 
     String LIST_TIPO_PROCESSO_DOCUMENTO = "listTipoProcessoDocumento";
     String LIST_TIPO_PROCESSO_DOCUMENTO_QUERY = "select o from TipoProcessoDocumento o ";
+    
+    String CODIGO_DOCUMENTO_PARAM = "codigoDocumento";
+    String FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO = "findClassificacaoDocumentoByCodigo";
+    String FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY = "select o from TipoProcessoDocumento o where o.codigoDocumento=:" + CODIGO_DOCUMENTO_PARAM;
 }
