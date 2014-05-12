@@ -12,6 +12,7 @@ public class DAOException extends Exception {
     private static final String MSG_FOREIGN_KEY_VIOLATION = "#{messages['constraintViolation.foreignKeyViolation']}";
     private static final String MSG_NOT_NULL_VIOLATION = "#{messages['constraintViolation.notNullViolation']}";
     private static final String MSG_CHECK_VIOLATION = "#{messages['constraintViolation.checkViolation']}";
+    private static final String MSG_DEADLOCK = "#{messages['databaseError.deadlock']}";
 
     private GenericDatabaseErrorCode databaseErrorCode;
     private String localizedMessage;
@@ -66,6 +67,9 @@ public class DAOException extends Exception {
             break;
             case CHECK_VIOLATION:
                 this.localizedMessage = MSG_CHECK_VIOLATION;
+            break;
+            case DEADLOCK:
+                this.localizedMessage = MSG_DEADLOCK;
             break;
             default:
                 this.localizedMessage = null;

@@ -17,6 +17,8 @@ public class SqlServer2012ErrorCodeAdaptor {
                     return GenericDatabaseErrorCode.NOT_NULL_VIOLATION;
                 case FOREIGN_KEY_VIOLATION:
                     return GenericDatabaseErrorCode.FOREIGN_KEY_VIOLATION;
+                case DEADLOCK:
+                    return GenericDatabaseErrorCode.DEADLOCK;
                 default:
                     return null;
                 }
