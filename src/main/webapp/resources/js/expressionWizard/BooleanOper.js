@@ -1,5 +1,6 @@
 (function(K) {
   
+  /* private static variables */
   var V = {
     AND:"And",
     OR:"Or",
@@ -9,110 +10,158 @@
     GT:"GreaterThan",
     GTE:"GreaterThanEqual",
     LT:"LessThan",
-    LTE:"LessThanEqual"
+    LTE:"LessThanEqual",
+    NAME:"BooleanOper"
   };
-  /*current === "Or" || current === "And" || current === "NotEqual" || current === "Equal" || current === "GreaterThan" || current === "GreaterThanEqual"
-       || current === "LessThan" || current === "LessThanEqual"*/
-  var BoolOper = Object.defineProperties({},{
-    AND:{
-      get:function() {
-        return new K.Enum("E", 0x1, V.AND);
+  
+  var values = [];
+  var it = 1;
+  
+  var _BooleanOper = {
+    AND:new BooleanOper({name:V.AND, label:"and"}),
+    OR:new BooleanOper({name:V.OR, label:"or"}),
+    NOT:new BooleanOper({name:V.NOT, label:"not"}),
+    EQ:new BooleanOper({name:V.EQ, label:"eq"}),
+    NEQ:new BooleanOper({name:V.NEQ, label:"neq"}),
+    GT:new BooleanOper({name:V.GT, label:"gt"}),
+    GTE:new BooleanOper({name:V.GTE, label:"gte"}),
+    LT:new BooleanOper({name:V.LT, label:"lt"}),
+    LTE:new BooleanOper({name:V.LTE, label:"lte"})
+  };
+  
+  /* Object */
+  function BooleanOper(args) {
+    var _super = new K.Enum(args.name);
+    var _this = this;
+    var pvt = {
+      ordinal : it++
+    };
+    
+    /* private methods */
+    function getLabel() {
+      var msg = K.messages || {};
+      return (msg = (msg = msg[navigator.language] || {BoolOper:{}}).BoolOper || {})[args.label] || [V.NAME,args.label].join(".");
+    }
+    
+    function getOrdinal() {
+      return pvt.ordinal;
+    }
+    
+    function getName() {
+      return _super.name;
+    }
+    
+    function valueOf() {
+      return pvt.ordinal;
+    }
+    
+    function toString() {
+      return _super.name;
+    }
+    
+    function toSource() {
+      return _this.label;
+    }
+    
+    /* privileged public methods and properties */
+    Object.defineProperties(_this, {
+      name:{
+        get:getName
+      },
+      ordinal:{
+        get:getOrdinal
+      },
+      valueOf:{
+        get:function () {
+          return valueOf;
+        }
+      },
+      label:{
+        get:getLabel
+      },
+      toString:{
+        get:function () {
+          return toString;
+        }
+      },
+      toSource:{
+        get:function() {
+          return toSource;
+        }
       }
-    },
-    OR:{
-      get:function() {
-        return new K.Enum("OU", 0x2, V.OR);
-      }
-    },
-    NOT:{
-      get:function() {
-        return new K.Enum("NEGAÇÃO", 0x3, V.NOT);
-      }
-    },
-    EQ:{
-      get:function() {
-        return new K.Enum("==", 0x4, V.EQ);
-      }
-    },
-    NEQ:{
-      get:function() {
-        return new K.Enum("!=", 0x5, V.NEQ);
-      }
-    },
-    GT:{
-      get:function() {
-        return new K.Enum(">", 0x6, V.GT);
-      }
-    },
-    GTE:{
-      get:function() {
-        return new K.Enum(">=", 0x7, V.GTE);
-      }
-    },
-    LT:{
-      get:function() {
-        return new K.Enum("<", 0x8, V.LT);
-      }
-    },
-    LTE:{
-      get:function() {
-        return new K.Enum("<=", 0x9, V.LTE);
-      }
+    });
+    values.push(_this);
+  }
+  
+  BooleanOper.prototype = new K.Enum();
+  
+  /* private static methods */
+  function getValues() {
+    return values.slice(0,values.length);
+  }
+  
+  function getValueOf(str) {
+    var _ = this;
+    var result;
+    if (str === V.AND) {
+      result = _.AND;
+    } else if (str === V.OR) {
+      result = _.OR;
+    } else if (str === V.NOT) {
+      result = _.NOT;
+    } else if (str === V.EQ) {
+      result = _.EQ;
+    } else if (str === V.NEQ) {
+      result = _.NEQ;
+    } else if (str === V.GT) {
+      result = _.GT;
+    } else if (str === V.GTE) {
+      result = _.GTE;
+    } else if (str === V.LT) {
+      result = _.LT;
+    } else if (str === V.LTE) {
+      result = _.LTE;
+    } else {
+      throw 0;
+    }
+    return result;
+  }
+  
+  function isBooleanOper(str) {
+    if (str instanceof BooleanOper) {
+      return true;
+    }
+    var result = true;
+    try {
+      K.BooleanOper.getValueOf(str);
+    } catch(e) {
+      result = false;
+    }
+    return result;
+  }
+  
+  /* public static methods */
+  
+  Object.defineProperties(_BooleanOper,{
+    values:{
+      get:getValues
     },
     getValueOf:{
       get:function() {
-        return function getValueOf(str) {
-          var _ = BoolOper;
-          if (str === V.AND) {
-            return _.AND;
-          } else if (str === V.OR) {
-            return _.OR;
-          } else if (str === V.NOT) {
-            return _.NOT;
-          } else if (str === V.EQ) {
-            return _.EQ;
-          } else if (str === V.NEQ) {
-            return _.NEQ;
-          } else if (str === V.GT) {
-            return _.GT;
-          } else if (str === V.GTE) {
-            return _.GTE;
-          } else if (str === V.LT) {
-            return _.LT;
-          } else if (str === V.LTE) {
-            return _.LTE;
-          } else {
-            throw 0;
-          }
-        };
+        return getValueOf;
       }
     },
-    isBoolOper:{
+    isBooleanOper:{
       get:function() {
-        return function isBoolOper(str) {
-          var result = true;
-          try {
-            K.BoolOper.getValueOf(str);
-          } catch(e) {
-            result = false;
-          }
-          return result;
-        };
-      }
-    },
-    toString:{
-      get:function () {
-        return function toString() {
-          return "BooleanOper";
-        };
+        return isBooleanOper;
       }
     }
   });
   
   Object.defineProperties(K,{
-    BoolOper:{
+    BooleanOper:{
       get:function() {
-        return BoolOper;
+        return _BooleanOper;
       }
     }
   });

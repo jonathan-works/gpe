@@ -1,40 +1,29 @@
 (function(K) {
-  function Enum(label, ordinal, name) {
-    function getLabel() {
-      return label;
+  function Enum(name) {
+    if (this === window) {
+      throw K.CONSTR_EXCEP;
     }
     
-    function getOrdinal() {
-      return ordinal;
-    }
-    
-    function getName() {
-      return name;
-    }
-    
-    function valueOf() {
-      return ordinal;
-    }
-    
-    if (this !== window) {
-      Object.defineProperties(this, {
-        label:{
-          get:getLabel
-        },
-        ordinal:{
-          get:getOrdinal
-        },
-        name:{
-          get:getName
-        },
-        valueOf:{
-          get:function() {
-            return valueOf;
-          }
+    Object.defineProperties(this, {
+      name:{
+        get:function getName() {
+          return name;
         }
-      });
-    }
+      }
+    });
   }
+  
+  Enum.prototype = {
+    get ordinal() {
+      throw K.IMPL_REQ_EXCEP;
+    },
+    valueOf:function valueOf() {
+      throw K.IMPL_REQ_EXCEP;
+    },
+    get name() {
+      throw K.IMPL_REQ_EXCEP;
+    }
+  };
   
   Object.defineProperties(K,{
     Enum:{

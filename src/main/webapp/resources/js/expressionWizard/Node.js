@@ -374,6 +374,7 @@
     var mouseenter = params.mouseEnter;
     var mouseleave = params.mouseLeave;
     var parent = params.parent;
+    var data = params.data || {};
 
     var classes = params.classes || [];
     var dom = document.createElement(type);
@@ -381,6 +382,10 @@
     dom.appendChild(document.createTextNode(text));
     for(var i=0,l=classes.length;i<l;i++) {
       dom.classList.add(classes[i]);
+    }
+    
+    for(var key in data) {
+      dom[["data",key].join("-")] = data[key] || "";
     }
     
     if (typeof mouseenter === "function") {
