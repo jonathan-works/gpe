@@ -52,7 +52,7 @@
       }
     });
     
-    if (typeof args !== "undefined") {
+    if (typeof args !== "undefined" && args.parent !== "undefined") {
       this.parent = args.parent;
     } else {
       args = args || {};
@@ -159,11 +159,9 @@
       current = stack.shift();
       if (K.BooleanNode.isBooleanNode(current)) {
         result = createBooleanNode(current, cache, dom);
-      } else if (current.indexOf("Integer")===0 && current.match(/Integer\[[+|-]?[0-9]+\]/g) !== null) {
-        result = new K.ArithNode({type:K.ArithNode.CONSTANT, value:current.slice("8", current.length-1), parent:dom});
-      } else if (current.indexOf("FloatingPoint")===0 && current.match(/FloatingPoint\[[+|-]?[0-9]+([.][0-9]+)?\]/g) !== null) {
-         //FloatingPoint
-        result = new K.ArithNode({type:K.ArithNode.CONSTANT, value:current.slice("14", current.length-1), parent:dom});
+      } else if ((current.indexOf("Integer")===0 && current.match(/Integer\[[+|-]?[0-9]+\]/g) !== null)
+                  || (current.indexOf("FloatingPoint")===0 && current.match(/FloatingPoint\[[+|-]?[0-9]+([.][0-9]+)?\]/g) !== null)) {
+        result = new K.ArithNode({type:K.ArithNode.CONSTANT, value:current, parent:dom});
       } else if (current.indexOf("String")===0 && current.match(/String\['.*']/g) !== null) {
         result = new K.StringNode({type:K.StringNode.CONSTANT, value:current.slice("7", current.length-1), parent:dom});
       } else if (current.indexOf("Identifier")===0 && current.match(/Identifier\[[a-zA-Z][a-zA-Z0-9]*\]/g) !== null) {

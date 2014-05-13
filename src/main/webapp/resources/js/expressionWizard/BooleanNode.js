@@ -245,6 +245,7 @@
       MenuItem({parent:toolbar, text:_M.inst.TRUE, click:clickConstantEvent, data:{type:V.TRUE}});
       MenuItem({parent:toolbar, text:_M.inst.FALSE, click:clickConstantEvent, data:{type:V.FALSE}});
       MenuItem({parent:toolbar, text:_M.inst.ARIT, click:clickOperationEvent, data:{operation:K.BooleanOper.EQ.name}});
+      
       MenuItem({parent:toolbar, text:_M.inst.OVERRIDE, click:clickOverrideParentEvent});
     }
     
@@ -413,9 +414,9 @@
             case _B.LTE.ordinal:
             case _B.EQ.ordinal:
             case _B.NEQ.ordinal:
-              children = createChildren({ type:V.CONSTANT, value:V.TRUE });
+              children = createChildren({ type:V.CONSTANT, value:V.TRUE, parent:_this });
               _this.clear();
-              init(args = {operation:oper.name, type:V.OPERATION, value:children, parent:_this.parent});
+              init(args = {operation:oper.name, type:V.OPERATION, value:children});
               break;
           }
           // SWAP OPERATOR AND CHILD NODES IF ARITHMETIC OPERATOR

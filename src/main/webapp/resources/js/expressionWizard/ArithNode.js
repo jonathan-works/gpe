@@ -149,6 +149,12 @@
       }
     }
 
+    function initConstant(args, dom) {
+      pvt.childNodes.push(args.value.match(/[+|-]?[0-9]+(\.[0-9]+)?/g)[0]);
+      dom.appendChild(container.createDOM({text:pvt.childNodes[0]}));
+      dom.classList.add("Value");
+    }
+
     (function () {
       var dom = _super.getDOM();
       dom.classList.add("ArithmeticNode");
@@ -179,9 +185,7 @@
           dom.classList.add("Value");
           break;
         case ArithNode.CONSTANT:
-          pvt.childNodes.push(args.value);
-          dom.appendChild(container.createDOM({type:"span", text:pvt.childNodes[0]}));
-          dom.classList.add("Value");
+          initConstant(args, dom);
           break;
         case ArithNode.EXPRESSION:
           pvt.condition = args.condition;
