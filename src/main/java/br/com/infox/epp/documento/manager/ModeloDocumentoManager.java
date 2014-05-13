@@ -37,6 +37,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     @In
     private VariavelDAO variavelDAO;
 
+    //TODO verificar se esse método ainda é utilizado, senão, remover
     public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento) {
         if (modeloDocumento != null) {
             return evaluateModeloDocumento(modeloDocumento);

@@ -41,6 +41,7 @@ public class ExternalVariables implements Serializable {
     private static final String PERFIL_USUARIO_LOGADO = "perfilUsuarioLogado";
     private static final String DATA_ATUAL = "dataAtual";
     private static final String DATA_ATUAL_FORMATADA = "dataAtualFormatada";
+    private static final String EMAIL_USUARIO_LOGADO = "emailUsuarioLogado";
 
     public static final String NAME = "externalVariables";
 
@@ -72,6 +73,11 @@ public class ExternalVariables implements Serializable {
     @Factory(PERFIL_USUARIO_LOGADO)
     public String getPerfilUsuarioLogado() {
         return extractObjectStringValue(getUsuarioLocalizacaoAtual());
+    }
+    
+    @Factory(EMAIL_USUARIO_LOGADO)
+    public String getEmailUsuarioLogado() {
+        return extractObjectStringValue(Authenticator.getUsuarioLogado().getEmail());
     }
 
     @Factory(NUMERO_PROCESSO_ATUAL)
