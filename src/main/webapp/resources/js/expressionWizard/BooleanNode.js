@@ -14,6 +14,7 @@
     OPER:"Operator",
     TRUE:"True",
     FALSE:"False",
+    DT_CLASS:"data-obj-class",
     CONSTANT:0x1,
     OPERATION:0x2,
     IDENTIFIER:0x3,
@@ -40,25 +41,6 @@
     STR_COMP  :[V.NAME,"STR_COMP"].join("."),
     EXPR      :[V.NAME,"EXPR"].join(".")
   };
-  
-  function mouseEnterDOM(evt) {
-    var sel = document.getElementsByClassName(V.SELECTED);
-    for(var i=0,l=sel.length;i<l;i++) {
-      sel[i].classList.remove(V.SELECTED);
-    }
-    var tbr = document.getElementsByClassName(V.TOOLBAR);
-    for(i=0, l=tbr.length;i<l;i++) {
-      tbr[i].style.left = [evt.layerX+5,"px"].join("");
-      tbr[i].style.top = [evt.layerY+5,"px"].join("");
-      
-    }
-    var parent = evt.target.parentNode;
-    parent.classList.add(V.SELECTED);
-  }
-  
-  function mouseLeaveDOM(evt) {
-    evt.target.parentNode.classList.remove(V.SELECTED);
-  }
   
   function BooleanNode(args) {
     var _this = K.checkInit(this);
@@ -97,9 +79,6 @@
       _super.clear();
     }
     
-    function getDOM() {
-    }
-    
     function getType() {
       return pvt.type;
     }
@@ -116,58 +95,53 @@
       return V.NAME;
     }
     
+    function getParent() {
+      return _super.parent;
+    }
+    
+    function setParent(itm) {
+      args.parent = _super.parent = itm;
+      clearToolbar();
+      initToolbar();
+    }
+  
     Object.defineProperties(_this, {
-      getDOM:{
-        get:function() {
-          return _super.getDOM;
-        }
-      },
       parent:{
-        get:function() {
-          return _super.parent;
-        },
-        set:function(itm) {
-          args.parent = _super.parent = itm;
-        }
+        get:getParent, set:setParent
       },
-      clear: {
-        get:function() {
-          return clear;
-        }
-      },
-      type : {
+      type:{
         get:getType
       },
-      values : {
+      values:{
         get:getValues
-      },
-      toString : {
-        get:function() {
-          return toString;
-        }
-      },
-      valueOf:{
-        get:function() {
-          return valueOf;
-        }
-      },
-      getNodeType:{
-        get:function() {
-          return getNodeType;
-        }
       },
       operation:{
         get:getOperation
       },
-      detachChildren:{
-        get:function () {
-          return detachChildren;
-        }
+      clear:{
+        get:function(){return clear;}
+      }
+      ,
+      getDOM:{
+        get:function(){return _super.getDOM}
+      },
+      toString:{
+        get:function(){return toString;}
+      },
+      valueOf:{
+        get:function(){return valueOf;}
+      },
+      getNodeType:{
+        get:function(){return getNodeType;}
       },
       replaceWithChild:{
-        get:function() {
-          return replaceWithChild;
-        }
+        get:function(){return replaceWithChild;}
+      },
+      initToolbar:{
+        get:function(){return initToolbar;}
+      },
+      clearToolbar:{
+        get:function(){return clearToolbar;}
       }
     });
     
@@ -177,82 +151,75 @@
       }
     }
     
-    function Action(params) {
-      return K.createDOM({
-        type:V.LI,
-        text:params.text,
-        classes:[V.ACTION],
-        click:function(evt) {
-          alert(evt.target.textContent);
-        }
-      });
-    }
-    
-    function evtTst(evt) {
-      alert(evt.target.textContent);
-    }
-    
-    function getToolBar(params) {
-      
-    }
-    
-    function MenuItem(params) {
-      return new K.createDOM({type:params.type||V.LI, classes:params.classes||[V.ACTION], click:params.click||evtTst, text:params.text||"", parent:params.parent, data:params.data||{}});
-    }
-    
     function initBooleanOperToolbar() {
-      var toolbar = pvt.toolbar = K.createDOM({type:V.UL, mouseLeave:mouseLeaveDOM, classes:[V.TOOLBAR, pvt.operation.name], parent:_super.getDOM()});
-      MenuItem({parent:toolbar, text:_M.inst.negate, click:clickNotEvent});
-      MenuItem({parent:toolbar, text:_M.inst.and, click:clickOperationEvent, data:{operation:K.BooleanOper.AND.name}});
-      MenuItem({parent:toolbar, text:_M.inst.or, click:clickOperationEvent, data:{operation:K.BooleanOper.OR.name}});
+      var boolOp = K.BooleanOper;
+      var msg = _M.inst;
+      
+      pvt.toolbar = new K.Toolbar({classes:[V.TOOLBAR, pvt.operation.name], parent:_this.getDOM(), items:[
+        {text:msg.negate, click:clickNotEvent},
+        {text:msg.and, click:clickOperationEvent, data:{operation:boolOp.AND.name}},
+        {text:msg.or, click:clickOperationEvent, data:{operation:boolOp.OR.name}}
+      ]});
     }
     
     function initArithComparOperToolbar() {
-      var toolbar = pvt.toolbar = K.createDOM({type:V.UL, mouseLeave:mouseLeaveDOM, classes:[V.TOOLBAR, pvt.operation.name], parent:_super.getDOM()});
-      MenuItem({parent:toolbar, text:_M.inst.negate,click:clickNotEvent});
-      MenuItem({parent:toolbar, text:_M.inst.and, click:clickOperationEvent, data:{operation:K.BooleanOper.AND.name}});
-      MenuItem({parent:toolbar, text:_M.inst.or, click:clickOperationEvent, data:{operation:K.BooleanOper.OR.name}});
+      var boolOp = K.BooleanOper;
+      var msg = _M.inst;
       
-      MenuItem({parent:toolbar, text:_M.inst.eq, click:clickOperationEvent, data:{operation:K.BooleanOper.EQ.name}});
-      MenuItem({parent:toolbar, text:_M.inst.neq, click:clickOperationEvent, data:{operation:K.BooleanOper.NEQ.name}});
-      MenuItem({parent:toolbar, text:_M.inst.gte, click:clickOperationEvent, data:{operation:K.BooleanOper.GTE.name}});
-      MenuItem({parent:toolbar, text:_M.inst.gt, click:clickOperationEvent, data:{operation:K.BooleanOper.GT.name}});
-      MenuItem({parent:toolbar, text:_M.inst.lte, click:clickOperationEvent, data:{operation:K.BooleanOper.LTE.name}});
-      MenuItem({parent:toolbar, text:_M.inst.lt, click:clickOperationEvent, data:{operation:K.BooleanOper.LT.name}});
+      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(), classes:[V.TOOLBAR, pvt.operation.name],items:[
+        {text:msg.negate, click:clickNotEvent},
+        {text:msg.and, click:clickOperationEvent, data:{operation:boolOp.AND.name}},
+        {text:msg.or, click:clickOperationEvent, data:{operation:boolOp.OR.name}},
+        {text:msg.eq, click:clickOperationEvent, data:{operation:boolOp.EQ.name}},
+        {text:msg.neq, click:clickOperationEvent, data:{operation:boolOp.NEQ.name}},
+        {text:msg.gte, click:clickOperationEvent, data:{operation:boolOp.GTE.name}},
+        {text:msg.gt, click:clickOperationEvent, data:{operation:boolOp.GT.name}},
+        {text:msg.lte, click:clickOperationEvent, data:{operation:boolOp.LTE.name}},
+        {text:msg.lt, click:clickOperationEvent, data:{operation:boolOp.LT.name}}
+      ]});
     }
     
     function initNegToolbar() {
-      var toolbar = pvt.toolbar = K.createDOM({type:V.UL, classes:[V.TOOLBAR, pvt.operation.name], mouseLeave:mouseLeaveDOM, parent:_super.getDOM()});
-      MenuItem({parent:toolbar, text:_M.inst.negate, click:clickNotEvent});
+      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(), classes:[V.TOOLBAR, pvt.operation.name],items:[
+        {text:_M.inst.negate, click:clickNotEvent}
+      ]});
     }
     
     function initValueToolbar() {
-      var toolbar = pvt.toolbar = K.createDOM({type:V.UL, classes:[V.TOOLBAR,V.VALUE], mouseLeave:mouseLeaveDOM, parent:_super.getDOM()});
-      MenuItem({parent:toolbar, text:_M.inst.negate, click:clickNotEvent});
-      MenuItem({parent:toolbar, text:_M.inst.and, click:clickOperationEvent, data:{operation:K.BooleanOper.AND.name}});
-      MenuItem({parent:toolbar, text:_M.inst.or, click:clickOperationEvent, data:{operation:K.BooleanOper.OR.name}});
+      var msg = _M.inst;
+      var boolOp = K.BooleanOper;
+      var tbarItems = [
+        {text:msg.negate, click:clickNotEvent},
+        {text:msg.and, click:clickOperationEvent, data:{operation:boolOp.AND.name}},
+        {text:msg.or, click:clickOperationEvent, data:{operation:boolOp.OR.name}},
+        {text:"-", classes:[]}
+      ];
+      tbarItems.push(getVariableSubMenu());
+      tbarItems.push({text:msg.TRUE, click:clickConstantEvent, data:{type:V.TRUE}});
+      tbarItems.push({text:msg.FALSE, click:clickConstantEvent, data:{type:V.FALSE}});
+      tbarItems.push({text:msg.ARIT, click:clickOperationEvent, data:{operation:boolOp.EQ.name}});
       
-      var variable = K.createDOM({type:V.LI, parent:toolbar});
+      if (getParent() instanceof BooleanNode) {
+        tbarItems.push({parent:toolbar, text:msg.OVERRIDE, click:clickOverrideParentEvent});
+      }
       
-      K.createDOM({text:_M.inst.var,classes:[V.TEXT_TYPE], parent:variable});
-      var variableMenu = K.createDOM({type:V.UL, parent:variable});
-      
+      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(), classes:[V.TOOLBAR,V.VALUE],items:tbarItems});
+    }
+    
+    function getVariableSubMenu() {
       var _ = K.Node;
       var variables = _.getVariables(_.VariableType.BOOLEAN);
+      var items = [];
       for(var i=0, l=variables.length;i<l;i++) {
-        variableMenu.appendChild(MenuItem({text:variables[i], click:clickVariableEvent, data:{varname:variables[i]}}));
+        items.push({text:variables[i], click:clickVariableEvent, data:{varname:variables[i]}});
       }
-      MenuItem({parent:toolbar, text:_M.inst.TRUE, click:clickConstantEvent, data:{type:V.TRUE}});
-      MenuItem({parent:toolbar, text:_M.inst.FALSE, click:clickConstantEvent, data:{type:V.FALSE}});
-      MenuItem({parent:toolbar, text:_M.inst.ARIT, click:clickOperationEvent, data:{operation:K.BooleanOper.EQ.name}});
-      
-      MenuItem({parent:toolbar, text:_M.inst.OVERRIDE, click:clickOverrideParentEvent});
+      return new K.Toolbar({classes:[V.TEXT_TYPE], items:items, text:_M.inst.var});
     }
     
     function clickOverrideParentEvent(evt) {
-      if (_this.parent instanceof K.Node) {
-        if (_this.parent instanceof BooleanNode) {
-          _this.parent.replaceWithChild(_this.parent.values.indexOf(_this));
+      if (getParent() instanceof K.Node) {
+        if (getParent() instanceof BooleanNode) {
+          getParent().replaceWithChild(getParent().values.indexOf(_this));
         }
       } else {
         alert("parent is not a Node type");
@@ -304,8 +271,8 @@
     }
     
     function changeToValue(_value, _type) {
-      _this.clear();
-      init(args = {type:_type || V.CONSTANT, parent:_this.parent, value:_value});
+      clear();
+      init(args = {type:_type || V.CONSTANT, parent:getParent(), value:_value});
     }
     
     function invertConstantValue() {
@@ -318,21 +285,6 @@
       changeToValue(value);
     }
     
-    function detachChildren() {
-      var children = pvt.childNodes;
-      var dom;
-      for(var i=0, l=children.length,item; i<l; i++,item=children[i]) {
-        if (item instanceof K.Node) {
-          if (item instanceof BooleanNode) {
-            item.detachChildren();
-          }
-          item.clear();
-          dom = item.getDOM();
-          dom.parentNode.removeChild(dom);
-        }
-      }
-    }
-    
     function changeToArithOperation(oper) {
       var children=[];
       var childArgs;
@@ -343,8 +295,8 @@
           childArgs = {type:K.ArithNode.CONSTANT, value:"0", parent:_this};
           children.push(new K.ArithNode(childArgs));
           children.push(new K.ArithNode(childArgs));
-          _this.clear();
-          init(args = {operation:oper.name, type:V.OPERATION, value:children, parent:_this.parent});
+          clear();
+          init(args = {operation:oper.name, type:V.OPERATION, value:children, parent:getParent()});
       }
       
       switch(pvt.type) {
@@ -367,8 +319,8 @@
             case _B.LTE.ordinal:
             case _B.EQ.ordinal:
             case _B.NEQ.ordinal:
-              _this.clear();
-              init(args = {operation:oper.name, type:args.type, value:args.value, parent:_this.parent});
+              clear();
+              init(args = {operation:oper.name, type:args.type, value:args.value, parent:getParent()});
               break;
           }
           // SWAP OPERATOR AND CHILD NODES IF ARITHMETIC OPERATOR
@@ -395,8 +347,8 @@
         case V.IDENTIFIER:
           // CONSTRUCT TWO CHILD CONSTANT NODES AND CHANGE THIS
           children = createChildren(args);
-          _this.clear();
-          init(args = {operation:oper.name, type:V.OPERATION, value:children, parent:_this.parent});
+          clear();
+          init(args = {operation:oper.name, type:V.OPERATION, value:children, parent:getParent()});
           break;
         case V.NOT:
           // CONSTRUCT ANOTHER CHILD CONSTANT NODE AND CHANGE THIS
@@ -405,8 +357,8 @@
           switch(pvt.operation.ordinal) {
             case _B.AND.ordinal:
             case _B.OR.ordinal:
-              _this.clear();
-              init(args = {operation:oper.name, type:args.type, value:args.value, parent:_this.parent});
+              clear();
+              init(args = {operation:oper.name, type:args.type, value:args.value, parent:getParent()});
               break;
             case _B.GT.ordinal:
             case _B.GTE.ordinal:
@@ -415,7 +367,7 @@
             case _B.EQ.ordinal:
             case _B.NEQ.ordinal:
               children = createChildren({ type:V.CONSTANT, value:V.TRUE, parent:_this });
-              _this.clear();
+              clear();
               init(args = {operation:oper.name, type:V.OPERATION, value:children});
               break;
           }
@@ -428,14 +380,15 @@
     }
     
     function negate() {
-      if (_this.parent.type === V.NOT) {
-        _this.parent.replaceWithChild(0);
+      var parent = getParent();
+      if (parent.type === V.NOT) {
+        parent.replaceWithChild(0);
       } else {
         var childArgs = args;
         childArgs.parent = _this;
         var child = new BooleanNode(childArgs);
         
-        _this.clear();
+        clear();
         args = {operation:K.BooleanOper.NOT.name, type:V.NOT, value:child};
         init(args);
       }
@@ -445,7 +398,7 @@
       var child = pvt.childNodes[numChild];
       pvt.childNodes.splice(numChild,1);
       var _type = child.type;
-      _this.clear();
+      clear();
       switch(_type) {
         case V.CONSTANT:
           init(args = {type:child.type, value:child.toString(), parent:_this});
@@ -466,50 +419,72 @@
       child.clear();
     }
     
-    function renderOperationDOM() {
-      var dom = _super.getDOM();
-      dom.classList.add(pvt.operation.name);
-      
-      K.createDOM({text:"(", classes:[V.TEXT], mouseEnter:mouseEnterDOM, parent:dom});
-      updateParent(pvt.childNodes[0]);
-      K.createDOM({text:pvt.operation.label, classes:[V.TEXT, V.OPER], mouseEnter:mouseEnterDOM, parent:dom});
-      updateParent(pvt.childNodes[1]);
-      K.createDOM({text:")", classes:[V.TEXT], mouseEnter:mouseEnterDOM, parent:dom});
-      
-      switch(pvt.operation.valueOf()) {
-        case K.BooleanOper.AND.valueOf():
-        case K.BooleanOper.OR.valueOf():
-          initBooleanOperToolbar();
-          break;
-        case K.BooleanOper.EQ.valueOf():
-        case K.BooleanOper.NEQ.valueOf():
-        case K.BooleanOper.GTE.valueOf():
-        case K.BooleanOper.GT.valueOf():
-        case K.BooleanOper.LTE.valueOf():
-        case K.BooleanOper.LT.valueOf():
-          initArithComparOperToolbar();
-          break;
+    function clearToolbar() {
+      if (pvt.toolbar) {
+        pvt.toolbar.clear();
+        delete pvt.toolbar;
       }
     }
     
-    function renderNegationDOM() {
-      var dom = _super.getDOM();
+    function initToolbar() {
+      var _ = K.BooleanOper;
+      switch(pvt.type) {
+        case V.NOT:
+          initNegToolbar();
+          break;
+        case V.CONSTANT:
+        case V.IDENTIFIER:
+          initValueToolbar();
+          break;
+        case V.OPERATION:
+          switch(pvt.operation.ordinal) {
+            case _.AND.ordinal:
+            case _.OR.ordinal:
+              initBooleanOperToolbar();
+              break;
+            case _.EQ.ordinal:
+            case _.NEQ.ordinal:
+            case _.GTE.ordinal:
+            case _.GT.ordinal:
+            case _.LTE.ordinal:
+            case _.LT.ordinal:
+              initArithComparOperToolbar();
+              break;
+          }
+          break;
+      }
+      _this.getDOM()["data-toolbar"] = pvt.toolbar;
+    }
+    
+    function renderOperationDOM() {
+      var dom = _this.getDOM();
       dom.classList.add(pvt.operation.name);
-      K.createDOM({text:pvt.operation.label, classes:[V.TEXT, V.OPER], mouseEnter:mouseEnterDOM, parent:dom});
+      
+      K.createDOM({text:"(", classes:[V.TEXT], parent:dom, hasToolbar:true});
       updateParent(pvt.childNodes[0]);
-      initNegToolbar();
+      K.createDOM({text:pvt.operation.label, classes:[V.TEXT, V.OPER], parent:dom, hasToolbar:true});
+      updateParent(pvt.childNodes[1]);
+      K.createDOM({text:")", classes:[V.TEXT] , parent:dom, hasToolbar:true});
+    }
+    
+    function renderNegationDOM() {
+      var dom = _this.getDOM();
+      dom.classList.add(pvt.operation.name);
+      K.createDOM({text:pvt.operation.label, classes:[V.TEXT, V.OPER], parent:dom, hasToolbar:true});
+      updateParent(pvt.childNodes[0]);
     }
     
     function renderValueDOM(text) {
-      var dom = _super.getDOM();
+      var dom = _this.getDOM();
       dom.classList.add(V.VALUE);
-      K.createDOM({text:text, classes:[V.NAME,V.TEXT, V.VALUE], mouseEnter:mouseEnterDOM, parent:dom});
-      initValueToolbar();
+      
+      K.createDOM({text:text, classes:[V.NAME,V.TEXT, V.VALUE], parent:dom, hasToolbar:true});
     }
     
     function init(args) {
-      var dom = _super.getDOM();
+      var dom = _this.getDOM();
       dom.classList.add(V.NAME);
+      var obj = dom[V.DT_CLASS] = _this;
       pvt.type = args.type;
       switch(pvt.type) {
         case V.OPERATION:
@@ -542,6 +517,7 @@
         default:
           throw V.TYPE_EXCEP;
       }
+      initToolbar();
     }
     
     init(args);

@@ -1,4 +1,10 @@
 (function (K) {
+  var V = {
+    get TOOLBAR(){return "toolbar";},
+    get UNDEF(){return "undefined";},
+    get DATA_TBR(){return "data-toolbar"}
+  };
+  
   function Node(args){
     checkInit(this);
     
@@ -7,7 +13,7 @@
     };
     
     function setParent(itm) {
-      if (itm !== window) {
+      if (itm !== window && typeof itm !== V.UNDEFINED) {
         if (itm instanceof K.Node) {
           itm.getDOM().appendChild(pvt.dom);
         } else {
@@ -52,7 +58,7 @@
       }
     });
     
-    if (typeof args !== "undefined" && args.parent !== "undefined") {
+    if (typeof args !== V.UNDEFINED && args.parent !== V.UNDEFINED) {
       this.parent = args.parent;
     } else {
       args = args || {};
@@ -343,22 +349,25 @@
     }
   });
   
-  function mouseEnterDOM(evt) {
-    evt.target.parentNode.classList.add("selected");
-    /*
-    var toolbars = evt.target.getElementsByClassName("toolbar");
-    for(var i=0,l=toolbars.length;i<l;i++) {
-      toolbars[i].classList.add("visible");
+  function clearToolbars() {
+    var tbrlst = document.getElementsByClassName("selected");
+    for(var i=0,l=tbrlst.length;i<l;i++) {
+      var itm = tbrlst[i];
+      itm.classList.remove("selected");
+      if (typeof itm[K._.DATA_TBR] !== K._.UNDEF) {
+        itm[K._.DATA_TBR].clear();
+      }
     }
-    //*/
   }
   
-  function mouseLeaveDOM(evt) {
-    evt.target.parentNode.classList.remove("selected");
-  }
-  
-  function mouseClickDOM(evt) {
-    
+  function mouseEnterDOM(evt) {
+    clearToolbars();
+    var tbr = evt.target;
+    var parent=tbr.parentNode;
+    parent.classList.add("selected");
+    if (typeof parent[K._.DATA_TBR] !==V.UNDEFINED) {
+      parent[K._.DATA_TBR].draw(evt.layerX+5, evt.layerY+5);
+    }
   }
 
   function createDOM(params) {
@@ -386,6 +395,10 @@
       dom[["data",key].join("-")] = data[key] || "";
     }
     
+    if (params.hasToolbar !== V.UNDEFINED && params.hasToolbar) {
+      dom.addEventListener("mouseenter", mouseEnterDOM);
+    }
+    
     if (typeof mouseenter === "function") {
       dom.addEventListener("mouseenter", mouseenter);
     }
@@ -396,7 +409,7 @@
       dom.addEventListener("click", click);
     }
     
-    if (typeof parent !== "undefined" && parent instanceof HTMLElement) {
+    if (typeof parent !== V.UNDEFINED && parent instanceof HTMLElement) {
       parent.appendChild(dom);
     }
     
@@ -418,6 +431,9 @@
       get:function() {
         return createDOM;
       }
+    },
+    _:{
+      get:function(){return V;}
     }
   });
   
