@@ -43,8 +43,8 @@ public class TaskPageAction implements Serializable {
         List<VariableAccess> variableAccesses = getVariableAccesses();
         for (VariableAccess va : variableAccesses) {
             String[] tokens = va.getMappedName().split(":");
-            String type = tokens[0];
-            if (type.equals(VariableType.TASK_PAGE)) {
+            VariableType type = VariableType.valueOf(tokens[0]);
+            if (type == VariableType.TASK_PAGE) {
                 hasTaskPage = true;
                 String pageName = tokens[1] + TASK_PAGE_SUFFIX;
 
