@@ -4,25 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.util.Version;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.search.SearchService;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
+import br.com.infox.index.SimpleQueryParser;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(TaskConteudoSearch.NAME)
 public class TaskConteudoSearch {
 
     public static final String NAME = "taskConteudoSearch";
+    private static final LogProvider LOG = Logging.getLogProvider(TaskConteudoSearch.class);
 
     @In
     private TaskConteudoDAO taskConteudoDAO;
@@ -59,9 +62,14 @@ public class TaskConteudoSearch {
     }
 
     public String getBestFragments(TaskConteudo taskConteudo) throws ParseException {
-        String[] fields = new String[] { "conteudo" };
-        QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, new BrazilianAnalyzer(Version.LUCENE_36));
-        Query query = parser.parse(getPalavraPesquisada());
+        SimpleQueryParser parser = new SimpleQueryParser(new BrazilianAnalyzer(Version.LUCENE_36), "conteudo");
+        Query query;
+        try {
+            query = parser.parse(getPalavraPesquisada());
+        } catch (TooManyClauses e) {
+            LOG.warn("", e);
+            return "";
+        }
         return SearchService.getBestFragments(query, taskConteudo.getConteudo());
     }
 

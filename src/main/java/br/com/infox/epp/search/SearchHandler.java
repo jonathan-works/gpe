@@ -12,11 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.util.Version;
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -37,6 +35,7 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.Variavel;
 import br.com.infox.index.InfoxDocumentIndexer;
+import br.com.infox.index.SimpleQueryParser;
 
 @Name("search")
 @Scope(ScopeType.CONVERSATION)
@@ -287,16 +286,15 @@ public class SearchHandler implements Serializable {
         }
 
         if (searchText != null) {
-            String[] fields = new String[] { "conteudo" };
-            QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, fields, SearchService.getAnalyzer());
+            SimpleQueryParser parser = new SimpleQueryParser(SearchService.getAnalyzer(), "conteudo");
             try {
                 org.apache.lucene.search.Query query = parser.parse(searchText);
                 String highlighted = SearchService.highlightText(query, texto, false);
                 if (!"".equals(highlighted)) {
                     texto = highlighted;
                 }
-            } catch (ParseException e) {
-                LOG.debug(e.getMessage(), e);
+            } catch (TooManyClauses e) {
+                LOG.warn("", e);
             }
         }
         return texto;

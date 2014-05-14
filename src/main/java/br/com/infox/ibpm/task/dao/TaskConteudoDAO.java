@@ -3,16 +3,18 @@ package br.com.infox.ibpm.task.dao;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.lucene.analysis.br.BrazilianAnalyzer;
+import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.util.Version;
 import org.hibernate.Session;
 import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
-import org.hibernate.search.errors.EmptyQueryException;
 import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.query.dsl.QueryBuilder;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -35,6 +37,7 @@ import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
+import br.com.infox.index.SimpleQueryParser;
 
 @Name(TaskConteudoDAO.NAME)
 @AutoCreate
@@ -94,14 +97,14 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
     public List<TaskConteudo> pesquisar(String searchPattern) {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
-        final QueryBuilder queryBuilder = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(TaskConteudo.class).get();
-        Query luceneQuery;
         List<TaskConteudo> ret = new ArrayList<TaskConteudo>();
+        SimpleQueryParser parser = new SimpleQueryParser(new BrazilianAnalyzer(Version.LUCENE_36), "conteudo");
+        Query luceneQuery;
         try {
-            luceneQuery = queryBuilder.keyword().onField("conteudo").matching(searchPattern).createQuery();
-        } catch (EmptyQueryException e) {
-            LOG.warn(".pesquisar()", e);
-            return ret;
+            luceneQuery = parser.parse(searchPattern);
+        } catch (TooManyClauses e) {
+            LOG.warn("", e);
+            return Collections.emptyList();
         }
         FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, TaskConteudo.class);
         List<TaskConteudo> taskConteudos = hibernateQuery.list();
