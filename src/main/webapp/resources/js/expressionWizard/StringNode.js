@@ -2,21 +2,25 @@
   StringNode.prototype = new K.Node();
   
   var V = {
-    STRING:"String",
-    IDENTIFIER:"Identifier",
-    CHOICE:"Choice",
-    NAME:"StringNode",
-    LN_BRK_CLS:"breakLine",
-    SPAN:"span",
-    DIV:"div",
-    EXPRESSION:"Expression",
-    TEXT:"Text",
-    OPER:"Operator",
-    VALUE:"Value",
-    IF:"SE",
-    THEN:"ENTÃO RETORNE",
-    ELSE:"SENÃO RETORNE"
+    get STRING()"String",
+    get IDENTIFIER()"Identifier",
+    get CHOICE()"Choice",
+    get NAME()"StringNode",
+    get LN_BRK_CLS()"breakLine",
+    get SPAN()"span",
+    get DIV()"div",
+    get EXPRESSION()"Expression",
+    get TEXT()"Text",
+    get OPER()"Operator",
+    get VALUE()"Value",
+    get IF()K.getMessage(this.NAME+".if"),
+    get THEN()K.getMessage(this.NAME+".then"),
+    get ELSE()K.getMessage(this.NAME+".else")
   };
+  
+  function valueOf() {
+    return 0x1;
+  }
   
   Object.defineProperties(StringNode, {
     CONSTANT:{
@@ -49,6 +53,42 @@
       childNodes:[]
     };
     
+    function getStack() {
+      var result = [];
+      switch(pvt.type) {
+        case StringNode.CONSTANT:
+          result = [[V.STRING,"[",pvt.childNodes[0],"]"].join("")];
+          break;
+        case StringNode.OPERATION:
+          result.push(pvt.operation);
+          pvt.childNodes[0].getStack().forEach(function(itm){
+            result.push(itm);
+          });
+          pvt.childNodes[1].getStack().forEach(function(itm){
+            result.push(itm);
+          });
+          //result = [pvt.operation, pvt.childNodes[0].toString(), pvt.childNodes[1].toString()].join();
+          break;
+        case StringNode.IDENTIFIER:
+          result = [[V.IDENTIFIER,"[",pvt.childNodes[0],"]"].join("")];
+          break;
+        case StringNode.EXPRESSION:
+          result.push(V.CHOICE);
+          pvt.condition.getStack().forEach(function(itm){
+            result.push(itm);
+          });
+          pvt.childNodes[0].getStack().forEach(function(itm){
+            result.push(itm);
+          });
+          pvt.childNodes[1].getStack().forEach(function(itm){
+            result.push(itm);
+          });
+          //result = [V.CHOICE,pvt.condition.toString(), pvt.childNodes[0].toString(), pvt.childNodes[1].toString()].join();
+          break;
+      }
+      return result;
+    }
+    
     function toString() {
       var result = "";
       switch(pvt.type) {
@@ -66,10 +106,6 @@
           break;
       }
       return result;
-    }
-    
-    function valueOf() {
-      return args.type;
     }
     
     function getNodeType() {
@@ -95,10 +131,11 @@
           return toString;
         }
       },
+      getStack:{
+        get:function(){return getStack;}
+      },
       valueOf:{
-        get:function() {
-          return valueOf;
-        }
+        get:function(){return valueOf;}
       },
       getNodeType:{
         get:function() {

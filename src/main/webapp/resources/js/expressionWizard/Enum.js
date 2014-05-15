@@ -13,16 +13,23 @@
     });
   }
   
+  function valueOf() {
+    throw K.IMPL_REQ_EXCEP;
+  }
+  
+  function toString() {
+    throw K.IMPL_REQ_EXCEP;
+  }
+  
   Enum.prototype = {
     get ordinal() {
       throw K.IMPL_REQ_EXCEP;
     },
-    valueOf:function valueOf() {
-      throw K.IMPL_REQ_EXCEP;
-    },
     get name() {
       throw K.IMPL_REQ_EXCEP;
-    }
+    },
+    get valueOf()valueOf,
+    get toString()toString
   };
   
   Object.defineProperties(K,{

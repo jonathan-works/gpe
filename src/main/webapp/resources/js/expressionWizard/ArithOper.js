@@ -2,35 +2,26 @@
   
   /* private static variables */
   var V = {
-    get AND()"And",
-    get OR()"Or",
-    get NOT()"Not",
-    get EQ()"Equal",
-    get NEQ()"NotEqual",
-    get GT()"GreaterThan",
-    get GTE()"GreaterThanEqual",
-    get LT()"LessThan",
-    get LTE()"LessThanEqual",
-    get NAME()"BooleanOper"
+    get PLUS()"Plus",
+    get MINUS()"Minus",
+    get MULT()"Mult",
+    get DIV()"Div",
+    get NEGATIVE()"Negative",
+    get NAME()"ArithOper"
   };
   
   var values = [];
   var it = 1;
-  
-  var _BooleanOper = {
-    AND:new BooleanOper({name:V.AND, label:"and"}),
-    OR:new BooleanOper({name:V.OR, label:"or"}),
-    NOT:new BooleanOper({name:V.NOT, label:"not"}),
-    EQ:new BooleanOper({name:V.EQ, label:"eq"}),
-    NEQ:new BooleanOper({name:V.NEQ, label:"neq"}),
-    GT:new BooleanOper({name:V.GT, label:"gt"}),
-    GTE:new BooleanOper({name:V.GTE, label:"gte"}),
-    LT:new BooleanOper({name:V.LT, label:"lt"}),
-    LTE:new BooleanOper({name:V.LTE, label:"lte"})
+  var _ArithOper = {
+    PLUS:new ArithOper({name:V.PLUS, label:"plus"}),
+    MINUS:new ArithOper({name:V.MINUS, label:"minus"}),
+    MULT:new ArithOper({name:V.MULT, label:"mult"}),
+    DIV:new ArithOper({name:V.DIV, label:"div"}),
+    NEGATIVE:new ArithOper({name:V.NEGATIVE, label:"negative"})
   };
   
   /* Object */
-  function BooleanOper(args) {
+  function ArithOper(args) {
     var _super = new K.Enum(args.name);
     var _this = this;
     var pvt = {
@@ -55,7 +46,7 @@
     }
     
     function toString() {
-      return pvt.ordinal;
+      return _super.name;
     }
     
     function toSource() {
@@ -63,18 +54,18 @@
     }
     
     /* privileged public methods and properties */
-    Object.defineProperties(_this,{
+    Object.defineProperties(_this, {
       name:{
         get:getName
       },
       ordinal:{
         get:getOrdinal
       },
-      label:{
-        get:getLabel
-      },
       valueOf:{
         get:function(){return valueOf;}
+      },
+      label:{
+        get:getLabel
       },
       toString:{
         get:function(){return toString;}
@@ -84,10 +75,10 @@
       }
     });
     values.push(_this);
-    values[args.name]=_this;
+    values[args.name] = _this;
   }
   
-  BooleanOper.prototype = new K.Enum();
+  ArithOper.prototype = new K.Enum();
   
   /* private static methods */
   function getValues() {
@@ -95,16 +86,11 @@
   }
   
   function getValueOf(str) {
-    var _ = this;
-    var result = values[str];
-    if (typeof result === K._.UNDEF) {
-      throw 0;
-    }
-    return result;
+    return values[str];
   }
   
-  function isBooleanOper(str) {
-    if (str instanceof BooleanOper) {
+  function isArithOper(str) {
+    if (str instanceof ArithOper) {
       return true;
     }
     return typeof values[str] !== K._.UNDEF;
@@ -112,7 +98,7 @@
   
   /* public static methods */
   
-  Object.defineProperties(_BooleanOper,{
+  Object.defineProperties(_ArithOper,{
     values:{
       get:getValues
     },
@@ -121,17 +107,17 @@
         return getValueOf;
       }
     },
-    isBooleanOper:{
+    isArithOper:{
       get:function() {
-        return isBooleanOper;
+        return isArithOper;
       }
     }
   });
   
   Object.defineProperties(K,{
-    BooleanOper:{
+    ArithOper:{
       get:function() {
-        return _BooleanOper;
+        return _ArithOper;
       }
     }
   });

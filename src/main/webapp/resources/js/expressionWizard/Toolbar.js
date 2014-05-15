@@ -34,7 +34,7 @@
       if (typeof parent["data-toolbar"] !== K._.UNDEF) {
         parent["data-toolbar"].clear();
       }
-      parent.classList.remove("selected");
+      parent.classList.remove(K._.CSS_SEL_ND);
     }
     
     function draw(x, y) {

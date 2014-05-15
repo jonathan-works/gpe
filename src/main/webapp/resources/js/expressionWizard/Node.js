@@ -1,19 +1,35 @@
 (function (K) {
   var V = {
-    get TOOLBAR(){return "toolbar";},
-    get UNDEF(){return "undefined";},
-    get DATA_TBR(){return "data-toolbar"}
+    get TOOLBAR()"toolbar",
+    get UNDEF()"undefined",
+    get DATA_TBR()"data-toolbar",
+    get DIV()"div",
+    get CSS_NODE()"Node",
+    get CSS_SEL_ND()"selected",
+    get IDENT_STR()"Identifier",
+    get MOUSE_LEAVE()"mouseleave",
+    get TEXT()"Text",
+    get OPER()"Operator",
+    get VALUE()"Value",
+    get EXPRESSION()"Expression",
+    get TEXT_TYPE()"txt-cont",
+    get DT_CLASS()"data-obj-class",
+    get CHOICE()"Choice",
+    get TYPE_STR()0x1,
+    get TYPE_BOOL()0x2,
+    get TYPE_NBR()0x4,
+    get REGX_IDENT()(/Identifier\[.+\]/)
   };
   
   function Node(args){
     checkInit(this);
     
     var pvt = {
-      dom:document.createElement("div")
+      dom:document.createElement(V.DIV)
     };
     
     function setParent(itm) {
-      if (itm !== window && typeof itm !== V.UNDEFINED) {
+      if (itm !== window && typeof itm !== V.UNDEF) {
         if (itm instanceof K.Node) {
           itm.getDOM().appendChild(pvt.dom);
         } else {
@@ -57,13 +73,12 @@
         }
       }
     });
-    
-    if (typeof args !== V.UNDEFINED && args.parent !== V.UNDEFINED) {
+    if (typeof args !== V.UNDEF && args.parent !== V.UNDEF) {
       this.parent = args.parent;
     } else {
       args = args || {};
     }
-    pvt.dom.classList.add("Node");
+    pvt.dom.classList.add(V.CSS_NODE);
   }
   
   function checkInit(obj) {
@@ -157,37 +172,52 @@
     return result;
   }
   
+  function createArithmeticNode(current, cache, dom) {
+    var _value = [];
+    var types = K.ArithNode;
+    var result;
+    var _type = types.getArithNodeType(current);
+    switch(_type) {
+      case types.CONSTANT:
+      case types.IDENTIFIER:
+        result = new K.ArithNode({type:_type, value:current, parent:dom});
+        break;
+      case types.NEGATIVE:
+        result = new K.ArithNode({operation:current, value:cache.pop(), type:_type, parent:dom});
+        break;
+      case types.EXPRESSION:
+        result = new K.ArithNode({operation:current, condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type, parent:dom});
+        break;
+      case types.OPERATION:
+        result = new K.ArithNode({operation:current, value:[cache.pop(),cache.pop()], type:_type, parent:dom});
+        break;
+    }
+  }
+  
   function generateTree(stack, dom) {
     var cache = [];
     var current;
     var result;
     while(stack.length > 0) {
       current = stack.shift();
-      if (K.BooleanNode.isBooleanNode(current)) {
-        result = createBooleanNode(current, cache, dom);
-      } else if ((current.indexOf("Integer")===0 && current.match(/Integer\[[+|-]?[0-9]+\]/g) !== null)
-                  || (current.indexOf("FloatingPoint")===0 && current.match(/FloatingPoint\[[+|-]?[0-9]+([.][0-9]+)?\]/g) !== null)) {
-        result = new K.ArithNode({type:K.ArithNode.CONSTANT, value:current, parent:dom});
-      } else if (current.indexOf("String")===0 && current.match(/String\['.*']/g) !== null) {
-        result = new K.StringNode({type:K.StringNode.CONSTANT, value:current.slice("7", current.length-1), parent:dom});
-      } else if (current.indexOf("Identifier")===0 && current.match(/Identifier\[[a-zA-Z][a-zA-Z0-9]*\]/g) !== null) {
-        // é variável
-        current = current.slice("11",current.length-1);
-        if (variables.numb.indexOf(current) >= 0) {
-          result = new K.ArithNode({value:current, type:K.ArithNode.IDENTIFIER, parent:dom});
-        } else if (variables.str.indexOf(current) >= 0) {
-          result = new K.StringNode({value:current, type:K.StringNode.IDENTIFIER, parent:dom});
-        } else {
-          throw "Identifier ["+current+"] not expected";
-        }
-      } else if (current === "Mult" || current === "Minus" || current === "Div") {
-        result = new K.ArithNode({type:K.ArithNode.OPERATION, operation:current, value:[cache.pop(), cache.pop()], parent:dom});
+      if (current === "Choice") {
+         result = getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()], parent:dom});
       } else if (current === "Plus") {
         result = getStringOrNumberFromPlus({operation:current, value:[cache.pop(), cache.pop()], parent:dom});
-      } else if (current === "Negative") {
-        result = new K.ArithNode({type:K.ArithNode.NEGATIVE, value:cache.pop(), parent:dom});
-       } else if (current === "Choice") {
-         result = getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()], parent:dom});
+      } else if (K.BooleanNode.isBooleanNode(current)) {
+        result = createBooleanNode(current, cache, dom);
+      } else if (K.ArithNode.isArithNode(current)) {
+        result = createArithmeticNode(current, cache, dom);
+      } else if ((/String\['.*']/).test(current)) {
+        result = new K.StringNode({type:K.StringNode.CONSTANT, value:current.slice("7", current.length-1), parent:dom});
+      } else if (V.REGX_IDENT.test(current)) {
+        // é variável
+        current = current.slice("11",current.length-1);
+        if (variables.str.indexOf(current) >= 0) {
+          result = new K.StringNode({value:current, type:K.StringNode.IDENTIFIER, parent:dom});
+        } else {
+          throw "Identifier["+current+"] not expected";
+        }
       } else {
         throw "Parse exception, token "+current+" not found";
       }
@@ -201,35 +231,23 @@
   
   function calculateValueTypes(obj) {
     var type = 0x0;
-    if (obj.value[0] instanceof K.StringNode) {
-      type = 0x1;
-    } else if (obj.value[0] instanceof K.BooleanNode) {
-      type = 0x2;
-    } else if (obj.value[0] instanceof K.ArithNode) {
-      type = 0x4;
-    }
-    if (obj.value[1] instanceof K.StringNode) {
-      type |= 0x1;
-    } else if (obj.value[1] instanceof K.BooleanNode) {
-      type |= 0x2;
-    } else if (obj.value[1] instanceof K.ArithNode) {
-      type |= 0x4;
+    if (obj.value[0] instanceof Node && obj.value[1] instanceof Node) {
+      type = obj.value[0] | obj.value[1];
     }
     return type;
   }
   
   function getStringOrNumberFromPlus(obj) {
     var result;
-    
     switch(calculateValueTypes(obj)) {
-      case 0x1:
-      case 0x3:
-      case 0x5:
-      case 0x6:
+      case V.TYPE_STR|V.TYPE_STR:
+      case V.TYPE_STR|V.TYPE_BOOL:
+      case V.TYPE_STR|V.TYPE_NBR:
+      case V.TYPE_NBR|V.TYPE_BOOL:
         obj.type = K.StringNode.OPERATION;
         result = new K.StringNode(obj);
         break;
-      case 0x4:
+      case V.TYPE_NBR|V.TYPE_NBR:
         obj.type = K.ArithNode.OPERATION;
         result = new K.ArithNode(obj);
         break;
@@ -243,18 +261,18 @@
   function getCorrectExpression(obj) {
     var result;
     switch(calculateValueTypes(obj)) {
-      case 0x2:
+      case V.TYPE_BOOL|V.TYPE_BOOL:
         obj.type = K.BooleanNode.EXPRESSION;
         result = new K.BooleanNode(obj);
         break;
-      case 0x4:
+      case V.TYPE_NBR|V.TYPE_NBR:
         obj.type = K.ArithNode.OPERATION;
         result = new K.ArithNode(obj);
         break;
-      case 0x1:
-      case 0x3:
-      case 0x5:
-      case 0x6:
+      case V.TYPE_STR|V.TYPE_STR:
+      case V.TYPE_STR|V.TYPE_BOOL:
+      case V.TYPE_STR|V.TYPE_NBR:
+      case V.TYPE_NBR|V.TYPE_BOOL:
         obj.type = K.StringNode.EXPRESSION;
         result = new K.StringNode(obj);
         break;
@@ -350,10 +368,10 @@
   });
   
   function clearToolbars() {
-    var tbrlst = document.getElementsByClassName("selected");
+    var tbrlst = document.getElementsByClassName(V.CSS_SEL_ND);
     for(var i=0,l=tbrlst.length;i<l;i++) {
       var itm = tbrlst[i];
-      itm.classList.remove("selected");
+      itm.classList.remove(V.CSS_SEL_ND);
       if (typeof itm[K._.DATA_TBR] !== K._.UNDEF) {
         itm[K._.DATA_TBR].clear();
       }
@@ -364,8 +382,8 @@
     clearToolbars();
     var tbr = evt.target;
     var parent=tbr.parentNode;
-    parent.classList.add("selected");
-    if (typeof parent[K._.DATA_TBR] !==V.UNDEFINED) {
+    parent.classList.add(V.CSS_SEL_ND);
+    if (typeof parent[K._.DATA_TBR] !==V.UNDEF) {
       parent[K._.DATA_TBR].draw(evt.layerX+5, evt.layerY+5);
     }
   }
@@ -395,7 +413,7 @@
       dom[["data",key].join("-")] = data[key] || "";
     }
     
-    if (params.hasToolbar !== V.UNDEFINED && params.hasToolbar) {
+    if (params.hasToolbar !== V.UNDEF && params.hasToolbar) {
       dom.addEventListener("mouseenter", mouseEnterDOM);
     }
     
@@ -403,17 +421,21 @@
       dom.addEventListener("mouseenter", mouseenter);
     }
     if (typeof mouseleave === "function") {
-      dom.addEventListener("mouseleave", mouseleave);
+      dom.addEventListener(V.MOUSE_LEAVE, mouseleave);
     }
     if (typeof click === "function") {
       dom.addEventListener("click", click);
     }
     
-    if (typeof parent !== V.UNDEFINED && parent instanceof HTMLElement) {
+    if (typeof parent !== V.UNDEF && parent instanceof HTMLElement) {
       parent.appendChild(dom);
     }
     
     return dom;
+  }
+  
+  function getMessage(label) {
+    return ((K.messages || {})[navigator.language] || {})[label] || label;
   }
   
   Object.defineProperties(K, {
@@ -434,6 +456,9 @@
     },
     _:{
       get:function(){return V;}
+    },
+    getMessage:{
+      get:function(){return getMessage;}
     }
   });
   
