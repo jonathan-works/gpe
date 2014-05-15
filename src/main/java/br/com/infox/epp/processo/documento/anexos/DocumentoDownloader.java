@@ -33,7 +33,7 @@ public class DocumentoDownloader {
 
     public void downloadDocumento(ProcessoDocumento documento) {
         ProcessoDocumentoBin pdBin = documento.getProcessoDocumentoBin();
-        byte[] data = documentoBinManager.getData(pdBin.getIdProcessoDocumentoBin());
+        byte[] data = documentoBinManager.getData(documento.getIdProcessoDocumento());
         String fileName = pdBin.getNomeArquivo();
         String contentType = "application/" + pdBin.getExtensao();
         FileDownloader.download(data, contentType, fileName);

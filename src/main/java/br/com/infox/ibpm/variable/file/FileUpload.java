@@ -25,6 +25,7 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
@@ -44,6 +45,8 @@ public class FileUpload implements FileUploadListener {
     @In
     private ProcessoDocumentoBinManager processoDocumentoBinManager;
     @In
+    private DocumentoBinManager documentoBinManager;
+    @In
     private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
     
     @Override
@@ -53,6 +56,7 @@ public class FileUpload implements FileUploadListener {
         ProcessoDocumento processoDocumento = createDocumento(file);
         try {
             processoDocumentoManager.gravarDocumentoNoProcesso(ProcessoHome.instance().getInstance(), processoDocumento);
+            documentoBinManager.salvarBinario(processoDocumento.getIdProcessoDocumento(), processoDocumento.getProcessoDocumentoBin().getProcessoDocumento());
             TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), processoDocumento.getIdProcessoDocumento());
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + ProcessoHome.instance().getInstance().getIdProcesso(), e);
