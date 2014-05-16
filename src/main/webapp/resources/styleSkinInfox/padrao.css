@@ -638,3 +638,10 @@ div.rf-trn {
 .margin-top-div {
   margin:15px 0 0 0;
 }
+
+.gaugeContainer.organized {
+  width:210px;
+}
+.rf-p.dtable-p.bam-table {
+  width:calc(100% - 212px);
+}
