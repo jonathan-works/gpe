@@ -31,8 +31,8 @@
     
     function mouseLeave(evt) {
       var parent = evt.target.parentNode;
-      if (typeof parent["data-toolbar"] !== K._.UNDEF) {
-        parent["data-toolbar"].clear();
+      if (typeof parent[K._.DATA_TBR] !== K._.UNDEF) {
+        parent[K._.DATA_TBR].clear();
       }
       parent.classList.remove(K._.CSS_SEL_ND);
     }

@@ -86,6 +86,9 @@
   }
   
   function getValueOf(str) {
+    if (typeof values[str] === K._.UNDEF) {
+      throw ["ArithOper.getValueOf(",str,")",K._.UNDEF].join(" ");
+    }
     return values[str];
   }
   

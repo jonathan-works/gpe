@@ -7,7 +7,8 @@
     get OPERATION()0x2,
     get IDENTIFIER()0x4,
     get NOT()0x8,
-    get EXPRESSION()0x10
+    get EXPRESSION()0x10,
+    get TYPE_EXCEP()"Type Exception"
   };
   
   var _lbl={
@@ -463,18 +464,18 @@
           }
           break;
       }
-      _this.getDOM()["data-toolbar"] = pvt.toolbar;
+      _this.getDOM()[K._.DATA_TBR] = pvt.toolbar;
     }
     
     function renderOperationDOM() {
       var dom = _this.getDOM();
       dom.classList.add(pvt.operation.name);
       
-      K.createDOM({text:"(", classes:[K._.TEXT], parent:dom, hasToolbar:true});
+      K.createDOM({text:"(", classes:[K._.TEXT], parent:dom});
       updateParent(pvt.childNodes[0]);
       K.createDOM({text:pvt.operation.label, classes:[K._.TEXT, K._.OPER], parent:dom, hasToolbar:true});
       updateParent(pvt.childNodes[1]);
-      K.createDOM({text:")", classes:[K._.TEXT] , parent:dom, hasToolbar:true});
+      K.createDOM({text:")", classes:[K._.TEXT] , parent:dom});
     }
     
     function renderNegationDOM() {

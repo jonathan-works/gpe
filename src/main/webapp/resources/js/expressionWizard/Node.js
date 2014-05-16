@@ -192,6 +192,7 @@
         result = new K.ArithNode({operation:current, value:[cache.pop(),cache.pop()], type:_type, parent:dom});
         break;
     }
+    return result;
   }
   
   function generateTree(stack, dom) {
@@ -200,6 +201,7 @@
     var result;
     while(stack.length > 0) {
       current = stack.shift();
+      
       if (current === "Choice") {
          result = getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()], parent:dom});
       } else if (current === "Plus") {

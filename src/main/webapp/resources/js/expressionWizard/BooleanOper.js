@@ -98,7 +98,7 @@
     var _ = this;
     var result = values[str];
     if (typeof result === K._.UNDEF) {
-      throw 0;
+      throw ["BooleanOper.getValueOf", str, K._.UNDEF].join(" ");
     }
     return result;
   }
