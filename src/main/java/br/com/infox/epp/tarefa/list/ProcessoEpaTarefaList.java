@@ -28,7 +28,7 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
     public static final String NAME = "processoEpaTarefaList";
 
     private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o";
-    private static final String DEFAULT_ORDER = "o.idProcessoTarefa";
+    private static final String DEFAULT_ORDER = "o.dataInicio";
 
     @In
     private ProcessoEpaManager processoEpaManager;
