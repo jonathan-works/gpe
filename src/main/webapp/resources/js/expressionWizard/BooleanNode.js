@@ -26,7 +26,8 @@
     get FALSE     ()[V.NAME,"FALSE"].join("."),
     get ARIT      ()[V.NAME,"ARIT"].join("."),
     get STR_COMP  ()[V.NAME,"STR_COMP"].join("."),
-    get EXPR      ()[V.NAME,"EXPR"].join(".")
+    get EXPR      ()[V.NAME,"EXPR"].join("."),
+    get OVERRIDE  ()[V.NAME,"OVERRIDE"].join(".")
   };
   
     
@@ -248,7 +249,7 @@
     
     function clickOperationEvent(evt) {
       var _ = K.BooleanOper;
-      var oper = _.getValueOf(evt.target["data-operation"]);
+      var oper = _.getValueOf(evt.target[K._.DATA_OPER]);
       switch(oper) {
         case _.AND:
         case _.OR:
@@ -303,7 +304,7 @@
       
       function createChildNodes() {
         // CONSTRUCT TWO CHILD CONSTANT NODES AND CHANGE THIS
-          childArgs = {type:K.ArithNode.CONSTANT, value:"0", parent:_this};
+          childArgs = {type:K.ArithNode.CONSTANT, value:"Integer[0]", parent:_this};
           children.push(new K.ArithNode(childArgs));
           children.push(new K.ArithNode(childArgs));
           clear();

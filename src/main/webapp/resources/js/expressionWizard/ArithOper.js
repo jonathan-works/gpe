@@ -13,11 +13,11 @@
   var values = [];
   var it = 1;
   var _ArithOper = {
+    NEGATIVE:new ArithOper({name:V.NEGATIVE, label:"negative"}),
     PLUS:new ArithOper({name:V.PLUS, label:"plus"}),
     MINUS:new ArithOper({name:V.MINUS, label:"minus"}),
     MULT:new ArithOper({name:V.MULT, label:"mult"}),
-    DIV:new ArithOper({name:V.DIV, label:"div"}),
-    NEGATIVE:new ArithOper({name:V.NEGATIVE, label:"negative"})
+    DIV:new ArithOper({name:V.DIV, label:"div"})
   };
   
   /* Object */
@@ -46,7 +46,7 @@
     }
     
     function toString() {
-      return _super.name;
+      return pvt.ordinal;
     }
     
     function toSource() {

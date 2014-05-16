@@ -3,6 +3,7 @@
     get TOOLBAR()"toolbar",
     get UNDEF()"undefined",
     get DATA_TBR()"data-toolbar",
+    get DATA_OPER()"data-operation",
     get DIV()"div",
     get CSS_NODE()"Node",
     get CSS_SEL_ND()"selected",
@@ -268,7 +269,8 @@
         result = new K.BooleanNode(obj);
         break;
       case V.TYPE_NBR|V.TYPE_NBR:
-        obj.type = K.ArithNode.OPERATION;
+        obj.type = K.ArithNode.EXPRESSION;
+        console.log(obj);
         result = new K.ArithNode(obj);
         break;
       case V.TYPE_STR|V.TYPE_STR:
@@ -382,11 +384,12 @@
   
   function mouseEnterDOM(evt) {
     clearToolbars();
-    var tbr = evt.target;
-    var parent=tbr.parentNode;
+    var item = evt.target;
+    var parent=item.parentNode;
     parent.classList.add(V.CSS_SEL_ND);
-    if (typeof parent[K._.DATA_TBR] !==V.UNDEF) {
-      parent[K._.DATA_TBR].draw(evt.layerX+5, evt.layerY+5);
+    var tbr = parent[K._.DATA_TBR];
+    if (typeof tbr!==V.UNDEF) {
+      tbr.draw(evt.layerX-20,evt.layerY+20);
     }
   }
 

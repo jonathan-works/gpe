@@ -13,6 +13,7 @@
       data:{},
       items:[]
     };
+    
     function initClasses(classes) {
       if (typeof classes !== K._.UNDEF) {
         for(var i=0,l=classes.length;i<l;i++) {
@@ -56,13 +57,15 @@
     
     function appendMenuItems() {
       var itm;
+      var newItm;
       for(var i=0,l=pvt.items.length;i<l;i++) {
         itm = pvt.items[i];
+        newItm = new K.createDOM({type:V.LI, classes:itm.classes||[V.ACTION], click:itm.click, text:itm.text||"", parent:pvt.dom, data:itm.data||{}});
         if (itm instanceof Toolbar) {
-          itm.parent = new K.createDOM({type:V.LI, classes:itm.classes||[V.ACTION], click:itm.click, text:itm.text||"", parent:pvt.dom, data:itm.data||{}});
+          itm.parent = newItm;
           itm.draw();
         } else {
-          itm.dom = new K.createDOM({type:V.LI, classes:itm.classes||[V.ACTION], click:itm.click, text:itm.text||"", parent:pvt.dom, data:itm.data||{}});
+          itm.dom = newItm;
         }
       }
     }
@@ -124,6 +127,9 @@
     setParent(args.parent);
     pvt.data=args.data;
     pvt.mouseLeave=args.mouseLeave;
+    if (typeof args.isImage !== K._.UNDEF && args.isImage && typeof args.src !== K._.UNDEF) {
+      initImage(args.src);
+    }
     pvt.text=args.text;
   }
   
