@@ -8,9 +8,9 @@
     get FLOAT_STR()"FloatingPoint",
     get INT_STR()"Integer",
     get NAME()"ArithNode",
-    get INT_PATT()"[+|-]?[1-9]*[0-9]",
+    get INT_PATT()"[0-9]+",
     get FLOAT_SUFX()"[.][0-9]+",
-    get FLOAT_PATT()this.INT_PATT+"("+this.FLOAT_SUFX+")?",
+    get FLOAT_PATT()this.INT_PATT+"(?:"+this.FLOAT_SUFX+")?",
   };
   var msg=K.getMessage;
   var lbl={
@@ -25,9 +25,10 @@
     get CONSTANT()msg([V.NAME,"constant"].join(".")),
     get VAR()msg([V.NAME,"variable"].join(".")),
     get NMBR_PROMPT()msg([V.NAME,"number","valid","prompt"].join(".")),
-    get OVERRIDE()msg([V.NAME,"override"].join("."))
+    get OVERRIDE()msg([V.NAME,"override"].join(".")),
+    get EXPRESSION()msg([V.NAME,"expression"].join("."))
   };
-
+///(?:(?:[1-9][0-9]{0,2}(?:[,][0-9]{3,3})*)|[0-9])(?:[.][0-9]*[1-9])?/ LOCALE NUMERIC REGEXP
   function ArithNode(args) {
     var _this = K.checkInit(this);
     var _super = new K.Node({parent:args.parent});
@@ -43,7 +44,8 @@
       } else if (isInteger(val)){
         result.push(V.INT_STR);
       } else {
-        throw "NaN";
+        console.error("NaN");
+        throw 0;
       }
       result.push("[");
       result.push(val);
@@ -132,6 +134,10 @@
       return pvt.type;
     }
     
+    function getOperation() {
+      return pvt.operation;
+    }
+    
     Object.defineProperties(_this, {
       parent:{
         get:getParent,
@@ -142,6 +148,9 @@
       },
       type:{
         get:getType
+      },
+      operation:{
+        get:getOperation
       },
       replaceWithChild:{
         get:function(){return replaceWithChild;}
@@ -191,11 +200,13 @@
     
     function renderValueDOM(){
       var dom = _this.getDOM();
+      var _text = "";
       if (pvt.type === V.IDENTIFIER) {
-        dom.appendChild(K.createDOM({text:["[",pvt.childNodes[0],"]"].join(""), hasToolbar:true}));
+        _text = ["[",pvt.childNodes[0],"]"].join("");
       } else {
-        dom.appendChild(K.createDOM({text:pvt.childNodes[0].toLocaleString(navigator.language), hasToolbar:true}));
+        _text = pvt.childNodes[0].toLocaleString(navigator.language);
       }
+      dom.appendChild(K.createDOM({text:_text, hasToolbar:true}));
       dom.classList.add(K._.VALUE);
     }
 
@@ -249,22 +260,43 @@
           setConstant(promptForConstant());
           break;
         case V.EXPRESSION:
-          console.log(result="expression"+evt.target.parentNode.parentNode[K._.DT_CLASS].toString());
+          setExpression();
           break;
         case V.NEGATIVE:
-          console.log(result="negative "+evt.target[K._.DATA_OPER].name);
+          negativate();
           break;
         default:
           break;
       }
     }
     
+    function negativate() {
+      if (pvt.type===V.NEGATIVE) {
+        _this.replaceWithChild(0);
+      }else if (getParent().type===V.NEGATIVE){
+        getParent().replaceWithChild(0);
+      }else{
+        clear();
+        init(args={type:V.NEGATIVE, operation:K.ArithOper.NEGATIVE.name, value:new ArithNode(args), parent:_this});
+      }
+    }
+    
+    function setExpression() {
+      var _parent = getParent();
+      var condition = new K.BooleanNode({type:K.BooleanNode.CONSTANT, parent:_parent});
+      var value = new K.ArithNode(args);
+      var value2 = new K.ArithNode({type:V.CONSTANT, value:[V.INT_STR,"[0]"].join("")});
+      clear();
+      init(args={condition:condition, value:[value,value2], type:V.EXPRESSION, parent:_parent});
+    }
+    
     function replaceWithChild(numChild) {
-      console.log(numChild);
       var child = pvt.childNodes[numChild];
       pvt.childNodes.splice(numChild,1);
       var _type = child.type;
       clear();
+      child.parent = getParent();
+      
       switch(_type) {
         case V.CONSTANT:
           init(args = {type:child.type, value:child.toString(), parent:_this});
@@ -283,6 +315,7 @@
           break;
       }
       child.clear();
+      child.getDOM().remove();
     }
     
     function setConstant(constantValue) {
@@ -311,7 +344,8 @@
             result.push(1);
             break;
           default:
-            throw "ArithNode ln 302";
+            console.error("Operator not Supported");
+            throw 0;
         }
         result.push("]");
         return result.join("");
@@ -342,7 +376,9 @@
         {text:lbl.PLUS, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.PLUS}},
         {text:lbl.MINUS, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.MINUS}},
         {text:lbl.MULT, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.MULT}},
-        {text:lbl.DIV, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.DIV}}
+        {text:lbl.DIV, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.DIV}},
+        {text:"-", classes:[]},
+        {text:lbl.EXPRESSION, click:genericClickEvent, data:{type:V.EXPRESSION}}
       ]});
     }
     
@@ -350,7 +386,6 @@
       var parent = getParent();
       if (parent instanceof K.Node) {
         if (parent instanceof ArithNode) {
-          console.log(parent.toString(), _this.toString(), parent.values.indexOf(_this));
           parent.replaceWithChild(parent.values.indexOf(_this));
         }
       } else {
@@ -371,8 +406,10 @@
       itms.push(getVariableSubMenu());
       itms.push({text:lbl.CONSTANT, click:genericClickEvent, data:{type:V.CONSTANT}});
       
+      itms.push({text:"-", classes:[]});
+      itms.push({text:lbl.EXPRESSION, click:genericClickEvent, data:{type:V.EXPRESSION}});
+      itms.push({text:"-", classes:[]});
       if (getParent() instanceof ArithNode) {
-        console.log(getParent(), _this.toString(), getParent().toString());
         itms.push({parent:toolbar, text:lbl.OVERRIDE, click:clickOverrideParentEvent});
       }
       
@@ -381,24 +418,36 @@
     
     function initOperationToolbar() {
       var arithOp = K.ArithOper;
-      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(), classes:[K._.TOOLBAR, pvt.operation.name],items:[
+      var itms = [
         {text:lbl.NEGATIVE, click:genericClickEvent, data:{type:V.NEGATIVE,operation:arithOp.NEGATIVE}},
         {text:lbl.PLUS, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.PLUS}},
         {text:lbl.MINUS, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.MINUS}},
         {text:lbl.MULT, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.MULT}},
-        {text:lbl.DIV, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.DIV}}
-      ]});
+        {text:lbl.DIV, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.DIV}},
+        {text:"-", classes:[]},
+        {text:lbl.EXPRESSION, click:genericClickEvent, data:{type:V.EXPRESSION}}
+      ];
+      if (getParent() instanceof ArithNode) {
+        itms.push({parent:toolbar, text:lbl.OVERRIDE, click:clickOverrideParentEvent});
+      }
+      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(), classes:[K._.TOOLBAR, pvt.operation.name],items:itms});
     }
     
     function initExpressionToolbar() {
       var arithOp = K.ArithOper;
-      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(), classes:[K._.TOOLBAR, K._.EXPRESSION],items:[
+      var itms = [
         {text:lbl.NEGATIVE, click:genericClickEvent, data:{type:V.NEGATIVE,operation:arithOp.NEGATIVE}},
         {text:lbl.PLUS, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.PLUS}},
         {text:lbl.MINUS, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.MINUS}},
         {text:lbl.MULT, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.MULT}},
-        {text:lbl.DIV, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.DIV}}
-      ]});
+        {text:lbl.DIV, click:genericClickEvent, data:{type:V.OPERATION,operation:arithOp.DIV}},
+        {text:"-", classes:[]},
+        {text:lbl.EXPRESSION, click:genericClickEvent, data:{type:V.EXPRESSION}}
+      ];
+      if (getParent() instanceof ArithNode) {
+        itms.push({parent:toolbar, text:lbl.OVERRIDE, click:clickOverrideParentEvent});
+      }
+      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(), classes:[K._.TOOLBAR, K._.EXPRESSION],items:itms});
     }
     
     function initToolbar() {
@@ -420,43 +469,47 @@
       _this.getDOM()[K._.DATA_TBR] = pvt.toolbar;
     }
     
-    var renderDOM;
-    
     function init(args) {
       var dom = _this.getDOM();
       dom.classList.add(V.NAME);
       pvt.type=args.type;
-      switch(args.type) {
+      switch(pvt.type) {
         case V.OPERATION:
           pvt.operation = K.ArithOper.getValueOf(args.operation);
           pvt.childNodes.push(args.value[0]);
           pvt.childNodes.push(args.value[1]);
-          renderDOM = renderOperationDOM;
+          pvt.childNodes[0].parent = _this;
+          pvt.childNodes[1].parent = _this;
+          pvt.renderDOM = renderOperationDOM;
           break;
         case V.NEGATIVE:
           pvt.operation = K.ArithOper.getValueOf(args.operation);
           pvt.childNodes.push(args.value);
-          renderDOM = renderNegativeDOM;
+          pvt.childNodes[0].parent = _this;
+          pvt.renderDOM = renderNegativeDOM;
           break;
         case V.IDENTIFIER:
           pvt.childNodes.push(args.value.slice(11,args.value.length-1));
-          renderDOM = renderValueDOM;
+          pvt.renderDOM = renderValueDOM;
           break;
         case V.CONSTANT:
           pvt.childNodes.push(Number.parseFloat(new RegExp(V.FLOAT_PATT).exec(args.value)[0]));
-          renderDOM = renderValueDOM;
+          pvt.renderDOM = renderValueDOM;
           break;
         case V.EXPRESSION:
           pvt.childNodes.push(args.condition);
           pvt.childNodes.push(args.value[0]);
           pvt.childNodes.push(args.value[1]);
-          renderDOM = renderExpressionDOM;
+          pvt.childNodes[0].parent = _this;
+          pvt.childNodes[1].parent = _this;
+          pvt.childNodes[2].parent = _this;
+          pvt.renderDOM = renderExpressionDOM;
           break;
         default:
-          console.log(args);
+          console.error("Unsupported type",args);
           throw 0;
       }
-      renderDOM();
+      pvt.renderDOM();
       _this.getDOM()[K._.DT_CLASS]=_this;
       initToolbar();
     }
@@ -464,15 +517,15 @@
   }
 
   function isFloat(val) {
-    return new RegExp(V.INT_PATT+V.FLOAT_SUFX).test(val);
+    return new RegExp(["^",V.INT_PATT,V.FLOAT_SUFX,"$"].join("")).test(val);
   }
   
   function isInteger(val) {
-    return new RegExp(V.INT_PATT).test(val);
+    return new RegExp(["^",V.INT_PATT,"$"].join("")).test(val);
   }
 
   function isNumberConstant(current) {
-    return new RegExp(V.INT_STR+"\\["+V.INT_PATT+"\\]|"+V.FLOAT_STR+"\\["+V.FLOAT_PATT+"\\]").test(current);
+    return new RegExp(["^",V.INT_STR,"\\[",V.INT_PATT,"\\]|",V.FLOAT_STR,"\\[",V.FLOAT_PATT,"\\]$"].join("")).test(current);
   }
   
   function getArithNodeType(str) {

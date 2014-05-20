@@ -19,7 +19,7 @@
     get TYPE_STR()0x1,
     get TYPE_BOOL()0x2,
     get TYPE_NBR()0x4,
-    get REGX_IDENT()(/Identifier\[.+\]/)
+    get REGX_IDENT()(/^Identifier\[.+\]$/)
   };
   
   function Node(args){
@@ -56,6 +56,7 @@
       for(i=0,l=dom.children.length; i<l; i++) {
         dom.removeChild(dom.children[0]);
       }
+      pvt.dom.classList.add(V.CSS_NODE);
     }
     
     Object.defineProperties(this,{
@@ -76,10 +77,10 @@
     });
     if (typeof args !== V.UNDEF && args.parent !== V.UNDEF) {
       this.parent = args.parent;
+      pvt.dom.classList.add(V.CSS_NODE);
     } else {
       args = args || {};
     }
-    pvt.dom.classList.add(V.CSS_NODE);
   }
   
   function checkInit(obj) {
@@ -187,11 +188,27 @@
         result = new K.ArithNode({operation:current, value:cache.pop(), type:_type, parent:dom});
         break;
       case types.EXPRESSION:
-        result = new K.ArithNode({operation:current, condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type, parent:dom});
+        result = new K.ArithNode({condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type, parent:dom});
         break;
       case types.OPERATION:
         result = new K.ArithNode({operation:current, value:[cache.pop(),cache.pop()], type:_type, parent:dom});
         break;
+    }
+    return result;
+  }
+  
+  function createStringNode(current, cache, dom) {
+    var StringNode = K.StringNode;
+    var _type = K.StringNode.getStringNodeType(current);
+    var result;
+    switch(_type) {
+      case StringNode.CONSTANT:
+      case StringNode.IDENTIFIER:
+        result = new K.StringNode({type:_type, value:current, parent:dom});
+        break;
+      default:
+        console.error("StringNode type not supported");
+        throw 0;
     }
     return result;
   }
@@ -211,23 +228,25 @@
         result = createBooleanNode(current, cache, dom);
       } else if (K.ArithNode.isArithNode(current)) {
         result = createArithmeticNode(current, cache, dom);
-      } else if ((/String\['.*']/).test(current)) {
-        result = new K.StringNode({type:K.StringNode.CONSTANT, value:current.slice("7", current.length-1), parent:dom});
+      } else if (K.StringNode.isStringNode(current)) {
+        result = createStringNode(current, cache, dom);
       } else if (V.REGX_IDENT.test(current)) {
         // é variável
-        current = current.slice("11",current.length-1);
-        if (variables.str.indexOf(current) >= 0) {
-          result = new K.StringNode({value:current, type:K.StringNode.IDENTIFIER, parent:dom});
-        } else {
-          throw "Identifier["+current+"] not expected";
-        }
+        console.error("Identifier not expected", current);
+        throw 0;
       } else {
-        throw "Parse exception, token "+current+" not found";
+        console.error("Parse exception, token not found", current);
+        throw 0;
       }
       cache.push(result);
+      var stck = result.getStack()[0];
+      if (stck!=current) {
+        console.log(current, result.getStack()[0]);
+      }
     }
     if (cache.length !== 1) {
-      throw "Parse exception. More than one root was found";
+      console.error("Parse exception. More than one root was found");
+      throw 0;
     }
     return cache.pop();
   }
@@ -270,7 +289,6 @@
         break;
       case V.TYPE_NBR|V.TYPE_NBR:
         obj.type = K.ArithNode.EXPRESSION;
-        console.log(obj);
         result = new K.ArithNode(obj);
         break;
       case V.TYPE_STR|V.TYPE_STR:
@@ -389,7 +407,7 @@
     parent.classList.add(V.CSS_SEL_ND);
     var tbr = parent[K._.DATA_TBR];
     if (typeof tbr!==V.UNDEF) {
-      tbr.draw(evt.layerX-20,evt.layerY+20);
+      tbr.draw(evt.layerX+5,evt.layerY-5);
     }
   }
 
