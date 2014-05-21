@@ -76,6 +76,7 @@
     
     function clear() {
       if (pvt.visible) {
+        pvt.dom.parentNode.classList.remove(K._.CSS_SEL_ND);
         pvt.dom.remove();
         delete pvt.dom;
         pvt.visible = false;

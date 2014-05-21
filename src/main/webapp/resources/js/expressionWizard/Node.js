@@ -162,10 +162,10 @@
     switch(_type) {
       case K.BooleanNode.CONSTANT:
       case K.BooleanNode.IDENTIFIER:
-        result = new K.BooleanNode({value:current, type:_type, parent:dom});
+        result = new K.BooleanNode({value:[current], type:_type, parent:dom});
         break;
       case K.BooleanNode.NOT:
-        result = new K.BooleanNode({operation:current, value:cache.pop(), type:_type, parent:dom});
+        result = new K.BooleanNode({operation:current, value:[cache.pop()], type:_type, parent:dom});
         break;
       case K.BooleanNode.OPERATION:
         result = new K.BooleanNode({operation:current, value:[cache.pop(), cache.pop()], type:_type, parent:dom});
@@ -390,10 +390,9 @@
   });
   
   function clearToolbars() {
-    var tbrlst = document.getElementsByClassName(V.CSS_SEL_ND);
+    var tbrlst=document.getElementsByClassName(V.TOOLBAR);
     for(var i=0,l=tbrlst.length;i<l;i++) {
-      var itm = tbrlst[i];
-      itm.classList.remove(V.CSS_SEL_ND);
+      var itm = tbrlst[i].parentNode;
       if (typeof itm[K._.DATA_TBR] !== K._.UNDEF) {
         itm[K._.DATA_TBR].clear();
       }
@@ -401,10 +400,21 @@
   }
   
   function mouseEnterDOM(evt) {
-    clearToolbars();
+    var tbrlst = document.getElementsByClassName(V.CSS_SEL_ND);
+    for(var i=0,l=tbrlst.length;i<l;i++) {
+      var itm = tbrlst[i];
+      itm.classList.remove(V.CSS_SEL_ND);
+    }
     var item = evt.target;
     var parent=item.parentNode;
     parent.classList.add(V.CSS_SEL_ND);
+  }
+  
+  function mouseClickDOM(evt) {
+    clearToolbars();
+    var item = evt.target;
+    console.log(item);
+    var parent=item.parentNode;
     var tbr = parent[K._.DATA_TBR];
     if (typeof tbr!==V.UNDEF) {
       tbr.draw(evt.layerX+5,evt.layerY-5);
@@ -437,6 +447,7 @@
     }
     
     if (params.hasToolbar !== V.UNDEF && params.hasToolbar) {
+      dom.addEventListener("click", mouseClickDOM);
       dom.addEventListener("mouseenter", mouseEnterDOM);
     }
     

@@ -31,7 +31,7 @@
 ///(?:(?:[1-9][0-9]{0,2}(?:[,][0-9]{3,3})*)|[0-9])(?:[.][0-9]*[1-9])?/ LOCALE NUMERIC REGEXP
   function ArithNode(args) {
     var _this = K.checkInit(this);
-    var _super = new K.Node({parent:args.parent});
+    var _super = new K.Node({parent:(args=args||{}).parent});
     var pvt = {
       type:args.type,
       childNodes:[]
@@ -472,7 +472,7 @@
     function init(args) {
       var dom = _this.getDOM();
       dom.classList.add(V.NAME);
-      pvt.type=args.type;
+      pvt.type=args.type||V.CONSTANT;
       switch(pvt.type) {
         case V.OPERATION:
           pvt.operation = K.ArithOper.getValueOf(args.operation);
@@ -493,7 +493,7 @@
           pvt.renderDOM = renderValueDOM;
           break;
         case V.CONSTANT:
-          pvt.childNodes.push(Number.parseFloat(new RegExp(V.FLOAT_PATT).exec(args.value)[0]));
+          pvt.childNodes.push(Number.parseFloat(new RegExp(V.FLOAT_PATT).exec(args.value||0)[0]));
           pvt.renderDOM = renderValueDOM;
           break;
         case V.EXPRESSION:
