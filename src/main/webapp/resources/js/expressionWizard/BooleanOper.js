@@ -2,16 +2,16 @@
   
   /* private static variables */
   var V = {
-    get AND()"And",
-    get OR()"Or",
-    get NOT()"Not",
-    get EQ()"Equal",
-    get NEQ()"NotEqual",
-    get GT()"GreaterThan",
-    get GTE()"GreaterThanEqual",
-    get LT()"LessThan",
-    get LTE()"LessThanEqual",
-    get NAME()"BooleanOper"
+    get AND(){return "And";},
+    get OR(){return "Or";},
+    get NOT(){return "Not";},
+    get EQ(){return "Equal";},
+    get NEQ(){return "NotEqual";},
+    get GT(){return "GreaterThan";},
+    get GTE(){return "GreaterThanEqual";},
+    get LT(){return "LessThan";},
+    get LTE(){return "LessThanEqual";},
+    get NAME(){return "BooleanOper";}
   };
   
   var values = [];

@@ -28,8 +28,8 @@
     get name() {
       throw K.IMPL_REQ_EXCEP;
     },
-    get valueOf()valueOf,
-    get toString()toString
+    get valueOf(){return valueOf;},
+    get toString(){return toString;}
   };
   
   Object.defineProperties(K,{

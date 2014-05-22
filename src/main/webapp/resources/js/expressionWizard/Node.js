@@ -1,27 +1,27 @@
 (function (K) {
   var V = {
-    get TOOLBAR()"toolbar",
-    get UNDEF()"undefined",
-    get DIV()"div",
-    get CSS_NODE()"Node",
-    get CSS_SEL_ND()"selected",
-    get IDENT_STR()"Identifier",
-    get MOUSE_LEAVE()"mouseleave",
-    get TEXT()"Text",
-    get OPER()"Operator",
-    get VALUE()"Value",
-    get EXPRESSION()"Expression",
-    get TEXT_TYPE()"txt-cont",
-    get CHOICE()"Choice",
-    get TYPE_STR()0x1,
-    get TYPE_BOOL()0x2,
-    get TYPE_NBR()0x4,
-    get REGX_IDENT()(/^Identifier\[.+\]$/),
-    get DATA_TBR()"data-toolbar",
-    get DATA_OPER()"data-operation",
-    get DT_CLASS()"data-obj-class",
-    get DT_TYPE()"data-type",
-    get DT_VAL()"data-value"
+    get TOOLBAR(){return "toolbar";},
+    get UNDEF(){return "undefined"},
+    get DIV(){return "div"},
+    get CSS_NODE(){return "Node"},
+    get CSS_SEL_ND(){return "selected"},
+    get IDENT_STR(){return "Identifier"},
+    get MOUSE_LEAVE(){return "mouseleave"},
+    get TEXT(){return "Text"},
+    get OPER(){return "Operator"},
+    get VALUE(){return "Value"},
+    get EXPRESSION(){return "Expression"},
+    get TEXT_TYPE(){return "txt-cont"},
+    get CHOICE(){return "Choice"},
+    get TYPE_STR(){return 0x1},
+    get TYPE_BOOL(){return 0x2},
+    get TYPE_NBR(){return 0x4},
+    get REGX_IDENT(){return (/^Identifier\[.+\]$/)},
+    get DATA_TBR(){return "data-toolbar"},
+    get DATA_OPER(){return "data-operation"},
+    get DT_CLASS(){return "data-obj-class"},
+    get DT_TYPE(){return "data-type"},
+    get DT_VAL(){return "data-value"}
   };
   
   function Node(args){
@@ -157,26 +157,26 @@
     array.push(varName);
   }
   
-  function createBooleanNode(current, cache, dom) {
+  function createBooleanNode(current, cache) {
     var _value = [];
     var _type = K.BooleanNode.getBooleanNodeType(current);
     var result;
     switch(_type) {
       case K.BooleanNode.CONSTANT:
       case K.BooleanNode.IDENTIFIER:
-        result = new K.BooleanNode({value:[current], type:_type, parent:dom});
+        result = new K.BooleanNode({value:[current], type:_type});
         break;
       case K.BooleanNode.NOT:
-        result = new K.BooleanNode({operation:current, value:[cache.pop()], type:_type, parent:dom});
+        result = new K.BooleanNode({operation:current, value:[cache.pop()], type:_type});
         break;
       case K.BooleanNode.OPERATION:
-        result = new K.BooleanNode({operation:current, value:[cache.pop(), cache.pop()], type:_type, parent:dom});
+        result = new K.BooleanNode({operation:current, value:[cache.pop(), cache.pop()], type:_type});
         break;
     }
     return result;
   }
   
-  function createArithmeticNode(current, cache, dom) {
+  function createArithmeticNode(current, cache) {
     var _value = [];
     var types = K.ArithNode;
     var result;
@@ -184,29 +184,29 @@
     switch(_type) {
       case types.CONSTANT:
       case types.IDENTIFIER:
-        result = new K.ArithNode({type:_type, value:current, parent:dom});
+        result = new K.ArithNode({type:_type, value:[current]});
         break;
       case types.NEGATIVE:
-        result = new K.ArithNode({operation:current, value:cache.pop(), type:_type, parent:dom});
+        result = new K.ArithNode({operation:current, value:[cache.pop()], type:_type});
         break;
       case types.EXPRESSION:
-        result = new K.ArithNode({condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type, parent:dom});
+        result = new K.ArithNode({condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type});
         break;
       case types.OPERATION:
-        result = new K.ArithNode({operation:current, value:[cache.pop(),cache.pop()], type:_type, parent:dom});
+        result = new K.ArithNode({operation:current, value:[cache.pop(),cache.pop()], type:_type});
         break;
     }
     return result;
   }
   
-  function createStringNode(current, cache, dom) {
+  function createStringNode(current, cache) {
     var StringNode = K.StringNode;
     var _type = K.StringNode.getStringNodeType(current);
     var result;
     switch(_type) {
       case StringNode.CONSTANT:
       case StringNode.IDENTIFIER:
-        result = new K.StringNode({type:_type, value:current, parent:dom});
+        result = new K.StringNode({type:_type, value:[current]});
         break;
       default:
         console.error("StringNode type not supported");
@@ -221,17 +221,16 @@
     var result;
     while(stack.length > 0) {
       current = stack.shift();
-      
       if (current === "Choice") {
-         result = getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()], parent:dom});
+         result = getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()]});
       } else if (current === "Plus") {
-        result = getStringOrNumberFromPlus({operation:current, value:[cache.pop(), cache.pop()], parent:dom});
+        result = getStringOrNumberFromPlus({operation:current, value:[cache.pop(), cache.pop()]});
       } else if (K.BooleanNode.isBooleanNode(current)) {
-        result = createBooleanNode(current, cache, dom);
+        result = createBooleanNode(current, cache);
       } else if (K.ArithNode.isArithNode(current)) {
-        result = createArithmeticNode(current, cache, dom);
+        result = createArithmeticNode(current, cache);
       } else if (K.StringNode.isStringNode(current)) {
-        result = createStringNode(current, cache, dom);
+        result = createStringNode(current, cache);
       } else if (V.REGX_IDENT.test(current)) {
         // é variável
         console.error("Identifier not expected", current);
@@ -246,6 +245,7 @@
         console.log(current, result.getStack()[0]);
       }
     }
+    cache[0].parent=dom;
     if (cache.length !== 1) {
       console.error("Parse exception. More than one root was found");
       throw 0;
@@ -342,8 +342,8 @@
     get condition() {
       implReqrd("condition");
     },
-    getNodeType:function getNodeType() {
-      implReqrd("getNodeType");
+    getClass:function getClass() {
+      implReqrd("getClass");
     }
   };
   
@@ -416,9 +416,12 @@
     clearToolbars();
     var item = evt.target;
     var parent=item.parentNode;
-    var tbr = parent[K._.DATA_TBR];
-    if (typeof tbr!==V.UNDEF) {
-      tbr.draw();
+    if (parent[V.DT_CLASS] instanceof Node) {
+      parent[V.DT_CLASS].initToolbar();
+      var tbr = parent[K._.DATA_TBR];
+      if (tbr!==undefined) {
+        tbr.draw(evt.layerX,evt.layerY);
+      }
     }
   }
 

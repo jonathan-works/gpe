@@ -2,12 +2,12 @@
   
   /* private static variables */
   var V = {
-    get PLUS()"Plus",
-    get MINUS()"Minus",
-    get MULT()"Mult",
-    get DIV()"Div",
-    get NEGATIVE()"Negative",
-    get NAME()"ArithOper"
+    get PLUS(){return "Plus";},
+    get MINUS(){return "Minus";},
+    get MULT(){return "Mult";},
+    get DIV(){return "Div";},
+    get NEGATIVE(){return "Negative";},
+    get NAME(){return "ArithOper";},
   };
   
   var values = [];

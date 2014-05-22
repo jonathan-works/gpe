@@ -1,48 +1,43 @@
 (function(K){
   var V={
-    get NAME()"BooleanNode",
-    get TRUE()"True",
-    get FALSE()"False",
-    get CONSTANT()0x1,
-    get OPERATION()0x2,
-    get IDENTIFIER()0x4,
-    get NOT()0x8,
-    get EXPRESSION()0x10,
-    get OVERRIDE()0x20,
-    get TYPE_EXCEP()"Type Exception"
+    get NAME(){return "BooleanNode";},
+    get TRUE(){return "True";},
+    get FALSE(){return "False";},
+    get CONSTANT(){return 0x1;},
+    get OPERATION(){return 0x2;},
+    get IDENTIFIER(){return 0x4;},
+    get NOT(){return 0x8;},
+    get EXPRESSION(){return 0x10;},
+    get OVERRIDE(){return 0x20;},
+    get TYPE_EXCEP(){return "Type Exception";}
   };
   
   var lbl={
-    get negate   ()[V.NAME,"negate"].join("."),
-    get and      ()[V.NAME,"and"].join("."),
-    get or       ()[V.NAME,"or"].join("."),
-    get eq       ()[V.NAME,"eq"].join("."),
-    get neq      ()[V.NAME,"neq"].join("."),
-    get gte      ()[V.NAME,"gte"].join("."),
-    get gt       ()[V.NAME,"gt"].join("."),
-    get lte      ()[V.NAME,"lte"].join("."),
-    get lt       ()[V.NAME,"lt"].join("."),
-    get var      ()[V.NAME,"var"].join("."),
-    get TRUE     ()[V.NAME,"TRUE"].join("."),
-    get FALSE    ()[V.NAME,"FALSE"].join("."),
-    get ARIT     ()[V.NAME,"ARIT"].join("."),
-    get STR_COMP ()[V.NAME,"STR_COMP"].join("."),
-    get EXPR     ()[V.NAME,"EXPR"].join("."),
-    get COMPARE  ()[V.NAME,"COMPARATION"],
-    get OVERRIDE ()[V.NAME,"OVERRIDE"].join(".")
+    get negate   (){return [V.NAME,"negate"].join(".");},
+    get and      (){return [V.NAME,"and"].join(".");},
+    get or       (){return [V.NAME,"or"].join(".");},
+    get eq       (){return [V.NAME,"eq"].join(".");},
+    get neq      (){return [V.NAME,"neq"].join(".");},
+    get gte      (){return [V.NAME,"gte"].join(".");},
+    get gt       (){return [V.NAME,"gt"].join(".");},
+    get lte      (){return [V.NAME,"lte"].join(".");},
+    get lt       (){return [V.NAME,"lt"].join(".");},
+    get var      (){return [V.NAME,"var"].join(".");},
+    get TRUE     (){return [V.NAME,"TRUE"].join(".");},
+    get FALSE    (){return [V.NAME,"FALSE"].join(".");},
+    get ARIT     (){return [V.NAME,"ARIT"].join(".");},
+    get STR_COMP (){return [V.NAME,"STR_COMP"].join(".");},
+    get EXPR     (){return [V.NAME,"EXPR"].join(".");},
+    get COMPARE  (){return [V.NAME,"COMPARATION"].join(".");},
+    get OVERRIDE (){return [V.NAME,"OVERRIDE"].join(".");}
   };
-  
-    
-  function valueOf(){
-    return K._.TYPE_BOOL;
-  }
   
   function BooleanNode(args){
     var _this=K.checkInit(this);
     var _super=new K.Node({parent:(args=args||{}).parent});
     
     var pvt={
-      childNodes : []
+      childNodes:[]
     };
     
     function getStack(){
@@ -71,8 +66,7 @@
     }
     
     function toString(){
-      var result="";
-      return result;
+      return "";
     }
     
     function clear(){
@@ -98,24 +92,17 @@
       return pvt.childNodes.slice(0, pvt.childNodes.length);
     }
     
-    function getNodeType(){
-      return V.NAME;
-    }
-    
     function getParent(){
       return _super.parent;
     }
-    
     function setParent(itm){
       args.parent=_super.parent=itm;
-      clearToolbar();
-      initToolbar();
     }
     
     function replaceParent(){
       var _parent=getParent();
       var _gParent;
-      if(_parent instanceof BooleanNode){
+      if(_parent instanceof _this.getClass()){
         _gParent=_parent.parent;
         if(_gParent instanceof K.Node){
           _gParent.replaceChild(_parent,_this);
@@ -123,8 +110,6 @@
           _gParent.replaceChild(_this.getDOM(),_parent.getDOM());
         }
       }
-      clearToolbar();
-      initToolbar();
     }
     
     function replaceChild(_old,_new){
@@ -133,13 +118,13 @@
         console.error("");
         throw 0;
       }
-      if(!_new instanceof BooleanNode){
+      if(!_new instanceof _this.getClass()){
         console.error("");
         throw 0;
       }
       _new.parent=_this;
       pvt.childNodes[pos]=_new;
-      args.value=pvt.childNodes;
+      args.value=pvt.childNodes.slice(length-2,length);
       _this.getDOM().replaceChild(_new.getDOM(),_old.getDOM());
     }
     
@@ -165,10 +150,9 @@
         case V.NOT:
           negate();
           break;
-        case V.OVERRIDE:
-          evt.target[K._.DT_VAL].replaceParent();
-          break;
         default:
+          evt.target[K._.DT_VAL].replaceParent();
+          clearToolbar();
           break;
       }
     }
@@ -254,6 +238,7 @@
     }
     
     function initToolbar(){
+      clearToolbar();
       var _=K.BooleanOper;
       var boolOp=K.BooleanOper;
       var itms=[
@@ -282,8 +267,9 @@
       ];
       itms.push(getVariableSubMenu());
       
-      if(getParent() instanceof BooleanNode){
-        itms.push({parent:toolbar, text:K.getMessage(lbl.OVERRIDE), click:genericClickEvent, data:{type:V.OVERRIDE,value:_this}});
+      if(getParent() instanceof _this.getClass()){
+        itms.push({text:"-", classes:[]});
+        itms.push({parent:toolbar, text:K.getMessage(lbl.OVERRIDE), click:genericClickEvent, data:{value:_this}});
       }
       _this.getDOM()[K._.DATA_TBR]=pvt.toolbar=new K.Toolbar({parent:_this.getDOM(), classes:[K._.TOOLBAR,K._.VALUE],items:itms});
     }
@@ -358,7 +344,6 @@
       dom[K._.DT_CLASS]=_this;
       
       pvt.renderDOM();
-      initToolbar();
     }
   
     Object.defineProperties(_this,{
@@ -386,12 +371,6 @@
       toString:{
         get:function(){return toString;}
       },
-      valueOf:{
-        get:function(){return valueOf;}
-      },
-      getNodeType:{
-        get:function(){return getNodeType;}
-      },
       initToolbar:{
         get:function(){return initToolbar;}
       },
@@ -407,6 +386,14 @@
     });
     init(args);
   }
+  
+  BooleanNode.prototype=new K.Node();
+  BooleanNode.prototype.valueOf=function valueOf(){
+    return K._.TYPE_BOOL;
+  };
+  BooleanNode.prototype.getClass=function getClass(){
+    return BooleanNode;
+  };
   
   function isBooleanNode(str){
     var _=K.Node;
@@ -432,8 +419,11 @@
     }
     return type;
   }
+
+  function toString(){
+    return this.name;
+  }
   
-  BooleanNode.prototype=new K.Node();
   /*    CONSTANTES DA CLASSE    */
   Object.defineProperties(BooleanNode,{
     CONSTANT:{
@@ -456,6 +446,9 @@
     },
     getBooleanNodeType:{
       get:function(){return getBooleanNodeType;}
+    },
+    toString:{
+      get:function(){return toString;}
     }
   });
   
