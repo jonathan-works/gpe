@@ -25,7 +25,7 @@
   
   function StringNode(args) {
     var _this = K.checkInit(this);
-    var _super = new K.Node({parent:args.parent});
+    var _super = new K.Node({parent:(args=args||{}).parent});
     var pvt = {
       type:args.type,
       childNodes:[]
@@ -246,7 +246,7 @@
     function init(args) {
       var dom = _this.getDOM();
       dom.classList.add(V.NAME);
-      pvt.type=args.type;
+      pvt.type=args.type||V.CONSTANT;
       switch(pvt.type) {
         case V.OPERATION:
           pvt.operation = args.operation;
@@ -261,6 +261,7 @@
           pvt.renderDOM = renderValueDOM;
           break;
         case V.CONSTANT:
+          args.value=args.value||"String['']";
           pvt.childNodes.push(args.value.slice(7,args.value.length-1));
           pvt.renderDOM = renderValueDOM;
           break;
@@ -277,6 +278,7 @@
           console.error("Invalid StringNode type");
           throw 0;
       }
+      pvt.renderDOM();
     }
     init(args);
   }
