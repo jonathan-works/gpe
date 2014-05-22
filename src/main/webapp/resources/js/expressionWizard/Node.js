@@ -2,8 +2,6 @@
   var V = {
     get TOOLBAR()"toolbar",
     get UNDEF()"undefined",
-    get DATA_TBR()"data-toolbar",
-    get DATA_OPER()"data-operation",
     get DIV()"div",
     get CSS_NODE()"Node",
     get CSS_SEL_ND()"selected",
@@ -14,12 +12,16 @@
     get VALUE()"Value",
     get EXPRESSION()"Expression",
     get TEXT_TYPE()"txt-cont",
-    get DT_CLASS()"data-obj-class",
     get CHOICE()"Choice",
     get TYPE_STR()0x1,
     get TYPE_BOOL()0x2,
     get TYPE_NBR()0x4,
-    get REGX_IDENT()(/^Identifier\[.+\]$/)
+    get REGX_IDENT()(/^Identifier\[.+\]$/),
+    get DATA_TBR()"data-toolbar",
+    get DATA_OPER()"data-operation",
+    get DT_CLASS()"data-obj-class",
+    get DT_TYPE()"data-type",
+    get DT_VAL()"data-value"
   };
   
   function Node(args){
@@ -413,11 +415,10 @@
   function mouseClickDOM(evt) {
     clearToolbars();
     var item = evt.target;
-    console.log(item);
     var parent=item.parentNode;
     var tbr = parent[K._.DATA_TBR];
     if (typeof tbr!==V.UNDEF) {
-      tbr.draw(evt.layerX+5,evt.layerY-5);
+      tbr.draw();
     }
   }
 
