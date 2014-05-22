@@ -8,10 +8,11 @@
     get IDENTIFIER()0x4,
     get NOT()0x8,
     get EXPRESSION()0x10,
+    get OVERRIDE()0x20,
     get TYPE_EXCEP()"Type Exception"
   };
   
-  var _lbl={
+  var lbl={
     get negate   ()[V.NAME,"negate"].join("."),
     get and      ()[V.NAME,"and"].join("."),
     get or       ()[V.NAME,"or"].join("."),
@@ -27,6 +28,7 @@
     get ARIT     ()[V.NAME,"ARIT"].join("."),
     get STR_COMP ()[V.NAME,"STR_COMP"].join("."),
     get EXPR     ()[V.NAME,"EXPR"].join("."),
+    get COMPARE  ()[V.NAME,"COMPARATION"],
     get OVERRIDE ()[V.NAME,"OVERRIDE"].join(".")
   };
   
@@ -37,9 +39,8 @@
   
   function BooleanNode(args){
     var _this=K.checkInit(this);
-    var _super=new K.Node({parent:args.parent});
+    var _super=new K.Node({parent:(args=args||{}).parent});
     
-    args=args||{};
     var pvt={
       childNodes : []
     };
@@ -71,20 +72,6 @@
     
     function toString(){
       var result="";
-      switch(pvt.type){
-        case V.CONSTANT:
-          result=pvt.childNodes[0].slice(0,1).toUpperCase()+pvt.childNodes[0].slice(1,pvt.childNodes[0].length);
-          break;
-        case V.OPERATION:
-          result=[pvt.operation.name, pvt.childNodes[0], pvt.childNodes[1]].join();
-          break;
-        case V.IDENTIFIER:
-          result=[K._.IDENT_STR,"[",pvt.childNodes[0],"]"].join("");
-          break;
-        case V.NOT:
-          result=[pvt.operation.name, pvt.childNodes[0].toString()].join();
-          break;
-      }
       return result;
     }
     
@@ -130,7 +117,6 @@
       var _gParent;
       if(_parent instanceof BooleanNode){
         _gParent=_parent.parent;
-        setParent(_gParent);
         if(_gParent instanceof K.Node){
           _gParent.replaceChild(_parent,_this);
         }else if(_gParent instanceof Element){
@@ -151,6 +137,7 @@
         console.error("");
         throw 0;
       }
+      _new.parent=_this;
       pvt.childNodes[pos]=_new;
       args.value=pvt.childNodes;
       _this.getDOM().replaceChild(_new.getDOM(),_old.getDOM());
@@ -162,87 +149,73 @@
       }
     }
     
-    function getVariableSubMenu(){
-      var _=K.Node;
-      var variables=_.getVariables(_.VariableType.BOOLEAN);
-      var items=[];
-      for(var i=0, l=variables.length;i<l;i++){
-        items.push({text:variables[i], click:genericClickEvent, data:{type:V.IDENTIFIER,value:variables[i]}});
-      }
-      return new K.Toolbar({classes:[K._.TEXT_TYPE], items:items, text:K.getMessage(_lbl.var)});
-    }
-    
     function genericClickEvent(evt){
       var result="";
-      var dtType=evt.target["data-type"];
       var _=K.BooleanOper;
-      switch(dtType){
+      switch(evt.target[K._.DT_TYPE]){
         case V.OPERATION:
-          setOperation(evt.target[K._.DATA_OPER]);
+          setOperation(evt.target[K._.DATA_OPER], retrieveOperationValues(evt.target[K._.DATA_OPER],evt.target[K._.DT_VAL]));
           break;
         case V.IDENTIFIER:
-          setIdentifier([K._.IDENT_STR,"[",evt.target["data-value"],"]"].join(""));
+          setIdentifier([K._.IDENT_STR,"[",evt.target[K._.DT_VAL],"]"].join(""));
           break;
         case V.CONSTANT:
-          setConstant(evt.target["data-value"]);
+          setConstant(evt.target[K._.DT_VAL]);
           break;
         case V.NOT:
           negate();
           break;
-        case "override":
-          evt.target["data-value"].replaceParent();
+        case V.OVERRIDE:
+          evt.target[K._.DT_VAL].replaceParent();
           break;
         default:
           break;
       }
     }
     
-    function setOperation(oper){
+    function retrieveOperationValues(oper,childrentype) {
       var _=K.BooleanOper;
       switch(oper){
         case _.AND:
         case _.OR:
-          setBooleanOperation(oper);
+          if(pvt.type!==V.OPERATION||(pvt.operation!==_.AND&&pvt.operation!==_.OR)){
+            return [new BooleanNode(args),new BooleanNode({value:[oper===_.AND?V.TRUE:V.FALSE]})];
+          }
           break;
         case _.GT:
         case _.GTE:
         case _.LT:
         case _.LTE:
+          if(pvt.type!==V.OPERATION||!(pvt.childNodes[0] instanceof K.ArithNode&&pvt.childNodes[1] instanceof K.ArithNode)){
+            return [new K.ArithNode(),new K.ArithNode()];
+          }
+          break;
         case _.EQ:
         case _.NEQ:
-          setArithOperation(oper);
+          if((childrentype||K._.TYPE_NBR)===K._.TYPE_NBR){
+            if(pvt.type!==V.OPERATION||!(pvt.childNodes[0] instanceof K.ArithNode&&pvt.childNodes[1] instanceof K.ArithNode)){
+              return [new K.ArithNode(),new K.ArithNode()];
+            }
+          }else{
+            if (pvt.type!==V.OPERATION||!(pvt.childNodes[0] instanceof K.StringNode&&pvt.childNodes[1] instanceof K.StringNode)) {
+              return [new K.StringNode(),new K.StringNode()];
+            }
+          }
           break;
       }
+      return pvt.childNodes;
     }
     
     function setConstant(_value){
-      init(args={parent:getParent(),value:_value});
+      init(args={value:[_value]});
     }
     
     function setIdentifier(_value){
-      init(args={type:V.IDENTIFIER,parent:getParent(),value:_value});
+      init(args={type:V.IDENTIFIER,value:[_value]});
     }
     
-    function setArithOperation(oper){
-      var _B=K.BooleanOper;
-      var val;
-      if(pvt.type!==V.OPERATION||pvt.operation===_B.AND||pvt.operation===_B.OR){
-        val=[new K.ArithNode(),new K.ArithNode()];
-      }else{
-        val=args.value;
-      }
-      init(args={operation:oper.name, type:V.OPERATION, value:val, parent:getParent()});
-    }
-    
-    function setBooleanOperation(oper){
-      var val=[];
-      var _B=K.BooleanOper;
-      if(pvt.type===V.OPERATION&&(pvt.operation===_B.AND||pvt.operation===_B.AND)){
-        val=args.value;
-      }else{
-        val=[new BooleanNode(args),new BooleanNode({value:oper===_B.AND?V.TRUE:V.FALSE})];
-      }
-      init(args={operation:oper.name,type:V.OPERATION,value:val,parent:getParent()});
+    function setOperation(oper,values){
+      init(args={operation:oper.name, type:V.OPERATION, value:values.slice(0,2)});
     }
     
     function negate(){
@@ -259,7 +232,7 @@
       }else if(pvt.type===V.NOT){
         pvt.childNodes[0].replaceParent();
       }else{
-        init(args={operation:K.BooleanOper.NOT.name,type:V.NOT,value:new BooleanNode(args)});
+        init(args={operation:K.BooleanOper.NOT.name,type:V.NOT,value:[new BooleanNode(args)]});
       }
     }
     
@@ -270,31 +243,47 @@
       }
     }
     
+    function getVariableSubMenu(){
+      var _=K.Node;
+      var variables=_.getVariables(_.VariableType.BOOLEAN);
+      var items=[];
+      for(var i=0, l=variables.length;i<l;i++){
+        items.push({text:variables[i], click:genericClickEvent, data:{type:V.IDENTIFIER,value:variables[i]}});
+      }
+      return new K.Toolbar({classes:[K._.TEXT_TYPE], items:items, text:K.getMessage(lbl.var)});
+    }
+    
     function initToolbar(){
       var _=K.BooleanOper;
       var boolOp=K.BooleanOper;
       var itms=[
-       {text:K.getMessage(_lbl.TRUE), click:genericClickEvent, data:{type:V.CONSTANT,value:V.TRUE}},
-       {text:K.getMessage(_lbl.FALSE), click:genericClickEvent, data:{type:V.CONSTANT,value:V.FALSE}},
-       {text:"-", classes:[]},
-       {text:K.getMessage(_lbl.negate), click:genericClickEvent, data:{type:V.NOT}},
-       {text:K.getMessage(_lbl.and), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.AND}},
-       {text:K.getMessage(_lbl.or), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.OR}},
-       {text:"-", classes:[]},
-        new K.Toolbar({classes:[K._.TEXT_TYPE],text:K.getMessage(_lbl.ARIT),items:[
-         {text:K.getMessage(_lbl.eq), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.EQ}},
-         {text:K.getMessage(_lbl.neq), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.NEQ}},
-         {text:K.getMessage(_lbl.gte), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.GTE}},
-         {text:K.getMessage(_lbl.gt), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.GT}},
-         {text:K.getMessage(_lbl.lte), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.LTE}},
-         {text:K.getMessage(_lbl.lt), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.LT}}]
-        }),
-       {text:"-", classes:[]}
+        {text:K.getMessage(lbl.TRUE), click:genericClickEvent, data:{type:V.CONSTANT,value:V.TRUE}},
+        {text:K.getMessage(lbl.FALSE), click:genericClickEvent, data:{type:V.CONSTANT,value:V.FALSE}},
+        {text:"-", classes:[]},
+        {text:K.getMessage(lbl.negate), click:genericClickEvent, data:{type:V.NOT}},
+        {text:K.getMessage(lbl.and), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.AND}},
+        {text:K.getMessage(lbl.or), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.OR}},
+        {text:"-", classes:[]},
+        new K.Toolbar({classes:[K._.TEXT_TYPE],text:K.getMessage(lbl.COMPARE),items:[
+          new K.Toolbar({classes:[K._.TEXT_TYPE],text:K.getMessage(lbl.ARIT),items:[
+            {text:K.getMessage(lbl.eq), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.EQ}},
+            {text:K.getMessage(lbl.neq), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.NEQ}},
+            {text:K.getMessage(lbl.gte), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.GTE}},
+            {text:K.getMessage(lbl.gt), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.GT}},
+            {text:K.getMessage(lbl.lte), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.LTE}},
+            {text:K.getMessage(lbl.lt), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.LT}}
+          ]}),
+          new K.Toolbar({classes:[K._.TEXT_TYPE],text:K.getMessage(lbl.STR_COMP),items:[
+            {text:K.getMessage(lbl.eq), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.EQ,value:K._.TYPE_STR}},
+            {text:K.getMessage(lbl.neq), click:genericClickEvent, data:{type:V.OPERATION,operation:boolOp.NEQ,value:K._.TYPE_STR}}
+          ]}),
+        ]}),
+        {text:"-", classes:[]}
       ];
       itms.push(getVariableSubMenu());
       
       if(getParent() instanceof BooleanNode){
-        itms.push({parent:toolbar, text:K.getMessage(_lbl.OVERRIDE), click:genericClickEvent, data:{type:"override",value:_this}});
+        itms.push({parent:toolbar, text:K.getMessage(lbl.OVERRIDE), click:genericClickEvent, data:{type:V.OVERRIDE,value:_this}});
       }
       _this.getDOM()[K._.DATA_TBR]=pvt.toolbar=new K.Toolbar({parent:_this.getDOM(), classes:[K._.TOOLBAR,K._.VALUE],items:itms});
     }
@@ -303,11 +292,11 @@
       var dom=_this.getDOM();
       dom.classList.add(pvt.operation.name);
       
-      K.createDOM({text:"(", classes:[K._.TEXT], parent:dom});
+      K.createDOM({text:"(", classes:[K._.TEXT], parent:dom, hasToolbar:true});
       updateParent(pvt.childNodes[0]);
       K.createDOM({text:pvt.operation.label, classes:[K._.TEXT, K._.OPER], parent:dom, hasToolbar:true});
       updateParent(pvt.childNodes[1]);
-      K.createDOM({text:")", classes:[K._.TEXT] , parent:dom});
+      K.createDOM({text:")", classes:[K._.TEXT] , parent:dom, hasToolbar:true});
     }
     
     function renderNegationDOM(){
@@ -325,16 +314,16 @@
       if(pvt.type===V.IDENTIFIER){
         _text=["[",pvt.childNodes[0],"]"].join("");
       }else{
-        if(args.value===V.TRUE){
-            _text=K.getMessage(_lbl.TRUE);
-          }else if(args.value===V.FALSE){
-            _text=K.getMessage(_lbl.FALSE);
+        if(pvt.childNodes[0]===V.TRUE){
+            _text=K.getMessage(lbl.TRUE);
+          }else if(pvt.childNodes[0]===V.FALSE){
+            _text=K.getMessage(lbl.FALSE);
           }
       }
       K.createDOM({text:_text, classes:[V.NAME,K._.TEXT, K._.VALUE], parent:dom, hasToolbar:true});
     }
     
-    function init(){
+    function init(args){
       clear();
       pvt.type=args.type||V.CONSTANT;
       args.value=args.value||[];
@@ -354,7 +343,7 @@
           pvt.renderDOM=renderNegationDOM;
           break;
         case V.CONSTANT:
-          pvt.childNodes.push(args.value[0]=(args.value=args.value||[])[0]||V.TRUE);
+          pvt.childNodes.push(args.value[0]||V.TRUE);
           pvt.renderDOM=renderValueDOM;
           break;
         case V.IDENTIFIER:
