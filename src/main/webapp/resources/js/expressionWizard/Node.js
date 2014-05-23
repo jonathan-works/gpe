@@ -1,6 +1,7 @@
 (function (K) {
   var V = {
     get TOOLBAR(){return "toolbar";},
+    get TOOLBAR_ITM(){return "toolbar-itm";},
     get UNDEF(){return "undefined"},
     get DIV(){return "div"},
     get CSS_NODE(){return "Node"},

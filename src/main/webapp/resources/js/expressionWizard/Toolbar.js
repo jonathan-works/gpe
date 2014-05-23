@@ -61,6 +61,7 @@
       for(var i=0,l=pvt.items.length;i<l;i++) {
         itm = pvt.items[i];
         newItm = new K.createDOM({type:V.LI, classes:itm.classes||[V.ACTION], click:itm.click, text:itm.text||"", parent:pvt.dom, data:itm.data||{}});
+        newItm.classList.add(K._.TOOLBAR_ITM);
         if (itm instanceof Toolbar) {
           itm.parent = newItm;
           itm.draw();
