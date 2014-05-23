@@ -72,6 +72,6 @@ public class ExpressionReader {
                 cache.push(format("({0} ? {1} : {2})", cache.pop(),cache.pop(),cache.pop()));
             }
         }
-        return cache.pop();
+        return format("#'{'{0}'}'", cache.pop());
     }
 }

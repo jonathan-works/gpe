@@ -23,7 +23,6 @@ public class ExpressionTokenizer {
         final AstCompositeExpression compositeExpression = parser.CompositeExpression();
         final WriteExpressionVisitor visitor = new WriteExpressionVisitor();
         compositeExpression.accept(visitor);
-        //return new ExpressionReader(visitor.getStack()).getResultExpression();
         return visitor.toString();
     }
     
@@ -48,7 +47,7 @@ public class ExpressionTokenizer {
         list.add("( ( false || ( !bool1 || true ) ) && ( ( ( 0==0 || 0!=0 ) || ( 0>=0 || 0<=0 ) ) || ( ( 0>0 || 0<0 ) ) ) )");
         list.add("(!(bool1 && bool2 || True && False) && (-0.05<=(((valor1+2)*3)/100)-1)) ? str1 : 'novo'");
         try {
-            String expr = list.get(4);
+            String expr = list.get(0);
             System.out.println(expr);
             String resultExpr = new ExpressionTokenizer(format("#'{'{0}'}'", expr)).getNodeJSON();
             System.out.println(resultExpr);
