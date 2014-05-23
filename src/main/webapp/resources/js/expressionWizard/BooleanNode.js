@@ -337,7 +337,8 @@
           pvt.renderDOM=renderValueDOM;
           break;
         default:
-          throw V.TYPE_EXCEP;
+          console.error(V.TYPE_EXCEP);
+          throw 0;
       }
       var dom=_this.getDOM();
       dom.classList.add(V.NAME);
