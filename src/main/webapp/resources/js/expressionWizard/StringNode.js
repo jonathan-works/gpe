@@ -2,8 +2,6 @@
   var V = {
     get STRING(){return "String";},
     get NAME(){return "StringNode";},
-    get LN_BRK_CLS(){return "breakLine";},
-    get SPAN(){return "span";},
     get DIV(){return "div";},
     get TEXT(){return "Text";},
     get OPER(){return "Operator";},
@@ -14,11 +12,21 @@
     get CONSTANT(){return 0x1;},
     get OPERATION(){return 0x2;},
     get IDENTIFIER(){return 0x4;},
-    get EXPRESSION(){return 0x8;}
+    get EXPRESSION(){return 0x8;},
+    get STR_OPER(){return "Plus";}
   };
-  
+
   var lbl = {
-    
+    get PLUS_OP(){return ["StringOper","plus"].join(".");},
+    get PROMPT(){return [V.NAME,"prompt"].join(".");},
+    get BEFORE(){return [V.NAME,"addPrefix"].join(".");},
+    get AFTER(){return [V.NAME,"addSufix"].join(".");},
+    get BOOL(){return [V.NAME,"booleanValue"].join(".");},
+    get STR(){return [V.NAME,"stringValue"].join(".");},
+    get NBR(){return [V.NAME,"numberValue"].join(".");},
+    get CONST(){return [V.NAME,"constant"].join(".");},
+    get EXPR(){return [V.NAME,"expression"].join(".");},
+    get OVERRIDE(){return [V.NAME,"override"].join(".");},
   };
   
   function StringNode(args) {
@@ -124,7 +132,7 @@
     function renderOperationDOM() {
       var dom = _this.getDOM();
       updateParent(pvt.childNodes[0]);
-      dom.appendChild(K.createDOM({text:"+", classes:[V.TEXT,V.OPER], hasToolbar:true}));
+      dom.appendChild(K.createDOM({text:K.getMessage(lbl.PLUS_OP),classes:[V.TEXT,V.OPER],hasToolbar:true}));
       updateParent(pvt.childNodes[1]);
       dom.classList.add(pvt.operation);
     }
@@ -137,38 +145,37 @@
       } else {
         _text=pvt.childNodes[0];
       }
-      dom.appendChild(K.createDOM({text:_text, hasToolbar:true}));
+      dom.appendChild(K.createDOM({text:_text,hasToolbar:true}));
       dom.classList.add(V.VALUE);
     }
     
     function renderExpressionDOM() {
       var dom = _this.getDOM();
-      dom.appendChild(K.createDOM({type:V.DIV, text:V.IF, classes:[V.TEXT], hasToolbar:true}));
+      dom.appendChild(K.createDOM({type:V.DIV,text:V.IF,classes:[V.TEXT],hasToolbar:true}));
       updateParent(pvt.childNodes[0]);
-      dom.appendChild(K.createDOM({type:V.DIV, text:V.THEN, classes:[V.TEXT], hasToolbar:true}));
+      dom.appendChild(K.createDOM({type:V.DIV,text:V.THEN,classes:[V.TEXT],hasToolbar:true}));
       updateParent(pvt.childNodes[1]);
-      dom.appendChild(K.createDOM({type:V.DIV, text:V.ELSE, classes:[V.TEXT], hasToolbar:true}));
+      dom.appendChild(K.createDOM({type:V.DIV,text:V.ELSE,classes:[V.TEXT],hasToolbar:true}));
       updateParent(pvt.childNodes[2]);
       
       dom.classList.add(K._.EXPRESSION);
     }
     
     function toolbarItemClick(evt) {
-      var result = "";
+      var val;
       var dtType = evt.target[K._.DT_TYPE];
       switch(dtType) {
         case V.OPERATION:
-          //setOperation(evt.target[K._.DATA_OPER],pvt.type===V.OPERATION?args.value:[new ArithNode(args),new ArithNode()]);
-          alert("Operation");
+          setOperation({name:V.STR_OPER},resolveOperationValues(evt.target[K._.DT_VAL]));
           break;
         case V.IDENTIFIER:
           init(args={type:dtType,value:[[K._.IDENT_STR,"[",evt.target[K._.DT_VAL],"]"].join("")]});
           break;
         case V.CONSTANT:
-          init(args={type:dtType,value:[[V.STRING,"['",prompt("Digite um valor"),"']"].join("")]});
+          init(args={type:dtType,value:[[V.STRING,"['",prompt(K.getMessage(lbl.PROMPT)),"']"].join("")]});
           break;
         case V.EXPRESSION:
-          init(args={condition:new K.BooleanNode(), value:[new StringNode(args),new StringNode()], type:V.EXPRESSION});
+      setExpression(new K.BooleanNode(),new StringNode(args),new StringNode());
           break;
         default:
           replaceParent();
@@ -176,6 +183,38 @@
       }
     }
     
+    function resolveOperValue(flag) {
+      var result;
+      console.log(flag,(flag&K._.TYPE_NBR),(flag&K._.TYPE_BOOL),(flag&K._.TYPE_STR));
+      if((flag&K._.TYPE_BOOL)===K._.TYPE_BOOL){
+        result=new K.BooleanNode();
+      }else if((flag&K._.TYPE_STR)===K._.TYPE_STR){
+        result=new StringNode();
+      }else if((flag&K._.TYPE_NBR)===K._.TYPE_NBR){
+        result=new K.ArithNode();
+      }else{
+        console.error("err");
+        throw 0;
+      }
+      return result;
+    }
+    
+    function resolveOperationValues(flag){
+      var values=[];
+      if ((flag&V.EXPRESSION)===V.EXPRESSION) {
+        values.push(new StringNode(args));
+        values.push(resolveOperValue(flag));
+      }else{
+        values.push(resolveOperValue(flag));
+        values.push(new StringNode(args));
+      }
+      return values;
+    }
+    
+    function setExpression(condition,value1,value2){
+      init(args={type:V.EXPRESSION,condition:condition,value:[value1,value2]});
+    }
+  
     function setOperation(oper,values) {
       init(args={operation:oper.name,type:V.OPERATION,value:values.slice(0,2)});
     }
@@ -184,28 +223,37 @@
       var _ = K.Node;
       var variables = _.getVariables(_.VariableType.STRING);
       var items = [];
-      for(var i=0, l=variables.length;i<l;i++) {
-        items.push({text:variables[i], click:toolbarItemClick, data:{type:V.IDENTIFIER,value:variables[i]}});
+      for(var i=0,l=variables.length;i<l;i++) {
+        items.push({text:variables[i],click:toolbarItemClick,data:{type:V.IDENTIFIER,value:variables[i]}});
       }
-      return new K.Toolbar({classes:[K._.TEXT_TYPE], items:items, text:K.getMessage("StringNode.var")});
+      return new K.Toolbar({classes:[K._.TEXT_TYPE],items:items,text:K.getMessage("StringNode.var")});
     }
-    
+      
     function initToolbar() {
       var itms = [
-        {text:"Plus", click:toolbarItemClick, data:{type:V.OPERATION,operation:"Plus"}},
-        {text:"-", classes:[]},
+        new K.Toolbar({text:K.getMessage(lbl.BEFORE),classes:[K._.TEXT_TYPE],items:[
+          {text:K.getMessage(lbl.BOOL),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_BOOL}},
+          {text:K.getMessage(lbl.STR),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_STR}},
+          {text:K.getMessage(lbl.NBR),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_NBR}}
+        ]}),
+        new K.Toolbar({text:K.getMessage(lbl.AFTER),classes:[K._.TEXT_TYPE],items:[
+          {text:K.getMessage(lbl.BOOL),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_BOOL|V.EXPRESSION}},
+          {text:K.getMessage(lbl.STR),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_STR|V.EXPRESSION}},
+          {text:K.getMessage(lbl.NBR),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_NBR|V.EXPRESSION}}
+        ]}),
+        {text:"-",classes:[]},
         getVariableSubMenu(),
-        {text:"Constant", click:toolbarItemClick, data:{type:V.CONSTANT}},
-        {text:"-", classes:[]},
-        {text:"Expression", click:toolbarItemClick, data:{type:V.EXPRESSION}},
+        {text:K.getMessage(lbl.CONST),click:toolbarItemClick,data:{type:V.CONSTANT}},
+        {text:"-",classes:[]},
+        {text:K.getMessage(lbl.EXPR),click:toolbarItemClick,data:{type:V.EXPRESSION}},
       ];
       
       if (getParent() instanceof _this.getClass()) {
-        itms.push({text:"-", classes:[]});
-        itms.push({parent:toolbar, text:"override", click:toolbarItemClick});
+        itms.push({text:"-",classes:[]});
+        itms.push({parent:toolbar,text:K.getMessage(lbl.OVERRIDE),click:toolbarItemClick});
       }
       
-      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(), classes:[K._.TOOLBAR,K._.VALUE],items:itms});
+      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(),classes:[K._.TOOLBAR,K._.VALUE],items:itms});
       _this.getDOM()[K._.DATA_TBR] = pvt.toolbar;
     }
     
@@ -233,7 +281,8 @@
           pvt.renderDOM = renderValueDOM;
           break;
         case V.CONSTANT:
-          param.value[0]=(param.value=param.value||[])[0]||[V.STRING,"['']"].join("");
+      param.value=param.value||[];
+      param.value[0]=param.value[0]||[V.STRING,"['']"].join("");
           pvt.childNodes.push(param.value[0].slice(7,param.value[0].length-1));
           pvt.renderDOM = renderValueDOM;
           break;
@@ -256,7 +305,7 @@
       pvt.renderDOM();
     }
     
-    Object.defineProperties(_this, {
+    Object.defineProperties(_this,{
       parent:{
         get:getParent,
         set:setParent
@@ -324,7 +373,7 @@
     return type;
   }
   
-  Object.defineProperties(StringNode, {
+  Object.defineProperties(StringNode,{
     CONSTANT:{get:function(){return V.CONSTANT;}},
     OPERATION:{get:function(){return V.OPERATION;}},
     IDENTIFIER:{get:function() {return V.IDENTIFIER;}},
