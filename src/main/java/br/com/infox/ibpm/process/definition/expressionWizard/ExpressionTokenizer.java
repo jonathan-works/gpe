@@ -10,14 +10,11 @@ import org.jboss.el.parser.AstCompositeExpression;
 import org.jboss.el.parser.ELParser;
 import org.jboss.el.parser.ParseException;
 
-public class ExpressionTokenizer {
-    private final String expression;
+public final class ExpressionTokenizer {
+
+    private ExpressionTokenizer(){}
     
-    public ExpressionTokenizer(String expression) {
-        this.expression=expression;
-    }
-    
-    public String getNodeJSON() throws ParseException,Exception{
+    public static final String toNodeJSON(String expression) throws ParseException,Exception{
         final StringReader reader = new StringReader(expression);
         final ELParser parser = new ELParser(reader);
         final AstCompositeExpression compositeExpression = parser.CompositeExpression();
@@ -26,7 +23,7 @@ public class ExpressionTokenizer {
         return visitor.toString();
     }
     
-    public static String fromNodeJSON(String json){
+    public static final String fromNodeJSON(String json){
         final String result = json.substring(1, json.length()-1);
         String[] split = result.split(",");
         Stack<String> stack=new Stack<>();
@@ -47,11 +44,11 @@ public class ExpressionTokenizer {
         list.add("( ( false || ( !bool1 || true ) ) && ( ( ( 0==0 || 0!=0 ) || ( 0>=0 || 0<=0 ) ) || ( ( 0>0 || 0<0 ) ) ) )");
         list.add("(!(bool1 && bool2 || True && False) && (-0.05<=(((valor1+2)*3)/100)-1)) ? str1 : 'novo'");
         try {
-            String expr = list.get(1);
+            String expr = list.get(5);
             System.out.println(expr);
-            String resultExpr = new ExpressionTokenizer(format("#'{'{0}'}'", expr)).getNodeJSON();
+            String resultExpr = ExpressionTokenizer.toNodeJSON(format("#'{'{0}'}'", expr));
             System.out.println(resultExpr);
-            System.out.println(fromNodeJSON(resultExpr));
+            System.out.println(ExpressionTokenizer.fromNodeJSON(resultExpr));
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (Exception e) {

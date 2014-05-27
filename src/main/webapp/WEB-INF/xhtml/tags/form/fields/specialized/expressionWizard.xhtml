@@ -10,68 +10,115 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:h="http://java.sun.com/jsf/html">
 	
-	<h:outputScript
-        name="expressionWizard.js"
-        library="js" />
-	<script language="javascript" charset="ISO-8859-1">
-	//<![CDATA[
-		invoke(["infox.ExpressionWizard"],function(ExpressionWizard){
-			new ExpressionWizard({
-				inputId:"#{rich:clientId(id)}TextDecoration:#{id}Text",
-				imagePath:"#{pathResolver.contextPath}#{a4jSkin.imgFolder}/jbpm/wizard.gif",
-				id:"#{rich:clientId(id)}Div",
-				variables:{
-					boolean:#{nodeFitter.currentNode.getBooleanVariables()},
-					number:#{nodeFitter.currentNode.getNumberVariables()},
-					transition:#{nodeFitter.currentNode.getLeavingTransitionList()},
-				},
-				messages:{
-					image:{
-						title:"#{eppmessages['expressionWizard.title']}"
-					},
-					numberInput:{
-						label:"#{eppmessages['expressionWizard.numberPrompt']}",
-						error:"#{eppmessages['expressionWizard.numberPromptError']}"
-					},
-					select:{
-						arithmetic:{
-							null:"#{eppmessages['expressionWizard.aritSelect.null']}",
-							plus:"#{eppmessages['expressionWizard.aritSelect.plus']}",
-							minus:"#{eppmessages['expressionWizard.aritSelect.minus']}",
-							mult:"#{eppmessages['expressionWizard.aritSelect.mult']}",
-							div:"#{eppmessages['expressionWizard.aritSelect.div']}",
-							number:"#{eppmessages['expressionWizard.aritSelect.numb']}"
-						},
-						boolean:{
-							null:"#{eppmessages['expressionWizard.booleanSelect.null']}",
-							true:"#{eppmessages['expressionWizard.booleanSelect.true']}",
-							false:"#{eppmessages['expressionWizard.booleanSelect.false']}",
-							or:"#{eppmessages['expressionWizard.booleanSelect.or']}",
-							and:"#{eppmessages['expressionWizard.booleanSelect.and']}",
-							not:"#{eppmessages['expressionWizard.booleanSelect.not']}",
-							equals:"#{eppmessages['expressionWizard.booleanSelect.equals']}",
-							notEqual:"#{eppmessages['expressionWizard.booleanSelect.notEqual']}",
-							gte:"#{eppmessages['expressionWizard.booleanSelect.gte']}",
-							gt:"#{eppmessages['expressionWizard.booleanSelect.gt']}",
-							lte:"#{eppmessages['expressionWizard.booleanSelect.lte']}",
-							lt:"#{eppmessages['expressionWizard.booleanSelect.lt']}"
-						},
-						conclusion:{
-							null:"#{eppmessages['expressionWizard.condSelect.null']}",
-							condition:"#{eppmessages['expressionWizard.condSelect.cond']}"
-						}
-					}
-				}
-		  });
-		});
-	//]]>
-	</script>
+  <h:outputScript
+        library="js/expressionWizard"
+        name="Enum.js"></h:outputScript>
+  <h:outputScript
+        library="js/expressionWizard"
+        name="Node.js"></h:outputScript>
+  <h:outputScript
+        library="js/expressionWizard"
+        name="Toolbar.js"></h:outputScript>
+  <h:outputScript
+        library="js/expressionWizard"
+        name="BooleanOper.js"></h:outputScript>
+  <h:outputScript
+        library="js/expressionWizard"
+        name="BooleanNode.js"></h:outputScript>
+  <h:outputScript
+        library="js/expressionWizard"
+        name="StringNode.js"></h:outputScript>
+  <h:outputScript
+        library="js/expressionWizard"
+        name="ArithOper.js"></h:outputScript>
+  <h:outputScript
+        library="js/expressionWizard"
+        name="ArithNode.js"></h:outputScript>
+  <h:outputScript id="setVariables">
+    (function(K){
+      var Node=K.Node;
+      var VariableType=Node.VariableType;
+      Node.clearVariables(VariableType.BOOLEAN);
+      Node.clearVariables(VariableType.NUMBER);
+      Node.clearVariables(VariableType.STRING);
+      Node.addVariable(#{nodeFitter.currentNode.getBooleanVariables()},VariableType.BOOLEAN);
+      Node.addVariable(#{nodeFitter.currentNode.getNumberVariables()},VariableType.NUMBER);
+      Node.addVariable(#{nodeFitter.currentNode.getLeavingTransitionList()},VariableType.STRING);
+      K.messages={
+          "pt-BR":{
+            "BooleanOper.and":"^",
+            "BooleanOper.or":"v",
+            "BooleanOper.not":"~",
+            "BooleanOper.eq":"=",
+            "BooleanOper.neq":"=|=",
+            "BooleanOper.gt":"&gt;",
+            "BooleanOper.gte":"&gt;=",
+            "BooleanOper.lt":"&lt;",
+            "BooleanOper.lte":"&lt;=",
+            "BooleanNode.negate":"Negar",
+            "BooleanNode.and":"Conjunção",
+            "BooleanNode.or":"Disjunção",
+            "BooleanNode.eq":"Igual a",
+            "BooleanNode.neq":"Diferente de",
+            "BooleanNode.gte":"Maior ou igual a",
+            "BooleanNode.gt":"Maior que",
+            "BooleanNode.lte":"Menor ou igual a",
+            "BooleanNode.lt":"Menor que",
+            "BooleanNode.var":"Variáveis",
+            "BooleanNode.TRUE":"VERDADEIRO",
+            "BooleanNode.FALSE":"FALSO",
+            "BooleanNode.ARIT":"Expr. Aritmética",
+            "BooleanNode.STR_COMP":"Comparação de literal",
+            "BooleanNode.EXPR":"Expressão ternária",
+            "BooleanNode.OVERRIDE":"Sobrescrever pai",
+            "BooleanNode.COMPARATION":"Comparação de valores",
+            "ArithOper.negative":"-",
+            "ArithOper.div":"/",
+            "ArithOper.minus":"-",
+            "ArithOper.mult":"x",
+            "ArithOper.plus":"+",
+            "ArithNode.if":"SE",
+            "ArithNode.then":"ENTÃO RETORNE",
+            "ArithNode.else":"SENÃO RETORNE",
+            "ArithNode.negative":"Negativar",
+            "ArithNode.minus":"Subtrair",
+            "ArithNode.plus":"Somar",
+            "ArithNode.mult":"Multiplicar",
+            "ArithNode.div":"Dividir",
+            "ArithNode.constant":"Valor constante",
+            "ArithNode.expression":"Expressão de decisão",
+            "ArithNode.variable":"Variáveis",
+            "ArithNode.override":"Sobrescrever valor",
+            "ArithNode.number.valid.prompt":"Insira um número válido (formato: 9999999.99)",
+            "StringNode.if":"SE",
+            "StringNode.then":"ENTÃO RETORNE",
+            "StringNode.else":"SENÃO RETORNE",
+            "StringOper.plus":" ",
+            "StringNode.addPrefix":"Inserir antes",
+            "StringNode.addSufix":"Inserir após",
+            "StringNode.booleanValue":"Valor Lógico",
+            "StringNode.stringValue":"Valor Literal",
+            "StringNode.numberValue":"Valor Numérico",
+            "StringNode.var":"Variáveis",
+            "StringNode.constant":"Valor constante",
+            "StringNode.expression":"Expressão de decisão",
+            "StringNode.override":"Sobrescrever com valor"
+          }
+        };
+    })(_parser);
+  </h:outputScript>
+  <script language="javascript" charset="utf-8">
+  _parser.Node.generateTree(#{value}, document.getElementById("#{rich:clientId(id.concat('Div'))}"), document.getElementById("#{rich:clientId(id)}TextDecoration:#{id}Text"));
+  </script>
 	<s:div id="#{id}" >
-		<s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
-		<wi:inputTextarea id="#{id}Text" styleClass="expressionInput"
-			label="#{eppmessages['expressionWizard.expressao']}" value="#{value}" showCounter="false">
-			<a:ajax execute="@this" event="change" render="#{id} pageBodyDialogMessage" limitRender="true"/>
-		</wi:inputTextarea>
-
+		<s:div id="#{id}Div" styleClass="expressionDiv">
+      <div class="toolbar-cont"></div>
+    </s:div>
+    <div class="expressionInput hidden">
+  		<wi:inputTextarea id="#{id}Text" styleClass="expressionInput"
+  			label="#{messages['expressionWizard.expressao']}" value="#{value}" showCounter="false">
+  			<a:ajax execute="@this" event="change" render="#{id}Text setVariables" limitRender="true"/>
+  		</wi:inputTextarea>
+    </div>
 	</s:div>
 </ui:composition>

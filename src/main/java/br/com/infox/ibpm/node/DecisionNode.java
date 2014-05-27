@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
+import org.jboss.el.parser.ParseException;
 import org.jboss.seam.international.Messages;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmException;
@@ -21,6 +22,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
+import br.com.infox.ibpm.process.definition.expressionWizard.ExpressionTokenizer;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.VariableCollector;
 import br.com.infox.seam.exception.ApplicationException;
@@ -73,6 +75,23 @@ public class DecisionNode extends Node {
         this.decisionExpression = decisionExpression;
     }
 
+    public String getTokenStack(){
+        String result="";
+        try {
+            result = ExpressionTokenizer.toNodeJSON(decisionExpression);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public void setTokenStack(String stack){
+        System.out.println(stack);
+        this.decisionExpression=ExpressionTokenizer.fromNodeJSON(stack);
+        System.out.println(this.decisionExpression);
+    }
+    
     // ----------
 
     public DecisionNode() {

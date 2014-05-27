@@ -108,6 +108,8 @@
           _gParent.replaceChild(_parent,_this);
         }else if(_gParent instanceof Element){
           _gParent.replaceChild(_this.getDOM(),_parent.getDOM());
+          _this.parent=_gParent;
+          _this.attachInput(_parent.getDOM()[K._.DT_INPT]);
         }
       }
     }
@@ -155,6 +157,7 @@
           clearToolbar();
           break;
       }
+      _this.getDOM().dispatchEvent(new CustomEvent("selected",{bubbles:true,cancelable:true,detail:{}}));
     }
     
     function retrieveOperationValues(oper,childrentype) {
@@ -383,6 +386,9 @@
       },
       replaceChild:{
         get:function(){return replaceChild;}
+      },
+      attachInput:{
+        get:function(){return _super.attachInput;}
       }
     });
     init(args);

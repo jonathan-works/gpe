@@ -7,7 +7,7 @@ import org.jboss.el.parser.AstDeferredExpression;
 import org.jboss.el.parser.Node;
 import org.jboss.el.parser.NodeVisitor;
 
-public class WriteExpressionVisitor implements NodeVisitor {
+public final class WriteExpressionVisitor implements NodeVisitor {
     private final Stack<String> stack;
     
     public WriteExpressionVisitor() {

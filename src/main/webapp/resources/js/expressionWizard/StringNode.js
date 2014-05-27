@@ -88,6 +88,8 @@
           _gParent.replaceChild(_parent,_this);
         }else if(_gParent instanceof Element){
           _gParent.replaceChild(_this.getDOM(),_parent.getDOM());
+          _this.parent=_gParent;
+          _this.attachInput(_parent.getDOM()[K._.DT_INPT]);
         }
       }
     }
@@ -181,11 +183,11 @@
           replaceParent();
           break;
       }
+      _this.getDOM().dispatchEvent(new CustomEvent("selected",{bubbles:true,cancelable:true,detail:{}}));
     }
     
     function resolveOperValue(flag) {
       var result;
-      console.log(flag,(flag&K._.TYPE_NBR),(flag&K._.TYPE_BOOL),(flag&K._.TYPE_STR));
       if((flag&K._.TYPE_BOOL)===K._.TYPE_BOOL){
         result=new K.BooleanNode();
       }else if((flag&K._.TYPE_STR)===K._.TYPE_STR){
@@ -336,6 +338,9 @@
       },
       replaceChild:{
         get:function(){return replaceChild;}
+      },
+      attachInput:{
+        get:function(){return _super.attachInput;}
       }
     });
         

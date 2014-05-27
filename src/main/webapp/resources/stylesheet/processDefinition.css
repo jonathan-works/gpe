@@ -73,3 +73,106 @@
   text-align:center;
   font-weight:bold;
 }
+
+.Node.selected{
+  cursor:pointer;
+}
+.Node.Text{
+  color:#CCC;
+}
+.Node.Text.Operator{
+  margin:0 5px;
+}
+.toolbar{
+  position:absolute;
+  z-index:128;
+  top:20px;
+  left:0;
+  margin:0;
+  padding:0 10px 0 0;
+}
+.toolbar > .toolbar-itm,.toolbar > .toolbar-itm > .toolbar > .toolbar-itm {
+  display:block;
+  vertical-align:top;
+  position:relative;
+}
+
+.toolbar > .toolbar-itm > .toolbar {
+  display:none;
+  position:absolute;
+  left:100%;
+  top:0;
+}
+.expressionInput.hidden{
+  display:none;
+}
+.expressionDiv{
+  font-size:18px;
+}
+.Text.Operator {
+  padding:0 5px;
+}
+
+.toolbar > .toolbar-itm:hover > .toolbar {
+  display:block;
+}
+
+.toolbar-itm.Action:hover {
+  color:#FFF;
+  background-color:#700;
+  cursor:context-menu;
+}
+.toolbar,.toolbar > .toolbar-itm > .toolbar {
+  padding:5px;
+}
+.toolbar {
+  background-color:#FFB;
+  color:#000;
+}
+.Node > .Value:hover, .Node > .Operator:hover,.selected {
+  background-color:#FFB;
+}
+
+.StringNode, .StringNode>.Text{
+  color:#00F;
+}
+.BooleanNode, .BooleanNode>.Text {
+  color:#A00;
+}
+.ArithNode, .ArithNode>.Text {
+  color:#040;
+}
+
+.ArithNode > .Text.Operator {
+  color:#030;
+}
+.StringNode > .Text.Operator {
+  color:#00E;
+}
+.BooleanNode > .Text.Operator {
+  color:#900;
+}
+
+.expressionDiv > .Node {
+  margin:0;
+}
+
+.Expression.Node {
+  display:inline-block;
+}
+
+.Node > .Expression.Node {
+  margin:0 0 0 20px;
+}
+
+.Expression.Node > .ArithNode, .Expression.Node > .StringNode, .Expression.Node > .BooleanNode {
+  margin:0 0 0 20px;
+}
+
+.Node {
+  vertical-align:middle;
+}
+
+.BooleanNode, .StringNode, .ArithNode {
+  display:inline-block;
+}

@@ -375,14 +375,6 @@ img.disabled {
   margin: 0;
 }
 
-.expressionDiv div {
-  display: inline-block;
-}
-
-.conclusionSelect {
-  display: block;
-}
-
 #backgroundBlock {
   left: 0;
   top: 0;
@@ -415,11 +407,6 @@ img.disabled {
   margin: 0;
   max-width: 99%;
   padding-top: 0;
-}
-
-.expressionDiv span:hover {
-  background-color: #BBCEC2;
-  cursor: pointer;
 }
 
 .inputTextMiniW69,.inputTextMiniW25,.foneDDD,.foneNormal {

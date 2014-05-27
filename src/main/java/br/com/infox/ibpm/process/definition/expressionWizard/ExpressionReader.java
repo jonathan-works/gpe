@@ -6,7 +6,7 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExpressionReader {
+public final class ExpressionReader {
     private final Stack<String> stack;
     
     public ExpressionReader(final Stack<String> stack){
