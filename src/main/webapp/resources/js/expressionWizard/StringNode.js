@@ -6,9 +6,6 @@
     get TEXT(){return "Text";},
     get OPER(){return "Operator";},
     get VALUE(){return "Value";},
-    get IF(){return K.getMessage(this.NAME+".if");},
-    get THEN(){return K.getMessage(this.NAME+".then");},
-    get ELSE(){return K.getMessage(this.NAME+".else");},
     get CONSTANT(){return 0x1;},
     get OPERATION(){return 0x2;},
     get IDENTIFIER(){return 0x4;},
@@ -17,6 +14,9 @@
   };
 
   var lbl = {
+    get IF(){return [V.NAME,"if"].join(".");},
+    get THEN(){return [V.NAME,"then"].join(".");},
+    get ELSE(){return [V.NAME,"else"].join(".");},
     get PLUS_OP(){return ["StringOper","plus"].join(".");},
     get PROMPT(){return [V.NAME,"prompt"].join(".");},
     get BEFORE(){return [V.NAME,"addPrefix"].join(".");},
@@ -153,11 +153,11 @@
     
     function renderExpressionDOM() {
       var dom = _this.getDOM();
-      dom.appendChild(K.createDOM({type:V.DIV,text:V.IF,classes:[V.TEXT],hasToolbar:true}));
+      dom.appendChild(K.createDOM({type:V.DIV,text:K.getMessage(lbl.IF),classes:[V.TEXT],hasToolbar:true}));
       updateParent(pvt.childNodes[0]);
-      dom.appendChild(K.createDOM({type:V.DIV,text:V.THEN,classes:[V.TEXT],hasToolbar:true}));
+      dom.appendChild(K.createDOM({type:V.DIV,text:K.getMessage(lbl.THEN),classes:[V.TEXT],hasToolbar:true}));
       updateParent(pvt.childNodes[1]);
-      dom.appendChild(K.createDOM({type:V.DIV,text:V.ELSE,classes:[V.TEXT],hasToolbar:true}));
+      dom.appendChild(K.createDOM({type:V.DIV,text:K.getMessage(lbl.ELSE),classes:[V.TEXT],hasToolbar:true}));
       updateParent(pvt.childNodes[2]);
       
       dom.classList.add(K._.EXPRESSION);
@@ -174,7 +174,10 @@
           init(args={type:dtType,value:[[K._.IDENT_STR,"[",evt.target[K._.DT_VAL],"]"].join("")]});
           break;
         case V.CONSTANT:
-          init(args={type:dtType,value:[[V.STRING,"['",prompt(K.getMessage(lbl.PROMPT)),"']"].join("")]});
+          val = prompt(K.getMessage(lbl.PROMPT));
+          if (val !== null){
+            init(args={type:dtType,value:[[V.STRING,"['",val,"']"].join("")]});
+          }
           break;
         case V.EXPRESSION:
       setExpression(new K.BooleanNode(),new StringNode(args),new StringNode());
