@@ -133,7 +133,7 @@
   background-color:#FFB;
 }
 
-.StringNode, .StringNode>.Text{
+.TransitionNode, .TransitionNode>.Text,.StringNode, .StringNode>.Text{
   color:#00F;
 }
 .BooleanNode, .BooleanNode>.Text {
@@ -146,7 +146,7 @@
 .ArithNode > .Text.Operator {
   color:#030;
 }
-.StringNode > .Text.Operator {
+.StringNode > .Text.Operator,.TransitionNode > .Text.Operator {
   color:#00E;
 }
 .BooleanNode > .Text.Operator {
@@ -165,7 +165,7 @@
   margin:0 0 0 20px;
 }
 
-.Expression.Node > .ArithNode, .Expression.Node > .StringNode, .Expression.Node > .BooleanNode {
+.Expression.Node > .ArithNode, .Expression.Node > .StringNode, .Expression.Node > .TransitionNode, .Expression.Node > .BooleanNode {
   margin:0 0 0 20px;
 }
 
@@ -173,6 +173,6 @@
   vertical-align:middle;
 }
 
-.BooleanNode, .StringNode, .ArithNode {
+.BooleanNode, .StringNode, .ArithNode, .TransitionNode {
   display:inline-block;
 }

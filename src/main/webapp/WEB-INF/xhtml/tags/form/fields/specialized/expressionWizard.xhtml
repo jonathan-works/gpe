@@ -30,6 +30,9 @@
         name="StringNode.js"></h:outputScript>
   <h:outputScript
         library="js/expressionWizard"
+        name="TransitionNode.js"></h:outputScript>
+  <h:outputScript
+        library="js/expressionWizard"
         name="ArithOper.js"></h:outputScript>
   <h:outputScript
         library="js/expressionWizard"
@@ -102,13 +105,19 @@
             "StringNode.var":"Variáveis",
             "StringNode.constant":"Valor constante",
             "StringNode.expression":"Expressão de decisão",
-            "StringNode.override":"Sobrescrever com valor"
+            "StringNode.override":"Sobrescrever com valor",
+            "TransitionNode.if":"SE",
+            "TransitionNode.then":"ENTÃO VÁ PARA",
+            "TransitionNode.else":"SENÃO VÁ PARA",
+            "TransitionNode.var":"Variáveis",
+            "TransitionNode.expression":"Decisão",
+            "TransitionNode.override":"Sobrescrever pai com este valor"
           }
         };
     })(_parser);
   </h:outputScript>
   <script language="javascript" charset="utf-8">
-  _parser.Node.generateTree(#{value}, document.getElementById("#{rich:clientId(id.concat('Div'))}"), document.getElementById("#{rich:clientId(id)}TextDecoration:#{id}Text"));
+  _parser.TransitionNode.generateTree(#{value}, #{rich:jQuery(id.concat('Div'))}[0], #{rich:jQuery(id.concat("Text"))}[0]);
   </script>
 	<s:div id="#{id}" >
 		<s:div id="#{id}Div" styleClass="expressionDiv">
