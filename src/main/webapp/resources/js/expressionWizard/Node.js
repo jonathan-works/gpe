@@ -544,7 +544,8 @@
   }
   
   function getMessage(label) {
-    return ((K.messages || {})[navigator.language] || {})[label] || label;
+    
+    return (((K.messages || {})[navigator.language] || {})[label] || label).replace(/\u2000/,"");
   }
   
   Object.defineProperties(K, {

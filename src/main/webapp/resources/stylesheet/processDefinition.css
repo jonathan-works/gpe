@@ -148,6 +148,8 @@
 }
 .StringNode > .Text.Operator,.TransitionNode > .Text.Operator {
   color:#00E;
+  margin:0;
+  padding:0;
 }
 .BooleanNode > .Text.Operator {
   color:#900;

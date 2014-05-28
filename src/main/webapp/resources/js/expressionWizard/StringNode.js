@@ -46,7 +46,7 @@
       
       switch(pvt.type) {
         case V.CONSTANT:
-          result = [[V.STRING,"[",pvt.childNodes[0],"]"].join("")];
+          result = [[V.STRING,"['",pvt.childNodes[0],"']"].join("")];
           break;
         case V.OPERATION:
           result.push(pvt.operation);
@@ -286,9 +286,9 @@
           pvt.renderDOM = renderValueDOM;
           break;
         case V.CONSTANT:
-      param.value=param.value||[];
-      param.value[0]=param.value[0]||[V.STRING,"['']"].join("");
-          pvt.childNodes.push(param.value[0].slice(7,param.value[0].length-1));
+          param.value=param.value||[];
+          param.value[0]=param.value[0]||[V.STRING,"['']"].join("");
+          pvt.childNodes.push(param.value[0].slice(8,param.value[0].length-2));
           pvt.renderDOM = renderValueDOM;
           break;
         case V.EXPRESSION:
