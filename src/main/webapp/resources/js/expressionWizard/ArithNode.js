@@ -238,7 +238,7 @@
     function negativate() {
       if (pvt.type===V.NEGATIVE) {
         pvt.childNodes[0].replaceParent();
-      }else if(getParent().type===V.NEGATIVE){
+      }else if(getParent() instanceof ArithNode && getParent().type===V.NEGATIVE){
         replaceParent();
       }else{
         init(args={type:V.NEGATIVE, operation:K.ArithOper.NEGATIVE.name, value:[new ArithNode(args)]});

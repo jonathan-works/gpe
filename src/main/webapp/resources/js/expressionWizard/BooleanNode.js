@@ -206,6 +206,8 @@
     }
     
     function negate(){
+      console.log(getParent().type, V.NOT,getParent().type=== V.NOT, getParent().getStack().toString());
+      console.log(pvt.type, V.NOT,pvt.type===V.NOT);
       if(pvt.type===V.CONSTANT){
         var value=pvt.childNodes[0];
         if(value===V.TRUE){
@@ -214,7 +216,7 @@
           value=V.TRUE;
         }
         setConstant(value);
-      }else if(getParent().type===V.NOT){
+      }else if(getParent() instanceof BooleanNode && getParent().type===V.NOT){
         replaceParent();
       }else if(pvt.type===V.NOT){
         pvt.childNodes[0].replaceParent();
