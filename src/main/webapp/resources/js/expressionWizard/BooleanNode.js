@@ -340,7 +340,7 @@
           pvt.renderDOM=renderValueDOM;
           break;
         default:
-          console.error(V.TYPE_EXCEP);
+          console.error(V.TYPE_EXCEP,args);
           throw 0;
       }
       var dom=_this.getDOM();
