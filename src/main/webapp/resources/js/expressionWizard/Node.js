@@ -72,22 +72,24 @@
     Object.defineProperties(this,{
       parent:{
         get:getParent,
-        set:setParent
+        set:setParent,
+        enumerable:true,
+        configurable:true
       },
       getDOM:{
-        get:function() {
-          return getDOM;
-        }
+        enumerable:true,
+        configurable:true,
+        value:getDOM
       },
       clear:{
-        get:function() {
-          return clear;
-        }
+        enumerable:true,
+        configurable:true,
+        value:clear
       },
       attachInput:{
-        get:function(){
-          return attachInput;
-        }
+        enumerable:true,
+        configurable:true,
+        value:attachInput
       }
     });
     if (typeof args !== V.UNDEF && args.parent !== V.UNDEF) {
@@ -202,18 +204,19 @@
   }
   
   function createBooleanNode(current, cache) {
-    var _type = K.BooleanNode.getBooleanNodeType(current);
+    var BNode = K.BooleanNode;
+    var _type = BNode.getBooleanNodeType(current);
     var result;
     switch(_type) {
-      case K.BooleanNode.CONSTANT:
-      case K.BooleanNode.IDENTIFIER:
-        result = new K.BooleanNode({value:[current], type:_type});
+      case BNode.CONSTANT:
+      case BNode.IDENTIFIER:
+        result = new BNode({value:[current], type:_type});
         break;
-      case K.BooleanNode.NOT:
-        result = new K.BooleanNode({operation:current, value:[cache.pop()], type:_type});
+      case BNode.NOT:
+        result = new BNode({operation:current, value:[cache.pop()], type:_type});
         break;
-      case K.BooleanNode.OPERATION:
-        result = new K.BooleanNode({operation:current, value:[cache.pop(), cache.pop()], type:_type});
+      case BNode.OPERATION:
+        result = new BNode({operation:current, value:[cache.pop(), cache.pop()], type:_type});
         break;
       default:
         console.error("BooleanNode type not supported");
@@ -223,22 +226,22 @@
   }
   
   function createArithmeticNode(current, cache) {
-    var types = K.ArithNode;
+    var ANode = K.ArithNode;
     var result;
-    var _type = types.getArithNodeType(current);
+    var _type = ANode.getArithNodeType(current);
     switch(_type) {
-      case types.CONSTANT:
-      case types.IDENTIFIER:
-        result = new K.ArithNode({type:_type, value:[current]});
+      case ANode.CONSTANT:
+      case ANode.IDENTIFIER:
+        result = new ANode({type:_type, value:[current]});
         break;
-      case types.NEGATIVE:
-        result = new K.ArithNode({operation:current, value:[cache.pop()], type:_type});
+      case ANode.NEGATIVE:
+        result = new ANode({operation:current, value:[cache.pop()], type:_type});
         break;
-      case types.EXPRESSION:
-        result = new K.ArithNode({condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type});
+      case ANode.EXPRESSION:
+        result = new ANode({condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type});
         break;
-      case types.OPERATION:
-        result = new K.ArithNode({operation:current, value:[cache.pop(),cache.pop()], type:_type});
+      case ANode.OPERATION:
+        result = new ANode({operation:current, value:[cache.pop(),cache.pop()], type:_type});
         break;
       default:
         console.error("ArithNode type not supported");
@@ -248,13 +251,13 @@
   }
   
   function createStringNode(current, cache) {
-    var StringNode = K.StringNode;
-    var _type = K.StringNode.getStringNodeType(current);
+    var SNode = K.StringNode;
+    var _type = SNode.getStringNodeType(current);
     var result;
     switch(_type) {
-      case StringNode.CONSTANT:
-      case StringNode.IDENTIFIER:
-        result = new K.StringNode({type:_type, value:[current]});
+      case SNode.CONSTANT:
+      case SNode.IDENTIFIER:
+        result = new SNode({type:_type, value:[current]});
         break;
       default:
         console.error("StringNode type not supported");
@@ -367,45 +370,7 @@
     return result;
   }
   
-  function implReqrd(str) {
-    throw ["Implementation of function ",str," required"].join("");
-  }
-  
-  Node.prototype = {
-    destroy:function destroy() {
-      implReqrd();
-    },
-    getDOM:function getDOM() {
-    },
-    accept:function accept(visitor) {
-      var visitStack = [this];
-      var current;
-      while(visitStack.length > 0) {
-        current = visitStack.pop();
-        var children = current.getChildNodes();
-        for(var i=0,l=children.length;i<l;i++) {
-          visitStack.push(children[i]);
-        }
-        visitor.visit(current);
-      }
-    },
-    get parent() {
-    },
-    set parent(itm) {
-    },
-    get type() {
-      implReqrd("type");
-    },
-    get values() {
-      implReqrd("values");
-    },
-    get condition() {
-      implReqrd("condition");
-    },
-    getClass:function getClass() {
-      implReqrd("getClass");
-    }
-  };
+  Node.prototype = {};
   
   var VariableType = {};
   Object.defineProperties(VariableType,{
@@ -550,25 +515,24 @@
   
   Object.defineProperties(K, {
     Node:{
-      get:function() {
-        return Node;
-      }
+      value:Node,
+      enumerable:true
     },
     checkInit:{
-      get:function() {
-        return checkInit;
-      }
+      value:checkInit,
+      enumerable:true
     },
     createDOM:{
-      get:function() {
-        return createDOM;
-      }
+      value:createDOM,
+      enumerable:true
     },
     _:{
-      get:function(){return V;}
+      value:V,
+      enumerable:true
     },
     getMessage:{
-      get:function(){return getMessage;}
+      value:getMessage,
+      enumerable:true
     }
   });
   

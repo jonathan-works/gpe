@@ -45,7 +45,6 @@
         default:
           console.error("Not expected");
           throw 0;
-          break;
       }
       return result;
     }
@@ -263,18 +262,25 @@
     return 0x1;
   };
   
+  function isChoice(str){
+    return (/^Choice$/).test(str);
+  }
+  
+  function isStringConst(str){
+    return (/^String\['.*'\]$/).test(str) && _.getVariables().indexOf(str.slice(8,str.length-2))>=0;
+  }
+  
   function isTransitionNode(str) {
     var _ = K.Node;
-    return (/^Choice$/).test(str)
-            || (/^String\['.*'\]$/.test(str) && _.getVariables().indexOf(str.slice(8,str.length-2))>=0);
+    return isChoice(str) || (isStringConst(str));
   }
   
   function getTransitionNodeType(str) {
     var type;
     var _ = K.Node;
-    if ((/^Choice$/).test(str)) {
+    if (isChoice(str)) {
       type = V.EXPRESSION;
-    } else if ((/^String\['.*'\]$/).test(str)) {//K._.REGX_IDENT.test(str)
+    } else if (isStringConst(str)) {
       type = V.CONSTANT;
     } else {
       type = 0x0;
@@ -283,18 +289,19 @@
   }
 
   function createBooleanNode(current, cache){
-    var _type = K.BooleanNode.getBooleanNodeType(current);
+    var BNode=K.BooleanNode;
+    var _type=BNode.getBooleanNodeType(current);
     var result;
     switch(_type){
-      case K.BooleanNode.CONSTANT:
-      case K.BooleanNode.IDENTIFIER:
-        result = new K.BooleanNode({value:[current], type:_type});
+      case BNode.CONSTANT:
+      case BNode.IDENTIFIER:
+        result = new BNode({value:[current], type:_type});
         break;
-      case K.BooleanNode.NOT:
-        result = new K.BooleanNode({operation:current, value:[cache.pop()], type:_type});
+      case BNode.NOT:
+        result = new BNode({operation:current, value:[cache.pop()], type:_type});
         break;
-      case K.BooleanNode.OPERATION:
-        result = new K.BooleanNode({operation:current, value:[cache.pop(), cache.pop()], type:_type});
+      case BNode.OPERATION:
+        result = new BNode({operation:current, value:[cache.pop(), cache.pop()], type:_type});
         break;
       default:
         console.error("BooleanNode type not supported");
@@ -304,22 +311,22 @@
   }
   
   function createArithmeticNode(current, cache){
-    var types = K.ArithNode;
+    var ANode=K.ArithNode;
     var result;
-    var _type = types.getArithNodeType(current);
+    var _type = ANode.getArithNodeType(current);
     switch(_type){
-      case types.CONSTANT:
-      case types.IDENTIFIER:
-        result = new K.ArithNode({type:_type, value:[current]});
+      case ANode.CONSTANT:
+      case ANode.IDENTIFIER:
+        result = new ANode({type:_type, value:[current]});
         break;
-      case types.NEGATIVE:
-        result = new K.ArithNode({operation:current, value:[cache.pop()], type:_type});
+      case ANode.NEGATIVE:
+        result = new ANode({operation:current, value:[cache.pop()], type:_type});
         break;
-      case types.EXPRESSION:
-        result = new K.ArithNode({condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type});
+      case ANode.EXPRESSION:
+        result = new ANode({condition:cache.pop(), value:[cache.pop(),cache.pop()], type:_type});
         break;
-      case types.OPERATION:
-        result = new K.ArithNode({operation:current, value:[cache.pop(),cache.pop()], type:_type});
+      case ANode.OPERATION:
+        result = new ANode({operation:current, value:[cache.pop(),cache.pop()], type:_type});
         break;
       default:
         console.error("ArithNode type not supported");
@@ -357,15 +364,14 @@
   }
   
   function createTransitionNode(current, cache){
-    var StringNode = K.StringNode;
     var _type = K.TransitionNode.getTransitionNodeType(current);
     var result;
     switch(_type){
-      case StringNode.CONSTANT:
+      case K.TransitionNode.CONSTANT:
         result = new K.TransitionNode({type:_type, value:[current]});
         break;
       default:
-        console.error("StringNode type not supported");
+        console.error("TransitionNode type not supported");
         throw 0;
     }
     return result;

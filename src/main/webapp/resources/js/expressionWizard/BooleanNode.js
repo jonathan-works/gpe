@@ -32,13 +32,28 @@
     get OVERRIDE (){return [V.NAME,"OVERRIDE"].join(".");}
   };
   
+  function getFunctionObject(obj){
+    var result={};
+    for(var key in obj){
+      Object.defineProperty(result, key, Object.getOwnPropertyDescriptor(obj,key));
+    }
+    return result;
+  }
+  
+  function replaceParentFunction(parent,child){
+    for(var key in parent){
+      Object.defineProperty(parent,key,Object.getOwnPropertyDescriptor(child,key));
+    }
+    return parent;
+  }
+  
   function BooleanNode(args){
     var _this=K.checkInit(this);
-    var _super=new K.Node({parent:(args=args||{}).parent});
-    
     var pvt={
       childNodes:[]
     };
+    var _super=new K.Node({parent:(args=args||{}).parent});
+    var uber=getFunctionObject(_super);
     
     function getStack(){
       var result=[];
@@ -77,7 +92,7 @@
           itm.clear();
         }
       }
-      _super.clear();
+      uber.clear();
     }
     
     function getType(){
@@ -93,10 +108,10 @@
     }
     
     function getParent(){
-      return _super.parent;
+      return uber.parent;
     }
     function setParent(itm){
-      args.parent=_super.parent=itm;
+      args.parent=uber.parent=itm;
     }
     
     function replaceParent(){
@@ -206,8 +221,6 @@
     }
     
     function negate(){
-      console.log(getParent().type, V.NOT,getParent().type=== V.NOT, getParent().getStack().toString());
-      console.log(pvt.type, V.NOT,pvt.type===V.NOT);
       if(pvt.type===V.CONSTANT){
         var value=pvt.childNodes[0];
         if(value===V.TRUE){
@@ -366,43 +379,50 @@
         get:getOperation
       },
       getStack:{
-        get:function(){return getStack;}
+        value:getStack
       },
       clear:{
-        get:function(){return clear;}
+        value:clear
       },
       getDOM:{
-        get:function(){return _super.getDOM}
+        value:uber.getDOM
       },
       toString:{
-        get:function(){return toString;}
+        value:toString
       },
       initToolbar:{
-        get:function(){return initToolbar;}
+        value:initToolbar
       },
       clearToolbar:{
-        get:function(){return clearToolbar;}
+        value:clearToolbar
       },
       replaceParent:{
-        get:function(){return replaceParent;}
+        value:replaceParent
       },
       replaceChild:{
-        get:function(){return replaceChild;}
+        value:replaceChild
       },
       attachInput:{
-        get:function(){return _super.attachInput;}
+        value:uber.attachInput
       }
     });
     init(args);
+    _super=replaceParentFunction(_super,_this);
   }
   
   BooleanNode.prototype=new K.Node();
-  BooleanNode.prototype.valueOf=function valueOf(){
-    return K._.TYPE_BOOL;
-  };
-  BooleanNode.prototype.getClass=function getClass(){
-    return BooleanNode;
-  };
+  Object.defineProperties(BooleanNode.prototype,{
+    valueOf:{
+      value:function valueOf(){
+        return K._.TYPE_BOOL;
+      }
+    },
+    getClass:{
+      value:function getClass(){
+        return BooleanNode;
+      }
+    }
+  });
   
   function isBooleanNode(str){
     var _=K.Node;
@@ -436,34 +456,34 @@
   /*    CONSTANTES DA CLASSE    */
   Object.defineProperties(BooleanNode,{
     CONSTANT:{
-      get:function(){return V.CONSTANT;}
+      value:V.CONSTANT
     },
     OPERATION:{
-      get:function(){return V.OPERATION;}
+      value:V.OPERATION
     },
     IDENTIFIER:{
-      get:function(){return V.IDENTIFIER;}
+      value:V.IDENTIFIER
     },
     NOT:{
-      get:function(){return V.NOT;}
+      value:V.NOT
     },
     EXPRESSION:{
-      get:function(){return V.EXPRESSION;}
+      value:V.EXPRESSION
     },
     isBooleanNode:{
-      get:function(){return isBooleanNode;}
+      value:isBooleanNode
     },
     getBooleanNodeType:{
-      get:function(){return getBooleanNodeType;}
+      value:getBooleanNodeType
     },
     toString:{
-      get:function(){return toString;}
+      value:toString
     }
   });
   
   Object.defineProperties(K,{
     BooleanNode:{
-      get:function(){return BooleanNode;}
+      value:BooleanNode
     }
   });
   

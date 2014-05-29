@@ -115,10 +115,10 @@
         get:getParent,set:setParent
       },
       draw:{
-        get:function(){return draw;}
+        value:draw
       },
       clear:{
-        get:function(){return clear;}
+        value:clear
       },
       visible:{
         get:isVisible

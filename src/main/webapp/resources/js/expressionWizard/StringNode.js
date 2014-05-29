@@ -319,49 +319,67 @@
         get:getType
       },
       getDOM:{
-        get:function(){return _super.getDOM;}
+        value:_super.getDOM,
+        enumerable:true
       },
-      toString : {
-        get:function(){return toString;}
+      toString:{
+        value:toString,
+        enumerable:true
       },
       getStack:{
-        get:function(){return getStack;}
+        value:getStack,
+        enumerable:true
       },
       clear:{
-        get:function(){return clear;}
+        value:clear,
+        enumerable:true
       },
       initToolbar:{
-        get:function(){return initToolbar;}
+        value:initToolbar,
+        enumerable:true
       },
       clearToolbar:{
-        get:function(){return clearToolbar;}
+        value:clearToolbar,
+        enumerable:true
       },
       replaceParent:{
-        get:function(){return replaceParent;}
+        value:replaceParent,
+        enumerable:true
       },
       replaceChild:{
-        get:function(){return replaceChild;}
+        value:replaceChild,
+        enumerable:true
       },
       attachInput:{
-        get:function(){return _super.attachInput;}
+        value:_super.attachInput,
+        enumerable:true
       }
     });
-        
     init(args);
   }
   
   StringNode.prototype = new K.Node();
-  StringNode.prototype.getClass=function getClass() {
-    return StringNode;
-  };
-  StringNode.prototype.valueOf=function valueOf() {
-    return 0x1;
-  };
+  Object.defineProperties(StringNode.prototype,{
+    getClass:{
+      value:function getClass() {
+        return StringNode;
+      }
+    },
+    valueOf:{
+      value:function valueOf() {
+        return 0x1;
+      }
+    }
+  });
+  
+  function isIdentifier(str){
+    return K._.REGX_IDENT.test(str) && _.getVariables().indexOf(str.slice(11,str.length-1))>=0;
+  }
   
   function isStringNode(str) {
     var _ = K.Node;
     return (/^String\['.*'\]|Plus|Choice$/).test(str)
-            || (K._.REGX_IDENT.test(str) && _.getVariables().indexOf(str.slice(11,str.length-1))>=0);
+            || isIdentifier(str);
   }
   
   function getStringNodeType(str) {
@@ -371,9 +389,9 @@
       type = V.OPERATION;
     } else if ((/^Choice$/).test(str)) {
       type = V.EXPRESSION;
-    } else if ((/^String\['.*'\]$/).test(str)) {//K._.REGX_IDENT.test(str)
+    } else if ((/^String\['.*'\]$/).test(str)) {
       type = V.CONSTANT;
-    } else if (K._.REGX_IDENT.test(str)&&_.getVariables().indexOf(str.slice(11,str.length-1))>=0) {
+    } else if (isIdentifier(str)) {
       type = V.IDENTIFIER;
     } else {
       type = 0x0;
