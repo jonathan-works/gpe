@@ -20,6 +20,7 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
@@ -147,7 +148,12 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
 
     public String getNaturezaCategoriaItem(ProcessoEpa processoEpa) {
         NaturezaCategoriaFluxo naturezaCategoriaFluxo = processoEpa.getNaturezaCategoriaFluxo();
-        return MessageFormat.format("{0}/{1}/{2}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria(), processoEpa.getItemDoProcesso().getDescricaoItem());
+        Item item = processoEpa.getItemDoProcesso();
+        if (item == null) {
+            return MessageFormat.format("{0}/{1}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria());
+        } else {
+            return MessageFormat.format("{0}/{1}/{2}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria(), item.getDescricaoItem());
+        }
     }
 
     public int getDiasDesdeInicioProcesso(ProcessoEpa processoEpa) {
