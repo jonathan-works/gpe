@@ -59,6 +59,10 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public String getUsuarioByTarefa(TaskInstance taskInstance) {
         return getDao().getUsuarioByTarefa(taskInstance);
     }
+    
+    public String getNomeUsuarioByTarefa(TaskInstance taskInstance) {
+        return getDao().getNomeUsuarioByTarefa(taskInstance);
+    }
 
     public UsuarioLogin getUsuarioLoginByPessoaFisica(
             final PessoaFisica pessoaFisica) {

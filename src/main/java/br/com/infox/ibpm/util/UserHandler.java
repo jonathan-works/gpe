@@ -25,7 +25,7 @@ public class UserHandler {
 
     private Integer idProcesso;
     private TaskInstance taskInstance;
-    private String usuarioProcesso, usuarioTarefa;
+    private String usuarioProcesso, usuarioTarefa, nomeUsuarioTarefa;
 
     @In
     private UsuarioLoginManager usuarioLoginManager;
@@ -63,6 +63,24 @@ public class UserHandler {
             }
         }
         return this.usuarioTarefa;
+    }
+    
+    public String getNomeUsuarioByTarefa(TaskInstance taskInstance) {
+        if (this.taskInstance == null
+                || !this.taskInstance.equals(taskInstance)) {
+            try {
+                this.taskInstance = taskInstance;
+                this.nomeUsuarioTarefa = usuarioLoginManager.getNomeUsuarioByTarefa(taskInstance);
+            } catch (NoResultException e) {
+                this.usuarioTarefa = "";
+                LOG.warn("Não houve resultado. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
+            } catch (NonUniqueResultException e) {
+                LOG.error("Múltiplos resultados. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
+            } catch (IllegalStateException e) {
+                LOG.error("Estado inválido. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
+            }
+        }
+        return this.nomeUsuarioTarefa;
     }
 
     public UsuarioLogin getUsuario(String login) {

@@ -36,8 +36,8 @@
         <s:div id="usuarioTarefaDiv">
           <h:graphicImage
             url="#{a4jSkin.imgFolder}/usuario.gif"
-            rendered="#{!empty userHandler.getUsuarioByTarefa(task)}" />
-          <h:outputText value="#{userHandler.getUsuarioByTarefa(task)} " />
+            rendered="#{!empty userHandler.getNomeUsuarioByTarefa(task)}" />
+          <h:outputText value="#{userHandler.getNomeUsuarioByTarefa(task)} " />
           <a:commandLink
             action="#{taskInstanceHome.removeUsuario(task)}"
             execute="@this"

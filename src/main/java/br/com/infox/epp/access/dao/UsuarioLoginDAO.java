@@ -3,6 +3,7 @@ package br.com.infox.epp.access.dao;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ID_PROCESSO_PARAM;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_ID_TASK_INSTANCE;
@@ -68,6 +69,12 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_TASK_INSTANCE, taskInstance.getId());
         return getNamedSingleResult(USUARIO_BY_ID_TASK_INSTANCE, parameters);
+    }
+    
+    public String getNomeUsuarioByTarefa(TaskInstance taskInstance) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_ID_TASK_INSTANCE, taskInstance.getId());
+        return getNamedSingleResult(NOME_USUARIO_BY_ID_TASK_INSTANCE, parameters);
     }
 
     public UsuarioLogin getUsuarioLoginByPessoaFisica(

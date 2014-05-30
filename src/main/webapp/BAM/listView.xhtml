@@ -235,9 +235,9 @@
         </span>
         <span> <h:graphicImage
             url="#{a4jSkin.imgFolder}/usuario.gif"
-            rendered="#{!empty userHandler.getUsuario(task.actorId)}"
+            rendered="#{!empty userHandler.getNomeUsuarioByTarefa(task)}"
           /> <h:outputText
-            value=" #{userHandler.getUsuario(task.actorId)}"
+            value=" #{userHandler.getNomeUsuarioByTarefa(task)}"
           />
         </span>
       </rich:column>

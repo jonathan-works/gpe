@@ -7,7 +7,7 @@ import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.BLOQUEIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.*;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.DATA_EXPIRACAO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.EMAIL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ID_USUARIO;
@@ -94,7 +94,8 @@ import br.com.infox.epp.system.entity.EntityLog;
     @NamedQuery(name = USUARIO_BY_PESSOA, query = USUARIO_BY_PESSOA_QUERY) })
 @NamedNativeQueries({
     @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE, query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
-    @NamedNativeQuery(name = ACTORID_TAREFA_ATUAL_BY_PROCESSO, query = ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY) })
+    @NamedNativeQuery(name = ACTORID_TAREFA_ATUAL_BY_PROCESSO, query = ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY),
+    @NamedNativeQuery(name = NOME_USUARIO_BY_ID_TASK_INSTANCE, query = NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY)})
 public class UsuarioLogin implements Serializable {
 
     private static final long serialVersionUID = 1L;
