@@ -1,4 +1,8 @@
 (function(K) {
+  if (K.TransitionNode !== undefined){
+    console.log("TransitionNode already loaded");
+    return;
+  }
   var V = {
     get STRING(){return "String";},
     get NAME(){return "TransitionNode";},
@@ -43,7 +47,7 @@
           pvt.childNodes[2].getStack().forEach(addToResult);
           break;
         default:
-          console.error("Not expected");
+          console.error("Not expected",pvt);
           throw 0;
       }
       return result;

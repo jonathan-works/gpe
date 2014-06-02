@@ -1,4 +1,9 @@
 (function(K){
+  if (K.BooleanNode !== undefined){
+    console.log("BooleanNode already loaded");
+    return;
+  }
+  
   var V={
     get NAME(){return "BooleanNode";},
     get TRUE(){return "True";},
@@ -486,5 +491,5 @@
       value:BooleanNode
     }
   });
-  
-})(window._parser);
+  return BooleanNode;
+})(window._parser=window._parser||{});

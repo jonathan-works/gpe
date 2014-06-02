@@ -1,5 +1,9 @@
-(function(K) {
-  var V = {
+(function(K){
+  if (K.StringNode !== undefined){
+    console.log("StringNode already loaded");
+    return;
+  }
+  var V={
     get STRING(){return "String";},
     get NAME(){return "StringNode";},
     get DIV(){return "div";},
@@ -10,10 +14,11 @@
     get OPERATION(){return 0x2;},
     get IDENTIFIER(){return 0x4;},
     get EXPRESSION(){return 0x8;},
-    get STR_OPER(){return "Plus";}
+    get STR_OPER(){return "Plus";},
+    get REGX_STR(){return (/^String\['(.*)'\]$/);}
   };
 
-  var lbl = {
+  var lbl={
     get IF(){return [V.NAME,"if"].join(".");},
     get THEN(){return [V.NAME,"then"].join(".");},
     get ELSE(){return [V.NAME,"else"].join(".");},
@@ -29,24 +34,24 @@
     get OVERRIDE(){return [V.NAME,"override"].join(".");},
   };
   
-  function StringNode(args) {
-    var _this = K.checkInit(this);
-    var _super = new K.Node({parent:(args=args||{}).parent});
-    var pvt = {
+  function StringNode(args){
+    var _this=K.checkInit(this);
+    var _super=new K.Node({parent:(args=args||{}).parent});
+    var pvt={
       type:args.type,
       childNodes:[]
     };
     
-    function getStack() {
-      var result = [];
+    function getStack(){
+      var result=[];
       
       function addToResult(itm){
         result.push(itm);
       }
       
-      switch(pvt.type) {
+      switch(pvt.type){
         case V.CONSTANT:
-          result = [[V.STRING,"['",pvt.childNodes[0],"']"].join("")];
+          result=[[V.STRING,"['",pvt.childNodes[0],"']"].join("")];
           break;
         case V.OPERATION:
           result.push(pvt.operation);
@@ -54,7 +59,7 @@
           pvt.childNodes[1].getStack().forEach(addToResult);
           break;
         case V.IDENTIFIER:
-          result = [[K._.IDENT_STR,"[",pvt.childNodes[0],"]"].join("")];
+          result=[[K._.IDENT_STR,"[",pvt.childNodes[0],"]"].join("")];
           break;
         case V.EXPRESSION:
           result.push(K._.CHOICE);
@@ -66,17 +71,22 @@
       return result;
     }
     
-    function toString() {
-      var result = "";
+    function getValues(){
+      var arr=pvt.childNodes;
+      return arr.slice(0,arr.length);
+    }
+    
+    function toString(){
+      var result="";
       return result;
     }
     
-    function getParent() {
+    function getParent(){
       return _super.parent;
     }
     
-    function setParent(itm) {
-      args.parent = _super.parent = itm;
+    function setParent(itm){
+      args.parent=_super.parent=itm;
     }
     
     function replaceParent(){
@@ -125,34 +135,37 @@
       return pvt.type;
     }
     
-    function updateParent(node) {
-      if (node instanceof K.Node) {
-        node.parent = _this;
+    function updateParent(node){
+      if (node instanceof K.Node){
+        node.parent=_this;
       }
     }
     
-    function renderOperationDOM() {
-      var dom = _this.getDOM();
+    function renderOperationDOM(){
+      var dom=_this.getDOM();
       updateParent(pvt.childNodes[0]);
       dom.appendChild(K.createDOM({text:K.getMessage(lbl.PLUS_OP),classes:[V.TEXT,V.OPER],hasToolbar:true}));
       updateParent(pvt.childNodes[1]);
       dom.classList.add(pvt.operation);
     }
     
-    function renderValueDOM() {
-      var dom = _this.getDOM();
+    function renderValueDOM(){
+      var dom=_this.getDOM();
       var _text;
-      if (pvt.type===V.IDENTIFIER) {
+      if (pvt.type===V.IDENTIFIER){
         _text=["[",pvt.childNodes[0],"]"].join("");
       } else {
         _text=pvt.childNodes[0];
+        if(_text.trim()===""){
+          _text="\u2000";
+        }
       }
       dom.appendChild(K.createDOM({text:_text,hasToolbar:true}));
       dom.classList.add(V.VALUE);
     }
     
-    function renderExpressionDOM() {
-      var dom = _this.getDOM();
+    function renderExpressionDOM(){
+      var dom=_this.getDOM();
       dom.appendChild(K.createDOM({type:V.DIV,text:K.getMessage(lbl.IF),classes:[V.TEXT],hasToolbar:true}));
       updateParent(pvt.childNodes[0]);
       dom.appendChild(K.createDOM({type:V.DIV,text:K.getMessage(lbl.THEN),classes:[V.TEXT],hasToolbar:true}));
@@ -163,10 +176,10 @@
       dom.classList.add(K._.EXPRESSION);
     }
     
-    function toolbarItemClick(evt) {
+    function toolbarItemClick(evt){
       var val;
-      var dtType = evt.target[K._.DT_TYPE];
-      switch(dtType) {
+      var dtType=evt.target[K._.DT_TYPE];
+      switch(dtType){
         case V.OPERATION:
           setOperation({name:V.STR_OPER},resolveOperationValues(evt.target[K._.DT_VAL]));
           break;
@@ -174,7 +187,7 @@
           init(args={type:dtType,value:[[K._.IDENT_STR,"[",evt.target[K._.DT_VAL],"]"].join("")]});
           break;
         case V.CONSTANT:
-          val = prompt(K.getMessage(lbl.PROMPT));
+          val=prompt(K.getMessage(lbl.PROMPT));
           if (val !== null){
             init(args={type:dtType,value:[[V.STRING,"['",val,"']"].join("")]});
           }
@@ -189,7 +202,7 @@
       _this.getDOM().dispatchEvent(new CustomEvent("selected",{bubbles:true,cancelable:true,detail:{}}));
     }
     
-    function resolveOperValue(flag) {
+    function resolveOperValue(flag){
       var result;
       if((flag&K._.TYPE_BOOL)===K._.TYPE_BOOL){
         result=new K.BooleanNode();
@@ -206,7 +219,7 @@
     
     function resolveOperationValues(flag){
       var values=[];
-      if ((flag&V.EXPRESSION)===V.EXPRESSION) {
+      if ((flag&V.EXPRESSION)===V.EXPRESSION){
         values.push(new StringNode(args));
         values.push(resolveOperValue(flag));
       }else{
@@ -220,22 +233,22 @@
       init(args={type:V.EXPRESSION,condition:condition,value:[value1,value2]});
     }
   
-    function setOperation(oper,values) {
+    function setOperation(oper,values){
       init(args={operation:oper.name,type:V.OPERATION,value:values.slice(0,2)});
     }
     
-    function getVariableSubMenu() {
-      var _ = K.Node;
-      var variables = _.getVariables(_.VariableType.STRING);
-      var items = [];
-      for(var i=0,l=variables.length;i<l;i++) {
+    function getVariableSubMenu(){
+      var _=K.Node;
+      var variables=_.getVariables(_.VariableType.STRING);
+      var items=[];
+      for(var i=0,l=variables.length;i<l;i++){
         items.push({text:variables[i],click:toolbarItemClick,data:{type:V.IDENTIFIER,value:variables[i]}});
       }
       return new K.Toolbar({classes:[K._.TEXT_TYPE],items:items,text:K.getMessage("StringNode.var")});
     }
       
-    function initToolbar() {
-      var itms = [
+    function initToolbar(){
+      var itms=[
         new K.Toolbar({text:K.getMessage(lbl.BEFORE),classes:[K._.TEXT_TYPE],items:[
           {text:K.getMessage(lbl.BOOL),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_BOOL}},
           {text:K.getMessage(lbl.STR),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_STR}},
@@ -246,65 +259,65 @@
           {text:K.getMessage(lbl.STR),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_STR|V.EXPRESSION}},
           {text:K.getMessage(lbl.NBR),click:toolbarItemClick,data:{type:V.OPERATION,value:K._.TYPE_NBR|V.EXPRESSION}}
         ]}),
-        {text:"-",classes:[]},
+        {type:"hr",classes:[]},
         getVariableSubMenu(),
         {text:K.getMessage(lbl.CONST),click:toolbarItemClick,data:{type:V.CONSTANT}},
-        {text:"-",classes:[]},
+        {type:"hr",classes:[]},
         {text:K.getMessage(lbl.EXPR),click:toolbarItemClick,data:{type:V.EXPRESSION}},
       ];
       
-      if (getParent() instanceof _this.getClass()) {
-        itms.push({text:"-",classes:[]});
+      if (getParent() instanceof _this.getClass()){
+        itms.push({type:"hr",classes:[]});
         itms.push({parent:toolbar,text:K.getMessage(lbl.OVERRIDE),click:toolbarItemClick});
       }
       
-      pvt.toolbar = new K.Toolbar({parent:_this.getDOM(),classes:[K._.TOOLBAR,K._.VALUE],items:itms});
-      _this.getDOM()[K._.DATA_TBR] = pvt.toolbar;
+      pvt.toolbar=new K.Toolbar({parent:_this.getDOM(),classes:[K._.TOOLBAR,K._.VALUE],items:itms});
+      _this.getDOM()[K._.DATA_TBR]=pvt.toolbar;
     }
     
-    function clearToolbar() {
-      if (pvt.toolbar) {
+    function clearToolbar(){
+      if (pvt.toolbar){
         pvt.toolbar.clear();
         delete pvt.toolbar;
       }
     }
 
-    function init(param) {
+    function init(param){
       clear();
       pvt.type=param.type||V.CONSTANT;
-      switch(pvt.type) {
+      switch(pvt.type){
         case V.OPERATION:
-          pvt.operation = param.operation;
+          pvt.operation=param.operation;
           pvt.childNodes.push(param.value[0]);
           pvt.childNodes.push(param.value[1]);
-          pvt.childNodes[0].parent = _this;
-          pvt.childNodes[1].parent = _this;
-          pvt.renderDOM = renderOperationDOM;
+          pvt.childNodes[0].parent=_this;
+          pvt.childNodes[1].parent=_this;
+          pvt.renderDOM=renderOperationDOM;
           break;
         case V.IDENTIFIER:
-          pvt.childNodes.push(param.value[0].slice(11,param.value[0].length-1));
-          pvt.renderDOM = renderValueDOM;
+          pvt.childNodes.push(K._.REGX_IDENT.exec(param.value[0])[1]);
+          pvt.renderDOM=renderValueDOM;
           break;
         case V.CONSTANT:
           param.value=param.value||[];
           param.value[0]=param.value[0]||[V.STRING,"['']"].join("");
-          pvt.childNodes.push(param.value[0].slice(8,param.value[0].length-2));
-          pvt.renderDOM = renderValueDOM;
+          pvt.childNodes.push(V.REGX_STR.exec(param.value[0])[1]);
+          pvt.renderDOM=renderValueDOM;
           break;
         case V.EXPRESSION:
           pvt.childNodes.push(param.condition);
           pvt.childNodes.push(param.value[0]);
           pvt.childNodes.push(param.value[1]);
-          pvt.childNodes[0].parent = _this;
-          pvt.childNodes[1].parent = _this;
-          pvt.childNodes[2].parent = _this;
-          pvt.renderDOM = renderExpressionDOM;
+          pvt.childNodes[0].parent=_this;
+          pvt.childNodes[1].parent=_this;
+          pvt.childNodes[2].parent=_this;
+          pvt.renderDOM=renderExpressionDOM;
           break;
         default:
           console.error("Invalid StringNode type");
           throw 0;
       }
-      var dom = _this.getDOM();
+      var dom=_this.getDOM();
       dom.classList.add(V.NAME);
       dom[K._.DT_CLASS]=_this;
       pvt.renderDOM();
@@ -358,43 +371,44 @@
     init(args);
   }
   
-  StringNode.prototype = new K.Node();
+  StringNode.prototype=new K.Node();
   Object.defineProperties(StringNode.prototype,{
     getClass:{
-      value:function getClass() {
+      value:function getClass(){
         return StringNode;
       }
     },
     valueOf:{
-      value:function valueOf() {
+      value:function valueOf(){
         return 0x1;
       }
     }
   });
   
   function isIdentifier(str){
-    return K._.REGX_IDENT.test(str) && _.getVariables().indexOf(str.slice(11,str.length-1))>=0;
+    var res=K._.REGX_IDENT.exec(str);
+    return res!==null && K.Node.getVariables().indexOf(res[1])>=0;
   }
   
-  function isStringNode(str) {
-    var _ = K.Node;
+  function isStringNode(str){
+    var _=K.Node;
     return (/^String\['.*'\]|Plus|Choice$/).test(str)
             || isIdentifier(str);
   }
   
-  function getStringNodeType(str) {
+  function getStringNodeType(str){
     var type;
-    var _ = K.Node;
-    if ((/^Plus$/).test(str)) {
-      type = V.OPERATION;
-    } else if ((/^Choice$/).test(str)) {
-      type = V.EXPRESSION;
-    } else if ((/^String\['.*'\]$/).test(str)) {
-      type = V.CONSTANT;
-    } else if (isIdentifier(str)) {
-      type = V.IDENTIFIER;
+    var _=K.Node;
+    if ((/^Plus$/).test(str)){
+      type=V.OPERATION;
+    } else if ((/^Choice$/).test(str)){
+      type=V.EXPRESSION;
+    } else if ((/^String\['.*'\]$/).test(str)){
+      type=V.CONSTANT;
+    } else if (isIdentifier(str)){
+      type=V.IDENTIFIER;
     } else {
-      type = 0x0;
+      type=0x0;
     }
     return type;
   }
@@ -402,7 +416,7 @@
   Object.defineProperties(StringNode,{
     CONSTANT:{get:function(){return V.CONSTANT;}},
     OPERATION:{get:function(){return V.OPERATION;}},
-    IDENTIFIER:{get:function() {return V.IDENTIFIER;}},
+    IDENTIFIER:{get:function(){return V.IDENTIFIER;}},
     EXPRESSION:{get:function(){return V.EXPRESSION;}},
     
     getStringNodeType:{
@@ -415,7 +429,7 @@
 
   Object.defineProperties(K,{
     StringNode:{
-      get:function() {
+      get:function(){
         return StringNode;
       }
     }

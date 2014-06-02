@@ -6,9 +6,7 @@
     
     Object.defineProperties(this, {
       name:{
-        get:function getName() {
-          return name;
-        }
+        value:name
       }
     });
   }
@@ -34,10 +32,8 @@
   
   Object.defineProperties(K,{
     Enum:{
-      get:function() {
-        return Enum;
-      }
+      value:Enum
     }
   });
   
-})(window._parser = window._parser || {});
+})(window._parser=window._parser||{});

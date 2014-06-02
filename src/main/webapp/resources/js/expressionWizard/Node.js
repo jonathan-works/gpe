@@ -1,4 +1,8 @@
 (function (K) {
+  if (K.Node !== undefined){
+    console.log("Node already loaded");
+    return;
+  }
   var V = {
     get TOOLBAR(){return "toolbar";},
     get TOOLBAR_ITM(){return "toolbar-itm";},
@@ -8,6 +12,7 @@
     get CSS_SEL_ND(){return "selected";},
     get IDENT_STR(){return "Identifier";},
     get MOUSE_LEAVE(){return "mouseleave";},
+    get M_ENTER_EVT(){return "mouseenter";},
     get TEXT(){return "Text";},
     get OPER(){return "Operator";},
     get VALUE(){return "Value";},
@@ -17,13 +22,15 @@
     get TYPE_STR(){return 0x1;},
     get TYPE_BOOL(){return 0x2;},
     get TYPE_NBR(){return 0x4;},
-    get REGX_IDENT(){return (/^Identifier\[.+\]$/);},
+    get REGX_IDENT(){return (/^Identifier\[(.+)\]$/);},
     get DATA_TBR(){return "data-toolbar";},
     get DATA_OPER(){return "data-operation";},
     get DT_CLASS(){return "data-obj-class";},
     get DT_TYPE(){return "data-type";},
     get DT_VAL(){return "data-value";},
-    get DT_INPT(){return "data-input";}
+    get DT_INPT(){return "data-input";},
+    get FUNC(){return "function";},
+    get CLK(){return "click";},
   };
   
   function Node(args){
@@ -272,7 +279,7 @@
     var result;
     while(stack.length > 0) {
       current = stack.shift();
-      if (current === "Choice") {
+      if (current === V.CHOICE) {
          result = getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()]});
       } else if (current === "Plus") {
         result = getStringOrNumberFromPlus({operation:current, value:[cache.pop(), cache.pop()]});
@@ -487,18 +494,18 @@
     }
     
     if (params.hasToolbar !== V.UNDEF && params.hasToolbar) {
-      dom.addEventListener("click", mouseClickDOM);
-      dom.addEventListener("mouseenter", mouseEnterDOM);
+      dom.addEventListener(V.CLK, mouseClickDOM);
+      dom.addEventListener(V.M_ENTER_EVT, mouseEnterDOM);
     }
     
-    if (typeof mouseenter === "function") {
-      dom.addEventListener("mouseenter", mouseenter);
+    if (typeof mouseenter === V.FUNC) {
+      dom.addEventListener(V.M_ENTER_EVT, mouseenter);
     }
-    if (typeof mouseleave === "function") {
+    if (typeof mouseleave === V.FUNC) {
       dom.addEventListener(V.MOUSE_LEAVE, mouseleave);
     }
-    if (typeof click === "function") {
-      dom.addEventListener("click", click);
+    if (typeof click === V.FUNC) {
+      dom.addEventListener(V.CLK, click);
     }
     
     if (typeof parent !== V.UNDEF && parent instanceof HTMLElement) {
@@ -513,7 +520,7 @@
     return (((K.messages || {})[navigator.language] || {})[label] || label).replace(/\u2000/,"");
   }
   
-  Object.defineProperties(K, {
+  var result= {
     Node:{
       value:Node,
       enumerable:true
@@ -534,6 +541,6 @@
       value:getMessage,
       enumerable:true
     }
-  });
-  
-})(window._parser = window._parser || {});
+  };
+  return Object.defineProperties(K,result);
+})(window._parser=window._parser||{});

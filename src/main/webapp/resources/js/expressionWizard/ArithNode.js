@@ -1,4 +1,8 @@
 (function(K) {
+  if (K.ArithNode !== undefined){
+    console.log("ArithNode already loaded");
+    return;
+  }
   var V = {
     get CONSTANT(){return 0x1;},
     get OPERATION(){return 0x2;},
