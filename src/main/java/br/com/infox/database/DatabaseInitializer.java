@@ -11,6 +11,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.entity.Recurso;
+import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
@@ -27,10 +29,13 @@ public class DatabaseInitializer {
 
     @In
     private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
+    @In
+    private RecursoManager recursoManager;
 
     @Create
     public void init() {
         createClassificacaoDocumentoAcessoDireto();
+        createPrioridadeProcessoChangerRecurso();
     }
 
     private void createClassificacaoDocumentoAcessoDireto() {
@@ -47,6 +52,20 @@ public class DatabaseInitializer {
                 tipoProcessoDocumentoManager.persist(acessoDireto);
             } catch (DAOException e) {
                 LOG.error("Não foi possível criar a classificação documento com acesso direto", e);
+            }
+        }
+    }
+    
+    private void createPrioridadeProcessoChangerRecurso() {
+        String identificador = "/pages/Processo/Consulta/setPrioridadeProcesso";
+        if (!recursoManager.existsRecurso(identificador)) {
+            Recurso recurso = new Recurso();
+            recurso.setIdentificador(identificador);
+            recurso.setNome(identificador);
+            try {
+                recursoManager.persist(recurso);
+            } catch (DAOException e) {
+                LOG.error("Não foi possível criar o recurso de mudança de prioridade da tela de consulta processo", e);
             }
         }
     }

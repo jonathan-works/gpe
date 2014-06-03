@@ -47,11 +47,26 @@
                             title="#{messages['button.selecionar']}"
                             action="#{processoSearcher.visualizarProcesso(row)}">
                         </wi:toolBar>
+                        <a:commandLink id="setPrioridadeLink"
+                            rendered="#{s:hasPermission('/pages/Processo/Consulta/setPrioridadeProcesso', 'access')}"
+                            execute="@this" render="prioridadeProcessoPanel"
+                            limitRender="true" status=":status"
+                            styleClass="opacityHover"
+                            action="#{prioridadeProcessoChanger.setProcessoEpa(row)}"
+                            oncomplete="#{rich:component('prioridadeProcessoPanel')}.show()">
+                            <h:graphicImage
+                                title="#{messages['prioridade.select']}"
+                                url="#{a4jSkin.imgFolder}/priority.gif" />
+                        </a:commandLink>
                     </ui:define>
 
                     <wi:columnOutputText columnId="numeroProcesso"
                         columnHeader="#{messages['processo.numeroProcesso']}"
                         value="#{row.numeroProcesso}" hideOrder="true" />
+                    <wi:columnOutputText columnId="prioridadeProcesso"
+                        columnHeader="#{messages['processo.prioridadeProcesso']}"
+                        value="#{row.prioridadeProcesso}"
+                        hideOrder="true" />
                     <wi:columnOutputText columnId="usuarioCadastro"
                         columnHeader="#{messages['processo.usuarioCadastroProcesso']}"
                         value="#{row.usuarioCadastroProcesso}"
@@ -70,6 +85,37 @@
                 </wi:dataTable>
             </rich:panel>
         </h:form>
+        <rich:popupPanel id="prioridadeProcessoPanel" height="140">
+            <f:facet name="header">#{messages['prioridade.title']}</f:facet>
+            <f:facet name="controls">
+                <h:panelGroup>
+                    <h:graphicImage
+                        value="#{a4jSkin.imgFolder}/closeMP.gif"
+                        onclick="#{rich:component('prioridadeProcessoPanel')}.hide()" />
+                </h:panelGroup>
+            </f:facet>
+            <s:decorate
+                template="/WEB-INF/xhtml/components/templates/edit.xhtml">
+                <ui:define name="label">
+                    <h:outputText
+                        value="#{messages['prioridade.choice']}"
+                        styleClass="label" />
+                </ui:define>
+                <h:form>
+                    <wi:selectOneMenuEntity id="selectPrioridade"
+                        value="#{prioridadeProcessoChanger.prioridadeProcesso}"
+                        styleClass="PaletteMenu">
+                        <f:selectItems
+                            value="#{prioridadeProcessoList.list()}" />
+                    </wi:selectOneMenuEntity>
+                    <div />
+                    <wi:commandButton id="saveButton"
+                        action="prioridadeProcessoChanger.atualizarPrioridade()"
+                        value="#{messages['crud.update']}" 
+                        oncomplete="#{rich:component('prioridadeProcessoPanel')}.hide(); location.href = location.href" />
+                </h:form>
+            </s:decorate>
+        </rich:popupPanel>
     </ui:define>
 
 
