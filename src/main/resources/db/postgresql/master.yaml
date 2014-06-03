@@ -1,0 +1,7 @@
+databaseChangeLog:
+  
+  - changeSet:
+      id: empty-substituir-quando-tiver-o-primeiro
+      author: gabriel
+      changes:
+      - empty: {}
