@@ -28,7 +28,6 @@
 			
 			<h:inputText
 			 id="#{id}"
-			 converterId="monetarioConverter"
 			 value="#{value}"
 			 readonly="#{readonly}"
 			 disabled="#{disabled}"
@@ -41,7 +40,7 @@
 			 onkeyup="#{onkeyup}"
 			 maxlength="20">
 				<ui:insert />
-				<f:converter converterId="#{wi:get(converterId, 'stringConverter')}" />
+				<f:converter converterId="monetarioConverter" />
 			
 		</h:inputText>
 		<s:div rendered="#{!readonly}">
