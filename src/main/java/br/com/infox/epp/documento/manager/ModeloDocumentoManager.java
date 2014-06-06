@@ -1,6 +1,9 @@
 package br.com.infox.epp.documento.manager;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +13,8 @@ import java.util.regex.Pattern;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.bpm.ProcessInstance;
+import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -110,6 +115,15 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 if (expression == null) {
                     matcher.appendReplacement(sb, group);
                 } else {
+                    String realVariableName = expression.substring(2, expression.length() - 1);
+                    Object value = ProcessInstance.instance().getContextInstance().getVariable(realVariableName, TaskInstance.instance().getToken());
+                    if (value instanceof Date) {
+                        expression = new SimpleDateFormat("dd/MM/yyyy").format(value);
+                    } else if (value instanceof Double || value instanceof Float) {
+                        expression = NumberFormat.getCurrencyInstance().format(value).replace("$", "\\$");
+                    } else if (value instanceof String) {
+                        expression = ((String) value).replaceAll("[\n]*|[\r\n]*", "<br />");
+                    }
                     matcher.appendReplacement(sb, expression);
                 }
             }
