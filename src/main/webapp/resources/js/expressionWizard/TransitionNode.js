@@ -271,6 +271,7 @@
   }
   
   function isStringConst(str){
+    var _ = K.Node;
     return (/^String\['.*'\]$/).test(str) && _.getVariables().indexOf(str.slice(8,str.length-2))>=0;
   }
   

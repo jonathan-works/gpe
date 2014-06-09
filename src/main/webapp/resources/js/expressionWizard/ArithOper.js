@@ -1,5 +1,8 @@
 (function(K) {
-  
+  if (K.ArithOper !== undefined){
+    console.log("ArithOper already loaded");
+    return;
+  }  
   /* private static variables */
   var V = {
     get PLUS(){return "Plus";},

@@ -78,6 +78,9 @@ public class DecisionNode extends Node {
     public String getTokenStack(){
         String result="";
         try {
+            if (decisionExpression==null){
+                decisionExpression=format("#'{'{0}'}'", getLeavingTransitionList().get(0));
+            }
             result = ExpressionTokenizer.toNodeJSON(decisionExpression);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -87,9 +90,7 @@ public class DecisionNode extends Node {
         return result;
     }
     public void setTokenStack(String stack){
-        System.out.println(stack);
         this.decisionExpression=ExpressionTokenizer.fromNodeJSON(stack);
-        System.out.println(this.decisionExpression);
     }
     
     // ----------

@@ -397,32 +397,22 @@
   });
   Object.defineProperties(Node,{
     VariableType:{
-      get:function() {
-        return VariableType;
-      }
+      value:VariableType
     },
     addVariable:{
-      get:function() {
-        return addVariable;
-      }
+      value:addVariable
     },
     removeVariable:{
-      get:function() {
-        return removeVariable;
-      }
+      value:removeVariable
     },
     clearVariables:{
-      get:function(){return clearVariables;}
+      value:clearVariables
     },
     getVariables:{
-      get:function() {
-        return getVariables;
-      }
+      value:getVariables
     },
     generateTree:{
-      get:function() {
-        return generateTree;
-      }
+      value:generateTree
     }
   });
   

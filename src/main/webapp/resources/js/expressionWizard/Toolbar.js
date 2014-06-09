@@ -1,4 +1,8 @@
 (function (K) {
+  if (K.Toolbar !== undefined){
+    console.log("Toolbar already loaded");
+    return;
+  }
   var V = {
     UL:"ul",
     LI:"li",

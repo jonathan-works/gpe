@@ -1,5 +1,8 @@
 (function(K) {
-  
+  if (K.BooleanOper !== undefined){
+    console.log("BooleanOper already loaded");
+    return;
+  }
   /* private static variables */
   var V = {
     get AND(){return "And";},

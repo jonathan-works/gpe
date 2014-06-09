@@ -1,4 +1,8 @@
 (function(K) {
+  if (K.Enum !== undefined){
+    console.log("Enum already loaded");
+    return;
+  }
   function Enum(name) {
     if (this === window) {
       throw K.CONSTR_EXCEP;
