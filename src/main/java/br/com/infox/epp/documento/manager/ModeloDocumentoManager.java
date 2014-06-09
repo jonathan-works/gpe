@@ -122,7 +122,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                     } else if (value instanceof Double || value instanceof Float) {
                         expression = NumberFormat.getCurrencyInstance().format(value).replace("$", "\\$");
                     } else if (value instanceof String) {
-                        expression = ((String) value).replaceAll("[\n]*|[\r\n]*", "<br />");
+                        expression = ((String) value).replaceAll("[\n]+|[\r\n]+", "<br />");
                     }
                     matcher.appendReplacement(sb, expression);
                 }
