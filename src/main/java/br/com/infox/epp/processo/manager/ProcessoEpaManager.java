@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.manager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.util.time.DateRange;
 
 @Name(ProcessoEpaManager.NAME)
 @AutoCreate
@@ -54,12 +56,17 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
 
             if (result != null) {
                 Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
-                Long dias = (Long) result.get("dias");
-                Long tempoGasto = ((Long) result.get("horas")) / HOURS_OF_DAY;
-                if (dias != null) {
-                    tempoGasto += dias;
+                
+                DateRange dateRange;
+                final Date dataInicio = processoEpa.getDataInicio();
+                final Date dataFim = processoEpa.getDataFim();
+                if (dataFim != null){
+                    dateRange = new DateRange(dataInicio, dataFim);
+                } else {
+                    dateRange = new DateRange(dataInicio, new Date());
                 }
-                processoEpa.setTempoGasto(tempoGasto.intValue());
+                
+                processoEpa.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
 
                 if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
                     processoEpa.setPorcentagem((processoEpa.getTempoGasto() * PORCENTAGEM)

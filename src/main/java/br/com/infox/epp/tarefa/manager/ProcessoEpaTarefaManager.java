@@ -1,5 +1,7 @@
 package br.com.infox.epp.tarefa.manager;
 
+import static java.text.MessageFormat.format;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -114,8 +116,7 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
             }
 
             ProcessoEpa processoEpa = processoEpaTarefa.getProcessoEpa();
-            if (porcentagem > PORCENTAGEM_MAXIMA
-                    && processoEpa.getSituacaoPrazo() == SituacaoPrazoEnum.SAT) {
+            if (porcentagem > PORCENTAGEM_MAXIMA) {
                 processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }
 
@@ -131,13 +132,16 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
         Map<String, Object> result = processoEpaDAO.getTempoGasto(processoEpa);
 
         if (result != null) {
-            Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
-            Long dias = (Long) result.get("dias");
-            Long tempoGasto = ((Long) result.get("horas")) / HOURS_OF_DAY;
-            if (dias != null) {
-                tempoGasto += dias;
+            
+            Date dataFim = processoEpa.getDataFim();
+            DateRange dateRange;
+            if (dataFim != null) {
+                 dateRange = new DateRange(processoEpa.getDataInicio(), dataFim);
+            } else {
+                dateRange = new DateRange(processoEpa.getDataInicio(), new Date());
             }
-            processoEpa.setTempoGasto(tempoGasto.intValue());
+            processoEpa.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
+            Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
 
             if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
                 processoEpa.setPorcentagem((processoEpa.getTempoGasto() * PORCENTAGEM_MAXIMA)

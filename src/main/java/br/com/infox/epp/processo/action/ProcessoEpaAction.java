@@ -14,7 +14,9 @@ public class ProcessoEpaAction extends AbstractAction<ProcessoEpa, ProcessoEpaMa
     public static final String NAME = "processoEpaAction";
 
     public boolean alternarContabilizar(ProcessoEpa processoEpa) {
-        return UPDATED.equals(update(processoEpa));
+        processoEpa.getSituacaoPrazo().toString();
+        String update = update(processoEpa);
+        return UPDATED.equals(update);
     }
 
 }
