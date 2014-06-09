@@ -34,6 +34,7 @@ public interface LengthConstants {
     int ID_PAGINA = 200;
     int ID_ENTIDADE = 200;
 
+    //TODO verificar quais constantes podem ser removidas
     // Tamanhos dos Nomes
     int NOME_PADRAO = 100;
     int NOME_BAIRRO = 100;

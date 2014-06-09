@@ -34,7 +34,7 @@ public class Reindexer {
 
     private static final LogProvider LOG = Logging.getLogProvider(Reindexer.class);
 
-    
+    //TODO verificar remoção dessa classe
     @SuppressWarnings(UNCHECKED)
     public void execute() {
         LOG.warn("----------- Criando indices de documentos das tarefas -------------");
