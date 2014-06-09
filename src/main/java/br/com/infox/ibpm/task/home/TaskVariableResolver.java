@@ -3,6 +3,7 @@ package br.com.infox.ibpm.task.home;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -74,7 +75,7 @@ final class TaskVariableResolver extends TaskVariable {
                 case DATE:
                     if (value instanceof String) {
                         try {
-                            value = DateFormat.getDateInstance(DateFormat.MEDIUM).parse(value.toString());
+                            value = new SimpleDateFormat("dd/MM/yyyy").parse(value.toString());
                         } catch (ParseException e) {
                         }
                     }

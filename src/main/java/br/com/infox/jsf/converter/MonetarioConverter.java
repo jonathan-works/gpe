@@ -1,6 +1,7 @@
 package br.com.infox.jsf.converter;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -23,8 +24,8 @@ public class MonetarioConverter implements Converter {
     private static final String SYMBOL;
 
     static {
-        FORMATTER = NumberFormat.getCurrencyInstance();
-        SYMBOL = FORMATTER.getCurrency().getSymbol();
+        FORMATTER = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        SYMBOL = FORMATTER.getCurrency().getSymbol(new Locale("pt", "BR"));
     }
 
     @Override
