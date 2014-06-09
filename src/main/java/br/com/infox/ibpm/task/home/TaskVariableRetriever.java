@@ -1,8 +1,5 @@
 package br.com.infox.ibpm.task.home;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -45,13 +42,6 @@ final class TaskVariableRetriever extends TaskVariable {
             switch (type) {
                 case EDITOR:
                     variable = getConteudoEditor(variable);
-                    break;
-                case DATE:
-                    try {
-                        variable = DateFormat.getDateInstance( DateFormat.MEDIUM).parse(variable.toString());
-                    } catch (ParseException e) {
-                        LOG.warn("parseDateFail", e);
-                    }
                     break;
                 case FILE:
                     variable = getNomeFileUploaded(variable);
