@@ -12,7 +12,6 @@
 	<param name="codigoDocumento" value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"/>
 	<param name="tipoProcessoDocumento" value="#{tipoProcessoDocumentoList.entity.tipoProcessoDocumento}"/>
 	<param name="inTipoDocumento" value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"/>
-	<param name="visibilidade" value="#{tipoProcessoDocumentoList.entity.visibilidade}"/>
 	<param name="ativo" value="#{tipoProcessoDocumentoList.entity.ativo}"/>
 
 </page>

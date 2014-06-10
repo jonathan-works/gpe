@@ -14,15 +14,12 @@
             title="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
         <wi:reportColumnHeader
             title="#{messages['tipoProcessoDocumento.uso']}" />
-        <wi:reportColumnHeader
-            title="#{messages['tipoProcessoDocumento.visibilidade']}" />
         <wi:reportColumnHeader title="#{messages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{tipoProcessoDocumentoList.list()}">
             <wi:reportColumn value="#{row.codigoDocumento}" />
             <wi:reportColumn value="#{row.tipoProcessoDocumento}" />
             <wi:reportColumn value="#{row.inTipoDocumento.getLabel()}" />
-            <wi:reportColumn value="#{row.visibilidade.getLabel()}" />
             <wi:reportColumnSituacao value="#{row.ativo}"
                 columnAlign="center" />
         </ui:repeat>
