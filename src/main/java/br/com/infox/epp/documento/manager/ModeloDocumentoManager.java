@@ -7,23 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.bpm.ProcessInstance;
+import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jbpm.context.def.VariableAccess;
-import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.node.TaskNode;
-import org.jbpm.taskmgmt.def.Task;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
@@ -33,7 +27,6 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -59,19 +52,6 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
     
-    @In(value = "org.jboss.seam.bpm.taskInstance", required = false)
-    private TaskInstance taskInstance;
-    
-    private Map<String, JbpmVariableInformation> variableTypeMap;
-    
-    @Override
-    public void init() {
-        super.init();
-        if (taskInstance != null) {
-            buildVariableTypeMap();
-        }
-    }
-
     //TODO verificar se esse método ainda é utilizado, senão, remover
     public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento) {
         if (modeloDocumento != null) {
@@ -120,6 +100,22 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
      *         modelo
      */
     public String evaluateModeloDocumento(ModeloDocumento modeloDocumento) {
+        return evaluateModeloDocumento(modeloDocumento, null);
+    }
+    
+    /**
+     * Realiza conversão de Modelo de Documento, para Documento final, verificando variáveis do jBPM
+     * 
+     * Este método busca linha a linha pelos nomes das variáveis do sistema para
+     * substituí-las por seus respectivos valores. Caso a variável exista no mapa de variáveis, ela é
+     * analisada de acordo com seu tipo e substituída por um valor formatado adequado
+     * 
+     * @param modeloDocumento Modelo de Documento não nulo a ser usado na tarefa
+     * @param variableTypeMap Mapa de variáveis do jBPM e seus tipos
+     * @return Documento contendo valores armazenados nas variáveis inseridas no
+     *         modelo
+     */
+    public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, Map<String, Pair<String, VariableType>> variableTypeMap) {
         if (modeloDocumento == null) {
             return null;
         }
@@ -146,7 +142,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                     matcher.appendReplacement(sb, group);
                 } else {
                     if (variableTypeMap != null) {
-                        expression = resolveJbpmVariable(expression);
+                        expression = resolveJbpmVariable(expression, variableTypeMap);
                     }
                     matcher.appendReplacement(sb, expression);
                 }
@@ -164,49 +160,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         }
         return modeloProcessado.toString();
     }
-
-    private String resolveJbpmVariable(String expression) {
-        String realVariableName = expression.substring(2, expression.length() - 1);
-        Object value = ProcessInstance.instance().getContextInstance().getVariable(realVariableName, taskInstance.getToken());
-        JbpmVariableInformation variableInfo = variableTypeMap.get(realVariableName);
-        switch (variableInfo.type) {
-        case DATE:
-            expression = new SimpleDateFormat("dd/MM/yyyy").format(value);
-            break;
-
-        case EDITOR:
-            expression = processoDocumentoManager.find(value).getProcessoDocumentoBin().getModeloDocumento();
-            break;
-            
-        case MONETARY:
-            expression = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(value).replace("$", "\\$");
-            break;
-            
-        case TEXT:
-            expression = ((String) value).replaceAll("[\n]+?|[\r\n]+?", "<br />");
-            break;
-            
-        case BOOLEAN:
-            expression = Boolean.valueOf((String) value) ? "Sim" : "Não";
-            break;
-            
-        case ENUMERATION:
-            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(Integer.valueOf(variableInfo.mappedName.split(":")[2]));
-            String[] itens = dominio.getDominio().split(";");
-            for (String item : itens) {
-                String[] pair = item.split("=");
-                if (pair[0].equals(value))  {
-                    expression = pair[1];
-                }
-            }
-            break;
-            
-        default:
-            break;
-        }
-        return expression;
-    }
-
+    
     /**
      * Recupera variáveis atreladas a um tipo de documento.
      * 
@@ -252,42 +206,45 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         return evaluateModeloDocumento(modeloDocumento);
     }
 
-    private void buildVariableTypeMap() {
-        variableTypeMap = new HashMap<>();
-        Node start = taskInstance.getTaskMgmtInstance().getTaskMgmtDefinition().getProcessDefinition().getStartState();
-        traverse(start);
-    }
+    private String resolveJbpmVariable(String expression, Map<String, Pair<String, VariableType>> variableTypeMap) {
+        String realVariableName = expression.substring(2, expression.length() - 1);
+        Object value = TaskInstance.instance().getVariable(realVariableName);
+        Pair<String, VariableType> variableInfo = variableTypeMap.get(realVariableName);
+        switch (variableInfo.getRight()) {
+        case DATE:
+            expression = new SimpleDateFormat("dd/MM/yyyy").format(value);
+            break;
 
-    @SuppressWarnings("unchecked")
-    private void traverse(Node node) {
-        Node nodeWithoutProxy = (Node) HibernateUtil.removeProxy(node);
-        if (nodeWithoutProxy instanceof TaskNode) {
-            Set<Task> tasks = ((TaskNode) nodeWithoutProxy).getTasks();
-            for (Task task : tasks) {
-                if (task.getTaskController() != null) {
-                    List<VariableAccess> variables = task.getTaskController().getVariableAccesses();
-                    for (VariableAccess variable : variables) {
-                        if (!variableTypeMap.containsKey(variable.getVariableName())) {
-                            String mappedName = variable.getMappedName();
-                            variableTypeMap.put(variable.getVariableName(), new JbpmVariableInformation(mappedName, VariableType.valueOf(variable.getMappedName().split(":")[0])));
-                        }
-                    }
+        case EDITOR:
+            expression = processoDocumentoManager.find(value).getProcessoDocumentoBin().getModeloDocumento();
+            break;
+            
+        case MONETARY:
+            expression = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(value).replace("$", "\\$");
+            break;
+            
+        case TEXT:
+            expression = ((String) value).replaceAll("[\n]+?|[\r\n]+?", "<br />");
+            break;
+            
+        case BOOLEAN:
+            expression = Boolean.valueOf((String) value) ? "Sim" : "Não";
+            break;
+            
+        case ENUMERATION:
+            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(Integer.valueOf(variableInfo.getLeft().split(":")[2]));
+            String[] itens = dominio.getDominio().split(";");
+            for (String item : itens) {
+                String[] pair = item.split("=");
+                if (pair[0].equals(value))  {
+                    expression = pair[1];
                 }
             }
+            break;
+            
+        default:
+            break;
         }
-        List<Transition> leavingTransitions = node.getLeavingTransitions();
-        for (Transition transition : leavingTransitions) {
-            traverse(transition.getTo());
-        }
-    }
-}
-
-class JbpmVariableInformation {
-    public String mappedName;
-    public VariableType type;
-    
-    public JbpmVariableInformation(String mappedName, VariableType type) {
-        this.mappedName = mappedName;
-        this.type = type;
+        return expression;
     }
 }
