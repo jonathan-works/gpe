@@ -119,7 +119,7 @@ public class VariableAccessHandler implements Serializable {
     public void setName(String name) {
         String auxiliarName = name.replace(' ', '_').replace('/', '_');
         if (!auxiliarName.equals(this.name)) {
-            if (VariableType.PAGE.equals(type) && !pageExists()) {
+            if (VariableType.PAGE.equals(type) && !pageExists(auxiliarName)) {
                 return;
             }
             this.name = auxiliarName;
@@ -214,7 +214,7 @@ public class VariableAccessHandler implements Serializable {
         return type;
     }
 
-    private boolean pageExists() {
+    private boolean pageExists(String name) {
         String page = "/" + name.replaceAll("_", "/") + ".xhtml";
         String realPath = ServletLifecycle.getServletContext().getRealPath(page);
         final boolean fileExists = new File(realPath).exists();
@@ -229,7 +229,7 @@ public class VariableAccessHandler implements Serializable {
         this.type = type;
         switch (type) {
             case PAGE:
-                if (!pageExists()) {
+                if (!pageExists(name)) {
                     setWritable(true);
                     this.name = "";
                     return;
