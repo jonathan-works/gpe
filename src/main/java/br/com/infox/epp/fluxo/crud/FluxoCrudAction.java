@@ -125,4 +125,10 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     public boolean isReplica() {
         return replica;
     }
+    
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        replica = false;
+    }
 }
