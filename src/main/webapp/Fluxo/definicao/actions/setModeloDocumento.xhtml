@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:a="http://richfaces.org/a4j"
->
-    <ui:param
-        name="variavel"
-        value="#{processBuilder.taskFitter.currentTask.currentVariable}"
-    />
+    xmlns:a="http://richfaces.org/a4j">
+    <ui:param name="variavel"
+        value="#{processBuilder.taskFitter.currentTask.currentVariable}" />
     <s:div id="modeloDocumentoDiv">
         <rich:panel header="Modelo de documento: #{variavel.name}">
             <wi:ajaxDiv id="divM2MVar">
@@ -21,31 +17,25 @@
                         header="#{messages['associatedModeloDocumentoVariavel.tableTitle']}"
                         id="associatedModeloDocumentoVariavelListPanel"
                         bodyClass="dtable-p-b"
-                        styleClass="dtable-p picklist"
-                    >
+                        styleClass="dtable-p picklist">
                         <rich:dataTable
                             value="#{variavel.modeloDocumentoList}"
                             id="associatedModeloDocumentoVariavelList"
                             rowKeyVar="key"
                             styleClass="dtable rf-dt-crud picklist-dt"
-                            var="row"
-                        >
-                            <wi:columnOutputText
+                            var="row">
+                            <wi:columnOutputText hideOrder="true"
                                 columnId="tituloModeloDocumento"
                                 columnHeader="#{messages['associatedModeloDocumentoVariavel.tituloModeloDocumento']}"
-                                value="#{row}"
-                            />
+                                value="#{row}" />
                             <rich:column styleClass="dt-toolbar-col">
                                 <h:form>
-                                    <a:commandLink
-                                        limitRender="true"
+                                    <a:commandLink limitRender="true"
                                         render="divM2MVar, modeloDocumentoDiv"
-                                        action="#{variavel.removeModelo(row)}"
-                                    >
+                                        action="#{variavel.removeModelo(row)}">
                                         <h:graphicImage
                                             url="#{a4jSkin.imgFolder}/grid/copyRight.gif"
-                                            title="#{messages['button.delete']}"
-                                        />
+                                            title="#{messages['button.delete']}" />
                                     </a:commandLink>
                                 </h:form>
                             </rich:column>
@@ -60,44 +50,36 @@
                         id="associativeModeloDocumentoList"
                         rowId="#{row.idModeloDocumento}"
                         panelStyleClass="picklist"
-                        styleClass="picklist-dt"
-                    >
+                        styleClass="picklist-dt">
                         <ui:define name="searchForm">
                             <wi:searchForm
                                 formId="pesquisarModeloDocumentoForm"
                                 formTitle="#{messages['searchForm.title']}"
                                 searchReRender="modeloDocumentoDiv"
                                 clearReRender="modeloDocumentoDiv"
-                                clearAction="associativeModeloDocumentoList.newInstance"
-                            >
-                                <wi:inputText
-                                    id="tituloModeloDocumento"
+                                clearAction="associativeModeloDocumentoList.newInstance">
+                                <wi:inputText id="tituloModeloDocumento"
                                     label="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
                                     value="#{associativeModeloDocumentoList.parameters.tituloModeloDocumento}"
-                                    maxlength="150"
-                                />
+                                    maxlength="150" />
                             </wi:searchForm>
                         </ui:define>
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
                             <h:form>
-                                <a:commandLink
-                                    limitRender="true"
+                                <a:commandLink limitRender="true"
                                     render="divM2MVar"
-                                    action="#{variavel.addModelo(row)}"
-                                >
+                                    action="#{variavel.addModelo(row)}">
                                     <h:graphicImage
                                         url="#{a4jSkin.imgFolder}/grid/copyLeft.gif"
-                                        title="#{messages['button.add']}"
-                                    />
+                                        title="#{messages['button.add']}" />
                                 </a:commandLink>
                             </h:form>
                         </ui:define>
                         <wi:columnOutputText
                             columnId="tituloModeloDocumento"
                             columnHeader="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
-                            value="#{row}"
-                        />
+                            value="#{row}" />
                     </wi:dataTable>
                 </div>
             </wi:ajaxDiv>
