@@ -17,7 +17,7 @@ public enum SearchCriteria {
             + "lower(#'{'{1}.entity.{0}}), '''%''')"),
 
     DATA_IGUAL(
-            "to_char(cast(o.{0} as date), '''DD/MM/YYYY''') = to_char(cast(#'{'{1}.entity.{0}} as date), '''DD/MM/YYYY''')");
+            "cast(o.{0} as date) = cast(#'{'{1}.entity.{0}} as date)");
 
     private String pattern;
 
