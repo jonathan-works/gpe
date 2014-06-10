@@ -1,5 +1,6 @@
 package br.com.infox.epp.documento.crud;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -26,7 +27,11 @@ public class TipoModeloDocumentoCrudAction extends AbstractCrudAction<TipoModelo
 
     public List<ModeloDocumento> getListaDeModeloDocumento() {
         final TipoModeloDocumento tipoModeloDocumento = getInstance();
-        return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(tipoModeloDocumento.getGrupoModeloDocumento(), tipoModeloDocumento);
+        if (isManaged()) {
+            return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(tipoModeloDocumento.getGrupoModeloDocumento(), tipoModeloDocumento);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
 }
