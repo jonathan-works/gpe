@@ -210,6 +210,9 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         String realVariableName = expression.substring(2, expression.length() - 1);
         Object value = TaskInstance.instance().getVariable(realVariableName);
         Pair<String, VariableType> variableInfo = variableTypeMap.get(realVariableName);
+        if (variableInfo == null) {
+            return expression;
+        }
         switch (variableInfo.getRight()) {
         case DATE:
             expression = new SimpleDateFormat("dd/MM/yyyy").format(value);
