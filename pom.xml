@@ -195,7 +195,7 @@
         <dependency>
             <groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
-        </dependency>
+            </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers</artifactId>
@@ -314,26 +314,6 @@
             <type>jar</type>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>3.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.3-1101-jdbc41</version>
-        </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
-        </dependency>
     </dependencies>
     <build>
         <finalName>epp</finalName>
@@ -442,7 +422,7 @@
                     <execution>
                         <goals>
                             <goal>revision</goal>
-                        </goals>
+                         </goals>
                     </execution>
                 </executions>
                 <configuration>
@@ -451,61 +431,7 @@
                     <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <changeLogFile>src/main/resources/db/${epp.liquibase.db}/master.yaml</changeLogFile>
-                    <driver>${epp.liquibase.driver}</driver>
-                    <url>${epp.liquibase.url}</url>
-                    <username>${epp.liquibase.username}</username>
-                    <password>${epp.liquibase.password}</password>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>update</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse 
-                    m2e settings only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.liquibase</groupId>
-                                        <artifactId>
-                                            liquibase-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [3.1.1,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>update</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -542,22 +468,12 @@
             <id>sqlserver</id>
             <properties>
                 <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxSQLServer2012Dialect</hibernate.dialect>
-                <epp.liquibase.db>sqlserver</epp.liquibase.db>
-                <epp.liquibase.driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</epp.liquibase.driver>
-                <epp.liquibase.url>jdbc:sqlserver://localhost\SQLEXPRESS:1433;databaseName=epp;SelectMethod=cursor</epp.liquibase.url>
-                <epp.liquibase.username>infox</epp.liquibase.username>
-                <epp.liquibase.password>123</epp.liquibase.password>
             </properties>
         </profile>
         <profile>
             <id>postgresql</id>
             <properties>
                 <hibernate.dialect>br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
-                <epp.liquibase.driver>org.postgresql.Driver</epp.liquibase.driver>
-                <epp.liquibase.db>postgresql</epp.liquibase.db>
-                <epp.liquibase.url>jdbc:postgresql://localhost:5432/desbd_epp</epp.liquibase.url>
-                <epp.liquibase.username>postgres</epp.liquibase.username>
-                <epp.liquibase.password>postgres</epp.liquibase.password>
             </properties>
         </profile>
         <profile>
