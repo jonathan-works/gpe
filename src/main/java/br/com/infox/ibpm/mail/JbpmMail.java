@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -21,6 +22,7 @@ import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
 import br.com.infox.epp.twitter.util.TwitterUtil;
+import br.com.infox.ibpm.task.home.VariableTypeResolver;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class JbpmMail extends org.jbpm.mail.Mail {
@@ -72,7 +74,8 @@ public class JbpmMail extends org.jbpm.mail.Mail {
         EMailData data = ComponentUtil.getComponent(EMailData.NAME);
         data.setUseHtmlBody(true);
         ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-        data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento"))));
+        VariableTypeResolver variableTypeResolver = (VariableTypeResolver) Component.getInstance(VariableTypeResolver.NAME);
+        data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), variableTypeResolver.getVariableTypeMap()));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;
         if (idGrupo != null) {

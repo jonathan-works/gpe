@@ -9,14 +9,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -35,11 +32,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Event;
-import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
-import org.jbpm.graph.node.TaskNode;
-import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -56,7 +50,6 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
-import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
@@ -97,8 +90,6 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinar = Boolean.FALSE;
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
-    private Map<String, Pair<String, VariableType>> variableTypeMap;
-
     @In
     private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In
@@ -115,6 +106,9 @@ public class TaskInstanceHome implements Serializable {
     private UserHandler userHandler;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In
+    private VariableTypeResolver variableTypeResolver;
+    
     private URL urlRetornoAcessoExterno;
 
     private boolean canClosePanelVal;
@@ -123,7 +117,7 @@ public class TaskInstanceHome implements Serializable {
     public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (mapaDeVariaveis == null && taskInstance != null) {
-            buildVariableTypeMap();
+            variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
             mapaDeVariaveis = new HashMap<String, Object>();
             retrieveVariables();
         }
@@ -611,7 +605,7 @@ public class TaskInstanceHome implements Serializable {
     public void assignModeloDocumento(final String id) {
         String modelo = "";
         if (modeloDocumento != null) {
-            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
+            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, variableTypeResolver.getVariableTypeMap());
         }
         mapaDeVariaveis.put(id, modelo);
     }
@@ -655,7 +649,7 @@ public class TaskInstanceHome implements Serializable {
 
     public void setModeloDocumento(ModeloDocumento modelo) {
         this.modeloDocumento = modelo;
-        mapaDeVariaveis.put(getFieldName(variavelDocumento), modeloDocumentoManager.evaluateModeloDocumento(modelo, variableTypeMap));
+        mapaDeVariaveis.put(getFieldName(variavelDocumento), modeloDocumentoManager.evaluateModeloDocumento(modelo, variableTypeResolver.getVariableTypeMap()));
     }
 
     public String getHomeName() {
@@ -700,34 +694,5 @@ public class TaskInstanceHome implements Serializable {
 
     public boolean podeRenderizarApplet() {
         return faltaAssinatura(ProcessoHome.instance().getTipoProcessoDocumento());
-    }
-    
-    private void buildVariableTypeMap() {
-        variableTypeMap = new HashMap<>();
-        Node start = taskInstance.getTaskMgmtInstance().getTaskMgmtDefinition().getProcessDefinition().getStartState();
-        traverse(start);
-    }
-
-    @SuppressWarnings(UNCHECKED)
-    private void traverse(Node node) {
-        Node nodeWithoutProxy = (Node) HibernateUtil.removeProxy(node);
-        if (nodeWithoutProxy instanceof TaskNode) {
-            Set<Task> tasks = ((TaskNode) nodeWithoutProxy).getTasks();
-            for (Task task : tasks) {
-                if (task.getTaskController() != null) {
-                    List<VariableAccess> variables = task.getTaskController().getVariableAccesses();
-                    for (VariableAccess variable : variables) {
-                        if (!variableTypeMap.containsKey(variable.getVariableName())) {
-                            String mappedName = variable.getMappedName();
-                            variableTypeMap.put(variable.getVariableName(), new ImmutablePair<>(mappedName, VariableType.valueOf(variable.getMappedName().split(":")[0])));
-                        }
-                    }
-                }
-            }
-        }
-        List<Transition> leavingTransitions = node.getLeavingTransitions();
-        for (Transition transition : leavingTransitions) {
-            traverse(transition.getTo());
-        }
     }
 }

@@ -205,6 +205,11 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         final ModeloDocumento modeloDocumento = find(idModeloDocumento);
         return evaluateModeloDocumento(modeloDocumento);
     }
+    
+    public String getConteudo(int idModeloDocumento, Map<String, Pair<String, VariableType>> variableTypeMap) {
+        final ModeloDocumento modeloDocumento = find(idModeloDocumento);
+        return evaluateModeloDocumento(modeloDocumento, variableTypeMap);
+    }
 
     private String resolveJbpmVariable(String expression, Map<String, Pair<String, VariableType>> variableTypeMap) {
         String realVariableName = expression.substring(2, expression.length() - 1);
