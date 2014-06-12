@@ -21,13 +21,15 @@
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarPrioridadeProcessoForm"
                     formTitle="#{messages['searchForm.title']}">
+                    
+                    <wi:inputNumber id="peso"
+                        value="#{prioridadeProcessoList.entity.peso}"
+                        label="#{messages['prioridadeProcesso.peso']}" />
+                        
                     <wi:inputText id="descricaoPrioridadeProcesso"
                         label="#{messages['prioridadeProcesso.descricaoPrioridade']}"
                         value="#{prioridadeProcessoList.entity.descricaoPrioridade}"
                         maxlength="150" />
-                    <wi:inputNumber id="peso"
-                        value="#{prioridadeProcessoList.entity.peso}"
-                        label="#{messages['prioridadeProcesso.peso']}" />
 
                     <wi:selectSituacaoOneMenu id="ativo"
                         label="#{messages['field.situacao']}"
