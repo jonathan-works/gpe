@@ -49,8 +49,8 @@ public class ParametroList extends EntityList<Parametro> {
      */
     protected Map<String, String> getCustomColumnsOrder() {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("usuarioModificacao", "case when (u.nome is null) then "
-                + "#{parametroList.order.endsWith(' asc') ? 'ZZZ' : '  '} else u.nome end ");
+        map.put("usuarioModificacao", "case when (u.nomeUsuario is null) then "
+                + "#{parametroList.order.endsWith(' asc') ? 'ZZZ' : '  '} else u.nomeUsuario end ");
         map.put("nomeVariavel", "o.nomeVariavel");
         map.put("descricaoVariavel", "o.descricaoVariavel");
         map.put("valorVariavel", "o.valorVariavel");
