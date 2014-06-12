@@ -460,12 +460,14 @@
             <id>sqlserver</id>
             <properties>
                 <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxSQLServer2012Dialect</hibernate.dialect>
+                <quartz.delegate>org.quartz.impl.jdbcjobstore.MSSQLDelegate</quartz.delegate>
             </properties>
         </profile>
         <profile>
             <id>postgresql</id>
             <properties>
                 <hibernate.dialect>br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
+                <quartz.delegate>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</quartz.delegate>
             </properties>
         </profile>
         <profile>
