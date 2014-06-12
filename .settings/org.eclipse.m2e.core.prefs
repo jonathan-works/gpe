@@ -1,4 +1,4 @@
-activeProfiles=desenvolvimento,jboss-eap
+activeProfiles=desenvolvimento,jboss-eap,postgresql
 eclipse.preferences.version=1
 resolveWorkspaceProjects=true
 version=1
