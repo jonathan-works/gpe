@@ -316,7 +316,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>epp</finalName>
+        <finalName>epp_${maven.build.timestamp}</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
@@ -435,31 +435,23 @@
     </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.search.index_base>./indices/</hibernate.search.index_base>
-        <maven.build.timestamp.format>dd/MM/yyyy - HH:mm</maven.build.timestamp.format>
-        <buildNumber>${maven.build.timestamp}</buildNumber>
-        <hibernate.dialect>br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
+        <maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
     </properties>
     <profiles>
         <profile>
             <id>producao</id>
             <properties>
-                <producao>true</producao>
-                <hibernate.show_sql>false</hibernate.show_sql>
-                <hibernate.format_sql>false</hibernate.format_sql>
+                <desenvolvimento>false</desenvolvimento>
                 <log.jbpm>WARNING</log.jbpm>
                 <log.hibernate.sql>ERROR</log.hibernate.sql>
                 <project.stage>Production</project.stage>
-                <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxSQLServer2012Dialect</hibernate.dialect>
             </properties>
         </profile>
         <profile>
             <id>desenvolvimento</id>
             <properties>
                 <project.stage>Development</project.stage>
-                <producao>false</producao>
-                <hibernate.show_sql>true</hibernate.show_sql>
-                <hibernate.format_sql>true</hibernate.format_sql>
+                <desenvolvimento>true</desenvolvimento>
                 <log.jbpm>INFO</log.jbpm>
                 <log.hibernate.sql>INFO</log.hibernate.sql>
             </properties>

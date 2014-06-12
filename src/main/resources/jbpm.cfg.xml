@@ -16,8 +16,6 @@
     <service name="authentication" factory="org.jbpm.security.authentication.DefaultAuthenticationServiceFactory" />
   </jbpm-context>
 
-	<string name="jbpm.mail.smtp.host" value="mail.infox.com.br" /> 
-
 	<!-- Arquivo que define o calendario de dias e horas úteis. -->
 	<string name="resource.business.calendar" value="jbpm.business.calendar.properties" />
 	

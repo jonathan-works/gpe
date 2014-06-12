@@ -22,7 +22,7 @@
                  http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">
 
     <core:init
-        debug="true"
+        debug="${desenvolvimento}"
         jndi-pattern="java:app/EPA-ejb/#{ejbName}" />
         
     <document:document-store use-extensions="true" />
@@ -73,15 +73,7 @@
         enabled="false"
         mode="disabled" />
 
-    <mail:mail-session
-        host="mail.infox.com.br"
-        tls="false"
-        port="25"
-        debug="false"
-        ssl="false"
-        username="sistemaepa@infox.com.br"
-        password="minot@uro"
-        session-jndi-name="java:jboss/mail/epp" />
+    <mail:mail-session session-jndi-name="java:jboss/mail/epp" />
 
     <bpm:jbpm>
         <bpm:process-definitions></bpm:process-definitions>
