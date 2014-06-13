@@ -230,7 +230,7 @@ public class TransitionFitter extends Fitter implements Serializable {
             transitionsItems.add(new SelectItem(null, internacionalize("process.transition.select")));
             for (Node n : nodes) {
                 if (n.getLeavingTransitions() != null) {
-                    for (TransitionHandler t : TransitionHandler.getList(n.getLeavingTransitions())) {
+                    for (TransitionHandler t : TransitionHandler.getList((List<Transition>) n.getLeavingTransitions())) {
                         transitionsItems.add(new SelectItem(t));
                     }
                 }
