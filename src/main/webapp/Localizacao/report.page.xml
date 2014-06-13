@@ -7,9 +7,5 @@ xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/s
     <restrict>#{security.checkPage()}</restrict>
     <param name="order" value="#{localizacaoList.order}" />
     <param name="restrictionLogicOperator" value="#{localizacaoList.restrictionLogicOperator}" />
-    <param name="localizacao" value="#{localizacaoList.entity.localizacao}"/>
-    <param name="localizacaoPai" value="#{localizacaoList.entity.localizacaoPai}"/>
-    <param name="estrutura" value="#{localizacaoList.entity.estrutura}"/>
-    <param name="ativo" value="#{localizacaoList.entity.ativo}"/>
 
 </page>
