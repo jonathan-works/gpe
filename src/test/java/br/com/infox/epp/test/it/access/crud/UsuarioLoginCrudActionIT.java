@@ -25,12 +25,24 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
+import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
+import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
+import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
+import br.com.infox.hibernate.session.SessionAssistant;
+import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
+import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.seam.exception.BusinessException;
 
 @RunWith(Arquillian.class)
@@ -44,7 +56,12 @@ public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
                 UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
                 ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
                 ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-                ParametroManager.class,ParametroDAO.class,SendmailCommand.class)
+                ParametroManager.class,ParametroDAO.class,SendmailCommand.class,
+                DominioVariavelTarefaManager.class, DominioVariavelTarefaDAO.class,
+                ProcessoDocumentoManager.class, ProcessoDocumentoDAO.class, SessionAssistant.class,
+                SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
+                SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
+                ProcessoDocumentoBinDAO.class, ProcessoDocumentoBinManager.class)
             .createDeployment()
         ;
     }

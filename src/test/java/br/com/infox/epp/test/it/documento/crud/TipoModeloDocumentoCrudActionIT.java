@@ -38,12 +38,24 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.manager.GrupoModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
+import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
+import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
+import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.PersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
+import br.com.infox.hibernate.session.SessionAssistant;
+import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
+import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 
 @RunWith(Arquillian.class)
 public class TipoModeloDocumentoCrudActionIT extends AbstractCrudTest<TipoModeloDocumento>{
@@ -59,7 +71,11 @@ public class TipoModeloDocumentoCrudActionIT extends AbstractCrudTest<TipoModelo
                 ModeloDocumentoManager.class, VariavelDAO.class,
                 ModeloDocumentoDAO.class, GrupoModeloDocumentoCrudActionIT.class,
                 GrupoModeloDocumentoCrudAtion.class, GrupoModeloDocumentoManager.class,
-                GrupoModeloDocumentoDAO.class)
+                GrupoModeloDocumentoDAO.class, DominioVariavelTarefaManager.class, DominioVariavelTarefaDAO.class,
+                ProcessoDocumentoManager.class, ProcessoDocumentoDAO.class, SessionAssistant.class,
+                SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
+                SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
+                ProcessoDocumentoBinDAO.class, ProcessoDocumentoBinManager.class)
         .createDeployment();
     }
     

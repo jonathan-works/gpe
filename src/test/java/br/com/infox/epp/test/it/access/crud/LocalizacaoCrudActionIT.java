@@ -40,6 +40,15 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
+import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
+import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
+import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
@@ -48,6 +57,9 @@ import br.com.infox.epp.test.crud.PersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
+import br.com.infox.hibernate.session.SessionAssistant;
+import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
+import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 
 @RunWith(Arquillian.class)
 public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
@@ -122,7 +134,12 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
                         UsuarioLoginManager.class, UsuarioLocalizacaoComparator.class, PasswordService.class,
                         AccessMailService.class, ModeloDocumentoManager.class, VariavelDAO.class,
                         ModeloDocumentoDAO.class, ParametroManager.class, ParametroDAO.class,
-                        EMailData.class).createDeployment();
+                        EMailData.class,
+                        DominioVariavelTarefaManager.class, DominioVariavelTarefaDAO.class,
+                        ProcessoDocumentoManager.class, ProcessoDocumentoDAO.class, SessionAssistant.class,
+                        SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
+                        SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
+                        ProcessoDocumentoBinDAO.class, ProcessoDocumentoBinManager.class).createDeployment();
     }
     
     public static final List<Localizacao> getSuccessfullyPersisted(final ActionContainer<Localizacao> action, final String suffix,final ServletContext servletContext, final HttpSession session) throws Exception {
