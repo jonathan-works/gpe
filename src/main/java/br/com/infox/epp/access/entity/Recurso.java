@@ -55,7 +55,7 @@ public class Recurso implements java.io.Serializable {
 
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = "sq_tb_recurso")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_recurso")
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_recurso", unique = true, nullable = false)

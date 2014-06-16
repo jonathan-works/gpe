@@ -155,7 +155,7 @@ public class UsuarioLogin implements Serializable {
         this.bloqueio = Boolean.FALSE;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_USUARIO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_USUARIO, unique = true, nullable = false)

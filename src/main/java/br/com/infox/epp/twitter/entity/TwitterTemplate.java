@@ -26,7 +26,7 @@ public class TwitterTemplate implements Serializable {
     private String mensagem;
     private Boolean ativo;
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_twitter_template")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_twitter_template")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_twitter_template")

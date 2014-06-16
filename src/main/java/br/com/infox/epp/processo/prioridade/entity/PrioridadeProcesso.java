@@ -29,7 +29,7 @@ public class PrioridadeProcesso implements Serializable, Comparable<PrioridadePr
     private Integer peso;
     private Boolean ativo;
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_prioridade_processo")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_prioridade_processo")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_prioridade_processo")

@@ -63,7 +63,7 @@ public class TipoModeloDocumento implements Serializable {
         this.ativo = ativo;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_TIPO_MODELO_DOCUMENTO, unique = true, nullable = false)

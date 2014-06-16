@@ -53,7 +53,7 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
     private String descricaoModeloDocumento;
     private Boolean ativo;
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_HISTORICO_MODELO_DOCUMENTO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_HISTORICO_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_HISTORICO_MODELO_DOCUMENTO, unique = true, nullable = false)

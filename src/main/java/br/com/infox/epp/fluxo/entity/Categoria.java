@@ -53,7 +53,7 @@ public class Categoria implements Serializable {
         this.ativo = ativo;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_CATEGORIA, unique = true, nullable = false)

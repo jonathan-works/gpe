@@ -129,7 +129,7 @@ public class Fluxo implements Serializable {
         this.dataFimPublicacao = dataFimPublicacao;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_FLUXO, unique = true, nullable = false)

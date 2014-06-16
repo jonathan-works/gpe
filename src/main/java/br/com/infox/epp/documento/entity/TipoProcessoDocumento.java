@@ -63,7 +63,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         visibilidade = VisibilidadeEnum.A;
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_tipo_processo_documento")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_tipo_processo_documento")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tipo_processo_documento", unique = true, nullable = false)

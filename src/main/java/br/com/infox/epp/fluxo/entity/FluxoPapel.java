@@ -48,7 +48,7 @@ public class FluxoPapel implements Serializable {
         this.papel = papel;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_FLUXO_PAPEL)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_FLUXO_PAPEL)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_FLUXO_PAPEL, unique = true, nullable = false)

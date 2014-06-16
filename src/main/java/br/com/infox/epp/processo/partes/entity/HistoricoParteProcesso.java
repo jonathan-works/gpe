@@ -48,7 +48,7 @@ public class HistoricoParteProcesso {
         ativo = parteProcessoAtual.getAtivo();
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_historico_parte_processo")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_historico_parte_processo")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_historico_parte_processo", unique = true, nullable = false)

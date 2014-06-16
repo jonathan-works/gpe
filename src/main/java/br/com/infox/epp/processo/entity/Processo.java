@@ -99,7 +99,7 @@ public class Processo implements java.io.Serializable {
     public Processo() {
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PROCESSO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_PROCESSO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_PROCESSO, unique = true, nullable = false)

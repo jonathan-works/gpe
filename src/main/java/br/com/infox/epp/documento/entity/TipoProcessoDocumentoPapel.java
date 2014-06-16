@@ -31,7 +31,7 @@ public class TipoProcessoDocumentoPapel implements java.io.Serializable {
     public TipoProcessoDocumentoPapel() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_tipo_processo_documento_papel")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_tipo_processo_documento_papel")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tipo_processo_documento_papel", nullable = false, unique = true)

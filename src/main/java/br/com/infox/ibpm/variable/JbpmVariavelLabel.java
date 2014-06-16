@@ -25,7 +25,7 @@ public class JbpmVariavelLabel implements java.io.Serializable {
     public JbpmVariavelLabel() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_jbpm_variavel_label")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_jbpm_variavel_label")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_jbpm_variavel_label", unique = true, nullable = false)

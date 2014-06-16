@@ -47,7 +47,7 @@ public class GrupoModeloDocumento implements java.io.Serializable {
         this.ativo = ativo;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_GRUPO_MODELO_DOCUMENTO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_GRUPO_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_GRUPO_MODELO_DOCUMENTO, unique = true, nullable = false)

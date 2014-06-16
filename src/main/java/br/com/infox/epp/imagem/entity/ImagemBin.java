@@ -55,7 +55,7 @@ public class ImagemBin implements Serializable {
 	private Integer tamanho;
 	private String filePath;
 
-	@SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_IMAGEM_BIN)
+	@SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_IMAGEM_BIN)
 	@Id
 	@GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
 	@Column(name = ID_IMAGEM_BIN, unique = true, nullable = false)

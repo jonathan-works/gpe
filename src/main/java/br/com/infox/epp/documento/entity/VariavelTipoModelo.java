@@ -30,7 +30,7 @@ public class VariavelTipoModelo implements Serializable {
     private Variavel variavel;
     private TipoModeloDocumento tipoModeloDocumento;
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL_TIPO_MODELO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL_TIPO_MODELO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_VARIAVEL_TIPO_MODELO, unique = true, nullable = false)

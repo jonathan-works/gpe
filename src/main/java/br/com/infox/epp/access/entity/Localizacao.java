@@ -98,7 +98,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.estruturaFilho = estruturaFilho;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_LOCALIZACAO, unique = true, nullable = false)

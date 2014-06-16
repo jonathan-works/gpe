@@ -32,7 +32,7 @@ public class TarefaJbpm implements java.io.Serializable {
     private Tarefa tarefa;
     private Long idJbpmTask;
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_tarefa_jbpm")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_tarefa_jbpm")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tarefa_jbpm", unique = true, nullable = false)

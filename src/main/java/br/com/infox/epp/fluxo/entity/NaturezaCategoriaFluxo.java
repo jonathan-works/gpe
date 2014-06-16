@@ -74,7 +74,7 @@ public class NaturezaCategoriaFluxo implements Serializable {
         this.idNaturezaCategoriaFluxo = idNaturezaCategoriaFluxo;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATRUEZA_CATEGORIA_FLUXO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_NATRUEZA_CATEGORIA_FLUXO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_NATUREZA_CATEGORIA_FLUXO, unique = true, nullable = false)

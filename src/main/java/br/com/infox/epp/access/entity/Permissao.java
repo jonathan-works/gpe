@@ -1,6 +1,7 @@
 package br.com.infox.epp.access.entity;
 
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_GRANDE;
+import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.access.query.PermissaoQuery.ACAO;
 import static br.com.infox.epp.access.query.PermissaoQuery.ALVO;
 import static br.com.infox.epp.access.query.PermissaoQuery.DESTINATARIO;
@@ -13,7 +14,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -34,9 +37,10 @@ public class Permissao implements Serializable {
     private String acao;
     private String discriminador;
 
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_permissao")
     @Id
-    @GeneratedValue
-    @Column(name = ID_PERMISSAO)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = ID_PERMISSAO, unique = true, nullable = false)
     public Long getIdPermissao() {
         return idPermissao;
     }

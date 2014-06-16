@@ -56,7 +56,7 @@ public class Ajuda implements java.io.Serializable {
     private Pagina pagina;
     private UsuarioLogin usuario;
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_AJUDA)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_AJUDA)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_AJUDA, unique = true, nullable = false)

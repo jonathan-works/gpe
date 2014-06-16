@@ -37,7 +37,7 @@ public class Pagina implements java.io.Serializable {
     public Pagina() {
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAGINA)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_PAGINA)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_PAGINA, unique = true, nullable = false)

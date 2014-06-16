@@ -77,7 +77,7 @@ public class Papel implements java.io.Serializable {
         this.identificador = identificador;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_PAPEL, unique = true, nullable = false)

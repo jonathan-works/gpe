@@ -20,6 +20,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Name(TarefaDAO.NAME)
@@ -63,6 +64,11 @@ public class TarefaDAO extends DAO<Tarefa> {
         parameters.put(TAREFA_PARAM, tarefa);
         parameters.put(FLUXO_PARAM, fluxo);
         return getNamedSingleResult(TAREFA_BY_TAREFA_AND_FLUXO, parameters);
+    }
+    
+    @Override
+    public Tarefa persist(Tarefa object) throws DAOException {
+        throw new UnsupportedOperationException();
     }
 
 }
