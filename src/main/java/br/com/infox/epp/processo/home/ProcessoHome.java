@@ -9,7 +9,6 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -125,8 +124,6 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private void avisarNaoHaPermissaoParaAcessarProcesso() {
         ContextFacade.setToEventContext("canClosePanel", true);
         FacesMessages.instance().clear();
-        FacesMessages.instance().add(Severity.ERROR, "Sem permissão para acessar o processo: "
-                + getInstance().getNumeroProcesso());
         throw new ApplicationException("Sem permissão para acessar o processo: "
                 + getInstance().getNumeroProcesso());
     }
