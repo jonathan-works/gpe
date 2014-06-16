@@ -282,7 +282,7 @@
                 requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
                 <wi:outputText
                     id="bloqueio"
-                    value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+                    value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? messages['bloqueioUsuario.bloqueado.true'] : messages['bloqueioUsuario.bloqueado.false']}"
                     label="#{messages['usuario.bloqueio']}" />
                 <wi:inputDate
                     id="dataDesbloqueio"
