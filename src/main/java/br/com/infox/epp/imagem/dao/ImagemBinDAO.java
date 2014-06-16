@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
@@ -21,6 +24,14 @@ public class ImagemBinDAO extends DAO<ImagemBin> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "imagemBinDAO";
+    
+    @In
+    private transient EntityManager entityManagerBin;
+    
+    @Override
+    protected EntityManager getEntityManager() {
+        return entityManagerBin;
+    }
 
     public List<ImagemBin> getTodasAsImagens() {
         return getNamedResultList(ImagemBinQuery.LIST_IMAGENS);
