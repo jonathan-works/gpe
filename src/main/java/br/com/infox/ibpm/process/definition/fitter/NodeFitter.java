@@ -4,7 +4,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,7 +69,7 @@ public class NodeFitter extends Fitter implements Serializable {
     private Node currentNode;
     private NodeHandler nodeHandler;
     private String nodeName;
-    private Map<BigInteger, String> modifiedNodes = new HashMap<BigInteger, String>();
+    private Map<Number, String> modifiedNodes = new HashMap<Number, String>();
 
     @In
     private JbpmNodeManager jbpmNodeManager;
@@ -376,7 +375,7 @@ public class NodeFitter extends Fitter implements Serializable {
         if (this.nodeName != null && !this.nodeName.equals(nodeName)) {
             if (currentNode != null) {
                 currentNode.setName(nodeName);
-                BigInteger idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(getProcessBuilder().getIdProcessDefinition(), nodeName);
+                Number idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(getProcessBuilder().getIdProcessDefinition(), nodeName);
                 if (idNodeModificado != null) {
                     modifiedNodes.put(idNodeModificado, nodeName);
                 }
@@ -490,17 +489,17 @@ public class NodeFitter extends Fitter implements Serializable {
         }
     }
 
-    public Map<BigInteger, String> getModifiedNodes() {
+    public Map<Number, String> getModifiedNodes() {
         return modifiedNodes;
     }
 
-    public void setModifiedNodes(Map<BigInteger, String> modifiedNodes) {
+    public void setModifiedNodes(Map<Number, String> modifiedNodes) {
         this.modifiedNodes = modifiedNodes;
     }
 
     public void modifyNodes() {
         jbpmNodeManager.atualizarNodesModificados(modifiedNodes);
-        modifiedNodes = new HashMap<BigInteger, String>();
+        modifiedNodes = new HashMap<Number, String>();
     }
 
     @Override

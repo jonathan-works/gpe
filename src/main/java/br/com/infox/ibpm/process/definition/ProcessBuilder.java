@@ -7,7 +7,6 @@ import static java.text.MessageFormat.format;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -437,7 +436,7 @@ public class ProcessBuilder implements Serializable {
     }
 
     @SuppressWarnings(UNCHECKED)
-    public BigInteger getIdProcessDefinition() {
+    public Number getIdProcessDefinition() {
         if (instance == null) {
             return null;
         }
@@ -447,7 +446,7 @@ public class ProcessBuilder implements Serializable {
         if (list == null || list.size() == 0) {
             return null;
         }
-        return (BigInteger) list.get(0);
+        return (Number) list.get(0);
     }
 
     public ProcessDefinition getInstance() {

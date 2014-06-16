@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.node.manager;
 
-import java.math.BigInteger;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -16,12 +15,12 @@ public class JbpmNodeManager extends Manager<JbpmNodeDAO, Void> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "jbpmNodeManager";
 
-    public void atualizarNodesModificados(Map<BigInteger, String> modifiedNodes) {
+    public void atualizarNodesModificados(Map<Number, String> modifiedNodes) {
         getDao().atualizarNodesModificados(modifiedNodes);
     }
 
-    public BigInteger findNodeIdByIdProcessDefinitionAndName(
-            BigInteger idProcessDefinition, String taskName) {
+    public Number findNodeIdByIdProcessDefinitionAndName(
+            Number idProcessDefinition, String taskName) {
         return getDao().findNodeIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
     }
 
