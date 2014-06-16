@@ -173,7 +173,7 @@
                         limitToList="true"
                         status=":status"
                         render="usuarioPessoaFisica, pageBodyDialogMessage"
-                        onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
+                        onclick="if(!confirm(\'#{messages['crud.confirmRemove']}\')){return false;}"
                         url="#{a4jSkin.imgFolder}/remove.png"
                         title="#{messages['crud.remove']}" />
                 </ui:define>
