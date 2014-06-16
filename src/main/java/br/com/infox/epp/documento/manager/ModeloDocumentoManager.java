@@ -143,6 +143,13 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 } else {
                     if (variableTypeMap != null) {
                         expression = resolveJbpmVariable(expression, variableTypeMap);
+                        if (expression != null) {
+                            // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
+                            // Matcher#appendReplacement (ver o Javadoc correspondente).
+                            // Importante manter a ordem dos replaces abaixo
+                            expression = expression.replace("\\", "\\\\");
+                            expression = expression.replace("$", "\\$");
+                        }
                     }
                     matcher.appendReplacement(sb, expression);
                 }
