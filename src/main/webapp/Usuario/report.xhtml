@@ -4,11 +4,11 @@
     xmlns:ui="http://java.sun.com/jsf/facelets">
     <wi:dataReport
         title="#{messages['usuario.titlePage']}"
-        columns="4"
-        widths="4 2 2 2"
+        columns="5"
+        widths="3 5 2 2 2"
         headerText="#{usuarioLoginList.criteria}">
-        <wi:reportColumnHeader
-            title="#{messages['usuarioLogin.nome']}" />
+        <wi:reportColumnHeader title="#{messages['usuarioLogin.nome']}" />
+        <wi:reportColumnHeader title="#{messages['usuarioLogin.localizacoes']}"/>
         <wi:reportColumnHeader title="#{messages['usuarioLogin.bloqueio']}" />
         <wi:reportColumnHeader title="#{messages['usuarioLogin.provisorio']}" />
         <wi:reportColumnHeader title="#{messages['field.situacao']}" />
@@ -16,6 +16,7 @@
             var="row"
             value="#{usuarioLoginList.list()}">
             <wi:reportColumn value="#{row.nomeUsuario}" />
+            <wi:reportColumnList value="#{row.usuarioLocalizacaoList}" />
             <wi:reportColumnBoolean value="#{row.bloqueio}" />
             <wi:reportColumnBoolean value="#{row.provisorio}" />
             <wi:reportColumnSituacao
