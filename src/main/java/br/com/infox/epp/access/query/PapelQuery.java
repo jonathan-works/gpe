@@ -14,7 +14,7 @@ public interface PapelQuery {
             + "select p.papel.idPapel from TipoModeloDocumentoPapel p "
             + "where p.tipoModeloDocumento = :"
             + PARAM_TIPO_MODELO_DOCUMENTO
-            + ")";
+            + ") order by o.nome ";
 
     String PARAM_TIPO_PROCESSO_DOCUMENTO = "tipoProcessoDocumento";
     String PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO = "listPapeisNaoAssociadosATipoProcessoDocumento";
