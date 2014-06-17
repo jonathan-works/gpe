@@ -11,8 +11,6 @@ import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.PARAM_USUARI
 
 import java.util.HashMap;
 
-import javax.faces.application.FacesMessage;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
