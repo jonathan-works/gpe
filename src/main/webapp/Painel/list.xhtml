@@ -159,6 +159,7 @@
         id="novaCaixaPanel"
         height="120"
         left="40"
+        onbeforeshow="infox.util.popupclear();"
       >
         <f:facet name="header">
           <h:outputText value="#{messages['caixa.titleNovaCaixa']}" />
@@ -171,15 +172,25 @@
             id="nomeCaixa"
             label="#{messages['caixa.nomeCaixa']}"
             value="#{caixaCrudAction.instance.nomeCaixa}"
+            required="true"
           />
           <a:commandButton
             value="#{messages['crud.persist']}"
             styleClass="buttons"
             action="#{caixaCrudAction.addCaixa(painelUsuarioHome.tarefaId)}"
-            oncomplete="#{rich:component('novaCaixaPanel')}.hide()"
-            render="tarefasDiv,painelProcessos"
+            oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('novaCaixaPanel')}.hide()}"
+            render="tarefasDiv, painelProcessos, nomeCaixaDecoration, pageBodyDialogMessage"
           />
         </h:form>
+        <h:outputScript>
+	        namespace("infox.util.popupclear",function onpopupshow(){
+		        $("#modalForm .inputText").val(null);
+		      	if ($("#modalForm label.errors").length != 0) {
+					$("#modalForm span.errorFields.errors").remove();
+					$("#modalForm .errors").each(function(){$(this).removeClass("errors")});
+				}
+		    });
+        </h:outputScript>
       </rich:popupPanel>
     </a:region>
   </ui:define>
