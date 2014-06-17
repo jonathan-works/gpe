@@ -11,11 +11,15 @@ import static br.com.infox.epp.access.query.UsuarioLocalizacaoQuery.PARAM_USUARI
 
 import java.util.HashMap;
 
+import javax.faces.application.FacesMessage;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.tree.TreeHandler;
@@ -74,8 +78,12 @@ public class UsuarioLocalizacaoCrudAction extends AbstractCrudAction<UsuarioLoca
         if (usuarioLocalizacao.getEstrutura() != null) {
             params.put(PARAM_ESTRUTURA, usuarioLocalizacao.getEstrutura());
         }
-
-        return (Long) getManager().getSingleResult(hql.toString(), params) > 0;
+        boolean existeUsuarioLocalizacao = (Long) getManager().getSingleResult(hql.toString(), params) > 0;
+        if (existeUsuarioLocalizacao){
+        	FacesMessages.instance().clear();
+        	FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Usuário já possui Localização e Papel associado!");
+        }
+        return existeUsuarioLocalizacao;
     }
 
     @Override
