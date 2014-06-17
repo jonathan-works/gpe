@@ -39,6 +39,7 @@ public class VariableTypeResolver implements Serializable {
     private ProcessInstance processInstance;
     
     private Map<String, Pair<String, VariableType>> variableTypeMap;
+    private Map<String, Boolean> visitedNodes;
     
     @PostConstruct
     public void init() {
@@ -59,12 +60,15 @@ public class VariableTypeResolver implements Serializable {
     
     private void buildVariableTypeMap() {
         variableTypeMap = new HashMap<>();
+        visitedNodes = new HashMap<>();
         Node start = processInstance.getProcessDefinition().getStartState();
         traverse(start);
+        visitedNodes = null;
     }
 
     @SuppressWarnings(UNCHECKED)
     private void traverse(Node node) {
+        visitedNodes.put(node.getName(), true);
         Node nodeWithoutProxy = (Node) HibernateUtil.removeProxy(node);
         if (nodeWithoutProxy instanceof TaskNode) {
             Set<Task> tasks = ((TaskNode) nodeWithoutProxy).getTasks();
@@ -82,7 +86,10 @@ public class VariableTypeResolver implements Serializable {
         }
         List<Transition> leavingTransitions = node.getLeavingTransitions();
         for (Transition transition : leavingTransitions) {
-            traverse(transition.getTo());
+            Node destination = transition.getTo();
+            if (!visitedNodes.containsKey(destination.getName()) || !visitedNodes.get(destination.getName())) {
+                traverse(destination);
+            }
         }
     }
 }
