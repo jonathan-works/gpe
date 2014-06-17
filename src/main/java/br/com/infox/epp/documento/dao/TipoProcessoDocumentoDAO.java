@@ -1,8 +1,10 @@
 package br.com.infox.epp.documento.dao;
 
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.CODIGO_DOCUMENTO_PARAM;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.PAPEL_PARAM;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.*;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_PARAM;
 
 import java.util.HashMap;
 import java.util.List;

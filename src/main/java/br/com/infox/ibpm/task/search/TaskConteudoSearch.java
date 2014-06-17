@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.BooleanQuery.TooManyClauses;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;

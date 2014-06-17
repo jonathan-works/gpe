@@ -1,9 +1,11 @@
 package br.com.infox.epp.documento.entity;
 
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.*;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY;
 
 import java.util.ArrayList;
 import java.util.List;
