@@ -20,7 +20,8 @@ public class AssociativeVariavelList extends EntityList<Variavel> {
 
     private static final String DEFAULT_EJBQL = "select o from Variavel o where not exists "
     		+ "(select 1 from VariavelTipoModelo v where "
-            + "v.tipoModeloDocumento = #{associativeVariavelList.tipoModeloToIgnore} and v.variavel = o)  ";
+            + "v.tipoModeloDocumento.idTipoModeloDocumento = #{associativeVariavelList.tipoModeloToIgnore.idTipoModeloDocumento} "
+    		+ "and v.variavel = o) ";
     private static final String DEFAULT_ORDER = "variavel";
 
     private TipoModeloDocumento tipoModeloToIgnore;
@@ -30,7 +31,7 @@ public class AssociativeVariavelList extends EntityList<Variavel> {
         addSearchField("variavel", SearchCriteria.CONTENDO);
         addSearchField("valorVariavel", SearchCriteria.CONTENDO);
         addSearchField("ativo", SearchCriteria.IGUAL);
-    }
+    } 
 
     @Override
     protected String getDefaultEjbql() {
