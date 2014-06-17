@@ -27,7 +27,7 @@
           id="ajudaPersistButton"
           action="ajudaCrudAction.save"
           value="#{messages['crud.update']}"
-          reRender="gridAjuda"
+          reRender="gridAjuda, formAjudaDialogMessage"
           oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})">
         </wi:commandButton>
         <ui:define name="buttons">
@@ -70,6 +70,9 @@
             </wi:dataTable>
           </s:div>
         </s:div>
+        <wi:messages formId="formAjuda"
+          			 rendered="true"
+          			 globalOnly="true" />
       </wi:dataForm>
     </s:div>
   </ui:define>

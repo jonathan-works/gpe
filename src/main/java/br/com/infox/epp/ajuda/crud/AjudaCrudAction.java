@@ -75,7 +75,7 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
         getInstance().setDataRegistro(new Date());
         getInstance().setPagina(pagina);
         String ret = super.save();
-        if ("persisted".equals(ret)) {
+        if (PERSISTED.equals(ret)) {
             if (oldInstance != null) {
                 try {
                     ajudaManager.gravarHistorico(oldInstance);
