@@ -222,7 +222,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         String realVariableName = expression.substring(2, expression.length() - 1);
         Object value = TaskInstance.instance().getVariable(realVariableName);
         Pair<String, VariableType> variableInfo = variableTypeMap.get(realVariableName);
-        if (variableInfo == null) {
+        if (variableInfo == null || value == null) {
             return expression;
         }
         switch (variableInfo.getRight()) {
