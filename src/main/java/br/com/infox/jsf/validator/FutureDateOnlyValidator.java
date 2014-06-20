@@ -28,7 +28,7 @@ public class FutureDateOnlyValidator implements Validator {
         Calendar data = Calendar.getInstance();
         data.setTime((Date) value);
         Calendar dataAtual = Calendar.getInstance();
-        dataAtual.set(Calendar.HOUR, 23);
+        dataAtual.set(Calendar.HOUR_OF_DAY, 23);
         dataAtual.set(Calendar.MINUTE, 59);
         dataAtual.set(Calendar.SECOND, 59);
         dataAtual.set(Calendar.MILLISECOND, 999);

@@ -28,7 +28,7 @@ public class PastDateOnlyValidator implements Validator {
         Calendar data = Calendar.getInstance();
         data.setTime((Date) value);
         Calendar dataAtual = Calendar.getInstance();
-        dataAtual.set(Calendar.HOUR, 0);
+        dataAtual.set(Calendar.HOUR_OF_DAY, 0);
         dataAtual.set(Calendar.MINUTE, 0);
         dataAtual.set(Calendar.SECOND, 0);
         dataAtual.set(Calendar.MILLISECOND, 0);
