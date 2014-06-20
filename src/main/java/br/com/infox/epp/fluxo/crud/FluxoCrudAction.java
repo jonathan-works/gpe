@@ -35,6 +35,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
             return null;
         }
         final Fluxo fluxo = getInstance();
+        fluxo.setPublicado(false);
         getManager().detach(fluxo);
         fluxo.setIdFluxo(null);
         setId(null);
