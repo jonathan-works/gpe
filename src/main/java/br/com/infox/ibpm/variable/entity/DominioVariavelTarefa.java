@@ -26,7 +26,7 @@ public class DominioVariavelTarefa implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_NAME)
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = COLUMN_ID)
     private Integer id;

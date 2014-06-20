@@ -11,7 +11,9 @@ public class SqlServer2012ErrorCodeAdaptor {
         for (SQLServer2012ErrorCode errorCode : SQLServer2012ErrorCode.values()) {
             if (errorCode.getCode() == code) {
                 switch (errorCode) {
-                case UNIQUE_VIOLATION:
+                case UNIQUE_VIOLATION_INDEX:
+                    return GenericDatabaseErrorCode.UNIQUE_VIOLATION;
+                case UNIQUE_VIOLATION_CONSTRAINT:
                     return GenericDatabaseErrorCode.UNIQUE_VIOLATION;
                 case NOT_NULL_VIOLATION:
                     return GenericDatabaseErrorCode.NOT_NULL_VIOLATION;

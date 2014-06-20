@@ -52,7 +52,7 @@ public class ListaEmail implements java.io.Serializable {
     public ListaEmail() {
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LISTA_EMAIL)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_LISTA_EMAIL)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_LISTA_EMAIL, unique = true, nullable = false)

@@ -42,7 +42,7 @@ public class Cep implements java.io.Serializable {
     public Cep() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_cep")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_cep")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_cep", unique = true, nullable = false)

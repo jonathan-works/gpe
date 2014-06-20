@@ -33,7 +33,7 @@ public class Estado implements java.io.Serializable {
     public Estado() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_estado")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_estado")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_estado", unique = true, nullable = false)

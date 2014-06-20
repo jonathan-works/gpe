@@ -48,7 +48,7 @@ public class Variavel implements java.io.Serializable {
     public Variavel() {
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_VARIAVEL)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_VARIAVEL, unique = true, nullable = false)

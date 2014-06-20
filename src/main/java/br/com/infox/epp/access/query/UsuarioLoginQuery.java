@@ -4,7 +4,7 @@ public interface UsuarioLoginQuery {
 
     // Entity Mapping
     String TABLE_USUARIO_LOGIN = "tb_usuario_login";
-    String SEQUENCE_USUARIO = "sq_tb_usuario";
+    String SEQUENCE_USUARIO = "sq_tb_usuario_login";
     String ID_USUARIO = "id_usuario_login";
     String LOGIN = "ds_login";
     String EMAIL = "ds_email";

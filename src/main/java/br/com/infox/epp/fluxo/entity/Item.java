@@ -69,7 +69,7 @@ public class Item implements Serializable, Recursive<Item> {
         this.ativo = ativo;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_ITEM)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_ITEM)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_ITEM, unique = true, nullable = false)

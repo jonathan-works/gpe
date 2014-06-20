@@ -75,7 +75,7 @@ public class UsuarioLocalizacao implements java.io.Serializable {
         this(usuario, localizacao, estrutura, papel, Boolean.TRUE, responsavelLocalizacao);
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_USUARIO_LOCALIZACAO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_USUARIO_LOCALIZACAO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_USUARIO_LOCALIZACAO, unique = true, nullable = false)

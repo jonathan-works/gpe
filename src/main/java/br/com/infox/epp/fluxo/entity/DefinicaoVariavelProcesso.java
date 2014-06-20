@@ -46,7 +46,7 @@ public class DefinicaoVariavelProcesso implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name = GENERATOR_DEFINICAO_VARIAVEL_PROCESSO, sequenceName = SEQUENCE_DEFINICAO_VARIAVEL_PROCESSO)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR_DEFINICAO_VARIAVEL_PROCESSO, sequenceName = SEQUENCE_DEFINICAO_VARIAVEL_PROCESSO)
     @GeneratedValue(generator = GENERATOR_DEFINICAO_VARIAVEL_PROCESSO, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_DEFINICAO_VARIAVEL_PROCESSO, nullable = false, unique = true)
     private Long id;

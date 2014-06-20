@@ -60,7 +60,7 @@ public class LocalizacaoTurno implements Serializable {
     private Integer tempoTurno;
     private DiaSemanaEnum diaSemana;
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_localizacao_turno")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_localizacao_turno")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_localizacao_turno", unique = true, nullable = false)

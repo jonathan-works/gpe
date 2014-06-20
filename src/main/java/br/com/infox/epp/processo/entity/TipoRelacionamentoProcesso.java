@@ -35,7 +35,7 @@ public class TipoRelacionamentoProcesso implements Serializable {
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_TIPO_RELACIONAMENTO_PROCESSO, unique = true, nullable = false)
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NAME)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_NAME)
     public Integer getIdTipoRelacionamento() {
         return idTipoRelacionamento;
     }

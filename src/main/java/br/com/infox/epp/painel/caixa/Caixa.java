@@ -58,7 +58,7 @@ public class Caixa implements java.io.Serializable {
 
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TABLE_CAIXA)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_TABLE_CAIXA)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_CAIXA, unique = true, nullable = false)

@@ -1,7 +1,6 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class TaskFitter extends Fitter implements Serializable {
     private TaskHandler startTaskHandler;
     private TaskHandler currentTask;
     private String taskName;
-    private Map<BigInteger, String> modifiedTasks = new HashMap<BigInteger, String>();
+    private Map<Number, String> modifiedTasks = new HashMap<>();
     private Tarefa tarefaAtual;
     private Set<Tarefa> tarefasModificadas = new HashSet<>();
     private boolean currentJbpmTaskPersisted;
@@ -106,7 +105,7 @@ public class TaskFitter extends Fitter implements Serializable {
         if (this.taskName != null && !this.taskName.equals(taskName)) {
             if (currentTask != null && currentTask.getTask() != null) {
                 currentTask.getTask().setName(taskName);
-                BigInteger idTaskModificada = getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName());
+                Number idTaskModificada = getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName());
                 if (idTaskModificada != null) {
                     modifiedTasks.put(idTaskModificada, taskName);
                 }
@@ -134,17 +133,17 @@ public class TaskFitter extends Fitter implements Serializable {
         startTaskHandler = startTask;
     }
 
-    public Map<BigInteger, String> getModifiedTasks() {
+    public Map<Number, String> getModifiedTasks() {
         return modifiedTasks;
     }
 
-    public void setModifiedTasks(Map<BigInteger, String> modifiedTasks) {
+    public void setModifiedTasks(Map<Number, String> modifiedTasks) {
         this.modifiedTasks = modifiedTasks;
     }
 
     public void modifyTasks() {
         jbpmTaskManager.atualizarTarefasModificadas(modifiedTasks);
-        modifiedTasks = new HashMap<BigInteger, String>();
+        modifiedTasks = new HashMap<Number, String>();
     }
 
     public List<TaskHandler> getTasks() {
@@ -203,12 +202,12 @@ public class TaskFitter extends Fitter implements Serializable {
     }
 
     public void checkCurrentTaskPersistenceState() {
-        BigInteger idProcessDefinition = getProcessBuilder().getIdProcessDefinition();
+        Number idProcessDefinition = getProcessBuilder().getIdProcessDefinition();
         String currentTaskName = getTaskName();
         this.currentJbpmTaskPersisted = getTaskId(idProcessDefinition, currentTaskName) != null;
     }
 
-    private BigInteger getTaskId(BigInteger idProcessDefinition, String taskName) {
+    private Number getTaskId(Number idProcessDefinition, String taskName) {
         if (idProcessDefinition != null && taskName != null) {
             return jbpmTaskManager.findTaskIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
         }

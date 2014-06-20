@@ -37,7 +37,7 @@ public class TipoModeloDocumentoPapel implements Serializable {
     private TipoModeloDocumento tipoModeloDocumento;
     private Papel papel;
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO_PAPEL)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_TIPO_MODELO_DOCUMENTO_PAPEL)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_TIPO_MODELO_DOCUMENTO_PAPEL, unique = true, nullable = false)

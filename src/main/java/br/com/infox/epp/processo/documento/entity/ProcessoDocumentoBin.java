@@ -56,7 +56,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     public ProcessoDocumentoBin() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_processo_documento_bin")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_processo_documento_bin")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_documento_bin", unique = true, nullable = false)

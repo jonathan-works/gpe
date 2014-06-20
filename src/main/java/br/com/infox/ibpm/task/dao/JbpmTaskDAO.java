@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.dao;
 
-import java.math.BigInteger;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,11 +18,11 @@ public class JbpmTaskDAO extends DAO<Void> {
     public static final String NAME = "jbpmTaskDAO";
 
     public void atualizarTarefasModificadas(
-            Map<BigInteger, String> modifiedTasks) {
+            Map<Number, String> modifiedTasks) {
         if (!modifiedTasks.isEmpty()) {
             String update = "update jbpm_task set name_ = :taskName where id_ = :taskId";
             Query q = JbpmUtil.getJbpmSession().createSQLQuery(update);
-            for (Entry<BigInteger, String> e : modifiedTasks.entrySet()) {
+            for (Entry<Number, String> e : modifiedTasks.entrySet()) {
                 q.setParameter("taskName", e.getValue());
                 q.setParameter("taskId", e.getKey());
                 q.executeUpdate();
@@ -32,11 +31,11 @@ public class JbpmTaskDAO extends DAO<Void> {
         JbpmUtil.getJbpmSession().flush();
     }
 
-    public BigInteger findTaskIdByIdProcessDefinitionAndName(
-            BigInteger idProcessDefinition, String taskName) {
+    public Number findTaskIdByIdProcessDefinitionAndName(
+            Number idProcessDefinition, String taskName) {
         String hql = "select max(id_) from jbpm_task where processdefinition_ = "
                 + ":idProcessDefinition and name_ = :taskName";
-        return (BigInteger) JbpmUtil.getJbpmSession().createSQLQuery(hql).setParameter("idProcessDefinition", idProcessDefinition).setParameter("taskName", taskName).uniqueResult();
+        return (Number) JbpmUtil.getJbpmSession().createSQLQuery(hql).setParameter("idProcessDefinition", idProcessDefinition).setParameter("taskName", taskName).uniqueResult();
     }
 
 }

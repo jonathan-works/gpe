@@ -81,7 +81,7 @@ public class Natureza implements java.io.Serializable {
         this.ativo = ativo;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_NATUREZA)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_NATUREZA)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_NATUREZA, unique = true, nullable = false)

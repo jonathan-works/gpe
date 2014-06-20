@@ -62,7 +62,7 @@ public class Tarefa implements java.io.Serializable {
     private List<TarefaJbpm> tarefaJbpmList = new ArrayList<TarefaJbpm>(0);
     private List<Caixa> caixaList = new ArrayList<Caixa>(0);
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_tarefa")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_tarefa")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tarefa", unique = true, nullable = false)

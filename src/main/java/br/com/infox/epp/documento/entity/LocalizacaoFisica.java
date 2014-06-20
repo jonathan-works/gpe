@@ -45,7 +45,7 @@ public class LocalizacaoFisica implements Serializable, Recursive<LocalizacaoFis
     private Boolean ativo;
     private List<LocalizacaoFisica> localizacaoFisicaList = new ArrayList<>(0);
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO_FISICA)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_LOCALIZACAO_FISICA)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_LOCALIZACAO_FISICA, unique = true, nullable = false)

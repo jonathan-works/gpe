@@ -36,7 +36,7 @@ public class Municipio implements java.io.Serializable {
     public Municipio() {
     }
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_municipio")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_municipio")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_municipio", unique = true, nullable = false)

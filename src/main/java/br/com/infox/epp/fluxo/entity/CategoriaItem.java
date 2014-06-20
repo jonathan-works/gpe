@@ -50,7 +50,7 @@ public class CategoriaItem implements Serializable {
         this.item = item;
     }
 
-    @SequenceGenerator(name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA_ITEM)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA_ITEM)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_CATEGORIA_ITEM, unique = true, nullable = false)

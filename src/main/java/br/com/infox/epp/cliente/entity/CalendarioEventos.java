@@ -37,7 +37,7 @@ public class CalendarioEventos implements Serializable {
     private Date dataEvento;
     private Boolean repeteAno = Boolean.TRUE;
 
-    @SequenceGenerator(name = "generator", sequenceName = "sq_tb_calendario_eventos")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_calendario_eventos")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_calendario_evento", unique = true, nullable = false)
