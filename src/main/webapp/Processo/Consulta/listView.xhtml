@@ -55,7 +55,7 @@
                             action="#{prioridadeProcessoChanger.setProcessoEpa(row)}"
                             oncomplete="#{rich:component('prioridadeProcessoPanel')}.show()">
                             <h:graphicImage
-                                title="#{messages['prioridade.select']}"
+                                title="#{messages['prioridadeProcesso.select']}"
                                 url="#{a4jSkin.imgFolder}/priority.gif" />
                         </a:commandLink>
                     </ui:define>
@@ -86,7 +86,7 @@
             </rich:panel>
         </h:form>
         <rich:popupPanel id="prioridadeProcessoPanel" height="140">
-            <f:facet name="header">#{messages['prioridade.title']}</f:facet>
+            <f:facet name="header">#{messages['prioridadeProcesso.title']}</f:facet>
             <f:facet name="controls">
                 <h:panelGroup>
                     <h:graphicImage
@@ -98,21 +98,21 @@
                 template="/WEB-INF/xhtml/components/templates/edit.xhtml">
                 <ui:define name="label">
                     <h:outputText
-                        value="#{messages['prioridade.choice']}"
+                        value="#{messages['prioridadeProcesso.choice']}"
                         styleClass="label" />
                 </ui:define>
                 <h:form>
                     <wi:selectOneMenuEntity id="selectPrioridade"
                         value="#{prioridadeProcessoChanger.prioridadeProcesso}"
                         styleClass="PaletteMenu">
-                        <f:selectItems
-                            value="#{prioridadeProcessoList.list()}" />
+                        <f:selectItems value="#{prioridadeProcessoList.listAtivos()}" />
                     </wi:selectOneMenuEntity>
                     <div />
                     <wi:commandButton id="saveButton"
                         action="prioridadeProcessoChanger.atualizarPrioridade()"
                         value="#{messages['crud.update']}" 
-                        oncomplete="#{rich:component('prioridadeProcessoPanel')}.hide(); location.href = location.href" />
+                        oncomplete="#{rich:component('prioridadeProcessoPanel')}.hide();"
+                        reRender="processoEpaListPanel" />
                 </h:form>
             </s:decorate>
         </rich:popupPanel>
