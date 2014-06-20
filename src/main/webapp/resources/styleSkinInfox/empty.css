@@ -1,0 +1,31 @@
+.clean-pageBody {
+	height:calc(100% - 2px);
+}
+#html, #body {
+	height:100%;
+	margin:0;
+}
+.banner.empty {
+	height:0px;
+	display:inline-block;
+	background:transparent;
+	width:100%;
+}
+.tituloPagina.empty {
+	height:0px;
+}
+.conteudo.empty {
+	height:calc(100% - 40px);
+}
+.banner-rgt.empty,.banner-lft.empty {
+  display:inline-block;
+  width:calc(50% - 2px);
+}
+.banner-rgt.empty,.painelUsuario-label.name.empty {
+  text-align:right;
+  color:#FFF;
+  font-weight:900;
+}
+.pageContent.empty {
+    height: 100%;
+}
