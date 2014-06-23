@@ -12,8 +12,8 @@ import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 
 @Name(HistoricoAjudaList.NAME)
-@BypassInterceptors
 @Scope(ScopeType.PAGE)
+@BypassInterceptors
 public class HistoricoAjudaList extends EntityList<HistoricoAjuda> {
 
     public static final String NAME = "historicoAjudaList";
@@ -41,5 +41,9 @@ public class HistoricoAjudaList extends EntityList<HistoricoAjuda> {
     protected String getDefaultOrder() {
         return DEFAULT_ORDER;
     }
-
+    
+    public boolean isExibGrid(){
+    	Long qtRegistros = getResultCount();
+    	return qtRegistros != null && qtRegistros > 0;
+    }
 }

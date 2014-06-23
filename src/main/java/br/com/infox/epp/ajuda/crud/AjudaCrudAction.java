@@ -13,8 +13,10 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.ajuda.entity.HistoricoAjuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
+import br.com.infox.epp.ajuda.list.HistoricoAjudaList;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(AjudaCrudAction.NAME)
 public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
@@ -82,6 +84,8 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
                 } catch (DAOException e) {
                     LOG.error("Erro ao gravar o histórico de ajuda", e);
                 }
+                HistoricoAjudaList historicoAjudaList = ComponentUtil.getComponent(HistoricoAjudaList.NAME);
+                historicoAjudaList.refresh();
             }
             newInstance();
         }
