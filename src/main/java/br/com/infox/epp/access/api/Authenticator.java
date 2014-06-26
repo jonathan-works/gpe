@@ -450,7 +450,7 @@ public class Authenticator {
         Identity identity = Identity.instance();
         Credentials credentials = identity.getCredentials();
         credentials.setUsername(ParametroUtil.LOGIN_USUARIO_EXTERNO);
-        credentials.setPassword("");
+        credentials.setPassword("usuarioexterno");
         identity.quietLogin();
         identity.login();
         UsuarioLoginManager usuarioLoginManager = (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
