@@ -16,8 +16,7 @@ public enum SearchCriteria {
     INICIANDO("lower(o.{0}) like concat("
             + "lower(#'{'{1}.entity.{0}}), '''%''')"),
 
-    DATA_IGUAL(
-            "cast(o.{0} as date) = cast(#'{'{1}.entity.{0}} as date)");
+    DATA_IGUAL("cast(o.{0} as date) = cast(#'{'{1}.entity.{0}} as date)");
 
     private String pattern;
 

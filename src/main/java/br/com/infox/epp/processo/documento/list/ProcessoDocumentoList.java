@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.list;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -39,7 +40,9 @@ public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
 
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
-        return null;
+    	Map<String, String> map = new HashMap<>();
+    	map.put("processoDocumentoBin.sizeFormatado", "o.processoDocumentoBin.size");
+        return map;
     }
 
 }

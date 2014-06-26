@@ -21,8 +21,8 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
 
     @Override
     public void newInstance() {
-        limparTrees();
         super.newInstance();
+        limparTrees();
         getInstance().setEstrutura(Boolean.FALSE);
     }
 

@@ -173,7 +173,7 @@
                         limitToList="true"
                         status=":status"
                         render="usuarioPessoaFisica, pageBodyDialogMessage"
-                        onclick="confirm(\'#{messages['crud.confirmRemove']}\')"
+                        onclick="if(!confirm(\'#{messages['crud.confirmRemove']}\')){return false;}"
                         url="#{a4jSkin.imgFolder}/remove.png"
                         title="#{messages['crud.remove']}" />
                 </ui:define>
@@ -282,7 +282,7 @@
                 requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
                 <wi:outputText
                     id="bloqueio"
-                    value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+                    value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? messages['bloqueioUsuario.bloqueado.true'] : messages['bloqueioUsuario.bloqueado.false']}"
                     label="#{messages['usuario.bloqueio']}" />
                 <wi:inputDate
                     id="dataDesbloqueio"
