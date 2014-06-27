@@ -76,6 +76,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
             LOG.warn(".update()", e);
             // Retorno do update não pertence ao enum, nada a fazer
         }
+        resolveStatusMessage(ret);
         return ret;
     }
 
