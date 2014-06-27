@@ -29,6 +29,7 @@ public class RelacionamentoCrudAction extends
         AbstractCrudAction<Relacionamento, RelacionamentoManager> {
 
     public static final String NAME = "relacionamentoCrudAction";
+    public static final String PROCESSO_RELAC_MSG = "Processo já está relacionado.";
     private static final long serialVersionUID = 1L;
 
     @In
@@ -56,9 +57,13 @@ public class RelacionamentoCrudAction extends
 
     @Override
     protected boolean isInstanceValid() {
-        return (getInstance().getMotivo().trim().length() > 0)
-                && (isManaged() || !relacionamentoProcessoManager
-                        .existeRelacionamento(processo, processoRelacionado));
+    	if (getInstance().getMotivo().trim().length() > 0 && !isManaged()){
+    		if (relacionamentoProcessoManager.existeRelacionamento(processo, processoRelacionado)){
+    			getMessagesHandler().add(PROCESSO_RELAC_MSG);
+    			return Boolean.FALSE;
+    		}
+    	}
+    	return super.isInstanceValid();
     }
 
     @Override

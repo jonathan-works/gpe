@@ -374,10 +374,12 @@
                                 value="#{relacionamentoCrudAction.isManaged() ? messages['crud.update'] : messages['crud.persist']}"
                                 execute="relacionamentoProcessoFormDiv">
                             </wi:commandButton>
+                            <wi:commandButtonNew newInstanceAction="relacionamentoCrudAction.newInstance()"
+                            					 reRender="relacionamentoProcessoFormDiv"/>
                         </ui:define>
                     </wi:dataForm>
                 </s:div>
-                <s:div id="relacionamentoProcessoDTDiv">
+                <s:div id="relacionamentoProcessoDTDiv" style="margin-top:10px">
                     <h:panelGroup
                         id="dtable"
                         rendered="#{not empty relacionamentoCrudAction.processo}">
