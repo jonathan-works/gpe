@@ -23,7 +23,7 @@
             status="none"
             rendered="#{!empty form.fields and processoHome.managed and !isUsuarioExterno}"
             onmouseup="showLoading()"
-            oncomplete="#{oncomplete};hideLoading()"
+            oncomplete="#{oncomplete}; hideLoading(); reloadPanel();"
             render="#{reRenderSave},:pageBodyDialogMessage"
             value="#{messages['crud.update']}"
             styleClass="buttons"

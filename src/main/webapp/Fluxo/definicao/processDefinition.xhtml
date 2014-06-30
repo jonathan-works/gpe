@@ -116,6 +116,7 @@
         action="#{processBuilder.deploy}"
         value="#{messages['processBuilder.deployBtn']}"
         rendered="#{processBuilder.exists}"
+        oncomplete="opener.refreshPage();"
         styleClass="buttons #{wi:get(styleClass, '')}" />
       <a:commandButton
         id="novoProcesso"
