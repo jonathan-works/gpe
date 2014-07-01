@@ -292,32 +292,5 @@
                 </s:div>
             </s:div>
         </s:div>
-        <wi:modalPanel
-            id="transitionCondition"
-            height="150"
-            width="550"
-            resizeable="false"
-            labelHeader="#{messages['process.transition.condition']}">
-            <h:form id="transitionConditionForm">
-                <div>
-                    <wi:inputTextarea
-                        id="conditionInput"
-                        value="#{transitionFitter.getCurrentTransition().condition}"
-                        widthDiv="500px"
-                        label="#{messages['process.transition.condition.expression']}">
-                        <a:ajax
-                            event="change"
-                            execute="@this"
-                            render="transitiontoTable,transitionfromTable"
-                            limitRender="true" />
-                    </wi:inputTextarea>
-                    <a:commandButton
-                        type="button"
-                        onclick="#{rich:component('transitionCondition')}.hide()"
-                        styleClass="buttons buttons"
-                        value="OK" />
-                </div>
-            </h:form>
-        </wi:modalPanel>
     </s:div>
 </ui:composition>

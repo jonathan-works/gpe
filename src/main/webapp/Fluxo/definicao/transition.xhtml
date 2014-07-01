@@ -51,32 +51,6 @@
                     <div>
                         <h:form>
                             <h:graphicImage
-                                title="#{messages['process.transition.condition.define']}"
-                                rendered="#{empty transition.transition.condition and transition.canDefineCondition()}"
-                                url="#{a4jSkin.imgFolder}/help_dis.gif"
-                                styleClass="opacityHover">
-                                <a:ajax
-                                    event="click"
-                                    listener="#{transitionFitter.setCurrentTransition(transition.transition)}"
-                                    oncomplete="#{rich:component('transitionCondition')}.show()"
-                                    render="transitionCondition"
-                                    execute="@this"
-                                    limitRender="true" />
-                            </h:graphicImage>
-                            <h:graphicImage
-                                title="#{messages['process.transition.condition.edit']}"
-                                rendered="#{!empty transition.transition.condition and transition.transition.condition != '#{true}' and transition.canDefineCondition()}}"
-                                styleClass="opacityHover"
-                                url="#{a4jSkin.imgFolder}/help.gif">
-                                <a:ajax
-                                    event="click"
-                                    listener="#{transitionFitter.setCurrentTransition(transition.transition)}"
-                                    oncomplete="#{rich:component('transitionCondition')}.show()"
-                                    render="transitionCondition"
-                                    limitRender="true"
-                                    execute="@this" />
-                            </h:graphicImage>
-                            <h:graphicImage
                                 title="#{messages['process.transition.remove']}"
                                 url="#{a4jSkin.imgFolder}/remove.png"
                                 styleClass="opacityHover"
