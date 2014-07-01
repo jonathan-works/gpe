@@ -137,11 +137,21 @@
               limitRender="true" />
             <f:validator validatorId="jsfComponentIdValidator" />
           </h:inputText>
+            <h:outputScript>
+                function customFilter(subString, value) {
+                    if (subString.length >= 1) {
+                        if (value.indexOf(subString) != -1)
+                            return true;
+                    } else
+                        return false;
+                };
+            </h:outputScript>
           <rich:autocomplete
             value="#{var.name}"
             rendered="#{empty var.name and !empty t.previousVariables}"
             selectFirst="false"
-            autocompleteList="#{t.previousVariables}">
+            autocompleteList="#{t.previousVariables}"
+            mode="client" minChars="2" clientFilterFunction="customFilter">
             <a:ajax
               status=":status"
               listener="#{var.copyVariable()}"
