@@ -42,5 +42,16 @@ public class TransactionService {
             throw new ApplicationException(ApplicationException.createMessage("iniciar transação", "beginTransaction()", "RegistraEventoAction", "BPM"), e);
         }
     }
+    
+    public static void rollbackTransaction() {
+        try {
+            UserTransaction ut = Transaction.instance();
+            if (ut != null) {
+                ut.rollback();
+            }
+        } catch (Exception e) {
+            throw new ApplicationException(ApplicationException.createMessage("rollback da transação", "rollbackTransaction()", "Util", "ePP"), e);
+        }
+    }
 
 }

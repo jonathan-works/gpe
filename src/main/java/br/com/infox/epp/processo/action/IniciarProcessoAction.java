@@ -1,8 +1,12 @@
 package br.com.infox.epp.processo.action;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 
 import org.hibernate.TypeMismatchException;
 import org.jboss.seam.ScopeType;
@@ -33,6 +37,7 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
+import br.com.infox.seam.exception.BusinessException;
 
 @Name(IniciarProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -94,6 +99,16 @@ public class IniciarProcessoAction {
         } catch (DAOException e) {
             sendIniciarProcessoErrorMessage("Erro ao inserir o processo: "
                     + e.getMessage(), e);
+        } catch (Exception e) {
+        	if (e.getCause() instanceof BusinessException) {
+        		try {
+        			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        			ec.getFlash().put("message", e.getCause().getLocalizedMessage());
+        			ec.redirect("listView.seam");
+				} catch (IOException e1) {
+					LOG.warn(e1.getMessage(), e1);
+				}
+        	}
         }
     }
 

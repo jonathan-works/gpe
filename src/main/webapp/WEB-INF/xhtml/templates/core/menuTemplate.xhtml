@@ -48,12 +48,12 @@
         id="frameDecorate"
         template="include/frame.xhtml"
       >
-        <ui:insert name="body" />
         <wi:messages
           formId="pageBody"
           rendered="#{empty showMsg ? true : showMsg}"
           globalOnly="true"
         />
+        <ui:insert name="body" />
       </ui:decorate>
     </s:div>
   </ui:define>

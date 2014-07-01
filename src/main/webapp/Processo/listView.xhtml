@@ -12,14 +12,14 @@
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
     <ui:define name="title">#{messages['processo.titlePage']}</ui:define>
-
+    
     <ui:param name="action" value="#{iniciarProcessoAction}" />
-
+    
     <ui:define name="body">
-        <s:div id="isCadastrandoPartes">
+        <s:div id="isCadastrandoPartes" >
+        
             <rich:panel id="iniciarProcesso"
                 header="#{messages['processo.titleFormIniciarProcesso']}">
-
                 <ui:include
                     src="ComponentesIniciarProcesso/naturezaCategoria.xhtml" />
                 <ui:include
@@ -27,8 +27,17 @@
                 <ui:include
                     src="ComponentesIniciarProcesso/partesProcesso.xhtml" />
             </rich:panel>
+            
         </s:div>
-
+        
+        <h:outputScript>
+	       	invoke(["infox.Messages"], function (msg) {
+	   			if (#{not empty flash.message}){
+	       			msg({'timeout':6000}).dialog('#{flash.message}');
+	       		}
+	        });
+		</h:outputScript>
+        
     </ui:define>
-
+    
 </ui:composition>
