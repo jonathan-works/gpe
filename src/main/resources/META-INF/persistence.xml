@@ -11,7 +11,7 @@
     <persistence-unit name="EPAPersistenceUnit"
         transaction-type="JTA">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <jta-data-source>java:jboss/datasources/EPADataSource</jta-data-source>
+        <jta-data-source>java:jboss/datasources/${epp.datasource.name}</jta-data-source>
         <properties>
             <property name="hibernate.show_sql" value="${desenvolvimento}" />
             <property name="hibernate.format_sql" value="false" />
@@ -39,7 +39,7 @@
                 value="org.apache.lucene.analysis.br.BrazilianAnalyzer" />
 
             <property name="jboss.entity.manager.factory.jndi.name"
-                value="java:jboss/EPAPersistenceUnit" />
+                value="java:app/${epp.name}/EPAPersistenceUnit" />
                 
         </properties>
     </persistence-unit>
@@ -47,7 +47,7 @@
     <persistence-unit name="EPABinPersistenceUnit"
         transaction-type="JTA">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <jta-data-source>java:jboss/datasources/EPADataSourceBin</jta-data-source>
+        <jta-data-source>java:jboss/datasources/${epp.datasourcebin.name}</jta-data-source>
         <properties>
             <property name="hibernate.show_sql" value="${desenvolvimento}" />
             <property name="hibernate.format_sql" value="false" />
@@ -65,7 +65,7 @@
                 value="LUCENE_36" />
 
             <property name="jboss.entity.manager.factory.jndi.name"
-                value="java:jboss/EPABinPersistenceUnit" />
+                value="java:app/${epp.name}/EPABinPersistenceUnit" />
                 
         </properties>
     </persistence-unit>

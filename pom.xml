@@ -436,6 +436,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
+        <epp.name>epp</epp.name>
+        <epp.datasource.name>EPADataSource</epp.datasource.name>
+        <epp.datasourcebin.name>EPADataSourceBin</epp.datasourcebin.name>
     </properties>
     <profiles>
         <profile>

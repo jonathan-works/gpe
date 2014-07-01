@@ -26,7 +26,7 @@
     ==== JDBC connection properties (end) -->
 
     <!-- DataSource properties (begin) -->
-    <property name="hibernate.connection.datasource">java:jboss/datasources/EPADataSource</property>
+    <property name="hibernate.connection.datasource">java:jboss/datasources/${epp.datasource.name}</property>
     <!-- DataSource properties (end) -->
 
     <!-- JTA transaction properties (begin) -->

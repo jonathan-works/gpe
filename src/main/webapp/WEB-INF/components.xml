@@ -23,7 +23,7 @@
 
     <core:init
         debug="${desenvolvimento}"
-        jndi-pattern="java:app/EPA-ejb/#{ejbName}" />
+        jndi-pattern="java:app/${epp.name}/#{ejbName}" />
         
     <document:document-store use-extensions="true" />
 
@@ -41,19 +41,19 @@
     <persistence:managed-persistence-context
         name="entityManagerLog"
         auto-create="true"
-        persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit" />
+        persistence-unit-jndi-name="java:app/${epp.name}/EPAPersistenceUnit" />
 
     <persistence:managed-persistence-context
         name="entityManager"
         auto-create="true"
-        persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit" />
+        persistence-unit-jndi-name="java:app/${epp.name}/EPAPersistenceUnit" />
 
     <async:quartz-dispatcher />
 
     <persistence:managed-persistence-context
         name="entityManagerBin"
         auto-create="true"
-        persistence-unit-jndi-name="java:jboss/EPABinPersistenceUnit" />
+        persistence-unit-jndi-name="java:app/${epp.name}/EPABinPersistenceUnit" />
 
     <event type="org.jboss.seam.security.notLoggedIn">
         <action execute="#{redirect.captureCurrentView}" />
@@ -73,7 +73,7 @@
         enabled="false"
         mode="disabled" />
 
-    <mail:mail-session session-jndi-name="java:jboss/mail/epp" />
+    <mail:mail-session session-jndi-name="java:jboss/mail/${app.name}" />
 
     <bpm:jbpm>
         <bpm:process-definitions></bpm:process-definitions>
