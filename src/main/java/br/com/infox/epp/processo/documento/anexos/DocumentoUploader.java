@@ -45,6 +45,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     @In
     private DocumentoBinManager documentoBinManager;
     private InputStream inputStream;
+    private UploadedFile uploadedFile;
 
     public boolean isValido() {
         return isValido;
@@ -55,8 +56,9 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     }
 
     @Override
-    protected void newInstance() {
+    public void newInstance() {
         super.newInstance();
+        uploadedFile = null;
         isValido = false;
     }
 
@@ -70,6 +72,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             LOG.error("Não foi possível recuperar o inputStream do arquivo carregado", e);
         }
         setValido(isDocumentoBinValido(ui));
+        setUploadedFile(ui);
         bin().setUsuario(Authenticator.getUsuarioLogado());
         bin().setNomeArquivo(ui.getName());
         bin().setExtensao(getFileType(ui.getName()));
@@ -134,10 +137,18 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             return false;
         }
         if (file.getSize() > TAMANHO_MAXIMO_ARQUIVO) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de 1.5MB!");
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de 2MB!");
             return false;
         }
         return true;
     }
+
+	public UploadedFile getUploadedFile() {
+		return uploadedFile;
+	}
+
+	public void setUploadedFile(UploadedFile uploadedFile) {
+		this.uploadedFile = uploadedFile;
+	}
 
 }

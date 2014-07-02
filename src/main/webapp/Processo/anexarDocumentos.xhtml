@@ -64,6 +64,7 @@
                     required="true"
                     label="#{messages['processo.anexarDocumentoDescricao']}">
                 </wi:inputText>
+                
                 <wi:selectOneMenuEntity
                     id="#{f.id}tipoProcessoDocumentoPdf"
                     label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
@@ -72,6 +73,7 @@
                     required="true"
                     showLabelSelecione="true">
                 </wi:selectOneMenuEntity>
+                
             </div>
             <s:div id="tipoDocumentoDivPdf">
                 <wi:fileUpload
@@ -85,13 +87,54 @@
                     id="botaoAnexarDocumentoPdf"
                     action="documentoUploader.persist()"
                     value="#{messages['processo.anexarDocumentoBtn']}"
-                    execute="uploaderDiv"
-                    reRender="@form,pageBodyDialogMessage"
+                    execute="#{f.id}inputProcessoDocumentoPdf, #{f.id}tipoProcessoDocumentoPdf"
+                    reRender="@form"
                     styleClass="buttons"
-                    rendered="#{documentoUploader.valido}">
+                    rendered="#{documentoUploader.valido}"
+                    oncomplete="infox.util.atualizarFileUpload();">
                 </wi:commandButton>
+                <h:outputScript>
+	        		namespace("infox.util.atualizarFileUpload", function atualizarFileUpload(){
+		            	if (#{facesContext.isValidationFailed()}){
+			            	
+		            		exibirBotaoNovoAnexo(false);
+
+			            	var div = $("<div> </div>").addClass("rf-fu-itm");
+		            		$(".rf-fu-lst").append(div);
+		            		
+		            		var spanLeft = $("<span> </span>").addClass("rf-fu-itm-lft");
+		            		var spanRight = $("<span> </span>").addClass("rf-fu-itm-rgh");
+
+		            		spanLeft.append($("<span> #{documentoUploader.uploadedFile.name} </span>").addClass("rf-fu-itm-lbl"));
+		            		spanLeft.append($("<span> #{messages['processoDocumento.doneLabel']} </span>").attr("style", "display: block;").addClass("rf-fu-itm-st"));
+
+		            		var aLink = $("<a> #{messages['processoDocumento.clearLabel']} </a>").attr("href", "javascript:void(0)").addClass("rf-fu-itm-lnk");
+							aLink.click(function(){
+								clearUploadFile(); 	$(".rf-fu-itm").remove(); exibirBotaoNovoAnexo(true);
+								}
+							);
+		            		
+		            		spanRight.append(aLink);
+		            		
+		            		div.append(spanLeft).append(spanRight);
+		                }
+		            });
+
+		            function exibirBotaoNovoAnexo(isExibe){
+			            if (isExibe){
+			            	$(".rf-fu-btn-add").removeAttr("style");
+			            	$(".rf-fu-btn-upl").removeAttr("style");
+			            	$(".rf-fu-btn-clr").attr("style", "display: none;");
+				        } else {
+				        	$(".rf-fu-btn-add").attr("style", "display: none;");
+		            		$(".rf-fu-btn-upl").attr("style", "display: none;");
+		            		$(".rf-fu-btn-clr").attr("style", "display: inline-block;");
+						}
+				    }
+				</h:outputScript>
             </s:div>
         </s:div>
+        
     </rich:collapsiblePanel>
     <br />
     <s:div id="documentosRedigidosDaSessao">
