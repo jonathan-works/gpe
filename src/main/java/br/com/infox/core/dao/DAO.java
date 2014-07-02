@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.hibernate.internal.SessionImpl;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -235,10 +234,6 @@ public abstract class DAO<T> implements Serializable {
         try {
             org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
             if (ut != null && ut.isMarkedRollback()) {
-                SessionImpl session = getEntityManager().unwrap(SessionImpl.class);
-                // Aborta o batch JDBC, possivelmente relacionado ao bug
-                // HHH-7689. Ver https://hibernate.atlassian.net/browse/HHH-7689
-                session.getTransactionCoordinator().getJdbcCoordinator().abortBatch();
                 ut.rollback();
             }
         } catch (Exception e) {
