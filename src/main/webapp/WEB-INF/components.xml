@@ -73,7 +73,7 @@
         enabled="false"
         mode="disabled" />
 
-    <mail:mail-session session-jndi-name="java:jboss/mail/${app.name}" />
+    <mail:mail-session session-jndi-name="java:jboss/mail/${epp.name}" />
 
     <bpm:jbpm>
         <bpm:process-definitions></bpm:process-definitions>
