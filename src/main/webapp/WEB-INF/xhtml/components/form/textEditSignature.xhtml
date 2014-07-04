@@ -48,7 +48,7 @@
 	    action="#{home.assinarDocumento(id)}"
 	    rendered="#{not readonly}"
 	    render="@form pageBodyDialogMessage"
-	    oncomplete="if (#{not facesContext.isValidationFailed()}){} infox.hideLoading();" />
+	    oncomplete="infox.hideLoading();"/>
 	  <s:div
 	    id="signatureDiv"
 	    rendered="#{not readonly}">

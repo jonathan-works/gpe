@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.documento.assinatura;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -100,6 +101,12 @@ public class AssinadorDocumento extends AbstractController {
         }
         FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
     }
+    
+    public boolean isSigned() {
+    	return getProcessoDocumentoBin() != null
+    			&& !StringUtils.isEmpty(getProcessoDocumentoBin().getSignature())
+    			&& !StringUtils.isEmpty(getProcessoDocumentoBin().getCertChain());
+	}
 
     @Override
     public void setId(Object id) {

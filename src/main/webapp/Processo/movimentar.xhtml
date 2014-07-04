@@ -233,7 +233,7 @@
                             target="idJan#{row.idProcessoDocumento}"
                             rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
-                            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 160, 450, 450);">
                             <h:graphicImage
                                 title="#{messages['assinaturas.validar']}"
                                 alt="#{messages['assinaturas.validar']}"
@@ -246,7 +246,7 @@
                             target="idJan#{row.idProcessoDocumento}"
                             rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
                             view="/Processo/Consulta/assinaDocumento.xhtml"
-                            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 200, 450, 450);">
                             <h:graphicImage
                                 title="#{messages['assinaturas.assinar']}"
                                 alt="#{messages['assinaturas.assinar']}"
