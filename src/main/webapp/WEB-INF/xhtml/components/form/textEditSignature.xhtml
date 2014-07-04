@@ -48,7 +48,7 @@
 	    action="#{home.assinarDocumento(id)}"
 	    rendered="#{not readonly}"
 	    render="@form pageBodyDialogMessage"
-	    oncomplete="infox.editor['#{id}Editor'].postSign()" />
+	    oncomplete="if (#{not facesContext.isValidationFailed()}){} infox.hideLoading();" />
 	  <s:div
 	    id="signatureDiv"
 	    rendered="#{not readonly}">
@@ -80,35 +80,35 @@
 	    </wi:appletAssinatura>
 	  </s:div>
 	  <h:outputScript rendered="#{not readonly}">
-				namespace("infox.editor.#{editorId}",{
-					useBase64:function useBase64() {
-						return "true";
-					},
-					get isSigned() {
-						return ((#{rich:jQuery(idSignature)}.val().trim() != "") 
-								&amp;&amp; (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
-					},
-					addSignature:function addSignature() {
-						infox.showLoading();
+			namespace("infox.editor.#{editorId}",{
+				useBase64:function useBase64() {
+					return "true";
+				},
+				get isSigned() {
+					return ((#{rich:jQuery(idSignature)}.val().trim() != "") 
+							&amp;&amp; (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
+				},
+				addSignature:function addSignature() {
+					infox.showLoading();
 						#{editorId.replace('-', '')}submitForm();
-					},
-					postSign:function postSign() {
-						infox.hideLoading();
-					},
-					sign:function sign() {
-						#{rich:jQuery(idSignature)}.val("signature");
-						#{rich:jQuery(idCertChain)}.val("certChain");
-						this.addSignature();
-					}
-				},{
-					callback:function callback(Editor) {
-						Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
-							#{rich:jQuery(idSignature)}.val("");
-							#{rich:jQuery(idCertChain)}.val("");
-							#{rich:jQuery("appletDiv")}.removeClass("hidden");
-						});
-					}
-				});
-			</h:outputScript>
+				},
+				postSign:function postSign() {
+					infox.hideLoading();
+				},
+				sign:function sign() {
+					#{rich:jQuery(idSignature)}.val("signature");
+					#{rich:jQuery(idCertChain)}.val("certChain");
+					this.addSignature();
+				}
+			},{
+				callback:function callback(Editor) {
+					Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
+						#{rich:jQuery(idSignature)}.val("");
+						#{rich:jQuery(idCertChain)}.val("");
+						#{rich:jQuery("appletDiv")}.removeClass("hidden");
+					});
+				}
+			});
+		</h:outputScript>
 		</f:subview>
 </ui:composition>
