@@ -110,7 +110,7 @@ public class TaskInstanceView implements Serializable {
                             break;
                         case ENUMERATION:
                         {
-                            ff.setType(VariableType.STRING.name());
+                            ff.setType(VariableType.ENUMERATION.name());
                             ff.setValue(value);
                             DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
                             Integer id = Integer.valueOf(tokens[2]);
