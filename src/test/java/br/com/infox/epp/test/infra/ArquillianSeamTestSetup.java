@@ -156,7 +156,7 @@ public class ArquillianSeamTestSetup {
     
     private File[] getFilesFromPom(String pom) {
         final ArrayList<File> resultFiles = new ArrayList<>();
-        final MavenResolverSystem resolver = Maven.configureResolver().fromFile("/var/opt/settings.xml");
+        final MavenResolverSystem resolver = Maven.resolver();
         final PomEquippedResolveStage loadPomFromFile = resolver.loadPomFromFile(new File(pom))
                                                         .importDependencies(ScopeType.RUNTIME,ScopeType.TEST,ScopeType.COMPILE);
         
