@@ -147,25 +147,23 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void retrieveVariable(VariableAccess variableAccess) {
-        if (variableAccess.isReadable()) {
-            final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
-            variableRetriever.retrieveVariableContent();
-            mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
-            if (variableRetriever.isEditor()) {
-                DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
-                Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
-                if (id != null) {
-                    dados.setIdDocumento(id);
-                    ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
-                    ProcessoDocumento pd = processoDocumentoManager.find(id);
-                    dados.setClassificacao(pd.getTipoProcessoDocumento());
-                    dados.setSignature(pd.getProcessoDocumentoBin().getSignature());
-                    dados.setCertChain(pd.getProcessoDocumentoBin().getCertChain());
-                }
-                documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
+        final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
+        variableRetriever.retrieveVariableContent();
+        mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
+        if (variableRetriever.isEditor()) {
+            DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
+            Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
+            if (id != null) {
+                dados.setIdDocumento(id);
+                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+                ProcessoDocumento pd = processoDocumentoManager.find(id);
+                dados.setClassificacao(pd.getTipoProcessoDocumento());
+                dados.setSignature(pd.getProcessoDocumentoBin().getSignature());
+                dados.setCertChain(pd.getProcessoDocumentoBin().getCertChain());
             }
-            setModeloWhenExists(variableRetriever);
+            documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
         }
+        setModeloWhenExists(variableRetriever);
     }
 
     private void setModeloWhenExists(TaskVariableRetriever variableRetriever) {
@@ -262,7 +260,7 @@ public class TaskInstanceHome implements Serializable {
                 variableAccess, taskInstance, documentoCorreto);
 
         if (variableAccess.isWritable()) {
-            if (variableResolver.isEditor()) {
+            if (variableResolver.isEditor() && variableAccess.isReadable()) {
                 DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
                 ProcessoHome.instance().setCertChain(dados.getCertChain());
                 ProcessoHome.instance().setSignature(dados.getSignature());
