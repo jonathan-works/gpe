@@ -404,6 +404,7 @@
                         <exclude>**/UsuarioLocalizacaoActionIT.java</exclude>
                     </excludes>
                     <encoding>UTF-8</encoding>
+                    <org.apache.maven.user-settings>${org.apache.maven.user-settings}</org.apache.maven.user-settings>
                 </configuration>
                 <executions>
                     <execution>
