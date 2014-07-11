@@ -137,20 +137,16 @@
 
     </ui:define>
     <ui:define name="tabs">
-
         <infox:tab
             status=":status"
             id="associarPapelTab"
             rendered="#{home.managed}"
             name="associarPapelTab"
             title="#{messages['tipoProcessoDocumento.papel']}">
-
             <s:div id="divAssociarPapel">
-
                 <wi:dataForm
                     formId="tipoProcessoDocumentoPapelForm"
                     formTitle="#{messages['form.title']}">
-
                     <wi:selectOneMenuEntity
                         id="papel"
                         label="#{messages['tipoProcessoDocumentoPapel.papel']}"
@@ -178,7 +174,6 @@
                     rowId="#{row.idTipoProcessoDocumentoPapel}"
                     listReRender="divAssociarPapel"
                     showMsg="false">
-
                     <wi:columnOutputText
                         columnId="papel"
                         columnHeader="#{messages['tipoProcessoDocumentoPapel.papel']}"

@@ -148,7 +148,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     }
 
     @Column(name = "ds_tipo_processo_documento_observacao", length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
-    @Size(max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
+    @Size(max = LengthConstants.TEXTO)
     public String getTipoProcessoDocumentoObservacao() {
         return this.tipoProcessoDocumentoObservacao;
     }
