@@ -176,7 +176,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     public void setSistema(Boolean sistema) {
         this.sistema = sistema;
     }
-
+    
     @Override
     public String toString() {
         return tipoProcessoDocumento;

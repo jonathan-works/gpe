@@ -154,18 +154,17 @@
                         value="#{classificacaoDocumentoPapelCrudAction.instance.papel}"
                         showLabelSelecione="true"
                         required="true" />
-                    <wi:selectBooleanRadio
-                        id="obrigatorio"
-                        required="true"
-                        value="#{classificacaoDocumentoPapelCrudAction.instance.obrigatorio}"
-                        label="#{messages['tipoProcessoDocumentoPapel.obrigatorio']}" />
+                    <wi:selectOneMenuEnum id="tipoAssinaturaCombo"
+                        label="#{messages['classificacaoDocumento.tipoAssinatura']}"
+                        items="#{classificacaoDocumentoFacade.getTipoAssinaturaEnumValues()}"
+                        value="#{classificacaoDocumentoPapelCrudAction.instance.tipoAssinatura}"
+                        required="true" showLabelSelecione="true" />
                     <ui:define name="buttons">
                         <wi:commandButtonPersist
                             home="#{classificacaoDocumentoPapelCrudAction}"
                             persistAction="classificacaoDocumentoPapelCrudAction.save()" />
                     </ui:define>
                 </wi:dataForm>
-
                 <wi:dataTable
                     values="#{tipoProcessoDocumentoPapelList.list(15)}"
                     bean="#{tipoProcessoDocumentoPapelList}"
@@ -178,10 +177,10 @@
                         columnId="papel"
                         columnHeader="#{messages['tipoProcessoDocumentoPapel.papel']}"
                         value="#{row.papel}" />
-                    <wi:columnBoolean
+                    <wi:columnEnum
                         columnId="obrigatorio"
-                        columnHeader="#{messages['tipoProcessoDocumentoPapel.obrigatorio']}"
-                        value="#{row.obrigatorio}" />
+                        columnHeader="#{messages['tipoProcessoDocumentoPapel.tipoAssinatura']}"
+                        value="#{row.tipoAssinatura}" />
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                          <wi:toolBar url="#{a4jSkin.imgFolder}/remove.png"
@@ -192,13 +191,67 @@
                             onclick="return confirm('Deseja remover o registro?');"
                             id="removeButton"/>
                     </ui:define>
-
                 </wi:dataTable>
-
             </s:div>
-
         </infox:tab>
-
+        <infox:tab
+            status=":status"
+            id="extensoesTab"
+            rendered="#{home.managed}"
+            name="extensoesArquivosTab"
+            title="#{messages['tipoProcessoDocumento.extensoesTab']}">
+            <wi:dataForm
+                formId="extensoesForm"
+                formTitle="#{messages['form.title']}">
+                <wi:inputText
+                    id="nomeExtensao"
+                    value="#{classificacaoDocumentoCrudAction.instance.codigoDocumento}"
+                    required="true"
+                    label="#{messages['tipoProcessoDocumento.tipoArquivo']}"
+                    maxlength="30" />
+                <wi:inputText
+                    id="extensao"
+                    value="#{classificacaoDocumentoCrudAction.instance.codigoDocumento}"
+                    required="true"
+                    label="#{messages['tipoProcessoDocumento.tipoExtensao']}"
+                    maxlength="30" />
+                <wi:inputNumber id="tamanaho"
+                    value="#{classificacaoDocumentoCrudAction.instance.idTipoProcessoDocumento}"
+                    required="true"
+                    label="#{messages['tipoProcessoDocumento.tamanho']}"
+                    maxlength="30"/>
+            </wi:dataForm>
+            <wi:dataTable
+                    values="#{tipoProcessoDocumentoPapelList.list(0)}"
+                    bean="#{tipoProcessoDocumentoPapelList}"
+                    tableTitle="#{classificacaoDocumentoCrudAction.instance} - Extensões Aceitas"
+                    id="extensoesList"
+                    rowId="#{row.idTipoProcessoDocumentoPapel}"
+                    listReRender="divAssociarPapel"
+                    showMsg="false">
+                    <wi:columnOutputText
+                        columnId="papel"
+                        columnHeader="#{messages['tipoProcessoDocumento.tipoArquivo']}"
+                        value="#{row.papel}" />
+                    <wi:columnBoolean
+                        columnId="obrigatorio"
+                        columnHeader="#{messages['tipoProcessoDocumento.tipoExtensao']}"
+                        value="#{row.obrigatorio}" />
+                    <wi:columnOutputText
+                        columnId="papel"
+                        columnHeader="#{messages['tipoProcessoDocumento.tamanho']}"
+                        value="#{row.idTipoProcessoDocumentoPapel}" />
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                         <wi:toolBar url="#{a4jSkin.imgFolder}/remove.png"
+                            title="Remover registro"
+                            action="classificacaoDocumentoPapelCrudAction.remove(row)"
+                            render="divAssociarPapel, pageBodyDialogMessage"
+                            execute="@this"
+                            onclick="return confirm('Deseja remover o registro?');"
+                            id="removeButton"/>
+                    </ui:define>
+                </wi:dataTable>
+        </infox:tab>
     </ui:define>
-
 </ui:composition>

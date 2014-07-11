@@ -15,7 +15,9 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
 import br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery;
+import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 
 @Name(TipoProcessoDocumentoDAO.NAME)
@@ -44,9 +46,9 @@ public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento> {
         HashMap<String, Object> params = new HashMap<String, Object>(0);
         params.put(TIPO_PROCESSO_DOCUMENTO_PARAM, tipoProcessoDocumento);
         params.put(PAPEL_PARAM, papel);
-        Boolean result = getNamedSingleResult(ASSINATURA_OBRIGATORIA, params);
-        if (result != null) {
-            return result;
+        TipoProcessoDocumentoPapel tpdp = getNamedSingleResult(ASSINATURA_OBRIGATORIA, params);
+        if (tpdp != null) {
+            return tpdp.getTipoAssinatura() != TipoAssinaturaEnum.F;
         }
         return false;
     }
