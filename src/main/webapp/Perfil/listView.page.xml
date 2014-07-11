@@ -2,10 +2,12 @@
 
 <page xmlns="http://jboss.org/schema/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd"
-  login-required="false">
-  <description>Perfil</description>
+  login-required="true">
 
   <begin-conversation join="true" />
+
+  <description>Perfil</description>
+  <restrict>#{security.checkPage()}</restrict>
   <param name="id" value="#{perfilCrudAction.id}" converterId="integerConverter" />
   <param name="tab" value="#{perfilCrudAction.tab}" />
 
