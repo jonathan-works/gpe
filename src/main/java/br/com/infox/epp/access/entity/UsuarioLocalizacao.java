@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
@@ -45,6 +46,7 @@ public class UsuarioLocalizacao implements java.io.Serializable {
     private Boolean responsavelLocalizacao;
     private Papel papel;
     private Localizacao estrutura;
+    private String nome;
     private Boolean contabilizar;
 
     public UsuarioLocalizacao() {
@@ -190,6 +192,14 @@ public class UsuarioLocalizacao implements java.io.Serializable {
     @Column(name = CONTABILIZAR, nullable = false)
     public Boolean getContabilizar() {
         return contabilizar;
+    }
+    
+    @Transient
+    public String getNome() {
+        return nome;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
 }
