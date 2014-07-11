@@ -102,7 +102,8 @@
         <infox:tab id="variaveis" status=":status"
             rendered="#{home.managed}"
             title="#{messages['tipoModeloDocumento.variaveis']}"
-            name="variaveis">
+            name="variaveis"
+            action="#{associativeVariavelList.newInstance()}">
             <wi:ajaxDiv id="divM2MVar">
                 <s:div styleClass="Associated">
                     <wi:dataTable

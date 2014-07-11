@@ -19,9 +19,12 @@ import br.com.infox.epp.fluxo.tree.ItemTreeHandler;
 @Name(CategoriaItemCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, CategoriaItemManager> {
-    private static final long serialVersionUID = 1L;
+    
+	private static final long serialVersionUID = 1L;
 
     public static final String NAME = "categoriaItemCrudAction";
+    public static final String REG_INATIVO_MSG = "Registro inativo não pôde ser inserido.";
+    
     @In
     private ItemManager itemManager;
 
@@ -35,9 +38,13 @@ public class CategoriaItemCrudAction extends AbstractCrudAction<CategoriaItem, C
     public void setItem(final Item item) {
         this.item = item;
     }
-
+    
     @Override
     public String save() {
+    	if (!item.getAtivo()){
+    		getMessagesHandler().add(REG_INATIVO_MSG);
+    		return null;
+    	}
         final Set<Item> folhas = itemManager.getFolhas(item);
         boolean inserted = false;
         for (final Item folha : folhas) {

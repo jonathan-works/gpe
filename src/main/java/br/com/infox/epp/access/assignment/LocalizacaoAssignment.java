@@ -163,7 +163,12 @@ public class LocalizacaoAssignment implements Serializable {
             String expression = context.getTask().getSwimlane().getPooledActorsExpression();
             this.currentTaskInstance = context.getTaskInstance();
             getPooledActors(expression);
-        } catch (Exception ex) {
+        } catch (BusinessException e) {
+        	String msg = String.format("Erro ao inserir processo localização: %s. Contate o Administrador do Sistema.", e.getLocalizedMessage());
+        	TransactionService.rollbackTransaction();
+        	throw new BusinessException(msg);
+        }
+        catch (Exception ex) {
             LOG.error(".onTaskCreate", ex);
             String action = "inserir processo localização: ";
             LOG.warn(action, ex);

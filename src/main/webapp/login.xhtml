@@ -15,7 +15,7 @@
   <ui:define name="baseHead">
     <h:outputStylesheet
       library="styleSkinInfox"
-      name="login.css" />
+      name="login.css" />git st
     <ui:param
       name="useCertLogin"
       value="#{certificateAuthenticator.certificateLogin}" />
@@ -24,15 +24,17 @@
     <h:outputScript
       library="js/components"
       name="Modal.js" />
-    <h:outputScript target="body">
+    <h:outputScript target="body"> 
       invoke([ "infox.Modal" ], function(Modal) {
         var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
         function toggleButton() {
           $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{messages['login.trocarSenhaBtn']}" : "#{messages['login.naoTrocarSenhaBtn']}");
           $(".input_login.passwd").val("");
+          $("#login\\:btnEntrar").val($("#btnTrocar").val() === "#{messages['login.naoTrocarSenhaBtn']}" ? "#{messages['login.alterarBtn']}" : "#{messages['login.entrarBtn']}");
         }
         function showPanel() {
           requestPasswordPanel.show();
+          
         }
         function hidePanel() {
           requestPasswordPanel.hide();

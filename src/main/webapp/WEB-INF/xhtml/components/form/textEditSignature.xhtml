@@ -24,11 +24,12 @@
 	    <wi:selectOneMenuEntity
 	      id="#{f.id}tipoProcessoDocumento"
 	      label="#{messages['processoDocumento.classificacaoDocumento']}"
-	      value="#{processoHome.tipoProcessoDocumento}"
+	      value="#{home.documentosAssinaveis[id].classificacao}"
 	      items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
 	      required="#{not readonly}"
 	      showLabelSelecione="true"
-	      readonly="#{readonly or not empty processoHome.signature}">
+	      readonly="#{readonly or not empty home.documentosAssinaveis[id].signature}"
+	      disabled="#{readonly or not empty home.documentosAssinaveis[id].signature}">
 	      <a:ajax
 	        event="change"
 	        render="appletDiv"
@@ -40,23 +41,23 @@
 	    <wi:editor
 	      id="#{editorId}"
 	      value="#{home.instance[id]}"
-	      readonly="#{readonly or not empty processoHome.signature}" />
+	      readonly="#{readonly or not empty home.documentosAssinaveis[id].signature}" />
 	  </s:div>
 	  <a:jsFunction
-	    name="submitForm"
-	    action="#{home.assinarDocumento()}"
+	    name="#{editorId.replace('-', '')}submitForm"
+	    action="#{home.assinarDocumento(id)}"
 	    rendered="#{not readonly}"
-	    render="signatureDiv appletDiv #{id}EditorDiv pageBodyDialogMessage"
-	    oncomplete="infox.editor['#{id}Editor'].postSign()" />
+	    render="@form pageBodyDialogMessage"
+	    oncomplete="infox.hideLoading();"/>
 	  <s:div
 	    id="signatureDiv"
 	    rendered="#{not readonly}">
 	    <h:inputHidden
 	      id="#{idCertChain}"
-	      value="#{processoHome.certChain}" />
+	      value="#{home.documentosAssinaveis[id].certChain}" />
 	    <h:inputHidden
 	      id="#{idSignature}"
-	      value="#{processoHome.signature}" />
+	      value="#{home.documentosAssinaveis[id].signature}" />
 	  </s:div>
 	  <s:div
 	    id="appletDiv"
@@ -71,46 +72,43 @@
 	      getDataFunction="infox.editor['#{editorId}'].instance.getData()"
 	      useBase64Function="infox.editor['#{editorId}'].useBase64()"
 	      functionPreSign="infox.showLoading();"
-	      functionPosSign="submitForm()"
+	      functionPosSign="#{editorId.replace('-', '')}submitForm()"
 	      debug="false"
 	      loginMode="false"
 	      useProviderDll="false"
-	      rendered="#{taskInstanceHome.podeRenderizarApplet()}">
+	      rendered="#{taskInstanceHome.podeRenderizarApplet(id)}">
 	    </wi:appletAssinatura>
 	  </s:div>
 	  <h:outputScript rendered="#{not readonly}">
-				namespace("infox.editor.#{editorId}",{
-					useBase64:function useBase64() {
-						return "true";
-					},
-					get isSigned() {
-						return ((#{rich:jQuery(idSignature)}.val().trim() != "") 
-								&amp;&amp; (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
-					},
-					addSignature:function addSignature() {
-						infox.showLoading();
-						submitForm();
-					},
-					postSign:function postSign() {
-						infox.hideLoading();
-						if (this.isSigned) {
-							#{rich:jQuery("appletDiv")}.addClass("hidden");
-						}
-					},
-					sign:function sign() {
-						#{rich:jQuery(idSignature)}.val("signature");
-						#{rich:jQuery(idCertChain)}.val("certChain");
-						this.addSignature();
-					}
-				},{
-					callback:function callback(Editor) {
-						Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
-							#{rich:jQuery(idSignature)}.val("");
-							#{rich:jQuery(idCertChain)}.val("");
-							#{rich:jQuery("appletDiv")}.removeClass("hidden");
-						});
-					}
-				});
-			</h:outputScript>
+			namespace("infox.editor.#{editorId}",{
+				useBase64:function useBase64() {
+					return "true";
+				},
+				get isSigned() {
+					return ((#{rich:jQuery(idSignature)}.val().trim() != "") 
+							&amp;&amp; (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
+				},
+				addSignature:function addSignature() {
+					infox.showLoading();
+						#{editorId.replace('-', '')}submitForm();
+				},
+				postSign:function postSign() {
+					infox.hideLoading();
+				},
+				sign:function sign() {
+					#{rich:jQuery(idSignature)}.val("signature");
+					#{rich:jQuery(idCertChain)}.val("certChain");
+					this.addSignature();
+				}
+			},{
+				callback:function callback(Editor) {
+					Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
+						#{rich:jQuery(idSignature)}.val("");
+						#{rich:jQuery(idCertChain)}.val("");
+						#{rich:jQuery("appletDiv")}.removeClass("hidden");
+					});
+				}
+			});
+		</h:outputScript>
 		</f:subview>
 </ui:composition>

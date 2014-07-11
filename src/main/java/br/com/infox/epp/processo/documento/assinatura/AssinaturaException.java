@@ -57,7 +57,7 @@ public class AssinaturaException extends Exception {
                 return "O certificado não é o mesmo do cadastro do usuario";
 
             case SEM_CERTIFICADO:
-                return "Não foi possível recuperar assinatura, verifique se seu cartão está corretamente configurado";
+                return "Sem certificado";
             default:
                 return null;
         }

@@ -74,6 +74,11 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
             return n1.compareTo(n2);
         }
     };
+    
+    @Override
+    public void onClickFormTab() {
+    	clear();
+    }
 
     public Integer getPapelId() {
         return (Integer) getId();

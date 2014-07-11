@@ -107,11 +107,12 @@ final class TaskVariableResolver extends TaskVariable {
         try {
             ProcessoHome processoHome = ProcessoHome.instance();
             Integer valueInt = processoHome.salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinarDocumento, getLabel());
-            resolve = resolve | SIGNED;
-
             if (valueInt != null && valueInt != 0) {
                 this.value = valueInt;
+                resolve = resolve | SIGNED;
                 atribuirValorDaVariavelNoContexto();
+            } else {
+                resolve = FAIL;
             }
         } catch (CertificadoException e) {
             LOG.error("Falha na assinatura", e);

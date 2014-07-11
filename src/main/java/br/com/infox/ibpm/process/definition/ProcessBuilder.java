@@ -354,6 +354,9 @@ public class ProcessBuilder implements Serializable {
     }
 
     public void deploy() {
+    	if (!fluxo.getPublicado()){
+    		fluxo.setPublicado(Boolean.TRUE);
+    	}
         update();
         if (needToPublic) {
             try {

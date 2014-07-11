@@ -51,7 +51,7 @@
                     opened="false"
                 />
                 <s:div
-                    rendered="#{not assinadorDocumento.houveErroAoAssinar}"
+                    rendered="#{not assinadorDocumento.signed}"
                     id="certificadoDigitalDiv"
                 >
                     <div id="divApplet">
@@ -71,11 +71,6 @@
                         </wi:appletAssinatura>
                     </div>
                     <h:form id="formValidar">
-                        <script>
-                        if (!(#{empty assinadorDocumento.processoDocumentoBin.signature or empty assinadorDocumento.processoDocumentoBin.certChain})) {
-                            opener.location.reload();
-                        }
-                        </script>
                         <h:inputHidden
                             id="certChain"
                             value="#{assinadorDocumento.certChain}"
@@ -87,11 +82,10 @@
                         <a:jsFunction
                             name="submitForm"
                             action="#{assinadorDocumento.assinarDocumento()}"
-                            oncomplete="if (!event.data) close();"
+                            oncomplete="if (!event.data) close(); if(#{assinadorDocumento.signed}){ opener.location.reload(); }"
                             execute="@form"
                             data="#{assinadorDocumento.houveErroAoAssinar}"
-                            render="painel, pageBodyDialogMessage"
-                        />
+                            render="painel, pageBodyDialogMessage"/>
                     </h:form>
                 </s:div>
             </rich:panel>

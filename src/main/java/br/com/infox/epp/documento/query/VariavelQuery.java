@@ -12,6 +12,6 @@ public interface VariavelQuery {
     String PARAM_TIPO = "tipo";
     String VARIAVEL_BY_TIPO_MODELO_DOCUMENTO = "listVariavelByTipoModeloDocumento";
     String VARIAVEL_BY_TIPO_MODELO_QUERY = "select o from Variavel o join o.variavelTipoModeloList tipos "
-            + "where tipos.tipoModeloDocumento = :" + PARAM_TIPO;
+            + "where tipos.tipoModeloDocumento = :" + PARAM_TIPO + " order by o.variavel";
 
 }

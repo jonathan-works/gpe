@@ -3,15 +3,16 @@ namespace("infox",{
 		setTimeout(function(){
 			$(args.selector).css(args.style);
 		},args.delay || 1);
-	},openPopUp:function openPopUp(id, url, width, height) {
+	},openPopUp:function openPopUp(id, url, width, height, top, left) {
 		var featPopUp = ["width=",width,
 			             ",height=",height,
+			             ",top=",top,
+			             ",left=",left,
 			             ",resizable=YES",
 			             ",scrollbars=YES",
 			             ",status=NO",
 			             ",location=NO"];
 		var popUp = window.open(url || 'about:blank', id, featPopUp.join(""));	
-		popUp.moveTo(0, 0);
 	},abrirPopUp:function abrirPopUp(id, url,args) {
 		var options = (args || {}).options || {};
 		var props = [];
