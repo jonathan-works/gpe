@@ -27,6 +27,7 @@
     <h:outputScript target="body"> 
       invoke([ "infox.Modal" ], function(Modal) {
         var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
+        var termoAdesaoPanel = new Modal({id:"termoAdesaoPanel"});
         function toggleButton() {
           $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{messages['login.trocarSenhaBtn']}" : "#{messages['login.naoTrocarSenhaBtn']}");
           $(".input_login.passwd").val("");
@@ -43,6 +44,12 @@
         $("#btnTrocarSenha").click(showPanel);
         $("#btnTrocarSenha2").click(hidePanel);
         $("##{rich:clientId('closeBtn')}").click(hidePanel);
+        $(".show-termo").click(function openPanel() {
+          termoAdesaoPanel.show();
+        });
+        $(".close-btn").click(function closePanel() {
+          termoAdesaoPanel.hide();
+        });
       });
 	</h:outputScript>
   </ui:define>
@@ -52,8 +59,9 @@
       styleClass="loginPageBody">
       <div class="corpoSuperior" />
       <div class="corpoInferior">
-        <h:outputText styleClass="versao" 
-            value="VERSÃO: #{gitRepository.commitId} / BRANCH: #{gitRepository.branch} / #{gitRepository.buildTime} " />
+        <h:outputText
+          styleClass="versao"
+          value="VERSÃO: #{gitRepository.commitId} / BRANCH: #{gitRepository.branch} / #{gitRepository.buildTime} " />
       </div>
       <div
         id="seletorSkinLogin"
@@ -182,8 +190,18 @@
               <h:commandButton
                 id="btnEntrar"
                 value="#{messages['login.entrarBtn']}"
-                class="input_button"
+                styleClass="input_button"
                 action="#{authenticator.login()}" />
+              <a:commandButton
+                id="btnEntrarTermo"
+                value="#{messages['login.entrarBtn']}2"
+                styleClass="input_button show-termo"
+                render="termoAdesaoPanel DialogMessage"
+                immediate="true"
+                execute="@this"
+                limitRender="true"
+                onclick=""
+              />
               <input
                 class="input_button"
                 id="btnTrocar"
@@ -245,6 +263,48 @@
             <input
               class="input_button"
               id="btnTrocarSenha2"
+              type="button"
+              value="#{messages['login.cancelaTrocaSenhaBtn']}" />
+          </div>
+        </h:form>
+      </rich:popupPanel>
+      <ui:param
+        name="panelWidth"
+        value="640"></ui:param>
+      <ui:param
+        name="panelHeight"
+        value="480"></ui:param>
+      <rich:popupPanel
+        id="termoAdesaoPanel"
+        width="#{panelWidth}"
+        height="#{panelHeight}"
+        show="true">
+        <f:facet name="header">#{messages['login.termoAdesao']} #{pwidth} #{pheight}</f:facet>
+        <f:facet name="controls">
+          <h:panelGroup>
+            <h:graphicImage
+              styleClass="close-btn"
+              value="#{a4jSkin.imgFolder}/closeMP.gif" />
+          </h:panelGroup>
+        </f:facet>
+        <h:form id="termoAdesaoForm">
+          <div>
+            <wi:editor
+              id="termoAdesao"
+              value="#{termoAdesaoAction.termoAdesao}"
+              readonly="true"
+              showVariables="false"
+              width="#{panelWidth-15}"
+              height="#{panelHeight-127}" />
+          </div>
+          <div>
+            <h:commandButton
+              id="confirma"
+              class="input_button"
+              value="#{messages['login.confirmaTrocaSenhaBtn']}" />
+            <input
+              class="input_button close-btn"
+              id="cancela"
               type="button"
               value="#{messages['login.cancelaTrocaSenhaBtn']}" />
           </div>
