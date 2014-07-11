@@ -12,6 +12,7 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 
 @Name(LocalizacaoEstruturaTreeHandler.NAME)
 @BypassInterceptors
+@Deprecated
 public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localizacao> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "localizacaoEstruturaTree";

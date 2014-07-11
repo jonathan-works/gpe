@@ -9,6 +9,7 @@ import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 
+@Deprecated
 public class LocalizacaoNode extends LocalizacaoNodeSearch {
 
     private static final long serialVersionUID = 1L;

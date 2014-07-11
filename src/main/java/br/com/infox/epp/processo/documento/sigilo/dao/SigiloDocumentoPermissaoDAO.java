@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
@@ -42,7 +43,7 @@ public class SigiloDocumentoPermissaoDAO extends DAO<SigiloDocumentoPermissao> {
         return getNamedSingleResult(SigiloDocumentoPermissaoQuery.NAMED_QUERY_USUARIO_POSSUI_PERMISSAO_DOCUMENTOS, params) != null;
     }
 
-    public void inativarPermissoes(SigiloDocumento sigiloDocumento) {
+    public void inativarPermissoes(SigiloDocumento sigiloDocumento) throws DAOException {
         Map<String, Object> params = new HashMap<>();
         params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_SIGILO_DOCUMENTO, sigiloDocumento);
         executeNamedQueryUpdate(SigiloDocumentoPermissaoQuery.NAMED_QUERY_INATIVAR_PERMISSOES, params);

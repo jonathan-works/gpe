@@ -86,7 +86,7 @@
             rendered="#{!empty tree.selected}"
             action="#{tree.clearTree(rich:clientId(id.concat('Tree')))}"
             immediate="true"
-            render="#{id}Form">
+            render="#{id}Form #{clearRender}">
             <h:graphicImage
               value="#{a4jSkin.imgFolder}/clear.gif"
               title="#{messages['button.limpar']}" />

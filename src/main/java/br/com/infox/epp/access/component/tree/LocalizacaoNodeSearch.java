@@ -7,6 +7,7 @@ import javax.persistence.Query;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Localizacao;
 
+@Deprecated
 public class LocalizacaoNodeSearch extends EntityNode<Localizacao> {
 
     private static final long serialVersionUID = 1L;
@@ -39,15 +40,15 @@ public class LocalizacaoNodeSearch extends EntityNode<Localizacao> {
     protected List<Localizacao> getChildrenList(String query,
             Localizacao localizacao) {
         List<Localizacao> list = null;
-        Localizacao estruturaFilho = localizacao == null ? null : localizacao.getEstruturaFilho();
-        if (showEstrutura) {
+//        Localizacao estruturaFilho = localizacao == null ? null : localizacao.getEstruturaFilho();
+//        if (showEstrutura) {
             list = super.getChildrenList(query, localizacao);
-            if (estruturaFilho != null) {
-                list.add(estruturaFilho);
-            }
-        } else {
-            list = super.getChildrenList(query, estruturaFilho != null ? estruturaFilho : localizacao);
-        }
+//            if (estruturaFilho != null) {
+//                list.add(estruturaFilho);
+//            }
+//        } else {
+//            list = super.getChildrenList(query, estruturaFilho != null ? estruturaFilho : localizacao);
+//        }
         return list;
     }
 

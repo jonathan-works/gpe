@@ -147,9 +147,10 @@ public class NatCatFluxoLocalizacaoManager extends Manager<NatCatFluxoLocalizaca
      * 
      * @param localizacao
      * @param ncfl
+     * @throws DAOException 
      */
     private void removeChildren(Localizacao localizacao,
-            NatCatFluxoLocalizacao ncfl) {
+            NatCatFluxoLocalizacao ncfl) throws DAOException {
         if (localizacao.getLocalizacaoList() != null
                 && localizacao.getLocalizacaoList().size() > 0) {
             for (Localizacao l : localizacao.getLocalizacaoList()) {

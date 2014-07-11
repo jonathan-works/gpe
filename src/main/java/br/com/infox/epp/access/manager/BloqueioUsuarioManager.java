@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.BloqueioUsuarioDAO;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -27,7 +28,7 @@ public class BloqueioUsuarioManager extends Manager<BloqueioUsuarioDAO, Bloqueio
         return bloqueioUsuario.getDataPrevisaoDesbloqueio();
     }
 
-    public void desfazerBloqueioUsuario(UsuarioLogin usuarioLogin) {
+    public void desfazerBloqueioUsuario(UsuarioLogin usuarioLogin) throws DAOException {
         BloqueioUsuario bloqueioUsuario = bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
         assert bloqueioUsuario.getDataDesbloqueio() != null;
         bloqueioUsuarioDAO.desfazerBloqueioUsuario(bloqueioUsuario);

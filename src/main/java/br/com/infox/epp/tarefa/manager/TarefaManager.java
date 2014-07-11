@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.dao.TarefaDAO;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 
@@ -22,7 +23,7 @@ public class TarefaManager extends Manager<TarefaDAO, Tarefa> {
         return getDao().getPreviousNodes(tarefa);
     }
 
-    public void encontrarNovasTarefas() {
+    public void encontrarNovasTarefas() throws DAOException {
         getDao().encontrarNovasTarefas();
     }
 

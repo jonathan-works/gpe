@@ -17,6 +17,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
@@ -30,7 +31,7 @@ public class NatCatFluxoLocalizacaoDAO extends DAO<NatCatFluxoLocalizacao> {
     public static final String NAME = "natCatFluxoLocalizacaoDAO";
 
     public void deleteByNatCatFluxoAndLocalizacao(NaturezaCategoriaFluxo ncf,
-            Localizacao l) {
+            Localizacao l) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);

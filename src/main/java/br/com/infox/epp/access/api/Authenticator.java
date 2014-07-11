@@ -261,7 +261,7 @@ public class Authenticator {
         list.add(loc);
         if (loc.getEstruturaFilho() != null
                 && !list.contains(loc.getEstruturaFilho())) {
-            getLocalizacoesFilhas(loc.getEstruturaFilho(), list);
+//            getLocalizacoesFilhas(loc.getEstruturaFilho(), list);
         }
         for (Localizacao locFilho : loc.getLocalizacaoList()) {
             getLocalizacoesFilhas(locFilho, list);
@@ -281,7 +281,7 @@ public class Authenticator {
         return sb.toString();
     }
 
-    public void unAuthenticate() {
+    public void unAuthenticate() throws DAOException {
         Identity.instance().unAuthenticate();
         limparContexto();
         anulaActorId();
@@ -290,10 +290,11 @@ public class Authenticator {
     /**
      * Ao encerrar uma sessao, limpa os processos que o servidor estava
      * trabalhando
+     * @throws DAOException 
      * 
      */
     @Observer("org.jboss.seam.preDestroyContext.SESSION")
-    public void anulaActorId() {
+    public void anulaActorId() throws DAOException {
         String actorId = Actor.instance().getId();
         if (actorId != null) {
             getAuthenticatorService().anulaActorId(actorId);
@@ -302,9 +303,10 @@ public class Authenticator {
 
     /**
      * Ao ligar a aplicação, limpa todos os actorIds dos processos
+     * @throws DAOException 
      */
     @Observer("org.jboss.seam.postInitialization")
-    public void anulaTodosActorId() {
+    public void anulaTodosActorId() throws DAOException {
         getAuthenticatorService().anularTodosActorId();
     }
 

@@ -183,7 +183,7 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
 
         private void initEntity(Localizacao entity) {
             setEntityValue("localizacao", entity.getLocalizacao());// required
-            setEntityValue("estrutura", entity.getEstrutura());// required
+//            setEntityValue("estrutura", entity.getEstrutura());// required
             setEntityValue("localizacaoPai", entity.getLocalizacaoPai());
             setEntityValue("estruturaFilho", entity.getEstruturaFilho());
             setEntityValue("ativo", entity.getAtivo());// required
@@ -253,22 +253,22 @@ public class UsuarioLocalizacaoActionIT  extends AbstractCrudTest<UsuarioLocaliz
     
     private ArrayList<Localizacao> initLocalizacoes(final String suffix) throws Exception {
         final ArrayList<Localizacao> resultMap = new ArrayList<>();
-        final Localizacao estruturaEpp = persistLocalizacao.runTest(new Localizacao(ESTRUTURA_EPP+suffix, Boolean.TRUE, Boolean.TRUE), servletContext, session);
-        resultMap.add(estruturaEpp);
-        final Localizacao estruturaEmpresa = persistLocalizacao.runTest(new Localizacao(ESTRUTURA_EMPRESA+suffix, Boolean.TRUE, Boolean.TRUE), servletContext, session);
-        resultMap.add(estruturaEmpresa);
-        final Localizacao gerencia = persistLocalizacao.runTest(new Localizacao(GERENCIA+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null), servletContext, session);
-        resultMap.add(gerencia);
-        final Localizacao setorPessoal = persistLocalizacao.runTest(new Localizacao(SETOR_PESSOAL+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
-        resultMap.add(setorPessoal);
-        final Localizacao setorFinanceiro = persistLocalizacao.runTest(new Localizacao(SETOR_FINANCEIRO+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
-        resultMap.add(setorFinanceiro);
-        final Localizacao setorCompras = persistLocalizacao.runTest(new Localizacao(SETOR_DE_COMPRAS+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
-        resultMap.add(setorCompras);
-        final Localizacao empresaX = persistLocalizacao.runTest(new Localizacao(EMPRESA_X+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEpp, estruturaEmpresa), servletContext, session);
-        resultMap.add(empresaX);
-        final Localizacao empresaY = persistLocalizacao.runTest(new Localizacao(EMPRESA_Y+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEpp, estruturaEmpresa), servletContext, session);
-        resultMap.add(empresaY);
+//        final Localizacao estruturaEpp = persistLocalizacao.runTest(new Localizacao(ESTRUTURA_EPP+suffix, Boolean.TRUE, Boolean.TRUE), servletContext, session);
+//        resultMap.add(estruturaEpp);
+//        final Localizacao estruturaEmpresa = persistLocalizacao.runTest(new Localizacao(ESTRUTURA_EMPRESA+suffix, Boolean.TRUE, Boolean.TRUE), servletContext, session);
+//        resultMap.add(estruturaEmpresa);
+//        final Localizacao gerencia = persistLocalizacao.runTest(new Localizacao(GERENCIA+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEmpresa, null), servletContext, session);
+//        resultMap.add(gerencia);
+//        final Localizacao setorPessoal = persistLocalizacao.runTest(new Localizacao(SETOR_PESSOAL+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
+//        resultMap.add(setorPessoal);
+//        final Localizacao setorFinanceiro = persistLocalizacao.runTest(new Localizacao(SETOR_FINANCEIRO+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
+//        resultMap.add(setorFinanceiro);
+//        final Localizacao setorCompras = persistLocalizacao.runTest(new Localizacao(SETOR_DE_COMPRAS+suffix, Boolean.TRUE, Boolean.TRUE, gerencia, null), servletContext, session);
+//        resultMap.add(setorCompras);
+//        final Localizacao empresaX = persistLocalizacao.runTest(new Localizacao(EMPRESA_X+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEpp, estruturaEmpresa), servletContext, session);
+//        resultMap.add(empresaX);
+//        final Localizacao empresaY = persistLocalizacao.runTest(new Localizacao(EMPRESA_Y+suffix, Boolean.FALSE, Boolean.TRUE, estruturaEpp, estruturaEmpresa), servletContext, session);
+//        resultMap.add(empresaY);
         return resultMap;
     }
     

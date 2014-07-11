@@ -12,6 +12,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -37,9 +38,10 @@ public class CaixaEventHandler {
     /**
      * Método principal, onde ocorrerá a validação para verificar se o processo
      * se encaixa em alguma Caixa, para então adicioná-lo à ela.
+     * @throws DAOException 
      */
     @Observer(Event.EVENTTYPE_TRANSITION)
-    public void filtrarProcessos(final ExecutionContext context) {
+    public void filtrarProcessos(final ExecutionContext context) throws DAOException {
         final Processo proc = processoManager.find(getIdProcesso());
         if (proc != null) {
             final List<Caixa> caixaResList = getCaixaResultList(context);

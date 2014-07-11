@@ -16,6 +16,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
@@ -36,7 +37,7 @@ public class SigiloProcessoPermissaoDAO extends DAO<SigiloProcessoPermissao> {
         return getNamedSingleResult(NAMED_QUERY_USUARIO_POSSUI_PERMISSAO, params) != null;
     }
 
-    public void inativarPermissoes(SigiloProcesso sigiloProcesso) {
+    public void inativarPermissoes(SigiloProcesso sigiloProcesso) throws DAOException {
         Map<String, Object> params = new HashMap<>();
         params.put(QUERY_PARAM_SIGILO_PROCESSO, sigiloProcesso);
         executeNamedQueryUpdate(NAMED_QUERY_INATIVAR_PERMISSOES, params);

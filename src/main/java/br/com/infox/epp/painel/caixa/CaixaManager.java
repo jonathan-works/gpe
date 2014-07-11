@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.entity.Processo;
 
@@ -20,7 +21,7 @@ public class CaixaManager extends Manager<CaixaDAO, Caixa> {
     @In
     private ProcessoDAO processoDAO;
 
-    public void removeCaixaByIdCaixa(int idCaixa) {
+    public void removeCaixaByIdCaixa(int idCaixa) throws DAOException {
         getDao().removeCaixaByIdCaixa(idCaixa);
     }
 
@@ -29,8 +30,9 @@ public class CaixaManager extends Manager<CaixaDAO, Caixa> {
      * 
      * @param caixaList - Lista da caixas nas quais o processo pode ser inserido
      * @param processo - Processo em Movimentação
+     * @throws DAOException 
      */
-    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) {
+    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) throws DAOException {
         Caixa caixa = escolherCaixa(caixaList);
         processoDAO.moverProcessoParaCaixa(caixa, processo);
     }

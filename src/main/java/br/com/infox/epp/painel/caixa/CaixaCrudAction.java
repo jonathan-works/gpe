@@ -14,7 +14,9 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
@@ -33,6 +35,8 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
     private TarefaManager tarefaManager;
     @In
     private CaixaManager caixaManager;
+    @In
+    private ActionMessagesService actionMessagesService;
 
     public List<SelectItem> getPreviousNodes() {
         return tarefaManager.getPreviousNodes(getInstance().getTarefa());
@@ -57,7 +61,12 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
     @Override
     protected void afterSave(String ret) {
         if (AbstractAction.PERSISTED.equals(ret)) {
-            JbpmEventsHandler.updatePostDeploy();
+            try {
+                JbpmEventsHandler.updatePostDeploy();
+            } catch (DAOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             TarefasTreeHandler.clearActiveTree();
         }
         super.afterSave(ret);
@@ -86,10 +95,15 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
 
     @Override
     public String remove() {
-        caixaManager.removeCaixaByIdCaixa(getInstance().getIdCaixa());
-        String ret = super.remove();
-        TarefasTreeHandler.clearActiveTree();
-        return ret;
+        try {
+            caixaManager.removeCaixaByIdCaixa(getInstance().getIdCaixa());
+            String ret = super.remove();
+            TarefasTreeHandler.clearActiveTree();
+            return ret;
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
+        }
+        return null;
     }
 
     public void setCaixaIdCaixa(Integer id) {
