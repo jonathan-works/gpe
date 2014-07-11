@@ -1,56 +1,52 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:c="http://java.sun.com/jstl/core"
-    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-
-    <ui:define name="baseBody">
-        <div class="pageBody">
-            <rich:panel id="mp_ass">
-                <f:facet name="header">
-                    <h:outputText value="Dados do Documento" />
-                </f:facet>
-                <f:facet name="controls">
-                    <span
-                        style="cursor: pointer; font-family: Verdana, Arial; padding-right: 22px"
-                        onclick="Richfaces.hideModalPanel('mp_ass')">X</span>
-                </f:facet>
-                <div>
-                    <h:panelGrid columns="2">
-                        <h:outputLabel value="Nome:" for="nome" />
-                        <h:outputText id="nome"
-                            value="#{validaDocumentoAction.documento.processoDocumentoBin.usuarioUltimoAssinar}" />
-
-                        <h:outputLabel value="Papel:" for="papel" />
-                        <h:outputText id="papel"
-                            value="#{validaDocumentoAction.documento.papel}" />
-
-                        <h:outputLabel value="Localização:"
-                            for="localizacao" />
-                        <h:outputText id="localizacao"
-                            value="#{validaDocumentoAction.documento.localizacao}" />
-
-                        <h:outputLabel value="Data da assinatura:"
-                            for="validade" />
-                        <h:outputText id="validade"
-                            value="#{validaDocumentoAction.documento.processoDocumentoBin.dataInclusao}">
-                            <s:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
-
-                    </h:panelGrid>
-                    <br />
-                    <rich:messages id="msg" infoClass="formMessage" />
-                </div>
-            </rich:panel>
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:c="http://java.sun.com/jstl/core"
+  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+  <ui:define name="baseBody">
+    <div class="pageBody">
+      <rich:panel id="mp_ass">
+        <f:facet name="header">
+          <h:outputText
+            value="Assinaturas para o documento 'Documento Assinável' no processo de 100" />
+        </f:facet>
+        <div>
+          <rich:dataTable
+            value="#{assinaturaDocumentoList.resultList}"
+            id="assinaturaDocumentoList"
+            rowKeyVar="row.idAssinatura"
+            rowClasses="zebra-row"
+            styleClass="dtable rf-dt-crud"
+            var="row">
+            <rich:column styleClass="dt-toolbar-col">
+              <f:facet name="header">
+                <h:outputText value="Nome"></h:outputText>
+              </f:facet>
+              <h:outputText value="#{row.nomeUsuario}"></h:outputText>
+            </rich:column>
+            <rich:column styleClass="dt-toolbar-col">
+              <f:facet name="header">
+                <h:outputText value="Perfil"></h:outputText>
+              </f:facet>
+              <h:outputText value="#{row.nomePapel}"></h:outputText>
+            </rich:column>
+            <rich:column styleClass="dt-toolbar-col">
+              <f:facet name="header">
+                <h:outputText value="Data da assinatura"></h:outputText>
+              </f:facet>
+              <h:outputText value="#{row.dataAssinatura}"></h:outputText>
+            </rich:column>
+          </rich:dataTable>
         </div>
-    </ui:define>
-
+      </rich:panel>
+    </div>
+  </ui:define>
 </ui:composition>
