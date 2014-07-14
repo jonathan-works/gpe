@@ -1,0 +1,92 @@
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    
+    
+    <ui:define name="title">#{messages['unidadeDecisoraColegiada.titleView']}</ui:define>
+    <ui:param name="home" value="#{unidadeDecisoraColegiadaCrudAction}"/>
+    
+    <ui:define name="searchGrid">
+    	<wi:dataTable
+            values="#{unidadeDecisoraColegiadaList.list(15)}"
+            bean="#{unidadeDecisoraColegiadaList}"
+            tableTitle="#{messages['unidadeDecisoraColegiada.tableTitle']}"
+            id="unidadeDecisoraColegiadaList"
+            rowId="#{row.idUnidadeDecisoraColegiada}">
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarUnidadeDecisoraMOnocraticaForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    
+                    <wi:inputText 
+                    		id="nomeUnidadeDecisoraColegiada"
+		                    maxlength="100"
+		                    value="#{bean.entity.nome}"
+		                    label="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"/>
+                    
+                    <s:div>
+                    	<strong>Unidade Decisora Monocrática</strong>
+	                    <h:selectOneMenu id="comboLocalizacao" value="#{bean.unidadeDecisoraMonocratica}">
+	                    	<f:selectItem id="item0" itemLabel="Selecione ..." itemValue=""/>
+	                    	<f:selectItem id="item1" itemLabel="Gabinete do Pedro" itemValue="Gabinete do Pedro"/>
+							<f:selectItem id="item2" itemLabel="Gabinete do João" itemValue="Gabinete do João"/>
+	                    </h:selectOneMenu>
+                    </s:div>
+                    
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{bean.entity.ativo}"/>
+                        
+                </wi:searchForm>
+            </ui:define>
+            
+            <wi:columnOutputText
+                columnId="nome"
+                columnHeader="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"
+                value="#{row.nome}"/>
+            
+            <wi:columnOutputText
+                columnId="unidadeDecisoraMonocraticas"
+                columnHeader="#{messages['unidadeDecisoraColegiada.unidadesAssociadas']}"
+                value="#{row.unidadeDecisoraMonocraticaList}"/>
+            
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}"/>
+             
+        </wi:dataTable>
+    </ui:define>
+    
+    <ui:define name="form">
+    	<wi:dataForm
+            formId="unidadeDecisoraColegiadaForm"
+            formTitle="#{messages['form.title']}">
+            
+            <wi:inputText
+	                id="nome"
+	                value="#{unidadeDecisoraColegiadaCrudAction.instance.nome}"
+	                label="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"
+	                required="true" />
+                
+             <wi:selectSituacaoRadio
+	               id="ativo"
+	               label="#{messages['field.situacao']}"
+	               value="#{unidadeDecisoraColegiadaCrudAction.instance.ativo}"/>
+	               
+	         <wi:pickList id="selectUDMonocraticaId" 
+	         			  value="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraMonocraticaList}" 
+	         			  itemValues="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"/>
+	         
+        </wi:dataForm>
+    </ui:define>
+    
+</ui:composition>
