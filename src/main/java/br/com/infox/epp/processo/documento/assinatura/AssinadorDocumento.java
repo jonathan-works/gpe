@@ -1,8 +1,5 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
-import java.util.Date;
-
-import org.apache.commons.lang.StringUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -17,6 +14,7 @@ import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
@@ -26,7 +24,8 @@ public class AssinadorDocumento extends AbstractController {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "assinadorDocumento";
-    private static final LogProvider LOG = Logging.getLogProvider(AssinadorDocumento.class);
+    private static final LogProvider LOG = Logging
+            .getLogProvider(AssinadorDocumento.class);
 
     private String certChain;
     private String signature;
@@ -74,39 +73,32 @@ public class AssinadorDocumento extends AbstractController {
     }
 
     public void assinarDocumento() {
-        FacesMessages.instance().clear();
+        final FacesMessages messages = FacesMessages.instance();
         try {
-            assinaturaDocumentoService.verificaCertificadoUsuarioLogado(getCertChain(), Authenticator.getUsuarioLogado());
-        } catch (CertificadoException | AssinaturaException e) {
-            LOG.error("Não foi possível verificar o certificado do usuário "
-                    + Authenticator.getUsuarioLogado(), e);
-            FacesMessages.instance().clear();
-            FacesMessages.instance().add(e.getMessage());
-            this.setHouveErroAoAssinar(true);
-            return;
-        }
-        // setId(processoDocumento.getProcessoDocumentoBin().getIdProcessoDocumentoBin());
-        processoDocumento.setLocalizacao(Authenticator.getLocalizacaoAtual());
-        processoDocumento.setPapel(Authenticator.getPapelAtual());
-        getProcessoDocumentoBin().setUsuarioUltimoAssinar(Authenticator.getUsuarioLogado().getNomeUsuario());
-        getProcessoDocumentoBin().setSignature(getSignature());
-        getProcessoDocumentoBin().setCertChain(getCertChain());
-        getProcessoDocumentoBin().setDataInclusao(new Date());
-        processoDocumento.setProcessoDocumentoBin(getProcessoDocumentoBin());
-        try {
+            final UsuarioLocalizacao perfilAtual = Authenticator
+                    .getUsuarioLocalizacaoAtual();
+            assinaturaDocumentoService.assinarDocumento(processoDocumento,
+                    perfilAtual, certChain, signature);
             genericManager.update(processoDocumento);
+            messages.clear();
+            messages.add(Messages.instance().get("assinatura.assinadoSucesso"));
         } catch (DAOException e) {
             LOG.error("Não foi possível assinar o documento "
                     + processoDocumento, e);
+        } catch (CertificadoException | AssinaturaException e) {
+            LOG.error("Não foi possível verificar o certificado do usuário "
+                    + Authenticator.getUsuarioLogado(), e);
+            messages.clear();
+            messages.add(e.getMessage());
+            this.setHouveErroAoAssinar(true);
         }
-        FacesMessages.instance().add(Messages.instance().get("assinatura.assinadoSucesso"));
+
     }
-    
+
     public boolean isSigned() {
-    	return getProcessoDocumentoBin() != null
-    			&& !StringUtils.isEmpty(getProcessoDocumentoBin().getSignature())
-    			&& !StringUtils.isEmpty(getProcessoDocumentoBin().getCertChain());
-	}
+        return assinaturaDocumentoService
+                .isDocumentoAssinado(processoDocumento);
+    }
 
     @Override
     public void setId(Object id) {
