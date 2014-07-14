@@ -6,6 +6,10 @@ import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_T
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +55,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     private String tipoProcessoDocumentoObservacao;
     private TipoDocumentoEnum inTipoDocumento;
     private TipoNumeracaoEnum tipoNumeracao;
+    private List<ExtensaoArquivo> extensaoArquivosList;
     private VisibilidadeEnum visibilidade;
     private Boolean ativo;
     private Boolean sistema = Boolean.FALSE;
@@ -166,6 +171,15 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 
     public void setTipoNumeracao(TipoNumeracaoEnum tipoNumeracao) {
         this.tipoNumeracao = tipoNumeracao;
+    }
+
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "tipoProcessoDocumento")
+    public List<ExtensaoArquivo> getExtensaoArquivosList() {
+        return extensaoArquivosList;
+    }
+
+    public void setExtensaoArquivosList(List<ExtensaoArquivo> extensaoArquivosList) {
+        this.extensaoArquivosList = extensaoArquivosList;
     }
 
     @Column(name = "in_sistema")

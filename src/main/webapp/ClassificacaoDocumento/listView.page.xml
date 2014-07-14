@@ -19,6 +19,10 @@
             if="#{classificacaoDocumentoCrudAction.tab eq 'associarPapelTab'}"/>
     <action execute="#{tipoProcessoDocumentoPapelList.entity.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
             if="#{classificacaoDocumentoCrudAction.tab eq 'associarPapelTab'}"/>
+    <action execute="#{extensaoArquivoCrudAction.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
+            if="#{classificacaoDocumentoCrudAction.tab eq 'extensoesTab'}"/>
+    <action execute="#{extensaoArquivoList.entity.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
+            if="#{classificacaoDocumentoCrudAction.tab eq 'extensoesTab'}"/>
     
 
 </page>
