@@ -20,7 +20,6 @@ import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
@@ -74,7 +73,6 @@ public class FileUpload implements FileUploadListener {
 
     private ProcessoDocumentoBin createDocumentoBin(final UploadedFile file) {
         ProcessoDocumentoBin pdb = new ProcessoDocumentoBin();
-        pdb.setUsuario(Authenticator.getUsuarioLogado());
         pdb.setNomeArquivo(file.getName());
         pdb.setExtensao(FileUtil.getFileType(file.getName()));
         pdb.setMd5Documento(MD5Encoder.encode(file.getData()));
