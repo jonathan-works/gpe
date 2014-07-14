@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.manager;
 
-import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -16,7 +15,6 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -49,15 +47,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
-    public ProcessoDocumentoBin createProcessoDocumentoBin(Object value,
-            String certChain, String signature) throws DAOException {
+    public ProcessoDocumentoBin createProcessoDocumentoBin(Object value) throws DAOException {
         ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
         bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
-        bin.setDataInclusao(new Date());
         bin.setMd5Documento(MD5Encoder.encode(String.valueOf(value)));
-        bin.setUsuario(Authenticator.getUsuarioLogado());
-        bin.setCertChain(certChain);
-        bin.setSignature(signature);
         genericDAO.persist(bin);
         return bin;
     }
