@@ -22,8 +22,35 @@
       tableTitle="#{messages['localizacao.perfilList']}"
       id="perfilList"
       rowId="#{row.idUsuarioLocalizacao}"
-      listReRender="divGridLU"
-      panelStyleClass="rf-dt-crud">
+      listReRender="divGridLU">
+      <ui:define name="searchForm">
+        <wi:searchForm
+          formId="perfilCrudActionForm"
+          formTitle="#{messages['searchForm.title']}">
+          <wi:inputText
+            id="perfil"
+            label="#{messages['perfil.descricao']}"
+            value="#{usuarioLocalizacaoEntityList.entity.descricao}"></wi:inputText>
+          <wi:tree
+            id="localizacao"
+            assignTo="usuarioLocalizacaoEntityList.entity.localizacao"
+            tree="#{localizacaoEstruturaTree}"
+            icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+            iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+            label="#{messages['perfil.localizacao']}" />
+          <wi:tree
+            id="papel"
+            assignTo="usuarioLocalizacaoEntityList.entity.papel"
+            tree="#{papelTree}"
+            icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+            iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+            label="#{messages['perfil.papel']}" />
+          <wi:selectBooleanMenu
+            id="responsavelLocalizacao"
+            value="#{perfilCrudAction.instance.responsavelLocalizacao}"
+            label="#{messages['perfil.responsavelLocalizacao']}" />
+        </wi:searchForm>
+      </ui:define>
       <ui:define name="headerToolBar" />
       <ui:define name="toolBar">
         <wi:toolBarEdit id="perfilListedit" />
@@ -47,6 +74,11 @@
       formId="perfilForm"
       formTitle="#{messages['form.title']}"
       home="#{perfilCrudAction}">
+      <wi:inputText
+        id="perfil"
+        label="#{messages['perfil.descricao']}"
+        value="#{perfilCrudAction.instance.descricao}"
+        required="true"></wi:inputText>
       <wi:tree
         id="localizacao"
         assignTo="perfilCrudAction.instance.localizacao"
@@ -69,6 +101,5 @@
         label="#{messages['perfil.responsavelLocalizacao']}" />
     </wi:dataForm>
   </ui:define>
-  <ui:define name="tabs">
-  </ui:define>
+  <ui:define name="tabs" />
 </ui:composition>
