@@ -46,7 +46,7 @@ public class UsuarioLocalizacao implements java.io.Serializable {
     private Boolean responsavelLocalizacao;
     private Papel papel;
     private Localizacao estrutura;
-    private String nome;
+    private String descricao;
     private Boolean contabilizar;
 
     public UsuarioLocalizacao() {
@@ -195,11 +195,11 @@ public class UsuarioLocalizacao implements java.io.Serializable {
     }
     
     @Transient
-    public String getNome() {
-        return nome;
+    public String getDescricao() {
+        return descricao;
     }
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setDescricao(String nome) {
+        this.descricao = nome;
     }
 
 }
