@@ -166,7 +166,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
             UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
             processoDocumento.setPapel(usuarioPerfil.getPerfil().getPapel());
             processoDocumento.setLocalizacao(usuarioPerfil.getPerfil().getLocalizacao());
-            atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento, usuarioPerfil.getUsuarioLogin());
+            atualizarProcessoDocumento(processoDocumento, modeloDocumento, usuarioPerfil);
             gravarAlteracoes(processoDocumento, processoDocumentoBin);
         }
     }
@@ -188,13 +188,10 @@ public class ProcessoHome extends AbstractHome<Processo> {
         getEntityManager().flush();
     }
 
-    private void atualizarProcessoDocumentoBin(
-            ProcessoDocumentoBin processoDocumentoBin, String modeloDocumento,
-            UsuarioLogin assinante) {
-        processoDocumentoBin.setModeloDocumento(modeloDocumento);
-        processoDocumentoBin.setCertChain(certChain);
-        processoDocumentoBin.setSignature(signature);
-        processoDocumentoBin.setUsuarioUltimoAssinar(assinante.getNomeUsuario());
+    private void atualizarProcessoDocumento(ProcessoDocumento processoDocumento, String modeloDocumento,
+            UsuarioPerfil usuarioPerfil) throws CertificadoException, AssinaturaException {
+        processoDocumento.getProcessoDocumentoBin().setModeloDocumento(modeloDocumento);
+        assinaturaDocumentoService.assinarDocumento(processoDocumento, usuarioPerfil, certChain, signature);
     }
 
     // Método para Inserir o documento do fluxo
