@@ -5,7 +5,8 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns="http://www.w3.org/1999/xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j">
     <rich:collapsiblePanel
         switchType="client"
         expanded="false"
@@ -72,6 +73,10 @@
                     items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                     required="true"
                     showLabelSelecione="true">
+                    <a:ajax event="change"
+                        render="tipoDocumentoDivPdf"
+                        limitRender="true" status=":status"
+                        execute="@this" />
                 </wi:selectOneMenuEntity>
                 
             </div>
@@ -79,7 +84,10 @@
                 <wi:fileUpload
                     id="uploadArquivo"
                     label="#{messages['fileUpload.type.file']}"
-                    reRender="buttonsPdfDiv">
+                    reRender="buttonsPdfDiv"
+                    tipMessage="Apenas arquivos #{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}"
+                    rendered="#{not empty documentoUploader.processoDocumento.tipoProcessoDocumento}"
+                    accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
                 </wi:fileUpload>
             </s:div>
             <s:div id="buttonsPdfDiv">

@@ -30,6 +30,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -194,6 +195,15 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     @Override
     public String toString() {
         return tipoProcessoDocumento;
+    }
+    
+    @Transient
+    public String getAcceptedTypes() {
+        String accepted = "";
+        for (ExtensaoArquivo ea : getExtensaoArquivosList()) {
+            accepted += ea.getExtensao() + ",";
+        }
+        return accepted;
     }
 
     @Override
