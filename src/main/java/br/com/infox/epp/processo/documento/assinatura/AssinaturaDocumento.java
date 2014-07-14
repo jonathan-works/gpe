@@ -1,36 +1,74 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.core.constants.LengthConstants.NOME_ATRIBUTO;
+import static br.com.infox.core.constants.LengthConstants.NOME_PADRAO;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_CERT_CHAIN;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_DATA_ASSINATURA;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_ID_ASSINATURA;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_NOME_LOCALIZACAO;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_NOME_PAPEL;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_NOME_USUARIO;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_SIGNATURE;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.SEQUENCE_NAME;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.TABLE_NAME;
+
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
+@Entity
+@Table(name = TABLE_NAME)
 public class AssinaturaDocumento implements Serializable {
     private static final long serialVersionUID = 1L;
-    
-    private int idAssinatura;
+
+    private Integer idAssinatura;
     private UsuarioLogin usuario;
     private String nomeUsuario;
     private String nomePapel;
     private String nomeLocalizacao;
-    private String md5Documento;
     private Date dataAssinatura;
     private String signature;
     private String certChain;
     private ProcessoDocumentoBin processoDocumentoBin;
-    
+
     public AssinaturaDocumento() {
     }
 
-    public int getIdAssinatura() {
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "generator", sequenceName = SEQUENCE_NAME)
+    @Id
+    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
+    @Column(name = COL_ID_ASSINATURA, unique = true, nullable = false)
+    @NotNull
+    public Integer getIdAssinatura() {
         return idAssinatura;
     }
 
-    public void setIdAssinatura(int idAssinatura) {
+    public void setIdAssinatura(Integer idAssinatura) {
         this.idAssinatura = idAssinatura;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = UsuarioLoginQuery.ID_USUARIO, nullable = false)
+    @NotNull
     public UsuarioLogin getUsuario() {
         return usuario;
     }
@@ -39,6 +77,9 @@ public class AssinaturaDocumento implements Serializable {
         this.usuario = usuario;
     }
 
+    @Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
+    @Size(max = NOME_ATRIBUTO)
+    @NotNull
     public String getNomeUsuario() {
         return nomeUsuario;
     }
@@ -47,14 +88,9 @@ public class AssinaturaDocumento implements Serializable {
         this.nomeUsuario = nomeUsuario;
     }
 
-    public String getMd5Documento() {
-        return md5Documento;
-    }
-
-    public void setMd5Documento(String md5Documento) {
-        this.md5Documento = md5Documento;
-    }
-
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = COL_DATA_ASSINATURA, nullable = false)
+    @NotNull
     public Date getDataAssinatura() {
         return dataAssinatura;
     }
@@ -63,6 +99,8 @@ public class AssinaturaDocumento implements Serializable {
         this.dataAssinatura = dataAssinatura;
     }
 
+    @Column(name = COL_SIGNATURE, nullable = false)
+    @NotNull
     public String getSignature() {
         return signature;
     }
@@ -71,6 +109,8 @@ public class AssinaturaDocumento implements Serializable {
         this.signature = signature;
     }
 
+    @Column(name = COL_CERT_CHAIN, nullable = false)
+    @NotNull
     public String getCertChain() {
         return certChain;
     }
@@ -79,14 +119,21 @@ public class AssinaturaDocumento implements Serializable {
         this.certChain = certChain;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
+    @NotNull
     public ProcessoDocumentoBin getProcessoDocumentoBin() {
         return processoDocumentoBin;
     }
 
-    public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {
+    public void setProcessoDocumentoBin(
+            ProcessoDocumentoBin processoDocumentoBin) {
         this.processoDocumentoBin = processoDocumentoBin;
     }
 
+    @Column(name = COL_NOME_PAPEL, nullable = false, length = NOME_PADRAO)
+    @Size(max = NOME_PADRAO)
+    @NotNull
     public String getNomePapel() {
         return nomePapel;
     }
@@ -95,6 +142,9 @@ public class AssinaturaDocumento implements Serializable {
         this.nomePapel = nomePapel;
     }
 
+    @Column(name = COL_NOME_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO)
+    @Size(max = DESCRICAO_PADRAO)
+    @NotNull
     public String getNomeLocalizacao() {
         return nomeLocalizacao;
     }
@@ -102,5 +152,5 @@ public class AssinaturaDocumento implements Serializable {
     public void setNomeLocalizacao(String nomeLocalizacao) {
         this.nomeLocalizacao = nomeLocalizacao;
     }
-    
+
 }
