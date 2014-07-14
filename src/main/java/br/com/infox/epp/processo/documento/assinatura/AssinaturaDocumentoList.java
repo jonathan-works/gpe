@@ -30,6 +30,7 @@ public class AssinaturaDocumentoList implements Serializable {
     }
 
     private void populate() {
+        //TODO: Substituir por busca no banco de dados
         resultList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento();
@@ -39,7 +40,6 @@ public class AssinaturaDocumentoList implements Serializable {
             assinaturaDocumento.setUsuario(null);
             assinaturaDocumento.setProcessoDocumentoBin(null);
             assinaturaDocumento.setDataAssinatura(new GregorianCalendar(2014, 7, 15+i).getTime());
-            assinaturaDocumento.setMd5Documento("b");
             assinaturaDocumento.setNomeUsuario("Usuário "+i);
             assinaturaDocumento.setNomeLocalizacao("Localização "+((i*i*i)%7));
             assinaturaDocumento.setNomePapel("Perfil "+((i*i*i*i*i)%11));
