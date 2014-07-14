@@ -178,11 +178,27 @@
                     required="true"
                     label="#{messages['tipoProcessoDocumento.tipoExtensao']}"
                     maxlength="30" />
-                <wi:inputNumber id="tamanaho"
+                <wi:inputNumber id="tamanho"
                     value="#{extensaoArquivoCrudAction.instance.tamanho}"
                     required="true"
                     label="#{messages['tipoProcessoDocumento.tamanho']}"
                     maxlength="30" />
+                <wi:selectBooleanRadio id="isPaginavel"
+                    label="#{messages['tipoProcessoDocumento.hasTamanhoPagina']}"
+                    value="#{extensaoArquivoCrudAction.instance.paginavel}">
+                    <a:ajax event="change"
+                        render="tamanhoPaginaDiv"
+                        limitRender="true" status=":status"
+                        execute="@this" />
+                </wi:selectBooleanRadio>
+                <s:div id="tamanhoPaginaDiv">
+                    <wi:inputNumber id="tamanhoPorPagina"
+                        value="#{extensaoArquivoCrudAction.instance.tamanhoPorPagina}"
+                        required="true"
+                        label="#{messages['tipoProcessoDocumento.tamanhoPorPagina']}"
+                        maxlength="30" 
+                        rendered="#{extensaoArquivoCrudAction.instance.paginavel}"/>
+                </s:div>
                 <ui:define name="buttons">
                     <wi:commandButton id="saveButton"
                         action="extensaoArquivoCrudAction.save()"

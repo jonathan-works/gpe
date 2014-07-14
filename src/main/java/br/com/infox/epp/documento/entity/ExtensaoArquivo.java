@@ -26,6 +26,8 @@ public class ExtensaoArquivo {
     private String nomeExtensao;
     private String extensao;
     private Integer tamanho;
+    private Boolean paginavel;
+    private Integer tamanhoPorPagina;
 
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_extensao_arquivo")
     @Id
@@ -81,5 +83,24 @@ public class ExtensaoArquivo {
     public void setTamanho(Integer tamanho) {
         this.tamanho = tamanho;
     }
-    
+
+    @Column(name = "in_paginavel", nullable = false)
+    @NotNull
+    public Boolean getPaginavel() {
+        return paginavel;
+    }
+
+    public void setPaginavel(Boolean paginavel) {
+        this.paginavel = paginavel;
+    }
+
+    @Column(name = "nr_tamanho_pagina", nullable = true)
+    public Integer getTamanhoPorPagina() {
+        return tamanhoPorPagina;
+    }
+
+    public void setTamanhoPorPagina(Integer tamanhoPorPagina) {
+        this.tamanhoPorPagina = tamanhoPorPagina;
+    }
+
 }
