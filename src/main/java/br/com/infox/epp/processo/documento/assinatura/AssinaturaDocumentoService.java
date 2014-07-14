@@ -1,19 +1,26 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 
 @Name(AssinaturaDocumentoService.NAME)
@@ -22,20 +29,41 @@ import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 public class AssinaturaDocumentoService implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(AssinaturaDocumentoService.class);
     public static final String NAME = "assinaturaDocumentoService";
 
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
-    public Boolean isDocumentoAssinado(ProcessoDocumento processoDocumento) {
-        return !Strings.isEmpty(processoDocumento.getProcessoDocumentoBin().getCertChain())
-                && !Strings.isEmpty(processoDocumento.getProcessoDocumentoBin().getSignature());
+    public Boolean isDocumentoAssinado(final ProcessoDocumento processoDocumento) {
+        final ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
+        return processoDocumentoBin != null && isSignedAndValid(processoDocumentoBin.getAssinaturas());
     }
 
+    private boolean isSignatureValid(AssinaturaDocumento assinatura) {
+        boolean result = false;
+        try {
+            verificaCertificadoUsuarioLogado(assinatura.getCertChain(), assinatura.getUsuario());
+            result = true;
+        } catch (CertificadoException | AssinaturaException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return result;
+    }
+    
+    private boolean isSignedAndValid(final List<AssinaturaDocumento> assinaturas) {
+        boolean result = false;
+        for (AssinaturaDocumento assinaturaDocumento : assinaturas) {
+            if (!(result = isSignatureValid(assinaturaDocumento))) {
+                break;
+            }
+        }
+        return result;
+    }
+    
     public Boolean isDocumentoAssinado(Integer idDoc) {
         ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDoc);
-        return processoDocumento != null
-                && isDocumentoAssinado(processoDocumento);
+        return processoDocumento != null && isDocumentoAssinado(processoDocumento);
     }
 
     public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded,
@@ -58,5 +86,26 @@ public class AssinaturaDocumentoService implements Serializable {
         if (!usuarioLogado.getPessoaFisica().checkCertChain(certChainBase64Encoded)) {
             throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
         }
+    }
+
+    public void assinarDocumento(final ProcessoDocumento processoDocumento, final UsuarioLocalizacao perfilAtual, final String certChain, final String signature) throws CertificadoException, AssinaturaException {
+        final UsuarioLogin usuario = perfilAtual.getUsuario();
+        verificaCertificadoUsuarioLogado(certChain, usuario);
+        
+        final String nomeUsuario = usuario.getNomeUsuario();
+        final Papel papel = perfilAtual.getPapel();
+        final ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
+        
+        final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento();
+        assinaturaDocumento.setProcessoDocumentoBin(processoDocumentoBin);
+        assinaturaDocumento.setDataAssinatura(new Date());
+        assinaturaDocumento.setCertChain(certChain);
+        assinaturaDocumento.setSignature(signature);
+        assinaturaDocumento.setNomeLocalizacao(perfilAtual.getLocalizacao().getLocalizacao());
+        assinaturaDocumento.setNomePapel(papel.getNome());
+        assinaturaDocumento.setNomeUsuario(nomeUsuario);
+        assinaturaDocumento.setUsuario(usuario);
+        
+        processoDocumentoBin.getAssinaturas().add(assinaturaDocumento);
     }
 }
