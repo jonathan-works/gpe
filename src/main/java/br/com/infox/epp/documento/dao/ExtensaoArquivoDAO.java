@@ -24,7 +24,7 @@ public class ExtensaoArquivoDAO extends DAO<ExtensaoArquivo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "extensaoArquivoDAO";
     
-    public Integer getTamanhoMaximo(TipoProcessoDocumento classificacao, String extensaoArquivo) {
+    public ExtensaoArquivo getTamanhoMaximo(TipoProcessoDocumento classificacao, String extensaoArquivo) {
         Map<String, Object> params = new HashMap<>();
         params.put(CLASSIFICACAO_PARAM, classificacao);
         params.put(EXTENSAO_PARAM, extensaoArquivo);

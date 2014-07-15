@@ -16,10 +16,13 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
+import com.lowagie.text.pdf.PdfReader;
+
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
@@ -131,14 +134,40 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Nenhum documento selecionado.");
             return false;
         }
-        Integer tamanhoMaximo = extensaoArquivoManager.getTamanhoMaximo(tipoProcessoDocumento, bin().getExtensao());
-        if (file.getSize() > tamanhoMaximo) {
+        ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(tipoProcessoDocumento, bin().getExtensao());
+        if (file.getSize() > extensaoArquivo.getTamanho()) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de "
-                    + tamanhoMaximo + "bytes!");
+                    + extensaoArquivo.getTamanho() + "bytes!");
+            return false;
+        }
+        if (extensaoArquivo.getPaginavel()) {
+            if(validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina())){
+                return true;
+            } else {
+                FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Não foi possível recuperar as páginas do arquivo.");
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private boolean validaLimitePorPagina(Integer limitePorPagina) {
+        PdfReader reader;
+        try {
+            reader = new PdfReader(inputStream);
+            int qtdPaginas = reader.getNumberOfPages();
+            for (int i = 1; i <= qtdPaginas; i++) {
+                if (reader.getPageContent(i).length > limitePorPagina) {
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("Não foi possível recuperar as páginas do arquivo", e);
             return false;
         }
         return true;
     }
+    
 
     public UploadedFile getUploadedFile() {
         return uploadedFile;

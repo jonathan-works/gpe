@@ -18,7 +18,7 @@ public class ExtensaoArquivoManager extends Manager<ExtensaoArquivoDAO, Extensao
     private static final long serialVersionUID = 1L;
     public static final String NAME = "extensaoArquivoManager";
     
-    public Integer getTamanhoMaximo(TipoProcessoDocumento classificacao, String extensaoArquivo) {
+    public ExtensaoArquivo getTamanhoMaximo(TipoProcessoDocumento classificacao, String extensaoArquivo) {
         return getDao().getTamanhoMaximo(classificacao, extensaoArquivo);
     }
     
