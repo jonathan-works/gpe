@@ -69,7 +69,7 @@
                 <wi:selectOneMenuEntity
                     id="#{f.id}tipoProcessoDocumentoPdf"
                     label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-                    value="#{documentoUploader.processoDocumento.tipoProcessoDocumento}"
+                    value="#{documentoUploader.tipoProcessoDocumento}"
                     items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                     required="true"
                     showLabelSelecione="true">
@@ -84,9 +84,9 @@
                 <wi:fileUpload
                     id="uploadArquivo"
                     label="#{messages['fileUpload.type.file']}"
-                    reRender="buttonsPdfDiv"
+                    reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
                     tipMessage="Apenas arquivos #{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}"
-                    rendered="#{not empty documentoUploader.processoDocumento.tipoProcessoDocumento}"
+                    rendered="#{not empty documentoUploader.tipoProcessoDocumento}"
                     accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
                 </wi:fileUpload>
             </s:div>
@@ -98,8 +98,7 @@
                     execute="#{f.id}inputProcessoDocumentoPdf, #{f.id}tipoProcessoDocumentoPdf"
                     reRender="@form"
                     styleClass="buttons"
-                    rendered="#{documentoUploader.valido}"
-                    oncomplete="infox.util.atualizarFileUpload();">
+                    rendered="#{documentoUploader.valido}">
                 </wi:commandButton>
                 <h:outputScript>
 	        		namespace("infox.util.atualizarFileUpload", function atualizarFileUpload(){
