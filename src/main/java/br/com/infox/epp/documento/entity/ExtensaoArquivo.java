@@ -3,6 +3,8 @@ package br.com.infox.epp.documento.entity;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static br.com.infox.core.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.documento.query.ExtensaoArquivoQuery.LIMITE_EXTENSAO;
+import static br.com.infox.epp.documento.query.ExtensaoArquivoQuery.LIMITE_EXTENSAO_QUERY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -19,6 +23,9 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="tb_extensao_arquivo")
+@NamedQueries({
+    @NamedQuery(name=LIMITE_EXTENSAO, query=LIMITE_EXTENSAO_QUERY)
+})
 public class ExtensaoArquivo {
     
     private Integer idExtensaoArquivo;
