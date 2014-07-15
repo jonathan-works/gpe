@@ -61,7 +61,8 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     private Boolean ativo;
     private Boolean sistema = Boolean.FALSE;
 
-    private List<ProcessoDocumento> processoDocumentoList = new ArrayList<ProcessoDocumento>(0);
+    private List<ProcessoDocumento> processoDocumentoList = new ArrayList<>(0);
+    private List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis = new ArrayList<>(0);
 
     private Boolean publico;
 
@@ -131,6 +132,16 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     public void setProcessoDocumentoList(
             List<ProcessoDocumento> processoDocumentoList) {
         this.processoDocumentoList = processoDocumentoList;
+    }
+
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "tipoProcessoDocumento")
+    public List<TipoProcessoDocumentoPapel> getTipoProcessoDocumentoPapeis() {
+        return tipoProcessoDocumentoPapeis;
+    }
+    public void setTipoProcessoDocumentoPapeis(
+            List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis) {
+        this.tipoProcessoDocumentoPapeis = tipoProcessoDocumentoPapeis;
     }
 
     @Column(name = "in_tipo_documento")
