@@ -71,6 +71,11 @@ public class AssinaturaDocumentoService implements Serializable {
         return result;
     }
 
+    public boolean isDocumentoTotalmenteAssinado(Integer idDoc) {
+        ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDoc);
+        return isDocumentoTotalmenteAssinado(processoDocumento);
+    }
+    
     public boolean isDocumentoTotalmenteAssinado(ProcessoDocumento processoDocumento) {
         boolean result = true;
         List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis = processoDocumento
