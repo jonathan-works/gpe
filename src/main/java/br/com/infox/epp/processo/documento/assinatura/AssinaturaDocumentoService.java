@@ -195,4 +195,9 @@ public class AssinaturaDocumentoService implements Serializable {
 
         processoDocumentoBin.getAssinaturas().add(assinaturaDocumento);
     }
+
+    public boolean isDocumentoAssinado(Integer idDocumento, UsuarioLocalizacao perfil) {
+        ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDocumento);
+        return processoDocumento != null && isDocumentoAssinado(processoDocumento, perfil);
+    }
 }
