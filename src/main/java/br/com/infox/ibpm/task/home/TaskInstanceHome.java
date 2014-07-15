@@ -538,8 +538,7 @@ public class TaskInstanceHome implements Serializable {
 
     private boolean faltaAssinatura(String idEditor) {
         DadosDocumentoAssinavel dados = documentosAssinaveis.get(idEditor);
-        return assinaturaDocumentoService.isDocumentoTotalmenteAssinado(dados
-                        .getIdDocumento());
+        return !assinaturaDocumentoService.isDocumentoTotalmenteAssinado(dados.getIdDocumento());
     }
 
     private void checkCurrentTask() {
@@ -779,8 +778,9 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public boolean podeRenderizarApplet(String idEditor) {
-        if (documentosAssinaveis.get(idEditor) != null) {
-            return faltaAssinatura(idEditor);
+        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis.get(idEditor);
+        if (documentoAssinavel != null) {
+            return assinaturaDocumentoService.isDocumentoAssinado(documentoAssinavel.getIdDocumento(), Authenticator.getUsuarioLocalizacaoAtual());
         }
         return false;
     }
