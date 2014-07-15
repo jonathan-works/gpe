@@ -80,7 +80,6 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
 
@@ -120,7 +119,6 @@ public class UsuarioLogin implements Serializable {
 
     private Set<Papel> papelSet = new TreeSet<Papel>();
 
-    private List<ProcessoDocumentoBin> processoDocumentoBinList = new ArrayList<ProcessoDocumentoBin>(0);
     private List<Fluxo> fluxoList = new ArrayList<Fluxo>(0);
     private List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>(0);
     private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(0);
@@ -308,16 +306,6 @@ public class UsuarioLogin implements Serializable {
 
     public void setDataExpiracao(Date dataExpiracao) {
         this.dataExpiracao = dataExpiracao;
-    }
-
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuario")
-    public List<ProcessoDocumentoBin> getProcessoDocumentoBinList() {
-        return this.processoDocumentoBinList;
-    }
-
-    public void setProcessoDocumentoBinList(
-            List<ProcessoDocumentoBin> processoDocumentoBinList) {
-        this.processoDocumentoBinList = processoDocumentoBinList;
     }
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioPublicacao")
