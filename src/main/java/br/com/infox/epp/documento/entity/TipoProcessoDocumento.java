@@ -205,6 +205,10 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         }
         return accepted;
     }
+    
+    public boolean canDoUpload() {
+        return !(this.inTipoDocumento == TipoDocumentoEnum.P);
+    }
 
     @Override
     public int hashCode() {

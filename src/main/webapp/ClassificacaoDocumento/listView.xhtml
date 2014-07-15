@@ -164,7 +164,7 @@
             </s:div>
         </infox:tab>
         <infox:tab status=":status" id="extensoesTab"
-            rendered="#{home.managed}" name="extensoesTab"
+            rendered="#{home.managed and home.instance.canDoUpload()}" name="extensoesTab"
             title="#{messages['tipoProcessoDocumento.extensoesTab']}">
             <wi:dataForm formId="extensoesForm"
                 formTitle="#{messages['form.title']}">
