@@ -24,6 +24,7 @@ public class ExtensaoArquivoList extends EntityList<ExtensaoArquivo> {
     protected void addSearchFields() {
         addSearchField("nomeExtensao", SearchCriteria.CONTENDO);
         addSearchField("extensao", SearchCriteria.CONTENDO);
+        addSearchField("tipoProcessoDocumento", SearchCriteria.IGUAL);
     }
 
     @Override
