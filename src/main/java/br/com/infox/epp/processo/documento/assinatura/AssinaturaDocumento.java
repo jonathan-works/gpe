@@ -31,7 +31,9 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.query.PapelQuery;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
@@ -42,6 +44,7 @@ public class AssinaturaDocumento implements Serializable {
 
     private Integer idAssinatura;
     private UsuarioLogin usuario;
+    private Papel papel;
     private String nomeUsuario;
     private String nomePapel;
     private String nomeLocalizacao;
@@ -75,6 +78,16 @@ public class AssinaturaDocumento implements Serializable {
 
     public void setUsuario(UsuarioLogin usuario) {
         this.usuario = usuario;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = PapelQuery.ID_PAPEL, nullable = false)
+    @NotNull
+    public Papel getPapel() {
+        return papel;
+    }
+    public void setPapel(Papel papel) {
+        this.papel = papel;
     }
 
     @Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
