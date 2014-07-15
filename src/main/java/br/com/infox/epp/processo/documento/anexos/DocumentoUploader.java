@@ -2,8 +2,6 @@ package br.com.infox.epp.processo.documento.anexos;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -18,12 +16,9 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
-import com.lowagie.text.pdf.PdfReader;
-
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
@@ -31,8 +26,8 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.infox.index.InfoxDocumentIndexer;
+
+import com.lowagie.text.pdf.PdfReader;
 
 @Name(DocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -83,7 +78,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         setValido(isDocumentoBinValido(ui));
         if (isValido()) {
             setUploadedFile(ui);
-            bin().setUsuario(Authenticator.getUsuarioLogado());
             bin().setNomeArquivo(ui.getName());
             bin().setMd5Documento(getMD5(ui.getData()));
             bin().setSize(Long.valueOf(ui.getSize()).intValue());
