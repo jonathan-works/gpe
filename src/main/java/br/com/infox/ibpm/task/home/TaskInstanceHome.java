@@ -43,7 +43,6 @@ import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
@@ -530,22 +529,16 @@ public class TaskInstanceHome implements Serializable {
     private boolean faltaAssinatura() {
         for (Entry<String, DadosDocumentoAssinavel> entry : documentosAssinaveis
                 .entrySet()) {
-            if (faltaAssinatura(entry.getValue().getClassificacao(),
-                    entry.getKey())) {
+            if (faltaAssinatura(entry.getKey())) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean faltaAssinatura(
-            TipoProcessoDocumento tipoProcessoDocumento, String idEditor) {
-        boolean isObrigatorio = tipoProcessoDocumentoDAO
-                .isAssinaturaObrigatoria(tipoProcessoDocumento,
-                        Authenticator.getPapelAtual());
+    private boolean faltaAssinatura(String idEditor) {
         DadosDocumentoAssinavel dados = documentosAssinaveis.get(idEditor);
-        return isObrigatorio
-                && assinaturaDocumentoService.isDocumentoAssinado(dados
+        return assinaturaDocumentoService.isDocumentoTotalmenteAssinado(dados
                         .getIdDocumento());
     }
 
@@ -787,8 +780,7 @@ public class TaskInstanceHome implements Serializable {
 
     public boolean podeRenderizarApplet(String idEditor) {
         if (documentosAssinaveis.get(idEditor) != null) {
-            return faltaAssinatura(documentosAssinaveis.get(idEditor)
-                    .getClassificacao(), idEditor);
+            return faltaAssinatura(idEditor);
         }
         return false;
     }
