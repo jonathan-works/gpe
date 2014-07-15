@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    <ui:define name="title">#{messages['estrutura.titlePage']}</ui:define>
+    <ui:param
+        name="home"
+        value="#{estruturaCrudAction}" />
+    <ui:define name="searchGrid">
+        <wi:dataTable
+            values="#{estruturaList.list(15)}"
+            bean="#{estruturaList}"
+            tableTitle="#{messages['estrutura.tableTitle']}"
+            id="estruturaList"
+            rowId="#{row.id}">
+            <ui:define name="headerToolBar" />
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarEstruturaForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText
+                        id="nome"
+                        value="#{estruturaList.entity.nome}"
+                        label="#{messages['estrutura.nome']}" />
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{estruturaList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText
+                columnId="nome"
+                columnHeader="#{messages['estrutura.nome']}"
+                value="#{row.nome}" />
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm
+            formId="estruturaForm"
+            formTitle="#{messages['form.title']}">
+            <wi:inputText
+                id="nome"
+                required="true"
+                label="#{messages['estrutura.nome']}"
+                value="#{estruturaCrudAction.instance.nome}" />
+            <wi:selectSituacaoRadio
+                id="ativo"
+                label="#{messages['field.situacao']}"
+                required="true"
+                value="#{estruturaCrudAction.instance.ativo}" />
+            <rich:panel rendered="#{home.managed}" id="localizacoesPanel">
+                <f:facet name="header"><h:outputText value="#{messages['estrutura.localizacoes']}" /></f:facet>
+                <wi:tree id="localizacaoFilho"
+                    assignTo="estruturaCrudAction.localizacaoFilho"
+                    tree="#{localizacaoSemEstruturaTree}"
+                    icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                    iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                    label="#{messages['estrutura.localizacaoFilho']}" 
+                    render="localizacoesPanel"/>
+                 <div />
+                 <wi:commandButton id="addLocalizacaoButton" action="estruturaCrudAction.addLocalizacaoFilho" 
+                    rendered="#{not empty estruturaCrudAction.localizacaoFilho}" value="Adicionar" 
+                    reRender="localizacoesPanel, pageBodyDialogMessage"/>
+                 <div />
+                    
+                 <wi:dataTable id="localizacoesList" values="#{localizacaoComEstruturaList.list(5)}" 
+                    bean="#{localizacaoComEstruturaList}" rowId="#{row.idLocalizacao}"
+                    tableTitle="#{messages['estrutura.localizacoesFilhas']}" panelStyleClass="rf-dt-crud">
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <wi:toolBar url="#{a4jSkin.imgFolder}/remove.png" title="#{messages['button.delete']}" id="toolBar"
+                            action="#{estruturaCrudAction.removeLocalizacaoFilho(row)}" render="localizacoesPanel, pageBodyDialogMessage"/>
+                    </ui:define>
+                    <wi:columnOutputText id="caminhoCompleto" value="#{estruturaCrudAction.formatCaminhoCompleto(row)}" 
+                        columnHeader="#{messages['localizacao.localizacao']}" styleClass="rf-tr" hideOrder="true"/>
+                 </wi:dataTable>
+            </rich:panel>
+            <ui:define name="buttons">
+                <s:fragment rendered="#{isEditable}">
+                    <wi:commandButtonSave />
+                    <wi:commandButtonNew />
+                </s:fragment>
+            </ui:define>
+        </wi:dataForm>
+    </ui:define>
+    <ui:define name="tabs">
+        <infox:tab name="visaoHierarquica" title="#{messages['estrutura.visaoHierarquica']}">
+            <h:form>
+                <rich:tree
+                  data="#{item}"
+                  selectionType="ajax"
+                  render="@form"
+                  var="item"
+                  selectionChangeListener="#{estruturaLocalizacaoTree.processTreeSelectionChange}">
+                      <rich:treeModelRecursiveAdaptor
+                        roots="#{estruturaLocalizacaoTree.roots}"
+                        nodes="#{item.nodes}">
+                            <rich:treeNode>
+                                  #{item.entity}
+                            </rich:treeNode>
+                    </rich:treeModelRecursiveAdaptor>
+                </rich:tree>
+            </h:form>
+        </infox:tab>
+    </ui:define>
+</ui:composition>

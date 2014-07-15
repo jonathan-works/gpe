@@ -47,11 +47,15 @@ public class ActionMessagesService implements Serializable {
             messages.add(daoException.getLocalizedMessage());
             return ret;
         } else {
-            final Throwable cause = daoException.getCause();
-            if (cause instanceof ConstraintViolationException) {
-                return handleBeanViolationException((ConstraintViolationException) cause);
+            if (daoException.getMessage() != null) {
+                messages.add(StatusMessage.Severity.ERROR, format("Erro ao gravar: {0}", daoException.getMessage()), daoException);
             } else {
-                messages.add(StatusMessage.Severity.ERROR, format("Erro ao gravar: {0}", cause.getMessage()), cause);
+                final Throwable cause = daoException.getCause();
+                if (cause instanceof ConstraintViolationException) {
+                    return handleBeanViolationException((ConstraintViolationException) cause);
+                } else {
+                    messages.add(StatusMessage.Severity.ERROR, format("Erro ao gravar: {0}", cause.getMessage()), cause);
+                }
             }
         }
         return null;

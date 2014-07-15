@@ -8,6 +8,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -32,6 +33,8 @@ public class LocalizacaoTurnoAction {
 
     @In
     private LocalizacaoTurnoManager localizacaoTurnoManager;
+    @In
+    private ActionMessagesService actionMessagesService;
 
     private Localizacao localizacao;
 
@@ -58,8 +61,12 @@ public class LocalizacaoTurnoAction {
     }
 
     public void gravarTurnos() {
-        localizacaoTurnoManager.removerTurnosAnteriores(localizacao);
-        inserirTurnosSelecionados();
+        try {
+            localizacaoTurnoManager.removerTurnosAnteriores(localizacao);
+            inserirTurnosSelecionados();
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
+        }
     }
 
     private void inserirTurnosSelecionados() {

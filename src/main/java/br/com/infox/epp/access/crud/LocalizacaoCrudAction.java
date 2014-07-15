@@ -3,13 +3,15 @@ package br.com.infox.epp.access.crud;
 import java.util.List;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.crud.AbstractRecursiveCrudAction;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
+import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.manager.EstruturaManager;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 
 @Name(LocalizacaoCrudAction.NAME)
@@ -18,12 +20,21 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "localizacaoCrudAction";
+    
+    @In private EstruturaManager estruturaManager;
+    private Boolean dentroDeEstrutura;
+    private List<Estrutura> estruturasDisponiveis;
 
     @Override
     public void newInstance() {
         super.newInstance();
         limparTrees();
-        getInstance().setEstrutura(Boolean.FALSE);
+    }
+    
+    @Override
+    public void setInstance(Localizacao instance) {
+        super.setInstance(instance);
+        dentroDeEstrutura = null;
     }
 
     public boolean hasPermissionToEdit() {
@@ -32,29 +43,6 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
             return true;
         }
         return getManager().isLocalizacaoAncestor(localizacaoUsuarioLogado, getInstance()) && !getInstance().equals(localizacaoUsuarioLogado);
-    }
-
-    @Override
-    protected boolean isInstanceValid() {
-        final Localizacao localizacao = getInstance();
-
-        final Boolean isEstrutura = localizacao.getEstrutura();
-        if (isEstrutura != null) {
-            if (isEstrutura) {
-                localizacao.setEstruturaFilho(null);
-                localizacao.setLocalizacaoPai(Authenticator.getLocalizacaoAtual());
-            } else {
-                final Localizacao localizacaoPai = localizacao.getLocalizacaoPai();
-                if (localizacaoPai != null
-                        && localizacaoPai.equals(localizacao.getEstruturaFilho())) {
-                    final StatusMessages messagesHandler = getMessagesHandler();
-                    messagesHandler.clear();
-                    messagesHandler.add("#{messages['localizacao.localizacaoPaiIgualEstruturaFilho']}");
-                    return Boolean.FALSE;
-                }
-            }
-        }
-        return super.isInstanceValid();
     }
 
     protected void limparTrees() {
@@ -83,8 +71,42 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
         return Boolean.TRUE;
     }
 
-    public List<Localizacao> getLocalizacoesEstrutura() {
-        return getManager().getLocalizacoesEstrutura();
+    public List<Estrutura> getEstruturasDisponiveis() {
+        if (estruturasDisponiveis == null) {
+            if (isManaged()) {
+                estruturasDisponiveis = estruturaManager.getEstruturasDisponiveisLocalizacao(getInstance());
+            } else {
+                estruturasDisponiveis = estruturaManager.getEstruturasDisponiveis();
+            }
+        }
+        return estruturasDisponiveis;
     }
-
+    
+    public String formatCaminhoCompleto(Localizacao localizacao) {
+        return getManager().formatCaminhoCompleto(localizacao);
+    }
+    
+    public boolean isDentroDeEstrutura() {
+        if (dentroDeEstrutura == null) {
+            Localizacao loc = getInstance();
+            dentroDeEstrutura = false;
+            while (loc != null) {
+                if (loc.getEstruturaPai() != null) {
+                    dentroDeEstrutura = true;
+                    break;
+                }
+                loc = loc.getLocalizacaoPai();
+            }
+        }
+        return dentroDeEstrutura;
+    }
+    
+    public Localizacao getLocalizacaoPai() {
+        return getInstance().getLocalizacaoPai();
+    }
+    
+    public void setLocalizacaoPai(Localizacao localizacaoPai) {
+        getInstance().setLocalizacaoPai(localizacaoPai);
+        dentroDeEstrutura = null;
+    }
 }

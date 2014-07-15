@@ -20,6 +20,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -69,7 +70,7 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
     }
 
     public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId,
-            Long processId) {
+            Long processId) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PROCESS_ID, processId);
         parameters.put(PARAM_TASK_ID, taskId);

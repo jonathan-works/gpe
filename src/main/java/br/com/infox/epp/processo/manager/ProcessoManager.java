@@ -173,15 +173,15 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
+    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) throws DAOException {
         getDao().moverProcessosParaCaixa(idList, caixa);
     }
 
-    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
+    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) throws DAOException {
         getDao().moverProcessoParaCaixa(caixa, processo);
     }
 
-    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) {
+    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) throws DAOException {
         Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
         getDao().moverProcessoParaCaixa(caixaEscolhida, processo);
     }
@@ -193,11 +193,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return caixaList.get(0);
     }
 
-    public void removerProcessoDaCaixaAtual(Processo processo) {
+    public void removerProcessoDaCaixaAtual(Processo processo) throws DAOException {
         getDao().removerProcessoDaCaixaAtual(processo);
     }
 
-    public void apagarActorIdDoProcesso(Processo processo) {
+    public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
         getDao().apagarActorIdDoProcesso(processo);
     }
 

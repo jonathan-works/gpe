@@ -23,6 +23,7 @@ import org.jboss.seam.annotations.TransactionPropagationType;
 import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -34,38 +35,38 @@ public class ProcessoDAO extends DAO<Processo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDAO";
 
-    public void anulaActorId(String actorId) {
+    public void anulaActorId(String actorId) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ACTOR_ID, actorId);
         executeNamedQueryUpdate(ANULA_ACTOR_ID, parameters);
     }
 
-    public void apagarActorIdDoProcesso(Processo processo) {
+    public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
         executeNamedQueryUpdate(APAGA_ACTOR_ID_DO_PROCESSO, parameters);
     }
 
     @Transactional(TransactionPropagationType.REQUIRED)
-    public void anularTodosActorId() {
+    public void anularTodosActorId() throws DAOException {
         executeNamedQueryUpdate(ANULA_TODOS_OS_ACTOR_IDS);
     }
 
-    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
+    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_LIST_PROCESSO_PARAM, idList);
         parameters.put(CAIXA_PARAM, caixa);
         executeNamedQueryUpdate(MOVER_PROCESSOS_PARA_CAIXA, parameters);
     }
 
-    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
+    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, processo);
         parameters.put(CAIXA_PARAM, caixa);
         executeNamedQueryUpdate(MOVER_PROCESSO_PARA_CAIXA, parameters);
     }
 
-    public void removerProcessoDaCaixaAtual(Processo processo) {
+    public void removerProcessoDaCaixaAtual(Processo processo) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
         executeNamedQueryUpdate(REMOVE_PROCESSO_DA_CAIXA_ATUAL, parameters);

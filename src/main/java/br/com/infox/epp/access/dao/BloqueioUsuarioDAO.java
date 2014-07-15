@@ -16,6 +16,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
@@ -33,18 +34,18 @@ public class BloqueioUsuarioDAO extends DAO<BloqueioUsuario> {
         return getNamedSingleResult(BLOQUEIO_MAIS_RECENTE, parameters);
     }
 
-    public void desfazerBloqueioUsuario(BloqueioUsuario bloqueioUsuario) {
+    public void desfazerBloqueioUsuario(BloqueioUsuario bloqueioUsuario) throws DAOException {
         desbloquearUsuario(bloqueioUsuario.getUsuario());
         gravarDesbloqueio(bloqueioUsuario);
     }
 
-    private void desbloquearUsuario(UsuarioLogin usuarioLogin) {
+    private void desbloquearUsuario(UsuarioLogin usuarioLogin) throws DAOException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_ID_USUARIO, usuarioLogin.getIdUsuarioLogin());
         executeNamedQueryUpdate(UNDO_BLOQUEIO_NATIVE_QUERY, parameters);
     }
 
-    private void gravarDesbloqueio(BloqueioUsuario bloqueioUsuario) {
+    private void gravarDesbloqueio(BloqueioUsuario bloqueioUsuario) throws DAOException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_BLOQUEIO, bloqueioUsuario);
         parameters.put(PARAM_DATA_DESBLOQUEIO, new Date());

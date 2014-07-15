@@ -26,6 +26,7 @@
             <value>menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
             <value>menu.contAcesso/usuario.menuText:/Usuario/listView.seam</value>
             <value>menu.contAcesso/localizacao.menuText:/Localizacao/listView.seam</value>
+            <value>menu.contAcesso/estrutura.menuText:/Estrutura/listView.seam</value>
             
             <value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>
             <value>menu.administracao/log.menuText:/Consulta/Log/list.seam</value>

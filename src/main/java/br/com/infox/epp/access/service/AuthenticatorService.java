@@ -24,6 +24,7 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
 import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -88,7 +89,7 @@ public class AuthenticatorService implements Serializable {
         Events.instance().raiseEvent(SET_USUARIO_LOCALIZACAO_LIST_EVENT, usuarioLocalizacaoList);
     }
 
-    public void validarUsuario(UsuarioLogin usuario) throws LoginException {
+    public void validarUsuario(UsuarioLogin usuario) throws LoginException, DAOException {
         if (usuario.getBloqueio()) {
             if (bloqueioUsuarioManager.liberarUsuarioBloqueado(usuario)) {
                 bloqueioUsuarioManager.desfazerBloqueioUsuario(usuario);
@@ -157,11 +158,11 @@ public class AuthenticatorService implements Serializable {
                 + " não possui Localização");
     }
 
-    public void anulaActorId(String actorId) {
+    public void anulaActorId(String actorId) throws DAOException {
         processoDAO.anulaActorId(actorId);
     }
 
-    public void anularTodosActorId() {
+    public void anularTodosActorId() throws DAOException {
         processoDAO.anularTodosActorId();
     }
 

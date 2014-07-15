@@ -27,6 +27,7 @@ import br.com.infox.seam.util.ComponentUtil;
 public class ParametroUtil {
 
     public static final String LOGIN_USUARIO_EXTERNO = "usuarioexterno";
+    public static final String LOCALIZACAO_EXTERNA = "Externo";
     public static final String NAME = "parametroUtil";
     public static final LogProvider LOG = Logging.getLogProvider(ParametroUtil.class);
 

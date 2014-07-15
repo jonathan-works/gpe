@@ -3,6 +3,7 @@ package br.com.infox.epp.access.component.tree;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Localizacao;
 
+@Deprecated
 public class EstruturaNode extends EntityNode<Localizacao> {
 
     private static final long serialVersionUID = 1L;
@@ -18,7 +19,8 @@ public class EstruturaNode extends EntityNode<Localizacao> {
 
     @Override
     public String getType() {
-        return getEntity().getEstrutura() ? "folder" : "leaf";
+//        return getEntity().getEstrutura() ? "folder" : "leaf";
+        return super.getType();
     }
 
     @Override

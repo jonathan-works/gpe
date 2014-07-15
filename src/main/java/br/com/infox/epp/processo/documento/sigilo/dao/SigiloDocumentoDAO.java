@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery;
@@ -39,7 +40,7 @@ public class SigiloDocumentoDAO extends DAO<SigiloDocumento> {
         return getNamedSingleResult(SigiloDocumentoQuery.NAMED_QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO, params) != null;
     }
 
-    public void inativarSigilos(ProcessoDocumento documento) {
+    public void inativarSigilos(ProcessoDocumento documento) throws DAOException {
         Map<String, Object> params = new HashMap<>();
         params.put(SigiloDocumentoQuery.QUERY_PARAM_DOCUMENTO, documento);
         executeNamedQueryUpdate(SigiloDocumentoQuery.NAMED_QUERY_INATIVAR_SIGILOS, params);

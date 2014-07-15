@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 
@@ -26,7 +27,7 @@ public class ProcessoLocalizacaoIbpmManager implements Serializable {
         return processoLocalizacaoIbpmDAO.listByTaskInstance(idTaskInstance);
     }
 
-    public void deleteByTaskIdAndProcessId(Long taskId, Long processId) {
+    public void deleteByTaskIdAndProcessId(Long taskId, Long processId) throws DAOException {
         processoLocalizacaoIbpmDAO.deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(taskId, processId);
     }
 

@@ -28,7 +28,6 @@ public class LocalizacaoList extends EntityList<Localizacao> {
         addSearchField("localizacao", SearchCriteria.CONTENDO);
         addSearchField("localizacaoPai", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
-        addSearchField("estrutura", SearchCriteria.IGUAL);
         addSearchField("hierarchicalPath", SearchCriteria.INICIANDO, "o.caminhoCompleto like concat(#{authenticator.getLocalizacaoAtual().caminhoCompleto},'%')");
     }
 

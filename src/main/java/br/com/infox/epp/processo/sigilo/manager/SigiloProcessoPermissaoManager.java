@@ -28,7 +28,7 @@ public class SigiloProcessoPermissaoManager extends Manager<SigiloProcessoPermis
         return getDao().usuarioPossuiPermissao(usuario, sigiloProcesso);
     }
 
-    public void inativarPermissoes(SigiloProcesso sigiloProcesso) {
+    public void inativarPermissoes(SigiloProcesso sigiloProcesso) throws DAOException {
         getDao().inativarPermissoes(sigiloProcesso);
     }
 

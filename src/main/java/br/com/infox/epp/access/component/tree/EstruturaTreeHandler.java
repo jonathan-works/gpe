@@ -9,6 +9,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(EstruturaTreeHandler.NAME)
 @BypassInterceptors
+@Deprecated
 public class EstruturaTreeHandler extends AbstractTreeHandler<Localizacao> {
 
     public static final String NAME = "estruturaTree";
