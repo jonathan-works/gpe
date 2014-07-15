@@ -135,6 +135,10 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             return false;
         }
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(tipoProcessoDocumento, bin().getExtensao());
+        if (extensaoArquivo == null) {
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Extensão de arquivo não permitida.");
+            return false;
+        }
         if (file.getSize() > extensaoArquivo.getTamanho()) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de "
                     + extensaoArquivo.getTamanho() + "bytes!");
