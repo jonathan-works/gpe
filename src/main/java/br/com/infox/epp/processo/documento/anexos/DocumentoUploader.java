@@ -2,8 +2,6 @@ package br.com.infox.epp.processo.documento.anexos;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -28,8 +26,6 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.infox.index.InfoxDocumentIndexer;
 
 @Name(DocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
