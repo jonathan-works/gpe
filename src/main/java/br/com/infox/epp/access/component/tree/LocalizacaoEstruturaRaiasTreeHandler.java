@@ -40,7 +40,7 @@ public class LocalizacaoEstruturaRaiasTreeHandler extends AbstractTreeHandler<Lo
     @Override
     protected String getQueryChildren() {
         return "select n from Localizacao n where localizacaoPai = :"
-                + EntityNode.PARENT_NODE + " and n.estrutura = false";
+                + EntityNode.PARENT_NODE;
     }
 
     @Override
