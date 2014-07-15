@@ -6,6 +6,10 @@ import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_T
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -51,6 +56,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     private String tipoProcessoDocumentoObservacao;
     private TipoDocumentoEnum inTipoDocumento;
     private TipoNumeracaoEnum tipoNumeracao;
+    private List<ExtensaoArquivo> extensaoArquivosList;
     private VisibilidadeEnum visibilidade;
     private Boolean ativo;
     private Boolean sistema = Boolean.FALSE;
@@ -148,7 +154,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     }
 
     @Column(name = "ds_tipo_processo_documento_observacao", length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
-    @Size(max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
+    @Size(max = LengthConstants.TEXTO)
     public String getTipoProcessoDocumentoObservacao() {
         return this.tipoProcessoDocumentoObservacao;
     }
@@ -168,6 +174,15 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         this.tipoNumeracao = tipoNumeracao;
     }
 
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "tipoProcessoDocumento")
+    public List<ExtensaoArquivo> getExtensaoArquivosList() {
+        return extensaoArquivosList;
+    }
+
+    public void setExtensaoArquivosList(List<ExtensaoArquivo> extensaoArquivosList) {
+        this.extensaoArquivosList = extensaoArquivosList;
+    }
+
     @Column(name = "in_sistema")
     public Boolean getSistema() {
         return sistema;
@@ -176,10 +191,23 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     public void setSistema(Boolean sistema) {
         this.sistema = sistema;
     }
-
+    
     @Override
     public String toString() {
         return tipoProcessoDocumento;
+    }
+    
+    @Transient
+    public String getAcceptedTypes() {
+        String accepted = "";
+        for (ExtensaoArquivo ea : getExtensaoArquivosList()) {
+            accepted += ea.getExtensao() + ",";
+        }
+        return accepted;
+    }
+    
+    public boolean canDoUpload() {
+        return !(this.inTipoDocumento == TipoDocumentoEnum.P);
     }
 
     @Override

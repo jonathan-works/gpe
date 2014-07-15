@@ -22,6 +22,8 @@ public interface LengthConstants {
     int DESCRICAO_MEDIA = 150;
     int DESCRICAO_PADRAO_DOBRO = 200;
     int DESCRICAO_GRANDE = 255;
+    
+    int TEXTO = 4000;
 
     // Tamanhos das Descrições Especiais
     int DESCRICAO_MD5 = 32;

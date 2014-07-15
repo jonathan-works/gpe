@@ -33,6 +33,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.seam.path.PathResolver;
 
+@Deprecated
 public class InfoxDocumentIndexer {
 
     private Analyzer analyzer = new LimitTokenCountAnalyzer(new BrazilianAnalyzer(Version.LUCENE_36), Integer.MAX_VALUE);

@@ -13,7 +13,7 @@ public interface TipoProcessoDocumentoQuery {
             + " or t.inTipoDocumento='T')";
 
     String ASSINATURA_OBRIGATORIA = "assinaturaObrigatoria";
-    String ASSINATURA_OBRIGATORIA_QUERY = "select distinct tpdp.obrigatorio "
+    String ASSINATURA_OBRIGATORIA_QUERY = "select distinct tpdp "
             + "from TipoProcessoDocumentoPapel tpdp "
             + "where tpdp.tipoProcessoDocumento=:"
             + TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_PARAM

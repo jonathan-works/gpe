@@ -47,11 +47,11 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
     </context-param>
     <context-param>
         <param-name>org.richfaces.fileUpload.maxRequestSize</param-name>
-        <param-value>2097152</param-value>
+        <param-value>2040109465</param-value>
     </context-param>
     <context-param>
         <param-name>org.richfaces.fileUpload.createTempFiles</param-name>
-        <param-value>false</param-value>
+        <param-value>true</param-value>
     </context-param>
     <filter>
         <filter-name>Seam Filter</filter-name>
