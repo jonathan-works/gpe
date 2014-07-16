@@ -41,7 +41,7 @@
 	    <wi:editor
 	      id="#{editorId}"
 	      value="#{home.instance[id]}"
-	      readonly="#{readonly or not empty home.documentosAssinaveis[id].signature}" />
+	      readonly="#{readonly or home.possuiAssinatura(id)}" />
 	  </s:div>
 	  <a:jsFunction
 	    name="#{editorId.replace('-', '')}submitForm"
