@@ -28,8 +28,8 @@
 	      items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
 	      required="#{not readonly}"
 	      showLabelSelecione="true"
-	      readonly="#{readonly or not empty home.documentosAssinaveis[id].signature}"
-	      disabled="#{readonly or not empty home.documentosAssinaveis[id].signature}">
+	      readonly="#{readonly or home.possuiAssinatura(id)}"
+	      disabled="#{readonly or home.possuiAssinatura(id)}">
 	      <a:ajax
 	        event="change"
 	        render="appletDiv"
