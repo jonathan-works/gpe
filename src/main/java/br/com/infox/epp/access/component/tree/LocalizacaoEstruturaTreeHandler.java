@@ -15,7 +15,7 @@ import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 @Deprecated
 public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localizacao> {
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "localizacaoEstruturaTree";
+    public static final String NAME = "localizacaoEstruturaTreeHandler";
     public static final String EVENT_SELECT_LOC_ESTRUTURA = "evtSelectLocalizacaoEstrutura";
 
     private UsuarioLocalizacao usuarioLocalizacaoAtual;

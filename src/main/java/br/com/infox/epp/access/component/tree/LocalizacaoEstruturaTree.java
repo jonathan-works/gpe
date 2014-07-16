@@ -1,0 +1,34 @@
+package br.com.infox.epp.access.component.tree;
+
+import org.jboss.seam.annotations.Name;
+
+import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+
+@Name(LocalizacaoEstruturaTree.NAME)
+public class LocalizacaoEstruturaTree extends AbstractTreeHandler<Localizacao> {
+
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "localizacaoEstruturaTree";
+
+    @Override
+    protected String getQueryRoots() {
+        return "select l from Localizacao l where l.idLocalizacao = " + getIdLocalizacaoAtual() + " order by localizacao";
+    }
+
+    private Integer getIdLocalizacaoAtual() {
+        final UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioLocalizacaoAtual();
+        final Localizacao estrutura = usuarioLocalizacao.getEstrutura();
+        final Localizacao raiz = estrutura != null ? estrutura : usuarioLocalizacao.getLocalizacao();
+        return raiz.getIdLocalizacao();
+    }
+
+    @Override
+    protected String getQueryChildren() {
+        return "select l from Localizacao l where localizacaoPai = :" + EntityNode.PARENT_NODE;
+    }
+
+}
