@@ -29,6 +29,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     public void newInstance() {
         super.newInstance();
         limparTrees();
+        estruturasDisponiveis = null;
     }
     
     @Override
@@ -73,11 +74,7 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
 
     public List<Estrutura> getEstruturasDisponiveis() {
         if (estruturasDisponiveis == null) {
-            if (isManaged()) {
-                estruturasDisponiveis = estruturaManager.getEstruturasDisponiveisLocalizacao(getInstance());
-            } else {
-                estruturasDisponiveis = estruturaManager.getEstruturasDisponiveis();
-            }
+            estruturasDisponiveis = estruturaManager.getEstruturasDisponiveis();
         }
         return estruturasDisponiveis;
     }

@@ -82,7 +82,9 @@
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBar url="#{a4jSkin.imgFolder}/remove.png" title="#{messages['button.delete']}" id="toolBar"
-                            action="#{estruturaCrudAction.removeLocalizacaoFilho(row)}" render="localizacoesPanel, pageBodyDialogMessage"/>
+                            action="#{estruturaCrudAction.removeLocalizacaoFilho(row)}" render="localizacoesPanel, pageBodyDialogMessage"
+                            rendered="#{row.localizacaoRaizEstrutura}"
+                            onclick="return confirm('#{messages['estrutura.confirmaRemocaoLocalizacao']}')"/>
                     </ui:define>
                     <wi:columnOutputText id="caminhoCompleto" value="#{estruturaCrudAction.formatCaminhoCompleto(row)}" 
                         columnHeader="#{messages['localizacao.localizacao']}" styleClass="rf-tr" hideOrder="true"/>
@@ -95,25 +97,5 @@
                 </s:fragment>
             </ui:define>
         </wi:dataForm>
-    </ui:define>
-    <ui:define name="tabs">
-        <infox:tab name="visaoHierarquica" title="#{messages['estrutura.visaoHierarquica']}">
-            <h:form>
-                <rich:tree
-                  data="#{item}"
-                  selectionType="ajax"
-                  render="@form"
-                  var="item"
-                  selectionChangeListener="#{estruturaLocalizacaoTree.processTreeSelectionChange}">
-                      <rich:treeModelRecursiveAdaptor
-                        roots="#{estruturaLocalizacaoTree.roots}"
-                        nodes="#{item.nodes}">
-                            <rich:treeNode>
-                                  #{item.entity}
-                            </rich:treeNode>
-                    </rich:treeModelRecursiveAdaptor>
-                </rich:tree>
-            </h:form>
-        </infox:tab>
     </ui:define>
 </ui:composition>
