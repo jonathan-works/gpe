@@ -165,9 +165,14 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
             beforeSave();
             ret = wasManaged ? update() : persist();
         }
-        final boolean persistFailed = ret == null
-                || (!PERSISTED.equals(ret) && !wasManaged);
-        if (ret != null) {
+        final boolean persistFailed = !PERSISTED.equals(ret) && !wasManaged;
+        if (persistFailed) {
+            try {
+                setInstance(EntityUtil.cloneEntity(getInstance(), false));
+            } catch (InstantiationException | IllegalAccessException e) {
+                LOG.error(".save()", e);
+            }
+        } else {
             // TODO: assim que os testes de crud estiverem prontos, jogar essas
             // duas invocações para fora desse if
             afterSave();
@@ -181,13 +186,8 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
                     LOG.error(".save()", e);
                 }
             }
-            resolveStatusMessage(ret);
-        }
-        if (persistFailed) {
-            try {
-                setInstance(EntityUtil.cloneEntity(getInstance(), false));
-            } catch (InstantiationException | IllegalAccessException e) {
-                LOG.error(".save()", e);
+            if (ret != null) {
+                resolveStatusMessage(ret);
             }
         }
         return ret;
