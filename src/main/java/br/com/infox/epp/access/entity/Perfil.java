@@ -22,6 +22,7 @@ public class Perfil {
     private Integer idPerfil;
     private String descricao;
     private Localizacao localizacao;
+    private Localizacao paiDaEstrutura;
     private Papel papel;
     private Boolean ativo;
     
@@ -58,6 +59,16 @@ public class Perfil {
         this.localizacao = localizacao;
     }
     
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "id_localizacao_pai_estrutura")
+    public Localizacao getPaiDaEstrutura() {
+        return paiDaEstrutura;
+    }
+
+    public void setPaiDaEstrutura(Localizacao paiDaEstrutura) {
+        this.paiDaEstrutura = paiDaEstrutura;
+    }
+
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "id_papel", nullable = false)
     @NotNull
