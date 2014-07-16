@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
@@ -27,7 +26,6 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.Messages;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.JbpmException;
@@ -162,8 +160,6 @@ public class TaskInstanceHome implements Serializable {
                         .getComponent(ProcessoDocumentoManager.NAME);
                 ProcessoDocumento pd = processoDocumentoManager.find(id);
                 dados.setClassificacao(pd.getTipoProcessoDocumento());
-                // dados.setSignature(signature);
-                // dados.setCertChain(pd.getProcessoDocumentoBin().getCertChain());
             }
             documentosAssinaveis.put(getFieldName(variableRetriever.getName()),
                     dados);
@@ -272,8 +268,10 @@ public class TaskInstanceHome implements Serializable {
             if (variableResolver.isEditor() && variableAccess.isReadable()) {
                 DadosDocumentoAssinavel dados = documentosAssinaveis
                         .get(fieldName);
-                ProcessoHome.instance().setTipoProcessoDocumento(
-                        dados.getClassificacao());
+                ProcessoHome processoHome = ProcessoHome.instance();
+                processoHome.setTipoProcessoDocumento(dados.getClassificacao());
+                processoHome.setSignature(dados.getSignature());
+                processoHome.setCertChain(dados.getCertChain());
             }
             variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
             variableResolver.resolve();
@@ -752,12 +750,25 @@ public class TaskInstanceHome implements Serializable {
         this.taskCompleted = taskCompleted;
     }
 
-    public boolean podeRenderizarApplet(String idEditor) {
-        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis.get(idEditor);
+    public boolean possuiAssinatura(String idEditor) {
+        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
+                .get(idEditor);
         if (documentoAssinavel != null) {
-            return assinaturaDocumentoService.isDocumentoAssinado(documentoAssinavel.getIdDocumento(), Authenticator.getUsuarioLocalizacaoAtual());
+            return assinaturaDocumentoService
+                    .isDocumentoAssinado(documentoAssinavel.getIdDocumento(), Authenticator.getUsuarioLocalizacaoAtual());
         }
         return false;
+    }
+
+    public boolean podeRenderizarApplet(String idEditor) {
+        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
+                .get(idEditor);
+        if (documentoAssinavel != null) {
+            return assinaturaDocumentoService.isDocumentoAssinado(
+                    documentoAssinavel.getIdDocumento(),
+                    Authenticator.getUsuarioLocalizacaoAtual());
+        }
+        return true;
     }
 
     public Map<String, DadosDocumentoAssinavel> getDocumentosAssinaveis() {
