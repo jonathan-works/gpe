@@ -200,7 +200,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
         if (validacaoCertificadoBemSucedida(assinado)) {
             try {
                 Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
-                ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue, certChain, signature);
+                ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue);
                 label = label == null ? "-" : label;
                 ProcessoDocumento doc;
                 doc = processoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
