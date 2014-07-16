@@ -82,8 +82,6 @@
                 iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                 required="true"
                 rendered="#{isEditable}"
-                render="@form"
-                clearRender="@form"
                 label="#{messages['localizacao.localizacaoPai']}" />
             <wi:selectOneMenuEntity
                 id="estruturaFilho"
@@ -91,7 +89,6 @@
                 label="#{messages['localizacao.estruturaFilho']}"
                 items="#{localizacaoCrudAction.getEstruturasDisponiveis()}"
                 readonly="#{not isEditable}"
-                rendered="#{not localizacaoCrudAction.dentroDeEstrutura}"
                 showLabelSelecione="true" />
             <wi:selectSituacaoRadio
                 id="ativo"

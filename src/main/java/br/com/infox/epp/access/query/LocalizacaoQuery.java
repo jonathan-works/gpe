@@ -11,6 +11,7 @@ public interface LocalizacaoQuery {
     String ESTRUTURA_FILHO = "id_estrutura_filho";
     String ESTRUTURA_PAI = "id_estrutura_pai";
     String TWITTER = "in_twitter";
+    String LOCALIZACAO_RAIZ_ESTRUTURA = "in_loc_raiz_estrutura";
     String CAMINHO_COMPLETO = "ds_caminho_completo";
     String LOCALIZACAO_ATTRIBUTE = "localizacao";
     String LOCALIZACAO_PAI_ATTRIBUTE = "localizacaoPai";
@@ -32,7 +33,7 @@ public interface LocalizacaoQuery {
             " where o.caminhoCompleto like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ",'%')";
     
     String REMOVER_ESTRUTURA_PAI = "Localizacao.removerEstruturaPai";
-    String QUERY_REMOVER_ESTRUTURA_PAI = "update Localizacao o set o.estruturaPai = null "
+    String QUERY_REMOVER_ESTRUTURA_PAI = "update Localizacao o set o.estruturaPai = null, o.localizacaoRaizEstrutura = false "
             + "where o.caminhoCompleto like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ",'%')";
 
     String EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_PAI_DIFERENTE = "Localizacao.existeLocalizacaoFilhaComEstruturaPaiDiferente";

@@ -53,9 +53,31 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
             throw new DAOException("#{messages['localizacao.existeLocalizacaoFilhaComEstruturaFilho']}");
         }
         getDao().atualizarEstruturaPai(novaEstruturaPai, localizacao);
+        localizacao.setLocalizacaoRaizEstrutura(true);
+        update(localizacao);
     }
 
     public void removerEstruturaPai(Localizacao localizacao) throws DAOException {
         getDao().removerEstruturaPai(localizacao);
+    }
+    
+    @Override
+    public Localizacao persist(Localizacao o) throws DAOException {
+        validarEstruturaPaiLocalizacaoSuperior(o);
+        o.setEstruturaPai(o.getLocalizacaoPai() != null ? o.getLocalizacaoPai().getEstruturaPai() : null);
+        return super.persist(o);
+    }
+
+    private void validarEstruturaPaiLocalizacaoSuperior(Localizacao o) throws DAOException {
+        if (o.getEstruturaFilho() != null && (o.getEstruturaPai() != null || (o.getLocalizacaoPai() != null && o.getLocalizacaoPai().getEstruturaPai() != null))) {
+            throw new DAOException("#{messages['localizacao.localizacaoSuperiorPossuiEstruturaPai']}");
+        }
+    }
+    
+    @Override
+    public Localizacao update(Localizacao o) throws DAOException {
+        validarEstruturaPaiLocalizacaoSuperior(o);
+        o.setEstruturaPai(o.getLocalizacaoPai() != null ? o.getLocalizacaoPai().getEstruturaPai() : null);
+        return super.update(o);
     }
 }

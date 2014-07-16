@@ -8,12 +8,5 @@ public interface EstruturaQuery {
     String PARAM_LOCALIZACAO = "localizacao";
     
     String ESTRUTURAS_DISPONIVEIS = "Estrutura.estruturasDisponiveis";
-    String ESTRUTURAS_DISPONIVEIS_QUERY = "select o from Estrutura o where o.ativo = true and not exists "
-            + "(select 1 from Localizacao l where l.estruturaFilho = o) "
-            + "order by o.nome";
-    
-    String ESTRUTURAS_DISPONIVEIS_LOCALIZACAO = "Estrutura.estruturasDisponiveisLocalizacao";
-    String ESTRUTURAS_DISPONIVEIS_LOCALIZACAO_QUERY = "select o from Estrutura o where o.ativo = true and not exists "
-            + "(select 1 from Localizacao l where l.estruturaFilho = o and l != :" + PARAM_LOCALIZACAO + ") "
-            + "order by o.nome";
+    String ESTRUTURAS_DISPONIVEIS_QUERY = "select o from Estrutura o where o.ativo = true order by o.nome";
 }

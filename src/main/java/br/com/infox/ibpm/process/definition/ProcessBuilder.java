@@ -50,6 +50,7 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.fluxo.service.RaiaPerfilService;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
@@ -100,6 +101,8 @@ public class ProcessBuilder implements Serializable {
     private GenericManager genericManager;
     @In
     private FluxoManager fluxoManager;
+    @In
+    private RaiaPerfilService raiaPerfilService;
 
     private String id;
     private ProcessDefinition instance;
@@ -362,6 +365,7 @@ public class ProcessBuilder implements Serializable {
             try {
                 JbpmUtil.getGraphSession().deployProcessDefinition(instance);
                 JbpmUtil.getJbpmSession().flush();
+                raiaPerfilService.atualizarRaias(fluxo.getCodFluxo());
                 Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
                 taskFitter.checkCurrentTaskPersistenceState();
                 FacesMessages.instance().clear();
