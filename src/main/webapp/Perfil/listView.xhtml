@@ -1,105 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:a="http://richfaces.org/a4j"
-  xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:rich="http://richfaces.org/rich"
-  xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:infox="http://www.infox.com.br/jsf"
-  xmlns:wi="http://www.itx.com.br/jsf"
-  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-  <ui:define name="title">#{messages['perfil.titlePage']}</ui:define>
-  <ui:param
-    name="home"
-    value="#{perfilCrudAction}"></ui:param>
-  <ui:define name="searchGrid">
-    <wi:dataTable
-      bean="#{usuarioLocalizacaoEntityList}"
-      values="#{usuarioLocalizacaoEntityList.list(20)}"
-      tableTitle="#{messages['localizacao.perfilList']}"
-      id="perfilList"
-      rowId="#{row.idUsuarioLocalizacao}"
-      listReRender="divGridLU">
-      <ui:define name="searchForm">
-        <wi:searchForm
-          formId="perfilCrudActionForm"
-          formTitle="#{messages['searchForm.title']}">
-          <wi:inputText
-            id="perfil"
-            label="#{messages['perfil.descricao']}"
-            value="#{usuarioLocalizacaoEntityList.entity.descricao}"></wi:inputText>
-          <wi:tree
-            id="localizacao"
-            assignTo="usuarioLocalizacaoEntityList.entity.localizacao"
-            tree="#{localizacaoEstruturaTree}"
-            icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-            iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-            label="#{messages['perfil.localizacao']}" />
-          <wi:tree
-            id="papel"
-            assignTo="usuarioLocalizacaoEntityList.entity.papel"
-            tree="#{papelTree}"
-            icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-            iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-            label="#{messages['perfil.papel']}" />
-          <wi:selectBooleanMenu
-            id="responsavelLocalizacao"
-            value="#{perfilCrudAction.instance.responsavelLocalizacao}"
-            label="#{messages['perfil.responsavelLocalizacao']}" />
-        </wi:searchForm>
-      </ui:define>
-      <ui:define name="headerToolBar" />
-      <ui:define name="toolBar">
-        <wi:toolBarEdit id="perfilListedit" />
-      </ui:define>
-      <wi:columnOutputText
-        columnId="localizacao"
-        columnHeader="#{messages['perfil.localizacao']}"
-        value="#{row.localizacao}" />
-      <wi:columnOutputText
-        columnId="papel"
-        columnHeader="#{messages['perfil.papel']}"
-        value="#{row.papel}" />
-      <wi:columnBoolean
-        columnId="responsavelLocalizacao"
-        columnHeader="#{messages['perfil.responsavelLocalizacao']}"
-        value="#{row.responsavelLocalizacao}" />
-    </wi:dataTable>
-  </ui:define>
-  <ui:define name="form">
-    <wi:dataForm
-      formId="perfilForm"
-      formTitle="#{messages['form.title']}"
-      home="#{perfilCrudAction}">
-      <wi:inputText
-        id="perfil"
-        label="#{messages['perfil.descricao']}"
-        value="#{perfilCrudAction.instance.descricao}"
-        required="true"></wi:inputText>
-      <wi:tree
-        id="localizacao"
-        assignTo="perfilCrudAction.instance.localizacao"
-        tree="#{localizacaoEstruturaTree}"
-        icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-        iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-        label="#{messages['perfil.localizacao']}"
-        required="true" />
-      <wi:tree
-        id="papel"
-        assignTo="perfilCrudAction.instance.papel"
-        tree="#{papelTree}"
-        icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-        iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-        label="#{messages['perfil.papel']}"
-        required="true" />
-      <wi:selectBooleanRadio
-        id="responsavelLocalizacao"
-        value="#{perfilCrudAction.instance.responsavelLocalizacao}"
-        label="#{messages['perfil.responsavelLocalizacao']}" />
-    </wi:dataForm>
-  </ui:define>
-  <ui:define name="tabs" />
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    <ui:define name="title">#{messages['perfil.titlePage']}</ui:define>
+    <ui:param name="home" value="#{perfilCrudAction}"></ui:param>
+    <ui:define name="searchGrid">
+        <wi:dataTable bean="#{usuarioLocalizacaoEntityList}"
+            values="#{usuarioLocalizacaoEntityList.list(20)}"
+            tableTitle="#{messages['localizacao.perfilList']}"
+            id="perfilList" rowId="#{row.idUsuarioLocalizacao}"
+            listReRender="divGridLU">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="perfilCrudActionForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText id="perfil"
+                        label="#{messages['perfil.descricao']}"
+                        value="#{usuarioLocalizacaoEntityList.entity.descricao}"></wi:inputText>
+                    <wi:tree id="localizacao"
+                        assignTo="usuarioLocalizacaoEntityList.entity.localizacao"
+                        tree="#{localizacaoEstruturaTree}"
+                        icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                        iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                        label="#{messages['perfil.localizacao']}" />
+                    <wi:tree id="papel"
+                        assignTo="usuarioLocalizacaoEntityList.entity.papel"
+                        tree="#{papelTree}"
+                        icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                        iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                        label="#{messages['perfil.papel']}" />
+                    <wi:selectBooleanMenu id="responsavelLocalizacao"
+                        value="#{perfilCrudAction.instance.responsavelLocalizacao}"
+                        label="#{messages['perfil.responsavelLocalizacao']}" />
+                </wi:searchForm>
+            </ui:define>
+            <ui:define name="headerToolBar" />
+            <ui:define name="toolBar">
+                <wi:toolBarEdit id="perfilListedit" />
+            </ui:define>
+            <wi:columnOutputText columnId="localizacao"
+                columnHeader="#{messages['perfil.localizacao']}"
+                value="#{row.localizacao}" />
+            <wi:columnOutputText columnId="papel"
+                columnHeader="#{messages['perfil.papel']}"
+                value="#{row.papel}" />
+            <wi:columnBoolean columnId="responsavelLocalizacao"
+                columnHeader="#{messages['perfil.responsavelLocalizacao']}"
+                value="#{row.responsavelLocalizacao}" />
+        </wi:dataTable>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm formId="perfilForm"
+            formTitle="#{messages['form.title']}"
+            home="#{perfilCrudAction}">
+            <wi:inputText id="perfil"
+                label="#{messages['perfil.descricao']}"
+                value="#{perfilCrudAction.instance.descricao}"
+                required="true"></wi:inputText>
+            <wi:tree id="localizacao"
+                assignTo="perfilCrudAction.instance.localizacao"
+                tree="#{localizacaoEstruturaTree}"
+                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                label="#{messages['perfil.localizacao']}"
+                required="true" />
+            <wi:tree id="papel"
+                assignTo="perfilCrudAction.instance.papel"
+                tree="#{papelTree}"
+                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                label="#{messages['perfil.papel']}" required="true" />
+            <wi:selectBooleanRadio id="responsavelLocalizacao"
+                value="#{perfilCrudAction.instance.responsavelLocalizacao}"
+                label="#{messages['perfil.responsavelLocalizacao']}" />
+        </wi:dataForm>
+    </ui:define>
+    <ui:define name="tabs" />
 </ui:composition>
