@@ -24,10 +24,9 @@
     <h:outputScript
       library="js/components"
       name="Modal.js" />
-    <h:outputScript target="body"> 
+    <h:outputScript> 
       invoke([ "infox.Modal" ], function(Modal) {
         var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
-        var termoAdesaoPanel = new Modal({id:"termoAdesaoPanel"});
         function toggleButton() {
           $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{messages['login.trocarSenhaBtn']}" : "#{messages['login.naoTrocarSenhaBtn']}");
           $(".input_login.passwd").val("");
@@ -44,12 +43,6 @@
         $("#btnTrocarSenha").click(showPanel);
         $("#btnTrocarSenha2").click(hidePanel);
         $("##{rich:clientId('closeBtn')}").click(hidePanel);
-        $(".show-termo").click(function openPanel() {
-          termoAdesaoPanel.show();
-        });
-        $(".close-btn").click(function closePanel() {
-          termoAdesaoPanel.hide();
-        });
       });
 	</h:outputScript>
   </ui:define>
@@ -192,16 +185,6 @@
                 value="#{messages['login.entrarBtn']}"
                 styleClass="input_button"
                 action="#{authenticator.login()}" />
-              <a:commandButton
-                id="btnEntrarTermo"
-                value="#{messages['login.entrarBtn']}2"
-                styleClass="input_button show-termo"
-                render="termoAdesaoPanel DialogMessage"
-                immediate="true"
-                execute="@this"
-                limitRender="true"
-                onclick=""
-              />
               <input
                 class="input_button"
                 id="btnTrocar"
@@ -274,16 +257,22 @@
       <ui:param
         name="panelHeight"
         value="480"></ui:param>
+      <a:jsFunction
+        name="showTermoAdesao"
+        oncomplete="#{rich:component(termoAdesaoAction.termoAdesaoPanelName)}.show()"
+        render="#{termoAdesaoAction.termoAdesaoPanelName} DefaultMessages">
+      </a:jsFunction>
       <rich:popupPanel
-        id="termoAdesaoPanel"
+        id="#{termoAdesaoAction.termoAdesaoPanelName}"
         width="#{panelWidth}"
         height="#{panelHeight}"
-        show="true">
+        show="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
         <f:facet name="header">#{messages['login.termoAdesao']} #{pwidth} #{pheight}</f:facet>
         <f:facet name="controls">
           <h:panelGroup>
             <h:graphicImage
               styleClass="close-btn"
+              onclick="RichFaces.$(#{termoAdesaoAction.termoAdesaoPanelName}).hide();"
               value="#{a4jSkin.imgFolder}/closeMP.gif" />
           </h:panelGroup>
         </f:facet>
@@ -306,6 +295,7 @@
               class="input_button close-btn"
               id="cancela"
               type="button"
+              onclick="RichFaces.$(#{termoAdesaoAction.termoAdesaoPanelName}).hide();"
               value="#{messages['login.cancelaTrocaSenhaBtn']}" />
           </div>
         </h:form>
