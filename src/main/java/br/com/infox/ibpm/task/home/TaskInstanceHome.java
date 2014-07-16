@@ -72,7 +72,6 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.CONVERSATION)
 public class TaskInstanceHome implements Serializable {
 
-    private static final String ASSINATURA_OBRIGATORIA = "A assinatura é obrigatória para esta classificação de documento";
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
     private static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
@@ -409,10 +408,7 @@ public class TaskInstanceHome implements Serializable {
             checkCurrentTask();
             ProcessoHome processoHome = ComponentUtil
                     .getComponent(ProcessoHome.NAME);
-            if (faltaAssinatura()) {
-                acusarFaltaDeAssinatura();
-                return null;
-            }
+
             if (!update()) {
                 return null;
             }
@@ -432,8 +428,9 @@ public class TaskInstanceHome implements Serializable {
         if (possuiTask()) {
             TaskController taskController = taskInstance.getTask()
                     .getTaskController();
-            List<VariableAccess> list = taskController.getVariableAccesses();
-            for (VariableAccess var : list) {
+            List<?> list = taskController.getVariableAccesses();
+            for (Object object : list) {
+                VariableAccess var = (VariableAccess) object;
                 if (var.isRequired()
                         && var.getMappedName().split(":")[0].equals("FILE")
                         && getInstance().get(
@@ -517,28 +514,6 @@ public class TaskInstanceHome implements Serializable {
         processoHome.setCertChain(null);
         processoHome.setSignature(null);
         processoHome.setTipoProcessoDocumento(null);
-    }
-
-    private void acusarFaltaDeAssinatura() {
-        FacesMessages messages = FacesMessages.instance();
-        messages.clearGlobalMessages();
-        messages.clear();
-        messages.add(Severity.ERROR, ASSINATURA_OBRIGATORIA);
-    }
-
-    private boolean faltaAssinatura() {
-        for (Entry<String, DadosDocumentoAssinavel> entry : documentosAssinaveis
-                .entrySet()) {
-            if (faltaAssinatura(entry.getKey())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean faltaAssinatura(String idEditor) {
-        DadosDocumentoAssinavel dados = documentosAssinaveis.get(idEditor);
-        return !assinaturaDocumentoService.isDocumentoTotalmenteAssinado(dados.getIdDocumento());
     }
 
     private void checkCurrentTask() {
