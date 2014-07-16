@@ -168,4 +168,13 @@ public class Papel implements java.io.Serializable {
         PapelDAO pd = ComponentUtil.getComponent(PapelDAO.NAME);
         return pd.getListaPermissoes(this);
     }
+    
+    @Transient
+    public Boolean getTermoAdesao() {
+        return Boolean.TRUE;
+    }
+    public void setTermoAdesao(Boolean termoAdesao) {
+        
+    }
+    
 }
