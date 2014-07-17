@@ -1,18 +1,23 @@
 package br.com.infox.certificado;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -29,9 +34,13 @@ public class ValidaDocumentoAction {
     private static final LogProvider LOG = Logging
             .getLogProvider(ValidaDocumentoAction.class);
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    public ProcessoDocumentoManager processoDocumentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
+    @In
+    private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In
+    private AssinaturaDocumentoManager assinaturaDocumentoManager;
 
     /**
      * @deprecated
@@ -55,39 +64,13 @@ public class ValidaDocumentoAction {
         processoDocumentoBin = bin;
         setValido(false);
         setDadosCertificado(null);
-        byte[] data = null;
-
-        // TODO: VALIDAR SE ASSINADO
-        // if (Strings.isEmpty(bin.getCertChain())
-        // || Strings.isEmpty(bin.getSignature())) {
-        // FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-        // "O documento não está assinado");
-        // return;
-        // }
-
-        if (!bin.isBinario()) {
-            data = ValidaDocumento.removeBR(bin.getModeloDocumento())
-                    .getBytes();
-        } else {
-            try {
-                data = documentoBinManager.getData(bin
-                        .getIdProcessoDocumentoBin());
-            } catch (Exception e) {
-                throw new IllegalArgumentException(
-                        "Erro ao obter os dados do binário", e);
-            }
-        }
-        if (data == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-                    "Documento inválido");
-            return;
-        }
         try {
-            ValidaDocumento validaDocumento = new ValidaDocumento(data,
-                    certChain, signature);
+            ValidaDocumento validaDocumento = assinaturaDocumentoService
+                    .validaDocumento(bin, certChain, signature);
             setValido(validaDocumento.verificaAssinaturaDocumento());
             setDadosCertificado(validaDocumento.getDadosCertificado());
-        } catch (ValidaDocumentoException | CertificadoException e) {
+        } catch (ValidaDocumentoException | CertificadoException
+                | IllegalArgumentException e) {
             LOG.error(".validaDocumento(bin, certChain, signature)", e);
             FacesMessages.instance().add(StatusMessage.Severity.ERROR,
                     e.getMessage());
@@ -95,19 +78,12 @@ public class ValidaDocumentoAction {
     }
 
     public void validaDocumentoId(Integer idDocumento) {
-        if (idDocumento == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-                    "Id do documento não informado");
-            return;
+        try {
+            this.documento = assinaturaDocumentoService
+                    .validaDocumentoId(idDocumento);
+        } catch (IllegalArgumentException e) {
+            FacesMessages.instance().add(Severity.ERROR, e.getMessage());
         }
-        ProcessoDocumento processoDocumento = processoDocumentoManager
-                .find(idDocumento);
-        if (processoDocumento == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-                    "Documento não encontrado.");
-            return;
-        }
-        validaDocumento(processoDocumento);
     }
 
     public ProcessoDocumento getDocumento() {
@@ -124,6 +100,11 @@ public class ValidaDocumentoAction {
 
     public Boolean getValido() {
         return valido;
+    }
+
+    public List<AssinaturaDocumento> getListAssinaturaDocumento() {
+        return assinaturaDocumentoManager
+                .listAssinaturaDocumentoByProcessoDocumento(documento);
     }
 
     public void setDadosCertificado(Certificado dadosCertificado) {

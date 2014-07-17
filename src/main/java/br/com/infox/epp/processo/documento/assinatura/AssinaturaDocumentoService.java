@@ -1,8 +1,8 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
+import static br.com.infox.epp.documento.type.TipoAssinaturaEnum.F;
 import static br.com.infox.epp.documento.type.TipoAssinaturaEnum.O;
 import static br.com.infox.epp.documento.type.TipoAssinaturaEnum.S;
-import static br.com.infox.epp.documento.type.TipoAssinaturaEnum.F;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +18,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLocalizacao;
@@ -27,6 +28,7 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 
 @Name(AssinaturaDocumentoService.NAME)
@@ -41,6 +43,8 @@ public class AssinaturaDocumentoService implements Serializable {
 
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
+    @In
+    private DocumentoBinManager documentoBinManager;
 
     public Boolean isDocumentoAssinado(final ProcessoDocumento processoDocumento) {
         final ProcessoDocumentoBin processoDocumentoBin = processoDocumento
@@ -199,5 +203,34 @@ public class AssinaturaDocumentoService implements Serializable {
     public boolean isDocumentoAssinado(Integer idDocumento, UsuarioLocalizacao perfil) {
         ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDocumento);
         return processoDocumento != null && isDocumentoAssinado(processoDocumento, perfil);
+    }
+
+    public ValidaDocumento validaDocumento(ProcessoDocumentoBin bin, String certChain, String signature) throws CertificadoException {
+        byte[] data = null;
+        if (!bin.isBinario()) {
+            data = ValidaDocumento.removeBR(bin.getModeloDocumento()).getBytes();
+        } else {
+            try {
+                data = documentoBinManager.getData(bin.getIdProcessoDocumentoBin());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Erro ao obter os dados do binário", e);
+            }
+        }
+        if (data == null) {
+            throw new IllegalArgumentException("Documento inválido");
+        }
+        return new ValidaDocumento(data, certChain, signature);
+    }
+
+    public ProcessoDocumento validaDocumentoId(Integer idDocumento) {
+        if (idDocumento == null) {
+            throw new IllegalArgumentException("Id do documento não informado");
+        }
+        ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDocumento);
+        if (processoDocumento == null) {
+            throw new IllegalArgumentException("Documento não encontrado.");
+        }
+    
+        return processoDocumento;
     }
 }
