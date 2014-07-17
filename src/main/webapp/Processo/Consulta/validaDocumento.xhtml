@@ -16,11 +16,11 @@
       <rich:panel id="mp_ass">
         <f:facet name="header">
           <h:outputText
-            value="Assinaturas para o documento 'Documento Assinável' no processo de 100" />
+            value="#{messages['validacaoDocumentoList.assinaturas.header']}" />
         </f:facet>
         <div>
           <rich:dataTable
-            value="#{assinaturaDocumentoList.resultList}"
+            value="#{validaDocumentoAction.listAssinaturaDocumento}"
             id="assinaturaDocumentoList"
             rowKeyVar="row.idAssinatura"
             rowClasses="zebra-row"
@@ -28,19 +28,29 @@
             var="row">
             <rich:column styleClass="dt-toolbar-col">
               <f:facet name="header">
-                <h:outputText value="Nome"></h:outputText>
+                <h:outputText
+                  value="#{messages['assinaturaDocumento.nomeUsuario']}"></h:outputText>
               </f:facet>
               <h:outputText value="#{row.nomeUsuario}"></h:outputText>
             </rich:column>
             <rich:column styleClass="dt-toolbar-col">
               <f:facet name="header">
-                <h:outputText value="Perfil"></h:outputText>
+                <h:outputText
+                  value="#{messages['assinaturaDocumento.nomePapel']}"></h:outputText>
               </f:facet>
               <h:outputText value="#{row.nomePapel}"></h:outputText>
             </rich:column>
             <rich:column styleClass="dt-toolbar-col">
               <f:facet name="header">
-                <h:outputText value="Data da assinatura"></h:outputText>
+                <h:outputText
+                  value="#{messages['assinaturaDocumento.nomeLocalizacao']}"></h:outputText>
+              </f:facet>
+              <h:outputText value="#{row.nomeLocalizacao}"></h:outputText>
+            </rich:column>
+            <rich:column styleClass="dt-toolbar-col">
+              <f:facet name="header">
+                <h:outputText
+                  value="#{messages['assinaturadocumento.dtAssinatura']}"></h:outputText>
               </f:facet>
               <h:outputText value="#{row.dataAssinatura}"></h:outputText>
             </rich:column>
