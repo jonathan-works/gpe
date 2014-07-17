@@ -83,7 +83,7 @@ public class AuthenticatorService implements Serializable {
      */
     public void setUsuarioLogadoSessao(UsuarioLogin usuario) {
         Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
-        List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioLocalizacaoList());
+        List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioPerfilList());
         Collections.sort(usuarioLocalizacaoList, USUARIO_LOCALIZACAO_COMPARATOR);
         Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_LIST, usuarioLocalizacaoList);
         Events.instance().raiseEvent(SET_USUARIO_LOCALIZACAO_LIST_EVENT, usuarioLocalizacaoList);
@@ -148,7 +148,7 @@ public class AuthenticatorService implements Serializable {
     }
 
     public UsuarioLocalizacao obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
-        List<UsuarioLocalizacao> listUsuarioLoc = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioLocalizacaoList());
+        List<UsuarioLocalizacao> listUsuarioLoc = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioPerfilList());
         Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
         if (listUsuarioLoc.size() > 0) {
             UsuarioLocalizacao loc = listUsuarioLoc.get(0);
