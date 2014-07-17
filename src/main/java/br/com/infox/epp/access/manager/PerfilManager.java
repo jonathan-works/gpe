@@ -7,6 +7,8 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.dao.PerfilDAO;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.Perfil;
 
 @Name(PerfilManager.NAME)
@@ -17,8 +19,8 @@ public class PerfilManager extends Manager<PerfilDAO, Perfil> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "perfilmanager";
     
-    public boolean existePerfil(Perfil perfil) {
-        return getDao().existePerfil(perfil);
+    public boolean existePerfil(Localizacao localizacao, Papel papel, Localizacao paiDaEstrutura) {
+        return getDao().existePerfil(localizacao, papel, paiDaEstrutura);
     }
 
 }

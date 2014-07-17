@@ -38,7 +38,7 @@ public class PerfilCrudAction extends AbstractCrudAction<Perfil, PerfilManager> 
 
     @Override
     protected boolean isInstanceValid() {
-        if(getManager().existePerfil(getInstance())) {
+        if(getManager().existePerfil(getInstance().getLocalizacao(), getInstance().getPapel(), getInstance().getPaiDaEstrutura())) {
             FacesMessages.instance().clear();
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "#{messages['constraintViolation.uniqueViolation']}");
             return false;
