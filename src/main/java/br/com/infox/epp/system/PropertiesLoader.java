@@ -15,6 +15,13 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.contexts.ServletLifecycle;
 
+/**
+ * Classe que carrega páginas customizadas pelo cliente e as insere no ePP
+ * dinamicamente, ou substitui as páginas padrão do ePP, caso essas existam.
+ * 
+ * @author avner
+ * 
+ */
 @Name(PropertiesLoader.NAME)
 @Startup()
 @Scope(ScopeType.APPLICATION)
@@ -40,22 +47,25 @@ public class PropertiesLoader extends Properties {
 					File file = new File(ServletLifecycle.getServletContext().getRealPath(key));
 					
 					if (!file.isDirectory()) {
-						if (file.exists()) {
-							file.delete();
-						}
-						
 						InputStream newFileStream = getClass().getResourceAsStream(value);
-						
-						file.createNewFile();
-						FileOutputStream f = new FileOutputStream(file);
-	
-						int read = newFileStream.read();
-						while (read != -1) {
-							f.write(read);
-							read = newFileStream.read();
+
+						if (newFileStream != null) {
+							if (file.exists()) {
+								file.delete();
+							} else {
+								file.getParentFile().mkdirs();
+							}
+							file.createNewFile();
+							FileOutputStream f = new FileOutputStream(file);
+		
+							int read = newFileStream.read();
+							while (read != -1) {
+								f.write(read);
+								read = newFileStream.read();
+							}
+							f.close();
+							newFileStream.close();
 						}
-						f.close();
-						newFileStream.close();
 					} else {
 						
 					}
