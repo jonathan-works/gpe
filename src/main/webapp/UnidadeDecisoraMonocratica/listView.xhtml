@@ -7,6 +7,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
     
     
@@ -22,7 +23,7 @@
             rowId="#{row.idUnidadeDecisoraMonocratica}">
             <ui:define name="searchForm">
                 <wi:searchForm
-                    formId="pesquisarUnidadeDecisoraMOnocraticaForm"
+                    formId="pesquisarUnidadeDecisoraMonocraticaForm"
                     formTitle="#{messages['searchForm.title']}">
                     
                     <wi:inputText 
@@ -31,20 +32,19 @@
 		                    value="#{bean.entity.nome}"
 		                    label="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"/>
                     
-                    <s:div>
-                    	<strong>Localização</strong>
-	                    <h:selectOneMenu id="comboLocalizacao" value="#{bean.entity.localizacao}">
-	                    	<f:selectItem id="item0" itemLabel="Selecione ..." itemValue=""/>
-	                    	<f:selectItem id="item1" itemLabel="Gabinete do Pedro" itemValue="Gabinete do Pedro"/>
-							<f:selectItem id="item2" itemLabel="Gabinete do João" itemValue="Gabinete do João"/>
-							<f:selectItem id="item3" itemLabel="TCE" itemValue="TCE"/>
-	                    </h:selectOneMenu>
-                    </s:div>
+                    <wi:tree
+			                id="localizacao"
+			                assignTo="unidadeDecisoraMonocraticaCrudAction.instance.localizacao"
+			                tree="#{localizacaoTree}"
+			                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+			                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+			                clearRender="@this"
+			                label="#{messages['unidadeDecisoraMonocratica.localizacao']}" />
                     
                     <wi:selectSituacaoOneMenu
-                        id="ativo"
-                        label="#{messages['field.situacao']}"
-                        value="#{bean.entity.ativo}"/>
+	                        id="ativo"
+	                        label="#{messages['field.situacao']}"
+	                        value="#{bean.entity.ativo}"/>
                         
                 </wi:searchForm>
             </ui:define>
@@ -78,12 +78,17 @@
 	                label="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"
 	                required="true" />
                 
-            <wi:selectOneMenu 
-            		id="selectId" 
-   				    values="" 
-   				    required="true"
-     				value="#{unidadeDecisoraMonocraticaCrudAction.instance.localizacao}"
-     				label="Localização"/>
+            <wi:tree
+	                id="localizacao"
+	                assignTo="unidadeDecisoraMonocraticaCrudAction.instance.localizacao"
+	                tree="#{localizacaoTree}"
+	                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+	                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+	                required="true"
+	                rendered="#{isEditable}"
+	                render="@this"
+	                clearRender="@this"
+	                label="#{messages['unidadeDecisoraMonocratica.localizacao']}" />
             
              <wi:selectSituacaoRadio
 	               id="ativo"

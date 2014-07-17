@@ -23,23 +23,23 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 	public static final String TABLE_NAME = "tb_uni_decisora_monocratica";
 	
 	@Id
-	@SequenceGenerator(name = "UnidadeDecisoraMonocraticaGenerator", sequenceName="sq_tb_unidade_decisora_monocratica")
+	@SequenceGenerator(allocationSize=1, initialValue=1, name = "UnidadeDecisoraMonocraticaGenerator", sequenceName="sq_tb_uni_decisora_monocratica")
 	@GeneratedValue(generator="UnidadeDecisoraMonocraticaGenerator")
-	@Column(name = "id_uni_decisora_monocratica", nullable = false)
+	@Column(name = "id_uni_decisora_monocratica", unique=true, nullable=false)
 	private Integer idUnidadeDecisoraMonocratica;
 	
 	@NotNull
-	@Column(name = "ds_uni_decisora_monocratica", nullable = false)
+	@Column(name="ds_uni_decisora_monocratica", nullable=false)
 	private String nome;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "id_localizacao", nullable = false)
+	@JoinColumn(name = "id_localizacao", nullable=false)
 	private Localizacao localizacao;
 	
 	@NotNull
-	@Column(name = "in_ativo", nullable = false)
+	@Column(name="in_ativo", nullable = false)
 	private Boolean ativo;
-
+	
 	public Integer getIdUnidadeDecisoraMonocratica() {
 		return idUnidadeDecisoraMonocratica;
 	}
@@ -71,7 +71,7 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-	
+
 	@Override
 	public String toString() {
 		return nome;

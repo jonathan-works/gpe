@@ -9,7 +9,6 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
     
-    
     <ui:define name="title">#{messages['unidadeDecisoraColegiada.titleView']}</ui:define>
     <ui:param name="home" value="#{unidadeDecisoraColegiadaCrudAction}"/>
     
@@ -22,7 +21,7 @@
             rowId="#{row.idUnidadeDecisoraColegiada}">
             <ui:define name="searchForm">
                 <wi:searchForm
-                    formId="pesquisarUnidadeDecisoraMOnocraticaForm"
+                    formId="pesquisarUnidadeDecisoraMonocraticaForm"
                     formTitle="#{messages['searchForm.title']}">
                     
                     <wi:inputText 
@@ -81,11 +80,15 @@
 	               id="ativo"
 	               label="#{messages['field.situacao']}"
 	               value="#{unidadeDecisoraColegiadaCrudAction.instance.ativo}"/>
-	               
-	         <wi:pickList id="selectUDMonocraticaId" 
-	         			  value="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraMonocraticaList}" 
-	         			  itemValues="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"/>
-	         
+	         <s:div>
+		         <h:outputLabel value="Associação de Unidades Decisoras Monocráticas" styleClass="name" style="padding: 10px 0px;"/>
+		         <wi:pickList id="selectUDMonocraticaId" 
+		         			  value="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraMonocraticaList}" 
+		         			  itemValues="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"
+		         			  sourceCaption="Unidades Decisoras Monocráticas Disponíveis"
+                        	  targetCaption="Unidades Decisoras Monocráticas Associadas"
+                        	  itemLabel="#{var}"/>
+	         </s:div>
         </wi:dataForm>
     </ui:define>
     

@@ -1,5 +1,7 @@
 package br.com.infox.epp.unidadedecisora.manager;
 
+import java.util.List;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -16,5 +18,9 @@ public class UnidadeDecisoraMonocraticaManager extends Manager<UnidadeDecisoraMo
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraMonocraticaManager";
+	
+	public List<UnidadeDecisoraMonocratica> getListUnidadeDecisoraMonocraticaAtivo(){
+		return getDao().getResultList("from UnidadeDecisoraMonocratica where ativo = true", null);
+	}
 
 }

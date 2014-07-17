@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -24,9 +24,9 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	public static final String TABLE_NAME = "tb_uni_decisora_colegiada";
 	
 	@Id
-	@SequenceGenerator(name="UnidadeDecisoraColegiadaGenerator", sequenceName="sq_tb_unidade_decisora_colegiada")
+	@SequenceGenerator(allocationSize=1, initialValue=1, name="UnidadeDecisoraColegiadaGenerator", sequenceName="sq_tb_uni_decisora_colegiada")
 	@GeneratedValue(generator="UnidadeDecisoraColegiadaGenerator")
-	@Column(name="id_uni_decisora_colegiada", nullable = false)
+	@Column(name="id_uni_decisora_colegiada", unique = true, nullable = false)
 	private Integer idUnidadeDecisoraColegiada;
 	
 	@NotNull
@@ -37,8 +37,8 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	@Column(name = "in_ativo", nullable = false)
 	private Boolean ativo;
 	
-	@OneToMany(fetch=FetchType.LAZY)
-	@JoinTable(name = "tb_uni_decisora_colegiada_mono", joinColumns = @JoinColumn(name = "id_uni_decisora_colegiada"), inverseJoinColumns = @JoinColumn(name = "id_uni_decisora_monocratica"))
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name = "tb_uni_decisora_colegiada_mono", joinColumns = @JoinColumn(name="id_uni_decisora_colegiada", nullable=false, updatable=false), inverseJoinColumns = @JoinColumn(name="id_uni_decisora_monocratica", nullable=false, updatable=false))
 	private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList = new ArrayList<>();  
 
 	public Integer getIdUnidadeDecisoraColegiada() {

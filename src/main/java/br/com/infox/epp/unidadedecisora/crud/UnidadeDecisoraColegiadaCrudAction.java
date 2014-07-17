@@ -30,12 +30,13 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 
 	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaItemList() {
 		if (unidadeDecisoraMonocraticaItemList == null){
+			unidadeDecisoraMonocraticaItemList = unidadeDecisoraMonocraticaManager.getListUnidadeDecisoraMonocraticaAtivo();
+			unidadeDecisoraMonocraticaItemList.removeAll(getInstance().getUnidadeDecisoraMonocraticaList());
 		}
 		return unidadeDecisoraMonocraticaItemList;
 	}
 
-	public void setUnidadeDecisoraMonocraticaItemList(
-			List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaItemList) {
+	public void setUnidadeDecisoraMonocraticaItemList(List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaItemList) {
 		this.unidadeDecisoraMonocraticaItemList = unidadeDecisoraMonocraticaItemList;
 	}
 	
