@@ -43,38 +43,41 @@ public class PropertiesLoader extends Properties {
 				while (keys.hasMoreElements()) {
 					String key = (keys.nextElement().toString());
 					String value = getProperty(key);
-					
-					File file = new File(ServletLifecycle.getServletContext().getRealPath(key));
-					
-					if (!file.isDirectory()) {
-						InputStream newFileStream = getClass().getResourceAsStream(value);
 
-						if (newFileStream != null) {
-							if (file.exists()) {
-								file.delete();
-							} else {
-								file.getParentFile().mkdirs();
-							}
-							file.createNewFile();
-							FileOutputStream f = new FileOutputStream(file);
-		
-							int read = newFileStream.read();
-							while (read != -1) {
-								f.write(read);
-								read = newFileStream.read();
-							}
-							f.close();
-							newFileStream.close();
-						}
-					} else {
-						
-					}
+					File file = new File(ServletLifecycle.getServletContext().getRealPath(key));
+
+					performLoad(file, value);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
-			// Resource not found
+			// Resource not found, noting to do here
+		}
+	}
+	
+	private void performLoad(File file, String path) {
+		InputStream newInputStream = getClass().getResourceAsStream(path);
+		if (newInputStream != null) {
+			if (file.exists()) {
+				file.delete();
+			} else {
+				file.getParentFile().mkdirs();
+			}
+			try {
+				file.createNewFile();
+				FileOutputStream newOutputStream = new FileOutputStream(file);
+				
+				int read = newInputStream.read();
+				while (read != -1) {
+					newOutputStream.write(read);
+					read = newInputStream.read();
+				}
+				newInputStream.close();
+				newOutputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
