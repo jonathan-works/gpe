@@ -139,7 +139,7 @@ public class Authenticator {
         boolean termoAdesao = false;
         if (usuario.getPessoaFisica().getSignature()==null) {
             for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilList()) {
-                Papel papel = usuarioPerfil.getPapel();
+                Papel papel = usuarioPerfil.getPerfil().getPapel();
                 if (termoAdesao=papel.getTermoAdesao()) {
                     break;
                 }
