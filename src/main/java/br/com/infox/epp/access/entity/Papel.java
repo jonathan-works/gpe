@@ -66,6 +66,7 @@ public class Papel implements java.io.Serializable {
     private int idPapel;
     private String nome;
     private String identificador;
+    private Boolean termoAdesao;
 
     private List<Papel> grupos;
 
@@ -171,6 +172,9 @@ public class Papel implements java.io.Serializable {
     
     @Transient
     public Boolean getTermoAdesao() {
+        if (this.idPapel%2==1){
+            return Boolean.FALSE;
+        }
         return Boolean.TRUE;
     }
     public void setTermoAdesao(Boolean termoAdesao) {
