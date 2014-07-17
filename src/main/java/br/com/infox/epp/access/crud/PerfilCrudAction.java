@@ -5,6 +5,8 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.tree.TreeHandler;
@@ -20,17 +22,29 @@ public class PerfilCrudAction extends AbstractCrudAction<Perfil, PerfilManager> 
 
     public static final String NAME = "perfilCrudAction";
     private static final long serialVersionUID = 1L;
-    
+
     @Observer(LocalizacaoEstruturaTree.SELECTED_LOCALIZACAO_ESTRUTURA)
-    public void setLocalizacoes(Localizacao localizacao, Localizacao paiDaEstrutura) {
+    public void setLocalizacoes(Localizacao localizacao,
+            Localizacao paiDaEstrutura) {
         getInstance().setLocalizacao(localizacao);
         getInstance().setPaiDaEstrutura(paiDaEstrutura);
     }
-    
+
     @Override
     public void newInstance() {
         super.newInstance();
         limparTrees();
+    }
+
+    @Override
+    protected boolean isInstanceValid() {
+        if(getManager().existePerfil(getInstance())) {
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "#{messages['constraintViolation.uniqueViolation']}");
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @SuppressWarnings(UNCHECKED)

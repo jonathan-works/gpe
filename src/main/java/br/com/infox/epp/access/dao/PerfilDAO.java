@@ -1,5 +1,10 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.query.PerfilQuery.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -15,5 +20,19 @@ public class PerfilDAO extends DAO<Perfil> {
     
     private static final long serialVersionUID = 1L;
     public static final String NAME = "perfilDAO";
+    
+    public boolean existePerfil(Perfil perfil) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(LOCALIZACAO_PARAM, perfil.getLocalizacao());
+        params.put(PAPEL_PARAM, perfil.getPapel());
+        Long count;
+        if (perfil.getPaiDaEstrutura() == null) {
+            count = getSingleResult(EXISTE_PERFIL_BASE_QUERY + SEM_ESTRUTURA, params);
+        } else {
+            params.put(PAI_DA_ESTRUTURA_PARAM, perfil.getPaiDaEstrutura());
+            count = getSingleResult(EXISTE_PERFIL_BASE_QUERY + COM_ESTRUTURA, params);
+        }
+        return count > 0;
+    }
 
 }
