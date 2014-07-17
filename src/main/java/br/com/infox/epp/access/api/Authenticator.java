@@ -116,16 +116,8 @@ public class Authenticator {
             UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
             validaCadastroDeUsuario(id, usuario);
             try {
-                boolean termoAdesao = false;
-                for (UsuarioLocalizacao usuarioLocalizacao : usuario.getUsuarioLocalizacaoList()) {
-                    Papel papel = usuarioLocalizacao.getPapel();
-                    if (termoAdesao=papel.getTermoAdesao()) {
-                        break;
-                    }
-                }
                 getAuthenticatorService().validarUsuario(usuario);
-                Contexts.getConversationContext().set("termoAdesaoRequired", termoAdesao);
-                if (!termoAdesao) {
+                if (!hasRoleWithTermoAdesao(usuario)) {
                     if (isTrocarSenha()) {
                         trocarSenhaUsuario(usuario);
                     } else {
@@ -140,6 +132,18 @@ public class Authenticator {
                 LOG.error("postAuthenticate()", e);
             }
         }
+    }
+
+    private boolean hasRoleWithTermoAdesao(UsuarioLogin usuario) {
+        boolean termoAdesao = false;
+        for (UsuarioLocalizacao usuarioLocalizacao : usuario.getUsuarioLocalizacaoList()) {
+            Papel papel = usuarioLocalizacao.getPapel();
+            if (termoAdesao=papel.getTermoAdesao()) {
+                break;
+            }
+        }
+        Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, termoAdesao);
+        return termoAdesao;
     }
 
     private void realizarLoginDoUsuario(final UsuarioLogin usuario) throws LoginException {
