@@ -79,7 +79,6 @@ public class Authenticator {
     public static final String ID_LOCALIZACOES_FILHAS_ATUAIS = "idLocalizacoesFilhasAtuais";
 
     // Eventos
-    public static final String SET_USUARIO_LOCALIZACAO_LIST_EVENT = "authenticator.setUsuarioLocalizacaoListEvent";
     public static final String SET_USUARIO_LOCALIZACAO_EVENT = "authenticator.setUsuarioLocalizacaoEvent";
 
     public String getNewPassword1() {
@@ -311,7 +310,7 @@ public class Authenticator {
     }
 
     private boolean obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
-        UsuarioLocalizacao usuarioLocalizacao = getAuthenticatorService().obterLocalizacaoAtual(usuario);
+        UsuarioLocalizacao usuarioLocalizacao = getAuthenticatorService().obterPerfilAtual(usuario);
         if (usuarioLocalizacao != null) {
             setLocalizacaoAtual(usuarioLocalizacao);
             return true;

@@ -5,7 +5,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +15,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Credentials;
@@ -25,10 +23,9 @@ import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
-import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
@@ -46,17 +43,15 @@ public class AuthenticatorService implements Serializable {
     private BloqueioUsuarioManager bloqueioUsuarioManager;
 
     @In
-    private UsuarioLocalizacaoDAO usuarioLocalizacaoDAO;
+    private UsuarioPerfilDAO usuarioPerfilDAO;
     @In
     private ProcessoDAO processoDAO;
 
-    private static final UsuarioLocalizacaoComparator USUARIO_LOCALIZACAO_COMPARATOR = new UsuarioLocalizacaoComparator();
     private static final LogProvider LOG = Logging.getLogProvider(AuthenticatorService.class);
 
     public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
     public static final String USUARIO_LOGADO = "usuarioLogado";
-    public static final String USUARIO_LOCALIZACAO_LIST = "usuarioLocalizacaoList";
-    public static final String SET_USUARIO_LOCALIZACAO_LIST_EVENT = "authenticator.setUsuarioLocalizacaoListEvent";
+    public static final String USUARIO_PERFIL_LIST = "usuarioPerfilList";
 
     public void autenticaManualmenteNoSeamSecurity(String login,
             IdentityManager identityManager) {
@@ -83,10 +78,8 @@ public class AuthenticatorService implements Serializable {
      */
     public void setUsuarioLogadoSessao(UsuarioLogin usuario) {
         Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
-        List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioPerfilList());
-        Collections.sort(usuarioLocalizacaoList, USUARIO_LOCALIZACAO_COMPARATOR);
-        Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_LIST, usuarioLocalizacaoList);
-        Events.instance().raiseEvent(SET_USUARIO_LOCALIZACAO_LIST_EVENT, usuarioLocalizacaoList);
+        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<UsuarioPerfil>(usuario.getUsuarioPerfilList());
+        Contexts.getSessionContext().set(USUARIO_PERFIL_LIST, usuarioPerfilList);
     }
 
     public void validarUsuario(UsuarioLogin usuario) throws LoginException, DAOException {
@@ -136,9 +129,9 @@ public class AuthenticatorService implements Serializable {
         }
     }
 
-    public void logDaBuscaDasRoles(UsuarioLocalizacao usuarioLocalizacao) {
-        LOG.warn("Obter role da localizacao: " + usuarioLocalizacao);
-        LOG.warn("Obter role do papel: " + usuarioLocalizacao.getPapel());
+    public void logDaBuscaDasRoles(UsuarioPerfil usuarioPerfil) {
+        LOG.warn("Obter role do Perfil: " + usuarioPerfil);
+        LOG.warn("Obter role do papel: " + usuarioPerfil.getPerfil().getPapel());
     }
 
     public void addRolesAtuais(Set<String> roleSet) {
@@ -147,15 +140,15 @@ public class AuthenticatorService implements Serializable {
         }
     }
 
-    public UsuarioLocalizacao obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
-        List<UsuarioLocalizacao> listUsuarioLoc = new ArrayList<UsuarioLocalizacao>(usuario.getUsuarioPerfilList());
-        Collections.sort(listUsuarioLoc, USUARIO_LOCALIZACAO_COMPARATOR);
-        if (listUsuarioLoc.size() > 0) {
-            UsuarioLocalizacao loc = listUsuarioLoc.get(0);
-            return usuarioLocalizacaoDAO.getReference(loc.getIdUsuarioLocalizacao());
+    //TODO refazer essa busca pelo PerfilAtual
+    public UsuarioPerfil obterPerfilAtual(UsuarioLogin usuario) throws LoginException {
+        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>(usuario.getUsuarioPerfilList());
+        if (usuarioPerfilList.size() > 0) {
+            UsuarioPerfil usuarioPerfil = usuarioPerfilList.get(0);
+            return usuarioPerfilDAO.getReference(usuarioPerfil.getIdUsuarioPerfil());
         }
         throw new LoginException("O usuário " + usuario
-                + " não possui Localização");
+                + " não possui Perfil");
     }
 
     public void anulaActorId(String actorId) throws DAOException {
