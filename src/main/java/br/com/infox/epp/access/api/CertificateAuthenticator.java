@@ -62,24 +62,24 @@ public class CertificateAuthenticator implements Serializable {
     @In
     private CertificateManager certificateManager;
 
-    public void authenticate() {
-        String cpf = null;
-
+    public void assinarTermoAdesao(String certChain, String signature) {
         try {
-            final Certificado c = new Certificado(certChain);
-            cpf = extractCpf(c);
-            checkValidadeCertificado(c);
-
-            final UsuarioLogin usuario = checkValidadeUsuarioLogin(cpf);
-
-            final boolean loggedIn = login(usuario.getLogin());
-            if (loggedIn) {
-                final PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-                if (pessoaFisica.getCertChain() == null) {
-                    persistCertChain(usuario.getPessoaFisica());
-                }
-                raiseLoginEvents();
-            }
+            signatureAuthentication(signature, certChain, true);
+        } catch (final CertificateExpiredException e) {
+            LOG.error(AUTHENTICATE, e);
+            throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
+        } catch (final CertificateException e) {
+            LOG.error(AUTHENTICATE, e);
+            throw new RedirectToLoginApplicationException(format(Messages.instance().get(CERTIFICATE_ERROR_UNKNOWN), e.getMessage()), e);
+        } catch (CertificadoException | LoginException | DAOException e) {
+            LOG.error(AUTHENTICATE, e);
+            throw new RedirectToLoginApplicationException(e.getMessage(), e);
+        }
+    }
+    
+    public void authenticate() {
+        try {
+            signatureAuthentication(null, certChain, false);
         } catch (final CertificateExpiredException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
@@ -91,6 +91,36 @@ public class CertificateAuthenticator implements Serializable {
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
         }
 
+    }
+
+    private void signatureAuthentication(String signature, String certChain, boolean termoAdesao)
+            throws CertificadoException, LoginException, CertificateException,
+            DAOException {
+        final Certificado c = new Certificado(certChain);
+        String cpf = extractCpf(c);
+        checkValidadeCertificado(c);
+
+        final UsuarioLogin usuario = checkValidadeUsuarioLogin(cpf);
+
+        final boolean loggedIn = login(usuario.getLogin());
+        if (loggedIn) {
+            final PessoaFisica pessoaFisica = usuario.getPessoaFisica();
+            boolean merge = false;
+            if (pessoaFisica.getCertChain() == null) {
+                pessoaFisica.setCertChain(certChain);
+                merge = true;
+            }
+            if (signature != null) {
+                pessoaFisica.setSignature(signature);
+                merge = true;
+            } else if (termoAdesao) {
+                throw new RedirectToLoginApplicationException(Messages.instance().get("login.termoAdesao.failed"));
+            }
+            if (merge) {
+                pessoaFisicaManager.merge(pessoaFisica);
+            }
+            raiseLoginEvents();
+        }
     }
 
     private UsuarioLogin checkValidadeUsuarioLogin(final String cpf) throws LoginException {
@@ -123,11 +153,6 @@ public class CertificateAuthenticator implements Serializable {
         final Events events = Events.instance();
         events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
         events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
-    }
-
-    private void persistCertChain(final PessoaFisica pessoaFisica) throws DAOException {
-        pessoaFisica.setCertChain(certChain);
-        pessoaFisicaManager.merge(pessoaFisica);
     }
 
     private boolean login(final String login) {
