@@ -192,6 +192,63 @@
             </wi:dataTable>
         </infox:tab>
         <infox:tab
+            id="usuarioPerfil"
+            rendered="#{home.isManaged()}"
+            title="#{messages['usuario.perfilTitleTab']}"
+            name="usuarioPerfil">
+            <wi:dataForm formId="usuarioPerfilForm"
+                formTitle="#{messages['form.title']}">
+                <wi:selectOneMenuEntity id="perfilCombo"
+                    value="#{usuarioPerfilCrudAction.instance.perfil}"
+                    label="#{messages['perfil.descricao']}"
+                    items="#{perfilList.list()}"
+                    showLabelSelecione="true" >
+                    <a:ajax event="change"
+                        render="informacoesPerfilDiv"
+                        limitRender="true" status=":status"
+                        execute="@this" />
+                </wi:selectOneMenuEntity>
+                <s:div id="informacoesPerfilDiv">
+                    <wi:outputText id="localizacao"
+                        label="#{messages['perfil.localizacao']}"
+                        value="#{usuarioPerfilCrudAction.instance.perfil.localizacao}"
+                        rendered="#{not empty usuarioPerfilCrudAction.instance.perfil}"/>
+                    <wi:outputText id="papel"
+                        label="#{messages['perfil.papel']}"
+                        value="#{usuarioPerfilCrudAction.instance.perfil.papel}"
+                        rendered="#{not empty usuarioPerfilCrudAction.instance.perfil}"/>
+                </s:div>
+                <ui:define name="buttons">
+                    <wi:commandButton id="saveButton"
+                        action="usuarioPerfilCrudAction.save()"
+                        reRender="usuarioPerfil, pageBodyDialogMessage"
+                        value="#{messages['crud.persist']}" />
+                </ui:define>
+            </wi:dataForm>
+            <s:div id="divPerfisAssociados">
+                <wi:dataTable id="usuarioPerfilList"
+                    values="#{usuarioPerfilList.list(15)}"
+                    bean="#{usuarioPerfilList}"
+                    tableTitle="#{messages['usuario.profiles']} #{usuarioLoginCrudAction.instance}"
+                    var="row" rows="10">
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <wi:toolBar
+                            url="#{a4jSkin.imgFolder}/remove.png"
+                            title="Remover registro"
+                            action="usuarioPerfilCrudAction.remove(row)"
+                            render="divPerfisAssociados, pageBodyDialogMessage"
+                            execute="@this"
+                            onclick="return confirm('Deseja remover o registro?');"
+                            id="removeButton" />
+                    </ui:define>
+                    <wi:columnOutputText columnId="descricaoPerfil"
+                        columnHeader="#{messages['perfil.descricao']}"
+                        value="#{row.perfil.descricao}" />
+                </wi:dataTable>
+            </s:div>
+        </infox:tab>
+        <infox:tab
             id="localizacaoUsuario"
             status=":status"
             rendered="#{home.managed}"
