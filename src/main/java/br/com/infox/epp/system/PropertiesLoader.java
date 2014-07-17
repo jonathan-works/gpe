@@ -14,6 +14,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.contexts.ServletLifecycle;
+import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 /**
  * Classe que carrega páginas customizadas pelo cliente e as insere no ePP
@@ -26,7 +29,7 @@ import org.jboss.seam.contexts.ServletLifecycle;
 @Startup()
 @Scope(ScopeType.APPLICATION)
 public class PropertiesLoader extends Properties {
-
+	private static final LogProvider LOG = Logging.getLogProvider(PropertiesLoader.class);
 	public static final String NAME = "propertiesLoader";
 	private static final long serialVersionUID = 1L;
 	
@@ -49,14 +52,14 @@ public class PropertiesLoader extends Properties {
 					performLoad(file, value);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOG.error(Messages.instance().get("propertiesLoader.fail"), e);
 			}
 		} else {
 			// Resource not found, noting to do here
 		}
 	}
 	
-	private void performLoad(File file, String path) {
+	private void performLoad(File file, String path) throws IOException {
 		InputStream newInputStream = getClass().getResourceAsStream(path);
 		if (newInputStream != null) {
 			if (file.exists()) {
@@ -64,20 +67,16 @@ public class PropertiesLoader extends Properties {
 			} else {
 				file.getParentFile().mkdirs();
 			}
-			try {
-				file.createNewFile();
-				FileOutputStream newOutputStream = new FileOutputStream(file);
-				
-				int read = newInputStream.read();
-				while (read != -1) {
-					newOutputStream.write(read);
-					read = newInputStream.read();
-				}
-				newInputStream.close();
-				newOutputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			file.createNewFile();
+			FileOutputStream newOutputStream = new FileOutputStream(file);
+			
+			int read = newInputStream.read();
+			while (read != -1) {
+				newOutputStream.write(read);
+				read = newInputStream.read();
 			}
+			newInputStream.close();
+			newOutputStream.close();
 		}
 	}
 }
