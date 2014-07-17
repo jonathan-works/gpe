@@ -19,8 +19,8 @@ import javax.validation.constraints.NotNull;
 public class UsuarioPerfil {
 
     private Integer idUsuarioPerfil;
-    private Integer idUsuarioLogin;
-    private Integer idPerfil;
+    private UsuarioLogin usuarioLogin;
+    private Perfil perfil;
     
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_usuario_perfil")
     @Id
@@ -37,23 +37,23 @@ public class UsuarioPerfil {
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "id_usuario_login", nullable = false)
     @NotNull
-    public Integer getIdUsuarioLogin() {
-        return idUsuarioLogin;
+    public UsuarioLogin getUsuarioLogin() {
+        return usuarioLogin;
     }
     
-    public void setIdUsuarioLogin(Integer idUsuarioLogin) {
-        this.idUsuarioLogin = idUsuarioLogin;
+    public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
+        this.usuarioLogin = usuarioLogin;
     }
     
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "id_perfil", nullable = false)
     @NotNull
-    public Integer getIdPerfil() {
-        return idPerfil;
+    public Perfil getPerfil() {
+        return perfil;
     }
     
-    public void setIdPerfil(Integer idPerfil) {
-        this.idPerfil = idPerfil;
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
     }
 
 }
