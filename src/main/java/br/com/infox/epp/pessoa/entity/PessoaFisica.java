@@ -35,6 +35,7 @@ public class PessoaFisica extends Pessoa {
     private String cpf;
     private Date dataNascimento;
     private String certChain;
+    private String signature;
 
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
@@ -126,6 +127,15 @@ public class PessoaFisica extends Pessoa {
             throw new IllegalArgumentException("O parâmetro não deve ser nulo");
         }
         return StringUtil.replaceQuebraLinha(certChain).equals(StringUtil.replaceQuebraLinha(this.certChain));
+    }
+
+    @Transient
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 
 }
