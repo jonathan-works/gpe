@@ -12,10 +12,4 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraMonocraticaCrudAction";
 	
-	public void saveUnidadeDecisoraUsuario(){
-		
-	}
-	
-	
-	
 }

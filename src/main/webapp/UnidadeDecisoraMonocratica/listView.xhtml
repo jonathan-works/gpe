@@ -10,7 +10,6 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
     
-    
     <ui:define name="title">#{messages['unidadeDecisoraMonocratica.titleView']}</ui:define>
     <ui:param name="home" value="#{unidadeDecisoraMonocraticaCrudAction}"/>
     
@@ -27,15 +26,15 @@
                     formTitle="#{messages['searchForm.title']}">
                     
                     <wi:inputText 
-                    		id="nomeUnidadeDecisora"
+                    		id="nome"
 		                    maxlength="100"
 		                    value="#{bean.entity.nome}"
 		                    label="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"/>
                     
                     <wi:tree
-			                id="localizacao"
+			                id="localizacaoUnidadeDecisoraTree"
 			                assignTo="unidadeDecisoraMonocraticaCrudAction.instance.localizacao"
-			                tree="#{localizacaoTree}"
+			                tree="#{unidadeDecisoraLocalizacaoTree}"
 			                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
 			                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
 			                clearRender="@this"
@@ -79,9 +78,9 @@
 	                required="true" />
                 
             <wi:tree
-	                id="localizacao"
+	                id="localizacaoUnidadeDecisoraTree"
 	                assignTo="unidadeDecisoraMonocraticaCrudAction.instance.localizacao"
-	                tree="#{localizacaoTree}"
+	                tree="#{unidadeDecisoraLocalizacaoTree}"
 	                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
 	                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
 	                required="true"

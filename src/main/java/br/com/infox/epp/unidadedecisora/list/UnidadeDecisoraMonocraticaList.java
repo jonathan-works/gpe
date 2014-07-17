@@ -8,7 +8,9 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.access.component.tree.UnidadeDecisoraLocalizacaoTreeHandler;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(UnidadeDecisoraMonocraticaList.NAME)
 @Scope(ScopeType.PAGE)
@@ -17,8 +19,18 @@ public class UnidadeDecisoraMonocraticaList extends EntityList<UnidadeDecisoraMo
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraMonocraticaList";
 	
+	private static final String TEMPLATE = "/UnidadeDecisoraMonocratica/unidadeDecisoraMonocraticaTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "UnidadeDecisoraMonocratica.xls";
+	
 	private static final String DEFAULT_EJBQL = "select o from UnidadeDecisoraMonocratica o";
     private static final String DEFAULT_ORDER = "nome";
+    
+    @Override
+    public void newInstance() {
+    	super.newInstance();
+    	UnidadeDecisoraLocalizacaoTreeHandler ut = ComponentUtil.getComponent(UnidadeDecisoraLocalizacaoTreeHandler.NAME);
+    	ut.clearTree();
+    }
     
 	@Override
 	protected void addSearchFields() {
@@ -41,5 +53,15 @@ public class UnidadeDecisoraMonocraticaList extends EntityList<UnidadeDecisoraMo
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
 	}
+	
+	@Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
 
 }

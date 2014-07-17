@@ -16,5 +16,6 @@ public class UnidadeDecisoraColegiadaManager extends Manager<UnidadeDecisoraCole
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraColegiadaManager";
+	
 
 }

@@ -25,20 +25,16 @@
                     formTitle="#{messages['searchForm.title']}">
                     
                     <wi:inputText 
-                    		id="nomeUnidadeDecisoraColegiada"
-		                    maxlength="100"
-		                    value="#{bean.entity.nome}"
-		                    label="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"/>
+                   		id="nomeUnidadeDecisoraColegiada"
+	                    maxlength="100"
+	                    value="#{bean.entity.nome}"
+	                    label="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"/>
                     
-                    <s:div>
-                    	<strong>Unidade Decisora Monocrática</strong>
-	                    <h:selectOneMenu id="comboLocalizacao" value="#{bean.unidadeDecisoraMonocratica}">
-	                    	<f:selectItem id="item0" itemLabel="Selecione ..." itemValue=""/>
-	                    	<f:selectItem id="item1" itemLabel="Gabinete do Pedro" itemValue="Gabinete do Pedro"/>
-							<f:selectItem id="item2" itemLabel="Gabinete do João" itemValue="Gabinete do João"/>
-	                    </h:selectOneMenu>
-                    </s:div>
-                    
+                    <wi:selectOneMenuEntity
+                    	id="unidadeMonocratica"
+                    	value="#{unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica}"
+                    	valueItems="#{unidadeDecisoraColegiadaList.getAllUniDecisoraMonocratica()}"/>
+                    	
                     <wi:selectSituacaoOneMenu
                         id="ativo"
                         label="#{messages['field.situacao']}"
@@ -55,7 +51,13 @@
             <wi:columnOutputText
                 columnId="unidadeDecisoraMonocraticas"
                 columnHeader="#{messages['unidadeDecisoraColegiada.unidadesAssociadas']}"
-                value="#{row.unidadeDecisoraMonocraticaList}"/>
+                hideOrder="true">
+                <ui:repeat
+                    var="unidadeMonocratica"
+                    value="#{row.unidadeDecisoraMonocraticaList}">
+                    <div>#{unidadeMonocratica}</div>
+                </ui:repeat>
+            </wi:columnOutputText>
             
             <wi:columnSituacao
                 columnId="ativo"
