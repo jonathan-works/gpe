@@ -24,6 +24,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -36,9 +38,11 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.query.PapelQuery;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
 
 @Entity
 @Table(name = TABLE_NAME)
+@NamedQueries({ @NamedQuery(name = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO, query = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO_QUERY) })
 public class AssinaturaDocumento implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -86,6 +90,7 @@ public class AssinaturaDocumento implements Serializable {
     public Papel getPapel() {
         return papel;
     }
+
     public void setPapel(Papel papel) {
         this.papel = papel;
     }
