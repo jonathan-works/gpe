@@ -24,7 +24,7 @@
     <h:outputScript
       library="js/components"
       name="Modal.js" />
-    <h:outputScript> 
+    <h:outputScript>
       invoke([ "infox.Modal" ], function(Modal) {
         var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
         function toggleButton() {
@@ -253,10 +253,10 @@
       </rich:popupPanel>
       <ui:param
         name="panelWidth"
-        value="640"></ui:param>
+        value="800"></ui:param>
       <ui:param
         name="panelHeight"
-        value="480"></ui:param>
+        value="600"></ui:param>
       <rich:popupPanel
         id="#{termoAdesaoAction.termoAdesaoPanelName}"
         width="#{panelWidth}"
@@ -271,7 +271,9 @@
               value="#{a4jSkin.imgFolder}/closeMP.gif" />
           </h:panelGroup>
         </f:facet>
-        <h:form id="termoAdesaoForm">
+        <h:form
+          id="termoAdesaoForm"
+          rendered="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
           <div>
             <wi:editor
               id="termoAdesao"
@@ -279,24 +281,15 @@
               readonly="true"
               showVariables="false"
               width="#{panelWidth-15}"
-              height="#{panelHeight-127}" />
+              height="#{panelHeight-157}" />
           </div>
           <div>
-            <wi:appletAssinatura
-              id="assinarTermoAdesao"
-              urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-              formId="#{rich:clientId('termoAdesaoForm')}"
-              certificationChainField="#{rich:clientId(certChain)}"
-              signatureField="#{rich:clientId('signature')}"
-              getDataFunction="infox.editor['termoAdesao'].instance.getData()"
-              useBase64Function="true"
-              functionPreSign="infox.showLoading();"
-              functionPosSign="infox.hideLoading();submitForm();"
-              debug="false"
-              loginMode="false"
-              useProviderDll="false"
-              signButtonCaption="#{messages['login.assinarTermoAdesao']}">
-            </wi:appletAssinatura>
+            <a:jsFunction
+              name="submitForm"
+              action="#{certificateAuthenticator.assinarTermoAdesao(termoAdesaoAction.certChain, termoAdesaoAction.signature)}"
+              execute="signature, certChain, certChainStringLog, @this"
+              render="DialogMessage"
+              limitRender="true" />
             <h:inputHidden
               id="signature"
               value="#{termoAdesaoAction.signature}">
@@ -305,12 +298,29 @@
               id="certChain"
               value="#{termoAdesaoAction.certChain}">
             </h:inputHidden>
-            <a:jsFunction
-              name="submitForm"
-              action="#{certificateAuthenticator.assinarTermoAdesao(termoAdesaoAction.certChain, termoAdesaoAction.signature)}"
-              execute="signature, certChain, certChainStringLog, @this"
-              render="DialogMessage"
-              limitRender="true" />
+            <wi:appletAssinatura
+              id="assinarTermoAdesao"
+              urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+              formId="#{rich:clientId('termoAdesaoForm')}"
+              certificationChainField="#{rich:clientId(certChain)}"
+              signatureField="#{rich:clientId('signature')}"
+              getDataFunction="infox.editor.termoAdesao.instance.getData()"
+              useBase64Function="infox.editor.termoAdesao.useBase64()"
+              functionPreSign="infox.showLoading();"
+              functionPosSign="submitForm();infox.hideLoading();"
+              debug="false"
+              loginMode="false"
+              useProviderDll="false"
+              signButtonCaption="#{messages['login.assinarTermoAdesao']}">
+            </wi:appletAssinatura>
+            <h:outputScript
+              rendered="#{not readonly and home.podeRenderizarApplet(id)}">
+              namespace("infox.editor.termoAdesao",{
+                useBase64:function useBase64() {
+                  return "true";
+                }
+              });
+            </h:outputScript>
             <input
               class="input_button close-btn"
               id="cancela"
