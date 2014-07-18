@@ -18,6 +18,7 @@ import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaRaiasTreeHandl
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.Perfil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
@@ -74,6 +75,7 @@ public class SwimlaneHandler implements Serializable {
             return;
         }
         UsuarioPerfil usuarioPerfil = new UsuarioPerfil();
+        usuarioPerfil.setPerfil(new Perfil());
         usuarioPerfil.getPerfil().setLocalizacao(localizacao);
         usuarioPerfil.getPerfil().setPapel(papel);
         getUsuarioPerfilList().add(usuarioPerfil);
@@ -182,6 +184,7 @@ public class SwimlaneHandler implements Serializable {
                     }
                     Localizacao loc = localizacaoManager().find(Integer.parseInt(local));
                     UsuarioPerfil usuarioPerfil = new UsuarioPerfil();
+                    usuarioPerfil.setPerfil(new Perfil());
                     usuarioPerfil.getPerfil().setLocalizacao(loc);
                     usuarioPerfil.getPerfil().setPapel(papel);
                     sh.getUsuarioPerfilList().add(usuarioPerfil);
