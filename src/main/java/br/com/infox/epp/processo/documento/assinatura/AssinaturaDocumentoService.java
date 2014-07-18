@@ -196,6 +196,7 @@ public class AssinaturaDocumentoService implements Serializable {
         assinaturaDocumento.setNomePapel(papel.getNome());
         assinaturaDocumento.setNomeUsuario(nomeUsuario);
         assinaturaDocumento.setUsuario(usuario);
+        assinaturaDocumento.setPapel(papel);
 
         processoDocumentoBin.getAssinaturas().add(assinaturaDocumento);
     }
