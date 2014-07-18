@@ -15,11 +15,6 @@
             if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica'}"/>
     <action execute="#{usuarioPessoaFisicaList.setUsuario(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica'}"/>
-	
-	<action execute="#{usuarioLocalizacaoCrudAction.setUsuarioGerenciado(usuarioLoginCrudAction.instance)}" 
-            if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
-    <action execute="#{usuarioLocalizacaoEntityList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
-            if="#{usuarioLoginCrudAction.tab eq 'localizacaoUsuario'}"/>
             
     <action execute="#{usuarioPerfilCrudAction.setUsuarioLogin(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'usuarioPerfil'}"/>
@@ -30,6 +25,4 @@
             if="#{usuarioLoginCrudAction.tab eq 'historicoBloqueioUsuario'}"/>        
     <action execute="#{bloqueioUsuarioList.entity.setUsuario(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'historicoBloqueioUsuario'}"/>
-            
-            
 </page>
