@@ -3,6 +3,7 @@ package br.com.infox.epp.access.entity;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.NOME_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.access.query.PapelQuery.COL_TERMO_ADESAO;
 import static br.com.infox.epp.access.query.PapelQuery.IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.ID_PAPEL;
 import static br.com.infox.epp.access.query.PapelQuery.NOME_PAPEL;
@@ -170,15 +171,13 @@ public class Papel implements java.io.Serializable {
         return pd.getListaPermissoes(this);
     }
     
-    @Transient
+    @NotNull
+    @Column(name=COL_TERMO_ADESAO, nullable=false)
     public Boolean getTermoAdesao() {
-        if (this.idPapel%2==1){
-            return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
+        return this.termoAdesao;
     }
     public void setTermoAdesao(Boolean termoAdesao) {
-        
+        this.termoAdesao=termoAdesao;
     }
     
 }
