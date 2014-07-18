@@ -3,6 +3,8 @@ package br.com.infox.epp.access.entity;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static javax.persistence.FetchType.EAGER;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +19,10 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="tb_usuario_perfil")
-public class UsuarioPerfil {
+public class UsuarioPerfil implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private Integer idUsuarioPerfil;
     private UsuarioLogin usuarioLogin;
     private Perfil perfil;

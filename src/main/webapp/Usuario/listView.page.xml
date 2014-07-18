@@ -18,7 +18,7 @@
             
     <action execute="#{usuarioPerfilCrudAction.setUsuarioLogin(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'usuarioPerfil'}"/>
-    <action execute="#{usuarioPerfilList.entity.setUsuarioLogin(usuarioLoginCrudAction.instance)}" 
+    <action execute="#{usuarioPerfilEntityList.entity.setUsuarioLogin(usuarioLoginCrudAction.instance)}" 
             if="#{usuarioLoginCrudAction.tab eq 'usuarioPerfil'}"/>
     
     <action execute="#{bloqueioUsuarioCrudAction.setUsuarioAtual(usuarioLoginCrudAction.instance)}" 

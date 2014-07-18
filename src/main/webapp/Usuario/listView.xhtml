@@ -217,8 +217,8 @@
             </wi:dataForm>
             <s:div id="divPerfisAssociados">
                 <wi:dataTable id="usuarioPerfilList"
-                    values="#{usuarioPerfilList.list(15)}"
-                    bean="#{usuarioPerfilList}"
+                    values="#{usuarioPerfilEntityList.list(15)}"
+                    bean="#{usuarioPerfilEntityList}"
                     tableTitle="#{messages['usuario.profiles']} #{usuarioLoginCrudAction.instance}"
                     var="row" rows="10">
                     <ui:define name="headerToolBar" />

@@ -24,9 +24,9 @@ public interface ContaTwitterQuery {
             + ID_GRUPO_EMAIL_PARAM
             + " and "
             + "((ul.perfil.localizacao = o.localizacao and (ul.perfil.papel = o.papel or o.papel is null) and "
-            + "(ul.perfil.estrutura = o.estrutura or o.estrutura is null)) or (ul.perfil.papel = o.papel and "
+            + "(ul.perfil.paiDaEstrutura = o.estrutura or o.estrutura is null)) or (ul.perfil.papel = o.papel and "
             + "(ul.perfil.localizacao = o.localizacao or o.localizacao is null) and "
-            + "(ul.perfil.estrutura = o.estrutura or o.estrutura is null)) or (ul.perfil.estrutura = o.estrutura "
+            + "(ul.perfil.paiDaEstrutura = o.estrutura or o.estrutura is null)) or (ul.perfil.paiDaEstrutura = o.estrutura "
             + "and (ul.perfil.localizacao = o.localizacao or o.localizacao is null) "
             + "and (ul.perfil.papel = o.papel or o.papel is null))))";
 
