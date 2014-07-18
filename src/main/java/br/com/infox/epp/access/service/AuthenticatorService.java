@@ -78,7 +78,7 @@ public class AuthenticatorService implements Serializable {
      */
     public void setUsuarioLogadoSessao(UsuarioLogin usuario) {
         Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
-        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<UsuarioPerfil>(usuario.getUsuarioPerfilList());
+        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<UsuarioPerfil>(usuario.getUsuarioPerfilAtivoList());
         Contexts.getSessionContext().set(USUARIO_PERFIL_LIST, usuarioPerfilList);
     }
 

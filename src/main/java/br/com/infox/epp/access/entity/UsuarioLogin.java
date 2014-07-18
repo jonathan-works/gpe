@@ -410,5 +410,16 @@ public class UsuarioLogin implements Serializable {
     public boolean isHumano() {
         return UsuarioEnum.H.equals(tipoUsuario);
     }
+    
+    @Transient
+    public List<UsuarioPerfil> getUsuarioPerfilAtivoList() {
+        List<UsuarioPerfil> result = new ArrayList<>();
+        for (UsuarioPerfil usuarioPerfil : getUsuarioPerfilList()) {
+            if (usuarioPerfil.getPerfil().getAtivo()) {
+              result.add(usuarioPerfil);
+            }
+        }
+        return result;
+    }
 
 }
