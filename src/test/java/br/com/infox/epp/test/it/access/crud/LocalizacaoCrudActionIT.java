@@ -1,7 +1,6 @@
 package br.com.infox.epp.test.it.access.crud;
 
 import static br.com.infox.core.action.AbstractAction.UPDATED;
-import static java.text.MessageFormat.format;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
@@ -21,12 +20,10 @@ import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.comparator.UsuarioLocalizacaoComparator;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
 import br.com.infox.epp.access.dao.BloqueioUsuarioDAO;
 import br.com.infox.epp.access.dao.LocalizacaoDAO;
-import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
@@ -129,9 +126,9 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
         return new ArquillianSeamTestSetup()
             .addClasses(LocalizacaoCrudAction.class, LocalizacaoManager.class, LocalizacaoTreeHandler.class,
                         LocalizacaoDAO.class, Authenticator.class, UsuarioLoginManager.class,
-                        UsuarioLoginDAO.class, UsuarioLocalizacaoDAO.class, AuthenticatorService.class,
+                        UsuarioLoginDAO.class, AuthenticatorService.class,
                         ProcessoDAO.class, BloqueioUsuarioManager.class, BloqueioUsuarioDAO.class,
-                        UsuarioLoginManager.class, UsuarioLocalizacaoComparator.class, PasswordService.class,
+                        UsuarioLoginManager.class, PasswordService.class,
                         AccessMailService.class, ModeloDocumentoManager.class, VariavelDAO.class,
                         ModeloDocumentoDAO.class, ParametroManager.class, ParametroDAO.class,
                         EMailData.class,
