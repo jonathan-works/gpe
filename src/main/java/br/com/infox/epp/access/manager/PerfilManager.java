@@ -19,8 +19,8 @@ public class PerfilManager extends Manager<PerfilDAO, Perfil> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "perfilmanager";
     
-    public boolean existePerfil(Localizacao localizacao, Papel papel, Localizacao paiDaEstrutura) {
-        return getDao().existePerfil(localizacao, papel, paiDaEstrutura);
+    public boolean existePerfil(Integer idPerfil, Localizacao localizacao, Papel papel, Localizacao paiDaEstrutura) {
+        return getDao().existePerfil(idPerfil, localizacao, papel, paiDaEstrutura);
     }
 
 }

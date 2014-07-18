@@ -23,18 +23,22 @@ public class PerfilDAO extends DAO<Perfil> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "perfilDAO";
     
-    public boolean existePerfil(Localizacao localizacao, Papel papel, Localizacao paiDaEstrutura) {
+    public boolean existePerfil(Integer idPerfil, Localizacao localizacao, Papel papel, Localizacao paiDaEstrutura) {
         Map<String, Object> params = new HashMap<>();
         params.put(LOCALIZACAO_PARAM, localizacao);
         params.put(PAPEL_PARAM, papel);
-        Long count;
+        String query = EXISTE_PERFIL_BASE_QUERY;
         if (paiDaEstrutura == null) {
-            count = getSingleResult(EXISTE_PERFIL_BASE_QUERY + SEM_ESTRUTURA, params);
+            query += SEM_ESTRUTURA;
         } else {
             params.put(PAI_DA_ESTRUTURA_PARAM, paiDaEstrutura);
-            count = getSingleResult(EXISTE_PERFIL_BASE_QUERY + COM_ESTRUTURA, params);
+            query += COM_ESTRUTURA;
         }
-        return count > 0;
+        if (idPerfil != null) {
+            params.put(ID_PERFIL_PARAM, idPerfil);
+            query += COM_ID;
+        }
+        return (Long) getSingleResult(query, params) > 0;
     }
 
 }
