@@ -45,12 +45,12 @@
     <a:jsFunction
       name="#{editorId.replace('-', '')}submitForm"
       action="#{home.assinarDocumento(id)}"
-      rendered="#{not readonly}"
+      rendered="#{not readonly and home.podeRenderizarApplet(id)}"
       render="@form pageBodyDialogMessage"
       oncomplete="infox.hideLoading();" />
     <s:div
       id="signatureDiv"
-      rendered="#{not readonly}">
+      rendered="#{not readonly and home.podeRenderizarApplet(id)}">
       <h:inputHidden
         id="#{idCertChain}"
         value="#{home.documentosAssinaveis[id].certChain}" />
@@ -75,10 +75,10 @@
         debug="false"
         loginMode="false"
         useProviderDll="false"
-        rendered="#{taskInstanceHome.podeRenderizarApplet(id)}">
+        rendered="#{home.podeRenderizarApplet(id)}">
       </wi:appletAssinatura>
     </s:div>
-    <h:outputScript rendered="#{not readonly}">
+    <h:outputScript rendered="#{not readonly and home.podeRenderizarApplet(id)}">
 			namespace("infox.editor.#{editorId}",{
 				useBase64:function useBase64() {
 					return "true";
