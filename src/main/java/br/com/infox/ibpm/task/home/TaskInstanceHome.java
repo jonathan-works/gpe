@@ -762,12 +762,11 @@ public class TaskInstanceHome implements Serializable {
     public boolean podeRenderizarApplet(String idEditor) {
         DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
                 .get(idEditor);
+        boolean assinado = false;
         if (documentoAssinavel != null) {
-            return !assinaturaDocumentoService.isDocumentoAssinado(
-                    documentoAssinavel.getIdDocumento(),
-                    Authenticator.getUsuarioLocalizacaoAtual());
+            assinado = assinaturaDocumentoService.isDocumentoAssinado(documentoAssinavel.getIdDocumento(),Authenticator.getUsuarioLocalizacaoAtual());
         }
-        return true;
+        return !assinado;
     }
 
     public Map<String, DadosDocumentoAssinavel> getDocumentosAssinaveis() {
