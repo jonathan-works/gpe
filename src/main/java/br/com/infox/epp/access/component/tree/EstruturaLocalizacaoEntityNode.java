@@ -6,49 +6,56 @@ import java.util.Map;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.epp.access.component.tree.bean.EstruturaLocalizacaoBean;
-import br.com.infox.epp.access.component.tree.bean.EstruturaLocalizacaoBean.Tipo;
-import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.seam.util.ComponentUtil;
 
-public class EstruturaLocalizacaoEntityNode extends EntityNode<EstruturaLocalizacaoBean> {
+public class EstruturaLocalizacaoEntityNode extends EntityNode<Object> {
     
     private static final long serialVersionUID = 1L;
 
-    public EstruturaLocalizacaoEntityNode(EntityNode<EstruturaLocalizacaoBean> parent, EstruturaLocalizacaoBean entity, String[] queryChildrenList) {
+    private String queryChildrenOfLocalizacaoList;
+    private String queryRootsOfEstruturaList;
+    
+    public EstruturaLocalizacaoEntityNode(EntityNode<Object> parent, Object entity, String[] queryChildrenList) {
         super(parent, entity, queryChildrenList);
+        queryChildrenOfLocalizacaoList = queryChildrenList[0] + " and o.localizacaoPai = :" + EntityNode.PARENT_NODE;
+        queryRootsOfEstruturaList = queryChildrenList[0] + " and o.localizacaoPai is null";
     }
     
     public EstruturaLocalizacaoEntityNode(String queryChildren) {
         super(queryChildren);
+        queryChildrenOfLocalizacaoList = queryChildren + " and o.localizacaoPai = :" + EntityNode.PARENT_NODE;
+        queryRootsOfEstruturaList = queryChildren + " and o.localizacaoPai is null";
     }
     
     public EstruturaLocalizacaoEntityNode(String[] queryChildrenList) {
         super(queryChildrenList);
+        queryChildrenOfLocalizacaoList = queryChildrenList[0] + " and o.localizacaoPai = :" + EntityNode.PARENT_NODE + 
+                " order by o.caminhoCompleto";
+        queryRootsOfEstruturaList = queryChildrenList[0] + " and o.localizacaoPai is null order by o.caminhoCompleto";
     }
     
     @Override
-    protected List<EstruturaLocalizacaoBean> getChildrenList(String hql, EstruturaLocalizacaoBean entity) {
+    protected List<Object> getChildrenList(String hql, Object entity) {
         Map<String, Object> parameters = new HashMap<>();
-        GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
-        Object parent;
-        if (entity.getTipo() == Tipo.L) {
-            parent = genericDAO.find(Localizacao.class, entity.getId());
+        String query;
+        if (entity instanceof Localizacao) {
+            parameters.put(PARENT_NODE, entity);
+            query = queryChildrenOfLocalizacaoList;
         } else {
-            parent = genericDAO.find(Estrutura.class, entity.getId());
+            query = queryRootsOfEstruturaList;
         }
-        parameters.put(PARENT_NODE, parent);
-        return genericDAO.getResultList(hql, parameters);
+        GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
+        return genericDAO.getResultList(query, parameters);
     }
     
     @Override
-    protected EntityNode<EstruturaLocalizacaoBean> createRootNode(EstruturaLocalizacaoBean n) {
+    protected EntityNode<Object> createRootNode(Object n) {
         return new EstruturaLocalizacaoEntityNode(null, n, getQueryChildrenList());
     }
     
     @Override
-    protected EntityNode<EstruturaLocalizacaoBean> createChildNode(EstruturaLocalizacaoBean n) {
+    protected EntityNode<Object> createChildNode(Object n) {
         return new EstruturaLocalizacaoEntityNode(this, n, getQueryChildrenList());
     }
 }

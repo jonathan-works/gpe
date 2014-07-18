@@ -3,27 +3,18 @@ package br.com.infox.epp.access.entity;
 import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.ATUALIZAR_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.DESCRICAO_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_FILHO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_PAI;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_FILHO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_PAI_DIFERENTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ID_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI_ATTRIBUTE;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_RAIZ_ESTRUTURA;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS_QUERY;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_ATUALIZAR_ESTRUTURA_PAI;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_FILHO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_PAI_DIFERENTE;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_REMOVER_ESTRUTURA_PAI;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.REMOVER_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.SEQUENCE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TABLE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TWITTER;
@@ -60,11 +51,8 @@ import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 @Table(name = TABLE_LOCALIZACAO)
 @NamedQueries(value = {
     @NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY),
-    @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY),
-    @NamedQuery(name = ATUALIZAR_ESTRUTURA_PAI, query = QUERY_ATUALIZAR_ESTRUTURA_PAI),
-    @NamedQuery(name = REMOVER_ESTRUTURA_PAI, query = QUERY_REMOVER_ESTRUTURA_PAI),
-    @NamedQuery(name = EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_PAI_DIFERENTE, query = QUERY_EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_PAI_DIFERENTE),
-    @NamedQuery(name = EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_FILHO, query = QUERY_EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_FILHO)})
+    @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY)
+})
 public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     private static final long serialVersionUID = 1L;
@@ -82,8 +70,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     private String caminhoCompleto;
     private Boolean temContaTwitter;
-
-    private boolean localizacaoRaizEstrutura = false;
 
     public Localizacao() {
         temContaTwitter = Boolean.FALSE;
@@ -205,15 +191,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.caminhoCompleto = caminhoCompleto;
     }
 
-    @Column(name = LOCALIZACAO_RAIZ_ESTRUTURA, nullable = false)
-    public boolean isLocalizacaoRaizEstrutura() {
-        return localizacaoRaizEstrutura;
-    }
-    
-    public void setLocalizacaoRaizEstrutura(boolean localizacaoRaizEstrutura) {
-        this.localizacaoRaizEstrutura = localizacaoRaizEstrutura;
-    }
-    
     @Override
     public String toString() {
         return localizacao;

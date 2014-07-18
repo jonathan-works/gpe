@@ -1,16 +1,10 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.LocalizacaoQuery.ATUALIZAR_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_FILHO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_PAI_DIFERENTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_CAMINHO_COMPLETO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_ID_LOCALIZACAO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.REMOVER_ESTRUTURA_PAI;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,8 +15,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(LocalizacaoDAO.NAME)
@@ -44,33 +36,5 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         params.put(CAMINHO_COMPLETO, localizacaoAncestor.getCaminhoCompleto());
         params.put(LOCALIZACAO_ATTRIBUTE, localizacao);
         return getNamedSingleResult(IS_LOCALIZACAO_ANCESTOR, params) != null;
-    }
-
-    public void removerEstruturaPai(Localizacao localizacao) throws DAOException {
-        final Map<String, Object> params = new HashMap<>();
-        params.put(QUERY_PARAM_CAMINHO_COMPLETO, localizacao.getCaminhoCompleto());
-        executeNamedQueryUpdate(REMOVER_ESTRUTURA_PAI, params);
-    }
-
-    public void atualizarEstruturaPai(Estrutura novaEstruturaPai, Localizacao localizacao) throws DAOException {
-        final Map<String, Object> params = new HashMap<>();
-        params.put(QUERY_PARAM_CAMINHO_COMPLETO, localizacao.getCaminhoCompleto());
-        params.put(QUERY_PARAM_ESTRUTURA_PAI, novaEstruturaPai);
-        executeNamedQueryUpdate(ATUALIZAR_ESTRUTURA_PAI, params);
-    }
-    
-    public boolean existeLocalizacaoFilhaComEstruturaPaiDiferente(Estrutura estrutura, Localizacao localizacaoPai) {
-        final Map<String, Object> params = new HashMap<>();
-        params.put(QUERY_PARAM_CAMINHO_COMPLETO, localizacaoPai.getCaminhoCompleto());
-        params.put(QUERY_PARAM_ESTRUTURA_PAI, estrutura);
-        params.put(QUERY_PARAM_ID_LOCALIZACAO, localizacaoPai.getIdLocalizacao());
-        return ((Number) getNamedSingleResult(EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_PAI_DIFERENTE, params)).intValue() > 0;
-    }
-    
-    public boolean existeLocalizacaoFilhaComEstruturaFilho(Localizacao localizacao) {
-        final Map<String, Object> params = new HashMap<>();
-        params.put(QUERY_PARAM_CAMINHO_COMPLETO, localizacao.getCaminhoCompleto());
-        params.put(QUERY_PARAM_ID_LOCALIZACAO, localizacao.getIdLocalizacao());
-        return ((Number) getNamedSingleResult(EXISTE_LOCALIZACAO_FILHA_COM_ESTRUTURA_FILHO, params)).intValue() > 0;
     }
 }

@@ -20,7 +20,7 @@ public class LocalizacaoList extends EntityList<Localizacao> {
     private static final String TEMPLATE = "/Localizacao/localizacaoTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "Localizacoes.xls";
 
-    private static final String DEFAULT_EJBQL = "select o from Localizacao o";
+    private static final String DEFAULT_EJBQL = "select o from Localizacao o where o.estruturaPai is null";
     private static final String DEFAULT_ORDER = "caminhoCompleto";
 
     @Override

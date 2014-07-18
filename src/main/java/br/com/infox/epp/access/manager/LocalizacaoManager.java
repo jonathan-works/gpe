@@ -6,10 +6,11 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
+import br.com.infox.core.exception.RecursiveException;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.epp.access.dao.LocalizacaoDAO;
-import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(LocalizacaoManager.NAME)
@@ -44,45 +45,34 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
         }
         return sb.toString();
     }
-
-    public void atualizarEstruturaPai(Estrutura novaEstruturaPai, Localizacao localizacao) throws DAOException {
-        if (getDao().existeLocalizacaoFilhaComEstruturaPaiDiferente(novaEstruturaPai, localizacao)) {
-            throw new DAOException("#{messages['localizacao.existeLocalizacaoFilhaComEstruturaPaiDiferente']}");
-        }
-        if (getDao().existeLocalizacaoFilhaComEstruturaFilho(localizacao)) {
-            throw new DAOException("#{messages['localizacao.existeLocalizacaoFilhaComEstruturaFilho']}");
-        }
-        getDao().atualizarEstruturaPai(novaEstruturaPai, localizacao);
-        refresh(localizacao);
-        localizacao.setLocalizacaoRaizEstrutura(true);
-        update(localizacao);
-    }
-
-    public void removerEstruturaPai(Localizacao localizacao) throws DAOException {
-        getDao().removerEstruturaPai(localizacao);
-    }
     
     @Override
     public Localizacao persist(Localizacao o) throws DAOException {
-        validarEstruturaPaiLocalizacaoSuperior(o);
-        if (o.getLocalizacaoPai() != null && o.getLocalizacaoPai().getEstruturaPai() != null) {
-            o.setEstruturaPai(o.getLocalizacaoPai().getEstruturaPai());
+        try {
+            RecursiveManager.refactor(o);
+        } catch (RecursiveException e) {
+            throw new DAOException(e);
         }
         return super.persist(o);
-    }
-
-    private void validarEstruturaPaiLocalizacaoSuperior(Localizacao o) throws DAOException {
-        if (o.getEstruturaFilho() != null && (o.getEstruturaPai() != null || (o.getLocalizacaoPai() != null && o.getLocalizacaoPai().getEstruturaPai() != null))) {
-            throw new DAOException("#{messages['localizacao.localizacaoSuperiorPossuiEstruturaPai']}");
-        }
     }
     
     @Override
     public Localizacao update(Localizacao o) throws DAOException {
-        validarEstruturaPaiLocalizacaoSuperior(o);
-        if (o.getLocalizacaoPai() != null && o.getLocalizacaoPai().getEstruturaPai() != null) {
-            o.setEstruturaPai(o.getLocalizacaoPai().getEstruturaPai());
+        try {
+            RecursiveManager.refactor(o);
+        } catch (RecursiveException e) {
+            throw new DAOException(e);
         }
-        return super.update(o);
+        o = super.update(o);
+        updateChildren(o);
+        return o;
+    }
+
+    private void updateChildren(Localizacao o) throws DAOException {
+        for (Localizacao loc : o.getLocalizacaoList()) {
+            loc.setAtivo(o.getAtivo());
+            super.update(loc);
+            updateChildren(loc);
+        }
     }
 }

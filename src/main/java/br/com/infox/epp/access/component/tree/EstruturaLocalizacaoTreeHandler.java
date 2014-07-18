@@ -5,30 +5,37 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.epp.access.component.tree.bean.EstruturaLocalizacaoBean;
+import br.com.infox.epp.access.entity.Estrutura;
 
 @Name(EstruturaLocalizacaoTreeHandler.NAME)
 @AutoCreate
-public class EstruturaLocalizacaoTreeHandler extends AbstractTreeHandler<EstruturaLocalizacaoBean> {
+public class EstruturaLocalizacaoTreeHandler extends AbstractTreeHandler<Object> {
 
     public static final String NAME = "estruturaLocalizacaoTree";
     private static final long serialVersionUID = 1L;
 
+    private Estrutura estrutura;
+    
     @Override
     protected String getQueryRoots() {
-        return "select new br.com.infox.epp.access.component.tree.bean.EstruturaLocalizacaoBean"
-                + "(o.id, o.nome, 'E') from Estrutura o";
+        return "select o from Estrutura o where o.id = " + estrutura.getId(); 
     }
 
     @Override
     protected String getQueryChildren() {
-        return "select new br.com.infox.epp.access.component.tree.bean.EstruturaLocalizacaoBean"
-                + "(o.idLocalizacao, o.localizacao, 'L') from Localizacao o "
-                + "where o.estruturaPai = :" + EntityNode.PARENT_NODE;
+        return "select o from Localizacao o where o.estruturaPai.id = " + estrutura.getId();
     }
 
     @Override
-    protected EntityNode<EstruturaLocalizacaoBean> createNode() {
+    protected EntityNode<Object> createNode() {
         return new EstruturaLocalizacaoEntityNode(getQueryChildrenList());
+    }
+    
+    public Estrutura getEstrutura() {
+        return estrutura;
+    }
+    
+    public void setEstrutura(Estrutura estrutura) {
+        this.estrutura = estrutura;
     }
 }
