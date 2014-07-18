@@ -16,7 +16,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.imagem.dao.ImagemBinDAO;
 import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.seam.path.PathResolver;
@@ -35,16 +35,15 @@ public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
         getDao().persistImageBin(imagemBin);
     }
 
-    private String[] getImagesDir(final String path,
-            final UsuarioLocalizacao usrLoc) {
-        if (usrLoc != null && usrLoc.getLocalizacao() != null) {
+    private String[] getImagesDir(final String path, final UsuarioPerfil usuarioPerfil) {
+        if (usuarioPerfil != null && usuarioPerfil.getPerfil().getLocalizacao() != null) {
             String idEstrutura = "";
-            if (usrLoc.getEstrutura() != null) {
-                idEstrutura = String.valueOf(usrLoc.getEstrutura().getIdLocalizacao());
+            if (usuarioPerfil.getPerfil().getPaiDaEstrutura() != null) {
+                idEstrutura = String.valueOf(usuarioPerfil.getPerfil().getPaiDaEstrutura().getIdLocalizacao());
             }
             return new String[] {
                 path,
-                MessageFormat.format("{0}/l{1}e{2}", path, usrLoc.getLocalizacao().getIdLocalizacao(), idEstrutura).replace("//", "/") };
+                MessageFormat.format("{0}/l{1}e{2}", path, usuarioPerfil.getPerfil().getLocalizacao().getIdLocalizacao(), idEstrutura).replace("//", "/") };
         }
         return new String[] { path };
     }
