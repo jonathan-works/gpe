@@ -15,8 +15,8 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -163,10 +163,10 @@ public class ProcessoHome extends AbstractHome<Processo> {
             ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
             ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
             String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
-            UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioPerfilAtual();
-            processoDocumento.setPapel(usuarioLocalizacao.getPapel());
-            processoDocumento.setLocalizacao(usuarioLocalizacao.getLocalizacao());
-            atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento, usuarioLocalizacao.getUsuario());
+            UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+            processoDocumento.setPapel(usuarioPerfil.getPerfil().getPapel());
+            processoDocumento.setLocalizacao(usuarioPerfil.getPerfil().getLocalizacao());
+            atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento, usuarioPerfil.getUsuarioLogin());
             gravarAlteracoes(processoDocumento, processoDocumentoBin);
         }
     }
