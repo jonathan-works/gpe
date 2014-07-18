@@ -23,7 +23,7 @@ public class LocalizacaoEstruturaTree extends AbstractTreeHandler<Localizacao> {
     }
 
     private Integer getIdLocalizacaoAtual() {
-        final UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioLocalizacaoAtual();
+        final UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioPerfilAtual();
         final Localizacao estrutura = usuarioLocalizacao.getEstrutura();
         final Localizacao raiz = estrutura != null ? estrutura : usuarioLocalizacao.getLocalizacao();
         return raiz.getIdLocalizacao();

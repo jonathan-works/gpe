@@ -30,7 +30,7 @@ public class LocalizacaoEstruturaRaiasTreeHandler extends AbstractTreeHandler<Lo
     }
 
     private Integer getIdLocalizacao() {
-        usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
+        usuarioLocalizacaoAtual = Authenticator.getUsuarioPerfilAtual();
         final UsuarioLocalizacao usuarioLocalizacao = getUsuarioLocalizacaoAtual();
         final Localizacao estrutura = usuarioLocalizacao.getEstrutura();
         final Localizacao loc = estrutura != null ? estrutura : usuarioLocalizacao.getLocalizacao();
@@ -77,7 +77,7 @@ public class LocalizacaoEstruturaRaiasTreeHandler extends AbstractTreeHandler<Lo
 
     public UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
         if (usuarioLocalizacaoAtual == null) {
-            usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
+            usuarioLocalizacaoAtual = Authenticator.getUsuarioPerfilAtual();
         }
         return usuarioLocalizacaoAtual;
     }

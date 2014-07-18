@@ -29,7 +29,7 @@ public class LocalizacaoNode extends LocalizacaoNodeSearch {
     }
 
     private boolean checkPermissaoLocalizacao(final EntityNode<Localizacao> node) {
-        final Localizacao locAtual = Authenticator.getUsuarioLocalizacaoAtual().getLocalizacao();
+        final Localizacao locAtual = Authenticator.getUsuarioPerfilAtual().getLocalizacao();
         if (node.getEntity().getIdLocalizacao() == locAtual.getIdLocalizacao()) {
             return true;
         }
@@ -59,7 +59,7 @@ public class LocalizacaoNode extends LocalizacaoNodeSearch {
 
     @Override
     public List<EntityNode<Localizacao>> getRoots(Query queryRoots) {
-        Localizacao estrutura = Authenticator.getUsuarioLocalizacaoAtual().getEstrutura();
+        Localizacao estrutura = Authenticator.getUsuarioPerfilAtual().getEstrutura();
         if (estrutura != null) {
             List<EntityNode<Localizacao>> nodes = new ArrayList<EntityNode<Localizacao>>();
             EntityNode<Localizacao> no = new LocalizacaoNode(null, estrutura, getQueryChildren());

@@ -41,7 +41,7 @@ public class ControleFiltros {
             return;
         }
         firstTime = false;
-        UsuarioLocalizacao usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
+        UsuarioLocalizacao usuarioLocalizacaoAtual = Authenticator.getUsuarioPerfilAtual();
 
         // Iniciar os filtros
         HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_PAPEL, usuarioLocalizacaoAtual.getPapel().getIdPapel());

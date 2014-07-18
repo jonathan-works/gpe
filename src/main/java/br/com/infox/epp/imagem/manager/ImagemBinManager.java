@@ -50,15 +50,15 @@ public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
     }
 
     public String[] getImagesDir(String imagesRelativePath) {
-        return getImagesDir(pathResolver.getRealPath(imagesRelativePath), Authenticator.getUsuarioLocalizacaoAtual());
+        return getImagesDir(pathResolver.getRealPath(imagesRelativePath), Authenticator.getUsuarioPerfilAtual());
     }
 
     public String[] getDBPath(String imagesRelativePath) {
-        return getImagesDir(imagesRelativePath, Authenticator.getUsuarioLocalizacaoAtual());
+        return getImagesDir(imagesRelativePath, Authenticator.getUsuarioPerfilAtual());
     }
 
     public String[] getImagesPath(String imagesRelativePath) {
-        return getImagesDir(pathResolver.getContextPath(imagesRelativePath), Authenticator.getUsuarioLocalizacaoAtual());
+        return getImagesDir(pathResolver.getContextPath(imagesRelativePath), Authenticator.getUsuarioPerfilAtual());
     }
 
     private void createDir(String imagesDir) {

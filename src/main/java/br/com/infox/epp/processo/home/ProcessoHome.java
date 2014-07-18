@@ -87,7 +87,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     public void iniciarTarefaProcesso() {
         try {
-            processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
+            processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
         } catch (java.lang.NullPointerException e) {
             LOG.error("ProcessoHome.iniciarTarefaProcesso()", e);
         } catch (DAOException e) {
@@ -96,7 +96,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public void visualizarTarefaProcesso() {
-        processoManager.visualizarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
+        processoManager.visualizarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
     }
 
     public static ProcessoHome instance() {
@@ -163,7 +163,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
             ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
             ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
             String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
-            UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioLocalizacaoAtual();
+            UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioPerfilAtual();
             processoDocumento.setPapel(usuarioLocalizacao.getPapel());
             processoDocumento.setLocalizacao(usuarioLocalizacao.getLocalizacao());
             atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento, usuarioLocalizacao.getUsuario());
