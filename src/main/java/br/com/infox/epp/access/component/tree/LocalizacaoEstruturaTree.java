@@ -7,7 +7,7 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 
 @Name(LocalizacaoEstruturaTree.NAME)
 public class LocalizacaoEstruturaTree extends AbstractTreeHandler<Localizacao> {
@@ -23,9 +23,9 @@ public class LocalizacaoEstruturaTree extends AbstractTreeHandler<Localizacao> {
     }
 
     private Integer getIdLocalizacaoAtual() {
-        final UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioPerfilAtual();
-        final Localizacao estrutura = usuarioLocalizacao.getEstrutura();
-        final Localizacao raiz = estrutura != null ? estrutura : usuarioLocalizacao.getLocalizacao();
+        final UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+        final Localizacao estrutura = usuarioPerfil.getPerfil().getPaiDaEstrutura();
+        final Localizacao raiz = estrutura != null ? estrutura : usuarioPerfil.getPerfil().getLocalizacao();
         return raiz.getIdLocalizacao();
     }
 
