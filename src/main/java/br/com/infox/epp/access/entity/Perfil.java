@@ -80,6 +80,7 @@ public class Perfil {
         this.papel = papel;
     }
 
+
     @Column(name = ATIVO, nullable = false)
     @NotNull
     public Boolean getAtivo() {
@@ -94,5 +95,50 @@ public class Perfil {
     public String toString() {
         return getDescricao();
     }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getAtivo() == null) ? 0 : getAtivo().hashCode());
+        result = prime * result
+                + ((getDescricao() == null) ? 0 : getDescricao().hashCode());
+        result = prime * result
+                + ((getIdPerfil() == null) ? 0 : getIdPerfil().hashCode());
+        result = prime * result
+                + ((getLocalizacao() == null) ? 0 : getLocalizacao().hashCode());
+        result = prime * result
+                + ((getPaiDaEstrutura() == null) ? 0 : getPaiDaEstrutura().hashCode());
+        result = prime * result + ((getPapel() == null) ? 0 : getPapel().hashCode());
+        return result;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof Perfil)) return false;
+        Perfil other = (Perfil) obj;
+        if (getAtivo() == null) {
+            if (other.getAtivo() != null) return false;
+        } else if (!getAtivo().equals(other.getAtivo())) return false;
+        if (getDescricao() == null) {
+            if (other.getDescricao() != null) return false;
+        } else if (!getDescricao().equals(other.getDescricao())) return false;
+        if (getIdPerfil() == null) {
+            if (other.getIdPerfil() != null) return false;
+        } else if (!getIdPerfil().equals(other.getIdPerfil())) return false;
+        if (getLocalizacao() == null) {
+            if (other.getLocalizacao() != null) return false;
+        } else if (!getLocalizacao().equals(other.getLocalizacao())) return false;
+        if (getPaiDaEstrutura() == null) {
+            if (other.getPaiDaEstrutura() != null) return false;
+        } else if (!getPaiDaEstrutura().equals(other.getPaiDaEstrutura())) return false;
+        if (getPapel() == null) {
+            if (other.getPapel() != null) return false;
+        } else if (!getPapel().equals(other.getPapel())) return false;
+        return true;
+    }
+    
 
 }

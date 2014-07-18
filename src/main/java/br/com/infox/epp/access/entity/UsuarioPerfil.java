@@ -65,5 +65,42 @@ public class UsuarioPerfil implements Serializable {
     public boolean getResponsavelLocalizacao() {
         return true;
     }
+    
+    @Override
+    public String toString() {
+        return getPerfil().getDescricao();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((getIdUsuarioPerfil() == null) ? 0 : getIdUsuarioPerfil().hashCode());
+        result = prime * result + ((getPerfil() == null) ? 0 : getPerfil().hashCode());
+        result = prime * result
+                + ((getUsuarioLogin() == null) ? 0 : getPerfil().hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof UsuarioPerfil)) return false;
+        UsuarioPerfil other = (UsuarioPerfil) obj;
+        if (getIdUsuarioPerfil() == null) {
+            if (other.getIdUsuarioPerfil() != null) return false;
+        } else if (!getIdUsuarioPerfil().equals(other.getIdUsuarioPerfil())) return false;
+        if (getPerfil() == null) {
+            if (other.getPerfil() != null) return false;
+        } else if (!getPerfil().equals(other.getPerfil())) return false;
+        if (getUsuarioLogin() == null) {
+            if (other.getUsuarioLogin() != null) return false;
+        } else if (!getUsuarioLogin().equals(other.getUsuarioLogin())) return false;
+        return true;
+    }
+    
+    
 
 }

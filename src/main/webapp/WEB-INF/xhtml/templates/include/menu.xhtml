@@ -63,6 +63,9 @@
                 template="/WEB-INF/xhtml/components/templates/display.xhtml"
                 onchange="this.form.submit()"
                 items="#{authenticator.usuarioPerfilListItems}">
+                <a:ajax event="change"
+                        limitRender="true" status=":status"
+                        execute="@form" />
             </wi:selectOneMenuEntity>
             <br />
             <h:outputText
