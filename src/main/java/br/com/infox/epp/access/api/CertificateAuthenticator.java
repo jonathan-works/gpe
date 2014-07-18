@@ -118,6 +118,7 @@ public class CertificateAuthenticator implements Serializable {
             }
             if (merge) {
                 pessoaFisicaManager.merge(pessoaFisica);
+                pessoaFisicaManager.flush();
             }
             raiseLoginEvents();
         }
