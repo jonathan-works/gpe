@@ -117,7 +117,7 @@ public class Authenticator {
             validaCadastroDeUsuario(id, usuario);
             try {
                 getAuthenticatorService().validarUsuario(usuario);
-                if (!hasRoleWithTermoAdesao(usuario)) {
+                if (!hasToSignTermoAdesao(usuario)) {
                     if (isTrocarSenha()) {
                         trocarSenhaUsuario(usuario);
                     } else {
@@ -134,12 +134,14 @@ public class Authenticator {
         }
     }
 
-    private boolean hasRoleWithTermoAdesao(UsuarioLogin usuario) {
+    private boolean hasToSignTermoAdesao(UsuarioLogin usuario) {
         boolean termoAdesao = false;
-        for (UsuarioLocalizacao usuarioLocalizacao : usuario.getUsuarioLocalizacaoList()) {
-            Papel papel = usuarioLocalizacao.getPapel();
-            if (termoAdesao=papel.getTermoAdesao()) {
-                break;
+        if (usuario.getPessoaFisica().getSignature()==null) {
+            for (UsuarioLocalizacao usuarioLocalizacao : usuario.getUsuarioLocalizacaoList()) {
+                Papel papel = usuarioLocalizacao.getPapel();
+                if (termoAdesao=papel.getTermoAdesao()) {
+                    break;
+                }
             }
         }
         Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, termoAdesao);
