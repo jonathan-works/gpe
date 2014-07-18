@@ -72,7 +72,7 @@ public class Authenticator {
     // Variaveis de sessão
     public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
     public static final String USUARIO_LOGADO = "usuarioLogado";
-    public static final String USUARIO_PERFIL_ATUAL = "usuarioLogadoLocalizacaoAtual";
+    public static final String USUARIO_PERFIL_ATUAL = "usuarioLogadoPerfilAtual";
     public static final String USUARIO_PERFIL_LIST = "usuarioPerfilList";
     public static final String INDENTIFICADOR_PAPEL_ATUAL = "identificadorPapelAtual";
     public static final String LOCALIZACOES_FILHAS_ATUAIS = "localizacoesFilhasAtuais";
