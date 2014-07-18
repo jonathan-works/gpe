@@ -129,7 +129,8 @@ public class PessoaFisica extends Pessoa {
         return StringUtil.replaceQuebraLinha(certChain).equals(StringUtil.replaceQuebraLinha(this.certChain));
     }
 
-    @Transient
+    @Column(name = "ds_signature")
+    @Basic(fetch = LAZY)
     public String getSignature() {
         return signature;
     }
