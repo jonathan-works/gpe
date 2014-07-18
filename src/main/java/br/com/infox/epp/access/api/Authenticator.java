@@ -43,6 +43,7 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.crud.TermoAdesaoAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -137,8 +138,8 @@ public class Authenticator {
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) {
         boolean termoAdesao = false;
         if (usuario.getPessoaFisica().getSignature()==null) {
-            for (UsuarioLocalizacao usuarioLocalizacao : usuario.getUsuarioLocalizacaoList()) {
-                Papel papel = usuarioLocalizacao.getPapel();
+            for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilList()) {
+                Papel papel = usuarioPerfil.getPapel();
                 if (termoAdesao=papel.getTermoAdesao()) {
                     break;
                 }
