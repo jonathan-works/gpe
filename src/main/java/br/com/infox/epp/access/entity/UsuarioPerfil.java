@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -26,6 +25,8 @@ public class UsuarioPerfil implements Serializable {
     private Integer idUsuarioPerfil;
     private UsuarioLogin usuarioLogin;
     private Perfil perfil;
+
+    private Boolean responsavelLocalizacao;
     
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_usuario_perfil")
     @Id
@@ -61,9 +62,14 @@ public class UsuarioPerfil implements Serializable {
         this.perfil = perfil;
     }
     
-    @Transient
-    public boolean getResponsavelLocalizacao() {
-        return true;
+    @Column(name="in_responsavel", nullable=false)
+    @NotNull
+    public Boolean getResponsavelLocalizacao() {
+        return this.responsavelLocalizacao;
+    }
+    
+    public void setResponsavelLocalizacao(Boolean responsavelLocalizacao) {
+        this.responsavelLocalizacao = responsavelLocalizacao;
     }
     
     @Override

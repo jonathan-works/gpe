@@ -193,21 +193,10 @@
                     label="#{messages['perfil.descricao']}"
                     items="#{perfilList.list()}"
                     showLabelSelecione="true" >
-                    <a:ajax event="change"
-                        render="informacoesPerfilDiv"
-                        limitRender="true" status=":status"
-                        execute="@this" />
                 </wi:selectOneMenuEntity>
-                <s:div id="informacoesPerfilDiv">
-                    <wi:outputText id="localizacao"
-                        label="#{messages['perfil.localizacao']}"
-                        value="#{usuarioPerfilCrudAction.instance.perfil.localizacao}"
-                        rendered="#{not empty usuarioPerfilCrudAction.instance.perfil}"/>
-                    <wi:outputText id="papel"
-                        label="#{messages['perfil.papel']}"
-                        value="#{usuarioPerfilCrudAction.instance.perfil.papel}"
-                        rendered="#{not empty usuarioPerfilCrudAction.instance.perfil}"/>
-                </s:div>
+                <wi:selectBooleanCheckbox id="responsavelLocalizacao"
+                    value="#{usuarioPerfilCrudAction.instance.responsavelLocalizacao}"
+                    label="#{messages['perfil.responsavelLocalizacao']}"/>
                 <ui:define name="buttons">
                     <wi:commandButton id="saveButton"
                         action="usuarioPerfilCrudAction.save()"
@@ -235,6 +224,9 @@
                     <wi:columnOutputText columnId="perfil.descricao"
                         columnHeader="#{messages['perfil.descricao']}"
                         value="#{row.perfil.descricao}" />
+                    <wi:columnBoolean columnId="responsavelLocalizacao"
+                        columnHeader="#{messages['perfil.responsavelLocalizacao']}"
+                        value="#{row.responsavelLocalizacao}"/>
                 </wi:dataTable>
             </s:div>
         </infox:tab>
