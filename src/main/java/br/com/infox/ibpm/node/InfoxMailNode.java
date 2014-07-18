@@ -26,7 +26,6 @@ import org.jbpm.persistence.db.DbPersistenceService;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.tree.TreeHandler;
-import br.com.infox.epp.access.component.tree.EstruturaTreeHandler;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -294,12 +293,12 @@ public class InfoxMailNode extends MailNode {
         currentListaEmail = new ListaEmail();
         to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
 
-        TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
-        treeHandler.clearTree();
-        treeHandler = (TreeHandler<?>) Component.getInstance(LocalizacaoTreeHandler.NAME);
-        treeHandler.clearTree();
-        treeHandler = (TreeHandler<?>) Component.getInstance(PapelTreeHandler.class);
-        treeHandler.clearTree();
+//        TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
+//        treeHandler.clearTree();
+//        treeHandler = (TreeHandler<?>) Component.getInstance(LocalizacaoTreeHandler.NAME);
+//        treeHandler.clearTree();
+//        treeHandler = (TreeHandler<?>) Component.getInstance(PapelTreeHandler.class);
+//        treeHandler.clearTree();
         createAction();
     }
 

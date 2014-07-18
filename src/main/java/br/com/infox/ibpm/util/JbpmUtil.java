@@ -29,7 +29,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.PerfilManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -64,14 +64,7 @@ public class JbpmUtil {
             if (expression == null) {
                 return null;
             }
-            // TODO: verificar se pode ser dado um tratamento melhor
-            String localizacaoId = expression.substring(expression.indexOf('(') + 1);
-            localizacaoId = localizacaoId.substring(0, localizacaoId.lastIndexOf(')'));
-            if (localizacaoId.indexOf(':') > 0) {
-                localizacaoId = localizacaoId.replaceAll("'", "");
-                localizacaoId = localizacaoId.split(":")[0];
-            }
-            return localizacaoManager().find(Integer.valueOf(localizacaoId));
+            return perfilManager().find(Integer.valueOf(expression.split(",")[0])).getLocalizacao();
         }
         return null;
     }
@@ -192,10 +185,6 @@ public class JbpmUtil {
         return ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
     }
 
-    private LocalizacaoManager localizacaoManager() {
-        return ComponentUtil.getComponent(LocalizacaoManager.NAME);
-    }
-
     private static ProcessoManager processoManager() {
         return ComponentUtil.getComponent(ProcessoManager.NAME);
     }
@@ -204,4 +193,7 @@ public class JbpmUtil {
         return ComponentUtil.getComponent(GenericManager.NAME);
     }
 
+    private static PerfilManager perfilManager() {
+        return ComponentUtil.getComponent(PerfilManager.NAME);
+    }
 }

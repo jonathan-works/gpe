@@ -10,8 +10,7 @@ import org.jboss.seam.international.StatusMessage;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.tree.TreeHandler;
-import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaTree;
-import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
+import br.com.infox.epp.access.component.tree.LocalizacaoFullTreeHandler;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -24,7 +23,7 @@ public class PerfilCrudAction extends AbstractCrudAction<Perfil, PerfilManager> 
     public static final String NAME = "perfilCrudAction";
     private static final long serialVersionUID = 1L;
 
-    @Observer(LocalizacaoEstruturaTree.SELECTED_LOCALIZACAO_ESTRUTURA)
+    @Observer(LocalizacaoFullTreeHandler.SELECTED_LOCALIZACAO_ESTRUTURA)
     public void setLocalizacoes(Localizacao localizacao,
             Localizacao paiDaEstrutura) {
         getInstance().setLocalizacao(localizacao);
@@ -51,7 +50,7 @@ public class PerfilCrudAction extends AbstractCrudAction<Perfil, PerfilManager> 
     @SuppressWarnings(UNCHECKED)
     private void limparTrees() {
         ((TreeHandler<Papel>) Component.getInstance(PapelTreeHandler.NAME)).clearTree();
-        ((TreeHandler<Localizacao>) Component.getInstance(LocalizacaoEstruturaTree.NAME)).clearTree();
+        ((TreeHandler<Localizacao>) Component.getInstance(LocalizacaoFullTreeHandler.NAME)).clearTree();
     }
     
     public void clear() {

@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.unidadedecisora.dao.UnidadeDecisoraMonocraticaDAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
@@ -23,4 +24,7 @@ public class UnidadeDecisoraMonocraticaManager extends Manager<UnidadeDecisoraMo
 		return getDao().getResultList("from UnidadeDecisoraMonocratica where ativo = true", null);
 	}
 
+	public boolean existeUnidadeDecisoraMonocraticaComHierarquiaLocalizacao(Localizacao localizacao) {
+	    return getDao().existeUnidadeDecisoraMonocraticaComHierarquiaLocalizacao(localizacao);
+	}
 }

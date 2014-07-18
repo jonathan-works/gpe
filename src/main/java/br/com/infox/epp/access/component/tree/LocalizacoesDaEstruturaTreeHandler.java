@@ -10,6 +10,12 @@ import br.com.infox.epp.access.crud.EstruturaCrudAction;
 import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 
+/**
+ * Localizações dentro de uma estrutura. Utilizada pelo {@link EstruturaCrudAction}
+ * @author gabriel
+ *
+ */
+
 @Name(LocalizacoesDaEstruturaTreeHandler.NAME)
 @AutoCreate
 public class LocalizacoesDaEstruturaTreeHandler extends AbstractTreeHandler<Localizacao> {

@@ -195,7 +195,7 @@
             id="natCatFluxoLoc"
             name="natCatFluxoLoc"
             rendered="#{home.managed and not fluxoCrudAction.replica}"
-            title="#{messages['localizacao.localizacao']}">
+            title="#{messages['localizacao.titleView']}">
             <s:div id="natCatFluxoLocDiv">
                 <div>
                     <wi:dataForm
@@ -211,7 +211,7 @@
                         <wi:tree
                             id="localizacao"
                             assignTo="fluxoLocalizacaoCrudAction.instance.localizacao"
-                            label="#{messages['localizacao.localizacao']}"
+                            label="#{messages['localizacao.titleView']}"
                             required="true"
                             tree="#{localizacaoTree}" />
                         <ui:define name="buttons">

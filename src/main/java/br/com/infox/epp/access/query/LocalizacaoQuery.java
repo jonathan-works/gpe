@@ -26,4 +26,13 @@ public interface LocalizacaoQuery {
     String IS_LOCALIZACAO_ANCESTOR = "isLocalizacaoAncestor";
     String IS_LOCALIZACAO_ANCESTOR_QUERY = "select distinct 1 from Localizacao o where o.caminhoCompleto like concat(:"
             + CAMINHO_COMPLETO + ",'%')" + " and o = :" + LOCALIZACAO_ATTRIBUTE;
+    
+    String IS_CAMINHO_COMPLETO_DUPLICADO_QUERY = "select count(o) from Localizacao o where o.estruturaPai is null and "
+            + " o.caminhoCompleto = :" + QUERY_PARAM_CAMINHO_COMPLETO;
+    
+    String IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY = "select count(o) from Localizacao o "
+            + " where o.estruturaPai = :" + QUERY_PARAM_ESTRUTURA_PAI + " and "
+            + " o.caminhoCompleto = :" + QUERY_PARAM_CAMINHO_COMPLETO;
+    
+    String PART_FILTER_BY_LOCALIZACAO = " and o.idLocalizacao <> :" + QUERY_PARAM_ID_LOCALIZACAO;
 }
