@@ -177,7 +177,9 @@
                     value="#{extensaoArquivoCrudAction.instance.extensao}"
                     required="true"
                     label="#{messages['tipoProcessoDocumento.tipoExtensao']}"
-                    maxlength="30" />
+                    maxlength="30" >
+                    <f:validator validatorId="extensaoDocumentoValidator" />
+                </wi:inputText>
                 <wi:inputNumber id="tamanho"
                     value="#{extensaoArquivoCrudAction.instance.tamanho}"
                     required="true"
