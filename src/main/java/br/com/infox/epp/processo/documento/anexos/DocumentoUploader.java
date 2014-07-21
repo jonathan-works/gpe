@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
-import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.AjaxBehaviorListener;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
