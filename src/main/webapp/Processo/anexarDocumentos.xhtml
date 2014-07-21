@@ -59,26 +59,27 @@
         <s:div id="uploaderDiv">
             <div>
                 <wi:inputText
-                    id="#{f.id}inputProcessoDocumentoPdf"
+                    id="inputProcessoDocumentoPdf"
                     value="#{documentoUploader.processoDocumento.processoDocumento}"
                     disabled="false"
                     required="true"
                     label="#{messages['processo.anexarDocumentoDescricao']}">
                     <a:ajax event="change"
-                        render="tipoDocumentoDivPdf"
                         limitRender="true" status=":status"
+                        render="@this"
+                        listener="#{documentoUploader.podeRenderizar}"
                         execute="@this" />
                 </wi:inputText>
                 
                 <wi:selectOneMenuEntity
-                    id="#{f.id}tipoProcessoDocumentoPdf"
+                    id="tipoProcessoDocumentoPdf"
                     label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                     value="#{documentoUploader.tipoProcessoDocumento}"
                     items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
                     required="true"
                     showLabelSelecione="true">
                     <a:ajax event="change"
-                        render="tipoDocumentoDivPdf"
+                        listener="#{documentoUploader.podeRenderizar}"
                         limitRender="true" status=":status"
                         execute="@this" />
                 </wi:selectOneMenuEntity>

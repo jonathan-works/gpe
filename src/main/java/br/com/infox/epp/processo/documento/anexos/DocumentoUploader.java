@@ -2,6 +2,13 @@ package br.com.infox.epp.processo.documento.anexos;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+
+import javax.faces.component.EditableValueHolder;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.AjaxBehaviorListener;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -34,6 +41,11 @@ import com.lowagie.text.pdf.PdfReader;
 public class DocumentoUploader extends DocumentoCreator implements FileUploadListener {
 
     public static final String NAME = "documentoUploader";
+    private static final String BASE_CLIENT_ID = ":movimentarTabPanel:anexarDocumentosForm";
+    private static final String NOME_DOCUMENTO = BASE_CLIENT_ID + ":inputProcessoDocumentoPdfDecoration:inputProcessoDocumentoPdf";
+    private static final String CLASSIFICACAO_DOCUMENTO = BASE_CLIENT_ID + ":tipoProcessoDocumentoPdfDecoration:tipoProcessoDocumentoPdf";
+    private static final String FILE_UPLOAD = BASE_CLIENT_ID + ":tipoDocumentoDivPdf";
+    
 
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
 
@@ -193,6 +205,22 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     public void clear() {
         super.clear();
         this.tipoProcessoDocumento = null;
+    }
+    
+    public void podeRenderizar(AjaxBehaviorEvent ajaxBehaviorEvent) {
+        UIInput input = (UIInput) ajaxBehaviorEvent.getComponent();
+        UIInput input2;
+        if (input.getClientId().equals(NOME_DOCUMENTO)) {
+            input2 = (UIInput) FacesContext.getCurrentInstance().getViewRoot().findComponent(CLASSIFICACAO_DOCUMENTO);
+        } else {
+            input2 = (UIInput) FacesContext.getCurrentInstance().getViewRoot().findComponent(NOME_DOCUMENTO);
+        }
+        if (input.getValue() != null && input2.getValue() != null) {
+            Collection<String> ids = FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds();
+            ids.add(CLASSIFICACAO_DOCUMENTO.substring(1));
+            ids.add(FILE_UPLOAD.substring(1));
+            ids.add(NOME_DOCUMENTO.substring(1));
+        }
     }
 
 }
