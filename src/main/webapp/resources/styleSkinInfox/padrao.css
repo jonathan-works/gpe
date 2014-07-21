@@ -621,6 +621,10 @@ div.rf-trn {
 .tree-inactive {
   text-decoration: line-through;
 }
+.tree-notselectable {
+  color: lightgray;
+  
+}
 
 .img-panel-cont {
   display: inline-block;

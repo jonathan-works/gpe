@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.component.tree.UnidadeDecisoraLocalizacaoTreeHandler;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -24,6 +25,16 @@ public class UnidadeDecisoraMonocraticaList extends EntityList<UnidadeDecisoraMo
 	
 	private static final String DEFAULT_EJBQL = "select o from UnidadeDecisoraMonocratica o";
     private static final String DEFAULT_ORDER = "nome";
+    
+    public Localizacao getLocalizacao() {
+        return getEntity().getLocalizacao();
+    }
+    
+    public void setLocalizacao(Localizacao localizacao) {
+        if (localizacao == null || localizacao.getEstruturaFilho() != null) {
+            getEntity().setLocalizacao(localizacao);
+        } 
+    }
     
     @Override
     public void newInstance() {

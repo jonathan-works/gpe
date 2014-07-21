@@ -49,7 +49,7 @@
       value="#{not item.canSelect()}" />
     <ui:param
       name="styleClass"
-      value="#{ativo ? '' : 'tree-inactive'}" />
+      value="#{not empty styleClass ? styleClass : (ativo ? '' : 'tree-inactive')}" />
     <rich:treeNode
       highlightedClass="#{folderSelectable ? '' : 'folderHighlighted'}"
       selectedClass="#{folderSelectable ? '' : 'folderSelected'}"

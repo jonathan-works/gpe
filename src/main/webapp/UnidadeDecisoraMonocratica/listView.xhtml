@@ -33,12 +33,13 @@
                     
                     <wi:tree
 			                id="localizacaoUnidadeDecisoraTree"
-			                assignTo="unidadeDecisoraMonocraticaCrudAction.instance.localizacao"
-			                tree="#{unidadeDecisoraLocalizacaoTree}"
+			                assignTo="unidadeDecisoraMonocraticaList.localizacao"
+			                tree="#{localizacaoTree}"
 			                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
 			                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
 			                clearRender="@this"
-			                label="#{messages['unidadeDecisoraMonocratica.localizacao']}" />
+			                label="#{messages['unidadeDecisoraMonocratica.localizacao']}" 
+                            styleClass="#{empty item.entity.estruturaFilho ? 'tree-notselectable' : ''}"/>
                     
                     <wi:selectSituacaoOneMenu
 	                        id="ativo"
@@ -79,15 +80,16 @@
                 
             <wi:tree
 	                id="localizacaoUnidadeDecisoraTree"
-	                assignTo="unidadeDecisoraMonocraticaCrudAction.instance.localizacao"
-	                tree="#{unidadeDecisoraLocalizacaoTree}"
+	                assignTo="unidadeDecisoraMonocraticaCrudAction.localizacao"
+	                tree="#{localizacaoTree}"
 	                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
 	                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
 	                required="true"
 	                rendered="#{isEditable}"
 	                render="@this"
 	                clearRender="@this"
-	                label="#{messages['unidadeDecisoraMonocratica.localizacao']}" />
+	                label="#{messages['unidadeDecisoraMonocratica.localizacao']}" 
+                    styleClass="#{empty item.entity.estruturaFilho ? 'tree-notselectable' : ''}"/>
             
              <wi:selectSituacaoRadio
 	               id="ativo"
