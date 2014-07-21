@@ -76,8 +76,8 @@ public class LocalizacaoEstruturaTreeHandler extends AbstractTreeHandler<Localiz
     }
 
     public void setUsuarioPerfilAtual(
-            final UsuarioPerfil usuarioLocalizacaoAtual) {
-        this.usuarioPerfilAtual = usuarioLocalizacaoAtual;
+            final UsuarioPerfil usuarioPerfilAtual) {
+        this.usuarioPerfilAtual = usuarioPerfilAtual;
     }
 
     public UsuarioPerfil getUsuarioPerfilAtual() {
