@@ -10,11 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -40,11 +36,8 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	@Column(name = "in_ativo", nullable = false)
 	private Boolean ativo;
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade= CascadeType.ALL)
-	@JoinTable(name = "tb_uni_decisora_colegiada_mono", 
-			   joinColumns = @JoinColumn(name="id_uni_decisora_colegiada", nullable=false, updatable=false), 
-			   inverseJoinColumns = @JoinColumn(name="id_uni_decisora_monocratica", nullable=false, updatable=false))
-	private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList = new ArrayList<>();  
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="unidadeDecisoraColegiada")
+	private List<UniDecisoraColegiadaMono> uniDecisoraColegiadaMonoList = new ArrayList<>();
 	
 	public Integer getIdUnidadeDecisoraColegiada() {
 		return idUnidadeDecisoraColegiada;
@@ -70,12 +63,12 @@ public class UnidadeDecisoraColegiada implements Serializable {
 		this.ativo = ativo;
 	}
 	
-	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaList() {
-		return unidadeDecisoraMonocraticaList;
+	public List<UniDecisoraColegiadaMono> getUniDecisoraColegiadaMonoList() {
+		return uniDecisoraColegiadaMonoList;
 	}
 
-	public void setUnidadeDecisoraMonocraticaList(List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList) {
-		this.unidadeDecisoraMonocraticaList = unidadeDecisoraMonocraticaList;
+	public void setUniDecisoraColegiadaMonoList(List<UniDecisoraColegiadaMono> uniDecisoraColegiadaMonoList) {
+		this.uniDecisoraColegiadaMonoList = uniDecisoraColegiadaMonoList;
 	}
 
 	@Override

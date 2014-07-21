@@ -53,9 +53,9 @@
                 columnHeader="#{messages['unidadeDecisoraColegiada.unidadesAssociadas']}"
                 hideOrder="true">
                 <ui:repeat
-                    var="unidadeMonocratica"
-                    value="#{row.unidadeDecisoraMonocraticaList}">
-                    <div>#{unidadeMonocratica}</div>
+                    var="uniColegiadaMono"
+                    value="#{row.uniDecisoraColegiadaMonoList}">
+                    <div>#{uniColegiadaMono.unidadeDecisoraMonocratica}</div>
                 </ui:repeat>
             </wi:columnOutputText>
             
@@ -85,7 +85,7 @@
 	         <s:div>
 		         <h:outputLabel value="Associação de Unidades Decisoras Monocráticas" styleClass="name" style="padding: 10px 0px;"/>
 		         <wi:pickList id="selectUDMonocraticaId" 
-		         			  value="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraMonocraticaList}" 
+		         			  value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaAssociadasList}"
 		         			  itemValues="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"
 		         			  sourceCaption="Unidades Decisoras Monocráticas Disponíveis"
                         	  targetCaption="Unidades Decisoras Monocráticas Associadas"
