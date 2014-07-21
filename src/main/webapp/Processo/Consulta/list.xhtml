@@ -64,7 +64,7 @@
                     <ui:define name="toolBar">
                         <s:link
                             target="idJan#{row.idProcessoDocumento}"
-                            rendered="#{not empty row.processoDocumentoBin.signature and not empty row.processoDocumentoBin.certChain}"
+                            rendered="#{not empty row.processoDocumentoBin.assinaturas}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
                             <h:graphicImage
@@ -77,7 +77,7 @@
                         </s:link>
                         <s:link
                             target="idJan#{row.idProcessoDocumento}"
-                            rendered="#{empty row.processoDocumentoBin.signature or empty row.processoDocumentoBin.certChain}"
+                            rendered="#{empty row.processoDocumentoBin.assinaturas}"
                             view="/Processo/Consulta/assinaDocumento.xhtml"
                             onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
                             <h:graphicImage
