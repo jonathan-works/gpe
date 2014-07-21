@@ -14,7 +14,7 @@ import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
@@ -75,8 +75,8 @@ public class AssinadorDocumento extends AbstractController {
     public void assinarDocumento() {
         final FacesMessages messages = FacesMessages.instance();
         try {
-            final UsuarioLocalizacao perfilAtual = Authenticator
-                    .getUsuarioLocalizacaoAtual();
+            final UsuarioPerfil perfilAtual = Authenticator
+                    .getUsuarioPerfilAtual();
             assinaturaDocumentoService.assinarDocumento(processoDocumento,
                     perfilAtual, certChain, signature);
             genericManager.update(processoDocumento);

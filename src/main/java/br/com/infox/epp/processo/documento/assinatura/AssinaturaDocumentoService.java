@@ -21,8 +21,8 @@ import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
@@ -99,12 +99,12 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public boolean isDocumentoAssinado(ProcessoDocumento processoDocumento,
-            UsuarioLocalizacao usuarioLocalizacao) {
+            UsuarioPerfil usuarioLocalizacao) {
         boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : processoDocumento
                 .getProcessoDocumentoBin().getAssinaturas()) {
-            Papel papel = usuarioLocalizacao.getPapel();
-            UsuarioLogin usuario = usuarioLocalizacao.getUsuario();
+            Papel papel = usuarioLocalizacao.getPerfil().getPapel();
+            UsuarioLogin usuario = usuarioLocalizacao.getUsuarioLogin();
             if (assinaturaDocumento.getPapel().equals(papel)
                     || assinaturaDocumento.getUsuario().equals(usuario)) {
                 result = isSignatureValid(assinaturaDocumento);
@@ -175,14 +175,14 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public void assinarDocumento(final ProcessoDocumento processoDocumento,
-            final UsuarioLocalizacao perfilAtual, final String certChain,
+            final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws CertificadoException,
             AssinaturaException {
-        final UsuarioLogin usuario = perfilAtual.getUsuario();
+        final UsuarioLogin usuario = perfilAtual.getUsuarioLogin();
         verificaCertificadoUsuarioLogado(certChain, usuario);
 
         final String nomeUsuario = usuario.getNomeUsuario();
-        final Papel papel = perfilAtual.getPapel();
+        final Papel papel = perfilAtual.getPerfil().getPapel();
         final ProcessoDocumentoBin processoDocumentoBin = processoDocumento
                 .getProcessoDocumentoBin();
 
@@ -191,7 +191,7 @@ public class AssinaturaDocumentoService implements Serializable {
         assinaturaDocumento.setDataAssinatura(new Date());
         assinaturaDocumento.setCertChain(certChain);
         assinaturaDocumento.setSignature(signature);
-        assinaturaDocumento.setNomeLocalizacao(perfilAtual.getLocalizacao()
+        assinaturaDocumento.setNomeLocalizacao(perfilAtual.getPerfil().getLocalizacao()
                 .getLocalizacao());
         assinaturaDocumento.setNomePapel(papel.getNome());
         assinaturaDocumento.setNomeUsuario(nomeUsuario);
@@ -201,7 +201,7 @@ public class AssinaturaDocumentoService implements Serializable {
         processoDocumentoBin.getAssinaturas().add(assinaturaDocumento);
     }
 
-    public boolean isDocumentoAssinado(Integer idDocumento, UsuarioLocalizacao perfil) {
+    public boolean isDocumentoAssinado(Integer idDocumento, UsuarioPerfil perfil) {
         ProcessoDocumento processoDocumento = processoDocumentoManager.find(idDocumento);
         return processoDocumento != null && isDocumentoAssinado(processoDocumento, perfil);
     }

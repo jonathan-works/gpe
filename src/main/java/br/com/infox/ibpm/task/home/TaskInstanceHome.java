@@ -754,7 +754,8 @@ public class TaskInstanceHome implements Serializable {
         DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
                 .get(idEditor);
         if (documentoAssinavel != null) {
-            return assinaturaDocumentoService.isDocumentoAssinado(documentoAssinavel.getIdDocumento());
+            return assinaturaDocumentoService
+                    .isDocumentoAssinado(documentoAssinavel.getIdDocumento());
         }
         return false;
     }
@@ -764,7 +765,9 @@ public class TaskInstanceHome implements Serializable {
                 .get(idEditor);
         boolean assinado = false;
         if (documentoAssinavel != null) {
-            assinado = assinaturaDocumentoService.isDocumentoAssinado(documentoAssinavel.getIdDocumento(),Authenticator.getUsuarioLocalizacaoAtual());
+            assinado = assinaturaDocumentoService.isDocumentoAssinado(
+                    documentoAssinavel.getIdDocumento(),
+                    Authenticator.getUsuarioPerfilAtual());
         }
         return !assinado;
     }

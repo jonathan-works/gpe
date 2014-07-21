@@ -15,7 +15,6 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
@@ -207,7 +206,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
                 final int idProcessoDocumento = doc.getIdProcessoDocumento();
                 setIdProcessoDocumento(idProcessoDocumento);
                 if (assinado) {
-                    assinaturaDocumentoService.assinarDocumento(doc, Authenticator.getUsuarioLocalizacaoAtual(), certChain, signature);
+                    assinaturaDocumentoService.assinarDocumento(doc, Authenticator.getUsuarioPerfilAtual(), certChain, signature);
                 }
                 return idProcessoDocumento;
             } catch (DAOException e) {
