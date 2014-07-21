@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:wi="http://www.itx.com.br/jsf">
+
+	<wi:dataReport
+         title="#{messages['unidadeDecisoraColegiada.reportTitle']}"
+         columns="3"
+         widths="1 1 1"
+         headerText="#{unidadeDecisoraColegiadaList.criteria}">
+				   
+		<wi:reportColumnHeader
+             title="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}" />
+		<wi:reportColumnHeader
+             title="#{messages['unidadeDecisoraColegiada.unidadesAssociadas']}" />
+		<wi:reportColumnHeader
+             title="#{messages['field.situacao']}" />
+				
+		<ui:repeat
+             var="row"
+             value="#{unidadeDecisoraColegiadaList.list()}">
+			<wi:reportColumn
+                 value="#{row.nome}"/>
+			<wi:reportColumnList 
+				 value="#{row.unidadeDecisoraMonocraticaList}" />
+			<wi:reportColumnSituacao
+                 value="#{row.ativo}"
+                 columnAlign="center" />
+		</ui:repeat>
+
+	</wi:dataReport>
+	
+</ui:composition>
