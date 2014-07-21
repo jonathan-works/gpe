@@ -2,6 +2,7 @@ package br.com.infox.epp.access.crud;
 
 import javax.enterprise.context.ConversationScoped;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -19,6 +20,7 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 
 @Name(EstruturaCrudAction.NAME)
 @ConversationScoped
+@AutoCreate
 public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, EstruturaManager> {
 
     private static final long serialVersionUID = 1L;

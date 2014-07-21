@@ -59,7 +59,6 @@
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{messages['field.situacao']}"
-                required="true"
                 value="#{estruturaCrudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>
@@ -82,7 +81,6 @@
                  <wi:selectSituacaoRadio
                     columnId="ativoLocalizacao"
                     label="#{messages['field.situacao']}"
-                    required="true"
                     value="#{estruturaCrudAction.localizacaoFilho.ativo}" />
                  
                  <ui:define name="buttons">
@@ -106,7 +104,7 @@
                 <ui:define name="toolBar">
                     <wi:toolBar url="#{a4jSkin.imgFolder}/view.gif" title="#{messages['button.edit']}" id="toolBarEdit" 
                         action="#{estruturaCrudAction.setLocalizacaoFilho(row)}" render="localizacoesTab, pageBodyDialogMessage"/>
-                    <wi:toolBar url="#{a4jSkin.imgFolder}/remove.png" title="#{messages['button.delete']}" id="toolBarInactive"
+                    <wi:toolBar url="#{a4jSkin.imgFolder}/remove.png" title="#{messages['button.inactive']}" id="toolBarInactive"
                         action="#{estruturaCrudAction.inativarLocalizacao(row)}" render="localizacoesTab, pageBodyDialogMessage"
                         onclick="return confirm('#{messages['estrutura.confirmaRemocaoLocalizacao']}')"
                         rendered="#{row.ativo}"/>

@@ -17,7 +17,7 @@ public class LocalizacoesDaEstruturaTreeHandler extends AbstractTreeHandler<Loca
     private static final long serialVersionUID = 1L;
     public static final String NAME = "localizacoesDaEstruturaTree";
 
-    private Estrutura estruturaPai;
+    private Estrutura estruturaPai = new Estrutura();
     
     @In
     private EstruturaCrudAction estruturaCrudAction;
