@@ -211,10 +211,13 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     @Transient
     public String getAcceptedTypes() {
         String accepted = "";
-        for (ExtensaoArquivo ea : getExtensaoArquivosList()) {
-            accepted += ea.getExtensao() + ",";
+        if (getExtensaoArquivosList().isEmpty()) {
+            return accepted;
         }
-        return accepted;
+        for (ExtensaoArquivo ea : getExtensaoArquivosList()) {
+            accepted += ea.getExtensao() + ", ";
+        }
+        return accepted.substring(0, accepted.length() -2);
     }
     
     public boolean canDoUpload() {

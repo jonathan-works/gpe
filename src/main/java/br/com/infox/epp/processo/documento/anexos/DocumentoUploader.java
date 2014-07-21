@@ -34,7 +34,6 @@ import com.lowagie.text.pdf.PdfReader;
 public class DocumentoUploader extends DocumentoCreator implements FileUploadListener {
 
     public static final String NAME = "documentoUploader";
-    private static final int TAMANHO_MAXIMO_ARQUIVO = 2097152;
 
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
 
@@ -87,7 +86,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         } else {
             newInstance();
             inputStream = null;
-            tipoProcessoDocumento = null;
         }
     }
 
@@ -138,9 +136,9 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Extensão de arquivo não permitida.");
             return false;
         }
-        if (file.getSize() > extensaoArquivo.getTamanho()) {
+        if ((file.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de "
-                    + extensaoArquivo.getTamanho() + "bytes!");
+                    + extensaoArquivo.getTamanho() + "Kb!");
             return false;
         }
         if (extensaoArquivo.getPaginavel()) {
@@ -160,7 +158,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             reader = new PdfReader(inputStream);
             int qtdPaginas = reader.getNumberOfPages();
             for (int i = 1; i <= qtdPaginas; i++) {
-                if (reader.getPageContent(i).length > limitePorPagina) {
+                if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {
                     return false;
                 }
             }
@@ -188,6 +186,12 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             TipoProcessoDocumento tipoProcessoDocumento) {
         this.tipoProcessoDocumento = tipoProcessoDocumento;
         getProcessoDocumento().setTipoProcessoDocumento(tipoProcessoDocumento);
+    }
+    
+    @Override
+    public void clear() {
+        super.clear();
+        this.tipoProcessoDocumento = null;
     }
 
 }

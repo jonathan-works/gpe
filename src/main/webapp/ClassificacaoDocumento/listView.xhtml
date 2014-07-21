@@ -177,7 +177,9 @@
                     value="#{extensaoArquivoCrudAction.instance.extensao}"
                     required="true"
                     label="#{messages['tipoProcessoDocumento.tipoExtensao']}"
-                    maxlength="30" />
+                    maxlength="30" >
+                    <f:validator validatorId="extensaoDocumentoValidator" />
+                </wi:inputText>
                 <wi:inputNumber id="tamanho"
                     value="#{extensaoArquivoCrudAction.instance.tamanho}"
                     required="true"
@@ -232,6 +234,12 @@
                     <wi:columnOutputText columnId="tamanho"
                         columnHeader="#{messages['extensaoArquivo.tamanho']}"
                         value="#{row.tamanho}" />
+                    <wi:columnOutputText columnId="pagianvel"
+                    	columnHeader="#{messages['extensaoArquivo.paginavel']}"
+                    	value="#{row.paginavel}" />
+                    <wi:columnOutputText columnId="tamanhoPorPagina"
+                    	columnHeader="#{messages['extensaoArquivo.tamanhoPorPagina']}"
+                    	value="#{row.tamanhoPorPagina}" />
                 </wi:dataTable>
             </s:div>
         </infox:tab>

@@ -86,7 +86,7 @@
                     label="#{messages['fileUpload.type.file']}"
                     reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
                     tipMessage="Apenas arquivos #{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}"
-                    rendered="#{not empty documentoUploader.tipoProcessoDocumento}"
+                    rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList}"
                     accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
                 </wi:fileUpload>
             </s:div>
