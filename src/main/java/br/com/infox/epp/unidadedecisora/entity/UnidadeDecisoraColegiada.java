@@ -23,7 +23,7 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	public static final String TABLE_NAME = "tb_uni_decisora_colegiada";
 	
 	@Id
-	@SequenceGenerator(allocationSize=1, initialValue=1, name="UnidadeDecisoraColegiadaGenerator", sequenceName="sq_tb_uni_decisora_colegiada")
+	@SequenceGenerator(allocationSize=1, initialValue=1, name="UnidadeDecisoraColegiadaGenerator", sequenceName="sq_uni_decisora_colegiada")
 	@GeneratedValue(generator="UnidadeDecisoraColegiadaGenerator")
 	@Column(name="id_uni_decisora_colegiada", unique = true, nullable = false)
 	private Integer idUnidadeDecisoraColegiada;
@@ -36,7 +36,7 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	@Column(name = "in_ativo", nullable = false)
 	private Boolean ativo;
 	
-	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="unidadeDecisoraColegiada")
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH, mappedBy="unidadeDecisoraColegiada")
 	private List<UniDecisoraColegiadaMono> uniDecisoraColegiadaMonoList = new ArrayList<>();
 	
 	public Integer getIdUnidadeDecisoraColegiada() {

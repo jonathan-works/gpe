@@ -23,7 +23,7 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 	public static final String TABLE_NAME = "tb_uni_decisora_monocratica";
 	
 	@Id
-	@SequenceGenerator(allocationSize=1, initialValue=1, name = "UnidadeDecisoraMonocraticaGenerator", sequenceName="sq_tb_uni_decisora_monocratica")
+	@SequenceGenerator(allocationSize=1, initialValue=1, name = "UnidadeDecisoraMonocraticaGenerator", sequenceName="sq_uni_decisora_monocratica")
 	@GeneratedValue(generator="UnidadeDecisoraMonocraticaGenerator")
 	@Column(name = "id_uni_decisora_monocratica", unique=true, nullable=false)
 	private Integer idUnidadeDecisoraMonocratica;
