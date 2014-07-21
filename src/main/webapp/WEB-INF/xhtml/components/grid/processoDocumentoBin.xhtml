@@ -42,7 +42,7 @@
         </h:commandLink>
         <s:link
             target="idJan#{row.idProcessoDocumento}"
-            rendered="#{not empty bin.signature}"
+            rendered="#{not empty bin.assinaturas}"
             view="/Processo/Consulta/validaDocumento.xhtml"
             onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');"
         >
@@ -58,7 +58,7 @@
         </s:link>
         <s:link
             target="idJan#{row.idProcessoDocumento}"
-            rendered="#{empty bin.signature}"
+            rendered="#{empty bin.assinaturas}"
             view="/Processo/Consulta/assinaDocumento.xhtml"
             onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');"
         >
