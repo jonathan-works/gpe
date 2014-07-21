@@ -46,7 +46,7 @@
       name="#{editorId.replace('-', '')}submitForm"
       action="#{home.assinarDocumento(id)}"
       rendered="#{not readonly and home.podeRenderizarApplet(id)}"
-      render="@form pageBodyDialogMessage"
+      render="@form pageBodyDialogMessage #{formId}"
       oncomplete="infox.hideLoading();" />
     <s:div
       id="signatureDiv"
