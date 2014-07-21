@@ -41,6 +41,7 @@
       noDuplicate="true"
       render="#{reRender}, pageBodyDialogMessage"
       acceptedTypes="#{accept}"
+      ontyperejected="alert('Extensão de arquivo inválida');"
       onclear="clearUploadFile();">
     </rich:fileUpload>
     
