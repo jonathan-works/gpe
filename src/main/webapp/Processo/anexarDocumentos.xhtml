@@ -64,6 +64,10 @@
                     disabled="false"
                     required="true"
                     label="#{messages['processo.anexarDocumentoDescricao']}">
+                    <a:ajax event="change"
+                        render="tipoDocumentoDivPdf"
+                        limitRender="true" status=":status"
+                        execute="@this" />
                 </wi:inputText>
                 
                 <wi:selectOneMenuEntity
@@ -86,7 +90,7 @@
                     label="#{messages['fileUpload.type.file']}"
                     reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
                     tipMessage="Apenas arquivos #{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}"
-                    rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList}"
+                    rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList and not empty documentoUploader.processoDocumento.processoDocumento}"
                     accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
                 </wi:fileUpload>
             </s:div>

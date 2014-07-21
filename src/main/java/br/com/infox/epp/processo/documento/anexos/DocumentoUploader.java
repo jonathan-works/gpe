@@ -123,6 +123,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         newInstance();
         tipoProcessoDocumento = null;
         inputStream = null;
+        setValido(false);
         return pd;
     }
 
