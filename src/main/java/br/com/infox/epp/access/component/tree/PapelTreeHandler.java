@@ -8,8 +8,9 @@ import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 
 @Name(PapelTreeHandler.NAME)
 @Scope(ScopeType.PAGE)
@@ -38,9 +39,9 @@ public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
     }
 
     protected Papel getPapelAtual() {
-        UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get("usuarioLogadoLocalizacaoAtual");
-        if (usuarioLocalizacao != null) {
-            return usuarioLocalizacao.getPapel();
+        UsuarioPerfil usuarioPerfil = (UsuarioPerfil) Contexts.getSessionContext().get(Authenticator.USUARIO_PERFIL_ATUAL);
+        if (usuarioPerfil != null) {
+            return usuarioPerfil.getPerfil().getPapel();
         }
         return null;
     }

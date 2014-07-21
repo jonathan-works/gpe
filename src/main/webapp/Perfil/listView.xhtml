@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    <ui:define name="title">#{messages['perfil.titlePage']}</ui:define>
+    <ui:param name="home" value="#{perfilCrudAction}"></ui:param>
+    <ui:define name="searchGrid">
+        <wi:dataTable bean="#{perfilList}"
+            values="#{perfilList.list(20)}"
+            tableTitle="#{messages['perfil.tableName']}"
+            id="perfilList" rowId="#{row.idPerfil}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="perfilCrudActionForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText id="perfil"
+                        label="#{messages['perfil.descricao']}"
+                        value="#{perfilList.entity.descricao}"></wi:inputText>
+                    <wi:tree id="localizacao"
+                        assignTo="perfilList.entity.localizacao"
+                        tree="#{localizacaoEstruturaTree}"
+                        icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                        iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                        label="#{messages['perfil.localizacao']}" />
+                    <wi:tree id="papel"
+                        assignTo="perfilList.entity.papel"
+                        tree="#{papelTree}"
+                        icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                        iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                        label="#{messages['perfil.papel']}" />
+                    <wi:selectBooleanMenu id="ativo"
+                        value="#{perfilList.entity.ativo}"
+                        label="#{messages['field.situacao']}" />
+                </wi:searchForm>
+            </ui:define>
+            <ui:define name="headerToolBar" />
+            <wi:columnOutputText columnId="descricao"
+                columnHeader="#{messages['perfil.descricao']}"
+                value="#{row.descricao}" />
+            <wi:columnOutputText columnId="localizacao"
+                columnHeader="#{messages['perfil.localizacao']}"
+                value="#{row.localizacao}" />
+            <wi:columnOutputText columnId="papel"
+                columnHeader="#{messages['perfil.papel']}"
+                value="#{row.papel}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+    <ui:define name="form">
+        <wi:dataForm formId="perfilForm"
+            formTitle="#{messages['form.title']}"
+            home="#{perfilCrudAction}">
+            <wi:inputText id="perfil"
+                label="#{messages['perfil.descricao']}"
+                value="#{perfilCrudAction.instance.descricao}"
+                required="true"/>
+            <wi:tree id="localizacao"
+                assignTo="perfilCrudAction.instance.localizacao"
+                tree="#{localizacaoEstruturaTree}"
+                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                label="#{messages['perfil.localizacao']}"
+                required="true" />
+            <wi:tree id="papel"
+                assignTo="perfilCrudAction.instance.papel"
+                tree="#{papelTree}"
+                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+                label="#{messages['perfil.papel']}" required="true" />
+            <wi:selectSituacaoRadio id="ativo"
+                value="#{perfilCrudAction.instance.ativo}"
+                label="#{messages['field.situacao']}" />
+        </wi:dataForm>
+    </ui:define>
+    <ui:define name="tabs" />
+</ui:composition>

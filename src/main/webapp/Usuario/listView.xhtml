@@ -49,16 +49,6 @@
                 columnId="nomeUsuario"
                 columnHeader="#{messages['usuarioLogin.nome']}"
                 value="#{row.nomeUsuario}" />
-            <wi:columnOutputText
-                columnId="usuarioLocalizacaoList"
-                columnHeader="#{messages['usuarioLogin.localizacoes']}"
-                hideOrder="true">
-                <ui:repeat
-                    var="usuarioLoc"
-                    value="#{row.usuarioLocalizacaoList}">
-                    <div>#{usuarioLoc}</div>
-                </ui:repeat>
-            </wi:columnOutputText>
             <wi:columnBoolean
                 columnId="bloqueio"
                 columnHeader="#{messages['usuarioLogin.bloqueio']}"
@@ -192,82 +182,52 @@
             </wi:dataTable>
         </infox:tab>
         <infox:tab
-            id="localizacaoUsuario"
-            status=":status"
-            rendered="#{home.managed}"
-            action="#{usuarioLocalizacaoCrudAction.newInstance}"
-            title="#{messages['localizacao.usuarioLocalizacaoList']}"
-            name="localizacaoUsuario">
-            <s:div>
-                <wi:ajaxDiv id="divGridLU">
-                    <s:div id="cadastroUsuarioLocalizacao">
-                        <wi:dataForm
-                            formId="localizacaoUsuarioForm"
-                            formTitle="#{messages['form.title']}"
-                            home="#{usuarioLocalizacaoCrudAction}">
-                            <wi:tree
-                                id="localizacao"
-                                assignTo="usuarioLocalizacaoCrudAction.instance.localizacao"
-                                tree="#{localizacaoEstruturaTree}"
-                                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-                                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-                                label="#{messages['usuarioLocalizacao.localizacao']}"
-                                required="true" />
-                            <wi:tree
-                                id="papel"
-                                assignTo="usuarioLocalizacaoCrudAction.instance.papel"
-                                tree="#{papelTree}"
-                                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-                                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-                                label="#{messages['usuarioLocalizacao.papel']}"
-                                required="true" />
-                            <wi:selectBooleanRadio
-                                id="responsavelLocalizacao"
-                                value="#{usuarioLocalizacaoCrudAction.instance.responsavelLocalizacao}"
-                                label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}" />
-                            <ui:define name="buttons">
-                                <wi:commandButton
-                                    id="saveButton"
-                                    action="usuarioLocalizacaoCrudAction.save"
-                                    reRender="localizacaoUsuario, pageBodyDialogMessage"
-                                    value="#{messages['crud.persist']}" />
-                            </ui:define>
-                        </wi:dataForm>
-                    </s:div>
-                    <wi:dataTable
-                        bean="#{usuarioLocalizacaoEntityList}"
-                        values="#{usuarioLocalizacaoEntityList.list(20)}"
-                        tableTitle="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioLoginCrudAction.instance)}"
-                        id="usuarioLocalizacaoList"
-                        rowId="#{row.idUsuarioLocalizacao}"
-                        listReRender="divGridLU"
-                        panelStyleClass="rf-dt-crud">
-                        <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar">
-                            <wi:toolBar
-                                action="usuarioLocalizacaoCrudAction.remove(row)"
-                                rendered="true"
-                                limitToList="true"
-                                status=":status"
-                                render="localizacaoUsuario pageBodyDialogMessage"
-                                onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
-                                url="#{a4jSkin.imgFolder}/remove.png"
-                                title="#{messages['crud.remove']}" />
-                        </ui:define>
-                        <wi:columnOutputText
-                            columnId="localizacao"
-                            columnHeader="#{messages['usuarioLocalizacao.localizacao']}"
-                            value="#{row.localizacao}" />
-                        <wi:columnOutputText
-                            columnId="papel"
-                            columnHeader="#{messages['usuarioLocalizacao.papel']}"
-                            value="#{row.papel}" />
-                        <wi:columnBoolean
-                            columnId="responsavelLocalizacao"
-                            columnHeader="#{messages['usuarioLocalizacao.responsavelLocalizacao']}"
-                            value="#{row.responsavelLocalizacao}" />
-                    </wi:dataTable>
-                </wi:ajaxDiv>
+            id="usuarioPerfil"
+            rendered="#{home.isManaged()}"
+            title="#{messages['usuario.perfilTitleTab']}"
+            name="usuarioPerfil">
+            <wi:dataForm formId="usuarioPerfilForm"
+                formTitle="#{messages['form.title']}">
+                <wi:selectOneMenuEntity id="perfilCombo"
+                    value="#{usuarioPerfilCrudAction.instance.perfil}"
+                    label="#{messages['perfil.descricao']}"
+                    items="#{perfilList.list()}"
+                    showLabelSelecione="true" >
+                </wi:selectOneMenuEntity>
+                <wi:selectBooleanCheckbox id="responsavelLocalizacao"
+                    value="#{usuarioPerfilCrudAction.instance.responsavelLocalizacao}"
+                    label="#{messages['perfil.responsavelLocalizacao']}"/>
+                <ui:define name="buttons">
+                    <wi:commandButton id="saveButton"
+                        action="usuarioPerfilCrudAction.save()"
+                        reRender="usuarioPerfil, pageBodyDialogMessage"
+                        value="#{messages['crud.persist']}" />
+                </ui:define>
+            </wi:dataForm>
+            <s:div id="divPerfisAssociados">
+                <wi:dataTable id="usuarioPerfilList"
+                    values="#{usuarioPerfilEntityList.list(15)}"
+                    bean="#{usuarioPerfilEntityList}"
+                    tableTitle="#{messages['usuario.profiles']} #{usuarioLoginCrudAction.instance}"
+                    var="row" rows="10">
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <wi:toolBar
+                            url="#{a4jSkin.imgFolder}/remove.png"
+                            title="Remover registro"
+                            action="usuarioPerfilCrudAction.remove(row)"
+                            render="divPerfisAssociados, pageBodyDialogMessage"
+                            execute="@this"
+                            onclick="return confirm('Deseja remover o registro?');"
+                            id="removeButton" />
+                    </ui:define>
+                    <wi:columnOutputText columnId="perfil.descricao"
+                        columnHeader="#{messages['perfil.descricao']}"
+                        value="#{row.perfil.descricao}" />
+                    <wi:columnBoolean columnId="responsavelLocalizacao"
+                        columnHeader="#{messages['perfil.responsavelLocalizacao']}"
+                        value="#{row.responsavelLocalizacao}"/>
+                </wi:dataTable>
             </s:div>
         </infox:tab>
         <infox:tab

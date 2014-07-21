@@ -19,15 +19,15 @@ public interface ContaTwitterQuery {
 
     String ID_GRUPO_EMAIL_PARAM = "idGrupoEmail";
     String LIST_TWITTER_BY_ID_GRUPO_EMAIL = "listContaTwitterByIdGrupoEmail";
-    String LIST_TWITTER_BY_ID_GRUPO_EMAIL_QUERY = "select distinct c from ContaTwitter c join c.usuario u join u.usuarioLocalizacaoList ul "
+    String LIST_TWITTER_BY_ID_GRUPO_EMAIL_QUERY = "select distinct c from ContaTwitter c join c.usuario u join u.usuarioPerfilList ul "
             + "where exists (select o from ListaEmail o where o.idGrupoEmail = :"
             + ID_GRUPO_EMAIL_PARAM
             + " and "
-            + "((ul.localizacao = o.localizacao and (ul.papel = o.papel or o.papel is null) and "
-            + "(ul.estrutura = o.estrutura or o.estrutura is null)) or (ul.papel = o.papel and "
-            + "(ul.localizacao = o.localizacao or o.localizacao is null) and "
-            + "(ul.estrutura = o.estrutura or o.estrutura is null)) or (ul.estrutura = o.estrutura "
-            + "and (ul.localizacao = o.localizacao or o.localizacao is null) "
-            + "and (ul.papel = o.papel or o.papel is null))))";
+            + "((ul.perfil.localizacao = o.localizacao and (ul.perfil.papel = o.papel or o.papel is null) and "
+            + "(ul.perfil.paiDaEstrutura = o.estrutura or o.estrutura is null)) or (ul.perfil.papel = o.papel and "
+            + "(ul.perfil.localizacao = o.localizacao or o.localizacao is null) and "
+            + "(ul.perfil.paiDaEstrutura = o.estrutura or o.estrutura is null)) or (ul.perfil.paiDaEstrutura = o.estrutura "
+            + "and (ul.perfil.localizacao = o.localizacao or o.localizacao is null) "
+            + "and (ul.perfil.papel = o.papel or o.papel is null))))";
 
 }

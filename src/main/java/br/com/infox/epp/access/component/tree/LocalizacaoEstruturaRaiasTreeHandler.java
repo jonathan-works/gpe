@@ -8,7 +8,7 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 
 @Name(LocalizacaoEstruturaRaiasTreeHandler.NAME)
 @BypassInterceptors
@@ -18,7 +18,7 @@ public class LocalizacaoEstruturaRaiasTreeHandler extends AbstractTreeHandler<Lo
     public static final String NAME = "localizacaoEstruturaRaiasTree";
     public static final String EVENT_SELECT_LOC_ESTRUTURA = "evtSelectLocalizacaoEstruturaRaias";
 
-    private UsuarioLocalizacao usuarioLocalizacaoAtual;
+    private UsuarioPerfil usuarioPerfilAtual;
 
     @Override
     protected String getQueryRoots() {
@@ -30,11 +30,11 @@ public class LocalizacaoEstruturaRaiasTreeHandler extends AbstractTreeHandler<Lo
     }
 
     private Integer getIdLocalizacao() {
-        usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
-        final UsuarioLocalizacao usuarioLocalizacao = getUsuarioLocalizacaoAtual();
-        final Localizacao estrutura = usuarioLocalizacao.getEstrutura();
-        final Localizacao loc = estrutura != null ? estrutura : usuarioLocalizacao.getLocalizacao();
-        return loc.getIdLocalizacao();
+        usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
+        final UsuarioPerfil usuarioPerfil = getUsuarioPerfilAtual();
+        final Localizacao paiDaEstrutura = usuarioPerfil.getPerfil().getPaiDaEstrutura();
+        final Localizacao localizacao = paiDaEstrutura != null ? paiDaEstrutura : usuarioPerfil.getPerfil().getLocalizacao();
+        return localizacao.getIdLocalizacao();
     }
 
     @Override
@@ -70,22 +70,22 @@ public class LocalizacaoEstruturaRaiasTreeHandler extends AbstractTreeHandler<Lo
         return null;
     }
 
-    public void setUsuarioLocalizacaoAtual(
-            final UsuarioLocalizacao usuarioLocalizacaoAtual) {
-        this.usuarioLocalizacaoAtual = usuarioLocalizacaoAtual;
+    public void setUsuarioPerfilAtual(
+            final UsuarioPerfil usuarioPerfilAtual) {
+        this.usuarioPerfilAtual = usuarioPerfilAtual;
     }
 
-    public UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
-        if (usuarioLocalizacaoAtual == null) {
-            usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
+    public UsuarioPerfil getUsuarioPerfilAtual() {
+        if (usuarioPerfilAtual == null) {
+            usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
         }
-        return usuarioLocalizacaoAtual;
+        return usuarioPerfilAtual;
     }
 
     @Override
     public void clearTree() {
         super.clearTree();
-        usuarioLocalizacaoAtual = null;
+        usuarioPerfilAtual = null;
     }
 
 }

@@ -8,7 +8,7 @@
         widths="3 5 2 2 2"
         headerText="#{usuarioLoginList.criteria}">
         <wi:reportColumnHeader title="#{messages['usuarioLogin.nome']}" />
-        <wi:reportColumnHeader title="#{messages['usuarioLogin.localizacoes']}"/>
+        <wi:reportColumnHeader title="#{messages['usuarioLogin.perfis']}"/>
         <wi:reportColumnHeader title="#{messages['usuarioLogin.bloqueio']}" />
         <wi:reportColumnHeader title="#{messages['usuarioLogin.provisorio']}" />
         <wi:reportColumnHeader title="#{messages['field.situacao']}" />
@@ -16,7 +16,7 @@
             var="row"
             value="#{usuarioLoginList.list()}">
             <wi:reportColumn value="#{row.nomeUsuario}" />
-            <wi:reportColumnList value="#{row.usuarioLocalizacaoList}" />
+            <wi:reportColumnList value="#{row.usuarioPerfilList}" />
             <wi:reportColumnBoolean value="#{row.bloqueio}" />
             <wi:reportColumnBoolean value="#{row.provisorio}" />
             <wi:reportColumnSituacao

@@ -64,9 +64,8 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     private Estrutura estruturaFilho;
     private Estrutura estruturaPai;
 
-    private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<LocalizacaoTurno>(0);
-    private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
-    private List<Localizacao> localizacaoList = new ArrayList<Localizacao>(0);
+    private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<>(0);
+    private List<Localizacao> localizacaoList = new ArrayList<>(0);
 
     private String caminhoCompleto;
     private Boolean temContaTwitter;
@@ -131,16 +130,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     public void setLocalizacaoPai(Localizacao localizacaoPai) {
         this.localizacaoPai = localizacaoPai;
-    }
-
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = LOCALIZACAO_ATTRIBUTE)
-    public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
-        return this.usuarioLocalizacaoList;
-    }
-
-    public void setUsuarioLocalizacaoList(
-            List<UsuarioLocalizacao> usuarioLocalizacaoList) {
-        this.usuarioLocalizacaoList = usuarioLocalizacaoList;
     }
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = LOCALIZACAO_PAI_ATTRIBUTE)

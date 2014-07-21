@@ -17,7 +17,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
@@ -41,15 +41,15 @@ public class ControleFiltros {
             return;
         }
         firstTime = false;
-        UsuarioLocalizacao usuarioLocalizacaoAtual = Authenticator.getUsuarioLocalizacaoAtual();
+        UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
 
         // Iniciar os filtros
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_PAPEL, usuarioLocalizacaoAtual.getPapel().getIdPapel());
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_LOCALIZACAO, usuarioLocalizacaoAtual.getLocalizacao().getIdLocalizacao());
+        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_PAPEL, usuarioPerfilAtual.getPerfil().getPapel().getIdPapel());
+        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_LOCALIZACAO, usuarioPerfilAtual.getPerfil().getLocalizacao().getIdLocalizacao());
 
-        HibernateUtil.setFilterParameter(SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, SigiloProcessoFilter.PARAM_ID_USUARIO, usuarioLocalizacaoAtual.getUsuario().getIdUsuarioLogin());
+        HibernateUtil.setFilterParameter(SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, SigiloProcessoFilter.PARAM_ID_USUARIO, usuarioPerfilAtual.getUsuarioLogin().getIdUsuarioLogin());
 
-        LOG.info(MessageFormat.format("Filtro executado para usuário [{0} | {1}]", usuarioLocalizacaoAtual.getUsuario(), LogUtil.getIdPagina()));
+        LOG.info(MessageFormat.format("Filtro executado para usuário [{0} | {1}]", usuarioPerfilAtual.getUsuarioLogin(), LogUtil.getIdPagina()));
     }
 
     public static ControleFiltros instance() {

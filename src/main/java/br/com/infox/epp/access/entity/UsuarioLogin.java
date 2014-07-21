@@ -122,7 +122,7 @@ public class UsuarioLogin implements Serializable {
 
     private List<ProcessoDocumentoBin> processoDocumentoBinList = new ArrayList<ProcessoDocumentoBin>(0);
     private List<Fluxo> fluxoList = new ArrayList<Fluxo>(0);
-    private List<UsuarioLocalizacao> usuarioLocalizacaoList = new ArrayList<UsuarioLocalizacao>(0);
+    private List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>(0);
     private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(0);
     private List<BloqueioUsuario> bloqueioUsuarioList = new ArrayList<BloqueioUsuario>(0);
     private List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<ProcessoDocumento>(0);
@@ -329,15 +329,15 @@ public class UsuarioLogin implements Serializable {
         this.fluxoList = fluxoList;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuario", orphanRemoval = true)
-    @OrderBy("idUsuarioLocalizacao")
-    public List<UsuarioLocalizacao> getUsuarioLocalizacaoList() {
-        return this.usuarioLocalizacaoList;
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioLogin", orphanRemoval = true)
+    @OrderBy("idUsuarioPerfil")
+    public List<UsuarioPerfil> getUsuarioPerfilList() {
+        return this.usuarioPerfilList;
     }
 
-    public void setUsuarioLocalizacaoList(
-            List<UsuarioLocalizacao> usuarioLocalizacaoList) {
-        this.usuarioLocalizacaoList = usuarioLocalizacaoList;
+    public void setUsuarioPerfilList(
+            List<UsuarioPerfil> usuarioPerfilList) {
+        this.usuarioPerfilList = usuarioPerfilList;
     }
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioCadastroProcesso")
@@ -409,6 +409,17 @@ public class UsuarioLogin implements Serializable {
     @Transient
     public boolean isHumano() {
         return UsuarioEnum.H.equals(tipoUsuario);
+    }
+    
+    @Transient
+    public List<UsuarioPerfil> getUsuarioPerfilAtivoList() {
+        List<UsuarioPerfil> result = new ArrayList<>();
+        for (UsuarioPerfil usuarioPerfil : getUsuarioPerfilList()) {
+            if (usuarioPerfil.getPerfil().getAtivo()) {
+              result.add(usuarioPerfil);
+            }
+        }
+        return result;
     }
 
 }

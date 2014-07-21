@@ -18,7 +18,8 @@ import br.com.infox.epp.access.component.tree.LocalizacaoEstruturaRaiasTreeHandl
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
+import br.com.infox.epp.access.entity.Perfil;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -29,7 +30,7 @@ public class SwimlaneHandler implements Serializable {
     private Swimlane swimlane;
     private Localizacao localizacao;
     private Papel papel;
-    private List<UsuarioLocalizacao> localPapelList = new ArrayList<UsuarioLocalizacao>();
+    private List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>();
     private boolean dirty;
     private List<Papel> papelList;
     private boolean contabilizar = false;
@@ -73,11 +74,11 @@ public class SwimlaneHandler implements Serializable {
         if (localizacao == null) {
             return;
         }
-        UsuarioLocalizacao u = new UsuarioLocalizacao();
-        u.setLocalizacao(localizacao);
-        u.setPapel(papel);
-        u.setContabilizar(contabilizar);
-        getLocalPapelList().add(u);
+        UsuarioPerfil usuarioPerfil = new UsuarioPerfil();
+        usuarioPerfil.setPerfil(new Perfil());
+        usuarioPerfil.getPerfil().setLocalizacao(localizacao);
+        usuarioPerfil.getPerfil().setPapel(papel);
+        getUsuarioPerfilList().add(usuarioPerfil);
         buildExpression();
         LocalizacaoEstruturaRaiasTreeHandler estruturaRaiasTreeHandler = ComponentUtil.getComponent(LocalizacaoEstruturaRaiasTreeHandler.NAME);
         PapelTreeHandler papelTreeHandler = ComponentUtil.getComponent(PapelTreeHandler.NAME);
@@ -96,40 +97,39 @@ public class SwimlaneHandler implements Serializable {
         return papelList;
     }
 
-    public void removeLocalPapel(UsuarioLocalizacao u) {
-        for (Iterator<UsuarioLocalizacao> i = localPapelList.iterator(); i.hasNext();) {
-            UsuarioLocalizacao uloc = i.next();
-            Localizacao l = uloc.getLocalizacao();
-            Papel p = uloc.getPapel();
+    public void removeUsuarioPerfil(UsuarioPerfil usuarioPerfil) {
+        for (Iterator<UsuarioPerfil> iterator = usuarioPerfilList.iterator(); iterator.hasNext();) {
+            UsuarioPerfil nodeUsuarioPerfil = iterator.next();
+            Localizacao localizacao = nodeUsuarioPerfil.getPerfil().getLocalizacao();
+            Papel papel = nodeUsuarioPerfil.getPerfil().getPapel();
             boolean mesmoPapel = false;
-            if (p == null) {
-                mesmoPapel = u.getPapel() == null;
+            if (papel == null) {
+                mesmoPapel = usuarioPerfil.getPerfil().getPapel() == null;
             } else {
-                mesmoPapel = p.equals(u.getPapel());
+                mesmoPapel = papel.equals(usuarioPerfil.getPerfil().getPapel());
             }
-            if (l.equals(u.getLocalizacao()) && mesmoPapel) {
-                i.remove();
+            if (localizacao.equals(usuarioPerfil.getPerfil().getLocalizacao()) && mesmoPapel) {
+                iterator.remove();
             }
         }
         buildExpression();
     }
 
     private void buildExpression() {
-        if (getLocalPapelList().isEmpty()) {
+        if (getUsuarioPerfilList().isEmpty()) {
             swimlane.setPooledActorsExpression("#{localizacaoAssignment.getPooledActors()}");
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append("#{localizacaoAssignment.getPooledActors('");
             boolean first = true;
-            for (UsuarioLocalizacao u : getLocalPapelList()) {
+            for (UsuarioPerfil usuarioPerfil : getUsuarioPerfilList()) {
                 if (!first) {
                     sb.append(",");
                 }
-                sb.append(u.getLocalizacao().getIdLocalizacao());
-                if (u.getPapel() != null) {
-                    sb.append(":").append(u.getPapel().getIdPapel());
+                sb.append(usuarioPerfil.getPerfil().getLocalizacao().getIdLocalizacao());
+                if (usuarioPerfil.getPerfil().getPapel() != null) {
+                    sb.append(":").append(usuarioPerfil.getPerfil().getPapel().getIdPapel());
                 }
-                sb.append(":").append(u.getContabilizar());
                 first = false;
             }
             sb.append("')}");
@@ -183,11 +183,11 @@ public class SwimlaneHandler implements Serializable {
                         }
                     }
                     Localizacao loc = localizacaoManager().find(Integer.parseInt(local));
-                    UsuarioLocalizacao u = new UsuarioLocalizacao();
-                    u.setLocalizacao(loc);
-                    u.setPapel(papel);
-                    u.setContabilizar(sh.getContabilizar());
-                    sh.getLocalPapelList().add(u);
+                    UsuarioPerfil usuarioPerfil = new UsuarioPerfil();
+                    usuarioPerfil.setPerfil(new Perfil());
+                    usuarioPerfil.getPerfil().setLocalizacao(loc);
+                    usuarioPerfil.getPerfil().setPapel(papel);
+                    sh.getUsuarioPerfilList().add(usuarioPerfil);
                 }
             }
             ret.add(sh);
@@ -235,12 +235,12 @@ public class SwimlaneHandler implements Serializable {
         return papel;
     }
 
-    public void setLocalPapelList(List<UsuarioLocalizacao> localPapelList) {
-        this.localPapelList = localPapelList;
+    public void setUsuarioPerfilList(List<UsuarioPerfil> localPapelList) {
+        this.usuarioPerfilList = localPapelList;
     }
 
-    public List<UsuarioLocalizacao> getLocalPapelList() {
-        return localPapelList;
+    public List<UsuarioPerfil> getUsuarioPerfilList() {
+        return usuarioPerfilList;
     }
 
     public void setContabilizar(boolean contabilizar) {

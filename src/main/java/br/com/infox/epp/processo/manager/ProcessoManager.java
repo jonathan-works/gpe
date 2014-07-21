@@ -19,8 +19,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
@@ -95,11 +95,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return processoEpaDAO.hasPartes(processo);
     }
 
-    public void visualizarTask(final Processo processo, final Long idTarefa,
-            final UsuarioLocalizacao usrLoc) {
+    public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioPerfil usuarioPerfil) {
         final BusinessProcess bp = BusinessProcess.instance();
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+            final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
 
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
@@ -127,12 +126,12 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     }
 
     public void iniciarTask(final Processo processo, final Long idTarefa,
-            final UsuarioLocalizacao usrLoc) throws DAOException {
-        final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+            final UsuarioPerfil usuarioPerfil) throws DAOException {
+        final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo, idTarefa);
         final String actorId = Actor.instance().getId();
         if (taskInstanceId != null) {
             iniciaTask(processo, taskInstanceId);
-            storeUsuario(taskInstanceId, usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel());
+            storeUsuario(taskInstanceId, usuarioPerfil.getUsuarioLogin(), usuarioPerfil.getPerfil().getLocalizacao(), usuarioPerfil.getPerfil().getPapel());
             vinculaUsuario(processo, actorId);
         }
     }
@@ -143,13 +142,13 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         flush();
     }
 
-    private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc,
+    private Long getTaskInstanceId(final UsuarioPerfil usuarioPerfil,
             final Processo processo, final Long idTarefa) {
         Long result;
         if (idTarefa != null) {
-            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
         } else {
-            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo);
+            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo);
         }
         return result;
     }

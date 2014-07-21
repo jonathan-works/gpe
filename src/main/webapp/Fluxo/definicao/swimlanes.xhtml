@@ -72,15 +72,15 @@
             </wi:inputText>
             <ui:decorate template="dataTable.xhtml">
                 <ui:param name="values"
-                    value="#{swimlaneFitter.currentSwimlane.localPapelList}" />
+                    value="#{swimlaneFitter.currentSwimlane.usuarioPerfilList}" />
                 <ui:param name="id" value="localPapeis" />
                 <ui:param name="styleClass" value="PerfilSwimlane" />
                 <ui:define name="toolBar">
                     <h:graphicImage
-                        title="#{messages['processBuilder.swimlane.removeLocalPapel']}"
+                        title="#{messages['processBuilder.swimlane.removeUsuarioPerfil']}"
                         url="#{a4jSkin.imgFolder}/remove.png">
                         <a:ajax event="click"
-                            listener="#{swimlaneFitter.currentSwimlane.removeLocalPapel(row)}"
+                            listener="#{swimlaneFitter.currentSwimlane.removeUsuarioPerfil(row)}"
                             execute="@this"
                             onbeforesubmit="return confirm('#{messages['processBuilder.confirm']}')"
                             render="swimlanesForm" limitRender="true" />
@@ -90,17 +90,11 @@
                 <ui:define name="columns">
                     <rich:column>
                         <f:facet name="header">#{messages['localizacao.localizacao']}</f:facet>
-                        <h:outputText value="#{row.localizacao}" />
+                        <h:outputText value="#{row.perfil.localizacao}" />
                     </rich:column>
                     <rich:column>
                         <f:facet name="header">#{messages['papel.papel']}</f:facet>
-                        <h:outputText value="#{row.papel}" />
-                    </rich:column>
-                    <rich:column styleClass="PerfilContabilizar">
-                        <f:facet styleClass="PerfilContabilizar"
-                            name="header">#{messages['processBuilder.contabilizar']}</f:facet>
-                        <h:outputText
-                            value="#{row.contabilizar ? messages['processBuilder.contabilizar.true'] : messages['processBuilder.contabilizar.false']}" />
+                        <h:outputText value="#{row.perfil.papel}" />
                     </rich:column>
                     <f:facet name="footer">
                         <rich:columnGroup>
@@ -130,11 +124,6 @@
                                     assignTo="swimlaneFitter.currentSwimlane.papel"
                                     folderSelectable="true"
                                     required="true" />
-                            </rich:column>
-                            <rich:column>
-                                <wi:selectBooleanCheckbox
-                                    id="contabilizar"
-                                    value="#{swimlaneFitter.currentSwimlane.contabilizar}" />
                             </rich:column>
                         </rich:columnGroup>
                     </f:facet>

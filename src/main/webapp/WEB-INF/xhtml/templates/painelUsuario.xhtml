@@ -10,17 +10,17 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf">
   <ui:param name="selectable"
-    value="#{authenticator.usuarioLocalizacaoListItems.size() gt 1}" />
+    value="#{authenticator.usuarioPerfilListItems.size() gt 1}" />
   <div class="painelUsuario">
 
     <c:if test="#{selectable}">
       <h:form id="papeisUsuarioForm">
         <wi:selectOneMenuEntity
-          value="#{authenticator.localizacaoAtualCombo}"
-          id="usuarioLocalizacao"
+          value="#{authenticator.usuarioPerfilAtualCombo}"
+          id="usuarioPerfil"
           template="/WEB-INF/xhtml/components/templates/display.xhtml"
           onchange="this.form.submit()"
-          items="#{authenticator.usuarioLocalizacaoListItems}"
+          items="#{authenticator.usuarioPerfilListItems}"
           label="#{usuarioLogado}" labelClass="painelUsuario-label"
           valueClass="painelUsuario-select">
         </wi:selectOneMenuEntity>
@@ -30,7 +30,7 @@
     <c:if test="#{not selectable}">
       <h:outputText styleClass="painelUsuario-label"
         value="#{usuarioLogado}" />
-      <h:outputText value="#{authenticator.localizacaoAtualCombo}" />
+      <h:outputText value="#{authenticator.usuarioPerfilAtualCombo}" />
     </c:if>
   </div>
 
