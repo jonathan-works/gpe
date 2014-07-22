@@ -19,6 +19,7 @@
             tableTitle="#{messages['unidadeDecisoraColegiada.tableTitle']}"
             id="unidadeDecisoraColegiadaList"
             rowId="#{row.idUnidadeDecisoraColegiada}">
+            
             <ui:define name="searchForm">
                 <wi:searchForm
                     formId="pesquisarUnidadeDecisoraMonocraticaForm"
@@ -50,12 +51,12 @@
             
             <wi:columnOutputText
                 columnId="unidadeDecisoraMonocraticas"
-                columnHeader="#{messages['unidadeDecisoraColegiada.unidadesAssociadas']}"
+                columnHeader="#{messages['unidadeDecisoraColegiada.unidadesMonocraticas']}"
                 hideOrder="true">
                 <ui:repeat
                     var="uniColegiadaMono"
-                    value="#{row.uniDecisoraColegiadaMonoList}">
-                    <div>#{uniColegiadaMono.unidadeDecisoraMonocratica}</div>
+                    value="#{row.unidadeDecisoraColegiadaMonocraticaList}">
+                    <div>#{uniColegiadaMono.unidadeDecisoraMonocratica.nome}</div>
                 </ui:repeat>
             </wi:columnOutputText>
             
@@ -82,15 +83,65 @@
 	               id="ativo"
 	               label="#{messages['field.situacao']}"
 	               value="#{unidadeDecisoraColegiadaCrudAction.instance.ativo}"/>
-	         <s:div>
-		         <h:outputLabel value="Associação de Unidades Decisoras Monocráticas" styleClass="name" style="padding: 10px 0px;"/>
-		         <wi:pickList id="selectUDMonocraticaId" 
-		         			  value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaAssociadasList}"
-		         			  itemValues="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"
-		         			  sourceCaption="Unidades Decisoras Monocráticas Disponíveis"
-                        	  targetCaption="Unidades Decisoras Monocráticas Associadas"
-                        	  itemLabel="#{var}"/>
-	         </s:div>
+	               
+	         <rich:panel id="unidadesMonocraticasAssociadasDiv" 
+	         			 rendered="#{home.managed}"
+	         			 header="#{messages['unidadeDecisoraColegiada.unidadesMonocraticas']}">
+	         			 
+		         <wi:selectOneMenuEntity 
+		         			id="selectUnidadesDemocraticas"
+		         			label="#{messages['unidadeDecisoraColegiada.unidadeDecisoraMonocratica']}"
+		         			value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraColegiadaMonocratica.unidadeDecisoraMonocratica}"
+		         			itemValues="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"
+		         			required="true"/>
+		         
+		         <wi:selectBooleanCheckbox
+		         			id="checkPresidente"
+		         			label="#{messages['unidadeDecisoraColegiada.presidente']}"
+		         			value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraColegiadaMonocratica.presidente}"
+		         			disabled="#{unidadeDecisoraColegiadaCrudAction.jaPosuiPresidente()}"/>
+		         <s:div>
+			         <wi:commandButton 
+			         			id="buttonAdicionarMonocratica"
+			         			action="unidadeDecisoraColegiadaCrudAction.adicionarUnidadeMonocratica()"
+			         			value="Adicionar"
+			         			reRender="dataTableAssociada, pageBodyDialogMessage"/>
+		         </s:div>
+		         
+		         <rich:dataTable id="dataTableAssociada"
+		         			    values="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraColegiadaMonocraticaList}"
+		         			    style="width:100%; margin-bottom:10px; margin-top:10px;"
+		         			    var="row">
+		         			    
+		         		<f:facet name="header">
+		                	<h:outputText value="#{messages['unidadeDecisoraColegiada.unidadesMonocraticasAssociadas']}"/>
+				        </f:facet>
+		         		
+		         		<wi:columnOutputText 
+		         				columnId="nome"
+                				columnHeader="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"
+                				value="#{row.unidadeDecisoraMonocratica.nome}"
+                				hideOrder="true"/>
+                				
+                		<wi:columnOutputText
+				                columnId="localizacao"
+				                columnHeader="#{messages['unidadeDecisoraMonocratica.localizacao']}"
+				                value="#{row.unidadeDecisoraMonocratica.localizacao}"
+				                hideOrder="true"/>
+				                
+				        <wi:columnOutputText
+				        		columnId="presidente"
+				                columnHeader="#{messages['unidadeDecisoraColegiada.presidente']}"
+				                value="#{row.presidente ? messages['entity.ativo'] : messages['entity.inativo']}"
+				                hideOrder="true"/>
+				                
+				        <f:facet name="footer">
+		                	<h:outputText value="Registros"/>
+				        </f:facet>
+		         
+		         </rich:dataTable>
+	         </rich:panel>
+	         
         </wi:dataForm>
     </ui:define>
     

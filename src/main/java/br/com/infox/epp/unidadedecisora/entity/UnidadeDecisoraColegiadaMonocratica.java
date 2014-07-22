@@ -2,7 +2,6 @@ package br.com.infox.epp.unidadedecisora.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,9 +16,9 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = UniDecisoraColegiadaMono.TABLE_NAME, 
+@Table(name = UnidadeDecisoraColegiadaMonocratica.TABLE_NAME, 
 	   uniqueConstraints = @UniqueConstraint(columnNames={"id_uni_decisora_monocratica", "id_uni_decisora_colegiada"}))
-public class UniDecisoraColegiadaMono implements Serializable {
+public class UnidadeDecisoraColegiadaMonocratica implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_uni_decisora_colegiada_mono";
@@ -28,16 +27,16 @@ public class UniDecisoraColegiadaMono implements Serializable {
 	@SequenceGenerator(allocationSize=1, initialValue=1, name="UniDecisoraColegiadaMonoGenerator", sequenceName="sq_uni_decisora_colegiada_mono")
 	@GeneratedValue(generator="UniDecisoraColegiadaMonoGenerator")
 	@Column(name="id_uni_decisora_colegiada_mono", unique = true, nullable = false)
-	private Integer idUniDecisoraColegiadaMono;
+	private Integer idUnidadeDecisoraColegiadaMonocratica;
 	
 	@NotNull
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="id_uni_decisora_monocratica", updatable=false, nullable=false)
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_uni_decisora_monocratica", insertable=false, updatable=false, nullable=false)
 	private UnidadeDecisoraMonocratica unidadeDecisoraMonocratica;
 	
 	@NotNull
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="id_uni_decisora_colegiada", updatable=false, nullable=false)
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_uni_decisora_colegiada", insertable=false, updatable=false, nullable=false)
 	private UnidadeDecisoraColegiada unidadeDecisoraColegiada;
 	
 	@Column(name="in_presidente", nullable=false)
@@ -50,12 +49,13 @@ public class UniDecisoraColegiadaMono implements Serializable {
 		}
 	}
 
-	public Integer getIdUniDecisoraColegiadaMono() {
-		return idUniDecisoraColegiadaMono;
+	public Integer getIdUnidadeDecisoraColegiadaMonocratica() {
+		return idUnidadeDecisoraColegiadaMonocratica;
 	}
 
-	public void setIdUniDecisoraColegiadaMono(Integer idUniDecisoraColegiadaMono) {
-		this.idUniDecisoraColegiadaMono = idUniDecisoraColegiadaMono;
+	public void setIdUnidadeDecisoraColegiadaMonocratica(
+			Integer idUnidadeDecisoraColegiadaMonocratica) {
+		this.idUnidadeDecisoraColegiadaMonocratica = idUnidadeDecisoraColegiadaMonocratica;
 	}
 
 	public UnidadeDecisoraMonocratica getUnidadeDecisoraMonocratica() {
@@ -88,8 +88,8 @@ public class UniDecisoraColegiadaMono implements Serializable {
 		int result = 1;
 		result = prime
 				* result
-				+ ((idUniDecisoraColegiadaMono == null) ? 0
-						: idUniDecisoraColegiadaMono.hashCode());
+				+ ((idUnidadeDecisoraColegiadaMonocratica == null) ? 0
+						: idUnidadeDecisoraColegiadaMonocratica.hashCode());
 		return result;
 	}
 
@@ -99,14 +99,14 @@ public class UniDecisoraColegiadaMono implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof UniDecisoraColegiadaMono))
+		if (!(obj instanceof UnidadeDecisoraColegiadaMonocratica))
 			return false;
-		UniDecisoraColegiadaMono other = (UniDecisoraColegiadaMono) obj;
-		if (idUniDecisoraColegiadaMono == null) {
-			if (other.idUniDecisoraColegiadaMono != null)
+		UnidadeDecisoraColegiadaMonocratica other = (UnidadeDecisoraColegiadaMonocratica) obj;
+		if (idUnidadeDecisoraColegiadaMonocratica == null) {
+			if (other.idUnidadeDecisoraColegiadaMonocratica != null)
 				return false;
-		} else if (!idUniDecisoraColegiadaMono
-				.equals(other.idUniDecisoraColegiadaMono))
+		} else if (!idUnidadeDecisoraColegiadaMonocratica
+				.equals(other.idUnidadeDecisoraColegiadaMonocratica))
 			return false;
 		return true;
 	}
