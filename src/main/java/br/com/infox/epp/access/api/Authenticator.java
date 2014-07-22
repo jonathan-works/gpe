@@ -137,10 +137,13 @@ public class Authenticator {
 
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) {
         boolean termoAdesao = false;
-        for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilList()) {
-            Papel papel = usuarioPerfil.getPerfil().getPapel();
-            if (termoAdesao=papel.getTermoAdesao()) {
-                break;
+        final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
+        if (perfilAtivoList != null) {
+            for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
+                Papel papel = usuarioPerfil.getPerfil().getPapel();
+                if (termoAdesao=papel.getTermoAdesao()) {
+                    break;
+                }
             }
         }
         Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, termoAdesao);
