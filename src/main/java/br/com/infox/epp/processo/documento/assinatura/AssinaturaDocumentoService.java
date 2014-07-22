@@ -174,31 +174,32 @@ public class AssinaturaDocumentoService implements Serializable {
         }
     }
 
-    public void assinarDocumento(final ProcessoDocumento processoDocumento,
-            final UsuarioPerfil perfilAtual, final String certChain,
-            final String signature) throws CertificadoException,
-            AssinaturaException {
+    public void assinarDocumento(final ProcessoDocumentoBin processoDocumentoBin, final UsuarioPerfil perfilAtual, final String certChain, final String signature) throws CertificadoException, AssinaturaException{
         final UsuarioLogin usuario = perfilAtual.getUsuarioLogin();
         verificaCertificadoUsuarioLogado(certChain, usuario);
 
         final String nomeUsuario = usuario.getNomeUsuario();
         final Papel papel = perfilAtual.getPerfil().getPapel();
-        final ProcessoDocumentoBin processoDocumentoBin = processoDocumento
-                .getProcessoDocumentoBin();
-
+        
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento();
         assinaturaDocumento.setProcessoDocumentoBin(processoDocumentoBin);
         assinaturaDocumento.setDataAssinatura(new Date());
         assinaturaDocumento.setCertChain(certChain);
         assinaturaDocumento.setSignature(signature);
-        assinaturaDocumento.setNomeLocalizacao(perfilAtual.getPerfil().getLocalizacao()
-                .getLocalizacao());
+        assinaturaDocumento.setNomeLocalizacao(perfilAtual.getPerfil().getLocalizacao().getLocalizacao());
         assinaturaDocumento.setNomePapel(papel.getNome());
         assinaturaDocumento.setNomeUsuario(nomeUsuario);
         assinaturaDocumento.setUsuario(usuario);
         assinaturaDocumento.setPapel(papel);
 
         processoDocumentoBin.getAssinaturas().add(assinaturaDocumento);
+    }
+    
+    public void assinarDocumento(final ProcessoDocumento processoDocumento,
+            final UsuarioPerfil perfilAtual, final String certChain,
+            final String signature) throws CertificadoException,
+            AssinaturaException {
+        this.assinarDocumento(processoDocumento.getProcessoDocumentoBin(), perfilAtual, certChain, signature);
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, UsuarioPerfil perfil) {
