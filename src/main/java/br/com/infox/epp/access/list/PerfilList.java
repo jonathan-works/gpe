@@ -18,6 +18,9 @@ public class PerfilList extends EntityList<Perfil> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "perfilList";
     
+    public static final String TEMPLATE = "/Perfil/PerfilTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Perfis.xls";
+    
     private static final String DEFAULT_EJBQL = "select o from Perfil o";
     private static final String DEFAULT_ORDER = "descricao";
 
@@ -42,6 +45,16 @@ public class PerfilList extends EntityList<Perfil> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
+
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
     }
 
 }
