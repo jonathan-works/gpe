@@ -29,7 +29,7 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	private Integer idUnidadeDecisoraColegiada;
 	
 	@NotNull
-	@Column(name = "ds_uni_decisora_colegiada", nullable = false)
+	@Column(name = "ds_uni_decisora_colegiada", nullable = false, unique=true)
 	private String nome;
 	
 	@NotNull
@@ -37,7 +37,7 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	private Boolean ativo;
 	
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH, mappedBy="unidadeDecisoraColegiada")
-	private List<UniDecisoraColegiadaMono> uniDecisoraColegiadaMonoList = new ArrayList<>();
+	private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 	
 	public Integer getIdUnidadeDecisoraColegiada() {
 		return idUnidadeDecisoraColegiada;
@@ -63,12 +63,13 @@ public class UnidadeDecisoraColegiada implements Serializable {
 		this.ativo = ativo;
 	}
 	
-	public List<UniDecisoraColegiadaMono> getUniDecisoraColegiadaMonoList() {
-		return uniDecisoraColegiadaMonoList;
+	public List<UnidadeDecisoraColegiadaMonocratica> getUnidadeDecisoraColegiadaMonocraticaList() {
+		return unidadeDecisoraColegiadaMonocraticaList;
 	}
 
-	public void setUniDecisoraColegiadaMonoList(List<UniDecisoraColegiadaMono> uniDecisoraColegiadaMonoList) {
-		this.uniDecisoraColegiadaMonoList = uniDecisoraColegiadaMonoList;
+	public void setUnidadeDecisoraColegiadaMonocraticaList(
+			List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList) {
+		this.unidadeDecisoraColegiadaMonocraticaList = unidadeDecisoraColegiadaMonocraticaList;
 	}
 
 	@Override

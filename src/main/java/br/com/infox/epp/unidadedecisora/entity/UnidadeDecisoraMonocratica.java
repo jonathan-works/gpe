@@ -29,7 +29,7 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 	private Integer idUnidadeDecisoraMonocratica;
 	
 	@NotNull
-	@Column(name="ds_uni_decisora_monocratica", nullable=false)
+	@Column(name="ds_uni_decisora_monocratica", nullable=false, unique=true)
 	private String nome;
 
 	@ManyToOne(fetch=FetchType.LAZY)

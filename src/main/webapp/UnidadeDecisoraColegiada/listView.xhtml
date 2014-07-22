@@ -19,6 +19,7 @@
             tableTitle="#{messages['unidadeDecisoraColegiada.tableTitle']}"
             id="unidadeDecisoraColegiadaList"
             rowId="#{row.idUnidadeDecisoraColegiada}">
+            
             <ui:define name="searchForm">
                 <wi:searchForm
                     formId="pesquisarUnidadeDecisoraMonocraticaForm"
@@ -32,8 +33,10 @@
                     
                     <wi:selectOneMenuEntity
                     	id="unidadeMonocratica"
+                    	showLabelTodos="true"
+                    	label="#{messages['unidadeDecisoraColegiada.unidadeDecisoraMonocratica']}"
                     	value="#{unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica}"
-                    	valueItems="#{unidadeDecisoraColegiadaList.getAllUniDecisoraMonocratica()}"/>
+                    	items="#{unidadeDecisoraColegiadaList.getAllUniDecisoraMonocratica()}"/>
                     	
                     <wi:selectSituacaoOneMenu
                         id="ativo"
@@ -50,12 +53,12 @@
             
             <wi:columnOutputText
                 columnId="unidadeDecisoraMonocraticas"
-                columnHeader="#{messages['unidadeDecisoraColegiada.unidadesAssociadas']}"
+                columnHeader="#{messages['unidadeDecisoraColegiada.unidadesMonocraticas']}"
                 hideOrder="true">
                 <ui:repeat
                     var="uniColegiadaMono"
-                    value="#{row.uniDecisoraColegiadaMonoList}">
-                    <div>#{uniColegiadaMono.unidadeDecisoraMonocratica}</div>
+                    value="#{row.unidadeDecisoraColegiadaMonocraticaList}">
+                    <div>#{uniColegiadaMono.unidadeDecisoraMonocratica.nome}</div>
                 </ui:repeat>
             </wi:columnOutputText>
             
@@ -82,15 +85,75 @@
 	               id="ativo"
 	               label="#{messages['field.situacao']}"
 	               value="#{unidadeDecisoraColegiadaCrudAction.instance.ativo}"/>
-	         <s:div>
-		         <h:outputLabel value="Associação de Unidades Decisoras Monocráticas" styleClass="name" style="padding: 10px 0px;"/>
-		         <wi:pickList id="selectUDMonocraticaId" 
-		         			  value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaAssociadasList}"
-		         			  itemValues="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"
-		         			  sourceCaption="Unidades Decisoras Monocráticas Disponíveis"
-                        	  targetCaption="Unidades Decisoras Monocráticas Associadas"
-                        	  itemLabel="#{var}"/>
-	         </s:div>
+	               
+	         <rich:panel id="unidadesMonocraticasAssociadasDiv" 
+	         			 rendered="#{home.managed}"
+	         			 header="#{messages['unidadeDecisoraColegiada.unidadesMonocraticas']}">
+	         			 
+		         <wi:selectOneMenuEntity 
+		         			id="selectUnidadesDemocraticas"
+		         			showLabelSelecione="true"
+		         			label="#{messages['unidadeDecisoraColegiada.unidadeDecisoraMonocratica']}"
+		         			value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraColegiadaMonocratica.unidadeDecisoraMonocratica}"
+		         			items="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"/>
+		         
+		         <wi:selectBooleanCheckbox
+		         			id="checkPresidente"
+		         			label="#{messages['unidadeDecisoraColegiada.presidente']}"
+		         			value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraColegiadaMonocratica.presidente}"
+		         			disabled="#{unidadeDecisoraColegiadaCrudAction.jaPosuiPresidente()}"/>
+		         <s:div>
+			         <wi:commandButton 
+			         			id="buttonAdicionarMonocratica"
+			         			action="unidadeDecisoraColegiadaCrudAction.adicionarUnidadeMonocratica()"
+			         			value="Adicionar"
+			         			reRender="dataTableAssociada, selectUnidadesDemocraticasDecoration, pageBodyDialogMessage"/>
+		         </s:div>
+		         
+		         <rich:dataTable id="dataTableAssociada"
+		         			     value="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraColegiadaMonocraticaList}"
+		         			     style="width:100%; margin-bottom:10px; margin-top:10px;"
+		         			     var="row" >
+		         			    
+		         		<f:facet name="header">
+		                	<h:outputText value="#{messages['unidadeDecisoraColegiada.unidadesMonocraticasAssociadas']}"/>
+				        </f:facet>
+				        
+				        <rich:column id="toolBar" styleClass="dt-toolbar-col" width="5%">
+				            <wi:toolBarRemove id="toolBarRemove" 
+				            				  actionRemove="#{unidadeDecisoraColegiadaCrudAction.removerUnidadeDemocratica(row)}" 
+				            				  reRenderRemove="dataTableAssociada, pageBodyDialogMessage, selectUnidadesDemocraticasDecoration"/>
+				        </rich:column>
+				        
+				        <rich:column id="nome" width="45%">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.unidadeDecisoraMonocratica.nome}"/>
+				        </rich:column>
+				        
+				        <rich:column id="localizacao" width="30%">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraMonocratica.localizacao']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.unidadeDecisoraMonocratica.localizacao}"/>
+				        </rich:column>
+				        
+				        <rich:column id="presidente" width="20%">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraColegiada.presidente']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.presidente ? 'Sim' : 'Não'}"/>
+				        </rich:column>
+				                
+		         </rich:dataTable>
+	         </rich:panel>
+	         
+	         <ui:define name="buttons">
+	         	<wi:commandButtonSave execute="nomeDecoration, ativoDecoration"/>
+                <wi:commandButtonNew />
+	         </ui:define>
+	         
         </wi:dataForm>
     </ui:define>
     
