@@ -31,12 +31,12 @@ public class UnidadeDecisoraColegiadaMonocratica implements Serializable {
 	
 	@NotNull
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_uni_decisora_monocratica", insertable=false, updatable=false, nullable=false)
+	@JoinColumn(name="id_uni_decisora_monocratica", updatable=false, nullable=false)
 	private UnidadeDecisoraMonocratica unidadeDecisoraMonocratica;
 	
 	@NotNull
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_uni_decisora_colegiada", insertable=false, updatable=false, nullable=false)
+	@JoinColumn(name="id_uni_decisora_colegiada", updatable=false, nullable=false)
 	private UnidadeDecisoraColegiada unidadeDecisoraColegiada;
 	
 	@Column(name="in_presidente", nullable=false)

@@ -33,8 +33,10 @@
                     
                     <wi:selectOneMenuEntity
                     	id="unidadeMonocratica"
+                    	showLabelTodos="true"
+                    	label="#{messages['unidadeDecisoraColegiada.unidadeDecisoraMonocratica']}"
                     	value="#{unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica}"
-                    	valueItems="#{unidadeDecisoraColegiadaList.getAllUniDecisoraMonocratica()}"/>
+                    	items="#{unidadeDecisoraColegiadaList.getAllUniDecisoraMonocratica()}"/>
                     	
                     <wi:selectSituacaoOneMenu
                         id="ativo"
@@ -90,10 +92,10 @@
 	         			 
 		         <wi:selectOneMenuEntity 
 		         			id="selectUnidadesDemocraticas"
+		         			showLabelSelecione="true"
 		         			label="#{messages['unidadeDecisoraColegiada.unidadeDecisoraMonocratica']}"
 		         			value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraColegiadaMonocratica.unidadeDecisoraMonocratica}"
-		         			itemValues="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"
-		         			required="true"/>
+		         			items="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"/>
 		         
 		         <wi:selectBooleanCheckbox
 		         			id="checkPresidente"
@@ -105,42 +107,52 @@
 			         			id="buttonAdicionarMonocratica"
 			         			action="unidadeDecisoraColegiadaCrudAction.adicionarUnidadeMonocratica()"
 			         			value="Adicionar"
-			         			reRender="dataTableAssociada, pageBodyDialogMessage"/>
+			         			reRender="dataTableAssociada, selectUnidadesDemocraticasDecoration, pageBodyDialogMessage"/>
 		         </s:div>
 		         
 		         <rich:dataTable id="dataTableAssociada"
-		         			    values="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraColegiadaMonocraticaList}"
-		         			    style="width:100%; margin-bottom:10px; margin-top:10px;"
-		         			    var="row">
+		         			     value="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraColegiadaMonocraticaList}"
+		         			     style="width:100%; margin-bottom:10px; margin-top:10px;"
+		         			     var="row" >
 		         			    
 		         		<f:facet name="header">
 		                	<h:outputText value="#{messages['unidadeDecisoraColegiada.unidadesMonocraticasAssociadas']}"/>
 				        </f:facet>
-		         		
-		         		<wi:columnOutputText 
-		         				columnId="nome"
-                				columnHeader="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"
-                				value="#{row.unidadeDecisoraMonocratica.nome}"
-                				hideOrder="true"/>
-                				
-                		<wi:columnOutputText
-				                columnId="localizacao"
-				                columnHeader="#{messages['unidadeDecisoraMonocratica.localizacao']}"
-				                value="#{row.unidadeDecisoraMonocratica.localizacao}"
-				                hideOrder="true"/>
+				        
+				        <rich:column id="toolBar" styleClass="dt-toolbar-col" width="5%">
+				            <wi:toolBarRemove id="toolBarRemove" 
+				            				  actionRemove="#{unidadeDecisoraColegiadaCrudAction.removerUnidadeDemocratica(row)}" 
+				            				  reRenderRemove="dataTableAssociada, pageBodyDialogMessage, selectUnidadesDemocraticasDecoration"/>
+				        </rich:column>
+				        
+				        <rich:column id="nome" width="45%">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.unidadeDecisoraMonocratica.nome}"/>
+				        </rich:column>
+				        
+				        <rich:column id="localizacao" width="30%">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraMonocratica.localizacao']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.unidadeDecisoraMonocratica.localizacao}"/>
+				        </rich:column>
+				        
+				        <rich:column id="presidente" width="20%">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraColegiada.presidente']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.presidente ? 'Sim' : 'Não'}"/>
+				        </rich:column>
 				                
-				        <wi:columnOutputText
-				        		columnId="presidente"
-				                columnHeader="#{messages['unidadeDecisoraColegiada.presidente']}"
-				                value="#{row.presidente ? messages['entity.ativo'] : messages['entity.inativo']}"
-				                hideOrder="true"/>
-				                
-				        <f:facet name="footer">
-		                	<h:outputText value="Registros"/>
-				        </f:facet>
-		         
 		         </rich:dataTable>
 	         </rich:panel>
+	         
+	         <ui:define name="buttons">
+	         	<wi:commandButtonSave execute="nomeDecoration, ativoDecoration"/>
+                <wi:commandButtonNew />
+	         </ui:define>
 	         
         </wi:dataForm>
     </ui:define>

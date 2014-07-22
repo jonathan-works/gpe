@@ -8,8 +8,8 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiadaMonocratica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiadaMonocratica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaMonocraticaManager;
@@ -29,29 +29,21 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 	private UnidadeDecisoraColegiadaMonocratica unidadeDecisoraColegiadaMonocratica;
 	private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaItemList;
 	
-	@Override
-	public void onClickFormTab() {
-		super.onClickFormTab();
-		unidadeDecisoraMonocraticaItemList = null;
-		unidadeDecisoraColegiadaMonocratica = new UnidadeDecisoraColegiadaMonocratica();
-	}
-	
-	public void adicionarUnidadeMonocratica(){
-		try {
+	public void adicionarUnidadeMonocratica() {
+		try {	
+			unidadeDecisoraColegiadaMonocratica.setUnidadeDecisoraColegiada(getInstance());
 			unidadeDecisoraColegiadaMonocraticaManager.persist(unidadeDecisoraColegiadaMonocratica);
+			getInstance().getUnidadeDecisoraColegiadaMonocraticaList().add(unidadeDecisoraColegiadaMonocratica);
 			FacesMessages.instance().add(MSG_REGISTRO_CRIADO);
+			unidadeDecisoraColegiadaMonocratica = new UnidadeDecisoraColegiadaMonocratica();
 		} catch (DAOException e) {
 			FacesMessages.instance().add(e.getMessage());
 		}
 	}
 	
 	public void removerUnidadeDemocratica(UnidadeDecisoraColegiadaMonocratica unidadeDecisoraColegiadaMonocratica){
-		try {
-			unidadeDecisoraColegiadaMonocraticaManager.remove(unidadeDecisoraColegiadaMonocratica);
-			FacesMessages.instance().add(MSG_REGISTRO_REMOVIDO);
-		} catch (DAOException e) {
-			FacesMessages.instance().add(e.getMessage());
-		}
+		getInstance().getUnidadeDecisoraColegiadaMonocraticaList().remove(unidadeDecisoraColegiadaMonocratica);
+		FacesMessages.instance().add(MSG_REGISTRO_REMOVIDO);
 	}
 	
 	public boolean jaPosuiPresidente(){
@@ -64,9 +56,7 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 	}
 
 	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaItemList() {
-		if (unidadeDecisoraMonocraticaItemList == null){
-			unidadeDecisoraMonocraticaItemList = unidadeDecisoraColegiadaMonocraticaManager.getListUnidadeDecisoraMonocraticaAtivo((Integer) getId());
-		}
+		unidadeDecisoraMonocraticaItemList = unidadeDecisoraColegiadaMonocraticaManager.getListUnidadeDecisoraMonocraticaAtivo((Integer) getId());
 		return unidadeDecisoraMonocraticaItemList;
 	}
 
@@ -75,6 +65,9 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 	}
 
 	public UnidadeDecisoraColegiadaMonocratica getUnidadeDecisoraColegiadaMonocratica() {
+		if (unidadeDecisoraColegiadaMonocratica == null){
+			unidadeDecisoraColegiadaMonocratica = new UnidadeDecisoraColegiadaMonocratica();
+		}
 		return unidadeDecisoraColegiadaMonocratica;
 	}
 

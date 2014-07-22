@@ -27,6 +27,10 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
 	private static final String DEFAULT_EJBQL = "select o from UnidadeDecisoraColegiada o";
     private static final String DEFAULT_ORDER = "nome";
     
+    private static final String FILTRO_UNIDADE_MONOCRATICA = "exists (select 1 from UnidadeDecisoraColegiadaMonocratica udcm " +
+    														 "where udcm.unidadeDecisoraMonocratica = #{unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica} " +
+    														 "and udcm.unidadeDecisoraColegiada = o) ";
+    
     @In
     private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
     
@@ -41,6 +45,7 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
 	@Override
 	protected void addSearchFields() {
 		addSearchField("nome", SearchCriteria.CONTENDO);
+		addSearchField("unidadeDecisoraMonocratica", SearchCriteria.IGUAL, FILTRO_UNIDADE_MONOCRATICA);
 		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 

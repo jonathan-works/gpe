@@ -29,7 +29,7 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	private Integer idUnidadeDecisoraColegiada;
 	
 	@NotNull
-	@Column(name = "ds_uni_decisora_colegiada", nullable = false)
+	@Column(name = "ds_uni_decisora_colegiada", nullable = false, unique=true)
 	private String nome;
 	
 	@NotNull

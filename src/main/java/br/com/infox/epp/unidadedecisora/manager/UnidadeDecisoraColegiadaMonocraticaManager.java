@@ -26,10 +26,11 @@ public class UnidadeDecisoraColegiadaMonocraticaManager extends Manager<UnidadeD
 		Map<String, Object> map = new HashMap<String, Object>(1);
 		map.put("id", idColegiada);
 		return getDao().getResultList("select udm " + 
-									  "from UnidadeDecisoraColegiadaMonocratica udcm  " +
-									  "inner join udcm.unidadeDecisoraMonocratica udm " +
+									  "from UnidadeDecisoraMonocratica udm  " +
 									  "where udm.ativo = true " +
-									  "and udcm.unidadeDecisoraColegiada.idUnidadeDecisoraColegiada <> :id", map);
+									  "and not exists (select 1 from UnidadeDecisoraColegiadaMonocratica udcm " +
+									  "			   where udcm.unidadeDecisoraColegiada.idUnidadeDecisoraColegiada = :id " +
+									  "			   and udcm.unidadeDecisoraMonocratica = udm )", map);
 	}
-
+	
 }
