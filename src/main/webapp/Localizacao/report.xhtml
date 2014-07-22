@@ -12,7 +12,7 @@
         <ui:repeat
             var="row"
             value="#{localizacaoList.list()}">
-            <wi:reportColumn value="#{localizacaoCrudAction.formatCaminhoCompleto(row)}" />
+            <wi:reportColumn value="#{row.getCaminhoCompletoFormatado()}" />
             <wi:reportColumnSituacao value="#{row.ativo}" columnAlign="center" />
         </ui:repeat>
     </wi:dataReport>
