@@ -63,12 +63,14 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     private Localizacao localizacaoPai;
     private Estrutura estruturaFilho;
     private Estrutura estruturaPai;
-
+    
     private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<>(0);
     private List<Localizacao> localizacaoList = new ArrayList<>(0);
 
     private String caminhoCompleto;
     private Boolean temContaTwitter;
+    
+    private String caminhoCompletoFormatado;
 
     public Localizacao() {
         temContaTwitter = Boolean.FALSE;
@@ -150,6 +152,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     public void setEstruturaFilho(Estrutura estruturaFilho) {
         this.estruturaFilho = estruturaFilho;
+        this.caminhoCompletoFormatado = null;
     }
     
     @ManyToOne(fetch = LAZY)
@@ -178,6 +181,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     public void setCaminhoCompleto(String caminhoCompleto) {
         this.caminhoCompleto = caminhoCompleto;
+        this.caminhoCompletoFormatado = null;
     }
 
     @Override
@@ -265,4 +269,29 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     public void setChildList(List<Localizacao> childList) {
         this.setLocalizacaoList(childList);
     }
+
+    @Transient
+	public String getCaminhoCompletoFormatado() {
+		if (caminhoCompletoFormatado == null) {
+			StringBuilder sb = new StringBuilder(this.getCaminhoCompleto());
+	        if (sb.charAt(sb.length() -1) == '|') {
+	            sb.deleteCharAt(sb.length() - 1);
+	        }
+	        int index = sb.indexOf("|", 0);
+	        while (index != -1) {
+	            sb.replace(index, index + 1, " / ");
+	            index = sb.indexOf("|", index);
+	        }
+	        if (this.getEstruturaFilho() != null) {
+	            sb.append(": ");
+	            sb.append(this.getEstruturaFilho().getNome());
+	        }
+	        caminhoCompletoFormatado = sb.toString();
+		}
+    	return caminhoCompletoFormatado;
+	}
+
+	public void setCaminhoCompletoFormatado(String caminhoCompletoFormatado) {
+		this.caminhoCompletoFormatado = caminhoCompletoFormatado;
+	}
 }
