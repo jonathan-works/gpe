@@ -4,7 +4,10 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.security.Principal;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -15,25 +18,44 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.core.Events;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
+import org.jboss.seam.util.Strings;
 
+import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
+import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
+import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(AuthenticatorService.NAME)
 @AutoCreate
 public class AuthenticatorService implements Serializable {
-
+    public static final String CERTIFICATE_ERROR_EXPIRED = "certificate.error.expired";
+    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO = "certificate.error.usuarioLoginProvisorioExpirado";
+    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO = "certificate.error.usuarioLoginBloqueado";
+    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO = "certificate.error.usuarioLoginInativo";
+    private static final String CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA = "certificate.error.tipoUsuarioSistema";
+    private static final String CERTIFICATE_ERROR_SEM_USUARIO_LOGIN = "certificate.error.semUsuarioLogin";
+    private static final String CERTIFICATE_ERROR_SEM_PESSOA_FISICA = "certificate.error.semPessoaFisica";
+    private static final String CERTIFICATE_INVALID = "certificate.error.invalid";
+    private static final String SEAM_SECURITY_CREDENTIALS = "org.jboss.seam.security.credentials";
+    private static final String CHECK_VALIDADE_CERTIFICADO = "CertificateAuthenticator.checkValidadeCertificado(Certificado)";
     private static final long serialVersionUID = 1L;
     public static final String NAME = "authenticatorService";
 
@@ -41,13 +63,19 @@ public class AuthenticatorService implements Serializable {
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private BloqueioUsuarioManager bloqueioUsuarioManager;
-
+    @In
+    private PessoaFisicaManager pessoaFisicaManager;
+    @In
+    private CertificateManager certificateManager;
     @In
     private UsuarioPerfilDAO usuarioPerfilDAO;
     @In
     private ProcessoDAO processoDAO;
+    
+    public static final String CERTIFICATE_ERROR_UNKNOWN = "certificate.error.unknown";
 
-    private static final LogProvider LOG = Logging.getLogProvider(AuthenticatorService.class);
+    private static final LogProvider LOG = Logging
+            .getLogProvider(AuthenticatorService.class);
 
     public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
     public static final String USUARIO_LOGADO = "usuarioLogado";
@@ -58,7 +86,8 @@ public class AuthenticatorService implements Serializable {
         Principal principal = new SimplePrincipal(login);
         Identity identity = Identity.instance();
         identity.acceptExternallyAuthenticatedPrincipal(principal);
-        Credentials credentials = (Credentials) Component.getInstance(Credentials.class);
+        Credentials credentials = (Credentials) Component
+                .getInstance(Credentials.class);
         credentials.clear();
         credentials.setUsername(login);
         identity.getCredentials().clear();
@@ -78,11 +107,14 @@ public class AuthenticatorService implements Serializable {
      */
     public void setUsuarioLogadoSessao(UsuarioLogin usuario) {
         Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
-        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<UsuarioPerfil>(usuario.getUsuarioPerfilAtivoList());
-        Contexts.getSessionContext().set(USUARIO_PERFIL_LIST, usuarioPerfilList);
+        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<UsuarioPerfil>(
+                usuario.getUsuarioPerfilAtivoList());
+        Contexts.getSessionContext()
+                .set(USUARIO_PERFIL_LIST, usuarioPerfilList);
     }
 
-    public void validarUsuario(UsuarioLogin usuario) throws LoginException, DAOException {
+    public void validarUsuario(UsuarioLogin usuario) throws LoginException,
+            DAOException {
         if (usuario.getBloqueio()) {
             if (bloqueioUsuarioManager.liberarUsuarioBloqueado(usuario)) {
                 bloqueioUsuarioManager.desfazerBloqueioUsuario(usuario);
@@ -99,17 +131,20 @@ public class AuthenticatorService implements Serializable {
         }
     }
 
-    private void throwUsuarioExpirou(UsuarioLogin usuario) throws LoginException {
+    private void throwUsuarioExpirou(UsuarioLogin usuario)
+            throws LoginException {
         throw new LoginException("O usuário " + usuario.getNomeUsuario()
                 + " expirou. " + "Por favor, contate o adminstrador do sistema");
     }
 
-    private void throwUsuarioInativo(UsuarioLogin usuario) throws LoginException {
+    private void throwUsuarioInativo(UsuarioLogin usuario)
+            throws LoginException {
         throw new LoginException("O usuário " + usuario.getNomeUsuario()
                 + " não está ativo.\n");
     }
 
-    private void throwUsuarioBloqueado(UsuarioLogin usuario) throws LoginException {
+    private void throwUsuarioBloqueado(UsuarioLogin usuario)
+            throws LoginException {
         throw new LoginException("O usuário " + usuario.getNomeUsuario()
                 + " está bloqueado."
                 + "Por favor, contate o adminstrador do sistema");
@@ -121,7 +156,8 @@ public class AuthenticatorService implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public void removeRolesAntigas() {
-        Set<String> roleSet = (Set<String>) Contexts.getSessionContext().get(PAPEIS_USUARIO_LOGADO);
+        Set<String> roleSet = (Set<String>) Contexts.getSessionContext().get(
+                PAPEIS_USUARIO_LOGADO);
         if (roleSet != null) {
             for (String r : roleSet) {
                 Identity.instance().removeRole(r);
@@ -140,15 +176,17 @@ public class AuthenticatorService implements Serializable {
         }
     }
 
-    //TODO refazer essa busca pelo PerfilAtual
-    public UsuarioPerfil obterPerfilAtual(UsuarioLogin usuario) throws LoginException {
-        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>(usuario.getUsuarioPerfilList());
+    // TODO refazer essa busca pelo PerfilAtual
+    public UsuarioPerfil obterPerfilAtual(UsuarioLogin usuario)
+            throws LoginException {
+        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>(
+                usuario.getUsuarioPerfilList());
         if (usuarioPerfilList.size() > 0) {
             UsuarioPerfil usuarioPerfil = usuarioPerfilList.get(0);
-            return usuarioPerfilDAO.getReference(usuarioPerfil.getIdUsuarioPerfil());
+            return usuarioPerfilDAO.getReference(usuarioPerfil
+                    .getIdUsuarioPerfil());
         }
-        throw new LoginException("O usuário " + usuario
-                + " não possui Perfil");
+        throw new LoginException("O usuário " + usuario + " não possui Perfil");
     }
 
     public void anulaActorId(String actorId) throws DAOException {
@@ -157,6 +195,121 @@ public class AuthenticatorService implements Serializable {
 
     public void anularTodosActorId() throws DAOException {
         processoDAO.anularTodosActorId();
+    }
+
+    public void signatureAuthentication(UsuarioLogin usuario, String signature, String certChain,boolean termoAdesao) throws CertificadoException, LoginException,CertificateException, DAOException {
+        final boolean loggedIn = login(usuario.getLogin());
+        if (loggedIn) {
+            final PessoaFisica pessoaFisica = usuario.getPessoaFisica();
+            boolean merge = false;
+            if (pessoaFisica.getCertChain() == null) {
+                pessoaFisica.setCertChain(certChain);
+                pessoaFisicaManager.merge(pessoaFisica);
+//                pessoaFisicaManager.flush();
+                merge = true;
+            }
+            if (signature != null) {
+                merge = true;
+            } else if (termoAdesao) {
+                throw new RedirectToLoginApplicationException(Messages.instance().get("login.termoAdesao.failed"));
+            }
+            
+            if (merge) {
+                
+            }
+        }
+    }
+
+    public UsuarioLogin getUsuarioLoginFromCertChain(String certChain) throws CertificadoException, LoginException, CertificateException{
+        final Certificado c = new Certificado(certChain);
+        String cpf = extractCpf(c);
+        checkValidadeCertificado(c);
+        return checkValidadeUsuarioLogin(cpf);
+    }
+    
+    private UsuarioLogin checkValidadeUsuarioLogin(final String cpf)
+            throws LoginException {
+        final PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(cpf);
+        if (pessoaFisica == null) {
+            throw new LoginException(Messages.instance().get(
+                    CERTIFICATE_ERROR_SEM_PESSOA_FISICA));
+        }
+        final UsuarioLogin usuarioLogin;
+        usuarioLogin = usuarioLoginManager
+                .getUsuarioLoginByPessoaFisica(pessoaFisica);
+        if (usuarioLogin == null) {
+            throw new LoginException(Messages.instance().get(
+                    CERTIFICATE_ERROR_SEM_USUARIO_LOGIN));
+        }
+        if (!usuarioLogin.isHumano()) {
+            throw new LoginException(Messages.instance().get(
+                    CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA));
+        }
+        if (!usuarioLogin.getAtivo()) {
+            throw new LoginException(Messages.instance().get(
+                    CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO));
+        }
+        if (usuarioLogin.getBloqueio()) {
+            throw new LoginException(Messages.instance().get(
+                    CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO));
+        }
+        if (usuarioLogin.getProvisorio()
+                && new Date().after(usuarioLogin.getDataExpiracao())) {
+            throw new LoginException(Messages.instance().get(
+                    CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO));
+        }
+        return usuarioLogin;
+    }
+
+    private void raiseLoginEvents() {
+        final Events events = Events.instance();
+        events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
+        events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
+    }
+
+    private boolean login(final String login) {
+        final IdentityManager identityManager = IdentityManager.instance();
+        final boolean userExists = identityManager.getIdentityStore()
+                .userExists(login);
+        if (userExists) {
+            final Principal principal = new SimplePrincipal(login);
+            final Identity identity = Identity.instance();
+            identity.acceptExternallyAuthenticatedPrincipal(principal);
+            final Credentials credentials = (Credentials) Component
+                    .getInstance(SEAM_SECURITY_CREDENTIALS);
+            credentials.clear();
+            credentials.setUsername(login);
+        }
+        return userExists;
+    }
+
+    private void checkValidadeCertificado(final Certificado c)
+            throws LoginException, CertificateException {
+        try {
+            certificateManager.verificaCertificado(c.getCertChain());
+        } catch (final CertificateExpiredException e) {
+            LOG.error(CHECK_VALIDADE_CERTIFICADO, e);
+            if (ParametroUtil.isProducao()) {
+                throw e;
+            }
+        }
+    }
+
+    private String extractCpf(final Certificado c) throws LoginException {
+        String cpf;
+        final String[] split = c.getCn().split(":");
+        if (split.length < 2) {
+            throw new LoginException(Messages.instance().get(
+                    CERTIFICATE_INVALID));
+        }
+        cpf = split[1];
+        if (Strings.isEmpty(cpf)) {
+            throw new LoginException(Messages.instance().get(
+                    CERTIFICATE_INVALID));
+        }
+        cpf = new StringBuilder(cpf).insert(9, '-').insert(6, '.')
+                .insert(3, '.').toString();
+        return cpf;
     }
 
 }
