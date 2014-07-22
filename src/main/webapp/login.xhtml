@@ -271,60 +271,56 @@
               value="#{a4jSkin.imgFolder}/closeMP.gif" />
           </h:panelGroup>
         </f:facet>
-        <h:form
-          id="termoAdesaoForm"
-          rendered="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
-          <div>
-            <wi:editor
-              id="termoAdesao"
-              value="#{termoAdesaoAction.termoAdesao}"
-              readonly="true"
-              showVariables="false"
-              width="#{panelWidth-15}"
-              height="#{panelHeight-157}" />
-          </div>
-          <div>
-            <a:jsFunction
-              name="submitForm"
-              action="#{certificateAuthenticator.assinarTermoAdesao(termoAdesaoAction.certChain, termoAdesaoAction.signature)}"
-              execute="signature, certChain, certChainStringLog, @this"
-              render="DialogMessage"
-              limitRender="true" />
-            <h:inputHidden
-              id="termoAdesaoSignature"
-              value="#{termoAdesaoAction.signature}">
-            </h:inputHidden>
-            <h:inputHidden
-              id="termoAdesaoCertChain"
-              value="#{termoAdesaoAction.certChain}">
-            </h:inputHidden>
-            <wi:appletAssinatura
-              id="assinarTermoAdesao"
-              urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-              formId="#{rich:clientId('termoAdesaoForm')}"
-              certificationChainField="#{rich:clientId('termoAdesaoCertChain')}"
-              signatureField="#{rich:clientId('termoAdesaoSignature')}"
-              getDataFunction="infox.editor.termoAdesao.instance.getData()"
-              useBase64Function="'true'"
-              functionPreSign=""
-              functionPosSign="submitForm()"
-              debug="false"
-              loginMode="false"
-              useProviderDll="false"
-              signButtonCaption="#{messages['login.assinarTermoAdesao']}">
-            </wi:appletAssinatura>
-            <h:outputScript>
-              function useBase64(){
-                return "true";
-              }
-            </h:outputScript>
-            <input
-              class="input_button close-btn"
-              id="cancela"
-              type="button"
-              onclick="RichFaces.$(#{termoAdesaoAction.termoAdesaoPanelName}).hide();"
-              value="#{messages['login.cancelaTrocaSenhaBtn']}" />
-          </div>
+        <h:form id="termoAdesaoForm">
+          <s:div
+            rendered="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
+            <div>
+              <wi:editor
+                id="termoAdesao"
+                value="#{termoAdesaoAction.termoAdesao}"
+                readonly="true"
+                showVariables="false"
+                width="#{panelWidth-15}"
+                height="#{panelHeight-157}" />
+            </div>
+            <div>
+              <a:jsFunction
+                name="assinarTermo"
+                action="#{certificateAuthenticator.assinarTermoAdesao(termoAdesaoAction.certChain, termoAdesaoAction.signature)}"
+                execute="@this termoAdesaoSignature termoAdesaoCertChain"
+                render="DialogMessage"
+                limitRender="true" />
+              <h:inputHidden
+                id="termoAdesaoSignature"
+                value="#{termoAdesaoAction.signature}">
+              </h:inputHidden>
+              <h:inputHidden
+                id="termoAdesaoCertChain"
+                value="#{termoAdesaoAction.certChain}">
+              </h:inputHidden>
+              <wi:appletAssinatura
+                id="assinarTermoAdesao"
+                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+                formId="#{rich:clientId('termoAdesaoForm')}"
+                certificationChainField="#{rich:clientId('termoAdesaoCertChain')}"
+                signatureField="#{rich:clientId('termoAdesaoSignature')}"
+                getDataFunction="infox.editor.termoAdesao.instance.getData()"
+                useBase64Function="'true'"
+                functionPreSign="infox.showLoading();"
+                functionPosSign="assinarTermo();infox.hideLoading();"
+                debug="false"
+                loginMode="false"
+                useProviderDll="false"
+                signButtonCaption="#{messages['login.assinarTermoAdesao']}">
+              </wi:appletAssinatura>
+              <input
+                class="input_button close-btn"
+                id="cancela"
+                type="button"
+                onclick="RichFaces.$(#{termoAdesaoAction.termoAdesaoPanelName}).hide();"
+                value="#{messages['login.cancelaTrocaSenhaBtn']}" />
+            </div>
+          </s:div>
         </h:form>
       </rich:popupPanel>
       <rich:popupPanel
