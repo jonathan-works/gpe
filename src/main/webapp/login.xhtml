@@ -286,7 +286,7 @@
             <div>
               <a:jsFunction
                 name="assinarTermo"
-                action="#{certificateAuthenticator.assinarTermoAdesao(termoAdesaoAction.certChain, termoAdesaoAction.signature)}"
+                action="#{termoAdesaoAction.assinarTermoAdesao()}"
                 execute="@this termoAdesaoSignature termoAdesaoCertChain"
                 render="DialogMessage"
                 limitRender="true" />
