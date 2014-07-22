@@ -25,4 +25,11 @@ public class ProcessoDocumentoBinManager extends Manager<ProcessoDocumentoBinDAO
         }
         return persist(bin);
     }
+    
+    public ProcessoDocumentoBin createProcessoDocumentoBin(final String tituloDocumento, final String conteudo) throws DAOException {
+        ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
+        bin.setModeloDocumento(conteudo);
+        bin.setMd5Documento(MD5Encoder.encode(conteudo));
+        return persist(bin);
+    }
 }
