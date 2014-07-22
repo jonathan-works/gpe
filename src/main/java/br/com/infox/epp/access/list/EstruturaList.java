@@ -18,6 +18,9 @@ public class EstruturaList extends EntityList<Estrutura> {
     public static final String NAME = "estruturaList";
     public static final String DEFAULT_EJBQL = "select o from Estrutura o";
     public static final String DEFAULT_ORDER = "nome";
+    
+    private static final String TEMPLATE = "/Estrutura/estruturaTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "Estruturas.xls";
 
     @Override
     protected void addSearchFields() {
@@ -39,5 +42,14 @@ public class EstruturaList extends EntityList<Estrutura> {
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
+    }
 
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
 }
