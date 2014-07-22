@@ -291,35 +291,32 @@
               render="DialogMessage"
               limitRender="true" />
             <h:inputHidden
-              id="signature"
+              id="termoAdesaoSignature"
               value="#{termoAdesaoAction.signature}">
             </h:inputHidden>
             <h:inputHidden
-              id="certChain"
+              id="termoAdesaoCertChain"
               value="#{termoAdesaoAction.certChain}">
             </h:inputHidden>
             <wi:appletAssinatura
               id="assinarTermoAdesao"
               urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
               formId="#{rich:clientId('termoAdesaoForm')}"
-              certificationChainField="#{rich:clientId(certChain)}"
-              signatureField="#{rich:clientId('signature')}"
+              certificationChainField="#{rich:clientId('termoAdesaoCertChain')}"
+              signatureField="#{rich:clientId('termoAdesaoSignature')}"
               getDataFunction="infox.editor.termoAdesao.instance.getData()"
-              useBase64Function="infox.editor.termoAdesao.useBase64()"
-              functionPreSign="infox.showLoading();"
-              functionPosSign="submitForm();infox.hideLoading();"
+              useBase64Function="'true'"
+              functionPreSign=""
+              functionPosSign="submitForm()"
               debug="false"
               loginMode="false"
               useProviderDll="false"
               signButtonCaption="#{messages['login.assinarTermoAdesao']}">
             </wi:appletAssinatura>
-            <h:outputScript
-              rendered="#{not readonly and home.podeRenderizarApplet(id)}">
-              namespace("infox.editor.termoAdesao",{
-                useBase64:function useBase64() {
-                  return "true";
-                }
-              });
+            <h:outputScript>
+              function useBase64(){
+                return "true";
+              }
             </h:outputScript>
             <input
               class="input_button close-btn"
