@@ -25,7 +25,8 @@
             <ui:define name="searchForm">
                 <wi:searchForm
                     formId="pesquisarLocalizacaoForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{messages['searchForm.title']}"
+                    clearAction="localizacaoCrudAction.clear()">
                     <wi:inputText
                         id="codigoItem"
                         value="#{localizacaoList.entity.localizacao}"

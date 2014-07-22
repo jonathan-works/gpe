@@ -106,4 +106,8 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     public void setLocalizacaoPai(Localizacao localizacaoPai) {
         getInstance().setLocalizacaoPai(localizacaoPai);
     }
+    
+    public void clear() {
+        limparTrees();
+    }
 }
