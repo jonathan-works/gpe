@@ -201,21 +201,13 @@ public class AuthenticatorService implements Serializable {
         final boolean loggedIn = login(usuario.getLogin());
         if (loggedIn) {
             final PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-            boolean merge = false;
             if (pessoaFisica.getCertChain() == null) {
                 pessoaFisica.setCertChain(certChain);
                 pessoaFisicaManager.merge(pessoaFisica);
-//                pessoaFisicaManager.flush();
-                merge = true;
+                pessoaFisicaManager.flush();
             }
-            if (signature != null) {
-                merge = true;
-            } else if (termoAdesao) {
+            if (signature == null && termoAdesao) {
                 throw new RedirectToLoginApplicationException(Messages.instance().get("login.termoAdesao.failed"));
-            }
-            
-            if (merge) {
-                
             }
         }
     }
