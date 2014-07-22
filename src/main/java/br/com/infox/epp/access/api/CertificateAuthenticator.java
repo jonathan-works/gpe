@@ -1,55 +1,37 @@
 package br.com.infox.epp.access.api;
 
+import static br.com.infox.epp.access.service.AuthenticatorService.CERTIFICATE_ERROR_EXPIRED;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
-import java.security.Principal;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
-import java.util.Date;
 
 import javax.security.auth.login.LoginException;
 
-import org.jboss.seam.Component;
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.core.Events;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.seam.security.Credentials;
-import org.jboss.seam.security.Identity;
-import org.jboss.seam.security.SimplePrincipal;
-import org.jboss.seam.security.management.IdentityManager;
-import org.jboss.seam.util.Strings;
 
-import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
+import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(CertificateAuthenticator.NAME)
+@Scope(ScopeType.CONVERSATION)
 public class CertificateAuthenticator implements Serializable {
-    private static final String CERTIFICATE_ERROR_UNKNOWN = "certificate.error.unknown";
-    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO = "certificate.error.usuarioLoginProvisorioExpirado";
-    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO = "certificate.error.usuarioLoginBloqueado";
-    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO = "certificate.error.usuarioLoginInativo";
-    private static final String CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA = "certificate.error.tipoUsuarioSistema";
-    private static final String CERTIFICATE_ERROR_SEM_USUARIO_LOGIN = "certificate.error.semUsuarioLogin";
-    private static final String CERTIFICATE_ERROR_SEM_PESSOA_FISICA = "certificate.error.semPessoaFisica";
-    private static final String CERTIFICATE_ERROR_EXPIRED = "certificate.error.expired";
-    private static final String CERTIFICATE_INVALID = "certificate.error.invalid";
-    private static final String SEAM_SECURITY_CREDENTIALS = "org.jboss.seam.security.credentials";
-    private static final String CHECK_VALIDADE_CERTIFICADO = "CertificateAuthenticator.checkValidadeCertificado(Certificado)";
     private static final long serialVersionUID = 6825659622529568148L;
     private static final String AUTHENTICATE = "certificateAuthenticator.authenticate()";
-    private static final LogProvider LOG = Logging.getLogProvider(CertificateAuthenticator.class);
+    private static final LogProvider LOG = Logging
+            .getLogProvider(CertificateAuthenticator.class);
     public static final String NAME = "certificateAuthenticator";
     private String assinatura;
     private String certChain;
@@ -58,141 +40,27 @@ public class CertificateAuthenticator implements Serializable {
     @In
     private UsuarioLoginManager usuarioLoginManager;
     @In
-    private PessoaFisicaManager pessoaFisicaManager;
-    @In
-    private CertificateManager certificateManager;
+    private AuthenticatorService authenticatorService;
 
-    public void assinarTermoAdesao(String certChain, String signature) {
-        try {
-            signatureAuthentication(signature, certChain, true);
-        } catch (final CertificateExpiredException e) {
-            LOG.error(AUTHENTICATE, e);
-            throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
-        } catch (final CertificateException e) {
-            LOG.error(AUTHENTICATE, e);
-            throw new RedirectToLoginApplicationException(format(Messages.instance().get(CERTIFICATE_ERROR_UNKNOWN), e.getMessage()), e);
-        } catch (CertificadoException | LoginException | DAOException e) {
-            LOG.error(AUTHENTICATE, e);
-            throw new RedirectToLoginApplicationException(e.getMessage(), e);
-        }
-    }
-    
     public void authenticate() {
         try {
-            signatureAuthentication(null, certChain, false);
+            UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
+            authenticatorService.signatureAuthentication(usuarioLogin, null, certChain, false);
         } catch (final CertificateExpiredException e) {
             LOG.error(AUTHENTICATE, e);
-            throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
+            throw new RedirectToLoginApplicationException(Messages.instance()
+                    .get(CERTIFICATE_ERROR_EXPIRED), e);
         } catch (final CertificateException e) {
             LOG.error(AUTHENTICATE, e);
-            throw new RedirectToLoginApplicationException(format(Messages.instance().get(CERTIFICATE_ERROR_UNKNOWN), e.getMessage()), e);
+            throw new RedirectToLoginApplicationException(format(
+                    Messages.instance().get(
+                            AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN),
+                    e.getMessage()), e);
         } catch (CertificadoException | LoginException | DAOException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
         }
 
-    }
-
-    private void signatureAuthentication(String signature, String certChain, boolean termoAdesao)
-            throws CertificadoException, LoginException, CertificateException,
-            DAOException {
-        final Certificado c = new Certificado(certChain);
-        String cpf = extractCpf(c);
-        checkValidadeCertificado(c);
-
-        final UsuarioLogin usuario = checkValidadeUsuarioLogin(cpf);
-
-        final boolean loggedIn = login(usuario.getLogin());
-        if (loggedIn) {
-            final PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-            boolean merge = false;
-            if (pessoaFisica.getCertChain() == null) {
-                pessoaFisica.setCertChain(certChain);
-                merge = true;
-            }
-            if (signature != null) {
-                pessoaFisica.setSignature(signature);
-                merge = true;
-            } else if (termoAdesao) {
-                throw new RedirectToLoginApplicationException(Messages.instance().get("login.termoAdesao.failed"));
-            }
-            if (merge) {
-                pessoaFisicaManager.merge(pessoaFisica);
-                pessoaFisicaManager.flush();
-            }
-            raiseLoginEvents();
-        }
-    }
-
-    private UsuarioLogin checkValidadeUsuarioLogin(final String cpf) throws LoginException {
-        final PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(cpf);
-        if (pessoaFisica == null) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_SEM_PESSOA_FISICA));
-        }
-        final UsuarioLogin usuarioLogin;
-        usuarioLogin = usuarioLoginManager.getUsuarioLoginByPessoaFisica(pessoaFisica);
-        if (usuarioLogin == null) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_SEM_USUARIO_LOGIN));
-        }
-        if (!usuarioLogin.isHumano()) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA));
-        }
-        if (!usuarioLogin.getAtivo()) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO));
-        }
-        if (usuarioLogin.getBloqueio()) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO));
-        }
-        if (usuarioLogin.getProvisorio()
-                && new Date().after(usuarioLogin.getDataExpiracao())) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO));
-        }
-        return usuarioLogin;
-    }
-
-    private void raiseLoginEvents() {
-        final Events events = Events.instance();
-        events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
-        events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
-    }
-
-    private boolean login(final String login) {
-        final IdentityManager identityManager = IdentityManager.instance();
-        final boolean userExists = identityManager.getIdentityStore().userExists(login);
-        if (userExists) {
-            final Principal principal = new SimplePrincipal(login);
-            final Identity identity = Identity.instance();
-            identity.acceptExternallyAuthenticatedPrincipal(principal);
-            final Credentials credentials = (Credentials) Component.getInstance(SEAM_SECURITY_CREDENTIALS);
-            credentials.clear();
-            credentials.setUsername(login);
-        }
-        return userExists;
-    }
-
-    private void checkValidadeCertificado(final Certificado c) throws LoginException, CertificateException {
-        try {
-            certificateManager.verificaCertificado(c.getCertChain());
-        } catch (final CertificateExpiredException e) {
-            LOG.error(CHECK_VALIDADE_CERTIFICADO, e);
-            if (ParametroUtil.isProducao()) {
-                throw e;
-            }
-        }
-    }
-
-    private String extractCpf(final Certificado c) throws LoginException {
-        String cpf;
-        final String[] split = c.getCn().split(":");
-        if (split.length < 2) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_INVALID));
-        }
-        cpf = split[1];
-        if (Strings.isEmpty(cpf)) {
-            throw new LoginException(Messages.instance().get(CERTIFICATE_INVALID));
-        }
-        cpf = new StringBuilder(cpf).insert(9, '-').insert(6, '.').insert(3, '.').toString();
-        return cpf;
     }
 
     public String getAssinatura() {
