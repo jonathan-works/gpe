@@ -426,6 +426,9 @@ public class TaskInstanceHome implements Serializable {
         if (possuiTask()) {
             TaskController taskController = taskInstance.getTask()
                     .getTaskController();
+            if (taskController == null) {
+                return true;
+            }
             List<?> list = taskController.getVariableAccesses();
             for (Object object : list) {
                 VariableAccess var = (VariableAccess) object;

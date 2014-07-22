@@ -103,7 +103,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.idLocalizacao = idLocalizacao;
     }
 
-    @Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO, unique = true)
+    @Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO)
     @Size(max = DESCRICAO_PADRAO)
     @NotNull
     public String getLocalizacao() {
@@ -174,7 +174,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.temContaTwitter = temContaTwitter;
     }
 
-    @Column(name = CAMINHO_COMPLETO, unique = true)
+    @Column(name = CAMINHO_COMPLETO)
     public String getCaminhoCompleto() {
         return caminhoCompleto;
     }

@@ -101,7 +101,7 @@
                 tableTitle="#{messages['estrutura.localizacoesFilhas']}" panelStyleClass="rf-dt-crud">
                 <ui:define name="headerToolBar" />
                 <ui:define name="toolBar">
-                    <wi:toolBar url="#{a4jSkin.imgFolder}/view.gif" title="#{messages['button.edit']}" id="toolBarEdit" 
+                    <wi:toolBar url="#{a4jSkin.imgFolder}/view.gif" title="#{messages['button.selecionar']}" id="toolBarEdit" 
                         action="#{estruturaCrudAction.setLocalizacaoFilho(row)}" render="localizacoesTab, pageBodyDialogMessage"/>
                     <wi:toolBar url="#{a4jSkin.imgFolder}/remove.png" title="#{messages['button.inactive']}" id="toolBarInactive"
                         action="#{estruturaCrudAction.inativarLocalizacao(row)}" render="localizacoesTab, pageBodyDialogMessage"
@@ -118,7 +118,7 @@
                 <rich:tree data="#{item}" selectionType="ajax" render="@form, pageBodyDialogMessage"
                       var="item" selectionChangeListener="#{estruturaLocalizacaoTree.processTreeSelectionChange}">
                       <rich:treeModelRecursiveAdaptor roots="#{estruturaLocalizacaoTree.roots}" nodes="#{item.nodes}">
-                        <rich:treeNode expanded="#{true}">
+                        <rich:treeNode>
                             <h:outputText styleClass="#{not item.entity.ativo ? 'tree-inactive' : ''}" value="#{item.entity}" />
                         </rich:treeNode>
                       </rich:treeModelRecursiveAdaptor>

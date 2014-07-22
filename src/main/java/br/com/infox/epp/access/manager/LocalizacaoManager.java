@@ -1,9 +1,11 @@
 package br.com.infox.epp.access.manager;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.exception.RecursiveException;
@@ -12,6 +14,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.epp.access.dao.LocalizacaoDAO;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
+import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
 
 @Name(LocalizacaoManager.NAME)
 @AutoCreate
@@ -19,6 +23,10 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "localizacaoManager";
+    
+    @In private RaiaPerfilManager raiaPerfilManager;
+    @In private PerfilManager perfilManager;
+    @In private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
 
     public List<Localizacao> getLocalizacoes(final Collection<Integer> ids) {
         return getDao().getLocalizacoes(ids);
@@ -59,11 +67,15 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     @Override
     public Localizacao update(Localizacao o) throws DAOException {
         try {
+            if (!o.getAtivo()) {
+                validarInativacao(o);
+            }
             RecursiveManager.refactor(o);
         } catch (RecursiveException e) {
             throw new DAOException(e);
         }
         o = super.update(o);
+        refresh(o);
         updateChildren(o);
         return o;
     }
@@ -73,6 +85,42 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
             loc.setAtivo(o.getAtivo());
             super.update(loc);
             updateChildren(loc);
+        }
+    }
+
+    public void inativar(Localizacao localizacao) throws DAOException {
+        validarInativacao(localizacao);
+        localizacao.setAtivo(false);
+        update(localizacao);
+    }
+    
+    public void validarInativacao(Localizacao localizacao) throws DAOException {
+        boolean invalid = false;
+        String msg = "Não foi possível inativar, pois existe {0} que utiliza esta localização ou suas filhas.";
+        if (perfilManager.existePerfilComHierarquiaLocalizacao(localizacao)) {
+            msg = MessageFormat.format(msg, "perfil{0}");
+            invalid = true;
+        }
+        if (raiaPerfilManager.existeRaiaPerfilComHierarquiaLocalizacao(localizacao)) {
+            if (invalid) {
+                msg = MessageFormat.format(msg, ", raia{0}");
+            } else {
+                msg = MessageFormat.format(msg, "raia{0}");
+                invalid = true;
+            }
+        }
+        if (unidadeDecisoraMonocraticaManager.existeUnidadeDecisoraMonocraticaComHierarquiaLocalizacao(localizacao)) {
+            if (invalid) {
+                msg = MessageFormat.format(msg, ", unidade decisora monocrática");
+            } else {
+                msg = MessageFormat.format(msg, "unidade decisora monocrática");
+                invalid = true;
+            }
+        }
+        
+        if (invalid) {
+            msg = msg.replace("{0}", "");
+            throw new DAOException(msg);
         }
     }
 }

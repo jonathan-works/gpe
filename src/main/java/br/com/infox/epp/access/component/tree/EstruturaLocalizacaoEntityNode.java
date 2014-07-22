@@ -9,6 +9,11 @@ import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.seam.util.ComponentUtil;
 
+/**
+ * EntityNode utilizado pela {@link EstruturaLocalizacaoTreeHandler}
+ * @author gabriel
+ *
+ */
 public class EstruturaLocalizacaoEntityNode extends EntityNode<Object> {
     
     private static final long serialVersionUID = 1L;
@@ -39,11 +44,11 @@ public class EstruturaLocalizacaoEntityNode extends EntityNode<Object> {
     protected List<Object> getChildrenList(String hql, Object entity) {
         Map<String, Object> parameters = new HashMap<>();
         String query;
-        if (entity instanceof Localizacao) {
+        if (entity instanceof Localizacao) { // O pai é uma localização, trago suas localizações filhas
             parameters.put(PARENT_NODE, entity);
             query = queryChildrenOfLocalizacaoList;
         } else {
-            query = queryRootsOfEstruturaList;
+            query = queryRootsOfEstruturaList; // O pai é uma estrutura, trago as localizações raízes da estrutura
         }
         GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
         return genericDAO.getResultList(query, parameters);

@@ -6,6 +6,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
@@ -17,6 +19,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.list.LocalizacaoComEstruturaList;
 import br.com.infox.epp.access.manager.EstruturaManager;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
 
 @Name(EstruturaCrudAction.NAME)
 @ConversationScoped
@@ -25,12 +28,14 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "estruturaCrudAction";
+    private static final LogProvider LOG = Logging.getLogProvider(EstruturaCrudAction.class);
     
     @In private LocalizacaoComEstruturaList localizacaoComEstruturaList;
     @In private LocalizacaoManager localizacaoManager;
     @In private ActionMessagesService actionMessagesService;
     @In private LocalizacoesDaEstruturaTreeHandler localizacoesDaEstruturaTree;
     @In private EstruturaLocalizacaoTreeHandler estruturaLocalizacaoTree;
+    @In private RaiaPerfilManager raiaPerfilManager;
     private Localizacao localizacaoFilho;
     
     @Override
@@ -70,17 +75,19 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
             FacesMessages.instance().add("#{messages['estrutura.localizacaoFilhoAdicionada']}");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
+            localizacaoFilho.setIdLocalizacao(null);
+            LOG.error(e);
         }
     }
     
     public void inativarLocalizacao(Localizacao localizacao) {
         try {
-            localizacao.setAtivo(false);
-            localizacaoManager.update(localizacao);
+            localizacaoManager.inativar(localizacao);
             novaLocalizacao();
             FacesMessages.instance().add("#{messages['estrutura.localizacaoFilhoRemovida']}");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
+            LOG.error(e);
         }
     }
     
@@ -90,6 +97,7 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
             FacesMessages.instance().add("#{messages['estrutura.localizacaoFilhoAtualizada']}");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
+            LOG.error(e);
         }
     }
     
@@ -98,5 +106,19 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
         localizacaoFilho.setAtivo(true);
         localizacoesDaEstruturaTree.clearTree();
         estruturaLocalizacaoTree.clearTree();
+    }
+    
+    @Override
+    public String inactive(Estrutura t) {
+        try {
+            for (Localizacao localizacao : t.getLocalizacoes()) {
+                localizacaoManager.inativar(localizacao);
+            }
+            return super.inactive(t);
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
+            LOG.error(e);
+        }
+        return null;
     }
 }

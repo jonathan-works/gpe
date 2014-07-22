@@ -7,6 +7,13 @@ import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Estrutura;
 
+/**
+ * Árvore cuja raiz é uma estrutura e o restante dos nós são as localizações dentro dessa estrutura.
+ * Utilizada pela aba de Visão Hierárquica do CRUD de Estrutura
+ * @author gabriel
+ *
+ */
+
 @Name(EstruturaLocalizacaoTreeHandler.NAME)
 @AutoCreate
 public class EstruturaLocalizacaoTreeHandler extends AbstractTreeHandler<Object> {
@@ -15,15 +22,21 @@ public class EstruturaLocalizacaoTreeHandler extends AbstractTreeHandler<Object>
     private static final long serialVersionUID = 1L;
 
     private Estrutura estrutura;
-    
+
     @Override
     protected String getQueryRoots() {
-        return "select o from Estrutura o where o.id = " + estrutura.getId(); 
+        if (estrutura != null && estrutura.getId() != null) {
+            return "select o from Estrutura o where o.id = " + estrutura.getId();
+        }
+        return "select o from Estrutura o where o.id is null"; // Quando a tree é chamada sozinha pelo seam e pelas injeções em um momento inoportuno
     }
 
     @Override
     protected String getQueryChildren() {
-        return "select o from Localizacao o where o.estruturaPai.id = " + estrutura.getId();
+        if (estrutura != null && estrutura.getId() != null) {
+            return "select o from Localizacao o where o.estruturaPai.id = " + estrutura.getId();
+        }
+        return "select o from Estrutura o where o.id is null"; // Quando a tree é chamada sozinha pelo seam e pelas injeções em um momento inoportuno
     }
 
     @Override
