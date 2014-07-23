@@ -30,6 +30,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -37,8 +38,10 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.query.PapelQuery;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
+import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
 @Table(name = TABLE_NAME)
@@ -169,6 +172,12 @@ public class AssinaturaDocumento implements Serializable {
 
     public void setNomeLocalizacao(String nomeLocalizacao) {
         this.nomeLocalizacao = nomeLocalizacao;
+    }
+    
+    @Transient
+    public String getNomePerfil() {
+        AssinaturaDocumentoDAO add = ComponentUtil.getComponent(AssinaturaDocumentoDAO.NAME);
+        return add.getNomePerfil(getNomeLocalizacao(), getNomePapel());
     }
 
 }
