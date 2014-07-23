@@ -9,14 +9,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.*;
 
 @Entity
 @Table(name = UnidadeDecisoraMonocratica.TABLE_NAME)
+@NamedQueries(value={ @NamedQuery(name=SEARCH_BY_UNIDADE_DECISORA_COLEGIADA, query=SEARCH_BY_UNIDADE_DECISORA_COLEGIADA_QUERY) })
 public class UnidadeDecisoraMonocratica implements Serializable {
 
 	private static final long serialVersionUID = 1L;

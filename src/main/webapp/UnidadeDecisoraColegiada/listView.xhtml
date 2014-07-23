@@ -27,12 +27,12 @@
                     
                     <wi:inputText 
                    		id="nomeUnidadeDecisoraColegiada"
-	                    maxlength="100"
+	                    maxlength="200"
 	                    value="#{bean.entity.nome}"
 	                    label="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"/>
                     
                     <wi:selectOneMenuEntity
-                    	id="unidadeMonocratica"
+                    	id="unidadeDecisoraMonocraticaSearch"
                     	showLabelTodos="true"
                     	label="#{messages['unidadeDecisoraColegiada.unidadeDecisoraMonocratica']}"
                     	value="#{unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica}"
@@ -107,7 +107,7 @@
 			         			id="buttonAdicionarMonocratica"
 			         			action="unidadeDecisoraColegiadaCrudAction.adicionarUnidadeMonocratica()"
 			         			value="Adicionar"
-			         			reRender="dataTableAssociada, selectUnidadesDemocraticasDecoration, pageBodyDialogMessage"/>
+			         			reRender="dataTableAssociada, selectUnidadesDemocraticasDecoration, pageBodyDialogMessage, checkPresidenteDecoration"/>
 		         </s:div>
 		         
 		         <rich:dataTable id="dataTableAssociada"
@@ -122,28 +122,28 @@
 				        <rich:column id="toolBar" styleClass="dt-toolbar-col" width="5%">
 				            <wi:toolBarRemove id="toolBarRemove" 
 				            				  actionRemove="#{unidadeDecisoraColegiadaCrudAction.removerUnidadeDemocratica(row)}" 
-				            				  reRenderRemove="dataTableAssociada, pageBodyDialogMessage, selectUnidadesDemocraticasDecoration"/>
+				            				  reRenderRemove="dataTableAssociada, pageBodyDialogMessage, selectUnidadesDemocraticasDecoration, checkPresidenteDecoration"/>
 				        </rich:column>
 				        
-				        <rich:column id="nome" width="45%">
+				        <rich:column id="nome" width="50%">
 				        		<f:facet name="header">
 				        			<h:outputText value="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"/>
 				        		</f:facet>
 				        		<h:outputText value="#{row.unidadeDecisoraMonocratica.nome}"/>
 				        </rich:column>
 				        
-				        <rich:column id="localizacao" width="30%">
+				        <rich:column id="localizacao" width="35%">
 				        		<f:facet name="header">
 				        			<h:outputText value="#{messages['unidadeDecisoraMonocratica.localizacao']}"/>
 				        		</f:facet>
 				        		<h:outputText value="#{row.unidadeDecisoraMonocratica.localizacao}"/>
 				        </rich:column>
 				        
-				        <rich:column id="presidente" width="20%">
+				        <rich:column id="presidente" width="10%" style="text-align:center;">
 				        		<f:facet name="header">
 				        			<h:outputText value="#{messages['unidadeDecisoraColegiada.presidente']}"/>
 				        		</f:facet>
-				        		<h:outputText value="#{row.presidente ? 'Sim' : 'Não'}"/>
+				        		<h:outputText value="#{row.presidente ? messages['unidadeDecisoraColegiada.presidente.true'] : messages['unidadeDecisoraColegiada.presidente.false']}"/>
 				        </rich:column>
 				                
 		         </rich:dataTable>

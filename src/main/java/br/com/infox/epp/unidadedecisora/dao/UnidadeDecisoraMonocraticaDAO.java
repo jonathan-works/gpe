@@ -1,6 +1,10 @@
 package br.com.infox.epp.unidadedecisora.dao;
 
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.ID_UNIDADE_DEC_COLEGIADA;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_BY_UNIDADE_DECISORA_COLEGIADA;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -25,4 +29,10 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
                         + "where o.localizacao.caminhoCompleto like concat(:caminhoCompleto, '%')",
                 params)).longValue() > 0;
     }
+	
+	public List<UnidadeDecisoraMonocratica> searchUnidadeDecisoraMonocraticaAtivoWithIdColegiada(Integer idColegiada){
+		Map<String, Object> map = new HashMap<String, Object>(1);
+		map.put(ID_UNIDADE_DEC_COLEGIADA, idColegiada);
+		return getNamedResultList(SEARCH_BY_UNIDADE_DECISORA_COLEGIADA, map);
+	}
 }
