@@ -161,8 +161,7 @@ public class TaskInstanceHome implements Serializable {
                 ProcessoDocumento pd = processoDocumentoManager.find(id);
                 dados.setClassificacao(pd.getTipoProcessoDocumento());
             }
-            documentosAssinaveis.put(getFieldName(variableRetriever.getName()),
-                    dados);
+            documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
         }
         setModeloWhenExists(variableRetriever);
     }
@@ -266,8 +265,7 @@ public class TaskInstanceHome implements Serializable {
 
         if (variableAccess.isWritable()) {
             if (variableResolver.isEditor() && variableAccess.isReadable()) {
-                DadosDocumentoAssinavel dados = documentosAssinaveis
-                        .get(fieldName);
+                DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
                 ProcessoHome processoHome = ProcessoHome.instance();
                 processoHome.setTipoProcessoDocumento(dados.getClassificacao());
                 processoHome.setSignature(dados.getSignature());
@@ -276,8 +274,14 @@ public class TaskInstanceHome implements Serializable {
             variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
             variableResolver.resolve();
             if (variableResolver.isEditor()) {
-                if (documentoCorreto && !variableResolver.isEditorAssinado()) {
-                    assinado = false;
+                if (documentoCorreto) {
+                    if (!variableResolver.isEditorAssinado()) {
+                        assinado = false;
+                    } else {
+                        assinado = assinado || assinar;
+                        DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
+                        dados.setIdDocumento((Integer) variableResolver.getValue());
+                    }
                 } else {
                     assinado = assinado || assinar;
                 }
@@ -286,7 +290,6 @@ public class TaskInstanceHome implements Serializable {
                 Contexts.getBusinessProcessContext().flush();
                 retrieveVariable(variableAccess);
             }
-
         }
     }
 
