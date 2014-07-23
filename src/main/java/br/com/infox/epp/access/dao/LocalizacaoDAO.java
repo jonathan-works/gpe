@@ -58,7 +58,7 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         }
         
         query = IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY;
-        if (params.containsKey(QUERY_PARAM_ID_LOCALIZACAO)) {
+        if (localizacao.getIdLocalizacao() != null) {
             query = IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY + PART_FILTER_BY_LOCALIZACAO;
         }
         params.put(QUERY_PARAM_ESTRUTURA_PAI, localizacao.getEstruturaPai());
