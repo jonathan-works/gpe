@@ -11,8 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -37,6 +39,7 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	private Boolean ativo;
 	
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH, mappedBy="unidadeDecisoraColegiada")
+	@OrderBy("unidadeDecisoraMonocratica ASC")
 	private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 	
 	public Integer getIdUnidadeDecisoraColegiada() {
@@ -70,6 +73,15 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	public void setUnidadeDecisoraColegiadaMonocraticaList(
 			List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList) {
 		this.unidadeDecisoraColegiadaMonocraticaList = unidadeDecisoraColegiadaMonocraticaList;
+	}
+	
+	@Transient
+	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaList(){
+		List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList = new ArrayList<>();
+		for (UnidadeDecisoraColegiadaMonocratica colegiadaMonocratica : getUnidadeDecisoraColegiadaMonocraticaList()){
+			unidadeDecisoraMonocraticaList.add(colegiadaMonocratica.getUnidadeDecisoraMonocratica());
+		}
+		return unidadeDecisoraMonocraticaList;
 	}
 
 	@Override

@@ -56,7 +56,7 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 	}
 
 	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaItemList() {
-		unidadeDecisoraMonocraticaItemList = unidadeDecisoraColegiadaMonocraticaManager.getListUnidadeDecisoraMonocraticaAtivo((Integer) getId());
+		unidadeDecisoraMonocraticaItemList = unidadeDecisoraMonocraticaManager.getListUnidadeDecisoraMonocraticaWithIdColegiada((Integer) getId());
 		return unidadeDecisoraMonocraticaItemList;
 	}
 

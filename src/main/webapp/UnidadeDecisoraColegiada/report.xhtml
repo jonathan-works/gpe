@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
      xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:wi="http://www.itx.com.br/jsf">
+     xmlns:wi="http://www.itx.com.br/jsf"
+     xmlns:p="http://jboss.org/schema/seam/pdf">
 
 	<wi:dataReport
          title="#{messages['unidadeDecisoraColegiada.reportTitle']}"
@@ -19,13 +20,21 @@
 		<ui:repeat
              var="row"
              value="#{unidadeDecisoraColegiadaList.list()}">
-			<wi:reportColumn
-                 value="#{row.nome}"/>
-			<wi:reportColumnList 
-				 value="#{row.unidadeDecisoraMonocraticaList}" />
-			<wi:reportColumnSituacao
-                 value="#{row.ativo}"
-                 columnAlign="center" />
+             
+			<wi:reportColumn value="#{row.nome}"/>
+			
+			<p:cell padding="3" horizontalAlignment="center">
+		        <p:list indent="10">
+		            <ui:repeat value="#{row.unidadeDecisoraColegiadaMonocraticaList}" var="v">
+		                <p:listItem>
+		                    <p:text horizontalAlignment="center" 
+		                    		value="#{v.unidadeDecisoraMonocratica}"/>
+		                </p:listItem>
+		            </ui:repeat>
+		        </p:list>
+		    </p:cell>
+		    
+			<wi:reportColumnSituacao value="#{row.ativo}" columnAlign="center" />
 		</ui:repeat>
 
 	</wi:dataReport>
