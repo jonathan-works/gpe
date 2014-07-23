@@ -18,6 +18,6 @@ public interface PerfilQuery {
             + "where o.localizacao.caminhoCompleto like concat(:" + CAMINHO_COMPLETO_PARAM + ", '%')";
     
     String LIST_PERFIS_DENTRO_DE_ESTRUTURA = "Perfil.listPerfisDentroDeEstrutura";
-    String LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY = "select o from Perfil o where o.localizacao.estruturaPai is not null "
+    String LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY = "select o from Perfil o where o.localizacao.estruturaPai is not null and o.ativo = true "
             + "order by o.descricao";
 }
