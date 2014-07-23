@@ -15,9 +15,11 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.core.Events;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.security.Identity;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
@@ -62,11 +64,11 @@ public class TermoAdesaoAction implements Serializable {
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
 
-    public void assinarTermoAdesao() {
+    public void assinarTermoAdesao(String certChain, String signature) {
         try {
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
-            ProcessoDocumentoBin bin = processoDocumentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, termoAdesao);
+            ProcessoDocumentoBin bin = processoDocumentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
 
             final List<UsuarioPerfil> perfilAtivoList = usuarioLogin.getUsuarioPerfilAtivoList();
             if (perfilAtivoList != null) {
@@ -79,6 +81,9 @@ public class TermoAdesaoAction implements Serializable {
                 assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature);
             }
             processoDocumentoBinManager.flush();
+            final Events events = Events.instance();
+            events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
+            events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
         } catch (final CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);

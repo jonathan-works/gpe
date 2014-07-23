@@ -54,6 +54,7 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -139,10 +140,13 @@ public class Authenticator {
         boolean termoAdesao = false;
         final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
         if (perfilAtivoList != null) {
-            for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
-                Papel papel = usuarioPerfil.getPerfil().getPapel();
-                if (termoAdesao=papel.getTermoAdesao()) {
-                    break;
+            PessoaFisica pessoaFisica = usuario.getPessoaFisica();
+            if (pessoaFisica != null && pessoaFisica.getSignature() == null) {
+                for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
+                    Papel papel = usuarioPerfil.getPerfil().getPapel();
+                    if (termoAdesao=papel.getTermoAdesao()) {
+                        break;
+                    }
                 }
             }
         }

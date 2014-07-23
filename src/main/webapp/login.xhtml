@@ -272,6 +272,20 @@
           </h:panelGroup>
         </f:facet>
         <h:form id="termoAdesaoForm">
+          <a:jsFunction
+            name="assinarTermo"
+            action="#{termoAdesaoAction.assinarTermoAdesao(termoAdesaoAction.certChain,termoAdesaoAction.signature)}"
+            execute="@this termoAdesaoSignature termoAdesaoCertChain"
+            render="DialogMessage"
+            limitRender="true" />
+          <h:inputHidden
+            id="termoAdesaoSignature"
+            value="#{termoAdesaoAction.signature}">
+          </h:inputHidden>
+          <h:inputHidden
+            id="termoAdesaoCertChain"
+            value="#{termoAdesaoAction.certChain}">
+          </h:inputHidden>
           <s:div
             rendered="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
             <div>
@@ -284,20 +298,6 @@
                 height="#{panelHeight-157}" />
             </div>
             <div>
-              <a:jsFunction
-                name="assinarTermo"
-                action="#{termoAdesaoAction.assinarTermoAdesao()}"
-                execute="@this termoAdesaoSignature termoAdesaoCertChain"
-                render="DialogMessage"
-                limitRender="true" />
-              <h:inputHidden
-                id="termoAdesaoSignature"
-                value="#{termoAdesaoAction.signature}">
-              </h:inputHidden>
-              <h:inputHidden
-                id="termoAdesaoCertChain"
-                value="#{termoAdesaoAction.certChain}">
-              </h:inputHidden>
               <wi:appletAssinatura
                 id="assinarTermoAdesao"
                 urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"

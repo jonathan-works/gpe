@@ -13,9 +13,11 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.core.Events;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.security.Identity;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
@@ -46,6 +48,9 @@ public class CertificateAuthenticator implements Serializable {
         try {
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, null, certChain, false);
+            final Events events = Events.instance();
+            events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
+            events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
         } catch (final CertificateExpiredException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(Messages.instance()
