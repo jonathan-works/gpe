@@ -14,7 +14,7 @@ import br.com.infox.core.list.SearchCriteria;
 public class AssinaturaDocumentoList extends EntityList<AssinaturaDocumento> {
 
     private static final String DEFAULT_ORDER = "dataAssinatura desc";
-    private static final String DEFAULT_EJBQL = "select o from AssinaturaDocumento";
+    private static final String DEFAULT_EJBQL = "select o from AssinaturaDocumento o";
     private static final long serialVersionUID = 1L;
     public static final String NAME = "assinaturaDocumentoList";
     
