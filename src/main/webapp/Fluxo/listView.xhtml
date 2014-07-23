@@ -210,10 +210,11 @@
                             items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoCrudAction.instance)}" />
                         <wi:tree
                             id="localizacao"
-                            assignTo="fluxoLocalizacaoCrudAction.instance.localizacao"
+                            assignTo="fluxoLocalizacaoCrudAction.localizacao"
                             label="#{messages['localizacao.titleView']}"
                             required="true"
-                            tree="#{localizacaoTree}" />
+                            tree="#{localizacaoFullTree}" 
+                            styleClass="#{empty item.entity.estruturaPai ? 'tree-notselectable' : ''}" />
                         <ui:define name="buttons">
                             <wi:commandButton
                                 id="saveButton"

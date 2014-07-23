@@ -6,7 +6,9 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
+import br.com.infox.core.tree.TreeHandler;
+import br.com.infox.epp.access.component.tree.LocalizacaoFullTreeHandler;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -25,7 +27,7 @@ public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLo
     public static final String NAME = "fluxoLocalizacaoCrudAction";
 
     @In
-    NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
+    private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
 
     public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
         return getInstance().getNaturezaCategoriaFluxo();
@@ -48,8 +50,17 @@ public class FluxoLocalizacaoCrudAction extends AbstractCrudAction<NatCatFluxoLo
     }
 
     private void clearTree() {
-        LocalizacaoTreeHandler treeHandler = ComponentUtil.getComponent("localizacaoTree");
+        TreeHandler<?> treeHandler = ComponentUtil.getComponent(LocalizacaoFullTreeHandler.NAME);
         treeHandler.clearTree();
     }
 
+    public void setLocalizacao(Localizacao localizacao) {
+        if (localizacao == null || localizacao.getEstruturaPai() != null) {
+            getInstance().setLocalizacao(localizacao);
+        }
+    }
+    
+    public Localizacao getLocalizacao() {
+        return getInstance().getLocalizacao();
+    }
 }
