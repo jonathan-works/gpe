@@ -1,10 +1,8 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.PerfilQuery.CAMINHO_COMPLETO_PARAM;
 import static br.com.infox.epp.access.query.PerfilQuery.COM_ESTRUTURA;
 import static br.com.infox.epp.access.query.PerfilQuery.COM_ID;
 import static br.com.infox.epp.access.query.PerfilQuery.EXISTE_PERFIL_BASE_QUERY;
-import static br.com.infox.epp.access.query.PerfilQuery.EXISTE_PERFIL_COM_HIERARQUIA_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PerfilQuery.ID_PERFIL_PARAM;
 import static br.com.infox.epp.access.query.PerfilQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA;
 import static br.com.infox.epp.access.query.PerfilQuery.LOCALIZACAO_PARAM;
@@ -52,12 +50,6 @@ public class PerfilDAO extends DAO<Perfil> {
         return (Long) getSingleResult(query, params) > 0;
     }
 
-    public boolean existePerfilComHierarquiaLocalizacao(Localizacao localizacao) {
-        Map<String, Object> params = new HashMap<>();
-        params.put(CAMINHO_COMPLETO_PARAM, localizacao.getCaminhoCompleto());
-        return ((Number) getNamedSingleResult(EXISTE_PERFIL_COM_HIERARQUIA_LOCALIZACAO, params)).longValue() > 0;
-    }
-    
     public List<Perfil> listPerfisDentroDeEstrutura() {
         return getNamedResultList(LIST_PERFIS_DENTRO_DE_ESTRUTURA);
     }

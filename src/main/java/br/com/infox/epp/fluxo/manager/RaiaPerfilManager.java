@@ -58,8 +58,4 @@ public class RaiaPerfilManager extends Manager<RaiaPerfilDAO, RaiaPerfil> {
         removerRaiaPerfisDoFluxo(fluxo);
         criarRaiaPerfis(fluxo, swimlanes);
     }
-    
-    public boolean existeRaiaPerfilComHierarquiaLocalizacao(Localizacao localizacao) {
-        return getDao().existeRaiaPerfilComHierarquiaLocalizacao(localizacao);
-    }
 }

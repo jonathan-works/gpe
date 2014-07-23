@@ -14,6 +14,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.epp.access.dao.LocalizacaoDAO;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
 
@@ -97,11 +98,12 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     public void validarInativacao(Localizacao localizacao) throws DAOException {
         boolean invalid = false;
         String msg = "Não foi possível inativar, pois existe {0} que utiliza esta localização ou suas filhas.";
-        if (perfilManager.existePerfilComHierarquiaLocalizacao(localizacao)) {
+        List<TipoUsoLocalizacaoEnum> usos = getDao().getUsosLocalizacao(localizacao);
+        if (usos.contains(TipoUsoLocalizacaoEnum.P)) {
             msg = MessageFormat.format(msg, "perfil{0}");
             invalid = true;
         }
-        if (raiaPerfilManager.existeRaiaPerfilComHierarquiaLocalizacao(localizacao)) {
+        if (usos.contains(TipoUsoLocalizacaoEnum.RP)) {
             if (invalid) {
                 msg = MessageFormat.format(msg, ", raia{0}");
             } else {
@@ -109,7 +111,7 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
                 invalid = true;
             }
         }
-        if (unidadeDecisoraMonocraticaManager.existeUnidadeDecisoraMonocraticaComHierarquiaLocalizacao(localizacao)) {
+        if (usos.contains(TipoUsoLocalizacaoEnum.UDM)) {
             if (invalid) {
                 msg = MessageFormat.format(msg, ", unidade decisora monocrática");
             } else {

@@ -10,7 +10,9 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.PART_FILTER_BY_LOCA
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_ID_LOCALIZACAO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.USOS_DA_HIERARQUIA_LOCALIZACAO;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +24,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
 
 @Name(LocalizacaoDAO.NAME)
 @AutoCreate
@@ -79,5 +82,16 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
             return super.update(object);
         }
         throw new DAOException(DAOException.MSG_UNIQUE_VIOLATION);
+    }
+    
+    public List<TipoUsoLocalizacaoEnum> getUsosLocalizacao(Localizacao localizacao) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(QUERY_PARAM_CAMINHO_COMPLETO, localizacao.getCaminhoCompleto());
+        List<String> result = getNamedResultList(USOS_DA_HIERARQUIA_LOCALIZACAO, params);
+        List<TipoUsoLocalizacaoEnum> usos = new ArrayList<>();
+        for (String s : result) {
+            usos.add(TipoUsoLocalizacaoEnum.valueOf(s));
+        }
+        return usos;
     }
 }

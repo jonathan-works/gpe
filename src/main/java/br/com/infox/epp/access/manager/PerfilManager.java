@@ -24,10 +24,6 @@ public class PerfilManager extends Manager<PerfilDAO, Perfil> {
     public boolean existePerfil(Integer idPerfil, Localizacao localizacao, Papel papel, Localizacao paiDaEstrutura) {
         return getDao().existePerfil(idPerfil, localizacao, papel, paiDaEstrutura);
     }
-
-    public boolean existePerfilComHierarquiaLocalizacao(Localizacao localizacao) {
-        return getDao().existePerfilComHierarquiaLocalizacao(localizacao);
-    }
     
     public List<Perfil> listPerfisDentroDeEstrutura() {
         return getDao().listPerfisDentroDeEstrutura();

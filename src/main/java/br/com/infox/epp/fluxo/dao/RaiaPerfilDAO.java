@@ -40,10 +40,4 @@ public class RaiaPerfilDAO extends DAO<RaiaPerfil> {
         params.put(RaiaPerfilQuery.QUERY_PARAM_FLUXO, fluxo);
         executeNamedQueryUpdate(RaiaPerfilQuery.REMOVER_RAIAS_PERFIS_POR_FLUXO, params);
     }
-    
-    public boolean existeRaiaPerfilComHierarquiaLocalizacao(Localizacao localizacao) {
-        Map<String, Object> params = new HashMap<>();
-        params.put(RaiaPerfilQuery.QUERY_PARAM_CAMINHO_COMPLETO, localizacao.getCaminhoCompleto());
-        return ((Number) getNamedSingleResult(RaiaPerfilQuery.EXISTE_RAIA_PERFIL_COM_HIERARQUIA_LOCALIZACAO, params)).longValue() > 0;
-    }
 }

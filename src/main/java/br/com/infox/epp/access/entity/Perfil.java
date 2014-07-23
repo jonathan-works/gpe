@@ -22,8 +22,7 @@ import br.com.infox.epp.access.query.PerfilQuery;
 @Entity
 @Table(name = "tb_perfil")
 @NamedQueries({
-    @NamedQuery(name = PerfilQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA, query = PerfilQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY),
-    @NamedQuery(name = PerfilQuery.EXISTE_PERFIL_COM_HIERARQUIA_LOCALIZACAO, query = PerfilQuery.EXISTE_PERFIL_COM_HIERARQUIA_LOCALIZACAO_QUERY)
+    @NamedQuery(name = PerfilQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA, query = PerfilQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)
 })
 public class Perfil {
     

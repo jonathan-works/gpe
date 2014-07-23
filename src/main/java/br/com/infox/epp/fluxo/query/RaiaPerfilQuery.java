@@ -24,8 +24,4 @@ public interface RaiaPerfilQuery {
     
     String REMOVER_RAIAS_PERFIS_POR_FLUXO = "RaiaPerfil.removerRaiasPerfisPorFluxo";
     String REMOVER_RAIAS_PERFIS_POR_FLUXO_QUERY = "delete RaiaPerfil o where o.fluxo = :" + QUERY_PARAM_FLUXO;
-    
-    String EXISTE_RAIA_PERFIL_COM_HIERARQUIA_LOCALIZACAO = "RaiaPerfil.existeRaiaPerfilComHierarquiaLocalizacao";
-    String EXISTE_RAIA_PERFIL_COM_HIERARQUIA_LOCALIZACAO_QUERY = "select count(o) from RaiaPerfil o "
-            + "where o.perfil.localizacao.caminhoCompleto like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%'))";
 }
