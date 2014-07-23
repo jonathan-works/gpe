@@ -33,5 +33,5 @@
 
   <action
     execute="#{assinaturaDocumentoList.entity.setUsuario(usuarioLoginCrudAction.instance)}"
-    if="#{usuarioLoginCrudAction.tab eq ''}" />
+    if="#{usuarioLoginCrudAction.tab eq 'usuarioAssinaturaDocumento'}" />
 </page>
