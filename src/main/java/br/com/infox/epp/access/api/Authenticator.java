@@ -141,13 +141,17 @@ public class Authenticator {
         final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
         if (perfilAtivoList != null) {
             PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-            if (pessoaFisica != null && pessoaFisica.getSignature() == null) {
-                for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
-                    Papel papel = usuarioPerfil.getPerfil().getPapel();
-                    if (termoAdesao=papel.getTermoAdesao()) {
-                        break;
-                    }
-                }
+            if (pessoaFisica != null) {
+            	if (pessoaFisica.getSignature() != null) {
+            		termoAdesao = false;
+            	} else {
+	                for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
+	                    Papel papel = usuarioPerfil.getPerfil().getPapel();
+	                    if (termoAdesao=papel.getTermoAdesao()) {
+	                        break;
+	                    }
+	                }
+            	}
             }
         }
         Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, termoAdesao);

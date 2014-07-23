@@ -28,6 +28,8 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
@@ -63,6 +65,8 @@ public class TermoAdesaoAction implements Serializable {
     private ProcessoDocumentoBinManager processoDocumentoBinManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In
+    private PessoaFisicaManager pessoaFisicaManager;
 
     public void assinarTermoAdesao(String certChain, String signature) {
         try {
@@ -79,6 +83,9 @@ public class TermoAdesaoAction implements Serializable {
                     }
                 }
                 assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature);
+                PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
+                //TODO RESOLVER ESTA GAMBIARRA
+                pessoaFisica.setSignature(format("{0}", bin.getIdProcessoDocumentoBin()));
             }
             processoDocumentoBinManager.flush();
             final Events events = Events.instance();

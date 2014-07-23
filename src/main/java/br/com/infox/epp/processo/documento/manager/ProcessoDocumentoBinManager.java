@@ -1,6 +1,9 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import javax.persistence.EntityManager;
+
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -16,6 +19,9 @@ public class ProcessoDocumentoBinManager extends Manager<ProcessoDocumentoBinDAO
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoBinManager";
+    
+    @In
+    private EntityManager entityManager;
 
     public ProcessoDocumentoBin createProcessoDocumentoBin(
             ProcessoDocumento processoDocumento) throws DAOException {
@@ -30,6 +36,7 @@ public class ProcessoDocumentoBinManager extends Manager<ProcessoDocumentoBinDAO
         ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
         bin.setModeloDocumento(conteudo);
         bin.setMd5Documento(MD5Encoder.encode(conteudo));
-        return persist(bin);
+        entityManager.persist(bin);
+        return bin;
     }
 }
