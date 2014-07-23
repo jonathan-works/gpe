@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.task.entity;
 
+import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.LOCALIZACAO_DA_TAREFA;
+import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.LOCALIZACAO_DA_TAREFA_QUERY;
 import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.USUARIO_DA_TAREFA;
 import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.USUARIO_DA_TAREFA_QUERY;
 
@@ -13,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import br.com.infox.epp.access.entity.Localizacao;
@@ -21,7 +25,12 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name = UsuarioTaskInstance.TABLE_NAME)
-@NamedNativeQueries({ @NamedNativeQuery(name = USUARIO_DA_TAREFA, query = USUARIO_DA_TAREFA_QUERY) })
+@NamedQueries({
+    @NamedQuery(name = LOCALIZACAO_DA_TAREFA, query = LOCALIZACAO_DA_TAREFA_QUERY)
+})
+@NamedNativeQueries({ 
+    @NamedNativeQuery(name = USUARIO_DA_TAREFA, query = USUARIO_DA_TAREFA_QUERY)
+})
 public class UsuarioTaskInstance implements Serializable {
 
     public static final String TABLE_NAME = "tb_usuario_taskinstance";

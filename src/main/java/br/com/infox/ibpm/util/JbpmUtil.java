@@ -23,18 +23,17 @@ import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
-import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.manager.PerfilManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -58,15 +57,7 @@ public class JbpmUtil {
      * @return
      */
     public Localizacao getLocalizacao(TaskInstance task) {
-        SwimlaneInstance swimlaneInstance = task.getSwimlaneInstance();
-        if (swimlaneInstance != null) {
-            String expression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
-            if (expression == null) {
-                return null;
-            }
-            return perfilManager().find(Integer.valueOf(expression.split(",")[0])).getLocalizacao();
-        }
-        return null;
+        return usuarioTaskInstanceManager().getLocalizacaoTarefa(task.getId());
     }
 
     /**
@@ -193,7 +184,7 @@ public class JbpmUtil {
         return ComponentUtil.getComponent(GenericManager.NAME);
     }
 
-    private static PerfilManager perfilManager() {
-        return ComponentUtil.getComponent(PerfilManager.NAME);
+    private static UsuarioTaskInstanceManager usuarioTaskInstanceManager() {
+        return ComponentUtil.getComponent(UsuarioTaskInstanceManager.NAME);
     }
 }
