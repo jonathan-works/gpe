@@ -2,6 +2,7 @@ package br.com.infox.epp.access.entity;
 
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.access.query.PerfilQuery.COL_ID_PERFIL;
 import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
@@ -36,7 +37,7 @@ public class Perfil {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_perfil")
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_perfil", unique = true, nullable = false)
+    @Column(name = COL_ID_PERFIL, unique = true, nullable = false)
     public Integer getIdPerfil() {
         return idPerfil;
     }
