@@ -56,9 +56,9 @@
                 columnHeader="#{messages['unidadeDecisoraColegiada.unidadesMonocraticas']}"
                 hideOrder="true">
                 <ui:repeat
-                    var="uniColegiadaMono"
+                    var="ucm"
                     value="#{row.unidadeDecisoraColegiadaMonocraticaList}">
-                    <div>#{uniColegiadaMono.unidadeDecisoraMonocratica.nome}</div>
+                    <div>#{ucm.unidadeDecisoraMonocratica.nome} #{ucm.presidente ? messages['unidadeDecisoraColegiada.isPresidente'] : ''}</div>
                 </ui:repeat>
             </wi:columnOutputText>
             

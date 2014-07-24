@@ -34,8 +34,6 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
     private static final String FIELD_EXPRESSION = "#'{'{0}List.entity.{1}}";
     
-    private static final String FIELD_EXPRESSION_LIST = "#'{'{0}List.{1}}";
-
     private static final long serialVersionUID = 1L;
 
     private static final LogProvider LOG = Logging.getLogProvider(EntityList.class);
@@ -157,13 +155,10 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
      */
     protected void visitFields(FieldCommand command) {
         String entityName = getEntityName();
-        String exp = null;
         for (SearchField s : searchFieldMap.values()) {
-        	if (s.getCriteria() != SearchCriteria.NONE){
-        		exp = MessageFormat.format(FIELD_EXPRESSION, entityName, s.getName());
-        	} else {
-        		exp = MessageFormat.format(FIELD_EXPRESSION_LIST, entityName, s.getName());
-        	}
+        	String exp = s.getCriteria() != SearchCriteria.NONE ? 
+        						MessageFormat.format(FIELD_EXPRESSION, entityName, s.getName()) :
+        							s.getName();
         	ValueExpression<Object> ve = Expressions.instance().createValueExpression(exp);
             Object o = null;
             try {

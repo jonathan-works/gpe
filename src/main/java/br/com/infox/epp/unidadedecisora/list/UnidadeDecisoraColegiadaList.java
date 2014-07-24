@@ -45,7 +45,7 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
 	@Override
 	protected void addSearchFields() {
 		addSearchField("nome", SearchCriteria.CONTENDO);
-		addSearchField("unidadeDecisoraMonocratica", SearchCriteria.NONE, FILTRO_UNIDADE_MONOCRATICA);
+		addSearchField("unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica", SearchCriteria.NONE, FILTRO_UNIDADE_MONOCRATICA);
 		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
