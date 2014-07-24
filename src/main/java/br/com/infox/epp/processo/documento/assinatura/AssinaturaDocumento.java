@@ -1,13 +1,12 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.constants.LengthConstants.NOME_ATRIBUTO;
 import static br.com.infox.core.constants.LengthConstants.NOME_PADRAO;
+import static br.com.infox.epp.access.query.PerfilQuery.COL_ID_PERFIL;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_CERT_CHAIN;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_DATA_ASSINATURA;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_ID_ASSINATURA;
-import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_NOME_LOCALIZACAO;
-import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_NOME_PAPEL;
+import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_NOME_PERFIL;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_NOME_USUARIO;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_SIGNATURE;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.SEQUENCE_NAME;
@@ -34,9 +33,9 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.Perfil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.query.PapelQuery;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
@@ -51,15 +50,24 @@ public class AssinaturaDocumento implements Serializable {
 
     private Integer idAssinatura;
     private UsuarioLogin usuario;
-    private Papel papel;
+    private Perfil perfil;
     private String nomeUsuario;
-    private String nomePapel;
-    private String nomeLocalizacao;
+    private String nomePerfil;
     private Date dataAssinatura;
     private String signature;
     private String certChain;
     private ProcessoDocumentoBin processoDocumentoBin;
 
+    public AssinaturaDocumento(ProcessoDocumentoBin processoDocumentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) {
+        this.processoDocumentoBin=processoDocumentoBin;
+        this.usuario = usuarioPerfil.getUsuarioLogin();
+        this.nomeUsuario = this.usuario.getNomeUsuario();
+        this.perfil = usuarioPerfil.getPerfil();
+        this.nomePerfil = this.perfil.getDescricao();
+        this.signature = signature;
+        this.certChain = certChain;
+    }
+    
     public AssinaturaDocumento() {
     }
 
@@ -88,14 +96,14 @@ public class AssinaturaDocumento implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = PapelQuery.ID_PAPEL, nullable = false)
+    @JoinColumn(name = COL_ID_PERFIL, nullable = false)
     @NotNull
-    public Papel getPapel() {
-        return papel;
+    public Perfil getPerfil() {
+        return perfil;
     }
 
-    public void setPapel(Papel papel) {
-        this.papel = papel;
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
     }
 
     @Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
@@ -152,26 +160,15 @@ public class AssinaturaDocumento implements Serializable {
         this.processoDocumentoBin = processoDocumentoBin;
     }
 
-    @Column(name = COL_NOME_PAPEL, nullable = false, length = NOME_PADRAO)
+    @Column(name = COL_NOME_PERFIL, nullable = false, length = NOME_PADRAO)
     @Size(max = NOME_PADRAO)
     @NotNull
-    public String getNomePapel() {
-        return nomePapel;
+    public String getNomePerfil() {
+        return nomePerfil;
     }
 
-    public void setNomePapel(String nomePapel) {
-        this.nomePapel = nomePapel;
-    }
-
-    @Column(name = COL_NOME_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO)
-    @Size(max = DESCRICAO_PADRAO)
-    @NotNull
-    public String getNomeLocalizacao() {
-        return nomeLocalizacao;
-    }
-
-    public void setNomeLocalizacao(String nomeLocalizacao) {
-        this.nomeLocalizacao = nomeLocalizacao;
+    public void setNomePerfil(String nomePerfil) {
+        this.nomePerfil = nomePerfil;
     }
     
     @Transient

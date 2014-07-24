@@ -10,8 +10,7 @@ public interface AssinaturaDocumentoQuery {
     String COL_DATA_ASSINATURA = "dt_assinatura";
     String COL_SIGNATURE = "ds_signature";
     String COL_CERT_CHAIN = "ds_cert_chain";
-    String COL_NOME_PAPEL = "nm_papel";
-    String COL_NOME_LOCALIZACAO = "nm_localizacao";
+    String COL_NOME_PERFIL = "nm_perfil";
 
     String LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO = "listAssinaturaDocumentoByProcessoDocumento";
     String LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO_QUERY = "select a "
