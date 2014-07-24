@@ -2,6 +2,7 @@ package br.com.infox.epp.access.query;
 
 public interface PerfilQuery {
     
+    String COL_ID_PERFIL = "id_perfil";
     String ID_PERFIL_PARAM = "idParam";
     String LOCALIZACAO_PARAM = "localizacao";
     String CAMINHO_COMPLETO_PARAM = "caminhoCompleto";
