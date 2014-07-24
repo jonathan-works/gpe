@@ -74,6 +74,9 @@ public class UsuarioPerfil implements Serializable {
     
     @Override
     public String toString() {
+        if (getPerfil() == null) {
+            return null;
+        }
         return getPerfil().getDescricao();
     }
 
