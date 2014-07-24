@@ -105,6 +105,9 @@ public class LocalizacaoCrudAction extends AbstractRecursiveCrudAction<Localizac
     
     public void setLocalizacaoPai(Localizacao localizacaoPai) {
         getInstance().setLocalizacaoPai(localizacaoPai);
+        if (localizacaoPai != null) {
+            getInstance().setEstruturaPai(localizacaoPai.getEstruturaPai());
+        }
     }
     
     public void clear() {
