@@ -13,7 +13,7 @@
 		<wi:reportColumnHeader
              title="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}" />
 		<wi:reportColumnHeader
-             title="#{messages['unidadeDecisoraColegiada.unidadesAssociadas']}" />
+             title="#{messages['unidadeDecisoraColegiada.unidadesMonocraticasAssociadas']}" />
 		<wi:reportColumnHeader
              title="#{messages['field.situacao']}" />
 				
@@ -28,7 +28,7 @@
 		            <ui:repeat value="#{row.unidadeDecisoraColegiadaMonocraticaList}" var="v">
 		                <p:listItem>
 		                    <p:text horizontalAlignment="center" 
-		                    		value="#{v.unidadeDecisoraMonocratica}"/>
+		                    		value="#{v.unidadeDecisoraMonocratica} #{v.presidente ? messages['unidadeDecisoraColegiada.isPresidente'] : ''}"/>
 		                </p:listItem>
 		            </ui:repeat>
 		        </p:list>
