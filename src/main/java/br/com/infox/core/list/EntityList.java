@@ -55,6 +55,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     private static final int TAMANHO_XLS_PADRAO = 10000;
 
     public EntityList() {
+        setCustomFilters();
         addSearchFields();
         Map<String, String> map = getCustomColumnsOrder();
         if (map != null) {
@@ -78,6 +79,9 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     protected abstract String getDefaultOrder();
 
     protected abstract Map<String, String> getCustomColumnsOrder();
+    
+    protected void setCustomFilters() {
+    }
 
     protected Map<String, SearchField> getSearchFieldMap() {
         return searchFieldMap;

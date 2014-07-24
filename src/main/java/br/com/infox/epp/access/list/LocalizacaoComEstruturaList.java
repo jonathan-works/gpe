@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(LocalizacaoComEstruturaList.NAME)
@@ -24,6 +25,7 @@ public class LocalizacaoComEstruturaList extends EntityList<Localizacao> {
     @Override
     protected void addSearchFields() {
         addSearchField("estruturaPai", SearchCriteria.IGUAL);
+        addSearchField("caminhoCompleto", SearchCriteria.INICIANDO);
     }
 
     @Override
@@ -36,6 +38,14 @@ public class LocalizacaoComEstruturaList extends EntityList<Localizacao> {
         return DEFAULT_ORDER;
     }
 
+    @Override
+    protected void setCustomFilters() {
+        Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+        if (localizacao.getEstruturaPai() != null) {
+            getEntity().setCaminhoCompleto(Authenticator.getLocalizacaoAtual().getCaminhoCompleto());
+        }
+    }
+    
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;

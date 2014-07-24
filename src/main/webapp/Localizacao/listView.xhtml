@@ -90,6 +90,7 @@
                 label="#{messages['localizacao.estruturaFilho']}"
                 items="#{localizacaoCrudAction.getEstruturasDisponiveis()}"
                 readonly="#{not isEditable}"
+                rendered="#{empty authenticator.getLocalizacaoAtual().getEstruturaPai()}"
                 showLabelSelecione="true" />
             <wi:selectSituacaoRadio
                 id="ativo"
