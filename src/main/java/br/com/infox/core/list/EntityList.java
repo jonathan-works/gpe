@@ -33,6 +33,8 @@ import br.com.infox.seam.path.PathResolver;
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
     private static final String FIELD_EXPRESSION = "#'{'{0}List.entity.{1}}";
+    
+    private static final String FIELD_EXPRESSION_LIST = "#'{'{0}List.{1}}";
 
     private static final long serialVersionUID = 1L;
 
@@ -151,15 +153,18 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
      */
     protected void visitFields(FieldCommand command) {
         String entityName = getEntityName();
+        String exp = null;
         for (SearchField s : searchFieldMap.values()) {
-            String exp = MessageFormat.format(FIELD_EXPRESSION, entityName, s.getName());
-            ValueExpression<Object> ve = Expressions.instance().createValueExpression(exp);
+        	if (s.getCriteria() != SearchCriteria.NONE){
+        		exp = MessageFormat.format(FIELD_EXPRESSION, entityName, s.getName());
+        	} else {
+        		exp = MessageFormat.format(FIELD_EXPRESSION_LIST, entityName, s.getName());
+        	}
+        	ValueExpression<Object> ve = Expressions.instance().createValueExpression(exp);
             Object o = null;
             try {
                 o = ve.getValue();
             } catch (PropertyNotFoundException e) {
-                // para o caso de uma restriction mapeada não seja um campo da
-                // entidade
                 LOG.error(".visitFields()", e);
             }
             if (o != null) {

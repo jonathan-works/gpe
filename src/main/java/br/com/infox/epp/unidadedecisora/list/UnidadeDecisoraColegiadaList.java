@@ -15,7 +15,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
 
 @Name(UnidadeDecisoraColegiadaList.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraColegiada>{
 
 	private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
 	@Override
 	protected void addSearchFields() {
 		addSearchField("nome", SearchCriteria.CONTENDO);
-		addSearchField("unidadeDecisoraMonocratica", SearchCriteria.IGUAL, FILTRO_UNIDADE_MONOCRATICA);
+		addSearchField("unidadeDecisoraMonocratica", SearchCriteria.NONE, FILTRO_UNIDADE_MONOCRATICA);
 		addSearchField("ativo", SearchCriteria.IGUAL);
 	}
 
