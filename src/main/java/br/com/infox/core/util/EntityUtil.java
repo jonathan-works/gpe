@@ -234,6 +234,9 @@ public final class EntityUtil implements Serializable {
     public static <E> Class<E> getParameterizedTypeClass(Class<E> clazz) {
         Class<E> entityClass;
         java.lang.reflect.Type type = clazz.getGenericSuperclass();
+        if (clazz.getCanonicalName().contains("_$$_")) { // Proxy
+            type = ((Class<?>) type).getGenericSuperclass();
+        }
         if (type instanceof java.lang.reflect.ParameterizedType) {
             java.lang.reflect.ParameterizedType paramType = (java.lang.reflect.ParameterizedType) type;
             entityClass = (Class<E>) paramType.getActualTypeArguments()[0];
