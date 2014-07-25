@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,7 +26,7 @@ public class UnidadeDecisoraColegiadaMonocratica implements Serializable {
 	
 	@Id
 	@SequenceGenerator(allocationSize=1, initialValue=1, name="UniDecisoraColegiadaMonoGenerator", sequenceName="sq_uni_decisora_colegiada_mono")
-	@GeneratedValue(generator="UniDecisoraColegiadaMonoGenerator")
+	@GeneratedValue(generator="UniDecisoraColegiadaMonoGenerator", strategy=GenerationType.SEQUENCE)
 	@Column(name="id_uni_decisora_colegiada_mono", unique = true, nullable = false)
 	private Integer idUnidadeDecisoraColegiadaMonocratica;
 	
