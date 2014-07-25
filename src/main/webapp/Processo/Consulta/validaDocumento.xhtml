@@ -6,6 +6,7 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:a="http://richfaces.org/a4j"
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:wi="http://www.itx.com.br/jsf"
@@ -18,7 +19,7 @@
           <h:outputText
             value="#{messages['validacaoDocumentoList.assinaturas.header']}" />
         </f:facet>
-        <div>
+        <s:div id="assinaturaListCont">
           <rich:dataTable
             value="#{validaDocumentoAction.listAssinaturaDocumento}"
             id="assinaturaDocumentoList"
@@ -48,7 +49,50 @@
               <h:outputText value="#{row.dataAssinatura}"></h:outputText>
             </rich:column>
           </rich:dataTable>
-        </div>
+        </s:div>
+        <s:div id="conteudoAssinatura">
+          <h:form id="assinaturaDocumento">
+            <s:div id="assinatura_pers">
+              <a:jsFunction
+                name="assinar"
+                action="#{validaDocumentoAction.assinaDocumento(usuarioLogadoPerfilAtual)}"
+                execute="@this certChain signature"
+                render="@all"
+                oncomplete="infox.hideLoading();" />
+              <h:inputHidden
+                id="certChain"
+                value="#{validaDocumentoAction.certChain}" />
+              <h:inputHidden
+                id="signature"
+                value="#{validaDocumentoAction.signature}" />
+              <wi:appletAssinatura
+                id="appletAssinatura"
+                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+                formId="#{rich:clientId('assinaturaDocumento')}"
+                certificationChainField="#{rich:clientId('certChain')}"
+                signatureField="#{rich:clientId('signature')}"
+                getDataFunction="documento.getData()"
+                useBase64Function="'true'"
+                functionPreSign="infox.showLoading();"
+                functionPosSign="opener.location=opener.location;assinar();"
+                debug="false"
+                loginMode="false"
+                useProviderDll="false"
+                rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado)}">
+              </wi:appletAssinatura>
+              <h:inputHidden
+                id="dadosAssinaveis"
+                value="#{assinadorDocumento.processoDocumentoBin.isBinario() ? validaDocumentoAction.processoDocumentoBin.md5Documento : validaDocumentoAction.processoDocumentoBin.modeloDocumento}" />
+              <h:outputScript>
+                var documento={
+                  getData:function getData() {
+                    return #{rich:jQuery('dadosAssinaveis')}.val();
+                  }
+                };
+              </h:outputScript>
+            </s:div>
+          </h:form>
+        </s:div>
       </rich:panel>
     </div>
   </ui:define>
