@@ -39,8 +39,11 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
@@ -161,7 +164,8 @@ public class TaskInstanceHome implements Serializable {
                 ProcessoDocumento pd = processoDocumentoManager.find(id);
                 dados.setClassificacao(pd.getTipoProcessoDocumento());
             }
-            documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
+            documentosAssinaveis.put(getFieldName(variableRetriever.getName()),
+                    dados);
         }
         setModeloWhenExists(variableRetriever);
     }
@@ -265,7 +269,8 @@ public class TaskInstanceHome implements Serializable {
 
         if (variableAccess.isWritable()) {
             if (variableResolver.isEditor() && variableAccess.isReadable()) {
-                DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
+                DadosDocumentoAssinavel dados = documentosAssinaveis
+                        .get(fieldName);
                 ProcessoHome processoHome = ProcessoHome.instance();
                 processoHome.setTipoProcessoDocumento(dados.getClassificacao());
                 processoHome.setSignature(dados.getSignature());
@@ -279,8 +284,10 @@ public class TaskInstanceHome implements Serializable {
                         assinado = false;
                     } else {
                         assinado = assinado || assinar;
-                        DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
-                        dados.setIdDocumento((Integer) variableResolver.getValue());
+                        DadosDocumentoAssinavel dados = documentosAssinaveis
+                                .get(fieldName);
+                        dados.setIdDocumento((Integer) variableResolver
+                                .getValue());
                     }
                 } else {
                     assinado = assinado || assinar;
@@ -769,13 +776,34 @@ public class TaskInstanceHome implements Serializable {
     public boolean podeRenderizarApplet(String idEditor) {
         DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
                 .get(idEditor);
-        boolean assinado = false;
+        boolean podeAssinar = false;
         if (documentoAssinavel != null) {
-            assinado = assinaturaDocumentoService.isDocumentoAssinado(
-                    documentoAssinavel.getIdDocumento(),
-                    Authenticator.getUsuarioPerfilAtual());
+            UsuarioPerfil usuarioPerfilAtual = Authenticator
+                    .getUsuarioPerfilAtual();
+            podeAssinar = podeAssinar(idEditor, usuarioPerfilAtual)
+                    && !assinaturaDocumentoService.isDocumentoAssinado(
+                            documentoAssinavel.getIdDocumento(),
+                            usuarioPerfilAtual.getUsuarioLogin());
         }
-        return !assinado;
+        return podeAssinar;
+    }
+
+    private boolean podeAssinar(String idEditor,
+            UsuarioPerfil usuarioPerfilAtual) {
+        boolean assinavel = false;
+        TipoProcessoDocumento classificacao = documentosAssinaveis
+                .get(idEditor).getClassificacao();
+        if (classificacao != null) {
+            List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis = classificacao
+                    .getTipoProcessoDocumentoPapeis();
+            for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : tipoProcessoDocumentoPapeis) {
+                if (assinavel = usuarioPerfilAtual.getPerfil().getPapel()
+                        .equals(tipoProcessoDocumentoPapel.getPapel())) {
+                    break;
+                }
+            }
+        }
+        return assinavel;
     }
 
     public Map<String, DadosDocumentoAssinavel> getDocumentosAssinaveis() {
