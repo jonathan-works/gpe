@@ -369,6 +369,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                    <attachClasses>true</attachClasses>
                     <packagingExcludes>WEB-INF/lib/sqljdbc4-4.0.jar,WEB-INF/lib/postgresql-9.3-1101-jdbc41.jar</packagingExcludes>
                     <webResources>
                         <resource>
@@ -606,4 +607,17 @@
         <name>Infox</name>
         <url>http://www.infox.com.br</url>
     </organization>
+    
+    <distributionManagement>
+        <repository>
+            <id>infox-releases</id>
+            <name>Infox Releases</name>
+            <url>http://hudson.infox.intranet:8081/nexus/content/repositories/infox-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>infox-snapshots</id>
+            <name>Infox Snapshots</name>
+            <url>http://hudson.infox.intranet:8081/nexus/content/repositories/infox-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
