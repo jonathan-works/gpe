@@ -134,7 +134,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
         Integer result = idDoc;
         try {
             if (processoDocumento != null) {
-                if (assinaturaDocumentoService.isDocumentoAssinado(processoDocumento)) {
+                if (assinaturaDocumentoService.isDocumentoAssinado(processoDocumento, Authenticator.getUsuarioLogado())){
                     return result;
                 }
                 atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
@@ -142,7 +142,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
                 result = inserirProcessoDocumentoFluxo(value, label, assinado);
             }
             FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
-        } catch (AssinaturaException e) {
+        } catch (DAOException | AssinaturaException e) {
             LOG.error("Não foi possível salvar o ProcessoDocumento " + idDoc, e);
             FacesMessages.instance().clear();
             FacesMessages.instance().add(e.getMessage());
@@ -157,7 +157,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     // Método para Atualizar o documento do fluxo
     private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc,
-            Boolean assinado) throws CertificadoException, AssinaturaException {
+            Boolean assinado) throws CertificadoException, AssinaturaException, DAOException {
         if (validacaoCertificadoBemSucedida(assinado)) {
             ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
             ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
@@ -188,7 +188,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     private void atualizarProcessoDocumento(ProcessoDocumento processoDocumento, String modeloDocumento,
-            UsuarioPerfil usuarioPerfil) throws CertificadoException, AssinaturaException {
+            UsuarioPerfil usuarioPerfil) throws CertificadoException, AssinaturaException, DAOException {
         processoDocumento.getProcessoDocumentoBin().setModeloDocumento(modeloDocumento);
         assinaturaDocumentoService.assinarDocumento(processoDocumento, usuarioPerfil, certChain, signature);
     }
