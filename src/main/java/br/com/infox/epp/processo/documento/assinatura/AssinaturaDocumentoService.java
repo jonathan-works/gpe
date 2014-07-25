@@ -19,6 +19,8 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.Perfil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -28,8 +30,10 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(AssinaturaDocumentoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -45,6 +49,8 @@ public class AssinaturaDocumentoService implements Serializable {
     private ProcessoDocumentoManager processoDocumentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
+    @In
+    private AssinaturaDocumentoManager assinaturaDocumentoManager;
 
     public Boolean isDocumentoAssinado(final ProcessoDocumento processoDocumento) {
         final ProcessoDocumentoBin processoDocumentoBin = processoDocumento
@@ -186,20 +192,21 @@ public class AssinaturaDocumentoService implements Serializable {
             final ProcessoDocumentoBin processoDocumentoBin,
             final UsuarioPerfil usuarioPerfilAtual, final String certChain,
             final String signature) throws CertificadoException,
-            AssinaturaException {
+            AssinaturaException, DAOException {
         final UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
         verificaCertificadoUsuarioLogado(certChain, usuario);
 
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
                 processoDocumentoBin, usuarioPerfilAtual, certChain, signature);
-
         processoDocumentoBin.getAssinaturas().add(assinaturaDocumento);
+        GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
+        genericManager.update(processoDocumentoBin);
     }
 
     public void assinarDocumento(final ProcessoDocumento processoDocumento,
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws CertificadoException,
-            AssinaturaException {
+            AssinaturaException, DAOException {
         this.assinarDocumento(processoDocumento.getProcessoDocumentoBin(),
                 perfilAtual, certChain, signature);
     }
