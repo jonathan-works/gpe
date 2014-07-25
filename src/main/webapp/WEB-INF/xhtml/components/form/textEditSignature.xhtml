@@ -31,7 +31,7 @@
         disabled="#{readonly or home.possuiAssinatura(id)}">
         <a:ajax
           event="change"
-          render="appletDiv"
+          render="appletDiv signatureDiv"
           execute="@this"
           limitRender="true" />
       </wi:selectOneMenuEntity>
@@ -42,21 +42,22 @@
         value="#{home.instance[id]}"
         readonly="#{readonly or home.possuiAssinatura(id)}" />
     </s:div>
-    <a:jsFunction
-      name="#{editorId.replace('-', '')}submitForm"
-      action="#{home.assinarDocumento(id)}"
-      rendered="#{not readonly and home.podeRenderizarApplet(id)}"
-      render="@form pageBodyDialogMessage #{formId}"
-      oncomplete="infox.hideLoading();" />
     <s:div
       id="signatureDiv"
-      rendered="#{not readonly and home.podeRenderizarApplet(id)}">
-      <h:inputHidden
-        id="#{idCertChain}"
-        value="#{home.documentosAssinaveis[id].certChain}" />
-      <h:inputHidden
-        id="#{idSignature}"
-        value="#{home.documentosAssinaveis[id].signature}" />
+      rendered="#{not readonly}">
+      <s:div rendered="#{home.podeRenderizarApplet(id)}">
+        <a:jsFunction
+          name="#{editorId.replace('-', '')}submitForm"
+          action="#{home.assinarDocumento(id)}"
+          render="@form pageBodyDialogMessage #{formId}"
+          oncomplete="infox.hideLoading();" />
+        <h:inputHidden
+          id="#{idCertChain}"
+          value="#{home.documentosAssinaveis[id].certChain}" />
+        <h:inputHidden
+          id="#{idSignature}"
+          value="#{home.documentosAssinaveis[id].signature}" />
+      </s:div>
     </s:div>
     <s:div
       id="appletDiv"
@@ -71,14 +72,15 @@
         getDataFunction="infox.editor['#{editorId}'].instance.getData()"
         useBase64Function="infox.editor['#{editorId}'].useBase64()"
         functionPreSign="infox.showLoading();"
-        functionPosSign="#{editorId.replace('-', '')}submitForm()"
+        functionPosSign="#{editorId.replace('-', '')}submitForm();infox.showLoading();"
         debug="false"
         loginMode="false"
         useProviderDll="false"
         rendered="#{home.podeRenderizarApplet(id)}">
       </wi:appletAssinatura>
     </s:div>
-    <h:outputScript rendered="#{not readonly and home.podeRenderizarApplet(id)}">
+    <h:outputScript
+      rendered="#{not readonly and home.podeRenderizarApplet(id)}">
 			namespace("infox.editor.#{editorId}",{
 				useBase64:function useBase64() {
 					return "true";
