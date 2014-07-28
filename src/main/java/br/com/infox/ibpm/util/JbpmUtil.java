@@ -23,18 +23,17 @@ import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
-import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -58,22 +57,7 @@ public class JbpmUtil {
      * @return
      */
     public Localizacao getLocalizacao(TaskInstance task) {
-        SwimlaneInstance swimlaneInstance = task.getSwimlaneInstance();
-        if (swimlaneInstance != null) {
-            String expression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
-            if (expression == null) {
-                return null;
-            }
-            // TODO: verificar se pode ser dado um tratamento melhor
-            String localizacaoId = expression.substring(expression.indexOf('(') + 1);
-            localizacaoId = localizacaoId.substring(0, localizacaoId.lastIndexOf(')'));
-            if (localizacaoId.indexOf(':') > 0) {
-                localizacaoId = localizacaoId.replaceAll("'", "");
-                localizacaoId = localizacaoId.split(":")[0];
-            }
-            return localizacaoManager().find(Integer.valueOf(localizacaoId));
-        }
-        return null;
+        return usuarioTaskInstanceManager().getLocalizacaoTarefa(task.getId());
     }
 
     /**
@@ -192,10 +176,6 @@ public class JbpmUtil {
         return ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
     }
 
-    private LocalizacaoManager localizacaoManager() {
-        return ComponentUtil.getComponent(LocalizacaoManager.NAME);
-    }
-
     private static ProcessoManager processoManager() {
         return ComponentUtil.getComponent(ProcessoManager.NAME);
     }
@@ -204,4 +184,7 @@ public class JbpmUtil {
         return ComponentUtil.getComponent(GenericManager.NAME);
     }
 
+    private static UsuarioTaskInstanceManager usuarioTaskInstanceManager() {
+        return ComponentUtil.getComponent(UsuarioTaskInstanceManager.NAME);
+    }
 }

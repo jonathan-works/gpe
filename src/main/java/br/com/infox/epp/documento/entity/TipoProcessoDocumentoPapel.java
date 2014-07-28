@@ -2,6 +2,8 @@ package br.com.infox.epp.documento.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery;
+import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 
 @Entity
 @Table(name = "tb_tipo_processo_documento_papel")
@@ -26,7 +29,7 @@ public class TipoProcessoDocumentoPapel implements java.io.Serializable {
     private Integer idTipoProcessoDocumentoPapel;
     private TipoProcessoDocumento tipoProcessoDocumento;
     private Papel papel;
-    private Boolean obrigatorio;
+    private TipoAssinaturaEnum tipoAssinatura;
 
     public TipoProcessoDocumentoPapel() {
     }
@@ -67,14 +70,14 @@ public class TipoProcessoDocumentoPapel implements java.io.Serializable {
         this.papel = papel;
     }
 
-    @Column(name = "in_obrigatorio", nullable = false)
-    @NotNull
-    public Boolean getObrigatorio() {
-        return obrigatorio;
+    @Column(name = "tp_assinatura", nullable=false)
+    @Enumerated(EnumType.STRING)
+    public TipoAssinaturaEnum getTipoAssinatura() {
+        return this.tipoAssinatura;
     }
-
-    public void setObrigatorio(Boolean obrigatorio) {
-        this.obrigatorio = obrigatorio;
+    
+    public void setTipoAssinatura(TipoAssinaturaEnum tipoAssinatura) {
+        this.tipoAssinatura = tipoAssinatura;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.manager;
 
-import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -16,11 +15,10 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
@@ -49,15 +47,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     @In
     private ProcessoDocumentoManager processoDocumentoManager;
 
-    public ProcessoDocumentoBin createProcessoDocumentoBin(Object value,
-            String certChain, String signature) throws DAOException {
+    public ProcessoDocumentoBin createProcessoDocumentoBin(Object value) throws DAOException {
         ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
         bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
-        bin.setDataInclusao(new Date());
         bin.setMd5Documento(MD5Encoder.encode(String.valueOf(value)));
-        bin.setUsuario(Authenticator.getUsuarioLogado());
-        bin.setCertChain(certChain);
-        bin.setSignature(signature);
         genericDAO.persist(bin);
         return bin;
     }
@@ -95,11 +88,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return processoEpaDAO.hasPartes(processo);
     }
 
-    public void visualizarTask(final Processo processo, final Long idTarefa,
-            final UsuarioLocalizacao usrLoc) {
+    public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioPerfil usuarioPerfil) {
         final BusinessProcess bp = BusinessProcess.instance();
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+            final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
 
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
@@ -127,12 +119,12 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     }
 
     public void iniciarTask(final Processo processo, final Long idTarefa,
-            final UsuarioLocalizacao usrLoc) throws DAOException {
-        final Long taskInstanceId = getTaskInstanceId(usrLoc, processo, idTarefa);
+            final UsuarioPerfil usuarioPerfil) throws DAOException {
+        final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo, idTarefa);
         final String actorId = Actor.instance().getId();
         if (taskInstanceId != null) {
             iniciaTask(processo, taskInstanceId);
-            storeUsuario(taskInstanceId, usrLoc.getUsuario(), usrLoc.getLocalizacao(), usrLoc.getPapel());
+            storeUsuario(taskInstanceId, usuarioPerfil.getUsuarioLogin(), usuarioPerfil.getPerfil().getLocalizacao(), usuarioPerfil.getPerfil().getPapel());
             vinculaUsuario(processo, actorId);
         }
     }
@@ -143,13 +135,13 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         flush();
     }
 
-    private Long getTaskInstanceId(final UsuarioLocalizacao usrLoc,
+    private Long getTaskInstanceId(final UsuarioPerfil usuarioPerfil,
             final Processo processo, final Long idTarefa) {
         Long result;
         if (idTarefa != null) {
-            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo, idTarefa);
+            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
         } else {
-            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usrLoc, processo);
+            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo);
         }
         return result;
     }
@@ -173,15 +165,15 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) {
+    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) throws DAOException {
         getDao().moverProcessosParaCaixa(idList, caixa);
     }
 
-    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) {
+    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) throws DAOException {
         getDao().moverProcessoParaCaixa(caixa, processo);
     }
 
-    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) {
+    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) throws DAOException {
         Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
         getDao().moverProcessoParaCaixa(caixaEscolhida, processo);
     }
@@ -193,11 +185,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return caixaList.get(0);
     }
 
-    public void removerProcessoDaCaixaAtual(Processo processo) {
+    public void removerProcessoDaCaixaAtual(Processo processo) throws DAOException {
         getDao().removerProcessoDaCaixaAtual(processo);
     }
 
-    public void apagarActorIdDoProcesso(Processo processo) {
+    public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
         getDao().apagarActorIdDoProcesso(processo);
     }
 

@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
@@ -40,6 +41,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(CertificateManager.NAME)
 @BypassInterceptors
 @Scope(ScopeType.APPLICATION)
+@AutoCreate
 public class CertificateManager {
 
     public static final String NAME = "certificateManager";

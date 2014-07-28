@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
@@ -81,7 +82,7 @@ public class LocalizacaoTurnoManager extends Manager<LocalizacaoTurnoDAO, Locali
                 + (calendar.get(Calendar.HOUR_OF_DAY) * MINUTES_OF_HOUR);
     }
 
-    public void removerTurnosAnteriores(Localizacao localizacao) {
+    public void removerTurnosAnteriores(Localizacao localizacao) throws DAOException {
         getDao().removerTurnosAnteriores(localizacao);
     }
 }

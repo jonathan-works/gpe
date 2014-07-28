@@ -1,347 +1,352 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:infox="http://www.infox.com.br/jsf"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-    <ui:define name="title">#{messages['usuario.titlePage']}</ui:define>
-    <ui:param
-        name="home"
-        value="#{usuarioLoginCrudAction}" />
-    <ui:define name="searchGrid">
-        <wi:dataTable
-            values="#{usuarioLoginList.list(15)}"
-            bean="#{usuarioLoginList}"
-            tableTitle="#{messages['usuario.tableTitle']}"
-            id="usuarioLoginList"
-            rowId="#{row.idUsuarioLogin}">
-            <ui:define name="searchForm">
-                <wi:searchForm
-                    formId="pesquisarUsuarioLoginForm"
-                    formTitle="#{messages['searchForm.title']}">
-                    <wi:inputText
-                        id="nome"
-                        label="#{messages['usuarioLogin.nome']}"
-                        value="#{usuarioLoginList.entity.nomeUsuario}"
-                        maxlength="150" />
-                    <wi:selectBooleanMenu
-                        id="bloqueio"
-                        label="#{messages['usuarioLogin.bloqueio']}"
-                        value="#{usuarioLoginList.entity.bloqueio}" />
-                    <wi:selectBooleanMenu
-                        id="provisorio"
-                        label="#{messages['usuarioLogin.provisorio']}"
-                        value="#{usuarioLoginList.entity.provisorio}" />
-                    <wi:selectSituacaoOneMenu
-                        id="ativo"
-                        label="#{messages['field.situacao']}"
-                        value="#{usuarioLoginList.entity.ativo}" />
-                </wi:searchForm>
-            </ui:define>
-            <wi:columnOutputText
-                columnId="nomeUsuario"
-                columnHeader="#{messages['usuarioLogin.nome']}"
-                value="#{row.nomeUsuario}" />
-            <wi:columnOutputText
-                columnId="usuarioLocalizacaoList"
-                columnHeader="#{messages['usuarioLogin.localizacoes']}"
-                hideOrder="true">
-                <ui:repeat
-                    var="usuarioLoc"
-                    value="#{row.usuarioLocalizacaoList}">
-                    <div>#{usuarioLoc}</div>
-                </ui:repeat>
-            </wi:columnOutputText>
-            <wi:columnBoolean
-                columnId="bloqueio"
-                columnHeader="#{messages['usuarioLogin.bloqueio']}"
-                value="#{row.bloqueio}" />
-            <wi:columnBoolean
-                columnId="provisorio"
-                columnHeader="#{messages['usuarioLogin.provisorio']}"
-                value="#{row.provisorio}" />
-            <wi:columnSituacao
-                columnId="ativo"
-                columnHeader="#{messages['field.situacao']}"
-                value="#{row.ativo}" />
-        </wi:dataTable>
-    </ui:define>
-    <ui:define name="form">
-        <wi:dataForm
-            formId="usuarioForm"
-            formTitle="#{messages['form.title']}">
-            <wi:inputText
-                id="nomeUsuario"
-                label="#{messages['usuario.nome']}"
-                value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
-                required="true" />
-            <wi:inputText
-                id="email"
-                label="#{messages['usuarioLogin.email']}"
-                value="#{usuarioLoginCrudAction.instance.email}"
-                required="true">
-                <f:validator validatorId="emailValidator" />
-            </wi:inputText>
-            <wi:inputText
-                id="login"
-                label="#{messages['usuarioLogin.login']}"
-                value="#{usuarioLoginCrudAction.instance.login}"
-                required="true"
-                maxlength="15" />
-            <wi:selectOneMenuEnum
-                id="tipoUsuario"
-                label="#{messages['usuario.tipoUsuario']}"
-                items="#{usuarioLoginCrudAction.tiposDeUsuario}"
-                value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
-                showLabelSelecione="true"
-                required="true">
-            </wi:selectOneMenuEnum>
-            <wi:selectSituacaoRadio
-                id="ativo"
-                label="#{messages['field.situacao']}"
-                value="#{usuarioLoginCrudAction.instance.ativo}" />
-            <ui:include
-                src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
-                <ui:param
-                    name="id"
-                    value="usuarioProvisorio" />
-            </ui:include>
-        </wi:dataForm>
-    </ui:define>
-    <ui:define name="tabs">
-        <infox:tab
-            id="usuarioPessoaFisica"
-            rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
-            title="#{messages['usuario.pessoaFisica']}"
-            name="usuarioPessoaFisica"
-            action="#{usuarioPessoaFisicaCrudAction.newInstance()}">
-            <wi:dataForm
-                formId="usuarioPessoaFisicaForm"
-                formTitle="#{messages['form.title']}"
-                home="#{usuarioPessoaFisicaCrudAction}"
-                rendered="#{empty usuarioLoginCrudAction.instance.pessoaFisica}">
-                <s:div id="pessoaFisicaRegion">
-                    <wi:inputCpf
-                        id="cpf"
-                        label="CPF"
-                        value="#{usuarioPessoaFisicaCrudAction.instance.cpf}"
-                        assignTo="#{usuarioPessoaFisicaCrudAction.instance.cpf}"
-                        required="true">
-                        <a:ajax
-                            event="blur"
-                            listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
-                            execute="@this"
-                            render="pessoaFisicaRegion"
-                            limitRender="true" />
-                    </wi:inputCpf>
-                    <wi:inputText
-                        id="nome"
-                        value="#{usuarioPessoaFisicaCrudAction.instance.nome}"
-                        label="#{messages['pessoaFisica.nome']}"
-                        required="true" />
-                    <wi:inputDate
-                        id="dataNascimento"
-                        value="#{usuarioPessoaFisicaCrudAction.instance.dataNascimento}"
-                        label="#{messages['pessoaFisica.dataNascimento']}"
-                        required="true" />
-                </s:div>
-                <ui:define name="buttons">
-                    <wi:commandButtonSave
-                        home="#{usuarioPessoaFisicaCrudAction}" />
-                </ui:define>
-            </wi:dataForm>
-            <wi:dataTable
-                bean="#{usuarioPessoaFisicaList}"
-                values="#{usuarioPessoaFisicaList.list(20)}"
-                tableTitle="#{(usuarioLoginCrudAction.instance)}"
-                id="usuarioPessoaFisicaList"
-                rowId="#{row.idPessoa}"
-                listReRender="divGridLU"
-                hideOrder="true">
-                <ui:define name="headerToolBar" />
-                <ui:define name="toolBar">
-                    <wi:toolBar
-                        action="usuarioPessoaFisicaCrudAction.remove(row)"
-                        rendered="true"
-                        limitToList="true"
-                        status=":status"
-                        render="usuarioPessoaFisica, pageBodyDialogMessage"
-                        onclick="if(!confirm(\'#{messages['crud.confirmRemove']}\')){return false;}"
-                        url="#{a4jSkin.imgFolder}/remove.png"
-                        title="#{messages['crud.remove']}" />
-                </ui:define>
-                <wi:columnOutputText
-                    columnId="cpf"
-                    columnHeader="#{messages['pessoaFisica.cpf']}"
-                    value="#{row.cpf}" />
-                <wi:columnOutputText
-                    columnId="nome"
-                    columnHeader="#{messages['pessoaFisica.nome']}"
-                    value="#{row.nome}" />
-                <wi:columnDateTime
-                    columnId="dataNascimento"
-                    columnHeader="#{messages['pessoaFisica.dataNascimento']}"
-                    value="#{row.dataNascimento}" />
-            </wi:dataTable>
-        </infox:tab>
-        <infox:tab
-            id="localizacaoUsuario"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+  <ui:define name="title">#{messages['usuario.titlePage']}</ui:define>
+  <ui:param
+    name="home"
+    value="#{usuarioLoginCrudAction}" />
+  <ui:define name="searchGrid">
+    <wi:dataTable
+      values="#{usuarioLoginList.list(15)}"
+      bean="#{usuarioLoginList}"
+      tableTitle="#{messages['usuario.tableTitle']}"
+      id="usuarioLoginList"
+      rowId="#{row.idUsuarioLogin}">
+      <ui:define name="searchForm">
+        <wi:searchForm
+          formId="pesquisarUsuarioLoginForm"
+          formTitle="#{messages['searchForm.title']}">
+          <wi:inputText
+            id="nome"
+            label="#{messages['usuarioLogin.nome']}"
+            value="#{usuarioLoginList.entity.nomeUsuario}"
+            maxlength="150" />
+          <wi:selectBooleanMenu
+            id="bloqueio"
+            label="#{messages['usuarioLogin.bloqueio']}"
+            value="#{usuarioLoginList.entity.bloqueio}" />
+          <wi:selectBooleanMenu
+            id="provisorio"
+            label="#{messages['usuarioLogin.provisorio']}"
+            value="#{usuarioLoginList.entity.provisorio}" />
+          <wi:selectSituacaoOneMenu
+            id="ativo"
+            label="#{messages['field.situacao']}"
+            value="#{usuarioLoginList.entity.ativo}" />
+        </wi:searchForm>
+      </ui:define>
+      <wi:columnOutputText
+        columnId="nomeUsuario"
+        columnHeader="#{messages['usuarioLogin.nome']}"
+        value="#{row.nomeUsuario}" />
+      <wi:columnBoolean
+        columnId="bloqueio"
+        columnHeader="#{messages['usuarioLogin.bloqueio']}"
+        value="#{row.bloqueio}" />
+      <wi:columnBoolean
+        columnId="provisorio"
+        columnHeader="#{messages['usuarioLogin.provisorio']}"
+        value="#{row.provisorio}" />
+      <wi:columnSituacao
+        columnId="ativo"
+        columnHeader="#{messages['field.situacao']}"
+        value="#{row.ativo}" />
+    </wi:dataTable>
+  </ui:define>
+  <ui:define name="form">
+    <wi:dataForm
+      formId="usuarioForm"
+      formTitle="#{messages['form.title']}">
+      <wi:inputText
+        id="nomeUsuario"
+        label="#{messages['usuario.nome']}"
+        value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
+        required="true" />
+      <wi:inputText
+        id="email"
+        label="#{messages['usuarioLogin.email']}"
+        value="#{usuarioLoginCrudAction.instance.email}"
+        required="true">
+        <f:validator validatorId="emailValidator" />
+      </wi:inputText>
+      <wi:inputText
+        id="login"
+        label="#{messages['usuarioLogin.login']}"
+        value="#{usuarioLoginCrudAction.instance.login}"
+        required="true"
+        maxlength="15" />
+      <wi:selectOneMenuEnum
+        id="tipoUsuario"
+        label="#{messages['usuario.tipoUsuario']}"
+        items="#{usuarioLoginCrudAction.tiposDeUsuario}"
+        value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
+        showLabelSelecione="true"
+        required="true">
+      </wi:selectOneMenuEnum>
+      <wi:selectSituacaoRadio
+        id="ativo"
+        label="#{messages['field.situacao']}"
+        value="#{usuarioLoginCrudAction.instance.ativo}" />
+      <ui:include
+        src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
+        <ui:param
+          name="id"
+          value="usuarioProvisorio" />
+      </ui:include>
+    </wi:dataForm>
+  </ui:define>
+  <ui:define name="tabs">
+    <infox:tab
+      id="usuarioPessoaFisica"
+      rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
+      title="#{messages['usuario.pessoaFisica']}"
+      name="usuarioPessoaFisica"
+      action="#{usuarioPessoaFisicaCrudAction.newInstance()}">
+      <wi:dataForm
+        formId="usuarioPessoaFisicaForm"
+        formTitle="#{messages['form.title']}"
+        home="#{usuarioPessoaFisicaCrudAction}"
+        rendered="#{empty usuarioLoginCrudAction.instance.pessoaFisica}">
+        <s:div id="pessoaFisicaRegion">
+          <wi:inputCpf
+            id="cpf"
+            label="CPF"
+            value="#{usuarioPessoaFisicaCrudAction.instance.cpf}"
+            assignTo="#{usuarioPessoaFisicaCrudAction.instance.cpf}"
+            required="true">
+            <a:ajax
+              event="blur"
+              listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
+              execute="@this"
+              render="pessoaFisicaRegion"
+              limitRender="true" />
+          </wi:inputCpf>
+          <wi:inputText
+            id="nome"
+            value="#{usuarioPessoaFisicaCrudAction.instance.nome}"
+            label="#{messages['pessoaFisica.nome']}"
+            required="true" />
+          <wi:inputDate
+            id="dataNascimento"
+            value="#{usuarioPessoaFisicaCrudAction.instance.dataNascimento}"
+            label="#{messages['pessoaFisica.dataNascimento']}"
+            required="true" />
+        </s:div>
+        <ui:define name="buttons">
+          <wi:commandButtonSave home="#{usuarioPessoaFisicaCrudAction}" />
+        </ui:define>
+      </wi:dataForm>
+      <wi:dataTable
+        bean="#{usuarioPessoaFisicaList}"
+        values="#{usuarioPessoaFisicaList.list(20)}"
+        tableTitle="#{(usuarioLoginCrudAction.instance)}"
+        id="usuarioPessoaFisicaList"
+        rowId="#{row.idPessoa}"
+        listReRender="divGridLU"
+        hideOrder="true">
+        <ui:define name="headerToolBar" />
+        <ui:define name="toolBar">
+          <wi:toolBar
+            action="usuarioPessoaFisicaCrudAction.remove(row)"
+            rendered="true"
+            limitToList="true"
             status=":status"
-            rendered="#{home.managed}"
-            action="#{usuarioLocalizacaoCrudAction.newInstance}"
-            title="#{messages['localizacao.usuarioLocalizacaoList']}"
-            name="localizacaoUsuario">
-            <s:div>
-                <wi:ajaxDiv id="divGridLU">
-                    <s:div id="cadastroUsuarioLocalizacao">
-                        <wi:dataForm
-                            formId="localizacaoUsuarioForm"
-                            formTitle="#{messages['form.title']}"
-                            home="#{usuarioLocalizacaoCrudAction}">
-                            <wi:tree
-                                id="localizacao"
-                                assignTo="usuarioLocalizacaoCrudAction.instance.localizacao"
-                                tree="#{localizacaoEstruturaTree}"
-                                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-                                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-                                label="#{messages['usuarioLocalizacao.localizacao']}"
-                                required="true" />
-                            <wi:tree
-                                id="papel"
-                                assignTo="usuarioLocalizacaoCrudAction.instance.papel"
-                                tree="#{papelTree}"
-                                icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-                                iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-                                label="#{messages['usuarioLocalizacao.papel']}"
-                                required="true" />
-                            <wi:selectBooleanRadio
-                                id="responsavelLocalizacao"
-                                value="#{usuarioLocalizacaoCrudAction.instance.responsavelLocalizacao}"
-                                label="#{messages['usuarioLocalizacao.responsavelLocalizacao']}" />
-                            <ui:define name="buttons">
-                                <wi:commandButton
-                                    id="saveButton"
-                                    action="usuarioLocalizacaoCrudAction.save"
-                                    reRender="localizacaoUsuario, pageBodyDialogMessage"
-                                    value="#{messages['crud.persist']}" />
-                            </ui:define>
-                        </wi:dataForm>
-                    </s:div>
-                    <wi:dataTable
-                        bean="#{usuarioLocalizacaoEntityList}"
-                        values="#{usuarioLocalizacaoEntityList.list(20)}"
-                        tableTitle="#{messages['localizacao.usuarioLocalizacaoList']} - #{(usuarioLoginCrudAction.instance)}"
-                        id="usuarioLocalizacaoList"
-                        rowId="#{row.idUsuarioLocalizacao}"
-                        listReRender="divGridLU"
-                        panelStyleClass="rf-dt-crud">
-                        <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar">
-                            <wi:toolBar
-                                action="usuarioLocalizacaoCrudAction.remove(row)"
-                                rendered="true"
-                                limitToList="true"
-                                status=":status"
-                                render="localizacaoUsuario pageBodyDialogMessage"
-                                onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
-                                url="#{a4jSkin.imgFolder}/remove.png"
-                                title="#{messages['crud.remove']}" />
-                        </ui:define>
-                        <wi:columnOutputText
-                            columnId="localizacao"
-                            columnHeader="#{messages['usuarioLocalizacao.localizacao']}"
-                            value="#{row.localizacao}" />
-                        <wi:columnOutputText
-                            columnId="papel"
-                            columnHeader="#{messages['usuarioLocalizacao.papel']}"
-                            value="#{row.papel}" />
-                        <wi:columnBoolean
-                            columnId="responsavelLocalizacao"
-                            columnHeader="#{messages['usuarioLocalizacao.responsavelLocalizacao']}"
-                            value="#{row.responsavelLocalizacao}" />
-                    </wi:dataTable>
-                </wi:ajaxDiv>
-            </s:div>
-        </infox:tab>
-        <infox:tab
-            id="historicoBloqueioUsuario"
-            rendered="#{home.isManaged()}"
-            title="#{messages['bloqueioUsuario.historicoBloqueio']}"
-            name="historicoBloqueioUsuario">
-            <wi:dataForm
-                formId="bloqueioUsuarioForm"
-                formTitle="#{messages['form.title']}"
-                home="#{bloqueioUsuarioCrudAction}"
-                requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
-                <wi:outputText
-                    id="bloqueio"
-                    value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? messages['bloqueioUsuario.bloqueado.true'] : messages['bloqueioUsuario.bloqueado.false']}"
-                    label="#{messages['usuario.bloqueio']}" />
-                <wi:inputDate
-                    id="dataDesbloqueio"
-                    label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
-                    value="#{bloqueioUsuarioCrudAction.instance.dataPrevisaoDesbloqueio}"
-                    rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-                    future="true"
-                    required="false" />
-                <wi:inputText
-                    id="motivoBloqueio"
-                    label="#{messages['bloqueioUsuario.motivoBloqueio']}"
-                    value="#{bloqueioUsuarioCrudAction.instance.motivoBloqueio}"
-                    rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-                    required="true"
-                    showRequired="true"
-                    maxlength="50" />
-                <ui:define name="buttons">
-                    <wi:commandButton
-                        id="bloqueioButton"
-                        rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-                        value="#{messages['usuario.bloquear']}"
-                        action="bloqueioUsuarioCrudAction.bloquear"
-                        reRender="historicoBloqueioUsuario, pageBodyDialogMessage" />
-                    <wi:commandButton
-                        id="desbloqueioButton"
-                        rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-                        value="#{messages['usuario.desbloquear']}"
-                        action="bloqueioUsuarioCrudAction.desbloquear"
-                        reRender="historicoBloqueioUsuario, pageBodyDialogMessage" />
-                </ui:define>
-            </wi:dataForm>
-            <s:div>
-                <wi:dataTable
-                    values="#{bloqueioUsuarioList.list(15)}"
-                    bean="#{bloqueioUsuarioList}"
-                    tableTitle="#{messages['bloqueioUsuario.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
-                    id="bloqueioUsuarioList"
-                    rowId="#{row.idBloqueioUsuario}"
-                    showToolbarColumn="false">
-                    <ui:define name="headerToolBar" />
-                    <ui:define name="toolBar" />
-                    <wi:columnDateTime
-                        columnId="dataBloqueio"
-                        columnHeader="#{messages['bloqueioUsuario.dataBloqueio']}"
-                        value="#{row.dataBloqueio}" />
-                    <wi:columnDateTime
-                        columnId="dataPrevisaoDesbloqueio"
-                        columnHeader="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
-                        value="#{row.dataPrevisaoDesbloqueio}" />
-                    <wi:columnOutputText
-                        columnId="motivoBloqueio"
-                        columnHeader="#{messages['bloqueioUsuario.motivoBloqueio']}"
-                        value="#{row.motivoBloqueio}" />
-                    <wi:columnDateTime
-                        columnId="dataDesbloqueio"
-                        columnHeader="#{messages['bloqueioUsuario.dataDesbloqueio']}"
-                        value="#{row.dataDesbloqueio}" />
-                </wi:dataTable>
-            </s:div>
-        </infox:tab>
-    </ui:define>
+            render="usuarioPessoaFisica, pageBodyDialogMessage"
+            onclick="if(!confirm(\'#{messages['crud.confirmRemove']}\')){return false;}"
+            url="#{a4jSkin.imgFolder}/remove.png"
+            title="#{messages['crud.remove']}" />
+        </ui:define>
+        <wi:columnOutputText
+          columnId="cpf"
+          columnHeader="#{messages['pessoaFisica.cpf']}"
+          value="#{row.cpf}" />
+        <wi:columnOutputText
+          columnId="nome"
+          columnHeader="#{messages['pessoaFisica.nome']}"
+          value="#{row.nome}" />
+        <wi:columnDateTime
+          columnId="dataNascimento"
+          columnHeader="#{messages['pessoaFisica.dataNascimento']}"
+          value="#{row.dataNascimento}" />
+      </wi:dataTable>
+    </infox:tab>
+    <infox:tab
+      id="usuarioPerfil"
+      rendered="#{home.isManaged()}"
+      title="#{messages['usuario.perfilTitleTab']}"
+      name="usuarioPerfil">
+      <wi:dataForm
+        formId="usuarioPerfilForm"
+        formTitle="#{messages['form.title']}">
+        <wi:selectOneMenuEntity
+          id="perfilCombo"
+          value="#{usuarioPerfilCrudAction.instance.perfil}"
+          label="#{messages['perfil.descricao']}"
+          items="#{perfilList.list()}"
+          showLabelSelecione="true">
+        </wi:selectOneMenuEntity>
+        <wi:selectBooleanCheckbox
+          id="responsavelLocalizacao"
+          value="#{usuarioPerfilCrudAction.instance.responsavelLocalizacao}"
+          label="#{messages['perfil.responsavelLocalizacao']}" />
+        <ui:define name="buttons">
+          <wi:commandButton
+            id="saveButton"
+            action="usuarioPerfilCrudAction.save()"
+            reRender="usuarioPerfil, pageBodyDialogMessage"
+            value="#{messages['crud.persist']}" />
+        </ui:define>
+      </wi:dataForm>
+      <s:div id="divPerfisAssociados">
+        <wi:dataTable
+          id="usuarioPerfilList"
+          values="#{usuarioPerfilEntityList.list(15)}"
+          bean="#{usuarioPerfilEntityList}"
+          tableTitle="#{messages['usuario.profiles']} #{usuarioLoginCrudAction.instance}"
+          var="row"
+          rows="10">
+          <ui:define name="headerToolBar" />
+          <ui:define name="toolBar">
+            <wi:toolBar
+              url="#{a4jSkin.imgFolder}/remove.png"
+              title="Remover registro"
+              action="usuarioPerfilCrudAction.remove(row)"
+              render="divPerfisAssociados, pageBodyDialogMessage"
+              execute="@this"
+              onclick="return confirm('Deseja remover o registro?');"
+              id="removeButton" />
+          </ui:define>
+          <wi:columnOutputText
+            columnId="perfil.descricao"
+            columnHeader="#{messages['perfil.descricao']}"
+            value="#{row.perfil.descricao}" />
+          <wi:columnBoolean
+            columnId="responsavelLocalizacao"
+            columnHeader="#{messages['perfil.responsavelLocalizacao']}"
+            value="#{row.responsavelLocalizacao}" />
+        </wi:dataTable>
+      </s:div>
+    </infox:tab>
+    <infox:tab
+      id="historicoBloqueioUsuario"
+      rendered="#{home.isManaged()}"
+      title="#{messages['bloqueioUsuario.historicoBloqueio']}"
+      name="historicoBloqueioUsuario">
+      <wi:dataForm
+        formId="bloqueioUsuarioForm"
+        formTitle="#{messages['form.title']}"
+        home="#{bloqueioUsuarioCrudAction}"
+        requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
+        <wi:outputText
+          id="bloqueio"
+          value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? messages['bloqueioUsuario.bloqueado.true'] : messages['bloqueioUsuario.bloqueado.false']}"
+          label="#{messages['usuario.bloqueio']}" />
+        <wi:inputDate
+          id="dataDesbloqueio"
+          label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+          value="#{bloqueioUsuarioCrudAction.instance.dataPrevisaoDesbloqueio}"
+          rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+          future="true"
+          required="false" />
+        <wi:inputText
+          id="motivoBloqueio"
+          label="#{messages['bloqueioUsuario.motivoBloqueio']}"
+          value="#{bloqueioUsuarioCrudAction.instance.motivoBloqueio}"
+          rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+          required="true"
+          showRequired="true"
+          maxlength="50" />
+        <ui:define name="buttons">
+          <wi:commandButton
+            id="bloqueioButton"
+            rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+            value="#{messages['usuario.bloquear']}"
+            action="bloqueioUsuarioCrudAction.bloquear"
+            reRender="historicoBloqueioUsuario, pageBodyDialogMessage" />
+          <wi:commandButton
+            id="desbloqueioButton"
+            rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
+            value="#{messages['usuario.desbloquear']}"
+            action="bloqueioUsuarioCrudAction.desbloquear"
+            reRender="historicoBloqueioUsuario, pageBodyDialogMessage" />
+        </ui:define>
+      </wi:dataForm>
+      <s:div>
+        <wi:dataTable
+          values="#{bloqueioUsuarioList.list(15)}"
+          bean="#{bloqueioUsuarioList}"
+          tableTitle="#{messages['bloqueioUsuario.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
+          id="bloqueioUsuarioList"
+          rowId="#{row.idBloqueioUsuario}"
+          showToolbarColumn="false">
+          <ui:define name="headerToolBar" />
+          <ui:define name="toolBar" />
+          <wi:columnDateTime
+            columnId="dataBloqueio"
+            columnHeader="#{messages['bloqueioUsuario.dataBloqueio']}"
+            value="#{row.dataBloqueio}" />
+          <wi:columnDateTime
+            columnId="dataPrevisaoDesbloqueio"
+            columnHeader="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+            value="#{row.dataPrevisaoDesbloqueio}" />
+          <wi:columnOutputText
+            columnId="motivoBloqueio"
+            columnHeader="#{messages['bloqueioUsuario.motivoBloqueio']}"
+            value="#{row.motivoBloqueio}" />
+          <wi:columnDateTime
+            columnId="dataDesbloqueio"
+            columnHeader="#{messages['bloqueioUsuario.dataDesbloqueio']}"
+            value="#{row.dataDesbloqueio}" />
+        </wi:dataTable>
+      </s:div>
+    </infox:tab>
+    <infox:tab
+      id="usuarioAssinaturaDocumento"
+      rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
+      title="#{messages['usuario.assinaturaDocumento']}"
+      name="usuarioAssinaturaDocumento">
+      <wi:dataTable
+        values="#{assinaturaDocumentoList.list(15)}"
+        bean="#{assinaturaDocumentoList}"
+        tableTitle="#{messages['assinaturaDocumentoList.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
+        id="assinaturaDocumentoList"
+        rowId="#{row.idAssinatura}">
+        <ui:define name="headerToolBar"></ui:define>
+        <ui:define name="toolBar">
+          <ui:param
+            name="isModelo"
+            value="#{empty row.processoDocumentoBin.extensao}" />
+          <h:form>
+            <h:commandLink
+              action="#{documentoHtmlView.setViewInstanceBin(row.processoDocumentoBin)}"
+              onclick="openPopUp('PopUpDocumentoBin', '')"
+              rendered="#{isModelo}"
+              target="PopUpDocumentoBin">
+              <h:graphicImage
+                title="#{messages['processoDocumento.visualizar']}"
+                url="#{a4jSkin.imgFolder}/view.gif" />
+            </h:commandLink>
+          </h:form>
+        </ui:define>
+        <wi:columnDateTime
+          columnId="dataAssinatura"
+          columnHeader="#{messages['assinaturadocumento.dtAssinatura']}"
+          value="#{row.dataAssinatura}" />
+        <wi:columnOutputText
+          columnId="processoDocumentoBin.nomeArquivo"
+          columnHeader="#{messages['processoDocumentoBin.nomeArquivo']}"
+          value="#{row.processoDocumentoBin.nomeArquivo}" />
+      </wi:dataTable>
+    </infox:tab>
+  </ui:define>
 </ui:composition>

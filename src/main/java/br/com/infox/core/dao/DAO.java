@@ -113,13 +113,25 @@ public abstract class DAO<T> implements Serializable {
         return q;
     }
 
-    protected void executeNamedQueryUpdate(final String namedQuery) {
-        getNamedQuery(namedQuery, null).executeUpdate();
+    protected void executeNamedQueryUpdate(final String namedQuery) throws DAOException {
+        try {
+            getNamedQuery(namedQuery, null).executeUpdate();
+        } catch (Exception e) {
+            throw new DAOException(e);
+        } finally {
+            rollbackTransactionIfNeeded();
+        }
     }
 
     protected void executeNamedQueryUpdate(final String namedQuery,
-            final Map<String, Object> parameters) {
-        getNamedQuery(namedQuery, parameters).executeUpdate();
+            final Map<String, Object> parameters) throws DAOException {
+        try {
+            getNamedQuery(namedQuery, parameters).executeUpdate();
+        } catch (Exception e) {
+            throw new DAOException(e);
+        } finally {
+            rollbackTransactionIfNeeded();
+        }
     }
 
     @Transactional

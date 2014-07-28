@@ -8,17 +8,16 @@ public interface LocalizacaoQuery {
     String LOCALIZACAO_PAI = "id_localizacao_pai";
     String DESCRICAO_LOCALIZACAO = "ds_localizacao";
     String IN_ESTRUTURA = "in_estrutura";
-    String ESTRUTURA = "id_estrutura";
+    String ESTRUTURA_FILHO = "id_estrutura_filho";
+    String ESTRUTURA_PAI = "id_estrutura_pai";
     String TWITTER = "in_twitter";
     String CAMINHO_COMPLETO = "ds_caminho_completo";
     String LOCALIZACAO_ATTRIBUTE = "localizacao";
     String LOCALIZACAO_PAI_ATTRIBUTE = "localizacaoPai";
 
     String QUERY_PARAM_ID_LOCALIZACAO = "idLocalizacao";
-
-    String LOCALIZACOES_ESTRUTURA = "localizacoesEstrutura";
-    String LOCALIZACOES_ESTRUTURA_QUERY = "select o from Localizacao o where o.estrutura = true and o.caminhoCompleto like concat(:"
-            + CAMINHO_COMPLETO + ",'%') order by o.localizacao";
+    String QUERY_PARAM_ESTRUTURA_PAI = "estruturaPai";
+    String QUERY_PARAM_CAMINHO_COMPLETO = "caminhoCompleto";
 
     String LOCALIZACOES_BY_IDS = "Localizacao.localizacoesByIds";
     String LOCALIZACOES_BY_IDS_QUERY = "select o from Localizacao o where o.idLocalizacao in :"
@@ -27,5 +26,51 @@ public interface LocalizacaoQuery {
     String IS_LOCALIZACAO_ANCESTOR = "isLocalizacaoAncestor";
     String IS_LOCALIZACAO_ANCESTOR_QUERY = "select distinct 1 from Localizacao o where o.caminhoCompleto like concat(:"
             + CAMINHO_COMPLETO + ",'%')" + " and o = :" + LOCALIZACAO_ATTRIBUTE;
-
+    
+    String IS_CAMINHO_COMPLETO_DUPLICADO_QUERY = "select count(o) from Localizacao o where o.estruturaPai is null and "
+            + " o.caminhoCompleto = :" + QUERY_PARAM_CAMINHO_COMPLETO;
+    
+    String IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY = "select count(o) from Localizacao o "
+            + " where o.estruturaPai = :" + QUERY_PARAM_ESTRUTURA_PAI + " and "
+            + " o.caminhoCompleto = :" + QUERY_PARAM_CAMINHO_COMPLETO;
+    
+    String PART_FILTER_BY_LOCALIZACAO = " and o.idLocalizacao <> :" + QUERY_PARAM_ID_LOCALIZACAO;
+    
+    String USOS_DA_HIERARQUIA_LOCALIZACAO = "Localizacao.usosHierarquiaLocalizacao";
+    String USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY = 
+        "SELECT tipo FROM " +
+        "(SELECT 'P' AS tipo FROM tb_perfil p " +
+        "INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
+        "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" +
+        
+        "UNION " +
+        
+        "SELECT 'P' AS tipo FROM tb_perfil p " +
+        "INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
+        "INNER JOIN tb_localizacao lp ON (p.id_localizacao_pai_estrutura = lp.id_localizacao) " +
+        "WHERE l.id_estrutura_pai IS NOT NULL " +
+        "AND lp.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" + 
+        
+        "UNION " +
+        
+        "SELECT 'RP' AS tipo FROM tb_raia_perfil rp " +
+        "INNER JOIN tb_perfil p ON (p.id_perfil = rp.id_perfil) " +
+        "INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
+        "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" + 
+        
+        "UNION " +
+        
+        "SELECT 'RP' AS tipo FROM tb_raia_perfil rp " +
+        "INNER JOIN tb_perfil p ON (p.id_perfil = rp.id_perfil) " +
+        "INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
+        "INNER JOIN tb_localizacao lp ON (p.id_localizacao_pai_estrutura = lp.id_localizacao) " +
+        "WHERE l.id_estrutura_pai IS NOT NULL " +
+        "AND lp.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" + 
+        
+        "UNION " +
+        
+        "SELECT 'UDM' AS tipo FROM tb_uni_decisora_monocratica und " +
+        "INNER JOIN tb_localizacao l ON (und.id_localizacao = l.id_localizacao) " +
+        "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" +
+        ") a ";
 }

@@ -45,8 +45,9 @@ public class TarefaDAO extends DAO<Tarefa> {
     /**
      * Popula a tabela tb_tarefa com todas as tarefas de todos os fluxos,
      * considerando como chave o nome da tarefa task.name_
+     * @throws DAOException 
      */
-    public void encontrarNovasTarefas() {
+    public void encontrarNovasTarefas() throws DAOException {
         executeNamedQueryUpdate(NOVAS_TAREFAS);
     }
 

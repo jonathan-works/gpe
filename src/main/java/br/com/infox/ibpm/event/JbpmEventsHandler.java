@@ -15,6 +15,7 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -38,7 +39,7 @@ public class JbpmEventsHandler implements Serializable {
     public static final String NAME = "jbpmEventsHandler";
 
     @Observer(Event.EVENTTYPE_TASK_END)
-    public void removerProcessoLocalizacao(ExecutionContext context) {
+    public void removerProcessoLocalizacao(ExecutionContext context) throws DAOException {
         try {
             Long taskId = context.getTask().getId();
             Long processId = context.getProcessInstance().getId();
@@ -53,7 +54,7 @@ public class JbpmEventsHandler implements Serializable {
 
     @Observer(Event.EVENTTYPE_TASK_END)
     @End(beforeRedirect = true)
-    public void refreshPainel(ExecutionContext context) {
+    public void refreshPainel(ExecutionContext context) throws DAOException {
         context.getTaskInstance().setActorId(null);
         try {
             getProcessoManager().apagarActorIdDoProcesso(JbpmUtil.getProcesso());
@@ -68,9 +69,10 @@ public class JbpmEventsHandler implements Serializable {
     /**
      * Atualiza o dicionário de Tarefas (tb_tarefa) com seus respectivos id's de
      * todas as versões.
+     * @throws DAOException 
      **/
     @Observer(ProcessBuilder.POST_DEPLOY_EVENT)
-    public static void updatePostDeploy() {
+    public static void updatePostDeploy() throws DAOException {
         try {
         	getProcessoManager().atualizarProcessos();
             getTarefaManager().encontrarNovasTarefas();
@@ -87,9 +89,10 @@ public class JbpmEventsHandler implements Serializable {
      * Antes de terminar a tarefa, remove a caixa do processo
      * 
      * @param transition
+     * @throws DAOException 
      */
     @Observer(Event.EVENTTYPE_TASK_END)
-    public void removeCaixaProcesso(ExecutionContext context) {
+    public void removeCaixaProcesso(ExecutionContext context) throws DAOException {
         try {
             Processo processo = JbpmUtil.getProcesso();
             getProcessoManager().removerProcessoDaCaixaAtual(processo);

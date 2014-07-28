@@ -1,56 +1,99 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:c="http://java.sun.com/jstl/core"
-    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-
-    <ui:define name="baseBody">
-        <div class="pageBody">
-            <rich:panel id="mp_ass">
-                <f:facet name="header">
-                    <h:outputText value="Dados do Documento" />
-                </f:facet>
-                <f:facet name="controls">
-                    <span
-                        style="cursor: pointer; font-family: Verdana, Arial; padding-right: 22px"
-                        onclick="Richfaces.hideModalPanel('mp_ass')">X</span>
-                </f:facet>
-                <div>
-                    <h:panelGrid columns="2">
-                        <h:outputLabel value="Nome:" for="nome" />
-                        <h:outputText id="nome"
-                            value="#{validaDocumentoAction.documento.processoDocumentoBin.usuarioUltimoAssinar}" />
-
-                        <h:outputLabel value="Papel:" for="papel" />
-                        <h:outputText id="papel"
-                            value="#{validaDocumentoAction.documento.papel}" />
-
-                        <h:outputLabel value="Localização:"
-                            for="localizacao" />
-                        <h:outputText id="localizacao"
-                            value="#{validaDocumentoAction.documento.localizacao}" />
-
-                        <h:outputLabel value="Data da assinatura:"
-                            for="validade" />
-                        <h:outputText id="validade"
-                            value="#{validaDocumentoAction.documento.processoDocumentoBin.dataInclusao}">
-                            <s:convertDateTime pattern="dd/MM/yyyy" />
-                        </h:outputText>
-
-                    </h:panelGrid>
-                    <br />
-                    <rich:messages id="msg" infoClass="formMessage" />
-                </div>
-            </rich:panel>
-        </div>
-    </ui:define>
-
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:c="http://java.sun.com/jstl/core"
+  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+  <ui:define name="baseBody">
+    <div class="pageBody">
+      <rich:panel id="mp_ass">
+        <f:facet name="header">
+          <h:outputText
+            value="#{messages['validacaoDocumentoList.assinaturas.header']}" />
+        </f:facet>
+        <s:div id="assinaturaListCont">
+          <rich:dataTable
+            value="#{validaDocumentoAction.listAssinaturaDocumento}"
+            id="assinaturaDocumentoList"
+            rowKeyVar="row.idAssinatura"
+            rowClasses="zebra-row"
+            styleClass="dtable rf-dt-crud"
+            var="row">
+            <rich:column styleClass="dt-toolbar-col">
+              <f:facet name="header">
+                <h:outputText
+                  value="#{messages['assinaturaDocumento.nomeUsuario']}"></h:outputText>
+              </f:facet>
+              <h:outputText value="#{row.nomeUsuario}"></h:outputText>
+            </rich:column>
+            <rich:column styleClass="dt-toolbar-col">
+              <f:facet name="header">
+                <h:outputText
+                  value="#{messages['assinaturaDocumento.nomePerfil']}"></h:outputText>
+              </f:facet>
+              <h:outputText value="#{row.nomePerfil}"></h:outputText>
+            </rich:column>
+            <rich:column styleClass="dt-toolbar-col">
+              <f:facet name="header">
+                <h:outputText
+                  value="#{messages['assinaturadocumento.dtAssinatura']}"></h:outputText>
+              </f:facet>
+              <h:outputText value="#{row.dataAssinatura}"></h:outputText>
+            </rich:column>
+          </rich:dataTable>
+        </s:div>
+        <s:div id="conteudoAssinatura">
+          <h:form id="assinaturaDocumento">
+            <s:div id="assinatura_pers">
+              <a:jsFunction
+                name="assinar"
+                action="#{validaDocumentoAction.assinaDocumento(usuarioLogadoPerfilAtual)}"
+                execute="@this certChain signature"
+                render="@all"
+                oncomplete="infox.hideLoading();" />
+              <h:inputHidden
+                id="certChain"
+                value="#{validaDocumentoAction.certChain}" />
+              <h:inputHidden
+                id="signature"
+                value="#{validaDocumentoAction.signature}" />
+              <wi:appletAssinatura
+                id="appletAssinatura"
+                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+                formId="#{rich:clientId('assinaturaDocumento')}"
+                certificationChainField="#{rich:clientId('certChain')}"
+                signatureField="#{rich:clientId('signature')}"
+                getDataFunction="documento.getData()"
+                useBase64Function="'true'"
+                functionPreSign="infox.showLoading();"
+                functionPosSign="opener.location=opener.location;assinar();"
+                debug="false"
+                loginMode="false"
+                useProviderDll="false"
+                rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado)}">
+              </wi:appletAssinatura>
+              <h:inputHidden
+                id="dadosAssinaveis"
+                value="#{assinadorDocumento.processoDocumentoBin.isBinario() ? validaDocumentoAction.processoDocumentoBin.md5Documento : validaDocumentoAction.processoDocumentoBin.modeloDocumento}" />
+              <h:outputScript>
+                var documento={
+                  getData:function getData() {
+                    return #{rich:jQuery('dadosAssinaveis')}.val();
+                  }
+                };
+              </h:outputScript>
+            </s:div>
+          </h:form>
+        </s:div>
+      </rich:panel>
+    </div>
+  </ui:define>
 </ui:composition>

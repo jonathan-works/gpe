@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.def.Swimlane;
 
+import br.com.infox.epp.access.entity.Perfil;
+import br.com.infox.epp.access.manager.PerfilManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
 import br.com.infox.seam.util.ComponentUtil;
@@ -24,12 +27,15 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     private List<SwimlaneHandler> swimlanes;
     private SwimlaneHandler currentSwimlane;
+    private List<Perfil> perfisDisponiveis;
 
     private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+    
+    @In private PerfilManager perfilManager;
 
     public void addSwimlane() {
         Swimlane s = new Swimlane("Raia " + (swimlanes.size() + 1));
-        currentSwimlane = new SwimlaneHandler(s);
+        setCurrentSwimlane(new SwimlaneHandler(s));
         pb.getInstance().getTaskMgmtDefinition().addSwimlane(s);
         swimlanes.add(currentSwimlane);
     }
@@ -37,7 +43,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
     @SuppressWarnings(UNCHECKED)
     public void removeSwimlane(SwimlaneHandler s) {
         swimlanes.remove(s);
-        currentSwimlane = null;
+        setCurrentSwimlane(null);
         Map<String, Swimlane> swimlaneMap = pb.getInstance().getTaskMgmtDefinition().getSwimlanes();
         swimlaneMap.remove(s.getSwimlane().getName());
     }
@@ -71,4 +77,21 @@ public class SwimlaneFitter extends Fitter implements Serializable {
         swimlanes = null;
     }
 
+    public List<Perfil> getPerfisDisponiveis() {
+        if (perfisDisponiveis == null) {
+            perfisDisponiveis = perfilManager.listPerfisDentroDeEstrutura();
+        }
+        List<Perfil> perfisDisponiveisParaSwimlaneAtual;
+        if (currentSwimlane != null) {
+            perfisDisponiveisParaSwimlaneAtual = new ArrayList<>();
+            for (Perfil perfil : perfisDisponiveis) {
+                if (!currentSwimlane.getPerfilList().contains(perfil)) {
+                    perfisDisponiveisParaSwimlaneAtual.add(perfil);
+                }
+            }
+        } else {
+            perfisDisponiveisParaSwimlaneAtual = perfisDisponiveis;
+        }
+        return perfisDisponiveisParaSwimlaneAtual;
+    }
 }

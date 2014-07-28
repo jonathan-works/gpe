@@ -31,6 +31,11 @@
             required="true"
             id="nome"
         />
+        <wi:selectBooleanCheckbox
+          id="termoAdesao"
+          label="#{messages['papel.form.termoAdesao']}"
+          value="#{papelCrudAction.instance.termoAdesao}"
+        />
         <ui:param
             name="targetListWidth"
             value="400"

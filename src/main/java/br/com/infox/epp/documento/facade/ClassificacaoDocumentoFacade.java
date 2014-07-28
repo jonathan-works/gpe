@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
+import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
@@ -33,6 +34,10 @@ public class ClassificacaoDocumentoFacade {
 
     public VisibilidadeEnum[] getVisibilidadeEnumValues() {
         return VisibilidadeEnum.values();
+    }
+    
+    public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
+        return TipoAssinaturaEnum.values();
     }
 
     public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(

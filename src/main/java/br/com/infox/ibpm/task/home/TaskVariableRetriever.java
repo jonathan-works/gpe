@@ -1,15 +1,12 @@
 package br.com.infox.ibpm.task.home;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
-import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.seam.util.ComponentUtil;
 
 final class TaskVariableRetriever extends TaskVariable {

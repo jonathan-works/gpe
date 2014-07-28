@@ -4,24 +4,16 @@
     xmlns:ui="http://java.sun.com/jsf/facelets">
     <wi:dataReport
         title="#{messages['localizacao.titlePage']}"
-        columns="4"
-        widths="4 4 2 2"
+        columns="2"
+        widths="4 2"
         headerText="#{localizacaoList.criteria}">
-        <wi:reportColumnHeader
-            title="#{messages['localizacao.localizacao']}" />
-        <wi:reportColumnHeader
-            title="#{messages['localizacao.localizacaoPai']}" />
-        <wi:reportColumnHeader title="#{messages['localizacao.estrutura']}" />
+        <wi:reportColumnHeader title="#{messages['localizacao.localizacao']}" />
         <wi:reportColumnHeader title="#{messages['field.situacao']}" />
         <ui:repeat
             var="row"
             value="#{localizacaoList.list()}">
-            <wi:reportColumn value="#{row.localizacao}" />
-            <wi:reportColumn value="#{row.localizacaoPai}" />
-            <wi:reportColumnBoolean value="#{row.estrutura}" />
-            <wi:reportColumnSituacao
-                value="#{row.ativo}"
-                columnAlign="center" />
+            <wi:reportColumn value="#{row.getCaminhoCompletoFormatado()}" />
+            <wi:reportColumnSituacao value="#{row.ativo}" columnAlign="center" />
         </ui:repeat>
     </wi:dataReport>
 </ui:composition>

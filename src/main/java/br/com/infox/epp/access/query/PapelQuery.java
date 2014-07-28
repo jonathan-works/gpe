@@ -35,7 +35,7 @@ public interface PapelQuery {
 
     String PARAM_LOCALIZACAO = "localizacao";
     String PAPEIS_BY_LOCALIZACAO = "papeisDeUsuarioByLocalizacao";
-    String PAPEIS_BY_LOCALIZACAO_QUERY = "select distinct l.papel from UsuarioLocalizacao l where l.localizacao = :"
+    String PAPEIS_BY_LOCALIZACAO_QUERY = "select distinct l.perfil.papel from UsuarioPerfil l where l.perfil.localizacao = :"
             + PARAM_LOCALIZACAO;
 
     String ID_PAPEL_PARAM = "idPapel";
@@ -43,5 +43,6 @@ public interface PapelQuery {
     String PERMISSOES_BY_PAPEL_QUERY = "select pe.ds_alvo from tb_permissao pe "
             + "inner join tb_papel pa on pe.ds_destinatario=pa.ds_identificador "
             + "where pa.id_papel = :" + ID_PAPEL_PARAM;
+    String COL_TERMO_ADESAO = "in_termo_adesao";
 
 }

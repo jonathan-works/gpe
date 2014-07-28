@@ -40,16 +40,15 @@
       immediateUpload="true"
       noDuplicate="true"
       render="#{reRender}, pageBodyDialogMessage"
-      acceptedTypes="pdf"
+      acceptedTypes="#{accept}"
+      ontyperejected="alert('Extensão de arquivo inválida');"
       onclear="clearUploadFile();">
     </rich:fileUpload>
     
   </s:decorate>
-  
-  <a:jsFunction id="clearUploadFileId"
-  				name="clearUploadFile"
-       		 	render="#{reRender}"
-       		 	execute="@this"
-       		 	actionListener="#{documentoUploader.newInstance()}"/>
-       		 
+
+    <a:jsFunction id="clearUploadFileId" name="clearUploadFile"
+        render="#{reRender}" execute="@this"
+        actionListener="#{documentoUploader.newInstance()}" />
+
 </ui:composition>

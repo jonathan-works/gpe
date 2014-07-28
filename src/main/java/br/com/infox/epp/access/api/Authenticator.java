@@ -43,16 +43,18 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.dao.UsuarioLocalizacaoDAO;
+import br.com.infox.epp.access.crud.TermoAdesaoAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
+import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -72,15 +74,11 @@ public class Authenticator {
     // Variaveis de sessão
     public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
     public static final String USUARIO_LOGADO = "usuarioLogado";
-    public static final String USUARIO_LOCALIZACAO_ATUAL = "usuarioLogadoLocalizacaoAtual";
-    public static final String USUARIO_LOCALIZACAO_LIST = "usuarioLocalizacaoList";
+    public static final String USUARIO_PERFIL_ATUAL = "usuarioLogadoPerfilAtual";
+    public static final String USUARIO_PERFIL_LIST = "usuarioPerfilList";
     public static final String INDENTIFICADOR_PAPEL_ATUAL = "identificadorPapelAtual";
     public static final String LOCALIZACOES_FILHAS_ATUAIS = "localizacoesFilhasAtuais";
     public static final String ID_LOCALIZACOES_FILHAS_ATUAIS = "idLocalizacoesFilhasAtuais";
-
-    // Eventos
-    public static final String SET_USUARIO_LOCALIZACAO_LIST_EVENT = "authenticator.setUsuarioLocalizacaoListEvent";
-    public static final String SET_USUARIO_LOCALIZACAO_EVENT = "authenticator.setUsuarioLocalizacaoEvent";
 
     public String getNewPassword1() {
         return newPassword1;
@@ -121,10 +119,12 @@ public class Authenticator {
             validaCadastroDeUsuario(id, usuario);
             try {
                 getAuthenticatorService().validarUsuario(usuario);
-                if (isTrocarSenha()) {
-                    trocarSenhaUsuario(usuario);
-                } else {
-                    realizarLoginDoUsuario(usuario);
+                if (!hasToSignTermoAdesao(usuario)) {
+                    if (isTrocarSenha()) {
+                        trocarSenhaUsuario(usuario);
+                    } else {
+                        realizarLoginDoUsuario(usuario);
+                    }
                 }
             } catch (LoginException e) {
                 Identity.instance().unAuthenticate();
@@ -136,9 +136,31 @@ public class Authenticator {
         }
     }
 
+    private boolean hasToSignTermoAdesao(UsuarioLogin usuario) {
+        boolean termoAdesao = false;
+        final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
+        if (perfilAtivoList != null) {
+            PessoaFisica pessoaFisica = usuario.getPessoaFisica();
+            if (pessoaFisica != null) {
+            	if (pessoaFisica.getSignature() != null) {
+            		termoAdesao = false;
+            	} else {
+	                for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
+	                    Papel papel = usuarioPerfil.getPerfil().getPapel();
+	                    if (termoAdesao=papel.getTermoAdesao()) {
+	                        break;
+	                    }
+	                }
+            	}
+            }
+        }
+        Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, termoAdesao);
+        return termoAdesao;
+    }
+
     private void realizarLoginDoUsuario(final UsuarioLogin usuario) throws LoginException {
         getAuthenticatorService().setUsuarioLogadoSessao(usuario);
-        obterLocalizacaoAtual(usuario);
+        obterPerfilAtual(usuario);
         Actor.instance().setId(usuario.getLogin());
     }
 
@@ -243,12 +265,12 @@ public class Authenticator {
         credentials.clear();
         Context context = Contexts.getSessionContext();
         context.remove(USUARIO_LOGADO);
-        context.remove(USUARIO_LOCALIZACAO_ATUAL);
+        context.remove(USUARIO_PERFIL_ATUAL);
         context.remove(PAPEIS_USUARIO_LOGADO);
         context.remove(INDENTIFICADOR_PAPEL_ATUAL);
         context.remove(LOCALIZACOES_FILHAS_ATUAIS);
         context.remove(ID_LOCALIZACOES_FILHAS_ATUAIS);
-        context.remove(USUARIO_LOCALIZACAO_LIST);
+        context.remove(USUARIO_PERFIL_LIST);
     }
 
     public static List<Localizacao> getLocalizacoesFilhas(
@@ -261,7 +283,7 @@ public class Authenticator {
         list.add(loc);
         if (loc.getEstruturaFilho() != null
                 && !list.contains(loc.getEstruturaFilho())) {
-            getLocalizacoesFilhas(loc.getEstruturaFilho(), list);
+//            getLocalizacoesFilhas(loc.getEstruturaFilho(), list);
         }
         for (Localizacao locFilho : loc.getLocalizacaoList()) {
             getLocalizacoesFilhas(locFilho, list);
@@ -281,7 +303,7 @@ public class Authenticator {
         return sb.toString();
     }
 
-    public void unAuthenticate() {
+    public void unAuthenticate() throws DAOException {
         Identity.instance().unAuthenticate();
         limparContexto();
         anulaActorId();
@@ -290,10 +312,11 @@ public class Authenticator {
     /**
      * Ao encerrar uma sessao, limpa os processos que o servidor estava
      * trabalhando
+     * @throws DAOException 
      * 
      */
     @Observer("org.jboss.seam.preDestroyContext.SESSION")
-    public void anulaActorId() {
+    public void anulaActorId() throws DAOException {
         String actorId = Actor.instance().getId();
         if (actorId != null) {
             getAuthenticatorService().anulaActorId(actorId);
@@ -302,16 +325,17 @@ public class Authenticator {
 
     /**
      * Ao ligar a aplicação, limpa todos os actorIds dos processos
+     * @throws DAOException 
      */
     @Observer("org.jboss.seam.postInitialization")
-    public void anulaTodosActorId() {
+    public void anulaTodosActorId() throws DAOException {
         getAuthenticatorService().anularTodosActorId();
     }
 
-    private boolean obterLocalizacaoAtual(UsuarioLogin usuario) throws LoginException {
-        UsuarioLocalizacao usuarioLocalizacao = getAuthenticatorService().obterLocalizacaoAtual(usuario);
-        if (usuarioLocalizacao != null) {
-            setLocalizacaoAtual(usuarioLocalizacao);
+    private boolean obterPerfilAtual(UsuarioLogin usuario) throws LoginException {
+        UsuarioPerfil usuarioPerfil = getAuthenticatorService().obterPerfilAtual(usuario);
+        if (usuarioPerfil != null) {
+            setUsuarioPerfilAtual(usuarioPerfil);
             return true;
         }
         throw new LoginException("O usuário " + usuario
@@ -323,14 +347,14 @@ public class Authenticator {
      * localização anterior (se hover) e atribuindo os roles da nova
      * localização, recursivamente.
      * 
-     * @param usuarioLocalizacao
+     * @param usuarioPerfil
      */
-    public void setLocalizacaoAtual(UsuarioLocalizacao usuarioLocalizacao) {
-        Set<String> roleSet = getRolesAtuais(usuarioLocalizacao);
+    public void setUsuarioPerfilAtual(UsuarioPerfil usuarioPerfil) {
+        Set<String> roleSet = getRolesAtuais(usuarioPerfil);
         getAuthenticatorService().removeRolesAntigas();
-        getAuthenticatorService().logDaBuscaDasRoles(usuarioLocalizacao);
+        getAuthenticatorService().logDaBuscaDasRoles(usuarioPerfil);
         getAuthenticatorService().addRolesAtuais(roleSet);
-        setVariaveisDoContexto(usuarioLocalizacao, roleSet);
+        setVariaveisDoContexto(usuarioPerfil, roleSet);
         if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
             redirectToPainelDoUsuario();
         }
@@ -344,18 +368,18 @@ public class Authenticator {
         redirect.execute();
     }
 
-    private void setVariaveisDoContexto(UsuarioLocalizacao usuarioLocalizacao,
+    private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil,
             Set<String> roleSet) {
-        Contexts.getSessionContext().set(USUARIO_LOCALIZACAO_ATUAL, usuarioLocalizacao);
-        Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, usuarioLocalizacao.getPapel().getIdentificador());
+        Contexts.getSessionContext().set(USUARIO_PERFIL_ATUAL, usuarioPerfil);
+        Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, usuarioPerfil.getPerfil().getPapel().getIdentificador());
         Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);
-        Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, getLocalizacoesFilhas(usuarioLocalizacao.getLocalizacao()));
+        Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, getLocalizacoesFilhas(usuarioPerfil.getPerfil().getLocalizacao()));
         Contexts.getSessionContext().remove("mainMenu");
         Contexts.removeFromAllContexts("tarefasTree");
     }
 
-    private Set<String> getRolesAtuais(UsuarioLocalizacao usuarioLocalizacao) {
-        return RolesMap.instance().getChildrenRoles(usuarioLocalizacao.getPapel().getIdentificador());
+    private Set<String> getRolesAtuais(UsuarioPerfil usuarioPerfil) {
+        return RolesMap.instance().getChildrenRoles(usuarioPerfil.getPerfil().getPapel().getIdentificador());
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -364,26 +388,26 @@ public class Authenticator {
     }
 
     /**
-     * @return a UsuarioLocalizacao atual do usuário logado
+     * @return o UsuarioPerfil atual do usuário logado
      */
-    public static UsuarioLocalizacao getUsuarioLocalizacaoAtual() {
-        UsuarioLocalizacao usuarioLocalizacao = (UsuarioLocalizacao) Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_ATUAL);
-        if (usuarioLocalizacao != null) {
-            usuarioLocalizacao = getUsuarioLocalizacaoDAO().find(usuarioLocalizacao.getIdUsuarioLocalizacao());
+    public static UsuarioPerfil getUsuarioPerfilAtual() {
+        UsuarioPerfil usuarioPerfil = (UsuarioPerfil) Contexts.getSessionContext().get(USUARIO_PERFIL_ATUAL);
+        if (usuarioPerfil != null) {
+            usuarioPerfil = getUsuarioPerfilDAO().find(usuarioPerfil.getIdUsuarioPerfil());
         }
-        return usuarioLocalizacao;
+        return usuarioPerfil;
     }
 
     public static boolean isUsuarioAtualResponsavel() {
-        return getUsuarioLocalizacaoAtual().getResponsavelLocalizacao();
+        return getUsuarioPerfilAtual().getResponsavelLocalizacao();
     }
 
     private static UsuarioLoginDAO getUsuarioLoginDAO() {
         return (UsuarioLoginDAO) Component.getInstance(UsuarioLoginDAO.NAME);
     }
 
-    private static UsuarioLocalizacaoDAO getUsuarioLocalizacaoDAO() {
-        return (UsuarioLocalizacaoDAO) Component.getInstance(UsuarioLocalizacaoDAO.NAME);
+    private static UsuarioPerfilDAO getUsuarioPerfilDAO() {
+        return (UsuarioPerfilDAO) Component.getInstance(UsuarioPerfilDAO.NAME);
     }
 
     /**
@@ -392,17 +416,17 @@ public class Authenticator {
      * @return localização atual do usuário logado
      */
     public static Localizacao getLocalizacaoAtual() {
-        UsuarioLocalizacao usuarioLocalizacaoAtual = getUsuarioLocalizacaoAtual();
-        if (usuarioLocalizacaoAtual != null) {
-            return usuarioLocalizacaoAtual.getLocalizacao();
+        UsuarioPerfil usuarioPerfilAtual = getUsuarioPerfilAtual();
+        if (usuarioPerfilAtual != null) {
+            return usuarioPerfilAtual.getPerfil().getLocalizacao();
         }
         return null;
     }
 
     public static Papel getPapelAtual() {
-        UsuarioLocalizacao usuarioLocalizacaoAtual = getUsuarioLocalizacaoAtual();
-        if (usuarioLocalizacaoAtual != null) {
-            return usuarioLocalizacaoAtual.getPapel();
+        UsuarioPerfil usuarioPerfilAtual = getUsuarioPerfilAtual();
+        if (usuarioPerfilAtual != null) {
+            return usuarioPerfilAtual.getPerfil().getPapel();
         }
         return null;
     }
@@ -429,17 +453,17 @@ public class Authenticator {
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<UsuarioLocalizacao> getUsuarioLocalizacaoListItems() {
-        List<UsuarioLocalizacao> list = (List<UsuarioLocalizacao>) Contexts.getSessionContext().get(USUARIO_LOCALIZACAO_LIST);
+    public List<UsuarioPerfil> getUsuarioPerfilListItems() {
+        List<UsuarioPerfil> list = (List<UsuarioPerfil>) Contexts.getSessionContext().get(USUARIO_PERFIL_LIST);
         return list;
     }
 
-    public void setLocalizacaoAtualCombo(UsuarioLocalizacao loc) {
-        setLocalizacaoAtual(loc);
+    public void setUsuarioPerfilAtualCombo(UsuarioPerfil usuarioPerfil) {
+        setUsuarioPerfilAtual(usuarioPerfil);
     }
 
-    public UsuarioLocalizacao getLocalizacaoAtualCombo() {
-        return getUsuarioLocalizacaoAtual();
+    public UsuarioPerfil getUsuarioPerfilAtualCombo() {
+        return getUsuarioPerfilAtual();
     }
 
     private static AuthenticatorService getAuthenticatorService() {

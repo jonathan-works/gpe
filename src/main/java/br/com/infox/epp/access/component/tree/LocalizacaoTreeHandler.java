@@ -16,6 +16,7 @@ public class LocalizacaoTreeHandler extends AbstractTreeHandler<Localizacao> {
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "localizacaoTree";
+    public static final String EVENT_SELECTED = "evtSelectLocalizacao";
 
     @Override
     protected String getQueryRoots() {
@@ -30,7 +31,7 @@ public class LocalizacaoTreeHandler extends AbstractTreeHandler<Localizacao> {
 
     @Override
     protected String getEventSelected() {
-        return "evtSelectLocalizacao";
+        return EVENT_SELECTED;
     }
 
     @Override

@@ -15,8 +15,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLocalizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -87,7 +86,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     public void iniciarTarefaProcesso() {
         try {
-            processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
+            processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
         } catch (java.lang.NullPointerException e) {
             LOG.error("ProcessoHome.iniciarTarefaProcesso()", e);
         } catch (DAOException e) {
@@ -96,7 +95,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public void visualizarTarefaProcesso() {
-        processoManager.visualizarTask(instance, tarefaId, Authenticator.getUsuarioLocalizacaoAtual());
+        processoManager.visualizarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
     }
 
     public static ProcessoHome instance() {
@@ -135,7 +134,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
         Integer result = idDoc;
         try {
             if (processoDocumento != null) {
-                if (assinaturaDocumentoService.isDocumentoAssinado(processoDocumento)) {
+                if (assinaturaDocumentoService.isDocumentoAssinado(processoDocumento, Authenticator.getUsuarioLogado())){
                     return result;
                 }
                 atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
@@ -143,7 +142,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
                 result = inserirProcessoDocumentoFluxo(value, label, assinado);
             }
             FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
-        } catch (AssinaturaException e) {
+        } catch (DAOException | AssinaturaException e) {
             LOG.error("Não foi possível salvar o ProcessoDocumento " + idDoc, e);
             FacesMessages.instance().clear();
             FacesMessages.instance().add(e.getMessage());
@@ -158,15 +157,15 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     // Método para Atualizar o documento do fluxo
     private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc,
-            Boolean assinado) throws CertificadoException, AssinaturaException {
+            Boolean assinado) throws CertificadoException, AssinaturaException, DAOException {
         if (validacaoCertificadoBemSucedida(assinado)) {
             ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
             ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
             String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
-            UsuarioLocalizacao usuarioLocalizacao = Authenticator.getUsuarioLocalizacaoAtual();
-            processoDocumento.setPapel(usuarioLocalizacao.getPapel());
-            processoDocumento.setLocalizacao(usuarioLocalizacao.getLocalizacao());
-            atualizarProcessoDocumentoBin(processoDocumentoBin, modeloDocumento, usuarioLocalizacao.getUsuario());
+            UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+            processoDocumento.setPapel(usuarioPerfil.getPerfil().getPapel());
+            processoDocumento.setLocalizacao(usuarioPerfil.getPerfil().getLocalizacao());
+            atualizarProcessoDocumento(processoDocumento, modeloDocumento, usuarioPerfil);
             gravarAlteracoes(processoDocumento, processoDocumentoBin);
         }
     }
@@ -188,13 +187,10 @@ public class ProcessoHome extends AbstractHome<Processo> {
         getEntityManager().flush();
     }
 
-    private void atualizarProcessoDocumentoBin(
-            ProcessoDocumentoBin processoDocumentoBin, String modeloDocumento,
-            UsuarioLogin assinante) {
-        processoDocumentoBin.setModeloDocumento(modeloDocumento);
-        processoDocumentoBin.setCertChain(certChain);
-        processoDocumentoBin.setSignature(signature);
-        processoDocumentoBin.setUsuarioUltimoAssinar(assinante.getNomeUsuario());
+    private void atualizarProcessoDocumento(ProcessoDocumento processoDocumento, String modeloDocumento,
+            UsuarioPerfil usuarioPerfil) throws CertificadoException, AssinaturaException, DAOException {
+        processoDocumento.getProcessoDocumentoBin().setModeloDocumento(modeloDocumento);
+        assinaturaDocumentoService.assinarDocumento(processoDocumento, usuarioPerfil, certChain, signature);
     }
 
     // Método para Inserir o documento do fluxo
@@ -203,12 +199,16 @@ public class ProcessoHome extends AbstractHome<Processo> {
         if (validacaoCertificadoBemSucedida(assinado)) {
             try {
                 Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
-                ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue, certChain, signature);
+                ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue);
                 label = label == null ? "-" : label;
                 ProcessoDocumento doc;
-                doc = processoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
-                setIdProcessoDocumento(doc.getIdProcessoDocumento());
-                return doc.getIdProcessoDocumento();
+                doc = processoDocumentoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
+                final int idProcessoDocumento = doc.getIdProcessoDocumento();
+                setIdProcessoDocumento(idProcessoDocumento);
+                if (assinado) {
+                    assinaturaDocumentoService.assinarDocumento(doc, Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+                }
+                return idProcessoDocumento;
             } catch (DAOException e) {
                 LOG.error("inserirProcessoDocumentoFluxo", e);
                 return ERRO_AO_VERIFICAR_CERTIFICADO;

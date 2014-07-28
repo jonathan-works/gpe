@@ -2,7 +2,7 @@ package br.com.infox.epp.system.variables;
 
 import static br.com.infox.epp.access.api.Authenticator.getLocalizacaoAtual;
 import static br.com.infox.epp.access.api.Authenticator.getPapelAtual;
-import static br.com.infox.epp.access.api.Authenticator.getUsuarioLocalizacaoAtual;
+import static br.com.infox.epp.access.api.Authenticator.getUsuarioPerfilAtual;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -72,7 +72,7 @@ public class ExternalVariables implements Serializable {
 
     @Factory(PERFIL_USUARIO_LOGADO)
     public String getPerfilUsuarioLogado() {
-        return extractObjectStringValue(getUsuarioLocalizacaoAtual());
+        return extractObjectStringValue(getUsuarioPerfilAtual());
     }
     
     @Factory(EMAIL_USUARIO_LOGADO)

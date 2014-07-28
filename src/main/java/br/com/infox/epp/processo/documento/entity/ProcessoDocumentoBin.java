@@ -3,7 +3,6 @@ package br.com.infox.epp.processo.documento.entity;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,13 +12,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -28,7 +23,7 @@ import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.ArrayUtil;
-import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 
 @Entity
 @Table(name = "tb_processo_documento_bin")
@@ -39,24 +34,21 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
     private int idProcessoDocumentoBin;
-    private UsuarioLogin usuario;
-    private String nomeUsuario;
-    private String usuarioUltimoAssinar;
     private byte[] processoDocumento;
     private String extensao;
     private String modeloDocumento;
     private String md5Documento;
     private String nomeArquivo;
-    private Date dataInclusao = new Date();
     private Integer size;
-    private String signature;
-    private String certChain;
-    private List<ProcessoDocumento> processoDocumentoList = new ArrayList<ProcessoDocumento>(0);
+    private List<ProcessoDocumento> processoDocumentoList;
+    private List<AssinaturaDocumento> assinaturas;
 
     public ProcessoDocumentoBin() {
+        this.processoDocumentoList = new ArrayList<>(0);
+        this.assinaturas = new ArrayList<>(0);
     }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_processo_documento_bin")
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "generator", sequenceName = "sq_tb_processo_documento_bin")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_documento_bin", unique = true, nullable = false)
@@ -67,16 +59,6 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 
     public void setIdProcessoDocumentoBin(int idProcessoDocumentoBin) {
         this.idProcessoDocumentoBin = idProcessoDocumentoBin;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario")
-    public UsuarioLogin getUsuario() {
-        return this.usuario;
-    }
-
-    public void setUsuario(UsuarioLogin usuario) {
-        this.usuario = usuario;
     }
 
     @Column(name = "ds_extensao", length = LengthConstants.DESCRICAO_MINIMA)
@@ -119,37 +101,8 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
         this.nomeArquivo = nomeArquivo;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "dt_inclusao", nullable = false)
-    @NotNull
-    public Date getDataInclusao() {
-        return this.dataInclusao;
-    }
-
-    public void setDataInclusao(Date dataInclusao) {
-        this.dataInclusao = dataInclusao;
-    }
-
-    @Column(name = "ds_signature")
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    @Column(name = "ds_cert_chain")
-    public String getCertChain() {
-        return certChain;
-    }
-
-    public void setCertChain(String certChain) {
-        this.certChain = certChain;
-    }
-
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
+            CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
     public List<ProcessoDocumento> getProcessoDocumentoList() {
         return this.processoDocumentoList;
     }
@@ -197,26 +150,6 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
         return "0 Kb";
     }
 
-    @Column(name = "ds_nome_usuario_ultimo_assinar", length = LengthConstants.DESCRICAO_PADRAO)
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
-    public String getUsuarioUltimoAssinar() {
-        return usuarioUltimoAssinar;
-    }
-
-    public void setUsuarioUltimoAssinar(String usuarioUltimoAssinar) {
-        this.usuarioUltimoAssinar = usuarioUltimoAssinar;
-    }
-
-    @Column(name = "ds_nome_usuario", length = LengthConstants.DESCRICAO_PADRAO)
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
-    public String getNomeUsuario() {
-        return nomeUsuario;
-    }
-
-    public void setNomeUsuario(String nomeUsuario) {
-        this.nomeUsuario = nomeUsuario;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -241,5 +174,15 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
         int result = 1;
         result = prime * result + getIdProcessoDocumentoBin();
         return result;
+    }
+
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
+    public List<AssinaturaDocumento> getAssinaturas() {
+        return assinaturas;
+    }
+
+    public void setAssinaturas(List<AssinaturaDocumento> assinaturas) {
+        this.assinaturas = assinaturas;
     }
 }

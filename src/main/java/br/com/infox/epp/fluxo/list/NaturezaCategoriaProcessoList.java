@@ -23,8 +23,8 @@ public class NaturezaCategoriaProcessoList extends EntityList<NaturezaCategoriaF
             + "inner join o.naturezaCategoriaFluxo ncf "
             + "inner join ncf.fluxo.fluxoPapelList papelList where ncf.fluxo.publicado is true";
     private static final String DEFAULT_ORDER = "natureza";
-    private static final String R1 = "o.localizacao = #{usuarioLogadoLocalizacaoAtual.getLocalizacao()}";
-    private static final String R2 = "papelList.papel = #{usuarioLogadoLocalizacaoAtual.getPapel()}";
+    private static final String R1 = "o.localizacao = #{usuarioLogadoPerfilAtual.getPerfil().getLocalizacao()}";
+    private static final String R2 = "papelList.papel = #{usuarioLogadoPerfilAtual.getPerfil().getPapel()}";
     
     @Override
     protected void addSearchFields() {

@@ -18,68 +18,69 @@
   <ui:param
     name="idCertChain"
     value="#{id}certChain" />
- 
   <f:subview id="#{f.id}SubView">
-	  <s:div id="#{f.id}TipoDocDiv">
-	    <wi:selectOneMenuEntity
-	      id="#{f.id}tipoProcessoDocumento"
-	      label="#{messages['processoDocumento.classificacaoDocumento']}"
-	      value="#{home.documentosAssinaveis[id].classificacao}"
-	      items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
-	      required="#{not readonly}"
-	      showLabelSelecione="true"
-	      readonly="#{readonly or not empty home.documentosAssinaveis[id].signature}"
-	      disabled="#{readonly or not empty home.documentosAssinaveis[id].signature}">
-	      <a:ajax
-	        event="change"
-	        render="appletDiv"
-	        execute="@this"
-	        limitRender="true" />
-	    </wi:selectOneMenuEntity>
-	  </s:div>
-	  <s:div id="#{id}EditorDiv">
-	    <wi:editor
-	      id="#{editorId}"
-	      value="#{home.instance[id]}"
-	      readonly="#{readonly or not empty home.documentosAssinaveis[id].signature}" />
-	  </s:div>
-	  <a:jsFunction
-	    name="#{editorId.replace('-', '')}submitForm"
-	    action="#{home.assinarDocumento(id)}"
-	    rendered="#{not readonly}"
-	    render="@form pageBodyDialogMessage"
-	    oncomplete="infox.hideLoading();"/>
-	  <s:div
-	    id="signatureDiv"
-	    rendered="#{not readonly}">
-	    <h:inputHidden
-	      id="#{idCertChain}"
-	      value="#{home.documentosAssinaveis[id].certChain}" />
-	    <h:inputHidden
-	      id="#{idSignature}"
-	      value="#{home.documentosAssinaveis[id].signature}" />
-	  </s:div>
-	  <s:div
-	    id="appletDiv"
-	    styleClass="applet-div"
-	    rendered="#{not readonly}">
-	    <wi:appletAssinatura
-	      id="#{id}"
-	      urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-	      formId="#{rich:clientId('taskInstanceForm')}"
-	      certificationChainField="#{rich:clientId(idCertChain)}"
-	      signatureField="#{rich:clientId(idSignature)}"
-	      getDataFunction="infox.editor['#{editorId}'].instance.getData()"
-	      useBase64Function="infox.editor['#{editorId}'].useBase64()"
-	      functionPreSign="infox.showLoading();"
-	      functionPosSign="#{editorId.replace('-', '')}submitForm()"
-	      debug="false"
-	      loginMode="false"
-	      useProviderDll="false"
-	      rendered="#{taskInstanceHome.podeRenderizarApplet(id)}">
-	    </wi:appletAssinatura>
-	  </s:div>
-	  <h:outputScript rendered="#{not readonly}">
+    <s:div id="#{f.id}TipoDocDiv">
+      <wi:selectOneMenuEntity
+        id="#{f.id}tipoProcessoDocumento"
+        label="#{messages['processoDocumento.classificacaoDocumento']}"
+        value="#{home.documentosAssinaveis[id].classificacao}"
+        items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
+        required="#{not readonly}"
+        showLabelSelecione="true"
+        readonly="#{readonly or home.possuiAssinatura(id)}"
+        disabled="#{readonly or home.possuiAssinatura(id)}">
+        <a:ajax
+          event="change"
+          render="appletDiv signatureDiv"
+          execute="@this"
+          limitRender="true" />
+      </wi:selectOneMenuEntity>
+    </s:div>
+    <s:div id="#{id}EditorDiv">
+      <wi:editor
+        id="#{editorId}"
+        value="#{home.instance[id]}"
+        readonly="#{readonly or home.possuiAssinatura(id)}" />
+    </s:div>
+    <s:div
+      id="signatureDiv"
+      rendered="#{not readonly}">
+      <s:div rendered="#{home.podeRenderizarApplet(id)}">
+        <a:jsFunction
+          name="#{editorId.replace('-', '')}submitForm"
+          action="#{home.assinarDocumento(id)}"
+          render="@form pageBodyDialogMessage #{formId}"
+          oncomplete="infox.hideLoading();" />
+        <h:inputHidden
+          id="#{idCertChain}"
+          value="#{home.documentosAssinaveis[id].certChain}" />
+        <h:inputHidden
+          id="#{idSignature}"
+          value="#{home.documentosAssinaveis[id].signature}" />
+      </s:div>
+    </s:div>
+    <s:div
+      id="appletDiv"
+      styleClass="applet-div"
+      rendered="#{not readonly}">
+      <wi:appletAssinatura
+        id="#{id}"
+        urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+        formId="#{rich:clientId('taskInstanceForm')}"
+        certificationChainField="#{rich:clientId(idCertChain)}"
+        signatureField="#{rich:clientId(idSignature)}"
+        getDataFunction="infox.editor['#{editorId}'].instance.getData()"
+        useBase64Function="infox.editor['#{editorId}'].useBase64()"
+        functionPreSign="infox.showLoading();"
+        functionPosSign="#{editorId.replace('-', '')}submitForm();infox.showLoading();"
+        debug="false"
+        loginMode="false"
+        useProviderDll="false"
+        rendered="#{home.podeRenderizarApplet(id)}">
+      </wi:appletAssinatura>
+    </s:div>
+    <h:outputScript
+      rendered="#{not readonly and home.podeRenderizarApplet(id)}">
 			namespace("infox.editor.#{editorId}",{
 				useBase64:function useBase64() {
 					return "true";
@@ -110,5 +111,5 @@
 				}
 			});
 		</h:outputScript>
-		</f:subview>
+  </f:subview>
 </ui:composition>

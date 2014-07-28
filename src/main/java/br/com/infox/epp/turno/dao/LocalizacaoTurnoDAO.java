@@ -29,6 +29,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
@@ -137,7 +138,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
         return getNamedSingleResult(COUNT_BY_HORA_INICIO_FIM, parameters);
     }
 
-    public void removerTurnosAnteriores(Localizacao localizacao) {
+    public void removerTurnosAnteriores(Localizacao localizacao) throws DAOException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_LOCALIZACAO, localizacao);
         executeNamedQueryUpdate(DELETE_TURNOS_ANTERIORES, parameters);

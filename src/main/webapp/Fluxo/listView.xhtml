@@ -195,7 +195,7 @@
             id="natCatFluxoLoc"
             name="natCatFluxoLoc"
             rendered="#{home.managed and not fluxoCrudAction.replica}"
-            title="#{messages['localizacao.localizacao']}">
+            title="#{messages['localizacao.titleView']}">
             <s:div id="natCatFluxoLocDiv">
                 <div>
                     <wi:dataForm
@@ -210,10 +210,11 @@
                             items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoCrudAction.instance)}" />
                         <wi:tree
                             id="localizacao"
-                            assignTo="fluxoLocalizacaoCrudAction.instance.localizacao"
-                            label="#{messages['localizacao.localizacao']}"
+                            assignTo="fluxoLocalizacaoCrudAction.localizacao"
+                            label="#{messages['localizacao.titleView']}"
                             required="true"
-                            tree="#{localizacaoTree}" />
+                            tree="#{localizacaoFullTree}" 
+                            styleClass="#{empty item.entity.estruturaPai ? 'tree-notselectable' : ''}" />
                         <ui:define name="buttons">
                             <wi:commandButton
                                 id="saveButton"
@@ -255,7 +256,7 @@
                             value="#{row.naturezaCategoriaFluxo.fluxo}" />
                         <wi:columnOutputText
                             columnId="localizacao"
-                            columnHeader="#{messages['localizacao.localizacao']}"
+                            columnHeader="#{messages['localizacao.titleView']}"
                             columnWidth="20%"
                             value="#{row.localizacao}" />
                     </wi:dataTable>

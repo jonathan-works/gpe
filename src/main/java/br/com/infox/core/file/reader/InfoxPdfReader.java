@@ -23,7 +23,7 @@ public class InfoxPdfReader {
             PdfTextExtractor extractor = new PdfTextExtractor(reader);
             int qtdPaginas = reader.getNumberOfPages();
             for (int i = 1; i <= qtdPaginas; i++) {
-                sb.append(extractor.getTextFromPage(1));
+                sb.append(extractor.getTextFromPage(i));
             }
         } catch (IOException e) {
             LOG.error("Não foi possível recuperar o conteúdo do pdf", e);

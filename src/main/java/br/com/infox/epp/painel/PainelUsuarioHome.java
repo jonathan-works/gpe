@@ -19,6 +19,8 @@ import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.componentes.column.DynamicColumnModel;
+import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
@@ -62,6 +64,8 @@ public class PainelUsuarioHome implements Serializable {
     private CaixaManager caixaManager;
     @In
     private ProcessoEpaManager processoEpaManager;
+    @In
+    private ActionMessagesService actionMessagesService;
 
     @Observer("selectedTarefasTree")
     public void onSelected(Object obj) {
@@ -99,8 +103,12 @@ public class PainelUsuarioHome implements Serializable {
     }
 
     public void setProcessoCaixa(List<Integer> idList, Caixa caixa) {
-        processoManager.moverProcessosParaCaixa(idList, caixa);
-        refresh();
+        try {
+            processoManager.moverProcessosParaCaixa(idList, caixa);
+            refresh();
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
+        }
     }
 
     private List<Integer> getProcessoIdList(Object o) {

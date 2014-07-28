@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
-import org.hibernate.type.IntegerType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -18,6 +17,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.epp.access.entity.Perfil;
+import br.com.infox.epp.access.manager.PerfilManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.ApplicationException;
@@ -64,8 +65,9 @@ public class LocalizacaoAssignment implements Serializable {
             return false;
         }
         boolean inserted = false;
+        PerfilManager perfilManager = ComponentUtil.getComponent(PerfilManager.NAME);
         for (String s : localPapel) {
-            insertProcessoLocalizacaoIbpm(s, processo);
+            insertProcessoLocalizacaoIbpm(perfilManager.find(Integer.valueOf(s)), processo);
             inserted = true;
         }
         return inserted;
@@ -87,54 +89,17 @@ public class LocalizacaoAssignment implements Serializable {
         return true;
     }
 
-    protected void insertProcessoLocalizacaoIbpm(String s, Processo processo) {
+    protected void insertProcessoLocalizacaoIbpm(Perfil perfil, Processo processo) {
         org.hibernate.Query q = JbpmUtil.getJbpmSession().createSQLQuery(IBPM_QUERY_INSERT);
         Long taskId = currentTaskInstance.getTask().getId();
-        String[] localizacaoPapel = splitLocalizacaoPapel(s);
         q.setParameter("idTaskJbpm", taskId);
         q.setParameter("idProcessInstance", ProcessInstance.instance().getId());
         q.setParameter("idProcesso", processo.getIdProcesso());
-        if (localizacaoPapel[0] == null) {
-            String action = "inserir Localização. Não existe Localização com o id = "
-                    + s.split(":")[0];
-            LOG.warn(action);
-            throw new ApplicationException(ApplicationException.createMessage(action, "getPooledActors()", "LocalizacaoAssignment", "BPM"));
-        }
-        q.setParameter("idLocalizacao", Integer.parseInt(localizacaoPapel[0]));
-        if (localizacaoPapel[1] == null) {
-            q.setParameter("idPapel", null, new IntegerType());
-        } else {
-            if ("true".equals(localizacaoPapel[1])
-                    || "false".equals(localizacaoPapel[1])) {
-                q.setParameter("idPapel", null, new IntegerType());
-                q.setParameter("contabilizar", Boolean.getBoolean(localizacaoPapel[1]));
-            } else {
-                q.setParameter("idPapel", Integer.parseInt(localizacaoPapel[1]));
-                if (localizacaoPapel[2] == null
-                        || "false".equals(localizacaoPapel[2])) {
-                    q.setParameter("contabilizar", false);
-                } else {
-                    q.setParameter("contabilizar", true);
-                }
-            }
-        }
+        q.setParameter("idLocalizacao", perfil.getLocalizacao().getIdLocalizacao());
+        q.setParameter("idPapel", perfil.getPapel().getIdPapel());
+        q.setParameter("contabilizar", true);
         q.setParameter("taskInstance", currentTaskInstance.getId());
         q.executeUpdate();
-    }
-
-    private static String[] splitLocalizacaoPapel(String localPapel) {
-        String[] ret = new String[3];
-        if (localPapel.contains(":")) {
-            String[] split = localPapel.split(":");
-            ret[0] = split[0];
-            if (split.length >= 2) {
-                ret[1] = split[1];
-            }
-            if (split.length == 3) {
-                ret[2] = split[2];
-            }
-        }
-        return ret;
     }
 
     public Set<String> getPooledActors(String expression) {
@@ -142,15 +107,7 @@ public class LocalizacaoAssignment implements Serializable {
     }
 
     public static String[] parse(String expression) {
-        String auxiliarExpression = expression;
-        if (auxiliarExpression == null) {
-            return null;
-        }
-        auxiliarExpression = auxiliarExpression.substring(auxiliarExpression.indexOf('(') + 1);
-        auxiliarExpression = auxiliarExpression.replaceAll("'", "");
-        auxiliarExpression = auxiliarExpression.replace(")", "");
-        auxiliarExpression = auxiliarExpression.replace("}", "");
-        return auxiliarExpression.split(",");
+        return expression.split(",");
     }
 
     public void setPooledActors(String expression) {

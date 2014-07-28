@@ -24,7 +24,7 @@
     <h:outputScript
       library="js/components"
       name="Modal.js" />
-    <h:outputScript target="body"> 
+    <h:outputScript>
       invoke([ "infox.Modal" ], function(Modal) {
         var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
         function toggleButton() {
@@ -52,8 +52,9 @@
       styleClass="loginPageBody">
       <div class="corpoSuperior" />
       <div class="corpoInferior">
-        <h:outputText styleClass="versao" 
-            value="VERSÃO: #{gitRepository.commitId} / BRANCH: #{gitRepository.branch} / #{gitRepository.buildTime} " />
+        <h:outputText
+          styleClass="versao"
+          value="VERSÃO: #{gitRepository.commitId} / BRANCH: #{gitRepository.branch} / #{gitRepository.buildTime} " />
       </div>
       <div
         id="seletorSkinLogin"
@@ -182,7 +183,7 @@
               <h:commandButton
                 id="btnEntrar"
                 value="#{messages['login.entrarBtn']}"
-                class="input_button"
+                styleClass="input_button"
                 action="#{authenticator.login()}" />
               <input
                 class="input_button"
@@ -248,6 +249,78 @@
               type="button"
               value="#{messages['login.cancelaTrocaSenhaBtn']}" />
           </div>
+        </h:form>
+      </rich:popupPanel>
+      <ui:param
+        name="panelWidth"
+        value="800"></ui:param>
+      <ui:param
+        name="panelHeight"
+        value="600"></ui:param>
+      <rich:popupPanel
+        id="#{termoAdesaoAction.termoAdesaoPanelName}"
+        width="#{panelWidth}"
+        height="#{panelHeight}"
+        show="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
+        <f:facet name="header">#{messages['login.termoAdesao']} #{pwidth} #{pheight}</f:facet>
+        <f:facet name="controls">
+          <h:panelGroup>
+            <h:graphicImage
+              styleClass="close-btn"
+              onclick="RichFaces.$(#{termoAdesaoAction.termoAdesaoPanelName}).hide();"
+              value="#{a4jSkin.imgFolder}/closeMP.gif" />
+          </h:panelGroup>
+        </f:facet>
+        <h:form id="termoAdesaoForm">
+          <a:jsFunction
+            name="assinarTermo"
+            action="#{termoAdesaoAction.assinarTermoAdesao(termoAdesaoAction.certChain,termoAdesaoAction.signature)}"
+            execute="@this termoAdesaoSignature termoAdesaoCertChain"
+            render="DialogMessage"
+            limitRender="true" />
+          <h:inputHidden
+            id="termoAdesaoSignature"
+            value="#{termoAdesaoAction.signature}">
+          </h:inputHidden>
+          <h:inputHidden
+            id="termoAdesaoCertChain"
+            value="#{termoAdesaoAction.certChain}">
+          </h:inputHidden>
+          <s:div
+            rendered="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
+            <div>
+              <wi:editor
+                id="termoAdesao"
+                value="#{termoAdesaoAction.termoAdesao}"
+                readonly="true"
+                showVariables="false"
+                width="#{panelWidth-15}"
+                height="#{panelHeight-157}" />
+            </div>
+            <div>
+              <wi:appletAssinatura
+                id="assinarTermoAdesao"
+                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+                formId="#{rich:clientId('termoAdesaoForm')}"
+                certificationChainField="#{rich:clientId('termoAdesaoCertChain')}"
+                signatureField="#{rich:clientId('termoAdesaoSignature')}"
+                getDataFunction="infox.editor.termoAdesao.instance.getData()"
+                useBase64Function="'true'"
+                functionPreSign="infox.showLoading();"
+                functionPosSign="assinarTermo();infox.hideLoading();"
+                debug="false"
+                loginMode="false"
+                useProviderDll="false"
+                signButtonCaption="#{messages['login.assinarTermoAdesao']}">
+              </wi:appletAssinatura>
+              <input
+                class="input_button close-btn"
+                id="cancela"
+                type="button"
+                onclick="RichFaces.$(#{termoAdesaoAction.termoAdesaoPanelName}).hide();"
+                value="#{messages['login.cancelaTrocaSenhaBtn']}" />
+            </div>
+          </s:div>
         </h:form>
       </rich:popupPanel>
       <rich:popupPanel

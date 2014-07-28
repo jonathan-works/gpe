@@ -40,7 +40,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         return result;
     }
 
-    public void inativarUsuario(final UsuarioLogin usuario) {
+    public void inativarUsuario(final UsuarioLogin usuario) throws DAOException {
         getDao().inativarUsuario(usuario);
     }
 

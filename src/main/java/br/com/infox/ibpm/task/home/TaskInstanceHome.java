@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
@@ -27,10 +26,8 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.Messages;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.seam.util.Strings;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Event;
@@ -42,9 +39,11 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
@@ -74,11 +73,11 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.CONVERSATION)
 public class TaskInstanceHome implements Serializable {
 
-    private static final String ASSINATURA_OBRIGATORIA = "A assinatura é obrigatória para esta classificação de documento";
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
     private static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
-    private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
+    private static final LogProvider LOG = Logging
+            .getLogProvider(TaskInstanceHome.class);
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "taskInstanceHome";
@@ -114,7 +113,7 @@ public class TaskInstanceHome implements Serializable {
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private VariableTypeResolver variableTypeResolver;
-    
+
     private URL urlRetornoAcessoExterno;
     private String documentoAAssinar;
 
@@ -124,7 +123,8 @@ public class TaskInstanceHome implements Serializable {
     public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (mapaDeVariaveis == null && taskInstance != null) {
-            variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
+            variableTypeResolver.setProcessInstance(taskInstance
+                    .getProcessInstance());
             mapaDeVariaveis = new HashMap<String, Object>();
             documentosAssinaveis = new HashMap<>();
             retrieveVariables();
@@ -133,7 +133,8 @@ public class TaskInstanceHome implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     private void retrieveVariables() {
-        TaskController taskController = taskInstance.getTask().getTaskController();
+        TaskController taskController = taskInstance.getTask()
+                .getTaskController();
         if (taskController != null) {
             List<VariableAccess> list = taskController.getVariableAccesses();
             for (VariableAccess variableAccess : list) {
@@ -147,27 +148,31 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void retrieveVariable(VariableAccess variableAccess) {
-        final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
+        final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(
+                variableAccess, taskInstance);
         variableRetriever.retrieveVariableContent();
-        mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
+        mapaDeVariaveis.put(getFieldName(variableRetriever.getName()),
+                variableRetriever.getVariable());
         if (variableRetriever.isEditor()) {
             DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
-            Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
+            Integer id = (Integer) taskInstance.getVariable(variableRetriever
+                    .getMappedName());
             if (id != null) {
                 dados.setIdDocumento(id);
-                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
+                        .getComponent(ProcessoDocumentoManager.NAME);
                 ProcessoDocumento pd = processoDocumentoManager.find(id);
                 dados.setClassificacao(pd.getTipoProcessoDocumento());
-                dados.setSignature(pd.getProcessoDocumentoBin().getSignature());
-                dados.setCertChain(pd.getProcessoDocumentoBin().getCertChain());
             }
-            documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
+            documentosAssinaveis.put(getFieldName(variableRetriever.getName()),
+                    dados);
         }
         setModeloWhenExists(variableRetriever);
     }
 
     private void setModeloWhenExists(TaskVariableRetriever variableRetriever) {
-        String modelo = getModeloFromProcessInstance(variableRetriever.getName());
+        String modelo = getModeloFromProcessInstance(variableRetriever
+                .getName());
         if (modelo != null) {
             variavelDocumento = variableRetriever.getName();
             if (!variableRetriever.hasVariable()) {
@@ -177,8 +182,8 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private String getModeloFromProcessInstance(String variableName) {
-        return (String) ProcessInstance.instance().getContextInstance().getVariable(variableName
-                + "Modelo");
+        return (String) ProcessInstance.instance().getContextInstance()
+                .getVariable(variableName + "Modelo");
     }
 
     private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
@@ -201,8 +206,10 @@ public class TaskInstanceHome implements Serializable {
     public boolean update() {
         prepareForUpdate();
         if (possuiTask()) {
-            TaskController taskController = taskInstance.getTask().getTaskController();
-            TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
+            TaskController taskController = taskInstance.getTask()
+                    .getTaskController();
+            TaskPageAction taskPageAction = ComponentUtil
+                    .getComponent(TaskPageAction.NAME);
             if (taskController != null) {
                 if (!taskPageAction.getHasTaskPage()) {
                     try {
@@ -252,7 +259,8 @@ public class TaskInstanceHome implements Serializable {
 
     private void updateVariable(VariableAccess variableAccess) {
         boolean documentoCorreto = false;
-        String fieldName = getFieldName(variableAccess.getMappedName().split(":")[1]);
+        String fieldName = getFieldName(variableAccess.getMappedName().split(
+                ":")[1]);
         if (assinar && fieldName.equals(documentoAAssinar)) {
             documentoCorreto = true;
         }
@@ -261,16 +269,26 @@ public class TaskInstanceHome implements Serializable {
 
         if (variableAccess.isWritable()) {
             if (variableResolver.isEditor() && variableAccess.isReadable()) {
-                DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
-                ProcessoHome.instance().setCertChain(dados.getCertChain());
-                ProcessoHome.instance().setSignature(dados.getSignature());
-                ProcessoHome.instance().setTipoProcessoDocumento(dados.getClassificacao());
+                DadosDocumentoAssinavel dados = documentosAssinaveis
+                        .get(fieldName);
+                ProcessoHome processoHome = ProcessoHome.instance();
+                processoHome.setTipoProcessoDocumento(dados.getClassificacao());
+                processoHome.setSignature(dados.getSignature());
+                processoHome.setCertChain(dados.getCertChain());
             }
             variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
             variableResolver.resolve();
             if (variableResolver.isEditor()) {
-                if (documentoCorreto && !variableResolver.isEditorAssinado()) {
-                    assinado = false;
+                if (documentoCorreto) {
+                    if (!variableResolver.isEditorAssinado()) {
+                        assinado = false;
+                    } else {
+                        assinado = assinado || assinar;
+                        DadosDocumentoAssinavel dados = documentosAssinaveis
+                                .get(fieldName);
+                        dados.setIdDocumento((Integer) variableResolver
+                                .getValue());
+                    }
                 } else {
                     assinado = assinado || assinar;
                 }
@@ -279,7 +297,6 @@ public class TaskInstanceHome implements Serializable {
                 Contexts.getBusinessProcessContext().flush();
                 retrieveVariable(variableAccess);
             }
-
         }
     }
 
@@ -355,15 +372,17 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public void updateIndex() {
-        TaskConteudoDAO taskConteudoDAO = ComponentUtil.getComponent(TaskConteudoDAO.NAME);
+        TaskConteudoDAO taskConteudoDAO = ComponentUtil
+                .getComponent(TaskConteudoDAO.NAME);
         TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
         int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
         if (taskConteudo != null) {
             try {
                 taskConteudoDAO.update(taskConteudo);
             } catch (DAOException e) {
-                LOG.error("Não foi possível reindexar o conteúdo da TaskInstance "
-                        + getTaskId(), e);
+                LOG.error(
+                        "Não foi possível reindexar o conteúdo da TaskInstance "
+                                + getTaskId(), e);
             }
         } else {
             taskConteudo = new TaskConteudo();
@@ -372,8 +391,9 @@ public class TaskInstanceHome implements Serializable {
             try {
                 taskConteudoDAO.persist(taskConteudo);
             } catch (DAOException e) {
-                LOG.error("Não foi possível indexar o conteúdo da TaskInstance "
-                        + getTaskId(), e);
+                LOG.error(
+                        "Não foi possível indexar o conteúdo da TaskInstance "
+                                + getTaskId(), e);
             }
         }
     }
@@ -385,23 +405,22 @@ public class TaskInstanceHome implements Serializable {
         } catch (Exception ex) {
             String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
             LOG.warn(action, ex);
-            throw new ApplicationException(ApplicationException.createMessage(action
-                    + ex.getLocalizedMessage(), "setCurrentTaskInstance()", "TaskInstanceHome", "BPM"), ex);
+            throw new ApplicationException(ApplicationException.createMessage(
+                    action + ex.getLocalizedMessage(),
+                    "setCurrentTaskInstance()", "TaskInstanceHome", "BPM"), ex);
         }
     }
 
     public String end(String transition) {
         if (checkAccess()) {
             checkCurrentTask();
-            ProcessoHome processoHome = ComponentUtil.getComponent(ProcessoHome.NAME);
-            if (faltaAssinatura()) {
-                acusarFaltaDeAssinatura();
-                return null;
-            }
+            ProcessoHome processoHome = ComponentUtil
+                    .getComponent(ProcessoHome.NAME);
+
             if (!update()) {
                 return null;
             }
-            if (!validFileUpload()){
+            if (!validFileUpload()) {
                 return null;
             }
             limparEstado(processoHome);
@@ -412,18 +431,29 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private boolean validFileUpload() {
-        //TODO verificar se é necessária a mesma validação do update para quando não há taskPage
+        // TODO verificar se é necessária a mesma validação do update para
+        // quando não há taskPage
         if (possuiTask()) {
-            TaskController taskController = taskInstance.getTask().getTaskController();
-            List<VariableAccess> list = taskController.getVariableAccesses();
-            for (VariableAccess var : list) {
+            TaskController taskController = taskInstance.getTask()
+                    .getTaskController();
+            if (taskController == null) {
+                return true;
+            }
+            List<?> list = taskController.getVariableAccesses();
+            for (Object object : list) {
+                VariableAccess var = (VariableAccess) object;
                 if (var.isRequired()
                         && var.getMappedName().split(":")[0].equals("FILE")
-                        && getInstance().get(getFieldName(var.getVariableName())) == null) {
-                    String label = JbpmUtil.instance().getMessages().get(taskInstance.getProcessInstance().getProcessDefinition().getName()
-                            + ":" + var.getVariableName());
-                    FacesMessages.instance().add("O arquivo do campo "
-                            + label + " é obrigatório");
+                        && getInstance().get(
+                                getFieldName(var.getVariableName())) == null) {
+                    String label = JbpmUtil
+                            .instance()
+                            .getMessages()
+                            .get(taskInstance.getProcessInstance()
+                                    .getProcessDefinition().getName()
+                                    + ":" + var.getVariableName());
+                    FacesMessages.instance().add(
+                            "O arquivo do campo " + label + " é obrigatório");
                     return false;
                 }
             }
@@ -440,7 +470,8 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private boolean isUsuarioExterno() {
-        Authenticator authenticator = ComponentUtil.getComponent("authenticator");
+        Authenticator authenticator = ComponentUtil
+                .getComponent("authenticator");
         return authenticator.isUsuarioExterno();
     }
 
@@ -456,7 +487,8 @@ public class TaskInstanceHome implements Serializable {
         if (this.currentTaskInstance == null) {
             setCanClosePanelVal(true);
             return true;
-        } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance.getId())) {
+        } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance
+                .getId())) {
             setTaskId(currentTaskInstance.getId());
             return false;
         } else {
@@ -475,7 +507,8 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarBam() {
-        ProcessoEpaTarefa pt = processoEpaTarefaManager.getByTaskInstance(taskInstance.getId());
+        ProcessoEpaTarefa pt = processoEpaTarefaManager
+                .getByTaskInstance(taskInstance.getId());
         Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
         try {
@@ -494,32 +527,11 @@ public class TaskInstanceHome implements Serializable {
         processoHome.setTipoProcessoDocumento(null);
     }
 
-    private void acusarFaltaDeAssinatura() {
-        FacesMessages messages = FacesMessages.instance();
-        messages.clearGlobalMessages();
-        messages.clear();
-        messages.add(Severity.ERROR, ASSINATURA_OBRIGATORIA);
-    }
-    
-    private boolean faltaAssinatura() {
-        for (Entry<String, DadosDocumentoAssinavel> entry : documentosAssinaveis.entrySet()) {
-            if (faltaAssinatura(entry.getValue().getClassificacao(), entry.getKey())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean faltaAssinatura(TipoProcessoDocumento tipoProcessoDocumento, String idEditor) {
-        boolean isObrigatorio = tipoProcessoDocumentoDAO.isAssinaturaObrigatoria(tipoProcessoDocumento, Authenticator.getPapelAtual());
-        DadosDocumentoAssinavel dados = documentosAssinaveis.get(idEditor);
-        return isObrigatorio && Strings.isEmpty(dados.getCertChain()) && Strings.isEmpty(dados.getSignature());
-    }
-
     private void checkCurrentTask() {
         TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
         if (currentTaskInstance != null
-                && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
+                && (tempTask == null || tempTask.getId() != currentTaskInstance
+                        .getId())) {
             acusarUsuarioSemAcesso();
         }
     }
@@ -546,13 +558,18 @@ public class TaskInstanceHome implements Serializable {
 
     public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         try {
-            final Map<String, Object> result = processoEpaTarefaManager.findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
-            taskInstanceManager.removeUsuario((Long) result.get("idTaskInstance"));
+            final Map<String, Object> result = processoEpaTarefaManager
+                    .findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso,
+                            idTarefa);
+            taskInstanceManager.removeUsuario((Long) result
+                    .get("idTaskInstance"));
             afterLiberarTarefa();
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
         } catch (NonUniqueResultException e) {
-            LOG.error(".removeUsuario(idProcesso, idTarefa) - Mais de um resultado", e);
+            LOG.error(
+                    ".removeUsuario(idProcesso, idTarefa) - Mais de um resultado",
+                    e);
         } catch (IllegalStateException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
         } catch (DAOException e) {
@@ -569,13 +586,15 @@ public class TaskInstanceHome implements Serializable {
     public void removeUsuario() {
         if (BusinessProcess.instance().hasCurrentTask()) {
             try {
-                taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
+                taskInstanceManager.removeUsuario(BusinessProcess.instance()
+                        .getTaskId());
                 afterLiberarTarefa();
             } catch (DAOException e) {
                 LOG.error(".removeUsuario() - ", e);
             }
         } else {
-            FacesMessages.instance().add(Messages.instance().get("org.jboss.seam.TaskNotFound"));
+            FacesMessages.instance().add(
+                    Messages.instance().get("org.jboss.seam.TaskNotFound"));
         }
     }
 
@@ -640,29 +659,34 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public List<ModeloDocumento> getModeloItems(String variavel) {
-        ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
+        ElFunctions elFunctions = (ElFunctions) Component
+                .getInstance(ElFunctions.NAME);
         String listaModelos = elFunctions.evaluateExpression(variavel);
-        return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
+        return modeloDocumentoManager
+                .getModelosDocumentoInListaModelo(listaModelos);
     }
 
     public void assignModeloDocumento(final String id) {
         String modelo = "";
         if (modeloDocumento != null) {
-            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, variableTypeResolver.getVariableTypeMap());
+            modelo = modeloDocumentoManager.evaluateModeloDocumento(
+                    modeloDocumento, variableTypeResolver.getVariableTypeMap());
         }
         mapaDeVariaveis.put(id, modelo);
     }
 
     public static boolean hasOcculTransition(Transition transition) {
         return transition.getDescription() != null
-                && transition.getDescription().contains(TransitionHandler.OCCULT_TRANSITION);
+                && transition.getDescription().contains(
+                        TransitionHandler.OCCULT_TRANSITION);
         // return OCCULT_TRANSITION.equals(transition.getCondition());
     }
 
     @SuppressWarnings(UNCHECKED)
     public void updateTransitions() {
         availableTransitions = taskInstance.getAvailableTransitions();
-        leavingTransitions = taskInstance.getTask().getTaskNode().getLeavingTransitions();
+        leavingTransitions = taskInstance.getTask().getTaskNode()
+                .getLeavingTransitions();
     }
 
     /**
@@ -694,7 +718,9 @@ public class TaskInstanceHome implements Serializable {
 
     public void setModeloDocumento(ModeloDocumento modelo) {
         this.modeloDocumento = modelo;
-        mapaDeVariaveis.put(getFieldName(variavelDocumento), modeloDocumentoManager.evaluateModeloDocumento(modelo, variableTypeResolver.getVariableTypeMap()));
+        mapaDeVariaveis.put(getFieldName(variavelDocumento),
+                modeloDocumentoManager.evaluateModeloDocumento(modelo,
+                        variableTypeResolver.getVariableTypeMap()));
     }
 
     public String getHomeName() {
@@ -737,13 +763,49 @@ public class TaskInstanceHome implements Serializable {
         this.taskCompleted = taskCompleted;
     }
 
-    public boolean podeRenderizarApplet(String idEditor) {
-        if (documentosAssinaveis.get(idEditor) != null) {
-            return faltaAssinatura(documentosAssinaveis.get(idEditor).getClassificacao(), idEditor);
+    public boolean possuiAssinatura(String idEditor) {
+        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
+                .get(idEditor);
+        if (documentoAssinavel != null) {
+            return assinaturaDocumentoService
+                    .isDocumentoAssinado(documentoAssinavel.getIdDocumento());
         }
         return false;
     }
-    
+
+    public boolean podeRenderizarApplet(String idEditor) {
+        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
+                .get(idEditor);
+        boolean podeAssinar = false;
+        if (documentoAssinavel != null) {
+            UsuarioPerfil usuarioPerfilAtual = Authenticator
+                    .getUsuarioPerfilAtual();
+            podeAssinar = podeAssinar(idEditor, usuarioPerfilAtual)
+                    && !assinaturaDocumentoService.isDocumentoAssinado(
+                            documentoAssinavel.getIdDocumento(),
+                            usuarioPerfilAtual.getUsuarioLogin());
+        }
+        return podeAssinar;
+    }
+
+    private boolean podeAssinar(String idEditor,
+            UsuarioPerfil usuarioPerfilAtual) {
+        boolean assinavel = false;
+        TipoProcessoDocumento classificacao = documentosAssinaveis
+                .get(idEditor).getClassificacao();
+        if (classificacao != null) {
+            List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis = classificacao
+                    .getTipoProcessoDocumentoPapeis();
+            for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : tipoProcessoDocumentoPapeis) {
+                if (assinavel = usuarioPerfilAtual.getPerfil().getPapel()
+                        .equals(tipoProcessoDocumentoPapel.getPapel())) {
+                    break;
+                }
+            }
+        }
+        return assinavel;
+    }
+
     public Map<String, DadosDocumentoAssinavel> getDocumentosAssinaveis() {
         return documentosAssinaveis;
     }

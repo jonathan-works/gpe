@@ -23,6 +23,7 @@ import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
@@ -47,7 +48,7 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
         return getNamedSingleResult(USUARIO_BY_LOGIN_TASK_INSTANCE, parameters);
     }
 
-    public void inativarUsuario(UsuarioLogin usuario) {
+    public void inativarUsuario(UsuarioLogin usuario) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID, usuario.getIdUsuarioLogin());
         executeNamedQueryUpdate(INATIVAR_USUARIO, parameters);

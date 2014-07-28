@@ -1,0 +1,160 @@
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+    
+    <ui:define name="title">#{messages['unidadeDecisoraColegiada.titleView']}</ui:define>
+    <ui:param name="home" value="#{unidadeDecisoraColegiadaCrudAction}"/>
+    
+    <ui:define name="searchGrid">
+    	<wi:dataTable
+            values="#{unidadeDecisoraColegiadaList.list(15)}"
+            bean="#{unidadeDecisoraColegiadaList}"
+            tableTitle="#{messages['unidadeDecisoraColegiada.tableTitle']}"
+            id="unidadeDecisoraColegiadaList"
+            rowId="#{row.idUnidadeDecisoraColegiada}">
+            
+            <ui:define name="searchForm">
+                <wi:searchForm
+                    formId="pesquisarUnidadeDecisoraMonocraticaForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    
+                    <wi:inputText 
+                   		id="nomeUnidadeDecisoraColegiada"
+	                    maxlength="200"
+	                    value="#{bean.entity.nome}"
+	                    label="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"/>
+                    
+                    <wi:selectOneMenuEntity
+                    	id="unidadeDecisoraMonocratica"
+                    	showLabelTodos="true"
+                    	label="#{messages['unidadeDecisoraColegiada.unidadeDecisoraMonocratica']}"
+                    	value="#{unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica}"
+                    	items="#{unidadeDecisoraColegiadaList.getAllUniDecisoraMonocratica()}"/>
+                    	
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{messages['field.situacao']}"
+                        value="#{bean.entity.ativo}"/>
+                        
+                </wi:searchForm>
+            </ui:define>
+            
+            <wi:columnOutputText
+                columnId="nome"
+                columnHeader="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"
+                value="#{row.nome}"/>
+            
+            <wi:columnOutputText
+                columnId="unidadeDecisoraMonocraticas"
+                columnHeader="#{messages['unidadeDecisoraColegiada.unidadesMonocraticas']}"
+                hideOrder="true">
+                <ui:repeat
+                    var="ucm"
+                    value="#{row.unidadeDecisoraColegiadaMonocraticaList}">
+                    <div>#{ucm.unidadeDecisoraMonocratica.nome} #{ucm.presidente ? messages['unidadeDecisoraColegiada.isPresidente'] : ''}</div>
+                </ui:repeat>
+            </wi:columnOutputText>
+            
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{messages['field.situacao']}"
+                value="#{row.ativo}"/>
+             
+        </wi:dataTable>
+    </ui:define>
+    
+    <ui:define name="form">
+    	<wi:dataForm
+            formId="unidadeDecisoraColegiadaForm"
+            formTitle="#{messages['form.title']}">
+            
+            <wi:inputText
+	                id="nome"
+	                value="#{unidadeDecisoraColegiadaCrudAction.instance.nome}"
+	                label="#{messages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}"
+	                required="true" />
+                
+             <wi:selectSituacaoRadio
+	               id="ativo"
+	               label="#{messages['field.situacao']}"
+	               value="#{unidadeDecisoraColegiadaCrudAction.instance.ativo}"/>
+	               
+	         <rich:panel id="unidadesMonocraticasAssociadasDiv" 
+	         			 rendered="#{home.managed}"
+	         			 header="#{messages['unidadeDecisoraColegiada.unidadesMonocraticas']}">
+	         			 
+		         <wi:selectOneMenuEntity 
+		         			id="selectUnidadesDemocraticas"
+		         			showLabelSelecione="true"
+		         			label="#{messages['unidadeDecisoraColegiada.unidadeDecisoraMonocratica']}"
+		         			value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraColegiadaMonocratica.unidadeDecisoraMonocratica}"
+		         			items="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraMonocraticaItemList}"/>
+		         
+		         <wi:selectBooleanCheckbox
+		         			id="checkPresidente"
+		         			label="#{messages['unidadeDecisoraColegiada.presidente']}"
+		         			value="#{unidadeDecisoraColegiadaCrudAction.unidadeDecisoraColegiadaMonocratica.presidente}"
+		         			disabled="#{unidadeDecisoraColegiadaCrudAction.jaPosuiPresidente()}"/>
+		         <s:div>
+			         <wi:commandButton 
+			         			id="buttonAdicionarMonocratica"
+			         			action="unidadeDecisoraColegiadaCrudAction.adicionarUnidadeMonocratica()"
+			         			value="Adicionar"
+			         			reRender="dataTableAssociada, selectUnidadesDemocraticasDecoration, pageBodyDialogMessage, checkPresidenteDecoration"/>
+		         </s:div>
+		         
+		         <rich:dataTable id="dataTableAssociada"
+		         			     value="#{unidadeDecisoraColegiadaCrudAction.instance.unidadeDecisoraColegiadaMonocraticaList}"
+		         			     style="width:100%; margin-bottom:10px; margin-top:10px;"
+		         			     var="row" >
+		         			    
+		         		<f:facet name="header">
+		                	<h:outputText value="#{messages['unidadeDecisoraColegiada.unidadesMonocraticasAssociadas']}"/>
+				        </f:facet>
+				        
+				        <rich:column id="toolBar" styleClass="dt-toolbar-col" width="5%">
+				            <wi:toolBarRemove id="toolBarRemove" 
+				            				  actionRemove="#{unidadeDecisoraColegiadaCrudAction.removerUnidadeDemocratica(row)}" 
+				            				  reRenderRemove="dataTableAssociada, pageBodyDialogMessage, selectUnidadesDemocraticasDecoration, checkPresidenteDecoration"/>
+				        </rich:column>
+				        
+				        <rich:column id="nome" width="50%">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraMonocratica.nomeUnidadeDecisora']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.unidadeDecisoraMonocratica.nome}"/>
+				        </rich:column>
+				        
+				        <rich:column id="localizacao" width="35%">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraMonocratica.localizacao']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.unidadeDecisoraMonocratica.localizacao}"/>
+				        </rich:column>
+				        
+				        <rich:column id="presidente" width="10%" style="text-align:center;">
+				        		<f:facet name="header">
+				        			<h:outputText value="#{messages['unidadeDecisoraColegiada.presidente']}"/>
+				        		</f:facet>
+				        		<h:outputText value="#{row.presidente ? messages['unidadeDecisoraColegiada.presidente.true'] : messages['unidadeDecisoraColegiada.presidente.false']}"/>
+				        </rich:column>
+				                
+		         </rich:dataTable>
+	         </rich:panel>
+	         
+	         <ui:define name="buttons">
+	         	<wi:commandButtonSave execute="nomeDecoration, ativoDecoration"/>
+                <wi:commandButtonNew />
+	         </ui:define>
+	         
+        </wi:dataForm>
+    </ui:define>
+    
+</ui:composition>

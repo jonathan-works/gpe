@@ -33,7 +33,7 @@ import br.com.infox.seam.path.PathResolver;
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
     private static final String FIELD_EXPRESSION = "#'{'{0}List.entity.{1}}";
-
+    
     private static final long serialVersionUID = 1L;
 
     private static final LogProvider LOG = Logging.getLogProvider(EntityList.class);
@@ -53,6 +53,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     private static final int TAMANHO_XLS_PADRAO = 10000;
 
     public EntityList() {
+        setCustomFilters();
         addSearchFields();
         Map<String, String> map = getCustomColumnsOrder();
         if (map != null) {
@@ -76,6 +77,9 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     protected abstract String getDefaultOrder();
 
     protected abstract Map<String, String> getCustomColumnsOrder();
+    
+    protected void setCustomFilters() {
+    }
 
     protected Map<String, SearchField> getSearchFieldMap() {
         return searchFieldMap;
@@ -152,14 +156,14 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     protected void visitFields(FieldCommand command) {
         String entityName = getEntityName();
         for (SearchField s : searchFieldMap.values()) {
-            String exp = MessageFormat.format(FIELD_EXPRESSION, entityName, s.getName());
-            ValueExpression<Object> ve = Expressions.instance().createValueExpression(exp);
+        	String exp = s.getCriteria() != SearchCriteria.NONE ? 
+        						MessageFormat.format(FIELD_EXPRESSION, entityName, s.getName()) :
+        							s.getName();
+        	ValueExpression<Object> ve = Expressions.instance().createValueExpression(exp);
             Object o = null;
             try {
                 o = ve.getValue();
             } catch (PropertyNotFoundException e) {
-                // para o caso de uma restriction mapeada não seja um campo da
-                // entidade
                 LOG.error(".visitFields()", e);
             }
             if (o != null) {
