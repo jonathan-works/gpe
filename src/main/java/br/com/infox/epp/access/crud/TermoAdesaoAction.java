@@ -84,8 +84,7 @@ public class TermoAdesaoAction implements Serializable {
                 }
                 assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature);
                 PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
-                //TODO RESOLVER ESTA GAMBIARRA
-                pessoaFisica.setSignature(format("{0}", bin.getIdProcessoDocumentoBin()));
+                pessoaFisica.setTermoAdesao(bin);
             }
             processoDocumentoBinManager.flush();
             final Events events = Events.instance();

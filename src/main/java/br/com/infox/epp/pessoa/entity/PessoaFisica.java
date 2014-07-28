@@ -10,6 +10,9 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -22,6 +25,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
+import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
 @Entity
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
@@ -35,7 +39,7 @@ public class PessoaFisica extends Pessoa {
     private String cpf;
     private Date dataNascimento;
     private String certChain;
-    private String signature;
+    private ProcessoDocumentoBin termoAdesao;
 
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
@@ -129,14 +133,15 @@ public class PessoaFisica extends Pessoa {
         return StringUtil.replaceQuebraLinha(certChain).equals(StringUtil.replaceQuebraLinha(this.certChain));
     }
 
-    @Column(name = "ds_signature")
-    @Basic(fetch = LAZY)
-    public String getSignature() {
-        return signature;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
+    @NotNull    
+    public ProcessoDocumentoBin getTermoAdesao() {
+        return termoAdesao;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public void setTermoAdesao(ProcessoDocumentoBin termoAdesao) {
+        this.termoAdesao = termoAdesao;
     }
 
 }

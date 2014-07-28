@@ -142,7 +142,7 @@ public class Authenticator {
         if (perfilAtivoList != null) {
             PessoaFisica pessoaFisica = usuario.getPessoaFisica();
             if (pessoaFisica != null) {
-            	if (pessoaFisica.getSignature() != null) {
+            	if (pessoaFisica.getTermoAdesao() != null) {
             		termoAdesao = false;
             	} else {
 	                for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
