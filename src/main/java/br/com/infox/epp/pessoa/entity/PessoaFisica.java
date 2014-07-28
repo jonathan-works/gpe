@@ -138,7 +138,7 @@ public class PessoaFisica extends Pessoa {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_processo_documento_bin", nullable = false)
     public ProcessoDocumentoBin getTermoAdesao() {
-        return termoAdesao;
+        return termoAdesao;   
     }
 
     public void setTermoAdesao(ProcessoDocumentoBin termoAdesao) {
