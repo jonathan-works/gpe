@@ -18,6 +18,7 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
@@ -53,7 +54,7 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
     private SigiloProcessoService sigiloProcessoService;
 
     @SuppressWarnings(UNCHECKED)
-    private static String extractConteudo(Long taskId) {
+    private String extractConteudo(Long taskId) {
         Session session = ManagedJbpmContext.instance().getSession();
         TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
         StringBuilder sb = new StringBuilder();
@@ -71,18 +72,20 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
         return getTextoIndexavel(sb.toString());
     }
 
-    private static String getTextoIndexavel(String texto) {
+    private String getTextoIndexavel(String texto) {
         Document doc = Jsoup.parse(texto);
         return doc.body().text();
     }
 
     @Override
+    @Transactional
     public TaskConteudo persist(TaskConteudo taskConteudo) throws DAOException {
         taskConteudo.setConteudo(extractConteudo(taskConteudo.getIdTaskInstance()));
         return super.persist(taskConteudo);
     }
 
     @Override
+    @Transactional
     public TaskConteudo update(TaskConteudo taskConteudo) throws DAOException {
         taskConteudo.setConteudo(extractConteudo(taskConteudo.getIdTaskInstance()));
         return super.update(taskConteudo);
