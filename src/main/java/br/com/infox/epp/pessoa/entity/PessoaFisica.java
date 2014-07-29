@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
@@ -40,6 +41,7 @@ public class PessoaFisica extends Pessoa {
     private Date dataNascimento;
     private String certChain;
     private ProcessoDocumentoBin termoAdesao;
+    private EstadoCivilEnum estadoCivil;
 
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
@@ -143,4 +145,13 @@ public class PessoaFisica extends Pessoa {
         this.termoAdesao = termoAdesao;
     }
 
+    @Column(name = "st_estado_civil")
+    @Enumerated(EnumType.STRING)
+	public EstadoCivilEnum getEstadoCivil() {
+		return estadoCivil;
+	}
+
+	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
 }
