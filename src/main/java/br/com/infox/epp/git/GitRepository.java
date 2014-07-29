@@ -21,6 +21,7 @@ public class GitRepository implements Serializable {
     private String branch;
     private String commitId;
     private String buildTime;
+    private String describe;
     
     @Create
     public void init() throws IOException {
@@ -29,6 +30,7 @@ public class GitRepository implements Serializable {
         this.branch = properties.getProperty("git.branch");
         this.commitId = properties.getProperty("git.commit.id.abbrev");
         this.buildTime = properties.getProperty("git.build.time");
+        this.describe = properties.getProperty("git.commit.id.describe");
     }
     
     public String getBranch() {
@@ -41,5 +43,9 @@ public class GitRepository implements Serializable {
     
     public String getBuildTime() {
         return buildTime;
+    }
+
+    public String getDescribe() {
+        return describe;
     }
 }
