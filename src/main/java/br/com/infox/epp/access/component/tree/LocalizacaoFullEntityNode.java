@@ -2,8 +2,11 @@ package br.com.infox.epp.access.component.tree;
 
 import java.util.List;
 
+import br.com.infox.constants.WarningConstants;
+import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class LocalizacaoFullEntityNode extends EntityNode<Localizacao> {
 
@@ -21,11 +24,15 @@ public class LocalizacaoFullEntityNode extends EntityNode<Localizacao> {
         super(queryChildrenList);
     }
     
+    @SuppressWarnings(WarningConstants.UNCHECKED)
     @Override
     protected List<Localizacao> getChildrenList(String hql, Localizacao entity) {
         List<Localizacao> children = super.getChildrenList(hql, entity);
         if (entity.getEstruturaFilho() != null) {
-            children.addAll(entity.getEstruturaFilho().getLocalizacoes());
+            GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
+            String queryRootsOfEstrutura = "select o from Localizacao o where o.estruturaPai.id = " + 
+                    entity.getEstruturaFilho().getId() + " and o.localizacaoPai is null and o.ativo = true";
+            children.addAll(genericDAO.createQuery(queryRootsOfEstrutura).getResultList());
         }
         return children;
     }
