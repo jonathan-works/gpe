@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.entity;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -43,7 +46,10 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     private List<ProcessoDocumento> processoDocumentoList;
     private List<AssinaturaDocumento> assinaturas;
 
+    private Date dataAssinatura;
+
     public ProcessoDocumentoBin() {
+        this.dataAssinatura=new Date();
         this.processoDocumentoList = new ArrayList<>(0);
         this.assinaturas = new ArrayList<>(0);
     }
@@ -133,6 +139,17 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 
     public void setSize(Integer size) {
         this.size = size;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_inclusao", nullable = false)
+    @NotNull
+    public Date getDataAssinatura() {
+        return dataAssinatura;
+    }
+
+    public void setDataAssinatura(Date dataAssinatura) {
+        this.dataAssinatura = dataAssinatura;
     }
 
     @Transient
