@@ -3,23 +3,23 @@ package br.com.infox.epp.meiocontato.validator;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import br.com.infox.epp.meiocontato.annotation.Email;
+import br.com.infox.epp.meiocontato.annotation.Telefone;
 
-public class EmailValidator implements ConstraintValidator<Email, String>{
+public class TelefoneValidator implements ConstraintValidator<Telefone, String>{
 	
 	private String pattern;
 
 	@Override
-	public void initialize(Email emailAnnotation) {
-		this.pattern = emailAnnotation.pattern();
+	public void initialize(Telefone telefone) {
+		this.pattern = telefone.pattern();
 	}
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		if (value == null){
+		if (value == null) {
 			return true;
 		} else {
-			return value.matches(pattern);
+			return value.matches(this.pattern);
 		}
 	}
 

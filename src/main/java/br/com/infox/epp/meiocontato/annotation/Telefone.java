@@ -1,4 +1,4 @@
-package br.com.infox.epp.pessoa.annotation;
+package br.com.infox.epp.meiocontato.annotation;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -11,19 +11,18 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import br.com.infox.epp.pessoa.validator.CpfValidator;
+import br.com.infox.epp.meiocontato.validator.TelefoneValidator;
 
 @Target({ METHOD, FIELD, PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = CpfValidator.class)
-public @interface Cpf {
+@Constraint(validatedBy = TelefoneValidator.class)
+public @interface Telefone {
 	
-	String pattern() default "^[0-9]{11}$";
+	String pattern() default "[]";
 	
-	String message() default "{br.com.infox.epp.pessoa.annotation.Cpf}";
+	String message() default "{br.com.infox.epp.meiocontato.annotation.Telefone}";
 	
 	Class<?>[] groups() default {};
 	
 	Class<? extends Payload>[] payload() default {};
-
 }
