@@ -95,8 +95,8 @@ public class LocalizacaoAssignment implements Serializable {
         q.setParameter("idTaskJbpm", taskId);
         q.setParameter("idProcessInstance", ProcessInstance.instance().getId());
         q.setParameter("idProcesso", processo.getIdProcesso());
-        q.setParameter("idLocalizacao", perfil.getLocalizacao().getIdLocalizacao());
-        q.setParameter("idPapel", perfil.getPapel().getIdPapel());
+        q.setParameter("idLocalizacao", perfil.getPerfilTemplate().getLocalizacao().getIdLocalizacao());
+        q.setParameter("idPapel", perfil.getPerfilTemplate().getPapel().getIdPapel());
         q.setParameter("contabilizar", true);
         q.setParameter("taskInstance", currentTaskInstance.getId());
         q.executeUpdate();

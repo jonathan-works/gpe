@@ -36,14 +36,14 @@ public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
     }
 
     private String[] getImagesDir(final String path, final UsuarioPerfil usuarioPerfil) {
-        if (usuarioPerfil != null && usuarioPerfil.getPerfil().getLocalizacao() != null) {
+        if (usuarioPerfil != null && usuarioPerfil.getPerfil().getPerfilTemplate().getLocalizacao() != null) {
             String idEstrutura = "";
             if (usuarioPerfil.getPerfil().getPaiDaEstrutura() != null) {
                 idEstrutura = String.valueOf(usuarioPerfil.getPerfil().getPaiDaEstrutura().getIdLocalizacao());
             }
             return new String[] {
                 path,
-                MessageFormat.format("{0}/l{1}e{2}", path, usuarioPerfil.getPerfil().getLocalizacao().getIdLocalizacao(), idEstrutura).replace("//", "/") };
+                MessageFormat.format("{0}/l{1}e{2}", path, usuarioPerfil.getPerfil().getPerfilTemplate().getLocalizacao().getIdLocalizacao(), idEstrutura).replace("//", "/") };
         }
         return new String[] { path };
     }

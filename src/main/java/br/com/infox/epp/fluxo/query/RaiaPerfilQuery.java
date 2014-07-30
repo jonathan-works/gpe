@@ -20,7 +20,7 @@ public interface RaiaPerfilQuery {
     
     String LIST_BY_LOCALIZACAO = "RaiaPerfil.listByLocalizacao";
     String LIST_BY_LOCALIZACAO_QUERY = "select o from RaiaPerfil o inner join o.perfil p "
-            + "where p.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
+            + "where p.perfilTemplate.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
     
     String REMOVER_RAIAS_PERFIS_POR_FLUXO = "RaiaPerfil.removerRaiasPerfisPorFluxo";
     String REMOVER_RAIAS_PERFIS_POR_FLUXO_QUERY = "delete RaiaPerfil o where o.fluxo = :" + QUERY_PARAM_FLUXO;

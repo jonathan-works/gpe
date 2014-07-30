@@ -170,8 +170,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
             ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
             String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
             UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-            processoDocumento.setPapel(usuarioPerfil.getPerfil().getPapel());
-            processoDocumento.setLocalizacao(usuarioPerfil.getPerfil().getLocalizacao());
+            processoDocumento.setPapel(usuarioPerfil.getPerfil().getPerfilTemplate().getPapel());
+            processoDocumento.setLocalizacao(usuarioPerfil.getPerfil().getPerfilTemplate().getLocalizacao());
             atualizarProcessoDocumento(processoDocumento, modeloDocumento, usuarioPerfil);
             gravarAlteracoes(processoDocumento, processoDocumentoBin);
         }

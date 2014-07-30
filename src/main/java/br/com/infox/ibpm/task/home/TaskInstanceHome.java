@@ -797,7 +797,7 @@ public class TaskInstanceHome implements Serializable {
             List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis = classificacao
                     .getTipoProcessoDocumentoPapeis();
             for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : tipoProcessoDocumentoPapeis) {
-                if (assinavel = usuarioPerfilAtual.getPerfil().getPapel()
+                if (assinavel = usuarioPerfilAtual.getPerfil().getPerfilTemplate().getPapel()
                         .equals(tipoProcessoDocumentoPapel.getPapel())) {
                     break;
                 }

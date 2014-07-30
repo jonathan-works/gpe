@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 public class PerfilTemplate {
 
     private Integer id;
-    private Localizacao localizacaoNaEstrutra;
+    private Localizacao localizacao;
     private Papel papel;
     
     @Id
@@ -36,12 +36,12 @@ public class PerfilTemplate {
     
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "id_localizacao")
-    public Localizacao getLocalizacaoNaEstrutra() {
-        return localizacaoNaEstrutra;
+    public Localizacao getLocalizacao() {
+        return localizacao;
     }
     
-    public void setLocalizacaoNaEstrutra(Localizacao localizacaoNaEstrutra) {
-        this.localizacaoNaEstrutra = localizacaoNaEstrutra;
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
     }
     
     @ManyToOne(fetch = EAGER)

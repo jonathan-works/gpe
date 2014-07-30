@@ -78,7 +78,7 @@ public class TermoAdesaoAction implements Serializable {
             if (perfilAtivoList != null) {
                 UsuarioPerfil perfil = null;
                 for (UsuarioPerfil usuarioPerfil : perfilAtivoList) {
-                    if ((perfil = usuarioPerfil).getPerfil().getPapel().getTermoAdesao()) {
+                    if ((perfil = usuarioPerfil).getPerfil().getPerfilTemplate().getPapel().getTermoAdesao()) {
                         break;
                     }
                 }

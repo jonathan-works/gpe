@@ -22,11 +22,30 @@ public class PerfilCrudAction extends AbstractCrudAction<Perfil, PerfilManager> 
 
     public static final String NAME = "perfilCrudAction";
     private static final long serialVersionUID = 1L;
+    
+    private Localizacao localizacao;
+    private Papel papel;
+
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
+
+    public Papel getPapel() {
+        return papel;
+    }
+
+    public void setPapel(Papel papel) {
+        this.papel = papel;
+    }
 
     @Observer(LocalizacaoFullTreeHandler.SELECTED_LOCALIZACAO_ESTRUTURA)
     public void setLocalizacoes(Localizacao localizacao,
             Localizacao paiDaEstrutura) {
-        getInstance().setLocalizacao(localizacao);
+        setLocalizacao(localizacao);
         getInstance().setPaiDaEstrutura(paiDaEstrutura);
     }
 
@@ -38,7 +57,7 @@ public class PerfilCrudAction extends AbstractCrudAction<Perfil, PerfilManager> 
 
     @Override
     protected boolean isInstanceValid() {
-        if(getManager().existePerfil(getInstance().getIdPerfil(), getInstance().getLocalizacao(), getInstance().getPapel(), getInstance().getPaiDaEstrutura())) {
+        if(getManager().existePerfil(getInstance().getIdPerfil(), getInstance().getPerfilTemplate().getLocalizacao(), getInstance().getPerfilTemplate().getPapel(), getInstance().getPaiDaEstrutura())) {
             FacesMessages.instance().clear();
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, "#{messages['constraintViolation.uniqueViolation']}");
             return false;
