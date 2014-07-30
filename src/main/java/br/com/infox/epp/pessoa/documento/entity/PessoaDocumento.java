@@ -33,9 +33,9 @@ public class PessoaDocumento implements Serializable {
 	private Date dataEmissao;
 	private TipoDocumentoPessoaEnum tipoDocumento;
 
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "generator", sequenceName = "sq_pessoa_documento")
+	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "PessoaDocumentoGenerator", sequenceName = "sq_pessoa_documento")
 	@Id
-	@GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = "PessoaDocumentoGenerator", strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_pessoa_documento", nullable = false, unique = true)
 	public Integer getIdPessoaDocumento() {
 		return idPessoaDocumento;
@@ -96,4 +96,33 @@ public class PessoaDocumento implements Serializable {
 	public void setTipoDocumento(TipoDocumentoPessoaEnum tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((idPessoaDocumento == null) ? 0 : idPessoaDocumento
+						.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof PessoaDocumento))
+			return false;
+		PessoaDocumento other = (PessoaDocumento) obj;
+		if (idPessoaDocumento == null) {
+			if (other.idPessoaDocumento != null)
+				return false;
+		} else if (!idPessoaDocumento.equals(other.idPessoaDocumento))
+			return false;
+		return true;
+	}
+	
 }

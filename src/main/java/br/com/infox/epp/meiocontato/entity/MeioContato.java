@@ -26,13 +26,13 @@ public class MeioContato implements Serializable {
 	public static final String TABLE_NAME = "tb_meio_contato";
 
 	private Integer idMeioContato;
-	private String meioCotnato;
+	private String meioContato;
 	private TipoMeioContatoEnum tipoMeioContato;
 	private Pessoa pessoa;
 
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "generator", sequenceName = "sq_meio_contato")
+	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "MeioContatoGenerator", sequenceName = "sq_meio_contato")
 	@Id
-	@GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = "MeioContatoGenerator", strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_meio_contato", nullable = false, unique = true)
 	public Integer getIdMeioContato() {
 		return idMeioContato;
@@ -44,12 +44,12 @@ public class MeioContato implements Serializable {
 
 	@Column(name = "vl_meio_contato", nullable = false)
 	@NotNull
-	public String getMeioCotnato() {
-		return meioCotnato;
+	public String getMeioContato() {
+		return meioContato;
 	}
 
-	public void setMeioCotnato(String meioCotnato) {
-		this.meioCotnato = meioCotnato;
+	public void setMeioContato(String meioContato) {
+		this.meioContato = meioContato;
 	}
 
 	@Column(name = "tp_meio_contato", nullable = false)
@@ -73,4 +73,31 @@ public class MeioContato implements Serializable {
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((idMeioContato == null) ? 0 : idMeioContato.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof MeioContato))
+			return false;
+		MeioContato other = (MeioContato) obj;
+		if (idMeioContato == null) {
+			if (other.idMeioContato != null)
+				return false;
+		} else if (!idMeioContato.equals(other.idMeioContato))
+			return false;
+		return true;
+	}
+	
 }
