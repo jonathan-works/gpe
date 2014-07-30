@@ -8,6 +8,8 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.pessoa.documento.dao.PessoaDocumentoDAO;
 import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
+import br.com.infox.epp.pessoa.documento.type.TipoPesssoaDocumentoEnum;
+import br.com.infox.epp.pessoa.entity.Pessoa;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
@@ -16,5 +18,11 @@ public class PessoaDocumentoManager extends Manager<PessoaDocumentoDAO, PessoaDo
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "pessoaDocumentoManager";
+	
+	public PessoaDocumento getPessoaDocumentoByPessoaTipoDocumento(Pessoa pessoa, 
+			TipoPesssoaDocumentoEnum tipoDocumento){
+		return getDao().searchPessoaDocumentoByPessoaTipoDocumento(pessoa, tipoDocumento);
+	}
+	
 	
 }

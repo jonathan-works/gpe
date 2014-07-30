@@ -1,6 +1,6 @@
 package br.com.infox.epp.pessoa.documento.type;
 
-public enum TipoDocumentoPessoaEnum {
+public enum TipoPesssoaDocumentoEnum {
 	
 	CI("Carteira de Identidade"), CT("Carteira de Trabalho"),
 	CM("Carteira de Motorista"), CN("Certidão de Nascimento"),
@@ -10,7 +10,7 @@ public enum TipoDocumentoPessoaEnum {
 	
 	private String label;
 	
-	private TipoDocumentoPessoaEnum(String label){
+	private TipoPesssoaDocumentoEnum(String label){
 		this.label = label;
 	}
 	

@@ -1,5 +1,8 @@
 package br.com.infox.epp.pessoa.documento.entity;
 
+import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO;
+import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO_QUERY;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,16 +16,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.pessoa.documento.type.TipoDocumentoPessoaEnum;
+import br.com.infox.epp.pessoa.documento.type.TipoPesssoaDocumentoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 
 @Entity
 @Table(name = PessoaDocumento.TABLE_NAME)
+@NamedQueries(value = {
+		@NamedQuery(name = PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO, query = PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO_QUERY)
+})
 public class PessoaDocumento implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_pessoa_documento";
 
@@ -31,7 +40,7 @@ public class PessoaDocumento implements Serializable {
 	private String documento;
 	private String orgaoEmissor;
 	private Date dataEmissao;
-	private TipoDocumentoPessoaEnum tipoDocumento;
+	private TipoPesssoaDocumentoEnum tipoDocumento;
 
 	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "PessoaDocumentoGenerator", sequenceName = "sq_pessoa_documento")
 	@Id
@@ -89,11 +98,11 @@ public class PessoaDocumento implements Serializable {
 	@Column(name = "tp_documento", nullable = false)
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	public TipoDocumentoPessoaEnum getTipoDocumento() {
+	public TipoPesssoaDocumentoEnum getTipoDocumento() {
 		return tipoDocumento;
 	}
 
-	public void setTipoDocumento(TipoDocumentoPessoaEnum tipoDocumento) {
+	public void setTipoDocumento(TipoPesssoaDocumentoEnum tipoDocumento) {
 		this.tipoDocumento = tipoDocumento;
 	}
 
