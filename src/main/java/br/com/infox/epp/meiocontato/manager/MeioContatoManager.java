@@ -21,7 +21,6 @@ public class MeioContatoManager extends Manager<MeioContatoDAO, MeioContato>{
 	public static final String NAME = "meioContatoManager";
 	
 	public List<MeioContato> getByPessoa(Pessoa pessoa) {
-		return null;
+		return getDao().getByPessoa(pessoa);
 	}
-
 }
