@@ -114,9 +114,9 @@ public class AssinaturaDocumentoService implements Serializable {
         boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : processoDocumento
                 .getProcessoDocumentoBin().getAssinaturas()) {
-            Papel papel = usuarioLocalizacao.getPerfil().getPapel();
+            Papel papel = usuarioLocalizacao.getPerfil().getPerfilTemplate().getPapel();
             UsuarioLogin usuario = usuarioLocalizacao.getUsuarioLogin();
-            if (result = (assinaturaDocumento.getPerfil().getPapel()
+            if (result = (assinaturaDocumento.getPerfil().getPerfilTemplate().getPapel()
                     .equals(papel) || assinaturaDocumento.getUsuario().equals(
                     usuario))
                     && isSignatureValid(assinaturaDocumento)) {
@@ -144,7 +144,7 @@ public class AssinaturaDocumentoService implements Serializable {
         boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : processoDocumento
                 .getProcessoDocumentoBin().getAssinaturas()) {
-            if (assinaturaDocumento.getPerfil().getPapel().equals(papel)) {
+            if (assinaturaDocumento.getPerfil().getPerfilTemplate().getPapel().equals(papel)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -215,7 +215,7 @@ public class AssinaturaDocumentoService implements Serializable {
         ProcessoDocumento processoDocumento = processoDocumentoManager
                 .find(idDocumento);
         return processoDocumento != null
-                && isDocumentoAssinado(processoDocumento, perfil.getPapel());
+                && isDocumentoAssinado(processoDocumento, perfil.getPerfilTemplate().getPapel());
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, UsuarioPerfil perfil) {

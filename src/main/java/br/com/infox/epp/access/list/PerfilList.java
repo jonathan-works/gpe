@@ -27,8 +27,8 @@ public class PerfilList extends EntityList<Perfil> {
     @Override
     protected void addSearchFields() {
         addSearchField("descricao", CONTENDO);
-        addSearchField("localizacao", IGUAL);
-        addSearchField("papel", IGUAL);
+        addSearchField("perfilTemplate.localizacao", IGUAL);
+        addSearchField("perfilTemplate.papel", IGUAL);
         addSearchField("ativo", IGUAL);
     }
 

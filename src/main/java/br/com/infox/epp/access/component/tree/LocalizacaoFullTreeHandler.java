@@ -40,7 +40,7 @@ public class LocalizacaoFullTreeHandler extends AbstractTreeHandler<Localizacao>
         if (localizacaoPaiEstrutura != null) {
             raiz = localizacaoPaiEstrutura;
         } else {
-            raiz = usuarioPerfil.getPerfil().getLocalizacao();
+            raiz = usuarioPerfil.getPerfil().getPerfilTemplate().getLocalizacao();
         }
         return raiz.getIdLocalizacao();
     }
@@ -51,7 +51,7 @@ public class LocalizacaoFullTreeHandler extends AbstractTreeHandler<Localizacao>
                 + "localizacaoPai = :" + EntityNode.PARENT_NODE
                 + " and l.ativo = true");
         UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-        Estrutura estruturaPai = usuarioPerfil.getPerfil().getLocalizacao().getEstruturaPai();
+        Estrutura estruturaPai = usuarioPerfil.getPerfil().getPerfilTemplate().getLocalizacao().getEstruturaPai();
         if (estruturaPai != null) {
             sb.append(" and estruturaPai.id = ");
             sb.append(estruturaPai.getId());

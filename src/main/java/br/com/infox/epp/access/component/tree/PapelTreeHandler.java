@@ -41,7 +41,7 @@ public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
     protected Papel getPapelAtual() {
         UsuarioPerfil usuarioPerfil = (UsuarioPerfil) Contexts.getSessionContext().get(Authenticator.USUARIO_PERFIL_ATUAL);
         if (usuarioPerfil != null) {
-            return usuarioPerfil.getPerfil().getPapel();
+            return usuarioPerfil.getPerfil().getPerfilTemplate().getPapel();
         }
         return null;
     }

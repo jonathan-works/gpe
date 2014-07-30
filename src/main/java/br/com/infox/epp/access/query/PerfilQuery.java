@@ -15,6 +15,7 @@ public interface PerfilQuery {
     String COM_ID = " and o.idPerfil <> :" + ID_PERFIL_PARAM;
     
     String LIST_PERFIS_DENTRO_DE_ESTRUTURA = "Perfil.listPerfisDentroDeEstrutura";
-    String LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY = "select o from Perfil o where o.localizacao.estruturaPai is not null and o.ativo = true "
+    //TODO verificar o caso dos perfis de configuração onde a localização do perfilTemplate é nula
+    String LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY = "select o from Perfil o where o.perfilTemplate.localizacao.estruturaPai is not null and o.ativo = true "
             + "order by o.descricao";
 }

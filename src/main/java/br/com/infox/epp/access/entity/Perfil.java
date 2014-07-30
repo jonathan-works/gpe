@@ -7,6 +7,7 @@ import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,10 +30,13 @@ public class Perfil {
     
     private Integer idPerfil;
     private String descricao;
-    private Localizacao localizacao;
     private Localizacao paiDaEstrutura;
-    private Papel papel;
+    private PerfilTemplate perfilTemplate;
     private Boolean ativo;
+    
+    public Perfil() {
+        perfilTemplate = new PerfilTemplate();
+    }
     
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_perfil")
     @Id
@@ -57,17 +61,6 @@ public class Perfil {
     }
 
     @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "id_localizacao", nullable = false)
-    @NotNull
-    public Localizacao getLocalizacao() {
-        return localizacao;
-    }
-    
-    public void setLocalizacao(Localizacao localizacao) {
-        this.localizacao = localizacao;
-    }
-    
-    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "id_localizacao_pai_estrutura")
     public Localizacao getPaiDaEstrutura() {
         return paiDaEstrutura;
@@ -77,17 +70,16 @@ public class Perfil {
         this.paiDaEstrutura = paiDaEstrutura;
     }
 
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "id_papel", nullable = false)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_perfil_template", nullable=false)
     @NotNull
-    public Papel getPapel() {
-        return papel;
-    }
-    
-    public void setPapel(Papel papel) {
-        this.papel = papel;
+    public PerfilTemplate getPerfilTemplate() {
+        return perfilTemplate;
     }
 
+    public void setPerfilTemplate(PerfilTemplate perfilTemplate) {
+        this.perfilTemplate = perfilTemplate;
+    }
 
     @Column(name = ATIVO, nullable = false)
     @NotNull
@@ -114,10 +106,10 @@ public class Perfil {
         result = prime * result
                 + ((getIdPerfil() == null) ? 0 : getIdPerfil().hashCode());
         result = prime * result
-                + ((getLocalizacao() == null) ? 0 : getLocalizacao().hashCode());
+                + ((getPerfilTemplate().getLocalizacao() == null) ? 0 : getPerfilTemplate().getLocalizacao().hashCode());
         result = prime * result
                 + ((getPaiDaEstrutura() == null) ? 0 : getPaiDaEstrutura().hashCode());
-        result = prime * result + ((getPapel() == null) ? 0 : getPapel().hashCode());
+        result = prime * result + ((getPerfilTemplate().getPapel() == null) ? 0 : getPerfilTemplate().getPapel().hashCode());
         return result;
     }
     
@@ -136,15 +128,15 @@ public class Perfil {
         if (getIdPerfil() == null) {
             if (other.getIdPerfil() != null) return false;
         } else if (!getIdPerfil().equals(other.getIdPerfil())) return false;
-        if (getLocalizacao() == null) {
-            if (other.getLocalizacao() != null) return false;
-        } else if (!getLocalizacao().equals(other.getLocalizacao())) return false;
+        if (getPerfilTemplate().getLocalizacao() == null) {
+            if (other.getPerfilTemplate().getLocalizacao() != null) return false;
+        } else if (!getPerfilTemplate().getLocalizacao().equals(other.getPerfilTemplate().getLocalizacao())) return false;
         if (getPaiDaEstrutura() == null) {
             if (other.getPaiDaEstrutura() != null) return false;
         } else if (!getPaiDaEstrutura().equals(other.getPaiDaEstrutura())) return false;
-        if (getPapel() == null) {
-            if (other.getPapel() != null) return false;
-        } else if (!getPapel().equals(other.getPapel())) return false;
+        if (getPerfilTemplate().getPapel() == null) {
+            if (other.getPerfilTemplate().getPapel() != null) return false;
+        } else if (!getPerfilTemplate().getPapel().equals(other.getPerfilTemplate().getPapel())) return false;
         return true;
     }
     

@@ -54,8 +54,8 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
             Long idTarefa) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfil().getLocalizacao());
-        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfil().getPapel());
+        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfil().getPerfilTemplate().getLocalizacao());
+        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfil().getPerfilTemplate().getPapel());
         parameters.put(PARAM_ID_TASK, idTarefa.intValue());
         return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, parameters);
     }
@@ -63,8 +63,8 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
     public Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfil().getLocalizacao());
-        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfil().getPapel());
+        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfil().getPerfilTemplate().getLocalizacao());
+        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfil().getPerfilTemplate().getPapel());
 
         return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, parameters);
     }

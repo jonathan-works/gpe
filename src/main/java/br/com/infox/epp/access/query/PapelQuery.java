@@ -35,7 +35,7 @@ public interface PapelQuery {
 
     String PARAM_LOCALIZACAO = "localizacao";
     String PAPEIS_BY_LOCALIZACAO = "papeisDeUsuarioByLocalizacao";
-    String PAPEIS_BY_LOCALIZACAO_QUERY = "select distinct l.perfil.papel from UsuarioPerfil l where l.perfil.localizacao = :"
+    String PAPEIS_BY_LOCALIZACAO_QUERY = "select distinct l.perfil.perfilTemplate.papel from UsuarioPerfil l where l.perfil.perfilTemplate.localizacao = :"
             + PARAM_LOCALIZACAO;
 
     String ID_PAPEL_PARAM = "idPapel";
