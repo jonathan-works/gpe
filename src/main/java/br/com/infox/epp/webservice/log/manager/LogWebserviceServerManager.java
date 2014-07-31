@@ -29,6 +29,7 @@ public class LogWebserviceServerManager extends Manager<LogWebserviceServerDAO, 
 		logWebserviceServer.setDatatInicio(Calendar.getInstance().getTime());
 		logWebserviceServer.setToken(token);
 		logWebserviceServer.setWebService(webserviceName);
+		logWebserviceServer.setRequisicao(requisicao);
 		try {
 			return persist(logWebserviceServer);
 		} catch (DAOException e){
