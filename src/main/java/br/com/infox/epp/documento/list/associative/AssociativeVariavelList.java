@@ -12,16 +12,14 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 
 @Name(AssociativeVariavelList.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class AssociativeVariavelList extends EntityList<Variavel> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "associativeVariavelList";
 
     private static final String DEFAULT_EJBQL = "select o from Variavel o where not exists "
-    		+ "(select 1 from VariavelTipoModelo v where "
-            + "v.tipoModeloDocumento.idTipoModeloDocumento = #{associativeVariavelList.tipoModeloToIgnore.idTipoModeloDocumento} "
-    		+ "and v.variavel = o) ";
+            + "(select 1 from VariavelTipoModelo v where " + "v.variavel = o";
     private static final String DEFAULT_ORDER = "variavel";
 
     private TipoModeloDocumento tipoModeloToIgnore;
@@ -31,11 +29,18 @@ public class AssociativeVariavelList extends EntityList<Variavel> {
         addSearchField("variavel", SearchCriteria.CONTENDO);
         addSearchField("valorVariavel", SearchCriteria.CONTENDO);
         addSearchField("ativo", SearchCriteria.IGUAL);
-    } 
+    }
 
     @Override
     protected String getDefaultEjbql() {
-        return DEFAULT_EJBQL;
+        StringBuilder sb = new StringBuilder();
+        sb.append(DEFAULT_EJBQL);
+        if (tipoModeloToIgnore != null
+                && tipoModeloToIgnore.getIdTipoModeloDocumento() != null) {
+            sb.append(" or v.tipoModeloDocumento.idTipoModeloDocumento = #{associativeVariavelList.tipoModeloToIgnore.idTipoModeloDocumento}");
+        }
+        sb.append(")");
+        return sb.toString();
     }
 
     @Override
