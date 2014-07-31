@@ -158,11 +158,13 @@ public class TaskInstanceHome implements Serializable {
             Integer id = (Integer) taskInstance.getVariable(variableRetriever
                     .getMappedName());
             if (id != null) {
-                dados.setIdDocumento(id);
                 ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
                         .getComponent(ProcessoDocumentoManager.NAME);
                 ProcessoDocumento pd = processoDocumentoManager.find(id);
-                dados.setClassificacao(pd.getTipoProcessoDocumento());
+                if (pd != null) {
+                    dados.setIdDocumento(id);
+                    dados.setClassificacao(pd.getTipoProcessoDocumento());
+                }
             }
             documentosAssinaveis.put(getFieldName(variableRetriever.getName()),
                     dados);
