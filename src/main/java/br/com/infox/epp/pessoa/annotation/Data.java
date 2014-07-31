@@ -1,4 +1,4 @@
-package br.com.infox.epp.meiocontato.annotation;
+package br.com.infox.epp.pessoa.annotation;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -11,18 +11,23 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import br.com.infox.epp.meiocontato.validator.TelefoneValidator;
+import br.com.infox.epp.pessoa.validator.DataValidator;
 
 @Target({ METHOD, FIELD, PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = TelefoneValidator.class)
-public @interface Telefone {
+@Constraint(validatedBy = DataValidator.class)
+public @interface Data {
 	
-	String pattern() default "\\d{10,11}";
+	boolean future() default false;
 	
-	String message() default "{br.com.infox.epp.meiocontato.annotation.Telefone}";
+	boolean past() default false;
+	
+	String pattern();
+	
+	String message() default "{br.com.infox.epp.ws.security.annotation.Data}";
 	
 	Class<?>[] groups() default {};
 	
 	Class<? extends Payload>[] payload() default {};
+
 }
