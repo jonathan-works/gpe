@@ -1,4 +1,4 @@
-package br.com.infox.epp.pessoa.validator;
+package br.com.infox.jsf.validator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,6 +26,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
@@ -40,6 +43,7 @@ public class PessoaFisica extends Pessoa {
     private Date dataNascimento;
     private String certChain;
     private ProcessoDocumentoBin termoAdesao;
+    private EstadoCivilEnum estadoCivil;
 
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
@@ -136,11 +140,20 @@ public class PessoaFisica extends Pessoa {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_processo_documento_bin", nullable = false)
     public ProcessoDocumentoBin getTermoAdesao() {
-        return termoAdesao;
+        return termoAdesao;   
     }
 
     public void setTermoAdesao(ProcessoDocumentoBin termoAdesao) {
         this.termoAdesao = termoAdesao;
     }
 
+    @Column(name = "st_estado_civil")
+    @Enumerated(EnumType.STRING)
+	public EstadoCivilEnum getEstadoCivil() {
+		return estadoCivil;
+	}
+
+	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
 }

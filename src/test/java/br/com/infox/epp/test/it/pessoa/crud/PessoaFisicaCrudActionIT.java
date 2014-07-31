@@ -15,11 +15,11 @@ import br.com.infox.epp.pessoa.crud.PessoaFisicaCrudAction;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.pessoa.validator.CpfValidator;
 import br.com.infox.epp.test.crud.AbstractCrudTest;
 import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
+import br.com.infox.jsf.validator.CpfValidator;
 
 @RunWith(Arquillian.class)
 public class PessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisica> {
