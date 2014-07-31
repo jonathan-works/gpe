@@ -27,7 +27,7 @@ public class PessoaDocumentoDAO extends DAO<PessoaDocumento> {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_PESSOA, pessoa);
 		parameters.put(PARAM_TPDOCUMENTO, tipoDocumento.name());
-		return getSingleResult(PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO, parameters);
+		return getNamedSingleResult(PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO, parameters);
 	}
 	
 }
