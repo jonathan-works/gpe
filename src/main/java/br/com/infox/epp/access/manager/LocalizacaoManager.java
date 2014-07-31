@@ -30,6 +30,9 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     @In private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
 
     public List<Localizacao> getLocalizacoes(final Collection<Integer> ids) {
+        if (ids.isEmpty()) {
+            ids.add(-1);
+        }
         return getDao().getLocalizacoes(ids);
     }
 
