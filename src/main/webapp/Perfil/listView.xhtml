@@ -21,7 +21,8 @@
             id="perfilList" rowId="#{row.id}">
             <ui:define name="searchForm">
                 <wi:searchForm formId="perfilTemplateSearchForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{messages['searchForm.title']}"
+                    clearAction="perfilTemplateCrudAction.onClickLimpar">
                     <wi:inputText id="perfil"
                         label="#{messages['perfil.descricao']}"
                         value="#{perfilTemplateList.entity.descricao}"></wi:inputText>
@@ -33,7 +34,7 @@
                         label="#{messages['perfil.localizacao']}" 
                         styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
                     <wi:tree id="papel"
-                        assignTo="perfilperfilTemplateList.entity.papel"
+                        assignTo="perfilTemplateList.entity.papel"
                         tree="#{papelTree}"
                         icon="#{a4jSkin.imgFolder}/nivelTree.gif"
                         iconLeaf="#{a4jSkin.imgFolder}/file.gif"
