@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.HEAD;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -78,6 +80,20 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     @Override
     public void onClickFormTab() {
     	clear();
+    }
+    
+    public void onClickRecursosTab(){
+    	recursos = null;
+    	recursosDisponiveis = null;
+    }
+    
+    public void onClickHerdeirosTab(){
+    	membros = null;
+    }
+    
+    public void onClickPapeisTab(){
+    	papeis = null;
+    	papeisDisponiveis = null;
     }
 
     public Integer getPapelId() {
