@@ -20,6 +20,7 @@ namespace("infox.Messages",function Messages(args) {
 	function $_hideDialog() {
 		clearTimeout(timer);
 		timer=false;
+		$(".d-msg-c").text("");
 		$(".d-msg").addClass("hidden");
 	}
 	
