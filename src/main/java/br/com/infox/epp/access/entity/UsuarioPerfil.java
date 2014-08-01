@@ -84,5 +84,9 @@ public class UsuarioPerfil implements Serializable {
         this.responsavelLocalizacao = responsavelLocalizacao;
     }
     
+    @Override
+    public String toString() {
+        return getPerfilTemplate().getPapel().toString();
+    }
 
 }

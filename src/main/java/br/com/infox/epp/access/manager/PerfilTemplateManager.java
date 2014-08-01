@@ -1,9 +1,12 @@
 package br.com.infox.epp.access.manager;
 
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
+import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.PerfilTemplateDAO;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 
@@ -13,5 +16,19 @@ public class PerfilTemplateManager extends Manager<PerfilTemplateDAO, PerfilTemp
     
     private static final long serialVersionUID = 1L;
     public static final String NAME = "perfilTemplateManager";
+    
+    @In
+    private GenericDAO genericDAO;
+    
+    @Override
+    public PerfilTemplate persist(PerfilTemplate o) throws DAOException {
+        if (o.getLocalizacao() == null) {
+            genericDAO.lock(o.getPapel());
+            if (getDao().existsPerfilTemplate(o)) {
+                throw new DAOException(DAOException.MSG_UNIQUE_VIOLATION);
+            }
+        }
+        return super.persist(o);
+    }
 
 }
