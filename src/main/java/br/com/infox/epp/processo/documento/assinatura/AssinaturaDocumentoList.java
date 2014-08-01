@@ -21,7 +21,7 @@ public class AssinaturaDocumentoList extends EntityList<AssinaturaDocumento> {
     @Override
     protected void addSearchFields() {
         addSearchField("usuario", SearchCriteria.IGUAL);
-        addSearchField("perfil", SearchCriteria.IGUAL);
+        addSearchField("usuarioPerfil", SearchCriteria.IGUAL);
     }
 
     @Override

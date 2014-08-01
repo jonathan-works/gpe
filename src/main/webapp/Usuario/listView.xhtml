@@ -188,13 +188,22 @@
       <wi:dataForm
         formId="usuarioPerfilForm"
         formTitle="#{messages['form.title']}">
-        <wi:selectOneMenuEntity
-          id="perfilCombo"
-          value="#{usuarioPerfilCrudAction.instance.perfil}"
-          label="#{messages['perfil.descricao']}"
-          items="#{perfilList.list()}"
-          showLabelSelecione="true">
-        </wi:selectOneMenuEntity>
+        <wi:tree
+            id="localizacoesTree"
+            assignTo="usuarioPerfilCrudAction.instance.localizacao"
+            tree="#{localizacaoTree}"
+            icon="#{a4jSkin.imgFolder}/nivelTree.gif"
+            iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+            clearRender="@this"
+            label="#{messages['perfilTemplate.localizacao']}" 
+            styleClass="#{item.entity.estruturaFilho ? 'tree-notselectable' : ''}"
+            render="perfisPermitidos"/>
+        <wi:selectOneMenuEntity id="perfisPermitidos"
+            value="#{usuarioPerfilCrudAction.instance.perfilTemplate}"
+            label="#{messages['usuarioPerfil.perfil']}"
+            items="#{usuarioPerfilCrudAction.perfisPermitidos}"
+            showLabelSelecione="true"
+            disabled="#{empty usuarioPerfilCrudAction.instance.localizacao}" />
         <wi:selectBooleanCheckbox
           id="responsavelLocalizacao"
           value="#{usuarioPerfilCrudAction.instance.responsavelLocalizacao}"
@@ -229,11 +238,16 @@
           <wi:columnOutputText
             columnId="perfil.descricao"
             columnHeader="#{messages['perfil.descricao']}"
-            value="#{row.perfil.descricao}" />
+            value="#{row.perfilTemplate.descricao}" />
+          <wi:columnOutputText 
+            columnId="localizacao"
+            columnHeader="#{messages['usuarioPerfil.localizacao']}"
+            value="#{row.localizacao}"/>
           <wi:columnBoolean
             columnId="responsavelLocalizacao"
             columnHeader="#{messages['perfil.responsavelLocalizacao']}"
             value="#{row.responsavelLocalizacao}" />
+            
         </wi:dataTable>
       </s:div>
     </infox:tab>
