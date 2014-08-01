@@ -32,7 +32,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.access.entity.Perfil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
@@ -47,9 +46,9 @@ public class AssinaturaDocumento implements Serializable {
 
     private Integer idAssinatura;
     private UsuarioLogin usuario;
-    private Perfil perfil;
+    private UsuarioPerfil usuarioPerfil;
     private String nomeUsuario;
-    private String nomePerfil;
+    private String nomeUsuarioPerfil;
     private Date dataAssinatura;
     private String signature;
     private String certChain;
@@ -59,8 +58,8 @@ public class AssinaturaDocumento implements Serializable {
         this.processoDocumentoBin=processoDocumentoBin;
         this.usuario = usuarioPerfil.getUsuarioLogin();
         this.nomeUsuario = this.usuario.getNomeUsuario();
-        this.perfil = usuarioPerfil.getPerfil();
-        this.nomePerfil = this.perfil.getDescricao();
+        this.usuarioPerfil = usuarioPerfil;
+        this.nomeUsuarioPerfil = this.usuarioPerfil.getPerfilTemplate().getDescricao();
         this.signature = signature;
         this.certChain = certChain;
         this.dataAssinatura = new Date();
@@ -94,14 +93,14 @@ public class AssinaturaDocumento implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = COL_ID_PERFIL, nullable = false)
+    @JoinColumn(name = "id_usuario_perfil", nullable = false)
     @NotNull
-    public Perfil getPerfil() {
-        return perfil;
+    public UsuarioPerfil getUsuarioPerfil() {
+        return usuarioPerfil;
     }
 
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
+    public void setUsuarioPerfil(UsuarioPerfil usuarioPerfil) {
+        this.usuarioPerfil = usuarioPerfil;
     }
 
     @Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
@@ -158,15 +157,15 @@ public class AssinaturaDocumento implements Serializable {
         this.processoDocumentoBin = processoDocumentoBin;
     }
 
-    @Column(name = COL_NOME_PERFIL, nullable = false, length = NOME_PADRAO)
+    @Column(name = "nm_usuario_perfil", nullable = false, length = NOME_PADRAO)
     @Size(max = NOME_PADRAO)
     @NotNull
-    public String getNomePerfil() {
-        return nomePerfil;
+    public String getNomeUsuarioPerfil() {
+        return nomeUsuarioPerfil;
     }
 
-    public void setNomePerfil(String nomePerfil) {
-        this.nomePerfil = nomePerfil;
+    public void setNomeUsuarioPerfil(String nomePerfil) {
+        this.nomeUsuarioPerfil = nomePerfil;
     }
 
 }

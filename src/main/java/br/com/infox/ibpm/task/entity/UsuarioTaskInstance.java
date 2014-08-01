@@ -31,6 +31,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @NamedNativeQueries({ 
     @NamedNativeQuery(name = USUARIO_DA_TAREFA, query = USUARIO_DA_TAREFA_QUERY)
 })
+//TODO adicionar campo para guarda a localização real (acima da localização filha de estrutura) do usuário
 public class UsuarioTaskInstance implements Serializable {
 
     public static final String TABLE_NAME = "tb_usuario_taskinstance";

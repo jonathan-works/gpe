@@ -167,7 +167,7 @@ public class AuthenticatorService implements Serializable {
 
     public void logDaBuscaDasRoles(UsuarioPerfil usuarioPerfil) {
         LOG.warn("Obter role do Perfil: " + usuarioPerfil);
-        LOG.warn("Obter role do papel: " + usuarioPerfil.getPerfil().getPerfilTemplate().getPapel());
+        LOG.warn("Obter role do papel: " + usuarioPerfil.getPerfilTemplate().getPapel());
     }
 
     public void addRolesAtuais(Set<String> roleSet) {
