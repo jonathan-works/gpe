@@ -49,7 +49,8 @@
         <a:jsFunction
           name="#{editorId.replace('-', '')}submitForm"
           action="#{home.assinarDocumento(id)}"
-          render="@form pageBodyDialogMessage #{formId}"
+          execute="@this #{idCertChain} #{idSignature} #{editorId} #{f.id}tipoProcessoDocumento"
+          render="#{f.id}TipoDocDiv signatureDiv appletDiv #{id}EditorDiv"
           oncomplete="infox.hideLoading();" />
         <h:inputHidden
           id="#{idCertChain}"

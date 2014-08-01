@@ -135,15 +135,20 @@ public class ProcessoHome extends AbstractHome<Processo> {
         setIdProcessoDocumento(idDoc);
         Integer result = idDoc;
         try {
-            if (processoDocumento != null) {
-                if (assinaturaDocumentoService.isDocumentoAssinado(processoDocumento, Authenticator.getUsuarioLogado())){
-                    return result;
+            if (tipoProcessoDocumento != null) {
+                if (processoDocumento != null) {
+                    if (assinaturaDocumentoService
+                            .isDocumentoAssinado(processoDocumento,
+                                    Authenticator.getUsuarioLogado())) {
+                        return result;
+                    }
+                    atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
+                } else {
+                    result = inserirProcessoDocumentoFluxo(value, label,
+                            assinado);
                 }
-                atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
-            } else {
-                result = inserirProcessoDocumentoFluxo(value, label, assinado);
+                FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
             }
-            FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
         } catch (DAOException | AssinaturaException e) {
             LOG.error("Não foi possível salvar o ProcessoDocumento " + idDoc, e);
             FacesMessages.instance().clear();
@@ -207,7 +212,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
                 doc = processoDocumentoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
                 final int idProcessoDocumento = doc.getIdProcessoDocumento();
                 setIdProcessoDocumento(idProcessoDocumento);
-                if (assinado) {
+                if (assinado && certChain!=null && signature != null) {
                     assinaturaDocumentoService.assinarDocumento(doc, Authenticator.getUsuarioPerfilAtual(), certChain, signature);
                 }
                 return idProcessoDocumento;
