@@ -31,7 +31,7 @@
         disabled="#{readonly or home.possuiAssinatura(id)}">
         <a:ajax
           event="change"
-          render="appletDiv signatureDiv"
+          render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv"
           execute="@this"
           limitRender="true" />
       </wi:selectOneMenuEntity>
@@ -43,14 +43,14 @@
         readonly="#{readonly or home.possuiAssinatura(id)}" />
     </s:div>
     <s:div
-      id="signatureDiv"
+      id="#{editorId.replace('-','')}SignatureDiv"
       rendered="#{not readonly}">
       <s:div rendered="#{home.podeRenderizarApplet(id)}">
         <a:jsFunction
           name="#{editorId.replace('-', '')}submitForm"
           action="#{home.assinarDocumento(id)}"
           execute="@this #{idCertChain} #{idSignature} #{editorId} #{f.id}tipoProcessoDocumento"
-          render="#{f.id}TipoDocDiv signatureDiv appletDiv #{id}EditorDiv"
+          render="#{f.id}TipoDocDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}AppletDiv #{id}EditorDiv pageBodyDialogMessage"
           oncomplete="infox.hideLoading();" />
         <h:inputHidden
           id="#{idCertChain}"
@@ -61,7 +61,7 @@
       </s:div>
     </s:div>
     <s:div
-      id="appletDiv"
+      id="#{editorId.replace('-','')}AppletDiv"
       styleClass="applet-div"
       rendered="#{not readonly}">
       <wi:appletAssinatura
@@ -107,7 +107,7 @@
 					Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
 						#{rich:jQuery(idSignature)}.val("");
 						#{rich:jQuery(idCertChain)}.val("");
-						#{rich:jQuery("appletDiv")}.removeClass("hidden");
+						#{rich:jQuery(editorId.replace('-','').concat('AppletDiv'))}.removeClass("hidden");
 					});
 				}
 			});
