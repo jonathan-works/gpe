@@ -17,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -56,6 +58,14 @@ public class PessoaFisica extends Pessoa {
         this.dataNascimento = dataNascimento;
         setNome(nome);
         setAtivo(ativo);
+    }
+    
+    @PrePersist
+    @PreUpdate
+    private void prePersistOrUpdate(){
+    	if (estadoCivil == null){
+    		estadoCivil = EstadoCivilEnum.N;
+    	}
     }
 
     @Column(name = "nr_cpf", nullable = false, unique = true)
