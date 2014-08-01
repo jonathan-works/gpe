@@ -418,7 +418,7 @@ public class Authenticator {
     public static Localizacao getLocalizacaoAtual() {
         UsuarioPerfil usuarioPerfilAtual = getUsuarioPerfilAtual();
         if (usuarioPerfilAtual != null) {
-            return usuarioPerfilAtual.getPerfilTemplate().getLocalizacao();
+            return usuarioPerfilAtual.getLocalizacao();
         }
         return null;
     }

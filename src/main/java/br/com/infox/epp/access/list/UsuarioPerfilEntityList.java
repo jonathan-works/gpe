@@ -19,7 +19,7 @@ public class UsuarioPerfilEntityList extends EntityList<UsuarioPerfil> {
     public static final String NAME = "usuarioPerfilEntityList";
     
     private static final String DEFAULT_EJBQL = "select o from UsuarioPerfil o";
-    private static final String DEFAULT_ORDER = "perfil.descricao";
+    private static final String DEFAULT_ORDER = "perfilTemplate.descricao";
 
     @Override
     protected void addSearchFields() {
