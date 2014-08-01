@@ -91,7 +91,6 @@ public class TaskInstanceHome implements Serializable {
     private ModeloDocumento modeloDocumento;
     private String varName;
     private String name;
-    private Boolean assinar = Boolean.FALSE;
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
     private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
@@ -200,7 +199,6 @@ public class TaskInstanceHome implements Serializable {
 
     // Método que será chamado pelo botão "Assinar Digitalmente"
     public void assinarDocumento(String idEditor) {
-        assinar = Boolean.TRUE;
         documentoAAssinar = idEditor;
         this.update();
     }
@@ -263,7 +261,7 @@ public class TaskInstanceHome implements Serializable {
         boolean documentoCorreto = false;
         String fieldName = getFieldName(variableAccess.getMappedName().split(
                 ":")[1]);
-        if (assinar && fieldName.equals(documentoAAssinar)) {
+        if (documentoAAssinar != null && fieldName.equals(documentoAAssinar)) {
             documentoCorreto = true;
         }
         TaskVariableResolver variableResolver = new TaskVariableResolver(
@@ -285,16 +283,16 @@ public class TaskInstanceHome implements Serializable {
                     if (!variableResolver.isEditorAssinado()) {
                         assinado = false;
                     } else {
-                        assinado = assinado || assinar;
+                        assinado = assinado || documentoAAssinar != null;
                         DadosDocumentoAssinavel dados = documentosAssinaveis
                                 .get(fieldName);
                         dados.setIdDocumento((Integer) variableResolver
                                 .getValue());
                     }
+                    documentoAAssinar = null;
                 } else {
-                    assinado = assinado || assinar;
+                    assinado = assinado || documentoAAssinar != null;
                 }
-                assinar = Boolean.FALSE;
             } else if (variableResolver.getType() == VariableType.FILE) {
                 Contexts.getBusinessProcessContext().flush();
                 retrieveVariable(variableAccess);
