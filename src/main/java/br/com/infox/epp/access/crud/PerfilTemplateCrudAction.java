@@ -39,6 +39,4 @@ public class PerfilTemplateCrudAction extends AbstractCrudAction<PerfilTemplate,
         ((TreeHandler<Localizacao>) Component.getInstance(EstruturaLocalizacoesPerfilTreeHandler.NAME)).clearTree();
     }
     
-    
-
 }
