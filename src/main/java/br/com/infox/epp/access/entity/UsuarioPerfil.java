@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,8 +25,8 @@ public class UsuarioPerfil implements Serializable {
     
     private Integer idUsuarioPerfil;
     private UsuarioLogin usuarioLogin;
-    private Perfil perfil;
-
+    private PerfilTemplate perfilTemplate;
+    private Localizacao localizacao;
     private Boolean responsavelLocalizacao;
     
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_usuario_perfil")
@@ -51,17 +52,28 @@ public class UsuarioPerfil implements Serializable {
         this.usuarioLogin = usuarioLogin;
     }
     
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "id_perfil", nullable = false)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_perfil_template", nullable=false)
     @NotNull
-    public Perfil getPerfil() {
-        return perfil;
+    public PerfilTemplate getPerfilTemplate() {
+        return perfilTemplate;
     }
-    
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
+
+    public void setPerfilTemplate(PerfilTemplate perfilTemplate) {
+        this.perfilTemplate = perfilTemplate;
     }
-    
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_localizacao", nullable=false)
+    @NotNull
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
+
     @Column(name="in_responsavel", nullable=false)
     @NotNull
     public Boolean getResponsavelLocalizacao() {
@@ -71,45 +83,6 @@ public class UsuarioPerfil implements Serializable {
     public void setResponsavelLocalizacao(Boolean responsavelLocalizacao) {
         this.responsavelLocalizacao = responsavelLocalizacao;
     }
-    
-    @Override
-    public String toString() {
-        if (getPerfil() == null) {
-            return null;
-        }
-        return getPerfil().getDescricao();
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((getIdUsuarioPerfil() == null) ? 0 : getIdUsuarioPerfil().hashCode());
-        result = prime * result + ((getPerfil() == null) ? 0 : getPerfil().hashCode());
-        result = prime * result
-                + ((getUsuarioLogin() == null) ? 0 : getPerfil().hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof UsuarioPerfil)) return false;
-        UsuarioPerfil other = (UsuarioPerfil) obj;
-        if (getIdUsuarioPerfil() == null) {
-            if (other.getIdUsuarioPerfil() != null) return false;
-        } else if (!getIdUsuarioPerfil().equals(other.getIdUsuarioPerfil())) return false;
-        if (getPerfil() == null) {
-            if (other.getPerfil() != null) return false;
-        } else if (!getPerfil().equals(other.getPerfil())) return false;
-        if (getUsuarioLogin() == null) {
-            if (other.getUsuarioLogin() != null) return false;
-        } else if (!getUsuarioLogin().equals(other.getUsuarioLogin())) return false;
-        return true;
-    }
-    
     
 
 }

@@ -27,7 +27,7 @@ public class TipoModeloDocumentoPapelDAO extends DAO<TipoModeloDocumentoPapel> {
      * */
     public List<TipoModeloDocumentoPapel> getTiposModeloDocumentoPermitidos() {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PAPEL_PARAM, Authenticator.getUsuarioPerfilAtual().getPerfil().getPerfilTemplate().getPapel());
+        parameters.put(PAPEL_PARAM, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getPapel());
         return getNamedResultList(TIPOS_MODELO_DOCUMENTO_PERMITIDOS, parameters);
     }
 

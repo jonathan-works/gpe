@@ -44,8 +44,8 @@ public class ControleFiltros {
         UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
 
         // Iniciar os filtros
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_PAPEL, usuarioPerfilAtual.getPerfil().getPerfilTemplate().getPapel().getIdPapel());
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_LOCALIZACAO, usuarioPerfilAtual.getPerfil().getPerfilTemplate().getLocalizacao().getIdLocalizacao());
+        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_PAPEL, usuarioPerfilAtual.getPerfilTemplate().getPapel().getIdPapel());
+        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_LOCALIZACAO, usuarioPerfilAtual.getLocalizacao().getIdLocalizacao());
 
         HibernateUtil.setFilterParameter(SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, SigiloProcessoFilter.PARAM_ID_USUARIO, usuarioPerfilAtual.getUsuarioLogin().getIdUsuarioLogin());
 
