@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.entity;
 
+import static br.com.infox.core.constants.LengthConstants.*;
+import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static javax.persistence.FetchType.EAGER;
 
@@ -19,8 +21,10 @@ import javax.validation.constraints.NotNull;
 public class PerfilTemplate {
 
     private Integer id;
+    private String descricao;
     private Localizacao localizacao;
     private Papel papel;
+    private Boolean ativo;
     
     @Id
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_perfil_template")
@@ -34,6 +38,16 @@ public class PerfilTemplate {
         this.id = id;
     }
     
+    @Column(name="ds_perfil_temp", length=DESCRICAO_PADRAO, nullable=false)
+    @NotNull
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "id_localizacao")
     public Localizacao getLocalizacao() {
@@ -55,4 +69,13 @@ public class PerfilTemplate {
         this.papel = papel;
     }
     
+    @Column(name = ATIVO, nullable = false)
+    @NotNull
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 }

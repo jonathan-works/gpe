@@ -3,20 +3,20 @@
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <ui:param name="title" value="#{messages['perfil.titlePage']}" />
+    <ui:param name="title" value="#{messages['perfilTemplate.titlePage']}" />
 
     <wi:dataReport title="#{messages['perfil.reportTitle']}"
-        columns="4" widths="4 4 4 2" headerText="#{perfilList.criteria}">
+        columns="4" widths="4 4 4 2" headerText="#{perfilTemplateList.criteria}">
 
         <wi:reportColumnHeader
-            title="#{messages['perfil.descricao']}" />
+            title="#{messages['perfilTemplate.descricao']}" />
         <wi:reportColumnHeader
-            title="#{messages['perfil.localizacao']}" />
+            title="#{messages['perfilTemplate.localizacao']}" />
         <wi:reportColumnHeader
-            title="#{messages['perfil.papel']}" />
+            title="#{messages['perfilTemplate.papel']}" />
         <wi:reportColumnHeader title="#{messages['field.situacao']}" />
 
-        <ui:repeat var="row" value="#{perfilList.list()}">
+        <ui:repeat var="row" value="#{perfilTemplateList.list()}">
             <wi:reportColumn value="#{row.descricao}" />
             <wi:reportColumn value="#{row.localizacao}" />
             <wi:reportColumn value="#{row.papel}" />
