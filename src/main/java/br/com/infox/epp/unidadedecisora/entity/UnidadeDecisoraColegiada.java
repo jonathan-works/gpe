@@ -1,5 +1,8 @@
 package br.com.infox.epp.unidadedecisora.entity;
 
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO_QUERY;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +14,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
@@ -20,6 +25,9 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = UnidadeDecisoraColegiada.TABLE_NAME)
+@NamedQueries(value={
+		@NamedQuery(name=SEARCH_UDC_BY_USUARIO, query=SEARCH_UDC_BY_USUARIO_QUERY)
+})
 public class UnidadeDecisoraColegiada implements Serializable {
 
 	private static final long serialVersionUID = 1L;

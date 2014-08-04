@@ -26,8 +26,8 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
         String hql;
         Map<String, Object> params = new HashMap<>();
         if (localizacao.getEstruturaFilho() != null) {
-            hql = "select o from PerfilTemplate o where o.localizacao = :localizacao"; 
-            params.put("localizacao", localizacao);
+        	hql = "select o from PerfilTemplate o where o.localizacao.estruturaPai = :estruturaFilho"; 
+            params.put("estruturaFilho", localizacao.getEstruturaFilho()); 
         } else {
             hql = "select o from PerfilTemplate o where o.localizacao is null";
         }
