@@ -66,7 +66,7 @@
                             target="idJan#{row.idProcessoDocumento}"
                             rendered="#{not empty row.processoDocumentoBin.assinaturas}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
-                            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 160, 450, 450);">
                             <h:graphicImage
                                 title="#{messages['assinaturas.validar']}"
                                 alt="#{messages['assinaturas.validar']}"
@@ -78,15 +78,15 @@
                         <s:link
                             target="idJan#{row.idProcessoDocumento}"
                             rendered="#{empty row.processoDocumentoBin.assinaturas}"
-                            view="/Processo/Consulta/assinaDocumento.xhtml"
-                            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');">
+                            view="/Processo/Consulta/validaDocumento.xhtml"
+                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 200, 450, 450);">
                             <h:graphicImage
                                 title="#{messages['assinaturas.assinar']}"
                                 alt="#{messages['assinaturas.assinar']}"
                                 url="#{a4jSkin.imgFolder}/lock_unlock.png" />
                             <f:param
                                 value="#{row.idProcessoDocumento}"
-                                name="id" />
+                                name="idProcessoDocumento" />
                         </s:link>
                     </ui:define>
                     <ui:define name="headerToolBar" />
