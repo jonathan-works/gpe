@@ -46,10 +46,10 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     private List<ProcessoDocumento> processoDocumentoList;
     private List<AssinaturaDocumento> assinaturas;
 
-    private Date dataAssinatura;
+    private Date dataInclusao;
 
     public ProcessoDocumentoBin() {
-        this.dataAssinatura=new Date();
+        this.dataInclusao=new Date();
         this.processoDocumentoList = new ArrayList<>(0);
         this.assinaturas = new ArrayList<>(0);
     }
@@ -144,12 +144,12 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_inclusao", nullable = false)
     @NotNull
-    public Date getDataAssinatura() {
-        return dataAssinatura;
+    public Date getDataInclusao() {
+        return dataInclusao;
     }
 
-    public void setDataAssinatura(Date dataAssinatura) {
-        this.dataAssinatura = dataAssinatura;
+    public void setDataInclusao(Date dataInclusao) {
+        this.dataInclusao = dataInclusao;
     }
 
     @Transient
