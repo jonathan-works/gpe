@@ -1,126 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j">
-    <rich:collapsiblePanel
-        switchType="client"
-        expanded="false"
-        header="#{messages['documentoEditor.header']}">
-        <s:div id="editorDiv">
-            <s:div>
-                <wi:inputText
-                    id="#{f.id}inputProcessoDocumento"
-                    value="#{documentoEditor.processoDocumento.processoDocumento}"
-                    disabled="false"
-                    required="true"
-                    label="#{messages['processo.anexarDocumentoDescricao']}">
-                </wi:inputText>
-                <wi:selectOneMenuEntity
-                    id="#{f.id}tipoProcessoDocumento"
-                    label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-                    value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
-                    items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
-                    required="true"
-                    showLabelSelecione="true">
-                </wi:selectOneMenuEntity>
-            </s:div>
-            <s:div id="tipoDocumentoDiv">
-                <wi:editor
-                    id="modeloDocumento"
-                    label="#{messages['tipoProcessoDocumento.modelo']}"
-                    value="#{documentoEditor.processoDocumento.processoDocumentoBin.modeloDocumento}"
-                    requiredField="false"
-                    required="true"
-                    showVariables="false">
-                </wi:editor>
-            </s:div>
-            <s:div id="buttonsDiv">
-                <wi:commandButton
-                    id="botaoAnexarDocumento"
-                    action="documentoEditor.persist()"
-                    value="#{messages['processo.anexarDocumentoBtn']}"
-                    execute="editorDiv"
-                    reRender="@form,pageBodyDialogMessage, buttonsDiv"
-                    styleClass="buttons">
-                </wi:commandButton>
-            </s:div>
-        </s:div>
-    </rich:collapsiblePanel>
-    <br />
-    <rich:collapsiblePanel
-        switchType="client"
-        expanded="true"
-        header="#{messages['fileUpload.header']}">
-        <s:div id="uploaderDiv">
-            <div>
-                <wi:inputText
-                    id="inputProcessoDocumentoPdf"
-                    value="#{documentoUploader.processoDocumento.processoDocumento}"
-                    disabled="false"
-                    required="true"
-                    label="#{messages['processo.anexarDocumentoDescricao']}">
-                    <a:ajax event="change"
-                        limitRender="true" status=":status"
-                        render="@this"
-                        listener="#{documentoUploader.podeRenderizar}"
-                        execute="@this" />
-                </wi:inputText>
-                
-                <wi:selectOneMenuEntity
-                    id="tipoProcessoDocumentoPdf"
-                    label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-                    value="#{documentoUploader.tipoProcessoDocumento}"
-                    items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
-                    required="true"
-                    showLabelSelecione="true">
-                    <a:ajax event="change"
-                        listener="#{documentoUploader.podeRenderizar}"
-                        limitRender="true" status=":status"
-                        execute="@this" />
-                </wi:selectOneMenuEntity>
-                
-            </div>
-            <s:div id="tipoDocumentoDivPdf">
-                <wi:fileUpload
-                    id="uploadArquivo"
-                    label="#{messages['fileUpload.type.file']}"
-                    reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
-                    tipMessage="Apenas arquivos #{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}"
-                    rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList and not empty documentoUploader.processoDocumento.processoDocumento}"
-                    accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
-                </wi:fileUpload>
-            </s:div>
-            <s:div id="buttonsPdfDiv">
-                <wi:commandButton
-                    id="botaoAnexarDocumentoPdf"
-                    action="documentoUploader.persist()"
-                    value="#{messages['processo.anexarDocumentoBtn']}"
-                    execute="#{f.id}inputProcessoDocumentoPdf, #{f.id}tipoProcessoDocumentoPdf"
-                    reRender="@form"
-                    styleClass="buttons"
-                    rendered="#{documentoUploader.valido}">
-                </wi:commandButton>
-                <h:outputScript>
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j">
+  <rich:collapsiblePanel
+    switchType="client"
+    expanded="false"
+    header="#{messages['documentoEditor.header']}">
+    <s:div id="editorDiv">
+      <s:div>
+        <wi:inputText
+          id="#{f.id}inputProcessoDocumento"
+          value="#{documentoEditor.processoDocumento.processoDocumento}"
+          disabled="false"
+          required="true"
+          label="#{messages['processo.anexarDocumentoDescricao']}">
+        </wi:inputText>
+        <wi:selectOneMenuEntity
+          id="#{f.id}tipoProcessoDocumento"
+          label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+          value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
+          items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
+          required="true"
+          showLabelSelecione="true">
+        </wi:selectOneMenuEntity>
+      </s:div>
+      <s:div id="tipoDocumentoDiv">
+        <wi:editor
+          id="modeloDocumento"
+          label="#{messages['tipoProcessoDocumento.modelo']}"
+          value="#{documentoEditor.processoDocumento.processoDocumentoBin.modeloDocumento}"
+          requiredField="false"
+          required="true"
+          showVariables="false">
+        </wi:editor>
+      </s:div>
+      <s:div id="buttonsDiv">
+        <wi:commandButton
+          id="botaoAnexarDocumento"
+          action="documentoEditor.persist()"
+          value="#{messages['processo.anexarDocumentoBtn']}"
+          execute="editorDiv"
+          reRender="@form,pageBodyDialogMessage, buttonsDiv"
+          styleClass="buttons">
+        </wi:commandButton>
+      </s:div>
+    </s:div>
+  </rich:collapsiblePanel>
+  <br />
+  <rich:collapsiblePanel
+    switchType="client"
+    expanded="true"
+    header="#{messages['fileUpload.header']}">
+    <s:div id="uploaderDiv">
+      <div>
+        <wi:inputText
+          id="inputProcessoDocumentoPdf"
+          value="#{documentoUploader.processoDocumento.processoDocumento}"
+          disabled="false"
+          required="true"
+          label="#{messages['processo.anexarDocumentoDescricao']}">
+          <a:ajax
+            event="change"
+            limitRender="true"
+            status=":status"
+            render="uploaderDiv"
+            execute="@this" />
+        </wi:inputText>
+        <wi:selectOneMenuEntity
+          id="tipoProcessoDocumentoPdf"
+          label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+          value="#{documentoUploader.tipoProcessoDocumento}"
+          items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
+          required="true"
+          showLabelSelecione="true">
+          <a:ajax
+            event="change"
+            render="uploaderDiv"
+            limitRender="true"
+            status=":status"
+            execute="@this" />
+        </wi:selectOneMenuEntity>
+      </div>
+      <s:div id="tipoDocumentoDivPdf">
+        <wi:fileUpload
+          id="uploadArquivo"
+          label="#{messages['fileUpload.type.file']}"
+          reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
+          tipMessage="Apenas arquivos #{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}"
+          rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList and not empty documentoUploader.processoDocumento.processoDocumento}"
+          accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
+        </wi:fileUpload>
+      </s:div>
+      <s:div id="buttonsPdfDiv">
+        <wi:commandButton
+          id="botaoAnexarDocumentoPdf"
+          action="documentoUploader.persist()"
+          value="#{messages['processo.anexarDocumentoBtn']}"
+          execute="#{f.id}inputProcessoDocumentoPdf, #{f.id}tipoProcessoDocumentoPdf"
+          reRender="@form"
+          styleClass="buttons"
+          rendered="#{documentoUploader.valido}">
+        </wi:commandButton>
+        <h:outputScript>
 	        		namespace("infox.util.atualizarFileUpload", function atualizarFileUpload(){
 		            	if (#{facesContext.isValidationFailed()}){
 			            	
 		            		exibirBotaoNovoAnexo(false);
 
-			            	var div = $("<div> </div>").addClass("rf-fu-itm");
+			            	var div = $("<div></div>").addClass("rf-fu-itm");
 		            		$(".rf-fu-lst").append(div);
 		            		
 		            		var spanLeft = $("<span> </span>").addClass("rf-fu-itm-lft");
 		            		var spanRight = $("<span> </span>").addClass("rf-fu-itm-rgh");
 
-		            		spanLeft.append($("<span> #{documentoUploader.uploadedFile.name} </span>").addClass("rf-fu-itm-lbl"));
-		            		spanLeft.append($("<span> #{messages['processoDocumento.doneLabel']} </span>").attr("style", "display: block;").addClass("rf-fu-itm-st"));
+		            		spanLeft.append($("<span>
+            #{documentoUploader.uploadedFile.name} </span>").addClass("rf-fu-itm-lbl"));
+		            		spanLeft.append($("<span>
+            #{messages['processoDocumento.doneLabel']} </span>").attr("style", "display: block;").addClass("rf-fu-itm-st"));
 
-		            		var aLink = $("<a> #{messages['processoDocumento.clearLabel']} </a>").attr("href", "javascript:void(0)").addClass("rf-fu-itm-lnk");
+		            		var aLink = $("<a>
+            #{messages['processoDocumento.clearLabel']} </a>").attr("href", "javascript:void(0)").addClass("rf-fu-itm-lnk");
 							aLink.click(function(){
 								clearUploadFile(); 	$(".rf-fu-itm").remove(); exibirBotaoNovoAnexo(true);
 								}
@@ -144,64 +148,63 @@
 						}
 				    }
 				</h:outputScript>
-            </s:div>
-        </s:div>
-        
-    </rich:collapsiblePanel>
-    <br />
-    <s:div id="documentosRedigidosDaSessao">
-        <wi:dataTable
-            values="#{documentoEditor.documentosDaSessao}"
-            tableTitle="#{messages['documentoEditor.titleView']}"
-            id="processoDocumentoDaSessao"
-            rowId="#{row.idProcessoDocumento}"
-            showSearchForm="false"
-            showToolbarColumn="false">
-            <wi:columnOutputText
-                columnId="usuarioInclusao"
-                columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-                hideOrder="true"
-                value="#{row.usuarioInclusao}" />
-            <wi:columnDateTime
-                columnId="dataInclusao"
-                columnHeader="#{messages['processoDocumento.dataInclusao']}"
-                hideOrder="true"
-                value="#{row.dataInclusao}" />
-            <wi:columnOutputText
-                columnId="processoDocumento"
-                columnHeader="#{messages['processoDocumentoBin.documento']}"
-                hideOrder="true"
-                value="#{row.processoDocumento}" />
-            <ui:define name="headerToolBar" />
-            <ui:define name="toolBar" />
-        </wi:dataTable>
+      </s:div>
     </s:div>
-    <br />
-    <s:div id="documentosDaSessao">
-        <wi:dataTable
-            showSearchForm="false"
-            values="#{documentoUploader.documentosDaSessao}"
-            tableTitle="#{messages['documentoUploader.titleView']}"
-            id="documentoDaSessao"
-            rowId="#{row.idProcessoDocumento}"
-            showToolbarColumn="false">
-            <wi:columnOutputText
-                columnId="usuarioInclusao"
-                columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
-                hideOrder="true"
-                value="#{row.usuarioInclusao}" />
-            <wi:columnDateTime
-                columnId="dataInclusao"
-                columnHeader="#{messages['processoDocumento.dataInclusao']}"
-                hideOrder="true"
-                value="#{row.dataInclusao}" />
-            <wi:columnOutputText
-                columnId="processoDocumento"
-                columnHeader="#{messages['processoDocumentoBin.documento']}"
-                hideOrder="true"
-                value="#{row.processoDocumento}" />
-            <ui:define name="headerToolBar" />
-            <ui:define name="toolBar" />
-        </wi:dataTable>
-    </s:div>
+  </rich:collapsiblePanel>
+  <br />
+  <s:div id="documentosRedigidosDaSessao">
+    <wi:dataTable
+      values="#{documentoEditor.documentosDaSessao}"
+      tableTitle="#{messages['documentoEditor.titleView']}"
+      id="processoDocumentoDaSessao"
+      rowId="#{row.idProcessoDocumento}"
+      showSearchForm="false"
+      showToolbarColumn="false">
+      <wi:columnOutputText
+        columnId="usuarioInclusao"
+        columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+        hideOrder="true"
+        value="#{row.usuarioInclusao}" />
+      <wi:columnDateTime
+        columnId="dataInclusao"
+        columnHeader="#{messages['processoDocumento.dataInclusao']}"
+        hideOrder="true"
+        value="#{row.dataInclusao}" />
+      <wi:columnOutputText
+        columnId="processoDocumento"
+        columnHeader="#{messages['processoDocumentoBin.documento']}"
+        hideOrder="true"
+        value="#{row.processoDocumento}" />
+      <ui:define name="headerToolBar" />
+      <ui:define name="toolBar" />
+    </wi:dataTable>
+  </s:div>
+  <br />
+  <s:div id="documentosDaSessao">
+    <wi:dataTable
+      showSearchForm="false"
+      values="#{documentoUploader.documentosDaSessao}"
+      tableTitle="#{messages['documentoUploader.titleView']}"
+      id="documentoDaSessao"
+      rowId="#{row.idProcessoDocumento}"
+      showToolbarColumn="false">
+      <wi:columnOutputText
+        columnId="usuarioInclusao"
+        columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+        hideOrder="true"
+        value="#{row.usuarioInclusao}" />
+      <wi:columnDateTime
+        columnId="dataInclusao"
+        columnHeader="#{messages['processoDocumento.dataInclusao']}"
+        hideOrder="true"
+        value="#{row.dataInclusao}" />
+      <wi:columnOutputText
+        columnId="processoDocumento"
+        columnHeader="#{messages['processoDocumentoBin.documento']}"
+        hideOrder="true"
+        value="#{row.processoDocumento}" />
+      <ui:define name="headerToolBar" />
+      <ui:define name="toolBar" />
+    </wi:dataTable>
+  </s:div>
 </ui:composition>
