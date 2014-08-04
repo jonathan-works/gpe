@@ -17,6 +17,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Unwrap;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -51,6 +53,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class TaskInstanceView implements Serializable {
+    private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceView.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceView";
 
@@ -100,10 +103,14 @@ public class TaskInstanceView implements Serializable {
                             ff.setType(type.name());
                             properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
                             if (value != null) {
-                                ProcessoDocumento processoDocumento = processoDocumentoManager().find((Integer) value);
-                                if (processoDocumento != null) {
-                                    properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
-                                    properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
+                                try {
+                                    ProcessoDocumento processoDocumento = processoDocumentoManager().find(Integer.parseInt(value.toString(), 10));
+                                    if (processoDocumento != null) {
+                                        properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
+                                        properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
+                                    }
+                                } catch (NumberFormatException e) {
+                                    LOG.error("Identificador de Processo Documento inválido", e);
                                 }
                             }
                         }
