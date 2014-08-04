@@ -52,19 +52,19 @@
           <img
             src="#{img}"
             class="grid-img"
-            title="#{messages['image.drag']}" />
+            title="#{messages['image.click']}" />
         </div>
         <f:facet name="footer">
           <rich:dataScroller />
         </f:facet>
       </rich:dataGrid>
       <h:outputScript id="initImageUploadScript">
-              invoke(["infox.imageUpload"],function initImageUpload(imageUpload) {
-                $(".grid-img").click(function gridImgOnClick() {
-                  imageUpload.click(this, "#{wi:get(editorId, 'editorId')}");
-                });
-              });
-            </h:outputScript>
+        invoke(["infox.imageUpload"],function initImageUpload(imageUpload) {
+          $(".grid-img").click(function gridImgOnClick() {
+            imageUpload.click(this, "#{wi:get(editorId, 'editorId')}");
+          });
+        });
+      </h:outputScript>
     </rich:collapsiblePanel>
   </s:div>
 </ui:composition>
