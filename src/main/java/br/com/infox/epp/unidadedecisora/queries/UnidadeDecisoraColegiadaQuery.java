@@ -5,7 +5,7 @@ public interface UnidadeDecisoraColegiadaQuery {
 	String ID_USUARIO_LOGIN = "idUsuarioLogin";
 	
 	String SEARCH_UDC_BY_USUARIO = "searchUDCByUsuario";
-    String SEARCH_UDC_BY_USUARIO_QUERY = "select udc " +
+    String SEARCH_UDC_BY_USUARIO_QUERY = "select distinct udc " +
     		  "from UnidadeDecisoraColegiadaMonocratica udcm " +
     		  "inner join udcm.unidadeDecisoraMonocratica udm " +
     		  "inner join udcm.unidadeDecisoraColegiada udc " +
