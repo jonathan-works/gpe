@@ -12,8 +12,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.def.Swimlane;
 
-import br.com.infox.epp.access.entity.Perfil;
-import br.com.infox.epp.access.manager.PerfilManager;
+import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
 import br.com.infox.seam.util.ComponentUtil;
@@ -27,11 +27,11 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     private List<SwimlaneHandler> swimlanes;
     private SwimlaneHandler currentSwimlane;
-    private List<Perfil> perfisDisponiveis;
+    private List<PerfilTemplate> perfisDisponiveis;
 
     private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
     
-    @In private PerfilManager perfilManager;
+    @In private PerfilTemplateManager perfilTemplateManager;
 
     public void addSwimlane() {
         Swimlane s = new Swimlane("Raia " + (swimlanes.size() + 1));
@@ -77,14 +77,14 @@ public class SwimlaneFitter extends Fitter implements Serializable {
         swimlanes = null;
     }
 
-    public List<Perfil> getPerfisDisponiveis() {
+    public List<PerfilTemplate> getPerfisDisponiveis() {
         if (perfisDisponiveis == null) {
-            perfisDisponiveis = perfilManager.listPerfisDentroDeEstrutura();
+            perfisDisponiveis = perfilTemplateManager.listPerfisDentroDeEstrutura();
         }
-        List<Perfil> perfisDisponiveisParaSwimlaneAtual;
+        List<PerfilTemplate> perfisDisponiveisParaSwimlaneAtual;
         if (currentSwimlane != null) {
             perfisDisponiveisParaSwimlaneAtual = new ArrayList<>();
-            for (Perfil perfil : perfisDisponiveis) {
+            for (PerfilTemplate perfil : perfisDisponiveis) {
                 if (!currentSwimlane.getPerfilList().contains(perfil)) {
                     perfisDisponiveisParaSwimlaneAtual.add(perfil);
                 }

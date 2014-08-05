@@ -26,7 +26,6 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     public static final String NAME = "localizacaoManager";
     
     @In private RaiaPerfilManager raiaPerfilManager;
-    @In private PerfilManager perfilManager;
     @In private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
 
     public List<Localizacao> getLocalizacoes(final Collection<Integer> ids) {

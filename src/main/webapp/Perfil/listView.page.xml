@@ -8,7 +8,7 @@
 
   <description>Perfil</description>
   <restrict>#{security.checkPage()}</restrict>
-  <param name="id" value="#{perfilCrudAction.id}" converterId="integerConverter" />
-  <param name="tab" value="#{perfilCrudAction.tab}" />
+  <param name="id" value="#{perfilTemplateCrudAction.id}" converterId="integerConverter" />
+  <param name="tab" value="#{perfilTemplateCrudAction.tab}" />
 
 </page>

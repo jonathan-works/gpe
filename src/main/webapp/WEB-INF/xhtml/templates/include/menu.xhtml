@@ -51,29 +51,6 @@
         </table>
     </h:form>
 
-    <s:div>
-        <h:outputText value="#{usuarioLogado}"
-            rendered="#{identity.loggedIn}" />
-
-        <h:form id="papeisUsuarioForm">
-            <wi:selectOneMenuEntity
-                value="#{authenticator.usuarioPerfilAtualCombo}"
-                rendered="#{authenticator.usuarioPerfilListItems.size() gt 1}"
-                id="usuarioPerfil"
-                template="/WEB-INF/xhtml/components/templates/display.xhtml"
-                onchange="this.form.submit()"
-                items="#{authenticator.usuarioPerfilListItems}">
-                <a:ajax event="change"
-                        limitRender="true" status=":status"
-                        execute="@form" />
-            </wi:selectOneMenuEntity>
-            <br />
-            <h:outputText
-                value="#{authenticator.usuarioPerfilListItems[0]}"
-                rendered="#{identity.loggedIn and authenticator.usuarioPerfilListItems.size() == 1}" />
-        </h:form>
-
-    </s:div>
 #{mostrarMenu}
 	<rich:toolbar width="100%">
         <c:if test="#{mostrarMenu}">

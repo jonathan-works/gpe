@@ -196,33 +196,6 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         return localizacao;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Localizacao)) {
-            return false;
-        }
-        Localizacao other = (Localizacao) obj;
-        if (getIdLocalizacao() != other.getIdLocalizacao()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + (this.idLocalizacao == null ? 0 : this.idLocalizacao);
-        return result;
-    }
-
     public void setLocalizacaoTurnoList(
             List<LocalizacaoTurno> localizacaoTurnoList) {
         this.localizacaoTurnoList = localizacaoTurnoList;
@@ -301,4 +274,53 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 	public void setCaminhoCompletoFormatado(String caminhoCompletoFormatado) {
 		this.caminhoCompletoFormatado = caminhoCompletoFormatado;
 	}
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((caminhoCompleto == null) ? 0 : caminhoCompleto.hashCode());
+        result = prime * result
+                + ((estruturaFilho == null) ? 0 : estruturaFilho.hashCode());
+        result = prime * result
+                + ((estruturaPai == null) ? 0 : estruturaPai.hashCode());
+        result = prime * result
+                + ((idLocalizacao == null) ? 0 : idLocalizacao.hashCode());
+        result = prime * result
+                + ((localizacao == null) ? 0 : localizacao.hashCode());
+        result = prime * result
+                + ((localizacaoPai == null) ? 0 : localizacaoPai.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof Localizacao)) return false;
+        Localizacao other = (Localizacao) obj;
+        if (caminhoCompleto == null) {
+            if (other.caminhoCompleto != null) return false;
+        } else if (!caminhoCompleto.equals(other.caminhoCompleto)) return false;
+        if (estruturaFilho == null) {
+            if (other.estruturaFilho != null) return false;
+        } else if (!estruturaFilho.equals(other.estruturaFilho)) return false;
+        if (estruturaPai == null) {
+            if (other.estruturaPai != null) return false;
+        } else if (!estruturaPai.equals(other.estruturaPai)) return false;
+        if (idLocalizacao == null) {
+            if (other.idLocalizacao != null) return false;
+        } else if (!idLocalizacao.equals(other.idLocalizacao)) return false;
+        if (localizacao == null) {
+            if (other.localizacao != null) return false;
+        } else if (!localizacao.equals(other.localizacao)) return false;
+        if (localizacaoPai == null) {
+            if (other.localizacaoPai != null) return false;
+        } else if (!localizacaoPai.equals(other.localizacaoPai)) return false;
+        return true;
+    }
+	
+	
+
 }

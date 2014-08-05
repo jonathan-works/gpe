@@ -41,10 +41,13 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
     }
 
     public boolean possuiPermissao(Processo processo) {
+        if (Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao() == null) {
+            return false;
+        }
         ControleFiltros.instance().iniciarFiltro();
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
+        parameters.put(PARAM_LOCALIZACAO, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao());
         parameters.put(PARAM_PAPEL, Authenticator.getPapelAtual());
         Long count = getNamedSingleResult(COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, parameters);
         return count != null && count > 0;
@@ -54,8 +57,8 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
             Long idTarefa) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfil().getLocalizacao());
-        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfil().getPapel());
+        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfilTemplate().getLocalizacao());
+        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfilTemplate().getPapel());
         parameters.put(PARAM_ID_TASK, idTarefa.intValue());
         return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, parameters);
     }
@@ -63,8 +66,8 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
     public Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfil().getLocalizacao());
-        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfil().getPapel());
+        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfilTemplate().getLocalizacao());
+        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfilTemplate().getPapel());
 
         return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, parameters);
     }

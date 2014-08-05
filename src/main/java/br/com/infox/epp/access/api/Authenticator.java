@@ -146,7 +146,7 @@ public class Authenticator {
             		termoAdesao = false;
             	} else {
 	                for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
-	                    Papel papel = usuarioPerfil.getPerfil().getPapel();
+	                    Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
 	                    if (termoAdesao=papel.getTermoAdesao()) {
 	                        break;
 	                    }
@@ -371,15 +371,15 @@ public class Authenticator {
     private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil,
             Set<String> roleSet) {
         Contexts.getSessionContext().set(USUARIO_PERFIL_ATUAL, usuarioPerfil);
-        Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, usuarioPerfil.getPerfil().getPapel().getIdentificador());
+        Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, usuarioPerfil.getPerfilTemplate().getPapel().getIdentificador());
         Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);
-        Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, getLocalizacoesFilhas(usuarioPerfil.getPerfil().getLocalizacao()));
+        Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, getLocalizacoesFilhas(usuarioPerfil.getLocalizacao()));
         Contexts.getSessionContext().remove("mainMenu");
         Contexts.removeFromAllContexts("tarefasTree");
     }
 
     private Set<String> getRolesAtuais(UsuarioPerfil usuarioPerfil) {
-        return RolesMap.instance().getChildrenRoles(usuarioPerfil.getPerfil().getPapel().getIdentificador());
+        return RolesMap.instance().getChildrenRoles(usuarioPerfil.getPerfilTemplate().getPapel().getIdentificador());
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -418,7 +418,7 @@ public class Authenticator {
     public static Localizacao getLocalizacaoAtual() {
         UsuarioPerfil usuarioPerfilAtual = getUsuarioPerfilAtual();
         if (usuarioPerfilAtual != null) {
-            return usuarioPerfilAtual.getPerfil().getLocalizacao();
+            return usuarioPerfilAtual.getLocalizacao();
         }
         return null;
     }
@@ -426,7 +426,7 @@ public class Authenticator {
     public static Papel getPapelAtual() {
         UsuarioPerfil usuarioPerfilAtual = getUsuarioPerfilAtual();
         if (usuarioPerfilAtual != null) {
-            return usuarioPerfilAtual.getPerfil().getPapel();
+            return usuarioPerfilAtual.getPerfilTemplate().getPapel();
         }
         return null;
     }

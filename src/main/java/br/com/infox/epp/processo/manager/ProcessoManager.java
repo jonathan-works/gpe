@@ -124,7 +124,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         final String actorId = Actor.instance().getId();
         if (taskInstanceId != null) {
             iniciaTask(processo, taskInstanceId);
-            storeUsuario(taskInstanceId, usuarioPerfil.getUsuarioLogin(), usuarioPerfil.getPerfil().getLocalizacao(), usuarioPerfil.getPerfil().getPapel());
+            storeUsuario(taskInstanceId, usuarioPerfil.getUsuarioLogin(), usuarioPerfil.getPerfilTemplate().getLocalizacao(), usuarioPerfil.getPerfilTemplate().getPapel());
             vinculaUsuario(processo, actorId);
         }
     }

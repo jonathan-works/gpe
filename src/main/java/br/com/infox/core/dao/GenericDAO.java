@@ -2,10 +2,15 @@ package br.com.infox.core.dao;
 
 import java.util.List;
 
+import javax.persistence.LockModeType;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
+
+import br.com.infox.core.util.EntityUtil;
 
 @Name(GenericDAO.NAME)
 @Scope(ScopeType.EVENT)
@@ -43,5 +48,13 @@ public class GenericDAO extends DAO<Object> {
 
     public <T> T getReference(Class<T> entityClass, Object id) {
         return getEntityManager().getReference(entityClass, id);
+    }
+    
+    @Transactional
+    public void lock(Object entity) {
+        if (!EntityUtil.isEntity(entity)) {
+            throw new IllegalArgumentException("Object is not an entity");
+        }
+        getEntityManager().lock(entity, LockModeType.PESSIMISTIC_READ);
     }
 }

@@ -17,8 +17,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
-import br.com.infox.epp.access.entity.Perfil;
-import br.com.infox.epp.access.manager.PerfilManager;
+import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.ApplicationException;
@@ -65,9 +65,9 @@ public class LocalizacaoAssignment implements Serializable {
             return false;
         }
         boolean inserted = false;
-        PerfilManager perfilManager = ComponentUtil.getComponent(PerfilManager.NAME);
+        PerfilTemplateManager perfilTemplateManager = ComponentUtil.getComponent(PerfilTemplateManager.NAME);
         for (String s : localPapel) {
-            insertProcessoLocalizacaoIbpm(perfilManager.find(Integer.valueOf(s)), processo);
+            insertProcessoLocalizacaoIbpm(perfilTemplateManager.find(Integer.valueOf(s)), processo);
             inserted = true;
         }
         return inserted;
@@ -89,14 +89,14 @@ public class LocalizacaoAssignment implements Serializable {
         return true;
     }
 
-    protected void insertProcessoLocalizacaoIbpm(Perfil perfil, Processo processo) {
+    protected void insertProcessoLocalizacaoIbpm(PerfilTemplate perfilTemplate, Processo processo) {
         org.hibernate.Query q = JbpmUtil.getJbpmSession().createSQLQuery(IBPM_QUERY_INSERT);
         Long taskId = currentTaskInstance.getTask().getId();
         q.setParameter("idTaskJbpm", taskId);
         q.setParameter("idProcessInstance", ProcessInstance.instance().getId());
         q.setParameter("idProcesso", processo.getIdProcesso());
-        q.setParameter("idLocalizacao", perfil.getLocalizacao().getIdLocalizacao());
-        q.setParameter("idPapel", perfil.getPapel().getIdPapel());
+        q.setParameter("idLocalizacao", perfilTemplate.getLocalizacao().getIdLocalizacao());
+        q.setParameter("idPapel", perfilTemplate.getPapel().getIdPapel());
         q.setParameter("contabilizar", true);
         q.setParameter("taskInstance", currentTaskInstance.getId());
         q.executeUpdate();

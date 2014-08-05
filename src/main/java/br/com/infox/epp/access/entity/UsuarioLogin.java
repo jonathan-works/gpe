@@ -403,7 +403,7 @@ public class UsuarioLogin implements Serializable {
     public List<UsuarioPerfil> getUsuarioPerfilAtivoList() {
         List<UsuarioPerfil> result = new ArrayList<>();
         for (UsuarioPerfil usuarioPerfil : getUsuarioPerfilList()) {
-            if (usuarioPerfil.getPerfil().getAtivo()) {
+            if (usuarioPerfil.getPerfilTemplate().getAtivo()) {
               result.add(usuarioPerfil);
             }
         }

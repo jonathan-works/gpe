@@ -2,6 +2,8 @@ package br.com.infox.epp.unidadedecisora.dao;
 
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.ID_UNIDADE_DEC_COLEGIADA;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_BY_UNIDADE_DECISORA_COLEGIADA;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_UDM_BY_USUARIO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.ID_USUARIO_LOGIN;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +21,16 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraMonocraticaDAO";
-
 	
 	public List<UnidadeDecisoraMonocratica> searchUnidadeDecisoraMonocraticaAtivoWithIdColegiada(Integer idColegiada){
 		Map<String, Object> map = new HashMap<String, Object>(1);
 		map.put(ID_UNIDADE_DEC_COLEGIADA, idColegiada);
 		return getNamedResultList(SEARCH_BY_UNIDADE_DECISORA_COLEGIADA, map);
+	}
+	
+	public List<UnidadeDecisoraMonocratica> searchUnidadeDecisoraMonocraticaWithIdUsuario(Integer idUsuario){
+		Map<String, Object> map = new HashMap<>(1);
+		map.put(ID_USUARIO_LOGIN, idUsuario);
+		return getNamedResultList(SEARCH_UDM_BY_USUARIO, map);
 	}
 }

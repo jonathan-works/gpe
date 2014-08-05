@@ -10,34 +10,37 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-    <ui:define name="title">#{messages['perfil.titlePage']}</ui:define>
-    <ui:param name="home" value="#{perfilCrudAction}"></ui:param>
+    <ui:define name="title">#{messages['perfilTemplate.titlePage']}</ui:define>
+    <ui:param 
+        name="home" 
+        value="#{perfilTemplateCrudAction}"/>
     <ui:define name="searchGrid">
-        <wi:dataTable bean="#{perfilList}"
-            values="#{perfilList.list(20)}"
+        <wi:dataTable bean="#{perfilTemplateList}"
+            values="#{perfilTemplateList.list(20)}"
             tableTitle="#{messages['perfil.tableName']}"
-            id="perfilList" rowId="#{row.idPerfil}">
+            id="perfilList" rowId="#{row.id}">
             <ui:define name="searchForm">
-                <wi:searchForm formId="perfilCrudActionForm"
+                <wi:searchForm formId="perfilTemplateSearchForm"
                     formTitle="#{messages['searchForm.title']}"
-                    clearAction="perfilCrudAction.clear()">
+                    clearAction="perfilTemplateCrudAction.onClickLimpar">
                     <wi:inputText id="perfil"
                         label="#{messages['perfil.descricao']}"
-                        value="#{perfilList.entity.descricao}"></wi:inputText>
+                        value="#{perfilTemplateList.entity.descricao}"></wi:inputText>
                     <wi:tree id="localizacao"
-                        assignTo="perfilList.entity.localizacao"
-                        tree="#{localizacaoEstruturaTree}"
+                        assignTo="perfilTemplateList.entity.localizacao"
+                        tree="#{estruturaLocalizacoesPerfilTree}"
                         icon="#{a4jSkin.imgFolder}/nivelTree.gif"
                         iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-                        label="#{messages['perfil.localizacao']}" />
+                        label="#{messages['perfil.localizacao']}" 
+                        styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
                     <wi:tree id="papel"
-                        assignTo="perfilList.entity.papel"
+                        assignTo="perfilTemplateList.entity.papel"
                         tree="#{papelTree}"
                         icon="#{a4jSkin.imgFolder}/nivelTree.gif"
                         iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                         label="#{messages['perfil.papel']}" />
                     <wi:selectSituacaoOneMenu id="ativo"
-                        value="#{perfilList.entity.ativo}"
+                        value="#{perfilTemplateList.entity.ativo}"
                         label="#{messages['field.situacao']}" />
                 </wi:searchForm>
             </ui:define>
@@ -56,28 +59,27 @@
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
-        <wi:dataForm formId="perfilForm"
-            formTitle="#{messages['form.title']}"
-            home="#{perfilCrudAction}">
+        <wi:dataForm formId="perfilTemplateForm"
+            formTitle="#{messages['form.title']}">
             <wi:inputText id="perfil"
                 label="#{messages['perfil.descricao']}"
-                value="#{perfilCrudAction.instance.descricao}"
+                value="#{perfilTemplateCrudAction.instance.descricao}"
                 required="true"/>
             <wi:tree id="localizacao"
-                assignTo="perfilCrudAction.instance.localizacao"
-                tree="#{localizacaoFullTree}"
+                assignTo="perfilTemplateCrudAction.instance.localizacao"
+                tree="#{estruturaLocalizacoesPerfilTree}"
                 icon="#{a4jSkin.imgFolder}/nivelTree.gif"
                 iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-                label="#{messages['perfil.localizacao']}"
-                required="true" />
+                label="#{messages['perfilTemplate.localizacao']}"
+                styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
             <wi:tree id="papel"
-                assignTo="perfilCrudAction.instance.papel"
+                assignTo="perfilTemplateCrudAction.instance.papel"
                 tree="#{papelTree}"
                 icon="#{a4jSkin.imgFolder}/nivelTree.gif"
                 iconLeaf="#{a4jSkin.imgFolder}/file.gif"
                 label="#{messages['perfil.papel']}" required="true" />
             <wi:selectSituacaoRadio id="ativo"
-                value="#{perfilCrudAction.instance.ativo}"
+                value="#{perfilTemplateCrudAction.instance.ativo}"
                 label="#{messages['field.situacao']}" />
         </wi:dataForm>
     </ui:define>

@@ -252,4 +252,5 @@ public abstract class DAO<T> implements Serializable {
             throw new ApplicationException(ApplicationException.createMessage("rollback da transação", "rollbackTransaction()", "Util", "ePP"), e);
         }
     }
+    
 }

@@ -1,8 +1,9 @@
 package br.com.infox.epp.access.entity;
 
+import static br.com.infox.epp.access.query.PerfilTemplateQuery.*;
+import static br.com.infox.core.constants.LengthConstants.*;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.access.query.PerfilQuery.COL_ID_PERFIL;
 import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
@@ -18,35 +19,30 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.access.query.PerfilQuery;
-
 @Entity
-@Table(name = "tb_perfil")
-@NamedQueries({
-    @NamedQuery(name = PerfilQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA, query = PerfilQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)
-})
-public class Perfil {
-    
-    private Integer idPerfil;
+@Table(name="tb_perfil_template")
+@NamedQueries({@NamedQuery(name=LIST_PERFIS_DENTRO_DE_ESTRUTURA, query=LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)})
+public class PerfilTemplate {
+
+    private Integer id;
     private String descricao;
     private Localizacao localizacao;
-    private Localizacao paiDaEstrutura;
     private Papel papel;
     private Boolean ativo;
     
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_perfil")
     @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_perfil_template")
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = COL_ID_PERFIL, unique = true, nullable = false)
-    public Integer getIdPerfil() {
-        return idPerfil;
+    @Column(name = "id", unique = true, nullable = false)
+    public Integer getId() {
+        return id;
     }
     
-    public void setIdPerfil(Integer idPerfil) {
-        this.idPerfil = idPerfil;
+    public void setId(Integer id) {
+        this.id = id;
     }
     
-    @Column(name = "ds_perfil", nullable = false, unique = true)
+    @Column(name="ds_perfil_temp", length=DESCRICAO_PADRAO, nullable=false)
     @NotNull
     public String getDescricao() {
         return descricao;
@@ -57,8 +53,7 @@ public class Perfil {
     }
 
     @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "id_localizacao", nullable = false)
-    @NotNull
+    @JoinColumn(name = "id_localizacao")
     public Localizacao getLocalizacao() {
         return localizacao;
     }
@@ -67,16 +62,6 @@ public class Perfil {
         this.localizacao = localizacao;
     }
     
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "id_localizacao_pai_estrutura")
-    public Localizacao getPaiDaEstrutura() {
-        return paiDaEstrutura;
-    }
-
-    public void setPaiDaEstrutura(Localizacao paiDaEstrutura) {
-        this.paiDaEstrutura = paiDaEstrutura;
-    }
-
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "id_papel", nullable = false)
     @NotNull
@@ -87,8 +72,7 @@ public class Perfil {
     public void setPapel(Papel papel) {
         this.papel = papel;
     }
-
-
+    
     @Column(name = ATIVO, nullable = false)
     @NotNull
     public Boolean getAtivo() {
@@ -103,7 +87,7 @@ public class Perfil {
     public String toString() {
         return getDescricao();
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -111,42 +95,36 @@ public class Perfil {
         result = prime * result + ((getAtivo() == null) ? 0 : getAtivo().hashCode());
         result = prime * result
                 + ((getDescricao() == null) ? 0 : getDescricao().hashCode());
-        result = prime * result
-                + ((getIdPerfil() == null) ? 0 : getIdPerfil().hashCode());
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result
                 + ((getLocalizacao() == null) ? 0 : getLocalizacao().hashCode());
-        result = prime * result
-                + ((getPaiDaEstrutura() == null) ? 0 : getPaiDaEstrutura().hashCode());
         result = prime * result + ((getPapel() == null) ? 0 : getPapel().hashCode());
         return result;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null) return false;
-        if (!(obj instanceof Perfil)) return false;
-        Perfil other = (Perfil) obj;
+        if (!(obj instanceof PerfilTemplate)) return false;
+        PerfilTemplate other = (PerfilTemplate) obj;
         if (getAtivo() == null) {
             if (other.getAtivo() != null) return false;
         } else if (!getAtivo().equals(other.getAtivo())) return false;
         if (getDescricao() == null) {
             if (other.getDescricao() != null) return false;
         } else if (!getDescricao().equals(other.getDescricao())) return false;
-        if (getIdPerfil() == null) {
-            if (other.getIdPerfil() != null) return false;
-        } else if (!getIdPerfil().equals(other.getIdPerfil())) return false;
+        if (getId() == null) {
+            if (other.getId() != null) return false;
+        } else if (!getId().equals(other.getId())) return false;
         if (getLocalizacao() == null) {
             if (other.getLocalizacao() != null) return false;
         } else if (!getLocalizacao().equals(other.getLocalizacao())) return false;
-        if (getPaiDaEstrutura() == null) {
-            if (other.getPaiDaEstrutura() != null) return false;
-        } else if (!getPaiDaEstrutura().equals(other.getPaiDaEstrutura())) return false;
         if (getPapel() == null) {
             if (other.getPapel() != null) return false;
         } else if (!getPapel().equals(other.getPapel())) return false;
         return true;
     }
     
-
+    
 }

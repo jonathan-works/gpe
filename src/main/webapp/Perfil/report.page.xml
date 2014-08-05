@@ -7,7 +7,7 @@
 	<begin-conversation join="true" />
 	<restrict>#{security.checkPage()}</restrict>
 
-	<param name="order" value="#{perfilList.order}" />
-	<param name="restrictionLogicOperator" value="#{perfilList.restrictionLogicOperator}" />
+	<param name="order" value="#{perfilTemplateList.order}" />
+	<param name="restrictionLogicOperator" value="#{perfilTemplateList.restrictionLogicOperator}" />
 	
 </page>

@@ -23,6 +23,9 @@
           items="#{authenticator.usuarioPerfilListItems}"
           label="#{usuarioLogado}" labelClass="painelUsuario-label"
           valueClass="painelUsuario-select">
+          <a:ajax event="change"
+                        limitRender="true" status=":status"
+                        execute="@form" />
         </wi:selectOneMenuEntity>
       </h:form>
     </c:if>
