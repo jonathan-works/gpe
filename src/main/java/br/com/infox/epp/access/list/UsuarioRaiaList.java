@@ -53,11 +53,15 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
         StringBuilder sb = new StringBuilder(DEFAULT_EJBQL);
         if (localizacoes != null) {
             sb.append("and ul.id_localizacao in (");
-            for (Localizacao localizacao : localizacoes) {
-                sb.append(localizacao.getIdLocalizacao());
-                sb.append(",");
+            if (localizacoes.isEmpty()) {
+                sb.append("-1");
+            } else {
+                for (Localizacao localizacao : localizacoes) {
+                    sb.append(localizacao.getIdLocalizacao());
+                    sb.append(",");
+                }
+                sb.deleteCharAt(sb.length() - 1);
             }
-            sb.deleteCharAt(sb.length() - 1);
             sb.append("))");
         }
         return sb.toString();
