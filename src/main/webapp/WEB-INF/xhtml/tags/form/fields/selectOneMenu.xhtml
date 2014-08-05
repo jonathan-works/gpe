@@ -26,7 +26,7 @@
                 <f:selectItems value="#{valueItems}" />
             </c:if>
             <c:if test="#{empty valueItems}">
-                <s:selectItems value="#{items}" var="item"
+                <s:selectItems value="#{items}" var="item" itemValue="#{empty itemValue ? item : itemValue}"
                     label="#{empty optionExpression ? (empty optionLabel ? item : optionLabel) : selectItemFunctions.getSelectExpressionSelectItem(optionExpression, item)}"
                     hideNoSelectionLabel="#{hideNoSelectionLabel}"
                     noSelectionLabel="#{noSelectionLabel}"

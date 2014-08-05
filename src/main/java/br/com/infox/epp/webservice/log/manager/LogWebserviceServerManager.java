@@ -26,7 +26,7 @@ public class LogWebserviceServerManager extends Manager<LogWebserviceServerDAO, 
 	
 	public LogWebserviceServer beginLog(String webserviceName, String token, String requisicao){
 		LogWebserviceServer logWebserviceServer = new LogWebserviceServer();
-		logWebserviceServer.setDatatInicio(Calendar.getInstance().getTime());
+		logWebserviceServer.setDataInicio(Calendar.getInstance().getTime());
 		logWebserviceServer.setToken(token);
 		logWebserviceServer.setWebService(webserviceName);
 		logWebserviceServer.setRequisicao(requisicao);
@@ -39,7 +39,7 @@ public class LogWebserviceServerManager extends Manager<LogWebserviceServerDAO, 
 	}
 	
 	public void endLog(LogWebserviceServer logWebserviceServer, String mensagemRetorno){
-		logWebserviceServer.setDatatFim(Calendar.getInstance().getTime());
+		logWebserviceServer.setDataFim(Calendar.getInstance().getTime());
 		logWebserviceServer.setMensagemRetorno(mensagemRetorno);
 		try {
 			update(logWebserviceServer);

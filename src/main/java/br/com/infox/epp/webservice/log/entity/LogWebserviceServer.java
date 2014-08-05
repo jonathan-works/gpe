@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,11 +31,11 @@ public class LogWebserviceServer implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="dt_inicio_requisicao", nullable=false)
-	private Date datatInicio;
+	private Date dataInicio;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="dt_fim_requisicao")
-	private Date datatFim;
+	private Date dataFim;
 	
 	@Column(name="cd_mensagem_retorno")
 	private String mensagemRetorno;
@@ -45,6 +47,7 @@ public class LogWebserviceServer implements Serializable {
 	private String token;
 	
 	@Column(name="ds_requisicao", nullable=false)
+	@Basic(fetch=FetchType.LAZY)
 	private String requisicao;
 
 	public BigInteger getIdLogWsServer() {
@@ -55,20 +58,20 @@ public class LogWebserviceServer implements Serializable {
 		this.idLogWsServer = idLogWsServer;
 	}
 
-	public Date getDatatInicio() {
-		return datatInicio;
+	public Date getDataInicio() {
+		return dataInicio;
 	}
 
-	public void setDatatInicio(Date datatInicio) {
-		this.datatInicio = datatInicio;
+	public void setDataInicio(Date dataInicio) {
+		this.dataInicio = dataInicio;
 	}
 
-	public Date getDatatFim() {
-		return datatFim;
+	public Date getDataFim() {
+		return dataFim;
 	}
 
-	public void setDatatFim(Date datatFim) {
-		this.datatFim = datatFim;
+	public void setDataFim(Date dataFim) {
+		this.dataFim = dataFim;
 	}
 
 	public String getMensagemRetorno() {

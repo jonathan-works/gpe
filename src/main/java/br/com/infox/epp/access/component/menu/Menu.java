@@ -14,8 +14,10 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 import org.richfaces.event.DropEvent;
 
+import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 /**
  * Monta o menu do usuário baseado nas permissões de acesso às páginas
@@ -50,6 +52,8 @@ public class Menu implements Serializable {
      * @param items
      */
     public void setItems(List<String> items) {
+    	PropertiesLoader p = ComponentUtil.getComponent(PropertiesLoader.NAME);
+    	items.addAll(p.getMenuItems());
         dropMenus = new ArrayList<MenuItem>();
         boolean ok = true;
 
