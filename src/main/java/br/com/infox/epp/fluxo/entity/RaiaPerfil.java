@@ -28,6 +28,7 @@ import br.com.infox.epp.fluxo.query.RaiaPerfilQuery;
 })
 @NamedQueries({
     @NamedQuery(name = RaiaPerfilQuery.LIST_BY_PERFIL, query = RaiaPerfilQuery.LIST_BY_PERFIL_QUERY),
+    @NamedQuery(name = RaiaPerfilQuery.LIST_BY_FLUXO, query = RaiaPerfilQuery.LIST_BY_FLUXO_QUERY),
     @NamedQuery(name = RaiaPerfilQuery.LIST_BY_LOCALIZACAO, query = RaiaPerfilQuery.LIST_BY_LOCALIZACAO_QUERY),
     @NamedQuery(name = RaiaPerfilQuery.REMOVER_RAIAS_PERFIS_POR_FLUXO, query = RaiaPerfilQuery.REMOVER_RAIAS_PERFIS_POR_FLUXO_QUERY)
 })
