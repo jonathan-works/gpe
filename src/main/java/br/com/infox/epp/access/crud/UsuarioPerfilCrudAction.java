@@ -2,6 +2,7 @@ package br.com.infox.epp.access.crud;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.jboss.seam.Component;
@@ -17,7 +18,6 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @Name(UsuarioPerfilCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -44,7 +44,6 @@ public class UsuarioPerfilCrudAction extends AbstractCrudAction<UsuarioPerfil, U
         super.afterSave(ret);
     }
     
-    @SuppressWarnings(UNCHECKED)
     public List<PerfilTemplate> getPerfisPermitidos() {
         if (getInstance().getLocalizacao() == null) {
             return Collections.emptyList();
