@@ -100,12 +100,11 @@ public class PropertiesLoader implements Serializable {
 					menuProperties.load(is);
 					menuItems = Collections.unmodifiableList(new ArrayList<>(menuProperties.values()));
 				} catch (IOException e) {
-					menuItems = Collections.unmodifiableList(new ArrayList<>());
 					LOG.error(Messages.instance().get("propertiesLoader.fail"), e);
 				}
 			}
 		}
-		return menuItems;
+		return menuItems == null ? (menuItems = Collections.unmodifiableList(new ArrayList<>())) : menuItems;
 	}
 	
 }
