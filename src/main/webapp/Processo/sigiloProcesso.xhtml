@@ -100,7 +100,7 @@
 	            </ui:define>
 	            
 	            <ui:define name="searchForm">
-	                <wi:searchForm formId="permissoesProcessoSearchForm" clearAction="usuarioRaiaList.clear" formTitle="Usuários">
+	                <wi:searchForm formId="permissoesProcessoSearchForm" formTitle="Usuários">
 	                    <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{messages['sigiloProcesso.usuario.nome']}" />
 	                    <wi:selectOneMenuEntity id="localizacao" value="#{usuarioRaiaList.localizacao}" 
 	                        items="#{usuarioRaiaList.localizacoes}" showLabelSelecione="true"
