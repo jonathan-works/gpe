@@ -110,7 +110,5 @@ public class UsuarioPerfil implements Serializable {
         return true;
     }
     
-    
-
 
 }
