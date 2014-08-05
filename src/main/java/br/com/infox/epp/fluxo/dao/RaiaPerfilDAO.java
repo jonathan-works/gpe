@@ -40,4 +40,10 @@ public class RaiaPerfilDAO extends DAO<RaiaPerfil> {
         params.put(RaiaPerfilQuery.QUERY_PARAM_FLUXO, fluxo);
         executeNamedQueryUpdate(RaiaPerfilQuery.REMOVER_RAIAS_PERFIS_POR_FLUXO, params);
     }
+
+    public List<RaiaPerfil> listByFluxo(Fluxo fluxo) {
+        final Map<String,Object> params = new HashMap<>();
+        params.put(RaiaPerfilQuery.QUERY_PARAM_FLUXO, fluxo);
+        return getNamedResultList(RaiaPerfilQuery.LIST_BY_FLUXO, params);
+    }
 }

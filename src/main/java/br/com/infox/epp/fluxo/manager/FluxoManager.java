@@ -1,25 +1,18 @@
 package br.com.infox.epp.fluxo.manager;
 
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.jpdl.xml.JpdlXmlReader;
-import org.jbpm.taskmgmt.def.Swimlane;
-import org.xml.sax.InputSource;
 
-import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.RaiaPerfil;
 
 /**
  * Classe Manager para a entidade Fluxo
@@ -34,6 +27,9 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     public static final String NAME = "fluxoManager";
 
+    @In
+    private RaiaPerfilManager raiaPerfilManager;
+    
     /**
      * Retorna todos os Fluxos ativos
      * 
@@ -63,31 +59,12 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         return getDao().existeFluxoComCodigo(codigo);
     }
 
-    @SuppressWarnings(WarningConstants.UNCHECKED)
     public Collection<Integer> getIdsLocalizacoesRaias(final Fluxo fluxo) {
-        //TODO REVER ESTE MÉTODO
-        StringReader stringReader = new StringReader(fluxo.getXml());
-        JpdlXmlReader jpdlReader = new JpdlXmlReader(new InputSource(stringReader));
-        ProcessDefinition processDefinition = jpdlReader.readProcessDefinition();
-        Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
-        Pattern p = Pattern.compile(".+?'(.+?)'.+?");
         Set<Integer> idsLocalizacao = new HashSet<Integer>();
-
-        for (Swimlane swimlane : swimlanes.values()) {
-            String pooledActorsExpression = swimlane.getPooledActorsExpression();
-            if (pooledActorsExpression == null) {
-                continue;
-            }
-            Matcher matcher = p.matcher(swimlane.getPooledActorsExpression());
-            if (!matcher.find()) {
-                continue;
-            }
-            for (String s : matcher.group(1).split(",")) {
-                String[] tokens = s.split(":");
-                idsLocalizacao.add(Integer.valueOf(tokens[0]));
-            }
+        List<RaiaPerfil> listByFluxo = raiaPerfilManager.listByFluxo(fluxo);
+        for (RaiaPerfil raiaPerfil : listByFluxo) {
+            idsLocalizacao.add(raiaPerfil.getPerfilTemplate().getLocalizacao().getIdLocalizacao());
         }
-
         return idsLocalizacao;
     }
 }
