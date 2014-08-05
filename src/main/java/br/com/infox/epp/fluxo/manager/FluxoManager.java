@@ -65,6 +65,7 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     @SuppressWarnings(WarningConstants.UNCHECKED)
     public Collection<Integer> getIdsLocalizacoesRaias(final Fluxo fluxo) {
+        //TODO REVER ESTE MÉTODO
         StringReader stringReader = new StringReader(fluxo.getXml());
         JpdlXmlReader jpdlReader = new JpdlXmlReader(new InputSource(stringReader));
         ProcessDefinition processDefinition = jpdlReader.readProcessDefinition();
