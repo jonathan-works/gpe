@@ -25,7 +25,7 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
     private static final String DEFAULT_ORDER = "tituloModeloDocumento";
     private static final String R1 = "exists (from TipoModeloDocumentoPapel tmdp"
             + " where tmdp.tipoModeloDocumento = o.tipoModeloDocumento"
-            + " and tmdp.papel = #{usuarioLogadoPerfilAtual.getPerfil().papel})";
+            + " and tmdp.papel = #{usuarioLogadoPerfilAtual.getPerfilTemplate().papel})";
 
     public static final ModeloDocumentoList instance() {
         return ComponentUtil.getComponent(NAME);

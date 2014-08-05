@@ -196,13 +196,15 @@
             iconLeaf="#{a4jSkin.imgFolder}/file.gif"
             clearRender="@this"
             label="#{messages['perfilTemplate.localizacao']}" 
-            render="perfisPermitidos"/>
+            render="perfisPermitidos"
+            required="true" />
         <wi:selectOneMenuEntity id="perfisPermitidos"
             value="#{usuarioPerfilCrudAction.instance.perfilTemplate}"
             label="#{messages['usuarioPerfil.perfil']}"
             items="#{usuarioPerfilCrudAction.perfisPermitidos}"
             showLabelSelecione="true"
-            disabled="#{empty usuarioPerfilCrudAction.instance.localizacao}" />
+            disabled="#{empty usuarioPerfilCrudAction.instance.localizacao}" 
+            required="true" />
         <wi:selectBooleanCheckbox
           id="responsavelLocalizacao"
           value="#{usuarioPerfilCrudAction.instance.responsavelLocalizacao}"
