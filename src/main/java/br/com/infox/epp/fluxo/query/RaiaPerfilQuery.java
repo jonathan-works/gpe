@@ -24,4 +24,6 @@ public interface RaiaPerfilQuery {
     
     String REMOVER_RAIAS_PERFIS_POR_FLUXO = "RaiaPerfil.removerRaiasPerfisPorFluxo";
     String REMOVER_RAIAS_PERFIS_POR_FLUXO_QUERY = "delete RaiaPerfil o where o.fluxo = :" + QUERY_PARAM_FLUXO;
+    String LIST_BY_FLUXO = "RaiaPerfil.listByFluxo";
+    String LIST_BY_FLUXO_QUERY = "select o from RaiaPerfil o where o.fluxo = :"+QUERY_PARAM_FLUXO;
 }
