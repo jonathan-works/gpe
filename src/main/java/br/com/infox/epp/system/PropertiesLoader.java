@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -19,8 +20,6 @@ import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * Classe que carrega páginas customizadas pelo cliente e as insere no ePP
@@ -90,7 +89,7 @@ public class PropertiesLoader implements Serializable {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<String> getMenuItems(){
 		if (menuProperties == null){
 			menuProperties = new Properties();
@@ -98,13 +97,13 @@ public class PropertiesLoader implements Serializable {
 			if (is != null) {
 				try {
 					menuProperties.load(is);
-					menuItems = Collections.unmodifiableList(new ArrayList<>(menuProperties.values()));
+					menuItems = Collections.unmodifiableList(new ArrayList(menuProperties.values()));
 				} catch (IOException e) {
 					LOG.error(Messages.instance().get("propertiesLoader.fail"), e);
 				}
 			}
 		}
-		return menuItems == null ? (menuItems = Collections.unmodifiableList(new ArrayList<>())) : menuItems;
+		return (menuItems == null ? (menuItems = Collections.unmodifiableList(new ArrayList<String>())) : menuItems);
 	}
 	
 }
