@@ -59,4 +59,8 @@ public class RaiaPerfilManager extends Manager<RaiaPerfilDAO, RaiaPerfil> {
         removerRaiaPerfisDoFluxo(fluxo);
         criarRaiaPerfis(fluxo, swimlanes);
     }
+
+    public List<RaiaPerfil> listByFluxo(Fluxo fluxo) {
+        return getDao().listByFluxo(fluxo);
+    }
 }
