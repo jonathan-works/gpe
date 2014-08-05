@@ -280,17 +280,17 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((caminhoCompleto == null) ? 0 : caminhoCompleto.hashCode());
+                + ((getCaminhoCompleto() == null) ? 0 : getCaminhoCompleto().hashCode());
         result = prime * result
-                + ((estruturaFilho == null) ? 0 : estruturaFilho.hashCode());
+                + ((getEstruturaFilho() == null) ? 0 : getEstruturaFilho().hashCode());
         result = prime * result
-                + ((estruturaPai == null) ? 0 : estruturaPai.hashCode());
+                + ((getEstruturaPai() == null) ? 0 : getEstruturaPai().hashCode());
         result = prime * result
-                + ((idLocalizacao == null) ? 0 : idLocalizacao.hashCode());
+                + ((getIdLocalizacao() == null) ? 0 : getIdLocalizacao().hashCode());
         result = prime * result
-                + ((localizacao == null) ? 0 : localizacao.hashCode());
+                + ((getLocalizacao() == null) ? 0 : getLocalizacao().hashCode());
         result = prime * result
-                + ((localizacaoPai == null) ? 0 : localizacaoPai.hashCode());
+                + ((getLocalizacaoPai() == null) ? 0 : getLocalizacaoPai().hashCode());
         return result;
     }
 
@@ -300,24 +300,24 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         if (obj == null) return false;
         if (!(obj instanceof Localizacao)) return false;
         Localizacao other = (Localizacao) obj;
-        if (caminhoCompleto == null) {
-            if (other.caminhoCompleto != null) return false;
-        } else if (!caminhoCompleto.equals(other.caminhoCompleto)) return false;
-        if (estruturaFilho == null) {
-            if (other.estruturaFilho != null) return false;
-        } else if (!estruturaFilho.equals(other.estruturaFilho)) return false;
-        if (estruturaPai == null) {
-            if (other.estruturaPai != null) return false;
-        } else if (!estruturaPai.equals(other.estruturaPai)) return false;
-        if (idLocalizacao == null) {
-            if (other.idLocalizacao != null) return false;
-        } else if (!idLocalizacao.equals(other.idLocalizacao)) return false;
-        if (localizacao == null) {
-            if (other.localizacao != null) return false;
-        } else if (!localizacao.equals(other.localizacao)) return false;
-        if (localizacaoPai == null) {
-            if (other.localizacaoPai != null) return false;
-        } else if (!localizacaoPai.equals(other.localizacaoPai)) return false;
+        if (getCaminhoCompleto() == null) {
+            if (other.getCaminhoCompleto() != null) return false;
+        } else if (!getCaminhoCompleto().equals(other.getCaminhoCompleto())) return false;
+        if (getEstruturaFilho() == null) {
+            if (other.getEstruturaFilho() != null) return false;
+        } else if (!getEstruturaFilho().equals(other.getEstruturaFilho())) return false;
+        if (getEstruturaPai() == null) {
+            if (other.getEstruturaPai() != null) return false;
+        } else if (!getEstruturaPai().equals(other.getEstruturaPai())) return false;
+        if (getIdLocalizacao() == null) {
+            if (other.getIdLocalizacao() != null) return false;
+        } else if (!getIdLocalizacao().equals(other.getIdLocalizacao())) return false;
+        if (getLocalizacao() == null) {
+            if (other.getLocalizacao() != null) return false;
+        } else if (!getLocalizacao().equals(other.getLocalizacao())) return false;
+        if (getLocalizacaoPai() == null) {
+            if (other.getLocalizacaoPai() != null) return false;
+        } else if (!getLocalizacaoPai().equals(other.getLocalizacaoPai())) return false;
         return true;
     }
 	
