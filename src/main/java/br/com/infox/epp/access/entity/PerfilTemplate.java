@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.entity;
 
+import static br.com.infox.epp.access.query.PerfilTemplateQuery.*;
 import static br.com.infox.core.constants.LengthConstants.*;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
@@ -12,12 +13,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="tb_perfil_template")
+@NamedQueries({@NamedQuery(name=LIST_PERFIS_DENTRO_DE_ESTRUTURA, query=LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)})
 public class PerfilTemplate {
 
     private Integer id;
@@ -83,4 +87,44 @@ public class PerfilTemplate {
     public String toString() {
         return getDescricao();
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getAtivo() == null) ? 0 : getAtivo().hashCode());
+        result = prime * result
+                + ((getDescricao() == null) ? 0 : getDescricao().hashCode());
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = prime * result
+                + ((getLocalizacao() == null) ? 0 : getLocalizacao().hashCode());
+        result = prime * result + ((getPapel() == null) ? 0 : getPapel().hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof PerfilTemplate)) return false;
+        PerfilTemplate other = (PerfilTemplate) obj;
+        if (getAtivo() == null) {
+            if (other.getAtivo() != null) return false;
+        } else if (!getAtivo().equals(other.getAtivo())) return false;
+        if (getDescricao() == null) {
+            if (other.getDescricao() != null) return false;
+        } else if (!getDescricao().equals(other.getDescricao())) return false;
+        if (getId() == null) {
+            if (other.getId() != null) return false;
+        } else if (!getId().equals(other.getId())) return false;
+        if (getLocalizacao() == null) {
+            if (other.getLocalizacao() != null) return false;
+        } else if (!getLocalizacao().equals(other.getLocalizacao())) return false;
+        if (getPapel() == null) {
+            if (other.getPapel() != null) return false;
+        } else if (!getPapel().equals(other.getPapel())) return false;
+        return true;
+    }
+    
+    
 }

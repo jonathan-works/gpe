@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import br.com.infox.core.persistence.ORConstants;
-import br.com.infox.epp.access.entity.Perfil;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.fluxo.query.RaiaPerfilQuery;
 
 @Entity
@@ -50,7 +50,7 @@ public class RaiaPerfil implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = RaiaPerfilQuery.COLUMN_PERFIL, nullable = false)
-    private Perfil perfil;
+    private PerfilTemplate perfilTemplate;
 
     public Integer getId() {
         return id;
@@ -76,11 +76,11 @@ public class RaiaPerfil implements Serializable {
         this.fluxo = fluxo;
     }
 
-    public Perfil getPerfil() {
-        return perfil;
+    public PerfilTemplate getPerfilTemplate() {
+        return perfilTemplate;
     }
 
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
+    public void setPerfilTemplate(PerfilTemplate perfilTemplate) {
+        this.perfilTemplate = perfilTemplate;
     }
 }

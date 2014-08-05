@@ -7,7 +7,6 @@ import org.jboss.seam.core.Events;
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 
@@ -51,10 +50,10 @@ public class LocalizacaoFullTreeHandler extends AbstractTreeHandler<Localizacao>
                 + "localizacaoPai = :" + EntityNode.PARENT_NODE
                 + " and l.ativo = true");
         UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-        Estrutura estruturaPai = usuarioPerfil.getPerfilTemplate().getLocalizacao().getEstruturaPai();
-        if (estruturaPai != null) {
+        Localizacao localizacao = usuarioPerfil.getPerfilTemplate().getLocalizacao();
+        if (usuarioPerfil.getPerfilTemplate().getLocalizacao() != null) {
             sb.append(" and estruturaPai.id = ");
-            sb.append(estruturaPai.getId());
+            sb.append(localizacao.getEstruturaPai().getId());
         }
         return sb.toString();
     }

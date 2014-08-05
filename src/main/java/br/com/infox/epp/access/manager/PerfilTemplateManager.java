@@ -1,5 +1,7 @@
 package br.com.infox.epp.access.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -29,6 +31,10 @@ public class PerfilTemplateManager extends Manager<PerfilTemplateDAO, PerfilTemp
             }
         }
         return super.persist(o);
+    }
+    
+    public List<PerfilTemplate> listPerfisDentroDeEstrutura() {
+        return getDao().listPerfisDentroDeEstrutura();
     }
 
 }

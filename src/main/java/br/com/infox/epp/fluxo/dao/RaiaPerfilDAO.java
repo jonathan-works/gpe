@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.Perfil;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
 import br.com.infox.epp.fluxo.query.RaiaPerfilQuery;
@@ -23,9 +23,9 @@ public class RaiaPerfilDAO extends DAO<RaiaPerfil> {
 
     public static final String NAME = "raiaPerfilDAO";
 
-    public List<RaiaPerfil> listByPerfil(Perfil perfil) {
+    public List<RaiaPerfil> listByPerfil(PerfilTemplate perfilTemplate) {
         Map<String, Object> params = new HashMap<>();
-        params.put(RaiaPerfilQuery.QUERY_PARAM_PERFIL, perfil);
+        params.put(RaiaPerfilQuery.QUERY_PARAM_PERFIL, perfilTemplate);
         return getNamedResultList(RaiaPerfilQuery.LIST_BY_PERFIL, params);
     }
 

@@ -17,6 +17,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
@@ -45,7 +46,8 @@ public class ControleFiltros {
 
         // Iniciar os filtros
         HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_PAPEL, usuarioPerfilAtual.getPerfilTemplate().getPapel().getIdPapel());
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_LOCALIZACAO, usuarioPerfilAtual.getLocalizacao().getIdLocalizacao());
+        Localizacao localizacaoAtual = usuarioPerfilAtual.getPerfilTemplate().getLocalizacao();
+        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_LOCALIZACAO, localizacaoAtual == null ? 0 : localizacaoAtual.getIdLocalizacao());
 
         HibernateUtil.setFilterParameter(SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, SigiloProcessoFilter.PARAM_ID_USUARIO, usuarioPerfilAtual.getUsuarioLogin().getIdUsuarioLogin());
 

@@ -12,18 +12,18 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.access.entity.Perfil;
-import br.com.infox.epp.access.manager.PerfilManager;
+import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class SwimlaneHandler implements Serializable {
 
     private static final long serialVersionUID = 7688420965362230234L;
     private Swimlane swimlane;
-    private List<Perfil> perfilList = new ArrayList<>();
+    private List<PerfilTemplate> perfilList = new ArrayList<>();
     private boolean dirty;
     private boolean contabilizar = false;
-    private Perfil perfil;
+    private PerfilTemplate perfil;
 
     public SwimlaneHandler(Swimlane swimlane) {
         this.swimlane = swimlane;
@@ -49,12 +49,12 @@ public class SwimlaneHandler implements Serializable {
         swimlane.getTaskMgmtDefinition().addSwimlane(swimlane);
     }
 
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
+    public void setPerfil(PerfilTemplate perfilTemplate) {
+        this.perfil = perfilTemplate;
         this.contabilizar = false;
     }
 
-    public Perfil getPerfil() {
+    public PerfilTemplate getPerfil() {
         return perfil;
     }
     
@@ -64,10 +64,10 @@ public class SwimlaneHandler implements Serializable {
         }
         getPerfilList().add(perfil);
         buildExpression();
-        setPerfil(new Perfil());
+        setPerfil(new PerfilTemplate());
     }
 
-    public void removePerfil(Perfil perfil) {
+    public void removePerfil(PerfilTemplate perfil) {
         getPerfilList().remove(perfil);
         buildExpression();
     }
@@ -78,11 +78,11 @@ public class SwimlaneHandler implements Serializable {
         } else {
             StringBuilder sb = new StringBuilder();
             boolean first = true;
-            for (Perfil perfil : getPerfilList()) {
+            for (PerfilTemplate perfil : getPerfilList()) {
                 if (!first) {
                     sb.append(",");
                 }
-                sb.append(perfil.getIdPerfil());
+                sb.append(perfil.getId());
                 first = false;
             }
             String expression = sb.toString();
@@ -101,7 +101,7 @@ public class SwimlaneHandler implements Serializable {
         Collection<Swimlane> values = swimlanes.values();
         for (Swimlane swimlane : values) {
             SwimlaneHandler sh = new SwimlaneHandler(swimlane);
-            sh.setPerfilList(new ArrayList<Perfil>());
+            sh.setPerfilList(new ArrayList<PerfilTemplate>());
             String exp = swimlane.getPooledActorsExpression();
             if (exp != null && !exp.isEmpty()) {
                 String[] perfis = exp.split(",");
@@ -148,11 +148,11 @@ public class SwimlaneHandler implements Serializable {
         return swimlane.getName();
     }
     
-    public void setPerfilList(List<Perfil> perfilList) {
+    public void setPerfilList(List<PerfilTemplate> perfilList) {
         this.perfilList = perfilList;
     }
     
-    public List<Perfil> getPerfilList() {
+    public List<PerfilTemplate> getPerfilList() {
         return perfilList;
     }
 
@@ -164,7 +164,7 @@ public class SwimlaneHandler implements Serializable {
         return contabilizar;
     }
 
-    private static PerfilManager perfilManager() {
-        return ComponentUtil.getComponent(PerfilManager.NAME);
+    private static PerfilTemplateManager perfilManager() {
+        return ComponentUtil.getComponent(PerfilTemplateManager.NAME);
     }
 }

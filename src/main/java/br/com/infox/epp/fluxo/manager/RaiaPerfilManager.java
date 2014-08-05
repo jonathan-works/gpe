@@ -10,9 +10,9 @@ import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.dao.PerfilDAO;
+import br.com.infox.epp.access.dao.PerfilTemplateDAO;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.Perfil;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.fluxo.dao.RaiaPerfilDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
@@ -24,10 +24,11 @@ public class RaiaPerfilManager extends Manager<RaiaPerfilDAO, RaiaPerfil> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "raiaPerfilManager";
 
-    @In private PerfilDAO perfilDAO;
+    @In 
+    private PerfilTemplateDAO perfilTemplateDAO;
     
-    public List<RaiaPerfil> listByPerfil(Perfil perfil) {
-        return getDao().listByPerfil(perfil);
+    public List<RaiaPerfil> listByPerfil(PerfilTemplate perfilTemplate) {
+        return getDao().listByPerfil(perfilTemplate);
     }
     
     public List<RaiaPerfil> listByLocalizacao(Localizacao localizacao) {
@@ -48,7 +49,7 @@ public class RaiaPerfilManager extends Manager<RaiaPerfilDAO, RaiaPerfil> {
                 RaiaPerfil raiaPerfil = new RaiaPerfil();
                 raiaPerfil.setFluxo(fluxo);
                 raiaPerfil.setNomeRaia(swimlane.getName());
-                raiaPerfil.setPerfil(perfilDAO.getReference(Integer.valueOf(perfil)));
+                raiaPerfil.setPerfilTemplate(perfilTemplateDAO.getReference(Integer.valueOf(perfil)));
                 persist(raiaPerfil);
             }
         }

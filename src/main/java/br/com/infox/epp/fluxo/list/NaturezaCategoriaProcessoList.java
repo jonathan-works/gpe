@@ -10,6 +10,8 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 
 @Name(NaturezaCategoriaProcessoList.NAME)
@@ -21,20 +23,21 @@ public class NaturezaCategoriaProcessoList extends EntityList<NaturezaCategoriaF
 
     private static final String DEFAULT_EJBQL = "select ncf from NatCatFluxoLocalizacao o "
             + "inner join o.naturezaCategoriaFluxo ncf "
-            + "inner join ncf.fluxo.fluxoPapelList papelList where ncf.fluxo.publicado is true";
+            + "inner join ncf.fluxo.fluxoPapelList papelList where ncf.fluxo.publicado is true "
+            + "and papelList.papel = #{usuarioLogadoPerfilAtual.getPerfilTemplate().getPapel()} ";
     private static final String DEFAULT_ORDER = "natureza";
-    private static final String R1 = "o.localizacao = #{usuarioLogadoPerfilAtual.getPerfil().getPerfilTemplate().getLocalizacao()}";
-    private static final String R2 = "papelList.papel = #{usuarioLogadoPerfilAtual.getPerfil().getPerfilTemplate().getPapel()}";
     
     @Override
     protected void addSearchFields() {
-        addSearchField("localizacao", SearchCriteria.IGUAL, R1);
-        addSearchField("papel", SearchCriteria.IGUAL, R2);
     }
 
     @Override
     protected String getDefaultEjbql() {
-        return DEFAULT_EJBQL;
+        Localizacao localizacao = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao();
+        if (localizacao == null) {
+            return DEFAULT_EJBQL + " and o.localizacao is null";
+        }
+        return DEFAULT_EJBQL + " and o.localizacao.idLocalizacao = " + localizacao.getIdLocalizacao();
     }
 
     @Override

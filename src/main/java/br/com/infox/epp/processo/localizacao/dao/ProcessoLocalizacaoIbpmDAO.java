@@ -41,10 +41,13 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
     }
 
     public boolean possuiPermissao(Processo processo) {
+        if (Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao() == null) {
+            return false;
+        }
         ControleFiltros.instance().iniciarFiltro();
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
+        parameters.put(PARAM_LOCALIZACAO, Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao());
         parameters.put(PARAM_PAPEL, Authenticator.getPapelAtual());
         Long count = getNamedSingleResult(COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, parameters);
         return count != null && count > 0;

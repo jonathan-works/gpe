@@ -22,7 +22,7 @@ import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.Perfil;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
@@ -211,11 +211,11 @@ public class AssinaturaDocumentoService implements Serializable {
                 perfilAtual, certChain, signature);
     }
 
-    public boolean isDocumentoAssinado(Integer idDocumento, Perfil perfil) {
+    public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {
         ProcessoDocumento processoDocumento = processoDocumentoManager
                 .find(idDocumento);
         return processoDocumento != null
-                && isDocumentoAssinado(processoDocumento, perfil.getPerfilTemplate().getPapel());
+                && isDocumentoAssinado(processoDocumento, perfilTemplate.getPapel());
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, UsuarioPerfil perfil) {
