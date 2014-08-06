@@ -29,6 +29,20 @@ public class UsuarioPerfil implements Serializable {
     private Localizacao localizacao;
     private Boolean responsavelLocalizacao;
     
+    public UsuarioPerfil() {
+    }
+    
+    public UsuarioPerfil(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, Localizacao localizacao) {
+        this(usuarioLogin, perfilTemplate, localizacao, Boolean.FALSE);
+    }
+    
+    public UsuarioPerfil(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, Localizacao localizacao, boolean responsavelLocalizacao) {
+        setUsuarioLogin(usuarioLogin);
+        setPerfilTemplate(perfilTemplate);
+        setLocalizacao(localizacao);
+        setResponsavelLocalizacao(responsavelLocalizacao);
+    }
+    
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_usuario_perfil")
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
