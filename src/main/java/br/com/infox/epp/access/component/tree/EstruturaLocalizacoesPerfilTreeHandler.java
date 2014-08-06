@@ -9,7 +9,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(EstruturaLocalizacoesPerfilTreeHandler.NAME)
 @AutoCreate
-public class EstruturaLocalizacoesPerfilTreeHandler extends AbstractTreeHandler<Localizacao> {
+public class EstruturaLocalizacoesPerfilTreeHandler extends AbstractTreeHandler<Object> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "estruturaLocalizacoesPerfilTree";
@@ -21,7 +21,12 @@ public class EstruturaLocalizacoesPerfilTreeHandler extends AbstractTreeHandler<
 
     @Override
     protected String getQueryChildren() {
-        return "select n from Localizacao n where n.estruturaPai = :" + EntityNode.PARENT_NODE;
+        return "select n from Localizacao n where n.estruturaPai is not null ";
+    }
+    
+    @Override
+    protected EntityNode<Object> createNode() {
+        return new EstruturaLocalizacoesPerfilEntityNode(getQueryChildrenList());
     }
 
 }
