@@ -114,24 +114,25 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
     public Localizacao getLocalizacaoByUnidadeGestora(
             String codigoUnidadeGestora) {
         Map<String, Object> params = new HashMap<>();
-        params.put(COL_CODIGO_UNIDADE_GESTORA, codigoUnidadeGestora);
-        List<String> listIdLocalizacao = getNamedResultList(
+        params.put(PARAM_COD_UNIDADE_GESTORA, codigoUnidadeGestora);
+        List<Object> listIdLocalizacao = getNamedResultList(
                 GET_BY_UNIDADE_GESTORA, params);
         Localizacao localizacao = null;
         if (listIdLocalizacao != null && !listIdLocalizacao.isEmpty()) {
-            localizacao = find(Integer.parseInt(listIdLocalizacao.get(0), 10));
+            localizacao = find(Integer.parseInt(listIdLocalizacao.get(0).toString(), 10));
         }
         return localizacao;
     }
 
-    public void createUnidadeGestora(String codigoUnidadeGestora, String nomeUnidadeGestora, Localizacao localizacao)
+    public void createUnidadeGestora(String codigoUnidadeGestora, Localizacao localizacao)
             throws DAOException {
         Map<String,Object> params = new HashMap<>();
         params.put(PARAM_COD_UNIDADE_GESTORA,codigoUnidadeGestora);
+        params.put(LOCALIZACAO_ATTRIBUTE, localizacao);
         try {
             String nativeQuery = INSERT_INTO_UNIDADE_GESTORA;
             Query query = createNativeQuery(nativeQuery, params);
-            query.getResultList();
+            query.executeUpdate();
         } catch (Exception e) {
             throw new DAOException(e);
         } finally {

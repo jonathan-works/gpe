@@ -7,6 +7,7 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.exception.RecursiveException;
 import br.com.infox.core.manager.Manager;
@@ -132,12 +133,13 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
         return getDao().getlocalizacaoByNomeEstruturaPai(nomeEstruturaPai);
     }
 
+    @Transactional
     public Localizacao createUnidadeGestora(String codigoUnidadeGestora, String nomeUnidadeGestora) throws DAOException {
         Localizacao localizacao=null;
-        if (getLocalizacaoByUnidadeGestora(codigoUnidadeGestora) != null) {
+        if (getLocalizacaoByUnidadeGestora(codigoUnidadeGestora) == null) {
             Localizacao localizacaoRaiz = new Localizacao(nomeUnidadeGestora, Boolean.TRUE, find(1));
             persist(localizacaoRaiz);
-            getDao().createUnidadeGestora(codigoUnidadeGestora, nomeUnidadeGestora, localizacaoRaiz);
+            getDao().createUnidadeGestora(codigoUnidadeGestora, localizacaoRaiz);
             localizacao = getLocalizacaoByUnidadeGestora(codigoUnidadeGestora);
         }
         return localizacao;

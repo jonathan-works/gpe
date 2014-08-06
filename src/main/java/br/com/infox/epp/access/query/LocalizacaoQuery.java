@@ -24,7 +24,7 @@ public interface LocalizacaoQuery {
             + QUERY_PARAM_ID_LOCALIZACAO;
     
     String LIST_BY_NOME_ESTRUTURA_PAI = "listByNomeEstruturaPai";
-    String LIST_BY_NOME_ESTRUTURA_PAI_QUERY = "select o from Localizacao o where o.estrutura.nome = :"
+    String LIST_BY_NOME_ESTRUTURA_PAI_QUERY = "select o from Localizacao o where o.estruturaPai.nome = :"
             + ESTRUTURA_PAI;
 
     String COL_CODIGO_UNIDADE_GESTORA = "id_unidade_gestora";
@@ -39,9 +39,8 @@ public interface LocalizacaoQuery {
     String INSERT_INTO_UNIDADE_GESTORA = "INSERT INTO tb_unidade_gestora ("
             + COL_CODIGO_UNIDADE_GESTORA + ", "
             + COL_NOME_UNIDADE_GESTORA + ", "
-            + ID_LOCALIZACAO + ") values ("
-            + PARAM_COD_UNIDADE_GESTORA + ", "
-            + PARAM_NOME_UNIDADE_GESTORA + ", "
+            + ID_LOCALIZACAO + ") values (:"
+            + PARAM_COD_UNIDADE_GESTORA + ", :"
             + LOCALIZACAO_ATTRIBUTE + ")";
     
     String IS_LOCALIZACAO_ANCESTOR = "isLocalizacaoAncestor";
