@@ -22,6 +22,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Reflections;
 
+import br.com.infox.hibernate.util.HibernateUtil;
+
 public final class ComponentUtil {
 
     private static final LogProvider LOG = Logging.getLogProvider(ComponentUtil.class);
@@ -139,6 +141,7 @@ public final class ComponentUtil {
      */
     public static Object getAnnotatedAttributeValue(Object object,
             Class<? extends Annotation> annotationClass) {
+    	object = HibernateUtil.removeProxy(object);
         String fieldName = getAnnotationField(object.getClass(), annotationClass);
         return getValue(object, fieldName);
     }
