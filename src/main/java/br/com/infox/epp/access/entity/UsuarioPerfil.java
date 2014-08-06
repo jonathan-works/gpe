@@ -1,6 +1,10 @@
 package br.com.infox.epp.access.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.access.query.UsuarioPerfilQuery.GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO;
+import static br.com.infox.epp.access.query.UsuarioPerfilQuery.GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.access.query.UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN;
+import static br.com.infox.epp.access.query.UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN_QUERY;
 import static javax.persistence.FetchType.EAGER;
 
 import java.io.Serializable;
@@ -13,12 +17,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="tb_usuario_perfil")
+@NamedQueries({
+    @NamedQuery(name=GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO, query=GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO_QUERY),
+    @NamedQuery(name=LIST_BY_USUARIO_LOGIN, query=LIST_BY_USUARIO_LOGIN_QUERY)
+})
 public class UsuarioPerfil implements Serializable {
 
     private static final long serialVersionUID = 1L;
