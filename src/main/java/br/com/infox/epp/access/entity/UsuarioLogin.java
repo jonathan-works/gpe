@@ -409,5 +409,15 @@ public class UsuarioLogin implements Serializable {
         }
         return result;
     }
+    
+    @Transient
+    public String getPerfisFormatados() {
+        if (getUsuarioPerfilList().isEmpty()) {
+            return "";
+        } else {
+            return getUsuarioPerfilList().toString();
+        }
+            
+    }
 
 }

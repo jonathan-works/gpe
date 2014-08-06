@@ -49,6 +49,11 @@
         columnId="nomeUsuario"
         columnHeader="#{messages['usuarioLogin.nome']}"
         value="#{row.nomeUsuario}" />
+      <wi:columnOutputText
+        columnId="usuarioPerfilList"
+        columnHeader="#{messages['usuarioLogin.perfis']}"
+        value="#{row.perfisFormatados}"
+      />
       <wi:columnBoolean
         columnId="bloqueio"
         columnHeader="#{messages['usuarioLogin.bloqueio']}"
