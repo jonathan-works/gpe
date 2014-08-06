@@ -29,10 +29,6 @@ public class PerfilTemplateCrudAction extends AbstractCrudAction<PerfilTemplate,
         clearTrees();
     }
 
-    public void onClickLimpar() {
-        clearTrees();
-    }
-    
     @SuppressWarnings(UNCHECKED)
     private void clearTrees() {
         ((TreeHandler<Papel>) Component.getInstance(PapelTreeHandler.NAME)).clearTree();

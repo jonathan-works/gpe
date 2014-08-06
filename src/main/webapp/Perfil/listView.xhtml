@@ -21,8 +21,7 @@
             id="perfilList" rowId="#{row.id}">
             <ui:define name="searchForm">
                 <wi:searchForm formId="perfilTemplateSearchForm"
-                    formTitle="#{messages['searchForm.title']}"
-                    clearAction="perfilTemplateCrudAction.onClickLimpar">
+                    formTitle="#{messages['searchForm.title']}">
                     <wi:inputText id="perfil"
                         label="#{messages['perfil.descricao']}"
                         value="#{perfilTemplateList.entity.descricao}"></wi:inputText>
