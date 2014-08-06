@@ -33,7 +33,7 @@ public class PerfilTemplate {
     @Id
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_perfil_template")
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(name = "id_perfil_template", unique = true, nullable = false)
     public Integer getId() {
         return id;
     }
@@ -42,7 +42,7 @@ public class PerfilTemplate {
         this.id = id;
     }
     
-    @Column(name="ds_perfil_temp", length=DESCRICAO_PADRAO, nullable=false)
+    @Column(name="ds_perfil_template", length=DESCRICAO_PADRAO, nullable=false)
     @NotNull
     public String getDescricao() {
         return descricao;
