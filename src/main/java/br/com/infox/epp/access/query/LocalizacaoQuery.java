@@ -22,6 +22,10 @@ public interface LocalizacaoQuery {
     String LOCALIZACOES_BY_IDS = "Localizacao.localizacoesByIds";
     String LOCALIZACOES_BY_IDS_QUERY = "select o from Localizacao o where o.idLocalizacao in :"
             + QUERY_PARAM_ID_LOCALIZACAO;
+    
+    String LIST_BY_NOME_ESTRUTURA_PAI = "listByNomeEstruturaPai";
+    String LIST_BY_NOME_ESTRUTURA_PAI_QUERY = "select o from Localizacao o where o.estrutura.nome = :"
+            + ESTRUTURA_PAI;
 
     String IS_LOCALIZACAO_ANCESTOR = "isLocalizacaoAncestor";
     String IS_LOCALIZACAO_ANCESTOR_QUERY = "select distinct 1 from Localizacao o where o.caminhoCompleto like concat(:"
