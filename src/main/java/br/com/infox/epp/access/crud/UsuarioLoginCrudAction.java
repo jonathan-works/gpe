@@ -1,6 +1,7 @@
 package br.com.infox.epp.access.crud;
 
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -10,7 +11,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
-import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
 
@@ -25,7 +25,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
     @In
     private UnidadeDecisoraColegiadaManager unidadeDecisoraColegiadaManager;
     
-    private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList;
+    private List<Map<String, String>> unidadeDecisoraMonocraticaList;
     private List<UnidadeDecisoraColegiada> unidadeDecisoraColegiadaList;
     
     public void onClickVinculoUnidadeDecisoraTab(){
@@ -45,7 +45,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
         return UsuarioEnum.values();
     }
     
-    public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaList(){
+    public List<Map<String, String>> getUnidadeDecisoraMonocraticaList(){
     	if (unidadeDecisoraMonocraticaList == null){
     		unidadeDecisoraMonocraticaList = unidadeDecisoraMonocraticaManager.getUnidadeDecisoraListByUsuario((Integer) getInstanceId());
     	}

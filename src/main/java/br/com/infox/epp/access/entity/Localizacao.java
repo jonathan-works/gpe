@@ -7,6 +7,8 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.DESCRICAO_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_FILHO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_PAI;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.GET_BY_UNIDADE_GESTORA;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.GET_BY_UNIDADE_GESTORA_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ID_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR_QUERY;
@@ -21,7 +23,7 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.SEQUENCE_LOCALIZACA
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TABLE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TWITTER;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.USOS_DA_HIERARQUIA_LOCALIZACAO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -33,6 +35,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,6 +55,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Entity
 @Table(name = TABLE_LOCALIZACAO)
@@ -77,6 +81,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     
     private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<>(0);
     private List<Localizacao> localizacaoList = new ArrayList<>(0);
+    private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList = new ArrayList<>(0);
 
     private String caminhoCompleto;
     private Boolean temContaTwitter;
@@ -209,8 +214,17 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     public List<LocalizacaoTurno> getLocalizacaoTurnoList() {
         return localizacaoTurnoList;
     }
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
+    public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaList() {
+		return unidadeDecisoraMonocraticaList;
+	}
 
-    @Override
+	public void setUnidadeDecisoraMonocraticaList(List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList) {
+		this.unidadeDecisoraMonocraticaList = unidadeDecisoraMonocraticaList;
+	}
+
+	@Override
     @Transient
     public Localizacao getParent() {
         return this.getLocalizacaoPai();

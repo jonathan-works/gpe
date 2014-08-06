@@ -30,7 +30,7 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
 		return getNamedResultList(SEARCH_BY_UNIDADE_DECISORA_COLEGIADA, map);
 	}
 	
-	public List<UnidadeDecisoraMonocratica> searchUnidadeDecisoraMonocraticaWithIdUsuario(Integer idUsuario){
+	public List<Map<String, String>> searchUnidadeDecisoraMonocraticaWithIdUsuario(Integer idUsuario){
 		Map<String, Object> map = new HashMap<>(1);
 		map.put(ID_USUARIO_LOGIN, idUsuario);
 		return getNamedResultList(SEARCH_UDM_BY_USUARIO, map);

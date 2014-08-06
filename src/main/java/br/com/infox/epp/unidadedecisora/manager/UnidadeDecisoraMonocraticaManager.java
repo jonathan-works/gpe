@@ -1,6 +1,7 @@
 package br.com.infox.epp.unidadedecisora.manager;
 
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -23,7 +24,7 @@ public class UnidadeDecisoraMonocraticaManager extends Manager<UnidadeDecisoraMo
 		return getDao().searchUnidadeDecisoraMonocraticaAtivoWithIdColegiada(idColegiada);
 	}
 	
-	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraListByUsuario(Integer idUsuario){
+	public List<Map<String, String>> getUnidadeDecisoraListByUsuario(Integer idUsuario){
 		return getDao().searchUnidadeDecisoraMonocraticaWithIdUsuario(idUsuario);
 	}
 	
