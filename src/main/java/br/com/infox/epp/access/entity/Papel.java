@@ -77,6 +77,7 @@ public class Papel implements java.io.Serializable {
     public Papel(final String nome, final String identificador) {
         this.nome = nome;
         this.identificador = identificador;
+        this.termoAdesao = Boolean.FALSE;
     }
 
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
