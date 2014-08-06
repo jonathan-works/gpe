@@ -18,13 +18,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Query;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.query.LocalizacaoQuery;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
 import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
 
 @Name(LocalizacaoDAO.NAME)
@@ -47,28 +49,32 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         params.put(LOCALIZACAO_ATTRIBUTE, localizacao);
         return getNamedSingleResult(IS_LOCALIZACAO_ANCESTOR, params) != null;
     }
-    
+
     public boolean isCaminhoCompletoDuplicado(Localizacao localizacao) {
         Map<String, Object> params = new HashMap<>();
-        params.put(QUERY_PARAM_CAMINHO_COMPLETO, localizacao.getCaminhoCompleto());
+        params.put(QUERY_PARAM_CAMINHO_COMPLETO,
+                localizacao.getCaminhoCompleto());
         String query = IS_CAMINHO_COMPLETO_DUPLICADO_QUERY;
         if (localizacao.getIdLocalizacao() != null) {
-            params.put(QUERY_PARAM_ID_LOCALIZACAO, localizacao.getIdLocalizacao());
-            query = IS_CAMINHO_COMPLETO_DUPLICADO_QUERY + PART_FILTER_BY_LOCALIZACAO;
+            params.put(QUERY_PARAM_ID_LOCALIZACAO,
+                    localizacao.getIdLocalizacao());
+            query = IS_CAMINHO_COMPLETO_DUPLICADO_QUERY
+                    + PART_FILTER_BY_LOCALIZACAO;
         }
         boolean result = ((Number) getSingleResult(query, params)).longValue() > 0;
         if (result) {
             return result;
         }
-        
+
         query = IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY;
         if (localizacao.getIdLocalizacao() != null) {
-            query = IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY + PART_FILTER_BY_LOCALIZACAO;
+            query = IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY
+                    + PART_FILTER_BY_LOCALIZACAO;
         }
         params.put(QUERY_PARAM_ESTRUTURA_PAI, localizacao.getEstruturaPai());
         return ((Number) getSingleResult(query, params)).longValue() > 0;
     }
-    
+
     @Override
     public Localizacao persist(Localizacao object) throws DAOException {
         if (!isCaminhoCompletoDuplicado(object)) {
@@ -76,7 +82,7 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         }
         throw new DAOException(DAOException.MSG_UNIQUE_VIOLATION);
     }
-    
+
     @Override
     public Localizacao update(Localizacao object) throws DAOException {
         if (!isCaminhoCompletoDuplicado(object)) {
@@ -84,11 +90,14 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         }
         throw new DAOException(DAOException.MSG_UNIQUE_VIOLATION);
     }
-    
-    public List<TipoUsoLocalizacaoEnum> getUsosLocalizacao(Localizacao localizacao) {
+
+    public List<TipoUsoLocalizacaoEnum> getUsosLocalizacao(
+            Localizacao localizacao) {
         Map<String, Object> params = new HashMap<>();
-        params.put(QUERY_PARAM_CAMINHO_COMPLETO, localizacao.getCaminhoCompleto());
-        List<String> result = getNamedResultList(USOS_DA_HIERARQUIA_LOCALIZACAO, params);
+        params.put(QUERY_PARAM_CAMINHO_COMPLETO,
+                localizacao.getCaminhoCompleto());
+        List<String> result = getNamedResultList(
+                USOS_DA_HIERARQUIA_LOCALIZACAO, params);
         List<TipoUsoLocalizacaoEnum> usos = new ArrayList<>();
         for (String s : result) {
             usos.add(TipoUsoLocalizacaoEnum.valueOf(s));
@@ -97,8 +106,36 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
     }
 
     public Localizacao getlocalizacaoByNomeEstruturaPai(String nomeEstruturaPai) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(ESTRUTURA_PAI, nomeEstruturaPai);
+        return getNamedSingleResult(LIST_BY_NOME_ESTRUTURA_PAI, params);
+    }
+
+    public Localizacao getLocalizacaoByUnidadeGestora(
+            String codigoUnidadeGestora) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(COL_CODIGO_UNIDADE_GESTORA, codigoUnidadeGestora);
+        List<String> listIdLocalizacao = getNamedResultList(
+                GET_BY_UNIDADE_GESTORA, params);
+        Localizacao localizacao = null;
+        if (listIdLocalizacao != null && !listIdLocalizacao.isEmpty()) {
+            localizacao = find(Integer.parseInt(listIdLocalizacao.get(0), 10));
+        }
+        return localizacao;
+    }
+
+    public void createUnidadeGestora(String codigoUnidadeGestora, String nomeUnidadeGestora, Localizacao localizacao)
+            throws DAOException {
         Map<String,Object> params = new HashMap<>();
-        params.put(LocalizacaoQuery.ESTRUTURA_PAI, nomeEstruturaPai);
-        return getNamedSingleResult(LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI, params);
+        params.put(PARAM_COD_UNIDADE_GESTORA,codigoUnidadeGestora);
+        try {
+            String nativeQuery = INSERT_INTO_UNIDADE_GESTORA;
+            Query query = createNativeQuery(nativeQuery, params);
+            query.getResultList();
+        } catch (Exception e) {
+            throw new DAOException(e);
+        } finally {
+            rollbackTransactionIfNeeded();
+        }
     }
 }

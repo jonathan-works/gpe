@@ -131,4 +131,19 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     public Localizacao getLocalizacaoByEstruturaPaiName(String nomeEstruturaPai) {
         return getDao().getlocalizacaoByNomeEstruturaPai(nomeEstruturaPai);
     }
+
+    public Localizacao createUnidadeGestora(String codigoUnidadeGestora, String nomeUnidadeGestora) throws DAOException {
+        Localizacao localizacao=null;
+        if (getLocalizacaoByUnidadeGestora(codigoUnidadeGestora) != null) {
+            Localizacao localizacaoRaiz = new Localizacao(nomeUnidadeGestora, Boolean.TRUE, find(1));
+            persist(localizacaoRaiz);
+            getDao().createUnidadeGestora(codigoUnidadeGestora, nomeUnidadeGestora, localizacaoRaiz);
+            localizacao = getLocalizacaoByUnidadeGestora(codigoUnidadeGestora);
+        }
+        return localizacao;
+    }
+    
+    public Localizacao getLocalizacaoByUnidadeGestora(String codigoUnidadeGestora) {
+        return getDao().getLocalizacaoByUnidadeGestora(codigoUnidadeGestora);
+    }
 }
