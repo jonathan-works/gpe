@@ -2,12 +2,14 @@ package br.com.infox.epp.access.list;
 
 import java.util.Map;
 
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(LocalizacaoList.NAME)
@@ -29,6 +31,13 @@ public class LocalizacaoList extends EntityList<Localizacao> {
         addSearchField("localizacaoPai", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
         addSearchField("hierarchicalPath", SearchCriteria.INICIANDO, "o.caminhoCompleto like concat(#{authenticator.getLocalizacaoAtual().caminhoCompleto},'%')");
+    }
+    
+    @Override
+    public void newInstance() {
+    	super.newInstance();
+    	LocalizacaoTreeHandler ret = (LocalizacaoTreeHandler) Component.getInstance(LocalizacaoTreeHandler.NAME);
+    	ret.clearTree();
     }
 
     @Override
