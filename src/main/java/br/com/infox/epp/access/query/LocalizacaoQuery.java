@@ -39,31 +39,39 @@ public interface LocalizacaoQuery {
     String USOS_DA_HIERARQUIA_LOCALIZACAO = "Localizacao.usosHierarquiaLocalizacao";
     String USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY = 
         "SELECT tipo FROM " +
-        "(SELECT 'P' AS tipo FROM tb_perfil p " +
+        "(SELECT 'P' AS tipo FROM tb_perfil_template p " +
         "INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
         "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" +
         
+ 		"UNION " +
+ 		
+		"SELECT 'P' AS tipo FROM tb_usuario_perfil p " +
+		"INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
+		"WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" +
+        
         "UNION " +
         
-        "SELECT 'P' AS tipo FROM tb_perfil p " +
+        "SELECT 'P' AS tipo FROM tb_usuario_perfil up " +
+        "INNER JOIN tb_perfil_template p ON (p.id_perfil_template=up.id_perfil_template) " +
         "INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
-        "INNER JOIN tb_localizacao lp ON (p.id_localizacao_pai_estrutura = lp.id_localizacao) " +
+        "INNER JOIN tb_localizacao lp ON (up.id_localizacao = lp.id_localizacao) " +
         "WHERE l.id_estrutura_pai IS NOT NULL " +
         "AND lp.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" + 
         
         "UNION " +
         
         "SELECT 'RP' AS tipo FROM tb_raia_perfil rp " +
-        "INNER JOIN tb_perfil p ON (p.id_perfil = rp.id_perfil) " +
+        "INNER JOIN tb_perfil_template p ON (p.id_perfil_template = rp.id_perfil_template) " +
         "INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
         "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" + 
         
         "UNION " +
         
         "SELECT 'RP' AS tipo FROM tb_raia_perfil rp " +
-        "INNER JOIN tb_perfil p ON (p.id_perfil = rp.id_perfil) " +
+        "INNER JOIN tb_perfil_template p ON (p.id_perfil_template = rp.id_perfil_template) " +
+        "INNER JOIN tb_usuario_perfil up ON (up.id_perfil_template=p.id_perfil_template) " +
         "INNER JOIN tb_localizacao l ON (p.id_localizacao = l.id_localizacao) " +
-        "INNER JOIN tb_localizacao lp ON (p.id_localizacao_pai_estrutura = lp.id_localizacao) " +
+        "INNER JOIN tb_localizacao lp ON (up.id_localizacao = lp.id_localizacao) " +
         "WHERE l.id_estrutura_pai IS NOT NULL " +
         "AND lp.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" + 
         
