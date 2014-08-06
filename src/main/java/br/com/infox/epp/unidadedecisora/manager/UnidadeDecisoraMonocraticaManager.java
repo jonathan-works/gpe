@@ -26,4 +26,8 @@ public class UnidadeDecisoraMonocraticaManager extends Manager<UnidadeDecisoraMo
 	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraListByUsuario(Integer idUsuario){
 		return getDao().searchUnidadeDecisoraMonocraticaWithIdUsuario(idUsuario);
 	}
+	
+	public boolean existeUnidadeMonocraticaComLocalizacao(Integer idLocalizacao){
+		return getDao().existeUnidadeDecisoraComLocalizacao(idLocalizacao);
+	}
 }

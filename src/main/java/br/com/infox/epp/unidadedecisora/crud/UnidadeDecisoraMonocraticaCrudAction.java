@@ -1,8 +1,11 @@
 package br.com.infox.epp.unidadedecisora.crud;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
@@ -15,12 +18,30 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraMonocraticaCrudAction";
 	
+	@In
+	private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
+	
 	@Override
 	public void newInstance() {
 		super.newInstance();
 		LocalizacaoTreeHandler tree = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
 		tree.clearTree();
 	}
+	
+	@Override
+	public String save() {
+		String ret = super.save();
+		if (GenericDatabaseErrorCode.UNIQUE_VIOLATION.name().equals(ret)){
+			Integer idLocalizacao = getInstance().getLocalizacao().getIdLocalizacao();
+			boolean existeLoc = unidadeDecisoraMonocraticaManager.existeUnidadeMonocraticaComLocalizacao(idLocalizacao);
+			if (existeLoc){
+				FacesMessages.instance().clearGlobalMessages();
+				FacesMessages.instance().add("#{messages['unidadeDecisoraMonocratica.jaExisteLocalizacao']}");
+			}
+		}
+		return ret;
+	};
+	
 	
 	public Localizacao getLocalizacao() {
 	    return getInstance().getLocalizacao();

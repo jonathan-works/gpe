@@ -22,7 +22,8 @@ import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocratic
 @Entity
 @Table(name = UnidadeDecisoraMonocratica.TABLE_NAME)
 @NamedQueries(value={ @NamedQuery(name=SEARCH_BY_UNIDADE_DECISORA_COLEGIADA, query=SEARCH_BY_UNIDADE_DECISORA_COLEGIADA_QUERY),
-					  @NamedQuery(name=SEARCH_UDM_BY_USUARIO, query=SEARCH_UDM_BY_USUARIO_QUERY) })
+					  @NamedQuery(name=SEARCH_UDM_BY_USUARIO, query=SEARCH_UDM_BY_USUARIO_QUERY),
+					  @NamedQuery(name=SEARCH_EXISTE_UDM_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY)})
 public class UnidadeDecisoraMonocratica implements Serializable {
 
 	private static final long serialVersionUID = 1L;
