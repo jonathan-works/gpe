@@ -24,6 +24,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.query.LocalizacaoQuery;
 import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
 
 @Name(LocalizacaoDAO.NAME)
@@ -93,5 +94,11 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
             usos.add(TipoUsoLocalizacaoEnum.valueOf(s));
         }
         return usos;
+    }
+
+    public Localizacao getlocalizacaoByNomeEstruturaPai(String nomeEstruturaPai) {
+        Map<String,Object> params = new HashMap<>();
+        params.put(LocalizacaoQuery.ESTRUTURA_PAI, nomeEstruturaPai);
+        return getNamedSingleResult(LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI, params);
     }
 }

@@ -127,4 +127,8 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
             throw new DAOException(msg);
         }
     }
+
+    public Localizacao getLocalizacaoByEstruturaPaiName(String nomeEstruturaPai) {
+        return getDao().getlocalizacaoByNomeEstruturaPai(nomeEstruturaPai);
+    }
 }
