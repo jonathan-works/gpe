@@ -1,9 +1,12 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.epp.access.query.PerfilTemplateQuery.*;
-import static br.com.infox.core.constants.LengthConstants.*;
+import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.access.query.PerfilTemplateQuery.GET_BY_LOCALIZACAO_PAPEL;
+import static br.com.infox.epp.access.query.PerfilTemplateQuery.GET_BY_LOCALIZACAO_PAPEL_QUERY;
+import static br.com.infox.epp.access.query.PerfilTemplateQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA;
+import static br.com.infox.epp.access.query.PerfilTemplateQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY;
 import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
@@ -21,7 +24,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="tb_perfil_template")
-@NamedQueries({@NamedQuery(name=LIST_PERFIS_DENTRO_DE_ESTRUTURA, query=LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)})
+@NamedQueries({@NamedQuery(name=GET_BY_LOCALIZACAO_PAPEL,query=GET_BY_LOCALIZACAO_PAPEL_QUERY),@NamedQuery(name=LIST_PERFIS_DENTRO_DE_ESTRUTURA, query=LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)})
 public class PerfilTemplate {
 
     private Integer id;
