@@ -7,6 +7,7 @@ import static br.com.infox.epp.access.query.PerfilTemplateQuery.GET_BY_LOCALIZAC
 import static br.com.infox.epp.access.query.PerfilTemplateQuery.GET_BY_LOCALIZACAO_PAPEL_QUERY;
 import static br.com.infox.epp.access.query.PerfilTemplateQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA;
 import static br.com.infox.epp.access.query.PerfilTemplateQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY;
+import static java.text.MessageFormat.format;
 import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
@@ -32,6 +33,16 @@ public class PerfilTemplate {
     private Localizacao localizacao;
     private Papel papel;
     private Boolean ativo;
+    
+    public PerfilTemplate() {
+    }
+    
+    public PerfilTemplate(Localizacao localizacao, Papel papel) {
+        this.localizacao = localizacao;
+        this.papel = papel;
+        this.descricao = format("{0} / {1}", localizacao, papel);
+        this.ativo = Boolean.TRUE;
+    }
     
     @Id
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_perfil_template")
