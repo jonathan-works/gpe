@@ -121,4 +121,9 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
         }
         return null;
     }
+    
+    @Override
+    public void onClickFormTab() {
+        novaLocalizacao();
+    }
 }
