@@ -10,6 +10,8 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.PerfilTemplateDAO;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 
 @Name(PerfilTemplateManager.NAME)
@@ -35,6 +37,10 @@ public class PerfilTemplateManager extends Manager<PerfilTemplateDAO, PerfilTemp
     
     public List<PerfilTemplate> listPerfisDentroDeEstrutura() {
         return getDao().listPerfisDentroDeEstrutura();
+    }
+
+    public PerfilTemplate getByLocalizacaoPapel(Localizacao localizacao, Papel papel) {
+        return getDao().getByLocalizacaoPapel(localizacao,papel);
     }
 
 }
