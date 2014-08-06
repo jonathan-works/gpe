@@ -252,5 +252,15 @@ public abstract class DAO<T> implements Serializable {
             throw new ApplicationException(ApplicationException.createMessage("rollback da transação", "rollbackTransaction()", "Util", "ePP"), e);
         }
     }
+
+    protected Query createNativeQuery(String nativeQuery, Map<String, Object> parameters) {
+        final Query query = getEntityManager().createNativeQuery(nativeQuery);
+        if (parameters != null) {
+            for (Entry<String, Object> e : parameters.entrySet()) {
+                query.setParameter(e.getKey(), e.getValue());
+            }
+        }
+        return query;
+    }
     
 }
