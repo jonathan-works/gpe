@@ -21,7 +21,7 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.SEQUENCE_LOCALIZACA
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TABLE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TWITTER;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.USOS_DA_HIERARQUIA_LOCALIZACAO;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -61,6 +61,7 @@ import br.com.infox.epp.turno.entity.LocalizacaoTurno;
     @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY)
 })
 @NamedNativeQueries({
+    @NamedNativeQuery(name=GET_BY_UNIDADE_GESTORA, query=GET_BY_UNIDADE_GESTORA_QUERY),
     @NamedNativeQuery(name = USOS_DA_HIERARQUIA_LOCALIZACAO, query = USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY)
 })
 public class Localizacao implements Serializable, Recursive<Localizacao> {
