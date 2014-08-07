@@ -5,7 +5,6 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.epp.access.entity.Localizacao;
 
 @Name(EstruturaLocalizacoesPerfilTreeHandler.NAME)
 @AutoCreate

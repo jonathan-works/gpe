@@ -20,28 +20,28 @@ public class EstruturaLocalizacoesPerfilEntityNode extends EntityNode<Object> {
             Object entity, String[] queryChildrenList) {
         super(parent, entity, queryChildrenList);
         queryChildrenOfLocalizacaoList = queryChildrenList[0] + " and n.localizacaoPai = :" + EntityNode.PARENT_NODE;
-        queryRootsOfEstruturaList = queryChildrenList[0] + " and n.localizacaoPai is null";
+        queryRootsOfEstruturaList = queryChildrenList[0] + " and n.localizacaoPai is null and n.estruturaPai = :"+ EntityNode.PARENT_NODE;
     }
 
     public EstruturaLocalizacoesPerfilEntityNode(String queryChildren) {
         super(queryChildren);
         queryChildrenOfLocalizacaoList = queryChildren + " and n.localizacaoPai = :" + EntityNode.PARENT_NODE;
-        queryRootsOfEstruturaList = queryChildren + " and n.localizacaoPai is null";
+        queryRootsOfEstruturaList = queryChildren + " and n.localizacaoPai is null and n.estruturaPai = :"+ EntityNode.PARENT_NODE;
     }
     
     public EstruturaLocalizacoesPerfilEntityNode(String[] queryChildrenList) {
         super(queryChildrenList);
         queryChildrenOfLocalizacaoList = queryChildrenList[0] + " and n.localizacaoPai = :" + EntityNode.PARENT_NODE + 
                 " order by n.caminhoCompleto";
-        queryRootsOfEstruturaList = queryChildrenList[0] + " and n.localizacaoPai is null order by n.caminhoCompleto";
+        queryRootsOfEstruturaList = queryChildrenList[0] + " and n.localizacaoPai is null and n.estruturaPai = :"+ EntityNode.PARENT_NODE +" order by n.caminhoCompleto";
     }
     
     @Override
     protected List<Object> getChildrenList(String hql, Object entity) {
         Map<String, Object> parameters = new HashMap<>();
         String query;
+        parameters.put(PARENT_NODE, entity);
         if (entity instanceof Localizacao) { // O pai é uma localização, trago suas localizações filhas
-            parameters.put(PARENT_NODE, entity);
             query = queryChildrenOfLocalizacaoList;
         } else {
             query = queryRootsOfEstruturaList; // O pai é uma estrutura, trago as localizações raízes da estrutura
