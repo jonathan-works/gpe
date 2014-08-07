@@ -7,8 +7,6 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.DESCRICAO_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_FILHO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_PAI;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.GET_BY_UNIDADE_GESTORA;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.GET_BY_UNIDADE_GESTORA_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ID_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR_QUERY;
@@ -65,7 +63,6 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
     @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY)
 })
 @NamedNativeQueries({
-    @NamedNativeQuery(name=GET_BY_UNIDADE_GESTORA, query=GET_BY_UNIDADE_GESTORA_QUERY),
     @NamedNativeQuery(name = USOS_DA_HIERARQUIA_LOCALIZACAO, query = USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY)
 })
 public class Localizacao implements Serializable, Recursive<Localizacao> {

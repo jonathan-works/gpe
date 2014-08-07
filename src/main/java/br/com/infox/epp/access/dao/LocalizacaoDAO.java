@@ -1,9 +1,11 @@
 package br.com.infox.epp.access.dao;
 
 import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_CAMINHO_COMPLETO_DUPLICADO_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.PART_FILTER_BY_LOCALIZACAO;
@@ -18,15 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
-
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
 import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
 
 @Name(LocalizacaoDAO.NAME)
@@ -111,32 +110,4 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         return getNamedSingleResult(LIST_BY_NOME_ESTRUTURA_PAI, params);
     }
 
-    public Localizacao getLocalizacaoByUnidadeGestora(
-            String codigoUnidadeGestora) {
-        Map<String, Object> params = new HashMap<>();
-        params.put(PARAM_COD_UNIDADE_GESTORA, codigoUnidadeGestora);
-        List<Object> listIdLocalizacao = getNamedResultList(
-                GET_BY_UNIDADE_GESTORA, params);
-        Localizacao localizacao = null;
-        if (listIdLocalizacao != null && !listIdLocalizacao.isEmpty()) {
-            localizacao = find(Integer.parseInt(listIdLocalizacao.get(0).toString(), 10));
-        }
-        return localizacao;
-    }
-
-    public void createUnidadeGestora(String codigoUnidadeGestora, Localizacao localizacao)
-            throws DAOException {
-        Map<String,Object> params = new HashMap<>();
-        params.put(PARAM_COD_UNIDADE_GESTORA,codigoUnidadeGestora);
-        params.put(LOCALIZACAO_ATTRIBUTE, localizacao);
-        try {
-            String nativeQuery = INSERT_INTO_UNIDADE_GESTORA;
-            Query query = createNativeQuery(nativeQuery, params);
-            query.executeUpdate();
-        } catch (Exception e) {
-            throw new DAOException(e);
-        } finally {
-            rollbackTransactionIfNeeded();
-        }
-    }
 }

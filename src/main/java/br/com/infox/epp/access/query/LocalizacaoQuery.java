@@ -27,22 +27,6 @@ public interface LocalizacaoQuery {
     String LIST_BY_NOME_ESTRUTURA_PAI_QUERY = "select o from Localizacao o where o.estruturaPai.nome = :"
             + ESTRUTURA_PAI;
 
-    String COL_CODIGO_UNIDADE_GESTORA = "id_unidade_gestora";
-    String PARAM_COD_UNIDADE_GESTORA = "codigoUnidadeGestora";
-    String COL_NOME_UNIDADE_GESTORA = "nm_unidade_gestora";
-    String PARAM_NOME_UNIDADE_GESTORA = "nomeUnidadeGestora";
-
-    String GET_BY_UNIDADE_GESTORA = "Localizacao.getByUnidadeGestora";
-    String GET_BY_UNIDADE_GESTORA_QUERY = "SELECT " + ID_LOCALIZACAO
-            + " FROM tb_unidade_gestora u WHERE u."
-            + COL_CODIGO_UNIDADE_GESTORA + " = :" + PARAM_COD_UNIDADE_GESTORA;
-    String INSERT_INTO_UNIDADE_GESTORA = "INSERT INTO tb_unidade_gestora ("
-            + COL_CODIGO_UNIDADE_GESTORA + ", "
-            + COL_NOME_UNIDADE_GESTORA + ", "
-            + ID_LOCALIZACAO + ") values (:"
-            + PARAM_COD_UNIDADE_GESTORA + ", :"
-            + LOCALIZACAO_ATTRIBUTE + ")";
-    
     String IS_LOCALIZACAO_ANCESTOR = "isLocalizacaoAncestor";
     String IS_LOCALIZACAO_ANCESTOR_QUERY = "select distinct 1 from Localizacao o where o.caminhoCompleto like concat(:"
             + CAMINHO_COMPLETO + ",'%')" + " and o = :" + LOCALIZACAO_ATTRIBUTE;

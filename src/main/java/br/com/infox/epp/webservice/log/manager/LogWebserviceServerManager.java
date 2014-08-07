@@ -1,6 +1,9 @@
 package br.com.infox.epp.webservice.log.manager;
 
+import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,6 +49,13 @@ public class LogWebserviceServerManager extends Manager<LogWebserviceServerDAO, 
 		} catch (DAOException e){
 			LOG.log(Level.SEVERE, e.getMessage());
 		}
+	}
+	
+	public String getRequisicaoFromLog(BigInteger idLogWsServer){
+		String hql = "select requisicao from LogWebserviceServer o where idLogWsServer = :idLogWsServer";
+		Map<String, Object> map = new HashMap<>(1);
+		map.put("idLogWsServer", idLogWsServer);
+		return getDao().getSingleResult(hql, map);
 	}
 
 }
