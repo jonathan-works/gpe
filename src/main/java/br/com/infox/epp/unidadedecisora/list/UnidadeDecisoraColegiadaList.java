@@ -10,9 +10,12 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(UnidadeDecisoraColegiadaList.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -36,9 +39,21 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
     
     private UnidadeDecisoraMonocratica unidadeDecisoraMonocratica;
     
+    public Localizacao getLocalizacao() {
+        return getEntity().getLocalizacao();
+    }
+    
+    public void setLocalizacao(Localizacao localizacao) {
+        if (localizacao == null || localizacao.getEstruturaFilho() != null) {
+            getEntity().setLocalizacao(localizacao);
+        }
+    }
+    
     @Override
     public void newInstance() {
     	super.newInstance();
+    	LocalizacaoTreeHandler ut = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
+    	ut.clearTree();
     	setUnidadeDecisoraMonocratica(null);
     }
 
@@ -47,6 +62,7 @@ public class UnidadeDecisoraColegiadaList extends EntityList<UnidadeDecisoraCole
 		addSearchField("nome", SearchCriteria.CONTENDO);
 		addSearchField("unidadeDecisoraColegiadaList.unidadeDecisoraMonocratica", SearchCriteria.NONE, FILTRO_UNIDADE_MONOCRATICA);
 		addSearchField("ativo", SearchCriteria.IGUAL);
+		addSearchField("localizacao", SearchCriteria.IGUAL);
 	}
 
 	@Override

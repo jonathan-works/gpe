@@ -1,6 +1,7 @@
 package br.com.infox.epp.unidadedecisora.manager;
 
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -19,8 +20,12 @@ public class UnidadeDecisoraColegiadaManager extends Manager<UnidadeDecisoraCole
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraColegiadaManager";
 	
-	public List<UnidadeDecisoraColegiada> getUnidadeDecisoraListByIdUsuario(Integer idUsuario){
+	public List<Map<String, String>> getUnidadeDecisoraListByIdUsuario(Integer idUsuario){
 		return getDao().searchUnidadeDecisoraColegiadaWithIdUsuario(idUsuario);
+	}
+	
+	public boolean existeUnidadeColegiadaComLocalizacao(Integer idLocalizacao){
+		return getDao().existeUnidadeDecisoraComLocalizacao(idLocalizacao);
 	}
 
 }

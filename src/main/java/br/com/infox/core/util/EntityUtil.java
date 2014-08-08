@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -47,7 +48,9 @@ public final class EntityUtil implements Serializable {
         if (cl.getName().indexOf("javassist") > -1) {
             cl = cl.getSuperclass();
         }
-
+        if(cl.getName().contains("_$$_")){
+        	cl = cl.getSuperclass();
+        }
         return getId(cl);
     }
 
@@ -67,7 +70,9 @@ public final class EntityUtil implements Serializable {
         if (cl.getName().indexOf("javassist") > -1) {
             cl = cl.getSuperclass();
         }
-
+        if(cl.getName().contains("_$$_")){
+        	cl = cl.getSuperclass();
+        }
         return getId(cl).getReadMethod().invoke(objId);
     }
 
@@ -165,6 +170,9 @@ public final class EntityUtil implements Serializable {
         if (cl.getName().indexOf("javassist") > -1) {
             cl = cl.getSuperclass();
         }
+        if(cl.getName().contains("_$$_")){
+        	cl = cl.getSuperclass();
+        }
         return cl;
     }
 
@@ -222,7 +230,8 @@ public final class EntityUtil implements Serializable {
     private static boolean isAceptable(PropertyDescriptor pd) {
         return pd != null
                 && !ReflectionsUtil.hasAnnotation(pd, Transient.class)
-                && (ReflectionsUtil.hasAnnotation(pd, Column.class) || ReflectionsUtil.hasAnnotation(pd, ManyToOne.class));
+                && (ReflectionsUtil.hasAnnotation(pd, Column.class) || ReflectionsUtil.hasAnnotation(pd, ManyToOne.class)
+                		|| ReflectionsUtil.hasAnnotation(pd, JoinColumn.class));
     }
 
     private static boolean isRelacao(PropertyDescriptor pd) {

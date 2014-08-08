@@ -2,6 +2,8 @@ package br.com.infox.epp.unidadedecisora.entity;
 
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,19 +16,24 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.access.entity.Localizacao;
+
 @Entity
 @Table(name = UnidadeDecisoraColegiada.TABLE_NAME)
 @NamedQueries(value={
-		@NamedQuery(name=SEARCH_UDC_BY_USUARIO, query=SEARCH_UDC_BY_USUARIO_QUERY)
+		@NamedQuery(name=SEARCH_UDC_BY_USUARIO, query=SEARCH_UDC_BY_USUARIO_QUERY),
+		@NamedQuery(name=SEARCH_EXISTE_UDC_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY)
 })
 public class UnidadeDecisoraColegiada implements Serializable {
 
@@ -50,6 +57,10 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH, mappedBy="unidadeDecisoraColegiada")
 	@OrderBy("unidadeDecisoraMonocratica ASC")
 	private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
+	
+	@OneToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="id_localizacao", nullable=false)
+	private Localizacao localizacao;
 	
 	public Integer getIdUnidadeDecisoraColegiada() {
 		return idUnidadeDecisoraColegiada;
@@ -84,6 +95,14 @@ public class UnidadeDecisoraColegiada implements Serializable {
 		this.unidadeDecisoraColegiadaMonocraticaList = unidadeDecisoraColegiadaMonocraticaList;
 	}
 	
+	public Localizacao getLocalizacao() {
+		return localizacao;
+	}
+
+	public void setLocalizacao(Localizacao localizacao) {
+		this.localizacao = localizacao;
+	}
+
 	@Transient
 	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaList(){
 		List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList = new ArrayList<>();
