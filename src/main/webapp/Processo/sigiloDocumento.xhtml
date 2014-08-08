@@ -181,8 +181,9 @@
                <wi:searchForm formId="permissoesSearchForm" searchAction="usuarioRaiaList.refreshQuery"
                    formTitle="#{messages['sigiloDocumento.usuarios']}">
                    <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{messages['sigiloDocumento.usuario.nome']}" />
-                   <wi:selectOneMenuEntity id="localizacao" value="#{usuarioRaiaList.localizacao}" label="#{messages['sigiloDocumento.localizacao']}"
-                       items="#{usuarioRaiaList.localizacoes}" showLabelSelecione="true" />
+                   <wi:selectOneMenuEntity id="perfilTemplate" value="#{usuarioRaiaList.perfil}" 
+                       label="#{messages['perfil.titlePage']}"
+                       items="#{usuarioRaiaList.perfis}" showLabelSelecione="true" />
                </wi:searchForm>
            </ui:define>
            
@@ -201,7 +202,8 @@
            </rich:column>
            
            <ui:define name="conteudoAdicional">
-               <h:form rendered="#{sigiloDocumentoController.fragmentoARenderizar eq 'PERMISSOES_SIGILO'}">
+               <h:form rendered="#{sigiloDocumentoController.fragmentoARenderizar eq 'PERMISSOES_SIGILO' and 
+                    usuarioRaiaList.resultCount gt 0}">
 		           <a:commandButton value="Gravar" action="#{sigiloDocumentoPermissaoAction.gravarPermissoes}" limitRender="true" 
 		               render="documentosTable, informacoesAdicionais, pageBodyDialogMessage" execute="@this" styleClass="buttons" />
 		           <a:commandButton value="Cancelar" action="#{sigiloDocumentoPermissaoAction.resetarPermissoes}" execute="@this"

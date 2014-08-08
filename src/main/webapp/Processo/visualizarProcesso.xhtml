@@ -188,7 +188,6 @@
                 name="tabSigiloProcesso"
                 status=":status"
                 title="#{messages['sigiloProcesso.sigiloProcesso']}"
-                action="#{usuarioRaiaList.loadLocalizacoes(processoHome.instance.naturezaCategoriaFluxo.fluxo)}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
                 <f:setPropertyActionListener
                     target="#{sigiloProcessoAction.processo}"
@@ -208,7 +207,6 @@
                 name="tabSigiloDocumento"
                 status=":status"
                 title="#{messages['sigiloDocumento.sigiloDocumento']}"
-                action="#{usuarioRaiaList.loadLocalizacoes(processoHome.instance.naturezaCategoriaFluxo.fluxo)}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloDocumento', 'access')}">
                 <f:setPropertyActionListener
                     target="#{sigiloDocumentoAction.processo}"

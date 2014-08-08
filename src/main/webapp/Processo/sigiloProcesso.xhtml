@@ -102,9 +102,9 @@
 	            <ui:define name="searchForm">
 	                <wi:searchForm formId="permissoesProcessoSearchForm" formTitle="Usuários">
 	                    <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{messages['sigiloProcesso.usuario.nome']}" />
-	                    <wi:selectOneMenuEntity id="localizacao" value="#{usuarioRaiaList.localizacao}" 
-	                        items="#{usuarioRaiaList.localizacoes}" showLabelSelecione="true"
-	                        label="#{messages['sigiloProcesso.localizacao']}"/>
+	                    <wi:selectOneMenuEntity id="perfilTemplate" value="#{usuarioRaiaList.perfil}" 
+	                        items="#{usuarioRaiaList.perfis}" showLabelSelecione="true"
+	                        label="#{messages['perfil.titlePage']}"/>
 	                </wi:searchForm>
 	            </ui:define>
 	            
@@ -123,7 +123,7 @@
 	            </rich:column>
 	            
 	            <ui:define name="conteudoAdicional">
-	               <h:form>
+	               <h:form rendered="#{usuarioRaiaList.resultCount gt 0}">
 		                <a:commandButton value="#{messages['sigiloProcesso.gravar']}" action="#{sigiloProcessoAction.gravarPermissoes}" limitRender="true" 
 		                    render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" styleClass="buttons"/>
 		                <a:commandButton value="#{messages['sigiloProcesso.cancelar']}" action="#{sigiloProcessoAction.resetPermissoes}" execute="@this"

@@ -5,16 +5,16 @@ import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.list.EntityList;
-import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.home.ProcessoHome;
 
 @Name(UsuarioRaiaList.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -24,20 +24,17 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioRaiaList";
 
-    private static final String DEFAULT_EJBQL = "select u.* from tb_usuario_login u "
+    private static final String DEFAULT_EJBQL = "select u.* from tb_raia_perfil rp "
+            + "inner join tb_usuario_perfil up on (up.id_perfil_template = rp.id_perfil_template) "
+            + "inner join tb_usuario_login u on (u.id_usuario_login = up.id_usuario_login) "
             + "where u.id_pessoa_fisica is not null "
-            + "and exists (select 1 from tb_usuario_localizacao ul where ul.id_usuario = u.id_usuario_login ";
+            + "and rp.id_fluxo = ";
 
     private static final String DEFAULT_ORDER = "u.nm_usuario";
 
-    @In
-    private LocalizacaoManager localizacaoManager;
-
-    @In
-    private FluxoManager fluxoManager;
-
-    private List<Localizacao> localizacoes;
-    private Localizacao localizacao;
+    private List<PerfilTemplate> perfis;
+    private PerfilTemplate perfil;
+    private Fluxo fluxo;
 
     public UsuarioRaiaList() {
         setNativeQuery(true);
@@ -50,23 +47,9 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
 
     @Override
     protected String getDefaultEjbql() {
-        StringBuilder sb = new StringBuilder(DEFAULT_EJBQL);
-        if (localizacoes != null) {
-            sb.append("and ul.id_localizacao in (");
-            if (localizacoes.isEmpty()) {
-                sb.append("-1");
-            } else {
-                for (Localizacao localizacao : localizacoes) {
-                    sb.append(localizacao.getIdLocalizacao());
-                    sb.append(",");
-                }
-                sb.deleteCharAt(sb.length() - 1);
-            }
-            sb.append("))");
-        }
-        return sb.toString();
+        return DEFAULT_EJBQL + getFluxo().getIdFluxo();
     }
-
+    
     @Override
     protected String getDefaultOrder() {
         return DEFAULT_ORDER;
@@ -76,48 +59,57 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
-
-    public List<Localizacao> getLocalizacoes() {
-        return localizacoes;
+    
+    @SuppressWarnings(WarningConstants.UNCHECKED)
+    public List<PerfilTemplate> getPerfis() {
+        if (perfis == null) {
+            perfis = getEntityManager().createNativeQuery("select p.* from tb_raia_perfil rp "
+                    + "inner join tb_perfil_template p on (p.id_perfil_template = rp.id_perfil_template) "
+                    + "where rp.id_fluxo = :idFluxo", PerfilTemplate.class)
+                .setParameter("idFluxo", getFluxo().getIdFluxo())
+                .getResultList();
+        }
+        return perfis;
     }
 
-    public Localizacao getLocalizacao() {
-        return localizacao;
+    public PerfilTemplate getPerfil() {
+        return perfil;
     }
-
-    public void setLocalizacao(Localizacao localizacao) {
-        this.localizacao = localizacao;
-    }
-
-    public void loadLocalizacoes(Fluxo fluxo) {
-        this.localizacoes = localizacaoManager.getLocalizacoes(fluxoManager.getIdsLocalizacoesRaias(fluxo));
-        refreshQuery();
+    
+    public void setPerfil(PerfilTemplate perfil) {
+        this.perfil = perfil;
     }
 
     @Override
     public void newInstance() {
         super.newInstance();
-        this.localizacao = null;
+        this.perfil = null;
         refreshQuery();
     }
 
     public void refreshQuery() {
         StringBuilder sb = new StringBuilder();
 
-        if (getLocalizacao() != null) {
-            sb.append(DEFAULT_EJBQL);
-            sb.append(" and ul.id_localizacao = ");
-            sb.append(getLocalizacao().getIdLocalizacao());
-            sb.append(") ");
+        if (getPerfil() != null) {
+            sb.append(getDefaultEjbql());
+            sb.append(" and up.id_perfil_template = ");
+            sb.append(getPerfil().getId());
         } else {
             sb.append(getDefaultEjbql());
         }
 
         if (getEntity().getNomeUsuario() != null) {
-            sb.append(" and u.nm_usuario ilike '%");
-            sb.append(getEntity().getNomeUsuario());
+            sb.append(" and lower(u.nm_usuario) like '%");
+            sb.append(getEntity().getNomeUsuario().toLowerCase());
             sb.append("%'");
         }
         setEjbql(sb.toString());
+    }
+    
+    private Fluxo getFluxo() {
+        if (fluxo == null) {
+            fluxo = getEntityManager().find(ProcessoEpa.class, ProcessoHome.instance().getId()).getNaturezaCategoriaFluxo().getFluxo();
+        }
+        return fluxo;
     }
 }
