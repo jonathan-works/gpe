@@ -53,6 +53,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Entity
@@ -78,7 +79,10 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     
     private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<>(0);
     private List<Localizacao> localizacaoList = new ArrayList<>(0);
-    private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList = new ArrayList<>(0);
+    
+    private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocratica = new ArrayList<>(1);
+    
+    private List<UnidadeDecisoraColegiada> unidadeDecisoraColegiada = new ArrayList<>(1);
 
     private String caminhoCompleto;
     private Boolean temContaTwitter;
@@ -213,12 +217,21 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     }
     
     @OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
-    public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocraticaList() {
-		return unidadeDecisoraMonocraticaList;
+	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocratica() {
+		return unidadeDecisoraMonocratica;
 	}
 
-	public void setUnidadeDecisoraMonocraticaList(List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocraticaList) {
-		this.unidadeDecisoraMonocraticaList = unidadeDecisoraMonocraticaList;
+	public void setUnidadeDecisoraMonocratica(List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocratica) {
+		this.unidadeDecisoraMonocratica = unidadeDecisoraMonocratica;
+	}
+
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
+	public List<UnidadeDecisoraColegiada> getUnidadeDecisoraColegiada() {
+		return unidadeDecisoraColegiada;
+	}
+
+	public void setUnidadeDecisoraColegiada(List<UnidadeDecisoraColegiada> unidadeDecisoraColegiada) {
+		this.unidadeDecisoraColegiada = unidadeDecisoraColegiada;
 	}
 
 	@Override

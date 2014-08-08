@@ -1,5 +1,12 @@
 package br.com.infox.epp.unidadedecisora.entity;
 
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_BY_UNIDADE_DECISORA_COLEGIADA;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_BY_UNIDADE_DECISORA_COLEGIADA_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_EXISTE_UDM_BY_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_UDM_BY_USUARIO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_UDM_BY_USUARIO_QUERY;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -17,7 +24,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.*;
 
 @Entity
 @Table(name = UnidadeDecisoraMonocratica.TABLE_NAME)

@@ -317,7 +317,7 @@ public class UsuarioLogin implements Serializable {
         this.fluxoList = fluxoList;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioLogin", orphanRemoval = true)
+    @OneToMany(fetch = LAZY, mappedBy = "usuarioLogin", orphanRemoval = true)
     @OrderBy("idUsuarioPerfil")
     public List<UsuarioPerfil> getUsuarioPerfilList() {
         return this.usuarioPerfilList;

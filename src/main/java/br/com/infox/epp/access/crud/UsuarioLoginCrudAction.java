@@ -10,7 +10,6 @@ import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
-import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
 
@@ -26,7 +25,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
     private UnidadeDecisoraColegiadaManager unidadeDecisoraColegiadaManager;
     
     private List<Map<String, String>> unidadeDecisoraMonocraticaList;
-    private List<UnidadeDecisoraColegiada> unidadeDecisoraColegiadaList;
+    private List<Map<String, String>> unidadeDecisoraColegiadaList;
     
     public void onClickVinculoUnidadeDecisoraTab(){
     	unidadeDecisoraMonocraticaList = null;
@@ -52,7 +51,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
     	return unidadeDecisoraMonocraticaList;
     }
     
-    public List<UnidadeDecisoraColegiada> getUnidadeDecisoraColegiadaList(){
+    public List<Map<String, String>> getUnidadeDecisoraColegiadaList(){
     	if (unidadeDecisoraColegiadaList == null){
     		unidadeDecisoraColegiadaList = unidadeDecisoraColegiadaManager.getUnidadeDecisoraListByIdUsuario((Integer) getInstanceId()); 
     	}

@@ -9,6 +9,7 @@ import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -19,7 +20,7 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
 	public static final String NAME = "unidadeDecisoraMonocraticaCrudAction";
 	
 	@In
-	private UnidadeDecisoraMonocraticaManager unidadeDecisoraMonocraticaManager;
+	private UnidadeDecisoraColegiadaManager unidadeDecisoraColegiadaManager;
 	
 	@Override
 	public void newInstance() {
@@ -27,20 +28,30 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
 		LocalizacaoTreeHandler tree = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
 		tree.clearTree();
 	}
+	@Override
+	protected boolean isInstanceValid() {
+		boolean existeLoc = unidadeDecisoraColegiadaManager.existeUnidadeColegiadaComLocalizacao(getInstance().getLocalizacao().getIdLocalizacao());
+		if(existeLoc){
+			FacesMessages.instance().clearGlobalMessages();
+			FacesMessages.instance().add("#{messages['unidadeDecisoraColegiada.jaExisteLocalizacao']}");
+			return false;
+		}
+		return super.isInstanceValid();
+	}
 	
 	@Override
 	public String save() {
 		String ret = super.save();
 		if (GenericDatabaseErrorCode.UNIQUE_VIOLATION.name().equals(ret)){
 			Integer idLocalizacao = getInstance().getLocalizacao().getIdLocalizacao();
-			boolean existeLoc = unidadeDecisoraMonocraticaManager.existeUnidadeMonocraticaComLocalizacao(idLocalizacao);
+			boolean existeLoc = getManager().existeUnidadeMonocraticaComLocalizacao(idLocalizacao);
 			if (existeLoc){
 				FacesMessages.instance().clearGlobalMessages();
 				FacesMessages.instance().add("#{messages['unidadeDecisoraMonocratica.jaExisteLocalizacao']}");
 			}
 		}
 		return ret;
-	};
+	}
 	
 	
 	public Localizacao getLocalizacao() {
