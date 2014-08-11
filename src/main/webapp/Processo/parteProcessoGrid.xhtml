@@ -38,7 +38,11 @@
                 value="#{row.pessoa.nome}" />
             <wi:columnOutputText columnId="cpf"
                 columnHeader="#{messages['parteProcesso.cpf']}"
-                value="#{row.pessoa.getCodigo()}" hideOrder="true" />
+                value="#{row.pessoa.getCodigo()}" hideOrder="true">
+                <ui:define name="outputText">
+                    <f:converter converterId="cpfConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
             <wi:columnSituacao columnId="ativo"
                 rendered="#{isUsuarioAtualResponsavel}"
                 columnHeader="#{messages['field.situacao']}"
@@ -65,7 +69,11 @@
                 value="#{row.pessoa.nome}" />
             <wi:columnOutputText columnId="cnpj"
                 columnHeader="#{messages['parteProcesso.cnpj']}"
-                value="#{row.pessoa.getCodigo()}" hideOrder="true" />
+                value="#{row.pessoa.getCodigo()}" hideOrder="true">
+                <ui:define name="outputText">
+                    <f:converter converterId="cnpjConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
             <wi:columnSituacao columnId="ativo"
                 rendered="#{isUsuarioAtualResponsavel}"
                 columnHeader="#{messages['field.situacao']}"

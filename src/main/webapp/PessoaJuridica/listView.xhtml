@@ -43,7 +43,11 @@
 
             <wi:columnOutputText columnId="cnpj"
                 columnHeader="#{messages['pessoaJuridica.cnpj']}"
-                value="#{row.cnpj}" />
+                value="#{row.cnpj}">
+                <ui:define name="outputText">
+                    <f:converter converterId="cnpjConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
             <wi:columnOutputText columnId="nome"
                 columnHeader="#{messages['pessoaJuridica.nome']}"
                 value="#{row.nome}" />

@@ -174,7 +174,11 @@
         <wi:columnOutputText
           columnId="cpf"
           columnHeader="#{messages['pessoaFisica.cpf']}"
-          value="#{row.cpf}" />
+          value="#{row.cpf}">
+          <ui:define name="outputText">
+              <f:converter converterId="cpfConverter"/>
+          </ui:define>
+        </wi:columnOutputText>
         <wi:columnOutputText
           columnId="nome"
           columnHeader="#{messages['pessoaFisica.nome']}"

@@ -34,7 +34,11 @@
                 value="#{row.tipoPessoa}" />
             <wi:columnOutputText columnId="codigo"
                 columnHeader="#{messages['partes.cpf']}"
-                value="#{row.cpf}" />
+                value="#{row.cpf}">
+                <ui:define name="outputText">
+                    <f:converter converterId="cpfConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
         </wi:dataTable>
         <wi:dataTable id="partesJuridicasTable"
             showGrid="#{not partesController.pessoasJuridicas.isEmpty()}"
@@ -55,7 +59,11 @@
                 value="#{row.tipoPessoa}" />
             <wi:columnOutputText columnId="codigo"
                 columnHeader="#{messages['partes.cnpj']}"
-                value="#{row.cnpj}" />
+                value="#{row.cnpj}">
+                <ui:define name="outputText">
+                    <f:converter converterId="cnpjConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
         </wi:dataTable>
         <h:form>
             <s:div id="storeDiv">

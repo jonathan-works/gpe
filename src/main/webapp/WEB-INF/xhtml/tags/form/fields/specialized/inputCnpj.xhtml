@@ -10,7 +10,7 @@
     <h:outputScript library="js" name="components.js" />
 
     <wi:inputText id="#{id}" styleClass="#{id}" size="18" maxlength="18"
-        onblur="validarCnpj(this)">
+        onblur="validarCnpj(this)" converterId="cnpjConverter">
         <f:validator validatorId="cnpjValidator" />
         <ui:insert />
     </wi:inputText>
