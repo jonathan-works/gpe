@@ -490,6 +490,7 @@ public class TaskInstanceHome implements Serializable {
         } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance
                 .getId())) {
             setTaskId(currentTaskInstance.getId());
+            FacesMessages.instance().clear();
             return false;
         } else {
             setCanClosePanelVal(true);
