@@ -96,22 +96,24 @@ public class SigiloDocumentoPermissaoAction implements Serializable {
 
     public void gravarPermissoes() {
         try {
-            for (Integer idDocumento : idsDocumentosSelecionados) {
-                SigiloDocumento sigiloDocumento = sigiloDocumentoManager.getSigiloDocumentoAtivo(idDocumento);
-                sigiloDocumentoPermissaoManager.inativarPermissoes(sigiloDocumento);
-                for (Integer idUsuario : usuariosMap.keySet()) {
-                    if (usuariosMap.get(idUsuario)) {
-                        UsuarioLogin usuario = usuarioLoginManager.find(idUsuario);
-                        SigiloDocumentoPermissao permissao = new SigiloDocumentoPermissao();
-                        permissao.setAtivo(true);
-                        permissao.setSigiloDocumento(sigiloDocumento);
-                        permissao.setUsuario(usuario);
-                        sigiloDocumentoPermissaoManager.persist(permissao);
+            if (idsDocumentosSelecionados != null) {
+                for (Integer idDocumento : idsDocumentosSelecionados) {
+                    SigiloDocumento sigiloDocumento = sigiloDocumentoManager.getSigiloDocumentoAtivo(idDocumento);
+                    sigiloDocumentoPermissaoManager.inativarPermissoes(sigiloDocumento);
+                    for (Integer idUsuario : usuariosMap.keySet()) {
+                        if (usuariosMap.get(idUsuario)) {
+                            UsuarioLogin usuario = usuarioLoginManager.find(idUsuario);
+                            SigiloDocumentoPermissao permissao = new SigiloDocumentoPermissao();
+                            permissao.setAtivo(true);
+                            permissao.setSigiloDocumento(sigiloDocumento);
+                            permissao.setUsuario(usuario);
+                            sigiloDocumentoPermissaoManager.persist(permissao);
+                        }
                     }
                 }
+                resetarPermissoes();
+                FacesMessages.instance().add(SigiloDocumentoController.MSG_REGISTRO_ALTERADO);
             }
-            resetarPermissoes();
-            FacesMessages.instance().add(SigiloDocumentoController.MSG_REGISTRO_ALTERADO);
         } catch (DAOException e) {
             LOG.error(e);
             actionMessagesService.handleDAOException(e);
