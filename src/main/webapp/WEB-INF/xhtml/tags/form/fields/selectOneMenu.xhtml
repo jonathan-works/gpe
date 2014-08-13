@@ -23,6 +23,9 @@
             required="#{required}" onchange="#{onchange}"
             readonly="#{readonly}" disabled="#{disabled}">
             <c:if test="#{not empty valueItems}">
+                <c:if test="#{showLabelSelecione}">
+                    <f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="#{messages['crud.select.select']}" />
+                </c:if>
                 <f:selectItems value="#{valueItems}" />
             </c:if>
             <c:if test="#{empty valueItems}">

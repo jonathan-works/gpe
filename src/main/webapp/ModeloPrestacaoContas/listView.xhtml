@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{messages['modeloPrestacaoContas.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{modeloPrestacaoContasAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{modeloPrestacaoContasList.list(15)}"
+            bean="#{modeloPrestacaoContasList}"
+            tableTitle="#{messages['modeloPrestacaoContas.tableTitle']}"
+            id="modeloPrestacaoContasList" rowId="#{row.id}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarmodeloPrestacaoContasForm"
+                    formTitle="#{messages['searchForm.title']}">
+                    <wi:inputText label="#{messages['modeloPrestacaoContas.nome']}" value="#{modeloPrestacaoContasList.entity.nome}" 
+                        id="nome"/>
+                    <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.tipoPrestacaoContas']}" id="tipoPrestacaoContas" 
+                        value="#{modeloPrestacaoContasList.entity.tipoPrestacaoContas}" showLabelSelecione="true" 
+                        valueItems="#{modeloPrestacaoContasAction.tiposPrestacaoContas}"/>
+                    <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.esfera']}" id="esfera" showLabelSelecione="true"
+                        value="#{modeloPrestacaoContasList.entity.esfera}" valueItems="#{modeloPrestacaoContasAction.esferas}"/>
+                    <wi:selectOneMenuEntity label="#{messages['modeloPrestacaoContas.grupoPrestacaoContas']}"  
+                        id="grupoPrestacaoContas" value="#{modeloPrestacaoContasList.entity.grupoPrestacaoContas}" 
+                        items="#{modeloPrestacaoContasAction.gruposPrestacaoContas}" showLabelSelecione="true"
+                        optionLabel="#{item.nome}"/>
+                    <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.anoExercicio']}" id="anoExercicio" 
+                        value="#{modeloPrestacaoContasList.entity.anoExercicio}" valueItems="#{modeloPrestacaoContasAction.anosExercicio}"
+                        showLabelSelecione="true"/>
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="nome"
+                columnHeader="#{messages['modeloPrestacaoContas.nome']}"
+                value="#{row.nome}" />
+            <wi:columnOutputText columnId="tipoPrestacaoContas"
+                columnHeader="#{messages['modeloPrestacaoContas.tipoPrestacaoContas']}"
+                value="#{row.tipoPrestacaoContas.label}" />
+            <wi:columnOutputText columnId="esfera"
+                columnHeader="#{messages['modeloPrestacaoContas.esfera']}"
+                value="#{row.esfera.label}" />
+            <wi:columnOutputText columnId="grupoPrestacaoContas"
+                columnHeader="#{messages['modeloPrestacaoContas.grupoPrestacaoContas']}"
+                value="#{row.grupoPrestacaoContas.nome}" />
+            <wi:columnOutputText columnId="anoExercicio"
+                columnHeader="#{messages['modeloPrestacaoContas.anoExercicio']}"
+                value="#{row.anoExercicio}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="modeloPrestacaoContasForm" formTitle="#{messages['form.title']}">
+            <wi:inputText label="#{messages['modeloPrestacaoContas.nome']}" value="#{modeloPrestacaoContasAction.instance.nome}" 
+                required="true" id="nome"/>
+            <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.tipoPrestacaoContas']}" required="true" id="tipoPrestacaoContas" 
+                value="#{modeloPrestacaoContasAction.instance.tipoPrestacaoContas}" showLabelSelecione="true" 
+                valueItems="#{modeloPrestacaoContasAction.tiposPrestacaoContas}"/>
+            <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.esfera']}" required="true" id="esfera" showLabelSelecione="true"
+                value="#{modeloPrestacaoContasAction.instance.esfera}" valueItems="#{modeloPrestacaoContasAction.esferas}"/>
+            <wi:selectOneMenuEntity label="#{messages['modeloPrestacaoContas.grupoPrestacaoContas']}" required="true" 
+                id="grupoPrestacaoContas" value="#{modeloPrestacaoContasAction.instance.grupoPrestacaoContas}" 
+                items="#{modeloPrestacaoContasAction.gruposPrestacaoContas}" showLabelSelecione="true"
+                optionLabel="#{item.nome}"/>
+            <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.anoExercicio']}" required="true" id="anoExercicio" 
+                value="#{modeloPrestacaoContasAction.instance.anoExercicio}" valueItems="#{modeloPrestacaoContasAction.anosExercicio}"
+                showLabelSelecione="true"/>   
+            <wi:selectBooleanCheckbox label="#{messages['modeloPrestacaoContas.questionarExistenciaSetoresControleInterno']}"
+                id="questionarExistenciaSetoresControleInterno" required="true"
+                value="#{modeloPrestacaoContasAction.instance.questionarExistenciaSetoresControleInterno}" />
+            <wi:selectBooleanCheckbox label="#{messages['modeloPrestacaoContas.questionarExistenciaSetoresContabilidade']}"
+                id="questionarExistenciaSetoresContabilidade" required="true"
+                value="#{modeloPrestacaoContasAction.instance.questionarExistenciaSetoresContabilidade}" />
+            <rich:panel header="#{messages['modeloPrestacaoContas.documentos']}">
+                <wi:suggest id="documentos"
+                    suggestProvider="#{tipoProcessoDocumentoSuggestBean}"
+                    value="#{modeloPrestacaoContasAction.classificacaoDocumento}"
+                    label="#{messages['modeloPrestacaoContas.documentos']}"/>
+                <wi:commandButton id="incluirDocumento" execute="@this, documentos" 
+                    value="#{messages['modeloPrestacaoContas.incluirDocumentos']}" />
+                <rich:dataTable value="#{modeloPrestacaoContasAction.instance.classificacoesDocumento}" var="row" id="documentosTable"
+                    styleClass="dtable rf-dt-crud">
+                    <rich:column>
+                        <a:commandLink action="#{modeloPrestacaoContasAction.instance.classificacoesDocumento.remove(row)}" execute="@this" 
+                            render="documentosTable" limitRender="true">
+                            <h:graphicImage url="#{a4jSkin.imgFolder}/remove.png" />
+                        </a:commandLink>
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">#{messages['modeloPrestacaoContas.documento']}</f:facet>
+                        <h:outputText value="#{row.tipoProcessoDocumento}" />
+                    </rich:column>
+                </rich:dataTable>   
+            </rich:panel>
+        </wi:dataForm>
+    </ui:define>
+
+    <ui:define name="tabs">
+    </ui:define>
+
+</ui:composition>
