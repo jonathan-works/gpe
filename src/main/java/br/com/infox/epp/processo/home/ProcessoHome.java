@@ -147,6 +147,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
                     result = inserirProcessoDocumentoFluxo(value, label,
                             assinado);
                 }
+                FacesMessages.instance().clear();
                 FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
             }
         } catch (DAOException | AssinaturaException e) {

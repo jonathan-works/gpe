@@ -5,6 +5,7 @@ import static br.com.infox.epp.access.query.UsuarioPerfilQuery.GET_BY_USUARIO_LO
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO_QUERY;
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN;
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN_QUERY;
+import static java.text.MessageFormat.format;
 import static javax.persistence.FetchType.EAGER;
 
 import java.io.Serializable;
@@ -110,7 +111,7 @@ public class UsuarioPerfil implements Serializable {
     
     @Override
     public String toString() {
-        return getPerfilTemplate().toString();
+        return format("{0} / {1}", getPerfilTemplate(), getLocalizacao());
     }
 
     @Override
