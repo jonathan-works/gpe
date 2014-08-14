@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Set;
 
 import org.dom4j.Document;
@@ -37,6 +39,7 @@ import org.jbpm.graph.node.ProcessFactory;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
+import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.JpdlException;
 import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
@@ -275,10 +278,11 @@ public class JpdlXmlWriter {
             addAttribute(taskElement, "due-date", task.getDueDate());
             addAttribute(taskElement, "pooled-actors", task.getPooledActorsExpression());
             writeController(task.getTaskController(), taskElement);
+            writeEvents(taskElement, task);
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
+	@SuppressWarnings(UNCHECKED)
     private void writeController(TaskController taskController,
             Element taskElement) {
         if (taskController != null) {
@@ -397,8 +401,13 @@ public class JpdlXmlWriter {
         if (event.hasActions()) {
             Iterator<Action> actionIter = event.getActions().iterator();
             while (actionIter.hasNext()) {
-                Action action = actionIter.next();
-                valid |= writeAction(eventElement, action);
+            	Action action = actionIter.next();
+            	Delegation actionDelegation = action.getActionDelegation();
+                if (actionDelegation != null) {
+                	valid |= writeStatusProcessoAction(eventElement, action);
+                } else {
+                	valid |= writeAction(eventElement, action);
+                }
             }
         }
         if (!valid) {
@@ -406,7 +415,31 @@ public class JpdlXmlWriter {
         }
     }
 
-    private void writeActions(Element parentElement, List<Action> actions) {
+    private boolean writeStatusProcessoAction(Element eventElement, Action action) {
+    	boolean valid = false;
+
+    	Element actionElement = addElement(eventElement, "action");
+    	Delegation actionDelegation = action.getActionDelegation();
+    	if (action.getName() != null && actionDelegation.getClassName() != null &&
+    			actionDelegation.getConfiguration() != null) { 
+	    	addAttribute(actionElement, "name", action.getName());
+			addAttribute(actionElement, "class", actionDelegation.getClassName());
+	    	addAttribute(actionElement, "async", "true");
+
+	    	String configuration = actionDelegation.getConfiguration();
+	    	Pattern pattern = Pattern.compile("(<statusProcesso>\\d+</statusProcesso>)");
+			Matcher matcher = pattern.matcher(configuration);
+			if (matcher.find()) {
+				configuration = matcher.group(1);
+			}
+			actionElement.addCDATA(configuration);
+	    	
+	    	valid = true;
+    	}
+		return valid;
+	}
+
+	private void writeActions(Element parentElement, List<Action> actions) {
         Iterator<Action> actionIter = actions.iterator();
         while (actionIter.hasNext()) {
             Action action = actionIter.next();
