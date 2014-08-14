@@ -10,7 +10,7 @@
     <wi:toolBar action="#{actionRemove}" limitToList="true"
         status=":status"
         reRender="#{wi:get(reRender, 'searchGridRegion')}"
-        onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
+        onclick="#{empty onclick ? 'return confirm(\''.concat(messages['crud.confirmRemove']).concat('\');') : onclick}"
         url="#{a4jSkin.imgFolder}/remove.png"
         title="#{wi:get(title, messages['crud.remove'])}">
         <f:param name="page" value="#{bean.page}" />
