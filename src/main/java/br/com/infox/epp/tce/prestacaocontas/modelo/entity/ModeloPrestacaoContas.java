@@ -13,9 +13,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -23,7 +23,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.tce.prestacaocontas.modelo.query.ModeloPrestacaoContasQuery;
 import br.com.infox.epp.tce.prestacaocontas.modelo.type.EsferaGovernamental;
 import br.com.infox.epp.tce.prestacaocontas.modelo.type.TipoPrestacaoContas;
 
@@ -32,6 +32,10 @@ import br.com.infox.epp.tce.prestacaocontas.modelo.type.TipoPrestacaoContas;
     @UniqueConstraint(columnNames = {
         "tp_prestacao_contas", "id_grupo_prestacao_contas", "tp_esfera_governamental", "nr_ano_exercicio"
     })
+})
+@NamedQueries({
+    @NamedQuery(name = ModeloPrestacaoContasQuery.TOTAL_DOCUMENTOS_ASSOCIADOS, query = ModeloPrestacaoContasQuery.TOTAL_DOCUMENTOS_ASSOCIADOS_QUERY),
+    @NamedQuery(name = ModeloPrestacaoContasQuery.TOTAL_RESPONSAVEIS_ASSOCIADOS, query = ModeloPrestacaoContasQuery.TOTAL_RESPONSAVEIS_ASSOCIADOS_QUERY)
 })
 public class ModeloPrestacaoContas implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -74,14 +78,13 @@ public class ModeloPrestacaoContas implements Serializable {
     @Column(name = "in_ques_ex_setor_contabilidade", nullable = false)
     private Boolean questionarExistenciaSetoresContabilidade = false;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "tb_mod_pres_contas_tp_proc_doc", joinColumns = {@JoinColumn(name = "id_modelo_prestacao_contas", nullable = false)}, 
-        inverseJoinColumns = {@JoinColumn(name = "id_tipo_processo_documento", nullable = false)}, 
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"id_modelo_prestacao_contas", "id_tipo_processo_documento"})
-    })
-    private List<TipoProcessoDocumento> classificacoesDocumento = new ArrayList<>(0);
+    @Column(name = "in_valido", nullable = false)
+    private boolean valido;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloPrestacaoContas", orphanRemoval = true)
+    private List<ModeloPrestacaoContasClassificacaoDocumento> classificacoesDocumento = new ArrayList<>(0);
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloPrestacaoContas")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloPrestacaoContas", orphanRemoval = true)
     private List<ResponsavelModeloPrestacaoContas> responsaveis = new ArrayList<>(0);
 
     public Long getId() {
@@ -140,11 +143,11 @@ public class ModeloPrestacaoContas implements Serializable {
         this.questionarExistenciaSetoresContabilidade = questionarExistenciaSetoresContabilidade;
     }
 
-    public List<TipoProcessoDocumento> getClassificacoesDocumento() {
+    public List<ModeloPrestacaoContasClassificacaoDocumento> getClassificacoesDocumento() {
         return classificacoesDocumento;
     }
 
-    public void setClassificacoesDocumento(List<TipoProcessoDocumento> classificacoesDocumento) {
+    public void setClassificacoesDocumento(List<ModeloPrestacaoContasClassificacaoDocumento> classificacoesDocumento) {
         this.classificacoesDocumento = classificacoesDocumento;
     }
 
@@ -162,6 +165,14 @@ public class ModeloPrestacaoContas implements Serializable {
     
     public void setNome(String nome) {
         this.nome = nome;
+    }
+    
+    public boolean isValido() {
+        return valido;
+    }
+    
+    public void setValido(boolean valido) {
+        this.valido = valido;
     }
 
     @Override

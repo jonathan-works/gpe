@@ -39,6 +39,15 @@
                         showLabelSelecione="true"/>
                 </wi:searchForm>
             </ui:define>
+            <ui:define name="toolBar">
+                <wi:toolBarEdit />
+                <h:form style="display: inline" rendered="#{row.valido}">
+                    <a:commandLink action="#{modeloPrestacaoContasAction.importar(row)}" limitRender="true" render="pageBody">
+                        <wi:toolBarGraphicImage url="#{a4jSkin.imgFolder}/grid/copyRight.gif" title="#{messages['modeloPrestacaoContas.importar']}"/>
+                    </a:commandLink>
+                </h:form>
+                <wi:toolBarRemove id="removeBar" />
+            </ui:define>
             <wi:columnOutputText columnId="nome"
                 columnHeader="#{messages['modeloPrestacaoContas.nome']}"
                 value="#{row.nome}" />
@@ -60,50 +69,106 @@
     <ui:define name="form">
         <wi:dataForm formId="modeloPrestacaoContasForm" formTitle="#{messages['form.title']}">
             <wi:inputText label="#{messages['modeloPrestacaoContas.nome']}" value="#{modeloPrestacaoContasAction.instance.nome}" 
-                required="true" id="nome"/>
+                required="true" id="nome">
+                <a:ajax event="change" execute="@this" render="nomeDecoration" limitRender="true"/>
+            </wi:inputText>
             <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.tipoPrestacaoContas']}" required="true" id="tipoPrestacaoContas" 
                 value="#{modeloPrestacaoContasAction.instance.tipoPrestacaoContas}" showLabelSelecione="true" 
-                valueItems="#{modeloPrestacaoContasAction.tiposPrestacaoContas}"/>
+                valueItems="#{modeloPrestacaoContasAction.tiposPrestacaoContas}">
+                <a:ajax event="change" execute="@this" render="tipoPrestacaoContasDecoration" limitRender="true"/>
+            </wi:selectOneMenu>
             <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.esfera']}" required="true" id="esfera" showLabelSelecione="true"
-                value="#{modeloPrestacaoContasAction.instance.esfera}" valueItems="#{modeloPrestacaoContasAction.esferas}"/>
+                value="#{modeloPrestacaoContasAction.instance.esfera}" valueItems="#{modeloPrestacaoContasAction.esferas}">
+                <a:ajax event="change" execute="@this" render="esferaDecoration" limitRender="true"/>
+            </wi:selectOneMenu>
             <wi:selectOneMenuEntity label="#{messages['modeloPrestacaoContas.grupoPrestacaoContas']}" required="true" 
                 id="grupoPrestacaoContas" value="#{modeloPrestacaoContasAction.instance.grupoPrestacaoContas}" 
                 items="#{modeloPrestacaoContasAction.gruposPrestacaoContas}" showLabelSelecione="true"
-                optionLabel="#{item.nome}"/>
+                optionLabel="#{item.nome}">
+                <a:ajax event="change" execute="@this" render="grupoPrestacaoContasDecoration" limitRender="true"/>
+            </wi:selectOneMenuEntity>
             <wi:selectOneMenu label="#{messages['modeloPrestacaoContas.anoExercicio']}" required="true" id="anoExercicio" 
                 value="#{modeloPrestacaoContasAction.instance.anoExercicio}" valueItems="#{modeloPrestacaoContasAction.anosExercicio}"
-                showLabelSelecione="true"/>   
+                showLabelSelecione="true">
+                <a:ajax event="change" execute="@this" render="anoExercicioDecoration" limitRender="true"/>
+            </wi:selectOneMenu>   
             <wi:selectBooleanCheckbox label="#{messages['modeloPrestacaoContas.questionarExistenciaSetoresControleInterno']}"
                 id="questionarExistenciaSetoresControleInterno" required="true"
-                value="#{modeloPrestacaoContasAction.instance.questionarExistenciaSetoresControleInterno}" />
+                value="#{modeloPrestacaoContasAction.instance.questionarExistenciaSetoresControleInterno}">
+                <a:ajax event="change" execute="@this" render="questionarExistenciaSetoresControleInternoDecoration" limitRender="true"/>
+            </wi:selectBooleanCheckbox>
             <wi:selectBooleanCheckbox label="#{messages['modeloPrestacaoContas.questionarExistenciaSetoresContabilidade']}"
                 id="questionarExistenciaSetoresContabilidade" required="true"
-                value="#{modeloPrestacaoContasAction.instance.questionarExistenciaSetoresContabilidade}" />
-            <rich:panel header="#{messages['modeloPrestacaoContas.documentos']}">
-                <wi:suggest id="documentos"
-                    suggestProvider="#{tipoProcessoDocumentoSuggestBean}"
-                    value="#{modeloPrestacaoContasAction.classificacaoDocumento}"
-                    label="#{messages['modeloPrestacaoContas.documentos']}"/>
-                <wi:commandButton id="incluirDocumento" execute="@this, documentos" 
-                    value="#{messages['modeloPrestacaoContas.incluirDocumentos']}" />
-                <rich:dataTable value="#{modeloPrestacaoContasAction.instance.classificacoesDocumento}" var="row" id="documentosTable"
-                    styleClass="dtable rf-dt-crud">
-                    <rich:column>
-                        <a:commandLink action="#{modeloPrestacaoContasAction.instance.classificacoesDocumento.remove(row)}" execute="@this" 
-                            render="documentosTable" limitRender="true">
-                            <h:graphicImage url="#{a4jSkin.imgFolder}/remove.png" />
-                        </a:commandLink>
-                    </rich:column>
-                    <rich:column>
-                        <f:facet name="header">#{messages['modeloPrestacaoContas.documento']}</f:facet>
-                        <h:outputText value="#{row.tipoProcessoDocumento}" />
-                    </rich:column>
-                </rich:dataTable>   
-            </rich:panel>
+                value="#{modeloPrestacaoContasAction.instance.questionarExistenciaSetoresContabilidade}">
+                <a:ajax event="change" execute="@this" render="questionarExistenciaSetoresContabilidadeDecoration" limitRender="true"/>
+            </wi:selectBooleanCheckbox>
         </wi:dataForm>
     </ui:define>
 
     <ui:define name="tabs">
+        <infox:tab name="documentosTab" title="#{messages['modeloPrestacaoContas.documentos']}"
+            rendered="#{modeloPrestacaoContasAction.managed}">
+            <h:form id="documentosForm">
+                <wi:selectOneMenuEntity id="classificacao" value="#{modeloPrestacaoContasAction.classificacao}" 
+                    items="#{modeloPrestacaoContasAction.documentosDisponiveis}" showLabelSelecione="true"
+                    label="#{messages['modeloPrestacaoContas.classificacao']}" required="true"/>
+                <div />
+                <a:commandButton id="addDocumento" action="#{modeloPrestacaoContasAction.addClassificacaoDocumento}" 
+                    render="@form, documentosTable" value="#{messages['modeloPrestacaoContas.addDocumento']}" styleClass="buttons"/>
+            </h:form>
+            <div />
+            <wi:dataTable values="#{classificacaoDocumentoPrestacaoContasList.list(15)}" id="documentosTable"
+                panelStyleClass="rf-dt-crud" bean="#{classificacaoDocumentoPrestacaoContasList}" rowId="#{row.id}">
+                <ui:define name="headerToolBar" />
+                <ui:define name="toolBar">
+                    <h:form>
+                        <a:commandLink action="#{modeloPrestacaoContasAction.removeClassificacaoDocumento(row)}" execute="@this" 
+                            render="documentosTable, documentosForm, pageBodyDialogMessage" limitRender="true">
+                            <h:graphicImage url="#{a4jSkin.imgFolder}/remove.png" title="#{messages['button.delete']}"/>
+                        </a:commandLink>
+                    </h:form>
+                </ui:define>
+                <rich:column>
+                    <f:facet name="header">#{messages['modeloPrestacaoContas.classificacao']}</f:facet>
+                    <h:outputText value="#{row.classificacaoDocumento.tipoProcessoDocumento}" />
+                </rich:column>
+            </wi:dataTable>
+        </infox:tab>
+        
+        <infox:tab name="responsaveisTab" title="#{messages['modeloPrestacaoContas.responsaveis']}"
+            rendered="#{modeloPrestacaoContasAction.managed}">
+            <h:form id="responsaveisForm">
+                <wi:selectOneMenuEntity id="tipoParte" value="#{modeloPrestacaoContasAction.responsavel.tipoParte}" 
+                    items="#{modeloPrestacaoContasAction.tiposParteDisponiveis}" showLabelSelecione="true"
+                    label="#{messages['modeloPrestacaoContas.tipoParte']}" required="true"/>
+                <wi:selectBooleanCheckbox id="obrigatorio" value="#{modeloPrestacaoContasAction.responsavel.obrigatorio}" 
+                    label="#{messages['modeloPrestacaoContas.obrigatorio']}"/>
+                <div />
+                <wi:commandButton id="addResponsavel" action="modeloPrestacaoContasAction.addResponsavel" 
+                    reRender="responsaveisForm, responsaveisTable" value="#{messages['modeloPrestacaoContas.addResponsavel']}"/>
+            </h:form>
+            <div />
+            <wi:dataTable values="#{responsavelModeloPrestacaoContasList.list(15)}" id="responsaveisTable"
+                panelStyleClass="rf-dt-crud" bean="#{responsavelModeloPrestacaoContasList}">
+                <ui:define name="headerToolBar" />
+                <ui:define name="toolBar">
+                    <h:form>
+                        <a:commandLink action="#{modeloPrestacaoContasAction.removeResponsavel(row)}" execute="@this" 
+                            render="responsaveisTable, responsaveisForm, pageBodyDialogMessage" limitRender="true">
+                            <h:graphicImage url="#{a4jSkin.imgFolder}/remove.png" title="#{messages['button.delete']}"/>
+                        </a:commandLink>
+                    </h:form>
+                </ui:define>
+                <rich:column>
+                    <f:facet name="header">#{messages['modeloPrestacaoContas.tipoParte']}</f:facet>
+                    <h:outputText value="#{row.tipoParte.descricao}" />
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">#{messages['modeloPrestacaoContas.obrigatorio']}</f:facet>
+                    <h:outputText value="#{row.obrigatorio ? 'Sim' : 'Não'}" />
+                </rich:column>
+            </wi:dataTable>
+        </infox:tab>
     </ui:define>
 
 </ui:composition>

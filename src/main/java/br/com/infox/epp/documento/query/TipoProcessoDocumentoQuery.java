@@ -30,6 +30,9 @@ public interface TipoProcessoDocumentoQuery {
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO = "findClassificacaoDocumentoByCodigo";
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY = "select o from TipoProcessoDocumento o where o.codigoDocumento=:" + CODIGO_DOCUMENTO_PARAM;
     
-    String LIST_ATIVOS = "TipoProcessoDocumento.listAtivos";
-    String LIST_ATIVOS_QUERY = "select o from TipoProcessoDocumento o where o.ativo = true order by o.tipoProcessoDocumento";
+    String LIST_CLASSIFICACOES_PARA_MODELO_PRESTACAO_CONTAS = "TipoProcessoDocumento.listClassificacoesParaModeloPrestacaoContas";
+    String LIST_CLASSIFICACOES_PARA_MODELO_PRESTACAO_CONTAS_QUERY = 
+            "select o from TipoProcessoDocumento o where o.ativo = true and not exists("
+            + "select 1 from ModeloPrestacaoContasClassificacaoDocumento c where c.classificacaoDocumento = o)"
+            + "order by o.tipoProcessoDocumento";
 }

@@ -2,8 +2,8 @@ package br.com.infox.epp.documento.entity;
 
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_ATIVOS;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_ATIVOS_QUERY;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_CLASSIFICACOES_PARA_MODELO_PRESTACAO_CONTAS;
+import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_CLASSIFICACOES_PARA_MODELO_PRESTACAO_CONTAS_QUERY;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_TIPO_PROCESSO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE;
@@ -49,7 +49,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
     @NamedQuery(name = LIST_TIPO_PROCESSO_DOCUMENTO, query = LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
     @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY),
     @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_USEABLE, query = TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY), 
-    @NamedQuery(name = LIST_ATIVOS, query = LIST_ATIVOS_QUERY)})
+    @NamedQuery(name = LIST_CLASSIFICACOES_PARA_MODELO_PRESTACAO_CONTAS, query = LIST_CLASSIFICACOES_PARA_MODELO_PRESTACAO_CONTAS_QUERY)})
 public class TipoProcessoDocumento implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 

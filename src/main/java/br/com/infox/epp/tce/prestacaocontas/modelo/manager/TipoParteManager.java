@@ -1,5 +1,7 @@
 package br.com.infox.epp.tce.prestacaocontas.modelo.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -13,4 +15,8 @@ public class TipoParteManager extends Manager<TipoParteDAO, TipoParte> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tipoParteManager";
+    
+    public List<TipoParte> listTiposParteParaModeloPrestacaoContas() {
+        return getDao().listTiposParteParaModeloPrestacaoContas();
+    }
 }
