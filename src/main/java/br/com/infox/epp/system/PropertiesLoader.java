@@ -8,7 +8,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jboss.seam.ScopeType;
@@ -16,6 +18,7 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
@@ -39,6 +42,9 @@ public class PropertiesLoader implements Serializable {
 	
 	private static final String PAGE_PROPERTIES = "/custom_pages.properties";
 	private static final String MENU_PROPERTIES = "/menu.properties";
+	private static final String MESSAGES_PROPERTIES = "/extended_messages.properties";
+	private static final String MESSAGES_EPP_PATH = "/entity_messages_pt_BR.properties";
+	private static final String EPP_MESSAGES = "eppmessages";
 	
 	private Properties pageProperties;
 	private Properties menuProperties;
@@ -46,6 +52,11 @@ public class PropertiesLoader implements Serializable {
 	
 	@Create
 	public void init() {
+		loadPageProperties();
+		loadMessagesProperties();
+	}
+	
+	private void loadPageProperties(){
 		InputStream is = getClass().getResourceAsStream(PAGE_PROPERTIES);
 		if (is != null) {
 			try {
@@ -62,8 +73,6 @@ public class PropertiesLoader implements Serializable {
 			} catch (IOException e) {
 				LOG.error(Messages.instance().get("propertiesLoader.fail"), e);
 			}
-		} else {
-			// Resource not found, noting to do here
 		}
 	}
 	
@@ -86,6 +95,44 @@ public class PropertiesLoader implements Serializable {
 			}
 			newInputStream.close();
 			newOutputStream.close();
+		}
+	}
+	
+	private void loadMessagesProperties(){
+		InputStream isMessagesEpp = getClass().getResourceAsStream(MESSAGES_EPP_PATH);
+		InputStream isMessagesExt = getClass().getResourceAsStream(MESSAGES_PROPERTIES);
+		if (isMessagesEpp == null || isMessagesExt == null){
+			LOG.error(Messages.instance().get("propertiesLoader.fail"));
+			return;
+		}
+		
+		try {
+			Properties propMessagesEpp = new Properties();
+			propMessagesEpp.load(isMessagesEpp);
+			
+			Map<String, String> messages = new HashMap<>();
+			
+			Enumeration<Object> keyEpp = propMessagesEpp.keys();
+			while (keyEpp.hasMoreElements()) {
+				String key = (keyEpp.nextElement().toString());
+				String value = propMessagesEpp.getProperty(key);
+				messages.put(key, value);
+			}
+			
+			Properties propMessagesExt = new Properties();
+			propMessagesExt.load(isMessagesExt);
+			
+			Enumeration<Object> keysExt = propMessagesExt.keys();
+			while (keysExt.hasMoreElements()) {
+				String key = (keysExt.nextElement().toString());
+				String value = propMessagesExt.getProperty(key);
+				messages.put(key, value);
+			}
+			
+			Contexts.getApplicationContext().set(EPP_MESSAGES, messages);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
