@@ -1,5 +1,6 @@
 package br.com.infox.epp.tce.prestacaocontas.modelo.action;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -58,6 +59,8 @@ public class ModeloPrestacaoContasAction extends AbstractCrudAction<ModeloPresta
     private List<TipoParte> tiposParteDisponiveis;
     private ResponsavelModeloPrestacaoContas responsavel = new ResponsavelModeloPrestacaoContas();
     private TipoProcessoDocumento classificacao = new TipoProcessoDocumento();
+    private List<ModeloPrestacaoContasClassificacaoDocumento> documentosImportacao;
+    private List<ResponsavelModeloPrestacaoContas> responsaveisImportacao;
     
     @Override
     public void newInstance() {
@@ -73,6 +76,29 @@ public class ModeloPrestacaoContasAction extends AbstractCrudAction<ModeloPresta
             responsavelModeloPrestacaoContasList.getEntity().setModeloPrestacaoContas(getInstance());
             classificacaoDocumentoPrestacaoContasList.getEntity().setModeloPrestacaoContas(getInstance());
         }
+    }
+    
+    @Override
+    public String save() {
+        String ret = super.save();
+        if (PERSISTED.equals(ret) && documentosImportacao != null) { // Esse modelo é importado
+            try {
+                for (ModeloPrestacaoContasClassificacaoDocumento doc : documentosImportacao) {
+                    doc.setModeloPrestacaoContas(getInstance());
+                    modeloPrestacaoContasService.adicionarClassificacaoDocumento(doc);
+                }
+                for (ResponsavelModeloPrestacaoContas responsavel : responsaveisImportacao) {
+                    responsavel.setModeloPrestacaoContas(getInstance());
+                    modeloPrestacaoContasService.adicionarResponsavel(responsavel);
+                }
+                documentosImportacao = null;
+                responsaveisImportacao = null;
+            } catch (DAOException e) {
+                LOG.error("save", e);
+                actionMessagesService.handleDAOException(e);
+            }
+        }
+        return ret;
     }
     
     public SelectItem[] getAnosExercicio() {
@@ -191,22 +217,29 @@ public class ModeloPrestacaoContasAction extends AbstractCrudAction<ModeloPresta
     
     public void importar(ModeloPrestacaoContas modeloPrestacaoContas) {
         newInstance();
-        ModeloPrestacaoContas modelo = getInstance();
+        responsaveisImportacao = new ArrayList<>();
+        documentosImportacao = new ArrayList<>();
+        ModeloPrestacaoContas novoModelo = getInstance();
         
-        modelo.setAnoExercicio(modeloPrestacaoContas.getAnoExercicio());
-        modelo.setEsfera(modeloPrestacaoContas.getEsfera());
-        modelo.setGrupoPrestacaoContas(modeloPrestacaoContas.getGrupoPrestacaoContas());
-        modelo.setNome(modeloPrestacaoContas.getNome());
-        modelo.setQuestionarExistenciaSetoresContabilidade(modeloPrestacaoContas.getQuestionarExistenciaSetoresContabilidade());
-        modelo.setQuestionarExistenciaSetoresControleInterno(modeloPrestacaoContas.getQuestionarExistenciaSetoresControleInterno());
-        modelo.setTipoPrestacaoContas(modeloPrestacaoContas.getTipoPrestacaoContas());
-        modelo.getClassificacoesDocumento().addAll(modeloPrestacaoContas.getClassificacoesDocumento());
-        for (ResponsavelModeloPrestacaoContas responsavel : modelo.getResponsaveis()) {
+        novoModelo.setAnoExercicio(modeloPrestacaoContas.getAnoExercicio());
+        novoModelo.setEsfera(modeloPrestacaoContas.getEsfera());
+        novoModelo.setGrupoPrestacaoContas(modeloPrestacaoContas.getGrupoPrestacaoContas());
+        novoModelo.setNome(modeloPrestacaoContas.getNome());
+        novoModelo.setQuestionarExistenciaSetoresContabilidade(modeloPrestacaoContas.getQuestionarExistenciaSetoresContabilidade());
+        novoModelo.setQuestionarExistenciaSetoresControleInterno(modeloPrestacaoContas.getQuestionarExistenciaSetoresControleInterno());
+        novoModelo.setTipoPrestacaoContas(modeloPrestacaoContas.getTipoPrestacaoContas());
+
+        for (ModeloPrestacaoContasClassificacaoDocumento documento : modeloPrestacaoContas.getClassificacoesDocumento()) {
+            ModeloPrestacaoContasClassificacaoDocumento novoDocumento = new ModeloPrestacaoContasClassificacaoDocumento();
+            novoDocumento.setClassificacaoDocumento(documento.getClassificacaoDocumento());
+            documentosImportacao.add(novoDocumento);
+        }
+        
+        for (ResponsavelModeloPrestacaoContas responsavel : modeloPrestacaoContas.getResponsaveis()) {
             ResponsavelModeloPrestacaoContas novoResponsavel = new ResponsavelModeloPrestacaoContas();
-            novoResponsavel.setModeloPrestacaoContas(modelo);
             novoResponsavel.setObrigatorio(responsavel.getObrigatorio());
             novoResponsavel.setTipoParte(responsavel.getTipoParte());
-            modelo.getResponsaveis().add(novoResponsavel);
+            responsaveisImportacao.add(novoResponsavel);
         }
         
         setTab("form");

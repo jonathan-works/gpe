@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
+import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.tce.prestacaocontas.modelo.entity.ModeloPrestacaoContas;
 
 @Name(ModeloPrestacaoContasList.NAME)
@@ -20,7 +21,11 @@ public class ModeloPrestacaoContasList extends EntityList<ModeloPrestacaoContas>
     
     @Override
     protected void addSearchFields() {
-        
+        addSearchField("tipoPrestacaoContas", SearchCriteria.IGUAL);
+        addSearchField("esfera", SearchCriteria.IGUAL);
+        addSearchField("grupoPrestacaoContas", SearchCriteria.IGUAL);
+        addSearchField("anoExercicio", SearchCriteria.IGUAL);
+        addSearchField("nome", SearchCriteria.CONTENDO);
     }
 
     @Override
