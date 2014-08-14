@@ -29,4 +29,7 @@ public interface TipoProcessoDocumentoQuery {
     String CODIGO_DOCUMENTO_PARAM = "codigoDocumento";
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO = "findClassificacaoDocumentoByCodigo";
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY = "select o from TipoProcessoDocumento o where o.codigoDocumento=:" + CODIGO_DOCUMENTO_PARAM;
+    
+    String LIST_ATIVOS = "TipoProcessoDocumento.listAtivos";
+    String LIST_ATIVOS_QUERY = "select o from TipoProcessoDocumento o where o.ativo = true order by o.tipoProcessoDocumento";
 }
