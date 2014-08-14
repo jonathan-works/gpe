@@ -3,7 +3,6 @@ package br.com.infox.epp.documento.dao;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.CODIGO_DOCUMENTO_PARAM;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO;
-import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.LIST_CLASSIFICACOES_PARA_MODELO_PRESTACAO_CONTAS;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.PAPEL_PARAM;
 import static br.com.infox.epp.documento.query.TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_PARAM;
 
@@ -58,9 +57,5 @@ public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento> {
         final HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(CODIGO_DOCUMENTO_PARAM, codigo);
         return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, parameters);
-    }
-
-    public List<TipoProcessoDocumento> listClassificacoesParaModeloPrestacaoContas() {
-        return getNamedResultList(LIST_CLASSIFICACOES_PARA_MODELO_PRESTACAO_CONTAS);
     }
 }

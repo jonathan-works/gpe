@@ -55,8 +55,4 @@ public class TipoProcessoDocumentoManager extends Manager<TipoProcessoDocumentoD
     public TipoProcessoDocumento getClassificaoParaAcessoDireto() {
         return getDao().findByCodigo(CODIGO_CLASSIFICACAO_ACESSO_DIRETO);
     }
-    
-    public List<TipoProcessoDocumento> listClassificacoesParaModeloPrestacaoContas() {
-        return getDao().listClassificacoesParaModeloPrestacaoContas();
-    }
 }
