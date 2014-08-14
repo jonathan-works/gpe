@@ -7,7 +7,7 @@ login-required="true">
 
     <begin-conversation join="true" />
     <restrict>#{security.checkPage()}</restrict>
-    <param name="id" value="#{modeloPrestacaoContasAction.id}" converterId="integerConverter" />
+    <param name="id" value="#{modeloPrestacaoContasAction.id}" converterId="longConverter" />
     <param name="tab" value="#{modeloPrestacaoContasAction.tab}" />
 
 </page>
