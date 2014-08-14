@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <ui:param name="title" value="Modelos de Prestação de Contas" />
+
+    <wi:dataReport title="#{messages['modeloPrestacaoContas.reportTitle']}"
+        columns="5" widths="4 2 2 2 2" headerText="#{modeloPrestacaoContasList.criteria}">
+
+        <wi:reportColumnHeader title="#{messages['modeloPrestacaoContas.nome']}" />
+        <wi:reportColumnHeader title="#{messages['modeloPrestacaoContas.tipoPrestacaoContas']}" />
+        <wi:reportColumnHeader title="#{messages['modeloPrestacaoContas.esfera']}" />
+        <wi:reportColumnHeader title="#{messages['modeloPrestacaoContas.grupoPrestacaoContas']}" />
+        <wi:reportColumnHeader title="#{messages['modeloPrestacaoContas.anoExercicio']}" />
+
+        <ui:repeat var="row" value="#{modeloPrestacaoContasList.list()}">
+            <wi:reportColumn value="#{row.nome}" />
+            <wi:reportColumn value="#{row.tipoPrestacaoContas.label}" />
+            <wi:reportColumn value="#{row.esfera.label}" />
+            <wi:reportColumn value="#{row.grupoPrestacaoContas.nome}" />
+            <wi:reportColumn value="#{row.anoExercicio}" />
+        </ui:repeat>
+
+    </wi:dataReport>
+
+</ui:composition>

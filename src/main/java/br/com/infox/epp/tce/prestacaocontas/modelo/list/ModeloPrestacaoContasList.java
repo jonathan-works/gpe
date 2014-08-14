@@ -16,8 +16,10 @@ public class ModeloPrestacaoContasList extends EntityList<ModeloPrestacaoContas>
     private static final long serialVersionUID = 1L;
     public static final String NAME = "modeloPrestacaoContasList";
 
-    public static final String DEFAULT_EJBQL = "select o from ModeloPrestacaoContas o";
-    public static final String DEFAULT_ORDER = "o.nome";
+    private static final String DEFAULT_EJBQL = "select o from ModeloPrestacaoContas o";
+    private static final String DEFAULT_ORDER = "nome";
+    private static final String TEMPLATE = "/ModeloPrestacaoContas/ModeloPrestacaoContasTemplate.xls";
+    private static final String DOWNLOAD_XLS_NAME = "ModeloPrestacaoContas.xls";
     
     @Override
     protected void addSearchFields() {
@@ -41,5 +43,15 @@ public class ModeloPrestacaoContasList extends EntityList<ModeloPrestacaoContas>
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
+    }
+    
+    @Override
+    public String getDownloadXlsName() {
+        return DOWNLOAD_XLS_NAME;
+    }
+    
+    @Override
+    public String getTemplate() {
+        return TEMPLATE;
     }
 }
