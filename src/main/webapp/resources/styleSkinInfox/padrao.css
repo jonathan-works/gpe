@@ -328,11 +328,18 @@ img.disabled {
   height: 21px;
 }
 
-select {
-  width: 250px;
+.input.select {
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: top;
+}
+
+.usuario-perfil.input.select{
+  width:auto;
+}
+
+.input {
+  width: 250px;
 }
 
 .inputText {
