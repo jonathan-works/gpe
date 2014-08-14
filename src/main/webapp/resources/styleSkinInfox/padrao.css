@@ -338,11 +338,7 @@ img.disabled {
   width:auto;
 }
 
-.input {
-  width: 250px;
-}
-
-.inputText {
+.input,.inputText {
   width: 250px;
 }
 
