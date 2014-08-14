@@ -59,6 +59,11 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
     @Override
     public void setInstance(final T instance) {
         this.instance = instance;
+        if (instance == null) {
+            this.id = null;
+        } else {
+            this.id = EntityUtil.getEntityIdObject(instance);
+        }
     }
 
     @Override
