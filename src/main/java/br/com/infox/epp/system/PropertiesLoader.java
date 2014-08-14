@@ -43,7 +43,10 @@ public class PropertiesLoader implements Serializable {
 	private static final String PAGE_PROPERTIES = "/custom_pages.properties";
 	private static final String MENU_PROPERTIES = "/menu.properties";
 	private static final String MESSAGES_PROPERTIES = "/extended_messages.properties";
-	private static final String MESSAGES_EPP_PATH = "/entity_messages_pt_BR.properties";
+	private static final String ENTITY_MESSAGES_EPP_PATH = "/entity_messages_pt_BR.properties";
+	private static final String MESSAGES_EPP_PATH = "/messages_pt_BR.properties";
+	private static final String STANDARD_MESSAGES_EPP_PATH = "/standard_messages_pt_BR.properties";
+	private static final String PROCESS_DEFINITION_MESSAGES_EPP_PATH = "/process_definition_messages_pt_BR.properties";
 	private static final String EPP_MESSAGES = "eppmessages";
 	
 	private Properties pageProperties;
@@ -99,41 +102,53 @@ public class PropertiesLoader implements Serializable {
 	}
 	
 	private void loadMessagesProperties(){
+		InputStream isEntityMessagesEpp = getClass().getResourceAsStream(ENTITY_MESSAGES_EPP_PATH);
 		InputStream isMessagesEpp = getClass().getResourceAsStream(MESSAGES_EPP_PATH);
+		InputStream isProcessDefinitionMessagesEpp = getClass().getResourceAsStream(PROCESS_DEFINITION_MESSAGES_EPP_PATH);
+		InputStream isStandardMessagesEpp = getClass().getResourceAsStream(STANDARD_MESSAGES_EPP_PATH);
 		InputStream isMessagesExt = getClass().getResourceAsStream(MESSAGES_PROPERTIES);
-		if (isMessagesEpp == null || isMessagesExt == null){
+		if (isEntityMessagesEpp == null || isMessagesExt == null || isMessagesEpp == null || isProcessDefinitionMessagesEpp == null){
 			LOG.error(Messages.instance().get("propertiesLoader.fail"));
 			return;
 		}
 		
 		try {
-			Properties propMessagesEpp = new Properties();
-			propMessagesEpp.load(isMessagesEpp);
-			
 			Map<String, String> messages = new HashMap<>();
+
+			Properties source = new Properties();
+            source.load(isEntityMessagesEpp);
+			copyProperties(source, messages);
 			
-			Enumeration<Object> keyEpp = propMessagesEpp.keys();
-			while (keyEpp.hasMoreElements()) {
-				String key = (keyEpp.nextElement().toString());
-				String value = propMessagesEpp.getProperty(key);
-				messages.put(key, value);
-			}
+			source = new Properties();
+			source.load(isMessagesEpp);
+			copyProperties(source, messages);
 			
-			Properties propMessagesExt = new Properties();
-			propMessagesExt.load(isMessagesExt);
-			
-			Enumeration<Object> keysExt = propMessagesExt.keys();
-			while (keysExt.hasMoreElements()) {
-				String key = (keysExt.nextElement().toString());
-				String value = propMessagesExt.getProperty(key);
-				messages.put(key, value);
-			}
+			source = new Properties();
+            source.load(isProcessDefinitionMessagesEpp);
+            copyProperties(source, messages);
+            
+            source = new Properties();
+            source.load(isStandardMessagesEpp);
+            copyProperties(source, messages);
+            
+            source = new Properties();
+            source.load(isMessagesExt);
+            copyProperties(source, messages); 
 			
 			Contexts.getApplicationContext().set(EPP_MESSAGES, messages);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void copyProperties(Properties source, Map<String, String> destination) {
+	    Enumeration<Object> srcKeys = source.keys();
+        while (srcKeys.hasMoreElements()) {
+            String key = srcKeys.nextElement().toString();
+            String value = source.getProperty(key);
+            destination.put(key, value);
+        }
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
