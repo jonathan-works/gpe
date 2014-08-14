@@ -20,7 +20,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.contexts.ServletLifecycle;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -74,7 +73,7 @@ public class PropertiesLoader implements Serializable {
 					performLoad(key, value);
 				}
 			} catch (IOException e) {
-				LOG.error(Messages.instance().get("propertiesLoader.fail"), e);
+			    LOG.error("Falha ao recuperar arquivos especificados no Properties Loader.", e);
 			}
 		}
 	}
@@ -108,7 +107,7 @@ public class PropertiesLoader implements Serializable {
 		InputStream isStandardMessagesEpp = getClass().getResourceAsStream(STANDARD_MESSAGES_EPP_PATH);
 		InputStream isMessagesExt = getClass().getResourceAsStream(MESSAGES_PROPERTIES);
 		if (isEntityMessagesEpp == null || isMessagesExt == null || isMessagesEpp == null || isProcessDefinitionMessagesEpp == null){
-			LOG.error(Messages.instance().get("propertiesLoader.fail"));
+			LOG.error("Falha ao recuperar arquivos especificados no Properties Loader.");
 			return;
 		}
 		
@@ -161,7 +160,7 @@ public class PropertiesLoader implements Serializable {
 					menuProperties.load(is);
 					menuItems = Collections.unmodifiableList(new ArrayList(menuProperties.values()));
 				} catch (IOException e) {
-					LOG.error(Messages.instance().get("propertiesLoader.fail"), e);
+				    LOG.error("Falha ao recuperar arquivos especificados no Properties Loader.", e);
 				}
 			}
 		}
