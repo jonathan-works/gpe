@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,10 +48,12 @@ public class ModeloPrestacaoContas implements Serializable {
     private String nome;
     
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "tp_prestacao_contas", nullable = false)
     private TipoPrestacaoContas tipoPrestacaoContas;
     
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "tp_esfera_governamental", nullable = false)
     private EsferaGovernamental esfera;
     
