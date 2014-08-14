@@ -3,18 +3,26 @@ package br.com.infox.ibpm.task.handler;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.context.def.VariableAccess;
+import org.jbpm.graph.def.Action;
+import org.jbpm.graph.def.Event;
 import org.jbpm.graph.node.TaskNode;
+import org.jbpm.instantiation.Delegation;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
+import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
@@ -30,12 +38,32 @@ public class TaskHandler implements Serializable {
     private List<VariableAccessHandler> variables;
     private Boolean hasTaskPage;
     private VariableAccessHandler currentVariable;
+    private StatusProcesso statusProcesso;
 
     public TaskHandler(Task task) {
         this.task = task;
         if (task != null && task.getSwimlane() != null) {
             this.swimlaneName = task.getSwimlane().getName();
         }
+        
+        if (task.hasEvent(Event.EVENTTYPE_TASK_CREATE)) {
+        	Event event = task.getEvent(Event.EVENTTYPE_TASK_CREATE);
+        	List<?> actions = event.getActions();
+        	for (Object object : actions) {
+				Action action = (Action) object;
+				Delegation actionDelegation = action.getActionDelegation();
+				if (actionDelegation != null && StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
+					String configuration = actionDelegation.getConfiguration();
+					Pattern pattern = Pattern.compile("<statusProcesso>(\\d+)</statusProcesso>");
+					Matcher matcher = pattern.matcher(configuration);
+					if (matcher.find()) {
+						String status = matcher.group(1);
+						StatusProcessoManager manager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
+						this.statusProcesso = manager.find(Integer.parseInt(status, 10));
+					}
+				}
+			}
+		}
     }
 
     public Task getTask() {
@@ -212,4 +240,57 @@ public class TaskHandler implements Serializable {
         clearHasTaskPage();
         var.limparModelos();
     }
+
+	private Event createNewStatusProcessoEvent(StatusProcesso statusProcesso) {
+		Event event = new Event(Event.EVENTTYPE_TASK_CREATE);
+		Action action = new Action();
+		action.setName("setStatusProcessoAction");
+		Delegation delegation = new Delegation(StatusHandler.class.getName());
+		delegation.setConfiguration(MessageFormat.format(
+				"<statusProcesso>{0}</statusProcesso>",
+				statusProcesso.getIdStatusProcesso()));
+		action.setActionDelegation(delegation);
+		event.addAction(action);
+		return event;
+	}
+	
+	private Action retrieveStatusProcessoEvent(Event event) {
+		List<?> actions = event.getActions();
+		Action result = null;
+		for (Object object : actions) {
+			Action action = (Action) object;
+			if ("setStatusProcessoAction".equals(action.getName())) {
+				result = action;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	public StatusProcesso getStatusProcesso() {
+		return statusProcesso;
+	}
+
+	public void setStatusProcesso(StatusProcesso statusProcesso) {
+		Action action = null;
+		if (this.task.hasEvent(Event.EVENTTYPE_TASK_CREATE)) {
+			action = retrieveStatusProcessoEvent(this.task.getEvent(Event.EVENTTYPE_TASK_CREATE));
+		}
+		Event event = null;
+		if (action != null) {
+			Delegation actionDelegation = action.getActionDelegation();
+			if (actionDelegation != null && StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
+				event = this.task.getEvent(Event.EVENTTYPE_TASK_CREATE);
+				actionDelegation.setConfigType("constructor");
+				actionDelegation.setConfiguration(MessageFormat.format(
+						"<statusProcesso>{0}</statusProcesso>",
+						statusProcesso.getIdStatusProcesso()));
+			}
+		} else {
+			event = createNewStatusProcessoEvent(statusProcesso);
+			this.task.addEvent(event);
+		}
+		
+		this.statusProcesso = statusProcesso;
+	}
 }
