@@ -45,6 +45,7 @@ import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
 @Entity
@@ -73,6 +74,7 @@ public class ProcessoEpa extends Processo {
     private SituacaoPrazoEnum situacaoPrazo;
     private Boolean contabilizar = Boolean.TRUE;
     private PrioridadeProcesso prioridadeProcesso;
+    private StatusProcesso statusProcesso;
 
     private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
     private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
@@ -200,4 +202,14 @@ public class ProcessoEpa extends Processo {
     public void setPartes(List<ParteProcesso> partes) {
         this.partes = partes;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_status_processo", nullable = true)
+	public StatusProcesso getStatusProcesso() {
+		return statusProcesso;
+	}
+
+	public void setStatusProcesso(StatusProcesso statusProcesso) {
+		this.statusProcesso = statusProcesso;
+	}
 }
