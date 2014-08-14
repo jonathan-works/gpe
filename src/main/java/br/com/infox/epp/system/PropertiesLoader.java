@@ -46,6 +46,7 @@ public class PropertiesLoader implements Serializable {
 	private static final String MESSAGES_EPP_PATH = "/messages_pt_BR.properties";
 	private static final String STANDARD_MESSAGES_EPP_PATH = "/standard_messages_pt_BR.properties";
 	private static final String PROCESS_DEFINITION_MESSAGES_EPP_PATH = "/process_definition_messages_pt_BR.properties";
+	private static final String VALIDATION_MESSAGES = "/ValidationMessages.properties";
 	private static final String EPP_MESSAGES = "eppmessages";
 	
 	private Properties pageProperties;
@@ -105,8 +106,9 @@ public class PropertiesLoader implements Serializable {
 		InputStream isMessagesEpp = getClass().getResourceAsStream(MESSAGES_EPP_PATH);
 		InputStream isProcessDefinitionMessagesEpp = getClass().getResourceAsStream(PROCESS_DEFINITION_MESSAGES_EPP_PATH);
 		InputStream isStandardMessagesEpp = getClass().getResourceAsStream(STANDARD_MESSAGES_EPP_PATH);
+		InputStream isValidationMessages = getClass().getResourceAsStream(VALIDATION_MESSAGES);
 		InputStream isMessagesExt = getClass().getResourceAsStream(MESSAGES_PROPERTIES);
-		if (isEntityMessagesEpp == null || isMessagesExt == null || isMessagesEpp == null || isProcessDefinitionMessagesEpp == null){
+		if (isEntityMessagesEpp == null || isMessagesExt == null || isMessagesEpp == null || isProcessDefinitionMessagesEpp == null || isValidationMessages == null){
 			LOG.error("Falha ao recuperar arquivos especificados no Properties Loader.");
 			return;
 		}
@@ -128,6 +130,10 @@ public class PropertiesLoader implements Serializable {
             
             source = new Properties();
             source.load(isStandardMessagesEpp);
+            copyProperties(source, messages);
+            
+            source = new Properties();
+            source.load(isValidationMessages);
             copyProperties(source, messages);
             
             source = new Properties();
