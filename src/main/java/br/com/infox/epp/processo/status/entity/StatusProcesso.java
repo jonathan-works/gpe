@@ -18,7 +18,7 @@ import br.com.infox.core.constants.LengthConstants;
 @Table(name = StatusProcesso.TABLE_NAME)
 public class StatusProcesso implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "";
+	public static final String TABLE_NAME = "tb_status_processo";
 
 	private Integer idStatusProcesso; 
 	private String nome;
@@ -44,5 +44,9 @@ public class StatusProcesso implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String toString() {
+		return this.nome;
 	}
 }
