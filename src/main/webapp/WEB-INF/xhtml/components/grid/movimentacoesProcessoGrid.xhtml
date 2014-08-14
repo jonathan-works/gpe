@@ -37,7 +37,8 @@
           <h:graphicImage
             url="#{a4jSkin.imgFolder}/usuario.gif"
             rendered="#{!empty userHandler.getNomeUsuarioByTarefa(task)}" />
-          <h:outputText value="#{userHandler.getNomeUsuarioByTarefa(task)} " />
+          <h:outputText
+            value="#{userHandler.getNomeUsuarioByTarefa(task)} " />
           <a:commandLink
             action="#{taskInstanceHome.removeUsuario(task)}"
             execute="@this"
@@ -71,13 +72,13 @@
           rendered="#{processoHandler.taskDocumentList.contains(task)}"
           view="/Processo/Consulta/paginator.seam">
           <h:graphicImage url="#{a4jSkin.imgFolder}/view.gif" />
-          <h:graphicImage
-            rendered="#{!empty processoHandler.getAnexos(task)}"
-            url="#{a4jSkin.imgFolder}/anexo.gif" />
           <f:param
             name="inicio"
             value="#{key + 1}" />
         </s:link>
+        <h:graphicImage
+          rendered="#{!empty processoHandler.getAnexos(task)}"
+          url="#{a4jSkin.imgFolder}/anexo.gif" />
       </rich:column>
     </rich:dataTable>
   </rich:panel>
