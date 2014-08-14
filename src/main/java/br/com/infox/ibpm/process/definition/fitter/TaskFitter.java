@@ -22,6 +22,8 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
+import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -49,6 +51,8 @@ public class TaskFitter extends Fitter implements Serializable {
     private JbpmTaskManager jbpmTaskManager;
     @In
     private TarefaManager tarefaManager;
+    @In
+    private StatusProcessoManager statusProcessoManager;
 
     public void addTask() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
@@ -227,5 +231,9 @@ public class TaskFitter extends Fitter implements Serializable {
 
     public void setTypeList(List<VariableType> typeList) {
         this.typeList = typeList;
+    }
+    
+    public List<StatusProcesso> getStatusProcessoList() {
+    	return statusProcessoManager.findAll();
     }
 }
