@@ -33,7 +33,7 @@ public class ResponsavelModeloPrestacaoContas implements Serializable {
     
     @NotNull
     @Column(name = "in_obrigatorio", nullable = false)
-    private Boolean obrigatorio;
+    private Boolean obrigatorio = false;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_modelo_prestacao_contas", nullable = false)
