@@ -35,12 +35,14 @@ public class ProcessoDAO extends DAO<Processo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDAO";
 
+    @Transactional(TransactionPropagationType.REQUIRED)
     public void anulaActorId(String actorId) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ACTOR_ID, actorId);
         executeNamedQueryUpdate(ANULA_ACTOR_ID, parameters);
     }
 
+    @Transactional(TransactionPropagationType.REQUIRED)
     public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
@@ -52,6 +54,7 @@ public class ProcessoDAO extends DAO<Processo> {
         executeNamedQueryUpdate(ANULA_TODOS_OS_ACTOR_IDS);
     }
 
+    @Transactional(TransactionPropagationType.REQUIRED)
     public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_LIST_PROCESSO_PARAM, idList);
@@ -59,6 +62,7 @@ public class ProcessoDAO extends DAO<Processo> {
         executeNamedQueryUpdate(MOVER_PROCESSOS_PARA_CAIXA, parameters);
     }
 
+    @Transactional(TransactionPropagationType.REQUIRED)
     public void moverProcessoParaCaixa(Caixa caixa, Processo processo) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, processo);
@@ -66,6 +70,7 @@ public class ProcessoDAO extends DAO<Processo> {
         executeNamedQueryUpdate(MOVER_PROCESSO_PARA_CAIXA, parameters);
     }
 
+    @Transactional(TransactionPropagationType.REQUIRED)
     public void removerProcessoDaCaixaAtual(Processo processo) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
@@ -80,6 +85,7 @@ public class ProcessoDAO extends DAO<Processo> {
         return getNamedResultList(LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, parameters);
     }
 
+    @Transactional(TransactionPropagationType.REQUIRED)
     public void atualizarProcessos() {
         JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY).executeUpdate();
     }
