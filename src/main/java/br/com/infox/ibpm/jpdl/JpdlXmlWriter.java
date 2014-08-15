@@ -425,6 +425,7 @@ public class JpdlXmlWriter {
 	    	addAttribute(actionElement, "name", action.getName());
 			addAttribute(actionElement, "class", actionDelegation.getClassName());
 	    	addAttribute(actionElement, "async", "true");
+	    	addAttribute(actionElement, "config-type", "constructor");
 
 	    	String configuration = actionDelegation.getConfiguration();
 	    	Pattern pattern = Pattern.compile("(<statusProcesso>\\d+</statusProcesso>)");
