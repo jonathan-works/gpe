@@ -246,6 +246,7 @@ public class TaskHandler implements Serializable {
 		Action action = new Action();
 		action.setName("setStatusProcessoAction");
 		Delegation delegation = new Delegation(StatusHandler.class.getName());
+		delegation.setConfigType("constructor");
 		delegation.setConfiguration(MessageFormat.format(
 				"<statusProcesso>{0}</statusProcesso>",
 				statusProcesso.getIdStatusProcesso()));
