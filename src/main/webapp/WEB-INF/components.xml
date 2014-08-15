@@ -41,19 +41,19 @@
     <persistence:managed-persistence-context
         name="entityManagerLog"
         auto-create="true"
-        persistence-unit-jndi-name="java:app/${epp.name}/EPAPersistenceUnit" />
+        persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit" />
 
     <persistence:managed-persistence-context
         name="entityManager"
         auto-create="true"
-        persistence-unit-jndi-name="java:app/${epp.name}/EPAPersistenceUnit" />
+        persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit" />
 
     <async:quartz-dispatcher />
 
     <persistence:managed-persistence-context
         name="entityManagerBin"
         auto-create="true"
-        persistence-unit-jndi-name="java:app/${epp.name}/EPABinPersistenceUnit" />
+        persistence-unit-jndi-name="java:jboss/EPABinPersistenceUnit" />
 
     <event type="org.jboss.seam.security.notLoggedIn">
         <action execute="#{redirect.captureCurrentView}" />
