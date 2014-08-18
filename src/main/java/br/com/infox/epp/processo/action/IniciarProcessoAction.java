@@ -17,6 +17,7 @@ import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -115,7 +116,7 @@ public class IniciarProcessoAction {
     private void sendIniciarProcessoErrorMessage(final String message,
             final Exception exception) {
         LOG.error(".iniciarProcesso()", exception);
-        getMessagesHandler().add(Severity.ERROR, message);
+        getMessagesHandler().add(Severity.ERROR, Messages.instance().get(message));
     }
 
     public void onSelectNatCatFluxo(final NaturezaCategoriaFluxo ncf) {

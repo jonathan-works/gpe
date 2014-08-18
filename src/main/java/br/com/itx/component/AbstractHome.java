@@ -19,6 +19,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.framework.EntityHome;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -39,7 +40,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Deprecated
 public abstract class AbstractHome<T> extends EntityHome<T> {
 
-    private static final String MSG_INACTIVE_SUCCESS = "Registro inativado com sucesso.";
+    private static final String MSG_INACTIVE_SUCCESS = "entity_inactived";
     private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
     private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
     private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
@@ -68,7 +69,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
     }
 
     protected String getInactiveSuccess() {
-        return MSG_INACTIVE_SUCCESS;
+        return Messages.instance().get(MSG_INACTIVE_SUCCESS);
     }
 
     protected String getRemoveError() {

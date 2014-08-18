@@ -9,6 +9,7 @@ import javax.faces.model.SelectItem;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -79,7 +80,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
             if (PostgreSQLErrorCode.valueOf(ret) == PostgreSQLErrorCode.UNIQUE_VIOLATION) {
                 final StatusMessages messages = getMessagesHandler();
                 messages.clear();
-                messages.add(Severity.ERROR, "Já existe uma caixa na mesma tarefa com o nó anterior especificado.");
+                messages.add(Severity.ERROR, Messages.instance().get("caixa.error.previousNodeExists"));
             }
         } catch (IllegalArgumentException e) {
             LOG.warn(".update()", e);
@@ -122,7 +123,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
         if (getInstance() != null) {
             remove();
         } else {
-            getMessagesHandler().add(Severity.ERROR, "Por favor, selecione a caixa que deseja excluir!");
+            getMessagesHandler().add(Severity.ERROR, Messages.instance().get("caixa.error.notSelected"));
         }
         final TarefasTreeHandler tree = ComponentUtil.getComponent(TarefasTreeHandler.NAME);
         tree.clearTree();
