@@ -34,6 +34,7 @@ import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -199,7 +200,7 @@ public class Authenticator {
         if (loginExists(credentials) || ldapLoginExists(credentials)) {
             identity.login();
         } else {
-            getMessagesHandler().add(Severity.ERROR, "Login inválido.");
+            getMessagesHandler().add(Severity.ERROR, Messages.instance().get("login.error.invalid"));
         }
     }
 

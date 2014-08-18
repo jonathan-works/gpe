@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
@@ -155,12 +156,12 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
                     ComponentUtil.setValue(t, "ativo", false);
                 }
                 ret = flushObject(t, false);
-                messages.add("Registro inativado com sucesso.");
+                messages.add(Messages.instance().get("entity_inactived"));
                 final String message = format(".inactive({0}){1}): {2}", t, objectClassName, sw.getTime());
                 LOG.info(message);
             } catch (final Exception e) {
                 LOG.error(".inactive()", e);
-                final String message = format("Erro ao definir a propriedade ativo na entidade: {0}. Verifique se esse campo existe.", objectClassName);
+                final String message = format(Messages.instance().get("entity.ativo.error"), objectClassName);
                 messages.add(StatusMessage.Severity.ERROR, message);
             }
         } else {

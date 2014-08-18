@@ -14,6 +14,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
@@ -188,7 +189,7 @@ public class ProdutividadeAction implements Serializable {
         List<ProdutividadeBean> beanList = list(10000);
         try {
             if (beanList == null || beanList.isEmpty()) {
-                FacesMessages.instance().add(Severity.INFO, "Não há dados para exportar!");
+                FacesMessages.instance().add(Severity.INFO, Messages.instance().get("entity.noDataAvailable"));
             } else {
                 exportarXLS(getTemplate(), beanList);
             }

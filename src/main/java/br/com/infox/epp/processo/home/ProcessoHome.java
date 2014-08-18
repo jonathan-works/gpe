@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -44,7 +45,8 @@ import br.com.itx.component.AbstractHome;
 @Name(ProcessoHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoHome extends AbstractHome<Processo> {
-    private static final LogProvider LOG = Logging.getLogProvider(Processo.class);
+    private static final LogProvider LOG = Logging
+            .getLogProvider(Processo.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoHome";
 
@@ -79,7 +81,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     private Long tarefaId;
 
-    //TODO confirmar se é método realmente não é mais utilizado e removê-lo
+    // TODO confirmar se é método realmente não é mais utilizado e removê-lo
     public void limpar() {
         modeloDocumento = null;
         tipoProcessoDocumento = null;
@@ -88,7 +90,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     public void iniciarTarefaProcesso() {
         try {
-            processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
+            processoManager.iniciarTask(instance, tarefaId,
+                    Authenticator.getUsuarioPerfilAtual());
         } catch (java.lang.NullPointerException e) {
             LOG.error("ProcessoHome.iniciarTarefaProcesso()", e);
         } catch (DAOException e) {
@@ -97,7 +100,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public void visualizarTarefaProcesso() {
-        processoManager.visualizarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
+        processoManager.visualizarTask(instance, tarefaId,
+                Authenticator.getUsuarioPerfilAtual());
     }
 
     public static ProcessoHome instance() {
@@ -110,10 +114,13 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public Boolean checarVisibilidade() {
-        if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoEpaManager.find(getInstance().getIdProcesso()))) {
+        if (!sigiloProcessoService.usuarioPossuiPermissao(
+                Authenticator.getUsuarioLogado(),
+                processoEpaManager.find(getInstance().getIdProcesso()))) {
             possuiPermissaoVisibilidade = false;
         } else if (checkVisibilidade) {
-            possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO.possuiPermissao(getInstance());
+            possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO
+                    .possuiPermissao(getInstance());
             checkVisibilidade = false;
         }
         if (!possuiPermissaoVisibilidade) {
@@ -125,8 +132,9 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private void avisarNaoHaPermissaoParaAcessarProcesso() {
         ContextFacade.setToEventContext("canClosePanel", true);
         FacesMessages.instance().clear();
-        throw new ApplicationException("Sem permissão para acessar o processo: "
-                + getInstance().getNumeroProcesso());
+        throw new ApplicationException(
+                "Sem permissão para acessar o processo: "
+                        + getInstance().getNumeroProcesso());
     }
 
     public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc,
@@ -134,8 +142,10 @@ public class ProcessoHome extends AbstractHome<Processo> {
         ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
         setIdProcessoDocumento(idDoc);
         Integer result = idDoc;
+        FacesMessages messages = FacesMessages.instance();
         try {
             if (tipoProcessoDocumento != null) {
+                String msgKey = "Registro gravado com sucesso!";
                 if (processoDocumento != null) {
                     if (assinaturaDocumentoService
                             .isDocumentoAssinado(processoDocumento,
@@ -143,17 +153,19 @@ public class ProcessoHome extends AbstractHome<Processo> {
                         return result;
                     }
                     atualizarProcessoDocumentoFluxo(value, idDoc, assinado);
+                    msgKey = "ProcessoDocumento_updated";
                 } else {
                     result = inserirProcessoDocumentoFluxo(value, label,
                             assinado);
+                    msgKey = "ProcessoDocumento_created";
                 }
-                FacesMessages.instance().clear();
-                FacesMessages.instance().add(StatusMessage.Severity.INFO, "Registro gravado com sucesso!");
+                messages.clear();
+                messages.add(StatusMessage.Severity.INFO, Messages.instance().get(msgKey));
             }
         } catch (DAOException | AssinaturaException e) {
             LOG.error("Não foi possível salvar o ProcessoDocumento " + idDoc, e);
-            FacesMessages.instance().clear();
-            FacesMessages.instance().add(e.getMessage());
+            messages.clear();
+            messages.add(e.getMessage());
             result = null;
         }
         return result;
@@ -165,15 +177,25 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     // Método para Atualizar o documento do fluxo
     private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc,
-            Boolean assinado) throws CertificadoException, AssinaturaException, DAOException {
+            Boolean assinado) throws CertificadoException, AssinaturaException,
+            DAOException {
         if (validacaoCertificadoBemSucedida(assinado)) {
             ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
-            ProcessoDocumentoBin processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
-            String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(value, processoDocumentoBin.getModeloDocumento());
+            ProcessoDocumentoBin processoDocumentoBin = processoDocumento
+                    .getProcessoDocumentoBin();
+            String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(
+                    value, processoDocumentoBin.getModeloDocumento());
             UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-            processoDocumento.setPapel(usuarioPerfil.getPerfilTemplate().getPapel());
-            processoDocumento.setLocalizacao(usuarioPerfil.getPerfilTemplate().getLocalizacao());
-            atualizarProcessoDocumento(processoDocumento, modeloDocumento, usuarioPerfil);
+            processoDocumento.setPapel(usuarioPerfil.getPerfilTemplate()
+                    .getPapel());
+            processoDocumento.setLocalizacao(usuarioPerfil.getPerfilTemplate()
+                    .getLocalizacao());
+            processoDocumento.getProcessoDocumentoBin().setModeloDocumento(
+                    modeloDocumento);
+            if (assinado) {
+                assinaturaDocumentoService.assinarDocumento(processoDocumento,
+                        usuarioPerfil, certChain, signature);
+            }
             gravarAlteracoes(processoDocumento, processoDocumentoBin);
         }
     }
@@ -195,26 +217,26 @@ public class ProcessoHome extends AbstractHome<Processo> {
         getEntityManager().flush();
     }
 
-    private void atualizarProcessoDocumento(ProcessoDocumento processoDocumento, String modeloDocumento,
-            UsuarioPerfil usuarioPerfil) throws CertificadoException, AssinaturaException, DAOException {
-        processoDocumento.getProcessoDocumentoBin().setModeloDocumento(modeloDocumento);
-        assinaturaDocumentoService.assinarDocumento(processoDocumento, usuarioPerfil, certChain, signature);
-    }
-
     // Método para Inserir o documento do fluxo
     private Integer inserirProcessoDocumentoFluxo(Object value, String label,
             Boolean assinado) throws CertificadoException, AssinaturaException {
         if (validacaoCertificadoBemSucedida(assinado)) {
             try {
-                Object newValue = processoManager.getAlteracaoModeloDocumento(processoDocumentoBin, value);
-                ProcessoDocumentoBin processoDocumentoBin = processoManager.createProcessoDocumentoBin(newValue);
+                Object newValue = processoManager.getAlteracaoModeloDocumento(
+                        processoDocumentoBin, value);
+                ProcessoDocumentoBin processoDocumentoBin = processoManager
+                        .createProcessoDocumentoBin(newValue);
                 label = label == null ? "-" : label;
                 ProcessoDocumento doc;
-                doc = processoDocumentoManager.createProcessoDocumento(getInstance(), label, processoDocumentoBin, getTipoProcessoDocumento());
+                doc = processoDocumentoManager.createProcessoDocumento(
+                        getInstance(), label, processoDocumentoBin,
+                        getTipoProcessoDocumento());
                 final int idProcessoDocumento = doc.getIdProcessoDocumento();
                 setIdProcessoDocumento(idProcessoDocumento);
-                if (assinado && certChain!=null && signature != null) {
-                    assinaturaDocumentoService.assinarDocumento(doc, Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+                if (assinado && certChain != null && signature != null) {
+                    assinaturaDocumentoService.assinarDocumento(doc,
+                            Authenticator.getUsuarioPerfilAtual(), certChain,
+                            signature);
                 }
                 return idProcessoDocumento;
             } catch (DAOException e) {
@@ -226,16 +248,19 @@ public class ProcessoHome extends AbstractHome<Processo> {
         }
     }
 
-    private boolean validacaoCertificadoBemSucedida(boolean assinado) throws CertificadoException, AssinaturaException {
+    private boolean validacaoCertificadoBemSucedida(boolean assinado)
+            throws CertificadoException, AssinaturaException {
         if (assinado) {
             try {
-                assinaturaDocumentoService.verificaCertificadoUsuarioLogado(certChain, Authenticator.getUsuarioLogado());
+                assinaturaDocumentoService.verificaCertificadoUsuarioLogado(
+                        certChain, Authenticator.getUsuarioLogado());
             } catch (AssinaturaException e) {
                 if (e.getMotivo() == Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO) {
                     limparAssinatura();
                 }
-                LOG.error("Não foi possível verificar o certificado do usuário "
-                        + Authenticator.getUsuarioLogado(), e);
+                LOG.error(
+                        "Não foi possível verificar o certificado do usuário "
+                                + Authenticator.getUsuarioLogado(), e);
                 throw e;
             }
         }
@@ -248,15 +273,18 @@ public class ProcessoHome extends AbstractHome<Processo> {
             setPdFluxo(processoDocumento);
             processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
             setIdProcessoDocumento(processoDocumento.getIdProcessoDocumento());
-            setTipoProcessoDocumento(processoDocumento.getTipoProcessoDocumento());
+            setTipoProcessoDocumento(processoDocumento
+                    .getTipoProcessoDocumento());
         }
     }
 
     public void updateProcessoDocumentoBin() {
         String modelo = "";
         if (taskInstancePossuiModeloDocumento()) {
-            ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
+            ModeloDocumentoManager modeloDocumentoManager = ComponentUtil
+                    .getComponent(ModeloDocumentoManager.NAME);
+            modelo = modeloDocumentoManager
+                    .evaluateModeloDocumento(modeloDocumento);
         }
         processoDocumentoBin.setModeloDocumento(modelo);
     }
@@ -274,7 +302,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     @Override
     public String remove() {
-        Authenticator.getUsuarioLogado().getProcessoListForIdUsuarioCadastroProcesso().remove(instance);
+        Authenticator.getUsuarioLogado()
+                .getProcessoListForIdUsuarioCadastroProcesso().remove(instance);
         return super.remove();
     }
 
@@ -287,7 +316,8 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public List<ProcessoDocumento> getProcessoDocumentoList() {
-        return getInstance() == null ? null : getInstance().getProcessoDocumentoList();
+        return getInstance() == null ? null : getInstance()
+                .getProcessoDocumentoList();
     }
 
     public boolean hasPartes() {
