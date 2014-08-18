@@ -4,6 +4,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,6 +14,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
+import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.taskmgmt.def.Swimlane;
@@ -23,11 +25,15 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
+import br.com.infox.epp.processo.timer.TaskExpirationInfo;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
 import br.com.infox.seam.util.ComponentUtil;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class TaskHandler implements Serializable {
 
@@ -39,6 +45,8 @@ public class TaskHandler implements Serializable {
     private Boolean hasTaskPage;
     private VariableAccessHandler currentVariable;
     private StatusProcesso statusProcesso;
+    private List<TaskExpirationInfo> expirations;
+    private TaskExpirationInfo currentExpiration = new TaskExpirationInfo();
 
     public TaskHandler(Task task) {
         this.task = task;
@@ -293,5 +301,104 @@ public class TaskHandler implements Serializable {
 		}
 		
 		this.statusProcesso = statusProcesso;
+	}
+	
+	public List<TaskExpirationInfo> getExpirations() throws ParseException {
+	    List<Action> actions = null;
+	    Event createEvent = null;
+	    if (expirations == null) {
+	        expirations = new ArrayList<>();
+	        if (this.task.hasEvent(Event.EVENTTYPE_TASK_CREATE)) {
+	            createEvent = this.task.getEvent(Event.EVENTTYPE_TASK_CREATE);
+	            actions = retrieveExpirationEvents(createEvent);
+	        }
+	        if (actions != null) {
+	            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+	            for (Action action : actions) {
+	                Delegation delegation = action.getActionDelegation();
+	                if (delegation != null && TaskExpirationHandler.class.getName().equals(delegation.getClassName())) {
+	                    TaskExpirationInfo info = TaskExpirationHandler.parseTaskExpirationInfo(delegation.getConfiguration());
+                        expirations.add(info);
+                        // Recoloca o objeto no Delegation, para remover o CDATA anterior e evitar duplicação de ]]>, que causa erro
+                        delegation.setConfiguration(gson.toJson(info));
+	                }
+	            }
+	        }
+	    }
+        return expirations;
+    }
+	
+	@SuppressWarnings(UNCHECKED)
+    private List<Action> retrieveExpirationEvents(Event event) {
+	    List<Action> actions = event.getActions();
+	    List<Action> result = new ArrayList<>();
+	    for (Action action : actions) {
+	        if ("setExpiration".equals(action.getName())) {
+	            result.add(action);
+	        }
+	    }
+        return result;
+    }
+
+    public TaskExpirationInfo getCurrentExpiration() {
+        return currentExpiration;
+    }
+	
+	public void setCurrentExpiration(TaskExpirationInfo currentExpiration) {
+        this.currentExpiration = currentExpiration;
+    }
+
+	public void addExpiration() throws ParseException {
+	    Event createEvent;
+	    if (this.task.hasEvent(Event.EVENTTYPE_TASK_CREATE)) {
+            createEvent = this.task.getEvent(Event.EVENTTYPE_TASK_CREATE);
+            removeExpiration(currentExpiration);
+        } else {
+            createEvent = new Event(Event.EVENTTYPE_TASK_CREATE);
+            this.task.addEvent(createEvent);
+        }
+	    
+	    Action action = new Action();
+	    action.setName("setExpiration");
+	    Delegation delegation = new Delegation(TaskExpirationHandler.class.getName());
+	    delegation.setConfigType("constructor");
+	    
+	    Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+	    delegation.setConfiguration(gson.toJson(currentExpiration));
+	    
+        action.setActionDelegation(delegation);
+        createEvent.addAction(action);
+        expirations.add(currentExpiration);
+        setCurrentExpiration(new TaskExpirationInfo());
+	}
+	
+	@SuppressWarnings(UNCHECKED)
+    public void removeExpiration(TaskExpirationInfo expiration) throws ParseException {
+	    Event event = this.task.getEvent(Event.EVENTTYPE_TASK_CREATE);
+	    List<Action> actions = event.getActions();
+	    Action expirationToRemove = null;
+	    for (Action action : actions) {
+	        if ("setExpiration".equals(action.getName())) {
+	            TaskExpirationInfo info = TaskExpirationHandler.parseTaskExpirationInfo(action.getActionDelegation().getConfiguration());
+	            if (info.getExpiration().equals(expiration.getExpiration()) && info.getTransition().equals(expiration.getTransition())) {
+	                expirationToRemove = action;
+	                break;
+	            }
+	        }
+	    }
+	    if (expirationToRemove != null) {
+	        event.removeAction(expirationToRemove);
+	        expirations.remove(expiration);
+	    }
+	}
+	
+	@SuppressWarnings(UNCHECKED)
+    public List<String> getTransitions() {
+	    List<String> transitions = new ArrayList<>();
+	    List<Transition> leavingTransitions = this.task.getTaskNode().getLeavingTransitions();
+	    for (Transition leavingTransition : leavingTransitions) {
+	        transitions.add(leavingTransition.getName());
+	    }
+	    return transitions;
 	}
 }

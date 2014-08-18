@@ -155,6 +155,10 @@
                             rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
                             <ui:include src="timers.xhtml" />
                         </s:fragment>
+                        <s:fragment
+                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
+                            <ui:include src="expirations.xhtml" />
+                        </s:fragment>
                         <s:div rendered="#{! empty nodeFitter.nodeForm}">
                             <h:form>
                                 <ui:include
