@@ -9,6 +9,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -141,7 +142,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
             try {
                 setInstance(getManager().merge(activeEntity));
             } catch (final DAOException e) {
-                getMessagesHandler().add(Severity.ERROR, "Merge Entity Error", e);
+                getMessagesHandler().add(Severity.ERROR, Messages.instance().get("entity.error.merge"), e);
             }
         }
     }
