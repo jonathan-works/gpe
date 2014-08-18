@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessages;
 
@@ -47,14 +48,15 @@ public class ActionMessagesService implements Serializable {
             messages.add(daoException.getLocalizedMessage());
             return ret;
         } else {
+            String pattern = Messages.instance().get("entity.error.save");
             if (daoException.getMessage() != null) {
-                messages.add(StatusMessage.Severity.ERROR, format("Erro ao gravar: {0}", daoException.getMessage()), daoException);
+                messages.add(StatusMessage.Severity.ERROR, format(pattern, daoException.getMessage()), daoException);
             } else {
                 final Throwable cause = daoException.getCause();
                 if (cause instanceof ConstraintViolationException) {
                     return handleBeanViolationException((ConstraintViolationException) cause);
                 } else {
-                    messages.add(StatusMessage.Severity.ERROR, format("Erro ao gravar: {0}", cause.getMessage()), cause);
+                    messages.add(StatusMessage.Severity.ERROR, format(pattern, cause.getMessage()), cause);
                 }
             }
         }
