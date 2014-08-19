@@ -68,7 +68,7 @@ public class PessoaFisica extends Pessoa {
     private EstadoCivilEnum estadoCivil;
     
     @OneToMany(fetch=FetchType.LAZY, mappedBy="pessoa")
-    private List<MeioContato> meioContaoList = new ArrayList<>();
+    private List<MeioContato> meioContatoList = new ArrayList<>();
     
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
@@ -131,12 +131,12 @@ public class PessoaFisica extends Pessoa {
 		this.estadoCivil = estadoCivil;
 	}
 	
-	public List<MeioContato> getMeioContaoList() {
-		return meioContaoList;
+	public List<MeioContato> getMeioContatoList() {
+		return meioContatoList;
 	}
 
-	public void setMeioContaoList(List<MeioContato> meioContaoList) {
-		this.meioContaoList = meioContaoList;
+	public void setMeioContatoList(List<MeioContato> meioContatoList) {
+		this.meioContatoList = meioContatoList;
 	}
 
 	@Transient
