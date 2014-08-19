@@ -23,6 +23,8 @@ import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.util.collection.DefaultMap;
+
 /**
  * Classe que carrega páginas customizadas pelo cliente e as insere no ePP
  * dinamicamente, ou substitui as páginas padrão do ePP, caso essas existam.
@@ -110,7 +112,7 @@ public class PropertiesLoader implements Serializable {
 		InputStream isMessagesExt = getClass().getResourceAsStream(MESSAGES_PROPERTIES);
 		
 		try {
-			Map<String, String> messages = new HashMap<>();
+			Map<String, String> messages = new DefaultMap<>(new HashMap<String, String>());
 
 			Properties source = new Properties();
             source.load(isEntityMessagesEpp);
