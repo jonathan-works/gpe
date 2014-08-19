@@ -35,17 +35,34 @@ public class PessoaDocumento implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_pessoa_documento";
 
-	private Integer idPessoaDocumento;
-	private Pessoa pessoa;
-	private String documento;
-	private String orgaoEmissor;
-	private Date dataEmissao;
-	private TipoPesssoaDocumentoEnum tipoDocumento;
-
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "PessoaDocumentoGenerator", sequenceName = "sq_pessoa_documento")
 	@Id
+	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "PessoaDocumentoGenerator", sequenceName = "sq_pessoa_documento")
 	@GeneratedValue(generator = "PessoaDocumentoGenerator", strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_pessoa_documento", nullable = false, unique = true)
+	private Integer idPessoaDocumento;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_pessoa", nullable = false)
+	private Pessoa pessoa;
+	
+	@NotNull
+	@Column(name = "vl_documento", nullable = false)
+	private String documento;
+	
+	@NotNull
+	@Column(name = "ds_orgao_emissor", nullable = false)
+	private String orgaoEmissor;
+	
+	@NotNull
+	@Column(name = "dt_emissao", nullable = false)
+	private Date dataEmissao;
+	
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tp_documento", nullable = false)
+	private TipoPesssoaDocumentoEnum tipoDocumento;
+	
 	public Integer getIdPessoaDocumento() {
 		return idPessoaDocumento;
 	}
@@ -54,9 +71,6 @@ public class PessoaDocumento implements Serializable {
 		this.idPessoaDocumento = idPessoaDocumento;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_pessoa", nullable = false)
-	@NotNull
 	public Pessoa getPessoa() {
 		return pessoa;
 	}
@@ -65,8 +79,6 @@ public class PessoaDocumento implements Serializable {
 		this.pessoa = pessoa;
 	}
 
-	@Column(name = "vl_documento", nullable = false)
-	@NotNull
 	public String getDocumento() {
 		return documento;
 	}
@@ -75,8 +87,6 @@ public class PessoaDocumento implements Serializable {
 		this.documento = documento;
 	}
 
-	@Column(name = "ds_orgao_emissor", nullable = false)
-	@NotNull
 	public String getOrgaoEmissor() {
 		return orgaoEmissor;
 	}
@@ -85,8 +95,6 @@ public class PessoaDocumento implements Serializable {
 		this.orgaoEmissor = orgaoEmissor;
 	}
 
-	@Column(name = "dt_emissao", nullable = false)
-	@NotNull
 	public Date getDataEmissao() {
 		return dataEmissao;
 	}
@@ -95,9 +103,6 @@ public class PessoaDocumento implements Serializable {
 		this.dataEmissao = dataEmissao;
 	}
 
-	@Column(name = "tp_documento", nullable = false)
-	@Enumerated(EnumType.STRING)
-	@NotNull
 	public TipoPesssoaDocumentoEnum getTipoDocumento() {
 		return tipoDocumento;
 	}
@@ -112,7 +117,7 @@ public class PessoaDocumento implements Serializable {
 		int result = 1;
 		result = prime
 				* result
-				+ ((idPessoaDocumento == null) ? 0 : idPessoaDocumento
+				+ ((getIdPessoaDocumento() == null) ? 0 : getIdPessoaDocumento()
 						.hashCode());
 		return result;
 	}
@@ -126,10 +131,10 @@ public class PessoaDocumento implements Serializable {
 		if (!(obj instanceof PessoaDocumento))
 			return false;
 		PessoaDocumento other = (PessoaDocumento) obj;
-		if (idPessoaDocumento == null) {
-			if (other.idPessoaDocumento != null)
+		if (getIdPessoaDocumento() == null) {
+			if (other.getIdPessoaDocumento() != null)
 				return false;
-		} else if (!idPessoaDocumento.equals(other.idPessoaDocumento))
+		} else if (!getIdPessoaDocumento().equals(other.getIdPessoaDocumento()))
 			return false;
 		return true;
 	}

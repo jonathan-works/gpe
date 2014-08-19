@@ -5,7 +5,9 @@ import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF_QUER
 import static javax.persistence.FetchType.LAZY;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -28,6 +31,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
@@ -37,16 +41,35 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 @PrimaryKeyJoinColumn(name = "id_pessoa_fisica", columnDefinition = "integer")
 @NamedQueries({ @NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY) })
 public class PessoaFisica extends Pessoa {
+	
     public static final String EVENT_LOAD = "evtCarregarPessoaFisica";
     public static final String TABLE_NAME = "tb_pessoa_fisica";
     private static final long serialVersionUID = 1L;
 
+    @NotNull
+    @Size(max = LengthConstants.NUMERO_CPF)
+    @Column(name = "nr_cpf", nullable = false, unique = true)
     private String cpf;
+    
+    @NotNull
+    @Column(name = "dt_nascimento", nullable = false)
     private Date dataNascimento;
+    
+    @Basic(fetch = LAZY)
+    @Column(name = "ds_cert_chain")
     private String certChain;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
     private ProcessoDocumentoBin termoAdesao;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "st_estado_civil")
     private EstadoCivilEnum estadoCivil;
-
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="pessoa")
+    private List<MeioContato> meioContaoList = new ArrayList<>();
+    
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
     }
@@ -68,9 +91,6 @@ public class PessoaFisica extends Pessoa {
     	}
     }
 
-    @Column(name = "nr_cpf", nullable = false, unique = true)
-    @Size(max = LengthConstants.NUMERO_CPF)
-    @NotNull
     public String getCpf() {
         return cpf;
     }
@@ -79,8 +99,6 @@ public class PessoaFisica extends Pessoa {
         this.cpf = cpf;
     }
 
-    @Column(name = "dt_nascimento", nullable = false)
-    @NotNull
     public Date getDataNascimento() {
         return dataNascimento;
     }
@@ -89,8 +107,6 @@ public class PessoaFisica extends Pessoa {
         this.dataNascimento = dataNascimento;
     }
 
-    @Column(name = "ds_cert_chain")
-    @Basic(fetch = LAZY)
     public String getCertChain() {
         return certChain;
     }
@@ -99,7 +115,31 @@ public class PessoaFisica extends Pessoa {
         this.certChain = certChain;
     }
 
-    @Transient
+    public ProcessoDocumentoBin getTermoAdesao() {
+        return termoAdesao;   
+    }
+
+    public void setTermoAdesao(ProcessoDocumentoBin termoAdesao) {
+        this.termoAdesao = termoAdesao;
+    }
+
+	public EstadoCivilEnum getEstadoCivil() {
+		return estadoCivil;
+	}
+
+	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+	
+	public List<MeioContato> getMeioContaoList() {
+		return meioContaoList;
+	}
+
+	public void setMeioContaoList(List<MeioContato> meioContaoList) {
+		this.meioContaoList = meioContaoList;
+	}
+
+	@Transient
     public String getDataFormatada() {
         return DateFormat.getDateInstance().format(dataNascimento);
     }
@@ -146,24 +186,4 @@ public class PessoaFisica extends Pessoa {
         }
         return StringUtil.replaceQuebraLinha(certChain).equals(StringUtil.replaceQuebraLinha(this.certChain));
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
-    public ProcessoDocumentoBin getTermoAdesao() {
-        return termoAdesao;   
-    }
-
-    public void setTermoAdesao(ProcessoDocumentoBin termoAdesao) {
-        this.termoAdesao = termoAdesao;
-    }
-
-    @Column(name = "st_estado_civil")
-    @Enumerated(EnumType.STRING)
-	public EstadoCivilEnum getEstadoCivil() {
-		return estadoCivil;
-	}
-
-	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
-		this.estadoCivil = estadoCivil;
-	}
 }

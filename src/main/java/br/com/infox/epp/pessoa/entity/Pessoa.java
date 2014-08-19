@@ -28,15 +28,24 @@ public abstract class Pessoa implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pessoa";
 
-    private Integer idPessoa;
-    private TipoPessoaEnum tipoPessoa;
-    private String nome;
-    private Boolean ativo;
-
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "PessoaGenerator", sequenceName = "sq_tb_pessoa")
     @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "PessoaGenerator", sequenceName = "sq_tb_pessoa")
     @GeneratedValue(generator = "PessoaGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_pessoa", unique = true, nullable = false)
+    private Integer idPessoa;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG)
+    private TipoPessoaEnum tipoPessoa;
+    
+    @NotNull
+    @Size(max = LengthConstants.NOME_ATRIBUTO)
+    @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO)
+    private String nome;
+    
+    @Column(name = "in_ativo", nullable = false)
+    private Boolean ativo;
+   
     public Integer getIdPessoa() {
         return idPessoa;
     }
@@ -45,8 +54,6 @@ public abstract class Pessoa implements Serializable {
         this.idPessoa = idPessoa;
     }
 
-    @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG)
-    @Enumerated(EnumType.STRING)
     public TipoPessoaEnum getTipoPessoa() {
         return tipoPessoa;
     }
@@ -55,9 +62,6 @@ public abstract class Pessoa implements Serializable {
         this.tipoPessoa = tipoPessoa;
     }
 
-    @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO)
-    @Size(max = LengthConstants.NOME_ATRIBUTO)
-    @NotNull
     public String getNome() {
         return nome;
     }
@@ -66,7 +70,6 @@ public abstract class Pessoa implements Serializable {
         this.nome = nome;
     }
 
-    @Column(name = "in_ativo", nullable = false)
     public Boolean getAtivo() {
         return ativo;
     }
@@ -74,14 +77,14 @@ public abstract class Pessoa implements Serializable {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
+    
+    @Transient
+    public abstract String getCodigo();
 
     @Override
     public String toString() {
         return nome;
     }
-
-    @Transient
-    public abstract String getCodigo();
 
     @Override
     public int hashCode() {

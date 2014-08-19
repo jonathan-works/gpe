@@ -28,11 +28,13 @@ import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -158,5 +160,20 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
         final HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(NUMERO_PROCESSO, numeroProcesso);
         return getNamedSingleResult(GET_PROCESSO_BY_NUMERO_PROCESSO, parameters);
+    }
+    
+    @Transactional
+    public ProcessoEpa persistProcessoComNumero(ProcessoEpa processoEpa) throws DAOException{
+    	try {
+    		processoEpa.setNumeroProcesso("");
+    		getEntityManager().persist(processoEpa);
+        	processoEpa.setNumeroProcesso(processoEpa.getIdProcesso().toString());
+        	getEntityManager().flush();
+            return processoEpa;
+        } catch (Exception e) {
+            throw new DAOException(e);
+        } finally {
+            rollbackTransactionIfNeeded();
+        }
     }
 }

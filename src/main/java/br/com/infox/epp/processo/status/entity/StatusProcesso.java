@@ -49,4 +49,32 @@ public class StatusProcesso implements Serializable {
 	public String toString() {
 		return this.nome;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((getIdStatusProcesso() == null) ? 0 : getIdStatusProcesso().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof StatusProcesso))
+			return false;
+		StatusProcesso other = (StatusProcesso) obj;
+		if (getIdStatusProcesso() == null) {
+			if (other.getIdStatusProcesso() != null)
+				return false;
+		} else if (!getIdStatusProcesso().equals(other.getIdStatusProcesso()))
+			return false;
+		return true;
+	}
+	
 }

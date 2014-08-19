@@ -58,6 +58,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private DocumentoBinManager documentoBinManager;
     @In
     private ExtensaoArquivoManager extensaoArquivoManager;
+    
     private InputStream inputStream;
     private UploadedFile uploadedFile;
     private TipoProcessoDocumento tipoProcessoDocumento;
