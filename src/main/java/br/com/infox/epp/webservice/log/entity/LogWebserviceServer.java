@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import br.com.infox.core.util.DateUtil;
+
 @Entity
 @Table(name=LogWebserviceServer.TABLE_NAME)
 public class LogWebserviceServer implements Serializable {
@@ -63,7 +65,7 @@ public class LogWebserviceServer implements Serializable {
 	}
 
 	public void setDataInicio(Date dataInicio) {
-		this.dataInicio = dataInicio;
+		this.dataInicio = DateUtil.getBeginningOfDay(dataInicio);
 	}
 
 	public Date getDataFim() {
@@ -71,7 +73,7 @@ public class LogWebserviceServer implements Serializable {
 	}
 
 	public void setDataFim(Date dataFim) {
-		this.dataFim = dataFim;
+		this.dataFim = DateUtil.getEndOfDay(dataFim);
 	}
 
 	public String getMensagemRetorno() {
