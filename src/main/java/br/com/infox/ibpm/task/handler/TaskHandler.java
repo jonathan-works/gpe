@@ -290,12 +290,16 @@ public class TaskHandler implements Serializable {
 			Delegation actionDelegation = action.getActionDelegation();
 			if (actionDelegation != null && StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
 				event = this.task.getEvent(Event.EVENTTYPE_TASK_CREATE);
-				actionDelegation.setConfigType("constructor");
-				actionDelegation.setConfiguration(MessageFormat.format(
-						"<statusProcesso>{0}</statusProcesso>",
-						statusProcesso.getIdStatusProcesso()));
+				if (statusProcesso == null) {
+					event.removeAction(action);
+				} else {
+					actionDelegation.setConfigType("constructor");
+					actionDelegation.setConfiguration(MessageFormat.format(
+							"<statusProcesso>{0}</statusProcesso>",
+							statusProcesso.getIdStatusProcesso()));
+				}
 			}
-		} else {
+		} else if (statusProcesso != null) {
 			event = createNewStatusProcessoEvent(statusProcesso);
 			this.task.addEvent(event);
 		}
