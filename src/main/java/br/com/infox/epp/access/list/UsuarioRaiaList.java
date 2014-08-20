@@ -24,7 +24,7 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioRaiaList";
 
-    private static final String DEFAULT_EJBQL = "select u.* from tb_raia_perfil rp "
+    private static final String DEFAULT_EJBQL = "select distinct u.* from tb_raia_perfil rp "
             + "inner join tb_usuario_perfil up on (up.id_perfil_template = rp.id_perfil_template) "
             + "inner join tb_usuario_login u on (u.id_usuario_login = up.id_usuario_login) "
             + "where u.id_pessoa_fisica is not null "
