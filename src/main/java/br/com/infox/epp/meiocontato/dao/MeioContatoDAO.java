@@ -16,7 +16,8 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
-
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_TIPO_CONTATO;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO;
 @AutoCreate
 @Name(MeioContatoDAO.NAME)
 public class MeioContatoDAO extends DAO<MeioContato> {
@@ -28,6 +29,13 @@ public class MeioContatoDAO extends DAO<MeioContato> {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_PESSOA, pessoa);
 		return getNamedResultList(MEIO_CONTATO_BY_PESSOA, parameters);
+	}
+	
+	public MeioContato getMeioContatoByPessoaAndTipo(Pessoa pessoa, TipoMeioContatoEnum tipoMeioContatoEnum){
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(PARAM_PESSOA, pessoa);
+		parameters.put(PARAM_TIPO_CONTATO, tipoMeioContatoEnum);
+		return getNamedSingleResult(MEIO_CONTATO_BY_PESSOA_AND_TIPO, parameters);
 	}
 
     public List<MeioContato> getByPessoaAndTipoMeioContato(Pessoa pessoa, TipoMeioContatoEnum tipoMeioContato) {

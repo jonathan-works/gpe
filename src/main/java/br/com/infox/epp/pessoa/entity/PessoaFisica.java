@@ -5,9 +5,7 @@ import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF_QUER
 import static javax.persistence.FetchType.LAZY;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -19,7 +17,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -31,7 +28,6 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
@@ -66,9 +62,6 @@ public class PessoaFisica extends Pessoa {
     @Enumerated(EnumType.STRING)
     @Column(name = "st_estado_civil")
     private EstadoCivilEnum estadoCivil;
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="pessoa")
-    private List<MeioContato> meioContatoList = new ArrayList<>();
     
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
@@ -131,14 +124,6 @@ public class PessoaFisica extends Pessoa {
 		this.estadoCivil = estadoCivil;
 	}
 	
-	public List<MeioContato> getMeioContatoList() {
-		return meioContatoList;
-	}
-
-	public void setMeioContatoList(List<MeioContato> meioContatoList) {
-		this.meioContatoList = meioContatoList;
-	}
-
 	@Transient
     public String getDataFormatada() {
         return DateFormat.getDateInstance().format(dataNascimento);
@@ -148,7 +133,7 @@ public class PessoaFisica extends Pessoa {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+        result = prime * result + ((getCpf() == null) ? 0 : getCpf().hashCode());
         return result;
     }
 
@@ -179,7 +164,7 @@ public class PessoaFisica extends Pessoa {
     public String getCodigo() {
         return getCpf();
     }
-
+    
     public boolean checkCertChain(String certChain) {
         if (certChain == null) {
             throw new IllegalArgumentException("O parâmetro não deve ser nulo");

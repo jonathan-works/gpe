@@ -26,11 +26,13 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO_QUERY;
 @Entity
 @Table(name = MeioContato.TABLE_NAME)
 @NamedQueries(value = {
 		@NamedQuery(name = MEIO_CONTATO_BY_PESSOA, query = MEIO_CONTATO_BY_PESSOA_QUERY),
-		@NamedQuery(name = MEIO_CONTATO_BY_PESSOA_AND_TIPO_MEIO_CONTATO, query = MEIO_CONTATO_BY_PESSOA_AND_TIPO_MEIO_CONTATO_QUERY)
+		@NamedQuery(name = MEIO_CONTATO_BY_PESSOA_AND_TIPO, query = MEIO_CONTATO_BY_PESSOA_AND_TIPO_QUERY)
 })
 public class MeioContato implements Serializable {
 	private static final long serialVersionUID = 1L;
