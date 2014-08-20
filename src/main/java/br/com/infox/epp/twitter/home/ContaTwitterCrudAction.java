@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -154,7 +155,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                 save();
             } catch (TwitterException e) {
                 if (UNAUTHORIZED == e.getStatusCode()) {
-                    FacesMessages.instance().add(Severity.ERROR, "Unable to get the access token.");
+                    FacesMessages.instance().add(Severity.ERROR, Messages.instance().get("contaTwitter.error.tokenNotFound"));
                 } else {
                     LOG.error(".getAutorizacao()", e);
                 }

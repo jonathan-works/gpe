@@ -1,7 +1,10 @@
 package br.com.infox.epp.processo.documento.anexos;
 
+import static java.text.MessageFormat.format;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Collection;
 
 import javax.faces.component.UIInput;
@@ -139,24 +142,23 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     private boolean isDocumentoBinValido(final UploadedFile file) {
         if (file == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Nenhum documento selecionado.");
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.instance().get("documentoUploader.error.noFile"));
             return false;
         }
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(tipoProcessoDocumento, bin().getExtensao());
         if (extensaoArquivo == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Extensão de arquivo não permitida.");
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.instance().get("documentoUploader.error.invalidExtension"));
             return false;
         }
         if ((file.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "O documento deve ter o tamanho máximo de "
-                    + extensaoArquivo.getTamanho() + "Kb!");
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
             return false;
         }
         if (extensaoArquivo.getPaginavel()) {
             if(validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina())){
                 return true;
             } else {
-                FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Não foi possível recuperar as páginas do arquivo.");
+                FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.instance().get("documentoUploader.error.notPaginable"));
                 return false;
             }
         }

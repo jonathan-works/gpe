@@ -1,7 +1,10 @@
 package br.com.infox.epp.system.util;
 
+import static java.text.MessageFormat.format;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 
 import javax.persistence.NoResultException;
 
@@ -38,7 +41,7 @@ public class ParametroUtil {
     public static String getFromContext(String nomeParametro, boolean validar) {
         String value = (String) Contexts.getApplicationContext().get(nomeParametro);
         if (validar && value == null) {
-            String erroMsg = "Parâmetro não encontrado: " + nomeParametro;
+            String erroMsg = format("parametro.error.notFound", nomeParametro);
             LOG.error(erroMsg);
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, erroMsg);
         }
