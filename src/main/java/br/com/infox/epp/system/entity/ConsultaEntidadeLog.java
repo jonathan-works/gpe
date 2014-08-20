@@ -14,14 +14,14 @@ public class ConsultaEntidadeLog implements Serializable {
     private String ip;
     private String nomeEntidade;
     private Date dataInicio;
-    private Date dataFim = new Date();
+    private Date dataFim;
     private UsuarioLogin usuario;
     private TipoOperacaoLogEnum tipoOperacaoLogEnum = null;
     private Boolean inPesquisa = false;
 
     public ConsultaEntidadeLog() {
-        dataFim = new Date();
-        dataInicio = DateUtil.getBeginningOfDay(dataFim);
+        setDataFim(new Date());
+        setDataInicio(this.dataFim);
     }
 
     public String getIp() {
@@ -61,7 +61,7 @@ public class ConsultaEntidadeLog implements Serializable {
     }
 
     public void setDataInicio(Date dataInicio) {
-        this.dataInicio = dataInicio;
+        this.dataInicio = DateUtil.getBeginningOfDay(dataInicio);
     }
 
     public Date getDataFim() {
