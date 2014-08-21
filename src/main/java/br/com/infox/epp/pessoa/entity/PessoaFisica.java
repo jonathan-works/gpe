@@ -2,6 +2,8 @@ package br.com.infox.epp.pessoa.entity;
 
 import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF;
 import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF_QUERY;
+import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF_AND_IS_USUARIO_AND_LOCALIZACAO;
+import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF_AND_IS_USUARIO_AND_LOCALIZACAO_QUERY;
 import static javax.persistence.FetchType.LAZY;
 
 import java.text.DateFormat;
@@ -35,7 +37,10 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 @Entity
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
 @PrimaryKeyJoinColumn(name = "id_pessoa_fisica", columnDefinition = "integer")
-@NamedQueries({ @NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY) })
+@NamedQueries({ 
+	@NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY),
+	@NamedQuery(name = SEARCH_BY_CPF_AND_IS_USUARIO_AND_LOCALIZACAO, query = SEARCH_BY_CPF_AND_IS_USUARIO_AND_LOCALIZACAO_QUERY)
+})
 public class PessoaFisica extends Pessoa {
 	
     public static final String EVENT_LOAD = "evtCarregarPessoaFisica";
