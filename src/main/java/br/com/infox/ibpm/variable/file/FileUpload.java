@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.faces.component.UIComponent;
+import javax.faces.event.AbortProcessingException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -51,6 +52,19 @@ public class FileUpload implements FileUploadListener {
     public void processFileUpload(FileUploadEvent event) {
         UploadedFile file = event.getUploadedFile();
         UIComponent uploadFile = event.getComponent();
+        Integer idDocumentoExistente = (Integer) TaskInstanceHome.instance().getValueOfVariableFromTaskInstance(TaskInstanceHome.instance().getVariableName(uploadFile.getId()));
+        if (idDocumentoExistente != null) {
+            try {
+                ProcessoDocumento doc = processoDocumentoManager.find(idDocumentoExistente);
+                ProcessoDocumentoBin docBin = doc.getProcessoDocumentoBin();
+                processoDocumentoManager.remove(doc);
+                processoDocumentoBinManager.remove(docBin);
+                documentoBinManager.remove(idDocumentoExistente);
+            } catch (DAOException e) {
+                LOG.error("Erro ao remover o documento existente, com id: " + idDocumentoExistente, e);
+                throw new AbortProcessingException(e);
+            }
+        }
         ProcessoDocumento processoDocumento = createDocumento(file, uploadFile.getId());
         try {
             processoDocumentoManager.gravarDocumentoNoProcesso(ProcessoHome.instance().getInstance(), processoDocumento);

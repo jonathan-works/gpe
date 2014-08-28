@@ -829,4 +829,18 @@ public class TaskInstanceHome implements Serializable {
     public Map<String, TipoProcessoDocumento> getClassificacoesVariaveisUpload() {
         return classificacoesVariaveisUpload;
     }
+    
+    @SuppressWarnings(UNCHECKED)
+    public Object getValueOfVariableFromTaskInstance(String variableName) {
+        TaskController taskController = taskInstance.getTask().getTaskController();
+        if (taskController != null) {
+            List<VariableAccess> variables = taskController.getVariableAccesses();
+            for (VariableAccess variable : variables) {
+                if (variable.getVariableName().equals(variableName)) {
+                    return taskInstance.getVariable(variable.getMappedName());
+                }
+            }
+        }
+        return null;
+    }
 }

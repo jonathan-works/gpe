@@ -10,7 +10,8 @@ public interface TipoProcessoDocumentoQuery {
             + " and t.ativo = true"
             + " and (t.inTipoDocumento = :"
             + TipoProcessoDocumentoQuery.TIPO_DOCUMENTO_PARAM
-            + " or t.inTipoDocumento='T')";
+            + " or t.inTipoDocumento='T') "
+            + "order by t.tipoProcessoDocumento";
 
     String ASSINATURA_OBRIGATORIA = "assinaturaObrigatoria";
     String ASSINATURA_OBRIGATORIA_QUERY = "select distinct tpdp "

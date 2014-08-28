@@ -48,6 +48,10 @@ public class ClassificacaoDocumentoFacade {
         if (!classificacoes.isEmpty()) {
             return classificacoes;
         }
+        return getUseableTipoProcessoDocumento(isModelo);
+    }
+    
+    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo) {
         return tipoProcessoDocumentoManager.getUseableTipoProcessoDocumento(isModelo, Authenticator.getPapelAtual());
     }
 }

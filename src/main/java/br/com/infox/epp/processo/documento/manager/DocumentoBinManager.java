@@ -23,4 +23,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         return getDao().gravarBinario(idDocumentoBin, file);
     }
 
+    public void remove(Integer idDocumentoExistente) throws DAOException {
+        remove(getDao().getReference(idDocumentoExistente));
+    }
 }
