@@ -68,6 +68,10 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
             final PessoaFisica pessoaFisica) {
         return getDao().getUsuarioLoginByPessoaFisica(pessoaFisica);
     }
+    
+    public UsuarioLogin getUsuarioFetchPessoaFisicaByNrCpf(String nrCpf){
+    	return getDao().getUsuarioFetchPessoaFisicaByCpf(nrCpf);
+    }
 
     private void validarPermanencia(final UsuarioLogin usuario) {
         if (!usuario.getProvisorio()) {

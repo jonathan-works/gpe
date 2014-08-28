@@ -17,6 +17,7 @@ public interface UsuarioLoginQuery {
 
     String PARAM_LOGIN = "login";
     String PARAM_ID_TASK_INSTANCE = "idTaskInstance";
+    String PARAM_NR_CPF = "nrCpf";
     String USUARIO_LOGIN_NAME = "usuarioLogadoByLogin";
     String USUARIO_LOGIN_QUERY = "select u from UsuarioLogin u where login = :"
             + PARAM_LOGIN;
@@ -61,4 +62,9 @@ public interface UsuarioLoginQuery {
     String NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY = "SELECT DISTINCT ul.nm_usuario FROM tb_usuario_login ul "
             + "JOIN tb_usuario_taskinstance uti ON (uti.id_usuario_login = ul.id_usuario_login) "
             + "WHERE id_taskinstance = :" + PARAM_ID_TASK_INSTANCE;
+    
+    String USUARIO_FETCH_PF_BY_NUMERO_CPF = "usuarioLoginByNumeroCpf";
+    String USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY = "SELECT o FROM UsuarioLogin o " +
+    		"INNER JOIN FETCH o.pessoaFisica pf " +
+    		"WHERE pf.cpf = :" + PARAM_NR_CPF;
 }
