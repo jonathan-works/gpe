@@ -2,8 +2,6 @@ package br.com.infox.epp.pessoa.entity;
 
 import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF;
 import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF_QUERY;
-import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF_AND_IS_USUARIO_AND_LOCALIZACAO;
-import static br.com.infox.epp.pessoa.query.PessoaFisicaQuery.SEARCH_BY_CPF_AND_IS_USUARIO_AND_LOCALIZACAO_QUERY;
 import static javax.persistence.FetchType.LAZY;
 
 import java.text.DateFormat;
@@ -19,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -30,6 +29,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
@@ -38,8 +38,7 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
 @PrimaryKeyJoinColumn(name = "id_pessoa_fisica", columnDefinition = "integer")
 @NamedQueries({ 
-	@NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY),
-	@NamedQuery(name = SEARCH_BY_CPF_AND_IS_USUARIO_AND_LOCALIZACAO, query = SEARCH_BY_CPF_AND_IS_USUARIO_AND_LOCALIZACAO_QUERY)
+	@NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY)
 })
 public class PessoaFisica extends Pessoa {
 	
@@ -67,6 +66,9 @@ public class PessoaFisica extends Pessoa {
     @Enumerated(EnumType.STRING)
     @Column(name = "st_estado_civil")
     private EstadoCivilEnum estadoCivil;
+    
+    @OneToOne(fetch = LAZY, mappedBy = "pessoaFisica")
+    private UsuarioLogin usuarioLogin;
     
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
@@ -129,6 +131,14 @@ public class PessoaFisica extends Pessoa {
 		this.estadoCivil = estadoCivil;
 	}
 	
+	public UsuarioLogin getUsuarioLogin() {
+		return usuarioLogin;
+	}
+
+	public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
+		this.usuarioLogin = usuarioLogin;
+	}
+
 	@Transient
     public String getDataFormatada() {
         return DateFormat.getDateInstance().format(dataNascimento);

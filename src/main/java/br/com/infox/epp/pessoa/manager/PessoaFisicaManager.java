@@ -6,7 +6,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
-import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
@@ -19,9 +18,5 @@ public class PessoaFisicaManager extends Manager<PessoaFisicaDAO, PessoaFisica> 
 
     public PessoaFisica getByCpf(final String cpf) {
         return getDao().searchByCpf(cpf);
-    }
-    
-    public PessoaFisica getByCpfAndIsUsuarioAndLocalizacao(String cpf, Localizacao localizacao){
-    	return getDao().searchByCpfAndIsUsuarioAndLocalizacao(cpf, localizacao);
     }
 }
