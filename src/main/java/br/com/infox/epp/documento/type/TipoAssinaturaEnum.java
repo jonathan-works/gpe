@@ -4,7 +4,7 @@ import br.com.infox.core.type.Displayable;
 
 public enum TipoAssinaturaEnum implements Displayable {
     
-    O("Obrigatória"), F("Facultativa"), S("Suficiente");
+    O("Obrigatória"), F("Facultativa"), S("Suficiente"), P("Não Permitida");
 
     private String label;
 

@@ -130,6 +130,12 @@
                         items="#{classificacaoDocumentoFacade.getTipoAssinaturaEnumValues()}"
                         value="#{classificacaoDocumentoPapelCrudAction.instance.tipoAssinatura}"
                         required="true" showLabelSelecione="true" />
+                    <wi:selectBooleanCheckbox
+		                label="#{eppmessages['tipoProcessoDocumentoPapel.podeRedigir']}"
+		                id="podeRedigir"
+		                value="#{classificacaoDocumentoPapelCrudAction.instance.podeRedigir}">
+		                <a:ajax event="change" execute="@this" limitRender="true" />
+		            </wi:selectBooleanCheckbox>
                     <ui:define name="buttons">
                         <wi:commandButtonPersist
                             home="#{classificacaoDocumentoPapelCrudAction}"
@@ -149,6 +155,10 @@
                     <wi:columnEnum columnId="tipoAssinatura"
                         columnHeader="#{messages['classificacaoDocumento.tipoAssinatura']}"
                         value="#{row.tipoAssinatura}" />
+                    <wi:columnOutputText colummId="podeRedigir"
+                    	columnHeader="#{eppmessages['tipoProcessoDocumentoPapel.podeRedigir']}"
+                    	value="#{row.podeRedigir ? 'Sim' : 'Não'}"
+                    	hideOrder="true"/>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBar
