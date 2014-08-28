@@ -20,7 +20,7 @@ public class UsuarioSuggestBean extends AbstractSuggestBean<UsuarioLogin> {
     }
 
     @Override
-    public String getEjbql() {
+    public String getEjbql(String typed) {
         StringBuilder sb = new StringBuilder();
         sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idUsuarioLogin, o.nomeUsuario) from UsuarioLogin o ");
         sb.append("where lower(o.nomeUsuario) like lower(concat (:");
