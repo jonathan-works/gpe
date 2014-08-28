@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.parser.PdfTextExtractor;
 
@@ -23,7 +24,11 @@ public class InfoxPdfReader {
             PdfTextExtractor extractor = new PdfTextExtractor(reader);
             int qtdPaginas = reader.getNumberOfPages();
             for (int i = 1; i <= qtdPaginas; i++) {
-                sb.append(extractor.getTextFromPage(i));
+                try {
+                    sb.append(extractor.getTextFromPage(i));
+                } catch (ExceptionConverter e) {
+                    LOG.error("Erro ao extrair texto da página " + i, e);
+                }
             }
         } catch (IOException e) {
             LOG.error("Não foi possível recuperar o conteúdo do pdf", e);

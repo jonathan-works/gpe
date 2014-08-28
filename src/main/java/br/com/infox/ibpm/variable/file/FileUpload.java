@@ -51,7 +51,7 @@ public class FileUpload implements FileUploadListener {
     public void processFileUpload(FileUploadEvent event) {
         UploadedFile file = event.getUploadedFile();
         UIComponent uploadFile = event.getComponent();
-        ProcessoDocumento processoDocumento = createDocumento(file);
+        ProcessoDocumento processoDocumento = createDocumento(file, uploadFile.getId());
         try {
             processoDocumentoManager.gravarDocumentoNoProcesso(ProcessoHome.instance().getInstance(), processoDocumento);
             documentoBinManager.salvarBinario(processoDocumento.getIdProcessoDocumento(), processoDocumento.getProcessoDocumentoBin().getProcessoDocumento());
@@ -62,12 +62,12 @@ public class FileUpload implements FileUploadListener {
         TaskInstanceHome.instance().update();
     }
     
-    private ProcessoDocumento createDocumento(final UploadedFile file) {
+    private ProcessoDocumento createDocumento(final UploadedFile file, final String id) {
         ProcessoDocumento pd = new ProcessoDocumento();
         pd.setProcessoDocumento(file.getName());
         pd.setAnexo(true);
         pd.setProcessoDocumentoBin(createDocumentoBin(file));
-        pd.setTipoProcessoDocumento(tipoProcessoDocumentoManager.getClassificaoParaAcessoDireto());
+        pd.setTipoProcessoDocumento(TaskInstanceHome.instance().getClassificacoesVariaveisUpload().get(id));
         return pd;
     }
 

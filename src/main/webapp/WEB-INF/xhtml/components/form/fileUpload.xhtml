@@ -11,41 +11,66 @@
   <ui:param
     name="template"
     value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
-  <s:decorate
+  
+<f:subview id="#{f.id}SubView">
+    <s:div id="#{f.id}TipoDocDiv">
+      <wi:selectOneMenuEntity
+        id="#{f.id}tipoProcessoDocumento"
+        label="#{messages['processoDocumento.classificacaoDocumento']}"
+        value="#{home.classificacoesVariaveisUpload[id]}"
+        items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false, taskInstanceHome.getVariableName(id), processoHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
+        required="#{not readonly}"
+        showLabelSelecione="true"
+        rendered="#{empty taskInstanceHome.instance[id]}"
+        readonly="#{readonly}"
+        disabled="#{readonly}">
+        <a:ajax
+         render="#{f.id}TipoDocDiv, #{f.id}Decoration"
+         event="change"
+         execute="@this"
+         limitRender="true" />
+      </wi:selectOneMenuEntity>
+      <wi:outputText id="#{f.id}classificacaoDocumentoSelecionada" 
+        label="#{messages['processoDocumento.classificacaoDocumento']}" 
+        value="#{taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumento}"
+        rendered="#{not empty taskInstanceHome.instance[id]}" />
+    </s:div>
+  
+    <s:decorate
     id="#{id}Decoration"
-    template="#{template}"
-    rendered="#{wi:get(rendered, true)}">
-    <ui:param
-      name="accept"
-      value="#{wi:get(accept, 'application/pdf')}" />
-    <ui:param
-      name="renderTipMessage"
-      value="#{empty taskInstanceHome.instance[id]}"/>
-    <ui:param
-      name="tipMessage"
-      value="#{accept == 'application/pdf' ? messages['fileUpload.restriction.pdf'] : tipMessage}" />
-    <ui:define name="label">#{label}</ui:define>
-    <h:outputText id="file#{id}" value="#{taskInstanceHome.instance[id]}" rendered="#{not empty taskInstanceHome.instance[id]}"/>
-    <rich:fileUpload
-      id="#{id}"
-      execute="@this"
-      status=":status"
-      limitRender="true"
-      required="#{wi:get(required, false)}"
-      fileUploadListener="#{fileUpload.processFileUpload}"
-      addLabel="#{messages['processoDocumento.addLabel']}"
-      clearAllLabel="#{messages['processoDocumento.clearAllLabel']}"
-      clearLabel="#{messages['processoDocumento.clearLabel']}"
-      doneLabel="#{messages['processoDocumento.doneLabel']}"
-      uploadLabel="#{messages['processoDocumento.uploadLabel']}"
-      sizeExceededLabel="#{messages['processoDocumento.sizeExceededLabel']}"
-      maxFilesQuantity="1"
-      listHeight="50px"
-      immediateUpload="true"
-      noDuplicate="true"
-      render="#{id}Decoration #{id} #{reRender}, pageBodyDialogMessage"
-      acceptedTypes="pdf"
-      rendered="#{empty taskInstanceHome.instance[id]}">
-    </rich:fileUpload>
-  </s:decorate>
+    template="#{template}">
+        <ui:param
+          name="accept"
+          value="#{wi:get(accept, 'application/pdf')}" />
+        <ui:param
+          name="renderTipMessage"
+          value="#{empty taskInstanceHome.instance[id]}"/>
+        <ui:param
+          name="tipMessage"
+          value="#{accept == 'application/pdf' ? messages['fileUpload.restriction.pdf'] : tipMessage}" />
+        <ui:define name="label">#{label}</ui:define>
+        <h:outputText id="file#{id}" value="#{taskInstanceHome.instance[id]}" rendered="#{not empty taskInstanceHome.instance[id]}"/>
+        <rich:fileUpload
+          id="#{id}"
+          execute="@this"
+          status=":status"
+          limitRender="true"
+          required="#{wi:get(required, false)}"
+          fileUploadListener="#{fileUpload.processFileUpload}"
+          addLabel="#{messages['processoDocumento.addLabel']}"
+          clearAllLabel="#{messages['processoDocumento.clearAllLabel']}"
+          clearLabel="#{messages['processoDocumento.clearLabel']}"
+          doneLabel="#{messages['processoDocumento.doneLabel']}"
+          uploadLabel="#{messages['processoDocumento.uploadLabel']}"
+          sizeExceededLabel="#{messages['processoDocumento.sizeExceededLabel']}"
+          maxFilesQuantity="1"
+          listHeight="50px"
+          immediateUpload="true"
+          noDuplicate="true"
+          render="#{id}Decoration #{id} #{reRender}, pageBodyDialogMessage"
+          acceptedTypes="pdf"
+          rendered="#{empty taskInstanceHome.instance[id] and not empty home.classificacoesVariaveisUpload[id]}">
+        </rich:fileUpload>
+    </s:decorate>
+  </f:subview>
 </ui:composition>

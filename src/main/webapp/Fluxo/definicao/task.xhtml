@@ -130,6 +130,22 @@
               status=":status"
               url="#{a4jSkin.imgFolder}/file.gif" />
           </a:commandLink>
+          <a:commandLink
+            id="setVariableForVariavelClassificacaoDocumentoLink"
+            execute="@this"
+            limitRender="true"
+            status=":status"
+            render="classificacoesParaVariavelPanel"
+            styleClass="opacityHover"
+            oncomplete="#{rich:component('classificacoesParaVariavelPanel')}.show()"
+            rendered="#{var.type eq 'EDITOR' or var.type eq 'FILE'}">
+            <h:graphicImage
+              title="#{messages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
+              status=":status"
+              url="#{a4jSkin.imgFolder}/hamburger.png" />
+            <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
+            <f:setPropertyActionListener value="#{var.type}" target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
+          </a:commandLink>
         </h:form>
       </div>
     </rich:column>
