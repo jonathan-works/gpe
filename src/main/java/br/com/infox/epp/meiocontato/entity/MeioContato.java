@@ -1,8 +1,6 @@
 package br.com.infox.epp.meiocontato.entity;
 
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA;
-import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO_MEIO_CONTATO;
-import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO_MEIO_CONTATO_QUERY;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_QUERY;
 
 import java.io.Serializable;
