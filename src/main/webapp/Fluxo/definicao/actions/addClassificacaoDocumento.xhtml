@@ -10,79 +10,77 @@
     <s:div id="variavelClassificacaoDocumentoDiv" rendered="#{not empty variavelClassificacaoDocumentoAction.currentVariable}">
         <rich:panel
             header="Classificações de documento da variável #{variavelClassificacaoDocumentoAction.currentVariable}">
-            <wi:ajaxDiv id="divM2MVar">
-                <div class="picklist-div">
-                    <rich:panel
-                        header="#{messages['variavelClassificacaoDocumento.tableTitle']}"
-                        id="variavelClassificacaoDocumentoListPanel"
-                        bodyClass="dtable-p-b"
-                        styleClass="dtable-p picklist">
-                        <rich:dataTable
-                            value="#{variavelClassificacaoDocumentoAction.classificacoesDaVariavel}"
-                            id="variavelClassificacaoDocumentoList"
-                            rowKeyVar="key"
-                            styleClass="dtable rf-dt-crud picklist-dt"
-                            var="row">
-                            <wi:columnOutputText hideOrder="true"
-                                columnId="classificacaoDocumento"
-                                columnHeader="#{messages['variavelClassificacaoDocumento.classificacaoDocumento']}"
-                                value="#{row.classificacaoDocumento.tipoProcessoDocumento}" />
-                            <rich:column styleClass="dt-toolbar-col">
-                                <h:form>
-                                    <a:commandLink limitRender="true"
-                                        render="divM2MVar, variavelClassificacaoDocumentoDiv"
-                                        action="#{variavelClassificacaoDocumentoAction.removerClassificacao(row)}">
-                                        <h:graphicImage
-                                            url="#{a4jSkin.imgFolder}/grid/copyRight.gif"
-                                            title="#{messages['button.delete']}" />
-                                    </a:commandLink>
-                                </h:form>
-                            </rich:column>
-                        </rich:dataTable>
-                    </rich:panel>
-                </div>
-                <div class="picklist-div">
-                    <wi:dataTable
-                        values="#{variavelClassificacaoDocumentoAction.classificacoesDisponiveis}"
-                        bean="#{variavelClassificacaoDocumentoAction}"
-                        tableTitle="#{messages['variavelClassificacaoDocumento.classificacaoDocumento.tableTitle']}"
-                        id="classificacoesDisponiveisList"
-                        rowId="#{row.idTipoProcessoDocumento}" panelStyleClass="picklist"
-                        styleClass="picklist-dt"
-                        hideOrder="true">
-                        <ui:define name="searchForm">
-                            <wi:searchForm
-                                formId="pesquisarClassificacaoDocumentoForm"
-                                formTitle="#{messages['searchForm.title']}"
-                                searchReRender="variavelClassificacaoDocumentoDiv"
-                                clearReRender="variavelClassificacaoDocumentoDiv"
-                                clearAction="variavelClassificacaoDocumentoAction.clearSearch"
-                                searchAction="variavelClassificacaoDocumentoAction.resetSearch">
-                                <wi:inputText id="tituloModeloDocumento"
-                                    label="#{messages['variavelClassificacaoDocumento.classificacaoDocumento']}"
-                                    value="#{variavelClassificacaoDocumentoAction.nomeClassificacaoDocumento}"
-                                    maxlength="150" />
-                            </wi:searchForm>
-                        </ui:define>
-                        <ui:define name="headerToolBar" />
-                        <ui:define name="toolBar">
-                            <h:form>
-                                <a:commandLink limitRender="true"
-                                    render="divM2MVar"
-                                    action="#{variavelClassificacaoDocumentoAction.adicionarClassificacao(row)}">
-                                    <h:graphicImage
-                                        url="#{a4jSkin.imgFolder}/grid/copyLeft.gif"
-                                        title="#{messages['button.add']}" />
-                                </a:commandLink>
-                            </h:form>
-                        </ui:define>
-                        <wi:columnOutputText
+            <div class="picklist-div">
+                <rich:panel
+                    header="#{messages['variavelClassificacaoDocumento.tableTitle']}"
+                    id="variavelClassificacaoDocumentoListPanel"
+                    bodyClass="dtable-p-b"
+                    styleClass="dtable-p picklist">
+                    <rich:dataTable
+                        value="#{variavelClassificacaoDocumentoAction.classificacoesDaVariavel}"
+                        id="variavelClassificacaoDocumentoList"
+                        rowKeyVar="key"
+                        styleClass="dtable rf-dt-crud picklist-dt"
+                        var="row">
+                        <wi:columnOutputText hideOrder="true"
                             columnId="classificacaoDocumento"
                             columnHeader="#{messages['variavelClassificacaoDocumento.classificacaoDocumento']}"
-                            value="#{row.tipoProcessoDocumento}" />
-                    </wi:dataTable>
-                </div>
-            </wi:ajaxDiv>
+                            value="#{row.classificacaoDocumento.tipoProcessoDocumento}" />
+                        <rich:column styleClass="dt-toolbar-col">
+                            <h:form>
+                                <a:commandLink limitRender="true"
+                                    render="variavelClassificacaoDocumentoDiv"
+                                    action="#{variavelClassificacaoDocumentoAction.removerClassificacao(row)}">
+                                    <h:graphicImage
+                                        url="#{a4jSkin.imgFolder}/grid/copyRight.gif"
+                                        title="#{messages['button.delete']}" />
+                                </a:commandLink>
+                            </h:form>
+                        </rich:column>
+                    </rich:dataTable>
+                </rich:panel>
+            </div>
+            <div class="picklist-div">
+                <wi:dataTable
+                    values="#{variavelClassificacaoDocumentoAction.classificacoesDisponiveis}"
+                    bean="#{variavelClassificacaoDocumentoAction}"
+                    tableTitle="#{messages['variavelClassificacaoDocumento.classificacaoDocumento.tableTitle']}"
+                    id="classificacoesDisponiveisList"
+                    rowId="#{row.idTipoProcessoDocumento}" panelStyleClass="picklist"
+                    styleClass="picklist-dt"
+                    hideOrder="true">
+                    <ui:define name="searchForm">
+                        <wi:searchForm
+                            formId="pesquisarClassificacaoDocumentoForm"
+                            formTitle="#{messages['searchForm.title']}"
+                            searchReRender="variavelClassificacaoDocumentoDiv"
+                            clearReRender="variavelClassificacaoDocumentoDiv"
+                            clearAction="variavelClassificacaoDocumentoAction.clearSearch"
+                            searchAction="variavelClassificacaoDocumentoAction.resetSearch">
+                            <wi:inputText id="tituloModeloDocumento"
+                                label="#{messages['variavelClassificacaoDocumento.classificacaoDocumento']}"
+                                value="#{variavelClassificacaoDocumentoAction.nomeClassificacaoDocumento}"
+                                maxlength="150" />
+                        </wi:searchForm>
+                    </ui:define>
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <h:form>
+                            <a:commandLink limitRender="true"
+                                render="variavelClassificacaoDocumentoDiv"
+                                action="#{variavelClassificacaoDocumentoAction.adicionarClassificacao(row)}">
+                                <h:graphicImage
+                                    url="#{a4jSkin.imgFolder}/grid/copyLeft.gif"
+                                    title="#{messages['button.add']}" />
+                            </a:commandLink>
+                        </h:form>
+                    </ui:define>
+                    <wi:columnOutputText
+                        columnId="classificacaoDocumento"
+                        columnHeader="#{messages['variavelClassificacaoDocumento.classificacaoDocumento']}"
+                        value="#{row.tipoProcessoDocumento}" />
+                </wi:dataTable>
+            </div>
         </rich:panel>
     </s:div>
 </ui:composition>
