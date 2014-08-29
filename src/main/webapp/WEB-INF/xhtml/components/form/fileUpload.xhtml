@@ -11,7 +11,7 @@
   <ui:param
     name="template"
     value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
-  
+  <ui:param name="readonly" value="#{empty readonly ? true : props.readonly}" />
 <f:subview id="#{f.id}SubView">
     <s:div id="#{f.id}TipoDocDiv">
       <wi:selectOneMenuEntity
@@ -19,10 +19,9 @@
         label="#{messages['processoDocumento.classificacaoDocumento']}"
         value="#{home.classificacoesVariaveisUpload[id]}"
         items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false, taskInstanceHome.getVariableName(id), processoHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
-        required="#{not readonly}"
+        required="true"
         showLabelSelecione="true"
-        readonly="#{readonly}"
-        disabled="#{readonly}">
+        rendered="#{not readonly}">
         <a:ajax
          render="#{f.id}TipoDocDiv, #{f.id}Decoration"
          event="change"
@@ -34,6 +33,7 @@
     <s:decorate
     id="#{id}Decoration"
     template="#{template}">
+        <ui:param name="renderTipMessage" value="#{not readonly}" />
         <ui:param
           name="tipMessage"
           value="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id] ? 'Apenas arquivos '.concat(taskInstanceHome.classificacoesVariaveisUpload[id].acceptedTypes) : 'Selecione uma classificação de documento'}" />
@@ -57,7 +57,7 @@
           noDuplicate="true"
           render="#{id}Decoration, #{id}, #{reRender}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente"
           acceptedTypes="#{home.classificacoesVariaveisUpload[id].acceptedTypes}"
-          rendered="#{not empty home.classificacoesVariaveisUpload[id]}"
+          rendered="#{not empty home.classificacoesVariaveisUpload[id] and not readonly}"
           ontyperejected="new infox.Messages({'timeout': 6000}).dialog(\'#{messages['processoDocumento.extensaoNaoPermitida']}\')">
         </rich:fileUpload>
     </s:decorate>
@@ -65,9 +65,9 @@
         <s:fragment rendered="#{not empty taskInstanceHome.instance[id]}">    
             <fieldset>
                 <legend>Documento Anexado</legend>
-                <h:outputText value="#{messages['processoDocumento.classificacaoDocumento']}: #{taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumento}"/>
+                <h:outputText value="#{messages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumento : props.classificacaoDocumento}"/>
                 <br />
-                <h:outputText id="file#{id}" value="Documento: #{taskInstanceHome.instance[id]}"/>
+                <h:outputText id="file#{id}" value="Documento: #{not readonly ? taskInstanceHome.instance[id] : value}"/>
             </fieldset>
         </s:fragment>
     </s:div>
