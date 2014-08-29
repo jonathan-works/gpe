@@ -158,7 +158,9 @@
         id="usuarioPessoaFisicaList"
         rowId="#{row.idPessoa}"
         listReRender="divGridLU"
-        hideOrder="true">
+        hideOrder="true"
+        showSearchForm="false"
+        panelStyleClass="full-sized short-margin-top">
         <ui:define name="headerToolBar" />
         <ui:define name="toolBar">
           <wi:toolBar
@@ -187,6 +189,54 @@
           columnId="dataNascimento"
           columnHeader="#{messages['pessoaFisica.dataNascimento']}"
           value="#{row.dataNascimento}" />
+      </wi:dataTable>
+      <wi:dataTable
+      	bean="#{usuarioPessoaFisicaList}"
+        values="#{usuarioPessoaFisicaList.list(20)}"
+        tableTitle="#{messages['meioContato.title']}"
+        id="meioContatoList"
+        rowId="#{row.idPessoa}"
+        listReRender="divGridLU"
+        hideOrder="true"
+        showSearchForm="false"
+        panelStyleClass="full-sized short-margin-top">
+        <ui:define name="headerToolBar" />
+        <wi:columnOutputText
+          columnId="meioContato"
+          columnHeader="#{messages['meioContato.meioContato']}"
+          value="#{row.meioContato}" />
+        <wi:columnOutputText
+          columnId="tipoMeioContato"
+          columnHeader="#{messages['meioContato.tipoMeioContato']}"
+          value="#{row.tipoMeioContato}" />
+      </wi:dataTable>
+      <wi:dataTable
+      	bean="#{usuarioPessoaFisicaList}"
+        values="#{usuarioPessoaFisicaList.list(20)}"
+        tableTitle="#{messages['pessoaDocumento.title']}"
+        id="pessoaDocumentoList"
+        rowId="#{row.idPessoa}"
+        listReRender="divGridLU"
+        hideOrder="true"
+        showSearchForm="false"
+        panelStyleClass="full-sized short-margin-top">
+        <ui:define name="headerToolBar" />
+        <wi:columnOutputText
+          columnId="documento"
+          columnHeader="#{messages['pessoaDocumento.documento']}"
+          value="#{row.documento}" />
+        <wi:columnOutputText
+          columnId="orgaoEmissor"
+          columnHeader="#{messages['pessoaDocumento.orgaoEmissor']}"
+          value="#{row.orgaoEmissor}" />
+        <wi:columnOutputText
+          columnId="tipoDocumento"
+          columnHeader="#{messages['pessoaDocumento.tipoDocumento']}"
+          value="#{row.tipoDocumento}" />
+        <wi:columnDateTime
+          columnId="dataEmissao"
+          columnHeader="#{messages['pessoaDocumento.dataEmissao']}"
+          value="#{row.dataEmissao}" />
       </wi:dataTable>
     </infox:tab>
     <infox:tab
