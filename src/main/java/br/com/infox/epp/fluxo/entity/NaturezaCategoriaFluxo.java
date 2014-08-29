@@ -14,6 +14,8 @@ import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_R
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.SEQUENCE_NATRUEZA_CATEGORIA_FLUXO;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.TABLE_NATUREZA_CATEGORIA_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO_QUERY;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
@@ -46,7 +48,9 @@ import br.com.infox.hibernate.util.HibernateUtil;
 @NamedQueries(value = {
     @NamedQuery(name = ATIVOS_BY_FLUXO, query = ATIVOS_BY_FLUXO_QUERY),
     @NamedQuery(name = LIST_BY_RELATIONSHIP, query = BY_RELATIONSHIP_QUERY),
-    @NamedQuery(name = LIST_BY_NATUREZA, query = LIST_BY_NATUREZA_QUERY) })
+    @NamedQuery(name = LIST_BY_NATUREZA, query = LIST_BY_NATUREZA_QUERY),
+    @NamedQuery(name = LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO, query = LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO_QUERY)
+})
 public class NaturezaCategoriaFluxo implements Serializable {
 
     private static final long serialVersionUID = 1L;

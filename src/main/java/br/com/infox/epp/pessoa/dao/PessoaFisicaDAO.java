@@ -23,5 +23,4 @@ public class PessoaFisicaDAO extends DAO<PessoaFisica> {
         parameters.put(CPF_PARAM, cpf);
         return getNamedSingleResult(SEARCH_BY_CPF, parameters);
     }
-
 }

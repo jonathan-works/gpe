@@ -39,14 +39,16 @@
             <infox:tab id="form" name="form" rendered="#{showFormTab}"
                 immediate="true" status=":status"
                 disabled="#{empty disabledForm ? false : disabledForm}"
-                title="#{messages['template.abaFormularioText']}"
+                title="#{empty titleFormTab ? messages['template.abaFormularioText'] : titleFormTab}"
                 action="#{home.onClickFormTab}">
                 <a:region>
                     <ui:insert name="form" />
                 </a:region>
             </infox:tab>
 
-            <ui:insert name="tabs" />
+            <ui:insert name="tabs">
+            
+            </ui:insert>
 
         </infox:tabPanel>
     </ui:define>

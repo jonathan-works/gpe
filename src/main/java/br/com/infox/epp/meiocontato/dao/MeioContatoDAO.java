@@ -1,9 +1,9 @@
 package br.com.infox.epp.meiocontato.dao;
 
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA;
-import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO_MEIO_CONTATO;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_PESSOA;
-import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_TIPO_MEIO_CONTATO;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_TIPO_CONTATO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,11 +29,18 @@ public class MeioContatoDAO extends DAO<MeioContato> {
 		parameters.put(PARAM_PESSOA, pessoa);
 		return getNamedResultList(MEIO_CONTATO_BY_PESSOA, parameters);
 	}
+	
+	public MeioContato getMeioContatoByPessoaAndTipo(Pessoa pessoa, TipoMeioContatoEnum tipoMeioContatoEnum){
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(PARAM_PESSOA, pessoa);
+		parameters.put(PARAM_TIPO_CONTATO, tipoMeioContatoEnum);
+		return getNamedSingleResult(MEIO_CONTATO_BY_PESSOA_AND_TIPO, parameters);
+	}
 
     public List<MeioContato> getByPessoaAndTipoMeioContato(Pessoa pessoa, TipoMeioContatoEnum tipoMeioContato) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PESSOA, pessoa);
-        parameters.put(PARAM_TIPO_MEIO_CONTATO, tipoMeioContato);
-        return getNamedResultList(MEIO_CONTATO_BY_PESSOA_AND_TIPO_MEIO_CONTATO, parameters);
+        parameters.put(PARAM_TIPO_CONTATO, tipoMeioContato);
+        return getNamedResultList(MEIO_CONTATO_BY_PESSOA_AND_TIPO, parameters);
     }
 }

@@ -1,16 +1,20 @@
 package br.com.infox.epp.pessoa.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -18,6 +22,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.epp.meiocontato.entity.MeioContato;
+import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 
 @Entity
@@ -28,15 +34,27 @@ public abstract class Pessoa implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pessoa";
 
-    private Integer idPessoa;
-    private TipoPessoaEnum tipoPessoa;
-    private String nome;
-    private Boolean ativo;
-
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "PessoaGenerator", sequenceName = "sq_tb_pessoa")
     @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "PessoaGenerator", sequenceName = "sq_tb_pessoa")
     @GeneratedValue(generator = "PessoaGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_pessoa", unique = true, nullable = false)
+    private Integer idPessoa;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG)
+    private TipoPessoaEnum tipoPessoa;
+    
+    @NotNull
+    @Size(max = LengthConstants.NOME_ATRIBUTO)
+    @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO)
+    private String nome;
+    
+    @Column(name = "in_ativo", nullable = false)
+    private Boolean ativo;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="pessoa")
+    private List<MeioContato> meioContatoList = new ArrayList<>();
+   
     public Integer getIdPessoa() {
         return idPessoa;
     }
@@ -45,8 +63,6 @@ public abstract class Pessoa implements Serializable {
         this.idPessoa = idPessoa;
     }
 
-    @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG)
-    @Enumerated(EnumType.STRING)
     public TipoPessoaEnum getTipoPessoa() {
         return tipoPessoa;
     }
@@ -55,9 +71,6 @@ public abstract class Pessoa implements Serializable {
         this.tipoPessoa = tipoPessoa;
     }
 
-    @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO)
-    @Size(max = LengthConstants.NOME_ATRIBUTO)
-    @NotNull
     public String getNome() {
         return nome;
     }
@@ -66,7 +79,6 @@ public abstract class Pessoa implements Serializable {
         this.nome = nome;
     }
 
-    @Column(name = "in_ativo", nullable = false)
     public Boolean getAtivo() {
         return ativo;
     }
@@ -74,21 +86,29 @@ public abstract class Pessoa implements Serializable {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
+    
+    public List<MeioContato> getMeioContatoList() {
+		return meioContatoList;
+	}
+
+	public void setMeioContatoList(List<MeioContato> meioContatoList) {
+		this.meioContatoList = meioContatoList;
+	}
+
+	@Transient
+    public abstract String getCodigo();
 
     @Override
     public String toString() {
         return nome;
     }
 
-    @Transient
-    public abstract String getCodigo();
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((idPessoa == null) ? 0 : idPessoa.hashCode());
+                + ((getIdPessoa() == null) ? 0 : getIdPessoa().hashCode());
         return result;
     }
 
@@ -104,14 +124,36 @@ public abstract class Pessoa implements Serializable {
             return false;
         }
         Pessoa other = (Pessoa) obj;
-        if (idPessoa == null) {
-            if (other.idPessoa != null) {
+        if (getIdPessoa() == null) {
+            if (other.getIdPessoa() != null) {
                 return false;
             }
-        } else if (!idPessoa.equals(other.idPessoa)) {
+        } else if (!getIdPessoa().equals(other.getIdPessoa())) {
             return false;
         }
         return true;
     }
+    
+    @Transient
+    public MeioContato getTelefoneFixo() {
+		List<MeioContato> meioContatoList = getMeioContatoList();
+		for (MeioContato meioContato : meioContatoList){
+			if (meioContato.getTipoMeioContato() == TipoMeioContatoEnum.TF){
+				return meioContato;
+			}
+		}
+		return null;
+	}
+
+    @Transient
+	public MeioContato getTelefoneMovel() {
+		List<MeioContato> meioContatoList = getMeioContatoList();
+		for (MeioContato meioContato : meioContatoList){
+			if (meioContato.getTipoMeioContato() == TipoMeioContatoEnum.TM){
+				return meioContato;
+			}
+		}
+		return null;
+	}
 
 }

@@ -26,16 +26,20 @@ public class PessoaJuridica extends Pessoa {
     public static final String EVENT_LOAD = "evtCarregarPessoaJuridica";
     private static final long serialVersionUID = 1L;
 
+    @NotNull
+    @Size(max = LengthConstants.NUMERO_RAZAO_SOCIAL)
+    @Column(name = "nr_cnpj", nullable = false, unique = true, length = LengthConstants.NUMERO_RAZAO_SOCIAL)
     private String cnpj;
+    
+    @NotNull
+    @Size(max = LengthConstants.NOME_PADRAO)
+    @Column(name = "nm_razao_social", nullable = false, length = LengthConstants.NOME_PADRAO)
     private String razaoSocial;
 
     public PessoaJuridica() {
         setTipoPessoa(TipoPessoaEnum.J);
     }
 
-    @Column(name = "nr_cnpj", nullable = false, unique = true, length = LengthConstants.NUMERO_RAZAO_SOCIAL)
-    @Size(max = LengthConstants.NUMERO_RAZAO_SOCIAL)
-    @NotNull
     public String getCnpj() {
         return cnpj;
     }
@@ -44,9 +48,6 @@ public class PessoaJuridica extends Pessoa {
         this.cnpj = cnpj;
     }
 
-    @Column(name = "nm_razao_social", nullable = false, length = LengthConstants.NOME_PADRAO)
-    @Size(max = LengthConstants.NOME_PADRAO)
-    @NotNull
     public String getRazaoSocial() {
         return razaoSocial;
     }

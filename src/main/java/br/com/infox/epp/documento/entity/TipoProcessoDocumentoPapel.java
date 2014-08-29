@@ -1,5 +1,7 @@
 package br.com.infox.epp.documento.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,46 +24,53 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 
 @Entity
 @Table(name = "tb_tipo_processo_documento_papel")
-@NamedQueries(value = { @NamedQuery(name = TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA, query = TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA_QUERY) })
-public class TipoProcessoDocumentoPapel implements java.io.Serializable {
-    private static final long serialVersionUID = 1L;
+@NamedQueries(value = { 
+		@NamedQuery(name = TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA, query = TipoProcessoDocumentoQuery.ASSINATURA_OBRIGATORIA_QUERY) 
+})
+public class TipoProcessoDocumentoPapel implements Serializable {
+    
+	private static final long serialVersionUID = 1L;
 
-    private Integer idTipoProcessoDocumentoPapel;
-    private TipoProcessoDocumento tipoProcessoDocumento;
-    private Papel papel;
-    private TipoAssinaturaEnum tipoAssinatura;
-
-    public TipoProcessoDocumentoPapel() {
-    }
-
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_tipo_processo_documento_papel")
     @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_tipo_processo_documento_papel")
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_tipo_processo_documento_papel", nullable = false, unique = true)
+    private Integer idTipoProcessoDocumentoPapel;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
+    private TipoProcessoDocumento tipoProcessoDocumento;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_papel", nullable = false)
+    private Papel papel;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_assinatura", nullable=false)
+    private TipoAssinaturaEnum tipoAssinatura;
+    
+    @NotNull
+    @Column(name = "in_redator", nullable = false)
+    private Boolean podeRedigir = Boolean.FALSE;
+
     public Integer getIdTipoProcessoDocumentoPapel() {
         return idTipoProcessoDocumentoPapel;
     }
 
-    public void setIdTipoProcessoDocumentoPapel(
-            Integer idTipoProcessoDocumentoPapel) {
+    public void setIdTipoProcessoDocumentoPapel(Integer idTipoProcessoDocumentoPapel) {
         this.idTipoProcessoDocumentoPapel = idTipoProcessoDocumentoPapel;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
-    @NotNull
     public TipoProcessoDocumento getTipoProcessoDocumento() {
         return tipoProcessoDocumento;
     }
 
-    public void setTipoProcessoDocumento(
-            TipoProcessoDocumento tipoProcessoDocumento) {
+    public void setTipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {
         this.tipoProcessoDocumento = tipoProcessoDocumento;
     }
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_papel", nullable = false)
-    @NotNull
+   
     public Papel getPapel() {
         return papel;
     }
@@ -70,8 +79,6 @@ public class TipoProcessoDocumentoPapel implements java.io.Serializable {
         this.papel = papel;
     }
 
-    @Column(name = "tp_assinatura", nullable=false)
-    @Enumerated(EnumType.STRING)
     public TipoAssinaturaEnum getTipoAssinatura() {
         return this.tipoAssinatura;
     }
@@ -79,8 +86,16 @@ public class TipoProcessoDocumentoPapel implements java.io.Serializable {
     public void setTipoAssinatura(TipoAssinaturaEnum tipoAssinatura) {
         this.tipoAssinatura = tipoAssinatura;
     }
+    
+    public Boolean getPodeRedigir() {
+		return podeRedigir;
+	}
 
-    @Override
+	public void setPodeRedigir(Boolean podeRedigir) {
+		this.podeRedigir = podeRedigir;
+	}
+
+	@Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;

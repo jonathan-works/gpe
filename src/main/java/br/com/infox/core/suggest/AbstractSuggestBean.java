@@ -39,8 +39,8 @@ public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Seri
         StopWatch sw = new StopWatch();
         sw.start();
         List<SuggestItem> result = null;
-        if (getEjbql() != null) {
-            Query query = entityManager.createQuery(getEjbql()).setParameter(INPUT_PARAMETER, typed);
+        if (getEjbql(typed) != null) {
+            Query query = entityManager.createQuery(getEjbql(typed)).setParameter(INPUT_PARAMETER, typed);
             if (getLimitSuggest() != null) {
                 query.setMaxResults(getLimitSuggest());
             }
@@ -62,5 +62,5 @@ public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Seri
         return LIMIT_SUGGEST_DEFAULT;
     }
 
-    public abstract String getEjbql();
+    public abstract String getEjbql(String typed);
 }

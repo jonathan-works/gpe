@@ -231,7 +231,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         int result = 1;
         result = prime
                 * result
-                + ((idTipoProcessoDocumento == null) ? 0 : idTipoProcessoDocumento.hashCode());
+                + ((getIdTipoProcessoDocumento() == null) ? 0 : getIdTipoProcessoDocumento().hashCode());
         return result;
     }
 
@@ -247,11 +247,11 @@ public class TipoProcessoDocumento implements java.io.Serializable {
             return false;
         }
         TipoProcessoDocumento other = (TipoProcessoDocumento) obj;
-        if (idTipoProcessoDocumento == null) {
+        if (getIdTipoProcessoDocumento() == null) {
             if (other.getIdTipoProcessoDocumento() != null) {
                 return false;
             }
-        } else if (!idTipoProcessoDocumento.equals(other.getIdTipoProcessoDocumento())) {
+        } else if (!getIdTipoProcessoDocumento().equals(other.getIdTipoProcessoDocumento())) {
             return false;
         }
         return true;

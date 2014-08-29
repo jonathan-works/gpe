@@ -14,7 +14,7 @@ public class GrupoModeloDocumentoSuggestBean extends AbstractSuggestBean<GrupoMo
     private static final long serialVersionUID = 1L;
 
     @Override
-    public String getEjbql() {
+    public String getEjbql(String typed) {
         StringBuilder sb = new StringBuilder();
         sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idGrupoModeloDocumento, o.grupoModeloDocumento) ");
         sb.append("from GrupoModeloDocumento o ");

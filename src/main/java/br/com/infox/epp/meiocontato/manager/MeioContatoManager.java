@@ -25,6 +25,18 @@ public class MeioContatoManager extends Manager<MeioContatoDAO, MeioContato>{
 		return getDao().getByPessoa(pessoa);
 	}
 	
+	public MeioContato getMeioContatoTelefoneFixoByPessoa(Pessoa pessoa){
+		return getMeioContatoByPessoaAndTipo(pessoa, TipoMeioContatoEnum.TF);
+	}
+	
+	public MeioContato getMeioContatoTelefoneMovelByPessoa(Pessoa pessoa){
+		return getMeioContatoByPessoaAndTipo(pessoa, TipoMeioContatoEnum.TM);
+	}
+	
+	public MeioContato getMeioContatoByPessoaAndTipo(Pessoa pessoa, TipoMeioContatoEnum tipoMeioContatoEnum){
+		return getDao().getMeioContatoByPessoaAndTipo(pessoa, tipoMeioContatoEnum);
+	}
+	
 	public MeioContato createMeioContatoTelefoneFixo(String vlMeioContato, Pessoa pessoa){
 		return createMeioContato(vlMeioContato, pessoa, TipoMeioContatoEnum.TF);
 	}

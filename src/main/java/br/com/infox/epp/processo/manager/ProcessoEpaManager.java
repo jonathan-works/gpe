@@ -111,4 +111,8 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
         }
         return processo;
     }
+    
+    public ProcessoEpa persistProcessoComNumero(ProcessoEpa processoEpa) throws DAOException{
+    	return getDao().persistProcessoComNumero(processoEpa);
+    }
 }
