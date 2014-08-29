@@ -37,6 +37,10 @@ public class MeioContatoManager extends Manager<MeioContatoDAO, MeioContato>{
 		return createMeioContato(vlMeioContato, pessoa, TipoMeioContatoEnum.EM);
 	}
 	
+	public List<MeioContato> getByPessoaAndTipoMeioContato(Pessoa pessoa, TipoMeioContatoEnum tipoMeioContato) {
+	    return getDao().getByPessoaAndTipoMeioContato(pessoa, tipoMeioContato);
+	}
+	
 	public MeioContato createMeioContato(String vlMeioContato, Pessoa pessoa, TipoMeioContatoEnum tipoMeioContato){
 		MeioContato meioContato = new MeioContato();
 		meioContato.setMeioContato(vlMeioContato);
