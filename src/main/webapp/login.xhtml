@@ -59,11 +59,10 @@
       <div
         id="seletorSkinLogin"
         class="seletorSkinsLogin">
-        <h:commandButton
+        <button
           id="consultaExterna"
-          value="#{messages['consultaExterna.titlePage']}"
           class="input_button"
-          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam'" />
+          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';">#{messages['consultaExterna.titlePage']}</button>
         <ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
           <ui:param
             name="id"
@@ -186,6 +185,7 @@
                 value="#{messages['login.entrarBtn']}"
                 styleClass="input_button"
                 action="#{authenticator.login()}" />
+                <a:commandButton action="#{naturezaCrudAction.teste}" value="A" execute="@this"/>
               <input
                 class="input_button"
                 id="btnTrocar"
