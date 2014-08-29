@@ -35,9 +35,6 @@
     id="#{id}Decoration"
     template="#{template}">
         <ui:param
-          name="renderTipMessage"
-          value="#{empty taskInstanceHome.instance[id]}"/>
-        <ui:param
           name="tipMessage"
           value="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id] ? 'Apenas arquivos '.concat(taskInstanceHome.classificacoesVariaveisUpload[id].acceptedTypes) : 'Selecione uma classificação de documento'}" />
         <ui:define name="label">#{label}</ui:define>
