@@ -64,7 +64,7 @@
           validatorMessage="#{messages['fileUpload.error.validator']}"
           requiredMessage="#{messages['fileUpload.error.required']}"
           disabled="#{disabled}"
-          ontyperejected="new infox.Messages({'timeout': 6000}).dialog(\'#{messages['fluxo.xpdl.error.fileExtension']}\')"
+          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{messages['fluxo.xpdl.error.fileExtension']}\')"
         >
           <f:facet name="label">
             <h:outputText value="{_KB}KB de {KB}KB" />

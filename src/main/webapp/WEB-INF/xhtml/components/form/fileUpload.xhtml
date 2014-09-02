@@ -58,7 +58,7 @@
           render="#{id}Decoration, #{id}, #{reRender}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente"
           acceptedTypes="#{home.classificacoesVariaveisUpload[id].acceptedTypes}"
           rendered="#{not empty home.classificacoesVariaveisUpload[id] and not readonly}"
-          ontyperejected="new infox.Messages({'timeout': 6000}).dialog(\'#{messages['processoDocumento.extensaoNaoPermitida']}\')">
+          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{messages['processoDocumento.extensaoNaoPermitida']}\')">
         </rich:fileUpload>
     </s:decorate>
     <s:div id="#{f.id}documentoExistente">
