@@ -168,7 +168,7 @@
             rendered="true"
             limitToList="true"
             status=":status"
-            render="usuarioPessoaFisica, pageBodyDialogMessage"
+            render="usuarioPessoaFisica, pageBodyDialogMessage, meioContatoList, pessoaDocumentoList"
             onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
             url="#{a4jSkin.imgFolder}/remove.png"
             title="#{messages['crud.remove']}" />
@@ -199,7 +199,8 @@
         listReRender="divGridLU"
         hideOrder="true"
         showSearchForm="false"
-        panelStyleClass="full-sized short-margin-top">
+        panelStyleClass="full-sized short-margin-top"
+        showGrid="#{not empty usuarioLoginCrudAction.instance.pessoaFisica}">
         <ui:define name="headerToolBar" />
         <ui:define name="toolBar" />
         <wi:columnOutputText
@@ -220,7 +221,8 @@
         listReRender="divGridLU"
         hideOrder="true"
         showSearchForm="false"
-        panelStyleClass="full-sized short-margin-top">
+        panelStyleClass="full-sized short-margin-top"
+        showGrid="#{not empty usuarioLoginCrudAction.instance.pessoaFisica}">
         <ui:define name="headerToolBar" />
         <ui:define name="toolBar" />
         <wi:columnOutputText
