@@ -121,6 +121,14 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
                 invalid = true;
             }
         }
+        if (usos.contains(TipoUsoLocalizacaoEnum.UDC)) {
+            if (invalid) {
+                msg = MessageFormat.format(msg, ", unidade decisora colegiada");
+            } else {
+                msg = MessageFormat.format(msg, "unidade decisora colegiada");
+                invalid = true;
+            }
+        }
         
         if (invalid) {
             msg = msg.replace("{0}", "");

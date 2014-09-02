@@ -88,5 +88,12 @@ public interface LocalizacaoQuery {
         "SELECT 'UDM' AS tipo FROM tb_uni_decisora_monocratica und " +
         "INNER JOIN tb_localizacao l ON (und.id_localizacao = l.id_localizacao) " +
         "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" +
+        
+        "UNION " +
+
+        "SELECT 'UDC' AS tipo FROM tb_uni_decisora_colegiada und " +
+        "INNER JOIN tb_localizacao l ON (und.id_localizacao = l.id_localizacao) " +
+        "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" +
+        
         ") a ";
 }
