@@ -14,6 +14,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.web.ServletContexts;
 
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name("security")
@@ -29,7 +30,7 @@ public class SecurityUtil {
         HttpServletRequest request = ServletContexts.instance().getRequest();
         String servletPath = request.getServletPath();
         boolean hasPermission = Identity.instance().hasPermission(PAGES_PREFIX
-                + servletPath, "access");
+                + servletPath, "access") && !Authenticator.instance().hasToSignTermoAdesao();
         if (!hasPermission) {
             LOG.info(MessageFormat.format("Bloqueado o acesso do perfil ''{0}'' para página ''{1}''.", Contexts.getSessionContext().get("identificadorPapelAtual"), servletPath));
         }

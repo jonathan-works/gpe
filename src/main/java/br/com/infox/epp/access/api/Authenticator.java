@@ -120,12 +120,10 @@ public class Authenticator {
             validaCadastroDeUsuario(id, usuario);
             try {
                 getAuthenticatorService().validarUsuario(usuario);
-                if (!hasToSignTermoAdesao(usuario)) {
-                    if (isTrocarSenha()) {
-                        trocarSenhaUsuario(usuario);
-                    } else {
-                        realizarLoginDoUsuario(usuario);
-                    }
+                if (isTrocarSenha()) {
+                    trocarSenhaUsuario(usuario);
+                } else {
+                    realizarLoginDoUsuario(usuario);
                 }
             } catch (LoginException e) {
                 Identity.instance().unAuthenticate();
@@ -137,6 +135,14 @@ public class Authenticator {
         }
     }
 
+    public boolean hasToSignTermoAdesao() {
+    	UsuarioLogin usuarioLogado = getUsuarioLogado();
+    	if (usuarioLogado != null) {
+    		return hasToSignTermoAdesao(usuarioLogado);
+    	}
+    	return false;
+    }
+    
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) {
         boolean termoAdesao = false;
         final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
@@ -357,7 +363,11 @@ public class Authenticator {
         getAuthenticatorService().addRolesAtuais(roleSet);
         setVariaveisDoContexto(usuarioPerfil, roleSet);
         if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
-            redirectToPainelDoUsuario();
+        	if (!hasToSignTermoAdesao()) {
+        		redirectToPainelDoUsuario();
+        	} else {
+        		redirectToTermoAdesao();
+        	}
         }
     }
 
@@ -369,6 +379,14 @@ public class Authenticator {
         redirect.execute();
     }
 
+    private void redirectToTermoAdesao() {
+        Redirect redirect = Redirect.instance();
+        redirect.getParameters().clear();
+        redirect.setViewId("/termoAdesao.seam");
+        redirect.setParameter("cid", null);
+        redirect.execute();
+    }
+    
     private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil,
             Set<String> roleSet) {
         Contexts.getSessionContext().set(USUARIO_PERFIL_ATUAL, usuarioPerfil);
