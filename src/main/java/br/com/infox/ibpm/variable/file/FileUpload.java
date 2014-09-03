@@ -56,9 +56,7 @@ public class FileUpload implements FileUploadListener {
         if (idDocumentoExistente != null) {
             try {
                 ProcessoDocumento doc = processoDocumentoManager.find(idDocumentoExistente);
-                ProcessoDocumentoBin docBin = doc.getProcessoDocumentoBin();
                 processoDocumentoManager.remove(doc);
-                processoDocumentoBinManager.remove(docBin);
                 documentoBinManager.remove(idDocumentoExistente);
             } catch (DAOException e) {
                 LOG.error("Erro ao remover o documento existente, com id: " + idDocumentoExistente, e);
