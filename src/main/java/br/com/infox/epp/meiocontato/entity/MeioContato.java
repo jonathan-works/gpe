@@ -33,18 +33,30 @@ import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_B
 		@NamedQuery(name = MEIO_CONTATO_BY_PESSOA_AND_TIPO, query = MEIO_CONTATO_BY_PESSOA_AND_TIPO_QUERY)
 })
 public class MeioContato implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_meio_contato";
 
-	private Integer idMeioContato;
-	private String meioContato;
-	private TipoMeioContatoEnum tipoMeioContato;
-	private Pessoa pessoa;
-
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "MeioContatoGenerator", sequenceName = "sq_meio_contato")
 	@Id
+	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "MeioContatoGenerator", sequenceName = "sq_meio_contato")
 	@GeneratedValue(generator = "MeioContatoGenerator", strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_meio_contato", nullable = false, unique = true)
+	private Integer idMeioContato;
+	
+	@NotNull
+	@Column(name = "vl_meio_contato", nullable = false)
+	private String meioContato;
+	
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tp_meio_contato", nullable = false)
+	private TipoMeioContatoEnum tipoMeioContato;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_pessoa", nullable = false)
+	private Pessoa pessoa;
+	
 	public Integer getIdMeioContato() {
 		return idMeioContato;
 	}
@@ -53,8 +65,6 @@ public class MeioContato implements Serializable {
 		this.idMeioContato = idMeioContato;
 	}
 
-	@Column(name = "vl_meio_contato", nullable = false)
-	@NotNull
 	public String getMeioContato() {
 		return meioContato;
 	}
@@ -63,9 +73,6 @@ public class MeioContato implements Serializable {
 		this.meioContato = meioContato;
 	}
 
-	@Column(name = "tp_meio_contato", nullable = false)
-	@Enumerated(EnumType.STRING)
-	@NotNull
 	public TipoMeioContatoEnum getTipoMeioContato() {
 		return tipoMeioContato;
 	}
@@ -74,9 +81,6 @@ public class MeioContato implements Serializable {
 		this.tipoMeioContato = tipoMeioContato;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_pessoa", nullable = false)
-	@NotNull
 	public Pessoa getPessoa() {
 		return pessoa;
 	}
@@ -84,13 +88,18 @@ public class MeioContato implements Serializable {
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
+	
+	@Override
+	public String toString() {
+		return getMeioContato();
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((idMeioContato == null) ? 0 : idMeioContato.hashCode());
+				+ ((getIdMeioContato() == null) ? 0 : getIdMeioContato().hashCode());
 		return result;
 	}
 
@@ -103,10 +112,10 @@ public class MeioContato implements Serializable {
 		if (!(obj instanceof MeioContato))
 			return false;
 		MeioContato other = (MeioContato) obj;
-		if (idMeioContato == null) {
-			if (other.idMeioContato != null)
+		if (getIdMeioContato() == null) {
+			if (other.getIdMeioContato() != null)
 				return false;
-		} else if (!idMeioContato.equals(other.idMeioContato))
+		} else if (!getIdMeioContato().equals(other.getIdMeioContato()))
 			return false;
 		return true;
 	}
