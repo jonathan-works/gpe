@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.faces.model.SelectItem;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
@@ -107,10 +108,11 @@ public class AuthenticatorService implements Serializable {
      */
     public void setUsuarioLogadoSessao(UsuarioLogin usuario) {
         Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
-        List<UsuarioPerfil> usuarioPerfilList = new ArrayList<UsuarioPerfil>(
-                usuario.getUsuarioPerfilAtivoList());
-        Contexts.getSessionContext()
-                .set(USUARIO_PERFIL_LIST, usuarioPerfilList);
+        List<SelectItem> usuarioPerfilList = new ArrayList<>();
+        for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()){
+        	usuarioPerfilList.add(new SelectItem(usuarioPerfil.getIdUsuarioPerfil(), usuarioPerfil.toString()));
+        }
+        Contexts.getSessionContext().set(USUARIO_PERFIL_LIST, usuarioPerfilList);
     }
 
     public void validarUsuario(UsuarioLogin usuario) throws LoginException,
