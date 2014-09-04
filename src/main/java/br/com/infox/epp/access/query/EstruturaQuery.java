@@ -13,5 +13,5 @@ public interface EstruturaQuery {
     String ESTRUTURAS_DISPONIVEIS_QUERY = "select o from Estrutura o where o.ativo = true order by o.nome";
     
     String ESTRUTURA_BY_NOME = "estruturaByNome";
-    String ESTRUTURA_BY_NOME_QUERY = "select o from Estrutura where o.nome = :" + PARAM_NOME;
+    String ESTRUTURA_BY_NOME_QUERY = "select o from Estrutura o where o.nome = :" + PARAM_NOME;
 }
