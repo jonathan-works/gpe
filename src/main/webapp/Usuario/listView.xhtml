@@ -251,13 +251,6 @@
       <wi:dataForm
         formId="usuarioPerfilForm"
         formTitle="#{messages['form.title']}">
-        <wi:selectOneMenuEntity id="perfisPermitidos"
-            value="#{usuarioPerfilCrudAction.instance.perfilTemplate}"
-            label="#{messages['usuarioPerfil.perfil']}"
-            items="#{usuarioPerfilCrudAction.perfisPermitidos}"
-            showLabelSelecione="true"
-            disabled="#{empty usuarioPerfilCrudAction.instance.localizacao}" 
-            required="true" />
         <wi:tree
             id="localizacoesTree"
             assignTo="usuarioPerfilCrudAction.instance.localizacao"
@@ -267,6 +260,13 @@
             clearRender="@this"
             label="#{messages['perfilTemplate.localizacao']}" 
             render="perfisPermitidos"
+            required="true" />
+        <wi:selectOneMenuEntity id="perfisPermitidos"
+            value="#{usuarioPerfilCrudAction.instance.perfilTemplate}"
+            label="#{messages['usuarioPerfil.perfil']}"
+            items="#{usuarioPerfilCrudAction.perfisPermitidos}"
+            showLabelSelecione="true"
+            disabled="#{empty usuarioPerfilCrudAction.instance.localizacao}" 
             required="true" />
         <wi:selectBooleanCheckbox
           id="responsavelLocalizacao"
@@ -300,14 +300,14 @@
               onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
               id="removeButton" />
           </ui:define>
-          <wi:columnOutputText
-            columnId="perfil.descricao"
-            columnHeader="#{messages['usuarioPerfil.perfil']}"
-            value="#{row.perfilTemplate.descricao}" />
           <wi:columnOutputText 
             columnId="localizacao"
             columnHeader="#{messages['usuarioPerfil.localizacao']}"
             value="#{row.localizacao}"/>
+          <wi:columnOutputText
+            columnId="perfil.descricao"
+            columnHeader="#{messages['usuarioPerfil.perfil']}"
+            value="#{row.perfilTemplate.descricao}" />
           <wi:columnBoolean
             columnId="responsavelLocalizacao"
             columnHeader="#{messages['perfil.responsavelLocalizacao']}"
