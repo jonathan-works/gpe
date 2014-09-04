@@ -16,11 +16,11 @@
   <div class="painelUsuario">
     <c:if test="#{selectable}">
       <h:form id="papeisUsuarioForm">
-        <wi:selectOneMenuEntity
+        <wi:selectOneMenu
           value="#{authenticator.usuarioPerfilAtualCombo}"
           id="usuarioPerfil"
           template="/WEB-INF/xhtml/components/templates/display.xhtml"
-          items="#{authenticator.usuarioPerfilListItems}"
+          valueItems="#{authenticator.usuarioPerfilListItems}"
           label="#{usuarioLogado}"
           labelClass="painelUsuario-label"
           valueClass="painelUsuario-select"
@@ -29,8 +29,9 @@
             event="change"
             limitRender="true"
             status=":status"
+            render="@form"
             execute="@form" />
-        </wi:selectOneMenuEntity>
+        </wi:selectOneMenu>
       </h:form>
     </c:if>
     <c:if test="#{not selectable}">
