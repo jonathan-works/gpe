@@ -25,6 +25,6 @@ public class EstruturaDAO extends DAO<Estrutura> {
     public Estrutura getEstruturaByNome(String nome){
     	Map<String, Object> params = new HashMap<>();
     	params.put(EstruturaQuery.PARAM_NOME, nome);
-    	return getNamedSingleResult(EstruturaQuery.ESTRUTURA_BY_NOME);
+    	return getNamedSingleResult(EstruturaQuery.ESTRUTURA_BY_NOME, params);
     }
 }
