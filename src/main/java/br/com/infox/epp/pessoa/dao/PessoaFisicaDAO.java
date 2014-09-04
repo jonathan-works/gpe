@@ -20,7 +20,7 @@ public class PessoaFisicaDAO extends DAO<PessoaFisica> {
 
     public PessoaFisica searchByCpf(final String cpf) {
         final HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put(CPF_PARAM, cpf);
+        parameters.put(CPF_PARAM, cpf.replaceAll("\\D", ""));
         return getNamedSingleResult(SEARCH_BY_CPF, parameters);
     }
 }

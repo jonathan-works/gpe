@@ -194,7 +194,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
+            CascadeType.REFRESH, CascadeType.REMOVE }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
     public List<AssinaturaDocumento> getAssinaturas() {
         return assinaturas;
     }
@@ -202,4 +202,5 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     public void setAssinaturas(List<AssinaturaDocumento> assinaturas) {
         this.assinaturas = assinaturas;
     }
+    
 }

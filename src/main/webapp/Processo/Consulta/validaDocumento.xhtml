@@ -12,6 +12,10 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:c="http://java.sun.com/jstl/core"
   template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+  
+  <ui:param name="reRenderExternal" 
+  	value="#{wi:get(facesContext.getCurrentInstance().externalContext.requestParameterMap['renderExternal'], false)}"/>
+  
   <ui:define name="baseBody">
     <div class="pageBody">
       <rich:panel id="mp_ass">
@@ -74,7 +78,7 @@
                 getDataFunction="documento.getData()"
                 useBase64Function="'true'"
                 functionPreSign="infox.showLoading();"
-                functionPosSign="opener.location=opener.location;assinar();"
+                functionPosSign="documento.reRenderExternal(); assinar();"
                 debug="false"
                 loginMode="false"
                 useProviderDll="false"
@@ -87,6 +91,11 @@
                 var documento={
                   getData:function getData() {
                     return #{rich:jQuery('dadosAssinaveis')}.val();
+                  },
+                  reRenderExternal:function(){
+                  	if (#{reRenderExternal}){
+                  		opener.location=opener.location;
+                  	}
                   }
                 };
               </h:outputScript>

@@ -86,4 +86,8 @@ public class ProcessoDocumentoManager extends Manager<ProcessoDocumentoDAO, Proc
     public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask) {
         return getDao().getAnexosPublicos(idJbpmTask);
     }
+    
+    public List<ProcessoDocumento> getListProcessoDocumento(Processo processo){
+    	return getDao().getListProcessoDocumentoByProcesso(processo);
+    }
 }

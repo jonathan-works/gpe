@@ -6,10 +6,13 @@ import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.L
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_QUERY;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL_QUERY;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,6 +45,9 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
+import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 
 /**
@@ -53,7 +59,8 @@ import br.com.infox.epp.processo.entity.Processo;
 @NamedQueries({
     @NamedQuery(name = LIST_ANEXOS_PUBLICOS, query = LIST_ANEXOS_PUBLICOS_QUERY),
     @NamedQuery(name = NEXT_SEQUENCIAL, query = NEXT_SEQUENCIAL_QUERY),
-    @NamedQuery(name = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO, query = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY)
+    @NamedQuery(name = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO, query = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY),
+    @NamedQuery(name = LIST_PROCESSO_DOCUMENTO_BY_PROCESSO, query = LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY)
 })
 @Indexed(index="IndexProcessoDocumento")
 public class ProcessoDocumento implements java.io.Serializable {
@@ -73,7 +80,7 @@ public class ProcessoDocumento implements java.io.Serializable {
     private TipoProcessoDocumento tipoProcessoDocumento;
     
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, cascade={CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_processo_documento_bin", nullable = false)
     private ProcessoDocumentoBin processoDocumentoBin;
     
@@ -255,7 +262,42 @@ public class ProcessoDocumento implements java.io.Serializable {
     public void setLocalizacao(Localizacao localizacao) {
         this.localizacao = localizacao;
     }
-
+    
+    public boolean isDocumentoAssinavel(Papel papel){
+    	List<TipoProcessoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
+		for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
+			if (tipoProcessoDocumentoPapel.getPapel().equals(papel) 
+					&& tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
+				return true;
+			}
+		}
+		return false;
+    }
+    
+    public boolean isDocumentoAssinavel(){
+    	List<TipoProcessoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
+		for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
+			if (tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
+				return true;
+			}
+		}
+		return false;
+    }
+    
+    public boolean isDocumentoAssinado(Papel papel){
+    	for(AssinaturaDocumento assinaturaDocumento : getProcessoDocumentoBin().getAssinaturas()){
+    		if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public boolean hasAssinatura(){
+    	return getProcessoDocumentoBin().getAssinaturas() != null && 
+    			getProcessoDocumentoBin().getAssinaturas().size() > 0;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

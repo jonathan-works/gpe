@@ -32,5 +32,8 @@ public interface ProcessoDocumentoQuery {
             + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o)"
             + ")" + ")";
     String DATA_INCLUSAO = "dataInclusao";
-
+    
+    String LIST_PROCESSO_DOCUMENTO_BY_PROCESSO = "listProcessoDocumentoByProcesso";
+    String LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY = "select o from ProcessoDocumento o " +
+    		"where o.processo = :" + PARAM_PROCESSO;
 }
