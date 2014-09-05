@@ -490,6 +490,10 @@ public class Authenticator {
     public Integer getUsuarioPerfilAtualCombo() {
         return getUsuarioPerfilAtual().getIdUsuarioPerfil();
     }
+    
+    public String getUsuarioPerfilAtualSingle(){
+    	return getUsuarioPerfilListItems().get(0).getLabel();
+    }
 
     private static AuthenticatorService getAuthenticatorService() {
         return (AuthenticatorService) Component.getInstance(AuthenticatorService.NAME);
