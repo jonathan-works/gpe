@@ -12,6 +12,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
 
 import java.util.HashMap;
 import java.util.List;
@@ -89,5 +91,12 @@ public class ProcessoDAO extends DAO<Processo> {
     public void atualizarProcessos() {
         JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY).executeUpdate();
     }
+    
+    public void removerProcessoJbpm(Integer idProcesso, Long idJbpm) throws DAOException{
+		Map<String, Object> params = new HashMap<>(2);
+		params.put(PARAM_ID_JBPM, idJbpm);
+		params.put(PARAM_ID_PROCESSO, idProcesso);
+		executeNamedQueryUpdate(REMOVER_PROCESSO_JBMP, params);
+	}
 
 }

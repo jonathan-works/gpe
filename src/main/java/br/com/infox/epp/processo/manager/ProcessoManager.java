@@ -208,4 +208,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
         return String.valueOf(idProcesso);
     }
+    
+    public void removerProcessoJbpm(Integer idProcesso, Long idJbpm) throws DAOException{
+    	getDao().removerProcessoJbpm(idProcesso, idJbpm);
+    }
 }
