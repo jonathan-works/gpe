@@ -75,6 +75,7 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
             }
             RecursiveManager.refactor(o);
         } catch (RecursiveException e) {
+            refresh(o);
             throw new DAOException(e);
         }
         o = super.update(o);
