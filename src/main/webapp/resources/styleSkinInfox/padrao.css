@@ -305,6 +305,10 @@ h1 {
   cursor: pointer;
 }
 
+.pointerRow:hover {
+	cursor: pointer;
+}
+
 img.disabled {
   opacity: 0.3;
   filter: alpha(opacity = 3);

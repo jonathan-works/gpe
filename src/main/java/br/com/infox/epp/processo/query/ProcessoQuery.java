@@ -14,7 +14,10 @@ public interface ProcessoQuery {
     String NOME_ACTOR_ID = "nm_actor_id";
     String ID_CAIXA = "id_caixa";
     String PROCESSO_ATTRIBUTE = "processo";
-
+    String PARAM_ID_JBPM = "idJbpm";
+    String PARAM_ID_TASKMGMINSTANCE = "idTaskMgmInstance";
+    String PARAM_ID_TOKEN = "idToken";
+    
     String PARAM_ACTOR_ID = "actorId";
     String ANULA_ACTOR_ID = "anulaActorId";
     String ANULA_ACTOR_ID_QUERY = "update tb_processo set nm_actor_id = null where nm_actor_id = :"
@@ -82,5 +85,23 @@ public interface ProcessoQuery {
     String GET_PROCESSO_BY_NUMERO_PROCESSO = "getProcessoByNumeroProcesso";
     String GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY = "select o from ProcessoEpa o where o.numeroProcesso=:"
             + NUMERO_PROCESSO;
+    
+    String REMOVER_PROCESSO_JBMP = "removerProcessoJbpm";
+	String REMOVER_PROCESSO_JBMP_QUERY = 
+			"DELETE FROM tb_task_conteudo_index WHERE id_taskinstance in (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
+			"UPDATE jbpm_processinstance SET roottoken_ = null, superprocesstoken_ = null where id_ = :" + PARAM_ID_JBPM + " ;\n" +
+			"DELETE FROM jbpm_variableinstance WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
+			"DELETE FROM tb_usuario_taskinstance WHERE id_taskinstance = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
+			"DELETE FROM tb_processo_localizacao_ibpm WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
+			"DELETE FROM tb_processo_epa_tarefa WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
+			"DELETE FROM jbpm_taskactorpool WHERE taskinstance_ = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" + 
+			"DELETE FROM jbpm_pooledactor WHERE swimlaneinstance_ = (select swimlaninstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
+			"DELETE FROM jbpm_taskinstance WHERE procinst_ = :" + PARAM_ID_JBPM + " ;\n" +
+			"DELETE FROM jbpm_swimlaneinstance WHERE taskmgmtinstance_ = :" + PARAM_ID_TASKMGMINSTANCE + " ;\n" +
+			"DELETE FROM jbpm_tokenvariablemap WHERE token_ = :" + PARAM_ID_TOKEN + " ;\n" +
+			"DELETE FROM jbpm_moduleinstance WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
+			"DELETE FROM jbpm_job WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
+			"DELETE FROM jbpm_token WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
+			"DELETE FROM jbpm_processinstance WHERE id_ = :" + PARAM_ID_JBPM + " ;";
 
 }
