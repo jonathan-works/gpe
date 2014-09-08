@@ -15,6 +15,8 @@ public interface ProcessoQuery {
     String ID_CAIXA = "id_caixa";
     String PROCESSO_ATTRIBUTE = "processo";
     String PARAM_ID_JBPM = "idJbpm";
+    String PARAM_ID_TASKMGMINSTANCE = "idTaskMgmInstance";
+    String PARAM_ID_TOKEN = "idToken";
     
     String PARAM_ACTOR_ID = "actorId";
     String ANULA_ACTOR_ID = "anulaActorId";
@@ -93,10 +95,10 @@ public interface ProcessoQuery {
 			"DELETE FROM tb_processo_localizacao_ibpm WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
 			"DELETE FROM tb_processo_epa_tarefa WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
 			"DELETE FROM jbpm_taskactorpool WHERE taskinstance_ = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" + 
-			"DELETE FROM jbpm_pooledactor WHERE swimlaneinstance_ = (select swimlaneinstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
-			"DELETE FROM jbpm_swimlaneinstance WHERE taskmgmtinstance_ = (select taskmgmtinstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
-			"DELETE FROM jbpm_tokenvariablemap WHERE token_ = (select token_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
+			"DELETE FROM jbpm_pooledactor WHERE swimlaneinstance_ = (select swimlaninstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"DELETE FROM jbpm_taskinstance WHERE procinst_ = :" + PARAM_ID_JBPM + " ;\n" +
+			"DELETE FROM jbpm_swimlaneinstance WHERE taskmgmtinstance_ = :" + PARAM_ID_TASKMGMINSTANCE + " ;\n" +
+			"DELETE FROM jbpm_tokenvariablemap WHERE token_ = :" + PARAM_ID_TOKEN + " ;\n" +
 			"DELETE FROM jbpm_moduleinstance WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM jbpm_job WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM jbpm_token WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +

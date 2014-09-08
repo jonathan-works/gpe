@@ -10,6 +10,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TASKMGMINSTANCE;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TOKEN;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_JBPM;
@@ -92,10 +94,13 @@ public class ProcessoDAO extends DAO<Processo> {
         JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY).executeUpdate();
     }
     
-    public void removerProcessoJbpm(Integer idProcesso, Long idJbpm) throws DAOException{
-		Map<String, Object> params = new HashMap<>(2);
+    public void removerProcessoJbpm(Integer idProcesso, Long idJbpm, Long idTaskMgmInstance, Long idToken) 
+    		throws DAOException{
+		Map<String, Object> params = new HashMap<>(4);
 		params.put(PARAM_ID_JBPM, idJbpm);
 		params.put(PARAM_ID_PROCESSO, idProcesso);
+		params.put(PARAM_ID_TASKMGMINSTANCE, idTaskMgmInstance);
+		params.put(PARAM_ID_TOKEN, idToken);
 		executeNamedQueryUpdate(REMOVER_PROCESSO_JBMP, params);
 	}
 
