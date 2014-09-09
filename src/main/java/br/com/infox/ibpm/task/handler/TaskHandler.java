@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.infinispan.config.Configuration.ExpirationType;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Action;
