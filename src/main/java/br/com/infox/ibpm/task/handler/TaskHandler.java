@@ -250,7 +250,12 @@ public class TaskHandler implements Serializable {
     }
 
 	private Event createNewStatusProcessoEvent(StatusProcesso statusProcesso) {
-		Event event = new Event(Event.EVENTTYPE_TASK_CREATE);
+	    Event event;
+	    if (this.task.hasEvent(Event.EVENTTYPE_TASK_CREATE)) {
+	        event = this.task.getEvent(Event.EVENTTYPE_TASK_CREATE);
+	    } else {
+	        event = new Event(Event.EVENTTYPE_TASK_CREATE);
+	    }
 		Action action = new Action();
 		action.setName("setStatusProcessoAction");
 		Delegation delegation = new Delegation(StatusHandler.class.getName());
@@ -391,6 +396,7 @@ public class TaskHandler implements Serializable {
 	        }
 	    }
 	    if (expirationToRemove != null) {
+	        expirationToRemove.setProcessDefinition(null);
 	        event.removeAction(expirationToRemove);
 	        expirations.remove(expiration);
 	    }
