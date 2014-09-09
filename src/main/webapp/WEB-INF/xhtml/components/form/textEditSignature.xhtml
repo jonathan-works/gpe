@@ -24,7 +24,7 @@
         id="#{f.id}tipoProcessoDocumento"
         label="#{messages['processoDocumento.classificacaoDocumento']}"
         value="#{home.documentosAssinaveis[id].classificacao}"
-        items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
+        items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true, taskInstanceHome.getVariableName(id), processoHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
         required="#{not readonly}"
         showLabelSelecione="true"
         readonly="#{readonly or home.possuiAssinatura(id)}"

@@ -3,10 +3,11 @@ package br.com.infox.core.list;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.Date;
-
-import org.jboss.seam.international.Messages;
+import java.util.Map;
 
 import br.com.infox.core.type.Displayable;
+import br.com.infox.epp.system.PropertiesLoader;
+import br.com.infox.seam.util.ComponentUtil;
 
 class FieldCommandImpl implements FieldCommand {
 
@@ -36,7 +37,8 @@ class FieldCommandImpl implements FieldCommand {
             attributeLabel = object.toString();
         }
 
-        messageBuilder.append(Messages.instance().get(MessageFormat.format("{0}.{1}", entityName, s.getName()))).append(" ").append(s.getCriteria()).append(" '").append(attributeLabel).append("'\n");
+        Map<String, String> eppMessages = ComponentUtil.getComponent(PropertiesLoader.EPP_MESSAGES);
+        messageBuilder.append(eppMessages.get(MessageFormat.format("{0}.{1}", entityName, s.getName()))).append(" ").append(s.getCriteria()).append(" '").append(attributeLabel).append("'\n");
     }
 
 }

@@ -14,6 +14,8 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_ID_TASK
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_PESSOA;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_NR_CPF;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_FETCH_PF_BY_NUMERO_CPF;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,6 +85,12 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PESSOA_FISICA, pessoaFisica);
         return getNamedSingleResult(USUARIO_BY_PESSOA, parameters);
+    }
+    
+    public UsuarioLogin getUsuarioFetchPessoaFisicaByCpf(String cpf){
+    	Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_NR_CPF, cpf);
+        return getNamedSingleResult(USUARIO_FETCH_PF_BY_NUMERO_CPF, parameters);
     }
 
 }

@@ -28,7 +28,9 @@ import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
@@ -139,7 +141,8 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
         sb.append("Classificado por: ");
         String column = getOrder();
         String[] s = column.split(" ");
-        sb.append(Messages.instance().get(MessageFormat.format("{0}.{1}", getEntityName(), s[0])));
+        Map<String, String> eppMessages = ComponentUtil.getComponent(PropertiesLoader.EPP_MESSAGES);
+        sb.append(eppMessages.get(MessageFormat.format("{0}.{1}", getEntityName(), s[0])));
         sb.append(" ");
         sb.append(s.length > 1 && "desc".equals(s[1]) ? "decrescente" : "crescente");
 

@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -52,6 +54,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
@@ -71,6 +74,9 @@ public class Authenticator {
     private String newPassword1;
     private String newPassword2;
     private String login;
+    
+    @In
+    private UsuarioPerfilManager usuarioPerfilManager;
 
     // Variaveis de sessão
     public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
@@ -120,12 +126,10 @@ public class Authenticator {
             validaCadastroDeUsuario(id, usuario);
             try {
                 getAuthenticatorService().validarUsuario(usuario);
-                if (!hasToSignTermoAdesao(usuario)) {
-                    if (isTrocarSenha()) {
-                        trocarSenhaUsuario(usuario);
-                    } else {
-                        realizarLoginDoUsuario(usuario);
-                    }
+                if (isTrocarSenha()) {
+                    trocarSenhaUsuario(usuario);
+                } else {
+                    realizarLoginDoUsuario(usuario);
                 }
             } catch (LoginException e) {
                 Identity.instance().unAuthenticate();
@@ -137,6 +141,14 @@ public class Authenticator {
         }
     }
 
+    public boolean hasToSignTermoAdesao() {
+    	UsuarioLogin usuarioLogado = getUsuarioLogado();
+    	if (usuarioLogado != null) {
+    		return hasToSignTermoAdesao(usuarioLogado);
+    	}
+    	return false;
+    }
+    
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) {
         boolean termoAdesao = false;
         final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
@@ -357,7 +369,11 @@ public class Authenticator {
         getAuthenticatorService().addRolesAtuais(roleSet);
         setVariaveisDoContexto(usuarioPerfil, roleSet);
         if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
-            redirectToPainelDoUsuario();
+        	if (!hasToSignTermoAdesao()) {
+        		redirectToPainelDoUsuario();
+        	} else {
+        		redirectToTermoAdesao();
+        	}
         }
     }
 
@@ -369,6 +385,14 @@ public class Authenticator {
         redirect.execute();
     }
 
+    private void redirectToTermoAdesao() {
+        Redirect redirect = Redirect.instance();
+        redirect.getParameters().clear();
+        redirect.setViewId("/termoAdesao.seam");
+        redirect.setParameter("cid", null);
+        redirect.execute();
+    }
+    
     private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil,
             Set<String> roleSet) {
         Contexts.getSessionContext().set(USUARIO_PERFIL_ATUAL, usuarioPerfil);
@@ -454,17 +478,21 @@ public class Authenticator {
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<UsuarioPerfil> getUsuarioPerfilListItems() {
-        List<UsuarioPerfil> list = (List<UsuarioPerfil>) Contexts.getSessionContext().get(USUARIO_PERFIL_LIST);
+    public List<SelectItem> getUsuarioPerfilListItems() {
+        List<SelectItem> list = (List<SelectItem>) Contexts.getSessionContext().get(USUARIO_PERFIL_LIST);
         return list;
     }
 
-    public void setUsuarioPerfilAtualCombo(UsuarioPerfil usuarioPerfil) {
-        setUsuarioPerfilAtual(usuarioPerfil);
+    public void setUsuarioPerfilAtualCombo(Integer id) {
+        setUsuarioPerfilAtual(getUsuarioPerfilDAO().find(id));
     }
 
-    public UsuarioPerfil getUsuarioPerfilAtualCombo() {
-        return getUsuarioPerfilAtual();
+    public Integer getUsuarioPerfilAtualCombo() {
+        return getUsuarioPerfilAtual().getIdUsuarioPerfil();
+    }
+    
+    public String getUsuarioPerfilAtualSingle(){
+    	return getUsuarioPerfilListItems().get(0).getLabel();
     }
 
     private static AuthenticatorService getAuthenticatorService() {

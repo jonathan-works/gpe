@@ -59,11 +59,10 @@
       <div
         id="seletorSkinLogin"
         class="seletorSkinsLogin">
-        <h:commandButton
+        <button
           id="consultaExterna"
-          value="#{messages['consultaExterna.titlePage']}"
           class="input_button"
-          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam'" />
+          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';">#{messages['consultaExterna.titlePage']}</button>
         <ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
           <ui:param
             name="id"
@@ -250,78 +249,6 @@
               type="button"
               value="#{messages['login.cancelaTrocaSenhaBtn']}" />
           </div>
-        </h:form>
-      </rich:popupPanel>
-      <ui:param
-        name="panelWidth"
-        value="800"></ui:param>
-      <ui:param
-        name="panelHeight"
-        value="600"></ui:param>
-      <rich:popupPanel
-        id="#{termoAdesaoAction.termoAdesaoPanelName}"
-        width="#{panelWidth}"
-        height="#{panelHeight}"
-        show="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
-        <f:facet name="header">#{messages['login.termoAdesao']} #{pwidth} #{pheight}</f:facet>
-        <f:facet name="controls">
-          <h:panelGroup>
-            <h:graphicImage
-              styleClass="close-btn"
-              onclick="RichFaces.$(#{termoAdesaoAction.termoAdesaoPanelName}).hide();"
-              value="#{a4jSkin.imgFolder}/closeMP.gif" />
-          </h:panelGroup>
-        </f:facet>
-        <h:form id="termoAdesaoForm">
-          <a:jsFunction
-            name="assinarTermo"
-            action="#{termoAdesaoAction.assinarTermoAdesao(termoAdesaoAction.certChain,termoAdesaoAction.signature)}"
-            execute="@this termoAdesaoSignature termoAdesaoCertChain"
-            render="DialogMessage"
-            limitRender="true" />
-          <h:inputHidden
-            id="termoAdesaoSignature"
-            value="#{termoAdesaoAction.signature}">
-          </h:inputHidden>
-          <h:inputHidden
-            id="termoAdesaoCertChain"
-            value="#{termoAdesaoAction.certChain}">
-          </h:inputHidden>
-          <s:div
-            rendered="#{not empty termoAdesaoRequired and termoAdesaoRequired}">
-            <div>
-              <wi:editor
-                id="termoAdesao"
-                value="#{termoAdesaoAction.termoAdesao}"
-                readonly="true"
-                showVariables="false"
-                width="#{panelWidth-15}"
-                height="#{panelHeight-157}" />
-            </div>
-            <div>
-              <wi:appletAssinatura
-                id="assinarTermoAdesao"
-                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-                formId="#{rich:clientId('termoAdesaoForm')}"
-                certificationChainField="#{rich:clientId('termoAdesaoCertChain')}"
-                signatureField="#{rich:clientId('termoAdesaoSignature')}"
-                getDataFunction="infox.editor.termoAdesao.instance.getData()"
-                useBase64Function="'true'"
-                functionPreSign="infox.showLoading();"
-                functionPosSign="assinarTermo();infox.hideLoading();"
-                debug="false"
-                loginMode="false"
-                useProviderDll="false"
-                signButtonCaption="#{messages['login.assinarTermoAdesao']}">
-              </wi:appletAssinatura>
-              <input
-                class="input_button close-btn"
-                id="cancela"
-                type="button"
-                onclick="RichFaces.$(#{termoAdesaoAction.termoAdesaoPanelName}).hide();"
-                value="#{messages['login.cancelaTrocaSenhaBtn']}" />
-            </div>
-          </s:div>
         </h:form>
       </rich:popupPanel>
       <rich:popupPanel

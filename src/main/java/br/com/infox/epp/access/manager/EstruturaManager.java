@@ -29,6 +29,10 @@ public class EstruturaManager extends Manager<EstruturaDAO, Estrutura> {
         return getDao().getEstruturasDisponiveis();
     }
     
+    public Estrutura getEstruturaByNome(String nome){
+    	return getDao().getEstruturaByNome(nome);
+    }
+    
     @Override
     public Estrutura update(Estrutura o) throws DAOException {
         if (!o.getAtivo()) {

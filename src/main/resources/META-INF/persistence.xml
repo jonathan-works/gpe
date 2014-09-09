@@ -7,9 +7,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
     version="2.0">
-
+    
     <persistence-unit name="EPAPersistenceUnit"
         transaction-type="JTA">
+        <mapping-file>META-INF/extended-mappings.xml</mapping-file>
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <jta-data-source>java:jboss/datasources/${epp.datasource.name}</jta-data-source>
         <properties>
@@ -39,7 +40,7 @@
                 value="org.apache.lucene.analysis.br.BrazilianAnalyzer" />
 
             <property name="jboss.entity.manager.factory.jndi.name"
-                value="java:app/${epp.name}/EPAPersistenceUnit" />
+                value="java:jboss/EPAPersistenceUnit" />
                 
         </properties>
     </persistence-unit>
@@ -65,7 +66,7 @@
                 value="LUCENE_36" />
 
             <property name="jboss.entity.manager.factory.jndi.name"
-                value="java:app/${epp.name}/EPABinPersistenceUnit" />
+                value="java:jboss/EPABinPersistenceUnit" />
                 
         </properties>
     </persistence-unit>

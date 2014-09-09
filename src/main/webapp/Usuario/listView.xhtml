@@ -158,7 +158,9 @@
         id="usuarioPessoaFisicaList"
         rowId="#{row.idPessoa}"
         listReRender="divGridLU"
-        hideOrder="true">
+        hideOrder="true"
+        showSearchForm="false"
+        panelStyleClass="full-sized short-margin-top">
         <ui:define name="headerToolBar" />
         <ui:define name="toolBar">
           <wi:toolBar
@@ -166,7 +168,7 @@
             rendered="true"
             limitToList="true"
             status=":status"
-            render="usuarioPessoaFisica, pageBodyDialogMessage"
+            render="usuarioPessoaFisica, pageBodyDialogMessage, meioContatoList, pessoaDocumentoList"
             onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
             url="#{a4jSkin.imgFolder}/remove.png"
             title="#{messages['crud.remove']}" />
@@ -174,7 +176,11 @@
         <wi:columnOutputText
           columnId="cpf"
           columnHeader="#{messages['pessoaFisica.cpf']}"
-          value="#{row.cpf}" />
+          value="#{row.cpf}">
+          <ui:define name="outputText">
+              <f:converter converterId="cpfConverter"/>
+          </ui:define>
+        </wi:columnOutputText>
         <wi:columnOutputText
           columnId="nome"
           columnHeader="#{messages['pessoaFisica.nome']}"
@@ -183,6 +189,58 @@
           columnId="dataNascimento"
           columnHeader="#{messages['pessoaFisica.dataNascimento']}"
           value="#{row.dataNascimento}" />
+      </wi:dataTable>
+      <wi:dataTable
+      	bean="#{meioContatoList}"
+        values="#{meioContatoList.list(20)}"
+        tableTitle="#{messages['meioContato.title']}"
+        id="meioContatoList"
+        rowId="#{row.idMeioContato}"
+        listReRender="divGridLU"
+        hideOrder="true"
+        showSearchForm="false"
+        panelStyleClass="full-sized short-margin-top"
+        showGrid="#{not empty usuarioLoginCrudAction.instance.pessoaFisica}"
+        showToolbarColumn="false">
+        <ui:define name="toolBar" />
+        <wi:columnOutputText
+          columnId="tipoMeioContato"
+          columnHeader="#{messages['meioContato.tipoMeioContato']}"
+          value="#{row.tipoMeioContato.label}" />
+        <wi:columnOutputText
+          columnId="meioContato"
+          columnHeader="#{messages['meioContato.meioContato']}"
+          value="#{row.meioContato}" />
+      </wi:dataTable>
+      <wi:dataTable
+      	bean="#{pessoaDocumentoList}"
+        values="#{pessoaDocumentoList.list(20)}"
+        tableTitle="#{messages['pessoaDocumento.title']}"
+        id="pessoaDocumentoList"
+        rowId="#{row.idPessoaDocumento}"
+        listReRender="divGridLU"
+        hideOrder="true"
+        showSearchForm="false"
+        panelStyleClass="full-sized short-margin-top"
+        showGrid="#{not empty usuarioLoginCrudAction.instance.pessoaFisica}"
+        showToolbarColumn="false">
+        <ui:define name="toolBar" />
+        <wi:columnOutputText
+          columnId="tipoDocumento"
+          columnHeader="#{messages['pessoaDocumento.tipoDocumento']}"
+          value="#{row.tipoDocumento.label}" />
+        <wi:columnOutputText
+          columnId="documento"
+          columnHeader="#{messages['pessoaDocumento.documento']}"
+          value="#{row.documento}" />
+        <wi:columnOutputText
+          columnId="orgaoEmissor"
+          columnHeader="#{messages['pessoaDocumento.orgaoEmissor']}"
+          value="#{row.orgaoEmissor}" />
+        <wi:columnDateTime
+          columnId="dataEmissao"
+          columnHeader="#{messages['pessoaDocumento.dataEmissao']}"
+          value="#{row.dataEmissao}" />
       </wi:dataTable>
     </infox:tab>
     <infox:tab
@@ -229,7 +287,8 @@
           bean="#{usuarioPerfilEntityList}"
           tableTitle="#{messages['usuario.profiles']} #{usuarioLoginCrudAction.instance}"
           var="row"
-          rows="10">
+          rows="10"
+          panelStyleClass="full-sized">
           <ui:define name="headerToolBar" />
           <ui:define name="toolBar">
             <wi:toolBar
@@ -241,14 +300,14 @@
               onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
               id="removeButton" />
           </ui:define>
-          <wi:columnOutputText
-            columnId="perfil.descricao"
-            columnHeader="#{messages['perfil.descricao']}"
-            value="#{row.perfilTemplate.descricao}" />
           <wi:columnOutputText 
             columnId="localizacao"
             columnHeader="#{messages['usuarioPerfil.localizacao']}"
             value="#{row.localizacao}"/>
+          <wi:columnOutputText
+            columnId="perfil.descricao"
+            columnHeader="#{messages['usuarioPerfil.perfil']}"
+            value="#{row.perfilTemplate.descricao}" />
           <wi:columnBoolean
             columnId="responsavelLocalizacao"
             columnHeader="#{messages['perfil.responsavelLocalizacao']}"

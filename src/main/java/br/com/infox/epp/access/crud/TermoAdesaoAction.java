@@ -15,11 +15,10 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.core.Events;
+import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jboss.seam.security.Identity;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
@@ -87,9 +86,11 @@ public class TermoAdesaoAction implements Serializable {
                 pessoaFisica.setTermoAdesao(bin);
             }
             processoDocumentoBinManager.flush();
-            final Events events = Events.instance();
-            events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
-            events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
+            Redirect r = Redirect.instance();
+            r.setViewId("/Painel/list.seam");
+            r.setConversationPropagationEnabled(false);
+            r.setParameter("cid", null);
+            r.execute();
         } catch (final CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);

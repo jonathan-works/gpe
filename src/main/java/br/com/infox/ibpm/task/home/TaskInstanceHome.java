@@ -94,6 +94,7 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
     private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
+    private Map<String, TipoProcessoDocumento> classificacoesVariaveisUpload;
     @In
     private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
     @In
@@ -126,6 +127,7 @@ public class TaskInstanceHome implements Serializable {
                     .getProcessInstance());
             mapaDeVariaveis = new HashMap<String, Object>();
             documentosAssinaveis = new HashMap<>();
+            classificacoesVariaveisUpload = new HashMap<>();
             retrieveVariables();
         }
     }
@@ -167,6 +169,15 @@ public class TaskInstanceHome implements Serializable {
             }
             documentosAssinaveis.put(getFieldName(variableRetriever.getName()),
                     dados);
+        } else if (variableRetriever.isVariableType(VariableType.FILE)) {
+            Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
+            if (id != null) {
+                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+                ProcessoDocumento pd = processoDocumentoManager.find(id);
+                classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), pd.getTipoProcessoDocumento());
+            } else {
+                classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), null);
+            }
         }
         setModeloWhenExists(variableRetriever);
     }
@@ -743,6 +754,10 @@ public class TaskInstanceHome implements Serializable {
     private String getFieldName(String name) {
         return name + "-" + taskInstance.getId();
     }
+    
+    public String getVariableName(String fieldName) {
+        return fieldName.split("-")[0];
+    }
 
     public void setUrlRetornoAcessoExterno(URL urlRetornoAcessoExterno) {
         this.urlRetornoAcessoExterno = urlRetornoAcessoExterno;
@@ -809,5 +824,23 @@ public class TaskInstanceHome implements Serializable {
 
     public Map<String, DadosDocumentoAssinavel> getDocumentosAssinaveis() {
         return documentosAssinaveis;
+    }
+    
+    public Map<String, TipoProcessoDocumento> getClassificacoesVariaveisUpload() {
+        return classificacoesVariaveisUpload;
+    }
+    
+    @SuppressWarnings(UNCHECKED)
+    public Object getValueOfVariableFromTaskInstance(String variableName) {
+        TaskController taskController = taskInstance.getTask().getTaskController();
+        if (taskController != null) {
+            List<VariableAccess> variables = taskController.getVariableAccesses();
+            for (VariableAccess variable : variables) {
+                if (variable.getVariableName().equals(variableName)) {
+                    return taskInstance.getVariable(variable.getMappedName());
+                }
+            }
+        }
+        return null;
     }
 }

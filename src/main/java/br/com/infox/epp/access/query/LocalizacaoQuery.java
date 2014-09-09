@@ -18,6 +18,7 @@ public interface LocalizacaoQuery {
     String QUERY_PARAM_ID_LOCALIZACAO = "idLocalizacao";
     String QUERY_PARAM_ESTRUTURA_PAI = "estruturaPai";
     String QUERY_PARAM_CAMINHO_COMPLETO = "caminhoCompleto";
+    String QUERY_PARAM_LOCALIZACAO = "localizacao";
 
     String LOCALIZACOES_BY_IDS = "Localizacao.localizacoesByIds";
     String LOCALIZACOES_BY_IDS_QUERY = "select o from Localizacao o where o.idLocalizacao in :"
@@ -39,6 +40,9 @@ public interface LocalizacaoQuery {
             + " o.caminhoCompleto = :" + QUERY_PARAM_CAMINHO_COMPLETO;
     
     String PART_FILTER_BY_LOCALIZACAO = " and o.idLocalizacao <> :" + QUERY_PARAM_ID_LOCALIZACAO;
+    
+    String LOCALIZACAO_DENTRO_ESTRUTURA = "Localizacao.localizacaoDentroEstrutura";
+    String LOCALIZACAO_DENTRO_ESTRUTURA_QUERY = "select o from Localizacao o where o.estruturaPai is not null and o.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
     
     String USOS_DA_HIERARQUIA_LOCALIZACAO = "Localizacao.usosHierarquiaLocalizacao";
     String USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY = 
@@ -84,5 +88,12 @@ public interface LocalizacaoQuery {
         "SELECT 'UDM' AS tipo FROM tb_uni_decisora_monocratica und " +
         "INNER JOIN tb_localizacao l ON (und.id_localizacao = l.id_localizacao) " +
         "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" +
+        
+        "UNION " +
+
+        "SELECT 'UDC' AS tipo FROM tb_uni_decisora_colegiada und " +
+        "INNER JOIN tb_localizacao l ON (und.id_localizacao = l.id_localizacao) " +
+        "WHERE l.ds_caminho_completo like concat(:" + QUERY_PARAM_CAMINHO_COMPLETO + ", '%')" +
+        
         ") a ";
 }

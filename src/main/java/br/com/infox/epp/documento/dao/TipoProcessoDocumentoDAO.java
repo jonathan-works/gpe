@@ -58,5 +58,4 @@ public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento> {
         parameters.put(CODIGO_DOCUMENTO_PARAM, codigo);
         return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, parameters);
     }
-
 }

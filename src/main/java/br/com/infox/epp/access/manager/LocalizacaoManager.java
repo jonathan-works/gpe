@@ -75,6 +75,7 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
             }
             RecursiveManager.refactor(o);
         } catch (RecursiveException e) {
+            refresh(o);
             throw new DAOException(e);
         }
         o = super.update(o);
@@ -121,6 +122,14 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
                 invalid = true;
             }
         }
+        if (usos.contains(TipoUsoLocalizacaoEnum.UDC)) {
+            if (invalid) {
+                msg = MessageFormat.format(msg, ", unidade decisora colegiada");
+            } else {
+                msg = MessageFormat.format(msg, "unidade decisora colegiada");
+                invalid = true;
+            }
+        }
         
         if (invalid) {
             msg = msg.replace("{0}", "");
@@ -131,5 +140,8 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     public Localizacao getLocalizacaoByEstruturaPaiName(String nomeEstruturaPai) {
         return getDao().getlocalizacaoByNomeEstruturaPai(nomeEstruturaPai);
     }
-
+    
+    public Localizacao getLocalizacaoDentroEstrutura(String nomeLocalizacao) {
+        return getDao().getLocalizacaoDentroEstrutura(nomeLocalizacao);
+    }
 }

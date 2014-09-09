@@ -132,6 +132,20 @@ public class TaskInstanceView implements Serializable {
                             ff.getProperties().put("items", selectItens);
                         }
                             break;
+                        case FILE:
+                        {
+                            ff.setType(type.name());
+                            ff.getProperties().put("readonly", true);
+                            if (value != null) {
+                                ProcessoDocumento documento = processoDocumentoManager().find(value);
+                                ff.setValue(documento.getProcessoDocumento());
+                                ff.getProperties().put("classificacaoDocumento", documento.getTipoProcessoDocumento().getTipoProcessoDocumento());
+                            } else {
+                                ff.setValue("(sem anexo)");
+                                ff.getProperties().put("classificacaoDocumento", "(sem anexo)");
+                            }
+                        }
+                        break;
                         default:
                         {
                             ff.setType(type.name());

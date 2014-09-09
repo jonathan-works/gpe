@@ -21,9 +21,9 @@ public final class StringUtil {
         }
     }
 
-    public static String concatList(List<Object> list, String delimitador) {
+    public static <E> String concatList(List<E> list, String delimitador) {
         StringBuilder sb = new StringBuilder();
-        for (Object object : list) {
+        for (E object : list) {
             if (sb.length() > 0) {
                 sb.append(delimitador);
             }
@@ -31,5 +31,5 @@ public final class StringUtil {
         }
         return sb.toString();
     }
-
+    
 }

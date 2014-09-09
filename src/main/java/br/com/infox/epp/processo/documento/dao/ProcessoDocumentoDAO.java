@@ -8,6 +8,7 @@ import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.N
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_TIPO_NUMERACAO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.USUARIO_PARAM;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,6 +84,12 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
 
     protected FullTextEntityManager getFullTextEntityManager() {
         return (FullTextEntityManager) super.getEntityManager();
+    }
+    
+    public List<ProcessoDocumento> getListProcessoDocumentoByProcesso(Processo processo){
+    	Map<String, Object> params = new HashMap<>(1);
+    	params.put(PARAM_PROCESSO, processo);
+    	return getNamedResultList(LIST_PROCESSO_DOCUMENTO_BY_PROCESSO, params);
     }
 
     @SuppressWarnings(UNCHECKED)

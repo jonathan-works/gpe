@@ -10,4 +10,5 @@
 	<param name="tab" value="#{processBuilder.tab}"/>
 	<action execute="#{processBuilder.getPaintedGraph()}" if="#{processBuilder.tab eq 'graphTab'}"/>
 	<action execute="#{definicaoVariavelProcessoAction.setFluxo(fluxoCrudAction.instance)}" on-postback="false"/>
+    <action execute="#{variavelClassificacaoDocumentoAction.setFluxo(fluxoCrudAction.instance)}" on-postback="false"/>
 </page>

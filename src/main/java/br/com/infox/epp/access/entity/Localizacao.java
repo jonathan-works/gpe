@@ -13,6 +13,8 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCE
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
@@ -61,7 +63,8 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 @NamedQueries(value = {
     @NamedQuery(name = LIST_BY_NOME_ESTRUTURA_PAI, query = LIST_BY_NOME_ESTRUTURA_PAI_QUERY),
     @NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY),
-    @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY)
+    @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY),
+    @NamedQuery(name = LOCALIZACAO_DENTRO_ESTRUTURA, query = LOCALIZACAO_DENTRO_ESTRUTURA_QUERY)
 })
 @NamedNativeQueries({
     @NamedNativeQuery(name = USOS_DA_HIERARQUIA_LOCALIZACAO, query = USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY)

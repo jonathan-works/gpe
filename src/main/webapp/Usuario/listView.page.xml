@@ -16,6 +16,12 @@
   <action
     execute="#{usuarioPessoaFisicaList.setUsuario(usuarioLoginCrudAction.instance)}"
     if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica'}" />
+  <action
+    execute="#{meioContatoList.setPessoa(usuarioLoginCrudAction.instance.pessoaFisica)}"
+    if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica' and not empty usuarioLoginCrudAction.instance.pessoaFisica}" />
+  <action
+    execute="#{pessoaDocumentoList.setPessoa(usuarioLoginCrudAction.instance.pessoaFisica)}"
+    if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica' and not empty usuarioLoginCrudAction.instance.pessoaFisica}" />
 
   <action
     execute="#{usuarioPerfilCrudAction.setUsuarioLogin(usuarioLoginCrudAction.instance)}"

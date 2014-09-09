@@ -19,6 +19,7 @@ import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -39,10 +40,12 @@ import br.com.infox.seam.util.ComponentUtil;
 public class QuartzJobsInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging.getLogProvider(QuartzJobsInfo.class);
+    private static final LogProvider LOG = Logging
+            .getLogProvider(QuartzJobsInfo.class);
     public static final String NAME = "quartzJobsInfo";
 
-    private static Pattern patternExpr = Pattern.compile("^AsynchronousInvocation\\((.*)\\)$");
+    private static Pattern patternExpr = Pattern
+            .compile("^AsynchronousInvocation\\((.*)\\)$");
 
     public static Scheduler getScheduler() {
         return QuartzDispatcher.instance().getScheduler();
@@ -58,7 +61,8 @@ public class QuartzJobsInfo implements Serializable {
                 maps.addAll(mapInfoGroup);
             }
         } catch (SchedulerException e) {
-            FacesMessages.instance().add(Severity.ERROR, "Erro ao obter os detalhes dos jobs do quartz.", e);
+            FacesMessages.instance().add(Severity.ERROR,
+                    Messages.instance().get("quartz.error.retrieveData"), e);
         }
         return maps;
     }
@@ -70,7 +74,8 @@ public class QuartzJobsInfo implements Serializable {
         List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
         for (String jobName : jobNames) {
             JobDetail jobDetail = scheduler.getJobDetail(jobName, groupName);
-            Trigger[] triggersOfJob = scheduler.getTriggersOfJob(jobName, groupName);
+            Trigger[] triggersOfJob = scheduler.getTriggersOfJob(jobName,
+                    groupName);
             for (Trigger trigger : triggersOfJob) {
                 maps.add(getTrigerDetailMap(jobDetail, trigger));
             }
@@ -133,7 +138,8 @@ public class QuartzJobsInfo implements Serializable {
 
     private boolean isMethodValid(Object component, String medothName) {
         try {
-            component.getClass().getDeclaredMethod(medothName, Date.class, String.class);
+            component.getClass().getDeclaredMethod(medothName, Date.class,
+                    String.class);
             return true;
         } catch (Exception e) {
             LOG.error(".isMethodValid(component, medothName)", e);
@@ -150,11 +156,11 @@ public class QuartzJobsInfo implements Serializable {
     public void triggerJob(String jobName, String groupName) {
         try {
             getScheduler().triggerJob(jobName, groupName);
-            FacesMessages.instance().add(Severity.INFO, "Job executado com sucesso: "
-                    + jobName);
+            FacesMessages.instance().add(Severity.INFO,
+                    "Job executado com sucesso: " + jobName);
         } catch (SchedulerException e) {
-            FacesMessages.instance().add(Severity.ERROR, "Erro ao executar job "
-                    + jobName, e);
+            FacesMessages.instance().add(Severity.ERROR,
+                    "Erro ao executar job " + jobName, e);
             LOG.error(".triggerJob()", e);
         }
     }
@@ -162,11 +168,11 @@ public class QuartzJobsInfo implements Serializable {
     public void deleteJob(String jobName, String groupName) {
         try {
             getScheduler().deleteJob(jobName, groupName);
-            FacesMessages.instance().add(Severity.INFO, "Job removido com sucesso: "
-                    + jobName);
+            FacesMessages.instance().add(Severity.INFO,
+                    "Job removido com sucesso: " + jobName);
         } catch (SchedulerException e) {
-            FacesMessages.instance().add(Severity.ERROR, "Erro ao remover job "
-                    + jobName, e);
+            FacesMessages.instance().add(Severity.ERROR,
+                    "Erro ao remover job " + jobName, e);
             LOG.error(".deleteJob()", e);
         }
     }

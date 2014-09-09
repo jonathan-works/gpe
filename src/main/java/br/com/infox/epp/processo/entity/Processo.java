@@ -30,9 +30,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_C
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.CascadeType.REFRESH;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP_QUERY;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static javax.persistence.TemporalType.TIMESTAMP;
@@ -41,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -74,7 +74,8 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
     @NamedNativeQuery(name = ATUALIZAR_PROCESSOS, query = ATUALIZAR_PROCESSOS_QUERY),
     @NamedNativeQuery(name = ANULA_TODOS_OS_ACTOR_IDS, query = ANULA_TODOS_OS_ACTOR_IDS_QUERY),
     @NamedNativeQuery(name = MOVER_PROCESSO_PARA_CAIXA, query = MOVER_PROCESSO_PARA_CAIXA_QUERY),
-    @NamedNativeQuery(name = ANULA_ACTOR_ID, query = ANULA_ACTOR_ID_QUERY) })
+    @NamedNativeQuery(name = ANULA_ACTOR_ID, query = ANULA_ACTOR_ID_QUERY),
+    @NamedNativeQuery(name = REMOVER_PROCESSO_JBMP, query = REMOVER_PROCESSO_JBMP_QUERY)})
 @NamedQueries(value = {
     @NamedQuery(name = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
     @NamedQuery(name = MOVER_PROCESSOS_PARA_CAIXA, query = MOVER_PROCESSOS_PARA_CAIXA_QUERY) })
@@ -165,10 +166,9 @@ public class Processo implements java.io.Serializable {
         this.duracao = duracao;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = PROCESSO_ATTRIBUTE)
+    @OneToMany(fetch = LAZY, mappedBy = PROCESSO_ATTRIBUTE, cascade={CascadeType.REMOVE})
     @OrderBy("dataInclusao DESC")
     public List<ProcessoDocumento> getProcessoDocumentoList() {
-
         return this.processoDocumentoList;
     }
 

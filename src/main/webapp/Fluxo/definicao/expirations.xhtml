@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+>
+
+    <ui:param name="task" value="#{taskFitter.currentTask}" />
+    
+    <rich:panel bodyClass="panel" header="Datas de Expiração" id="expirationPanel">
+        <rich:dataTable value="#{task.expirations}" var="row" styleClass="dtable-p rf-dt-crud" id="expirationTable" 
+            rendered="#{not empty task.expirations}">
+            <rich:column>
+                <h:form>
+                    <a:commandLink action="#{task.removeExpiration(row)}" execute="@this" render="expirationPanel" limitRender="true">
+                        <h:graphicImage url="#{a4jSkin.imgFolder}/remove.png" title="#{messages['button.delete']}" />
+                    </a:commandLink>
+                </h:form>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">#{eppmessages['process.expiration.expirationDate']}</f:facet>
+                <h:outputText value="#{row.expiration}">
+                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                </h:outputText>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">#{eppmessages['process.expiration.transition']}</f:facet>
+                <h:outputText value="#{row.transition}" />
+            </rich:column>
+        </rich:dataTable>
+        <div />
+        <h:form id="expirationForm">
+            <wi:inputDate id="expirationDate" value="#{task.currentExpiration.expiration}" required="true" future="true" 
+                label="#{eppmessages['process.expiration.expirationDate']}">
+                <a:ajax event="change" execute="@this" render="expirationDateDecoration, pageBodyDialogMessage" limitRender="true" />
+            </wi:inputDate>
+            <wi:selectOneMenu id="transition" value="#{task.currentExpiration.transition}"
+                label="#{eppmessages['process.expiration.transition']}" items="#{task.transitions}" 
+                showLabelSelecione="true" required="true">
+                <a:ajax event="change"  execute="@this" render="transitionDecoration, pageBodyDialogMessage" limitRender="true" />
+            </wi:selectOneMenu>
+            <div />
+            <wi:commandButton id="gravarExpiration" action="taskFitter.currentTask.addExpiration" 
+                value="#{eppmessages['process.expiration.incluir']}" reRender="expirationPanel"/>
+        </h:form>
+    </rich:panel>
+</ui:composition>

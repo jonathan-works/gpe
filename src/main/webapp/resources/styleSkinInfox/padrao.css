@@ -3,6 +3,10 @@
   padding-top: 5px;
 }
 
+.padding-top-10 {
+  padding-top: 10px;
+}
+
 .tree-p.rf-cp.rf-tgp {
   border-color: #fff;
   display: inline-table;
@@ -299,6 +303,10 @@ h1 {
 .opacityHover:hover {
   opacity: 1;
   cursor: pointer;
+}
+
+.pointerRow:hover {
+	cursor: pointer;
 }
 
 img.disabled {

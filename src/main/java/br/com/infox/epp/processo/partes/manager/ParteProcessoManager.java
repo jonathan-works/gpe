@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.pessoa.entity.Pessoa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.dao.ParteProcessoDAO;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
@@ -19,6 +20,10 @@ public class ParteProcessoManager extends Manager<ParteProcessoDAO, ParteProcess
 
     public void incluir(ProcessoEpa processoEpa, Pessoa pessoa) throws DAOException {
         persist(new ParteProcesso(processoEpa, pessoa));
+    }
+    
+    public ParteProcesso getParteProcessoByPessoaProcesso(Pessoa pessoa, Processo processo){
+    	return getDao().getParteProcessoByPessoaProcesso(pessoa, processo);
     }
 
 }

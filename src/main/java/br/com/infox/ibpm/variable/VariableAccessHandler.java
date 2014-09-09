@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.ServletLifecycle;
+import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
@@ -34,6 +35,7 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -43,6 +45,7 @@ import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
 
+    public static final String EVENT_JBPM_VARIABLE_NAME_CHANGED = "jbpmVariableNameChanged";
     private static final String COMMA = ",";
     private static final long serialVersionUID = -4113688503786103974L;
     private static final String PREFIX = "#{modeloDocumento.set('";
@@ -122,6 +125,7 @@ public class VariableAccessHandler implements Serializable {
             if (VariableType.PAGE.equals(type) && !pageExists(auxiliarName)) {
                 return;
             }
+            Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getFluxo().getIdFluxo(), this.name, auxiliarName);
             this.name = auxiliarName;
             ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
             ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"

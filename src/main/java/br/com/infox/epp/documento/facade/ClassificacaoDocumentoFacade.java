@@ -14,6 +14,7 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 
 @Name(ClassificacaoDocumentoFacade.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -21,6 +22,8 @@ public class ClassificacaoDocumentoFacade {
 
     @In
     TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
+    @In
+    private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
 
     public static final String NAME = "classificacaoDocumentoFacade";
 
@@ -40,9 +43,15 @@ public class ClassificacaoDocumentoFacade {
         return TipoAssinaturaEnum.values();
     }
 
-    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(
-            boolean isModelo) {
+    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
+        List<TipoProcessoDocumento> classificacoes = variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
+        if (!classificacoes.isEmpty()) {
+            return classificacoes;
+        }
+        return getUseableTipoProcessoDocumento(isModelo);
+    }
+    
+    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo) {
         return tipoProcessoDocumentoManager.getUseableTipoProcessoDocumento(isModelo, Authenticator.getPapelAtual());
     }
-
 }

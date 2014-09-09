@@ -34,6 +34,7 @@ public class ProcessoDocumentoBinManager extends Manager<ProcessoDocumentoBinDAO
     
     public ProcessoDocumentoBin createProcessoDocumentoBin(final String tituloDocumento, final String conteudo) throws DAOException {
         ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
+        bin.setNomeArquivo(tituloDocumento);
         bin.setModeloDocumento(conteudo);
         bin.setMd5Documento(MD5Encoder.encode(conteudo));
         entityManager.persist(bin);

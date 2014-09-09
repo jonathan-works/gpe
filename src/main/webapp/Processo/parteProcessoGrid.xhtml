@@ -19,7 +19,7 @@
     <s:div id="parteProcessoListDiv" styleClass="padding-top-5">
         <wi:dataTable id="partesFisicasTable"
             values="#{partesProcessoController.partesFisicas}"
-            tableTitle="#{messages['parteFisicaProcesso.tableTitle']}">
+            tableTitle="#{messages['partesFisicas.titleTable']}">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBar
@@ -38,7 +38,11 @@
                 value="#{row.pessoa.nome}" />
             <wi:columnOutputText columnId="cpf"
                 columnHeader="#{messages['parteProcesso.cpf']}"
-                value="#{row.pessoa.getCodigo()}" hideOrder="true" />
+                value="#{row.pessoa.getCodigo()}" hideOrder="true">
+                <ui:define name="outputText">
+                    <f:converter converterId="cpfConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
             <wi:columnSituacao columnId="ativo"
                 rendered="#{isUsuarioAtualResponsavel}"
                 columnHeader="#{messages['field.situacao']}"
@@ -46,7 +50,7 @@
         </wi:dataTable>
         <wi:dataTable id="partesJuridicasTable"
             values="#{partesProcessoController.partesJuridicas}"
-            tableTitle="#{messages['parteJuridicaProcesso.tableTitle']}">
+            tableTitle="#{messages['partesJuridicas.titleTable']}">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBar
@@ -65,7 +69,11 @@
                 value="#{row.pessoa.nome}" />
             <wi:columnOutputText columnId="cnpj"
                 columnHeader="#{messages['parteProcesso.cnpj']}"
-                value="#{row.pessoa.getCodigo()}" hideOrder="true" />
+                value="#{row.pessoa.getCodigo()}" hideOrder="true">
+                <ui:define name="outputText">
+                    <f:converter converterId="cnpjConverter"/>
+                </ui:define>
+            </wi:columnOutputText>
             <wi:columnSituacao columnId="ativo"
                 rendered="#{isUsuarioAtualResponsavel}"
                 columnHeader="#{messages['field.situacao']}"

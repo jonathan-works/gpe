@@ -24,7 +24,8 @@ import br.com.infox.epp.access.query.EstruturaQuery;
 @Entity
 @Table(name = EstruturaQuery.TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name = EstruturaQuery.ESTRUTURAS_DISPONIVEIS, query = EstruturaQuery.ESTRUTURAS_DISPONIVEIS_QUERY)
+    @NamedQuery(name = EstruturaQuery.ESTRUTURAS_DISPONIVEIS, query = EstruturaQuery.ESTRUTURAS_DISPONIVEIS_QUERY),
+    @NamedQuery(name = EstruturaQuery.ESTRUTURA_BY_NOME, query = EstruturaQuery.ESTRUTURA_BY_NOME_QUERY)
 })
 public class Estrutura implements Serializable {
 

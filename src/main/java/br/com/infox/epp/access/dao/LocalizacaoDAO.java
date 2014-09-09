@@ -1,6 +1,6 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_CAMINHO_COMPLETO_DUPLICADO_QUERY;
@@ -110,4 +110,9 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         return getNamedSingleResult(LIST_BY_NOME_ESTRUTURA_PAI, params);
     }
 
+    public Localizacao getLocalizacaoDentroEstrutura(String nomeLocalizacao) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(QUERY_PARAM_LOCALIZACAO, nomeLocalizacao);
+        return getNamedSingleResult(LOCALIZACAO_DENTRO_ESTRUTURA, params);
+    }
 }

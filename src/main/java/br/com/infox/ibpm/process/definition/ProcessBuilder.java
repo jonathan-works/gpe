@@ -7,6 +7,7 @@ import static java.text.MessageFormat.format;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
+import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
@@ -103,6 +105,8 @@ public class ProcessBuilder implements Serializable {
     private FluxoManager fluxoManager;
     @In
     private RaiaPerfilManager raiaPerfilManager;
+    @In
+    private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
 
     private String id;
     private ProcessDefinition instance;
@@ -311,7 +315,6 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void update() {
         exists = true;
         if (fluxo != null) {
@@ -328,7 +331,6 @@ public class ProcessBuilder implements Serializable {
                 fluxo.setXml(xmlDef);
                 try {
                     genericManager.update(fluxo);
-                    raiaPerfilManager.atualizarRaias(fluxo, instance.getTaskMgmtDefinition().getSwimlanes());
                 } catch (DAOException e) {
                     LOG.error(".update()", e);
                 }
@@ -363,6 +365,11 @@ public class ProcessBuilder implements Serializable {
     		fluxo.setPublicado(Boolean.TRUE);
     	}
         update();
+        try {
+            deployActions();
+        } catch (DAOException e1) {
+            LOG.error(".deploy()", e1);
+        }
         if (needToPublic) {
             try {
                 JbpmUtil.getGraphSession().deployProcessDefinition(instance);
@@ -376,6 +383,44 @@ public class ProcessBuilder implements Serializable {
             }
             needToPublic = false;
         }
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    private void deployActions() throws DAOException {
+        raiaPerfilManager.atualizarRaias(fluxo, instance.getTaskMgmtDefinition().getSwimlanes());
+        
+        Integer idFluxo = fluxo.getIdFluxo();
+        List<String> variaveis = getVariaveisDocumento();
+        variavelClassificacaoDocumentoManager.removerClassificacoesDeVariaveisObsoletas(idFluxo, variaveis);
+        
+        variavelClassificacaoDocumentoManager.publicarClassificacoesDasVariaveis(idFluxo);
+    }
+
+    @SuppressWarnings(UNCHECKED)
+    private List<String> getVariaveisDocumento() {
+        List<String> variaveis = new ArrayList<>();
+        List<Node> nodes = instance.getNodes();
+        for (Node node : nodes) {
+            if (!(node instanceof TaskNode)) {
+                continue;
+            }
+            TaskNode taskNode = (TaskNode) node;
+            Set<Task> tasks = taskNode.getTasks();
+            for (Task task : tasks) {
+                if (task.getTaskController() == null) {
+                    continue;
+                }
+                List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
+                for (VariableAccess variableAccess : variableAccesses) {
+                    String[] mappedName = variableAccess.getMappedName().split(":");
+                    VariableType type = VariableType.valueOf(mappedName[0]);
+                    if (type == VariableType.EDITOR || type == VariableType.FILE) {
+                        variaveis.add(variableAccess.getVariableName());
+                    }
+                }
+            }
+        }
+        return variaveis;
     }
 
     public void clearDefinition() {

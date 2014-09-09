@@ -10,7 +10,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;

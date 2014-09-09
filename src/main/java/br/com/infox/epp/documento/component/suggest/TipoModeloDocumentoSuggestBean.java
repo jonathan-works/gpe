@@ -15,7 +15,7 @@ public class TipoModeloDocumentoSuggestBean extends AbstractSuggestBean<TipoMode
     private static final long serialVersionUID = 1L;
 
     @Override
-    public String getEjbql() {
+    public String getEjbql(String typed) {
         StringBuilder sb = new StringBuilder();
         sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idTipoModeloDocumento, o.tipoModeloDocumento) "
                 + "from TipoModeloDocumento o where lower(o.tipoModeloDocumento) ");

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.faces.component.UIComponent;
+import javax.faces.event.AbortProcessingException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -51,7 +52,18 @@ public class FileUpload implements FileUploadListener {
     public void processFileUpload(FileUploadEvent event) {
         UploadedFile file = event.getUploadedFile();
         UIComponent uploadFile = event.getComponent();
-        ProcessoDocumento processoDocumento = createDocumento(file);
+        Integer idDocumentoExistente = (Integer) TaskInstanceHome.instance().getValueOfVariableFromTaskInstance(TaskInstanceHome.instance().getVariableName(uploadFile.getId()));
+        if (idDocumentoExistente != null) {
+            try {
+                ProcessoDocumento doc = processoDocumentoManager.find(idDocumentoExistente);
+                processoDocumentoManager.remove(doc);
+                documentoBinManager.remove(idDocumentoExistente);
+            } catch (DAOException e) {
+                LOG.error("Erro ao remover o documento existente, com id: " + idDocumentoExistente, e);
+                throw new AbortProcessingException(e);
+            }
+        }
+        ProcessoDocumento processoDocumento = createDocumento(file, uploadFile.getId());
         try {
             processoDocumentoManager.gravarDocumentoNoProcesso(ProcessoHome.instance().getInstance(), processoDocumento);
             documentoBinManager.salvarBinario(processoDocumento.getIdProcessoDocumento(), processoDocumento.getProcessoDocumentoBin().getProcessoDocumento());
@@ -62,12 +74,12 @@ public class FileUpload implements FileUploadListener {
         TaskInstanceHome.instance().update();
     }
     
-    private ProcessoDocumento createDocumento(final UploadedFile file) {
+    private ProcessoDocumento createDocumento(final UploadedFile file, final String id) {
         ProcessoDocumento pd = new ProcessoDocumento();
         pd.setProcessoDocumento(file.getName());
         pd.setAnexo(true);
         pd.setProcessoDocumentoBin(createDocumentoBin(file));
-        pd.setTipoProcessoDocumento(tipoProcessoDocumentoManager.getClassificaoParaAcessoDireto());
+        pd.setTipoProcessoDocumento(TaskInstanceHome.instance().getClassificacoesVariaveisUpload().get(id));
         return pd;
     }
 

@@ -20,9 +20,15 @@
             <wi:columnOutputText columnId="pessoa.nome"
                 columnHeader="#{messages['parteProcesso.nome']}"
                 value="#{row.pessoa.nome}" />
-            <wi:columnOutputText columnId="codigo"
-                columnHeader="#{messages['parteProcesso.codigo']}"
-                value="#{row.pessoa.getCodigo()}" hideOrder="true" />
+            <rich:column>
+                <f:facet name="header">#{messages['parteProcesso.codigo']}</f:facet>
+                <h:outputText value="#{row.pessoa.codigo}" rendered="#{row.pessoa.tipoPessoa eq 'F'}">
+                    <f:converter converterId="cpfConverter" />
+                </h:outputText>
+                <h:outputText value="#{row.pessoa.codigo}" rendered="#{row.pessoa.tipoPessoa eq 'J'}">
+                    <f:converter converterId="cnpjConverter" />
+                </h:outputText>
+            </rich:column>
             <wi:columnOutputText columnId="pessoa.tipoPessoa"
                 columnHeader="#{messages['parteProcesso.tipoPessoa']}"
                 value="#{row.pessoa.tipoPessoa.label}" />

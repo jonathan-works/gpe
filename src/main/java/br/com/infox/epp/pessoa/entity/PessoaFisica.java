@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -28,6 +29,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
@@ -35,18 +37,39 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 @Entity
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
 @PrimaryKeyJoinColumn(name = "id_pessoa_fisica", columnDefinition = "integer")
-@NamedQueries({ @NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY) })
+@NamedQueries({ 
+	@NamedQuery(name = SEARCH_BY_CPF, query = SEARCH_BY_CPF_QUERY)
+})
 public class PessoaFisica extends Pessoa {
+	
     public static final String EVENT_LOAD = "evtCarregarPessoaFisica";
     public static final String TABLE_NAME = "tb_pessoa_fisica";
     private static final long serialVersionUID = 1L;
 
+    @NotNull
+    @Size(max = LengthConstants.NUMERO_CPF)
+    @Column(name = "nr_cpf", nullable = false, unique = true)
     private String cpf;
+    
+    @NotNull
+    @Column(name = "dt_nascimento", nullable = false)
     private Date dataNascimento;
+    
+    @Basic(fetch = LAZY)
+    @Column(name = "ds_cert_chain")
     private String certChain;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
     private ProcessoDocumentoBin termoAdesao;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "st_estado_civil")
     private EstadoCivilEnum estadoCivil;
-
+    
+    @OneToOne(fetch = LAZY, mappedBy = "pessoaFisica")
+    private UsuarioLogin usuarioLogin;
+    
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
     }
@@ -68,9 +91,6 @@ public class PessoaFisica extends Pessoa {
     	}
     }
 
-    @Column(name = "nr_cpf", nullable = false, unique = true)
-    @Size(max = LengthConstants.NUMERO_CPF)
-    @NotNull
     public String getCpf() {
         return cpf;
     }
@@ -79,8 +99,6 @@ public class PessoaFisica extends Pessoa {
         this.cpf = cpf;
     }
 
-    @Column(name = "dt_nascimento", nullable = false)
-    @NotNull
     public Date getDataNascimento() {
         return dataNascimento;
     }
@@ -89,8 +107,6 @@ public class PessoaFisica extends Pessoa {
         this.dataNascimento = dataNascimento;
     }
 
-    @Column(name = "ds_cert_chain")
-    @Basic(fetch = LAZY)
     public String getCertChain() {
         return certChain;
     }
@@ -99,7 +115,31 @@ public class PessoaFisica extends Pessoa {
         this.certChain = certChain;
     }
 
-    @Transient
+    public ProcessoDocumentoBin getTermoAdesao() {
+        return termoAdesao;   
+    }
+
+    public void setTermoAdesao(ProcessoDocumentoBin termoAdesao) {
+        this.termoAdesao = termoAdesao;
+    }
+
+	public EstadoCivilEnum getEstadoCivil() {
+		return estadoCivil;
+	}
+
+	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+	
+	public UsuarioLogin getUsuarioLogin() {
+		return usuarioLogin;
+	}
+
+	public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
+		this.usuarioLogin = usuarioLogin;
+	}
+
+	@Transient
     public String getDataFormatada() {
         return DateFormat.getDateInstance().format(dataNascimento);
     }
@@ -108,7 +148,7 @@ public class PessoaFisica extends Pessoa {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+        result = prime * result + ((getCpf() == null) ? 0 : getCpf().hashCode());
         return result;
     }
 
@@ -139,31 +179,11 @@ public class PessoaFisica extends Pessoa {
     public String getCodigo() {
         return getCpf();
     }
-
+    
     public boolean checkCertChain(String certChain) {
         if (certChain == null) {
             throw new IllegalArgumentException("O parâmetro não deve ser nulo");
         }
         return StringUtil.replaceQuebraLinha(certChain).equals(StringUtil.replaceQuebraLinha(this.certChain));
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
-    public ProcessoDocumentoBin getTermoAdesao() {
-        return termoAdesao;   
-    }
-
-    public void setTermoAdesao(ProcessoDocumentoBin termoAdesao) {
-        this.termoAdesao = termoAdesao;
-    }
-
-    @Column(name = "st_estado_civil")
-    @Enumerated(EnumType.STRING)
-	public EstadoCivilEnum getEstadoCivil() {
-		return estadoCivil;
-	}
-
-	public void setEstadoCivil(EstadoCivilEnum estadoCivil) {
-		this.estadoCivil = estadoCivil;
-	}
 }

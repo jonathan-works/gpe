@@ -46,7 +46,8 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 @NamedQueries({
     @NamedQuery(name = LIST_TIPO_PROCESSO_DOCUMENTO, query = LIST_TIPO_PROCESSO_DOCUMENTO_QUERY),
     @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY),
-    @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_USEABLE, query = TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY) })
+    @NamedQuery(name = TIPO_PROCESSO_DOCUMENTO_USEABLE, query = TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY) 
+})
 public class TipoProcessoDocumento implements java.io.Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -230,7 +231,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         int result = 1;
         result = prime
                 * result
-                + ((idTipoProcessoDocumento == null) ? 0 : idTipoProcessoDocumento.hashCode());
+                + ((getIdTipoProcessoDocumento() == null) ? 0 : getIdTipoProcessoDocumento().hashCode());
         return result;
     }
 
@@ -246,11 +247,11 @@ public class TipoProcessoDocumento implements java.io.Serializable {
             return false;
         }
         TipoProcessoDocumento other = (TipoProcessoDocumento) obj;
-        if (idTipoProcessoDocumento == null) {
+        if (getIdTipoProcessoDocumento() == null) {
             if (other.getIdTipoProcessoDocumento() != null) {
                 return false;
             }
-        } else if (!idTipoProcessoDocumento.equals(other.getIdTipoProcessoDocumento())) {
+        } else if (!getIdTipoProcessoDocumento().equals(other.getIdTipoProcessoDocumento())) {
             return false;
         }
         return true;

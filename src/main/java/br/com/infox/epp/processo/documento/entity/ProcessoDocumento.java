@@ -6,11 +6,15 @@ import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.L
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_QUERY;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL_QUERY;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,6 +45,9 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
+import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 
 /**
@@ -52,37 +59,83 @@ import br.com.infox.epp.processo.entity.Processo;
 @NamedQueries({
     @NamedQuery(name = LIST_ANEXOS_PUBLICOS, query = LIST_ANEXOS_PUBLICOS_QUERY),
     @NamedQuery(name = NEXT_SEQUENCIAL, query = NEXT_SEQUENCIAL_QUERY),
-    @NamedQuery(name = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO, query = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY)
+    @NamedQuery(name = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO, query = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY),
+    @NamedQuery(name = LIST_PROCESSO_DOCUMENTO_BY_PROCESSO, query = LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY)
 })
 @Indexed(index="IndexProcessoDocumento")
 public class ProcessoDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long idJbpmTask;
-    private int idProcessoDocumento;
-    private TipoProcessoDocumento tipoProcessoDocumento;
-    private ProcessoDocumentoBin processoDocumentoBin;
-    private UsuarioLogin usuarioInclusao;
-    private Processo processo;
-    private String processoDocumento;
-    private Date dataInclusao = new Date();
-    private Integer numeroDocumento;
-    private Boolean ativo = Boolean.TRUE;
-    private Boolean documentoSigiloso = Boolean.FALSE;
-    private Boolean anexo = Boolean.FALSE;
-    private Papel papel;
-    private UsuarioLogin usuarioAlteracao;
-    private Localizacao localizacao;
-
-    public ProcessoDocumento() {
-    }
-
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_processo_documento")
     @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_processo_documento")
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_documento", unique = true, nullable = false)
     @NotNull
+    private int idProcessoDocumento;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
+    private TipoProcessoDocumento tipoProcessoDocumento;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
+    private ProcessoDocumentoBin processoDocumentoBin;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario_inclusao")
+    private UsuarioLogin usuarioInclusao;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_processo", nullable = false)
+    private Processo processo;
+    
+    @NotNull
+    @Size(max = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = "ds_processo_documento", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
+    private String processoDocumento;
+    
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_inclusao", nullable = false)
+    private Date dataInclusao = new Date();
+    
+    @Column(name = "nr_documento", nullable = true)
+    private Integer numeroDocumento;
+    
+    @NotNull
+    @Column(name = "in_ativo", nullable = false)
+    private Boolean ativo = Boolean.TRUE;
+    
+    @NotNull
+    @Column(name = "in_documento_sigiloso", nullable = false)
+    private Boolean documentoSigiloso = Boolean.FALSE;
+    
+    @NotNull
+    @Column(name = "in_anexo", nullable = false)
+    private Boolean anexo = Boolean.FALSE;
+    
+    @Column(name = "id_jbpm_task")
+    private Long idJbpmTask;
+    
+    @JoinColumn(name = "id_papel")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Papel papel;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario_alteracao")
+    private UsuarioLogin usuarioAlteracao;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_localizacao")
+    private Localizacao localizacao;
+    
+    public ProcessoDocumento() {
+    }
+
     public int getIdProcessoDocumento() {
         return this.idProcessoDocumento;
     }
@@ -91,9 +144,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.idProcessoDocumento = idProcessoDocumento;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
-    @NotNull
     public TipoProcessoDocumento getTipoProcessoDocumento() {
         return this.tipoProcessoDocumento;
     }
@@ -103,7 +153,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.tipoProcessoDocumento = tipoProcessoDocumento;
     }
 
-    @Column(name = "nr_documento", nullable = true)
     public Integer getNumeroDocumento() {
         return this.numeroDocumento;
     }
@@ -112,9 +161,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.numeroDocumento = numeroDocumento;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
-    @NotNull
     public ProcessoDocumentoBin getProcessoDocumentoBin() {
         return this.processoDocumentoBin;
     }
@@ -124,8 +170,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.processoDocumentoBin = processoDocumentoBin;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario_inclusao")
     public UsuarioLogin getUsuarioInclusao() {
         return this.usuarioInclusao;
     }
@@ -134,9 +178,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.usuarioInclusao = usuarioInclusao;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo", nullable = false)
-    @NotNull
     public Processo getProcesso() {
         return this.processo;
     }
@@ -145,9 +186,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.processo = processo;
     }
 
-    @Column(name = "ds_processo_documento", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
-    @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
     public String getProcessoDocumento() {
         return this.processoDocumento;
     }
@@ -156,9 +194,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.processoDocumento = processoDocumento;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "dt_inclusao", nullable = false)
-    @NotNull
     public Date getDataInclusao() {
         return this.dataInclusao;
     }
@@ -167,8 +202,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.dataInclusao = dataInclusao;
     }
 
-    @Column(name = "in_ativo", nullable = false)
-    @NotNull
     public Boolean getAtivo() {
         return this.ativo;
     }
@@ -177,8 +210,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.ativo = ativo;
     }
 
-    @Column(name = "in_documento_sigiloso", nullable = false)
-    @NotNull
     public Boolean getDocumentoSigiloso() {
         return this.documentoSigiloso;
     }
@@ -187,8 +218,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.documentoSigiloso = documentoSigiloso;
     }
 
-    @Column(name = "in_anexo", nullable = false)
-    @NotNull
     public Boolean getAnexo() {
         return anexo;
     }
@@ -202,7 +231,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         return processoDocumento;
     }
 
-    @Column(name = "id_jbpm_task")
     public Long getIdJbpmTask() {
         return idJbpmTask;
     }
@@ -211,8 +239,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.idJbpmTask = idJbpmTask;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_papel")
     public Papel getPapel() {
         return this.papel;
     }
@@ -221,8 +247,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.papel = papel;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario_alteracao")
     public UsuarioLogin getUsuarioAlteracao() {
         return this.usuarioAlteracao;
     }
@@ -231,8 +255,6 @@ public class ProcessoDocumento implements java.io.Serializable {
         this.usuarioAlteracao = usuarioAlteracao;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_localizacao")
     public Localizacao getLocalizacao() {
         return localizacao;
     }
@@ -240,7 +262,42 @@ public class ProcessoDocumento implements java.io.Serializable {
     public void setLocalizacao(Localizacao localizacao) {
         this.localizacao = localizacao;
     }
-
+    
+    public boolean isDocumentoAssinavel(Papel papel){
+    	List<TipoProcessoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
+		for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
+			if (tipoProcessoDocumentoPapel.getPapel().equals(papel) 
+					&& tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
+				return true;
+			}
+		}
+		return false;
+    }
+    
+    public boolean isDocumentoAssinavel(){
+    	List<TipoProcessoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
+		for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
+			if (tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
+				return true;
+			}
+		}
+		return false;
+    }
+    
+    public boolean isDocumentoAssinado(Papel papel){
+    	for(AssinaturaDocumento assinaturaDocumento : getProcessoDocumentoBin().getAssinaturas()){
+    		if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public boolean hasAssinatura(){
+    	return getProcessoDocumentoBin().getAssinaturas() != null && 
+    			getProcessoDocumentoBin().getAssinaturas().size() > 0;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
