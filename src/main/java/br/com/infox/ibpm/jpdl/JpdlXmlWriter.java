@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Set;
 
 import org.dom4j.Document;
@@ -49,6 +47,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.ibpm.node.DecisionNode;
+import br.com.infox.ibpm.task.handler.CustomAction;
 
 public class JpdlXmlWriter {
 
@@ -404,7 +403,7 @@ public class JpdlXmlWriter {
             	Action action = actionIter.next();
             	Delegation actionDelegation = action.getActionDelegation();
                 if (actionDelegation != null) {
-                	valid |= writeStatusProcessoAction(eventElement, action);
+                	valid |= writeCustomAction(eventElement, action);
                 } else {
                 	valid |= writeAction(eventElement, action);
                 }
@@ -415,9 +414,7 @@ public class JpdlXmlWriter {
         }
     }
 
-    private boolean writeStatusProcessoAction(Element eventElement, Action action) {
-    	boolean valid = false;
-
+    private boolean writeCustomAction(Element eventElement, Action action) {
     	Element actionElement = addElement(eventElement, "action");
     	Delegation actionDelegation = action.getActionDelegation();
     	if (action.getName() != null && actionDelegation.getClassName() != null &&
@@ -428,16 +425,19 @@ public class JpdlXmlWriter {
 	    	addAttribute(actionElement, "config-type", "constructor");
 
 	    	String configuration = actionDelegation.getConfiguration();
-	    	Pattern pattern = Pattern.compile("(<statusProcesso>\\d+</statusProcesso>)");
-			Matcher matcher = pattern.matcher(configuration);
-			if (matcher.find()) {
-				configuration = matcher.group(1);
-			}
-			actionElement.addCDATA(configuration);
-	    	
-	    	valid = true;
+	    	try {
+                Class<?> delegationClass = Class.forName(actionDelegation.getClassName());
+                if (CustomAction.class.isAssignableFrom(delegationClass)) {
+                    CustomAction customAction = (CustomAction) delegationClass.newInstance();
+                    configuration = customAction.parseJbpmConfiguration(configuration);
+                }
+                actionElement.addCDATA(configuration);
+                return true;
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                LOG.error("", e);
+            }
     	}
-		return valid;
+    	return false;
 	}
 
 	private void writeActions(Element parentElement, List<Action> actions) {

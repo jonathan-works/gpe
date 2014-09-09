@@ -19,7 +19,7 @@ import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.seam.util.ComponentUtil;
 
-public class StatusHandler implements ActionHandler {
+public class StatusHandler implements ActionHandler, CustomAction {
 
 	private static final LogProvider LOG = Logging.getLogProvider(StatusHandler.class);
 	private static final long serialVersionUID = 1L;
@@ -62,4 +62,14 @@ public class StatusHandler implements ActionHandler {
 			LOG.error("Falha na atribuição de status do processo", e);
 		}
 	}
+
+    @Override
+    public String parseJbpmConfiguration(String configuration) {
+        Pattern pattern = Pattern.compile("(<statusProcesso>\\d+</statusProcesso>)");
+        Matcher matcher = pattern.matcher(configuration);
+        if (matcher.find()) {
+            configuration = matcher.group(1);
+        }
+        return configuration;
+    }
 }
