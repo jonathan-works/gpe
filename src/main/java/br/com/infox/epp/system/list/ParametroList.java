@@ -37,7 +37,7 @@ public class ParametroList extends EntityList<Parametro> {
     }
 
     protected void addSearchFields() {
-        addSearchField("nomeVariavel", SearchCriteria.INICIANDO);
+        addSearchField("nomeVariavel", SearchCriteria.CONTENDO);
         addSearchField("descricaoVariavel", SearchCriteria.CONTENDO);
         addSearchField("usuarioModificacao", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
