@@ -42,7 +42,7 @@ public class RaiaPerfilManager extends Manager<RaiaPerfilDAO, RaiaPerfil> {
     private void criarRaiaPerfis(Fluxo fluxo, Map<String, Swimlane> swimlanes) throws DAOException {
         for (Swimlane swimlane : swimlanes.values()) {
             if (swimlane.getPooledActorsExpression() == null || swimlane.getPooledActorsExpression().isEmpty()) {
-                continue;
+                throw new DAOException("A raia " + swimlane.getName() + " não possui perfil associado");
             }
             String[] perfis = swimlane.getPooledActorsExpression().split(",");
             for (String perfil : perfis) {
