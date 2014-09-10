@@ -10,7 +10,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <rich:column width="#{columnWidth}"
+    <rich:column width="#{columnWidth}" style="#{styleColumn}"
         rendered="#{wi:get(columnRendered,true) and !excludeColumns.matches('.*\\b'.concat(columnId).concat('\\b.*'))}"
         rowspan="#{wi:get(rowspan,1)}" colspan="#{wi:get(colspan,1)}">
         <f:facet name="header">

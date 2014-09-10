@@ -74,6 +74,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     private static final long serialVersionUID = 1L;
 
     private Integer idLocalizacao;
+    private String codigo;
     private String localizacao;
     private Boolean ativo;
     private Localizacao localizacaoPai;
@@ -121,6 +122,17 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     public void setIdLocalizacao(Integer idLocalizacao) {
         this.idLocalizacao = idLocalizacao;
+    }
+
+    @Column(name = "cd_localizacao", nullable=false, length=50)
+    @Size(max=50)
+    @NotNull
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     @Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO)

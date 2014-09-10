@@ -1,4 +1,8 @@
 /*LAYOUT GERAL DA PÁGINA*/
+.width-5 {
+  width: 5px;
+}
+
 .padding-top-5 {
   padding-top: 5px;
 }
