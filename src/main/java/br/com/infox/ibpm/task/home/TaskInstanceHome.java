@@ -45,6 +45,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
@@ -813,8 +814,9 @@ public class TaskInstanceHome implements Serializable {
             List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis = classificacao
                     .getTipoProcessoDocumentoPapeis();
             for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : tipoProcessoDocumentoPapeis) {
-                if (assinavel = usuarioPerfilAtual.getPerfilTemplate().getPapel()
-                        .equals(tipoProcessoDocumentoPapel.getPapel())) {
+                if (usuarioPerfilAtual.getPerfilTemplate().getPapel().equals(tipoProcessoDocumentoPapel.getPapel())
+                		&& tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P) {
+                	assinavel = true;
                     break;
                 }
             }

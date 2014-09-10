@@ -91,7 +91,7 @@ public final class FluxoXPDL implements Serializable {
         addEvents(definition);
 
         if (!mensagens.isEmpty()) {
-            throw new IllegalXPDLException(createExceptionMessage());
+            throw new IllegalXPDLException();
         }
         return definition;
     }
@@ -173,15 +173,5 @@ public final class FluxoXPDL implements Serializable {
 
     public Set<String> getMensagens() {
         return Collections.unmodifiableSet(mensagens);
-    }
-
-    public String createExceptionMessage() {
-        StringBuilder sb = new StringBuilder("Foram encontrados erros ao importar o XPDL:\n");
-        for (String mensagem : mensagens) {
-            sb.append("\t");
-            sb.append(mensagem);
-            sb.append("\n");
-        }
-        return sb.toString();
     }
 }
