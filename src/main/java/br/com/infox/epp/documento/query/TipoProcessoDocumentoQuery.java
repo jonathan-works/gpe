@@ -5,7 +5,7 @@ public interface TipoProcessoDocumentoQuery {
     String TIPO_PROCESSO_DOCUMENTO_USEABLE = "useableTipoProcessoDocumento";
     String TIPO_PROCESSO_DOCUMENTO_USEABLE_QUERY = "select t from TipoProcessoDocumentoPapel o"
             + " inner join o.tipoProcessoDocumento t"
-            + " where o.papel=:"
+            + " where t.sistema = false and o.papel=:"
             + TipoProcessoDocumentoQuery.PAPEL_PARAM
             + " and t.ativo = true"
             + " and (t.inTipoDocumento = :"

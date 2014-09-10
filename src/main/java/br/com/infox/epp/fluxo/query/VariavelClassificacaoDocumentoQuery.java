@@ -19,7 +19,7 @@ public interface VariavelClassificacaoDocumentoQuery {
      */
     String VARIAVEL_CLASSIFICACAO_LIST = "VariavelClassificacaoDocumento.variavelClassificacaoList";
     String VARIAVEL_CLASSIFICACAO_LIST_QUERY = "select o from VariavelClassificacaoDocumento o where o.fluxo.idFluxo = :" + PARAM_ID_FLUXO
-            + " and o.removerNaPublicacao = false and o.variavel = :" + PARAM_VARIAVEL 
+            + " and o.classificacaoDocumento.sistema = false and o.removerNaPublicacao = false and o.variavel = :" + PARAM_VARIAVEL 
             + " order by o.classificacaoDocumento.tipoProcessoDocumento";
     
     /**
@@ -27,7 +27,7 @@ public interface VariavelClassificacaoDocumentoQuery {
      */
     String CLASSIFICACOES_PUBLICADAS_DA_VARIAVEL = "VariavelClassificacaoDocumento.classificacoesPublicadasDaVariavel";
     String CLASSIFICACOES_PUBLICADAS_DA_VARIAVEL_QUERY = "select o.classificacaoDocumento from VariavelClassificacaoDocumento o "
-            + "where o.publicado = true and o.classificacaoDocumento.ativo = true and o.fluxo.idFluxo = :" + PARAM_ID_FLUXO 
+            + "where o.publicado = true and o.classificacaoDocumento.sistema = false and o.classificacaoDocumento.ativo = true and o.fluxo.idFluxo = :" + PARAM_ID_FLUXO 
             + " and o.variavel = :" + PARAM_VARIAVEL + " order by o.classificacaoDocumento.tipoProcessoDocumento";
     
     String PUBLICAR = "VariavelClassificacaoDocumento.publicar";
@@ -45,7 +45,7 @@ public interface VariavelClassificacaoDocumentoQuery {
     /**
      * Classificações disponíveis para associação à variável
      */
-    String CLASSIFICACOES_DISPONIVEIS_PARA_VARIAVEL_BASE_QUERY = "from TipoProcessoDocumento o where o.ativo = true and "
+    String CLASSIFICACOES_DISPONIVEIS_PARA_VARIAVEL_BASE_QUERY = "from TipoProcessoDocumento o where o.ativo = true and o.sistema = false and "
             + "o.inTipoDocumento in ('T', :" + PARAM_TIPO_DOCUMENTO + ") and "
             + "not exists (select 1 from VariavelClassificacaoDocumento v where v.classificacaoDocumento = o and "
             + "v.removerNaPublicacao = false and "
