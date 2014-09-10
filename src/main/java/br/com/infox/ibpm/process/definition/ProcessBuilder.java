@@ -573,6 +573,7 @@ public class ProcessBuilder implements Serializable {
     @SuppressWarnings(UNCHECKED)
     public void importarXPDL(byte[] bytes, Fluxo fluxo) {
         FluxoXPDL fluxoXPDL = null;
+        mensagensImportacao = new HashSet<>();
         try {
             importacaoConcluida = false;
 
@@ -594,8 +595,18 @@ public class ProcessBuilder implements Serializable {
             }
         } catch (IllegalXPDLException | DAOException e) {
             LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage(), e);
+            if (e instanceof IllegalXPDLException && e.getMessage() != null) {
+                mensagensImportacao.add(e.getMessage());
+            }
             if (fluxoXPDL != null) {
-                mensagensImportacao = fluxoXPDL.getMensagens();
+                mensagensImportacao.addAll(fluxoXPDL.getMensagens());
+                StringBuilder sb = new StringBuilder("Foram encontrados erros ao importar o XPDL:\n");
+                for (String mensagem : mensagensImportacao) {
+                    sb.append("\t");
+                    sb.append(mensagem);
+                    sb.append("\n");
+                }
+                LOG.error(sb.toString());
             }
         }
     }
