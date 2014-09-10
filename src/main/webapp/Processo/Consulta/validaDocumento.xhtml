@@ -14,7 +14,7 @@
   template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
   
   <ui:param name="reRenderExternal" 
-  	value="#{wi:get(facesContext.getCurrentInstance().externalContext.requestParameterMap['renderExternal'], false)}"/>
+  	value="#{wi:get(facesContext.getCurrentInstance().externalContext.requestParameterMap['renderExternal'], true)}"/>
   
   <ui:define name="baseBody">
     <div class="pageBody">
@@ -82,7 +82,8 @@
                 debug="false"
                 loginMode="false"
                 useProviderDll="false"
-                rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado)}">
+                rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado) 
+                				and validaDocumentoAction.documento.isDocumentoAssinavel(usuarioLogadoPerfilAtual.perfilTemplate.papel)}">
               </wi:appletAssinatura>
               <h:inputHidden
                 id="dadosAssinaveis"
