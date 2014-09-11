@@ -8,6 +8,7 @@ import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocratic
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_UDM_BY_USUARIO_QUERY;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,11 +20,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
 @Table(name = UnidadeDecisoraMonocratica.TABLE_NAME)
@@ -52,6 +55,9 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 	@NotNull
 	@Column(name="in_ativo", nullable = false)
 	private Boolean ativo;
+
+	@OneToMany(mappedBy="decisoraMonocratica", fetch=FetchType.LAZY)
+	private List<ProcessoEpa> processoEpaList;
 	
 	public Integer getIdUnidadeDecisoraMonocratica() {
 		return idUnidadeDecisoraMonocratica;
@@ -85,7 +91,15 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 		this.ativo = ativo;
 	}
 
-	@Override
+	public List<ProcessoEpa> getProcessoEpaList() {
+        return processoEpaList;
+    }
+
+    public void setProcessoEpaList(List<ProcessoEpa> processoEpaList) {
+        this.processoEpaList = processoEpaList;
+    }
+
+    @Override
 	public String toString() {
 		return nome;
 	}

@@ -47,6 +47,8 @@ import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Entity
 @Table(name = ProcessoEpa.TABLE_NAME)
@@ -75,9 +77,10 @@ public class ProcessoEpa extends Processo {
     private Boolean contabilizar = Boolean.TRUE;
     private PrioridadeProcesso prioridadeProcesso;
     private StatusProcesso statusProcesso;
-
     private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
     private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
+    private UnidadeDecisoraMonocratica decisoraMonocratica;
+    private UnidadeDecisoraColegiada decisoraColegiada;
 
     public ProcessoEpa() {
         super();
@@ -212,4 +215,24 @@ public class ProcessoEpa extends Processo {
 	public void setStatusProcesso(StatusProcesso statusProcesso) {
 		this.statusProcesso = statusProcesso;
 	}
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_uni_decisora_monocratica", nullable = true)
+    public UnidadeDecisoraMonocratica getDecisoraMonocratica() {
+        return decisoraMonocratica;
+    }
+
+    public void setDecisoraMonocratica(UnidadeDecisoraMonocratica decisoraMonocratica) {
+        this.decisoraMonocratica = decisoraMonocratica;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_uni_decisora_colegiada", nullable = true)
+    public UnidadeDecisoraColegiada getDecisoraColegiada() {
+        return decisoraColegiada;
+    }
+
+    public void setDecisoraColegiada(UnidadeDecisoraColegiada decisoraColegiada) {
+        this.decisoraColegiada = decisoraColegiada;
+    }
 }
