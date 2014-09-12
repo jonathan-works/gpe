@@ -53,13 +53,14 @@
                 immediate="true"
                 action="#{processoDocumentoList.entity.setProcesso(consultaController.processoEpa)}"
                 status=":status"
-                title="#{messages['processo.documentos']}">
+                title="#{messages['processo.documentos']}x">
                 <wi:dataTable
                     values="#{processoDocumentoList.list(15)}"
                     bean="#{processoDocumentoList}"
                     tableTitle="#{messages['processo.documentos']}"
                     id="processoDocumentoList"
                     rowId="#{row.idProcessoDocumento}"
+                    panelStyleClass="full-sized"
                     showSearchForm="false">
                     <ui:define name="toolBar">
                         <s:link
