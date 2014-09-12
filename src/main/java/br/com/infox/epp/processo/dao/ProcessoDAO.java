@@ -16,6 +16,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 
 import java.util.HashMap;
 import java.util.List;
@@ -103,5 +104,11 @@ public class ProcessoDAO extends DAO<Processo> {
 		params.put(PARAM_ID_TOKEN, idToken);
 		executeNamedQueryUpdate(REMOVER_PROCESSO_JBMP, params);
 	}
+    
+    public Object[] getIdTaskMgmInstanceAndIdTokenByidJbpm(Long idJbpm){
+    	Map<String, Object> params = new HashMap<>(1);
+		params.put(PARAM_ID_JBPM, idJbpm);
+    	return getNamedSingleResult(GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, params);
+    }
 
 }
