@@ -23,6 +23,12 @@ public class AssociativeVariavelList extends EntityList<Variavel> {
     private static final String DEFAULT_ORDER = "variavel";
 
     private TipoModeloDocumento tipoModeloToIgnore;
+    
+    public void onClickVariaveisTab(TipoModeloDocumento tipoModeloToIgnore){
+        this.tipoModeloToIgnore = tipoModeloToIgnore;
+        newInstance();
+        setEjbql(getDefaultEjbql());
+    }
 
     @Override
     protected void addSearchFields() {
@@ -37,7 +43,7 @@ public class AssociativeVariavelList extends EntityList<Variavel> {
         sb.append(DEFAULT_EJBQL);
         if (tipoModeloToIgnore != null
                 && tipoModeloToIgnore.getIdTipoModeloDocumento() != null) {
-            sb.append(" or v.tipoModeloDocumento.idTipoModeloDocumento = #{associativeVariavelList.tipoModeloToIgnore.idTipoModeloDocumento}");
+            sb.append(" and v.tipoModeloDocumento.idTipoModeloDocumento = #{associativeVariavelList.tipoModeloToIgnore.idTipoModeloDocumento}");
         }
         sb.append(")");
         return sb.toString();
@@ -60,5 +66,4 @@ public class AssociativeVariavelList extends EntityList<Variavel> {
     public void setTipoModeloToIgnore(TipoModeloDocumento tipoModeloToIgnore) {
         this.tipoModeloToIgnore = tipoModeloToIgnore;
     }
-
 }
