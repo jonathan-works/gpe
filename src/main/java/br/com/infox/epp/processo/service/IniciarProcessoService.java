@@ -5,6 +5,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.jboss.seam.ScopeType;
@@ -52,21 +53,32 @@ public class IniciarProcessoService {
      * @throws DAOException
      */
     public void iniciarProcesso(ProcessoEpa processoEpa) throws DAOException {
+        iniciarProcesso(processoEpa, null);
+    }
+    
+    public void iniciarProcesso(ProcessoEpa processoEpa, Map<String, Object> variaveis) throws DAOException {
         processoEpaManager.persist(processoEpa);
         processoEpa.setDataInicio(new Date());
-        Long idProcessoJbpm = iniciarProcessoJbpm(processoEpa, processoEpa.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
+        Long idProcessoJbpm = iniciarProcessoJbpm(processoEpa, processoEpa.getNaturezaCategoriaFluxo().getFluxo().getFluxo(), variaveis);
         processoEpa.setIdJbpm(idProcessoJbpm);
         processoEpa.setNumeroProcesso(String.valueOf(processoEpa.getIdProcesso()));
         naturezaManager.lockNatureza(processoEpa.getNaturezaCategoriaFluxo().getNatureza());
         processoEpaManager.update(processoEpa);
     }
 
-    private Long iniciarProcessoJbpm(ProcessoEpa processoEpa, String fluxo) {
+    private Long iniciarProcessoJbpm(ProcessoEpa processoEpa, String fluxo, Map<String, Object> variaveis) {
         BusinessProcess businessProcess = BusinessProcess.instance();
-        businessProcess.createProcess(fluxo);
+        businessProcess.createProcess(fluxo, false);
         org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
-        processInstance.getContextInstance().setVariable("processo", processoEpa.getIdProcesso());
-        createJbpmVariables(processoEpa, processInstance.getContextInstance());
+        ContextInstance contextInstance = processInstance.getContextInstance();
+        contextInstance.setVariable("processo", processoEpa.getIdProcesso());
+        createJbpmVariables(processoEpa, contextInstance);
+        if (variaveis != null) {
+            for (String variavel : variaveis.keySet()) {
+                contextInstance.setVariable(variavel, variaveis.get(variavel));
+            }
+        }
+        processInstance.signal();
         @SuppressWarnings(UNCHECKED) Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
         if (taskInstances != null && !taskInstances.isEmpty()) {

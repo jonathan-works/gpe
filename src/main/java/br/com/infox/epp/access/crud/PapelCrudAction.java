@@ -367,6 +367,7 @@ public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
                     availableResourcesList, selectedResourcesList);
             operation.run();
             getManager().flush();
+            clear();
         }
     }
 
