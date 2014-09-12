@@ -8,8 +8,10 @@ import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocratic
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_UDM_BY_USUARIO_QUERY;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,8 +23,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
@@ -55,6 +59,10 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 	@NotNull
 	@Column(name="in_ativo", nullable = false)
 	private Boolean ativo;
+	
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH, mappedBy="unidadeDecisoraMonocratica")
+    @OrderBy("unidadeDecisoraColegiada ASC")
+    private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 
 	@OneToMany(mappedBy="decisoraMonocratica", fetch=FetchType.LAZY)
 	private List<ProcessoEpa> processoEpaList;
@@ -91,7 +99,25 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 		this.ativo = ativo;
 	}
 
-	public List<ProcessoEpa> getProcessoEpaList() {
+	public List<UnidadeDecisoraColegiadaMonocratica> getUnidadeDecisoraColegiadaMonocraticaList() {
+        return unidadeDecisoraColegiadaMonocraticaList;
+    }
+
+    public void setUnidadeDecisoraColegiadaMonocraticaList(
+            List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList) {
+        this.unidadeDecisoraColegiadaMonocraticaList = unidadeDecisoraColegiadaMonocraticaList;
+    }
+    
+    @Transient
+    public List<UnidadeDecisoraColegiada> getUnidadeDecisoraColegiadaList(){
+        List<UnidadeDecisoraColegiada> unidadeDecisoraColegiadaList = new ArrayList<>();
+        for (UnidadeDecisoraColegiadaMonocratica colegiadaMonocratica : getUnidadeDecisoraColegiadaMonocraticaList()){
+            unidadeDecisoraColegiadaList.add(colegiadaMonocratica.getUnidadeDecisoraColegiada());
+        }
+        return unidadeDecisoraColegiadaList;
+    }
+
+    public List<ProcessoEpa> getProcessoEpaList() {
         return processoEpaList;
     }
 
