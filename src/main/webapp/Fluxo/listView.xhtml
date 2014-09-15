@@ -104,10 +104,8 @@
                 id="dataFim"
                 label="#{messages['fluxo.dataFimPublicacao']}"
                 value="#{fluxoCrudAction.instance.dataFimPublicacao}" />
-            <wi:selectBooleanRadio
-                id="publicado"
-                label="#{messages['fluxo.publicado']}"
-                value="#{fluxoCrudAction.instance.publicado}" />
+            <wi:outputText id="statusPublicacao" rendered="#{fluxoCrudAction.managed}" label="#{messages['fluxo.publicado']}"
+                value="#{fluxoCrudAction.instance.publicado ? 'Sim' : 'Não'}" />
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{messages['field.situacao']}"
