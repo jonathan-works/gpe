@@ -17,11 +17,11 @@ import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 
 @Name(ClassificacaoDocumentoFacade.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.EVENT)
 public class ClassificacaoDocumentoFacade {
 
     @In
-    TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
+    private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
     @In
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
 

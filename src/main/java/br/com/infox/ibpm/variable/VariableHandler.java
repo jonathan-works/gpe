@@ -58,7 +58,7 @@ public class VariableHandler implements Serializable {
                     String name = var.getMappedName().split(":")[1];
                     Object value = taskInstance.getVariable(var.getMappedName());
                     if (value != null && !"".equals(value)) {
-                        ret.add(new Variavel(getLabel(name), value, type));
+                        ret.add(new Variavel(getLabel(taskInstance.getTask().getProcessDefinition().getName() + ":" + name), value, type));
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     LOG.error("Varivel com Valor inválido: "
