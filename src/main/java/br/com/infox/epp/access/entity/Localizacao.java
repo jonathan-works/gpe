@@ -221,7 +221,13 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     @Override
     public String toString() {
-        return localizacao;
+        String str = localizacao;
+        if (!getUnidadeDecisoraColegiada().isEmpty()) {
+            str += " - " + getUnidadeDecisoraColegiada().get(0).getNome();
+        } else if (!getUnidadeDecisoraMonocratica().isEmpty()){
+            str += " - " + getUnidadeDecisoraMonocratica().get(0).getNome();
+        }
+        return str;
     }
 
     public void setLocalizacaoTurnoList(
@@ -367,6 +373,20 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         return true;
     }
 	
+    @Transient
+    public boolean isDecisoraMonocratica() {
+        return !getUnidadeDecisoraMonocratica().isEmpty();
+    }
+    
+    @Transient
+    public List<UnidadeDecisoraColegiada> getColegiadaDaMonocraticaList() {
+        if (!getUnidadeDecisoraMonocratica().isEmpty()) {
+            return getUnidadeDecisoraMonocratica().get(0).getUnidadeDecisoraColegiadaList();
+        } else {
+            return new ArrayList<>();
+        }
+    }
+    
 	
 
 }
