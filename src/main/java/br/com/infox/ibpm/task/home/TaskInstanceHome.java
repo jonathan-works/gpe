@@ -44,12 +44,17 @@ import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
+import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.documento.type.TipoDocumentoEnum;
+import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
+import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
@@ -114,6 +119,8 @@ public class TaskInstanceHome implements Serializable {
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private VariableTypeResolver variableTypeResolver;
+    @In(create=true)
+    private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
 
     private URL urlRetornoAcessoExterno;
     private String documentoAAssinar;
@@ -150,26 +157,25 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void retrieveVariable(VariableAccess variableAccess) {
-        final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(
-                variableAccess, taskInstance);
+        final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
         variableRetriever.retrieveVariableContent();
-        mapaDeVariaveis.put(getFieldName(variableRetriever.getName()),
-                variableRetriever.getVariable());
+        mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
         if (variableRetriever.isEditor()) {
             DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
-            Integer id = (Integer) taskInstance.getVariable(variableRetriever
-                    .getMappedName());
+            Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
             if (id != null) {
-                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
-                        .getComponent(ProcessoDocumentoManager.NAME);
+                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
                 ProcessoDocumento pd = processoDocumentoManager.find(id);
                 if (pd != null) {
                     dados.setIdDocumento(id);
                     dados.setClassificacao(pd.getTipoProcessoDocumento());
                 }
             }
-            documentosAssinaveis.put(getFieldName(variableRetriever.getName()),
-                    dados);
+            List<TipoProcessoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true, getVariableName(variableRetriever.getName()), ((ProcessoEpa)ProcessoHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
+            if (useableTipoProcessoDocumento != null && useableTipoProcessoDocumento.size()>0 && dados.getClassificacao() == null){
+                dados.setClassificacao(useableTipoProcessoDocumento.get(0));
+            }
+            documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
         } else if (variableRetriever.isVariableType(VariableType.FILE)) {
             Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
             if (id != null) {
@@ -184,8 +190,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void setModeloWhenExists(TaskVariableRetriever variableRetriever) {
-        String modelo = getModeloFromProcessInstance(variableRetriever
-                .getName());
+        String modelo = getModeloFromProcessInstance(variableRetriever.getName());
         if (modelo != null) {
             variavelDocumento = variableRetriever.getName();
             if (!variableRetriever.hasVariable()) {
@@ -845,4 +850,25 @@ public class TaskInstanceHome implements Serializable {
         }
         return null;
     }
+
+    public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
+        return classificacaoDocumentoFacade.getTipoDocumentoEnumValues();
+    }
+
+    public TipoNumeracaoEnum[] getTipoNumeracaoEnumValues() {
+        return classificacaoDocumentoFacade.getTipoNumeracaoEnumValues();
+    }
+
+    public VisibilidadeEnum[] getVisibilidadeEnumValues() {
+        return classificacaoDocumentoFacade.getVisibilidadeEnumValues();
+    }
+
+    public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
+        return classificacaoDocumentoFacade.getTipoAssinaturaEnumValues();
+    }
+    
+    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
+        return classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(isModelo, nomeVariavel, idFluxo);
+    }
+    
 }
