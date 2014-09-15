@@ -149,11 +149,11 @@ public class UnidadeDecisoraColegiada implements Serializable {
 		if (!(obj instanceof UnidadeDecisoraColegiada))
 			return false;
 		UnidadeDecisoraColegiada other = (UnidadeDecisoraColegiada) obj;
-		if (idUnidadeDecisoraColegiada == null) {
-			if (other.idUnidadeDecisoraColegiada != null)
+		if (getIdUnidadeDecisoraColegiada() == null) {
+			if (other.getIdUnidadeDecisoraColegiada() != null)
 				return false;
-		} else if (!idUnidadeDecisoraColegiada
-				.equals(other.idUnidadeDecisoraColegiada))
+		} else if (!getIdUnidadeDecisoraColegiada()
+				.equals(other.getIdUnidadeDecisoraColegiada()))
 			return false;
 		return true;
 	}
