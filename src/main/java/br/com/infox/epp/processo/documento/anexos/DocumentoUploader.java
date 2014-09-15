@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIForm;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -42,10 +44,11 @@ import com.lowagie.text.pdf.PdfReader;
 public class DocumentoUploader extends DocumentoCreator implements FileUploadListener {
 
     public static final String NAME = "documentoUploader";
-    private static final String BASE_CLIENT_ID = ":movimentarTabPanel:anexarDocumentosForm";
-    private static final String NOME_DOCUMENTO = BASE_CLIENT_ID + ":inputProcessoDocumentoPdfDecoration:inputProcessoDocumentoPdf";
-    private static final String CLASSIFICACAO_DOCUMENTO = BASE_CLIENT_ID + ":tipoProcessoDocumentoPdfDecoration:tipoProcessoDocumentoPdf";
-    private static final String FILE_UPLOAD = BASE_CLIENT_ID + ":tipoDocumentoDivPdf";
+    private static final String NOME_DOCUMENTO_DECORATION = "inputProcessoDocumentoPdfDecoration";
+    private static final String NOME_DOCUMENTO = "inputProcessoDocumentoPdf";
+    private static final String CLASSIFICACAO_DOCUMENTO_DECORATION = "tipoProcessoDocumentoPdfDecoration";
+    private static final String CLASSIFICACAO_DOCUMENTO = "tipoProcessoDocumentoPdfDecoration:tipoProcessoDocumentoPdf";
+    private static final String FILE_UPLOAD = "tipoDocumentoDivPdf";
     
 
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
@@ -219,16 +222,21 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     public void podeRenderizar(AjaxBehaviorEvent ajaxBehaviorEvent) {
         UIInput input = (UIInput) ajaxBehaviorEvent.getComponent();
         UIInput input2;
-        if (input.getClientId().equals(NOME_DOCUMENTO)) {
-            input2 = (UIInput) FacesContext.getCurrentInstance().getViewRoot().findComponent(CLASSIFICACAO_DOCUMENTO);
+        UIComponent form = input.getParent();
+        while (!(form instanceof UIForm)) {
+            form = form.getParent();
+        }
+        if (input.getClientId().endsWith(NOME_DOCUMENTO)) {
+            
+            input2 = (UIInput) form.findComponent(CLASSIFICACAO_DOCUMENTO_DECORATION).findComponent(CLASSIFICACAO_DOCUMENTO);
         } else {
-            input2 = (UIInput) FacesContext.getCurrentInstance().getViewRoot().findComponent(NOME_DOCUMENTO);
+            input2 = (UIInput) form.findComponent(NOME_DOCUMENTO_DECORATION).findComponent(NOME_DOCUMENTO);
         }
         if (input.getValue() != null && input2.getValue() != null) {
             Collection<String> ids = FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds();
-            ids.add(CLASSIFICACAO_DOCUMENTO.substring(1));
-            ids.add(FILE_UPLOAD.substring(1));
-            ids.add(NOME_DOCUMENTO.substring(1));
+            ids.add(input.getClientId());
+            ids.add(input2.getClientId());
+            ids.add(form.findComponent(FILE_UPLOAD).getClientId());
         }
     }
 
