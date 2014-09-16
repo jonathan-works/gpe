@@ -2,9 +2,9 @@ package br.com.infox.epp.processo.documento.anexos;
 
 import static java.text.MessageFormat.format;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.Collection;
 
 import javax.faces.component.UIInput;
@@ -59,9 +59,9 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     @In
     private ExtensaoArquivoManager extensaoArquivoManager;
     
-    private InputStream inputStream;
     private UploadedFile uploadedFile;
     private TipoProcessoDocumento tipoProcessoDocumento;
+    private byte[] pdf;
 
     public boolean isValido() {
         return isValido;
@@ -76,6 +76,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         super.newInstance();
         uploadedFile = null;
         isValido = false;
+        pdf = null;
     }
 
     @Override
@@ -83,9 +84,18 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         newInstance();
         final UploadedFile ui = fileUploadEvent.getUploadedFile();
         try {
-            inputStream = ui.getInputStream();
+            InputStream inputStream = ui.getInputStream();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[8192];
+            int read;
+            while ((read = inputStream.read(buffer)) != -1) {
+                bos.write(buffer, 0, read);
+            }
+            pdf = bos.toByteArray();
         } catch (IOException e) {
             LOG.error("Não foi possível recuperar o inputStream do arquivo carregado", e);
+            FacesMessages.instance().add("Erro no upload do arquivo, tente novamente.");
+            return;
         }
         bin().setExtensao(getFileType(ui.getName()));
         setValido(isDocumentoBinValido(ui));
@@ -99,7 +109,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             FacesMessages.instance().add(Messages.instance().get("processoDocumento.doneLabel"));
         } else {
             newInstance();
-            inputStream = null;
         }
     }
 
@@ -129,14 +138,13 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     @Override
     protected ProcessoDocumento gravarDocumento() throws DAOException {
-        String texto = InfoxPdfReader.readPdfFromInputStream(inputStream);
+        String texto = InfoxPdfReader.readPdfFromByteArray(pdf);
         ProcessoDocumento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
         bin().setModeloDocumento(texto);
         documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
         //Removida indexação manual daqui
         newInstance();
         tipoProcessoDocumento = null;
-        inputStream = null;
         setValido(false);
         return pd;
     }
@@ -169,7 +177,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private boolean validaLimitePorPagina(Integer limitePorPagina) {
         PdfReader reader;
         try {
-            reader = new PdfReader(inputStream);
+            reader = new PdfReader(pdf);
             int qtdPaginas = reader.getNumberOfPages();
             for (int i = 1; i <= qtdPaginas; i++) {
                 if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {

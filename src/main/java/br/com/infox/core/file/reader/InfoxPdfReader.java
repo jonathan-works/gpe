@@ -18,11 +18,28 @@ public class InfoxPdfReader {
     }
 
     public static String readPdfFromInputStream(InputStream inputStream) {
+        try {
+            return readPdf(new PdfReader(inputStream));
+        } catch (IOException e) {
+            LOG.error("Não foi possível recuperar o conteúdo do pdf", e);
+            return null;
+        }
+    }
+
+    public static String readPdfFromByteArray(byte[] pdf) {
+        try {
+            return readPdf(new PdfReader(pdf));
+        } catch (IOException e) {
+            LOG.error("Não foi possível recuperar o conteúdo do pdf", e);
+            return null;
+        }
+    }
+    
+    private static String readPdf(PdfReader pdfReader) {
         StringBuilder sb = new StringBuilder();
         try {
-            PdfReader reader = new PdfReader(inputStream);
-            PdfTextExtractor extractor = new PdfTextExtractor(reader);
-            int qtdPaginas = reader.getNumberOfPages();
+            PdfTextExtractor extractor = new PdfTextExtractor(pdfReader);
+            int qtdPaginas = pdfReader.getNumberOfPages();
             for (int i = 1; i <= qtdPaginas; i++) {
                 try {
                     sb.append(extractor.getTextFromPage(i));
@@ -35,5 +52,4 @@ public class InfoxPdfReader {
         }
         return sb.toString();
     }
-
 }
