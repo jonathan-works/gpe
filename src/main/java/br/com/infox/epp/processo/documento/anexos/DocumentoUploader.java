@@ -144,7 +144,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         String texto = InfoxPdfReader.readPdfFromByteArray(pdf);
         ProcessoDocumento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
         bin().setModeloDocumento(texto);
-        documentoBinManager.salvarBinario(getProcessoDocumento().getIdProcessoDocumento(), bin().getProcessoDocumento());
+        documentoBinManager.salvarBinario(bin().getIdProcessoDocumentoBin(), bin().getProcessoDocumento());
         //Removida indexação manual daqui
         newInstance();
         tipoProcessoDocumento = null;
