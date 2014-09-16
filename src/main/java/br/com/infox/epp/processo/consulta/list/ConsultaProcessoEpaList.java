@@ -31,6 +31,8 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
     private static final String R5 = "o.naturezaCategoriaFluxo.categoria = #{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}";
     private static final String R6 = "cast(o.dataInicio as date) >= #{consultaProcessoEpaList.dataInicio}";
     private static final String R7 = "cast(o.dataInicio as date) <= #{consultaProcessoEpaList.dataFim}";
+    private static final String R8 = "o.decisoraMonocratica = #{authenticator.monocraticaLogada}";
+    private static final String R9 = "o.decisoraColegiada = #{authenticator.colegiadaLogada}";
 
     private Date dataInicio;
     private Date dataFim;
@@ -52,6 +54,8 @@ public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
         addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL, R5);
         addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL, R6);
         addSearchField("dataFim", SearchCriteria.MENOR_IGUAL, R7);
+        addSearchField("decisoraMonocratica", SearchCriteria.IGUAL, R8);
+        addSearchField("decisoraColegiada", SearchCriteria.IGUAL, R9);
     }
 
     @Override

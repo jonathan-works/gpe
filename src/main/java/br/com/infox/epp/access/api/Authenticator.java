@@ -62,6 +62,8 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Name(Authenticator.NAME)
 @Install(precedence = Install.APPLICATION)
@@ -86,6 +88,7 @@ public class Authenticator {
     public static final String INDENTIFICADOR_PAPEL_ATUAL = "identificadorPapelAtual";
     public static final String LOCALIZACOES_FILHAS_ATUAIS = "localizacoesFilhasAtuais";
     public static final String ID_LOCALIZACOES_FILHAS_ATUAIS = "idLocalizacoesFilhasAtuais";
+    public static final String COLEGIADA_DA_MONOCRATICA_LOGADA = "colegiadaDaMonocraticaLogada";
 
     public String getNewPassword1() {
         return newPassword1;
@@ -284,6 +287,7 @@ public class Authenticator {
         context.remove(LOCALIZACOES_FILHAS_ATUAIS);
         context.remove(ID_LOCALIZACOES_FILHAS_ATUAIS);
         context.remove(USUARIO_PERFIL_LIST);
+        context.remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
     }
 
     public static List<Localizacao> getLocalizacoesFilhas(
@@ -489,6 +493,48 @@ public class Authenticator {
 
     public Integer getUsuarioPerfilAtualCombo() {
         return getUsuarioPerfilAtual().getIdUsuarioPerfil();
+    }
+    
+    public boolean isUsuarioLogadoInMonocratica() {
+        return getUsuarioPerfilAtual().getLocalizacao().isDecisoraMonocratica();
+    }
+    
+    public boolean isUsuarioLogadoInColegiada() {
+        return getUsuarioPerfilAtual().getLocalizacao().isDecisoraColegiada();
+    }
+    
+    public UnidadeDecisoraMonocratica getMonocraticaLogada() {
+        if (isUsuarioLogadoInMonocratica()) {
+            return getUsuarioPerfilAtual().getLocalizacao().getUnidadeDecisoraMonocratica().get(0);
+        } else {
+            return null;
+        }
+    }
+    
+    public UnidadeDecisoraColegiada getColegiadaLogada() {
+        if (isUsuarioLogadoInColegiada()) {
+            return getUsuarioPerfilAtual().getLocalizacao().getUnidadeDecisoraColegiada().get(0);
+        } else if (isUsuarioLogadoInMonocratica()) {
+            return getColegiadaParaMonocraticaLogada();
+        } else {
+            return null;
+        }
+    }
+    
+    public void setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada) {
+        Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
+    }
+    
+    public UnidadeDecisoraColegiada getColegiadaParaMonocraticaLogada() {
+        return (UnidadeDecisoraColegiada) Contexts.getSessionContext().get(COLEGIADA_DA_MONOCRATICA_LOGADA);
+    }
+     
+    public List<UnidadeDecisoraColegiada> getColegiadasParaMonocraticaLogada() {
+        if (isUsuarioLogadoInMonocratica()) {
+            return getMonocraticaLogada().getUnidadeDecisoraColegiadaList();
+        } else {
+            return new ArrayList<>();
+        }
     }
     
     public String getUsuarioPerfilAtualSingle(){

@@ -386,7 +386,10 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
             return new ArrayList<>();
         }
     }
-    
-	
+
+    @Transient
+    public boolean isDecisoraColegiada() {
+        return !getUnidadeDecisoraColegiada().isEmpty();
+    }
 
 }
