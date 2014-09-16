@@ -278,9 +278,11 @@ public class SearchHandler implements Serializable {
         } else if (VariableType.BOOLEAN.name().equals(type)) {
             texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
         } else if (VariableType.MONETARY.name().equalsIgnoreCase(type)) {
-            texto = String.format(FloatFormatConstants.F2, value);
+            texto = "R$ " + String.format(FloatFormatConstants.F2, value);
         } else if (VariableType.DATE.toString().equals(type)) {
             texto = DateFormat.getDateInstance().format((Date)value);
+        } else if (VariableType.FILE.toString().equals(type)) {
+            texto = processoDocumentoManager.find(value).getProcessoDocumento();
         } else {
             texto = value.toString();
         }
