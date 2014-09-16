@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
@@ -12,13 +13,13 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.search.SearchService;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
-import br.com.infox.index.SimpleQueryParser;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(TaskConteudoSearch.NAME)
@@ -58,16 +59,33 @@ public class TaskConteudoSearch {
     }
 
     private void pesquisar() {
-        setResultadoPesquisa(taskConteudoDAO.pesquisar(getPalavraPesquisada()));
+        try {
+            setResultadoPesquisa(taskConteudoDAO.pesquisar(getPalavraPesquisada()));
+        } catch (TooManyClauses e) {
+            LOG.warn("", e);
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add("Não foi possível realizar a pesquisa, muitos termos de busca");
+        } catch (ParseException e) {
+            LOG.error("", e);
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add("Erro ao realizar a pesquisa, favor tentar novamente");
+        }
     }
 
     public String getBestFragments(TaskConteudo taskConteudo) throws ParseException {
-        SimpleQueryParser parser = new SimpleQueryParser(new BrazilianAnalyzer(Version.LUCENE_36), "conteudo");
+        QueryParser parser = new QueryParser(Version.LUCENE_36, "conteudo", new BrazilianAnalyzer(Version.LUCENE_36));
         Query query;
         try {
             query = parser.parse(getPalavraPesquisada());
         } catch (TooManyClauses e) {
             LOG.warn("", e);
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add("Não foi possível realizar a pesquisa, muitos termos de busca");
+            return "";
+        } catch (ParseException e) {
+            LOG.error("", e);
+            FacesMessages.instance().clear();
+            FacesMessages.instance().add("Erro ao realizar a pesquisa, favor tentar novamente");
             return "";
         }
         return SearchService.getBestFragments(query, taskConteudo.getConteudo());

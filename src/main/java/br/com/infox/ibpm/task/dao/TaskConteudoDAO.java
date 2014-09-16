@@ -3,10 +3,11 @@ package br.com.infox.ibpm.task.dao;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
@@ -38,7 +39,6 @@ import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
-import br.com.infox.index.SimpleQueryParser;
 
 @Name(TaskConteudoDAO.NAME)
 @AutoCreate
@@ -97,17 +97,16 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<TaskConteudo> pesquisar(String searchPattern) {
+    public List<TaskConteudo> pesquisar(String searchPattern) throws TooManyClauses, ParseException {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         List<TaskConteudo> ret = new ArrayList<TaskConteudo>();
-        SimpleQueryParser parser = new SimpleQueryParser(new BrazilianAnalyzer(Version.LUCENE_36), "conteudo");
+        QueryParser parser = new QueryParser(Version.LUCENE_36, "conteudo", new BrazilianAnalyzer(Version.LUCENE_36));
         Query luceneQuery;
         try {
             luceneQuery = parser.parse(searchPattern);
-        } catch (TooManyClauses e) {
-            LOG.warn("", e);
-            return Collections.emptyList();
+        } catch (TooManyClauses | ParseException e) {
+            throw e;
         }
         FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, TaskConteudo.class);
         List<TaskConteudo> taskConteudos = hibernateQuery.list();
