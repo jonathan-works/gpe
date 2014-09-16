@@ -330,4 +330,9 @@ public class ProcessoDocumento implements java.io.Serializable {
         return getProcessoDocumentoBin().getModeloDocumento();
     }
 
+    @Transient
+    @Field(index = Index.YES, store = Store.NO, name = "nome")
+    public String getNomeIndexavel() {
+        return getProcessoDocumento();
+    }
 }

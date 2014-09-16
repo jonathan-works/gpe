@@ -4,19 +4,21 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.ID_JDBPM_TASK_PARAM;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
+import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_TIPO_NUMERACAO;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.USUARIO_PARAM;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
@@ -28,8 +30,6 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.log.Log;
-import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
@@ -39,7 +39,6 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.session.SessionAssistant;
-import br.com.infox.index.SimpleQueryParser;
 
 @Name(ProcessoDocumentoDAO.NAME)
 @AutoCreate
@@ -47,7 +46,6 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoDAO";
-    private static final Log LOG = Logging.getLog(ProcessoDocumentoDAO.class);
 
     @In
     private SessionAssistant sessionAssistant;
@@ -93,17 +91,16 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<ProcessoDocumento> pesquisar(String searchPattern) {
+    public List<ProcessoDocumento> pesquisar(String searchPattern) throws TooManyClauses, ParseException {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
-        SimpleQueryParser parser = new SimpleQueryParser(new BrazilianAnalyzer(Version.LUCENE_36), "texto");
+        QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, new String[] {"nome", "texto"}, new BrazilianAnalyzer(Version.LUCENE_36));
         Query luceneQuery;
         try {
             luceneQuery = parser.parse(searchPattern);
-        } catch (TooManyClauses e) {
-            LOG.warn("", e);
-            return Collections.emptyList();
+        } catch (TooManyClauses | ParseException e) {
+            throw e;
         }
         FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, ProcessoDocumento.class);
         List<ProcessoDocumento> temp = hibernateQuery.list();
