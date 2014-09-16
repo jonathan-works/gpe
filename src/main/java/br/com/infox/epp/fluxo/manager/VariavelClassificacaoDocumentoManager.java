@@ -59,6 +59,7 @@ public class VariavelClassificacaoDocumentoManager extends Manager<VariavelClass
                 novaVariavelClassificacao.setPublicado(false);
                 novaVariavelClassificacao.setVariavel(novaVariavel);
                 novaVariavelClassificacao.setClassificacaoDocumento(variavelClassificacao.getClassificacaoDocumento());
+                novaVariavelClassificacao.setRemoverNaPublicacao(false);
                 persist(novaVariavelClassificacao);
             }
         }

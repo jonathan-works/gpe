@@ -8,6 +8,7 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCE
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.PART_FILTER_BY_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_ESTRUTURA_PAI;
@@ -114,5 +115,11 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         Map<String, Object> params = new HashMap<>();
         params.put(QUERY_PARAM_LOCALIZACAO, nomeLocalizacao);
         return getNamedSingleResult(LOCALIZACAO_DENTRO_ESTRUTURA, params);
+    }
+    
+    public Localizacao getLocalizacaoForaEstruturaByNome(String nomeLocalizacao){
+    	Map<String, Object> params = new HashMap<>(1);
+        params.put(QUERY_PARAM_LOCALIZACAO, nomeLocalizacao);
+        return getNamedSingleResult(LOCALIZACAO_FORA_ESTRUTURA_BY_NOME, params);
     }
 }

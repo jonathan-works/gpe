@@ -144,4 +144,9 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     public Localizacao getLocalizacaoDentroEstrutura(String nomeLocalizacao) {
         return getDao().getLocalizacaoDentroEstrutura(nomeLocalizacao);
     }
+    
+    public Localizacao getLocalizacaoForaEstruturaByNome(String nomeLocalizacao){
+    	return getDao().getLocalizacaoForaEstruturaByNome(nomeLocalizacao);
+    }
+    
 }

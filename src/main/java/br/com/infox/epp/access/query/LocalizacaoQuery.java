@@ -44,6 +44,9 @@ public interface LocalizacaoQuery {
     String LOCALIZACAO_DENTRO_ESTRUTURA = "Localizacao.localizacaoDentroEstrutura";
     String LOCALIZACAO_DENTRO_ESTRUTURA_QUERY = "select o from Localizacao o where o.estruturaPai is not null and o.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
     
+    String LOCALIZACAO_FORA_ESTRUTURA_BY_NOME = "Localizacao.localizacaoForaEstrutura";
+    String LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY = "select o from Localizacao o where o.estruturaFilho is null and o.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
+    
     String USOS_DA_HIERARQUIA_LOCALIZACAO = "Localizacao.usosHierarquiaLocalizacao";
     String USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY = 
         "SELECT tipo FROM " +
