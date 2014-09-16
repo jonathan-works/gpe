@@ -70,7 +70,7 @@
             status=":status"
             onbeforesubmit="infox.showLoading();"
             oncomplete="infox.hideLoading();"
-            listener="#{documentoUploader.podeRenderizar}"
+            render="uploaderDiv"
             execute="@this" />
         </wi:inputText>
         <wi:selectOneMenuEntity
@@ -82,10 +82,10 @@
           showLabelSelecione="true">
           <a:ajax
             event="change"
+            render="uploaderDiv"
             onbeforesubmit="infox.showLoading();"
             oncomplete="infox.hideLoading();"
             limitRender="true"
-            listener="#{documentoUploader.podeRenderizar}"
             status=":status"
             execute="@this" />
         </wi:selectOneMenuEntity>
