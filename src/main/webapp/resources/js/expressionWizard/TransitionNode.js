@@ -159,7 +159,7 @@
   
     function getVariableSubMenu() {
       var _ = K.Node;
-      var variables = _.getVariables(_.VariableType.STRING);
+      var variables = _.getVariables(_.VariableType.TRANSITION);
       var items = [];
       for(var i=0,l=variables.length;i<l;i++) {
         items.push({text:variables[i],click:toolbarItemClick,data:{type:V.CONSTANT,value:variables[i]}});
@@ -272,7 +272,7 @@
   
   function isStringConst(str){
     var _ = K.Node;
-    return (/^String\['.*'\]$/).test(str) && _.getVariables().indexOf(str.slice(8,str.length-2))>=0;
+    return (/^String\['.*'\]$/).test(str) && _.getVariables(_.VariableType.TRANSITION).indexOf(str.slice(8,str.length-2))>=0;
   }
   
   function isTransitionNode(str) {
@@ -381,6 +381,22 @@
     }
     return result;
   }
+
+  function createStringNode(current, cache) {
+    var SNode = K.StringNode;
+    var _type = SNode.getStringNodeType(current);
+    var result;
+    switch(_type) {
+      case SNode.CONSTANT:
+      case SNode.IDENTIFIER:
+        result = new SNode({type:_type, value:[current]});
+        break;
+      default:
+        console.error("StringNode type not supported");
+        throw 0;
+    }
+    return result;
+  }
   
   function generateTree(stack, dom, input){
     var cache = [];
@@ -396,6 +412,8 @@
         result = createArithmeticNode(current, cache);
       } else if (K.TransitionNode.isTransitionNode(current)){
         result = createTransitionNode(current, cache);
+      } else if (K.StringNode.isStringNode(current)) {
+        result = createStringNode(current, cache);
       } else if (K._.REGX_IDENT.test(current)){
         // é variável
         console.error("Identifier not expected", current);

@@ -138,6 +138,9 @@
       case VariableType.BOOLEAN:
         variables.bool = array;
         break;
+      case VariableType.TRANSITION:
+        variables.transition = array;
+        break;
     }
   }
   
@@ -152,6 +155,9 @@
         break;
       case VariableType.BOOLEAN:
         array = variables.bool;
+        break;
+      case VariableType.TRANSITION:
+        array = variables.transition;
         break;
       default:
         array = [];
@@ -206,6 +212,9 @@
         break;
       case VariableType.BOOLEAN:
         variables.bool=[];
+        break;
+      case VariableType.TRANSITION:
+        variables.transition=[];
         break;
     }
   }
@@ -392,6 +401,11 @@
     },NUMBER:{
       get:function() {
         return 0x3;
+      }
+    },
+    TRANSITION:{
+      get:function(){
+        return 0x4;
       }
     }
   });
