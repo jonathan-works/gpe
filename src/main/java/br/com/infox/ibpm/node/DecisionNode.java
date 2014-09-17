@@ -36,7 +36,12 @@ public class DecisionNode extends Node {
     private List<String> booleanVariables = new ArrayList<>();
     private List<String> numberVariables = new ArrayList<>();
     private List<String> leavingTransitionList = new ArrayList<>();
+    private List<String> stringVariables = new ArrayList<>();
 
+    public List<String> getStringVariables(){
+        return getProcessedVariables(stringVariables, VariableType.STRING, VariableType.ENUMERATION);
+    }
+    
     public List<String> getNumberVariables() {
         return getProcessedVariables(numberVariables, VariableType.INTEGER, VariableType.MONETARY);
     }
