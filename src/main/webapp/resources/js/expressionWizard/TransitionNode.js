@@ -144,7 +144,7 @@
           init(args={type:dtType,value:[[V.STRING,"['",evt.target[K._.DT_VAL],"']"].join("")]});
           break;
         case V.EXPRESSION://",_.getVariables()[0],"
-          setExpression(new K.BooleanNode(),new TransitionNode(args),new TransitionNode({value:[[V.STRING,"['",K.Node.getVariables()[0],"']"].join("")]}));
+          setExpression(new K.BooleanNode(),new TransitionNode(args),new TransitionNode({value:[[V.STRING,"['",K.Node.getVariables(_.VariableType.TRANSITION)[0],"']"].join("")]}));
           break;
         default:
           replaceParent();
@@ -196,7 +196,7 @@
       switch(pvt.type) {
         case V.CONSTANT:
           param.value=param.value||[];
-          param.value[0]=param.value[0]||[V.STRING,"['",K.Node.getVariables()[0],"']"].join("");
+          param.value[0]=param.value[0]||[V.STRING,"['",K.Node.getVariables(_.VariableType.TRANSITION)[0],"']"].join("");
           pvt.childNodes.push(param.value[0].slice(7,param.value[0].length-1));
           pvt.renderDOM = renderValueDOM;
           break;
