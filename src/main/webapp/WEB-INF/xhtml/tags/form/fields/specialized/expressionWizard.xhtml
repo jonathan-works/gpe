@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:h="http://java.sun.com/jsf/html">
-	
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:h="http://java.sun.com/jsf/html">
   <h:outputScript
-        library="js/expressionWizard"
-        name="Enum.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="Enum.js" />
   <h:outputScript
-        library="js/expressionWizard"
-        name="Node.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="Node.js" />
   <h:outputScript
-        library="js/expressionWizard"
-        name="Toolbar.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="Toolbar.js" />
   <h:outputScript
-        library="js/expressionWizard"
-        name="BooleanOper.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="BooleanOper.js" />
   <h:outputScript
-        library="js/expressionWizard"
-        name="BooleanNode.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="BooleanNode.js" />
   <h:outputScript
-        library="js/expressionWizard"
-        name="StringNode.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="StringNode.js" />
   <h:outputScript
-        library="js/expressionWizard"
-        name="TransitionNode.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="TransitionNode.js" />
   <h:outputScript
-        library="js/expressionWizard"
-        name="ArithOper.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="ArithOper.js" />
   <h:outputScript
-        library="js/expressionWizard"
-        name="ArithNode.js"></h:outputScript>
+    library="js/expressionWizard"
+    name="ArithNode.js" />
   <h:outputScript id="setVariables">
     (function(K){
       var Node=K.Node;
@@ -44,9 +42,11 @@
       Node.clearVariables(VariableType.BOOLEAN);
       Node.clearVariables(VariableType.NUMBER);
       Node.clearVariables(VariableType.STRING);
+      Node.clearVariables(VariableType.TRANSITION);
       Node.addVariable(#{nodeFitter.currentNode.getBooleanVariables()},VariableType.BOOLEAN);
       Node.addVariable(#{nodeFitter.currentNode.getNumberVariables()},VariableType.NUMBER);
-      Node.addVariable(#{nodeFitter.currentNode.getLeavingTransitionList()},VariableType.STRING);
+      Node.addVariable(#{nodeFitter.currentNode.getStringVariables()},VariableType.STRING);
+      Node.addVariable(#{nodeFitter.currentNode.getLeavingTransitionList()},VariableType.TRANSITION);
       K.messages={
           "pt-BR":{
             "BooleanOper.and":"^",
@@ -116,18 +116,30 @@
         };
     })(_parser);
   </h:outputScript>
-  <script language="javascript" charset="utf-8">
-  _parser.TransitionNode.generateTree(#{value}, #{rich:jQuery(id.concat('Div'))}[0], #{rich:jQuery(id.concat("Text"))}[0]);
-  </script>
-	<s:div id="#{id}" >
-		<s:div id="#{id}Div" styleClass="expressionDiv">
+  <script
+    language="javascript"
+    charset="utf-8">
+    _parser.TransitionNode.generateTree(#{value}, #{rich:jQuery(id.concat('Div'))}[0], #{rich:jQuery(id.concat("Text"))}[0]);
+    </script>
+  <s:div id="#{id}">
+    <s:div
+      id="#{id}Div"
+      styleClass="expressionDiv">
       <div class="toolbar-cont"></div>
     </s:div>
     <div class="expressionInput hidden">
-  		<wi:inputTextarea id="#{id}Text" styleClass="expressionInput"
-  			label="#{messages['expressionWizard.expressao']}" value="#{value}" showCounter="false">
-  			<a:ajax execute="@this" event="change" render="#{id}Text setVariables" limitRender="true"/>
-  		</wi:inputTextarea>
+      <wi:inputTextarea
+        id="#{id}Text"
+        styleClass="expressionInput"
+        label="#{messages['expressionWizard.expressao']}"
+        value="#{value}"
+        showCounter="false">
+        <a:ajax
+          execute="@this"
+          event="change"
+          render="#{id}Text setVariables"
+          limitRender="true" />
+      </wi:inputTextarea>
     </div>
-	</s:div>
+  </s:div>
 </ui:composition>
