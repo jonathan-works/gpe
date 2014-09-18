@@ -335,6 +335,12 @@ img.disabled {
   top: 5px;
 }
 
+.formPesquisa a {
+    position: relative;
+    top: 3px;
+    margin-right: 15px;    
+}
+
 .palette div {
   width: 67px;
   height: 21px;
