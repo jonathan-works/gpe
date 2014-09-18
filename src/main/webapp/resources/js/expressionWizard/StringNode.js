@@ -193,7 +193,7 @@
           }
           break;
         case V.EXPRESSION:
-      setExpression(new K.BooleanNode(),new StringNode(args),new StringNode());
+          setExpression(new K.BooleanNode(),new StringNode(args),new StringNode());
           break;
         default:
           replaceParent();
@@ -380,7 +380,7 @@
     },
     valueOf:{
       value:function valueOf(){
-        return 0x1;
+        return K._.TYPE_STR;
       }
     }
   });

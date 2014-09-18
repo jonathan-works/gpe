@@ -408,7 +408,7 @@
     return ArithNode;
   };
   ArithNode.prototype.valueOf=function valueOf(){
-    return 0x4;
+    return K._.TYPE_NBR;
   };
   
   function isFloat(val) {
