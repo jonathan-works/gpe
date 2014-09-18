@@ -10,7 +10,8 @@
     get TEXT(){return "Text";},
     get VALUE(){return "Value";},
     get CONSTANT(){return 0x1;},
-    get EXPRESSION(){return 0x8;}
+    get EXPRESSION(){return 0x8;},
+    get TYPE_EXPR(){return this.EXPRESSION;},
   };
 
   var lbl = {
@@ -101,7 +102,7 @@
       var itm;
       while(pvt.childNodes.length>0){
         itm=pvt.childNodes.pop();
-        if(itm instanceof K.Node){
+        if(itm instanceof Node){
           itm.clear();
         }
       }
@@ -143,8 +144,8 @@
         case V.CONSTANT:
           init(args={type:dtType,value:[[V.STRING,"['",evt.target[K._.DT_VAL],"']"].join("")]});
           break;
-        case V.EXPRESSION://",_.getVariables()[0],"
-          setExpression(new K.BooleanNode(),new TransitionNode(args),new TransitionNode({value:[[V.STRING,"['",K.Node.getVariables(_.VariableType.TRANSITION)[0],"']"].join("")]}));
+        case V.EXPRESSION:
+          setExpression(new K.BooleanNode(),new TransitionNode(args),new TransitionNode());
           break;
         default:
           replaceParent();
@@ -196,18 +197,18 @@
       switch(pvt.type) {
         case V.CONSTANT:
           param.value=param.value||[];
-          param.value[0]=param.value[0]||[V.STRING,"['",K.Node.getVariables(_.VariableType.TRANSITION)[0],"']"].join("");
+          param.value[0]=param.value[0]||[V.STRING,"['",K.Node.getVariables(K.Node.VariableType.TRANSITION)[0],"']"].join("");
           pvt.childNodes.push(param.value[0].slice(7,param.value[0].length-1));
-          pvt.renderDOM = renderValueDOM;
+          pvt.renderDOM=renderValueDOM;
           break;
         case V.EXPRESSION:
           pvt.childNodes.push(param.condition);
           pvt.childNodes.push(param.value[0]);
           pvt.childNodes.push(param.value[1]);
-          pvt.childNodes[0].parent = _this;
-          pvt.childNodes[1].parent = _this;
-          pvt.childNodes[2].parent = _this;
-          pvt.renderDOM = renderExpressionDOM;
+          pvt.childNodes[0].parent=_this;
+          pvt.childNodes[1].parent=_this;
+          pvt.childNodes[2].parent=_this;
+          pvt.renderDOM=renderExpressionDOM;
           break;
         default:
           console.error("Invalid TransitionNode type");
@@ -263,7 +264,7 @@
     return TransitionNode;
   };
   TransitionNode.prototype.valueOf=function valueOf() {
-    return 0x1;
+    return V.TYPE_EXPR;
   };
   
   function isChoice(str){
@@ -350,18 +351,26 @@
   
   function getCorrectExpression(obj){
     var result;
+    var valueType = calculateValueTypes(obj);
+    console.log(obj, valueType, K._.TYPE_STR, K._.TYPE_BOOL, K._.TYPE_NBR, V.TYPE_EXPR);
     switch(calculateValueTypes(obj)){
-      case V.TYPE_BOOL|V.TYPE_BOOL:
+      case K._.TYPE_STR|K._.TYPE_STR:
+        obj.type = K.StringNode.EXPRESSION;
+        result = new K.StringNode(obj);
+        break;
+      case K._.TYPE_BOOL|K._.TYPE_BOOL:
         obj.type = K.BooleanNode.EXPRESSION;
         result = new K.BooleanNode(obj);
         break;
-      case V.TYPE_NBR|V.TYPE_NBR:
+      case K._.TYPE_NBR|K._.TYPE_NBR:
         obj.type = K.ArithNode.EXPRESSION;
         result = new K.ArithNode(obj);
         break;
-      default:
+      case V.TYPE_EXPR|V.TYPE_EXPR:
         obj.type = K.TransitionNode.EXPRESSION;
         result = new K.TransitionNode(obj);
+        break;
+      default:
         break;
     }
     
