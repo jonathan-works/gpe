@@ -137,11 +137,11 @@
     function replaceChild(_old,_new){
       var pos=pvt.childNodes.indexOf(_old);
       if(pos<0){
-        console.error("");
+        console.error("replace Child BooleanNode");
         throw 0;
       }
       if(!_new instanceof _this.getClass()){
-        console.error("");
+        console.error("replace Child BooleanNode");
         throw 0;
       }
       _new.parent=_this;

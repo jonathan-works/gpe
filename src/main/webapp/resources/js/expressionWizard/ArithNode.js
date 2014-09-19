@@ -149,11 +149,11 @@
     function replaceChild(_old,_new){
       var pos=pvt.childNodes.indexOf(_old);
       if(pos<0){
-        console.error("");
+        console.error("replace Child ArithNode");
         throw 0;
       }
       if(!_new instanceof _this.getClass()){
-        console.error("");
+        console.error("replace Child ArithNode");
         throw 0;
       }
       _new.parent=_this;
@@ -315,43 +315,46 @@
       }
     }
 
-    function init(args) {
+    function init(param) {
       clear();
-      pvt.type=args.type||V.CONSTANT;
+      pvt.type=param.type||V.CONSTANT;
       switch(pvt.type) {
         case V.OPERATION:
-          pvt.operation = K.ArithOper.getValueOf(args.operation);
-          pvt.childNodes.push(args.value[0]);
-          pvt.childNodes.push(args.value[1]);
+          pvt.operation = K.ArithOper.getValueOf(param.operation);
+          pvt.childNodes.push(param.value[0]);
+          pvt.childNodes.push(param.value[1]);
           pvt.childNodes[0].parent = _this;
           pvt.childNodes[1].parent = _this;
           pvt.renderDOM = renderOperationDOM;
           break;
         case V.NEGATIVE:
-          pvt.operation = K.ArithOper.getValueOf(args.operation);
-          pvt.childNodes.push(args.value[0]);
+          pvt.operation = K.ArithOper.getValueOf(param.operation);
+          pvt.childNodes.push(param.value[0]);
           pvt.childNodes[0].parent = _this;
           pvt.renderDOM = renderNegativeDOM;
           break;
         case V.IDENTIFIER:
-          pvt.childNodes.push(args.value[0].slice(11,args.value[0].length-1));
+          pvt.childNodes.push(param.value[0].slice(11,param.value[0].length-1));
           pvt.renderDOM = renderValueDOM;
           break;
         case V.CONSTANT:
-          pvt.childNodes.push(Number.parseFloat(new RegExp(V.FLOAT_PATT).exec((args.value||[])[0]||0)[0]));
+          pvt.childNodes.push(Number.parseFloat(new RegExp(V.FLOAT_PATT).exec((param.value||[])[0]||0)[0]));
           pvt.renderDOM = renderValueDOM;
           break;
         case V.EXPRESSION:
-          pvt.childNodes.push(args.condition);
-          pvt.childNodes.push(args.value[0]);
-          pvt.childNodes.push(args.value[1]);
+          if (param.condition.getClass() !== K.BooleanNode){
+            param.condition = new K.BooleanNode();
+          }
+          pvt.childNodes.push(param.condition);
+          pvt.childNodes.push(param.value[0]);
+          pvt.childNodes.push(param.value[1]);
           pvt.childNodes[0].parent = _this;
           pvt.childNodes[1].parent = _this;
           pvt.childNodes[2].parent = _this;
           pvt.renderDOM = renderExpressionDOM;
           break;
         default:
-          console.error("Unsupported type",args);
+          console.error("Unsupported type",param);
           throw 0;
       }
       var dom = _this.getDOM();

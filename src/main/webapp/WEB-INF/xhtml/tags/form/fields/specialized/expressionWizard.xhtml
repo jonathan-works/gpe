@@ -35,6 +35,27 @@
   <h:outputScript
     library="js/expressionWizard"
     name="ArithNode.js" />
+  <s:div id="#{id}">
+    <s:div
+      id="#{id}Div"
+      styleClass="expressionDiv">
+      <div class="toolbar-cont"></div>
+    </s:div>
+    <div class="expressionInput hidden">
+      <wi:inputTextarea
+        id="#{id}Text"
+        styleClass="expressionInput"
+        label="#{messages['expressionWizard.expressao']}"
+        value="#{value}"
+        showCounter="false">
+        <a:ajax
+          execute="@this"
+          event="change"
+          render="#{id}Text setVariables"
+          limitRender="true" />
+      </wi:inputTextarea>
+    </div>
+  </s:div>
   <h:outputScript id="setVariables">
     (function(K){
       var Node=K.Node;
@@ -96,7 +117,7 @@
             "StringNode.if":"SE",
             "StringNode.then":"ENTÃO RETORNE",
             "StringNode.else":"SENÃO RETORNE",
-            "StringOper.plus":"\u2000",
+            "StringOper.plus":"+",
             "StringNode.addPrefix":"Inserir antes",
             "StringNode.addSufix":"Inserir após",
             "StringNode.booleanValue":"Valor Lógico",
@@ -121,25 +142,4 @@
     charset="utf-8">
     _parser.TransitionNode.generateTree(#{value}, #{rich:jQuery(id.concat('Div'))}[0], #{rich:jQuery(id.concat("Text"))}[0]);
     </script>
-  <s:div id="#{id}">
-    <s:div
-      id="#{id}Div"
-      styleClass="expressionDiv">
-      <div class="toolbar-cont"></div>
-    </s:div>
-    <div class="expressionInput hidden">
-      <wi:inputTextarea
-        id="#{id}Text"
-        styleClass="expressionInput"
-        label="#{messages['expressionWizard.expressao']}"
-        value="#{value}"
-        showCounter="false">
-        <a:ajax
-          execute="@this"
-          event="change"
-          render="#{id}Text setVariables"
-          limitRender="true" />
-      </wi:inputTextarea>
-    </div>
-  </s:div>
 </ui:composition>

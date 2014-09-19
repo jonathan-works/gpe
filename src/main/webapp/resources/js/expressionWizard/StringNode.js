@@ -107,11 +107,11 @@
     function replaceChild(_old,_new){
       var pos=pvt.childNodes.indexOf(_old);
       if(pos<0){
-        console.error("");
+        console.error("replace Child BooleanNode");
         throw 0;
       }
       if(!_new instanceof _this.getClass()){
-        console.error("");
+        console.error("replace Child BooleanNode");
         throw 0;
       }
       _new.parent=_this;
@@ -301,10 +301,14 @@
         case V.CONSTANT:
           param.value=param.value||[];
           param.value[0]=param.value[0]||[V.STRING,"['']"].join("");
+          console.log(param.value);
           pvt.childNodes.push(V.REGX_STR.exec(param.value[0])[1]);
           pvt.renderDOM=renderValueDOM;
           break;
         case V.EXPRESSION:
+          if (param.condition.getClass() !== K.BooleanNode){
+            param.condition = new K.BooleanNode();
+          }
           pvt.childNodes.push(param.condition);
           pvt.childNodes.push(param.value[0]);
           pvt.childNodes.push(param.value[1]);

@@ -9,7 +9,7 @@
     get UNDEF(){return "undefined";},
     get DIV(){return "div";},
     get CSS_NODE(){return "Node";},
-    get CSS_SEL_ND(){return "selected";},
+    get CSS_SEL_ND(){return "Selected";},
     get IDENT_STR(){return "Identifier";},
     get MOUSE_LEAVE(){return "mouseleave";},
     get M_ENTER_EVT(){return "mouseenter";},

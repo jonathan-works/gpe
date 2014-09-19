@@ -85,11 +85,11 @@
     function replaceChild(_old,_new){
       var pos=pvt.childNodes.indexOf(_old);
       if(pos<0){
-        console.error("");
+        console.error("replace Child TransitionNode");
         throw 0;
       }
       if(!_new instanceof _this.getClass()){
-        console.error("");
+        console.error("replace Child TransitionNode");
         throw 0;
       }
       _new.parent=_this;
@@ -121,7 +121,8 @@
     
     function renderValueDOM() {
       var dom = _this.getDOM();
-      var _text=["[",pvt.childNodes[0],"]"].join("");
+      var value = pvt.childNodes[0];
+      var _text=["[",value.slice(1,value.length-1),"]"].join("");
       dom.appendChild(K.createDOM({text:_text,hasToolbar:true}));
       dom.classList.add(V.VALUE);
     }
@@ -202,6 +203,9 @@
           pvt.renderDOM=renderValueDOM;
           break;
         case V.EXPRESSION:
+          if (param.condition.getClass() !== K.BooleanNode){
+            param.condition = new K.BooleanNode();
+          }
           pvt.childNodes.push(param.condition);
           pvt.childNodes.push(param.value[0]);
           pvt.childNodes.push(param.value[1]);
@@ -307,6 +311,7 @@
         result = new BNode({operation:current, value:[cache.pop()], type:_type});
         break;
       case BNode.OPERATION:
+        var valueType = calculateValueTypes(cache);
         result = new BNode({operation:current, value:[cache.pop(), cache.pop()], type:_type});
         break;
       default:
@@ -343,32 +348,42 @@
 
   function calculateValueTypes(obj){
     var type = 0x0;
-    if (obj.value[0] instanceof K.Node && obj.value[1] instanceof K.Node){
-      type = obj.value[0] | obj.value[1];
+    if (obj[0] instanceof K.Node){
+      type = type | obj[0];
+    } else {
+      obj[0]=false;
+    }
+    if (obj[1] instanceof K.Node){
+      type = type | obj[1];
+    } else {
+      obj[1]=false;
     }
     return type;
   }
   
-  function getCorrectExpression(obj){
+  function createExpression(param){
     var result;
-    var valueType = calculateValueTypes(obj);
-    console.log(obj, valueType, K._.TYPE_STR, K._.TYPE_BOOL, K._.TYPE_NBR, V.TYPE_EXPR);
-    switch(calculateValueTypes(obj)){
+    var valueType = calculateValueTypes(param.value);
+    var SNode = K.StringNode;
+    var BNode = K.BooleanNode;
+    var ANode = K.ArithNode;
+    var TNode = K.TransitionNode;
+    switch(calculateValueTypes(param.value)){
       case K._.TYPE_STR|K._.TYPE_STR:
-        obj.type = K.StringNode.EXPRESSION;
-        result = new K.StringNode(obj);
+        param.type=SNode.EXPRESSION;
+        result = new SNode(param);
         break;
       case K._.TYPE_BOOL|K._.TYPE_BOOL:
-        obj.type = K.BooleanNode.EXPRESSION;
-        result = new K.BooleanNode(obj);
+        param.type=BNode.EXPRESSION;
+        result = new BNode(param);
         break;
       case K._.TYPE_NBR|K._.TYPE_NBR:
-        obj.type = K.ArithNode.EXPRESSION;
-        result = new K.ArithNode(obj);
+        param.type=ANode.EXPRESSION
+        result = new ANode(param);
         break;
       case V.TYPE_EXPR|V.TYPE_EXPR:
-        obj.type = K.TransitionNode.EXPRESSION;
-        result = new K.TransitionNode(obj);
+        param.type=TNode.EXPRESSION;
+        result = new TNode(param);
         break;
       default:
         break;
@@ -378,11 +393,12 @@
   }
   
   function createTransitionNode(current, cache){
-    var _type = K.TransitionNode.getTransitionNodeType(current);
+    var TNode=K.TransitionNode;
+    var _type = TNode.getTransitionNodeType(current);
     var result;
     switch(_type){
-      case K.TransitionNode.CONSTANT:
-        result = new K.TransitionNode({type:_type, value:[current]});
+      case TNode.CONSTANT:
+        result = new TNode({type:_type, value:[current]});
         break;
       default:
         console.error("TransitionNode type not supported");
@@ -406,15 +422,40 @@
     }
     return result;
   }
-  
-  function generateTree(stack, dom, input){
+
+  function resolvePlusOperator(obj) {
+    var result;
+    switch(calculateValueTypes(obj.value)) {
+      case K._.TYPE_STR|K._.TYPE_STR:
+      case K._.TYPE_STR|K._.TYPE_BOOL:
+      case K._.TYPE_STR|K._.TYPE_NBR:
+      case K._.TYPE_NBR|K._.TYPE_BOOL:
+        obj.type = K.StringNode.OPERATION;
+        result = new K.StringNode(obj);
+        break;
+      case K._.TYPE_NBR|K._.TYPE_NBR:
+        obj.type = K.ArithNode.OPERATION;
+        result = new K.ArithNode(obj);
+        break;
+      default:
+        console.error("Parse exception, token not found", current);
+        alert("Parser exception, token not found"+current);
+        throw 0;
+        break;
+    }
+    
+    return result;
+  }
+  function processStack(stack) {
     var cache = [];
     var current;
     var result;
     while(stack.length > 0){
       current = stack.shift();
       if (current==="Choice"){
-         result = getCorrectExpression({condition:cache.pop(),value:[cache.pop(),cache.pop()]});
+         result = createExpression({condition:cache.pop(), value:[cache.pop(), cache.pop()]});
+      } else if (current === "Plus") {
+        result = resolvePlusOperator({operation:current, value:[cache.pop(), cache.pop()]});
       } else if (K.BooleanNode.isBooleanNode(current)){
         result = createBooleanNode(current, cache);
       } else if (K.ArithNode.isArithNode(current)){
@@ -424,11 +465,10 @@
       } else if (K.StringNode.isStringNode(current)) {
         result = createStringNode(current, cache);
       } else if (K._.REGX_IDENT.test(current)){
-        // é variável
-        console.error("Identifier not expected", current);
         throw 0;
       } else {
         console.error("Parse exception, token not found", current);
+        alert("Parser exception, token not found"+current);
         throw 0;
       }
       cache.push(result);
@@ -438,13 +478,28 @@
         throw 0;
       }
     }
-    cache[0].parent=dom;
+    if (cache[cache.length-1].getClass() !== K.TransitionNode){
+      console.error("Root node was not of type TransitionNode");
+      throw 0;
+    }
     if (cache.length !== 1){
       console.error("Parse exception. More than one root was found");
       throw 0;
     }
-    cache[0].attachInput(input);
     return cache.pop();
+  }
+  
+  function generateTree(stack, dom, input){
+    var root={};
+    try {
+      root = processStack(stack);
+    } catch (e){
+      console.error(e);
+      root = new K.TransitionNode();
+    }
+    root.parent=dom;
+    root.attachInput(input);
+    return root;
   }
   
   Object.defineProperties(TransitionNode,{

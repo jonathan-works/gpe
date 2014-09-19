@@ -74,7 +74,7 @@
   font-weight:bold;
 }
 
-.Node.selected{
+.Node.Selected{
   cursor:pointer;
 }
 .Node.Text{
@@ -107,7 +107,7 @@
   display:none;
 }
 .expressionDiv{
-  font-size:18px;
+  font-size:12px;
 }
 .Text.Operator {
   padding:0 5px;
@@ -119,18 +119,18 @@
 
 .toolbar-itm.Action:hover {
   color:#FFF;
-  background-color:#700;
+  background-color:#505050;
   cursor:context-menu;
 }
 .toolbar,.toolbar > .toolbar-itm > .toolbar {
   padding:5px;
 }
 .toolbar {
-  background-color:#FFB;
+  background-color:#C0C0C0;
   color:#000;
 }
-.Node > .Value:hover, .Node > .Operator:hover,.selected {
-  background-color:#FFB;
+.Node > .Value:hover, .Node > .Operator:hover,.Selected {
+  background-color:#C0C0C0;
 }
 
 .TransitionNode, .TransitionNode>.Text,.StringNode, .StringNode>.Text{
