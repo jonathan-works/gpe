@@ -670,3 +670,38 @@ div.rf-trn {
 .rf-p.dtable-p.bam-table {
   width:calc(100% - 212px);
 }
+
+.epp-tooltip {
+	display: none;
+	position: absolute;
+	z-index: 9001;
+}
+
+.tooltip-parent:hover > .epp-tooltip {
+	display: block;
+}
+
+.tooltip-panel {
+	max-width: 450px; 
+	max-height: 130px;
+	background-color: #FFFFCC;
+	overflow: auto;
+	padding: 2px;
+	border:1px solid #000;
+}
+
+.epp-fu {
+	width: 400px;
+}
+
+.panel-relative {
+	position: relative;
+}
+
+.tooltip-panel-div {
+	margin-left:20px;
+}
+
+.tooltip-panel-top {
+	margin-top:5px;
+}

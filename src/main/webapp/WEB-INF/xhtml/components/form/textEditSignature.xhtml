@@ -31,16 +31,26 @@
         disabled="#{readonly or home.getUseableTipoProcessoDocumento(true, taskInstanceHome.getVariableName(id), processoHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}">
         <a:ajax
           event="change"
-          render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv"
+          render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}ToolTipDiv"
           execute="@this"
           limitRender="true" />
       </wi:selectOneMenuEntity>
     </s:div>
     <s:div id="#{id}EditorDiv">
-      <wi:editor
-        id="#{editorId}"
-        value="#{home.instance[id]}"
-        readonly="#{readonly or home.possuiAssinatura(id)}" />
+	    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+		  	rendered="#{not empty home.documentosAssinaveis[id].classificacao.tipoProcessoDocumentoObservacao and not (readonly or home.possuiAssinatura(id))}">
+		  	<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
+			<div class="epp-tooltip">
+				<div class="tooltip-panel">
+					<div><h:outputText value="Observação:"/></div>
+					<h:outputText value="#{home.documentosAssinaveis[id].classificacao.tipoProcessoDocumentoObservacao}"/>
+				</div>
+			</div>
+	    </s:div>
+	    <wi:editor
+	      id="#{editorId}"
+	      value="#{home.instance[id]}"
+	      readonly="#{readonly or home.possuiAssinatura(id)}" />
     </s:div>
     <s:div
       id="#{editorId.replace('-','')}SignatureDiv"

@@ -11,17 +11,31 @@
   <ui:param
     name="template"
     value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+    
+   <s:div id="#{id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+   		  rendered="#{wi:get(rendered, true) and not empty documentoUploader.processoDocumento.tipoProcessoDocumento}">
+   	<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
+	<div class="epp-tooltip">
+		<div class="tooltip-panel">
+			<div><h:outputText value="Extensões Aceitas:" /></div>
+			<ui:repeat var="documento" value="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypesList}">
+				<div><h:outputText value="#{documento}" title="KiB significa KibiByte que são 1024 Bytes" styleClass="tooltip-panel-div"/></div>
+			</ui:repeat>
+			<s:div styleClass="tooltip-panel-top" rendered="#{not empty documentoUploader.processoDocumento.tipoProcessoDocumento.tipoProcessoDocumentoObservacao}">
+				<div><h:outputText value="Observação:"/></div>
+				<h:outputText value="#{documentoUploader.processoDocumento.tipoProcessoDocumento.tipoProcessoDocumentoObservacao}" />
+			</s:div>
+		</div>
+	</div>
+  </s:div>
+  
   <s:decorate
     id="#{id}Decoration"
     template="#{template}"
     rendered="#{wi:get(rendered, true)}">
-    <ui:param
-      name="accept"
-      value="#{wi:get(accept, 'application/pdf')}" />
-    <ui:param
-      name="tipMessage"
-      value="#{accept == 'application/pdf' ? messages['fileUpload.restriction.pdf'] : tipMessage}" />
-    <ui:define name="label">#{label}</ui:define>
+    <ui:param name="accept" value="#{wi:get(accept, 'application/pdf')}" />
+    
+	<ui:define name="label">#{label}</ui:define>
     <rich:fileUpload
       id="#{id}"
       execute="@this"
@@ -49,6 +63,6 @@
 
     <a:jsFunction id="clearUploadFileId#{id}" name="clearUploadFile"
         render="#{reRender}" execute="@this"
-        actionListener="#{documentoUploader.newInstance()}" />
+        actionListener="#{documentoUploader.clearUploadFile()}" />
 
 </ui:composition>

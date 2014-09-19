@@ -2,9 +2,7 @@ package br.com.infox.epp.processo.documento.anexos;
 
 import static java.text.MessageFormat.format;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 
 import javax.faces.component.UIComponent;
@@ -13,6 +11,7 @@ import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.apache.commons.io.IOUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -65,11 +64,23 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private UploadedFile uploadedFile;
     private TipoProcessoDocumento tipoProcessoDocumento;
     private byte[] pdf;
+    
+    public void onChangeClassificacaoDocumento(AjaxBehaviorEvent ajaxBehaviorEvent){
+    	clearUploadFile();
+        podeRenderizar(ajaxBehaviorEvent);
+    }
+    
+    public void clearUploadFile(){
+    	getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+    	setValido(false);
+    	setUploadedFile(null);
+    	pdf = null;
+    }
 
     public boolean isValido() {
         return isValido;
     }
-
+    
     public void setValido(boolean isValido) {
         this.isValido = isValido;
     }
@@ -84,17 +95,9 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     @Override
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
-        newInstance();
         final UploadedFile ui = fileUploadEvent.getUploadedFile();
         try {
-            InputStream inputStream = ui.getInputStream();
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[8192];
-            int read;
-            while ((read = inputStream.read(buffer)) != -1) {
-                bos.write(buffer, 0, read);
-            }
-            pdf = bos.toByteArray();
+            pdf = IOUtils.toByteArray(ui.getInputStream());
         } catch (IOException e) {
             LOG.error("Não foi possível recuperar o inputStream do arquivo carregado", e);
             FacesMessages.instance().add("Erro no upload do arquivo, tente novamente.");
