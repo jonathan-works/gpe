@@ -11,9 +11,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.el.ELException;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import org.jboss.el.parser.ELParser;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Factory;
@@ -39,6 +41,7 @@ import org.jbpm.graph.node.TaskNode;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.converter.NodeConverter;
@@ -523,5 +526,24 @@ public class NodeFitter extends Fitter implements Serializable {
             return false;
         }
         return !getProcessBuilder().existemProcessosAssociadosAoFluxo();
+    }
+    
+    public String getCurrentDecisionExpression() {
+        return ((DecisionNode) getCurrentNode()).getDecisionExpression();
+    }
+    
+    public void setCurrentDecisionExpression(String expression) {
+        DecisionNode decision = (DecisionNode) getCurrentNode();
+        if (expression != null) {
+            try {
+                ELParser.parse(expression);
+            } catch (ELException e) {
+                LOG.warn("Erro de sintaxe na expressão do nó de decisão " + decision.getName(), e);
+                FacesMessages.instance().clear();
+                FacesMessages.instance().add("Erro de sintaxe na expressão");
+                return;
+            }
+        }
+        decision.setDecisionExpression(expression);
     }
 }
