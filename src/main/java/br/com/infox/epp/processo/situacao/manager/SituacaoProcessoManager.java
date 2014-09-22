@@ -21,8 +21,7 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
         return getDao().getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
     }
 
-    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa,
-            Map<String, Object> selected) {
+    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
         return getDao().getProcessosAbertosByIdTarefa(idTarefa, selected);
     }
 

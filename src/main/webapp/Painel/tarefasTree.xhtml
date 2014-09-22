@@ -20,23 +20,16 @@
         render="painelProcessos,:pesquisaListForm" var="node">
 
         <rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
-
           <rich:treeNode iconCollapsed="#{a4jSkin.imgFolder}/globe16.png"
             iconExpanded="#{a4jSkin.imgFolder}/globe16.png" iconLeaf="#{a4jSkin.imgFolder}/messages.gif">
-
             <h:outputText value="#{node.entity.nomeFluxo}" />
-
           </rich:treeNode>
-
           <rich:treeModelAdaptor nodes="#{node.nodesTarefas}">
-
             <rich:treeNode id="taskNode"
               iconCollapsed="#{a4jSkin.imgFolder}/messages.gif"
               iconExpanded="#{a4jSkin.imgFolder}/messages.gif"
               iconLeaf="#{a4jSkin.imgFolder}/messages.gif">
-
               <h:outputText value="#{node.entity.nomeTarefa}" />
-
               <h:outputText
                 rendered="#{node.entity.qtd - node.entity.qtdEmCaixa gt 0}"
                 value="(#{node.entity.qtd - node.entity.qtdEmCaixa})" />

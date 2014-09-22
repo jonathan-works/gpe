@@ -29,22 +29,43 @@ public interface SituacaoProcessoQuery {
 
     String ID_TAREFA_PARAM = "idTarefa";
 
-    String PROCESSOS_ABERTOS = "processosAbertos";
-    String PROCESSOS_ABERTOS_QUERY = "select s.idProcesso from SituacaoProcesso s "
-            + "where s.idTarefa = :"
-            + ID_TAREFA_PARAM
-            + " group by s.idProcesso";
+//    String PROCESSOS_ABERTOS = "processosAbertos";
+//    String PROCESSOS_ABERTOS_QUERY = "select s.idProcesso from SituacaoProcesso s "
+//            + "where s.idTarefa = :"
+//            + ID_TAREFA_PARAM + ""
+//            + " group by s.idProcesso";
+//
+//    String PROCESSOS_ABERTOS_SEM_CAIXA = "processosAbertosQueNaoEstaoEmNenhumaCaixa";
+//    String PROCESSOS_ABERTOS_SEM_CAIXA_QUERY = "select s.idProcesso from SituacaoProcesso s "
+//            + "where s.idTarefa = :"
+//            + ID_TAREFA_PARAM
+//            + " and s.idCaixa is null group by s.idProcesso";
+//
+//    String PROCESSOS_ABERTOS_EM_CAIXA = "processosAbertosEmCaixa";
+//    String PROCESSOS_ABERTOS_EM_CAIXA_QUERY = "select s.idProcesso from SituacaoProcesso s "
+//            + "where s.idTarefa = :" + ID_TAREFA_PARAM
+//            + " and s.idCaixa is not null group by s.idProcesso";
+    
+    String PROCESSOS_ABERTOS_BASE_QUERY = "select s.idProcesso from SituacaoProcesso s where s.idTarefa = :" + ID_TAREFA_PARAM;
+    
+    String COM_CAIXA_COND = " and s.idCaixa is not null";
+    String SEM_CAIXA_COND = " and s.idCaixa is null";
+    
+    String GROUP_BY_PROCESSO_SUFIX = " group by s.idProcesso";
+    
+    String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from ProcessoEpa pe WHERE";
+    String FILTRO_SUFIX = ") ";
+    String AND = " and ";
 
-    String PROCESSOS_ABERTOS_SEM_CAIXA = "processosAbertosQueNaoEstaoEmNenhumaCaixa";
-    String PROCESSOS_ABERTOS_SEM_CAIXA_QUERY = "select s.idProcesso from SituacaoProcesso s "
-            + "where s.idTarefa = :"
-            + ID_TAREFA_PARAM
-            + " and s.idCaixa is null group by s.idProcesso";
-
-    String PROCESSOS_ABERTOS_EM_CAIXA = "processosAbertosEmCaixa";
-    String PROCESSOS_ABERTOS_EM_CAIXA_QUERY = "select s.idProcesso from SituacaoProcesso s "
-            + "where s.idTarefa = :"
-            + ID_TAREFA_PARAM
-            + " and s.idCaixa is not null group by s.idProcesso";
+    String COM_COLEGIADA = " pe.decisoraColegiada = :colegiadaLogada";
+    String COM_MONOCRATICA = " pe.decisoraMonocratica = :monocraticaLogada";
+    String SEM_COLEGIADA = " pe.decisoraColegiada is null";
+    String SEM_MONOCRATICA = " pe.decisoraMonocratica is null";
+    
+    String PROCESSOS_COM_COLEGIADA_COND = FILTRO_PREFIX + COM_COLEGIADA + AND + SEM_MONOCRATICA + FILTRO_SUFIX;
+    String PROCESSOS_COM_MONOCRATICA_COND = FILTRO_PREFIX + SEM_COLEGIADA + AND + COM_MONOCRATICA + FILTRO_SUFIX;
+    String PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND = FILTRO_PREFIX + COM_COLEGIADA + AND + COM_MONOCRATICA + FILTRO_SUFIX;
+    String PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND = FILTRO_PREFIX + SEM_COLEGIADA + AND + SEM_MONOCRATICA + FILTRO_SUFIX;
+    
 
 }

@@ -368,6 +368,7 @@ public class Authenticator {
      */
     public void setUsuarioPerfilAtual(UsuarioPerfil usuarioPerfil) {
         Set<String> roleSet = getRolesAtuais(usuarioPerfil);
+        Contexts.getSessionContext().remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
         getAuthenticatorService().removeRolesAntigas();
         getAuthenticatorService().logDaBuscaDasRoles(usuarioPerfil);
         getAuthenticatorService().addRolesAtuais(roleSet);
@@ -501,6 +502,10 @@ public class Authenticator {
     
     public boolean isUsuarioLogadoInColegiada() {
         return getUsuarioPerfilAtual().getLocalizacao().isDecisoraColegiada();
+    }
+    
+    public boolean isUsuarioLogandoInMonocraticaAndColegiada() {
+        return isUsuarioLogadoInMonocratica() && getColegiadaParaMonocraticaLogada() != null;
     }
     
     public UnidadeDecisoraMonocratica getMonocraticaLogada() {
