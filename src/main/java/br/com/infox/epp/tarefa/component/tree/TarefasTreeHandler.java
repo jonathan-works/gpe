@@ -1,8 +1,6 @@
 package br.com.infox.epp.tarefa.component.tree;
 
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +16,7 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(TarefasTreeHandler.NAME)
@@ -38,7 +37,17 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected String getQueryChildren() {
-        return TAREFAS_TREE_QUERY_CHILDREN;
+        String baseQuery = TAREFAS_TREE_QUERY_CHILDREN;
+        if (getAuthenticator().isUsuarioLogandoInMonocraticaAndColegiada()) {
+            baseQuery += PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND;
+        } else if (getAuthenticator().isUsuarioLogadoInColegiada()) {
+            baseQuery += PROCESSOS_COM_COLEGIADA_COND;
+        } else if (getAuthenticator().isUsuarioLogadoInMonocratica()) {
+            baseQuery += PROCESSOS_COM_MONOCRATICA_COND;
+        } else {
+            baseQuery += PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND;
+        }
+        return baseQuery + TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
     }
 
     protected String getQueryCaixas() {
@@ -102,5 +111,9 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     private GenericDAO genericDAO() {
         return ComponentUtil.getComponent(GenericDAO.NAME);
+    }
+    
+    private Authenticator getAuthenticator(){
+        return ComponentUtil.getComponent(Authenticator.NAME);
     }
 }

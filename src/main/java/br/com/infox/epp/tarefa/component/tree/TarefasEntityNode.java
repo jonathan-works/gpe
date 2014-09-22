@@ -13,6 +13,7 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
@@ -112,12 +113,21 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     }
 
     @Override
-    protected List<Map<String, Object>> getChildrenList(String hql,
-            Map<String, Object> entity) {
+    protected List<Map<String, Object>> getChildrenList(String hql, Map<String, Object> entity) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("idFluxo", entity.get("idFluxo"));
+        if (getAuthenticator().getColegiadaLogada() != null) {
+            parameters.put("colegiadaLogada", getAuthenticator().getColegiadaLogada());
+        }
+        if (getAuthenticator().isUsuarioLogadoInMonocratica()) {
+            parameters.put("monocraticaLogada", getAuthenticator().getMonocraticaLogada());
+        }
         GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
         return genericDAO.getResultList(hql, parameters);
+    }
+    
+    private Authenticator getAuthenticator(){
+        return ComponentUtil.getComponent(Authenticator.NAME);
     }
 
     @SuppressWarnings(UNCHECKED)

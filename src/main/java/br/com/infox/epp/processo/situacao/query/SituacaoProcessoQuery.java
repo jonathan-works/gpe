@@ -12,12 +12,13 @@ public interface SituacaoProcessoQuery {
             + "from SituacaoProcesso s group by s.nomeFluxo order by s.nomeFluxo";
 
     String TAREFAS_TREE_CHILDREN = "tarefasTreeQueryChildren";
+    String TAREFAS_TREE_QUERY_CHILDREN_SUFIX = " group by s.nomeTarefa order by s.nomeTarefa";
     String TAREFAS_TREE_QUERY_CHILDREN = "select new map("
             + "max(s.idSituacaoProcesso) as id, s.nomeTarefa as nomeTarefa, "
             + "max(s.idTask) as idTask, max(s.idTaskInstance) as idTaskInstance, "
             + "max(s.idTarefa) as idTarefa, count(s.nomeCaixa) as qtdEmCaixa, "
-            + "count(s.idProcesso) as qtd, 'caixa' as tree, 'Task' as type) from SituacaoProcesso s "
-            + "where s.idFluxo = :idFluxo group by s.nomeTarefa order by s.nomeTarefa";
+            + "count(distinct s.idProcesso) as qtd, 'caixa' as tree, 'Task' as type) from SituacaoProcesso s "
+            + "where s.idFluxo = :idFluxo";
 
     String TAREFAS_TREE_CAIXAS = "tarefasTreeQueryCaixas";
     String TAREFAS_TREE_QUERY_CAIXAS = "select new map(c.idCaixa as idCaixa, "
