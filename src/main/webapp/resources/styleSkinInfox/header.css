@@ -1,4 +1,5 @@
-.banner {
+.banner, .banner-logo {
+    height: 101px;
 }
 .banner-lft, .banner-ctr, .banner-rgt {
     display: inline-block;
@@ -56,7 +57,4 @@
 }
 .painelUsuario-label, .painelUsuario-select {
     display: block;
-}
-.banner-logo {
-    height: 85px;
 }

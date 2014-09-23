@@ -82,7 +82,7 @@
 }
 
 .pageBody {
-  height: calc(100% - 109px);
+  height: calc(100% - 125px);
 }
 /* FIM LAYOUT GERAL */
 /* MENU */
@@ -631,9 +631,6 @@ div.rf-trn {
   overflow: visible;
 }
 
-.banner-logo {
-  height: 85px;
-}
 /* Fim do workaround RF-12332 */
 .rf-tr {
   text-align: left;
