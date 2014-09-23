@@ -72,6 +72,11 @@
   width:100%;
   text-align:center;
   font-weight:bold;
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 }
 
 .Node.Selected{
@@ -134,7 +139,11 @@
 }
 
 .TransitionNode, .TransitionNode>.Text,.StringNode, .StringNode>.Text{
+<<<<<<< Updated upstream
   color:#00F;
+=======
+  color:#44F;
+>>>>>>> Stashed changes
 }
 .BooleanNode, .BooleanNode>.Text {
   color:#A00;
@@ -159,6 +168,7 @@
   margin:0;
 }
 
+<<<<<<< Updated upstream
 .Expression.Node {
   display:inline-block;
 }
@@ -168,6 +178,9 @@
 }
 
 .Expression.Node > .ArithNode, .Expression.Node > .StringNode, .Expression.Node > .TransitionNode, .Expression.Node > .BooleanNode {
+=======
+.Node > .Expression.Node, .Expression.Node > .ArithNode, .Expression.Node > .StringNode, .Expression.Node > .TransitionNode, .Expression.Node > .BooleanNode {
+>>>>>>> Stashed changes
   margin:0 0 0 20px;
 }
 
@@ -175,6 +188,12 @@
   vertical-align:middle;
 }
 
+<<<<<<< Updated upstream
 .BooleanNode, .StringNode, .ArithNode, .TransitionNode {
   display:inline-block;
+=======
+.Expression.Node,.BooleanNode, .StringNode, .ArithNode, .TransitionNode {
+  display:inline-block;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 }
