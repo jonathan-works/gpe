@@ -93,10 +93,10 @@ public class PropertiesLoader implements Serializable {
 			file.createNewFile();
 			FileOutputStream newOutputStream = new FileOutputStream(file);
 			
-			int read = newInputStream.read();
-			while (read != -1) {
-				newOutputStream.write(read);
-				read = newInputStream.read();
+			int length;
+			byte[] data = new byte[1024];
+			while ((length = newInputStream.read(data)) > 0) {
+				newOutputStream.write(data, 0, length);
 			}
 			newInputStream.close();
 			newOutputStream.close();
