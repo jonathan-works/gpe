@@ -40,7 +40,7 @@
 					<s:div rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id]}">
 						<div><h:outputText value="Extensões Aceitas:"/></div>
 						<ui:repeat var="documento" value="#{taskInstanceHome.classificacoesVariaveisUpload[id].acceptedTypesList}">
-							<div><h:outputText value="#{documento}" title="KiB significa KibiByte que são 1024 Bytes" styleClass="tooltip-panel-div"/></div>
+							<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
 						</ui:repeat>
 						<s:div styleClass="tooltip-panel-top" rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumentoObservacao}">
 							<div>

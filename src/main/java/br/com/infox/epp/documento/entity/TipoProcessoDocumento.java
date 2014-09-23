@@ -231,9 +231,9 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     	for (ExtensaoArquivo ea : getExtensaoArquivosList()){
     		stringBuilder = new StringBuilder();
     		stringBuilder.append(ea.getNomeExtensao().toUpperCase());
-    		stringBuilder.append("(").append(ea.getTamanho()).append(" KiB");
+    		stringBuilder.append("(").append(ea.getTamanho()).append(" Kb");
     		if (ea.getPaginavel()){
-    			stringBuilder.append(" / ").append(ea.getTamanhoPorPagina()).append(" KiB");
+    			stringBuilder.append(" / ").append(ea.getTamanhoPorPagina()).append(" Kb");
     			stringBuilder.append(" por Página");
     		}
     		stringBuilder.append(")");

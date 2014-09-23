@@ -19,7 +19,7 @@
 		<div class="tooltip-panel">
 			<div><h:outputText value="Extensões Aceitas:" /></div>
 			<ui:repeat var="documento" value="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypesList}">
-				<div><h:outputText value="#{documento}" title="KiB significa KibiByte que são 1024 Bytes" styleClass="tooltip-panel-div"/></div>
+				<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
 			</ui:repeat>
 			<s:div styleClass="tooltip-panel-top" rendered="#{not empty documentoUploader.processoDocumento.tipoProcessoDocumento.tipoProcessoDocumentoObservacao}">
 				<div><h:outputText value="Observação:"/></div>
