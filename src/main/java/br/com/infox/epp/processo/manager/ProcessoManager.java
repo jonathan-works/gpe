@@ -214,8 +214,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     	Long idJbpm = processo.getIdJbpm();
     	if (idJbpm == null) throw new DAOException("Processo sem tarefa no Jbpm");
     	Object[] ids = getDao().getIdTaskMgmInstanceAndIdTokenByidJbpm(idJbpm);
-    	Long idTaskMgmInstance = ((BigInteger) ids[0]).longValue();
-    	Long idToken = ((BigInteger) ids[1]).longValue();
+    	Long idTaskMgmInstance = ((Number) ids[0]).longValue();
+    	Long idToken = ((Number) ids[1]).longValue();
     	getDao().removerProcessoJbpm(processo.getIdProcesso(), idJbpm, idTaskMgmInstance, idToken);
     	processo.setIdJbpm(null);
     }
