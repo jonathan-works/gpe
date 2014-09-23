@@ -176,10 +176,10 @@
                 limitRender="true" />
             </s:div>
           </div>
-          <s:div rendered="#{not useCertLogin}">
-            <div
-              id="bg_login_inferior"
-              class="bg_login_inferior login">
+          <div
+            id="bg_login_inferior"
+            class="bg_login_inferior login">
+            <h:panelGroup rendered="#{not useCertLogin}">
               <h:commandButton
                 id="btnEntrar"
                 value="#{messages['login.entrarBtn']}"
@@ -189,13 +189,14 @@
                 class="input_button"
                 id="btnTrocar"
                 type="button"
-                value="#{messages['login.trocarSenhaBtn']}" /> <input
+                value="#{messages['login.trocarSenhaBtn']}" />
+              <input
                 class="input_button"
                 id="btnTrocarSenha"
                 type="button"
                 value="#{messages['login.requisitarSenhaBtn']}" />
-            </div>
-          </s:div>
+            </h:panelGroup>
+          </div>
         </div>
       </h:form>
       <rich:popupPanel

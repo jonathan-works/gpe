@@ -37,35 +37,43 @@
 
 .blocoCentralLogin {
   position: fixed;
-  height: 282px;
-  width: 742px;
-  left: calc(50% - 371px);
-  top: calc(50% - 141px);
+  height: 0px;
+  width: 0px;
+  left: 50%;
+  top: 50%;
   z-index: 1;
 }
 
 .logo, .logo_inferior,
- .login.bg_login, .bg_login_inferior.login {
+ .login.bg_login, .bg_login_inferior.login{
   position: absolute;
-  width: 350px;
 }
-.logo-img {
-  width:350px  
-}
-.logo, .login.bg_login {
-  bottom: 141px;
-}
-
-.logo_inferior, .bg_login_inferior.login {
-  top: 141px;
-}
-
 .logo, .logo_inferior {
-  right: 371px;
+  width:355px;
+  height:122px;
 }
 
 .login.bg_login, .bg_login_inferior.login {
-  left: 371px;
+  width: 355px;
+  min-height: 122px;
+}
+.logo-img{
+  max-width:355px;
+  max-height:150px;
+}
+.logo, .login.bg_login,.logo-img {
+  bottom:0;
+}
+.logo_inferior, .bg_login_inferior.login {
+  top:0;
+}
+
+.logo, .logo_inferior,.logo-img {
+  right:0;
+}
+
+.login.bg_login, .bg_login_inferior.login {
+  left:0;
 }
 
 .bg_login {
@@ -77,7 +85,7 @@
 .bg_login_inferior {
   text-align: center;
   border-radius: 0 0 10px 10px;
-  padding: 25px 0 25px 0;
+  padding: 10px 0 0 0;
 }
 
 .novaSenha {
