@@ -11,23 +11,23 @@
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
 
-    <ui:define name="title">#{messages['categoria.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['categoria.titlePage']}</ui:define>
     <ui:param name="home" value="#{categoriaCrudAction}" />
     <ui:param name="crudAction" value="#{categoriaCrudAction}" />
     <ui:define name="searchGrid">
         <wi:dataTable values="#{categoriaList.list(15)}"
             bean="#{categoriaList}"
-            tableTitle="#{messages['categoria.tableTitle']}"
+            tableTitle="#{eppmessages['categoria.tableTitle']}"
             id="categoriaList" rowId="#{row.idCategoria}"
             actionInactive="categoriaCrudAction.inactive">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarCategoriaForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{eppmessages['searchForm.title']}">
                     <wi:inputText id="categoria"
                         value="#{categoriaList.entity.categoria}"
-                        label="#{messages['categoria.categoria']}" />
+                        label="#{eppmessages['categoria.categoria']}" />
                     <wi:selectSituacaoOneMenu id="ativo"
-                        label="#{messages['field.situacao']}"
+                        label="#{eppmessages['field.situacao']}"
                         value="#{categoriaList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
@@ -37,41 +37,41 @@
                     actionInactive="categoriaCrudAction.inactive(row)" />
             </ui:define>
             <wi:columnOutputText columnId="categoria"
-                columnHeader="#{messages['categoria.categoria']}"
+                columnHeader="#{eppmessages['categoria.categoria']}"
                 value="#{row.categoria}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{messages['field.situacao']}"
+                columnHeader="#{eppmessages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
         <wi:dataForm formId="categoriaForm"
-            formTitle="#{messages['form.title']}">
+            formTitle="#{eppmessages['form.title']}">
             <wi:inputText id="categoria"
                 value="#{crudAction.instance.categoria}" required="true"
-                label="#{messages['categoria.categoria']}" />
+                label="#{eppmessages['categoria.categoria']}" />
             <wi:selectSituacaoRadio id="ativo" required="false"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{crudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>
     <ui:define name="tabs">
         <infox:tab id="categoriaItemTab"
             rendered="#{crudAction.isManaged()}"
-            title="#{messages['categoriaItem.titleTab']}"
+            title="#{eppmessages['categoriaItem.titleTab']}"
             name="categoriaItemTab">
             <s:div id="categoriaItemFormDiv">
                 <wi:dataForm formId="categoriaItemForm"
-                    formTitle="#{messages['form.title']} #{crudAction.instance.categoria}">
+                    formTitle="#{eppmessages['form.title']} #{crudAction.instance.categoria}">
                     <wi:tree id="itemTree"
                         assignTo="categoriaItemCrudAction.item"
                         tree="#{itemTree}" required="true"
-                        label="#{messages['categoriaItem.item']}" />
+                        label="#{eppmessages['categoriaItem.item']}" />
                     <ui:define name="buttons">
                         <wi:commandButton id="saveButton"
                             action="categoriaItemCrudAction.save()"
                             reRender="categoriaItemFormDiv, categoriaItemDiv, categoriaItemTab, pageBodyDialogMessage"
-                            value="#{messages['crud.persist']}" />
+                            value="#{eppmessages['crud.persist']}" />
                     </ui:define>
                 </wi:dataForm>
             </s:div>
@@ -79,7 +79,7 @@
                 <wi:dataTable id="categoriaItemTable"
                     values="#{categoriaItemList.list(15)}"
                     bean="#{categoriaItemList}"
-                    tableTitle="#{messages['categoriaItem.titleDataTable']} - #{crudAction.instance.categoria}"
+                    tableTitle="#{eppmessages['categoriaItem.titleDataTable']} - #{crudAction.instance.categoria}"
                     var="row" rows="10">
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
@@ -88,7 +88,7 @@
                             actionRemove="categoriaItemCrudAction.remove(row)" />
                     </ui:define>
                     <wi:columnOutputText columnId="item"
-                        columnHeader="#{messages['categoriaItem.item']}"
+                        columnHeader="#{eppmessages['categoriaItem.item']}"
                         value="#{row.item.caminhoCompletoToString()}"
                         hideOrder="true" styleClass="rf-dt-c-left">
                     </wi:columnOutputText>
