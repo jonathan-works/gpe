@@ -11,6 +11,8 @@ import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PRO
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_COM_MONOCRATICA_COND;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.SEM_CAIXA_COND;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_BASE;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +46,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     }
 
     public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
-        String namedQuery = getFiltrosDecisoras(getProcessosBaseQuery(selected)) + GROUP_BY_PROCESSO_SUFIX;
+        String namedQuery = putFiltrosDeUnidadesDecisoras(getProcessosBaseQuery(selected)) + GROUP_BY_PROCESSO_SUFIX;
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_TAREFA_PARAM, idTarefa);
         if (authenticator.getColegiadaLogada() != null) {
@@ -68,7 +70,20 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return PROCESSOS_ABERTOS_BASE_QUERY;
     }
     
-    private String getFiltrosDecisoras(String baseQuery) {
+
+    public boolean canOpenTask(long currentTaskId) {
+        JbpmUtil.getJbpmSession().flush();
+        Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
+        Long count = getQuantidadeTarefasAtivasByTaskId(currentTaskId);
+        return count != null && count > 0;
+    }
+    
+    public String createQueryChildrenForTree() {
+        String baseQuery = TAREFAS_TREE_QUERY_CHILDREN_BASE;
+        return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
+    }
+
+    private String putFiltrosDeUnidadesDecisoras(String baseQuery) {
         if (authenticator.isUsuarioLogandoInMonocraticaAndColegiada()) {
             return baseQuery + PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND;
         } else if (authenticator.isUsuarioLogadoInColegiada()) {
@@ -78,13 +93,6 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         } else {
             return baseQuery + PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND;
         }
-    }
-
-    public boolean canOpenTask(long currentTaskId) {
-        JbpmUtil.getJbpmSession().flush();
-        Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
-        Long count = getQuantidadeTarefasAtivasByTaskId(currentTaskId);
-        return count != null && count > 0;
     }
 
 }

@@ -17,6 +17,7 @@ import org.jboss.seam.core.Events;
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(TarefasTreeHandler.NAME)
@@ -32,22 +33,12 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected String getQueryRoots() {
-        return TAREFAS_TREE_QUERY_ROOTS;
+        return TAREFAS_TREE_QUERY_ROOTS_BASE;
     }
 
     @Override
     protected String getQueryChildren() {
-        String baseQuery = TAREFAS_TREE_QUERY_CHILDREN;
-        if (getAuthenticator().isUsuarioLogandoInMonocraticaAndColegiada()) {
-            baseQuery += PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND;
-        } else if (getAuthenticator().isUsuarioLogadoInColegiada()) {
-            baseQuery += PROCESSOS_COM_COLEGIADA_COND;
-        } else if (getAuthenticator().isUsuarioLogadoInMonocratica()) {
-            baseQuery += PROCESSOS_COM_MONOCRATICA_COND;
-        } else {
-            baseQuery += PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND;
-        }
-        return baseQuery + TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
+        return getSituacaoProcessoDAO().createQueryChildrenForTree();
     }
 
     protected String getQueryCaixas() {
@@ -115,5 +106,9 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
     
     private Authenticator getAuthenticator(){
         return ComponentUtil.getComponent(Authenticator.NAME);
+    }
+    
+    private SituacaoProcessoDAO getSituacaoProcessoDAO() {
+        return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
     }
 }

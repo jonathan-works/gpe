@@ -25,15 +25,16 @@ import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
 @Entity
 @Table(name = SituacaoProcesso.TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name = TAREFAS_TREE_ROOTS, query = TAREFAS_TREE_QUERY_ROOTS),
-    @NamedQuery(name = TAREFAS_TREE_CHILDREN, query = TAREFAS_TREE_QUERY_CHILDREN),
+    @NamedQuery(name = TAREFAS_TREE_ROOTS, query = TAREFAS_TREE_QUERY_ROOTS_BASE),
+    @NamedQuery(name = TAREFAS_TREE_CHILDREN, query = TAREFAS_TREE_QUERY_CHILDREN_BASE),
     @NamedQuery(name = TAREFAS_TREE_CAIXAS, query = TAREFAS_TREE_QUERY_CAIXAS),
     @NamedQuery(name = COUNT_TAREFAS_ATIVAS_BY_TASK_ID, query = COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY) })
 @FilterDefs({
     @FilterDef(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, parameters = {
         @ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO),
         @ParamDef(type = SituacaoProcessoFilter.TYPE_INT, name = SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL) }),
-    @FilterDef(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, parameters = { @ParamDef(type = SigiloProcessoFilter.TYPE_INT, name = SigiloProcessoFilter.PARAM_ID_USUARIO) }) })
+    @FilterDef(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, parameters = { 
+        @ParamDef(type = SigiloProcessoFilter.TYPE_INT, name = SigiloProcessoFilter.PARAM_ID_USUARIO) }) })
 @Filters({
     @Filter(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, condition = SituacaoProcessoFilter.CONDITION_PAPEL_LOCALIZACAO),
     @Filter(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, condition = SigiloProcessoFilter.CONDITION_FILTER_SIGILO_PROCESSO) })
