@@ -1,6 +1,6 @@
 package br.com.infox.epp.tarefa.component.tree;
 
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.*;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,8 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected String getQueryRoots() {
-        return TAREFAS_TREE_QUERY_ROOTS_BASE;
+        return getSituacaoProcessoDAO().createQueryRootsForTree();
+//        return TAREFAS_TREE_QUERY_ROOTS_BASE;
     }
 
     @Override
@@ -73,7 +74,13 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
     public List<TarefasEntityNode<Map<String, Object>>> getTarefasRoots() {
         if (rootList == null || rootList.isEmpty()) {
             Events.instance().raiseEvent(FILTER_TAREFAS_TREE);
-            Query query = genericDAO().createQuery(getQueryRoots());
+            Query query = genericDAO().createQuery(getSituacaoProcessoDAO().createQueryRootsForTree());
+            if (getAuthenticator().getColegiadaLogada() != null) {
+                query.setParameter("colegiadaLogada", getAuthenticator().getColegiadaLogada());
+            }
+            if (getAuthenticator().isUsuarioLogadoInMonocratica()) {
+                query.setParameter("monocraticaLogada", getAuthenticator().getMonocraticaLogada());
+            }
             TarefasEntityNode<Map<String, Object>> entityNode = createNode();
             rootList = entityNode.getRootsFluxos(query);
         }
@@ -104,11 +111,11 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
         return ComponentUtil.getComponent(GenericDAO.NAME);
     }
     
-    private Authenticator getAuthenticator(){
-        return ComponentUtil.getComponent(Authenticator.NAME);
-    }
-    
     private SituacaoProcessoDAO getSituacaoProcessoDAO() {
         return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
+    }
+    
+    private Authenticator getAuthenticator(){
+        return ComponentUtil.getComponent(Authenticator.NAME);
     }
 }

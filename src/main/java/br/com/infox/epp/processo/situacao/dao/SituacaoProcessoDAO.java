@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.situacao.dao;
 
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.COM_CAIXA_COND;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.*;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.COUNT_TAREFAS_ATIVAS_BY_TASK_ID;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.GROUP_BY_PROCESSO_SUFIX;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.ID_TAREFA_PARAM;
@@ -76,6 +76,11 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
         Long count = getQuantidadeTarefasAtivasByTaskId(currentTaskId);
         return count != null && count > 0;
+    }
+    
+    public String createQueryRootsForTree() {
+        String baseQuery = TAREFAS_TREE_QUERY_ROOTS_BASE;
+        return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_ROOTS_SUFIX;
     }
     
     public String createQueryChildrenForTree() {

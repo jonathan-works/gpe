@@ -9,7 +9,9 @@ public interface SituacaoProcessoQuery {
 
     String TAREFAS_TREE_ROOTS = "tarefasTreeQueryRoots";
     String TAREFAS_TREE_QUERY_ROOTS_BASE = "select new map(s.nomeFluxo as nomeFluxo, max(s.idFluxo) as idFluxo, 'Fluxo' as type) "
-            + "from SituacaoProcesso s group by s.nomeFluxo order by s.nomeFluxo";
+            + "from SituacaoProcesso s where 1=1";
+    String TAREFAS_TREE_QUERY_ROOTS_SUFIX = "group by s.nomeFluxo order by s.nomeFluxo";
+    
 
     String TAREFAS_TREE_CHILDREN = "tarefasTreeQueryChildren";
     String TAREFAS_TREE_QUERY_CHILDREN_SUFIX = " group by s.nomeTarefa order by s.nomeTarefa";
