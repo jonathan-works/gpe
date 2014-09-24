@@ -28,9 +28,6 @@ import br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter;
     @NamedQuery(name = TAREFAS_TREE_ROOTS, query = TAREFAS_TREE_QUERY_ROOTS),
     @NamedQuery(name = TAREFAS_TREE_CHILDREN, query = TAREFAS_TREE_QUERY_CHILDREN),
     @NamedQuery(name = TAREFAS_TREE_CAIXAS, query = TAREFAS_TREE_QUERY_CAIXAS),
-//    @NamedQuery(name = PROCESSOS_ABERTOS, query = PROCESSOS_ABERTOS_QUERY),
-//    @NamedQuery(name = PROCESSOS_ABERTOS_EM_CAIXA, query = PROCESSOS_ABERTOS_EM_CAIXA_QUERY),
-//    @NamedQuery(name = PROCESSOS_ABERTOS_SEM_CAIXA, query = PROCESSOS_ABERTOS_SEM_CAIXA_QUERY),
     @NamedQuery(name = COUNT_TAREFAS_ATIVAS_BY_TASK_ID, query = COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY) })
 @FilterDefs({
     @FilterDef(name = SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO, parameters = {

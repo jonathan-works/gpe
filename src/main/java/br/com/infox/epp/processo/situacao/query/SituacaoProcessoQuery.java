@@ -30,23 +30,6 @@ public interface SituacaoProcessoQuery {
 
     String ID_TAREFA_PARAM = "idTarefa";
 
-//    String PROCESSOS_ABERTOS = "processosAbertos";
-//    String PROCESSOS_ABERTOS_QUERY = "select s.idProcesso from SituacaoProcesso s "
-//            + "where s.idTarefa = :"
-//            + ID_TAREFA_PARAM + ""
-//            + " group by s.idProcesso";
-//
-//    String PROCESSOS_ABERTOS_SEM_CAIXA = "processosAbertosQueNaoEstaoEmNenhumaCaixa";
-//    String PROCESSOS_ABERTOS_SEM_CAIXA_QUERY = "select s.idProcesso from SituacaoProcesso s "
-//            + "where s.idTarefa = :"
-//            + ID_TAREFA_PARAM
-//            + " and s.idCaixa is null group by s.idProcesso";
-//
-//    String PROCESSOS_ABERTOS_EM_CAIXA = "processosAbertosEmCaixa";
-//    String PROCESSOS_ABERTOS_EM_CAIXA_QUERY = "select s.idProcesso from SituacaoProcesso s "
-//            + "where s.idTarefa = :" + ID_TAREFA_PARAM
-//            + " and s.idCaixa is not null group by s.idProcesso";
-    
     String PROCESSOS_ABERTOS_BASE_QUERY = "select s.idProcesso from SituacaoProcesso s where s.idTarefa = :" + ID_TAREFA_PARAM;
     
     String COM_CAIXA_COND = " and s.idCaixa is not null";
