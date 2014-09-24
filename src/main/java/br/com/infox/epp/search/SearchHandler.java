@@ -86,29 +86,14 @@ public class SearchHandler implements Serializable {
         String[] fields = new String[] { "conteudo" };
         Query query = indexer.getQuery(searchText, fields);
         List<Document> search = indexer.search(searchText, fields, 200);
-//        Session session = ManagedJbpmContext.instance().getSession();
 
         for (Document d : search) {
-//            long taskId = Long.parseLong(d.get("id"));
-//            TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
-
-//            if (ti == null) {
-//                LOG.warn("Task não encontrada: " + taskId);
-//            } else {
-//            String texto = d.get("conteudo");
-//                String s = SearchService.getBestFragments(query, d.get("conteudo"));
                 Map<String, Object> m = new HashMap<String, Object>();
-//                m.put("texto", s);
                 m.put("processo", d.get("idProcesso"));
-//                m.put("taskName", ti.getTask().getName());
                 m.put("taskId", d.get("taskId"));
-//                m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
-//                if (s == null || "".equals(s)) {
                     m.put("nomeArquivo", d.get("nomeArquivo"));
-//                }
                 searchResult.add(m);
             }
-//        }
         resultSize = searchResult.size();
     }
 

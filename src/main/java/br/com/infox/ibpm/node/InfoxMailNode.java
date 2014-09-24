@@ -293,12 +293,6 @@ public class InfoxMailNode extends MailNode {
         currentListaEmail = new ListaEmail();
         to = MessageFormat.format("'{'idGrupo={0}'}'", idGrupo);
 
-//        TreeHandler<?> treeHandler = (TreeHandler<?>) Component.getInstance(EstruturaTreeHandler.NAME);
-//        treeHandler.clearTree();
-//        treeHandler = (TreeHandler<?>) Component.getInstance(LocalizacaoTreeHandler.NAME);
-//        treeHandler.clearTree();
-//        treeHandler = (TreeHandler<?>) Component.getInstance(PapelTreeHandler.class);
-//        treeHandler.clearTree();
         createAction();
     }
 
