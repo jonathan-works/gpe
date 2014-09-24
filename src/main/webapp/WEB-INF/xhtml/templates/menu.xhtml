@@ -19,57 +19,52 @@
   <ui:param
     name="mostrarMenu"
     value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
-  <h:outputScript>
-    $(document).ready(function() {
-      $(".LinkMenu")
-        .addClass("rf-ddm-lbl rf-ddm-unsel")
-        .hover(function() {
-          $(this)
-            .toggleClass("rf-ddm-unsel")
-            .toggleClass("rf-ddm-sel");
-        });
-    });
-  </h:outputScript>
-  <rich:toolbar
-    styleClass="menu-tb"
-    itemClass="label-menu">
-    <c:if test="#{mostrarMenu}">
-      <c:forEach
-        items="#{mainMenu.dropMenus}"
-        var="drop">
-        <h:form rendered="#{empty drop.url}">
-          <rich:dropDownMenu label="#{drop.label}">
-            <ui:include src="/WEB-INF/xhtml/templates/subMenu.xhtml">
-              <ui:param
-                name="subMenu"
-                value="#{drop}" />
-            </ui:include>
-          </rich:dropDownMenu>
-        </h:form>
-        <h:form rendered="#{!empty drop.url}">
-          <rich:menuItem
-            submitMode="server"
-            label="#{drop.label}"
-            action="#{drop.url}">
-            <s:conversationPropagation type="end" />
-          </rich:menuItem>
-        </h:form>
-      </c:forEach>
-    </c:if>
-    <rich:toolbarGroup location="right">
-      <h:form>
-        <s:link
-          view="/login.xhtml"
+  <h:form>
+    <nav class="menu-nav">
+      <ul class="menu-main">
+        <c:if test="#{mostrarMenu}">
+          <c:forEach
+            items="#{mainMenu.dropMenus}"
+            var="drop">
+            <li class="menu-itm">
+              <h:panelGroup
+                rendered="#{empty drop.url}">
+                <div class="inline-block">
+                  <h:outputText value="#{drop.label}" />
+                </div>
+                <ul class="menu-submenu">
+                  <ui:include src="/WEB-INF/xhtml/templates/subMenu.xhtml">
+                    <ui:param name="subMenu" value="#{drop}" />
+                  </ui:include>
+                </ul>
+              </h:panelGroup>
+              <h:panelGroup rendered="#{not empty drop.url}">
+                <h:commandLink action="#{drop.url}">
+                  <h:outputText value="#{drop.label}" />
+                  <s:conversationPropagation type="end" />
+                </h:commandLink>
+              </h:panelGroup>
+            </li>
+          </c:forEach>
+        </c:if>
+        <li class="menu-itm">
+          <s:link
+            view="/login.xhtml"
           value="#{eppmessages['menu.login']}"
-          rendered="#{not identity.loggedIn}" />
-        <s:link
-          view="/home.xhtml"
-          action="#{identity.logout}"
-          styleClass="LinkMenu"
+            rendered="#{not identity.loggedIn}" />
+        </li>
+        <li class="menu-itm">
+          <s:link
+            view="/home.xhtml"
+            action="#{identity.logout}"
+            styleClass="LinkMenu"
           value="#{eppmessages['menu.logout']}"
-          rendered="#{identity.loggedIn}" />
-      </h:form>
-      <wi:helpIcon />
-    </rich:toolbarGroup>
-  </rich:toolbar>
+            rendered="#{identity.loggedIn}" />
+        </li>
+        <li class="menu-itm">
+          <wi:helpIcon />
+        </li>
+      </ul>
+    </nav>
+  </h:form>
 </ui:composition>
