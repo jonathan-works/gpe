@@ -17,38 +17,38 @@
   <ui:param
     name="showFormTab"
     value="#{home.managed}" />
-  <ui:define name="title">#{messages['recurso.titlePage']}</ui:define>
+  <ui:define name="title">#{eppmessages['recurso.titlePage']}</ui:define>
   <ui:define name="searchGrid">
     <wi:dataTable
       values="#{recursoList.list(15)}"
       bean="#{recursoList}"
-      tableTitle="#{messages['recurso.tableTitle']}"
+      tableTitle="#{eppmessages['recurso.tableTitle']}"
       id="recursoList"
       rowId="#{row.idRecurso}"
       reportPath="/useradmin/reportRecurso.xhtml">
       <ui:define name="searchForm">
         <wi:searchForm
           formId="pesquisarRecursoForm"
-          formTitle="#{messages['searchForm.title']}">
+          formTitle="#{eppmessages['searchForm.title']}">
           <wi:inputText
             id="nome"
-            label="#{messages['recurso.nome']}"
+            label="#{eppmessages['recurso.nome']}"
             value="#{recursoList.entity.nome}"
             maxlength="100" />
           <wi:inputText
             id="identificador"
-            label="#{messages['recurso.identificador']}"
+            label="#{eppmessages['recurso.identificador']}"
             value="#{recursoList.entity.identificador}"
             maxlength="100" />
         </wi:searchForm>
       </ui:define>
       <wi:columnOutputText
         columnId="nome"
-        columnHeader="#{messages['recurso.nome']}"
+        columnHeader="#{eppmessages['recurso.nome']}"
         value="#{row.nome}" />
       <wi:columnOutputText
         columnId="identificador"
-        columnHeader="#{messages['recurso.identificador']}"
+        columnHeader="#{eppmessages['recurso.identificador']}"
         value="#{row.identificador}" />
       <ui:define name="toolBar">
         <wi:toolBarEdit id="recursoListedit" />
@@ -58,17 +58,17 @@
   <ui:define name="form">
     <wi:dataForm
       formId="recursos"
-      formTitle="#{messages['form.title']}"
+      formTitle="#{eppmessages['form.title']}"
       updateAction="recursoCrudAction.save()"
       persistAction="recursoCrudAction.save()">
       <wi:outputText
         id="identificador"
-        label="#{messages['recurso.identificador']}"
+        label="#{eppmessages['recurso.identificador']}"
         value="#{recursoCrudAction.instance.identificador}">
       </wi:outputText>
       <wi:inputText
         id="nome"
-        label="#{messages['recurso.nome']}"
+        label="#{eppmessages['recurso.nome']}"
         value="#{recursoCrudAction.instance.nome}"
         required="true" />
       <ui:define name="buttons">
@@ -80,16 +80,16 @@
     <infox:tab
       id="papeisTab"
       rendered="#{recursoCrudAction.isManaged()}"
-      title="#{messages['recursoPapel.titleTab']}"
+      title="#{eppmessages['recursoPapel.titleTab']}"
       name="papeisTab"
       action="#{recursoPapelController.setRecurso(recursoCrudAction.instance)}">
       <wi:dataForm
         formId="papel"
-        formTitle="#{messages['recurso.papelTitleForm']} - #{recursoCrudAction.instance.nome}">
+        formTitle="#{eppmessages['recurso.papelTitleForm']} - #{recursoCrudAction.instance.nome}">
         <a:region>
           <wi:pickList
             id="recurso"
-            targetCaption="#{messages['recurso.papeis']}"
+            targetCaption="#{eppmessages['recurso.papeis']}"
             value="#{recursoPapelController.papeis}"
             itemValues="#{recursoPapelController.papeisDisponiveis}"
             itemLabel="#{var}" />
@@ -98,7 +98,7 @@
           <wi:commandButton
             id="papeisButton"
             action="recursoPapelController.save()"
-            value="#{messages['crud.update']}" />
+            value="#{eppmessages['crud.update']}" />
         </ui:define>
       </wi:dataForm>
     </infox:tab>

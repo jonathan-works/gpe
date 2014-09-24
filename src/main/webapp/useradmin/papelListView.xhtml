@@ -16,12 +16,12 @@
     name="home"
     value="#{papelCrudAction}"
   />
-  <ui:define name="title">#{messages['papel.titlePage']}</ui:define>
+  <ui:define name="title">#{eppmessages['papel.titlePage']}</ui:define>
   <ui:define name="searchGrid">
     <wi:dataTable
       values="#{papelList.list(15)}"
       bean="#{papelList}"
-      tableTitle="#{messages['papel.tableTitle']}"
+      tableTitle="#{eppmessages['papel.tableTitle']}"
       id="papelList"
       rowId="#{row.idPapel}"
       reportPath="/useradmin/reportPapel.xhtml"
@@ -29,17 +29,17 @@
       <ui:define name="searchForm">
         <wi:searchForm
           formId="pesquisarPapelForm"
-          formTitle="#{messages['searchForm.title']}"
+          formTitle="#{eppmessages['searchForm.title']}"
         >
           <wi:inputText
             id="nome"
-            label="#{messages['papel.nome']}"
+            label="#{eppmessages['papel.nome']}"
             value="#{papelList.entity.nome}"
             maxlength="100"
           />
           <wi:inputText
             id="identificador"
-            label="#{messages['papel.identificador']}"
+            label="#{eppmessages['papel.identificador']}"
             value="#{papelList.entity.identificador}"
             maxlength="100"
           />
@@ -47,12 +47,12 @@
       </ui:define>
       <wi:columnOutputText
         columnId="nome"
-        columnHeader="#{messages['papel.nome']}"
+        columnHeader="#{eppmessages['papel.nome']}"
         value="#{row.nome}"
       />
       <wi:columnOutputText
         columnId="identificador"
-        columnHeader="#{messages['papel.identificador']}"
+        columnHeader="#{eppmessages['papel.identificador']}"
         value="#{row.identificador}"
       />
       <ui:define name="toolBar">
@@ -64,7 +64,7 @@
   <ui:define name="form">
     <wi:dataForm
       formId="papel"
-      formTitle="#{messages['form.title']}"
+      formTitle="#{eppmessages['form.title']}"
       updateAction="papelCrudAction.save()"
       persistAction="papelCrudAction.save()"
     >
@@ -75,14 +75,14 @@
     <infox:tab
       id="tabPapeis"
       status=":status"
-      title="#{messages['papel.visaoHierarquica']}"
+      title="#{eppmessages['papel.visaoHierarquica']}"
       name="tabPapeis"
       action="#{rolesTree.clearTree()}"
     >
       <h:form>
         <a:commandButton
           styleClass="buttons"
-          value="#{messages['papel.visaoHierarquica.revert']}"
+          value="#{eppmessages['papel.visaoHierarquica.revert']}"
           render="@form"
           execute="@this"
           action="#{rolesTree.inverter}"
@@ -90,10 +90,10 @@
         />
         <span> <h:outputText
             rendered="#{rolesTree.invertida}"
-            value="#{messages['papel.roleTree.titleReverted']}"
+            value="#{eppmessages['papel.roleTree.titleReverted']}"
           /> <h:outputText
             rendered="#{!rolesTree.invertida}"
-            value="#{messages['papel.roleTree.title']}"
+            value="#{eppmessages['papel.roleTree.title']}"
           />
         </span>
         <rich:tree

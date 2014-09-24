@@ -17,7 +17,7 @@
     <s:div id="pessoasListDiv">
         <wi:dataTable id="partesFisicasTable"
             showGrid="#{not partesController.pessoasFisicas.isEmpty()}"
-            tableTitle="#{messages['partesFisicas.titleTable']}"
+            tableTitle="#{eppmessages['partesFisicas.titleTable']}"
             values="#{partesController.pessoasFisicas}" rowId="#{row.idPessoa}"
             searchFormStyleClass="hidden">
             <ui:define name="headerToolBar" />
@@ -27,13 +27,13 @@
                     actionRemove="#{partesController.removePessoaFisica(row)}" />
             </ui:define>
             <wi:columnOutputText columnId="pessoa"
-                columnHeader="#{messages['partes.nome']}"
+                columnHeader="#{eppmessages['partes.nome']}"
                 value="#{row.nome}" />
             <wi:columnEnum columnId="tipo"
-                columnHeader="#{messages['partes.tipoParte']}"
+                columnHeader="#{eppmessages['partes.tipoParte']}"
                 value="#{row.tipoPessoa}" />
             <wi:columnOutputText columnId="codigo"
-                columnHeader="#{messages['partes.cpf']}"
+                columnHeader="#{eppmessages['partes.cpf']}"
                 value="#{row.cpf}">
                 <ui:define name="outputText">
                     <f:converter converterId="cpfConverter"/>
@@ -42,7 +42,7 @@
         </wi:dataTable>
         <wi:dataTable id="partesJuridicasTable"
             showGrid="#{not partesController.pessoasJuridicas.isEmpty()}"
-            tableTitle="#{messages['partesJuridicas.titleTable']}"
+            tableTitle="#{eppmessages['partesJuridicas.titleTable']}"
             values="#{partesController.pessoasJuridicas}" rowId="#{row.idPessoa}"
             searchFormStyleClass="hidden">
             <ui:define name="headerToolBar" />
@@ -52,13 +52,13 @@
                     actionRemove="#{partesController.removePessoaJuridica(row)}" />
             </ui:define>
             <wi:columnOutputText columnId="pessoa"
-                columnHeader="#{messages['partes.nome']}"
+                columnHeader="#{eppmessages['partes.nome']}"
                 value="#{row.nome}" />
             <wi:columnEnum columnId="tipo"
-                columnHeader="#{messages['partes.tipoParte']}"
+                columnHeader="#{eppmessages['partes.tipoParte']}"
                 value="#{row.tipoPessoa}" />
             <wi:columnOutputText columnId="codigo"
-                columnHeader="#{messages['partes.cnpj']}"
+                columnHeader="#{eppmessages['partes.cnpj']}"
                 value="#{row.cnpj}">
                 <ui:define name="outputText">
                     <f:converter converterId="cnpjConverter"/>
@@ -73,7 +73,7 @@
                     limitRender="true"
                     action="#{action.iniciarProcesso(partesController.pessoasFisicas, partesController.pessoasJuridicas)}"
                     rendered="#{!partesController.pessoasFisicas.isEmpty() or !partesController.pessoasJuridicas.isEmpty()}"
-                    value="#{messages['processo.iniciarBtn']}"
+                    value="#{eppmessages['processo.iniciarBtn']}"
                     styleClass="buttons #{wi:get(styleClass, 'buttons')}"
                     oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); window.location='#{pathResolver.contextPath}/Painel/list.seam';" />
             </s:div>

@@ -9,25 +9,25 @@
     template="/WEB-INF/xhtml/templates/minimal.xhtml"
     xmlns:h="http://java.sun.com/jsf/html">
 
-    <ui:define name="title">#{messages['historicoModeloDocumento.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['historicoModeloDocumento.titlePage']}</ui:define>
 
     <ui:define name="body">
         <rich:panel bodyClass="panel"
             rendered="#{historicoModeloDocumentoCrudAction.selecionado != null}">
             <h:form>
                 <wi:inputText id="#{rowId}Titulo"
-                    label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+                    label="#{eppmessages['historicoModeloDocumento.tituloModeloDocumento']}"
                     value="#{historicoModeloDocumentoCrudAction.selecionado.tituloModeloDocumento}"
                     readonly="true" />
 
                 <wi:inputText id="#{rowId}Situacao"
-                    label="#{messages['field.situacao']}"
+                    label="#{eppmessages['field.situacao']}"
                     value="#{historicoModeloDocumentoCrudAction.selecionado.ativo ? messages['entity.ativo'] : messages['entity.inativo']}"
                     readonly="true" />
                 <s:div id="editorROModeloDocumento">
                     <wi:editor id="#{rowId}ModeloDocumento"
                         value="#{historicoModeloDocumentoCrudAction.selecionado.descricaoModeloDocumento}"
-                        label="#{messages['historicoModeloDocumento.modeloDocumento']}"
+                        label="#{eppmessages['historicoModeloDocumento.modeloDocumento']}"
                         readonly="true" />
                 </s:div>
                 <wi:commandButton

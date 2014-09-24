@@ -9,11 +9,11 @@
     
     <s:div id="includePessoaJuridicaDiv" styleClass="padding-top-5">
         <wi:dataForm formId="pessoaJuridicaForm"
-            formTitle="#{messages['form.title']}" panelWidth="70%"
+            formTitle="#{eppmessages['form.title']}" panelWidth="70%"
             rendered="#{isUsuarioAtualResponsavel and partesProcessoController.podeAdicionarPartesJuridicas() and !partesProcessoController.apenasPessoaFisica()}">
             <wi:inputCnpj id="cnpj"
                 value="#{partesProcessoController.pessoaJuridica.cnpj}"
-                label="#{messages['pessoaJuridica.cnpj']}"
+                label="#{eppmessages['pessoaJuridica.cnpj']}"
                 assignTo="#{partesProcessoController.pessoaJuridica.cnpj}"
                 required="true">
                 <a:ajax event="blur" execute="@this"
@@ -23,18 +23,18 @@
             <h:panelGroup id="loadedByCNPJ">
                 <wi:inputText id="nome"
                     value="#{partesProcessoController.pessoaJuridica.nome}"
-                    label="#{messages['pessoaJuridica.nome']}"
+                    label="#{eppmessages['pessoaJuridica.nome']}"
                     required="true" />
                 <wi:inputText id="razao"
                     value="#{partesProcessoController.pessoaJuridica.razaoSocial}"
-                    label="#{messages['pessoaJuridica.razaoSocial']}"
+                    label="#{eppmessages['pessoaJuridica.razaoSocial']}"
                     required="true" />
             </h:panelGroup>
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
                     action="#{partesProcessoController.includePessoaJuridica()}"
                     reRender="buscaDiv, parteProcessoListDiv, includePessoaJuridicaDiv, pessoasListDiv, storeDiv, pageBodyDialogMessage"
-                    value="#{messages['crud.persist']}" />
+                    value="#{eppmessages['crud.persist']}" />
             </ui:define>
         </wi:dataForm>
     </s:div>

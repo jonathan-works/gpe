@@ -15,7 +15,7 @@
         id="taskName"
         value="#{taskFitter.taskName}"
         widthDiv="230px"
-        label="#{messages['process.task.name']}"
+        label="#{eppmessages['process.task.name']}"
         converterId="nodeNameConverter"
         required="true">
         <a:ajax
@@ -29,7 +29,7 @@
       <wi:selectOneMenu
         id="swimlaneTask"
         items="#{swimlaneFitter.swimlaneList}"
-        label="#{messages['process.task.responsavel']}"
+        label="#{eppmessages['process.task.responsavel']}"
         widthDiv="230px"
         showLabelSelecione="true"
         value="#{t.swimlaneName}">
@@ -40,7 +40,7 @@
       </wi:selectOneMenu>
       <wi:inputNumber
         id="prazo"
-        label="#{messages['process.task.prazo']}"
+        label="#{eppmessages['process.task.prazo']}"
         value="#{taskFitter.tarefaAtual.prazo}"
         rendered="#{taskFitter.currentJbpmTaskPersisted}">
         <a:ajax
@@ -51,7 +51,7 @@
       </wi:inputNumber>
       <wi:selectOneMenuEnum
         id="tipoPrazo"
-        label="#{messages['process.task.prazo.unidade']}"
+        label="#{eppmessages['process.task.prazo.unidade']}"
         value="#{taskFitter.tarefaAtual.tipoPrazo}"
         items="#{prazoCombo.tipoPrazoList}"
         showLabelSelecione="true"
@@ -64,7 +64,7 @@
       </wi:selectOneMenuEnum>
       <wi:selectOneMenuEntity
         id="statusProcesso"
-        label="#{messages['process.status.nome']}"
+        label="#{eppmessages['process.status.nome']}"
         value="#{taskFitter.currentTask.statusProcesso}"
         items="#{taskFitter.statusProcessoList}"
         showLabelSelecione="true">
@@ -92,7 +92,7 @@
             render="varTable pageBodyDialogMessage"
             limitRender="true">
             <h:graphicImage
-              title="#{messages['process.task.addVariable']}"
+              title="#{eppmessages['process.task.addVariable']}"
               url="#{a4jSkin.imgFolder}/add.gif" />
           </a:commandLink>
         </h:form>
@@ -102,12 +102,12 @@
           <a:commandLink
             action="#{t.removeVar(var)}"
             execute="@this"
-            onclick="return confirm(\'#{messages['processBuilder.confirm']}\');"
+            onclick="return confirm(\'#{eppmessages['processBuilder.confirm']}\');"
             render="varTable"
             limitRender="true"
             styleClass="opacityHover">
             <h:graphicImage
-              title="#{messages['process.task.removeVariable']}"
+              title="#{eppmessages['process.task.removeVariable']}"
               url="#{a4jSkin.imgFolder}/remove.png" />
           </a:commandLink>
           <a:commandLink
@@ -121,7 +121,7 @@
             oncomplete="#{rich:component('actionTemplatePanel')}.show()"
             rendered="#{var.type eq 'EDITOR'}">
             <h:graphicImage
-              title="#{messages['process.task.var.modelo']}"
+              title="#{eppmessages['process.task.var.modelo']}"
               rendered="#{empty var.modeloList}"
               url="#{a4jSkin.imgFolder}/newfile.gif" />
             <h:graphicImage
@@ -140,7 +140,7 @@
             oncomplete="#{rich:component('classificacoesParaVariavelPanel')}.show()"
             rendered="#{var.type eq 'EDITOR' or var.type eq 'FILE'}">
             <h:graphicImage
-              title="#{messages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
+              title="#{eppmessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
               status=":status"
               url="#{a4jSkin.imgFolder}/hamburger.png" />
             <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
@@ -150,7 +150,7 @@
       </div>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{messages['process.task.var']}</f:facet>
+      <f:facet name="header">#{eppmessages['process.task.var']}</f:facet>
       <h:form>
         <s:div id="varDiv">
           <h:message for="varName" />
@@ -197,7 +197,7 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{messages['process.task.var.label']}</f:facet>
+      <f:facet name="header">#{eppmessages['process.task.var.label']}</f:facet>
       <h:form>
         <s:div id="varLabel">
           <h:inputText value="#{var.label}">
@@ -211,7 +211,7 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{messages['process.task.var.modo']}</f:facet>
+      <f:facet name="header">#{eppmessages['process.task.var.modo']}</f:facet>
       <h:form>
         <h:selectBooleanCheckbox
           id="writable"
@@ -226,7 +226,7 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{messages['process.task.var.required']}</f:facet>
+      <f:facet name="header">#{eppmessages['process.task.var.required']}</f:facet>
       <h:form>
         <h:selectBooleanCheckbox
           id="required"
@@ -241,7 +241,7 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{messages['process.task.var.hidden']}</f:facet>
+      <f:facet name="header">#{eppmessages['process.task.var.hidden']}</f:facet>
       <h:form>
         <h:selectBooleanCheckbox
           id="hidden"
@@ -256,13 +256,13 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{messages['process.task.var.type']}</f:facet>
+      <f:facet name="header">#{eppmessages['process.task.var.type']}</f:facet>
       <h:form id="formVariableType">
         <wi:selectOneMenu
           id="type"
           value="#{var.type}"
           items="#{taskFitter.typeList}"
-          optionLabel="#{messages[item.label]}"
+          optionLabel="#{eppmessages[item.label]}"
           widthDiv="100%"
           required="true">
           <a:ajax
@@ -293,7 +293,7 @@
           rendered="#{var.data}">
           <wi:selectOneMenuEnum
             id="tipoDeData"
-            label="#{messages['data.tipoData']}"
+            label="#{eppmessages['data.tipoData']}"
             showLabelSelecione="true"
             items="#{var.getTypeDateValues()}"
             value="#{var.validacaoDataEnum}">

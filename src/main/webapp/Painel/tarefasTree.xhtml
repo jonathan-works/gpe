@@ -49,7 +49,7 @@
                 rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
                 <rich:menuItem
-                  label="#{messages['caixa.menu.novaCaixa']}"
+                  label="#{eppmessages['caixa.menu.novaCaixa']}"
                   icon="#{a4jSkin.imgFolder}/add.gif"
                   onclick="#{rich:component('novaCaixaPanel')}.show()" />
 
@@ -72,13 +72,13 @@
                   target="caixaNode"
                   rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
-                  <rich:menuItem label="#{messages['caixa.menu.editaCaixa']}"
+                  <rich:menuItem label="#{eppmessages['caixa.menu.editaCaixa']}"
                     icon="#{a4jSkin.imgFolder}/mod/edit.gif"
                     action="#{painelUsuarioHome.editaCaixa()}" />
 
-                  <rich:menuItem label="#{messages['caixa.menu.removerCaixa']}"
+                  <rich:menuItem label="#{eppmessages['caixa.menu.removerCaixa']}"
                     icon="#{a4jSkin.imgFolder}/remove.png"
-                    onclick="return confirm(\'#{messages['caixa.confirm.remove']}\');" render="tarefasDiv"
+                    onclick="return confirm(\'#{eppmessages['caixa.confirm.remove']}\');" render="tarefasDiv"
                     action="#{caixaCrudAction.remove}">
 
                     <f:setPropertyActionListener

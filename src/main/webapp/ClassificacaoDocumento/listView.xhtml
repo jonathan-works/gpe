@@ -13,7 +13,7 @@
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
 
-    <ui:define name="title">#{messages['tipoProcessoDocumento.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['tipoProcessoDocumento.titlePage']}</ui:define>
 
     <ui:param name="home" value="#{classificacaoDocumentoCrudAction}" />
 
@@ -21,7 +21,7 @@
 
         <wi:dataTable values="#{tipoProcessoDocumentoList.list(15)}"
             bean="#{tipoProcessoDocumentoList}"
-            tableTitle="#{messages['tipoProcessoDocumento.tableTitle']}"
+            tableTitle="#{eppmessages['tipoProcessoDocumento.tableTitle']}"
             id="tipoProcessoDocumentoList"
             rowId="#{row.idTipoProcessoDocumento}">
 
@@ -29,23 +29,23 @@
 
                 <wi:searchForm
                     formId="pesquisarTipoProcessoDocumentoForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{eppmessages['searchForm.title']}">
 
                     <wi:inputText id="codigoDocumento"
                         value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"
-                        label="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+                        label="#{eppmessages['tipoProcessoDocumento.codigoDocumento']}"
                         maxlength="30" />
                     <wi:inputText id="tipoProcessoDocumento"
-                        label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                        label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                         value="#{tipoProcessoDocumentoList.entity.tipoProcessoDocumento}"
                         maxlength="100" />
                     <wi:selectOneMenuEnum id="usoTipoDocumento"
-                        label="#{messages['tipoProcessoDocumento.uso']}"
+                        label="#{eppmessages['tipoProcessoDocumento.uso']}"
                         items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                         value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"
-                        noSelectionLabel="#{messages['crud.select.all']}" />
+                        noSelectionLabel="#{eppmessages['crud.select.all']}" />
                     <wi:selectSituacaoOneMenu id="ativo"
-                        label="#{messages['field.situacao']}"
+                        label="#{eppmessages['field.situacao']}"
                         value="#{tipoProcessoDocumentoList.entity.ativo}" />
 
                 </wi:searchForm>
@@ -53,16 +53,16 @@
             </ui:define>
 
             <wi:columnOutputText columnId="codigoDocumento"
-                columnHeader="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+                columnHeader="#{eppmessages['tipoProcessoDocumento.codigoDocumento']}"
                 value="#{row.codigoDocumento}" />
             <wi:columnOutputText columnId="tipoProcessoDocumento"
-                columnHeader="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                columnHeader="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                 value="#{row.tipoProcessoDocumento}" />
             <wi:columnEnum columnId="inTipoDocumento"
-                columnHeader="#{messages['tipoProcessoDocumento.uso']}"
+                columnHeader="#{eppmessages['tipoProcessoDocumento.uso']}"
                 value="#{row.inTipoDocumento}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{messages['field.situacao']}"
+                columnHeader="#{eppmessages['field.situacao']}"
                 value="#{row.ativo}" />
 
         </wi:dataTable>
@@ -72,41 +72,41 @@
     <ui:define name="form">
 
         <wi:dataForm formId="tipoProcessoDocumentoForm"
-            formTitle="#{messages['form.title']}">
+            formTitle="#{eppmessages['form.title']}">
 
             <wi:inputText id="codigoDocumento"
                 value="#{classificacaoDocumentoCrudAction.instance.codigoDocumento}"
                 required="true"
-                label="#{messages['tipoProcessoDocumento.codigoDocumento']}"
+                label="#{eppmessages['tipoProcessoDocumento.codigoDocumento']}"
                 maxlength="30" />
             <wi:inputText id="tipoProcessoDocumento"
-                label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                 required="true"
                 value="#{classificacaoDocumentoCrudAction.instance.tipoProcessoDocumento}"
                 maxlength="150" />
             <wi:selectOneMenuEnum id="usoTipoDocumento"
-                label="#{messages['tipoProcessoDocumento.uso']}"
+                label="#{eppmessages['tipoProcessoDocumento.uso']}"
                 items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                 value="#{classificacaoDocumentoCrudAction.instance.inTipoDocumento}"
                 required="true" showLabelSelecione="true" />
 
             <wi:selectOneMenuEnum id="tipoNumeracaoCombo"
-                label="#{messages['classificacaoDocumento.tipoNumeracao']}"
+                label="#{eppmessages['classificacaoDocumento.tipoNumeracao']}"
                 items="#{classificacaoDocumentoFacade.getTipoNumeracaoEnumValues()}"
                 value="#{classificacaoDocumentoCrudAction.instance.tipoNumeracao}"
                 required="true" showLabelSelecione="true" />
 
             <wi:selectBooleanRadio id="sistema"
-                label="#{messages['tipoProcessoDocumento.sistema']}"
+                label="#{eppmessages['tipoProcessoDocumento.sistema']}"
                 value="#{classificacaoDocumentoCrudAction.instance.sistema}" />
             <wi:selectBooleanRadio id="publico"
-                label="#{messages['tipoProcessoDocumento.publico']}"
+                label="#{eppmessages['tipoProcessoDocumento.publico']}"
                 value="#{classificacaoDocumentoCrudAction.instance.publico}" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{classificacaoDocumentoCrudAction.instance.ativo}" />
             <wi:inputTextarea id="tipoProcessoDocumentoObservacao"
-                label="#{messages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
+                label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
                 value="#{classificacaoDocumentoCrudAction.instance.tipoProcessoDocumentoObservacao}"
                 maxlength="4000" />
 
@@ -116,17 +116,17 @@
     <ui:define name="tabs">
         <infox:tab status=":status" id="associarPapelTab"
             rendered="#{home.managed}" name="associarPapelTab"
-            title="#{messages['tipoProcessoDocumento.papel']}">
+            title="#{eppmessages['tipoProcessoDocumento.papel']}">
             <s:div id="divAssociarPapel">
                 <wi:dataForm formId="tipoProcessoDocumentoPapelForm"
-                    formTitle="#{messages['form.title']}">
+                    formTitle="#{eppmessages['form.title']}">
                     <wi:selectOneMenuEntity id="papel"
-                        label="#{messages['tipoProcessoDocumentoPapel.papel']}"
+                        label="#{eppmessages['tipoProcessoDocumentoPapel.papel']}"
                         items="#{classificacaoDocumentoPapelCrudAction.papelItems()}"
                         value="#{classificacaoDocumentoPapelCrudAction.instance.papel}"
                         showLabelSelecione="true" required="true" />
                     <wi:selectOneMenuEnum id="tipoAssinaturaCombo"
-                        label="#{messages['classificacaoDocumento.tipoAssinatura']}"
+                        label="#{eppmessages['classificacaoDocumento.tipoAssinatura']}"
                         items="#{classificacaoDocumentoFacade.getTipoAssinaturaEnumValues()}"
                         value="#{classificacaoDocumentoPapelCrudAction.instance.tipoAssinatura}"
                         required="true" showLabelSelecione="true" />
@@ -145,15 +145,15 @@
                 <wi:dataTable
                     values="#{tipoProcessoDocumentoPapelList.list(15)}"
                     bean="#{tipoProcessoDocumentoPapelList}"
-                    tableTitle="#{classificacaoDocumentoCrudAction.instance} - #{messages['form.title']}"
+                    tableTitle="#{classificacaoDocumentoCrudAction.instance} - #{eppmessages['form.title']}"
                     id="tipoProcessoDocumentoPapelList"
                     rowId="#{row.idTipoProcessoDocumentoPapel}"
                     listReRender="divAssociarPapel" showMsg="false">
                     <wi:columnOutputText columnId="papel"
-                        columnHeader="#{messages['tipoProcessoDocumentoPapel.papel']}"
+                        columnHeader="#{eppmessages['tipoProcessoDocumentoPapel.papel']}"
                         value="#{row.papel}" />
                     <wi:columnEnum columnId="tipoAssinatura"
-                        columnHeader="#{messages['classificacaoDocumento.tipoAssinatura']}"
+                        columnHeader="#{eppmessages['classificacaoDocumento.tipoAssinatura']}"
                         value="#{row.tipoAssinatura}" />
                     <wi:columnOutputText colummId="podeRedigir"
                     	columnHeader="#{eppmessages['tipoProcessoDocumentoPapel.podeRedigir']}"
@@ -175,28 +175,28 @@
         </infox:tab>
         <infox:tab status=":status" id="extensoesTab"
             rendered="#{home.managed and home.instance.canDoUpload()}" name="extensoesTab"
-            title="#{messages['tipoProcessoDocumento.extensoesTab']}">
+            title="#{eppmessages['tipoProcessoDocumento.extensoesTab']}">
             <wi:dataForm formId="extensoesForm"
-                formTitle="#{messages['form.title']}">
+                formTitle="#{eppmessages['form.title']}">
                 <wi:inputText id="nomeExtensao"
                     value="#{extensaoArquivoCrudAction.instance.nomeExtensao}"
                     required="true"
-                    label="#{messages['tipoProcessoDocumento.tipoArquivo']}"
+                    label="#{eppmessages['tipoProcessoDocumento.tipoArquivo']}"
                     maxlength="30" />
                 <wi:inputText id="extensao"
                     value="#{extensaoArquivoCrudAction.instance.extensao}"
                     required="true"
-                    label="#{messages['tipoProcessoDocumento.tipoExtensao']}"
+                    label="#{eppmessages['tipoProcessoDocumento.tipoExtensao']}"
                     maxlength="30" >
                     <f:validator validatorId="extensaoDocumentoValidator" />
                 </wi:inputText>
                 <wi:inputNumber id="tamanho"
                     value="#{extensaoArquivoCrudAction.instance.tamanho}"
                     required="true"
-                    label="#{messages['tipoProcessoDocumento.tamanho']}"
+                    label="#{eppmessages['tipoProcessoDocumento.tamanho']}"
                     maxlength="30" />
                 <wi:selectBooleanRadio id="isPaginavel"
-                    label="#{messages['tipoProcessoDocumento.hasTamanhoPagina']}"
+                    label="#{eppmessages['tipoProcessoDocumento.hasTamanhoPagina']}"
                     value="#{extensaoArquivoCrudAction.instance.paginavel}">
                     <a:ajax event="change"
                         render="tamanhoPaginaDiv"
@@ -207,7 +207,7 @@
                     <wi:inputNumber id="tamanhoPorPagina"
                         value="#{extensaoArquivoCrudAction.instance.tamanhoPorPagina}"
                         required="true"
-                        label="#{messages['tipoProcessoDocumento.tamanhoPorPagina']}"
+                        label="#{eppmessages['tipoProcessoDocumento.tamanhoPorPagina']}"
                         maxlength="30" 
                         rendered="#{extensaoArquivoCrudAction.instance.paginavel}"/>
                 </s:div>
@@ -215,7 +215,7 @@
                     <wi:commandButton id="saveButton"
                         action="extensaoArquivoCrudAction.save()"
                         reRender="extensoesTab, pageBodyDialogMessage"
-                        value="#{messages['crud.persist']}" />
+                        value="#{eppmessages['crud.persist']}" />
                 </ui:define>
             </wi:dataForm>
             <s:div id="divAssociarExtensoes">
@@ -236,19 +236,19 @@
                             id="removeButton" />
                     </ui:define>
                     <wi:columnOutputText columnId="nomeExtensao"
-                        columnHeader="#{messages['extensaoArquivo.nomeExtensao']}"
+                        columnHeader="#{eppmessages['extensaoArquivo.nomeExtensao']}"
                         value="#{row.nomeExtensao}" />
                     <wi:columnOutputText columnId="extensao"
-                        columnHeader="#{messages['extensaoArquivo.extensao']}"
+                        columnHeader="#{eppmessages['extensaoArquivo.extensao']}"
                         value="#{row.extensao}" />
                     <wi:columnOutputText columnId="tamanho"
-                        columnHeader="#{messages['extensaoArquivo.tamanho']}"
+                        columnHeader="#{eppmessages['extensaoArquivo.tamanho']}"
                         value="#{row.tamanho}" />
                     <wi:columnBoolean columnId="paginavel"
-                    	columnHeader="#{messages['extensaoArquivo.paginavel']}"
+                    	columnHeader="#{eppmessages['extensaoArquivo.paginavel']}"
                     	value="#{row.paginavel}" />
                     <wi:columnOutputText columnId="tamanhoPorPagina"
-                    	columnHeader="#{messages['extensaoArquivo.tamanhoPorPagina']}"
+                    	columnHeader="#{eppmessages['extensaoArquivo.tamanhoPorPagina']}"
                     	value="#{row.tamanhoPorPagina}" />
                 </wi:dataTable>
             </s:div>

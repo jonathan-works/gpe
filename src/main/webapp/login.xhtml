@@ -28,9 +28,9 @@
       invoke([ "infox.Modal" ], function(Modal) {
         var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
         function toggleButton() {
-          $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{messages['login.trocarSenhaBtn']}" : "#{messages['login.naoTrocarSenhaBtn']}");
+          $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{eppmessages['login.trocarSenhaBtn']}" : "#{eppmessages['login.naoTrocarSenhaBtn']}");
           $(".input_login.passwd").val("");
-          $("#login\\:btnEntrar").val($("#btnTrocar").val() === "#{messages['login.naoTrocarSenhaBtn']}" ? "#{messages['login.alterarBtn']}" : "#{messages['login.entrarBtn']}");
+          $("#login\\:btnEntrar").val($("#btnTrocar").val() === "#{eppmessages['login.naoTrocarSenhaBtn']}" ? "#{eppmessages['login.alterarBtn']}" : "#{eppmessages['login.entrarBtn']}");
         }
         function showPanel() {
           requestPasswordPanel.show();
@@ -62,7 +62,7 @@
         <button
           id="consultaExterna"
           class="input_button"
-          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';">#{messages['consultaExterna.titlePage']}</button>
+          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';">#{eppmessages['consultaExterna.titlePage']}</button>
         <ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
           <ui:param
             name="id"
@@ -94,7 +94,7 @@
                   for="username"
                   rendered="#{not useCertLogin}"
                   class="login-lbl"
-                  value="#{messages['login.nomeUsuario']}">
+                  value="#{eppmessages['login.nomeUsuario']}">
                 </h:outputLabel>
                 <h:inputText
                   id="username"
@@ -107,7 +107,7 @@
                   for="password"
                   rendered="#{not useCertLogin}"
                   class="login-lbl"
-                  value="#{messages['login.senha']}">
+                  value="#{eppmessages['login.senha']}">
                 </h:outputLabel>
                 <h:inputSecret
                   id="password"
@@ -120,7 +120,7 @@
                   for="newPassword1"
                   rendered="#{not useCertLogin}"
                   class="login-lbl"
-                  value="#{messages['login.novaSenha']}">
+                  value="#{eppmessages['login.novaSenha']}">
                 </h:outputLabel>
                 <h:inputSecret
                   id="newPassword1"
@@ -132,7 +132,7 @@
                   for="newPassword2"
                   rendered="#{not useCertLogin}"
                   class="login-lbl"
-                  value="#{messages['login.confirmacaoNovaSenha']}">
+                  value="#{eppmessages['login.confirmacaoNovaSenha']}">
                 </h:outputLabel>
                 <h:inputSecret
                   id="newPassword2"
@@ -149,7 +149,7 @@
                 formId="#{rich:clientId('login')}"
                 certificationChainField="#{rich:clientId('certChain')}"
                 signatureField="#{rich:clientId('signature')}"
-                signButtonCaption="#{messages['signature.loginBtn']}"
+                signButtonCaption="#{eppmessages['signature.loginBtn']}"
                 getDataFunction="''"
                 useBase64Function="'true'"
                 functionPreSign="RichFaces.$('mp_formValidar').show();"
@@ -182,19 +182,19 @@
             <h:panelGroup rendered="#{not useCertLogin}">
               <h:commandButton
                 id="btnEntrar"
-                value="#{messages['login.entrarBtn']}"
+                value="#{eppmessages['login.entrarBtn']}"
                 styleClass="input_button"
                 action="#{authenticator.login()}" />
               <input
                 class="input_button"
                 id="btnTrocar"
                 type="button"
-                value="#{messages['login.trocarSenhaBtn']}" />
+                value="#{eppmessages['login.trocarSenhaBtn']}" />
               <input
                 class="input_button"
                 id="btnTrocarSenha"
                 type="button"
-                value="#{messages['login.requisitarSenhaBtn']}" />
+                value="#{eppmessages['login.requisitarSenhaBtn']}" />
             </h:panelGroup>
           </div>
         </div>
@@ -203,7 +203,7 @@
         id="requestPasswordPanel"
         width="370"
         height="255">
-        <f:facet name="header">#{messages['login.requisitarSenha']}</f:facet>
+        <f:facet name="header">#{eppmessages['login.requisitarSenha']}</f:facet>
         <f:facet name="controls">
           <h:panelGroup>
             <h:graphicImage
@@ -219,7 +219,7 @@
               <h:outputLabel
                 for="login"
                 class="login-lbl"
-                value="#{messages['login.nomeUsuario']}">
+                value="#{eppmessages['login.nomeUsuario']}">
               </h:outputLabel>
               <h:inputText
                 id="login"
@@ -230,7 +230,7 @@
               <h:outputLabel
                 for="email"
                 class="login-lbl"
-                value="#{messages['login.emailUsuario']}">
+                value="#{eppmessages['login.emailUsuario']}">
               </h:outputLabel>
               <h:inputText
                 id="email"
@@ -242,13 +242,13 @@
             <h:commandButton
               id="confirma"
               class="input_button"
-              value="#{messages['login.confirmaTrocaSenhaBtn']}"
+              value="#{eppmessages['login.confirmaTrocaSenhaBtn']}"
               action="#{passwordRequester.requisitarNovaSenha()}" />
             <input
               class="input_button"
               id="btnTrocarSenha2"
               type="button"
-              value="#{messages['login.cancelaTrocaSenhaBtn']}" />
+              value="#{eppmessages['login.cancelaTrocaSenhaBtn']}" />
           </div>
         </h:form>
       </rich:popupPanel>
@@ -259,7 +259,7 @@
         rendered="#{useCertLogin}"
         resizeable="false">
         <f:facet name="header">
-          <h:outputText value="#{messages['certificate.waitInit']}" />
+          <h:outputText value="#{eppmessages['certificate.waitInit']}" />
         </f:facet>
         <div>
           <h:graphicImage url="#{a4jSkin.imgFolder}/ajax-loader.gif" />

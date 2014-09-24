@@ -25,7 +25,7 @@
             />
             <ui:define name="toolBar">
                 <h:graphicImage
-                    title="#{messages['process.mail.receiver.remove']}"
+                    title="#{eppmessages['process.mail.receiver.remove']}"
                     url="#{a4jSkin.imgFolder}/remove.png"
                     style="cursor: pointer"
                 >
@@ -41,22 +41,22 @@
             </ui:define>
             <ui:define name="columns">
                 <rich:column>
-                    <f:facet name="header">#{messages['process.mail.receiver.estrutura']}</f:facet>
+                    <f:facet name="header">#{eppmessages['process.mail.receiver.estrutura']}</f:facet>
                     <h:outputText value="#{row.estrutura}" />
                 </rich:column>
                 <rich:column>
-                    <f:facet name="header">#{messages['process.mail.receiver.localizacao']}</f:facet>
+                    <f:facet name="header">#{eppmessages['process.mail.receiver.localizacao']}</f:facet>
                     <h:outputText value="#{row.localizacao}" />
                 </rich:column>
                 <rich:column>
-                    <f:facet name="header">#{messages['process.mail.receiver.papel']}</f:facet>
+                    <f:facet name="header">#{eppmessages['process.mail.receiver.papel']}</f:facet>
                     <h:outputText value="#{row.papel}" />
                 </rich:column>
                 <f:facet name="footer">
                     <rich:columnGroup>
                         <rich:column>
                             <h:graphicImage
-                                title="#{messages['process.mail.receiver.add']}"
+                                title="#{eppmessages['process.mail.receiver.add']}"
                                 id="novoLocPapel"
                                 url="#{a4jSkin.imgFolder}/add.gif"
                                 style="cursor: pointer"
@@ -97,14 +97,14 @@
                     </rich:columnGroup>
                 </f:facet>
                 <f:facet name="header">
-                    <h:outputText value="#{messages['process.mail.receivers']}" />
+                    <h:outputText value="#{eppmessages['process.mail.receivers']}" />
                 </f:facet>
             </ui:define>
         </ui:decorate>
         <wi:selectBooleanCheckbox
             id="usaTwitter"
             value="#{nodeFitter.currentNode.usaTwitter}"
-            label="#{messages['processBuilder.usaTwitter']}"
+            label="#{eppmessages['processBuilder.usaTwitter']}"
         >
             <a:ajax
                 event="change"
@@ -146,7 +146,7 @@
         <s:div id="modeloDocDiv">
             <wi:selectOneMenuEntity
                 id="modeloDocumento"
-                label="#{messages['processBuilder.tituloModeloDocumento']}"
+                label="#{eppmessages['processBuilder.tituloModeloDocumento']}"
                 value="#{nodeFitter.currentNode.modeloDocumento}"
                 items="#{nodeFitter.modeloDocumentoList}"
                 showLabelTodos="true"
@@ -160,7 +160,7 @@
             </wi:selectOneMenuEntity>
             <wi:inputText
                 id="to"
-                label="#{messages['process.mail.to']}"
+                label="#{eppmessages['process.mail.to']}"
                 rendered="#{!isExpression}"
                 value="#{nodeFitter.currentNode.to}"
             >
@@ -172,15 +172,15 @@
             </wi:inputText>
             <wi:inputText
                 id="toExpession"
-                label="#{messages['process.mail.to']}"
+                label="#{eppmessages['process.mail.to']}"
                 rendered="#{isExpression}"
                 disabled="true"
                 readonly="true"
-                value="#{messages['process.mail.to.generated']}"
+                value="#{eppmessages['process.mail.to.generated']}"
             />
             <wi:inputText
                 id="subject"
-                label="#{messages['process.mail.subject']}"
+                label="#{eppmessages['process.mail.subject']}"
                 value="#{nodeFitter.currentNode.subject}"
             >
                 <a:ajax
@@ -194,7 +194,7 @@
                     id="editorModeloDocumento"
                     rendered="#{nodeFitter.currentNode.modeloDocumento != null}"
                     value="#{nodeFitter.currentNode.modeloDocumento.modeloDocumento}"
-                    label="#{messages['processBuilder.modeloDocumento']}"
+                    label="#{eppmessages['processBuilder.modeloDocumento']}"
                     readonly="true"
                 />
             </s:div>

@@ -3,18 +3,18 @@
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <ui:param name="title" value="#{messages['perfilTemplate.titlePage']}" />
+    <ui:param name="title" value="#{eppmessages['perfilTemplate.titlePage']}" />
 
-    <wi:dataReport title="#{messages['perfil.reportTitle']}"
+    <wi:dataReport title="#{eppmessages['perfil.reportTitle']}"
         columns="4" widths="4 4 4 2" headerText="#{perfilTemplateList.criteria}">
 
         <wi:reportColumnHeader
-            title="#{messages['perfilTemplate.descricao']}" />
+            title="#{eppmessages['perfilTemplate.descricao']}" />
         <wi:reportColumnHeader
-            title="#{messages['perfilTemplate.localizacao']}" />
+            title="#{eppmessages['perfilTemplate.localizacao']}" />
         <wi:reportColumnHeader
-            title="#{messages['perfil.papel']}" />
-        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
+            title="#{eppmessages['perfil.papel']}" />
+        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{perfilTemplateList.list()}">
             <wi:reportColumn value="#{row.descricao}" />

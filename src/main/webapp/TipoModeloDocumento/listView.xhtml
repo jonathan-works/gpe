@@ -9,77 +9,77 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-    <ui:define name="title">#{messages['tipoModeloDocumento.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['tipoModeloDocumento.titlePage']}</ui:define>
     <ui:param name="home" value="#{tipoModeloDocumentoCrudAction}" />
     <ui:define name="searchGrid">
         <wi:dataTable values="#{tipoModeloDocumentoList.list(15)}"
             bean="#{tipoModeloDocumentoList}"
-            tableTitle="#{messages['tipoModeloDocumento.tableTitle']}"
+            tableTitle="#{eppmessages['tipoModeloDocumento.tableTitle']}"
             id="tipoModeloDocumentoList"
             rowId="#{row.idTipoModeloDocumento}">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarTipoModeloDocumentoForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{eppmessages['searchForm.title']}">
                     <wi:suggest id="grupoModeloDocumento"
                         suggestProvider="#{grupoModeloDocumentoSuggest}"
                         value="#{tipoModeloDocumentoList.entity.grupoModeloDocumento}"
-                        label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}" />
+                        label="#{eppmessages['tipoModeloDocumento.grupoModeloDocumento']}" />
                     <wi:inputText id="tipoModeloDocumento"
-                        label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+                        label="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}"
                         value="#{tipoModeloDocumentoList.entity.tipoModeloDocumento}" />
                     <wi:inputText id="abreviacao"
-                        label="#{messages['tipoModeloDocumento.abreviacao']}"
+                        label="#{eppmessages['tipoModeloDocumento.abreviacao']}"
                         value="#{tipoModeloDocumentoList.entity.abreviacao}"
                         maxlength="5" />
                     <wi:selectSituacaoOneMenu id="ativo"
-                        label="#{messages['field.situacao']}"
+                        label="#{eppmessages['field.situacao']}"
                         value="#{tipoModeloDocumentoList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
             <wi:columnOutputText columnId="grupoModeloDocumento"
-                columnHeader="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
+                columnHeader="#{eppmessages['tipoModeloDocumento.grupoModeloDocumento']}"
                 value="#{row.grupoModeloDocumento}" />
             <wi:columnOutputText columnId="tipoModeloDocumento"
-                columnHeader="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+                columnHeader="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}"
                 value="#{row.tipoModeloDocumento}" />
             <wi:columnOutputText columnId="abreviacao"
-                columnHeader="#{messages['tipoModeloDocumento.abreviacao']}"
+                columnHeader="#{eppmessages['tipoModeloDocumento.abreviacao']}"
                 value="#{row.abreviacao}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{messages['field.situacao']}"
+                columnHeader="#{eppmessages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
         <wi:dataForm formId="tipoModeloDocumentoForm"
-            formTitle="#{messages['form.title']}">
+            formTitle="#{eppmessages['form.title']}">
             <wi:suggest id="grupoModeloDocumento"
                 suggestProvider="#{grupoModeloDocumentoSuggest}"
                 value="#{tipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
-                label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
+                label="#{eppmessages['tipoModeloDocumento.grupoModeloDocumento']}"
                 required="true" />
             <wi:inputText id="tipoModeloDocumento"
-                label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+                label="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.tipoModeloDocumento}"
                 maxlength="50" required="true" />
             <wi:inputText id="abreviacao"
-                label="#{messages['tipoModeloDocumento.abreviacao']}"
+                label="#{eppmessages['tipoModeloDocumento.abreviacao']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.abreviacao}"
                 required="true" maxlength="5" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>
     <ui:define name="tabs">
         <infox:tab id="modeloDocumento" status=":status"
             rendered="#{home.managed}"
-            title="#{messages['tipoModeloDocumento.modeloDocumentoList']}"
+            title="#{eppmessages['tipoModeloDocumento.modeloDocumentoList']}"
             name="modeloDocumento">
             <wi:dataTable
                 values="#{tipoModeloDocumentoCrudAction.listaDeModeloDocumento}"
                 hideOrder="true"
-                tableTitle="#{messages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoCrudAction.instance)}"
+                tableTitle="#{eppmessages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoCrudAction.instance)}"
                 id="associativeModeloDocumentoList"
                 rowId="#{row.idModeloDocumento}"
                 panelStyleClass="rf-dt-crud" styleClass="Associated-dt">
@@ -89,19 +89,19 @@
                         linkDetalhe="/ModeloDocumento/listView.seam" />
                 </ui:define>
                 <wi:columnOutputText columnId="tipoModeloDocumento"
-                    columnHeader="#{messages['associativeModeloDocumento.tipoModeloDocumento']}"
+                    columnHeader="#{eppmessages['associativeModeloDocumento.tipoModeloDocumento']}"
                     value="#{row.tipoModeloDocumento}" />
                 <wi:columnOutputText columnId="tituloModeloDocumento"
-                    columnHeader="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
+                    columnHeader="#{eppmessages['associativeModeloDocumento.tituloModeloDocumento']}"
                     value="#{row}" />
                 <wi:columnSituacao columnId="tituloModeloDocumento"
-                    columnHeader="#{messages['field.situacao']}"
+                    columnHeader="#{eppmessages['field.situacao']}"
                     value="#{row.ativo}" />
             </wi:dataTable>
         </infox:tab>
         <infox:tab id="variaveis" status=":status"
             rendered="#{home.managed}"
-            title="#{messages['tipoModeloDocumento.variaveis']}"
+            title="#{eppmessages['tipoModeloDocumento.variaveis']}"
             name="variaveis"
             action="#{associativeVariavelList.onClickVariaveisTab(home.instance)}">
             <wi:ajaxDiv id="divM2MVar">
@@ -109,22 +109,22 @@
                     <wi:dataTable
                         values="#{associativeVariavelList.list(15)}"
                         bean="#{associativeVariavelList}"
-                        tableTitle="#{messages['associativeVariavel.tableTitle']}"
+                        tableTitle="#{eppmessages['associativeVariavel.tableTitle']}"
                         id="associativeVariavelList"
                         rowId="#{row.idVariavel}"
                         styleClass="Associative-dt">
                         <ui:define name="searchForm">
                             <wi:searchForm
                                 formId="pesquisarTipoModeloDocumento"
-                                formTitle="#{messages['searchForm.title']}">
+                                formTitle="#{eppmessages['searchForm.title']}">
                                 <wi:inputText id="variavel"
-                                    label="#{messages['associativeVariavel.variavel']}"
+                                    label="#{eppmessages['associativeVariavel.variavel']}"
                                     value="#{associativeVariavelList.entity.variavel}" />
                                 <wi:inputText id="valorVariavel"
-                                    label="#{messages['associativeVariavel.valorVariavel']}"
+                                    label="#{eppmessages['associativeVariavel.valorVariavel']}"
                                     value="#{associativeVariavelList.entity.valorVariavel}" />
                                 <wi:selectSituacaoOneMenu id="ativo"
-                                    label="#{messages['field.situacao']}"
+                                    label="#{eppmessages['field.situacao']}"
                                     value="#{associativeVariavelList.entity.ativo}" />
                             </wi:searchForm>
                         </ui:define>
@@ -137,18 +137,18 @@
                                     rendered="true">
                                     <h:graphicImage
                                         url="#{a4jSkin.imgFolder}/grid/copyLeft.gif"
-                                        title="#{messages['button.add']}" />
+                                        title="#{eppmessages['button.add']}" />
                                 </a:commandLink>
                             </a:region>
                         </ui:define>
                         <wi:columnOutputText columnId="variavel"
-                            columnHeader="#{messages['associativeVariavel.variavel']}"
+                            columnHeader="#{eppmessages['associativeVariavel.variavel']}"
                             value="#{row.variavel}" />
                         <wi:columnOutputText columnId="valorVariavel"
-                            columnHeader="#{messages['associativeVariavel.valorVariavel']}"
+                            columnHeader="#{eppmessages['associativeVariavel.valorVariavel']}"
                             value="#{row.valorVariavel}" />
                         <wi:columnSituacao columnId="ativo"
-                            columnHeader="#{messages['field.situacao']}"
+                            columnHeader="#{eppmessages['field.situacao']}"
                             value="#{row.ativo}" />
                     </wi:dataTable>
                 </s:div>
@@ -156,7 +156,7 @@
                     <wi:dataTable
                         values="#{associatedVariavelTipoModeloList.list(15)}"
                         bean="#{associatedVariavelTipoModeloList}"
-                        tableTitle="#{messages['associatedVariavelTipoModelo.tableTitle']}"
+                        tableTitle="#{eppmessages['associatedVariavelTipoModelo.tableTitle']}"
                         id="associatedVariavelTipoModeloList"
                         rowId="#{row.idVariavelTipoModelo}"
                         panelStyleClass="rf-dt-crud"
@@ -171,15 +171,15 @@
                                     rendered="true">
                                     <h:graphicImage
                                         url="#{a4jSkin.imgFolder}/grid/copyRight.gif"
-                                        title="#{messages['button.delete']}" />
+                                        title="#{eppmessages['button.delete']}" />
                                 </a:commandLink>
                             </a:region>
                         </ui:define>
                         <wi:columnOutputText columnId="variavel"
-                            columnHeader="#{messages['associatedVariavelTipoModelo.variavel']}"
+                            columnHeader="#{eppmessages['associatedVariavelTipoModelo.variavel']}"
                             value="#{row.variavel}" />
                         <wi:columnOutputText columnId="variavel"
-                            columnHeader="#{messages['associatedVariavelTipoModelo.valorVariavel']}"
+                            columnHeader="#{eppmessages['associatedVariavelTipoModelo.valorVariavel']}"
                             value="#{row.variavel.valorVariavel}" />
                     </wi:dataTable>
                 </s:div>
@@ -187,17 +187,17 @@
         </infox:tab>
         <infox:tab id="papeis" status=":status"
             rendered="#{home.managed}"
-            title="#{messages['tipoModeloDocumento.papeis']}"
+            title="#{eppmessages['tipoModeloDocumento.papeis']}"
             name="papeis">
             <s:div id="divAssociarPapel">
                 <wi:dataForm formId="tipoModeloDocumentoPapelForm"
-                    formTitle="#{messages['form.title']}">
+                    formTitle="#{eppmessages['form.title']}">
                     <wi:selectOneMenuEntity id="papel"
-                        label="#{messages['tipoModeloDocumento.papel']}"
+                        label="#{eppmessages['tipoModeloDocumento.papel']}"
                         items="#{tipoModeloDocumentoPapelCrudAction.getPapeisNaoAssociadosATipoModeloDocumentoAtual()}"
                         value="#{tipoModeloDocumentoPapelCrudAction.instance.papel}"
                         required="true"
-                        showLabel="#{messages['crud.select.select']}" />
+                        showLabel="#{eppmessages['crud.select.select']}" />
                     <ui:define name="buttons">
                         <wi:commandButtonPersist
                             home="#{tipoModeloDocumentoPapelCrudAction}"
@@ -207,7 +207,7 @@
                 <wi:dataTable
                     values="#{tipoModeloDocumentoPapelList.list(15)}"
                     bean="#{tipoModeloDocumentoPapelList}"
-                    tableTitle="#{messages['tipoModeloDocumentoPapel.tableTitle']}"
+                    tableTitle="#{eppmessages['tipoModeloDocumentoPapel.tableTitle']}"
                     id="tipoModeloDocumentoPapelList"
                     rowId="#{row.idTipoModeloDocumentoPapel}"
                     searchFormStyleClass="hidden" showMsg="false">
@@ -218,7 +218,7 @@
                             actionRemove="tipoModeloDocumentoPapelCrudAction.remove(row)" />
                     </ui:define>
                     <wi:columnOutputText columnId="o.papel.nome"
-                        columnHeader="#{messages['tipoModeloDocumento.papel']}"
+                        columnHeader="#{eppmessages['tipoModeloDocumento.papel']}"
                         value="#{row.papel}" />
                 </wi:dataTable>
             </s:div>

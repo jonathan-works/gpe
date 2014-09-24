@@ -13,7 +13,7 @@
     template="/WEB-INF/xhtml/templates/minimal.xhtml">
     <ui:param
         name="pageTitle"
-        value="#{messages['processo.titlePage']}" />
+        value="#{eppmessages['processo.titlePage']}" />
     <ui:define name="title">#{pageTitle}</ui:define>
     <ui:param
         name="home"
@@ -37,7 +37,7 @@
         </h:form>
         <rich:collapsiblePanel
             switchType="client"
-            header="#{messages['processo.titleView']} #{processoHome.instance.numeroProcesso}"
+            header="#{eppmessages['processo.titleView']} #{processoHome.instance.numeroProcesso}"
             expanded="false">
             <h:panelGrid
                 columns="2"
@@ -45,13 +45,13 @@
                 columnClasses="viewColumn">
                 <wi:outputText
                     id="dataInicio"
-                    label="#{messages['processo.dataInicio']}"
+                    label="#{eppmessages['processo.dataInicio']}"
                     value="#{processoHome.instance.dataInicio}">
                     <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
                 </wi:outputText>
                 <wi:outputText
                     id="usuarioCadastroProcesso"
-                    label="#{messages['processo.usuarioCadastroProcesso']}"
+                    label="#{eppmessages['processo.usuarioCadastroProcesso']}"
                     value="#{processoHome.instance.usuarioCadastroProcesso}" />
             </h:panelGrid>
         </rich:collapsiblePanel>
@@ -68,11 +68,11 @@
                 name="tabEntrada"
                 rendered="#{!empty taskInstanceView.fields}"
                 status=":status"
-                title="#{messages['movimentar.entrada.titleTab']}">
+                title="#{eppmessages['movimentar.entrada.titleTab']}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{messages['movimentar.entrada.titleTab']}</ui:define>
+                    <ui:define name="title">#{eppmessages['movimentar.entrada.titleTab']}</ui:define>
                     <wi:form
                         canEdit="true"
                         formTitle="#{taskInstance.name}"
@@ -85,11 +85,11 @@
                 name="tabMovimentacoes"
                 rendered="#{processoHome.managed}"
                 status=":status"
-                title="#{messages['acaoProcesso.menuText']}">
+                title="#{eppmessages['acaoProcesso.menuText']}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{messages['acaoProcesso.menuText']}</ui:define>
+                    <ui:define name="title">#{eppmessages['acaoProcesso.menuText']}</ui:define>
                     <ui:include
                         src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
                 </ui:decorate>
@@ -100,34 +100,34 @@
                 rendered="#{processoHome.managed}"
                 status=":status"
                 action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
-                title="#{messages['processo.documentos']}">
+                title="#{eppmessages['processo.documentos']}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{messages['processo.documentos']}</ui:define>
+                    <ui:define name="title">#{eppmessages['processo.documentos']}</ui:define>
                     <wi:dataTable
                         values="#{processoDocumentoList.list(15)}"
                         bean="#{processoDocumentoList}"
-                        tableTitle="#{messages['processo.documentos']} #{home.instance}"
+                        tableTitle="#{eppmessages['processo.documentos']} #{home.instance}"
                         id="processoDocumentoList"
                         rowId="#{row.idProcessoDocumento}"
                         searchFormStyleClass="hidden">
                         <ui:define name="headerToolBar" />
                         <wi:columnOutputText
                             columnId="numeroDocumento"
-                            columnHeader="#{messages['processoDocumento.numeroDocumento']}"
+                            columnHeader="#{eppmessages['processoDocumento.numeroDocumento']}"
                             value="#{row.numeroDocumento}" />
                         <wi:columnOutputText
                             columnId="usuarioInclusao"
-                            columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+                            columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
                             value="#{row.usuarioInclusao}" />
                         <wi:columnDateTime
                             columnId="dataInclusao"
-                            columnHeader="#{messages['processoDocumento.dataInclusao']}"
+                            columnHeader="#{eppmessages['processoDocumento.dataInclusao']}"
                             value="#{row.dataInclusao}" />
                         <wi:columnOutputText
                             columnId="processoDocumentoBin"
-                            columnHeader="#{messages['processoDocumentoBin.documento']}"
+                            columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
                             value="#{row.processoDocumento}" />
                         <ui:define name="toolBar" />
                     </wi:dataTable>
@@ -141,11 +141,11 @@
                 name="documentoFisicoTab"
                 rendered="#{home.isManaged()}"
                 action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
-                title="#{messages['documentoFisico.titleTab']}">
+                title="#{eppmessages['documentoFisico.titleTab']}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{messages['documentoFisico.titleTab']}</ui:define>
+                    <ui:define name="title">#{eppmessages['documentoFisico.titleTab']}</ui:define>
                     <s:div id="documentoFisicoDiv">
                         <wi:dataTable
                             id="documentoFisicoTable"
@@ -157,12 +157,12 @@
                             <ui:define name="headerToolBar" />
                             <wi:columnOutputText
                                 columnId="localizacaoFisica"
-                                columnHeader="#{messages['documentoFisico.localizacaoFisica']}"
+                                columnHeader="#{eppmessages['documentoFisico.localizacaoFisica']}"
                                 value="#{row.localizacaoFisica.caminhoCompletoToString()}"
                                 hideOrder="true" />
                             <wi:columnOutputText
                                 columnId="descricao"
-                                columnHeader="#{messages['documentoFisico.descricaoDocumentoFisico']}"
+                                columnHeader="#{eppmessages['documentoFisico.descricaoDocumentoFisico']}"
                                 value="#{row.descricaoDocumentoFisico}"
                                 hideOrder="true" />
                         </wi:dataTable>
@@ -175,11 +175,11 @@
                 status=":status"
                 rendered="#{home.hasPartes()}"
                 action="#{parteProcessoList.entity.setProcesso(home.instance)}"
-                title="#{messages['parteProcesso.partes']}">
+                title="#{eppmessages['parteProcesso.partes']}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{messages['parteProcesso.partes']}</ui:define>
+                    <ui:define name="title">#{eppmessages['parteProcesso.partes']}</ui:define>
                     <ui:include src="parteProcessoGridRO.xhtml" />
                 </ui:decorate>
             </infox:tab>
@@ -187,7 +187,7 @@
                 id="tabSigiloProcesso"
                 name="tabSigiloProcesso"
                 status=":status"
-                title="#{messages['sigiloProcesso.sigiloProcesso']}"
+                title="#{eppmessages['sigiloProcesso.sigiloProcesso']}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
                 <f:setPropertyActionListener
                     target="#{sigiloProcessoAction.processo}"
@@ -198,7 +198,7 @@
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{messages['sigiloProcesso.sigiloProcesso']}</ui:define>
+                    <ui:define name="title">#{eppmessages['sigiloProcesso.sigiloProcesso']}</ui:define>
                     <ui:include src="sigiloProcesso.xhtml" />
                 </ui:decorate>
             </infox:tab>
@@ -206,7 +206,7 @@
                 id="tabSigiloDocumento"
                 name="tabSigiloDocumento"
                 status=":status"
-                title="#{messages['sigiloDocumento.sigiloDocumento']}"
+                title="#{eppmessages['sigiloDocumento.sigiloDocumento']}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloDocumento', 'access')}">
                 <f:setPropertyActionListener
                     target="#{sigiloDocumentoAction.processo}"
@@ -217,7 +217,7 @@
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{messages['sigiloDocumento.sigiloDocumento']}</ui:define>
+                    <ui:define name="title">#{eppmessages['sigiloDocumento.sigiloDocumento']}</ui:define>
                     <ui:include src="sigiloDocumento.xhtml" />
                 </ui:decorate>
             </infox:tab>
@@ -225,7 +225,7 @@
         <c:if test="#{!checkPermission}">
             <wi:outputText
                 id="error"
-                value="#{messages['movimentar.noPermission']}" />
+                value="#{eppmessages['movimentar.noPermission']}" />
         </c:if>
     </ui:define>
 </ui:composition>

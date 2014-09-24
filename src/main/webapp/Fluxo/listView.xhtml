@@ -10,7 +10,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-    <ui:define name="title">#{messages['fluxo.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['fluxo.titlePage']}</ui:define>
     <ui:param
         name="home"
         value="#{fluxoCrudAction}" />
@@ -18,97 +18,97 @@
         <wi:dataTable
             values="#{fluxoList.list(15)}"
             bean="#{fluxoList}"
-            tableTitle="#{messages['fluxo.tableTitle']}"
+            tableTitle="#{eppmessages['fluxo.tableTitle']}"
             id="fluxoList"
             rowId="#{row.idFluxo}">
             <ui:define name="searchForm">
                 <wi:searchForm
                     formId="pesquisarFluxoForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{eppmessages['searchForm.title']}">
                     <wi:inputText
                         id="codFluxo"
-                        label="#{messages['fluxo.codFluxo']}"
+                        label="#{eppmessages['fluxo.codFluxo']}"
                         value="#{fluxoList.entity.codFluxo}" />
                     <wi:inputText
                         id="descricao"
-                        label="#{messages['fluxo.descricao']}"
+                        label="#{eppmessages['fluxo.descricao']}"
                         value="#{fluxoList.entity.fluxo}" />
                     <wi:inputDataPeriodo
                         id="dataPublicacao"
-                        label="#{messages['fluxo.dataPublicacao']}"
+                        label="#{eppmessages['fluxo.dataPublicacao']}"
                         valueDateFrom="#{fluxoList.entity.dataInicioPublicacao}"
                         valueDateTo="#{fluxoList.entity.dataFimPublicacao}" />
                     <wi:selectBooleanMenu
                         id="publicado"
-                        label="#{messages['fluxo.publicado']}"
+                        label="#{eppmessages['fluxo.publicado']}"
                         value="#{fluxoList.entity.publicado}" />
                     <wi:selectSituacaoOneMenu
                         id="ativo"
-                        label="#{messages['field.situacao']}"
+                        label="#{eppmessages['field.situacao']}"
                         value="#{fluxoList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
             <wi:columnOutputText
                 columnId="codFluxo"
-                columnHeader="#{messages['fluxo.codFluxo']}"
+                columnHeader="#{eppmessages['fluxo.codFluxo']}"
                 value="#{row.codFluxo}" />
             <wi:columnOutputText
                 columnId="fluxo"
-                columnHeader="#{messages['fluxo.descricao']}"
+                columnHeader="#{eppmessages['fluxo.descricao']}"
                 value="#{row.fluxo}" />
             <wi:columnOutputText
                 columnId="dataInicioPublicacao"
-                columnHeader="#{messages['fluxo.dataInicioPublicacao']}"
+                columnHeader="#{eppmessages['fluxo.dataInicioPublicacao']}"
                 value="#{row.dataInicioPublicacao}" />
             <wi:columnOutputText
                 columnId="dataFimPublicacao"
-                columnHeader="#{messages['fluxo.dataFimPublicacao']}"
+                columnHeader="#{eppmessages['fluxo.dataFimPublicacao']}"
                 value="#{row.dataFimPublicacao}" />
             <wi:columnBoolean
                 columnId="publicado"
-                columnHeader="#{messages['fluxo.publicado']}"
+                columnHeader="#{eppmessages['fluxo.publicado']}"
                 value="#{row.publicado}" />
             <wi:columnSituacao
                 columnId="ativo"
-                columnHeader="#{messages['field.situacao']}"
+                columnHeader="#{eppmessages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
         <wi:dataForm
             formId="fluxoForm"
-            formTitle="#{messages['form.title']}">
+            formTitle="#{eppmessages['form.title']}">
             <wi:inputText
                 id="codFluxo"
                 value="#{fluxoCrudAction.instance.codFluxo}"
                 required="true"
-                label="#{messages['fluxo.codFluxo']}">
+                label="#{eppmessages['fluxo.codFluxo']}">
                 <f:validator validatorId="jsfComponentIdValidator" />
             </wi:inputText>
             <wi:inputText
                 id="descricaoFluxo"
                 required="true"
-                label="#{messages['fluxo.descricao']}"
+                label="#{eppmessages['fluxo.descricao']}"
                 value="#{fluxoCrudAction.instance.fluxo}" />
             <wi:inputNumber
                 id="prazoDias"
-                label="#{messages['fluxo.qtPrazo']}"
+                label="#{eppmessages['fluxo.qtPrazo']}"
                 required="true"
                 value="#{fluxoCrudAction.instance.qtPrazo}" />
             <wi:inputDate
                 id="dataInicio"
-                label="#{messages['fluxo.dataInicioPublicacao']}"
+                label="#{eppmessages['fluxo.dataInicioPublicacao']}"
                 required="true"
                 value="#{fluxoCrudAction.instance.dataInicioPublicacao}" />
             <wi:inputDate
                 id="dataFim"
-                label="#{messages['fluxo.dataFimPublicacao']}"
+                label="#{eppmessages['fluxo.dataFimPublicacao']}"
                 value="#{fluxoCrudAction.instance.dataFimPublicacao}" />
-            <wi:outputText id="statusPublicacao" rendered="#{fluxoCrudAction.managed}" label="#{messages['fluxo.publicado']}"
+            <wi:outputText id="statusPublicacao" rendered="#{fluxoCrudAction.managed}" label="#{eppmessages['fluxo.publicado']}"
                 value="#{fluxoCrudAction.instance.publicado ? 'Sim' : 'Não'}" />
             <wi:selectSituacaoRadio
                 id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{fluxoCrudAction.instance.ativo}" />
             <ui:define name="buttons">
                 <wi:commandButtonSave
@@ -119,16 +119,16 @@
                     action="fluxoCrudAction.criarReplica()"
                     reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
                     rendered="#{fluxoCrudAction.managed or fluxoCrudAction.replica}"
-                    value="#{messages['fluxo.exportar']}" />
+                    value="#{eppmessages['fluxo.exportar']}" />
                 <wi:commandButton
                     id="definicao"
                     action="#{processBuilder.load(fluxoCrudAction.instance)}"
-                    value="#{messages['fluxo.definicao']}"
+                    value="#{eppmessages['fluxo.definicao']}"
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
                     oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);" />
                 <wi:commandButton
                     id="importarXPDL"
-                    value="#{messages['importarXPDL.button']}"
+                    value="#{eppmessages['importarXPDL.button']}"
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
                     onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);" />
             </ui:define>
@@ -142,14 +142,14 @@
             id="fluxoPapelTab"
             rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
             action="#{action.init(fluxoCrudAction.instance)}"
-            title="#{messages['fluxoPapel.titleTab']}"
+            title="#{eppmessages['fluxoPapel.titleTab']}"
             name="fluxoPapelTab">
             <wi:dataForm
                 formId="fluxoPapelForm"
-                formTitle="#{messages['form.title']}">
+                formTitle="#{eppmessages['form.title']}">
                 <wi:tree
                     id="papelTree"
-                    label="#{messages['fluxoPapel.papel']}"
+                    label="#{eppmessages['fluxoPapel.papel']}"
                     assignTo="fluxoPapelAction.instance.papel"
                     tree="#{action.papelTreeHandler}"
                     required="true" />
@@ -158,7 +158,7 @@
                         id="savePapelButton"
                         action="fluxoPapelAction.save"
                         reRender="fluxoPapelForm, fluxoPapelDiv, pageBodyDialogMessage"
-                        value="#{messages['crud.persist']}" />
+                        value="#{eppmessages['crud.persist']}" />
                 </ui:define>
             </wi:dataForm>
             <s:div id="fluxoPapelDiv">
@@ -176,7 +176,7 @@
                     <rich:column>
                         <f:facet name="header">
                             <h:outputText
-                                value="#{messages['fluxoPapel.papel']}" />
+                                value="#{eppmessages['fluxoPapel.papel']}" />
                         </f:facet>
                         <h:outputText value="#{row.papel}" />
                     </rich:column>
@@ -193,23 +193,23 @@
             id="natCatFluxoLoc"
             name="natCatFluxoLoc"
             rendered="#{home.managed and not fluxoCrudAction.replica}"
-            title="#{messages['localizacao.titleView']}">
+            title="#{eppmessages['localizacao.titleView']}">
             <s:div id="natCatFluxoLocDiv">
                 <div>
                     <wi:dataForm
                         formId="natCatFluxoLocForm"
-                        formTitle="#{messages['form.title']}: #{fluxoCrudAction.instance}">
+                        formTitle="#{eppmessages['form.title']}: #{fluxoCrudAction.instance}">
                         <wi:selectOneMenuEntity
                             id="naturezaCategoriaFluxo"
                             value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
                             required="true"
-                            label="#{messages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
+                            label="#{eppmessages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
                             showLabelSelecione="true"
                             items="#{fluxoLocalizacaoCrudAction.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoCrudAction.instance)}" />
                         <wi:tree
                             id="localizacao"
                             assignTo="fluxoLocalizacaoCrudAction.localizacao"
-                            label="#{messages['localizacao.titleView']}"
+                            label="#{eppmessages['localizacao.titleView']}"
                             required="true"
                             tree="#{localizacaoFullTree}" 
                             styleClass="#{empty item.entity.estruturaPai ? 'tree-notselectable' : ''}" />
@@ -218,7 +218,7 @@
                                 id="saveButton"
                                 action="fluxoLocalizacaoCrudAction.save"
                                 reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
-                                value="#{messages['crud.persist']}" />
+                                value="#{eppmessages['crud.persist']}" />
                         </ui:define>
                     </wi:dataForm>
                 </div>
@@ -226,7 +226,7 @@
                     <wi:dataTable
                         values="#{natCatFluxoLocalizacaoList.list(15)}"
                         bean="#{natCatFluxoLocalizacaoList}"
-                        tableTitle="#{messages['natCatFluxoLocalizacao.tableTitle']}"
+                        tableTitle="#{eppmessages['natCatFluxoLocalizacao.tableTitle']}"
                         id="natCatFluxoLocalizacaoList"
                         rowId="#{row.idNatCatFluxoLocalizacao}"
                         actionInactive="fluxoLocalizacaoCrudAction.inactive">
@@ -239,22 +239,22 @@
                         </ui:define>
                         <wi:columnOutputText
                             columnId="naturezaCategoriaFluxo.natureza"
-                            columnHeader="#{messages['naturezaCategoriaFluxo.natureza']}"
+                            columnHeader="#{eppmessages['naturezaCategoriaFluxo.natureza']}"
                             columnWidth="25%"
                             value="#{row.naturezaCategoriaFluxo.natureza}" />
                         <wi:columnOutputText
                             columnId="naturezaCategoriaFluxo.categoria"
-                            columnHeader="#{messages['naturezaCategoriaFluxo.categoria']}"
+                            columnHeader="#{eppmessages['naturezaCategoriaFluxo.categoria']}"
                             columnWidth="20%"
                             value="#{row.naturezaCategoriaFluxo.categoria}" />
                         <wi:columnOutputText
                             columnId="naturezaCategoriaFluxo.fluxo"
-                            columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+                            columnHeader="#{eppmessages['naturezaCategoriaFluxo.fluxo']}"
                             columnWidth="20%"
                             value="#{row.naturezaCategoriaFluxo.fluxo}" />
                         <wi:columnOutputText
                             columnId="localizacao"
-                            columnHeader="#{messages['localizacao.titleView']}"
+                            columnHeader="#{eppmessages['localizacao.titleView']}"
                             columnWidth="20%"
                             value="#{row.localizacao}" />
                     </wi:dataTable>

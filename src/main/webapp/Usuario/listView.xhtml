@@ -11,7 +11,7 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-  <ui:define name="title">#{messages['usuario.titlePage']}</ui:define>
+  <ui:define name="title">#{eppmessages['usuario.titlePage']}</ui:define>
   <ui:param
     name="home"
     value="#{usuarioLoginCrudAction}" />
@@ -19,80 +19,80 @@
     <wi:dataTable
       values="#{usuarioLoginList.list(15)}"
       bean="#{usuarioLoginList}"
-      tableTitle="#{messages['usuario.tableTitle']}"
+      tableTitle="#{eppmessages['usuario.tableTitle']}"
       id="usuarioLoginList"
       rowId="#{row.idUsuarioLogin}">
       <ui:define name="searchForm">
         <wi:searchForm
           formId="pesquisarUsuarioLoginForm"
-          formTitle="#{messages['searchForm.title']}">
+          formTitle="#{eppmessages['searchForm.title']}">
           <wi:inputText
             id="nome"
-            label="#{messages['usuarioLogin.nome']}"
+            label="#{eppmessages['usuarioLogin.nome']}"
             value="#{usuarioLoginList.entity.nomeUsuario}"
             maxlength="150" />
           <wi:selectBooleanMenu
             id="bloqueio"
-            label="#{messages['usuarioLogin.bloqueio']}"
+            label="#{eppmessages['usuarioLogin.bloqueio']}"
             value="#{usuarioLoginList.entity.bloqueio}" />
           <wi:selectBooleanMenu
             id="provisorio"
-            label="#{messages['usuarioLogin.provisorio']}"
+            label="#{eppmessages['usuarioLogin.provisorio']}"
             value="#{usuarioLoginList.entity.provisorio}" />
           <wi:selectSituacaoOneMenu
             id="ativo"
-            label="#{messages['field.situacao']}"
+            label="#{eppmessages['field.situacao']}"
             value="#{usuarioLoginList.entity.ativo}" />
         </wi:searchForm>
       </ui:define>
       <wi:columnOutputText
         columnId="nomeUsuario"
-        columnHeader="#{messages['usuarioLogin.nome']}"
+        columnHeader="#{eppmessages['usuarioLogin.nome']}"
         value="#{row.nomeUsuario}" />
       <wi:columnOutputText
         columnId="usuarioPerfilList"
-        columnHeader="#{messages['usuarioLogin.perfis']}"
+        columnHeader="#{eppmessages['usuarioLogin.perfis']}"
         value="#{row.perfisFormatados}"
       />
       <wi:columnBoolean
         columnId="bloqueio"
-        columnHeader="#{messages['usuarioLogin.bloqueio']}"
+        columnHeader="#{eppmessages['usuarioLogin.bloqueio']}"
         value="#{row.bloqueio}" />
       <wi:columnBoolean
         columnId="provisorio"
-        columnHeader="#{messages['usuarioLogin.provisorio']}"
+        columnHeader="#{eppmessages['usuarioLogin.provisorio']}"
         value="#{row.provisorio}" />
       <wi:columnSituacao
         columnId="ativo"
-        columnHeader="#{messages['field.situacao']}"
+        columnHeader="#{eppmessages['field.situacao']}"
         value="#{row.ativo}" />
     </wi:dataTable>
   </ui:define>
   <ui:define name="form">
     <wi:dataForm
       formId="usuarioForm"
-      formTitle="#{messages['form.title']}">
+      formTitle="#{eppmessages['form.title']}">
       <wi:inputText
         id="nomeUsuario"
-        label="#{messages['usuario.nome']}"
+        label="#{eppmessages['usuario.nome']}"
         value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
         required="true" />
       <wi:inputText
         id="email"
-        label="#{messages['usuarioLogin.email']}"
+        label="#{eppmessages['usuarioLogin.email']}"
         value="#{usuarioLoginCrudAction.instance.email}"
         required="true">
         <f:validator validatorId="emailValidator" />
       </wi:inputText>
       <wi:inputText
         id="login"
-        label="#{messages['usuarioLogin.login']}"
+        label="#{eppmessages['usuarioLogin.login']}"
         value="#{usuarioLoginCrudAction.instance.login}"
         required="true"
         maxlength="15" />
       <wi:selectOneMenuEnum
         id="tipoUsuario"
-        label="#{messages['usuario.tipoUsuario']}"
+        label="#{eppmessages['usuario.tipoUsuario']}"
         items="#{usuarioLoginCrudAction.tiposDeUsuario}"
         value="#{usuarioLoginCrudAction.instance.tipoUsuario}"
         showLabelSelecione="true"
@@ -100,7 +100,7 @@
       </wi:selectOneMenuEnum>
       <wi:selectSituacaoRadio
         id="ativo"
-        label="#{messages['field.situacao']}"
+        label="#{eppmessages['field.situacao']}"
         value="#{usuarioLoginCrudAction.instance.ativo}" />
       <ui:include
         src="/WEB-INF/xhtml/components/form/usuarioProvisorio.xhtml">
@@ -114,12 +114,12 @@
     <infox:tab
       id="usuarioPessoaFisica"
       rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
-      title="#{messages['usuario.pessoaFisica']}"
+      title="#{eppmessages['usuario.pessoaFisica']}"
       name="usuarioPessoaFisica"
       action="#{usuarioPessoaFisicaCrudAction.newInstance()}">
       <wi:dataForm
         formId="usuarioPessoaFisicaForm"
-        formTitle="#{messages['form.title']}"
+        formTitle="#{eppmessages['form.title']}"
         home="#{usuarioPessoaFisicaCrudAction}"
         rendered="#{empty usuarioLoginCrudAction.instance.pessoaFisica}">
         <s:div id="pessoaFisicaRegion">
@@ -139,12 +139,12 @@
           <wi:inputText
             id="nome"
             value="#{usuarioPessoaFisicaCrudAction.instance.nome}"
-            label="#{messages['pessoaFisica.nome']}"
+            label="#{eppmessages['pessoaFisica.nome']}"
             required="true" />
           <wi:inputDate
             id="dataNascimento"
             value="#{usuarioPessoaFisicaCrudAction.instance.dataNascimento}"
-            label="#{messages['pessoaFisica.dataNascimento']}"
+            label="#{eppmessages['pessoaFisica.dataNascimento']}"
             required="true" />
         </s:div>
         <ui:define name="buttons">
@@ -169,13 +169,13 @@
             limitToList="true"
             status=":status"
             render="usuarioPessoaFisica, pageBodyDialogMessage, meioContatoList, pessoaDocumentoList"
-            onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
+            onclick="return confirm(\'#{eppmessages['crud.confirmRemove']}\');"
             url="#{a4jSkin.imgFolder}/remove.png"
-            title="#{messages['crud.remove']}" />
+            title="#{eppmessages['crud.remove']}" />
         </ui:define>
         <wi:columnOutputText
           columnId="cpf"
-          columnHeader="#{messages['pessoaFisica.cpf']}"
+          columnHeader="#{eppmessages['pessoaFisica.cpf']}"
           value="#{row.cpf}">
           <ui:define name="outputText">
               <f:converter converterId="cpfConverter"/>
@@ -183,17 +183,17 @@
         </wi:columnOutputText>
         <wi:columnOutputText
           columnId="nome"
-          columnHeader="#{messages['pessoaFisica.nome']}"
+          columnHeader="#{eppmessages['pessoaFisica.nome']}"
           value="#{row.nome}" />
         <wi:columnDateTime
           columnId="dataNascimento"
-          columnHeader="#{messages['pessoaFisica.dataNascimento']}"
+          columnHeader="#{eppmessages['pessoaFisica.dataNascimento']}"
           value="#{row.dataNascimento}" />
       </wi:dataTable>
       <wi:dataTable
       	bean="#{meioContatoList}"
         values="#{meioContatoList.list(20)}"
-        tableTitle="#{messages['meioContato.title']}"
+        tableTitle="#{eppmessages['meioContato.title']}"
         id="meioContatoList"
         rowId="#{row.idMeioContato}"
         listReRender="divGridLU"
@@ -205,17 +205,17 @@
         <ui:define name="toolBar" />
         <wi:columnOutputText
           columnId="tipoMeioContato"
-          columnHeader="#{messages['meioContato.tipoMeioContato']}"
+          columnHeader="#{eppmessages['meioContato.tipoMeioContato']}"
           value="#{row.tipoMeioContato.label}" />
         <wi:columnOutputText
           columnId="meioContato"
-          columnHeader="#{messages['meioContato.meioContato']}"
+          columnHeader="#{eppmessages['meioContato.meioContato']}"
           value="#{row.meioContato}" />
       </wi:dataTable>
       <wi:dataTable
       	bean="#{pessoaDocumentoList}"
         values="#{pessoaDocumentoList.list(20)}"
-        tableTitle="#{messages['pessoaDocumento.title']}"
+        tableTitle="#{eppmessages['pessoaDocumento.title']}"
         id="pessoaDocumentoList"
         rowId="#{row.idPessoaDocumento}"
         listReRender="divGridLU"
@@ -227,30 +227,30 @@
         <ui:define name="toolBar" />
         <wi:columnOutputText
           columnId="tipoDocumento"
-          columnHeader="#{messages['pessoaDocumento.tipoDocumento']}"
+          columnHeader="#{eppmessages['pessoaDocumento.tipoDocumento']}"
           value="#{row.tipoDocumento.label}" />
         <wi:columnOutputText
           columnId="documento"
-          columnHeader="#{messages['pessoaDocumento.documento']}"
+          columnHeader="#{eppmessages['pessoaDocumento.documento']}"
           value="#{row.documento}" />
         <wi:columnOutputText
           columnId="orgaoEmissor"
-          columnHeader="#{messages['pessoaDocumento.orgaoEmissor']}"
+          columnHeader="#{eppmessages['pessoaDocumento.orgaoEmissor']}"
           value="#{row.orgaoEmissor}" />
         <wi:columnDateTime
           columnId="dataEmissao"
-          columnHeader="#{messages['pessoaDocumento.dataEmissao']}"
+          columnHeader="#{eppmessages['pessoaDocumento.dataEmissao']}"
           value="#{row.dataEmissao}" />
       </wi:dataTable>
     </infox:tab>
     <infox:tab
       id="usuarioPerfil"
       rendered="#{home.isManaged()}"
-      title="#{messages['usuario.perfilTitleTab']}"
+      title="#{eppmessages['usuario.perfilTitleTab']}"
       name="usuarioPerfil">
       <wi:dataForm
         formId="usuarioPerfilForm"
-        formTitle="#{messages['form.title']}">
+        formTitle="#{eppmessages['form.title']}">
         <wi:tree
             id="localizacoesTree"
             assignTo="usuarioPerfilCrudAction.instance.localizacao"
@@ -258,12 +258,12 @@
             icon="#{a4jSkin.imgFolder}/nivelTree.gif"
             iconLeaf="#{a4jSkin.imgFolder}/file.gif"
             clearRender="@this"
-            label="#{messages['perfilTemplate.localizacao']}" 
+            label="#{eppmessages['perfilTemplate.localizacao']}" 
             render="perfisPermitidos"
             required="true" />
         <wi:selectOneMenuEntity id="perfisPermitidos"
             value="#{usuarioPerfilCrudAction.instance.perfilTemplate}"
-            label="#{messages['usuarioPerfil.perfil']}"
+            label="#{eppmessages['usuarioPerfil.perfil']}"
             items="#{usuarioPerfilCrudAction.perfisPermitidos}"
             showLabelSelecione="true"
             disabled="#{empty usuarioPerfilCrudAction.instance.localizacao}" 
@@ -271,13 +271,13 @@
         <wi:selectBooleanCheckbox
           id="responsavelLocalizacao"
           value="#{usuarioPerfilCrudAction.instance.responsavelLocalizacao}"
-          label="#{messages['perfil.responsavelLocalizacao']}" />
+          label="#{eppmessages['perfil.responsavelLocalizacao']}" />
         <ui:define name="buttons">
           <wi:commandButton
             id="saveButton"
             action="usuarioPerfilCrudAction.save()"
             reRender="usuarioPerfil, pageBodyDialogMessage"
-            value="#{messages['crud.persist']}" />
+            value="#{eppmessages['crud.persist']}" />
         </ui:define>
       </wi:dataForm>
       <s:div id="divPerfisAssociados">
@@ -285,7 +285,7 @@
           id="usuarioPerfilList"
           values="#{usuarioPerfilEntityList.list(15)}"
           bean="#{usuarioPerfilEntityList}"
-          tableTitle="#{messages['usuario.profiles']} #{usuarioLoginCrudAction.instance}"
+          tableTitle="#{eppmessages['usuario.profiles']} #{usuarioLoginCrudAction.instance}"
           var="row"
           rows="10"
           panelStyleClass="full-sized">
@@ -293,24 +293,24 @@
           <ui:define name="toolBar">
             <wi:toolBar
               url="#{a4jSkin.imgFolder}/remove.png"
-              title="#{messages['crud.remove']}"
+              title="#{eppmessages['crud.remove']}"
               action="usuarioPerfilCrudAction.remove(row)"
               render="divPerfisAssociados, pageBodyDialogMessage"
               execute="@this"
-              onclick="return confirm(\'#{messages['crud.confirmRemove']}\');"
+              onclick="return confirm(\'#{eppmessages['crud.confirmRemove']}\');"
               id="removeButton" />
           </ui:define>
           <wi:columnOutputText 
             columnId="localizacao"
-            columnHeader="#{messages['usuarioPerfil.localizacao']}"
+            columnHeader="#{eppmessages['usuarioPerfil.localizacao']}"
             value="#{row.localizacao}"/>
           <wi:columnOutputText
             columnId="perfil.descricao"
-            columnHeader="#{messages['usuarioPerfil.perfil']}"
+            columnHeader="#{eppmessages['usuarioPerfil.perfil']}"
             value="#{row.perfilTemplate.descricao}" />
           <wi:columnBoolean
             columnId="responsavelLocalizacao"
-            columnHeader="#{messages['perfil.responsavelLocalizacao']}"
+            columnHeader="#{eppmessages['perfil.responsavelLocalizacao']}"
             value="#{row.responsavelLocalizacao}" />
             
         </wi:dataTable>
@@ -319,27 +319,27 @@
     <infox:tab
       id="historicoBloqueioUsuario"
       rendered="#{home.isManaged()}"
-      title="#{messages['bloqueioUsuario.historicoBloqueio']}"
+      title="#{eppmessages['bloqueioUsuario.historicoBloqueio']}"
       name="historicoBloqueioUsuario">
       <wi:dataForm
         formId="bloqueioUsuarioForm"
-        formTitle="#{messages['form.title']}"
+        formTitle="#{eppmessages['form.title']}"
         home="#{bloqueioUsuarioCrudAction}"
         requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
         <wi:outputText
           id="bloqueio"
           value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? messages['bloqueioUsuario.bloqueado.true'] : messages['bloqueioUsuario.bloqueado.false']}"
-          label="#{messages['usuario.bloqueio']}" />
+          label="#{eppmessages['usuario.bloqueio']}" />
         <wi:inputDate
           id="dataDesbloqueio"
-          label="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+          label="#{eppmessages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
           value="#{bloqueioUsuarioCrudAction.instance.dataPrevisaoDesbloqueio}"
           rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
           future="true"
           required="false" />
         <wi:inputText
           id="motivoBloqueio"
-          label="#{messages['bloqueioUsuario.motivoBloqueio']}"
+          label="#{eppmessages['bloqueioUsuario.motivoBloqueio']}"
           value="#{bloqueioUsuarioCrudAction.instance.motivoBloqueio}"
           rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
           required="true"
@@ -349,13 +349,13 @@
           <wi:commandButton
             id="bloqueioButton"
             rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-            value="#{messages['usuario.bloquear']}"
+            value="#{eppmessages['usuario.bloquear']}"
             action="bloqueioUsuarioCrudAction.bloquear"
             reRender="historicoBloqueioUsuario, pageBodyDialogMessage" />
           <wi:commandButton
             id="desbloqueioButton"
             rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-            value="#{messages['usuario.desbloquear']}"
+            value="#{eppmessages['usuario.desbloquear']}"
             action="bloqueioUsuarioCrudAction.desbloquear"
             reRender="historicoBloqueioUsuario, pageBodyDialogMessage" />
         </ui:define>
@@ -364,7 +364,7 @@
         <wi:dataTable
           values="#{bloqueioUsuarioList.list(15)}"
           bean="#{bloqueioUsuarioList}"
-          tableTitle="#{messages['bloqueioUsuario.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
+          tableTitle="#{eppmessages['bloqueioUsuario.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
           id="bloqueioUsuarioList"
           rowId="#{row.idBloqueioUsuario}"
           showToolbarColumn="false">
@@ -372,19 +372,19 @@
           <ui:define name="toolBar" />
           <wi:columnDateTime
             columnId="dataBloqueio"
-            columnHeader="#{messages['bloqueioUsuario.dataBloqueio']}"
+            columnHeader="#{eppmessages['bloqueioUsuario.dataBloqueio']}"
             value="#{row.dataBloqueio}" />
           <wi:columnDateTime
             columnId="dataPrevisaoDesbloqueio"
-            columnHeader="#{messages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
+            columnHeader="#{eppmessages['bloqueioUsuario.dataPrevisaoDesbloqueio']}"
             value="#{row.dataPrevisaoDesbloqueio}" />
           <wi:columnOutputText
             columnId="motivoBloqueio"
-            columnHeader="#{messages['bloqueioUsuario.motivoBloqueio']}"
+            columnHeader="#{eppmessages['bloqueioUsuario.motivoBloqueio']}"
             value="#{row.motivoBloqueio}" />
           <wi:columnDateTime
             columnId="dataDesbloqueio"
-            columnHeader="#{messages['bloqueioUsuario.dataDesbloqueio']}"
+            columnHeader="#{eppmessages['bloqueioUsuario.dataDesbloqueio']}"
             value="#{row.dataDesbloqueio}" />
         </wi:dataTable>
       </s:div>
@@ -392,12 +392,12 @@
     <infox:tab
       id="usuarioAssinaturaDocumento"
       rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
-      title="#{messages['usuario.assinaturaDocumento']}"
+      title="#{eppmessages['usuario.assinaturaDocumento']}"
       name="usuarioAssinaturaDocumento">
       <wi:dataTable
         values="#{assinaturaDocumentoList.list(15)}"
         bean="#{assinaturaDocumentoList}"
-        tableTitle="#{messages['assinaturaDocumentoList.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
+        tableTitle="#{eppmessages['assinaturaDocumentoList.tableTitle']} - #{usuarioLoginCrudAction.instance.nomeUsuario}"
         id="assinaturaDocumentoList"
         rowId="#{row.idAssinatura}">
         <ui:define name="headerToolBar"></ui:define>
@@ -412,25 +412,25 @@
               rendered="#{isModelo}"
               target="PopUpDocumentoBin">
               <h:graphicImage
-                title="#{messages['processoDocumento.visualizar']}"
+                title="#{eppmessages['processoDocumento.visualizar']}"
                 url="#{a4jSkin.imgFolder}/view.gif" />
             </h:commandLink>
           </h:form>
         </ui:define>
         <wi:columnDateTime
           columnId="dataAssinatura"
-          columnHeader="#{messages['assinaturadocumento.dtAssinatura']}"
+          columnHeader="#{eppmessages['assinaturadocumento.dtAssinatura']}"
           value="#{row.dataAssinatura}" />
         <wi:columnOutputText
           columnId="processoDocumentoBin.nomeArquivo"
-          columnHeader="#{messages['processoDocumentoBin.nomeArquivo']}"
+          columnHeader="#{eppmessages['processoDocumentoBin.nomeArquivo']}"
           value="#{row.processoDocumentoBin.nomeArquivo}" />
       </wi:dataTable>
     </infox:tab>
     <infox:tab 
 	    id="vinculoUsuarioUnidadeDecisora"
 	    rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
-	    title="#{messages['usuario.vinculoUnidadeDescisora']}"
+	    title="#{eppmessages['usuario.vinculoUnidadeDescisora']}"
 	    name="vinculoUsuarioUnidadeDecisora"
 	    actionListener="#{usuarioLoginCrudAction.onClickVinculoUnidadeDecisoraTab()}">
 	   
@@ -439,15 +439,15 @@
 	    	style="margin-top:10px; width:100%;"
 	    	value="#{usuarioLoginCrudAction.getUnidadeDecisoraMonocraticaList()}"
 	    	var="row">
-	    	<f:facet name="header">#{messages['usuario.unidadesDecisorasMonocraticas']}</f:facet> 	
+	    	<f:facet name="header">#{eppmessages['usuario.unidadesDecisorasMonocraticas']}</f:facet> 	
 	    	
 	    	<rich:column>
-	    		<f:facet name="header">#{messages['usuario.nomeUnidadeDecisora']}</f:facet>
+	    		<f:facet name="header">#{eppmessages['usuario.nomeUnidadeDecisora']}</f:facet>
 	    		<h:outputLabel value="#{row.nome}"/>
 	    	</rich:column>
 	    	
 	    	<rich:column>
-	    		<f:facet name="header">#{messages['usuario.perfilUnidadeDecisora']}</f:facet>
+	    		<f:facet name="header">#{eppmessages['usuario.perfilUnidadeDecisora']}</f:facet>
 	    		<h:outputLabel value="#{row.perfil}"/>
 	    	</rich:column>
 	    
@@ -458,15 +458,15 @@
 	    	value="#{usuarioLoginCrudAction.getUnidadeDecisoraColegiadaList()}"
 	    	var="row"
 	    	style="margin-top:20px; width:100%;">
-	    	<f:facet name="header">#{messages['usuario.unidadesDecisorasColegiadas']}</f:facet>
+	    	<f:facet name="header">#{eppmessages['usuario.unidadesDecisorasColegiadas']}</f:facet>
 	    	
 	    	<rich:column>
-	    		<f:facet name="header">#{messages['usuario.nomeUnidadeDecisora']}</f:facet>
+	    		<f:facet name="header">#{eppmessages['usuario.nomeUnidadeDecisora']}</f:facet>
 	    		<h:outputLabel value="#{row.nome}"/>
 	    	</rich:column>
 	    	
 	    	<rich:column>
-	    		<f:facet name="header">#{messages['usuario.perfilUnidadeDecisora']}</f:facet>
+	    		<f:facet name="header">#{eppmessages['usuario.perfilUnidadeDecisora']}</f:facet>
 	    		<h:outputLabel value="#{row.perfil}"/>
 	    	</rich:column>
 	    	

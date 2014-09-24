@@ -4,14 +4,14 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<wi:dataReport title="#{messages['twitterTemplate.reportTitle']}"
+	<wi:dataReport title="#{eppmessages['twitterTemplate.reportTitle']}"
 				   columns="3"
 				   widths="4 4 1"
 				   headerText="#{twitterTemplateList.criteria}">
 				   
-		<wi:reportColumnHeader title="#{messages['twitterTemplate.titulo']}" />
-		<wi:reportColumnHeader title="#{messages['twitterTemplate.mensagem']}" />
-		<wi:reportColumnHeader title="#{messages['field.situacao']}"/>
+		<wi:reportColumnHeader title="#{eppmessages['twitterTemplate.titulo']}" />
+		<wi:reportColumnHeader title="#{eppmessages['twitterTemplate.mensagem']}" />
+		<wi:reportColumnHeader title="#{eppmessages['field.situacao']}"/>
 				
 		<ui:repeat var="row" value="#{twitterTemplateList.list()}">
 			<wi:reportColumn value="#{row.titulo}" />

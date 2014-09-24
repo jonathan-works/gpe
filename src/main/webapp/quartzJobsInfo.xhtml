@@ -65,7 +65,7 @@
                             action="#{quartzJobsInfo.triggerJob(row.jobName, row.groupName)}"
                             rendered="#{row.jobValid}" />
                         <h:commandLink
-                            value="#{messages['button.delete']}"
+                            value="#{eppmessages['button.delete']}"
                             action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName)}"
                             rendered="#{not row.jobValid}" />
                     </h:form>

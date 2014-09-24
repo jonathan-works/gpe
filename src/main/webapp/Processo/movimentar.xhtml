@@ -13,7 +13,7 @@
     template="/WEB-INF/xhtml/templates/minimal.xhtml">
     <ui:param
         name="pageTitle"
-        value="#{messages['processo.titlePage']}" />
+        value="#{eppmessages['processo.titlePage']}" />
     <ui:define name="title">#{pageTitle}</ui:define>
     <ui:define name="contentTitle">
     </ui:define>
@@ -97,7 +97,7 @@
     <ui:define name="body">
         <rich:collapsiblePanel
             switchType="client"
-            header="#{messages['processo.titleView']} #{processoHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoHome.instance.itemDoProcesso}"
+            header="#{eppmessages['processo.titleView']} #{processoHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoHome.instance.itemDoProcesso}"
             expanded="false">
             <h:panelGrid
                 columns="2"
@@ -105,13 +105,13 @@
                 columnClasses="viewColumn">
                 <wi:outputText
                     id="dataInicio"
-                    label="#{messages['processo.dataInicio']}"
+                    label="#{eppmessages['processo.dataInicio']}"
                     value="#{processoHome.instance.dataInicio}">
                     <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
                 </wi:outputText>
                 <wi:outputText
                     id="usuarioCadastroProcesso"
-                    label="#{messages['processo.usuarioCadastroProcesso']}"
+                    label="#{eppmessages['processo.usuarioCadastroProcesso']}"
                     value="#{processoHome.instance.usuarioCadastroProcesso}" />
             </h:panelGrid>
         </rich:collapsiblePanel>
@@ -132,7 +132,7 @@
                 id="tabVariaveisProcesso"
                 name="tabVariaveisProcesso"
                 rendered="#{variavelProcessoAction.possuiVariaveis()}"
-                title="#{messages['variavelProcesso.variaveisProcesso']}">
+                title="#{eppmessages['variavelProcesso.variaveisProcesso']}">
                 <h:form>
                     <rich:panel>
                         <ui:repeat
@@ -156,7 +156,7 @@
                 name="tabEntrada"
                 rendered="#{!empty taskInstanceView.fields}"
                 status=":status"
-                title="#{messages['movimentar.entrada.titleTab']}">
+                title="#{eppmessages['movimentar.entrada.titleTab']}">
                 <wi:form
                     canEdit="true"
                     formTitle="#{taskInstance.name}"
@@ -168,7 +168,7 @@
                 name="tabSaida"
                 rendered="#{processoHome.managed}"
                 status=":status"
-                title="#{messages['movimentar.saida.titleTab']}">
+                title="#{eppmessages['movimentar.saida.titleTab']}">
                 <c:if test="#{not taskPageAction.hasTaskPage}">
                     <wi:form
                         canEdit="true"
@@ -186,11 +186,11 @@
                 name="tabAnexar"
                 rendered="#{processoHome.managed}"
                 status=":status"
-                title="#{messages['movimentar.anexar.titleTab']}"
+                title="#{eppmessages['movimentar.anexar.titleTab']}"
                 action="#{anexoController.onClickTabAnexar(processoHome.instance)}">
                 <wi:dataForm
                     formId="anexarDocumentosForm"
-                    formTitle="#{messages['movimentar.anexar.titleForm']}"
+                    formTitle="#{eppmessages['movimentar.anexar.titleForm']}"
                     isUploadForm="true">
                     <ui:include src="anexarDocumentos.xhtml" />
                     <ui:define name="buttons" />
@@ -202,11 +202,11 @@
                 rendered="#{processoHome.managed}"
                 status=":status"
                 action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
-                title="#{messages['movimentar.documentos.titleTab']}">
+                title="#{eppmessages['movimentar.documentos.titleTab']}">
                 <wi:dataTable
                     values="#{processoDocumentoList.list(15)}"
                     bean="#{processoDocumentoList}"
-                    tableTitle="#{messages['processo.documentos']} #{home.instance}"
+                    tableTitle="#{eppmessages['processo.documentos']} #{home.instance}"
                     id="processoDocumentoList"
                     rowId="#{row.idProcessoDocumento}"
                     showSearchForm="false"
@@ -214,19 +214,19 @@
                     <ui:define name="headerToolBar" />
                     <wi:columnOutputText
                         columnId="numeroDocumento"
-                        columnHeader="#{messages['processoDocumento.numeroDocumento']}"
+                        columnHeader="#{eppmessages['processoDocumento.numeroDocumento']}"
                         value="#{row.numeroDocumento}" />
                     <wi:columnOutputText
                         columnId="usuarioInclusao"
-                        columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+                        columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
                         value="#{row.usuarioInclusao}" />
                     <wi:columnDateTime
                         columnId="dataInclusao"
-                        columnHeader="#{messages['processoDocumento.dataInclusao']}"
+                        columnHeader="#{eppmessages['processoDocumento.dataInclusao']}"
                         value="#{row.dataInclusao}" />
                     <wi:columnOutputText
                         columnId="processoDocumento"
-                        columnHeader="#{messages['processoDocumentoBin.documento']}"
+                        columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
                         value="#{row.processoDocumento}" />
                     <ui:define name="toolBar">
                         <s:link
@@ -235,8 +235,8 @@
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 160, 450, 450);">
                             <h:graphicImage
-                                title="#{messages['assinaturas.validar']}"
-                                alt="#{messages['assinaturas.validar']}"
+                                title="#{eppmessages['assinaturas.validar']}"
+                                alt="#{eppmessages['assinaturas.validar']}"
                                 url="#{a4jSkin.imgFolder}/lock.png" />
                             <f:param
                                 value="#{row.idProcessoDocumento}"
@@ -248,8 +248,8 @@
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 200, 450, 450);">
                             <h:graphicImage
-                                title="#{messages['assinaturas.assinar']}"
-                                alt="#{messages['assinaturas.assinar']}"
+                                title="#{eppmessages['assinaturas.assinar']}"
+                                alt="#{eppmessages['assinaturas.assinar']}"
                                 url="#{a4jSkin.imgFolder}/lock_unlock.png" />
                             <f:param
                                 value="#{row.idProcessoDocumento}"
@@ -263,7 +263,7 @@
                 name="tabMovimentacoes"
                 rendered="#{processoHome.managed}"
                 status=":status"
-                title="#{messages['movimentar.movimentacoes.titleTab']}">
+                title="#{eppmessages['movimentar.movimentacoes.titleTab']}">
                 <ui:include
                     src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
             </infox:tab>
@@ -275,20 +275,20 @@
                 name="documentoFisicoTab"
                 rendered="#{home.isManaged()}"
                 action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
-                title="#{messages['documentoFisico.titleTab']}">
+                title="#{eppmessages['documentoFisico.titleTab']}">
                 <wi:dataForm
                     formId="documentoFisicoForm"
-                    formTitle="#{messages['documentoFisico.form']}">
+                    formTitle="#{eppmessages['documentoFisico.form']}">
                     <wi:tree
                         id="localizacaoFisica"
                         assignTo="localizacaoDocumentoFisicoCrudAction.instance.localizacaoFisica"
                         tree="#{localizacaoFisicaTree}"
-                        label="#{messages['documentoFisico.localizacaoFisica']}"
+                        label="#{eppmessages['documentoFisico.localizacaoFisica']}"
                         required="true"
-                        noSelectionLabel="#{messages['documentoFisico.selectLocalizacaoFisica']}" />
+                        noSelectionLabel="#{eppmessages['documentoFisico.selectLocalizacaoFisica']}" />
                     <wi:inputText
                         id="descricaoDocumentoFisico"
-                        label="#{messages['documentoFisico.descricaoDocumentoFisico']}"
+                        label="#{eppmessages['documentoFisico.descricaoDocumentoFisico']}"
                         required="true"
                         value="#{action.instance.descricaoDocumentoFisico}"
                         maxlength="150" />
@@ -297,7 +297,7 @@
                             id="saveDocumentoFisicoButton"
                             action="localizacaoDocumentoFisicoCrudAction.save"
                             reRender="documentoFisicoForm, documentoFisicoDiv, pageBodyDialogMessage"
-                            value="#{messages['crud.persist']}" />
+                            value="#{eppmessages['crud.persist']}" />
                     </ui:define>
                 </wi:dataForm>
                 <s:div id="documentoFisicoDiv">
@@ -317,12 +317,12 @@
                         <ui:define name="headerToolBar" />
                         <wi:columnOutputText
                             columnId="localizacaoFisica"
-                            columnHeader="#{messages['documentoFisico.localizacaoFisica']}"
+                            columnHeader="#{eppmessages['documentoFisico.localizacaoFisica']}"
                             value="#{row.localizacaoFisica.caminhoCompletoToString()}"
                             hideOrder="true" />
                         <wi:columnOutputText
                             columnId="descricao"
-                            columnHeader="#{messages['documentoFisico.descricaoDocumentoFisico']}"
+                            columnHeader="#{eppmessages['documentoFisico.descricaoDocumentoFisico']}"
                             value="#{row.descricaoDocumentoFisico}"
                             hideOrder="true" />
                     </wi:dataTable>
@@ -332,15 +332,15 @@
                 id="relacionamentoProcessoTab"
                 name="relacionamentoProcessoTab"
                 rendered="#{home.isManaged()}"
-                title="#{messages['relacionamentoProcesso.titleTab']}">
+                title="#{eppmessages['relacionamentoProcesso.titleTab']}">
                 <s:div id="relacionamentoProcessoFormDiv">
                     <wi:dataForm
                         formId="relacionamentoProcessoForm"
-                        formTitle="#{messages['relacionamentoProcesso.titleForm']}"
+                        formTitle="#{eppmessages['relacionamentoProcesso.titleForm']}"
                         home="#{relacionamentoCrudAction}">
                         <wi:inputText
                             id="labelNumeroProcesso"
-                            label="#{messages['relacionamentoProcesso.numeroProcesso']}"
+                            label="#{eppmessages['relacionamentoProcesso.numeroProcesso']}"
                             required="true"
                             maxlength="30"
                             value="#{relacionamentoCrudAction.processoRelacionado}"
@@ -349,7 +349,7 @@
                         <wi:selectOneMenuEntity
                             id="tipoRelacionamento"
                             value="#{relacionamentoCrudAction.instance.tipoRelacionamentoProcesso}"
-                            label="#{messages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
+                            label="#{eppmessages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
                             items="#{relacionamentoCrudAction.tipoRelacionamentoProcessoList}"
                             required="true"
                             hideNoSelectionLabel="false"
@@ -357,13 +357,13 @@
                         </wi:selectOneMenuEntity>
                         <wi:inputTextarea
                             id="motivo"
-                            label="#{messages['relacionamentoProcesso.motivo']}"
+                            label="#{eppmessages['relacionamentoProcesso.motivo']}"
                             value="#{relacionamentoCrudAction.instance.motivo}"
                             required="true">
                         </wi:inputTextarea>
                         <wi:selectSituacaoRadio
                             id="ativo"
-                            label="#{messages['field.situacao']}"
+                            label="#{eppmessages['field.situacao']}"
                             rendered="#{relacionamentoCrudAction.managed}"
                             value="#{relacionamentoCrudAction.instance.ativo}" />
                         <ui:define name="buttons">
@@ -387,7 +387,7 @@
                             id="relProcDt2"
                             bean="#{relacionamentoProcessoList}"
                             values="#{relacionamentoProcessoList.list(15)}"
-                            tableTitle="#{messages['relacionamentoProcesso.processosRelacionados']}"
+                            tableTitle="#{eppmessages['relacionamentoProcesso.processosRelacionados']}"
                             rowId="#{row.idRelacionamentoProcesso}"
                             showSearchForm="false"
                             panelStyleClass="rel-proc-dt">
@@ -404,30 +404,30 @@
                                     limitToList="true"
                                     status=":status"
                                     render="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
-                                    onclick="return confirm(\'#{messages['crud.confirmInactivate']}\');"
+                                    onclick="return confirm(\'#{eppmessages['crud.confirmInactivate']}\');"
                                     url="#{a4jSkin.imgFolder}/remove.png"
-                                    title="#{messages['button.inactive']}" />
+                                    title="#{eppmessages['button.inactive']}" />
                             </ui:define>
                             <wi:columnOutputText
                                 columnId="numeroProcesso"
-                                columnHeader="#{messages['relacionamentoProcesso.numeroProcesso']}"
+                                columnHeader="#{eppmessages['relacionamentoProcesso.numeroProcesso']}"
                                 value="#{row.numeroProcesso}" />
                             <wi:columnOutputText
                                 columnId="motivo"
-                                columnHeader="#{messages['relacionamentoProcesso.motivo']}"
+                                columnHeader="#{eppmessages['relacionamentoProcesso.motivo']}"
                                 value="#{row.relacionamento.motivo}" />
                             <wi:columnOutputText
                                 columnId="nomeUsuario"
-                                columnHeader="#{messages['relacionamentoProcesso.nomeUsuario']}"
+                                columnHeader="#{eppmessages['relacionamentoProcesso.nomeUsuario']}"
                                 value="#{row.relacionamento.nomeUsuario}" />
                             <wi:columnOutputText
                                 columnId="dataRelacionamento"
-                                columnHeader="#{messages['relacionamentoProcesso.dataRelacionamento']}"
+                                columnHeader="#{eppmessages['relacionamentoProcesso.dataRelacionamento']}"
                                 value="#{row.relacionamento.dataRelacionamento}" />
                             <wi:columnOutputText
                                 columnId="ativo"
                                 value="#{row.relacionamento.ativo ? messages['entity.ativo'] : messages['entity.inativo']}"
-                                columnHeader="#{messages['entity.situacao']}"
+                                columnHeader="#{eppmessages['entity.situacao']}"
                                 columnStyle="text-align:center;"
                                 columnWidth="10%" />
                         </wi:dataTable>
@@ -440,14 +440,14 @@
                 status=":status"
                 action="#{partesProcessoController.setProcessoEpa(home.instance)}"
                 rendered="#{home.hasPartes()}"
-                title="#{messages['parteProcesso.partes']}">
+                title="#{eppmessages['parteProcesso.partes']}">
                 <ui:include src="parteProcessoGrid.xhtml" />
             </infox:tab>
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">
             <wi:outputText
                 id="error"
-                value="#{messages['movimentar.noPermission']}" />
+                value="#{eppmessages['movimentar.noPermission']}" />
         </c:if>
         <ui:param
             name="modalWidth"
@@ -467,7 +467,7 @@
             domElementAttachment="parent">
             <f:facet name="header">
                 <h:outputText
-                    value="#{messages['jbpm.taskNode.description']}" />
+                    value="#{eppmessages['jbpm.taskNode.description']}" />
             </f:facet>
             <f:facet name="controls">
                 <h:panelGroup>

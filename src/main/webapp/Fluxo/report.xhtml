@@ -3,16 +3,16 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:ui="http://java.sun.com/jsf/facelets">
     <wi:dataReport
-        title="#{messages['fluxo.titlePage']}"
+        title="#{eppmessages['fluxo.titlePage']}"
         columns="4"
         widths="2 5 2 2"
         headerText="#{fluxoList.criteria}">
         <wi:reportColumnHeader
-            title="#{messages['fluxo.codFluxo']}" />
+            title="#{eppmessages['fluxo.codFluxo']}" />
         <wi:reportColumnHeader
-            title="#{messages['fluxo.descricao']}" />
-        <wi:reportColumnHeader title="#{messages['fluxo.publicado']}" />
-        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
+            title="#{eppmessages['fluxo.descricao']}" />
+        <wi:reportColumnHeader title="#{eppmessages['fluxo.publicado']}" />
+        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
         <ui:repeat
             var="row"
             value="#{fluxoList.list()}">

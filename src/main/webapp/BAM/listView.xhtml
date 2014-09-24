@@ -12,7 +12,7 @@
   xmlns:dojo="http://www.itx.com.br/dojo"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
 >
-  <ui:define name="title">#{messages['bam.pageTitle']}</ui:define>
+  <ui:define name="title">#{eppmessages['bam.pageTitle']}</ui:define>
   <ui:param
     name="home"
     value="#{bamAction}"
@@ -39,7 +39,7 @@
     <wi:dataTable
       values="#{processoEpaNaoFinalizadoList.list(15)}"
       bean="#{processoEpaNaoFinalizadoList}"
-      tableTitle="#{messages['bam.tableTitle']}"
+      tableTitle="#{eppmessages['bam.tableTitle']}"
       id="processoEpaNaoFinalizadoList"
       rowId="#{row.idProcessoTarefa}"
       toolBarColumnWidth="69px"
@@ -48,17 +48,17 @@
       <ui:define name="searchForm">
         <wi:searchForm
           formId="pesquisaFluxoForm"
-          formTitle="#{messages['searchForm.title']}"
+          formTitle="#{eppmessages['searchForm.title']}"
         >
           <wi:selectOneMenuEntity
             id="comboFluxo"
             value="#{processoEpaNaoFinalizadoList.fluxo}"
-            label="#{messages['naturezaCategoriaFluxo.fluxo']}"
+            label="#{eppmessages['naturezaCategoriaFluxo.fluxo']}"
             items="#{processoEpaNaoFinalizadoList.fluxoList}"
           />
           <wi:selectOneMenuEnum
             id="tipoDeprocesso"
-            label="#{messages['bam.tipoAtraso']}"
+            label="#{eppmessages['bam.tipoAtraso']}"
             items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
             value="#{processoEpaNaoFinalizadoList.entity.processoEpa.situacaoPrazo}"
           />
@@ -69,9 +69,9 @@
           width="250"
           height="200"
           radius="50"
-          label="#{messages['bam.medidorProcSel']}"
+          label="#{eppmessages['bam.medidorProcSel']}"
           draggable="false"
-          indicatorLabel="#{messages['bam.tempoMedio']} (dias)"
+          indicatorLabel="#{eppmessages['bam.tempoMedio']} (dias)"
           value="#{processoEpaNaoFinalizadoList.mediaTempoGastoDesdeInicioProcesso}"
         />
       </ui:define>
@@ -109,35 +109,35 @@
       </ui:define>
       <wi:columnOutputText
         columnId="numeroProcesso"
-        columnHeader="#{messages['processo.menuText']}"
+        columnHeader="#{eppmessages['processo.menuText']}"
         value="#{row.processoEpa.numeroProcesso}"
         hideOrder="true"
       />
       <wi:columnOutputText
         columnId="fluxo"
-        columnHeader="#{messages['naturezaCategoriaFluxo.fluxo']}"
+        columnHeader="#{eppmessages['naturezaCategoriaFluxo.fluxo']}"
         value="#{row.processoEpa.naturezaCategoriaFluxo.fluxo}"
         hideOrder="true"
       />
       <wi:columnDateTime
         columnId="dataInicio"
-        columnHeader="#{messages['processo.dataInicio']}"
+        columnHeader="#{eppmessages['processo.dataInicio']}"
         value="#{row.processoEpa.dataInicio}"
       />
       <wi:columnOutputText
         columnId="naturezaCategoriaItem"
-        columnHeader="#{messages['processoEpa.naturezaCategoriaItem']}"
+        columnHeader="#{eppmessages['processoEpa.naturezaCategoriaItem']}"
         value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processoEpa)}"
         hideOrder="true"
       />
       <wi:columnOutputText
         columnId="prioridadeProcesso"
-        columnHeader="#{messages['bam.prioridade']}"
+        columnHeader="#{eppmessages['bam.prioridade']}"
         value="#{row.processoEpa.prioridadeProcesso}"
       />
       <wi:columnDateTime
         columnId="dataChegadaTarefa"
-        columnHeader="#{messages['processoEpa.dataChegadaTarefa']}"
+        columnHeader="#{eppmessages['processoEpa.dataChegadaTarefa']}"
         value="#{row.dataInicio}"
       />
       <ui:param
@@ -145,7 +145,7 @@
         value="#{bamAction.getTaskInstance(row.taskInstance)}"
       />
       <rich:column styleClass="defaultCell">
-        <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
+        <f:facet name="header">#{eppmessages['localizacao.localizacao']} / #{eppmessages['usuario.usuario']}</f:facet>
         <span> <h:graphicImage
             url="#{a4jSkin.imgFolder}/localizacao.gif"
             rendered="#{!empty jbpmUtil.getLocalizacao(task)}"
@@ -161,12 +161,12 @@
       </rich:column>
       <wi:columnOutputText
         columnId="tempoGastoTarefa"
-        columnHeader="#{messages['processoEpa.tempoGastoTarefa']}"
+        columnHeader="#{eppmessages['processoEpa.tempoGastoTarefa']}"
         value="#{row.tempoGastoFormatado}"
       />
       <wi:columnOutputText
         columnId="tempoDesdeInicio"
-        columnHeader="#{messages['processoEpa.tempoDesdeInicioDias']}"
+        columnHeader="#{eppmessages['processoEpa.tempoDesdeInicioDias']}"
         value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processoEpa)}"
         hideOrder="true"
       />
@@ -182,7 +182,7 @@
       label="#{processoEpaNaoFinalizadoList.fluxo.fluxo}"
       draggable="true"
       containerStyleClass="organized"
-      indicatorLabel="#{messages['processoEpa.tempoGasto']} (dias)"
+      indicatorLabel="#{eppmessages['processoEpa.tempoGasto']} (dias)"
       value="#{processoEpaTarefaList.diasDesdeInicioProcesso}"
     />
     <wi:dataTable
@@ -199,7 +199,7 @@
       <ui:define name="headerToolBar"></ui:define>
       <wi:columnOutputText
         columnId="medidor"
-        columnHeader="#{messages['bam.medidor']}"
+        columnHeader="#{eppmessages['bam.medidor']}"
         hideOrder="true"
         columnWidth="60"
       >
@@ -226,7 +226,7 @@
         value="#{bamAction.getTaskInstance(row.taskInstance)}"
       />
       <rich:column styleClass="defaultCell">
-        <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
+        <f:facet name="header">#{eppmessages['localizacao.localizacao']} / #{eppmessages['usuario.usuario']}</f:facet>
         <span> <h:graphicImage
             url="#{a4jSkin.imgFolder}/localizacao.gif"
             rendered="#{!empty jbpmUtil.getLocalizacao(task)}"
@@ -254,25 +254,25 @@
         value="#{not empty porc ? (porc != -1 ? ''.concat(porc).concat('%') : '-') : '0%'}"
       />
       <rich:column styleClass="defaultCell">
-        <f:facet name="header">#{messages['processo.dataInicio']}</f:facet>
+        <f:facet name="header">#{eppmessages['processo.dataInicio']}</f:facet>
         <h:outputText value="#{row.dataInicio}">
           <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
         </h:outputText>
       </rich:column>
       <rich:column styleClass="defaultCell">
-        <f:facet name="header">#{messages['processo.dataFim']}</f:facet>
+        <f:facet name="header">#{eppmessages['processo.dataFim']}</f:facet>
         <h:outputText value="#{row.dataFim}">
           <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
         </h:outputText>
       </rich:column>
       <wi:columnOutputText
         columnId="tempoGasto"
-        columnHeader="#{messages['processoEpa.tempoGasto']}"
+        columnHeader="#{eppmessages['processoEpa.tempoGasto']}"
         value="#{row.getTempoGastoFormatado()}"
       />
       <wi:columnOutputText
         columnId="tempoPrevisto"
-        columnHeader="#{messages['temposMedios.prazo']}"
+        columnHeader="#{eppmessages['temposMedios.prazo']}"
         value="#{row.tarefa.prazo} #{row.tarefa.tipoPrazo.getLabel()}"
       />
     </wi:dataTable>

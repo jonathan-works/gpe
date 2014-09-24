@@ -7,7 +7,7 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-    <ui:define name="title">#{messages['caixa.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['caixa.titlePage']}</ui:define>
     <ui:param name="id" value="caixa#{id}" />
 
     <ui:param name="home" value="#{caixaCrudAction}" />
@@ -23,16 +23,16 @@
                 status=":status" title="Formulário"
                 action="#{caixaCrudAction.onClickFormTab}">
                 <wi:dataForm formId="caixaForm"
-                    formTitle="#{messages['form.title']}">
+                    formTitle="#{eppmessages['form.title']}">
                     <wi:inputText id="tarefa" label="Tarefa"
                         value="#{caixaCrudAction.instance.tarefa}"
                         required="true" disabled="true" />
                     <wi:inputText id="nomeCaixa"
-                        label="#{messages['caixa.nomeCaixa']}"
+                        label="#{eppmessages['caixa.nomeCaixa']}"
                         value="#{caixaCrudAction.instance.nomeCaixa}"
                         required="true" length="100" />
                     <wi:inputTextarea id="dsCaixa"
-                        label="#{messages['caixa.dsCaixa']}"
+                        label="#{eppmessages['caixa.dsCaixa']}"
                         value="#{caixaCrudAction.instance.dsCaixa}"
                         showCounter="false" />
 

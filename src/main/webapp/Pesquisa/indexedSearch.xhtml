@@ -28,13 +28,13 @@
                 rendered="true"
                 immediate="true"
                 status=":status"
-                title="#{messages['indexedSearch.conteudo']}">
+                title="#{eppmessages['indexedSearch.conteudo']}">
                 <div>
                     <h:outputText
                         value="#{taskConteudoSearch.resultadoPesquisa.size()}"
                         style="font-weight: bold" />
                     <h:outputText
-                        value=" #{messages['indexedSearch.resultAbout']} " />
+                        value=" #{eppmessages['indexedSearch.resultAbout']} " />
                     <h:outputText
                         value="#{taskConteudoSearch.palavraPesquisada}"
                         style="font-weight: bold" />
@@ -82,14 +82,14 @@
                 rendered="true"
                 immediate="true"
                 status=":status"
-                title="#{messages['indexedSearch.documentoTitleTab']}">
+                title="#{eppmessages['indexedSearch.documentoTitleTab']}">
                 <s:div id="resultado">
                     <div>
                         <h:outputText
                             value="#{processoDocumentoSearch.resultadoPesquisa.size()}"
                             style="font-weight: bold" />
                         <h:outputText
-                            value=" #{messages['indexedSearch.resultAbout']} " />
+                            value=" #{eppmessages['indexedSearch.resultAbout']} " />
                         <h:outputText
                             value="#{processoDocumentoSearch.palavraPesquisada}"
                             style="font-weight: bold" />
@@ -123,7 +123,7 @@
                                     </s:link>
                                     <div>
                                         <h:outputText
-                                            value="#{messages['indexedSearch.foundAt']} #{document.processoDocumento}" />
+                                            value="#{eppmessages['indexedSearch.foundAt']} #{document.processoDocumento}" />
                                     </div>
                                 </div>
                             </rich:column>

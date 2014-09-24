@@ -10,7 +10,7 @@
     xmlns:a="http://richfaces.org/a4j"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-    <ui:define name="title">#{messages['temposMedios.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['temposMedios.titlePage']}</ui:define>
 
     <ui:define name="body">
         <rich:panel>
@@ -26,27 +26,27 @@
                     <f:validateBean disabled="true">
                         <s:div styleClass="edit">
                             <rich:collapsiblePanel expanded="true"
-                                header="#{messages['searchForm.title']}"
+                                header="#{eppmessages['searchForm.title']}"
                                 switchType="client">
                                 <ui:param name="template"
                                     value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
                                 <wi:selectOneMenuEntity
                                     id="naturezaCategoriaFluxo"
-                                    label="#{messages['naturezaCategoriaFluxo.tableTitle']}"
+                                    label="#{eppmessages['naturezaCategoriaFluxo.tableTitle']}"
                                     value="#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}"
                                     items="#{tempoMediaTarefaAction.naturezaCategoriaFluxoList}"
-                                    showLabel="#{messages['crud.select.select']}" />
+                                    showLabel="#{eppmessages['crud.select.select']}" />
                                 <wi:inputDate id="dataInicio"
-                                    label="#{messages['temposMedios.dataInicio']}"
+                                    label="#{eppmessages['temposMedios.dataInicio']}"
                                     value="#{tempoMedioTarefaList.parameters.dataInicio}">
                                 </wi:inputDate>
                                 <wi:inputDate id="dataFim"
-                                    label="#{messages['temposMedios.dataFim']}"
+                                    label="#{eppmessages['temposMedios.dataFim']}"
                                     value="#{tempoMedioTarefaList.parameters.dataFim}">
                                 </wi:inputDate>
                                 <s:div>
                                     <wi:commandButton id="searchButton"
-                                        value="#{messages['button.pesquisar']}"
+                                        value="#{eppmessages['button.pesquisar']}"
                                         reRender="pageBody">
                                         <a:param
                                             assignTo="#{tempoMedioTarefaList.page}"
@@ -59,7 +59,7 @@
                                             onclick="$('##{formId}').clearForm();showLoading();"
                                             oncomplete="hideLoading();"
                                             action="#{tempoMedioTarefaList.newInstance()}"
-                                            value="#{messages['button.limpar']}"
+                                            value="#{eppmessages['button.limpar']}"
                                             execute="@this"
                                             render="pageBody"
                                             styleClass="buttons buttons" />
@@ -73,7 +73,7 @@
             <a:region>
                 <rich:panel id="#{id}Panel"
                     rendered="#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo != null}"
-                    header="[#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}] #{messages['temposMedios.dataTable']} #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. #{messages['temposMedios.prazo.dataTable']} #{tempoMedioTarefaList.prazoFluxo}"
+                    header="[#{tempoMedioTarefaList.parameters.naturezaCategoriaFluxo}] #{eppmessages['temposMedios.dataTable']} #{tempoMedioTarefaList.tempoMedioProcessoFormatado}. #{eppmessages['temposMedios.prazo.dataTable']} #{tempoMedioTarefaList.prazoFluxo}"
                     bodyClass="dtable-p-b" styleClass="dtable-p">
                     <rich:dataTable id="#{id}"
                         value="#{tempoMedioTarefaList.list(10)}"
@@ -82,7 +82,7 @@
                         <rich:column>
                             <f:facet name="header">
                                 <h:outputText
-                                    value="#{messages['fluxo.tarefa']}"></h:outputText>
+                                    value="#{eppmessages['fluxo.tarefa']}"></h:outputText>
                             </f:facet>
                             <s:div>
                                 <h:outputText
@@ -92,7 +92,7 @@
                         <rich:column>
                             <f:facet name="header">
                                 <h:outputText
-                                    value="#{messages['temposMedios.tempoMedio']}"></h:outputText>
+                                    value="#{eppmessages['temposMedios.tempoMedio']}"></h:outputText>
                             </f:facet>
                             <s:div>
                                 <h:outputText
@@ -102,7 +102,7 @@
                         <rich:column>
                             <f:facet name="header">
                                 <h:outputText
-                                    value="#{messages['temposMedios.prazo']}"></h:outputText>
+                                    value="#{eppmessages['temposMedios.prazo']}"></h:outputText>
                             </f:facet>
                             <s:div>
                                 <h:outputText
@@ -121,7 +121,7 @@
                         </rich:column>
                     </rich:dataTable>
                     <h:outputText
-                        value="#{messages['list.resultPrefix']} #{tempoMedioTarefaList.resultCount} #{messages['list.resultSufix']}"
+                        value="#{eppmessages['list.resultPrefix']} #{tempoMedioTarefaList.resultCount} #{eppmessages['list.resultSufix']}"
                         styleClass="dt-res-count" />
                     <s:div
                         rendered="#{tempoMedioTarefaList.nextExists or tempoMedioTarefaList.previousExists}">

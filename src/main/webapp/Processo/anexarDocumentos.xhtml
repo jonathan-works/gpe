@@ -10,7 +10,7 @@
   <rich:collapsiblePanel
     switchType="client"
     expanded="false"
-    header="#{messages['documentoEditor.header']}">
+    header="#{eppmessages['documentoEditor.header']}">
     <s:div id="editorDiv">
       <s:div>
         <wi:inputText
@@ -18,11 +18,11 @@
           value="#{documentoEditor.processoDocumento.processoDocumento}"
           disabled="false"
           required="true"
-          label="#{messages['processo.anexarDocumentoDescricao']}">
+          label="#{eppmessages['processo.anexarDocumentoDescricao']}">
         </wi:inputText>
         <wi:selectOneMenuEntity
           id="#{f.id}tipoProcessoDocumento"
-          label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+          label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
           items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
           required="true"
@@ -44,7 +44,7 @@
 	    </s:div>
         <wi:editor
           id="modeloDocumento"
-          label="#{messages['tipoProcessoDocumento.modelo']}"
+          label="#{eppmessages['tipoProcessoDocumento.modelo']}"
           value="#{documentoEditor.processoDocumento.processoDocumentoBin.modeloDocumento}"
           requiredField="false"
           required="true"
@@ -55,7 +55,7 @@
         <wi:commandButton
           id="botaoAnexarDocumento"
           action="documentoEditor.persist()"
-          value="#{messages['processo.anexarDocumentoBtn']}"
+          value="#{eppmessages['processo.anexarDocumentoBtn']}"
           execute="editorDiv"
           reRender="@form,pageBodyDialogMessage, buttonsDiv"
           styleClass="buttons">
@@ -67,7 +67,7 @@
   <rich:collapsiblePanel
     switchType="client"
     expanded="true"
-    header="#{messages['fileUpload.header']}">
+    header="#{eppmessages['fileUpload.header']}">
     <s:div id="uploaderDiv">
       <div>
         <wi:inputText
@@ -75,7 +75,7 @@
           value="#{documentoUploader.processoDocumento.processoDocumento}"
           disabled="false"
           required="true"
-          label="#{messages['processo.anexarDocumentoDescricao']}">
+          label="#{eppmessages['processo.anexarDocumentoDescricao']}">
           <a:ajax
             event="change"
             limitRender="true"
@@ -87,7 +87,7 @@
         </wi:inputText>
         <wi:selectOneMenuEntity
           id="tipoProcessoDocumentoPdf"
-          label="#{messages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+          label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoUploader.tipoProcessoDocumento}"
           items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
           required="true"
@@ -106,7 +106,7 @@
       <s:div id="tipoDocumentoDivPdf">
         <wi:fileUpload
           id="uploadArquivo"
-          label="#{messages['fileUpload.type.file']}"
+          label="#{eppmessages['fileUpload.type.file']}"
           reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
           rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList and not empty documentoUploader.processoDocumento.processoDocumento}"
           accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
@@ -116,7 +116,7 @@
         <wi:commandButton
           id="botaoAnexarDocumentoPdf"
           action="documentoUploader.persist()"
-          value="#{messages['processo.anexarDocumentoBtn']}"
+          value="#{eppmessages['processo.anexarDocumentoBtn']}"
           execute="#{f.id}inputProcessoDocumentoPdf, #{f.id}tipoProcessoDocumentoPdf"
           reRender="@form"
           styleClass="buttons"
@@ -129,7 +129,7 @@
   <s:div id="documentosRedigidosDaSessao">
     <wi:dataTable
       values="#{documentoEditor.documentosDaSessao}"
-      tableTitle="#{messages['documentoEditor.titleView']}"
+      tableTitle="#{eppmessages['documentoEditor.titleView']}"
       id="processoDocumentoDaSessao"
       rowId="#{row.idProcessoDocumento}"
       showSearchForm="false"
@@ -137,17 +137,17 @@
       showToolbarColumn="false">
       <wi:columnOutputText
         columnId="usuarioInclusao"
-        columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+        columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
         hideOrder="true"
         value="#{row.usuarioInclusao}" />
       <wi:columnDateTime
         columnId="dataInclusao"
-        columnHeader="#{messages['processoDocumento.dataInclusao']}"
+        columnHeader="#{eppmessages['processoDocumento.dataInclusao']}"
         hideOrder="true"
         value="#{row.dataInclusao}" />
       <wi:columnOutputText
         columnId="processoDocumento"
-        columnHeader="#{messages['processoDocumentoBin.documento']}"
+        columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
         hideOrder="true"
         value="#{row.processoDocumento}" />
       <ui:define name="headerToolBar" />
@@ -159,24 +159,24 @@
     <wi:dataTable
       showSearchForm="false"
       values="#{documentoUploader.documentosDaSessao}"
-      tableTitle="#{messages['documentoUploader.titleView']}"
+      tableTitle="#{eppmessages['documentoUploader.titleView']}"
       id="documentoDaSessao"
       rowId="#{row.idProcessoDocumento}"
       panelStyleClass="full-sized"
       showToolbarColumn="false">
       <wi:columnOutputText
         columnId="usuarioInclusao"
-        columnHeader="#{messages['processoDocumento.usuarioInclusao']}"
+        columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
         hideOrder="true"
         value="#{row.usuarioInclusao}" />
       <wi:columnDateTime
         columnId="dataInclusao"
-        columnHeader="#{messages['processoDocumento.dataInclusao']}"
+        columnHeader="#{eppmessages['processoDocumento.dataInclusao']}"
         hideOrder="true"
         value="#{row.dataInclusao}" />
       <wi:columnOutputText
         columnId="processoDocumento"
-        columnHeader="#{messages['processoDocumentoBin.documento']}"
+        columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
         hideOrder="true"
         value="#{row.processoDocumento}" />
       <ui:define name="headerToolBar" />

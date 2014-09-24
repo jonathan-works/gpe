@@ -13,15 +13,15 @@
     <s:div id="parteProcessoListDiv">
         <wi:dataTable values="#{parteProcessoList.list(15)}"
             bean="#{parteProcessoList}"
-            tableTitle="#{messages['parteProcesso.tableTitle']}"
+            tableTitle="#{eppmessages['parteProcesso.tableTitle']}"
             id="parteProcessoList" showSearchForm="false">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar" />
             <wi:columnOutputText columnId="pessoa.nome"
-                columnHeader="#{messages['parteProcesso.nome']}"
+                columnHeader="#{eppmessages['parteProcesso.nome']}"
                 value="#{row.pessoa.nome}" />
             <rich:column>
-                <f:facet name="header">#{messages['parteProcesso.codigo']}</f:facet>
+                <f:facet name="header">#{eppmessages['parteProcesso.codigo']}</f:facet>
                 <h:outputText value="#{row.pessoa.codigo}" rendered="#{row.pessoa.tipoPessoa eq 'F'}">
                     <f:converter converterId="cpfConverter" />
                 </h:outputText>
@@ -30,11 +30,11 @@
                 </h:outputText>
             </rich:column>
             <wi:columnOutputText columnId="pessoa.tipoPessoa"
-                columnHeader="#{messages['parteProcesso.tipoPessoa']}"
+                columnHeader="#{eppmessages['parteProcesso.tipoPessoa']}"
                 value="#{row.pessoa.tipoPessoa.label}" />
             <wi:columnSituacao columnId="ativo"
                 rendered="#{isUsuarioAtualResponsavel}"
-                columnHeader="#{messages['field.situacao']}"
+                columnHeader="#{eppmessages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </s:div>
