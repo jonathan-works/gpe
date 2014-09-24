@@ -25,7 +25,7 @@
             onmouseup="showLoading()"
             oncomplete="#{oncomplete}; hideLoading(); reloadPanel();"
             render="#{reRenderSave},:pageBodyDialogMessage"
-            value="#{messages['crud.update']}"
+            value="#{eppmessages['crud.update']}"
             styleClass="buttons"
             action="#{taskInstanceHome.update(home)}" />
         <!-- Implementar -->
@@ -38,7 +38,7 @@
             onbeforedomupdate="reloadPanel();"
             oncomplete="#{oncomplete};hideLoading();close()"
             render="#{reRenderSave}"
-            value="#{messages['movimentar.liberarTarefa']}"
+            value="#{eppmessages['movimentar.liberarTarefa']}"
             styleClass="buttons"
             action="#{taskInstanceHome.removeUsuario()}" />
         <a:commandButton
@@ -48,12 +48,12 @@
             onmouseup="showLoading()"
             oncomplete="hideLoading()"
             render="#{reRenderSave}"
-            value="#{messages['crud.persist']}"
+            value="#{eppmessages['crud.persist']}"
             styleClass="buttons"
             action="#{taskInstanceHome.persist(home)}" />
         <h:outputText
             styleClass="label-general"
-            value="#{messages['movimentar.next']} " />
+            value="#{eppmessages['movimentar.next']} " />
         <c:if test="#{taskInstanceHome.transitions.size gt 3}">
             <h:selectOneMenu value="#{taskInstanceHome.name}">
                 <f:selectItems
@@ -86,7 +86,7 @@
         <ui:fragment
             rendered="#{authenticator.isUsuarioAtualResponsavel()}">
             <h:outputText
-                value="#{messages['prioridadeProcesso.comboBox']}"
+                value="#{eppmessages['prioridadeProcesso.comboBox']}"
                 style="margin-left: 40px;" />
             <h:selectOneMenu
                 value="#{processoHome.instance.prioridadeProcesso}">

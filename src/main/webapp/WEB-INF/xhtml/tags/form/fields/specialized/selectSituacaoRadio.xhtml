@@ -6,7 +6,7 @@
 
     <wi:selectOneRadio id="#{wi:get(columnId, 'ativo')}"
         label="#{wi:get(label, 'Situação')}"
-        valueList="true:#{messages['entity.ativo']},false:#{messages['entity.inativo']}"
+        valueList="true:#{eppmessages['entity.ativo']},false:#{eppmessages['entity.inativo']}"
         boxChecked="#{inativo ? 1 : 0}" />
 
 </ui:composition>

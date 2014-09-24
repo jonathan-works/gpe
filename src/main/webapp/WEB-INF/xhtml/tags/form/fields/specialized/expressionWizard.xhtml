@@ -27,38 +27,38 @@
 				},
 				messages:{
 					image:{
-						title:"#{messages['expressionWizard.title']}"
+						title:"#{eppmessages['expressionWizard.title']}"
 					},
 					numberInput:{
-						label:"#{messages['expressionWizard.numberPrompt']}",
-						error:"#{messages['expressionWizard.numberPromptError']}"
+						label:"#{eppmessages['expressionWizard.numberPrompt']}",
+						error:"#{eppmessages['expressionWizard.numberPromptError']}"
 					},
 					select:{
 						arithmetic:{
-							null:"#{messages['expressionWizard.aritSelect.null']}",
-							plus:"#{messages['expressionWizard.aritSelect.plus']}",
-							minus:"#{messages['expressionWizard.aritSelect.minus']}",
-							mult:"#{messages['expressionWizard.aritSelect.mult']}",
-							div:"#{messages['expressionWizard.aritSelect.div']}",
-							number:"#{messages['expressionWizard.aritSelect.numb']}"
+							null:"#{eppmessages['expressionWizard.aritSelect.null']}",
+							plus:"#{eppmessages['expressionWizard.aritSelect.plus']}",
+							minus:"#{eppmessages['expressionWizard.aritSelect.minus']}",
+							mult:"#{eppmessages['expressionWizard.aritSelect.mult']}",
+							div:"#{eppmessages['expressionWizard.aritSelect.div']}",
+							number:"#{eppmessages['expressionWizard.aritSelect.numb']}"
 						},
 						boolean:{
-							null:"#{messages['expressionWizard.booleanSelect.null']}",
-							true:"#{messages['expressionWizard.booleanSelect.true']}",
-							false:"#{messages['expressionWizard.booleanSelect.false']}",
-							or:"#{messages['expressionWizard.booleanSelect.or']}",
-							and:"#{messages['expressionWizard.booleanSelect.and']}",
-							not:"#{messages['expressionWizard.booleanSelect.not']}",
-							equals:"#{messages['expressionWizard.booleanSelect.equals']}",
-							notEqual:"#{messages['expressionWizard.booleanSelect.notEqual']}",
-							gte:"#{messages['expressionWizard.booleanSelect.gte']}",
-							gt:"#{messages['expressionWizard.booleanSelect.gt']}",
-							lte:"#{messages['expressionWizard.booleanSelect.lte']}",
-							lt:"#{messages['expressionWizard.booleanSelect.lt']}"
+							null:"#{eppmessages['expressionWizard.booleanSelect.null']}",
+							true:"#{eppmessages['expressionWizard.booleanSelect.true']}",
+							false:"#{eppmessages['expressionWizard.booleanSelect.false']}",
+							or:"#{eppmessages['expressionWizard.booleanSelect.or']}",
+							and:"#{eppmessages['expressionWizard.booleanSelect.and']}",
+							not:"#{eppmessages['expressionWizard.booleanSelect.not']}",
+							equals:"#{eppmessages['expressionWizard.booleanSelect.equals']}",
+							notEqual:"#{eppmessages['expressionWizard.booleanSelect.notEqual']}",
+							gte:"#{eppmessages['expressionWizard.booleanSelect.gte']}",
+							gt:"#{eppmessages['expressionWizard.booleanSelect.gt']}",
+							lte:"#{eppmessages['expressionWizard.booleanSelect.lte']}",
+							lt:"#{eppmessages['expressionWizard.booleanSelect.lt']}"
 						},
 						conclusion:{
-							null:"#{messages['expressionWizard.condSelect.null']}",
-							condition:"#{messages['expressionWizard.condSelect.cond']}"
+							null:"#{eppmessages['expressionWizard.condSelect.null']}",
+							condition:"#{eppmessages['expressionWizard.condSelect.cond']}"
 						}
 					}
 				}
@@ -69,7 +69,7 @@
 	<s:div id="#{id}" >
 		<s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
 		<wi:inputTextarea id="#{id}Text" styleClass="expressionInput"
-			label="#{messages['expressionWizard.expressao']}" value="#{value}" showCounter="false">
+			label="#{eppmessages['expressionWizard.expressao']}" value="#{value}" showCounter="false">
 			<a:ajax execute="@this" event="change" render="#{id} pageBodyDialogMessage" limitRender="true"/>
 		</wi:inputTextarea>
 

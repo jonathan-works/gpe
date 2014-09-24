@@ -88,7 +88,7 @@
     </rich:toolbar>
 
     <rich:popupPanel id="skinPanel" height="100">
-        <f:facet name="header">#{messages['skin.title']}</f:facet>
+        <f:facet name="header">#{eppmessages['skin.title']}</f:facet>
         <f:facet name="controls">
             <h:panelGroup>
                 <h:graphicImage value="#{a4jSkin.imgFolder}/closeMP.gif"
@@ -98,7 +98,7 @@
         <s:decorate
             template="/WEB-INF/xhtml/components/templates/edit.xhtml">
             <ui:define name="label">
-                <h:outputText value="#{messages['skin.choice']}"
+                <h:outputText value="#{eppmessages['skin.choice']}"
                     styleClass="label" />
             </ui:define>
             <h:form>

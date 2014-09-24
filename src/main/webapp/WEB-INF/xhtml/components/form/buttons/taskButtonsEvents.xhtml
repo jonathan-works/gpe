@@ -31,7 +31,7 @@
             oncomplete="#{oncomplete}"
             render="#{reRenderSave}, taskButtonsDiv"
             limitRender="true"
-            value="#{messages['crud.update']}"
+            value="#{eppmessages['crud.update']}"
             styleClass="buttons"
             action="#{taskInstanceHome.update(home)}" />
         <a:commandButton
@@ -41,11 +41,11 @@
             eventsQueue="editQueue"
             render="#{reRenderSave}, taskButtonsDiv"
             limitRender="true"
-            value="#{messages['crud.update']}"
+            value="#{eppmessages['crud.update']}"
             styleClass="buttons"
             action="#{taskInstanceHome.persist(home)}" />
         <h:outputText
-            value="#{messages['movimentar.next']} "
+            value="#{eppmessages['movimentar.next']} "
             rendered="true" />
         <c:if test="#{taskInstanceHome.transitions.size gt 3}">
             <h:selectOneMenu value="#{taskInstanceHome.name}">

@@ -15,7 +15,7 @@
 
     <wi:selectOneRadio
         onchange="if(this.value == 'false') alert('Ao inativar este registro os seus filhos também serão inativados.');"
-        valueList="true:#{messages['entity.ativo']},false:#{messages['entity.inativo']}"
+        valueList="true:#{eppmessages['entity.ativo']},false:#{eppmessages['entity.inativo']}"
         boxChecked="#{inativo ? 1 : 0}">
     </wi:selectOneRadio>
 

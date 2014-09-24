@@ -18,7 +18,7 @@
             rendered="#{canEdit and listReRender == ':pagebody'}"
             limitRender="true" status=":status" render="#{listReRender}">
             <h:graphicImage url="#{a4jSkin.imgFolder}/mod/edit.gif"
-                title="#{messages['button.selecionar']}" />
+                title="#{eppmessages['button.selecionar']}" />
             <f:param name="firstResult" value="#{bean.firstResult}" />
             <f:param name="page" value="#{bean.page}" />
         </a:commandLink>
@@ -27,7 +27,7 @@
         rendered="#{canEdit and listReRender != ':pagebody'}"
         limitRender="true" status=":status" render="#{listReRender}">
         <h:graphicImage url="#{a4jSkin.imgFolder}/mod/edit.gif"
-            title="#{messages['button.selecionar']}" />
+            title="#{eppmessages['button.selecionar']}" />
         <f:param name="firstResult" value="#{bean.firstResult}" />
         <f:param name="page" value="#{bean.page}" />
     </a:commandLink>

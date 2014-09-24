@@ -14,7 +14,7 @@
                 <a:commandLink status=":status" render=":pageBody"
                     limitRender="true" id="#{gridId}Edit">
                     <h:graphicImage url="#{a4jSkin.imgFolder}/view.gif"
-                        title="#{messages['button.selecionar']}" />
+                        title="#{eppmessages['button.selecionar']}" />
                     <f:param name="id" value="#{row[bean.key]}" />
                     <f:param name="tab" value="form" />
                 </a:commandLink>
@@ -23,7 +23,7 @@
                     status=":status" render=":#{gridId}"
                     onclick="if(!confirm('Confirma?')) return false;">
                     <h:graphicImage url="#{a4jSkin.imgFolder}/remove.png"
-                        title="#{messages['button.delete']}" />
+                        title="#{eppmessages['button.delete']}" />
                     <f:param name="firstResult"
                         value="#{bean.firstResult}" />
                     <f:param name="page" value="#{bean.page}" />

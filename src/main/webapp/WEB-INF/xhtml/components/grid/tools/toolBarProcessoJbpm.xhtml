@@ -23,11 +23,11 @@
           draggingClass="caixa-drag"
           rejectClass="caixa-rejt"
         >
-          <span class="caixa-ind-lbl">#{messages['processo.titlePage']}: #{row.numeroProcesso}</span>
+          <span class="caixa-ind-lbl">#{eppmessages['processo.titlePage']}: #{row.numeroProcesso}</span>
         </rich:dragIndicator>
       </rich:dragSource>
 
-      <h:graphicImage url="#{a4jSkin.imgFolder}/annotate.gif" title="#{messages['caixa.moverCaixa']}" />
+      <h:graphicImage url="#{a4jSkin.imgFolder}/annotate.gif" title="#{eppmessages['caixa.moverCaixa']}" />
 
     </a:outputPanel>
 
@@ -74,11 +74,11 @@
     <a:commandLink
       action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}"
       execute="@this" render="painelProcessos, pageBodyDialogMessage"
-      onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
+      onclick="return confirm(\'#{eppmessages['movimentar.confirmLiberarTarefa']}\');"
       limitRender="true"
       rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and authenticator.isUsuarioAtualResponsavel())}">
       <h:graphicImage url="#{a4jSkin.imgFolder}/role.gif"
-        title="#{messages['painel.list.liberarTarefaServidor']} #{owner}" />
+        title="#{eppmessages['painel.list.liberarTarefaServidor']} #{owner}" />
     </a:commandLink>
   </h:form>
 

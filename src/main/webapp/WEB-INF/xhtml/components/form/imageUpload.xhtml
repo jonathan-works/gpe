@@ -22,7 +22,7 @@
             id="uploadImagem"
             switchType="ajax"
             opened="false"
-            label="#{messages['image.album']}"
+            label="#{eppmessages['image.album']}"
             onclick="configureDragDrop()"
         >
             <rich:fileUpload
@@ -32,9 +32,9 @@
                 onupload="uploadHandler(event, '#{imageFileUploader.imagePath}')"
                 onuploadcomplete="insert()"
                 maxFilesQuantity="10"
-                addLabel="#{messages['image.new']}"
-                clearAllLabel="#{messages['image.clearAll']}"
-                clearLabel="#{messages['image.clear']}"
+                addLabel="#{eppmessages['image.new']}"
+                clearAllLabel="#{eppmessages['image.clearAll']}"
+                clearLabel="#{eppmessages['image.clear']}"
                 listHeight="0px"
                 immediateUpload="true"
                 noDuplicate="true"
@@ -52,7 +52,7 @@
                 <s:div>
                     <img
                         src="#{img}"
-                        title="#{messages['image.drag']}"
+                        title="#{eppmessages['image.drag']}"
                     />
                 </s:div>
                 <f:facet name="footer">

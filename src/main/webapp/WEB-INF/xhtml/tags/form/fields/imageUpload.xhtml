@@ -22,7 +22,7 @@
       id="#{wi:get(editorId, 'editorId')}ImagePanel"
       switchType="ajax"
       expanded="#{wi:get(opened, 'false')}"
-      header="#{messages['image.album']}">
+      header="#{eppmessages['image.album']}">
       <rich:fileUpload
         id="upload"
         execute="@this"
@@ -30,11 +30,11 @@
         limitRender="true"
         required="#{wi:get(required, false)}"
         fileUploadListener="#{imageBean.processFileUpload}"
-        addLabel="#{messages['image.new']}"
-        clearAllLabel="#{messages['image.clearAll']}"
-        clearLabel="#{messages['image.clear']}"
-        uploadLabel="#{messages['image.upload']}"
-        doneLabel="#{messages['image.done']}"
+        addLabel="#{eppmessages['image.new']}"
+        clearAllLabel="#{eppmessages['image.clearAll']}"
+        clearLabel="#{eppmessages['image.clear']}"
+        uploadLabel="#{eppmessages['image.upload']}"
+        doneLabel="#{eppmessages['image.done']}"
         maxFilesQuantity="10"
         listHeight="0px"
         immediateUpload="true"
@@ -52,7 +52,7 @@
           <img
             src="#{img}"
             class="grid-img"
-            title="#{messages['image.click']}" />
+            title="#{eppmessages['image.click']}" />
         </div>
         <f:facet name="footer">
           <rich:dataScroller />

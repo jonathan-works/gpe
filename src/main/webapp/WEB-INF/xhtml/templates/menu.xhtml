@@ -60,13 +60,13 @@
       <h:form>
         <s:link
           view="/login.xhtml"
-          value="#{messages['menu.login']}"
+          value="#{eppmessages['menu.login']}"
           rendered="#{not identity.loggedIn}" />
         <s:link
           view="/home.xhtml"
           action="#{identity.logout}"
           styleClass="LinkMenu"
-          value="#{messages['menu.logout']}"
+          value="#{eppmessages['menu.logout']}"
           rendered="#{identity.loggedIn}" />
       </h:form>
       <wi:helpIcon />

@@ -11,7 +11,7 @@
     <div class="anexos">
         <wi:dataTable
             values="#{consultaController.getProcessoDocumentoList(task.id)}"
-            tableTitle="#{messages['anexosProcesso.titleView']}"
+            tableTitle="#{eppmessages['anexosProcesso.titleView']}"
             id="documentosAnexadosList"
             rowId="#{row.idProcessoDocumento}" panelStyleClass="anexos"
             hideOrder="true">
@@ -25,10 +25,10 @@
                 </ui:include>
             </ui:define>
             <wi:columnOutputText columnId="processoDocumento"
-                columnHeader="#{messages['anexosProcesso.processoDocumento']}"
+                columnHeader="#{eppmessages['anexosProcesso.processoDocumento']}"
                 value="#{row.processoDocumento}" />
             <wi:columnOutputText columnId="dataAnexo"
-                columnHeader="#{messages['anexosProcesso.dataInclusao']}"
+                columnHeader="#{eppmessages['anexosProcesso.dataInclusao']}"
                 value="#{row.processoDocumentoBin.dataInclusao}">
                 <ui:define name="outputText">
                     <f:convertDateTime pattern="dd/MM/yyyy" />
@@ -38,7 +38,7 @@
     </div>
     <s:div style="padding-top: 10px;">
         <wi:selectBooleanRadio id="sistema"
-            label="#{messages['anexosProcesso.showAllDocuments']}"
+            label="#{eppmessages['anexosProcesso.showAllDocuments']}"
             value="#{consultaController.showAllDocuments}">
             <a:ajax execute="@this" event="change"
                 render="documentosAnexadosList"></a:ajax>

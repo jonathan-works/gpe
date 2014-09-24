@@ -10,7 +10,7 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf">
   <rich:panel
-    header="#{messages['acaoProcesso.menuText']}"
+    header="#{eppmessages['acaoProcesso.menuText']}"
     id="movimentacoesProcessoPanel"
     bodyClass="dtable-p-b"
     styleClass="dtable-p full-sized">
@@ -22,11 +22,11 @@
       styleClass="dtable rf-dt-crud"
       var="task">
       <rich:column styleClass="defaultCell">
-        <f:facet name="header">#{messages['fluxo.tarefa']}</f:facet>
+        <f:facet name="header">#{eppmessages['fluxo.tarefa']}</f:facet>
         <h:outputText value="#{task.name}" />
       </rich:column>
       <rich:column styleClass="defaultCell">
-        <f:facet name="header">#{messages['localizacao.localizacao']} / #{messages['usuario.usuario']}</f:facet>
+        <f:facet name="header">#{eppmessages['localizacao.localizacao']} / #{eppmessages['usuario.usuario']}</f:facet>
         <div>
           <h:graphicImage
             url="#{a4jSkin.imgFolder}/localizacao.gif"
@@ -43,24 +43,24 @@
             action="#{taskInstanceHome.removeUsuario(task)}"
             execute="@this"
             render="usuarioTarefaDiv, pageBodyDialogMessage"
-            onclick="return confirm(\'#{messages['movimentar.confirmLiberarTarefa']}\');"
+            onclick="return confirm(\'#{eppmessages['movimentar.confirmLiberarTarefa']}\');"
             limitRender="true"
             oncomplete="close()"
             rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
             <h:graphicImage
               url="#{a4jSkin.imgFolder}/unlocked.gif"
-              title="#{messages['movimentar.liberarTarefa']}" />
+              title="#{eppmessages['movimentar.liberarTarefa']}" />
           </a:commandLink>
         </s:div>
       </rich:column>
       <rich:column styleClass="defaultCell">
-        <f:facet name="header">#{messages['processo.dataInicio']}</f:facet>
+        <f:facet name="header">#{eppmessages['processo.dataInicio']}</f:facet>
         <h:outputText value="#{task.start}">
           <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
         </h:outputText>
       </rich:column>
       <rich:column styleClass="defaultCell">
-        <f:facet name="header">#{messages['processo.dataFim']}</f:facet>
+        <f:facet name="header">#{eppmessages['processo.dataFim']}</f:facet>
         <h:outputText value="#{task.end}">
           <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
         </h:outputText>

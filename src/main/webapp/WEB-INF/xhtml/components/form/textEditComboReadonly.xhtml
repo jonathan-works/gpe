@@ -12,7 +12,7 @@
     
     <s:div id="#{id}TipoProcDocDiv">
         <wi:selectOneMenuEntity id="#{id}TipoProcDoc"
-            label="#{messages['processoDocumento.classificacaoDocumento']}"
+            label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
             value="#{props.tipoProcessoDocumentoRO}"
             items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true)}"
             required="true" disabled="#{readonly ? true : false}"
