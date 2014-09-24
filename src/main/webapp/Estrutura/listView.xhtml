@@ -72,6 +72,12 @@
         formId="localizacoesForm"
         formTitle="#{messages['form.title']}">
         <wi:inputText
+          id="codigo"
+          required="true"
+          label="#{messages['localizacao.codigo']}"
+          value="#{estruturaCrudAction.localizacaoFilho.codigo}" 
+          disabled="#{not empty estruturaCrudAction.localizacaoFilho.idLocalizacao}"/>
+        <wi:inputText
           id="localizacao"
           required="true"
           label="#{messages['localizacao.localizacao']}"
@@ -134,10 +140,15 @@
             rendered="#{row.ativo}" />
         </ui:define>
         <wi:columnOutputText
+          id="codigo"
+          value="#{row.codigo}"
+          columnHeader="#{messages['localizacao.codigo']}"
+          styleClass="width-5"
+          hideOrder="true" />
+        <wi:columnOutputText
           id="caminhoCompleto"
           value="#{estruturaCrudAction.formatCaminhoCompleto(row)}"
           columnHeader="#{messages['localizacao.localizacao']}"
-          styleClass="rf-tr"
           hideOrder="true" />
       </wi:dataTable>
     </infox:tab>

@@ -27,9 +27,21 @@
           items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
           required="true"
           showLabelSelecione="true">
+          <a:ajax event="change" status=":status" limitRender="true" 
+          		  render=":movimentarTabPanel:anexarDocumentosForm:editorToolTipDiv" execute="@this"/>
         </wi:selectOneMenuEntity>
       </s:div>
       <s:div id="tipoDocumentoDiv">
+      	<s:div id="editorToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+		  	rendered="true">
+		  	<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
+			<div class="epp-tooltip">
+				<div class="tooltip-panel">
+					<div><h:outputText value="Observação:"/></div>
+					<h:outputText value="#{documentoEditor.processoDocumento.tipoProcessoDocumento.tipoProcessoDocumentoObservacao}"/>
+				</div>
+			</div>
+	    </s:div>
         <wi:editor
           id="modeloDocumento"
           label="#{messages['tipoProcessoDocumento.modelo']}"
@@ -85,7 +97,8 @@
             onbeforesubmit="infox.showLoading();"
             oncomplete="infox.hideLoading();"
             limitRender="true"
-            listener="#{documentoUploader.podeRenderizar}"
+            render="tipoDocumentoDivPdf buttonsPdfDiv"
+            listener="#{documentoUploader.onChangeClassificacaoDocumento}"
             status=":status"
             execute="@this" />
         </wi:selectOneMenuEntity>
@@ -95,7 +108,6 @@
           id="uploadArquivo"
           label="#{messages['fileUpload.type.file']}"
           reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
-          tipMessage="Apenas arquivos #{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}"
           rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList and not empty documentoUploader.processoDocumento.processoDocumento}"
           accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
         </wi:fileUpload>
@@ -110,48 +122,6 @@
           styleClass="buttons"
           rendered="#{documentoUploader.valido}">
         </wi:commandButton>
-        <h:outputScript>
-	        		namespace("infox.util.atualizarFileUpload", function atualizarFileUpload(){
-		            	if (#{facesContext.isValidationFailed()}){
-			            	
-		            		exibirBotaoNovoAnexo(false);
-
-			            	var div = $("<div></div>").addClass("rf-fu-itm");
-		            		$(".rf-fu-lst").append(div);
-		            		
-		            		var spanLeft = $("<span> </span>").addClass("rf-fu-itm-lft");
-		            		var spanRight = $("<span> </span>").addClass("rf-fu-itm-rgh");
-
-		            		spanLeft.append($("<span>
-            #{documentoUploader.uploadedFile.name} </span>").addClass("rf-fu-itm-lbl"));
-		            		spanLeft.append($("<span>
-            #{messages['processoDocumento.doneLabel']} </span>").attr("style", "display: block;").addClass("rf-fu-itm-st"));
-
-		            		var aLink = $("<a>
-            #{messages['processoDocumento.clearLabel']} </a>").attr("href", "javascript:void(0)").addClass("rf-fu-itm-lnk");
-							aLink.click(function(){
-								clearUploadFile(); 	$(".rf-fu-itm").remove(); exibirBotaoNovoAnexo(true);
-								}
-							);
-		            		
-		            		spanRight.append(aLink);
-		            		
-		            		div.append(spanLeft).append(spanRight);
-		                }
-		            });
-
-		            function exibirBotaoNovoAnexo(isExibe){
-			            if (isExibe){
-			            	$(".rf-fu-btn-add").removeAttr("style");
-			            	$(".rf-fu-btn-upl").removeAttr("style");
-			            	$(".rf-fu-btn-clr").attr("style", "display: none;");
-				        } else {
-				        	$(".rf-fu-btn-add").attr("style", "display: none;");
-		            		$(".rf-fu-btn-upl").attr("style", "display: none;");
-		            		$(".rf-fu-btn-clr").attr("style", "display: inline-block;");
-						}
-				    }
-				</h:outputScript>
       </s:div>
     </s:div>
   </rich:collapsiblePanel>

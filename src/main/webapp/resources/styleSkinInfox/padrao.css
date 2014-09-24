@@ -1,4 +1,8 @@
 /*LAYOUT GERAL DA PÁGINA*/
+.width-5 {
+  width: 5px;
+}
+
 .padding-top-5 {
   padding-top: 5px;
 }
@@ -331,6 +335,12 @@ img.disabled {
   top: 5px;
 }
 
+.formPesquisa a {
+    position: relative;
+    top: 3px;
+    margin-right: 15px;    
+}
+
 .palette div {
   width: 67px;
   height: 21px;
@@ -659,4 +669,39 @@ div.rf-trn {
 }
 .rf-p.dtable-p.bam-table {
   width:calc(100% - 212px);
+}
+
+.epp-tooltip {
+	display: none;
+	position: absolute;
+	z-index: 9001;
+}
+
+.tooltip-parent:hover > .epp-tooltip {
+	display: block;
+}
+
+.tooltip-panel {
+	max-width: 450px; 
+	max-height: 130px;
+	background-color: #FFFFCC;
+	overflow: auto;
+	padding: 2px;
+	border:1px solid #000;
+}
+
+.epp-fu {
+	width: 400px;
+}
+
+.panel-relative {
+	position: relative;
+}
+
+.tooltip-panel-div {
+	margin-left:20px;
+}
+
+.tooltip-panel-top {
+	margin-top:5px;
 }

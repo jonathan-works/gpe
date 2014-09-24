@@ -41,8 +41,7 @@ public class TipoProcessoDocumentoDAO extends DAO<TipoProcessoDocumento> {
         return getNamedResultList(TipoProcessoDocumentoQuery.TIPO_PROCESSO_DOCUMENTO_USEABLE, parameters);
     }
 
-    public boolean isAssinaturaObrigatoria(
-            TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
+    public boolean isAssinaturaObrigatoria(TipoProcessoDocumento tipoProcessoDocumento, Papel papel) {
         HashMap<String, Object> params = new HashMap<String, Object>(0);
         params.put(TIPO_PROCESSO_DOCUMENTO_PARAM, tipoProcessoDocumento);
         params.put(PAPEL_PARAM, papel);

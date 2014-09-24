@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.manager;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -7,11 +8,9 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
-import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -214,11 +213,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public void removerProcessoJbpm(Processo processo) throws DAOException {
     	Long idJbpm = processo.getIdJbpm();
     	if (idJbpm == null) throw new DAOException("Processo sem tarefa no Jbpm");
-    	ProcessInstance pi = ManagedJbpmContext.instance().getProcessInstance(idJbpm);
-		Long idTaskMgmInstance = pi.getTaskMgmtInstance().getId();
-		Long idToken = pi.getRootToken().getId();
-		BusinessProcess.instance().setProcessId(null);
-		ManagedJbpmContext.instance().getSession().flush();
+    	Object[] ids = getDao().getIdTaskMgmInstanceAndIdTokenByidJbpm(idJbpm);
+    	Long idTaskMgmInstance = ((Number) ids[0]).longValue();
+    	Long idToken = ((Number) ids[1]).longValue();
     	getDao().removerProcessoJbpm(processo.getIdProcesso(), idJbpm, idTaskMgmInstance, idToken);
     	processo.setIdJbpm(null);
     }

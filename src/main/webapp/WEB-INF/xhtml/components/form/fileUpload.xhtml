@@ -23,21 +23,40 @@
         showLabelSelecione="true"
         rendered="#{not readonly}">
         <a:ajax
-         render="#{f.id}TipoDocDiv, #{f.id}Decoration"
+         render="#{f.id}TipoDocDiv #{f.id}Decoration #{f.id}ToolTipDivExterna"
          event="change"
          execute="@this"
          limitRender="true" />
       </wi:selectOneMenuEntity>
     </s:div>
-  
+    <s:div id="#{f.id}ToolTipDivExterna">
+	    <s:div id="#{f.id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" rendered="#{not empty home.classificacoesVariaveisUpload[id] and not readonly}">
+			<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
+			<div class="epp-tooltip">
+				<div class="tooltip-panel">
+					<s:div rendered="#{empty taskInstanceHome.classificacoesVariaveisUpload[id]}">
+						<h:outputText value="Selecione uma classificação de documento" />
+					</s:div>
+					<s:div rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id]}">
+						<div><h:outputText value="Extensões Aceitas:"/></div>
+						<ui:repeat var="documento" value="#{taskInstanceHome.classificacoesVariaveisUpload[id].acceptedTypesList}">
+							<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
+						</ui:repeat>
+						<s:div styleClass="tooltip-panel-top" rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumentoObservacao}">
+							<div>
+								<h:outputText value="Observação:"/>
+							</div>
+							<h:outputText value="#{taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumentoObservacao}" />
+						</s:div>
+					</s:div>
+				</div>
+			</div>
+		</s:div>
+	</s:div>
     <s:decorate
     id="#{id}Decoration"
     template="#{template}">
-        <ui:param name="renderTipMessage" value="#{not readonly}" />
-        <ui:param
-          name="tipMessage"
-          value="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id] ? 'Apenas arquivos '.concat(taskInstanceHome.classificacoesVariaveisUpload[id].acceptedTypes) : 'Selecione uma classificação de documento'}" />
-        <ui:define name="label">#{label}</ui:define>
+		<ui:define name="label">#{label}</ui:define>
         <rich:fileUpload
           id="#{id}"
           execute="@this"

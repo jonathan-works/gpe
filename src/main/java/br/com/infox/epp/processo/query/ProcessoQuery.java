@@ -103,5 +103,9 @@ public interface ProcessoQuery {
 			"DELETE FROM jbpm_job WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM jbpm_token WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM jbpm_processinstance WHERE id_ = :" + PARAM_ID_JBPM + " ;";
+	
+	String GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST = "getIdTaskMgmInstanceAndIdTokenByProcInst";
+	String GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY = "select taskmgmtinstance_ , token_ " +
+			"from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM;
 
 }

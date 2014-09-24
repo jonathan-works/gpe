@@ -50,7 +50,7 @@ public class ActionMessagesService implements Serializable {
         } else {
             String pattern = Messages.instance().get("entity.error.save");
             if (daoException.getMessage() != null) {
-                messages.add(StatusMessage.Severity.ERROR, format(pattern, daoException.getCause().getMessage()), daoException);
+                messages.add(StatusMessage.Severity.ERROR, format(pattern, daoException.getMessage()), daoException);
             } else {
                 final Throwable cause = daoException.getCause();
                 if (cause instanceof ConstraintViolationException) {

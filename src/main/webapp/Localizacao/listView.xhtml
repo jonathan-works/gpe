@@ -44,6 +44,12 @@
         </wi:searchForm>
       </ui:define>
       <wi:columnOutputText
+        styleClass="width-5"
+        hideOrder="true"
+        columnId="codigo"
+        columnHeader="#{messages['localizacao.codigo']}"
+        value="#{row.codigo}" />
+      <wi:columnOutputText
         styleClass="rf-tr"
         hideOrder="true"
         columnId="caminhoCompleto"
@@ -63,6 +69,12 @@
     <wi:dataForm
       formId="localizacaoForm"
       formTitle="#{messages['form.title']}">
+      <wi:inputText
+        id="codigo"
+        required="true"
+        label="#{messages['localizacao.codigo']}"
+        value="#{localizacaoCrudAction.instance.codigo}"
+        readonly="#{localizacaoCrudAction.managed}" />
       <wi:inputText
         id="localizacao"
         required="true"

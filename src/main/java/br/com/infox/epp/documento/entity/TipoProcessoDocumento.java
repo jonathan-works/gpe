@@ -221,6 +221,27 @@ public class TipoProcessoDocumento implements java.io.Serializable {
         return accepted.substring(0, accepted.length() -2);
     }
     
+    @Transient
+    public List<String> getAcceptedTypesList(){
+    	if (getExtensaoArquivosList().isEmpty()){
+    		return new ArrayList<String>(1);
+    	}
+    	List<String> acceptedTypes = new ArrayList<>(getExtensaoArquivosList().size());
+    	StringBuilder stringBuilder = null;
+    	for (ExtensaoArquivo ea : getExtensaoArquivosList()){
+    		stringBuilder = new StringBuilder();
+    		stringBuilder.append(ea.getNomeExtensao().toUpperCase());
+    		stringBuilder.append("(").append(ea.getTamanho()).append(" Kb");
+    		if (ea.getPaginavel()){
+    			stringBuilder.append(" / ").append(ea.getTamanhoPorPagina()).append(" Kb");
+    			stringBuilder.append(" por Página");
+    		}
+    		stringBuilder.append(")");
+    		acceptedTypes.add(stringBuilder.toString());
+    	}
+    	return acceptedTypes;
+    }
+    
     public boolean canDoUpload() {
         return !(this.inTipoDocumento == TipoDocumentoEnum.P);
     }

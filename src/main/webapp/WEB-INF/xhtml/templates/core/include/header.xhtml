@@ -32,7 +32,7 @@
     <s:div styleClass="banner-rgt">
       <s:fragment rendered="#{identity.loggedIn}">
         <s:div styleClass="divBg">
-          <s:div styleClass="BarraPesquisa">
+          <s:div styleClass="BarraPesquisa" rendered="#{s:hasPermission('/pages/Pesquisa/indexedSearch.seam', 'access') and s:hasPermission('/pages/Pesquisa/searchResult.seam', 'access')}">
             <ui:include
               src="/WEB-INF/xhtml/templates/barraPesquisa.xhtml"
             />

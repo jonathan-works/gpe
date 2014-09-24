@@ -70,7 +70,7 @@
 		<s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
 		<wi:inputTextarea id="#{id}Text" styleClass="expressionInput"
 			label="#{messages['expressionWizard.expressao']}" value="#{value}" showCounter="false">
-			<a:ajax execute="@this" event="change" render="#{id}" limitRender="true"/>
+			<a:ajax execute="@this" event="change" render="#{id} pageBodyDialogMessage" limitRender="true"/>
 		</wi:inputTextarea>
 
 	</s:div>

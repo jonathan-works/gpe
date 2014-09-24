@@ -12,7 +12,7 @@
      xmlns:wi="http://www.itx.com.br/jsf">
 
 	<h:form
-         class="formPesquisa"
+         styleClass="formPesquisa"
          rendered="#{identity.loggedIn and !usuarioLogado.provisorio}">
         <h:outputLabel
         	for="searchText"
@@ -27,6 +27,16 @@
                  action="/Pesquisa/indexedSearch.xhtml"
                  image="#{a4jSkin.imgFolder}/imgPes.png" 
                  onclick="if (#{rich:element('searchText')}.value == '') { new infox.Messages({'timeout': 3000}).dialog('#{messages['pesquisa.campoPesquisaVazio']}'); return false; }"/>
+        <h:commandLink
+          action="/help/show.xhtml"
+          target="helpwnd"
+          immediate="true"
+          actionListener="#{ajudaView.setViewId('/Pesquisa/indexedSearch.seam', true)}">
+          <h:graphicImage
+            url="#{a4jSkin.imgFolder}/question.png"
+            title="#{messages['ajuda.ajudaBtn']}"
+            onclick="openPopUp('helpwnd', 'about:blank');" />
+        </h:commandLink>
 	</h:form>
 
 </ui:composition>

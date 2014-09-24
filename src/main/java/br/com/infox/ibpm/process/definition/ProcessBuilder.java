@@ -47,6 +47,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -107,6 +108,8 @@ public class ProcessBuilder implements Serializable {
     private RaiaPerfilManager raiaPerfilManager;
     @In
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
+    @In
+    private ActionMessagesService actionMessagesService;
 
     private String id;
     private ProcessDefinition instance;
@@ -369,6 +372,10 @@ public class ProcessBuilder implements Serializable {
             deployActions();
         } catch (DAOException e1) {
             LOG.error(".deploy()", e1);
+            FacesMessages.instance().clear();
+            actionMessagesService.handleDAOException(e1);
+            fluxo.setPublicado(false);
+            return;
         }
         if (needToPublic) {
             try {

@@ -84,6 +84,8 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
 
         if (dataHoje.equals(dataInicio)) {
             fluxo.setPublicado(TRUE);
+        } else {
+            fluxo.setPublicado(false);
         }
     }
 
