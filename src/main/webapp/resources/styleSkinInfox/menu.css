@@ -8,10 +8,7 @@
 .menu-submenu {
   display:none;
   position:absolute;
-  margin-left:100%;
-  margin-top:-24px;
   padding:0;
-  z-index:9000;
   min-width:100%;
 }
 .menu-lnk {
@@ -34,10 +31,30 @@
   display:inline-block;
   vertical-align:top;
 }
-.menu-itm:hover > .menu-submenu,.menu-main,.menu-itm{
-  display:block;
-}
 .menu-main {
    margin:0;
    padding:0;
+}
+
+@media (max-width:660px){
+  .menu-main > .menu-itm {
+    display:none;
+  }
+  .menu-main:after{
+    content: "\2000";
+  }
+  .menu-main:hover > .menu-itm {
+    display:block;
+  }
+  .menu-main > .menu-itm > .menu-submenu,.menu-submenu {
+    display:none;
+    position:relative;
+    margin-left:15px;
+    margin-top:0;
+    padding:0;
+  }
+}
+
+.menu-itm:hover > .menu-submenu,.menu-main,.menu-itm{
+  display:block;
 }
