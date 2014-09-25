@@ -194,3 +194,13 @@
 .caixa-drag.caixa-rejt:before {
   content: url("/epp/img/dragDropReject.gif")
 }
+.menu-nav{
+  background-color: #D4F2D6;
+}
+.menu-itm{
+  background-color: #D4F2D6;
+}
+.menu-itm-lbl:hover{
+  color: #D4F2D6;
+  background-color: #a4c2a6;
+}
