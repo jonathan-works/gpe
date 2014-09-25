@@ -58,21 +58,21 @@
           <div class="menu-lbl">
             <s:link
               view="/login.xhtml"
-          value="#{eppmessages['menu.login']}"
+              value="#{eppmessages['menu.login']}"
               styleClass="menu-lnk"
               rendered="#{not identity.loggedIn}" />
           </div>
         </li>
-        <li class="menu-itm"><s:link
+        <li class="menu-itm">
+          <s:link
             view="/home.xhtml"
             action="#{identity.logout}"
-            styleClass="menu-lnk"
-          value="#{eppmessages['menu.logout']}"
+            styleClass="menu-lnk">
             <div class="menu-itm-lbl">
               <h:outputText value="#{messages['menu.logout']}" />
             </div>
-          </s:link></li>
-        <li class="menu-itm"><wi:helpIcon /></li>
+          </s:link>
+        </li>
       </ul>
     </nav>
   </h:form>
