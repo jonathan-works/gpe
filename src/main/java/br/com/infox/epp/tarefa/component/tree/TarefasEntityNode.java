@@ -116,6 +116,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     protected List<Map<String, Object>> getChildrenList(String hql, Map<String, Object> entity) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("idFluxo", entity.get("idFluxo"));
+        parameters.put("idPerfilTemplate", Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId().toString());
         if (getAuthenticator().getColegiadaLogada() != null) {
             parameters.put("colegiadaLogada", getAuthenticator().getColegiadaLogada());
         }

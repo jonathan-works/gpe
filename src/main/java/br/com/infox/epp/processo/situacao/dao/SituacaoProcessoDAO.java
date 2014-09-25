@@ -13,10 +13,14 @@ import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PRO
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.SEM_CAIXA_COND;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_BASE;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BASE;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_SUFIX;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -45,20 +49,19 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return getNamedSingleResult(COUNT_TAREFAS_ATIVAS_BY_TASK_ID, parameters);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
-        String namedQuery = putFiltrosDeUnidadesDecisoras(getProcessosBaseQuery(selected)) + GROUP_BY_PROCESSO_SUFIX;
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(ID_TAREFA_PARAM, idTarefa);
-        if (authenticator.getColegiadaLogada() != null) {
-            parameters.put("colegiadaLogada", authenticator.getColegiadaLogada());
-        }
-        if (authenticator.isUsuarioLogadoInMonocratica()) {
-            parameters.put("monocraticaLogada", authenticator.getMonocraticaLogada());
-        }
-        return getResultList(namedQuery, parameters);
+        return (List<Integer>) getQueryProcessoAbertosByIdTarefa(idTarefa, selected).getResultList();
+    }
+    
+    public Query getQueryProcessoAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
+        String hql = putFiltrosDeUnidadesDecisoras(getHqlQueryBaseProcessosAbertos(selected)) + GROUP_BY_PROCESSO_SUFIX;
+        Query query = getEntityManager().createQuery(hql);
+        query.setParameter(ID_TAREFA_PARAM, idTarefa);
+        return putParametrosDosFiltrosDeUnidadesDecisoras(query);
     }
 
-    private String getProcessosBaseQuery(Map<String, Object> selected) {
+    private String getHqlQueryBaseProcessosAbertos(Map<String, Object> selected) {
         String treeType = (String) selected.get("tree");
         String nodeType = (String) selected.get("type");
         if ("caixa".equals(treeType) && "Task".equals(nodeType)) {
@@ -78,15 +81,33 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return count != null && count > 0;
     }
     
-    public String createQueryRootsForTree() {
+    public Query createQueryRoots() {
+        return putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryRoots()));
+    }
+    
+    public Query createQueryChildren() {
+        return putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryChildren())));
+    }
+    
+    public Query createQueryCaixas() {
+        return putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryCaixa())));
+    }
+    
+    private String createHqlQueryRoots() {
         String baseQuery = TAREFAS_TREE_QUERY_ROOTS_BASE;
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_ROOTS_SUFIX;
     }
     
-    public String createQueryChildrenForTree() {
+    public String createHqlQueryChildren() {
         String baseQuery = TAREFAS_TREE_QUERY_CHILDREN_BASE;
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
     }
+    
+    private String createHqlQueryCaixa() {
+        String baseQuery = TAREFAS_TREE_QUERY_CAIXAS_BASE;
+        return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CAIXAS_SUFIX;
+    }
+    
 
     private String putFiltrosDeUnidadesDecisoras(String baseQuery) {
         if (authenticator.isUsuarioLogandoInMonocraticaAndColegiada()) {
@@ -100,4 +121,17 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         }
     }
 
+    private Query putParametrosDosFiltrosDeUnidadesDecisoras(Query query) {
+        if (authenticator.getColegiadaLogada() != null) {
+            query.setParameter("colegiadaLogada", authenticator.getColegiadaLogada());
+        }
+        if (authenticator.isUsuarioLogadoInMonocratica()) {
+            query.setParameter("monocraticaLogada", authenticator.getMonocraticaLogada());
+        }
+        return query;
+    }
+    
+    private Query putParametroIdPerfilTemplate(Query query) {
+        return query.setParameter("idPerfilTemplate", Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId().toString());
+    }
 }
