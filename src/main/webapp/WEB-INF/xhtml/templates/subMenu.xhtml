@@ -11,24 +11,26 @@
   <c:forEach
     items="#{subMenu.children}"
     var="sub">
-    <li class="menu-itm">
-      <h:panelGroup
+    <li class="menu-itm"><h:panelGroup
         rendered="#{empty sub.children}">
         <h:commandLink
+          styleClass="menu-lnk"
           action="#{conversationFacade.endBeforeRedirect(sub.url)}">
-          <h:outputText value="#{sub.label}" />
+          <div class="menu-itm-lbl">
+            <h:outputText value="#{sub.label}" />
+          </div>
         </h:commandLink>
-      </h:panelGroup>
-      <h:panelGroup rendered="#{not empty sub.children}">
-        <div class="inline-block">
+      </h:panelGroup> <h:panelGroup rendered="#{not empty sub.children}">
+        <div class="menu-itm-lbl">
           <h:outputText value="#{sub.label}" />
         </div>
         <ul class="menu-submenu">
           <ui:include src="/WEB-INF/xhtml/templates/subMenu.xhtml">
-            <ui:param name="subMenu" value="#{sub}" />
+            <ui:param
+              name="subMenu"
+              value="#{sub}" />
           </ui:include>
         </ul>
-      </h:panelGroup>
-    </li>
+      </h:panelGroup></li>
   </c:forEach>
 </ui:composition>

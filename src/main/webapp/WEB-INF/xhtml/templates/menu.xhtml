@@ -19,6 +19,9 @@
   <ui:param
     name="mostrarMenu"
     value="#{identity.loggedIn and !usuarioLogado.provisorio}" />
+  <h:outputStylesheet
+    library="styleSkinInfox"
+    name="menu.css" />
   <h:form>
     <nav class="menu-nav">
       <ul class="menu-main">
@@ -26,44 +29,50 @@
           <c:forEach
             items="#{mainMenu.dropMenus}"
             var="drop">
-            <li class="menu-itm">
-              <h:panelGroup
+            <li class="menu-itm"><h:panelGroup
                 rendered="#{empty drop.url}">
-                <div class="inline-block">
+                <div class="menu-itm-lbl">
                   <h:outputText value="#{drop.label}" />
                 </div>
                 <ul class="menu-submenu">
-                  <ui:include src="/WEB-INF/xhtml/templates/subMenu.xhtml">
-                    <ui:param name="subMenu" value="#{drop}" />
+                  <ui:include
+                    src="/WEB-INF/xhtml/templates/subMenu.xhtml">
+                    <ui:param
+                      name="subMenu"
+                      value="#{drop}" />
                   </ui:include>
                 </ul>
-              </h:panelGroup>
-              <h:panelGroup rendered="#{not empty drop.url}">
-                <h:commandLink action="#{drop.url}">
-                  <h:outputText value="#{drop.label}" />
+              </h:panelGroup> <h:panelGroup rendered="#{not empty drop.url}">
+                <h:commandLink
+                  styleClass="menu-lnk"
+                  action="#{drop.url}">
+                  <div class="menu-lbl">
+                    <h:outputText value="#{drop.label}" />
+                  </div>
                   <s:conversationPropagation type="end" />
                 </h:commandLink>
-              </h:panelGroup>
-            </li>
+              </h:panelGroup></li>
           </c:forEach>
         </c:if>
         <li class="menu-itm">
-          <s:link
-            view="/login.xhtml"
+          <div class="menu-lbl">
+            <s:link
+              view="/login.xhtml"
           value="#{eppmessages['menu.login']}"
-            rendered="#{not identity.loggedIn}" />
+              styleClass="menu-lnk"
+              rendered="#{not identity.loggedIn}" />
+          </div>
         </li>
-        <li class="menu-itm">
-          <s:link
+        <li class="menu-itm"><s:link
             view="/home.xhtml"
             action="#{identity.logout}"
-            styleClass="LinkMenu"
+            styleClass="menu-lnk"
           value="#{eppmessages['menu.logout']}"
-            rendered="#{identity.loggedIn}" />
-        </li>
-        <li class="menu-itm">
-          <wi:helpIcon />
-        </li>
+            <div class="menu-itm-lbl">
+              <h:outputText value="#{messages['menu.logout']}" />
+            </div>
+          </s:link></li>
+        <li class="menu-itm"><wi:helpIcon /></li>
       </ul>
     </nav>
   </h:form>
