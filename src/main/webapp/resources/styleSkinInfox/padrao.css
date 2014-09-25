@@ -705,3 +705,10 @@ div.rf-trn {
 .tooltip-panel-top {
 	margin-top:5px;
 }
+
+.menu-itm > .menu-submenu{
+  margin-top:-24px;
+}
+.menu-itm-lbl{
+  padding:5px;
+}

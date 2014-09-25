@@ -32,14 +32,17 @@
     endColorstr='#80a991', GradientType=1);
 }
 
-.banner {
+.banner,.menu-nav {
   color: #003300;
 }
 
-.banner .divBg {
+.banner .divBg,.menu-nav, .menu-itm {
   background-color: #a0c991;
 }
-
+.menu-itm-lbl:hover{
+  color: #a0c991;
+  background-color: #030;
+}
 .banner {
   background: #c7d8cd; /* Cor fixa para Browsers antigos */
   background:
@@ -193,14 +196,4 @@
 
 .caixa-drag.caixa-rejt:before {
   content: url("/epp/img/dragDropReject.gif")
-}
-.menu-nav{
-  background-color: #D4F2D6;
-}
-.menu-itm{
-  background-color: #D4F2D6;
-}
-.menu-itm-lbl:hover{
-  color: #D4F2D6;
-  background-color: #a4c2a6;
 }

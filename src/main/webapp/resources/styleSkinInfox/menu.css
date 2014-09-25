@@ -17,9 +17,6 @@
 .menu-lnk {
   text-decoration:none;
 }
-.menu-itm-lbl{
-  padding:5px 10px;
-}
 .menu-itm-lbl:hover{
   cursor:pointer;
 }
