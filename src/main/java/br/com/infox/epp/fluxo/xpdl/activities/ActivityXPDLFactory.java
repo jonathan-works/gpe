@@ -50,15 +50,29 @@ public final class ActivityXPDLFactory {
     }
 
     private static boolean isSystemNode(Element element) {
+        boolean foundByEvent = false;
+        boolean foundByTask = false;
+        
         List<Element> eventList = XmlUtil.getChildren(element, EVENT);
         if (!eventList.isEmpty()) {
             List<Element> intermediate = XmlUtil.getChildren(eventList.get(0), INTERMEDIATE_EVENT);
             if (!intermediate.isEmpty()) {
                 String value = XmlUtil.getAttributeValue(intermediate.get(0), TRIGGER);
-                return "None".equals(value);
+                foundByEvent = "None".equals(value);
             }
         }
-        return false;
+        
+        if (!foundByEvent) {
+            List<Element> implList = XmlUtil.getChildren(element, IMPLEMENTATION);
+            if (!implList.isEmpty()) {
+                List<Element> taskList = XmlUtil.getChildren(implList.get(0), TASK);
+                if (!taskList.isEmpty()) {
+                    foundByTask = !taskList.get(0).getChildren().isEmpty() && taskList.get(0).getChild("TaskUser", taskList.get(0).getNamespace()) == null;
+                }
+            }
+        }
+        
+        return foundByEvent || foundByTask;
     }
 
     private static boolean isParallelNode(Element element) {
@@ -95,7 +109,9 @@ public final class ActivityXPDLFactory {
         List<Element> implList = XmlUtil.getChildren(element, IMPLEMENTATION);
         if (!implList.isEmpty()) {
             List<Element> taskList = XmlUtil.getChildren(implList.get(0), TASK);
-            return !taskList.isEmpty();
+            if (!taskList.isEmpty()) {
+                return taskList.get(0).getChildren().isEmpty() || taskList.get(0).getChild("TaskUser", taskList.get(0).getNamespace()) != null;
+            }
         }
         return false;
     }
