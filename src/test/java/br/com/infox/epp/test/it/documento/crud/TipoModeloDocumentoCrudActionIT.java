@@ -91,18 +91,18 @@ public class TipoModeloDocumentoCrudActionIT extends AbstractCrudTest<TipoModelo
             <wi:suggest id="grupoModeloDocumento"
                 suggestProvider="#{grupoModeloDocumentoSuggest}"
                 value="#{tipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
-                label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
+                label="#{eppmessages['tipoModeloDocumento.grupoModeloDocumento']}"
                 required="true" />
             <wi:inputText id="tipoModeloDocumento"
-                label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+                label="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.tipoModeloDocumento}"
                 maxlength="50" required="true" />
             <wi:inputText id="abreviacao"
-                label="#{messages['tipoModeloDocumento.abreviacao']}"
+                label="#{eppmessages['tipoModeloDocumento.abreviacao']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.abreviacao}"
                 required="true" maxlength="5" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.ativo}" />
             */
         }

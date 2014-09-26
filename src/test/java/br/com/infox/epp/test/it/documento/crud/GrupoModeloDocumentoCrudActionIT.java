@@ -57,12 +57,12 @@ public class GrupoModeloDocumentoCrudActionIT extends AbstractCrudTest<GrupoMode
         public void execute(final CrudActions<GrupoModeloDocumento> crudActions) {
             /*
             <wi:inputText id="grupoModeloDocumento"
-                label="#{messages['grupoModeloDocumento.grupoModeloDocumento']}"
+                label="#{eppmessages['grupoModeloDocumento.grupoModeloDocumento']}"
                 value="#{home.instance.grupoModeloDocumento}"
                 required="true" maxlength="30" />
 
             <wi:selectSituacaoRadio id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{home.instance.ativo}" />
             */
             final GrupoModeloDocumento entity = getEntity();

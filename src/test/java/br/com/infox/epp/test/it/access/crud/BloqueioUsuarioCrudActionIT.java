@@ -87,20 +87,20 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
      * 
     <wi:dataForm
         formId="bloqueioUsuarioForm"
-        formTitle="#{messages['form.title']}"
+        formTitle="#{eppmessages['form.title']}"
         home="#{bloqueioUsuarioCrudAction}"
         requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
         <wi:outputText
             id="bloqueio"
             value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? 'Sim': 'Não'}"
-            label="#{messages['usuario.bloqueio']}" />
+            label="#{eppmessages['usuario.bloqueio']}" />
         
         <ui:define name="buttons">
            <wi:commandButton id="bloqueioButton" rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-               value="#{messages['usuario.bloquear']}" action="bloqueioUsuarioCrudAction.bloquear"
+               value="#{eppmessages['usuario.bloquear']}" action="bloqueioUsuarioCrudAction.bloquear"
                reRender="historicoBloqueioUsuario, pageBodyDialogMessage"/>
            <wi:commandButton id="desbloqueioButton" rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-               value="#{messages['usuario.desbloquear']}" action="bloqueioUsuarioCrudAction.desbloquear"
+               value="#{eppmessages['usuario.desbloquear']}" action="bloqueioUsuarioCrudAction.desbloquear"
                reRender="historicoBloqueioUsuario, pageBodyDialogMessage"/>
         </ui:define>
     </wi:dataForm>

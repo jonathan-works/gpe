@@ -48,11 +48,11 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
         if (AbstractAction.PERSISTED.equals(ret)) {
             this.variaveis = null;
             this.variavel = null;
-            FacesMessages.instance().add("#{messages['DefinicaoVariavelProcesso_created']}");
+            FacesMessages.instance().add("#{eppmessages['DefinicaoVariavelProcesso_created']}");
         } else if (AbstractAction.UPDATED.equals(ret)) {
             this.variaveis = null;
             this.variavel = null;
-            FacesMessages.instance().add("#{messages['DefinicaoVariavelProcesso_updated']}");
+            FacesMessages.instance().add("#{eppmessages['DefinicaoVariavelProcesso_updated']}");
         }
     }
 
@@ -82,7 +82,7 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
         }
         if (AbstractAction.REMOVED.equals(ret)) {
             this.variaveis = null;
-            FacesMessages.instance().add("#{messages['DefinicaoVariavelProcesso_deleted']}");
+            FacesMessages.instance().add("#{eppmessages['DefinicaoVariavelProcesso_deleted']}");
             if (obj.equals(this.variavel)) {
                 this.variavel = null;
             }

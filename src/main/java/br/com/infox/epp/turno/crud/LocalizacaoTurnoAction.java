@@ -87,9 +87,9 @@ public class LocalizacaoTurnoAction {
             }
         }
         if (!houveErro) {
-            FacesMessages.instance().add("#{messages['entity_updated']}");
+            FacesMessages.instance().add("#{eppmessages['entity_updated']}");
         } else {
-            FacesMessages.instance().add("#{messages['localizacaoTurno.erroGravacaoTurno']}");
+            FacesMessages.instance().add("#{eppmessages['localizacaoTurno.erroGravacaoTurno']}");
         }
     }
 }

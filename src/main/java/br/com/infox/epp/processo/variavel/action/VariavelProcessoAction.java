@@ -57,6 +57,6 @@ public class VariavelProcessoAction implements Serializable {
         for (VariavelProcesso variavel : getVariaveis()) {
             variavelProcessoService.save(variavel);
         }
-        FacesMessages.instance().add("#{messages['VariavelProcesso_updated']}");
+        FacesMessages.instance().add("#{eppmessages['VariavelProcesso_updated']}");
     }
 }

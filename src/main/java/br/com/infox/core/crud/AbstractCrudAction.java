@@ -45,10 +45,10 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
     private String tab;
     private Object id;
 
-    protected static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
-    protected static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
-    protected static final String MSG_REGISTRO_REMOVIDO = "#{messages['entity_deleted']}";
-    protected static final String MSG_REGISTRO_NAO_REMOVIDO_FK = "#{messages['constraintViolation.foreignKeyViolation']}";
+    protected static final String MSG_REGISTRO_CRIADO = "#{eppmessages['entity_created']}";
+    protected static final String MSG_REGISTRO_ALTERADO = "#{eppmessages['entity_updated']}";
+    protected static final String MSG_REGISTRO_REMOVIDO = "#{eppmessages['entity_deleted']}";
+    protected static final String MSG_REGISTRO_NAO_REMOVIDO_FK = "#{eppmessages['constraintViolation.foreignKeyViolation']}";
     private static final LogProvider LOG = Logging.getLogProvider(AbstractCrudAction.class);
 
     /**
