@@ -1,7 +1,10 @@
 package br.com.infox.core.view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.model.SelectItem;
 
@@ -22,12 +25,19 @@ public class Skin extends Selector {
 
     private static final long serialVersionUID = 1L;
 
-    private String skin = "skin/azulVerde";
+    private String skin = "skin/default";
 
     private List<SelectItem> skins;
 
-    private static final String[] SKINS = { "azulVerde", "cinza",
-        "altoContraste" };
+    private static final Map<String,String> SKIN_ENTRIES = getSkinEntries();
+    
+    private static final Map<String, String> getSkinEntries() {
+        Map<String, String> simpleEntries = new HashMap<>();
+        simpleEntries.put("skin/default", "Padrão");
+        simpleEntries.put("skin/cinza", "Cinza");
+        simpleEntries.put("skin/altoContraste", "AltoContraste");
+        return simpleEntries;
+    }
 
     public Skin() {
         PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
@@ -35,13 +45,9 @@ public class Skin extends Selector {
         setCookiePath(cookiePath);
         setCookieEnabled(true);
         String skinCookie = getCookieValueIfEnabled();
-        if (!Strings.isEmpty(skinCookie) && skinCookie.startsWith("skin/")) {
-            for (String arg : SKINS) {
-                if (arg.equalsIgnoreCase(skinCookie.substring(5))) {
-                    skin = skinCookie;
-                    break;
-                }
-            }
+        
+        if (!Strings.isEmpty(skinCookie) && SKIN_ENTRIES.containsKey(skinCookie)) {
+            skin = skinCookie;
         }
     }
 
@@ -59,8 +65,8 @@ public class Skin extends Selector {
             return skins;
         }
         skins = new ArrayList<SelectItem>();
-        for (String s : SKINS) {
-            skins.add(new SelectItem("skin/" + s, s));
+        for (Entry<String, String> s : SKIN_ENTRIES.entrySet()) {
+            skins.add(new SelectItem(s.getKey(),s.getValue()));
         }
         return skins;
     }
