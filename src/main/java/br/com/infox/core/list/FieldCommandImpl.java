@@ -7,6 +7,7 @@ import java.util.Map;
 
 import br.com.infox.core.type.Displayable;
 import br.com.infox.epp.system.PropertiesLoader;
+import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.seam.util.ComponentUtil;
 
 class FieldCommandImpl implements FieldCommand {
@@ -37,7 +38,7 @@ class FieldCommandImpl implements FieldCommand {
             attributeLabel = object.toString();
         }
 
-        Map<String, String> eppMessages = ComponentUtil.getComponent(PropertiesLoader.EPP_MESSAGES);
+        Map<String, String> eppMessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
         messageBuilder.append(eppMessages.get(MessageFormat.format("{0}.{1}", entityName, s.getName()))).append(" ").append(s.getCriteria()).append(" '").append(attributeLabel).append("'\n");
     }
 
