@@ -1,6 +1,7 @@
 package br.com.infox.epp.access.manager;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -40,5 +41,9 @@ public class BloqueioUsuarioManager extends Manager<BloqueioUsuarioDAO, Bloqueio
 
     public BloqueioUsuario getUltimoBloqueio(UsuarioLogin usuarioLogin) {
         return bloqueioUsuarioDAO.getBloqueioUsuarioMaisRecente(usuarioLogin);
+    }
+
+    public List<BloqueioUsuario> getBloqueiosAtivos() {
+    	return getDao().getBloqueiosAtivos();
     }
 }
