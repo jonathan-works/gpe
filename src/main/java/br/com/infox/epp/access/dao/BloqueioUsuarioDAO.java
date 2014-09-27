@@ -6,10 +6,12 @@ import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_DATA_DESB
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_ID_USUARIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_USUARIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.SAVE_DATA_DESBLOQUEIO;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO_NATIVE_QUERY;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -42,14 +44,17 @@ public class BloqueioUsuarioDAO extends DAO<BloqueioUsuario> {
     private void desbloquearUsuario(UsuarioLogin usuarioLogin) throws DAOException {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_ID_USUARIO, usuarioLogin.getIdUsuarioLogin());
-        executeNamedQueryUpdate(UNDO_BLOQUEIO_NATIVE_QUERY, parameters);
+        executeNamedQueryUpdate(UNDO_BLOQUEIO, parameters);
     }
 
     private void gravarDesbloqueio(BloqueioUsuario bloqueioUsuario) throws DAOException {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(PARAM_BLOQUEIO, bloqueioUsuario);
+        parameters.put(PARAM_BLOQUEIO, bloqueioUsuario.getIdBloqueioUsuario());
         parameters.put(PARAM_DATA_DESBLOQUEIO, new Date());
         executeNamedQueryUpdate(SAVE_DATA_DESBLOQUEIO, parameters);
     }
 
+    public List<BloqueioUsuario> getBloqueiosAtivos() {
+    	return getNamedResultList(BLOQUEIOS_ATIVOS);
+    }
 }
