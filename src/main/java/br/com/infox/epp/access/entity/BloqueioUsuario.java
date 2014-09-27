@@ -15,6 +15,8 @@ import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.SEQUENCE_BLOQUE
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.TABLE_BLOQUEIO_USUARIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO_NATIVE_QUERY;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS_QUERY;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
@@ -47,8 +49,9 @@ import br.com.infox.core.constants.LengthConstants;
 @Table(name = TABLE_BLOQUEIO_USUARIO)
 @NamedQueries(value = {
     @NamedQuery(name = SAVE_DATA_DESBLOQUEIO, query = SAVE_DATA_DESBLOQUEIO_QUERY),
-    @NamedQuery(name = BLOQUEIO_MAIS_RECENTE, query = BLOQUEIO_MAIS_RECENTE_QUERY) })
-@NamedNativeQueries(value = { @NamedNativeQuery(name = UNDO_BLOQUEIO, query = UNDO_BLOQUEIO_NATIVE_QUERY) })
+    @NamedQuery(name = BLOQUEIO_MAIS_RECENTE, query = BLOQUEIO_MAIS_RECENTE_QUERY),
+    @NamedQuery(name = BLOQUEIOS_ATIVOS, query = BLOQUEIOS_ATIVOS_QUERY)})
+@NamedNativeQueries(value = { @NamedNativeQuery(name = UNDO_BLOQUEIO, query = UNDO_BLOQUEIO_NATIVE_QUERY)})
 public class BloqueioUsuario implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -105,7 +108,6 @@ public class BloqueioUsuario implements java.io.Serializable {
 
     @Temporal(TIMESTAMP)
     @Column(name = DATA_PREVISAO_DESBLOQUEIO, nullable = true)
-    @Future
     public Date getDataPrevisaoDesbloqueio() {
         return this.dataPrevisaoDesbloqueio;
     }
