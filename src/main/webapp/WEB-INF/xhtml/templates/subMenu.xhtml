@@ -23,6 +23,9 @@
       </h:panelGroup> <h:panelGroup rendered="#{not empty sub.children}">
         <div class="menu-itm-lbl">
           <h:outputText value="#{sub.label}" />
+          <h:graphicImage
+            styleClass="menu-arrow"
+            url="#{a4jSkin.imgFolder}/arrow-right.png" />
         </div>
         <ul class="menu-submenu">
           <ui:include src="/WEB-INF/xhtml/templates/subMenu.xhtml">
