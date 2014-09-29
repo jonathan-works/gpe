@@ -24,4 +24,7 @@ public class ParametroManager extends Manager<ParametroDAO, Parametro> {
         return getDao().listParametrosAtivos();
     }
 
+    public boolean existeParametro(String nome) {
+        return getDao().existeParametro(nome);
+    }
 }
