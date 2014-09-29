@@ -29,12 +29,12 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected String getQueryRoots() {
-        return "";
+        throw new IllegalStateException("Usar SituacaoProcessoDAO::createQueryRoots ao invés de TarefasTreeHanlder::getQueryRoots");
     }
 
     @Override
     protected String getQueryChildren() {
-        return "";
+        throw new IllegalStateException("Usar SituacaoProcessoDAO::createQueryChildren ao invés de TarefasTreeHanlder::getQueryChildren");
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected TarefasEntityNode<Map<String, Object>> createNode() {
-        return new TarefasEntityNode<Map<String, Object>>(getQueryChildrenList(), getQueryCaixasList());
+        return new TarefasEntityNode<Map<String, Object>>(getQueryCaixasList());
     }
 
     public List<TarefasEntityNode<Map<String, Object>>> getTarefasRoots() {

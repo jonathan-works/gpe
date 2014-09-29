@@ -26,14 +26,12 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
         super(queryChildren);
     }
 
-    public TarefasEntityNode(String[] queryChildren, List<Query> queryCaixas) {
-        super(queryChildren);
+    public TarefasEntityNode(List<Query> queryCaixas) {
+        super("");
         this.queryCaixas = queryCaixas;
     }
 
-    public TarefasEntityNode(EntityNode<Map<String, Object>> parent,
-            Map<String, Object> entity, String[] queryChildren,
-            List<Query> queryCaixas) {
+    public TarefasEntityNode(EntityNode<Map<String, Object>> parent, Map<String, Object> entity, String[] queryChildren, List<Query> queryCaixas) {
         super(parent, entity, queryChildren);
         this.queryCaixas = queryCaixas;
     }
