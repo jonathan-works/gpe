@@ -22,17 +22,13 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     private List<EntityNode<E>> caixas;
     private List<Query> queryCaixas = new ArrayList<Query>();
 
-    public TarefasEntityNode(String queryChildren) {
-        super(queryChildren);
-    }
-
     public TarefasEntityNode(List<Query> queryCaixas) {
         super("");
         this.queryCaixas = queryCaixas;
     }
 
-    public TarefasEntityNode(EntityNode<Map<String, Object>> parent, Map<String, Object> entity, String[] queryChildren, List<Query> queryCaixas) {
-        super(parent, entity, queryChildren);
+    public TarefasEntityNode(EntityNode<Map<String, Object>> parent, Map<String, Object> entity, List<Query> queryCaixas) {
+        super(parent, entity, new String[0]);
         this.queryCaixas = queryCaixas;
     }
 
@@ -104,7 +100,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     @Override
     protected TarefasEntityNode<Map<String, Object>> createRootNode(
             Map<String, Object> n) {
-        return new TarefasEntityNode<Map<String, Object>>(null, n, getQueryChildren(), queryCaixas);
+        return new TarefasEntityNode<Map<String, Object>>(null, n, queryCaixas);
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -121,7 +117,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     @Override
     protected TarefasEntityNode<Map<String, Object>> createChildNode(
             Map<String, Object> n) {
-        return new TarefasEntityNode<Map<String, Object>>(this, n, getQueryChildren(), queryCaixas);
+        return new TarefasEntityNode<Map<String, Object>>(this, n, queryCaixas);
     }
 
     public Integer getTarefaId() {
