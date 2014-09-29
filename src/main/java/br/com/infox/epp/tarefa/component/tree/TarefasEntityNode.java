@@ -3,7 +3,6 @@ package br.com.infox.epp.tarefa.component.tree;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,9 +10,8 @@ import javax.persistence.Query;
 
 import org.jboss.seam.core.Events;
 
-import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
@@ -86,9 +84,9 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
         if (nodes == null) {
             nodes = new ArrayList<TarefasEntityNode<E>>();
             boolean parent = true;
-            for (String query : getQueryChildrenList()) {
                 if (!isLeaf()) {
-                    List<E> children = (List<E>) getChildrenList(query, getEntity());
+                    Query query = getSituacaoProcessoDAO().createQueryChildren((Integer) getEntity().get("idFluxo"));
+                    List<E> children = (List<E>) query.getResultList();
                     for (E n : children) {
                         if (!n.equals(getIgnore())) {
                             TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
@@ -99,7 +97,6 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
                     }
                     parent = false;
                 }
-            }
 
             Events.instance().raiseEvent("entityNodesPostGetNodes", nodes);
         }
@@ -110,25 +107,6 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     protected TarefasEntityNode<Map<String, Object>> createRootNode(
             Map<String, Object> n) {
         return new TarefasEntityNode<Map<String, Object>>(null, n, getQueryChildren(), queryCaixas);
-    }
-
-    @Override
-    protected List<Map<String, Object>> getChildrenList(String hql, Map<String, Object> entity) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("idFluxo", entity.get("idFluxo"));
-        parameters.put("idPerfilTemplate", Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId().toString());
-        if (getAuthenticator().getColegiadaLogada() != null) {
-            parameters.put("colegiadaLogada", getAuthenticator().getColegiadaLogada());
-        }
-        if (getAuthenticator().isUsuarioLogadoInMonocratica()) {
-            parameters.put("monocraticaLogada", getAuthenticator().getMonocraticaLogada());
-        }
-        GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
-        return genericDAO.getResultList(hql, parameters);
-    }
-    
-    private Authenticator getAuthenticator(){
-        return ComponentUtil.getComponent(Authenticator.NAME);
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -168,6 +146,10 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
 
     public List<Query> getQueryCaixas() {
         return queryCaixas;
+    }
+    
+    private SituacaoProcessoDAO getSituacaoProcessoDAO() {
+        return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
     }
 
 }

@@ -85,8 +85,8 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryRoots()));
     }
     
-    public Query createQueryChildren() {
-        return putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryChildren())));
+    public Query createQueryChildren(Integer idFluxo) {
+        return putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryChildren()))).setParameter("idFluxo", idFluxo);
     }
     
     public Query createQueryCaixas() {
@@ -98,7 +98,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_ROOTS_SUFIX;
     }
     
-    public String createHqlQueryChildren() {
+    private String createHqlQueryChildren() {
         String baseQuery = TAREFAS_TREE_QUERY_CHILDREN_BASE;
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
     }

@@ -34,7 +34,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected String getQueryChildren() {
-        return getSituacaoProcessoDAO().createHqlQueryChildren();
+        return "";
     }
 
     @Override
