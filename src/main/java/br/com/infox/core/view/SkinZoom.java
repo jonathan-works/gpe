@@ -1,7 +1,5 @@
 package br.com.infox.core.view;
 
-import java.util.Arrays;
-
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -18,9 +16,6 @@ public class SkinZoom extends Selector {
     private static final Integer TAM_NORMAL = 12;
     private static final Integer TAM_MEDIO = 17;
     private static final Integer TAM_GRANDE = 22;
-    private static final Integer[] TAMANHOS = { TAM_NORMAL, TAM_MEDIO,
-        TAM_GRANDE };
-
     public SkinZoom() {
         PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
         String cookiePath = pathResolver.getContextPath();
@@ -29,10 +24,7 @@ public class SkinZoom extends Selector {
         String cookieValueIfEnabled = getCookieValueIfEnabled();
         Integer tamanhoCookie = cookieValueIfEnabled == null ? null : Integer.parseInt(cookieValueIfEnabled, 10);
         if (tamanhoCookie != null) {
-            int i = Arrays.binarySearch(TAMANHOS, tamanhoCookie);
-            if (i > -1) {
-                skinZoom = tamanhoCookie;
-            }
+            skinZoom = tamanhoCookie;
         }
     }
 
@@ -53,6 +45,19 @@ public class SkinZoom extends Selector {
     public void setTmGrande() {
         setCookieValueIfEnabled(TAM_GRANDE.toString());
         skinZoom = TAM_GRANDE;
+    }
+
+    public void normalizeZoom() {
+        setCookieValueIfEnabled(TAM_NORMAL.toString());
+        skinZoom = TAM_NORMAL;
+    }
+
+    public void increaseZoom() {
+        setCookieValueIfEnabled(String.valueOf(++skinZoom));
+    }
+
+    public void decreaseZoom() {
+        setCookieValueIfEnabled(String.valueOf(--skinZoom));
     }
 
     @Override
