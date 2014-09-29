@@ -29,7 +29,7 @@ public class BamTimerManager extends Manager<GenericDAO, Object> {
             BamTimerProcessor processor) throws SchedulerException, DAOException {
         QuartzTriggerHandle handle = processor.increaseTimeSpent(cronExpression);
         Trigger trigger = handle.getTrigger();
-        saveSystemParameter(idIniciarProcessoTimerParameter, trigger.getName(), description);
+        saveSystemParameter(idIniciarProcessoTimerParameter, trigger.getJobKey().getName(), description);
     }
 
     private void saveSystemParameter(String nomeVariavel, String valorVariavel,

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,9 +27,11 @@ import org.jboss.seam.log.Logging;
 import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.quartz.impl.matchers.GroupMatcher;
 
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -55,7 +58,7 @@ public class QuartzJobsInfo implements Serializable {
         List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
         try {
             Scheduler scheduler = getScheduler();
-            String[] jobGroupNames = scheduler.getJobGroupNames();
+            List<String> jobGroupNames = scheduler.getJobGroupNames();
             for (String groupName : jobGroupNames) {
                 List<Map<String, Object>> mapInfoGroup = getListMapInfoGroupFromJobs(groupName);
                 maps.addAll(mapInfoGroup);
@@ -70,12 +73,11 @@ public class QuartzJobsInfo implements Serializable {
     private List<Map<String, Object>> getListMapInfoGroupFromJobs(
             String groupName) throws SchedulerException {
         Scheduler scheduler = getScheduler();
-        String[] jobNames = scheduler.getJobNames(groupName);
+        Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
         List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
-        for (String jobName : jobNames) {
-            JobDetail jobDetail = scheduler.getJobDetail(jobName, groupName);
-            Trigger[] triggersOfJob = scheduler.getTriggersOfJob(jobName,
-                    groupName);
+        for (JobKey jobKey : jobKeys) {
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
             for (Trigger trigger : triggersOfJob) {
                 maps.add(getTrigerDetailMap(jobDetail, trigger));
             }
@@ -86,11 +88,11 @@ public class QuartzJobsInfo implements Serializable {
     private Map<String, Object> getTrigerDetailMap(JobDetail jobDetail,
             Trigger trigger) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String jobName = trigger.getJobName();
+        String jobName = trigger.getJobKey().getName();
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        map.put("triggerName", trigger.getName());
+        map.put("triggerName", trigger.getKey().getName());
         map.put("jobName", jobName);
-        map.put("groupName", jobDetail.getGroup());
+        map.put("groupName", jobDetail.getKey().getGroup());
         map.put("nextFireTime", trigger.getNextFireTime());
         map.put("previousFireTime", trigger.getPreviousFireTime());
         String jobExpression = getJobExpression(jobDataMap);
@@ -155,7 +157,7 @@ public class QuartzJobsInfo implements Serializable {
 
     public void triggerJob(String jobName, String groupName) {
         try {
-            getScheduler().triggerJob(jobName, groupName);
+            getScheduler().triggerJob(JobKey.jobKey(jobName, groupName));
             FacesMessages.instance().add(Severity.INFO,
                     "Job executado com sucesso: " + jobName);
         } catch (SchedulerException e) {
@@ -167,7 +169,7 @@ public class QuartzJobsInfo implements Serializable {
 
     public void deleteJob(String jobName, String groupName) {
         try {
-            getScheduler().deleteJob(jobName, groupName);
+            getScheduler().deleteJob(JobKey.jobKey(jobName, groupName));
             FacesMessages.instance().add(Severity.INFO,
                     "Job removido com sucesso: " + jobName);
         } catch (SchedulerException e) {
@@ -180,8 +182,8 @@ public class QuartzJobsInfo implements Serializable {
     @Create
     public void addGlobalTriggerListener() throws SchedulerException {
         Scheduler scheduler = QuartzJobsInfo.getScheduler();
-        if (scheduler.getGlobalTriggerListeners().isEmpty()) {
-            scheduler.addGlobalTriggerListener(new TriggerListenerLog());
+        if (scheduler.getListenerManager().getTriggerListeners().isEmpty()) {
+            scheduler.getListenerManager().addTriggerListener(new TriggerListenerLog());
         }
     }
 
