@@ -19,11 +19,14 @@ public interface SituacaoProcessoQuery {
             + "max(s.idTask) as idTask, max(s.idTarefa) as idTarefa, count(s.nomeCaixa) as qtdEmCaixa, "
             + "count(s.idProcesso) as qtd, 'caixa' as tree, 'Task' as type) from SituacaoProcesso s "
             + "where s.idFluxo = :idFluxo and s.pooledActor = :idPerfilTemplate";
-
+    
     String TAREFAS_TREE_CAIXAS = "tarefasTreeQueryCaixas";
-    String TAREFAS_TREE_QUERY_CAIXAS_SUFIX = "group by s.idTarefa, s.idCaixa, s.nomeCaixa order by s.nomeCaixa";
-    String TAREFAS_TREE_QUERY_CAIXAS_BASE = "select new map(s.idCaixa as idCaixa, s.idTarefa as idTarefa, s.nomeCaixa as nomeCaixa, 'Caixa' as type, count(s.idProcesso) as qtd) "
-            + "from SituacaoProcesso s where s.idTarefa = :taskId and s.pooledActor = :idPerfilTemplate and s.idCaixa is not null";
+    String TAREFAS_TREE_QUERY_CAIXAS_BASE = "select new map(c.idCaixa as idCaixa, "
+            + "c.tarefa.idTarefa as idTarefa, "
+            + "c.nomeCaixa as nomeCaixa, "
+            + "'Caixa' as type, "
+            + "(select count(distinct s.idProcesso) from SituacaoProcesso s where s.idCaixa = c.idCaixa and s.pooledActor = :idPerfilTemplate";
+    String TAREFAS_TREE_QUERY_CAIXAS_SUFIX = ") as qtd) from Caixa c where c.tarefa.idTarefa = :taskId order by c.nomeCaixa";
 
     String ID_TAREFA_PARAM = "idTarefa";
 
@@ -34,19 +37,18 @@ public interface SituacaoProcessoQuery {
     
     String GROUP_BY_PROCESSO_SUFIX = " group by s.idProcesso";
     
-    String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from ProcessoEpa pe WHERE";
+    String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from ProcessoEpa pe LEFT JOIN pe.decisoraColegiada dc LEFT JOIN pe.decisoraMonocratica dm WHERE";
     String FILTRO_SUFIX = ") ";
     String AND = " and ";
 
-    String COM_COLEGIADA = " pe.decisoraColegiada = :colegiadaLogada";
-    String COM_MONOCRATICA = " pe.decisoraMonocratica = :monocraticaLogada";
-    String SEM_COLEGIADA = " pe.decisoraColegiada is null";
-    String SEM_MONOCRATICA = " pe.decisoraMonocratica is null";
+    String COM_COLEGIADA = " dc = :colegiadaLogada";
+    String COM_MONOCRATICA = " dm = :monocraticaLogada";
+    String SEM_COLEGIADA = " dc is null";
+    String SEM_MONOCRATICA = " dm is null";
     
     String PROCESSOS_COM_COLEGIADA_COND = FILTRO_PREFIX + COM_COLEGIADA + AND + SEM_MONOCRATICA + FILTRO_SUFIX;
     String PROCESSOS_COM_MONOCRATICA_COND = FILTRO_PREFIX + SEM_COLEGIADA + AND + COM_MONOCRATICA + FILTRO_SUFIX;
     String PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND = FILTRO_PREFIX + COM_COLEGIADA + AND + COM_MONOCRATICA + FILTRO_SUFIX;
     String PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND = FILTRO_PREFIX + SEM_COLEGIADA + AND + SEM_MONOCRATICA + FILTRO_SUFIX;
-    
 
 }

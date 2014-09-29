@@ -134,14 +134,6 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
         return 0;
     }
 
-    public void setQueryCaixas(List<Query> queryCaixas) {
-        this.queryCaixas = queryCaixas;
-    }
-
-    public List<Query> getQueryCaixas() {
-        return queryCaixas;
-    }
-    
     private SituacaoProcessoDAO getSituacaoProcessoDAO() {
         return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
     }
