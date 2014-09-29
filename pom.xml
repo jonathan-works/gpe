@@ -188,7 +188,7 @@
         <dependency>
             <groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
-            </dependency>
+        </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers</artifactId>
@@ -414,13 +414,16 @@
                     <execution>
                         <goals>
                             <goal>revision</goal>
-                         </goals>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+                    <gitDescribe>
+                        <dirty>-DEV</dirty>
+                    </gitDescribe>
                 </configuration>
             </plugin>
         </plugins>
@@ -600,7 +603,7 @@
         <name>Infox</name>
         <url>http://www.infox.com.br</url>
     </organization>
-    
+
     <distributionManagement>
         <repository>
             <id>infox-releases</id>
