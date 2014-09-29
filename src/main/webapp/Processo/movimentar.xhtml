@@ -56,7 +56,7 @@
           }
       }
     </h:outputScript>
-        <h:outputScript rendered="#{processoHome.tab=='tabSaida'}">
+    <h:outputScript rendered="#{processoHome.tab=='tabSaida'}">
       invoke([ "infox.Modal" ], function(Modal) {
         var panelTeste = new Modal({
           id : "#{rich:clientId('mp_taskNodeDescription')}"
@@ -203,6 +203,9 @@
                 status=":status"
                 action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
                 title="#{eppmessages['movimentar.documentos.titleTab']}">
+                <a:jsFunction name="selectDocumentoToExcludeRestore" immediate="true" execute="@this, processoDocumentoList" render="requestMotivoPanelDiv">
+					<a:param name="documento" assignTo="#{anexoController.idDocumentoToExcludeRestore}" />
+				</a:jsFunction>
                 <wi:dataTable
                     values="#{processoDocumentoList.list(15)}"
                     bean="#{processoDocumentoList}"
@@ -213,25 +216,29 @@
                     panelStyleCss="full-sized">
                     <ui:define name="headerToolBar" />
                     <wi:columnOutputText
+                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through' : ''}"
                         columnId="numeroDocumento"
                         columnHeader="#{eppmessages['processoDocumento.numeroDocumento']}"
                         value="#{row.numeroDocumento}" />
                     <wi:columnOutputText
+                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through' : ''}"
                         columnId="usuarioInclusao"
                         columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
                         value="#{row.usuarioInclusao}" />
                     <wi:columnDateTime
+                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through' : ''}"
                         columnId="dataInclusao"
                         columnHeader="#{eppmessages['processoDocumento.dataInclusao']}"
                         value="#{row.dataInclusao}" />
                     <wi:columnOutputText
+                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through' : ''}"
                         columnId="processoDocumento"
                         columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
                         value="#{row.processoDocumento}" />
                     <ui:define name="toolBar">
                         <s:link
                             target="idJan#{row.idProcessoDocumento}"
-                            rendered="#{not empty row.processoDocumentoBin.assinaturas}"
+                            rendered="#{not empty row.processoDocumentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 160, 450, 450);">
                             <h:graphicImage
@@ -244,7 +251,7 @@
                         </s:link>
                         <s:link
                             target="idJan#{row.idProcessoDocumento}"
-                            rendered="#{empty row.processoDocumentoBin.assinaturas}"
+                            rendered="#{empty row.processoDocumentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 200, 450, 450);">
                             <h:graphicImage
@@ -255,8 +262,56 @@
                                 value="#{row.idProcessoDocumento}"
                                 name="idProcessoDocumento" />
                         </s:link>
+                        <h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/remove.png" title="#{eppmessages['button.delete']}" 
+                        		onmouseup="selectDocumentoToExcludeRestore('#{rowId}');"
+                        		rendered="#{not row.excluido}"/>
+                        <h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/stock_undelete.png" title="#{eppmessages['button.restaurar']}"
+                        		onmouseup="selectDocumentoToExcludeRestore('#{rowId}');"
+                        		rendered="#{row.excluido}"/>		
                     </ui:define>
                 </wi:dataTable>
+                <s:div id="requestMotivoPanelDiv">
+                	<s:div id="requestMotivoPanel" rendered="#{not empty anexoController.documentoToExcludeRestore}" styleClass="rf-pp" >
+		                <div id="requestMotivoPanel_shade" class="rf-pp-shade" style="z-index:100;">
+		    				<button accesskey="" tabindex="-1" class="rf-pp-btn" id="requestMotivoPanel_shade_button" name="requestMotivoPanel_shade_button"/>
+		                </div>
+		                <rich:panel id="requestMotivoPanel_container" styleClass="rf-pp-cntr epp-rf-popup-doc" 
+		                			header="#{anexoController.documentoToExcludeRestore.excluido ? 'Restauracao' : 'Exclusao'} de Documento" 
+		                			style="position: fixed; z-index: 100; left: 180px; top: 371px;">
+					        <h:form id="excluirRestaurarDocumentoDiv">
+					          <div>
+					          	<wi:outputText id="numeroDocumento" label="Numero do documento" 
+					          					value="#{anexoController.documentoToExcludeRestore.numeroDocumento}"/>
+					          					
+					          	<wi:outputText id="processoDocumento" label="Documento" 
+					          					value="#{anexoController.documentoToExcludeRestore.processoDocumento}"/>
+					          </div>
+					          <div>
+					            <wi:inputTextarea id="motivoExclusaoRestauracao"
+					            	maxlength="4000" required="true" cols="60" rows="5"
+					            	label="Motivo da #{anexoController.documentoToExcludeRestore.excluido ? 'Restauracao' : 'Exclusao'}"
+					            	value="#{anexoController.motivoExclusaoRestauracao}"/>
+					          </div>
+					          <div>
+					          	<a:commandButton id="excluirDocButton" 
+					          		actionListener="#{anexoController.exclusaoRestauracaoDocumento()}"
+							        limitRender="true" execute="@form"
+							        onclick="infox.showLoading();"
+							        oncomplete="infox.hideLoading(); " 
+							        value="#{anexoController.documentoToExcludeRestore.excluido ? 'Restaurar' : 'Excluir'}"
+							        render="@form, processoDocumentoList, requestMotivoPanelDiv, pageBodyDialogMessage" 
+							        styleClass="buttons buttons}"/>
+							        
+							    <a:commandButton id="cancelarDocButton" 
+					          		onmouseup="selectDocumentoToExcludeRestore(null);"
+							        value="Cancelar"
+							        type="reset"
+							        styleClass="buttons buttons"/>
+					          </div>
+					        </h:form>
+					    </rich:panel>
+				    </s:div>
+				</s:div>
             </infox:tab>
             <infox:tab
                 id="tabMovimentacoes"

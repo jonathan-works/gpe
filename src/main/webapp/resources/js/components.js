@@ -274,14 +274,14 @@ function isCnpjValido(cnpj) {
 
 /**
  * Usado pelo componente inputTextarea para contar e limitar o texto
- * @param obj é o campo do formulario
- * @param max é o limite máximo do texto
+ * @param obj ï¿½ o campo do formulario
+ * @param max ï¿½ o limite mï¿½ximo do texto
  * @return
  */
 function counterTextarea(obj, max) {
 	if (!max || max == '') return;
 	typed = obj.nextElementSibling;
-	typed.style.visibility = "visible";
+	typed.style.visibility = "inherit";
 	var maxlength = parseInt(max);					  			
 	if(obj.value.length > maxlength) {
 		obj.value = obj.value.substring(0, maxlength);

@@ -133,6 +133,10 @@ public class ProcessoDocumento implements java.io.Serializable {
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
     
+    @NotNull
+    @Column(name="in_excluido", nullable=false)
+    private Boolean excluido = Boolean.FALSE;
+    
     public ProcessoDocumento() {
     }
 
@@ -261,9 +265,17 @@ public class ProcessoDocumento implements java.io.Serializable {
 
     public void setLocalizacao(Localizacao localizacao) {
         this.localizacao = localizacao;
-    }
+    } 
     
-    public boolean isDocumentoAssinavel(Papel papel){
+    public Boolean getExcluido() {
+		return excluido;
+	}
+
+	public void setExcluido(Boolean excluido) {
+		this.excluido = excluido;
+	}
+
+	public boolean isDocumentoAssinavel(Papel papel){
     	List<TipoProcessoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
 		for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
 			if (tipoProcessoDocumentoPapel.getPapel().equals(papel) 
@@ -296,6 +308,10 @@ public class ProcessoDocumento implements java.io.Serializable {
     public boolean hasAssinatura(){
     	return getProcessoDocumentoBin().getAssinaturas() != null && 
     			getProcessoDocumentoBin().getAssinaturas().size() > 0;
+    }
+    
+    public boolean podeExcluirDocumento(Papel papel){
+    	return true;
     }
     
     @Override
