@@ -10,7 +10,7 @@ import org.jboss.seam.async.QuartzTriggerHandle;
 
 import br.com.infox.epp.estatistica.abstracts.BamTimerProcessor;
 import br.com.infox.epp.estatistica.manager.BamTimerManager;
-import br.com.infox.epp.estatistica.startup.ProcessoTimerStarter;
+import br.com.infox.epp.estatistica.startup.BamTimerStarter;
 import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
@@ -57,7 +57,7 @@ public class ProcessoTimerProcessor extends BamTimerProcessor {
 
     @Override
     protected String getParameterName() {
-        return ProcessoTimerStarter.ID_INICIAR_PROCESSO_TIMER_PARAMETER;
+        return BamTimerStarter.ID_INICIAR_PROCESSO_TIMER_PARAMETER;
     }
 
 }

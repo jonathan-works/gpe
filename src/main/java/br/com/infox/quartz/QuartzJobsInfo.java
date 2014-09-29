@@ -12,11 +12,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.Install;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.faces.FacesMessages;
@@ -38,8 +37,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(QuartzJobsInfo.NAME)
 @Scope(ScopeType.APPLICATION)
 @BypassInterceptors
-@Startup(depends = QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER)
-@Install(dependencies = { QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER })
+@AutoCreate
 public class QuartzJobsInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -179,7 +177,7 @@ public class QuartzJobsInfo implements Serializable {
         }
     }
 
-    @Create
+    @Observer(value = QuartzDispatcher.QUARTZ_DISPATCHER_INITIALIZED_EVENT)
     public void addGlobalTriggerListener() throws SchedulerException {
         Scheduler scheduler = QuartzJobsInfo.getScheduler();
         if (scheduler.getListenerManager().getTriggerListeners().isEmpty()) {

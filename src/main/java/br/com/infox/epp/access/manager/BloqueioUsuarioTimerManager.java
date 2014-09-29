@@ -29,7 +29,7 @@ public class BloqueioUsuarioTimerManager extends Manager<GenericDAO, Object> {
     		BloqueioUsuarioProcessor processor) throws SchedulerException, DAOException {
     	QuartzTriggerHandle handle = processor.processBloqueioUsuario(cronExpression);
     	Trigger trigger = handle.getTrigger();
-    	saveSystemParameter(idDesbloquearUsuarioTimerParameter, trigger.getName(), description);
+    	saveSystemParameter(idDesbloquearUsuarioTimerParameter, trigger.getKey().getName(), description);
     }
 
 	private void saveSystemParameter(String nome, String valor,
