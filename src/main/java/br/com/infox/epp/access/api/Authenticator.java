@@ -492,7 +492,7 @@ public class Authenticator {
     }
     
     public String getUsuarioPerfilAtualSingle(){
-    	return getUsuarioPerfilListItems().get(0).getLabel();
+    	return getUsuarioPerfilAtual().toString();
     }
 
     private static AuthenticatorService getAuthenticatorService() {

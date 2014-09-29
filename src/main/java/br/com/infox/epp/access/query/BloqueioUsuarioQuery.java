@@ -18,10 +18,12 @@ public interface BloqueioUsuarioQuery extends Serializable {
     String BLOQUEIO_MAIS_RECENTE_QUERY = "select o from BloqueioUsuario o where o.idBloqueioUsuario = "
             + "(select max(b.idBloqueioUsuario) from BloqueioUsuario b where b.usuario = :"
             + PARAM_USUARIO + ")";
+    String BLOQUEIOS_ATIVOS = "bloqueiosAtivos";
+    String BLOQUEIOS_ATIVOS_QUERY = "select o from BloqueioUsuario o where o.dataDesbloqueio = null";
 
     String PARAM_ID_USUARIO = "id_usuario";
     String UNDO_BLOQUEIO = "undoBloqueio";
-    String UNDO_BLOQUEIO_NATIVE_QUERY = "update tb_usuario set in_bloqueio=false where id_usuario = :"
+    String UNDO_BLOQUEIO_NATIVE_QUERY = "update tb_usuario_login set in_bloqueio=false where id_usuario_login = :"
             + PARAM_ID_USUARIO;
 
     String PARAM_BLOQUEIO = "bloqueio";

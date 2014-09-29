@@ -420,6 +420,9 @@
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+                    <gitDescribe>
+                        <dirty>-DEV</dirty>
+                    </gitDescribe>
                 </configuration>
             </plugin>
         </plugins>
