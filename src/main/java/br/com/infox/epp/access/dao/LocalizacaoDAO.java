@@ -1,18 +1,20 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_CAMINHO_COMPLETO_DUPLICADO_DENTRO_ESTRUTURA_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_CAMINHO_COMPLETO_DUPLICADO_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.PART_FILTER_BY_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_ID_LOCALIZACAO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.QUERY_PARAM_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.USOS_DA_HIERARQUIA_LOCALIZACAO;
 
 import java.util.ArrayList;

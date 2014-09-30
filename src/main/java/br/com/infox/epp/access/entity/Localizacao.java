@@ -15,12 +15,12 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUT
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA_QUERY;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS_QUERY;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.SEQUENCE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TABLE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TWITTER;

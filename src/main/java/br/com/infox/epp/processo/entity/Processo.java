@@ -13,6 +13,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DURACAO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
@@ -26,14 +28,12 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_
 import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
-import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.InheritanceType.JOINED;
 import static javax.persistence.TemporalType.TIMESTAMP;

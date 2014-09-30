@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.jboss.seam.Component;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -25,9 +24,6 @@ import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.persistence.db.DbPersistenceService;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.tree.TreeHandler;
-import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
-import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.ListaEmail;

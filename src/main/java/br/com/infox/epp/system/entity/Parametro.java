@@ -1,6 +1,8 @@
 package br.com.infox.epp.system.entity;
 
-import static br.com.infox.epp.system.query.ParametroQuery.*;
+import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO;
+import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO_QUERY;
+import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS_QUERY;
 
 import java.text.DateFormat;

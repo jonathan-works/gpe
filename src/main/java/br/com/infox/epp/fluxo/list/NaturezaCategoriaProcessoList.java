@@ -9,7 +9,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.list.EntityList;
-import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;

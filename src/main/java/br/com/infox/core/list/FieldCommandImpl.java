@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.Map;
 
 import br.com.infox.core.type.Displayable;
-import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.seam.util.ComponentUtil;
 

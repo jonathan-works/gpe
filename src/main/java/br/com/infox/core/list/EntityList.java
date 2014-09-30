@@ -28,7 +28,6 @@ import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
