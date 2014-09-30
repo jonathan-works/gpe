@@ -719,5 +719,6 @@ div.rf-trn {
 
 .texto-tachado{
 	text-decoration:line-through;
+	color: red;
 }
 }

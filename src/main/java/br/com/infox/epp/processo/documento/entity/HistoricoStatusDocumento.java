@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -24,8 +26,17 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO_QUERY;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO_QUERY;
+
 @Entity
 @Table(name="tb_historico_status_documento")
+@NamedQueries(value = {
+		@NamedQuery(name = EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO, query = EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO_QUERY),
+		@NamedQuery(name = LIST_HISTORICO_BY_DOCUMENTO, query = LIST_HISTORICO_BY_DOCUMENTO_QUERY)
+})
 public class HistoricoStatusDocumento implements Serializable{
 
 	private static final long serialVersionUID = 1L;

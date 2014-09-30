@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -24,6 +26,14 @@ public class HistoricoStatusDocumentoManager extends Manager<HistoricoStatusDocu
     	historicoStatusDocumento.setProcessoDocumento(processoDocumento);
     	historicoStatusDocumento.setTipoAlteracaoDocumento(tipoAlteracaoDocumento);
     	persist(historicoStatusDocumento);
+	}
+	
+	public boolean existeAlgumHistoricoDoDocumento(Integer idDocumento){
+		return getDao().existeAlgumHistoricoDoDocumento(idDocumento);
+	}
+	
+	public List<HistoricoStatusDocumento> getListHistoricoByDocumento(ProcessoDocumento processoDocumento){
+		return getDao().getListHistoricoByDocumento(processoDocumento);
 	}
 
 }

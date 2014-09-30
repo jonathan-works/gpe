@@ -11,6 +11,7 @@ import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.L
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL_QUERY;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +28,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -136,6 +139,10 @@ public class ProcessoDocumento implements java.io.Serializable {
     @NotNull
     @Column(name="in_excluido", nullable=false)
     private Boolean excluido = Boolean.FALSE;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="processoDocumento")
+    @OrderBy(value="dataAlteracao DESC")
+    private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
     
     public ProcessoDocumento() {
     }
@@ -273,6 +280,14 @@ public class ProcessoDocumento implements java.io.Serializable {
 
 	public void setExcluido(Boolean excluido) {
 		this.excluido = excluido;
+	}
+	
+	public List<HistoricoStatusDocumento> getHistoricoStatusDocumentoList() {
+		return historicoStatusDocumentoList;
+	}
+
+	public void setHistoricoStatusDocumentoList(List<HistoricoStatusDocumento> historicoStatusDocumentoList) {
+		this.historicoStatusDocumentoList = historicoStatusDocumentoList;
 	}
 
 	public boolean isDocumentoAssinavel(Papel papel){

@@ -19,7 +19,7 @@ public interface ProcessoDocumentoQuery {
             + "where o.idJbpmTask = :"
             + ID_JDBPM_TASK_PARAM
             + " and (tpd.visibilidade='A' or tpd.visibilidade='E') and "
-            + "not exists(select s from SigiloDocumento s where s.ativo = true and s.documento = o)";
+            + "not exists(select 1 from SigiloDocumento s where s.ativo = true and s.documento = o)";
     String LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO = "listAnexosPublicosUsuarioLogado";
     String LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY = "select o from ProcessoDocumento o inner join o.tipoProcessoDocumento tpd "
             + "where o.idJbpmTask = :"
