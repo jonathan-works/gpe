@@ -110,6 +110,11 @@
                     required="true"
                     value="#{definicaoVariavelProcessoAction.variavel.label}"
                 />
+                <wi:selectBooleanCheckbox
+                	id="variavelVisivel"
+                	label="#{eppmessages['definicaoVariavelProcesso.visivel']}"
+                	value="#{definicaoVariavelProcessoAction.variavel.visivel}"
+              	/>
             </s:div>
             <a:commandButton
                 action="#{definicaoVariavelProcessoAction.save}"
