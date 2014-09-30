@@ -406,6 +406,24 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.lesscss</groupId>
+                <artifactId>lesscss-maven-plugin</artifactId>
+                <version>1.7.0.1.1</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/less/stylesheets</sourceDirectory>
+                    <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
+                    <watch>false</watch>
+                    <compress>false</compress>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
                 <version>2.1.9</version>
