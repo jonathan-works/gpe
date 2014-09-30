@@ -6,6 +6,7 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.GENERA
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_DEFINICAO_VARIAVEL_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LABEL;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO_QUERY;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.NOME_VARIAVEL;
@@ -65,6 +66,13 @@ public class DefinicaoVariavelProcesso implements Serializable {
     @JoinColumn(name = ID_FLUXO, nullable = false)
     private Fluxo fluxo;
 
+    @Column(name = VISIVEL)
+    private Boolean visivel;
+    
+    public DefinicaoVariavelProcesso() {
+    	setVisivel(Boolean.TRUE);
+    }
+    
     public Long getId() {
         return id;
     }
@@ -97,6 +105,14 @@ public class DefinicaoVariavelProcesso implements Serializable {
         this.fluxo = fluxo;
     }
 
+	public Boolean getVisivel() {
+		return visivel;
+	}
+
+	public void setVisivel(Boolean visivel) {
+		this.visivel = visivel;
+	}
+	
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -142,4 +158,5 @@ public class DefinicaoVariavelProcesso implements Serializable {
         }
         return true;
     }
+
 }
