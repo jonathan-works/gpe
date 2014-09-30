@@ -41,7 +41,9 @@ public class VariavelProcessoService {
             if (variableName.startsWith(DefinicaoVariavelProcessoManager.JBPM_VARIABLE_TYPE
                     + ":")) {
                 DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processoEpa.getNaturezaCategoriaFluxo().getFluxo(), variableName);
-                variaveis.add(buildVariavelProcesso(definicao, processInstance));
+                if (definicao.getVisivel()) {
+                	variaveis.add(buildVariavelProcesso(definicao, processInstance));
+                }
             }
         }
 
