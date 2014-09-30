@@ -458,6 +458,7 @@
             <properties>
                 <hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxSQLServer2012Dialect</hibernate.dialect>
                 <quartz.delegate>org.quartz.impl.jdbcjobstore.MSSQLDelegate</quartz.delegate>
+                <database.type>SQLServer</database.type>
             </properties>
         </profile>
         <profile>
@@ -465,6 +466,7 @@
             <properties>
                 <hibernate.dialect>br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
                 <quartz.delegate>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</quartz.delegate>
+                <database.type>PostgreSQL</database.type>
             </properties>
         </profile>
         <profile>
