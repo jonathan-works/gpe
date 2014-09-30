@@ -135,8 +135,8 @@ public class UnidadeDecisoraColegiada implements Serializable {
 		int result = 1;
 		result = prime
 				* result
-				+ ((idUnidadeDecisoraColegiada == null) ? 0
-						: idUnidadeDecisoraColegiada.hashCode());
+				+ ((getIdUnidadeDecisoraColegiada() == null) ? 0
+						: getIdUnidadeDecisoraColegiada().hashCode());
 		return result;
 	}
 

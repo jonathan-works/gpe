@@ -136,8 +136,8 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 		int result = 1;
 		result = prime
 				* result
-				+ ((idUnidadeDecisoraMonocratica == null) ? 0
-						: idUnidadeDecisoraMonocratica.hashCode());
+				+ ((getIdUnidadeDecisoraMonocratica() == null) ? 0
+						: getIdUnidadeDecisoraMonocratica().hashCode());
 		return result;
 	}
 
@@ -150,11 +150,11 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 		if (!(obj instanceof UnidadeDecisoraMonocratica))
 			return false;
 		UnidadeDecisoraMonocratica other = (UnidadeDecisoraMonocratica) obj;
-		if (idUnidadeDecisoraMonocratica == null) {
-			if (other.idUnidadeDecisoraMonocratica != null)
+		if (getIdUnidadeDecisoraMonocratica() == null) {
+			if (other.getIdUnidadeDecisoraMonocratica() != null)
 				return false;
-		} else if (!idUnidadeDecisoraMonocratica
-				.equals(other.idUnidadeDecisoraMonocratica))
+		} else if (!getIdUnidadeDecisoraMonocratica()
+				.equals(other.getIdUnidadeDecisoraMonocratica()))
 			return false;
 		return true;
 	}
