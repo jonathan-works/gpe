@@ -16,6 +16,7 @@ import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Name(ProcessoDocumentoManager.NAME)
@@ -24,8 +25,11 @@ public class ProcessoDocumentoManager extends Manager<ProcessoDocumentoDAO, Proc
 
     public static final String NAME = "processoDocumentoManager";
     private static final long serialVersionUID = 1L;
+    
     @In
     private ProcessoDocumentoBinManager processoDocumentoBinManager;
+    @In
+    private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
 
     public String getModeloDocumentoByIdProcessoDocumento(
             Integer idProcessoDocumento) {
@@ -35,7 +39,18 @@ public class ProcessoDocumentoManager extends Manager<ProcessoDocumentoDAO, Proc
     public String valorProcessoDocumento(Integer idProcessoDocumento) {
         return find(idProcessoDocumento).getProcessoDocumentoBin().getModeloDocumento();
     }
-
+    
+    public void exclusaoRestauracaoLogicaDocumento(ProcessoDocumento processoDocumento, String motivo, 
+    		TipoAlteracaoDocumento tipoAlteracaoDocumento) throws DAOException{
+    	historicoStatusDocumentoManager.gravarHistoricoDocumento(motivo, tipoAlteracaoDocumento, processoDocumento);
+    	if (tipoAlteracaoDocumento == TipoAlteracaoDocumento.E) {
+    		processoDocumento.setExcluido(true);
+    	} else if (tipoAlteracaoDocumento == TipoAlteracaoDocumento.R) {
+    		processoDocumento.setExcluido(false);
+    	}
+		update(processoDocumento);
+    }
+    
     public ProcessoDocumento gravarDocumentoNoProcesso(Processo processo,
             ProcessoDocumento processoDocumento) throws DAOException {
         processoDocumento.setProcesso(processo);

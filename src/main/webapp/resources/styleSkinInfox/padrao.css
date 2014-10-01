@@ -716,4 +716,9 @@ div.rf-trn {
   margin-top:0;
   z-index:9000;
 }
+
+.texto-tachado{
+	text-decoration:line-through;
+	color: red;
+}
 }

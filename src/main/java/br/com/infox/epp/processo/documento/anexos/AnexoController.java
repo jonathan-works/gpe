@@ -24,7 +24,7 @@ public class AnexoController extends AbstractController {
     private Processo processo;
     private List<DocumentoCreator> creators;
     private List<ProcessoDocumento> documentosDaSessao;
-
+    
     @Create
     public void init() {
         creators = new ArrayList<>();
@@ -55,5 +55,5 @@ public class AnexoController extends AbstractController {
             creator.clear();
         }
     }
-
+	
 }
