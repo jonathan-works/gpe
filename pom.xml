@@ -426,7 +426,7 @@
                     <execution>
                         <id>css</id>
                         <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/less/stylesheets</sourceDirectory>
+                            <sourceDirectory>${project.basedir}/src/main/less/static</sourceDirectory>
                             <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
                             <watch>false</watch>
                             <compress>false</compress>
