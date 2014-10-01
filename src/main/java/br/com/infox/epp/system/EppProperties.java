@@ -19,8 +19,24 @@ public class EppProperties implements Serializable {
     public static final String NAME = "eppProperties";
     
     private Properties properties;
+    private static EppProperties instance;
     
-    @Create
+    private EppProperties(){
+    	try {
+			init();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public static EppProperties getInstance() {
+    	if (instance == null){
+    		instance = new EppProperties();
+    	}
+		return instance;
+	}
+
+	@Create
     public void init() throws IOException {
         properties = new Properties();
         properties.load(getClass().getResourceAsStream("/epp.properties"));

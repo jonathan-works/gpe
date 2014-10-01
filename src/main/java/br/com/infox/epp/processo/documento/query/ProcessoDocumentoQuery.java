@@ -18,13 +18,13 @@ public interface ProcessoDocumentoQuery {
     String LIST_ANEXOS_PUBLICOS_QUERY = "select o from ProcessoDocumento o inner join o.tipoProcessoDocumento tpd "
             + "where o.idJbpmTask = :"
             + ID_JDBPM_TASK_PARAM
-            + " and (tpd.visibilidade='A' or tpd.visibilidade='E') and "
+            + " and (tpd.visibilidade='A' or tpd.visibilidade='E') and o.excluido = false and "
             + "not exists(select 1 from SigiloDocumento s where s.ativo = true and s.documento = o)";
     String LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO = "listAnexosPublicosUsuarioLogado";
     String LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY = "select o from ProcessoDocumento o inner join o.tipoProcessoDocumento tpd "
             + "where o.idJbpmTask = :"
             + ID_JDBPM_TASK_PARAM
-            + " and (tpd.visibilidade='A' or tpd.visibilidade='E') and "
+            + " and (tpd.visibilidade='A' or tpd.visibilidade='E') and o.excluido = false and "
             + "(not exists(select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = :"
             + USUARIO_PARAM
