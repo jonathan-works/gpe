@@ -1,10 +1,9 @@
-@imgFolder:"resources/styleSkinInfox/default/imagens";
 @bgColorSelect:#ECF7EC;
 @borderColorButton:#A0BC93;
 @borderColorInputTree:#009900;
 @bgColorInputTextareaSelect:#EFFBEF;
 @borderColorInputTextareaSelect:#D1E9D3;
-@bgColorRequired:#F00;;
+@bgColorRequired:#F00;
 @headerBackgroundColor:#D4F2D6;
 @headerTextColor:#5B7961;
 @panelBorderColor:#C0C0C0;
@@ -211,13 +210,6 @@
   content: url("/epp/img/dragDropReject.gif")
 }
 
-.image(@imgName) {
-  background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
-}
-.ipt-txt-area-select{
-  border-color:@borderColorInputTextareaSelect;
-  background:@bgColorInputTextareaSelect;
-}
 .tree-b {
   border-color:@borderColorInputTree;
 }
@@ -265,37 +257,11 @@ textarea {
     &:extend(.rf-dt-hdr-c);
   }
 }
+.ipt-txt-area-select {
+  border-color:@borderColorInputTextareaSelect;
+  background:@bgColorInputTextareaSelect;
+}
 
 select {
   &:extend(.ipt-txt-area-select);
-  .image("select.png");
-}
-.rich-calendar-input,.inputText {
-  .image("input_text01.png");
-}
-.suggest {
-  .image("suggest.png");
-}
-.modPesqEsq {
-  .image("imgBgPes1.png");
-}
-.modPesqBg {
-  .image("imgBgPes2.png");
-}
-.modPesqInputText {
-  .image("img_textPesq.png");
-}
-.tree-hdr {
-  & > .rf-cp-gr {
-    .image("tree.png");
-  }
-}
-.inputTextMiniW69 {
-  .image("inputTextMini-W69.png");
-}
-.inputTextMiniW25,.foneDDD {
-  .image("inputTextMini-W25.png");
-}
-.foneNormal {
-  .image("inputTextMini-W100.png");
 }

@@ -1,4 +1,3 @@
-@imgFolder:"resources/styleSkinInfox/altoContraste/imagens";
 @bgColorSelect:#fff;
 @borderColorButton:#000;
 @borderColorInputTree:#000;
@@ -124,9 +123,6 @@
   color:#fff;
 }
 
-.image(@imgName) {
-  background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
-}
 .ipt-txt-area-select{
   border-color:@borderColorInputTextareaSelect;
   background:@bgColorInputTextareaSelect;
@@ -181,34 +177,4 @@ textarea {
 
 select {
   .ipt-txt-area-select;
-  .image("select.png");
-}
-.rich-calendar-input,.inputText {
-  .image("input_text01.png");
-}
-.suggest {
-  .image("suggest.png");
-}
-.modPesqEsq {
-  .image("imgBgPes1.png");
-}
-.modPesqBg {
-  .image("imgBgPes2.png");
-}
-.modPesqInputText {
-  .image("img_textPesq.png");
-}
-.tree-hdr {
-  & > .rf-cp-gr {
-    .image("tree.png");
-  }
-}
-.inputTextMiniW69 {
-  .image("inputTextMini-W69.png");
-}
-.inputTextMiniW25,.foneDDD {
-  .image("inputTextMini-W25.png");
-}
-.foneNormal {
-  .image("inputTextMini-W100.png");
 }
