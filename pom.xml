@@ -413,7 +413,7 @@
                     <execution>
                         <id>ecss</id>
                         <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/less/estylesheets</sourceDirectory>
+                            <sourceDirectory>${project.basedir}/src/main/less/dynamic</sourceDirectory>
                             <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
                             <watch>false</watch>
                             <compress>false</compress>
