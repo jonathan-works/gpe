@@ -1,0 +1,214 @@
+@imgFolder:"/resources/styleSkinInfox/altoContraste/imagens";
+@bgColorSelect:#fff;
+@borderColorButton:#000;
+@borderColorInputTree:#000;
+@bgColorInputTextareaSelect:#fff;
+@borderColorInputTextareaSelect:#fff;
+@bgColorRequired:#000;
+@headerBackgroundColor:#fff;
+@headerTextColor:#000;
+@panelBorderColor:#000;
+@tableBorderColor:#fff;
+@tableBorderWidth:1px;
+
+/* CSS para as Paginas */
+#html,#body {
+  background: #fff; /* Cor fixa para Browsers antigos */
+}
+
+.subBorda {
+  color: #fff;
+  background-color: #000; /* Cor fixa para Browsers antigos */
+}
+
+.banner .clock,.banner .center,.banner label {
+  color: #000;
+}
+
+.banner .divBg {
+  color: #fff;
+  background-color: #000;
+}
+
+.ui-menu-item>.ui-corner-all {
+  color: #000;
+  background: #fff;
+}
+
+.ui-menu-item>.ui-corner-all.ui-state-focus {
+  background: #000;
+  color: #fff;
+}
+
+.banner {
+  background: #fff; /* Cor fixa para Browsers antigos */
+}
+
+/* Pagina do Login*/
+.corpoSuperior {
+  background: #fff; /* Old browsers */
+}
+
+.corpoInferior {
+  background: #fff;
+}
+
+.bg_login_inferior {
+  background-color: #fff;
+  border: 1px solid #000;
+}
+
+.banner .divBg label {
+  color: #fff;
+}
+
+.bg_login,.corpoInferior,.newPasswd {
+  background-color: #000;
+  border: 1px solid #000;
+}
+
+.login .input_login,.reqSenha .input_login {
+  background-color: #fff; /* Old browsers */
+  border: 2px solid #fff;
+}
+
+.bg_login_inferior .input_button {
+  background-color: #fff;
+  border: 1px solid #000;
+  color: #000;
+}
+
+.reqSenha label {
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+.login-lbl {
+  color: #fff;
+}
+
+/*Aba ativa*/
+.ui-widget-header>.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active
+  {
+  background: #000;
+}
+/* texto */
+.ui-widget-header>.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active>a
+  {
+  color: #fff;
+}
+
+/*Aba inativa*/
+.ui-widget-header>.ui-state-default.ui-corner-top {
+  background: #fff;
+}
+/* texto */
+.ui-widget-header>.ui-state-default.ui-corner-top>a {
+  color: #000;
+}
+
+/*Aba desabilitada*/
+.ui-widget-header>.ui-state-default.ui-corner-top.ui-state-disabled {
+  
+}
+/* texto */
+.ui-widget-header>.ui-state-default.ui-corner-top.ui-state-disabled>a {
+  
+}
+.rf-ddm-itm.rf-ddm-itm-sel,.rf-ddm-lbl.rf-ddm-sel {
+  background:#000;
+  color:#fff;
+}
+.rf-ddm-itm.rf-ddm-itm-sel > .rf-ddm-itm-lbl,.rf-ddm-lbl.rf-ddm-sel > .rf-ddm-lbl-dec {
+  color:#fff;
+}
+
+.image(@imgName) {
+  background-image:url(%("%s/%s",@imgFolder,@imgName));
+}
+.ipt-txt-area-select{
+  border-color:@borderColorInputTextareaSelect;
+  background:@bgColorInputTextareaSelect;
+}
+.tree-b {
+  border-color:@borderColorInputTree;
+}
+option {
+  background-color:@bgColorSelect;
+}
+
+textarea {
+  .ipt-txt-area-select;
+}
+.buttons {
+  border-color:@borderColorButton;
+  &.branco{
+    background-color:@headerBackgroundColor;
+  }
+}
+.tree-hdr {
+  & > .rf-cp-gr {
+    background-color:transparent;
+  }
+}
+.required {
+  color:@bgColorRequired;
+}
+.d-msg-h {
+  color:@headerTextColor;
+  border-color:@panelBorderColor;
+  background-color:@headerBackgroundColor;
+}
+.rf-dt-thd {
+  border-color:@tableBorderColor;
+  border-width:@tableBorderWidth;
+}
+.rf-dt-hdr {
+  background-color:@headerBackgroundColor;
+}
+.rf-dt-shdr {
+  background-color:@headerBackgroundColor;
+}
+.rf-dt-hdr-c {
+  color:@headerTextColor;
+}
+.label-general {
+  &.resultado-pesquisa-ajuda {
+    .rf-dt-hdr-c;
+  }
+}
+
+select {
+  .ipt-txt-area-select;
+  .image("select.png");
+}
+.rich-calendar-input,.inputText {
+  .image("input_text01.png");
+}
+.suggest {
+  .image("suggest.png");
+}
+.modPesqEsq {
+  .image("imgBgPes1.png");
+}
+.modPesqBg {
+  .image("imgBgPes2.png");
+}
+.modPesqInputText {
+  .image("img_textPesq.png");
+}
+.tree-hdr {
+  & > .rf-cp-gr {
+    .image("tree.png");
+  }
+}
+.inputTextMiniW69 {
+  .image("inputTextMini-W69.png");
+}
+.inputTextMiniW25,.foneDDD {
+  .image("inputTextMini-W25.png");
+}
+.foneNormal {
+  .image("inputTextMini-W100.png");
+}
