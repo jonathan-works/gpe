@@ -89,13 +89,6 @@
                 items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                 value="#{classificacaoDocumentoCrudAction.instance.inTipoDocumento}"
                 required="true" showLabelSelecione="true" />
-
-            <wi:selectOneMenuEnum id="tipoNumeracaoCombo"
-                label="#{eppmessages['classificacaoDocumento.tipoNumeracao']}"
-                items="#{classificacaoDocumentoFacade.getTipoNumeracaoEnumValues()}"
-                value="#{classificacaoDocumentoCrudAction.instance.tipoNumeracao}"
-                required="true" showLabelSelecione="true" />
-
             <wi:selectBooleanRadio id="sistema"
                 label="#{eppmessages['tipoProcessoDocumento.sistema']}"
                 value="#{classificacaoDocumentoCrudAction.instance.sistema}" />
