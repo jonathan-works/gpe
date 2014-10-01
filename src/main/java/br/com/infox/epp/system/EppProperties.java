@@ -10,6 +10,8 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.seam.util.ComponentUtil;
+
 @Name(EppProperties.NAME)
 @Scope(ScopeType.APPLICATION)
 @AutoCreate
@@ -19,21 +21,9 @@ public class EppProperties implements Serializable {
     public static final String NAME = "eppProperties";
     
     private Properties properties;
-    private static EppProperties instance;
-    
-    private EppProperties(){
-    	try {
-			init();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
     
     public static EppProperties getInstance() {
-    	if (instance == null){
-    		instance = new EppProperties();
-    	}
-		return instance;
+    	return ComponentUtil.getComponent(EppProperties.NAME);
 	}
 
 	@Create
