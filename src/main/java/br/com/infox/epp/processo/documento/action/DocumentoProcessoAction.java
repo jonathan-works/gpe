@@ -114,7 +114,7 @@ public class DocumentoProcessoAction implements Serializable{
 	}
 	
 	public boolean podeUsuarioExcluirRestaurar(){
-		return !(Identity.instance().hasRole("usuarioExterno") && "false".equals(Parametros.IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO.getValue()));
+		return Identity.instance().hasPermission("/pages/Processo/excluirDocumento", "access");
 	}
 	
 	public boolean podeUsuarioVerHistorico(){
