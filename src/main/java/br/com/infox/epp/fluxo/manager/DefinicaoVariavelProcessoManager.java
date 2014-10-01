@@ -42,16 +42,12 @@ public class DefinicaoVariavelProcessoManager extends Manager<DefinicaoVariavelP
         if (variavelProcesso == null || variavelProcesso.getNome() == null) {
             return null;
         }
-        String[] nome = variavelProcesso.getNome().split(":");
-        if (nome.length == 1) {
-            return nome[0];
-        }
-        return nome[1];
+        return variavelProcesso.getNome();
     }
 
     public void setNome(DefinicaoVariavelProcesso variavelProcesso,
             String nomeAmigavel) {
         String nome = nomeAmigavel.replace(' ', '_').replace('/', '_');
-        variavelProcesso.setNome(JBPM_VARIABLE_TYPE + ":" + nome);
+        variavelProcesso.setNome(nome);
     }
 }
