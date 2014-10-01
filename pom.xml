@@ -409,14 +409,29 @@
                 <groupId>org.lesscss</groupId>
                 <artifactId>lesscss-maven-plugin</artifactId>
                 <version>1.7.0.1.1</version>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/less/stylesheets</sourceDirectory>
-                    <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
-                    <watch>false</watch>
-                    <compress>false</compress>
-                </configuration>
                 <executions>
                     <execution>
+                        <id>ecss</id>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/less/estylesheets</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
+                            <watch>false</watch>
+                            <compress>false</compress>
+                            <outputFileFormat>{fileName}.ecss</outputFileFormat>
+                        </configuration>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>css</id>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/less/stylesheets</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
+                            <watch>false</watch>
+                            <compress>false</compress>
+                            <outputFileFormat>{fileName}.css</outputFileFormat>
+                        </configuration>
                         <goals>
                             <goal>compile</goal>
                         </goals>
