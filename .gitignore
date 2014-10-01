@@ -20,4 +20,4 @@ derby.log
 /.metadata
 /.project
 /.settings
-
+src/main/webapp/resources/styleSkinInfox/*.css
