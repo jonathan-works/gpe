@@ -56,7 +56,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     private String codigoDocumento;
     private String tipoProcessoDocumentoObservacao;
     private TipoDocumentoEnum inTipoDocumento;
-    private TipoNumeracaoEnum tipoNumeracao;
+    private TipoNumeracaoEnum tipoNumeracao = TipoNumeracaoEnum.S;
     private List<ExtensaoArquivo> extensaoArquivosList;
     private VisibilidadeEnum visibilidade;
     private Boolean ativo;
