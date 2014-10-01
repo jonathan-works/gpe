@@ -1,82 +1,78 @@
 .pointer {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .pd-xml.textarea {
-	min-height: 465px;
-	resize: none;
+  min-height: 465px;
+  resize: none;
 }
 
 .rf-dt.dt-destinatarios {
-	width: 100%;
+  width: 100%;
 }
 
 .conteudo.minimal {
-	height: calc(100% - 125px);
+  height: calc(100% - 125px);
 }
 
 .swimlane-list,.swimlane-form,.node-instance-e,.node-instance-l {
-	display: inline-block;
-	vertical-align: top;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .node-instance-e {
-	width: 70%;
+  width: 70%;
 }
 
 .node-instance-l {
-	width: 30%;
+  width: 30%;
 }
 
 .node-instance-p {
-	width: 100%;
-	min-width: 800px;
+  width: 100%;
+  min-width: 800px;
 }
 
 .link {
-	text-decoration: none;
-	color: #000
+  text-decoration: none;
+  color: #000
 }
 
 .link:hover {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 .bold-link {
-	font-weight: 900;
+  font-weight: 900;
 }
 
 .rf-p-b.panel.processDefinition {
-	overflow-x: auto;
+  overflow-x: auto;
 }
 
-.graphHint.hidden {
-  display:none;
+#nodes:hover + .graphHint {
+  display:block;
 }
 
 .graphHint {
-	position: absolute;
-	background: rgba(255, 255, 220, 0.75);
-	width: 500px;
-	z-index: 100;
-	border-style: solid;
-	border-width: 1px;
-	border-color: #9F9F9F;
-	-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-	box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+  display:none;
+  position: absolute;
+  background: rgba(255, 255, 220, 0.75);
+  width: 500px;
+  z-index: 100;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #9F9F9F;
+  -webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+  box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 .graphHint-title {
   width:100%;
   text-align:center;
   font-weight:bold;
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
 }
 
 .Node.Selected{
@@ -139,11 +135,7 @@
 }
 
 .TransitionNode, .TransitionNode>.Text,.StringNode, .StringNode>.Text{
-<<<<<<< Updated upstream
-  color:#00F;
-=======
   color:#44F;
->>>>>>> Stashed changes
 }
 .BooleanNode, .BooleanNode>.Text {
   color:#A00;
@@ -168,19 +160,7 @@
   margin:0;
 }
 
-<<<<<<< Updated upstream
-.Expression.Node {
-  display:inline-block;
-}
-
-.Node > .Expression.Node {
-  margin:0 0 0 20px;
-}
-
-.Expression.Node > .ArithNode, .Expression.Node > .StringNode, .Expression.Node > .TransitionNode, .Expression.Node > .BooleanNode {
-=======
 .Node > .Expression.Node, .Expression.Node > .ArithNode, .Expression.Node > .StringNode, .Expression.Node > .TransitionNode, .Expression.Node > .BooleanNode {
->>>>>>> Stashed changes
   margin:0 0 0 20px;
 }
 
@@ -188,12 +168,6 @@
   vertical-align:middle;
 }
 
-<<<<<<< Updated upstream
-.BooleanNode, .StringNode, .ArithNode, .TransitionNode {
-  display:inline-block;
-=======
 .Expression.Node,.BooleanNode, .StringNode, .ArithNode, .TransitionNode {
   display:inline-block;
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 }
