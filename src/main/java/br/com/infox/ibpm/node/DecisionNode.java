@@ -22,6 +22,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
+import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.ibpm.process.definition.expressionWizard.ExpressionTokenizer;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.VariableCollector;
@@ -38,8 +39,18 @@ public class DecisionNode extends Node {
     private List<String> leavingTransitionList = new ArrayList<>();
     private List<String> stringVariables = new ArrayList<>();
 
-    public List<String> getStringVariables(){
-        return getProcessedVariables(stringVariables, VariableType.STRING, VariableType.ENUMERATION);
+    public List<String> getStringVariables(List<DefinicaoVariavelProcesso> processVariables){
+        List<String> variables = getProcessedVariables(stringVariables, VariableType.STRING, VariableType.ENUMERATION);
+        for (DefinicaoVariavelProcesso variable : processVariables) {
+
+        	String name = variable.getNome();
+			if (name == null) {
+				throw new ApplicationException(Messages.instance().get("processDefinition.variable.invalid"));
+			}
+			variables.add(format("''{0}''", name));
+
+		}
+        return variables;
     }
     
     public List<String> getNumberVariables() {
