@@ -102,12 +102,12 @@
                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/remove.png"
                        					rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}" 
                        					title="#{eppmessages['button.delete']}"
-                       					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.processoDocumento}');"/>
+                       					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.processoDocumento}', '#{row.tipoProcessoDocumento.tipoProcessoDocumento}');"/>
                        	
                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/stock_undelete.png"
                        				    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}" 
                        				    title="#{eppmessages['button.restaurar']}"
-                       				    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.processoDocumento}');"/>
+                       				    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.processoDocumento}', '#{row.tipoProcessoDocumento.tipoProcessoDocumento}');"/>
                     </ui:define>
                     <ui:define name="headerToolBar" />
                     <wi:columnOutputText
@@ -141,48 +141,67 @@
 						$('.errors').removeClass('errors');
 				  	}
 				  	
-				  	function setValuesToExcludeRestore(isExclusao, idDocumento, numeroDocumento, dsDocumento) {
+				  	function setValuesToExcludeRestore(isExclusao, idDocumento, numeroDocumento, dsDocumento, classificacao) {
 					  	#{rich:jQuery('hiddenIdDocumento')}.val(idDocumento);
 				  		#{rich:jQuery('numeroDocumento')}.text(numeroDocumento);
 						#{rich:jQuery('processoDocumento')}.text(dsDocumento);
+						#{rich:jQuery('tipoProcessoDocumentoOutPanel')}.text(classificacao);
 						if (isExclusao) {
-							$('.rf-pp-hdr-cnt').text('Exclusão de Documento');
+							$('.rf-pp-hdr.motivo-header > div').text('Exclusão de Documento');
 							#{rich:jQuery('excluirRestaurarDocButton')}.attr('value','Excluir');
-							$('label[for=\''+#{rich:jQuery('motivoExclusaoRestauracao')}.attr('id')+'\']').text('Motivo da Exclusão');
+							alterarMotivoDaExlusaoRestauracao('Motivo da Exclusão');
 						} else {
-							$('.rf-pp-hdr-cnt').text('Restauração de Documento');
+							$('.rf-pp-hdr.motivo-header > div').text('Restauração de Documento');
 							#{rich:jQuery('excluirRestaurarDocButton')}.attr('value', 'Restaurar');
-							$('label[for=\''+#{rich:jQuery('motivoExclusaoRestauracao')}.attr('id')+'\']').text('Motivo da Restauração');
+							alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
+						}
+					}
+
+				  	function alterarMotivoDaExlusaoRestauracao(label){
+						var labelTextArea = $('label[for=\''+#{rich:jQuery('motivoExclusaoRestauracao')}.attr('id')+'\']');
+						labelTextArea.text(label);
+						labelTextArea.append($("<span> * </span>").addClass("required"));
+					}
+
+					function atualizarOnValidationFailed() {
+						var teste = $('.rf-pp-hdr.motivo-header').children(0).text();
+						if (teste === 'Exclusão de Documento') {
+							#{rich:jQuery('excluirRestaurarDocButton')}.attr('value','Excluir');
+							alterarMotivoDaExlusaoRestauracao('Motivo da Exclusão');
+						} else {
+							#{rich:jQuery('excluirRestaurarDocButton')}.attr('value', 'Restaurar');
+							alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
 						}
 					}
                 </script>
                 
-                <rich:popupPanel id="requestMotivoPanel" header="" moveable="true" 
-                				 show="false" resizeable="true" minWidth="631" minHeight="273"
+                <rich:popupPanel id="requestMotivoPanel" header="teste" headerClass="motivo-header" moveable="true" 
+                				 show="false" resizeable="true" minWidth="690" minHeight="310"
                 				 onbeforehide="clearFieldsExcludeRestore();">
 			        <f:facet name="controls">
 			        	<h:graphicImage id="mp_taskNodeCloseBtn" styleClass="mp-close" value="#{a4jSkin.imgFolder}/closeMP.gif" 
 			        					onmouseup="#{rich:component('requestMotivoPanel')}.hide();"/>
 			        </f:facet>
-		          	<wi:outputText id="numeroDocumento" label="#{eppmessages['processoDocumento.numeroDocumento']}"
-		          					value="#{documentoProcessoAction.processoDocumentoSelected.numeroDocumento}"/>
+		          	<wi:outputText id="numeroDocumento" label="#{eppmessages['processoDocumento.numeroDocumento']}" />
+		          	
+		          	<wi:outputText id="tipoProcessoDocumentoOutPanel" label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
 		          					
-		          	<wi:outputText id="processoDocumento" label="#{eppmessages['processoDocumentoBin.documento']}" 
-		          					value="#{documentoProcessoAction.processoDocumentoSelected.processoDocumento}"/>
+		          	<wi:outputText id="processoDocumento" label="#{eppmessages['processoDocumentoBin.documento']}" />
 			        <h:form id="excluirRestaurarDocumentoForm">
 			          <div>
 		          		<h:inputHidden id="hiddenIdDocumento" value="#{documentoProcessoAction.idDocumentoAlter}" converter="javax.faces.Integer"/>
 			            <wi:inputTextarea id="motivoExclusaoRestauracao"
 			            	maxlength="4000" required="true" cols="60" rows="5"
-			            	label="Motivo da "
-			            	value="#{documentoProcessoAction.motivoExclusaoRestauracao}"/>
+			            	label="Motivo" value="#{documentoProcessoAction.motivoExclusaoRestauracao}">
+			           		<f:validator validatorId="emptyStringValidator"/>
+			           	</wi:inputTextarea>
 			          </div>
 			          <div>
 			          	<a:commandButton id="excluirRestaurarDocButton" 
 			          		actionListener="#{documentoProcessoAction.exclusaoRestauracaoDocumento()}"
 					        limitRender="true" execute="@form"
 					        onclick="infox.showLoading();"
-					        oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}"
+					        oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
 					        value="Enviar"
 					        render="@form, processoDocumentoList, pageBodyDialogMessage"
 					        styleClass="buttons buttons"/>
