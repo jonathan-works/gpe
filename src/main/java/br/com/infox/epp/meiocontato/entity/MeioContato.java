@@ -1,6 +1,8 @@
 package br.com.infox.epp.meiocontato.entity;
 
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO_QUERY;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_QUERY;
 
 import java.io.Serializable;
@@ -23,9 +25,6 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
-
-import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO;
-import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO_QUERY;
 @Entity
 @Table(name = MeioContato.TABLE_NAME)
 @NamedQueries(value = {

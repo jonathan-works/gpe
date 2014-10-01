@@ -26,14 +26,16 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ProcessoLocalizacaoIbpmDAO.NAME)
 @AutoCreate
 public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoLocalizacaoIbpmDAO";
-
+    
     public Localizacao listByTaskInstance(Long idTaskInstance) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_ID_TASK_INSTANCE, idTaskInstance);
@@ -44,6 +46,9 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         if (Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao() == null) {
             return false;
         }
+        if (!isUsuarioLogadoEmUnidadesDecisorasDoProcesso(processo)) {
+            return false;
+        }
         ControleFiltros.instance().iniciarFiltro();
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_PROCESSO, processo);
@@ -51,6 +56,33 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         parameters.put(PARAM_PAPEL, Authenticator.getPapelAtual());
         Long count = getNamedSingleResult(COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, parameters);
         return count != null && count > 0;
+    }
+    
+    private boolean isUsuarioLogadoEmUnidadesDecisorasDoProcesso(Processo processo) {
+        if (processo instanceof ProcessoEpa) {
+            ProcessoEpa pe = (ProcessoEpa) processo;
+            return processoInColegiada(pe) && processoInMonocratica(pe);
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean processoInColegiada(ProcessoEpa processoEpa) {
+        if ((processoEpa.getDecisoraColegiada() == null && getAuthenticator().getColegiadaLogada() == null) 
+                || (processoEpa.getDecisoraColegiada() != null && processoEpa.getDecisoraColegiada().equals(getAuthenticator().getColegiadaLogada()))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean processoInMonocratica(ProcessoEpa processoEpa) {
+        if ((processoEpa.getDecisoraMonocratica() == null && getAuthenticator().getMonocraticaLogada() == null) 
+                || (processoEpa.getDecisoraMonocratica() != null && processoEpa.getDecisoraMonocratica().equals(getAuthenticator().getMonocraticaLogada()))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo,
@@ -78,6 +110,10 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         parameters.put(PARAM_PROCESS_ID, processId);
         parameters.put(PARAM_TASK_ID, taskId);
         executeNamedQueryUpdate(DELETE_BY_PROCESS_ID_AND_TASK_ID, parameters);
+    }
+    
+    private Authenticator getAuthenticator() {
+        return ComponentUtil.getComponent(Authenticator.NAME);
     }
 
 }

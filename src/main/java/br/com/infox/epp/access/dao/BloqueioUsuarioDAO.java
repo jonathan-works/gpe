@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.dao;
 
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIO_MAIS_RECENTE;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_BLOQUEIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_DATA_DESBLOQUEIO;
@@ -7,7 +8,6 @@ import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_ID_USUARI
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_USUARIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.SAVE_DATA_DESBLOQUEIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS;
 
 import java.util.Date;
 import java.util.HashMap;

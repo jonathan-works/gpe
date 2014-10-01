@@ -8,8 +8,8 @@ import javax.faces.model.SelectItem;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;

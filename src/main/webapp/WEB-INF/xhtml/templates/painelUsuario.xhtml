@@ -30,8 +30,26 @@
             limitRender="true"
             status=":status"
             render="@form"
-            execute="@form" />
+            execute="@this" />
         </wi:selectOneMenu>
+        <wi:selectOneMenuEntity id="colegiadaParaMonocratica"
+          rendered="#{authenticator.isUsuarioLogadoInMonocratica()}"
+          value="#{authenticator.colegiadaParaMonocraticaLogada}"
+          items="#{authenticator.getColegiadasParaMonocraticaLogada()}"
+          noSelectionLabel="Unidades Colegiadas Disponíveis..."
+          showLabelSelecione="true"
+          template="/WEB-INF/xhtml/components/templates/display.xhtml"
+          labelClass="painelUsuario-label"
+          valueClass="painelUsuario-select"
+          styleClass="usuario-perfil colegiado">
+          <a:ajax
+            event="change"
+            limitRender="true"
+            status=":status"
+            render="@form"
+            execute="@form" />
+        </wi:selectOneMenuEntity>
+        <div/>
       </h:form>
     </c:if>
     <c:if test="#{not selectable}">

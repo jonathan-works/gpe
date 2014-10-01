@@ -1,9 +1,9 @@
 package br.com.infox.epp.unidadedecisora.entity;
 
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO_QUERY;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO_QUERY;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
 @Table(name = UnidadeDecisoraColegiada.TABLE_NAME)
@@ -61,6 +62,9 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_localizacao", nullable=false)
 	private Localizacao localizacao;
+	
+	@OneToMany(mappedBy="decisoraColegiada", fetch=FetchType.LAZY)
+    private List<ProcessoEpa> processoEpaList;
 	
 	public Integer getIdUnidadeDecisoraColegiada() {
 		return idUnidadeDecisoraColegiada;
@@ -112,7 +116,15 @@ public class UnidadeDecisoraColegiada implements Serializable {
 		return unidadeDecisoraMonocraticaList;
 	}
 
-	@Override
+	public List<ProcessoEpa> getProcessoEpaList() {
+        return processoEpaList;
+    }
+
+    public void setProcessoEpaList(List<ProcessoEpa> processoEpaList) {
+        this.processoEpaList = processoEpaList;
+    }
+
+    @Override
 	public String toString() {
 		return nome;
 	}
@@ -123,8 +135,8 @@ public class UnidadeDecisoraColegiada implements Serializable {
 		int result = 1;
 		result = prime
 				* result
-				+ ((idUnidadeDecisoraColegiada == null) ? 0
-						: idUnidadeDecisoraColegiada.hashCode());
+				+ ((getIdUnidadeDecisoraColegiada() == null) ? 0
+						: getIdUnidadeDecisoraColegiada().hashCode());
 		return result;
 	}
 
@@ -137,11 +149,11 @@ public class UnidadeDecisoraColegiada implements Serializable {
 		if (!(obj instanceof UnidadeDecisoraColegiada))
 			return false;
 		UnidadeDecisoraColegiada other = (UnidadeDecisoraColegiada) obj;
-		if (idUnidadeDecisoraColegiada == null) {
-			if (other.idUnidadeDecisoraColegiada != null)
+		if (getIdUnidadeDecisoraColegiada() == null) {
+			if (other.getIdUnidadeDecisoraColegiada() != null)
 				return false;
-		} else if (!idUnidadeDecisoraColegiada
-				.equals(other.idUnidadeDecisoraColegiada))
+		} else if (!getIdUnidadeDecisoraColegiada()
+				.equals(other.getIdUnidadeDecisoraColegiada()))
 			return false;
 		return true;
 	}

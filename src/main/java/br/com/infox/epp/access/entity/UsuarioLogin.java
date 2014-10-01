@@ -29,11 +29,11 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_T
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_PESSOA;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_PESSOA_QUERY;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_FETCH_PF_BY_NUMERO_CPF;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_EMAIL_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_QUERY;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_FETCH_PF_BY_NUMERO_CPF;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;

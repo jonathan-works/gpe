@@ -1,6 +1,8 @@
 package br.com.infox.epp.access.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS;
+import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS_QUERY;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIO_MAIS_RECENTE;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIO_MAIS_RECENTE_QUERY;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.DATA_BLOQUEIO;
@@ -15,8 +17,6 @@ import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.SEQUENCE_BLOQUE
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.TABLE_BLOQUEIO_USUARIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO_NATIVE_QUERY;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS_QUERY;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
@@ -36,7 +36,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 

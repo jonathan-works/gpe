@@ -1,7 +1,8 @@
 package br.com.infox.epp.access.list;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.core.list.SearchCriteria.*;
+import static br.com.infox.core.list.SearchCriteria.CONTENDO;
+import static br.com.infox.core.list.SearchCriteria.IGUAL;
 
 import java.util.Map;
 

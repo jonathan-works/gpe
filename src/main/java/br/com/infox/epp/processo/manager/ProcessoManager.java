@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.manager;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;

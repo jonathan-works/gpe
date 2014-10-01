@@ -15,12 +15,12 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUT
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA_QUERY;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI_ATTRIBUTE;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS_QUERY;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.SEQUENCE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TABLE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.TWITTER;
@@ -221,7 +221,13 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     @Override
     public String toString() {
-        return localizacao;
+        String str = localizacao;
+        if (!getUnidadeDecisoraColegiada().isEmpty()) {
+            str += " - " + getUnidadeDecisoraColegiada().get(0).getNome();
+        } else if (!getUnidadeDecisoraMonocratica().isEmpty()){
+            str += " - " + getUnidadeDecisoraMonocratica().get(0).getNome();
+        }
+        return str;
     }
 
     public void setLocalizacaoTurnoList(
@@ -367,6 +373,23 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         return true;
     }
 	
-	
+    @Transient
+    public boolean isDecisoraMonocratica() {
+        return !getUnidadeDecisoraMonocratica().isEmpty();
+    }
+    
+    @Transient
+    public List<UnidadeDecisoraColegiada> getColegiadaDaMonocraticaList() {
+        if (!getUnidadeDecisoraMonocratica().isEmpty()) {
+            return getUnidadeDecisoraMonocratica().get(0).getUnidadeDecisoraColegiadaList();
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    @Transient
+    public boolean isDecisoraColegiada() {
+        return !getUnidadeDecisoraColegiada().isEmpty();
+    }
 
 }
