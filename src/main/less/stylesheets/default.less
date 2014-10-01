@@ -8,6 +8,8 @@
 @headerBackgroundColor:#D4F2D6;
 @headerTextColor:#5B7961;
 @panelBorderColor:#C0C0C0;
+@tableBorderColor:#C0C0C0;
+@tableBorderWidth:1px;
 
 /* CSS para as Paginas */
 #html,#body {
@@ -210,7 +212,7 @@
 }
 
 .image(@imgName) {
-  background-image:url(%("%s/%s",@imgFolder,@imgName));
+  background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
 }
 .ipt-txt-area-select{
   border-color:@borderColorInputTextareaSelect;
@@ -224,7 +226,7 @@ option {
 }
 
 textarea {
-  .ipt-txt-area-select;
+  &:extend(.ipt-txt-area-select);
 }
 .buttons {
   border-color:@borderColorButton;
@@ -260,12 +262,12 @@ textarea {
 }
 .label-general {
   &.resultado-pesquisa-ajuda {
-    .rf-dt-hdr-c;
+    &:extend(.rf-dt-hdr-c);
   }
 }
 
 select {
-  .ipt-txt-area-select;
+  &:extend(.ipt-txt-area-select);
   .image("select.png");
 }
 .rich-calendar-input,.inputText {

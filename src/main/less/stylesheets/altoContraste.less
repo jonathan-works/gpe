@@ -125,7 +125,7 @@
 }
 
 .image(@imgName) {
-  background-image:url(%("%s/%s",@imgFolder,@imgName));
+  background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
 }
 .ipt-txt-area-select{
   border-color:@borderColorInputTextareaSelect;
