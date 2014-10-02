@@ -19,7 +19,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Events;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -27,9 +26,9 @@ import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
-import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
@@ -54,7 +53,6 @@ public class AuthenticatorService implements Serializable {
     private static final String CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA = "certificate.error.tipoUsuarioSistema";
     private static final String CERTIFICATE_ERROR_SEM_USUARIO_LOGIN = "certificate.error.semUsuarioLogin";
     private static final String CERTIFICATE_ERROR_SEM_PESSOA_FISICA = "certificate.error.semPessoaFisica";
-    private static final String CERTIFICATE_INVALID = "certificate.error.invalid";
     private static final String SEAM_SECURITY_CREDENTIALS = "org.jboss.seam.security.credentials";
     private static final String CHECK_VALIDADE_CERTIFICADO = "CertificateAuthenticator.checkValidadeCertificado(Certificado)";
     private static final long serialVersionUID = 1L;
@@ -215,9 +213,9 @@ public class AuthenticatorService implements Serializable {
     }
 
     public UsuarioLogin getUsuarioLoginFromCertChain(String certChain) throws CertificadoException, LoginException, CertificateException{
-        final Certificado c = new Certificado(certChain);
-        String cpf = extractCpf(c);
+        final Certificado c = CertificadoFactory.createCertificado(certChain);
         checkValidadeCertificado(c);
+        String cpf = new StringBuilder(c.getCPF()).insert(9, '-').insert(6, '.').insert(3, '.').toString();
         return checkValidadeUsuarioLogin(cpf);
     }
     
@@ -255,12 +253,6 @@ public class AuthenticatorService implements Serializable {
         return usuarioLogin;
     }
 
-    private void raiseLoginEvents() {
-        final Events events = Events.instance();
-        events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
-        events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
-    }
-
     private boolean login(final String login) {
         final IdentityManager identityManager = IdentityManager.instance();
         final boolean userExists = identityManager.getIdentityStore()
@@ -288,22 +280,4 @@ public class AuthenticatorService implements Serializable {
             }
         }
     }
-
-    private String extractCpf(final Certificado c) throws LoginException {
-        String cpf;
-        final String[] split = c.getCn().split(":");
-        if (split.length < 2) {
-            throw new LoginException(Messages.instance().get(
-                    CERTIFICATE_INVALID));
-        }
-        cpf = split[1];
-        if (Strings.isEmpty(cpf)) {
-            throw new LoginException(Messages.instance().get(
-                    CERTIFICATE_INVALID));
-        }
-        cpf = new StringBuilder(cpf).insert(9, '-').insert(6, '.')
-                .insert(3, '.').toString();
-        return cpf;
-    }
-
 }

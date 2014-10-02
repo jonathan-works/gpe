@@ -32,7 +32,7 @@ import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.CertificadoECPF;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.util.FileUtil;
@@ -87,7 +87,7 @@ public class CertificateManager {
                 is = fileCert.openStream();
                 X509Certificate x509Cert = (X509Certificate) certFactory.generateCertificate(is);
                 listCertificadosCA.add(x509Cert);
-                String cnName = Certificado.getCNValue(x509Cert.getSubjectDN().getName());
+                String cnName = CertificadoECPF.getCNValue(x509Cert.getSubjectDN().getName());
                 acceptedCaNameList.add(cnName);
                 acceptedCaNameSb.append(cnName);
                 acceptedCaNameSb.append(BR);
