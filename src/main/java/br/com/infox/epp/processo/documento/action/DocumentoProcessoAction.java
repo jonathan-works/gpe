@@ -35,7 +35,7 @@ public class DocumentoProcessoAction implements Serializable{
 	private Map<String, Boolean> cache;
 	
 	@In
-	private DocumentoManager processoDocumentoManager;
+	private DocumentoManager documentoManager;
 	@In
 	private ActionMessagesService actionMessagesService;
 	@In
@@ -45,10 +45,10 @@ public class DocumentoProcessoAction implements Serializable{
 		if (idDocumentoAlter == null){
 			FacesMessages.instance().add("Não existe documento para alterar");
 		} else {
-			Documento documento = processoDocumentoManager.find(idDocumentoAlter);
+			Documento documento = documentoManager.find(idDocumentoAlter);
 			TipoAlteracaoDocumento tipoAlteracaoDocumento = documento.getExcluido() ? TipoAlteracaoDocumento.R : TipoAlteracaoDocumento.E;
 			try {
-				processoDocumentoManager.exclusaoRestauracaoLogicaDocumento(documento, getMotivoExclusaoRestauracao(), tipoAlteracaoDocumento);
+				documentoManager.exclusaoRestauracaoLogicaDocumento(documento, getMotivoExclusaoRestauracao(), tipoAlteracaoDocumento);
 				FacesMessages.instance().add("#{eppmessages['ProcessoDocumento_updated']}");
 				if (cache.containsKey(idDocumentoAlter.toString())){
 					cache.remove(idDocumentoAlter.toString());
@@ -81,10 +81,10 @@ public class DocumentoProcessoAction implements Serializable{
 	
 	public void setIdDocumento(Integer idDocumento) {
 		if ( idDocumento <= 0 || 
-				(processoDocumentoSelected != null && idDocumento.equals(processoDocumentoSelected.getIdProcessoDocumento()))) {
+				(processoDocumentoSelected != null && idDocumento.equals(processoDocumentoSelected.getId()))) {
 			processoDocumentoSelected = null;
 		} else {
-			processoDocumentoSelected = processoDocumentoManager.find(idDocumento);
+			processoDocumentoSelected = documentoManager.find(idDocumento);
 		}
 	}
 	

@@ -270,7 +270,7 @@ public class SearchHandler implements Serializable {
         } else if (VariableType.DATE.toString().equals(type)) {
             texto = DateFormat.getDateInstance().format((Date)value);
         } else if (VariableType.FILE.toString().equals(type)) {
-            texto = processoDocumentoManager.find(value).getProcessoDocumento();
+            texto = processoDocumentoManager.find(value).getDescricao();
         } else {
             texto = value.toString();
         }

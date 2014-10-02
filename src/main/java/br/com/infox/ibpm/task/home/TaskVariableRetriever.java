@@ -74,7 +74,7 @@ final class TaskVariableRetriever extends TaskVariable {
             Documento documento = processoDocumentoManager
                     .find(idProcessoDocumento);
             if (documento != null) {
-                variable = documento.getProcessoDocumento();
+                variable = documento.getDescricao();
             } else {
                 LOG.warn("ProcessoDocumento não encontrado: "
                         + idProcessoDocumento);
