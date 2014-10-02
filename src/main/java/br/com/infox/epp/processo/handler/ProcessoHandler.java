@@ -22,7 +22,6 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
@@ -44,8 +43,6 @@ public class ProcessoHandler implements Serializable {
 
     private int inicio;
 
-    @In
-    private ClassificacaoDocumentoManager classificacaoDocumentoManager;
     @In
     private ProcessoEpaManager processoEpaManager;
     @In
@@ -104,7 +101,7 @@ public class ProcessoHandler implements Serializable {
     public List<Documento> getAnexos(TaskInstance task) {
         List<Documento> anexoList = anexoMap.get(task);
         if (anexoList == null) {
-            anexoList = classificacaoDocumentoManager.getProcessoDocumentoByTask(task);
+            anexoList = documentoManager.getDocumentoByTask(task);
             anexoMap.put(task, anexoList);
         }
         return anexoList;

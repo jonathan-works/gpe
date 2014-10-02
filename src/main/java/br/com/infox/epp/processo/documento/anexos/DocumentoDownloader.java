@@ -13,7 +13,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 @AutoCreate
@@ -24,7 +24,7 @@ public class DocumentoDownloader {
     private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
     @In
-    private DocumentoBinManager documentoBinManager;
+    private DocumentoBinarioManager documentoBinarioManager;
     @In
     private DocumentoManager documentoManager;
 
@@ -32,7 +32,7 @@ public class DocumentoDownloader {
 
     public void downloadDocumento(Documento documento) {
         ProcessoDocumentoBin pdBin = documento.getProcessoDocumentoBin();
-        byte[] data = documentoBinManager.getData(documento.getId());
+        byte[] data = documentoBinarioManager.getData(documento.getId());
         String fileName = pdBin.getNomeArquivo();
         String contentType = "application/" + pdBin.getExtensao();
         FileDownloader.download(data, contentType, fileName);

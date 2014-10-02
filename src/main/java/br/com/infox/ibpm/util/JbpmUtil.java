@@ -138,11 +138,11 @@ public class JbpmUtil {
         if (isTypeEditor(type)) {
             Integer id = (Integer) variable;
             if (id != null) {
-                Documento processoDocumento = documentoManager().find(id);
-                if (processoDocumento == null) {
-                    LOG.warn("ProcessoDocumento não encontrado: " + id);
+                Documento documento = documentoManager().find(id);
+                if (documento == null) {
+                    LOG.warn("Documento não encontrado: " + id);
                 } else {
-                    variable = processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
+                    variable = documento.getProcessoDocumentoBin().getModeloDocumento();
                 }
             }
         } else if (VariableType.BOOLEAN.name().equals(type)) {

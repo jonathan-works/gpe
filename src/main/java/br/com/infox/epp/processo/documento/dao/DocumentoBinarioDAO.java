@@ -8,14 +8,14 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.documento.entity.DocumentoBin;
+import br.com.infox.epp.documento.entity.DocumentoBinario;
 
-@Name(DocumentoBinDAO.NAME)
 @AutoCreate
-public class DocumentoBinDAO extends DAO<DocumentoBin> {
+@Name(DocumentoBinarioDAO.NAME)
+public class DocumentoBinarioDAO extends DAO<DocumentoBinario> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "documentoBinDAO";
+    public static final String NAME = "documentoBinarioDAO";
 
     @In
     private transient EntityManager entityManagerBin;
@@ -26,26 +26,26 @@ public class DocumentoBinDAO extends DAO<DocumentoBin> {
     }
 
     public byte[] getData(int idDocumentoBin) {
-        return find(idDocumentoBin).getDocumentoBin();
+        return find(idDocumentoBin).getDocumentoBinario();
     }
 
     /**
      * Grava o arquivo binário na base de arquivos Bin com o respctivo Id da
      * tabela ProcessoDocumentoBin.
      * 
-     * @param idDocumentoBin Id da Tabela
+     * @param idDocumentoBinario Id da Tabela
      * @param file Arquivo do tipo byte[]
      * @throws DAOException
      */
-    public DocumentoBin gravarBinario(int idDocumentoBin, byte[] file) throws DAOException {
-        return persist(createDocumentoBin(idDocumentoBin, file));
+    public DocumentoBinario gravarBinario(int idDocumentoBinario, byte[] file) throws DAOException {
+        return persist(createDocumentoBinario(idDocumentoBinario, file));
     }
 
-    private DocumentoBin createDocumentoBin(int idDocumentoBin, byte[] file) {
-        DocumentoBin documentoBin = new DocumentoBin();
-        documentoBin.setIdDocumentoBin(idDocumentoBin);
-        documentoBin.setDocumentoBin(file);
-        return documentoBin;
+    private DocumentoBinario createDocumentoBinario(int idDocumentoBinario, byte[] file) {
+        DocumentoBinario documentoBinario = new DocumentoBinario();
+        documentoBinario.setId(idDocumentoBinario);
+        documentoBinario.setDocumentoBinario(file);
+        return documentoBinario;
     }
 
 }

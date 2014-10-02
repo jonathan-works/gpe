@@ -104,10 +104,10 @@ public class TaskInstanceView implements Serializable {
                             properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
                             if (value != null) {
                                 try {
-                                    Documento processoDocumento = documentoManager().find(Integer.parseInt(value.toString(), 10));
-                                    if (processoDocumento != null) {
-                                        properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
-                                        properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
+                                    Documento documento = documentoManager().find(Integer.parseInt(value.toString(), 10));
+                                    if (documento != null) {
+                                        properties.put("modeloDocumentoRO", documento.getProcessoDocumentoBin().getModeloDocumento());
+                                        properties.put("tipoProcessoDocumentoRO", documento.getTipoProcessoDocumento());
                                     }
                                 } catch (NumberFormatException e) {
                                     LOG.error("Identificador de Processo Documento inválido", e);

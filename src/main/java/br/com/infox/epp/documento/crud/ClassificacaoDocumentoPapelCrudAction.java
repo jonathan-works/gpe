@@ -8,12 +8,12 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.TipoProcessoDocumentoPapelManager;
 
 @Name(ClassificacaoDocumentoPapelCrudAction.NAME)
-public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<TipoProcessoDocumentoPapel, TipoProcessoDocumentoPapelManager> {
+public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<ClassificacaoDocumentoPapel, TipoProcessoDocumentoPapelManager> {
 
     /**
      * 
@@ -26,7 +26,7 @@ public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<Ti
     private PapelManager papelManager;
 
     public void setTipoProcessoDocumento(
-            TipoProcessoDocumento tipoProcessoDocumento) {
+            ClassificacaoDocumento tipoProcessoDocumento) {
         newInstance();
         getInstance().setTipoProcessoDocumento(tipoProcessoDocumento);
     }

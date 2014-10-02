@@ -19,10 +19,10 @@ import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
-import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
@@ -41,9 +41,9 @@ public class FileUpload implements FileUploadListener {
     @In
     private ProcessoDocumentoBinManager processoDocumentoBinManager;
     @In
-    private DocumentoBinManager documentoBinManager;
+    private DocumentoBinarioManager documentoBinarioManager;
     @In
-    private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
+    private ClassificacaoDocumentoManager tipoProcessoDocumentoManager;
     
     @Override
     public void processFileUpload(FileUploadEvent event) {
@@ -54,17 +54,17 @@ public class FileUpload implements FileUploadListener {
             try {
                 Documento doc = documentoManager.find(idDocumentoExistente);
                 documentoManager.remove(doc);
-                documentoBinManager.remove(idDocumentoExistente);
+                documentoBinarioManager.remove(idDocumentoExistente);
             } catch (DAOException e) {
                 LOG.error("Erro ao remover o documento existente, com id: " + idDocumentoExistente, e);
                 throw new AbortProcessingException(e);
             }
         }
-        Documento processoDocumento = createDocumento(file, uploadFile.getId());
+        Documento documento = createDocumento(file, uploadFile.getId());
         try {
-            documentoManager.gravarDocumentoNoProcesso(ProcessoEpaHome.instance().getInstance(), processoDocumento);
-            documentoBinManager.salvarBinario(processoDocumento.getId(), processoDocumento.getProcessoDocumentoBin().getProcessoDocumento());
-            TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), processoDocumento.getId());
+            documentoManager.gravarDocumentoNoProcesso(ProcessoEpaHome.instance().getInstance(), documento);
+            documentoBinarioManager.salvarBinario(documento.getId(), documento.getProcessoDocumentoBin().getProcessoDocumento());
+            TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), documento.getId());
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + ProcessoEpaHome.instance().getInstance().getIdProcesso(), e);
         }

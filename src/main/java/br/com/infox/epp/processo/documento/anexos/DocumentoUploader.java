@@ -29,11 +29,11 @@ import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 import com.lowagie.text.pdf.PdfReader;
@@ -56,12 +56,12 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     @In
     private DocumentoManager documentoManager;
     @In
-    private DocumentoBinManager documentoBinManager;
+    private DocumentoBinarioManager documentoBinarioManager;
     @In
     private ExtensaoArquivoManager extensaoArquivoManager;
     
     private UploadedFile uploadedFile;
-    private TipoProcessoDocumento tipoProcessoDocumento;
+    private ClassificacaoDocumento tipoProcessoDocumento;
     private byte[] pdf;
     
     public void onChangeClassificacaoDocumento(AjaxBehaviorEvent ajaxBehaviorEvent){
@@ -70,7 +70,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     }
     
     public void clearUploadFile(){
-    	getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+    	getDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
     	setValido(false);
     	setUploadedFile(null);
     	pdf = null;
@@ -111,17 +111,17 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             bin().setSize(Long.valueOf(ui.getSize()).intValue());
             bin().setProcessoDocumento(ui.getData());
             bin().setModeloDocumento(null);
-            FacesMessages.instance().add(Messages.instance().get("processoDocumento.doneLabel"));
+            FacesMessages.instance().add(Messages.instance().get("documento.doneLabel"));
         } else {
             newInstance();
         }
     }
 
     private ProcessoDocumentoBin bin() {
-        if (getProcessoDocumento().getProcessoDocumentoBin() == null) {
-            getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+        if (getDocumento().getProcessoDocumentoBin() == null) {
+            getDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
         }
-        return getProcessoDocumento().getProcessoDocumentoBin();
+        return getDocumento().getProcessoDocumentoBin();
     }
 
     private String getFileType(String nomeArquivo) {
@@ -144,9 +144,9 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     @Override
     protected Documento gravarDocumento() throws DAOException {
         String texto = InfoxPdfReader.readPdfFromByteArray(pdf);
-        Documento pd = documentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+        Documento pd = documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento());
         bin().setModeloDocumento(texto);
-        documentoBinManager.salvarBinario(bin().getIdProcessoDocumentoBin(), bin().getProcessoDocumento());
+        documentoBinarioManager.salvarBinario(bin().getIdProcessoDocumentoBin(), bin().getProcessoDocumento());
         //Removida indexação manual daqui
         newInstance();
         tipoProcessoDocumento = null;
@@ -205,14 +205,14 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         this.uploadedFile = uploadedFile;
     }
 
-    public TipoProcessoDocumento getTipoProcessoDocumento() {
+    public ClassificacaoDocumento getTipoProcessoDocumento() {
         return tipoProcessoDocumento;
     }
 
     public void setTipoProcessoDocumento(
-            TipoProcessoDocumento tipoProcessoDocumento) {
+            ClassificacaoDocumento tipoProcessoDocumento) {
         this.tipoProcessoDocumento = tipoProcessoDocumento;
-        getProcessoDocumento().setTipoProcessoDocumento(tipoProcessoDocumento);
+        getDocumento().setTipoProcessoDocumento(tipoProcessoDocumento);
     }
     
     @Override

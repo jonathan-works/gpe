@@ -14,7 +14,7 @@ import br.com.infox.epp.access.dao.PapelDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 
 @Name(PapelManager.NAME)
 @AutoCreate
@@ -32,7 +32,7 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
     }
 
     public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(
-            TipoProcessoDocumento tipoProcessoDocumento) {
+            ClassificacaoDocumento tipoProcessoDocumento) {
         return getDao().getPapeisNaoAssociadosATipoProcessoDocumento(tipoProcessoDocumento);
     }
 

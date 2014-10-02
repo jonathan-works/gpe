@@ -4,8 +4,8 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEX
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL_QUERY;
 
@@ -44,8 +44,8 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.entity.Processo;
@@ -56,7 +56,7 @@ import br.com.infox.epp.processo.entity.Processo;
     @NamedQuery(name = LIST_ANEXOS_PUBLICOS, query = LIST_ANEXOS_PUBLICOS_QUERY),
     @NamedQuery(name = NEXT_SEQUENCIAL, query = NEXT_SEQUENCIAL_QUERY),
     @NamedQuery(name = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO, query = LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY),
-    @NamedQuery(name = LIST_PROCESSO_DOCUMENTO_BY_PROCESSO, query = LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY)
+    @NamedQuery(name = LIST_DOCUMENTO_BY_PROCESSO, query = LIST_DOCUMENTO_BY_PROCESSO_QUERY)
 })
 @Indexed(index="IndexProcessoDocumento")
 public class Documento implements Serializable {
@@ -73,7 +73,7 @@ public class Documento implements Serializable {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
-    private TipoProcessoDocumento tipoProcessoDocumento;
+    private ClassificacaoDocumento tipoProcessoDocumento;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -137,11 +137,11 @@ public class Documento implements Serializable {
 		this.id = id;
 	}
 
-	public TipoProcessoDocumento getTipoProcessoDocumento() {
+	public ClassificacaoDocumento getTipoProcessoDocumento() {
 		return tipoProcessoDocumento;
 	}
 
-	public void setTipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {
+	public void setTipoProcessoDocumento(ClassificacaoDocumento tipoProcessoDocumento) {
 		this.tipoProcessoDocumento = tipoProcessoDocumento;
 	}
 
@@ -251,8 +251,8 @@ public class Documento implements Serializable {
 	}
 
 	public boolean isDocumentoAssinavel(Papel papel){
-    	List<TipoProcessoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
-		for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
+    	List<ClassificacaoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
+		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
 			if (tipoProcessoDocumentoPapel.getPapel().equals(papel) 
 					&& tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
 				return true;
@@ -262,8 +262,8 @@ public class Documento implements Serializable {
     }
     
     public boolean isDocumentoAssinavel(){
-    	List<TipoProcessoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
-		for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
+    	List<ClassificacaoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
+		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
 			if (tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
 				return true;
 			}

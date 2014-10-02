@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 
 @Name(ExtensaoArquivoCrudAction.NAME)
@@ -16,9 +16,9 @@ public class ExtensaoArquivoCrudAction extends AbstractCrudAction<ExtensaoArquiv
     private static final long serialVersionUID = 1L;
     public static final String NAME = "extensaoArquivoCrudAction";
     
-    private TipoProcessoDocumento tipoProcessoDocumento;
+    private ClassificacaoDocumento tipoProcessoDocumento;
 
-    public void setTipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {
+    public void setTipoProcessoDocumento(ClassificacaoDocumento tipoProcessoDocumento) {
         this.tipoProcessoDocumento = tipoProcessoDocumento;
     }
     

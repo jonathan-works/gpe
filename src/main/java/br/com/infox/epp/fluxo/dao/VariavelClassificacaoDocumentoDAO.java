@@ -12,7 +12,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
 import br.com.infox.epp.fluxo.query.VariavelClassificacaoDocumentoQuery;
@@ -30,7 +30,7 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
         return getNamedResultList(VariavelClassificacaoDocumentoQuery.VARIAVEL_CLASSIFICACAO_LIST, params);
     }
     
-    public List<TipoProcessoDocumento> listClassificacoesPublicadasDaVariavel(String nomeVariavel, Integer idFluxo) {
+    public List<ClassificacaoDocumento> listClassificacoesPublicadasDaVariavel(String nomeVariavel, Integer idFluxo) {
         Map<String, Object> params = new HashMap<>();
         params.put(VariavelClassificacaoDocumentoQuery.PARAM_ID_FLUXO, idFluxo);
         params.put(VariavelClassificacaoDocumentoQuery.PARAM_VARIAVEL, nomeVariavel);
@@ -64,13 +64,13 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
         }
     }
     
-    public List<TipoProcessoDocumento> listClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, int start, int max) {
+    public List<ClassificacaoDocumento> listClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, int start, int max) {
         String hql = VariavelClassificacaoDocumentoQuery.CLASSIFICACOES_DISPONIVEIS_PARA_VARIAVEL_BASE_QUERY;
         if (nomeClassificacaoDocumento != null) {
             hql += VariavelClassificacaoDocumentoQuery.NOME_CLASSIFICACAO_FILTER;
         }
         hql += VariavelClassificacaoDocumentoQuery.ORDER_BY_NOME_CLASSIFICACAO;
-        TypedQuery<TipoProcessoDocumento> query = getEntityManager().createQuery(hql, TipoProcessoDocumento.class);
+        TypedQuery<ClassificacaoDocumento> query = getEntityManager().createQuery(hql, ClassificacaoDocumento.class);
         query.setFirstResult(start).setMaxResults(max)
             .setParameter(VariavelClassificacaoDocumentoQuery.PARAM_ID_FLUXO, idFluxo)
             .setParameter(VariavelClassificacaoDocumentoQuery.PARAM_VARIAVEL, variavel)
@@ -94,7 +94,7 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
         return ((Number) getSingleResult(hql, params)).intValue();
     }
     
-    public VariavelClassificacaoDocumento findVariavelClassificacao(Integer idFluxo, String variavel, TipoProcessoDocumento classificacao) {
+    public VariavelClassificacaoDocumento findVariavelClassificacao(Integer idFluxo, String variavel, ClassificacaoDocumento classificacao) {
         Map<String, Object> params = new HashMap<>();
         params.put(VariavelClassificacaoDocumentoQuery.PARAM_ID_FLUXO, idFluxo);
         params.put(VariavelClassificacaoDocumentoQuery.PARAM_VARIAVEL, variavel);

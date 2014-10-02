@@ -1,9 +1,6 @@
 package br.com.infox.epp.processo.documento.manager;
 
-import javax.persistence.EntityManager;
-
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -13,21 +10,18 @@ import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
-@Name(ProcessoDocumentoBinManager.NAME)
 @AutoCreate
+@Name(ProcessoDocumentoBinManager.NAME)
 public class ProcessoDocumentoBinManager extends Manager<ProcessoDocumentoBinDAO, ProcessoDocumentoBin> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDocumentoBinManager";
     
-    @In
-    private EntityManager entityManager;
-
     public ProcessoDocumentoBin createProcessoDocumentoBin(
-            Documento processoDocumento) throws DAOException {
-        ProcessoDocumentoBin bin = processoDocumento.getProcessoDocumentoBin();
+            Documento documento) throws DAOException {
+        ProcessoDocumentoBin bin = documento.getProcessoDocumentoBin();
         if (bin.getMd5Documento() == null) {
-            bin.setMd5Documento(MD5Encoder.encode(processoDocumento.getProcessoDocumentoBin().getModeloDocumento()));
+            bin.setMd5Documento(MD5Encoder.encode(documento.getProcessoDocumentoBin().getModeloDocumento()));
         }
         return persist(bin);
     }
@@ -37,7 +31,6 @@ public class ProcessoDocumentoBinManager extends Manager<ProcessoDocumentoBinDAO
         bin.setNomeArquivo(tituloDocumento);
         bin.setModeloDocumento(conteudo);
         bin.setMd5Documento(MD5Encoder.encode(conteudo));
-        entityManager.persist(bin);
-        return bin;
+        return persist(bin);
     }
 }

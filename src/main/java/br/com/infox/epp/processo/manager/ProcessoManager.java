@@ -19,7 +19,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
@@ -57,7 +57,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     public Documento createProcessoDocumento(Processo processo,
             String label, ProcessoDocumentoBin bin,
-            TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
+            ClassificacaoDocumento tipoProcessoDocumento) throws DAOException {
         return documentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);
     }
 

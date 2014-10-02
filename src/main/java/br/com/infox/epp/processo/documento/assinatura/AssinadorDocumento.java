@@ -31,13 +31,13 @@ public class AssinadorDocumento extends AbstractController {
     private String signature;
     private boolean houveErroAoAssinar = false;
 
-    private Documento processoDocumento;
+    private Documento documento;
     private ProcessoDocumentoBin processoDocumentoBin;
 
     @In
-    AssinaturaDocumentoService assinaturaDocumentoService;
+    private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
-    GenericManager genericManager;
+    private GenericManager genericManager;
 
     public String getCertChain() {
         return certChain;
@@ -77,14 +77,14 @@ public class AssinadorDocumento extends AbstractController {
         try {
             final UsuarioPerfil perfilAtual = Authenticator
                     .getUsuarioPerfilAtual();
-            assinaturaDocumentoService.assinarDocumento(processoDocumento,
+            assinaturaDocumentoService.assinarDocumento(documento,
                     perfilAtual, certChain, signature);
-            genericManager.update(processoDocumento);
+            genericManager.update(documento);
             messages.clear();
             messages.add(Messages.instance().get("assinatura.assinadoSucesso"));
         } catch (DAOException e) {
             LOG.error("Não foi possível assinar o documento "
-                    + processoDocumento, e);
+                    + documento, e);
         } catch (CertificadoException | AssinaturaException e) {
             LOG.error("Não foi possível verificar o certificado do usuário "
                     + Authenticator.getUsuarioLogado(), e);
@@ -97,14 +97,14 @@ public class AssinadorDocumento extends AbstractController {
 
     public boolean isSigned() {
         return assinaturaDocumentoService
-                .isDocumentoAssinado(processoDocumento);
+                .isDocumentoAssinado(documento);
     }
 
     @Override
     public void setId(Object id) {
         super.setId(id);
-        processoDocumento = genericManager.find(Documento.class, id);
-        setProcessoDocumentoBin(processoDocumento.getProcessoDocumentoBin());
+        documento = genericManager.find(Documento.class, id);
+        setProcessoDocumentoBin(documento.getProcessoDocumentoBin());
     }
 
 }

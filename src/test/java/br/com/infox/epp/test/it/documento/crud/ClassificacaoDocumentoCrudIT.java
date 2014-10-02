@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.documento.crud.ClassificacaoDocumentoCrudAction;
-import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
+import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
@@ -24,15 +24,15 @@ import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
 
 @RunWith(Arquillian.class)
-public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoDocumento> {
+public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<ClassificacaoDocumento> {
 
     @Deployment
     @OverProtocol(SERVLET_3_0)
     public static WebArchive createDeployment() {
         return new ArquillianSeamTestSetup()
                 .addClasses(ClassificacaoDocumentoCrudAction.class)
-                .addClasses(TipoProcessoDocumentoManager.class)
-                .addClass(TipoProcessoDocumentoDAO.class)
+                .addClasses(ClassificacaoDocumentoManager.class)
+                .addClass(ClassificacaoDocumentoDAO.class)
                 .createDeployment();
     }
 
@@ -41,14 +41,14 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
         return NAME;
     }
     
-    private TipoProcessoDocumento createInstance(final String codigoDocumento,
+    private ClassificacaoDocumento createInstance(final String codigoDocumento,
             final String tipoProcessoDocumento,
             final TipoDocumentoEnum tipoDocumento,
             final VisibilidadeEnum visibilidade, final Boolean numera,
             final TipoNumeracaoEnum tipoNumeracao, final Boolean sistema,
             final Boolean publico, final Boolean ativo,
             final String tipoProcessoDocumentoObservacao) {
-        final TipoProcessoDocumento instance = new TipoProcessoDocumento();
+        final ClassificacaoDocumento instance = new ClassificacaoDocumento();
         instance.setCodigoDocumento(codigoDocumento);
         instance.setTipoProcessoDocumento(tipoProcessoDocumento);
         instance.setInTipoDocumento(tipoDocumento);
@@ -61,10 +61,10 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
         return instance;
     }
 
-    private final ActionContainer<TipoProcessoDocumento> initEntityAction = new ActionContainer<TipoProcessoDocumento>() {
+    private final ActionContainer<ClassificacaoDocumento> initEntityAction = new ActionContainer<ClassificacaoDocumento>() {
         @Override
-        public void execute(CrudActions<TipoProcessoDocumento> crudActions) {
-            final TipoProcessoDocumento entity = getEntity();
+        public void execute(CrudActions<ClassificacaoDocumento> crudActions) {
+            final ClassificacaoDocumento entity = getEntity();
             crudActions.setEntityValue("codigoDocumento", entity.getCodigoDocumento());
             crudActions.setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
             crudActions.setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
@@ -77,7 +77,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
         }
     };
     
-    protected ActionContainer<TipoProcessoDocumento> getInitEntityAction() {
+    protected ActionContainer<ClassificacaoDocumento> getInitEntityAction() {
         return initEntityAction;
     };
     
@@ -86,7 +86,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
     }
     
     @Override
-    protected boolean compareEntityValues(TipoProcessoDocumento entity, CrudActions<TipoProcessoDocumento> crudActions) {
+    protected boolean compareEntityValues(ClassificacaoDocumento entity, CrudActions<ClassificacaoDocumento> crudActions) {
         return areEquals(crudActions.getEntityValue("codigoDocumento"),entity.getCodigoDocumento())
                 && areEquals(crudActions.getEntityValue("tipoProcessoDocumento"),entity.getTipoProcessoDocumento())
                 && areEquals(crudActions.getEntityValue("inTipoDocumento"),entity.getInTipoDocumento())
@@ -100,10 +100,10 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
 
     @Test
     public void updateFailTest() throws Exception {
-        TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        updateFail.runTest(new ActionContainer<TipoProcessoDocumento>(createdEntity) {
+        ClassificacaoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
+        updateFail.runTest(new ActionContainer<ClassificacaoDocumento>(createdEntity) {
             @Override
-            public void execute(final CrudActions<TipoProcessoDocumento> crudActions) {
+            public void execute(final CrudActions<ClassificacaoDocumento> crudActions) {
                 final Object id = crudActions.getId();
                 assert id != null;
                 crudActions.newInstance();
@@ -115,8 +115,8 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<TipoProcessoD
 
     @Test
     public void updateSuccessTest() throws Exception {
-        TipoProcessoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
-        TipoProcessoDocumento processoDocumento = persistSuccess.runTest(createdEntity, servletContext, session);
+        ClassificacaoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
+        ClassificacaoDocumento processoDocumento = persistSuccess.runTest(createdEntity, servletContext, session);
         System.out.println(format("ENTITY = {0}", processoDocumento.getIdTipoProcessoDocumento()));
 //        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
 //        updateSuccess.runTest(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {

@@ -28,9 +28,9 @@ public class HistoricoStatusDocumentoDAO extends DAO<HistoricoStatusDocumento> {
 		return (long) getNamedSingleResult(EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO, params) > 0;
 	}
 	
-	public List<HistoricoStatusDocumento> getListHistoricoByDocumento(Documento processoDocumento){
+	public List<HistoricoStatusDocumento> getListHistoricoByDocumento(Documento documento){
 		Map<String, Object> params = new HashMap<String, Object>(1);
-		params.put(PARAM_DOCUMENTO, processoDocumento);
+		params.put(PARAM_DOCUMENTO, documento);
 		return getNamedResultList(LIST_HISTORICO_BY_DOCUMENTO, params);
 	}
 

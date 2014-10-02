@@ -262,7 +262,7 @@ public class SearchHandler implements Serializable {
         String texto = null;
         String type = v.getType();
         if (JbpmUtil.isTypeEditor(type)) {
-            texto = documentoManager.valorProcessoDocumento((Integer) value);
+            texto = documentoManager.valorDocumento((Integer) value);
         } else if (VariableType.BOOLEAN.name().equals(type)) {
             texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
         } else if (VariableType.MONETARY.name().equalsIgnoreCase(type)) {

@@ -18,7 +18,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.fluxo.query.VariavelClassificacaoDocumentoQuery;
 
 @Entity
@@ -61,7 +61,7 @@ public class VariavelClassificacaoDocumento implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
-    private TipoProcessoDocumento classificacaoDocumento;
+    private ClassificacaoDocumento classificacaoDocumento;
     
     public Long getId() {
         return id;
@@ -87,11 +87,11 @@ public class VariavelClassificacaoDocumento implements Serializable {
         this.fluxo = fluxo;
     }
 
-    public TipoProcessoDocumento getClassificacaoDocumento() {
+    public ClassificacaoDocumento getClassificacaoDocumento() {
         return classificacaoDocumento;
     }
 
-    public void setClassificacaoDocumento(TipoProcessoDocumento classificacaoDocumento) {
+    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         this.classificacaoDocumento = classificacaoDocumento;
     }
     

@@ -24,7 +24,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -44,7 +44,7 @@ public class ValidaDocumentoAction {
     @In
     public DocumentoManager documentoManager;
     @In
-    private DocumentoBinManager documentoBinManager;
+    private DocumentoBinarioManager documentoBinarioManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
@@ -150,7 +150,7 @@ public class ValidaDocumentoAction {
     }
 
     private void refresh() {
-        listAssinaturaDocumento = assinaturaDocumentoManager.listAssinaturaDocumentoByProcessoDocumento(documento);
+        listAssinaturaDocumento = assinaturaDocumentoManager.listAssinaturaDocumentoByDocumento(documento);
     }
 
     public void setDadosCertificado(Certificado dadosCertificado) {

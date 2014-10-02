@@ -8,11 +8,11 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 
 @Name(TipoProcessoDocumentoPapelList.NAME)
 @Scope(ScopeType.PAGE)
-public class TipoProcessoDocumentoPapelList extends EntityList<TipoProcessoDocumentoPapel> {
+public class TipoProcessoDocumentoPapelList extends EntityList<ClassificacaoDocumentoPapel> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tipoProcessoDocumentoPapelList";

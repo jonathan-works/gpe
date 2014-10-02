@@ -13,18 +13,15 @@ import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 
 @AutoCreate
-@Name(AssinaturaDocumentoManager.NAME)
 @Scope(ScopeType.EVENT)
-public class AssinaturaDocumentoManager extends
-        Manager<AssinaturaDocumentoDAO, AssinaturaDocumento> {
+@Name(AssinaturaDocumentoManager.NAME)
+public class AssinaturaDocumentoManager extends Manager<AssinaturaDocumentoDAO, AssinaturaDocumento> {
 
     public static final String NAME = "assinaturaDocumentoManager";
     private static final long serialVersionUID = 1L;
 
-    public List<AssinaturaDocumento> listAssinaturaDocumentoByProcessoDocumento(
-            Documento processoDocumento) {
-        return getDao().listAssinaturaDocumentoByProcessoDocumento(
-                processoDocumento);
+    public List<AssinaturaDocumento> listAssinaturaDocumentoByDocumento(Documento documento) {
+        return getDao().listAssinaturaDocumentoByProcessoDocumento(documento);
     }
 
 }

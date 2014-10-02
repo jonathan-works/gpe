@@ -24,7 +24,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 
 @Name(PapelDAO.NAME)
 @AutoCreate
@@ -41,7 +41,7 @@ public class PapelDAO extends DAO<Papel> {
     }
 
     public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(
-            TipoProcessoDocumento tipoProcessoDocumento) {
+            ClassificacaoDocumento tipoProcessoDocumento) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_TIPO_PROCESSO_DOCUMENTO, tipoProcessoDocumento);
         return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, parameters);

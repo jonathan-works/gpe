@@ -13,7 +13,7 @@ import br.com.infox.epp.processo.entity.Processo;
 public abstract class DocumentoCreator {
 
     private Processo processo;
-    private Documento processoDocumento;
+    private Documento documento;
     private List<Documento> documentosDaSessao;
 
     public Processo getProcesso() {
@@ -24,12 +24,12 @@ public abstract class DocumentoCreator {
         this.processo = processo;
     }
 
-    public Documento getProcessoDocumento() {
-        return processoDocumento;
+    public Documento getDocumento() {
+        return documento;
     }
 
-    public void setProcessoDocumento(Documento processoDocumento) {
-        this.processoDocumento = processoDocumento;
+    public void setProcessoDocumento(Documento documento) {
+        this.documento = documento;
     }
 
     public List<Documento> getDocumentosDaSessao() {
@@ -42,8 +42,8 @@ public abstract class DocumentoCreator {
 
     protected void newInstance() {
         setProcessoDocumento(new Documento());
-        getProcessoDocumento().setAnexo(true);
-        getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+        getDocumento().setAnexo(true);
+        getDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
     }
 
     public void clear() {
@@ -56,7 +56,7 @@ public abstract class DocumentoCreator {
             getDocumentosDaSessao().add(gravarDocumento());
         } catch (DAOException e) {
             getLogger().error("Não foi possível gravar o documento "
-                    + getProcessoDocumento() + " no processo " + getProcesso(), e);
+                    + getDocumento() + " no processo " + getProcesso(), e);
         }
         newInstance();
     }

@@ -54,11 +54,11 @@ final class TaskVariableRetriever extends TaskVariable {
         if (idProcessoDocumento != null) {
             DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
             Object modeloDocumento = documentoManager
-                    .getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
+                    .getModeloDocumentoByIdDocumento(idProcessoDocumento);
             if (modeloDocumento != null) {
                 variable = modeloDocumento;
             } else {
-                LOG.warn("ProcessoDocumento não encontrado: "
+                LOG.warn("Documento não encontrado: "
                         + idProcessoDocumento);
             }
         }
@@ -73,7 +73,7 @@ final class TaskVariableRetriever extends TaskVariable {
             if (documento != null) {
                 variable = documento.getDescricao();
             } else {
-                LOG.warn("ProcessoDocumento não encontrado: "
+                LOG.warn("Documento não encontrado: "
                         + idProcessoDocumento);
             }
         }

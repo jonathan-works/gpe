@@ -11,7 +11,7 @@ import org.jboss.seam.bpm.TaskInstance;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -19,8 +19,8 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(DocumentoManager.NAME)
 @AutoCreate
+@Name(DocumentoManager.NAME)
 public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
 
     public static final String NAME = "documentoManager";
@@ -31,13 +31,12 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     @In
     private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
 
-    public String getModeloDocumentoByIdProcessoDocumento(
-            Integer idProcessoDocumento) {
-        return getDao().getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
+    public String getModeloDocumentoByIdDocumento(Integer idDocumento) {
+        return getDao().getModeloDocumentoByIdDocumento(idDocumento);
     }
 
-    public String valorProcessoDocumento(Integer idProcessoDocumento) {
-        return find(idProcessoDocumento).getProcessoDocumentoBin().getModeloDocumento();
+    public String valorDocumento(Integer idDocumento) {
+        return find(idDocumento).getProcessoDocumentoBin().getModeloDocumento();
     }
     
     public void exclusaoRestauracaoLogicaDocumento(Documento documento, String motivo, 
@@ -67,7 +66,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
 
     public Documento createProcessoDocumento(Processo processo,
             String label, ProcessoDocumentoBin bin,
-            TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
+            ClassificacaoDocumento classificacaoDocumento) throws DAOException {
         Documento doc = new Documento();
         doc.setProcessoDocumentoBin(bin);
         doc.setDataInclusao(new Date());
@@ -75,12 +74,16 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         doc.setProcesso(processo);
         doc.setDescricao(label);
         doc.setExcluido(false);
-        doc.setTipoProcessoDocumento(tipoProcessoDocumento);
-        doc.setNumeroDocumento(getNextNumeracao(tipoProcessoDocumento, processo));
+        doc.setTipoProcessoDocumento(classificacaoDocumento);
+        doc.setNumeroDocumento(getNextNumeracao(classificacaoDocumento, processo));
         return getDao().persist(doc);
     }
+    
+    public List<Documento> getDocumentoByTask(org.jbpm.taskmgmt.exe.TaskInstance task) {
+        return getDao().getDocumentoListByTask(task);
+    }
 
-    public Integer getNextNumeracao(TipoProcessoDocumento tipoProcessoDoc,
+    public Integer getNextNumeracao(ClassificacaoDocumento tipoProcessoDoc,
             Processo processo) {
         Integer result = null;
         if (tipoProcessoDoc.getTipoNumeracao().equals(TipoNumeracaoEnum.S)) {

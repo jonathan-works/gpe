@@ -1,10 +1,11 @@
 package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JDBPM_TASK_PARAM;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JBPM_TASK_PARAM;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_TIPO_NUMERACAO;
@@ -30,6 +31,7 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
@@ -40,8 +42,8 @@ import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.session.SessionAssistant;
 
-@Name(DocumentoDAO.NAME)
 @AutoCreate
+@Name(DocumentoDAO.NAME)
 public class DocumentoDAO extends DAO<Documento> {
 
     private static final long serialVersionUID = 1L;
@@ -59,7 +61,7 @@ public class DocumentoDAO extends DAO<Documento> {
         return getNamedSingleResult(NEXT_SEQUENCIAL, parameters);
     }
 
-    public String getModeloDocumentoByIdProcessoDocumento(
+    public String getModeloDocumentoByIdDocumento(
             Integer idProcessoDocumento) {
         Documento documento = find(idProcessoDocumento);
         if (documento != null) {
@@ -70,7 +72,7 @@ public class DocumentoDAO extends DAO<Documento> {
 
     public List<Documento> getAnexosPublicos(long idJbpmTask) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(ID_JDBPM_TASK_PARAM, idJbpmTask);
+        parameters.put(ID_JBPM_TASK_PARAM, idJbpmTask);
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
         String query = LIST_ANEXOS_PUBLICOS;
         if (usuarioLogado != null) {
@@ -87,7 +89,13 @@ public class DocumentoDAO extends DAO<Documento> {
     public List<Documento> getListProcessoDocumentoByProcesso(Processo processo){
     	Map<String, Object> params = new HashMap<>(1);
     	params.put(PARAM_PROCESSO, processo);
-    	return getNamedResultList(LIST_PROCESSO_DOCUMENTO_BY_PROCESSO, params);
+    	return getNamedResultList(LIST_DOCUMENTO_BY_PROCESSO, params);
+    }
+    
+    public List<Documento> getDocumentoListByTask(TaskInstance task) {
+    	Map<String, Object> params = new HashMap<>(1);
+    	params.put(ID_JBPM_TASK_PARAM, task.getId());
+    	return getNamedResultList(LIST_DOCUMENTO_BY_TASKINSTANCE, params);
     }
 
     @SuppressWarnings(UNCHECKED)

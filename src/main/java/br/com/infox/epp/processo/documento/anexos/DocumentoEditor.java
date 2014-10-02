@@ -28,7 +28,7 @@ public class DocumentoEditor extends DocumentoCreator {
 
     @Override
     protected Documento gravarDocumento() throws DAOException {
-        return documentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+        return documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento());
     }
 
 }

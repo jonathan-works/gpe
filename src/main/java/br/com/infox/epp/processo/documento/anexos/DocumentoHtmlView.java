@@ -36,8 +36,8 @@ public class DocumentoHtmlView {
         return PAGINA_VISUALIZACAO;
     }
     
-    public String setViewInstance(Documento processoDocumento) {
-        viewInstance = processoDocumento;
+    public String setViewInstance(Documento documento) {
+        viewInstance = documento;
         this.processoDocumentoBin = viewInstance.getProcessoDocumentoBin();
         return PAGINA_VISUALIZACAO;
     }
