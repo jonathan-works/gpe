@@ -9,7 +9,7 @@ import org.quartz.Trigger;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.manager.BamTimerManager;
-import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 public abstract class BamTimerProcessor {
@@ -20,7 +20,7 @@ public abstract class BamTimerProcessor {
 
     protected abstract String getParameterName();
 
-    protected abstract ProcessoEpaTarefaManager getProcessoEpaTarefamanager();
+    protected abstract ProcessoTarefaManager getProcessoEpaTarefamanager();
 
     protected abstract BamTimerManager getBamTimerManager();
 

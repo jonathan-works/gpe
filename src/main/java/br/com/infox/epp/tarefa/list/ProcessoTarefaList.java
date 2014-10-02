@@ -10,28 +10,22 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
-/**
- * EntityList que consulta as tarefas de um determinado processo
- * 
- * @author tassio
- * 
- */
-@Name(ProcessoEpaTarefaList.NAME)
-public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
+@Name(ProcessoTarefaList.NAME)
+public class ProcessoTarefaList extends EntityList<ProcessoTarefa> {
 
     private static final int PORCENTAGEM = 100;
     private static final int LIMITE_PADRAO = 15;
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "processoEpaTarefaList";
+    public static final String NAME = "processoTarefaList";
 
-    private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o";
+    private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa o ";
     private static final String DEFAULT_ORDER = "o.dataInicio";
 
     @In
-    private ProcessoEpaManager processoEpaManager;
+    private ProcessoTarefaManager processoTarefaManager;
 
     @Override
     protected void addSearchFields() {
@@ -55,7 +49,7 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
 
     public String rowClasses() {
         List<Object> classes = new ArrayList<Object>();
-        for (ProcessoEpaTarefa row : list(LIMITE_PADRAO)) {
+        for (ProcessoTarefa row : list(LIMITE_PADRAO)) {
             if (row.getPorcentagem() != null
                     && row.getPorcentagem() > PORCENTAGEM) {
                 classes.add("red-back");
@@ -67,6 +61,6 @@ public class ProcessoEpaTarefaList extends EntityList<ProcessoEpaTarefa> {
     }
 
     public int getDiasDesdeInicioProcesso() {
-        return processoEpaManager.getDiasDesdeInicioProcesso(getEntity().getProcessoEpa());
+        return processoTarefaManager.getDiasDesdeInicioProcesso(getEntity().getProcesso());
     }
 }

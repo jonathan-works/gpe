@@ -1,7 +1,5 @@
 package br.com.infox.epp.tarefa.manager;
 
-import static java.text.MessageFormat.format;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -11,6 +9,8 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -19,40 +19,39 @@ import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.tarefa.dao.ProcessoEpaTarefaDAO;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.dao.ProcessoTarefaDAO;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.infox.epp.turno.dao.LocalizacaoTurnoDAO;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 import br.com.infox.util.time.DateRange;
 
-@Name(ProcessoEpaTarefaManager.NAME)
 @AutoCreate
-public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, ProcessoEpaTarefa> {
+@Name(ProcessoTarefaManager.NAME)
+public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTarefa> {
 
     private static final int PORCENTAGEM_MAXIMA = 100;
-    private static final int HOURS_OF_DAY = 24;
 
     private static final long serialVersionUID = 7702766272346991620L;
-
-    public static final String NAME = "processoEpaTarefaManager";
+    public static final String NAME = "processoTarefaManager";
 
     @In
     private LocalizacaoTurnoDAO localizacaoTurnoDAO;
     @In
     private ProcessoEpaDAO processoEpaDAO;
 
-    public ProcessoEpaTarefa getByTaskInstance(Long taskInstance) {
+    public ProcessoTarefa getByTaskInstance(Long taskInstance) {
         return getDao().getByTaskInstance(taskInstance);
     }
 
-    public List<ProcessoEpaTarefa> getTarefaEnded() {
+    public List<ProcessoTarefa> getTarefaEnded() {
         return getDao().getTarefaEnded();
     }
 
-    public List<ProcessoEpaTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
+    public List<ProcessoTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
         return getDao().getTarefaNotEnded(tipoPrazo);
     }
 
@@ -68,9 +67,9 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
         return getDao().listTarefaPertoLimite();
     }
 
-    public Map<String, Object> findProcessoEpaTarefaByIdProcessoAndIdTarefa(
+    public Map<String, Object> findProcessoTarefaByIdProcessoAndIdTarefa(
             final Integer idProcesso, final Integer idTarefa) {
-        return getDao().findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
+        return getDao().findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
     }
 
     /**
@@ -81,7 +80,7 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
      * @param horario
      * @return turno da localização da tarefa
      */
-    public boolean contemTurnoTarefaDia(ProcessoEpaTarefa pt, Date data) {
+    public boolean contemTurnoTarefaDia(ProcessoTarefa pt, Date data) {
         Calendar horarioCalendar = Calendar.getInstance();
         int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
         return localizacaoTurnoDAO.countTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana - 1]) > 0;
@@ -96,13 +95,13 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
      * @throws DAOException
      */
     public void updateTarefasNaoFinalizadas(Date fireTime, PrazoEnum tipoPrazo) throws DAOException {
-        for (ProcessoEpaTarefa pt : getTarefaNotEnded(tipoPrazo)) {
+        for (ProcessoTarefa pt : getTarefaNotEnded(tipoPrazo)) {
             updateTempoGasto(fireTime, pt);
         }
     }
 
     public void updateTempoGasto(Date fireTime,
-            ProcessoEpaTarefa processoEpaTarefa) throws DAOException {
+            ProcessoTarefa processoEpaTarefa) throws DAOException {
         if (processoEpaTarefa.getTarefa().getTipoPrazo() == null) {
             return;
         }
@@ -115,7 +114,7 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
                 porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / (prazo * 60);
             }
 
-            ProcessoEpa processoEpa = processoEpaTarefa.getProcessoEpa();
+            ProcessoEpa processoEpa = (ProcessoEpa) processoEpaTarefa.getProcesso();
             if (porcentagem > PORCENTAGEM_MAXIMA) {
                 processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }
@@ -155,16 +154,16 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
     }
 
     /**
-     * Calcula o tempo a incrementar no {@link ProcessoEpaTarefa} de acordo com
+     * Calcula o tempo a incrementar no {@link ProcessoTarefa} de acordo com
      * a data em que ocorreu o disparo.
      * 
      * @param horaDisparo
      * @param processoEpaTarefa
      * @return Incremento a ser adicionado ao tempo gasto de um
-     *         {@link ProcessoEpaTarefa}
+     *         {@link ProcessoTarefa}
      */
     private float getIncrementoTempoGasto(Date horaDisparo,
-            ProcessoEpaTarefa processoEpaTarefa) {
+            ProcessoTarefa processoEpaTarefa) {
         PrazoEnum tipoPrazo = processoEpaTarefa.getTarefa().getTipoPrazo();
         float result = 0;
         if (tipoPrazo == null) {
@@ -258,7 +257,7 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
     }
 
     private int calcularTempoGastoDias(Date dataDisparo,
-            ProcessoEpaTarefa processoEpaTarefa) {
+            ProcessoTarefa processoEpaTarefa) {
         int result = 0;
         Date ultimaAtualizacao = processoEpaTarefa.getUltimoDisparo();
 
@@ -271,5 +270,11 @@ public class ProcessoEpaTarefaManager extends Manager<ProcessoEpaTarefaDAO, Proc
         }
 
         return result;
+    }
+    
+    public int getDiasDesdeInicioProcesso(Processo processo) {
+        LocalDate dataInicio = LocalDate.fromDateFields(getDao().getDataInicioPrimeiraTarefa(processo));
+        LocalDate now = LocalDate.now();
+        return Days.daysBetween(dataInicio, now).getDays();
     }
 }

@@ -31,31 +31,17 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 
-/**
- * Classe DAO para a entidade LocalizacaoTurno
- * 
- * @author Daniel
- * 
- */
-@Name(LocalizacaoTurnoDAO.NAME)
 @AutoCreate
+@Name(LocalizacaoTurnoDAO.NAME)
 public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
 
     private static final long serialVersionUID = 4917008814431859631L;
     public static final String NAME = "localizacaoTurnoDAO";
 
-    /**
-     * Busca a LocalizacaoTurno da localização do processo em que o horário
-     * passado se encaixa
-     * 
-     * @param pt
-     * @param horario
-     * @return
-     */
     public LocalizacaoTurno getTurnoTarefa(Integer idProcesso,
             Date dataAnterior, Date dataAtual, DiaSemanaEnum diaSemana) {
         Map<String, Object> parameters = new HashMap<String, Object>();
@@ -86,14 +72,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
         return getNamedResultList(LOCALIZACAO_TURNO_BY_TAREFA, parameters);
     }
 
-    /**
-     * Busca a LocalizacaoTurno da localização do processo em que o dia passado
-     * se encaixa
-     * 
-     * @param pt
-     * @return
-     */
-    public Long countTurnoTarefaDia(ProcessoEpaTarefa pt, Date data,
+    public Long countTurnoTarefaDia(ProcessoTarefa pt, Date data,
             DiaSemanaEnum diaSemana) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_ID_TASK_INSTANCE, pt.getTaskInstance());
@@ -107,13 +86,6 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
         return getNamedSingleResult(COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA, parameters);
     }
 
-    /**
-     * Lista todos os registros filtrando por uma natureza.
-     * 
-     * @param natureza que se desejar filtrar a seleção.
-     * @return lista de todos os registros referente a <code>natureza</code>
-     *         informada.
-     */
     public List<LocalizacaoTurno> listByLocalizacao(Localizacao localizacao) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_LOCALIZACAO, localizacao);

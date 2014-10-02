@@ -17,9 +17,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.entity.Tarefa;
-import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.ApplicationException;
@@ -34,7 +34,7 @@ public class TaskListenerService implements Serializable {
     public static final String NAME = "taskListenerAction";
 
     @In
-    private ProcessoEpaTarefaManager processoEpaTarefaManager;
+    private ProcessoTarefaManager processoEpaTarefaManager;
     @In
     TarefaManager tarefaManager;
     @In
@@ -61,21 +61,21 @@ public class TaskListenerService implements Serializable {
         String procDefName = taskInstance.getProcessInstance().getProcessDefinition().getName();
         Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
 
-        ProcessoEpaTarefa pEpaTarefa = new ProcessoEpaTarefa();
-        pEpaTarefa.setProcessoEpa(processoEpaManager.find(processo.getIdProcesso()));
-        pEpaTarefa.setTarefa(tarefa);
-        pEpaTarefa.setDataInicio(taskInstance.getCreate());
-        pEpaTarefa.setUltimoDisparo(new Date());
-        pEpaTarefa.setTempoGasto(0);
-        pEpaTarefa.setPorcentagem(0);
-        pEpaTarefa.setTempoPrevisto(tarefa.getPrazo());
-        if (pEpaTarefa.getTempoPrevisto() == null) {
-            pEpaTarefa.setTempoPrevisto(0);
+        ProcessoTarefa pTarefa = new ProcessoTarefa();
+        pTarefa.setProcesso(processoEpaManager.find(processo.getIdProcesso()));
+        pTarefa.setTarefa(tarefa);
+        pTarefa.setDataInicio(taskInstance.getCreate());
+        pTarefa.setUltimoDisparo(new Date());
+        pTarefa.setTempoGasto(0);
+        pTarefa.setPorcentagem(0);
+        pTarefa.setTempoPrevisto(tarefa.getPrazo());
+        if (pTarefa.getTempoPrevisto() == null) {
+            pTarefa.setTempoPrevisto(0);
         }
-        pEpaTarefa.setTaskInstance(taskInstance.getId());
+        pTarefa.setTaskInstance(taskInstance.getId());
 
         try {
-            processoEpaTarefaManager.persist(pEpaTarefa);
+            processoEpaTarefaManager.persist(pTarefa);
         } catch (DAOException e) {
             LOG.error(".createProcessoEpa(processo, taskInstance)", e);
         }

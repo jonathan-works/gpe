@@ -2,8 +2,6 @@ package br.com.infox.epp.processo.entity;
 
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA;
-import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED;
@@ -19,7 +17,6 @@ import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCE
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
-import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +47,6 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
@@ -64,7 +60,6 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
     @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO, query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
     @NamedQuery(name = ITEM_DO_PROCESSO, query = ITEM_DO_PROCESSO_QUERY),
     @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
-    @NamedQuery(name = DATA_INICIO_PRIMEIRA_TAREFA, query = DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
     @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
     @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
     @NamedQuery(name = GET_PROCESSO_BY_NUMERO_PROCESSO, query = GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY) 
@@ -107,13 +102,10 @@ public class ProcessoEpa extends Processo {
     @JoinColumn(name = "id_prioridade_processo", nullable = true)
     private PrioridadeProcesso prioridadeProcesso;
     
-    @OneToMany(mappedBy = "processoEpa", fetch = FetchType.LAZY)
-    private List<ProcessoEpaTarefa> processoEpaTarefaList = new ArrayList<ProcessoEpaTarefa>(0);
-    
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE })
     private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
     
-    @OneToMany(fetch = LAZY, mappedBy = PROCESSO_ATTRIBUTE, cascade={CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE, cascade={CascadeType.REMOVE})
     @OrderBy("dataInclusao DESC")
     private List<Documento> processoDocumentoList = new ArrayList<Documento>(0);
     
@@ -157,15 +149,6 @@ public class ProcessoEpa extends Processo {
 
     public Localizacao getLocalizacao() {
         return localizacao;
-    }
-
-    public void setProcessoEpaTarefaList(
-            List<ProcessoEpaTarefa> processoEpaTarefaList) {
-        this.processoEpaTarefaList = processoEpaTarefaList;
-    }
-
-    public List<ProcessoEpaTarefa> getProcessoEpaTarefaList() {
-        return processoEpaTarefaList;
     }
 
     public void setTempoGasto(Integer tempoGasto) {

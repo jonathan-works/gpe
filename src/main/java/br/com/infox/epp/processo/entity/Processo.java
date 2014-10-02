@@ -33,12 +33,11 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_C
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.InheritanceType.JOINED;
-import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -50,15 +49,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -66,11 +69,12 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 
 @Entity
 @Table(name = TABLE_PROCESSO)
-@Inheritance(strategy = JOINED)
-@DiscriminatorColumn(name = "tp_processo", length=2)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "tp_processo", length = 2)
 @NamedNativeQueries(value = {
     @NamedNativeQuery(name = APAGA_ACTOR_ID_DO_PROCESSO, query = APAGA_ACTOR_ID_DO_PROCESSO_QUERY),
     @NamedNativeQuery(name = REMOVE_PROCESSO_DA_CAIXA_ATUAL, query = REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY),
@@ -95,7 +99,7 @@ public abstract class Processo implements Serializable {
     @Column(name = ID_PROCESSO, unique = true, nullable = false)
     private Integer idProcesso;
     
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_USUARIO_CADASTRO_PROCESSO)
     private UsuarioLogin usuarioCadastroProcesso;
     
@@ -106,22 +110,22 @@ public abstract class Processo implements Serializable {
     
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "tp_processo", nullable = false)
+    @Column(name = "tp_processo", nullable = false, length = 2)
     private TipoProcesso tipoProcesso;
     
     @NotNull
-    @Temporal(TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_INICIO, nullable = false)
     private Date dataInicio;
     
-    @Temporal(TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_FIM)
     private Date dataFim;
     
     @Column(name = DURACAO)
     private Long duracao;
     
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_CAIXA)
     private Caixa caixa;
 
@@ -134,48 +138,107 @@ public abstract class Processo implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "id_status_processo", nullable = true)
     private StatusProcesso statusProcesso;
+    
+    @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY)
+    private List<ProcessoTarefa> processoTarefaList = new ArrayList<ProcessoTarefa>(0);
 
+    @Transient
+    public ProcessoEpa getProcessoEpa(){
+    	if (getTipoProcesso() == TipoProcesso.PE) {
+    		return (ProcessoEpa) this;
+    	}
+    	throw new IllegalStateException("Inválido converter tipo de processo " + getTipoProcesso() + " em ProcessoEpa");
+    }
+    
     public Integer getIdProcesso() {
-        return this.idProcesso;
-    }
+		return idProcesso;
+	}
 
-    public void setIdProcesso(Integer idProcesso) {
-        this.idProcesso = idProcesso;
-    }
+	public void setIdProcesso(Integer idProcesso) {
+		this.idProcesso = idProcesso;
+	}
 
-    public UsuarioLogin getUsuarioCadastroProcesso() {
-        return this.usuarioCadastroProcesso;
-    }
+	public UsuarioLogin getUsuarioCadastroProcesso() {
+		return usuarioCadastroProcesso;
+	}
 
-    public void setUsuarioCadastroProcesso(UsuarioLogin usuarioCadastroProcesso) {
-        this.usuarioCadastroProcesso = usuarioCadastroProcesso;
-    }
+	public void setUsuarioCadastroProcesso(UsuarioLogin usuarioCadastroProcesso) {
+		this.usuarioCadastroProcesso = usuarioCadastroProcesso;
+	}
 
-    public String getNumeroProcesso() {
-        return this.numeroProcesso;
-    }
+	public String getNumeroProcesso() {
+		return numeroProcesso;
+	}
 
-    public void setNumeroProcesso(String numeroProcesso) {
-        this.numeroProcesso = numeroProcesso;
-    }
+	public void setNumeroProcesso(String numeroProcesso) {
+		this.numeroProcesso = numeroProcesso;
+	}
 
-    public Date getDataInicio() {
-        return dataInicio;
-    }
+	public TipoProcesso getTipoProcesso() {
+		return tipoProcesso;
+	}
 
-    public void setDataInicio(Date dataInicio) {
-        this.dataInicio = dataInicio;
-    }
+	public void setTipoProcesso(TipoProcesso tipoProcesso) {
+		this.tipoProcesso = tipoProcesso;
+	}
 
-    public Date getDataFim() {
-        return dataFim;
-    }
+	public Date getDataInicio() {
+		return dataInicio;
+	}
 
-    public void setDataFim(Date dataFim) {
-        this.dataFim = dataFim;
-    }
+	public void setDataInicio(Date dataInicio) {
+		this.dataInicio = dataInicio;
+	}
 
-    public Long getDuracao() {
+	public Date getDataFim() {
+		return dataFim;
+	}
+
+	public void setDataFim(Date dataFim) {
+		this.dataFim = dataFim;
+	}
+
+	public Caixa getCaixa() {
+		return caixa;
+	}
+
+	public void setCaixa(Caixa caixa) {
+		this.caixa = caixa;
+	}
+
+	public Long getIdJbpm() {
+		return idJbpm;
+	}
+
+	public void setIdJbpm(Long idJbpm) {
+		this.idJbpm = idJbpm;
+	}
+
+	public String getActorId() {
+		return actorId;
+	}
+
+	public void setActorId(String actorId) {
+		this.actorId = actorId;
+	}
+
+	public StatusProcesso getStatusProcesso() {
+		return statusProcesso;
+	}
+
+	public void setStatusProcesso(StatusProcesso statusProcesso) {
+		this.statusProcesso = statusProcesso;
+	}
+
+	public List<ProcessoTarefa> getProcessoTarefaList() {
+		return processoTarefaList;
+	}
+
+	public void setProcessoTarefaList(List<ProcessoTarefa> processoTarefaList) {
+		this.processoTarefaList = processoTarefaList;
+	}
+
+	public Long getDuracao() {
 		if (duracao == null && dataFim != null && dataInicio != null) {
 			setDuracao(dataFim.getTime() - dataInicio.getTime());
 	    }
@@ -185,38 +248,6 @@ public abstract class Processo implements Serializable {
     public void setDuracao(Long duracao) {
         this.duracao = duracao;
     }
-
-    public Long getIdJbpm() {
-        return idJbpm;
-    }
-
-    public void setIdJbpm(Long idJbpm) {
-        this.idJbpm = idJbpm;
-    }
-
-    public void setActorId(String actorId) {
-        this.actorId = actorId;
-    }
-
-    public String getActorId() {
-        return actorId;
-    }
-
-    public Caixa getCaixa() {
-        return caixa;
-    }
-
-    public void setCaixa(Caixa caixa) {
-        this.caixa = caixa;
-    }
-    
-    public StatusProcesso getStatusProcesso() {
-		return statusProcesso;
-	}
-
-	public void setStatusProcesso(StatusProcesso statusProcesso) {
-		this.statusProcesso = statusProcesso;
-	}
 
 	@Override
     public String toString() {

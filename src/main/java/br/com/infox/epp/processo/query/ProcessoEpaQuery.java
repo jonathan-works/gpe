@@ -25,13 +25,6 @@ public interface ProcessoEpaQuery {
             + "where t.tipoPrazo = 'H' and pet.processoEpa.idProcesso=:idProcesso "
             + "group by pet.processoEpa.idProcesso";
 
-    String DATA_INICIO_PRIMEIRA_TAREFA = "getDataInicioDaPrimeiraTarefa";
-    String DATA_INICIO_PRIMEIRA_TAREFA_QUERY = "select pt.dataInicio from ProcessoEpaTarefa pt "
-            + "where pt.processoEpa = :"
-            + QUERY_PARAM_PROCESSO_EPA
-            + " and pt.dataInicio <= (select min(pt2.dataInicio) from ProcessoEpaTarefa pt2 "
-            + "where pt2.processoEpa = pt.processoEpa)";
-
     String PARAM_ID_JBPM = "idJbpm";
     String PROCESSO_EPA_BY_ID_JBPM = "getProcessoEpaByIdJbpm";
     String PROCESSO_EPA_BY_ID_JBPM_QUERY = "select pe from ProcessoEpa pe where pe.idJbpm = :"

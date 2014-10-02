@@ -58,8 +58,8 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
-import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
@@ -108,7 +108,7 @@ public class TaskInstanceHome implements Serializable {
     @In
     private ProcessoManager processoManager;
     @In
-    private ProcessoEpaTarefaManager processoEpaTarefaManager;
+    private ProcessoTarefaManager processoEpaTarefaManager;
     @In
     private TaskInstanceManager taskInstanceManager;
     @In
@@ -525,7 +525,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarBam() {
-        ProcessoEpaTarefa pt = processoEpaTarefaManager
+        ProcessoTarefa pt = processoEpaTarefaManager
                 .getByTaskInstance(taskInstance.getId());
         Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
@@ -577,7 +577,7 @@ public class TaskInstanceHome implements Serializable {
     public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         try {
             final Map<String, Object> result = processoEpaTarefaManager
-                    .findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso,
+                    .findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso,
                             idTarefa);
             taskInstanceManager.removeUsuario((Long) result
                     .get("idTaskInstance"));
