@@ -2,6 +2,7 @@ package br.com.infox.seam.security;
 
 import java.text.MessageFormat;
 
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.ScopeType;
@@ -26,7 +27,7 @@ public class SecurityUtil {
     public static final String PAGES_PREFIX = "/pages";
     private static final LogProvider LOG = Logging.getLogProvider(SecurityUtil.class);
 
-    public boolean checkPage() {
+    public boolean checkPage() throws LoginException {
         HttpServletRequest request = ServletContexts.instance().getRequest();
         String servletPath = request.getServletPath();
         boolean hasPermission = Identity.instance().hasPermission(PAGES_PREFIX

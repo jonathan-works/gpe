@@ -144,7 +144,7 @@ public class Authenticator {
         }
     }
 
-    public boolean hasToSignTermoAdesao() {
+    public boolean hasToSignTermoAdesao() throws LoginException {
     	UsuarioLogin usuarioLogado = getUsuarioLogado();
     	if (usuarioLogado != null) {
     		return hasToSignTermoAdesao(usuarioLogado);
@@ -152,26 +152,24 @@ public class Authenticator {
     	return false;
     }
     
-    private boolean hasToSignTermoAdesao(UsuarioLogin usuario) {
-        boolean termoAdesao = false;
+    private boolean hasToSignTermoAdesao(UsuarioLogin usuario) throws LoginException {
         final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
+        PessoaFisica pessoaFisica = usuario.getPessoaFisica();
+        boolean hasToSign = false;
         if (perfilAtivoList != null) {
-            PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-            if (pessoaFisica != null) {
-            	if (pessoaFisica.getTermoAdesao() != null) {
-            		termoAdesao = false;
-            	} else {
-	                for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
-	                    Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-	                    if (termoAdesao=papel.getTermoAdesao()) {
-	                        break;
-	                    }
-	                }
-            	}
+            for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
+                Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
+                if (papel.getTermoAdesao()) {
+                    if (pessoaFisica == null) {
+                        throw new LoginException("Usuário sem pessoa física associada");
+                    }
+                    hasToSign = pessoaFisica.getTermoAdesao() == null;
+                    break;
+                }
             }
         }
-        Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, termoAdesao);
-        return termoAdesao;
+        Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, hasToSign);
+        return hasToSign;
     }
 
     private void realizarLoginDoUsuario(final UsuarioLogin usuario) throws LoginException {
@@ -365,8 +363,9 @@ public class Authenticator {
      * localização, recursivamente.
      * 
      * @param usuarioPerfil
+     * @throws LoginException 
      */
-    public void setUsuarioPerfilAtual(UsuarioPerfil usuarioPerfil) {
+    public void setUsuarioPerfilAtual(UsuarioPerfil usuarioPerfil) throws LoginException {
         Set<String> roleSet = getRolesAtuais(usuarioPerfil);
         Contexts.getSessionContext().remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
         getAuthenticatorService().removeRolesAntigas();
@@ -488,7 +487,7 @@ public class Authenticator {
         return list;
     }
 
-    public void setUsuarioPerfilAtualCombo(Integer id) {
+    public void setUsuarioPerfilAtualCombo(Integer id) throws LoginException {
         setUsuarioPerfilAtual(getUsuarioPerfilDAO().find(id));
     }
 
