@@ -30,6 +30,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.certificado.CertificadoFactory;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
@@ -52,10 +54,10 @@ public class AssinaturaDocumento implements Serializable {
     private String certChain;
     private ProcessoDocumentoBin processoDocumentoBin;
 
-    public AssinaturaDocumento(ProcessoDocumentoBin processoDocumentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) {
+    public AssinaturaDocumento(ProcessoDocumentoBin processoDocumentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) throws CertificadoException {
         this.processoDocumentoBin=processoDocumentoBin;
         this.usuario = usuarioPerfil.getUsuarioLogin();
-        this.nomeUsuario = this.usuario.getNomeUsuario();
+        this.nomeUsuario = CertificadoFactory.createCertificado(certChain).getNome();
         this.usuarioPerfil = usuarioPerfil;
         this.nomeUsuarioPerfil = this.usuarioPerfil.getPerfilTemplate().getDescricao();
         this.signature = signature;
