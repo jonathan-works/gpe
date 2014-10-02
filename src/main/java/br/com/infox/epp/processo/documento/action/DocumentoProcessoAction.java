@@ -114,7 +114,7 @@ public class DocumentoProcessoAction implements Serializable{
 	}
 	
 	public boolean podeUsuarioExcluirRestaurar(){
-		return Identity.instance().hasPermission("/pages/Processo/excluirDocumento", "access");
+		return Identity.instance().hasPermission("/pages/Processo/excluirDocumentoProcesso", "access");
 	}
 	
 	public boolean podeUsuarioVerHistorico(){
