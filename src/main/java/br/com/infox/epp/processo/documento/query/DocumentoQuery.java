@@ -1,12 +1,12 @@
 package br.com.infox.epp.processo.documento.query;
 
-public interface ProcessoDocumentoQuery {
+public interface DocumentoQuery {
 
     String PARAM_PROCESSO = "processo";
     String PARAM_TIPO_NUMERACAO = "tipoNumeracao";
 
     String NEXT_SEQUENCIAL = "getNextSequencial";
-    String NEXT_SEQUENCIAL_QUERY = "select max(pd.numeroDocumento) from ProcessoDocumento pd "
+    String NEXT_SEQUENCIAL_QUERY = "select max(pd.numeroDocumento) from Documento pd "
             + "inner join pd.tipoProcessoDocumento tpd where pd.processo = :"
             + PARAM_PROCESSO
             + " and tpd.tipoNumeracao=:"
@@ -15,13 +15,13 @@ public interface ProcessoDocumentoQuery {
     String ID_JDBPM_TASK_PARAM = "idJbpmTask";
     String USUARIO_PARAM = "usuario";
     String LIST_ANEXOS_PUBLICOS = "listAnexosPublicos";
-    String LIST_ANEXOS_PUBLICOS_QUERY = "select o from ProcessoDocumento o inner join o.tipoProcessoDocumento tpd "
+    String LIST_ANEXOS_PUBLICOS_QUERY = "select o from Documento o inner join o.tipoProcessoDocumento tpd "
             + "where o.idJbpmTask = :"
             + ID_JDBPM_TASK_PARAM
             + " and (tpd.visibilidade='A' or tpd.visibilidade='E') and o.excluido = false and "
             + "not exists(select 1 from SigiloDocumento s where s.ativo = true and s.documento = o)";
     String LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO = "listAnexosPublicosUsuarioLogado";
-    String LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY = "select o from ProcessoDocumento o inner join o.tipoProcessoDocumento tpd "
+    String LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO_QUERY = "select o from Documento o inner join o.tipoProcessoDocumento tpd "
             + "where o.idJbpmTask = :"
             + ID_JDBPM_TASK_PARAM
             + " and (tpd.visibilidade='A' or tpd.visibilidade='E') and o.excluido = false and "
@@ -34,6 +34,6 @@ public interface ProcessoDocumentoQuery {
     String DATA_INCLUSAO = "dataInclusao";
     
     String LIST_PROCESSO_DOCUMENTO_BY_PROCESSO = "listProcessoDocumentoByProcesso";
-    String LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY = "select o from ProcessoDocumento o " +
+    String LIST_PROCESSO_DOCUMENTO_BY_PROCESSO_QUERY = "select o from Documento o " +
     		"where o.processo = :" + PARAM_PROCESSO;
 }

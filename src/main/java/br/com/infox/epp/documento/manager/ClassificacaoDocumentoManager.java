@@ -9,7 +9,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 
 @Name(ClassificacaoDocumentoManager.NAME)
 @AutoCreate
@@ -18,7 +18,7 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
     private static final long serialVersionUID = 1L;
     public static final String NAME = "classificacaoDocumentoManager";
 
-    public List<ProcessoDocumento> getProcessoDocumentoByTask(TaskInstance task) {
+    public List<Documento> getProcessoDocumentoByTask(TaskInstance task) {
         return getDao().getProcessoDocumentoByTask(task);
     }
 

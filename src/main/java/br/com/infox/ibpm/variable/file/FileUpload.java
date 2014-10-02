@@ -22,11 +22,11 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 
@@ -38,7 +38,7 @@ public class FileUpload implements FileUploadListener {
     private static final LogProvider LOG = Logging.getLogProvider(FileUpload.class);
     
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
     @In
     private GenericManager genericManager;
     @In
@@ -55,7 +55,7 @@ public class FileUpload implements FileUploadListener {
         Integer idDocumentoExistente = (Integer) TaskInstanceHome.instance().getValueOfVariableFromTaskInstance(TaskInstanceHome.instance().getVariableName(uploadFile.getId()));
         if (idDocumentoExistente != null) {
             try {
-                ProcessoDocumento doc = processoDocumentoManager.find(idDocumentoExistente);
+                Documento doc = processoDocumentoManager.find(idDocumentoExistente);
                 processoDocumentoManager.remove(doc);
                 documentoBinManager.remove(idDocumentoExistente);
             } catch (DAOException e) {
@@ -63,7 +63,7 @@ public class FileUpload implements FileUploadListener {
                 throw new AbortProcessingException(e);
             }
         }
-        ProcessoDocumento processoDocumento = createDocumento(file, uploadFile.getId());
+        Documento processoDocumento = createDocumento(file, uploadFile.getId());
         try {
             processoDocumentoManager.gravarDocumentoNoProcesso(ProcessoHome.instance().getInstance(), processoDocumento);
             documentoBinManager.salvarBinario(processoDocumento.getIdProcessoDocumento(), processoDocumento.getProcessoDocumentoBin().getProcessoDocumento());
@@ -74,8 +74,8 @@ public class FileUpload implements FileUploadListener {
         TaskInstanceHome.instance().update();
     }
     
-    private ProcessoDocumento createDocumento(final UploadedFile file, final String id) {
-        ProcessoDocumento pd = new ProcessoDocumento();
+    private Documento createDocumento(final UploadedFile file, final String id) {
+        Documento pd = new Documento();
         pd.setProcessoDocumento(file.getName());
         pd.setAnexo(true);
         pd.setProcessoDocumentoBin(createDocumentoBin(file));

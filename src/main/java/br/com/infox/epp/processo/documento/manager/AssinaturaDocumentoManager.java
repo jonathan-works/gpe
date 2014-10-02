@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 
 @AutoCreate
 @Name(AssinaturaDocumentoManager.NAME)
@@ -22,7 +22,7 @@ public class AssinaturaDocumentoManager extends
     private static final long serialVersionUID = 1L;
 
     public List<AssinaturaDocumento> listAssinaturaDocumentoByProcessoDocumento(
-            ProcessoDocumento processoDocumento) {
+            Documento processoDocumento) {
         return getDao().listAssinaturaDocumentoByProcessoDocumento(
                 processoDocumento);
     }

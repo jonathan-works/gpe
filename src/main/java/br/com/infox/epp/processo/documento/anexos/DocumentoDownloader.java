@@ -11,10 +11,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.file.download.FileDownloader;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 @Name(DocumentoDownloader.NAME)
 @Scope(ScopeType.EVENT)
@@ -27,11 +27,11 @@ public class DocumentoDownloader {
     DocumentoBinManager documentoBinManager;
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
 
     public static final String NAME = "documentoDownloader";
 
-    public void downloadDocumento(ProcessoDocumento documento) {
+    public void downloadDocumento(Documento documento) {
         ProcessoDocumentoBin pdBin = documento.getProcessoDocumentoBin();
         byte[] data = documentoBinManager.getData(documento.getIdProcessoDocumento());
         String fileName = pdBin.getNomeArquivo();

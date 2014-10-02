@@ -1,14 +1,14 @@
 package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.ID_JDBPM_TASK_PARAM;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_PROCESSO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_TIPO_NUMERACAO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.USUARIO_PARAM;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JDBPM_TASK_PARAM;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_TIPO_NUMERACAO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.USUARIO_PARAM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,17 +35,17 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.session.SessionAssistant;
 
-@Name(ProcessoDocumentoDAO.NAME)
+@Name(DocumentoDAO.NAME)
 @AutoCreate
-public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
+public class DocumentoDAO extends DAO<Documento> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "processoDocumentoDAO";
+    public static final String NAME = "documentoDAO";
 
     @In
     private SessionAssistant sessionAssistant;
@@ -61,14 +61,14 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
 
     public String getModeloDocumentoByIdProcessoDocumento(
             Integer idProcessoDocumento) {
-        ProcessoDocumento processoDocumento = find(idProcessoDocumento);
-        if (processoDocumento != null) {
-            return processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
+        Documento documento = find(idProcessoDocumento);
+        if (documento != null) {
+            return documento.getProcessoDocumentoBin().getModeloDocumento();
         }
         return null;
     }
 
-    public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask) {
+    public List<Documento> getAnexosPublicos(long idJbpmTask) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(ID_JDBPM_TASK_PARAM, idJbpmTask);
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
@@ -84,17 +84,17 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         return (FullTextEntityManager) super.getEntityManager();
     }
     
-    public List<ProcessoDocumento> getListProcessoDocumentoByProcesso(Processo processo){
+    public List<Documento> getListProcessoDocumentoByProcesso(Processo processo){
     	Map<String, Object> params = new HashMap<>(1);
     	params.put(PARAM_PROCESSO, processo);
     	return getNamedResultList(LIST_PROCESSO_DOCUMENTO_BY_PROCESSO, params);
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<ProcessoDocumento> pesquisar(String searchPattern) throws TooManyClauses, ParseException {
+    public List<Documento> pesquisar(String searchPattern) throws TooManyClauses, ParseException {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
-        List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
+        List<Documento> ret = new ArrayList<Documento>();
         QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, new String[] {"nome", "texto"}, new BrazilianAnalyzer(Version.LUCENE_36));
         Query luceneQuery;
         try {
@@ -102,15 +102,15 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         } catch (TooManyClauses | ParseException e) {
             throw e;
         }
-        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, ProcessoDocumento.class);
-        List<ProcessoDocumento> temp = hibernateQuery.list();
-        for (ProcessoDocumento documento : temp) {
+        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, Documento.class);
+        List<Documento> temp = hibernateQuery.list();
+        for (Documento documento : temp) {
             if (documento.getAnexo()) {
                 ret.add(documento);
             }
         }
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        for (ProcessoDocumento documento : ret) {
+        for (Documento documento : ret) {
             
             if (!sigiloDocumentoService.possuiPermissao(documento, usuarioLogado)){
                 ret.remove(documento);

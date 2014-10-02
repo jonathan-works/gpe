@@ -37,7 +37,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 
 @Entity
 @Table(name = TABLE_NAME)
@@ -58,7 +58,7 @@ public class SigiloDocumento implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = COLUMN_ID_PROCESSO_DOCUMENTO, nullable = false)
-    private ProcessoDocumento documento;
+    private Documento documento;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = COLUMN_ID_USUARIO_LOGIN, nullable = false)
@@ -82,11 +82,11 @@ public class SigiloDocumento implements Serializable {
         this.id = id;
     }
 
-    public ProcessoDocumento getDocumento() {
+    public Documento getDocumento() {
         return documento;
     }
 
-    public void setDocumento(ProcessoDocumento documento) {
+    public void setDocumento(Documento documento) {
         this.documento = documento;
     }
 

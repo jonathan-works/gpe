@@ -23,9 +23,9 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
@@ -61,7 +61,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
     @In
     private SigiloProcessoService sigiloProcessoService;
 
@@ -74,7 +74,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     private boolean iniciaExterno;
     private String signature;
     private String certChain;
-    private ProcessoDocumento pdFluxo;
+    private Documento pdFluxo;
     private Integer idProcessoDocumento;
     private boolean checkVisibilidade = true;
     private boolean possuiPermissaoVisibilidade = false;
@@ -139,7 +139,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
 
     public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDoc,
             Boolean assinado, String label) throws CertificadoException {
-        ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
+        Documento processoDocumento = buscarProcessoDocumento(idDoc);
         setIdProcessoDocumento(idDoc);
         Integer result = idDoc;
         FacesMessages messages = FacesMessages.instance();
@@ -171,7 +171,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
         return result;
     }
 
-    private ProcessoDocumento buscarProcessoDocumento(Integer idDoc) {
+    private Documento buscarProcessoDocumento(Integer idDoc) {
         return processoDocumentoManager.find(idDoc);
     }
 
@@ -180,7 +180,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
             Boolean assinado) throws CertificadoException, AssinaturaException,
             DAOException {
         if (validacaoCertificadoBemSucedida(assinado)) {
-            ProcessoDocumento processoDocumento = buscarProcessoDocumento(idDoc);
+            Documento processoDocumento = buscarProcessoDocumento(idDoc);
             ProcessoDocumentoBin processoDocumentoBin = processoDocumento
                     .getProcessoDocumentoBin();
             String modeloDocumento = getDescricaoModeloDocumentoFluxoByValue(
@@ -208,7 +208,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
         return value.toString();
     }
 
-    private void gravarAlteracoes(ProcessoDocumento processoDocumento,
+    private void gravarAlteracoes(Documento processoDocumento,
             ProcessoDocumentoBin processoDocumentoBin) {
         processoDocumento.setTipoProcessoDocumento(tipoProcessoDocumento);
         getEntityManager().merge(processoDocumento);
@@ -227,7 +227,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
                 ProcessoDocumentoBin processoDocumentoBin = processoManager
                         .createProcessoDocumentoBin(newValue);
                 label = label == null ? "-" : label;
-                ProcessoDocumento doc;
+                Documento doc;
                 doc = processoDocumentoManager.createProcessoDocumento(
                         getInstance(), label, processoDocumentoBin,
                         getTipoProcessoDocumento());
@@ -268,7 +268,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
     }
 
     public void carregarDadosFluxo(Integer idProcessoDocumento) {
-        ProcessoDocumento processoDocumento = buscarProcessoDocumento(idProcessoDocumento);
+        Documento processoDocumento = buscarProcessoDocumento(idProcessoDocumento);
         if (processoDocumento != null) {
             setPdFluxo(processoDocumento);
             processoDocumentoBin = processoDocumento.getProcessoDocumentoBin();
@@ -315,7 +315,7 @@ public class ProcessoHome extends AbstractHome<Processo> {
         return ret;
     }
 
-    public List<ProcessoDocumento> getProcessoDocumentoList() {
+    public List<Documento> getProcessoDocumentoList() {
         return getInstance() == null ? null : getInstance()
                 .getProcessoDocumentoList();
     }
@@ -418,11 +418,11 @@ public class ProcessoHome extends AbstractHome<Processo> {
         return processoDocumentoBin;
     }
 
-    public void setPdFluxo(ProcessoDocumento pdFluxo) {
+    public void setPdFluxo(Documento pdFluxo) {
         this.pdFluxo = pdFluxo;
     }
 
-    public ProcessoDocumento getPdFluxo() {
+    public Documento getPdFluxo() {
         return pdFluxo;
     }
 

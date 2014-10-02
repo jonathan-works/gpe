@@ -52,8 +52,8 @@ import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.home.ProcessoHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -164,8 +164,8 @@ public class TaskInstanceHome implements Serializable {
             DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
             Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
             if (id != null) {
-                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
-                ProcessoDocumento pd = processoDocumentoManager.find(id);
+                DocumentoManager processoDocumentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+                Documento pd = processoDocumentoManager.find(id);
                 if (pd != null) {
                     dados.setIdDocumento(id);
                     dados.setClassificacao(pd.getTipoProcessoDocumento());
@@ -179,8 +179,8 @@ public class TaskInstanceHome implements Serializable {
         } else if (variableRetriever.isVariableType(VariableType.FILE)) {
             Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
             if (id != null) {
-                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
-                ProcessoDocumento pd = processoDocumentoManager.find(id);
+                DocumentoManager processoDocumentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+                Documento pd = processoDocumentoManager.find(id);
                 classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), pd.getTipoProcessoDocumento());
             } else {
                 classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), null);

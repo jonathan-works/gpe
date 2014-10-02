@@ -38,7 +38,7 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 
 @Entity
 @Table(name = "tb_tipo_processo_documento")
@@ -62,7 +62,7 @@ public class TipoProcessoDocumento implements java.io.Serializable {
     private Boolean ativo;
     private Boolean sistema = Boolean.FALSE;
 
-    private List<ProcessoDocumento> processoDocumentoList = new ArrayList<>(0);
+    private List<Documento> processoDocumentoList = new ArrayList<>(0);
     private List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis = new ArrayList<>(0);
 
     private Boolean publico;
@@ -126,12 +126,12 @@ public class TipoProcessoDocumento implements java.io.Serializable {
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
         CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "tipoProcessoDocumento")
-    public List<ProcessoDocumento> getProcessoDocumentoList() {
+    public List<Documento> getProcessoDocumentoList() {
         return this.processoDocumentoList;
     }
 
     public void setProcessoDocumentoList(
-            List<ProcessoDocumento> processoDocumentoList) {
+            List<Documento> processoDocumentoList) {
         this.processoDocumentoList = processoDocumentoList;
     }
 

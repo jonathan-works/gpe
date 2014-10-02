@@ -22,7 +22,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.action.SigiloDocumentoController.FragmentoSigilo;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
@@ -45,13 +45,10 @@ public class SigiloDocumentoAction implements Serializable {
 
     @In
     private SigiloDocumentoManager sigiloDocumentoManager;
-
     @In
     private SigiloDocumentoController sigiloDocumentoController;
-
     @In
     private ActionMessagesService actionMessagesService;
-
     @In
     private PathResolver pathResolver;
 
@@ -82,21 +79,21 @@ public class SigiloDocumentoAction implements Serializable {
         return sigiloDocumentoMap;
     }
 
-    public String getViewUrl(ProcessoDocumento documento) {
+    public String getViewUrl(Documento documento) {
         if (documento.getProcessoDocumentoBin().isBinario()) {
-            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getIdProcessoDocumento());
+            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
         }
-        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getIdProcessoDocumento());
+        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());
     }
 
-    public boolean isSigiloso(ProcessoDocumento documento) {
-        return sigiloDocumentoManager.isSigiloso(documento.getIdProcessoDocumento());
+    public boolean isSigiloso(Documento documento) {
+        return sigiloDocumentoManager.isSigiloso(documento.getId());
     }
 
     public void gravarSigiloDocumento() {
         SigiloDocumento sigiloDocumento = new SigiloDocumento();
         sigiloDocumento.setDocumento(sigiloDocumentoController.getDocumentoSelecionado());
-        sigiloDocumento.setAtivo(sigiloDocumentoMap.get(sigiloDocumento.getDocumento().getIdProcessoDocumento()));
+        sigiloDocumento.setAtivo(sigiloDocumentoMap.get(sigiloDocumento.getDocumento().getId()));
         sigiloDocumento.setUsuario(Authenticator.getUsuarioLogado());
         sigiloDocumento.setMotivo(motivo);
         sigiloDocumento.setDataInclusao(new Date());
@@ -118,7 +115,7 @@ public class SigiloDocumentoAction implements Serializable {
         this.motivo = motivo;
     }
 
-    public void prepararGravacaoSigilo(ProcessoDocumento documento) {
+    public void prepararGravacaoSigilo(Documento documento) {
         sigiloDocumentoController.setDocumentoSelecionado(documento);
         sigiloDocumentoController.setFragmentoARenderizar(FragmentoSigilo.MOTIVO_SIGILO);
     }
@@ -136,7 +133,7 @@ public class SigiloDocumentoAction implements Serializable {
     }
 
     private void resetarMarcacaoSigilo() {
-        int idDocumento = sigiloDocumentoController.getDocumentoSelecionado().getIdProcessoDocumento();
+        int idDocumento = sigiloDocumentoController.getDocumentoSelecionado().getId();
         sigiloDocumentoMap.put(idDocumento, !sigiloDocumentoMap.get(idDocumento));
     }
 }

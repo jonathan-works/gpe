@@ -10,6 +10,8 @@ import static br.com.infox.epp.access.query.PerfilTemplateQuery.LIST_PERFIS_DENT
 import static java.text.MessageFormat.format;
 import static javax.persistence.FetchType.EAGER;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,14 +27,37 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="tb_perfil_template")
-@NamedQueries({@NamedQuery(name=GET_BY_LOCALIZACAO_PAPEL,query=GET_BY_LOCALIZACAO_PAPEL_QUERY),@NamedQuery(name=LIST_PERFIS_DENTRO_DE_ESTRUTURA, query=LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)})
-public class PerfilTemplate {
-
-    private Integer id;
+@Table(name = PerfilTemplate.TABLE_NAME)
+@NamedQueries({
+	@NamedQuery(name=GET_BY_LOCALIZACAO_PAPEL,query=GET_BY_LOCALIZACAO_PAPEL_QUERY),
+	@NamedQuery(name=LIST_PERFIS_DENTRO_DE_ESTRUTURA, query=LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)
+})
+public class PerfilTemplate implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	public static final String TABLE_NAME = "tb_perfil_template";
+	
+	@Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_perfil_template")
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = "id_perfil_template", unique = true, nullable = false)
+	private Integer id;
+	
+	@NotNull
+	@Column(name="ds_perfil_template", length=DESCRICAO_PADRAO, nullable=false)
     private String descricao;
+	
+	@ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
+	
+	@NotNull
+	@ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "id_papel", nullable = false)
     private Papel papel;
+	
+	@NotNull
+	@Column(name = ATIVO, nullable = false)
     private Boolean ativo;
     
     public PerfilTemplate() {
@@ -45,10 +70,6 @@ public class PerfilTemplate {
         this.ativo = Boolean.TRUE;
     }
     
-    @Id
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_perfil_template")
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_perfil_template", unique = true, nullable = false)
     public Integer getId() {
         return id;
     }
@@ -57,8 +78,6 @@ public class PerfilTemplate {
         this.id = id;
     }
     
-    @Column(name="ds_perfil_template", length=DESCRICAO_PADRAO, nullable=false)
-    @NotNull
     public String getDescricao() {
         return descricao;
     }
@@ -67,8 +86,6 @@ public class PerfilTemplate {
         this.descricao = descricao;
     }
 
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "id_localizacao")
     public Localizacao getLocalizacao() {
         return localizacao;
     }
@@ -77,9 +94,6 @@ public class PerfilTemplate {
         this.localizacao = localizacao;
     }
     
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "id_papel", nullable = false)
-    @NotNull
     public Papel getPapel() {
         return papel;
     }
@@ -88,8 +102,6 @@ public class PerfilTemplate {
         this.papel = papel;
     }
     
-    @Column(name = ATIVO, nullable = false)
-    @NotNull
     public Boolean getAtivo() {
         return ativo;
     }

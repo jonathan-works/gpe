@@ -43,7 +43,7 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
     private String md5Documento;
     private String nomeArquivo;
     private Integer size;
-    private List<ProcessoDocumento> processoDocumentoList;
+    private List<Documento> processoDocumentoList; //tem muitos
     private List<AssinaturaDocumento> assinaturas;
 
     private Date dataInclusao;
@@ -109,12 +109,12 @@ public class ProcessoDocumentoBin implements java.io.Serializable {
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
-    public List<ProcessoDocumento> getProcessoDocumentoList() {
+    public List<Documento> getProcessoDocumentoList() {
         return this.processoDocumentoList;
     }
 
     public void setProcessoDocumentoList(
-            List<ProcessoDocumento> processoDocumentoList) {
+            List<Documento> processoDocumentoList) {
         this.processoDocumentoList = processoDocumentoList;
     }
 

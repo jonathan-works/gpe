@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 
@@ -19,7 +19,7 @@ public class SigiloDocumentoManager extends Manager<SigiloDocumentoDAO, SigiloDo
     private static final long serialVersionUID = 1L;
     public static final String NAME = "sigiloDocumentoManager";
 
-    public SigiloDocumento getSigiloDocumentoAtivo(ProcessoDocumento documento) {
+    public SigiloDocumento getSigiloDocumentoAtivo(Documento documento) {
         return getDao().getSigiloDocumentoAtivo(documento);
     }
 

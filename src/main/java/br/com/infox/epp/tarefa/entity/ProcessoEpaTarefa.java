@@ -47,28 +47,58 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
     @NamedQuery(name = FORA_PRAZO_FLUXO, query = FORA_PRAZO_FLUXO_QUERY),
     @NamedQuery(name = FORA_PRAZO_TAREFA, query = FORA_PRAZO_TAREFA_QUERY),
     @NamedQuery(name = TAREFA_PROXIMA_LIMITE, query = TAREFA_PROXIMA_LIMITE_QUERY),
-    @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY) })
+    @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY) 
+})
 public class ProcessoEpaTarefa implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public static final String TABLE_NAME = "tb_processo_epa_tarefa";
 
-    private int idProcessoTarefa;
-    private ProcessoEpa processoEpa;
-    private Tarefa tarefa;
-    private Date dataInicio;
-    private Date dataFim;
-    private Date ultimoDisparo;
-    private Integer porcentagem;
-    private Integer tempoGasto;
-    private Integer tempoPrevisto;
-    private Long taskInstance;
-
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_processo_epa_tarefa")
     @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_processo_epa_tarefa")
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_epa_tarefa", unique = true, nullable = false)
+    private int idProcessoTarefa;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_processo", nullable = false)
+    private ProcessoEpa processoEpa;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_tarefa", nullable = false)
+    private Tarefa tarefa;
+    
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_inicio", nullable = false)
+    private Date dataInicio;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_fim")
+    private Date dataFim;
+    
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_ultimo_disparo", nullable = false)
+    private Date ultimoDisparo;
+    
+    @Column(name = "nr_porcentagem")
+    private Integer porcentagem;
+    
+    @NotNull
+    @Column(name = "nr_tempo_gasto", nullable = false)
+    private Integer tempoGasto;
+    
+    @NotNull
+    @Column(name = "nr_tempo_previsto", nullable = false)
+    private Integer tempoPrevisto;
+    
+    @Column(name = "id_task_instance", nullable = false)
+    private Long taskInstance;
+
     public int getIdProcessoTarefa() {
         return idProcessoTarefa;
     }
@@ -77,9 +107,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.idProcessoTarefa = idProcessoTarefa;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo", nullable = false)
-    @NotNull
     public ProcessoEpa getProcessoEpa() {
         return processoEpa;
     }
@@ -92,9 +119,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.tarefa = tarefa;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tarefa", nullable = false)
-    @NotNull
     public Tarefa getTarefa() {
         return tarefa;
     }
@@ -103,9 +127,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.dataInicio = dataInicio;
     }
 
-    @Column(name = "dt_inicio", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
     public Date getDataInicio() {
         return dataInicio;
     }
@@ -114,8 +135,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.dataFim = dataFim;
     }
 
-    @Column(name = "dt_fim")
-    @Temporal(TemporalType.TIMESTAMP)
     public Date getDataFim() {
         return dataFim;
     }
@@ -124,7 +143,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.taskInstance = taskInstance;
     }
 
-    @Column(name = "id_task_instance", nullable = false)
     public Long getTaskInstance() {
         return this.taskInstance;
     }
@@ -133,9 +151,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.ultimoDisparo = ultimoDisparo;
     }
 
-    @Column(name = "dt_ultimo_disparo", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
     public Date getUltimoDisparo() {
         return ultimoDisparo;
     }
@@ -144,8 +159,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.tempoGasto = tempoGasto;
     }
 
-    @Column(name = "nr_tempo_gasto", nullable = false)
-    @NotNull
     public Integer getTempoGasto() {
         return tempoGasto;
     }
@@ -159,8 +172,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.tempoPrevisto = tempoPrevisto;
     }
 
-    @Column(name = "nr_tempo_previsto", nullable = false)
-    @NotNull
     public Integer getTempoPrevisto() {
         return tempoPrevisto;
     }
@@ -169,7 +180,6 @@ public class ProcessoEpaTarefa implements Serializable {
         this.porcentagem = porcentagem;
     }
 
-    @Column(name = "nr_porcentagem")
     public Integer getPorcentagem() {
         return porcentagem;
     }

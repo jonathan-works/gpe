@@ -9,7 +9,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.dao.HistoricoStatusDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 
 @AutoCreate
@@ -20,10 +20,10 @@ public class HistoricoStatusDocumentoManager extends Manager<HistoricoStatusDocu
 	public static final String NAME = "historicoStatusDocumentoManager";
 	
 	public void gravarHistoricoDocumento(String motivo, TipoAlteracaoDocumento tipoAlteracaoDocumento, 
-			ProcessoDocumento processoDocumento) throws DAOException {
+			Documento documento) throws DAOException {
 		HistoricoStatusDocumento historicoStatusDocumento = new HistoricoStatusDocumento();
     	historicoStatusDocumento.setMotivo(motivo);
-    	historicoStatusDocumento.setProcessoDocumento(processoDocumento);
+    	historicoStatusDocumento.setDocumento(documento);
     	historicoStatusDocumento.setTipoAlteracaoDocumento(tipoAlteracaoDocumento);
     	persist(historicoStatusDocumento);
 	}
@@ -32,8 +32,8 @@ public class HistoricoStatusDocumentoManager extends Manager<HistoricoStatusDocu
 		return getDao().existeAlgumHistoricoDoDocumento(idDocumento);
 	}
 	
-	public List<HistoricoStatusDocumento> getListHistoricoByDocumento(ProcessoDocumento processoDocumento){
-		return getDao().getListHistoricoByDocumento(processoDocumento);
+	public List<HistoricoStatusDocumento> getListHistoricoByDocumento(Documento documento){
+		return getDao().getListHistoricoByDocumento(documento);
 	}
 
 }

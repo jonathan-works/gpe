@@ -32,7 +32,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.FloatFormatConstants;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.search.ProcessoSearcher;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -54,7 +54,7 @@ public class SearchHandler implements Serializable {
     private static final LogProvider LOG = Logging.getLogProvider(SearchHandler.class);
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
     @In
     private ProcessoSearcher processoSearcher;
     

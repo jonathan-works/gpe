@@ -21,11 +21,11 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ValidaDocumentoAction.NAME)
@@ -33,7 +33,7 @@ import br.com.infox.seam.util.ComponentUtil;
 public class ValidaDocumentoAction {
 
     public static final String NAME = "validaDocumentoAction";
-    private ProcessoDocumento documento;
+    private Documento documento;
     private ProcessoDocumentoBin processoDocumentoBin;
     private Boolean valido;
     private Certificado dadosCertificado;
@@ -42,7 +42,7 @@ public class ValidaDocumentoAction {
     private static final LogProvider LOG = Logging
             .getLogProvider(ValidaDocumentoAction.class);
     @In
-    public ProcessoDocumentoManager processoDocumentoManager;
+    public DocumentoManager processoDocumentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
     @In
@@ -58,7 +58,7 @@ public class ValidaDocumentoAction {
      * @deprecated
      * */
     @Deprecated
-    public void validaDocumento(ProcessoDocumento documento) {
+    public void validaDocumento(Documento documento) {
         this.documento = documento;
         ProcessoDocumentoBin bin = documento.getProcessoDocumentoBin();
         // TODO ASSINATURA
@@ -125,11 +125,11 @@ public class ValidaDocumentoAction {
         }
     }
 
-    public ProcessoDocumento getDocumento() {
+    public Documento getDocumento() {
         return documento;
     }
 
-    public void setDocumento(ProcessoDocumento documento) {
+    public void setDocumento(Documento documento) {
         this.documento = documento;
     }
 

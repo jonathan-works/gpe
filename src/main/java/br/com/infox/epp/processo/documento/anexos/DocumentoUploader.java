@@ -31,10 +31,10 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 import com.lowagie.text.pdf.PdfReader;
 
@@ -55,7 +55,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private boolean isValido;
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
     @In
@@ -143,9 +143,9 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     }
 
     @Override
-    protected ProcessoDocumento gravarDocumento() throws DAOException {
+    protected Documento gravarDocumento() throws DAOException {
         String texto = InfoxPdfReader.readPdfFromByteArray(pdf);
-        ProcessoDocumento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+        Documento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
         bin().setModeloDocumento(texto);
         documentoBinManager.salvarBinario(bin().getIdProcessoDocumentoBin(), bin().getProcessoDocumento());
         //Removida indexação manual daqui

@@ -8,8 +8,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 @Name(DocumentoEditor.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -19,7 +19,7 @@ public class DocumentoEditor extends DocumentoCreator {
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoEditor.class);
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
 
     @Override
     protected LogProvider getLogger() {
@@ -27,7 +27,7 @@ public class DocumentoEditor extends DocumentoCreator {
     }
 
     @Override
-    protected ProcessoDocumento gravarDocumento() throws DAOException {
+    protected Documento gravarDocumento() throws DAOException {
         return processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
     }
 

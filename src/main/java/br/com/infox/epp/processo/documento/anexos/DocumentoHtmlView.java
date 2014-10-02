@@ -6,9 +6,9 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 @Name(DocumentoHtmlView.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -20,9 +20,9 @@ public class DocumentoHtmlView {
     public static final String NAME = "documentoHtmlView";
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
 
-    private ProcessoDocumento viewInstance;
+    private Documento viewInstance;
     private ProcessoDocumentoBin processoDocumentoBin;
 
     public void setIdDocumento(Integer idDocumento) {
@@ -36,7 +36,7 @@ public class DocumentoHtmlView {
         return PAGINA_VISUALIZACAO;
     }
     
-    public String setViewInstance(ProcessoDocumento processoDocumento) {
+    public String setViewInstance(Documento processoDocumento) {
         viewInstance = processoDocumento;
         this.processoDocumentoBin = viewInstance.getProcessoDocumentoBin();
         return PAGINA_VISUALIZACAO;

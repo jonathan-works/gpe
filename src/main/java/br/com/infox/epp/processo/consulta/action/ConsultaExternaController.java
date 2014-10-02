@@ -8,8 +8,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.controller.AbstractController;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
 
@@ -22,7 +22,7 @@ public class ConsultaExternaController extends AbstractController {
     public static final String TAB_VIEW = "processoExternoView";
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
 
     private ProcessoEpa processoEpa;
 
@@ -39,7 +39,7 @@ public class ConsultaExternaController extends AbstractController {
         setProcessoEpa(processoEpa);
     }
 
-    public List<ProcessoDocumento> getAnexosPublicos(
+    public List<Documento> getAnexosPublicos(
             ProcessoEpaTarefa processoEpaTarefa) {
         return processoDocumentoManager.getAnexosPublicos(processoEpaTarefa.getTaskInstance());
     }

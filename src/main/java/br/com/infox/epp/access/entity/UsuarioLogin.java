@@ -81,7 +81,7 @@ import org.jboss.seam.annotations.security.management.UserRoles;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.entity.EntityLog;
 
@@ -127,7 +127,7 @@ public class UsuarioLogin implements Serializable {
     private List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>(0);
     private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(0);
     private List<BloqueioUsuario> bloqueioUsuarioList = new ArrayList<BloqueioUsuario>(0);
-    private List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<ProcessoDocumento>(0);
+    private List<Documento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<Documento>(0);
     private List<EntityLog> entityLogList = new ArrayList<EntityLog>(0);
 
     public UsuarioLogin() {
@@ -352,12 +352,12 @@ public class UsuarioLogin implements Serializable {
     }
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioInclusao")
-    public List<ProcessoDocumento> getProcessoDocumentoListForIdUsuarioInclusao() {
+    public List<Documento> getProcessoDocumentoListForIdUsuarioInclusao() {
         return this.processoDocumentoListForIdUsuarioInclusao;
     }
 
     public void setProcessoDocumentoListForIdUsuarioInclusao(
-            List<ProcessoDocumento> processoDocumentoListForIdUsuarioInclusao) {
+            List<Documento> processoDocumentoListForIdUsuarioInclusao) {
         this.processoDocumentoListForIdUsuarioInclusao = processoDocumentoListForIdUsuarioInclusao;
     }
 

@@ -23,8 +23,8 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -104,7 +104,7 @@ public class TaskInstanceView implements Serializable {
                             properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
                             if (value != null) {
                                 try {
-                                    ProcessoDocumento processoDocumento = processoDocumentoManager().find(Integer.parseInt(value.toString(), 10));
+                                    Documento processoDocumento = processoDocumentoManager().find(Integer.parseInt(value.toString(), 10));
                                     if (processoDocumento != null) {
                                         properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
                                         properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
@@ -137,7 +137,7 @@ public class TaskInstanceView implements Serializable {
                             ff.setType(type.name());
                             ff.getProperties().put("readonly", true);
                             if (value != null) {
-                                ProcessoDocumento documento = processoDocumentoManager().find(value);
+                                Documento documento = processoDocumentoManager().find(value);
                                 ff.setValue(documento.getProcessoDocumento());
                                 ff.getProperties().put("classificacaoDocumento", documento.getTipoProcessoDocumento().getTipoProcessoDocumento());
                             } else {
@@ -174,7 +174,7 @@ public class TaskInstanceView implements Serializable {
         taskInstance = newInstance;
     }
 
-    private ProcessoDocumentoManager processoDocumentoManager() {
-        return ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+    private DocumentoManager processoDocumentoManager() {
+        return ComponentUtil.getComponent(DocumentoManager.NAME);
     }
 }

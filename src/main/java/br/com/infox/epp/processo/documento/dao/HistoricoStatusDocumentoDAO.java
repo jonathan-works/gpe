@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.PARAM_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.PARAM_ID_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO;
@@ -28,7 +28,7 @@ public class HistoricoStatusDocumentoDAO extends DAO<HistoricoStatusDocumento> {
 		return (long) getNamedSingleResult(EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO, params) > 0;
 	}
 	
-	public List<HistoricoStatusDocumento> getListHistoricoByDocumento(ProcessoDocumento processoDocumento){
+	public List<HistoricoStatusDocumento> getListHistoricoByDocumento(Documento processoDocumento){
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		params.put(PARAM_DOCUMENTO, processoDocumento);
 		return getNamedResultList(LIST_HISTORICO_BY_DOCUMENTO, params);

@@ -6,15 +6,15 @@ import java.util.List;
 import org.jboss.seam.log.LogProvider;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 
 public abstract class DocumentoCreator {
 
     private Processo processo;
-    private ProcessoDocumento processoDocumento;
-    private List<ProcessoDocumento> documentosDaSessao;
+    private Documento processoDocumento;
+    private List<Documento> documentosDaSessao;
 
     public Processo getProcesso() {
         return processo;
@@ -24,30 +24,30 @@ public abstract class DocumentoCreator {
         this.processo = processo;
     }
 
-    public ProcessoDocumento getProcessoDocumento() {
+    public Documento getProcessoDocumento() {
         return processoDocumento;
     }
 
-    public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
+    public void setProcessoDocumento(Documento processoDocumento) {
         this.processoDocumento = processoDocumento;
     }
 
-    public List<ProcessoDocumento> getDocumentosDaSessao() {
+    public List<Documento> getDocumentosDaSessao() {
         return documentosDaSessao;
     }
 
-    public void setDocumentosDaSessao(List<ProcessoDocumento> documentosDaSessao) {
+    public void setDocumentosDaSessao(List<Documento> documentosDaSessao) {
         this.documentosDaSessao = documentosDaSessao;
     }
 
     protected void newInstance() {
-        setProcessoDocumento(new ProcessoDocumento());
+        setProcessoDocumento(new Documento());
         getProcessoDocumento().setAnexo(true);
         getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
     }
 
     public void clear() {
-        setDocumentosDaSessao(new ArrayList<ProcessoDocumento>());
+        setDocumentosDaSessao(new ArrayList<Documento>());
         newInstance();
     }
 
@@ -63,6 +63,6 @@ public abstract class DocumentoCreator {
 
     protected abstract LogProvider getLogger();
 
-    protected abstract ProcessoDocumento gravarDocumento() throws DAOException;
+    protected abstract Documento gravarDocumento() throws DAOException;
 
 }

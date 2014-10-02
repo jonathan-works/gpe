@@ -5,8 +5,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 final class TaskVariableRetriever extends TaskVariable {
@@ -52,8 +52,8 @@ final class TaskVariableRetriever extends TaskVariable {
     private Object getConteudoEditor(Object variable) {
         Integer idProcessoDocumento = (Integer) variable;
         if (idProcessoDocumento != null) {
-            ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
-                    .getComponent(ProcessoDocumentoManager.NAME);
+            DocumentoManager processoDocumentoManager = ComponentUtil
+                    .getComponent(DocumentoManager.NAME);
             Object modeloDocumento = processoDocumentoManager
                     .getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
             if (modeloDocumento != null) {
@@ -69,9 +69,9 @@ final class TaskVariableRetriever extends TaskVariable {
     private Object getNomeFileUploaded(Object variable) {
         Integer idProcessoDocumento = (Integer) variable;
         if (idProcessoDocumento != null) {
-            ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
-                    .getComponent(ProcessoDocumentoManager.NAME);
-            ProcessoDocumento documento = processoDocumentoManager
+            DocumentoManager processoDocumentoManager = ComponentUtil
+                    .getComponent(DocumentoManager.NAME);
+            Documento documento = processoDocumentoManager
                     .find(idProcessoDocumento);
             if (documento != null) {
                 variable = documento.getProcessoDocumento();

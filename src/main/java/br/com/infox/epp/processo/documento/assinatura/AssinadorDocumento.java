@@ -15,7 +15,7 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 
 @Name(AssinadorDocumento.NAME)
@@ -31,7 +31,7 @@ public class AssinadorDocumento extends AbstractController {
     private String signature;
     private boolean houveErroAoAssinar = false;
 
-    private ProcessoDocumento processoDocumento;
+    private Documento processoDocumento;
     private ProcessoDocumentoBin processoDocumentoBin;
 
     @In
@@ -103,7 +103,7 @@ public class AssinadorDocumento extends AbstractController {
     @Override
     public void setId(Object id) {
         super.setId(id);
-        processoDocumento = genericManager.find(ProcessoDocumento.class, id);
+        processoDocumento = genericManager.find(Documento.class, id);
         setProcessoDocumentoBin(processoDocumento.getProcessoDocumentoBin());
     }
 

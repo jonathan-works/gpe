@@ -32,14 +32,15 @@ import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumento
 import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO_QUERY;
 
 @Entity
-@Table(name="tb_historico_status_documento")
+@Table(name = HistoricoStatusDocumento.TABLE_NAME)
 @NamedQueries(value = {
 		@NamedQuery(name = EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO, query = EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO_QUERY),
 		@NamedQuery(name = LIST_HISTORICO_BY_DOCUMENTO, query = LIST_HISTORICO_BY_DOCUMENTO_QUERY)
 })
-public class HistoricoStatusDocumento implements Serializable{
+public class HistoricoStatusDocumento implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	public static final String TABLE_NAME = "tb_historico_status_documento";
 	
 	@Id
 	@SequenceGenerator(initialValue=1, allocationSize=1, name="HistoricoStatusDocumentoGen", sequenceName="sq_historico_status_documento")
@@ -49,8 +50,8 @@ public class HistoricoStatusDocumento implements Serializable{
 	
 	@NotNull
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="id_processo_documento", nullable=false)
-	private ProcessoDocumento processoDocumento;
+	@JoinColumn(name="id_documento", nullable=false)
+	private Documento documento;
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -85,12 +86,12 @@ public class HistoricoStatusDocumento implements Serializable{
 		this.id = id;
 	}
 
-	public ProcessoDocumento getProcessoDocumento() {
-		return processoDocumento;
+	public Documento getDocumento() {
+		return documento;
 	}
 
-	public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
-		this.processoDocumento = processoDocumento;
+	public void setDocumento(Documento documento) {
+		this.documento = documento;
 	}
 
 	public Date getDataAlteracao() {

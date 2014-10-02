@@ -18,7 +18,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -31,7 +31,7 @@ public class VariableHandler implements Serializable {
     private static final LogProvider LOG = Logging.getLogProvider(VariableHandler.class);
     
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
 
     public List<Variavel> getVariables(long taskId) {
         return getVariables(taskId, false);

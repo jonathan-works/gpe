@@ -23,9 +23,9 @@ import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
@@ -45,7 +45,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     @In
     private GenericDAO genericDAO;
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager processoDocumentoManager;
 
     public ProcessoDocumentoBin createProcessoDocumentoBin(Object value) throws DAOException {
         ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
@@ -55,7 +55,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return bin;
     }
 
-    public ProcessoDocumento createProcessoDocumento(Processo processo,
+    public Documento createProcessoDocumento(Processo processo,
             String label, ProcessoDocumentoBin bin,
             TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
         return processoDocumentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);

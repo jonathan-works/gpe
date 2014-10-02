@@ -11,13 +11,13 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
 
 @Name(ProcessoDocumentoList.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
+public class ProcessoDocumentoList extends EntityList<Documento> {
 	
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_EJBQL = "select o from ProcessoDocumento o where "
