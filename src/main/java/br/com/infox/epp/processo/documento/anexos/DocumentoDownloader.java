@@ -26,7 +26,7 @@ public class DocumentoDownloader {
     @In
     private DocumentoBinManager documentoBinManager;
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     public static final String NAME = "documentoDownloader";
 
@@ -59,6 +59,6 @@ public class DocumentoDownloader {
     }
 
     public void downloadDocumento(String idDocumento) {
-        downloadDocumento(processoDocumentoManager.find(Integer.valueOf(idDocumento)));
+        downloadDocumento(documentoManager.find(Integer.valueOf(idDocumento)));
     }
 }

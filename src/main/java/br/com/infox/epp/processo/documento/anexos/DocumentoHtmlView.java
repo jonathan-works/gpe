@@ -20,14 +20,14 @@ public class DocumentoHtmlView {
     public static final String NAME = "documentoHtmlView";
 
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     private Documento viewInstance;
     private ProcessoDocumentoBin processoDocumentoBin;
 
     public void setIdDocumento(Integer idDocumento) {
         if (idDocumento != null && idDocumento != 0) {
-            setViewInstance(processoDocumentoManager.find(idDocumento));
+            setViewInstance(documentoManager.find(idDocumento));
         }
     }
 

@@ -104,7 +104,7 @@ public class TaskInstanceView implements Serializable {
                             properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
                             if (value != null) {
                                 try {
-                                    Documento processoDocumento = processoDocumentoManager().find(Integer.parseInt(value.toString(), 10));
+                                    Documento processoDocumento = documentoManager().find(Integer.parseInt(value.toString(), 10));
                                     if (processoDocumento != null) {
                                         properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
                                         properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
@@ -137,7 +137,7 @@ public class TaskInstanceView implements Serializable {
                             ff.setType(type.name());
                             ff.getProperties().put("readonly", true);
                             if (value != null) {
-                                Documento documento = processoDocumentoManager().find(value);
+                                Documento documento = documentoManager().find(value);
                                 ff.setValue(documento.getDescricao());
                                 ff.getProperties().put("classificacaoDocumento", documento.getTipoProcessoDocumento().getTipoProcessoDocumento());
                             } else {
@@ -174,7 +174,7 @@ public class TaskInstanceView implements Serializable {
         taskInstance = newInstance;
     }
 
-    private DocumentoManager processoDocumentoManager() {
+    private DocumentoManager documentoManager() {
         return ComponentUtil.getComponent(DocumentoManager.NAME);
     }
 }

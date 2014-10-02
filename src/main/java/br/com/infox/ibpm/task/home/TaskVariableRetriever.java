@@ -52,9 +52,8 @@ final class TaskVariableRetriever extends TaskVariable {
     private Object getConteudoEditor(Object variable) {
         Integer idProcessoDocumento = (Integer) variable;
         if (idProcessoDocumento != null) {
-            DocumentoManager processoDocumentoManager = ComponentUtil
-                    .getComponent(DocumentoManager.NAME);
-            Object modeloDocumento = processoDocumentoManager
+            DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+            Object modeloDocumento = documentoManager
                     .getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
             if (modeloDocumento != null) {
                 variable = modeloDocumento;
@@ -69,10 +68,8 @@ final class TaskVariableRetriever extends TaskVariable {
     private Object getNomeFileUploaded(Object variable) {
         Integer idProcessoDocumento = (Integer) variable;
         if (idProcessoDocumento != null) {
-            DocumentoManager processoDocumentoManager = ComponentUtil
-                    .getComponent(DocumentoManager.NAME);
-            Documento documento = processoDocumentoManager
-                    .find(idProcessoDocumento);
+            DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+            Documento documento = documentoManager.find(idProcessoDocumento);
             if (documento != null) {
                 variable = documento.getDescricao();
             } else {

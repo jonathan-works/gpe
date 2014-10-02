@@ -49,7 +49,7 @@ public class ProcessoHandler implements Serializable {
     @In
     private ProcessoEpaManager processoEpaManager;
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     @SuppressWarnings(UNCHECKED)
     public List<TaskInstance> getTaskInstanceList() {
@@ -98,7 +98,7 @@ public class ProcessoHandler implements Serializable {
     }
 
     public List<Documento> getAnexosPublicos(TaskInstance task) {
-        return processoDocumentoManager.getAnexosPublicos(task.getId());
+        return documentoManager.getAnexosPublicos(task.getId());
     }
 
     public List<Documento> getAnexos(TaskInstance task) {

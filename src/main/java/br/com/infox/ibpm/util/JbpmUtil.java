@@ -138,7 +138,7 @@ public class JbpmUtil {
         if (isTypeEditor(type)) {
             Integer id = (Integer) variable;
             if (id != null) {
-                Documento processoDocumento = processoDocumentoManager().find(id);
+                Documento processoDocumento = documentoManager().find(id);
                 if (processoDocumento == null) {
                     LOG.warn("ProcessoDocumento não encontrado: " + id);
                 } else {
@@ -172,7 +172,7 @@ public class JbpmUtil {
         return VariableType.EDITOR.name().equals(type);
     }
 
-    private DocumentoManager processoDocumentoManager() {
+    private DocumentoManager documentoManager() {
         return ComponentUtil.getComponent(DocumentoManager.NAME);
     }
 

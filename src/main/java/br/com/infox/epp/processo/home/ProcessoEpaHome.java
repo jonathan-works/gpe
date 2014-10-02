@@ -62,7 +62,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
     @In
     private SigiloProcessoService sigiloProcessoService;
 
@@ -173,7 +173,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
     }
 
     private Documento buscarProcessoDocumento(Integer idDoc) {
-        return processoDocumentoManager.find(idDoc);
+        return documentoManager.find(idDoc);
     }
 
     private void atualizarProcessoDocumentoFluxo(Object value, Integer idDoc,
@@ -224,7 +224,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
                         .createProcessoDocumentoBin(newValue);
                 label = label == null ? "-" : label;
                 Documento doc;
-                doc = processoDocumentoManager.createProcessoDocumento(
+                doc = documentoManager.createProcessoDocumento(
                         getInstance(), label, processoDocumentoBin,
                         getTipoProcessoDocumento());
                 final int idProcessoDocumento = doc.getId();

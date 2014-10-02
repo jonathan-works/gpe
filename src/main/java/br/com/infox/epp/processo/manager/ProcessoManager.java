@@ -45,7 +45,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     @In
     private GenericDAO genericDAO;
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     public ProcessoDocumentoBin createProcessoDocumentoBin(Object value) throws DAOException {
         ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
@@ -58,7 +58,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public Documento createProcessoDocumento(Processo processo,
             String label, ProcessoDocumentoBin bin,
             TipoProcessoDocumento tipoProcessoDocumento) throws DAOException {
-        return processoDocumentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);
+        return documentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);
     }
 
     private String getDescricaoModeloDocumentoByValue(Object value) {

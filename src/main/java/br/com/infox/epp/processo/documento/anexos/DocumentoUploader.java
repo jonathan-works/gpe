@@ -49,13 +49,12 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private static final String CLASSIFICACAO_DOCUMENTO = "tipoProcessoDocumentoPdfDecoration:tipoProcessoDocumentoPdf";
     private static final String FILE_UPLOAD = "tipoDocumentoDivPdf";
     
-
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
 
     private boolean isValido;
 
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
     @In
@@ -145,7 +144,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     @Override
     protected Documento gravarDocumento() throws DAOException {
         String texto = InfoxPdfReader.readPdfFromByteArray(pdf);
-        Documento pd = processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+        Documento pd = documentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
         bin().setModeloDocumento(texto);
         documentoBinManager.salvarBinario(bin().getIdProcessoDocumentoBin(), bin().getProcessoDocumento());
         //Removida indexação manual daqui

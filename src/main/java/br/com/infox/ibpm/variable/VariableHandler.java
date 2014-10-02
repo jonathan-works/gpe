@@ -31,7 +31,7 @@ public class VariableHandler implements Serializable {
     private static final LogProvider LOG = Logging.getLogProvider(VariableHandler.class);
     
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     public List<Variavel> getVariables(long taskId) {
         return getVariables(taskId, false);
@@ -93,7 +93,7 @@ public class VariableHandler implements Serializable {
     public String getNumeroDocumentoTarefa(long taskId) {
         for (Variavel variavel : getTaskVariables(taskId)) {
             if (JbpmUtil.isTypeEditor(variavel.getType())) {
-                return " - Doc. Nr: " + processoDocumentoManager.find(variavel.getValue()).getNumeroDocumento();
+                return " - Doc. Nr: " + documentoManager.find(variavel.getValue()).getNumeroDocumento();
             }
         }
         return null;

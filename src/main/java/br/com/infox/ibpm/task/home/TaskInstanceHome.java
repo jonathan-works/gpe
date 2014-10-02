@@ -164,8 +164,8 @@ public class TaskInstanceHome implements Serializable {
             DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
             Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
             if (id != null) {
-                DocumentoManager processoDocumentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
-                Documento pd = processoDocumentoManager.find(id);
+                DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+                Documento pd = documentoManager.find(id);
                 if (pd != null) {
                     dados.setIdDocumento(id);
                     dados.setClassificacao(pd.getTipoProcessoDocumento());
@@ -179,8 +179,8 @@ public class TaskInstanceHome implements Serializable {
         } else if (variableRetriever.isVariableType(VariableType.FILE)) {
             Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
             if (id != null) {
-                DocumentoManager processoDocumentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
-                Documento pd = processoDocumentoManager.find(id);
+                DocumentoManager documentoManger = ComponentUtil.getComponent(DocumentoManager.NAME);
+                Documento pd = documentoManger.find(id);
                 classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), pd.getTipoProcessoDocumento());
             } else {
                 classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), null);

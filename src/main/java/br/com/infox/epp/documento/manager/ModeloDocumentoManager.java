@@ -50,7 +50,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     private DominioVariavelTarefaManager dominioVariavelTarefaManager;
     
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
     
     //TODO verificar se esse método ainda é utilizado, senão, remover
     public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento) {
@@ -231,7 +231,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
             break;
 
         case EDITOR:
-            expression = processoDocumentoManager.find(value).getProcessoDocumentoBin().getModeloDocumento();
+            expression = documentoManager.find(value).getProcessoDocumentoBin().getModeloDocumento();
             break;
             
         case MONETARY:

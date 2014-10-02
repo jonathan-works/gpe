@@ -47,7 +47,7 @@ public class AssinaturaDocumentoService implements Serializable {
     public static final String NAME = "assinaturaDocumentoService";
 
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
     @In
@@ -83,7 +83,7 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public boolean isDocumentoTotalmenteAssinado(Integer idDoc) {
-        Documento processoDocumento = processoDocumentoManager
+        Documento processoDocumento = documentoManager
                 .find(idDoc);
         return isDocumentoTotalmenteAssinado(processoDocumento);
     }
@@ -154,7 +154,7 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public Boolean isDocumentoAssinado(Integer idDoc) {
-        Documento processoDocumento = processoDocumentoManager
+        Documento processoDocumento = documentoManager
                 .find(idDoc);
         return processoDocumento != null
                 && isDocumentoAssinado(processoDocumento);
@@ -212,14 +212,14 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {
-        Documento processoDocumento = processoDocumentoManager
+        Documento processoDocumento = documentoManager
                 .find(idDocumento);
         return processoDocumento != null
                 && isDocumentoAssinado(processoDocumento, perfilTemplate.getPapel());
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, UsuarioPerfil perfil) {
-        Documento processoDocumento = processoDocumentoManager
+        Documento processoDocumento = documentoManager
                 .find(idDocumento);
         return processoDocumento != null
                 && isDocumentoAssinado(processoDocumento, perfil);
@@ -250,7 +250,7 @@ public class AssinaturaDocumentoService implements Serializable {
         if (idDocumento == null) {
             throw new IllegalArgumentException("Id do documento não informado");
         }
-        Documento processoDocumento = processoDocumentoManager
+        Documento processoDocumento = documentoManager
                 .find(idDocumento);
         if (processoDocumento == null) {
             throw new IllegalArgumentException("Documento não encontrado.");
@@ -261,7 +261,7 @@ public class AssinaturaDocumentoService implements Serializable {
 
     public boolean isDocumentoAssinado(Integer idDocumento,
             UsuarioLogin usuarioLogin) {
-        Documento processoDocumento = processoDocumentoManager
+        Documento processoDocumento = documentoManager
                 .find(idDocumento);
         return processoDocumento != null
                 && isDocumentoAssinado(processoDocumento, usuarioLogin);

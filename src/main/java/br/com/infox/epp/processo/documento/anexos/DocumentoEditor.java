@@ -19,7 +19,7 @@ public class DocumentoEditor extends DocumentoCreator {
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoEditor.class);
 
     @In
-    private DocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     @Override
     protected LogProvider getLogger() {
@@ -28,7 +28,7 @@ public class DocumentoEditor extends DocumentoCreator {
 
     @Override
     protected Documento gravarDocumento() throws DAOException {
-        return processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+        return documentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
     }
 
 }

@@ -42,14 +42,15 @@ public class ValidaDocumentoAction {
     private static final LogProvider LOG = Logging
             .getLogProvider(ValidaDocumentoAction.class);
     @In
-    public DocumentoManager processoDocumentoManager;
+    public DocumentoManager documentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
-    private Integer idProcessoDocumento;
+    
+    private Integer idDocumento;
     private String signature;
     private String certChain;
     
@@ -196,12 +197,12 @@ public class ValidaDocumentoAction {
         this.signature = signature;
     }
 
-    public Integer getIdProcessoDocumento() {
-        return idProcessoDocumento;
-    }
+	public Integer getIdDocumento() {
+		return idDocumento;
+	}
 
-    public void setIdProcessoDocumento(Integer idProcessoDocumento) {
-        this.idProcessoDocumento = idProcessoDocumento;
-        validaDocumentoId(idProcessoDocumento);
-    }
+	public void setIdDocumento(Integer idDocumento) {
+		this.idDocumento = idDocumento;
+	}
+
 }
