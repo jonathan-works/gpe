@@ -55,7 +55,7 @@ import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -171,7 +171,7 @@ public class TaskInstanceHome implements Serializable {
                     dados.setClassificacao(pd.getTipoProcessoDocumento());
                 }
             }
-            List<TipoProcessoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true, getVariableName(variableRetriever.getName()), ((ProcessoEpa)ProcessoHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
+            List<TipoProcessoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true, getVariableName(variableRetriever.getName()), ((ProcessoEpa)ProcessoEpaHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
             if (useableTipoProcessoDocumento != null && useableTipoProcessoDocumento.size()>0 && dados.getClassificacao() == null){
                 dados.setClassificacao(useableTipoProcessoDocumento.get(0));
             }
@@ -276,8 +276,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void updateVariable(VariableAccess variableAccess) {
         boolean documentoCorreto = false;
-        String fieldName = getFieldName(variableAccess.getMappedName().split(
-                ":")[1]);
+        String fieldName = getFieldName(variableAccess.getMappedName().split(":")[1]);
         if (documentoAAssinar != null && fieldName.equals(documentoAAssinar)) {
             documentoCorreto = true;
         }
@@ -288,7 +287,7 @@ public class TaskInstanceHome implements Serializable {
             if (variableResolver.isEditor() && variableAccess.isReadable()) {
                 DadosDocumentoAssinavel dados = documentosAssinaveis
                         .get(fieldName);
-                ProcessoHome processoHome = ProcessoHome.instance();
+                ProcessoEpaHome processoHome = ProcessoEpaHome.instance();
                 processoHome.setTipoProcessoDocumento(dados.getClassificacao());
                 processoHome.setSignature(dados.getSignature());
                 processoHome.setCertChain(dados.getCertChain());
@@ -318,7 +317,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private Boolean checkAccess() {
-        int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
+        int idProcesso = ProcessoEpaHome.instance().getInstance().getIdProcesso();
         String login = Authenticator.getUsuarioLogado().getLogin();
         if (processoManager.checkAccess(idProcesso, login)) {
             return Boolean.TRUE;
@@ -392,7 +391,7 @@ public class TaskInstanceHome implements Serializable {
         TaskConteudoDAO taskConteudoDAO = ComponentUtil
                 .getComponent(TaskConteudoDAO.NAME);
         TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
-        int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
+        int idProcesso = ProcessoEpaHome.instance().getInstance().getIdProcesso();
         if (taskConteudo != null) {
             try {
                 taskConteudoDAO.update(taskConteudo);
@@ -431,8 +430,8 @@ public class TaskInstanceHome implements Serializable {
     public String end(String transition) {
         if (checkAccess()) {
             checkCurrentTask();
-            ProcessoHome processoHome = ComponentUtil
-                    .getComponent(ProcessoHome.NAME);
+            ProcessoEpaHome processoHome = ComponentUtil
+                    .getComponent(ProcessoEpaHome.NAME);
 
             if (!update()) {
                 return null;
@@ -537,7 +536,7 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    private void limparEstado(ProcessoHome processoHome) {
+    private void limparEstado(ProcessoEpaHome processoHome) {
         this.currentTaskInstance = null;
         processoHome.setIdProcessoDocumento(null);
         processoHome.setCertChain(null);

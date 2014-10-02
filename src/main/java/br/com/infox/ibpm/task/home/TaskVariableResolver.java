@@ -14,7 +14,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -105,7 +105,7 @@ final class TaskVariableResolver extends TaskVariable {
 
     private void resolveEditor() {
         try {
-            ProcessoHome processoHome = ProcessoHome.instance();
+            ProcessoEpaHome processoHome = ProcessoEpaHome.instance();
             Integer valueInt = processoHome.salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinarDocumento, getLabel());
             if (valueInt != null && valueInt != 0) {
                 this.value = valueInt;

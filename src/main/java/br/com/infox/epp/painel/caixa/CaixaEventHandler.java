@@ -14,7 +14,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
@@ -77,7 +77,7 @@ public class CaixaEventHandler {
     private Integer getIdProcesso() {
         Integer idProcesso = JbpmUtil.getProcessVariable(PROCESSO);
         if (idProcesso == null) {
-            final Processo processo = ProcessoHome.instance().getInstance();
+            final Processo processo = ProcessoEpaHome.instance().getInstance();
             if (processo != null) {
                 idProcesso = processo.getIdProcesso();
             }

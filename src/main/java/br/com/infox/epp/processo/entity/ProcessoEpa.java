@@ -107,7 +107,7 @@ public class ProcessoEpa extends Processo {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE, cascade={CascadeType.REMOVE})
     @OrderBy("dataInclusao DESC")
-    private List<Documento> processoDocumentoList = new ArrayList<Documento>(0);
+    private List<Documento> documentoList = new ArrayList<Documento>(0);
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_uni_decisora_monocratica", nullable = true)
@@ -210,8 +210,16 @@ public class ProcessoEpa extends Processo {
     public void setPartes(List<ParteProcesso> partes) {
         this.partes = partes;
     }
+    
+    public List<Documento> getDocumentoList() {
+		return documentoList;
+	}
 
-    public UnidadeDecisoraMonocratica getDecisoraMonocratica() {
+	public void setDocumentoList(List<Documento> documentoList) {
+		this.documentoList = documentoList;
+	}
+
+	public UnidadeDecisoraMonocratica getDecisoraMonocratica() {
         return decisoraMonocratica;
     }
 

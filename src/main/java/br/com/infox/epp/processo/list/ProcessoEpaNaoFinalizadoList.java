@@ -23,8 +23,8 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(ProcessoEpaNaoFinalizadoList.NAME)
@@ -35,6 +35,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
             + "inner join o.processo p "
             + "inner join p.naturezaCategoriaFluxo ncf "
             + "where o.dataFim is null and o.tipoProcesso = 'PE'";
+    
     private static final String DEFAULT_ORDER = "p.idProcesso";
     private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
@@ -55,7 +56,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     private boolean updateFluxoList = true;
 
     @In
-    private ProcessoEpaManager processoEpaManager;
+    private ProcessoTarefaManager processoTarefaManager;
 
     @Override
     protected void addSearchFields() {
@@ -152,6 +153,6 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     }
 
     public int getDiasDesdeInicioProcesso(ProcessoEpa processoEpa) {
-        return processoEpaManager.getDiasDesdeInicioProcesso(processoEpa);
+        return processoTarefaManager.getDiasDesdeInicioProcesso(processoEpa);
     }
 }

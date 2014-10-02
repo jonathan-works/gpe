@@ -16,16 +16,15 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
-@Name(DocumentoDownloader.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
+@Scope(ScopeType.EVENT)
+@Name(DocumentoDownloader.NAME)
 public class DocumentoDownloader {
 
     private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
     @In
-    DocumentoBinManager documentoBinManager;
-
+    private DocumentoBinManager documentoBinManager;
     @In
     private DocumentoManager processoDocumentoManager;
 
@@ -33,7 +32,7 @@ public class DocumentoDownloader {
 
     public void downloadDocumento(Documento documento) {
         ProcessoDocumentoBin pdBin = documento.getProcessoDocumentoBin();
-        byte[] data = documentoBinManager.getData(documento.getIdProcessoDocumento());
+        byte[] data = documentoBinManager.getData(documento.getId());
         String fileName = pdBin.getNomeArquivo();
         String contentType = "application/" + pdBin.getExtensao();
         FileDownloader.download(data, contentType, fileName);
