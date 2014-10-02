@@ -1,4 +1,9 @@
 @import "padrao.less";
+@import "login.less";
+@import "defaultCRUD.less";
+@import "datatable.less";
+@import "menu.less";
+@import "header.less";
 
 @bgColorSelect:#ECF7EC;
 @borderColorButton:#A0BC93;
@@ -14,6 +19,17 @@
 
 @baseBgColor:#c3d9e4;
 @baseDegBgColor:#acc8be;
+@login-label-color:#616161;
+
+@zebra-row-color-odd:#FAFAFA;
+@zebra-row-color-even:#E7E7E7;
+@zebra-row-color-over:#AFAFAF;
+@dt-toolbar-column-border-color:#CCC;
+@rf-dt-col-shdr-cont-color:#000;
+
+@menu-bg-color:#a0c991;
+@menu-txt-color:#030;
+
 
 /* CSS para as Paginas */
 #html,#body {
@@ -43,31 +59,6 @@
   background: linear-gradient(45deg, #bbcec2 0%, #80a991 75%, #80a991 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bbcec2',
     endColorstr='#80a991', GradientType=1);
-}
-
-.banner,.menu-nav {
-  color: #030;
-}
-
-.banner .divBg,.menu-nav, .menu-itm {
-  background-color: #a0c991;
-}
-.menu-itm-lbl:hover{
-  color: #a0c991;
-  background-color: #030;
-}
-.banner {
-  background: #c7d8cd; /* Cor fixa para Browsers antigos */
-  /* IE9 SVG */
-  background: -moz-linear-gradient(top, #c7d8cd 0%, #dbe5de 90%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #c7d8cd),
-    color-stop(90%, #dbe5de));
-  background: -webkit-linear-gradient(top, #c7d8cd 0%, #dbe5de 90%);
-  background: -o-linear-gradient(top, #c7d8cd 0%, #dbe5de 90%);
-  background: -ms-linear-gradient(top, #c7d8cd 0%, #dbe5de 90%);
-  background: linear-gradient(to bottom, #c7d8cd 0%, #dbe5de 90%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c7d8cd',
-    endColorstr='#dbe5de', GradientType=0);
 }
 
 /* Pagina do Login*/
@@ -158,17 +149,9 @@
 }
 
 .input_button {
-  background: #FFF !important;
-  border: 1px solid #868686 !important;
-  color: #8ca29c !important;
-}
-
-.login-lbl {
-  color: #616161;
-}
-
-.ui-draggable:after {
-  
+  background: #FFF;
+  border: 1px solid #868686;
+  color: #8ca29c;
 }
 
 .rf-tr-nd.rf-drp-hvr {

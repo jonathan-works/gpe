@@ -15,9 +15,18 @@
   height: calc(~"100% - 125px");
 }
 
-.swimlane-list,.swimlane-form,.node-instance-e,.node-instance-l {
+.swimlane-list {
   display: inline-block;
   vertical-align: top;
+}
+.swimlane-form {
+  &:extend(.swimlane-list);
+}
+.node-instance-e {
+  &:extend(.swimlane-list);
+}
+.node-instance-l {
+  &:extend(.swimlane-list);
 }
 
 .node-instance-e {
@@ -92,7 +101,9 @@
   margin:0;
   padding:0 10px 0 0;
 }
-.toolbar > .toolbar-itm,.toolbar > .toolbar-itm > .toolbar > .toolbar-itm {
+
+.toolbar > .toolbar-itm,
+.toolbar > .toolbar-itm > .toolbar > .toolbar-itm {
   display:block;
   vertical-align:top;
   position:relative;
@@ -106,9 +117,6 @@
 }
 .expressionInput.hidden{
   display:none;
-}
-.expressionDiv{
-  font-size:12px;
 }
 .Text.Operator {
   padding:0 5px;

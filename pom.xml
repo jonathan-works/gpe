@@ -417,6 +417,7 @@
                             <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
                             <watch>false</watch>
                             <compress>false</compress>
+                            <force>true</force>
                             <outputFileFormat>{fileName}.css</outputFileFormat>
                         </configuration>
                         <goals>

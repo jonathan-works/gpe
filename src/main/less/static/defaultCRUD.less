@@ -1,3 +1,9 @@
+@zebra-row-color-odd:#FAFAFA;
+@zebra-row-color-even:#E7E7E7;
+@zebra-row-color-over:#AFAFAF;
+@dt-toolbar-column-border-color:#CCC;
+@rf-dt-col-shdr-cont-color:#000;
+
 .dtable-search-form.hidden {
   display: none;
 }
@@ -23,13 +29,13 @@
   padding: 0px;
 }
 .zebra-row.rf-dt-r:nth-child(odd) {
-  background-color: #FAFAFA;
+  background-color: @zebra-row-color-odd;
 }
 .zebra-row.rf-dt-r:nth-child(even) {
-  background-color: #E7E7E7;
+  background-color: @zebra-row-color-even;
 }
 .zebra-row.rf-dt-r:hover {
-  background-color: #AFAFAF;
+  background-color: @zebra-row-color-over;
 }
 .rf-dt-crud,
 .dtable-p.rf-dt-crud {
@@ -60,7 +66,7 @@
   text-align: center;
   border-style: solid;
   border-width: 1px;
-  border-color: #CCC;
+  border-color: @dt-toolbar-column-border-color;
 }
 .dt-res-count {
   float: right;
@@ -69,7 +75,7 @@
   border-style: solid;
 }
 .rf-dt-shdr-c {
-  color: #000;
+  color: @rf-dt-col-shdr-cont-color;
 }
 .rf-dt-ftr-c {
   text-align: center;
