@@ -16,6 +16,7 @@
             <wi:dataTable rowKeyVar="key" id="collectionTable" var="row"
                 panelWidth="99%" showToolbarColumn="false"
                 showGridCount="false" tableTitle="Quartz Jobs List"
+                panelStyleClass="full-sized short-margin-top"
                 values="#{quartzJobsInfo.detailJobsInfo}">
 
                 <rich:column>
@@ -64,10 +65,11 @@
                         <h:commandLink value="Executar"
                             action="#{quartzJobsInfo.triggerJob(row.jobName, row.groupName)}"
                             rendered="#{row.jobValid}" />
+                    </h:form>
+                    <h:form>
                         <h:commandLink
                             value="#{eppmessages['button.delete']}"
-                            action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName)}"
-                            rendered="#{not row.jobValid}" />
+                            action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName)}" />
                     </h:form>
                 </rich:column>
             </wi:dataTable>
