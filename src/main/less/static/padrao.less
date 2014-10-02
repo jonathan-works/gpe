@@ -1,3 +1,7 @@
+@import "epp-mixins.less";
+
+@imgFolder:~"#{pathResolver.contextPath}/#{a4jSkin.imgFolder}";
+
 /*LAYOUT GERAL DA PÁGINA*/
 .width-5 {
   width: 5px;
@@ -715,11 +719,6 @@ div.rf-trn {
 	text-decoration:line-through;
 	color: red;
 }
-}
-@imgFolder:~"#{pathResolver.contextPath}/#{a4jSkin.imgFolder}";
-
-.image(@imgName) {
-  background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
 }
 
 .caixa-drag:before {
