@@ -1,6 +1,6 @@
 function NodeArea(cid) {
 
-    if ($('#nodes').length === 0) {
+    if ($('#nodes').length == 0) {
         var map = $('<map></map>');
         map.attr({'id': 'nodes', 'name': 'nodes'});
         $('body').append(map);
@@ -79,7 +79,7 @@ function NodeArea(cid) {
           ulOut.append($('<li>' + v.name + ' (' + v.type + ')' + '</li>'));
       });
 
-      if (area[0].cond !== null){
+      if (area[0].cond != null){
           var condicao = "Condi\u00E7\u00E3o";
           tooltip.append($('<p>' + condicao + ': ' + area[0].cond + '</p>'));
       }
