@@ -23,6 +23,8 @@ public class NaturezaCategoriaProcessoList extends EntityList<NaturezaCategoriaF
     private static final String DEFAULT_EJBQL = "select ncf from NatCatFluxoLocalizacao o "
             + "inner join o.naturezaCategoriaFluxo ncf "
             + "inner join ncf.fluxo.fluxoPapelList papelList where ncf.fluxo.publicado is true "
+            + "and (current_date() >= ncf.fluxo.dataInicioPublicacao and "
+            + "(ncf.fluxo.dataFimPublicacao is null or current_date() < ncf.fluxo.dataFimPublicacao)) "
             + "and papelList.papel = #{usuarioLogadoPerfilAtual.getPerfilTemplate().getPapel()} ";
     private static final String DEFAULT_ORDER = "natureza";
     
