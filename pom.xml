@@ -411,19 +411,6 @@
                 <version>1.7.0.1.1</version>
                 <executions>
                     <execution>
-                        <id>ecss</id>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/less/dynamic</sourceDirectory>
-                            <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
-                            <watch>false</watch>
-                            <compress>false</compress>
-                            <outputFileFormat>{fileName}.ecss</outputFileFormat>
-                        </configuration>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>css</id>
                         <configuration>
                             <sourceDirectory>${project.basedir}/src/main/less/static</sourceDirectory>
