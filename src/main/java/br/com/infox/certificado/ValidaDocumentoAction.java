@@ -165,8 +165,7 @@ public class ValidaDocumentoAction {
     }
 
     public String getNomeCertificadora() {
-        return dadosCertificado == null ? null : dadosCertificado
-                .getNomeCertificadora();
+        return dadosCertificado == null ? null : dadosCertificado.getAutoridadeCertificadora();
     }
 
     public String getNome() {
@@ -174,8 +173,7 @@ public class ValidaDocumentoAction {
     }
 
     public BigInteger getSerialNumber() {
-        return dadosCertificado == null ? null : dadosCertificado
-                .getSerialNumber();
+        return dadosCertificado == null ? null : dadosCertificado.getSerialNumber();
     }
 
     public static ValidaDocumentoAction instance() {

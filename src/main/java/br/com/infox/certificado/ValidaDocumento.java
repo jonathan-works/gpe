@@ -47,7 +47,7 @@ public class ValidaDocumento {
         this.certificado = certificado;
         this.assinatura = assinatura;
         try {
-            this.dadosCertificado = new Certificado(DigitalSignatureUtils.loadCertFromBase64String(certificado));
+            this.dadosCertificado = CertificadoFactory.createCertificado(DigitalSignatureUtils.loadCertFromBase64String(certificado));
         } catch (Exception e) {
             throw new CertificadoException("Certificado inválido: "
                     + e.getMessage(), e);

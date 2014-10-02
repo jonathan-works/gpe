@@ -17,6 +17,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.manager.GenericManager;
@@ -169,9 +170,8 @@ public class AssinaturaDocumentoService implements Serializable {
             throw new AssinaturaException(Motivo.USUARIO_SEM_PESSOA_FISICA);
         }
         if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
-            final Certificado certificado = new Certificado(
-                    certChainBase64Encoded);
-            final String cpfCertificado = certificado.getCn().split(":")[1];
+            final Certificado certificado = CertificadoFactory.createCertificado(certChainBase64Encoded); 
+            final String cpfCertificado = certificado.getCPF();
             if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf()
                     .replace(".", "").replace("-", ""))) {
                 usuarioLogado.getPessoaFisica().setCertChain(
