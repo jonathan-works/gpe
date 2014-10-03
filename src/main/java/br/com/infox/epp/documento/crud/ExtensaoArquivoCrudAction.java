@@ -9,22 +9,22 @@ import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 
-@Name(ExtensaoArquivoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Name(ExtensaoArquivoCrudAction.NAME)
 public class ExtensaoArquivoCrudAction extends AbstractCrudAction<ExtensaoArquivo, ExtensaoArquivoManager>{
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "extensaoArquivoCrudAction";
     
-    private ClassificacaoDocumento tipoProcessoDocumento;
+    private ClassificacaoDocumento classificacaoDocumento;
 
-    public void setTipoProcessoDocumento(ClassificacaoDocumento tipoProcessoDocumento) {
-        this.tipoProcessoDocumento = tipoProcessoDocumento;
+    public void setTipoProcessoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+        this.classificacaoDocumento = classificacaoDocumento;
     }
     
     @Override
     protected boolean isInstanceValid() {
-        getInstance().setTipoProcessoDocumento(tipoProcessoDocumento);
+        getInstance().setClassificacaoDocumento(classificacaoDocumento);
         return super.isInstanceValid();
     }
 

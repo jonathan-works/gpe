@@ -4,12 +4,13 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
-import br.com.infox.epp.documento.dao.TipoProcessoDocumentoPapelDAO;
+import br.com.infox.epp.documento.dao.ClassificacaoDocumentoPapelDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 
-@Name(TipoProcessoDocumentoPapelManager.NAME)
 @AutoCreate
-public class TipoProcessoDocumentoPapelManager extends Manager<TipoProcessoDocumentoPapelDAO, ClassificacaoDocumentoPapel> {
+@Name(ClassificacaoDocumentoPapelManager.NAME)
+public class ClassificacaoDocumentoPapelManager extends Manager<ClassificacaoDocumentoPapelDAO, ClassificacaoDocumentoPapel> {
+	
     private static final long serialVersionUID = 4455754174682600299L;
-    public static final String NAME = "tipoProcessoDocumentoPapelManager";
+    public static final String NAME = "classificacaoDocumentoPapelManager";
 }

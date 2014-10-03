@@ -139,7 +139,7 @@ public class TaskInstanceView implements Serializable {
                             if (value != null) {
                                 Documento documento = documentoManager().find(value);
                                 ff.setValue(documento.getDescricao());
-                                ff.getProperties().put("classificacaoDocumento", documento.getTipoProcessoDocumento().getTipoProcessoDocumento());
+                                ff.getProperties().put("classificacaoDocumento", documento.getTipoProcessoDocumento().getDescricao());
                             } else {
                                 ff.setValue("(sem anexo)");
                                 ff.getProperties().put("classificacaoDocumento", "(sem anexo)");

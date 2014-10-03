@@ -50,14 +50,14 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<Classificacao
             final String tipoProcessoDocumentoObservacao) {
         final ClassificacaoDocumento instance = new ClassificacaoDocumento();
         instance.setCodigoDocumento(codigoDocumento);
-        instance.setTipoProcessoDocumento(tipoProcessoDocumento);
+        instance.setDescricao(tipoProcessoDocumento);
         instance.setInTipoDocumento(tipoDocumento);
         instance.setVisibilidade(visibilidade);
         instance.setTipoNumeracao(tipoNumeracao);
         instance.setSistema(sistema);
         instance.setPublico(publico);
         instance.setAtivo(ativo);
-        instance.setTipoProcessoDocumentoObservacao(tipoProcessoDocumentoObservacao);
+        instance.setObservacao(tipoProcessoDocumentoObservacao);
         return instance;
     }
 
@@ -66,14 +66,14 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<Classificacao
         public void execute(CrudActions<ClassificacaoDocumento> crudActions) {
             final ClassificacaoDocumento entity = getEntity();
             crudActions.setEntityValue("codigoDocumento", entity.getCodigoDocumento());
-            crudActions.setEntityValue("tipoProcessoDocumento", entity.getTipoProcessoDocumento());
+            crudActions.setEntityValue("tipoProcessoDocumento", entity.getDescricao());
             crudActions.setEntityValue("inTipoDocumento", entity.getInTipoDocumento());
             crudActions.setEntityValue("visibilidade", entity.getVisibilidade());
             crudActions.setEntityValue("tipoNumeracao", entity.getTipoNumeracao());
             crudActions.setEntityValue("sistema", entity.getSistema());
             crudActions.setEntityValue("publico", entity.getPublico());
             crudActions.setEntityValue("ativo", entity.getAtivo());
-            crudActions.setEntityValue("tipoProcessoDocumentoObservacao", entity.getTipoProcessoDocumentoObservacao());
+            crudActions.setEntityValue("tipoProcessoDocumentoObservacao", entity.getObservacao());
         }
     };
     
@@ -88,14 +88,14 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<Classificacao
     @Override
     protected boolean compareEntityValues(ClassificacaoDocumento entity, CrudActions<ClassificacaoDocumento> crudActions) {
         return areEquals(crudActions.getEntityValue("codigoDocumento"),entity.getCodigoDocumento())
-                && areEquals(crudActions.getEntityValue("tipoProcessoDocumento"),entity.getTipoProcessoDocumento())
+                && areEquals(crudActions.getEntityValue("tipoProcessoDocumento"),entity.getDescricao())
                 && areEquals(crudActions.getEntityValue("inTipoDocumento"),entity.getInTipoDocumento())
                 && areEquals(crudActions.getEntityValue("visibilidade"),entity.getVisibilidade())
                 && areEquals(crudActions.getEntityValue("tipoNumeracao"),entity.getTipoNumeracao())
                 && areEquals(crudActions.getEntityValue("sistema"),entity.getSistema())
                 && areEquals(crudActions.getEntityValue("publico"),entity.getPublico())
                 && areEquals(crudActions.getEntityValue("ativo"),entity.getAtivo())
-                && areEquals(crudActions.getEntityValue("tipoProcessoDocumentoObservacao"),entity.getTipoProcessoDocumentoObservacao());
+                && areEquals(crudActions.getEntityValue("tipoProcessoDocumentoObservacao"),entity.getObservacao());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class ClassificacaoDocumentoCrudIT extends AbstractCrudTest<Classificacao
     public void updateSuccessTest() throws Exception {
         ClassificacaoDocumento createdEntity = createInstance("", "", TipoDocumentoEnum.T, VisibilidadeEnum.A, Boolean.TRUE, TipoNumeracaoEnum.S, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, "");
         ClassificacaoDocumento processoDocumento = persistSuccess.runTest(createdEntity, servletContext, session);
-        System.out.println(format("ENTITY = {0}", processoDocumento.getIdTipoProcessoDocumento()));
+        System.out.println(format("ENTITY = {0}", processoDocumento.getId()));
 //        final CrudActions<TipoProcessoDocumento> crudActions = getCrudActions();
 //        updateSuccess.runTest(new EntityActionContainer<TipoProcessoDocumento>(createdEntity) {
 //            @Override

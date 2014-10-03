@@ -11,23 +11,23 @@ import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(TipoProcessoDocumentoList.NAME)
 @Scope(ScopeType.PAGE)
-public class TipoProcessoDocumentoList extends EntityList<ClassificacaoDocumento> {
+@Name(ClassificacaoDocumentoList.NAME)
+public class ClassificacaoDocumentoList extends EntityList<ClassificacaoDocumento> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "tipoProcessoDocumentoList";
+    public static final String NAME = "classificacaoDocumentoList";
 
     private static final String TEMPLATE = "/ClassificacaoDocumento/tipoProcessoDocumentoTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "ClassificacaoDocumento.xls";
 
-    private static final String DEFAULT_EJBQL = "select o from TipoProcessoDocumento o";
-    private static final String DEFAULT_ORDER = "tipoProcessoDocumento";
+    private static final String DEFAULT_EJBQL = "select o from ClassificacaoDocumento o";
+    private static final String DEFAULT_ORDER = "descricao";
 
     @Override
     protected void addSearchFields() {
         addSearchField("codigoDocumento", SearchCriteria.CONTENDO);
-        addSearchField("tipoProcessoDocumento", SearchCriteria.CONTENDO);
+        addSearchField("desricao", SearchCriteria.CONTENDO);
         addSearchField("inTipoDocumento", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
     }
@@ -47,8 +47,8 @@ public class TipoProcessoDocumentoList extends EntityList<ClassificacaoDocumento
         return null;
     }
 
-    public static TipoProcessoDocumentoList instance() {
-        return ComponentUtil.getComponent(TipoProcessoDocumentoList.NAME);
+    public static ClassificacaoDocumentoList instance() {
+        return ComponentUtil.getComponent(ClassificacaoDocumentoList.NAME);
     }
 
     @Override
