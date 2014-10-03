@@ -15,7 +15,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocumentoDAO, ClassificacaoDocumento> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "tipoProcessoDocumentoManager";
+    public static final String NAME = "classificacaoDocumentoManager";
     public static final String CODIGO_CLASSIFICACAO_ACESSO_DIRETO = "acessoDireto";
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(

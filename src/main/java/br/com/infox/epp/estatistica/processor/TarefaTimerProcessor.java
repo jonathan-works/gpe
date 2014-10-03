@@ -22,13 +22,14 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
  * 
  * @author Daniel
  */
-@Name(TarefaTimerProcessor.NAME)
 @AutoCreate
+@Name(TarefaTimerProcessor.NAME)
 public class TarefaTimerProcessor extends BamTimerProcessor {
+	
     public static final String NAME = "tarefaTimerProcessor";
 
     @In
-    private ProcessoTarefaManager processoEpaTarefaManager;
+    private ProcessoTarefaManager processoTarefaManager;
     @In
     private BamTimerManager bamTimerManager;
 
@@ -45,12 +46,11 @@ public class TarefaTimerProcessor extends BamTimerProcessor {
         return updateTarefasNaoFinalizadas(PrazoEnum.H);
     }
 
-    @Override
-    protected ProcessoTarefaManager getProcessoEpaTarefamanager() {
-        return processoEpaTarefaManager;
-    }
+    public ProcessoTarefaManager getProcessoTarefaManager() {
+		return processoTarefaManager;
+	}
 
-    @Override
+	@Override
     protected BamTimerManager getBamTimerManager() {
         return bamTimerManager;
     }
