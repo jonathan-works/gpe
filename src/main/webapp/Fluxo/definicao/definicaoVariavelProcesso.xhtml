@@ -121,7 +121,7 @@
                 render="variavelForm, variavelTable, pageBodyDialogMessage, variavelPaginator"
                 limitRender="true"
                 value="#{definicaoVariavelProcessoAction.persisted ? messages['crud.update'] : messages['crud.persist']}"
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}"
+                styleClass="#{wi:get(styleClass, 'buttons')}"
             />
         </ui:fragment>
     </h:form>

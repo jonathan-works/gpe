@@ -1,35 +1,49 @@
 @import "padrao.less";
+@import "login.less";
+@import "defaultCRUD.less";
+@import "datatable.less";
+@import "menu.less";
+@import "header.less";
+@import "messages.less";
 
-@bgColorSelect:#fff;
-@borderColorButton:#000;
+@bgColorSelect:#FFF;
+@borderColorButton:#FFF;
 @borderColorInputTree:#000;
-@bgColorInputTextareaSelect:#fff;
-@borderColorInputTextareaSelect:#fff;
-@bgColorRequired:#000;
-@headerBackgroundColor:#fff;
+@bgColorInputTextareaSelect:#FFF;
+@borderColorInputTextareaSelect:#FFF;
+@bgColorRequired:#FFF;
+@headerBackgroundColor:#FFF;
 @headerTextColor:#000;
-@panelBorderColor:#000;
-@tableBorderColor:#fff;
-@tableBorderWidth:1px;
+@panelBorderColor:#FFF;
+@tableBorderColor:#FFF;
+@baseBgColor:#FFF;
+@baseDegBgColor:#FFF;
+@login-label-color:#000;
+@zebra-row-color-odd:#FFF;
+@zebra-row-color-even:#FFF;
+@zebra-row-color-over:#FFF;
+@dt-toolbar-column-border-color:#FFF;
+@rf-dt-col-shdr-cont-color:#000;
+@header-bg-color:#FFF;
+@header-bg-deg-color:#FFF;
+@menu-bg-color:#FFF;
+@menu-txt-color:#000;
+@login-label-color:#000;
+@login-corpoSuperior-bg-color:#FFF;
+@login-corpoSuperior-bg-deg-color:#FFF;
+@login-corpoInferior-bg-color:#FFF;
+@login-corpoInferior-bg-deg-color:#FFF;
+@central-block-top-right-section-bg-color:#FFF;
+@central-block-top-right-section-bg-deg-color:#FFF;
+@central-block-bottom-right-section-bg-color:#FFF;
+@central-block-bottom-right-section-bg-deg-color:#FFF;
+@input-text-login-bg-color:#FFF;
+@input-text-login-bg-deg-color:#FFF;
+@input-text-login-bord-color:#FFF;
 
-/* CSS para as Paginas */
-#html,#body {
-  background: #fff; /* Cor fixa para Browsers antigos */
-}
-
-.subBorda {
-  color: #fff;
-  background-color: #000; /* Cor fixa para Browsers antigos */
-}
-
-.banner .clock,.banner .center,.banner label {
-  color: #000;
-}
-
-.banner .divBg {
-  color: #fff;
-  background-color: #000;
-}
+@sub-borda-bg-color:#000;
+@sub-borda-bg-deg-color:#000;
+@sub-borda-title-color:#FFF;
 
 .ui-menu-item>.ui-corner-all {
   color: #000;
@@ -38,54 +52,6 @@
 
 .ui-menu-item>.ui-corner-all.ui-state-focus {
   background: #000;
-  color: #fff;
-}
-
-.banner {
-  background: #fff; /* Cor fixa para Browsers antigos */
-}
-
-/* Pagina do Login*/
-.corpoSuperior {
-  background: #fff; /* Old browsers */
-}
-
-.corpoInferior {
-  background: #fff;
-}
-
-.bg_login_inferior {
-  background-color: #fff;
-  border: 1px solid #000;
-}
-
-.banner .divBg label {
-  color: #fff;
-}
-
-.bg_login,.corpoInferior,.newPasswd {
-  background-color: #000;
-  border: 1px solid #000;
-}
-
-.login .input_login,.reqSenha .input_login {
-  background-color: #fff; /* Old browsers */
-  border: 2px solid #fff;
-}
-
-.bg_login_inferior .input_button {
-  background-color: #fff;
-  border: 1px solid #000;
-  color: #000;
-}
-
-.reqSenha label {
-  color: #fff;
-  font-family: Arial, sans-serif;
-  margin: 0;
-}
-
-.login-lbl {
   color: #fff;
 }
 
@@ -116,67 +82,4 @@
 /* texto */
 .ui-widget-header>.ui-state-default.ui-corner-top.ui-state-disabled>a {
   
-}
-.rf-ddm-itm.rf-ddm-itm-sel,.rf-ddm-lbl.rf-ddm-sel {
-  background:#000;
-  color:#fff;
-}
-.rf-ddm-itm.rf-ddm-itm-sel > .rf-ddm-itm-lbl,.rf-ddm-lbl.rf-ddm-sel > .rf-ddm-lbl-dec {
-  color:#fff;
-}
-
-.ipt-txt-area-select{
-  border-color:@borderColorInputTextareaSelect;
-  background:@bgColorInputTextareaSelect;
-}
-.tree-b {
-  border-color:@borderColorInputTree;
-}
-option {
-  background-color:@bgColorSelect;
-}
-
-textarea {
-  .ipt-txt-area-select;
-}
-.buttons {
-  border-color:@borderColorButton;
-  &.branco{
-    background-color:@headerBackgroundColor;
-  }
-}
-.tree-hdr {
-  & > .rf-cp-gr {
-    background-color:transparent;
-  }
-}
-.required {
-  color:@bgColorRequired;
-}
-.d-msg-h {
-  color:@headerTextColor;
-  border-color:@panelBorderColor;
-  background-color:@headerBackgroundColor;
-}
-.rf-dt-thd {
-  border-color:@tableBorderColor;
-  border-width:@tableBorderWidth;
-}
-.rf-dt-hdr {
-  background-color:@headerBackgroundColor;
-}
-.rf-dt-shdr {
-  background-color:@headerBackgroundColor;
-}
-.rf-dt-hdr-c {
-  color:@headerTextColor;
-}
-.label-general {
-  &.resultado-pesquisa-ajuda {
-    .rf-dt-hdr-c;
-  }
-}
-
-select {
-  .ipt-txt-area-select;
 }

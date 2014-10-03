@@ -36,7 +36,7 @@
                 action="#{partesController.includePessoaJuridica()}"
                 render="buscaDiv, pessoasListDiv, storeDiv, pessoaJuridicaForm"
                 value="#{eppmessages['crud.persist']}" 
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}"/>
+                styleClass="#{wi:get(styleClass, 'buttons')}"/>
         </ui:define>
 
     </wi:dataForm>

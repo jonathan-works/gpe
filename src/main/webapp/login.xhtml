@@ -26,12 +26,11 @@
         var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
         function toggleButton() {
           $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{eppmessages['login.trocarSenhaBtn']}" : "#{eppmessages['login.naoTrocarSenhaBtn']}");
-          $(".input_login.passwd").val("");
+          $(".input-text-login.passwd").val("");
           $("#login\\:btnEntrar").val($("#btnTrocar").val() === "#{eppmessages['login.naoTrocarSenhaBtn']}" ? "#{eppmessages['login.alterarBtn']}" : "#{eppmessages['login.entrarBtn']}");
         }
         function showPanel() {
           requestPasswordPanel.show();
-          
         }
         function hidePanel() {
           requestPasswordPanel.hide();
@@ -51,14 +50,14 @@
       <div class="corpoInferior">
         <h:outputText
           styleClass="versao"
-          value="VERSÃO: #{gitRepository.describe} / #{gitRepository.buildTime} " />
+          value="VERSÃO: #{gitRepository.describe} / #{gitRepository.buildTime}" />
       </div>
       <div
         id="seletorSkinLogin"
         class="seletorSkinsLogin">
         <button
           id="consultaExterna"
-          class="input_button"
+          class="input-button-login input_button"
           onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';">#{eppmessages['consultaExterna.titlePage']}</button>
         <ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
           <ui:param
@@ -96,7 +95,7 @@
                 <h:inputText
                   id="username"
                   value="#{credentials.username}"
-                  class="input_login label-general"
+                  class="input-text-login"
                   rendered="#{not useCertLogin}" />
               </div>
               <div>
@@ -110,7 +109,7 @@
                   id="password"
                   value="#{credentials.password}"
                   rendered="#{not useCertLogin}"
-                  class="input_login label-general" />
+                  class="input-text-login" />
               </div>
               <div class="novaSenha">
                 <h:outputLabel
@@ -121,7 +120,7 @@
                 </h:outputLabel>
                 <h:inputSecret
                   id="newPassword1"
-                  class="input_login label-general passwd"
+                  class="input-text-login  passwd"
                   value="#{authenticator.newPassword1}" />
               </div>
               <div class="novaSenha">
@@ -133,7 +132,7 @@
                 </h:outputLabel>
                 <h:inputSecret
                   id="newPassword2"
-                  class="input_login label-general passwd"
+                  class="input-text-login  passwd"
                   value="#{authenticator.newPassword2}" />
               </div>
             </s:div>
@@ -180,15 +179,15 @@
               <h:commandButton
                 id="btnEntrar"
                 value="#{eppmessages['login.entrarBtn']}"
-                styleClass="input_button"
+                styleClass="input-button-login input_button"
                 action="#{authenticator.login()}" />
               <input
-                class="input_button"
+                class="input-button-login input_button"
                 id="btnTrocar"
                 type="button"
                 value="#{eppmessages['login.trocarSenhaBtn']}" />
               <input
-                class="input_button"
+                class="input-button-login input_button"
                 id="btnTrocarSenha"
                 type="button"
                 value="#{eppmessages['login.requisitarSenhaBtn']}" />
@@ -220,7 +219,7 @@
               </h:outputLabel>
               <h:inputText
                 id="login"
-                class="input_login label-general"
+                class="input-text-login"
                 value="#{passwordRequester.login}" />
             </div>
             <div>
@@ -231,18 +230,18 @@
               </h:outputLabel>
               <h:inputText
                 id="email"
-                class="input_login label-general"
+                class="input-text-login"
                 value="#{passwordRequester.email}" />
             </div>
           </div>
           <div class="bg_login_inferior">
             <h:commandButton
               id="confirma"
-              class="input_button"
+              class="input-button-login input_button"
               value="#{eppmessages['login.confirmaTrocaSenhaBtn']}"
               action="#{passwordRequester.requisitarNovaSenha()}" />
             <input
-              class="input_button"
+              class="input-button-login input_button"
               id="btnTrocarSenha2"
               type="button"
               value="#{eppmessages['login.cancelaTrocaSenhaBtn']}" />

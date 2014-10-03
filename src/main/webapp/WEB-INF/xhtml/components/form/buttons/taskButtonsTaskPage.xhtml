@@ -32,7 +32,7 @@
                 onmouseup="showLoading()" oncomplete="verifyFields()"
                 render=":script, #{reRenderEndTask}, :pageBodyDialogMessage"
                 limitRender="true" value="#{transition.name}"
-                styleClass="buttons buttons"
+                styleClass="buttons"
                 action="#{elFunctions.invokeMethod(taskEndAction)}">
                 <f:setPropertyActionListener
                     target="#{taskInstanceHome.name}"

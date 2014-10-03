@@ -148,7 +148,7 @@
                         value="Gravar"
                         action="#{variavelProcessoAction.save}"
                         render="@form, pageBodyDialogMessage"
-                        styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
+                        styleClass="#{wi:get(styleClass, 'buttons')}" />
                 </h:form>
             </infox:tab>
             <infox:tab
@@ -353,7 +353,7 @@
 					        oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
 					        value="Enviar"
 					        render="@form, processoDocumentoList, pageBodyDialogMessage"
-					        styleClass="buttons buttons"/>
+					        styleClass="buttons"/>
 			          </div>
 			        </h:form>
                 </rich:popupPanel>

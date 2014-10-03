@@ -4,6 +4,7 @@
 @import "datatable.less";
 @import "menu.less";
 @import "header.less";
+@import "messages.less";
 
 @bgColorSelect:#ECF7EC;
 @borderColorButton:#A0BC93;
@@ -27,201 +28,31 @@
 @dt-toolbar-column-border-color:#CCC;
 @rf-dt-col-shdr-cont-color:#000;
 
+@default-font-family:Arial, sans-serif;
+@header-bg-color:#c7d8cd;
+@header-bg-deg-color:#dbe5de;
+
 @menu-bg-color:#a0c991;
 @menu-txt-color:#030;
+@login-label-color:#616161;
 
+@login-corpoSuperior-bg-color:#cce0e6;
+@login-corpoSuperior-bg-deg-color:#bcd6d4;
 
-/* CSS para as Paginas */
-#html,#body {
-  background: @baseBgColor; /* Cor fixa para Browsers antigos */
-    /* IE9 SVG */
-  background: -moz-linear-gradient(top, @baseBgColor 13%, @baseDegBgColor 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(13%, @baseBgColor),
-    color-stop(100%, @baseDegBgColor));
-  background: -webkit-linear-gradient(top, @baseBgColor 13%, @baseDegBgColor 100%);
-  background: -o-linear-gradient(top, @baseBgColor 13%, @baseDegBgColor 100%);
-  background: -ms-linear-gradient(top, @baseBgColor 13%, @baseDegBgColor 100%);
-  background: linear-gradient(to bottom, @baseBgColor 13%, @baseDegBgColor 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@baseBgColor',
-    endColorstr='@baseDegBgColor', GradientType=0);
-}
+@login-corpoInferior-bg-color:#c6dddf;
+@login-corpoInferior-bg-deg-color:#b2d0c7;
 
-.subBorda {
-  color: #FFFFFF;
-  background: #bbcec2; /* Cor fixa para Browsers antigos */
-    /* IE9 SVG */
-  background: -moz-linear-gradient(45deg, #bbcec2 0%, #80a991 75%, #80a991 100%);
-  background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #bbcec2),
-    color-stop(75%, #80a991), color-stop(100%, #80a991));
-  background: -webkit-linear-gradient(45deg, #bbcec2 0%, #80a991 75%, #80a991 100%);
-  background: -o-linear-gradient(45deg, #bbcec2 0%, #80a991 75%, #80a991 100%);
-  background: -ms-linear-gradient(45deg, #bbcec2 0%, #80a991 75%, #80a991 100%);
-  background: linear-gradient(45deg, #bbcec2 0%, #80a991 75%, #80a991 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bbcec2',
-    endColorstr='#80a991', GradientType=1);
-}
+@central-block-top-right-section-bg-color:#a2b9b5;
+@central-block-top-right-section-bg-deg-color:#b8d1cf;
+@central-block-bottom-right-section-bg-color:#c3d8db;
+@central-block-bottom-right-section-bg-deg-color:#b9d1d0;
 
-/* Pagina do Login*/
-.corpoSuperior {
-  background: #cce0e6; /* Old browsers */
-  background: -moz-linear-gradient(top, #cce0e6 0%, #bcd6d4 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cce0e6),
-    color-stop(100%, #bcd6d4));
-  background: -webkit-linear-gradient(top, #cce0e6 0%, #bcd6d4 100%);
-  background: -o-linear-gradient(top, #cce0e6 0%, #bcd6d4 100%);
-  background: -ms-linear-gradient(top, #cce0e6 0%, #bcd6d4 100%);
-  background: linear-gradient(to bottom, #cce0e6 0%, #bcd6d4 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cce0e6',
-    endColorstr='#bcd6d4', GradientType=0);
-}
+@input-text-login-bg-color:#f4f7f6;
+@input-text-login-bg-deg-color:#ffffff;
+@input-text-login-bord-color:#c4d6d1;
 
-.corpoInferior {
-  background: #c6dddf;
-  background: -moz-linear-gradient(top, #c6dddf 0%, #b2d0c7 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #c6dddf),
-    color-stop(100%, #b2d0c7));
-  background: -webkit-linear-gradient(top, #c6dddf 0%, #b2d0c7 100%);
-  background: -o-linear-gradient(top, #c6dddf 0%, #b2d0c7 100%);
-  background: -ms-linear-gradient(top, #c6dddf 0%, #b2d0c7 100%);
-  background: linear-gradient(to bottom, #c6dddf 0%, #b2d0c7 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c6dddf',
-    endColorstr='#b2d0c7', GradientType=0);
-}
+@sub-borda-bg-color:#80a991;
+@sub-borda-bg-deg-color:#bbcec2;
+@sub-borda-title-color:#FFF;
 
-.bg_login,.newPasswd {
-  background: #a2b9b5; /* Old browsers */
-  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-  background: -moz-linear-gradient(top, #a2b9b5 0%, #b8d1cf 100%);
-  /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a2b9b5),
-    color-stop(100%, #b8d1cf)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #a2b9b5 0%, #b8d1cf 100%);
-  /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #a2b9b5 0%, #b8d1cf 100%);
-  /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #a2b9b5 0%, #b8d1cf 100%);
-  /* IE10+ */
-  background: linear-gradient(to bottom, #a2b9b5 0%, #b8d1cf 100%);
-  /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a2b9b5',
-    endColorstr='#b8d1cf', GradientType=0); /* IE6-8 */
-}
-
-.input_login {
-  background: rgb(244, 247, 246); /* Old browsers */
-  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-  background: -moz-linear-gradient(top, rgba(244, 247, 246, 1) 0%,
-    rgba(255, 255, 255, 1) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(244,
-    247, 246, 1)), color-stop(100%, rgba(255, 255, 255, 1)));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(244, 247, 246, 1) 0%,
-    rgba(255, 255, 255, 1) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(244, 247, 246, 1) 0%,
-    rgba(255, 255, 255, 1) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, rgba(244, 247, 246, 1) 0%,
-    rgba(255, 255, 255, 1) 100%); /* IE10+ */
-  background: linear-gradient(to bottom, rgba(244, 247, 246, 1) 0%,
-    rgba(255, 255, 255, 1) 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f7f6',
-    endColorstr='#ffffff', GradientType=0); /* IE6-8 */
-  border: 2px solid #c4d6d1;
-}
-
-.bg_login_inferior {
-  background: rgb(195, 216, 219); /* Old browsers */
-  /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-  background: -moz-linear-gradient(top, rgba(195, 216, 219, 1) 0%,
-    rgba(185, 209, 208, 1) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(195,
-    216, 219, 1)), color-stop(100%, rgba(185, 209, 208, 1)));
-  /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(195, 216, 219, 1) 0%,
-    rgba(185, 209, 208, 1) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, rgba(195, 216, 219, 1) 0%,
-    rgba(185, 209, 208, 1) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, rgba(195, 216, 219, 1) 0%,
-    rgba(185, 209, 208, 1) 100%); /* IE10+ */
-  background: linear-gradient(to bottom, rgba(195, 216, 219, 1) 0%,
-    rgba(185, 209, 208, 1) 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c3d8db',
-    endColorstr='#b9d1d0', GradientType=0); /* IE6-8 */
-}
-
-.input_button {
-  background: #FFF;
-  border: 1px solid #868686;
-  color: #8ca29c;
-}
-
-.rf-tr-nd.rf-drp-hvr {
-  /*background-color:#FFFF00;*/
-  
-}
-
-.rf-tr-nd.rf-drp-hlight {
-  border: 1px solid #5B7961;
-}
-
-.caixa-drag {
-  border: 1px solid #5B7961;
-  background-color: #D4F2D6;
-  color: #5B7961;
-  cursor: all-scroll;
-}
-
-.tree-b {
-  border-color:@borderColorInputTree;
-}
-option {
-  background-color:@bgColorSelect;
-}
-
-textarea {
-  &:extend(.ipt-txt-area-select);
-}
-.buttons {
-  border-color:@borderColorButton;
-  &.branco{
-    background-color:@headerBackgroundColor;
-  }
-}
-.tree-hdr {
-  & > .rf-cp-gr {
-    background-color:transparent;
-  }
-}
-.required {
-  color:@bgColorRequired;
-}
-.d-msg-h {
-  color:@headerTextColor;
-  border-color:@panelBorderColor;
-  background-color:@headerBackgroundColor;
-}
-.rf-dt-thd {
-  border-color:@tableBorderColor;
-  border-width:@tableBorderWidth;
-}
-.rf-dt-hdr {
-  background-color:@headerBackgroundColor;
-}
-.rf-dt-shdr {
-  background-color:@headerBackgroundColor;
-}
-.rf-dt-hdr-c {
-  color:@headerTextColor;
-}
-.label-general {
-  &.resultado-pesquisa-ajuda {
-    &:extend(.rf-dt-hdr-c);
-  }
-}
-.ipt-txt-area-select {
-  border-color:@borderColorInputTextareaSelect;
-  background:@bgColorInputTextareaSelect;
-}
-
-select {
-  &:extend(.ipt-txt-area-select);
-}
+@default-font-family:Arial, sans-serif;

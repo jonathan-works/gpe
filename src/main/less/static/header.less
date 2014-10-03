@@ -1,30 +1,31 @@
+@import "epp-mixins.less";
+
+@default-font-family:Arial, sans-serif;
+@header-bg-color:#c7d8cd;
+@header-bg-deg-color:#dbe5de;
+@menu-bg-color:#a0c991;
+@menu-txt-color:#030;
+
+@banner-height:85px;
+
 .banner {
-  color: #030;
-  height: 101px;
+  color:@menu-txt-color;
+  height:@banner-height;
+  .bg-deg-color(@header-bg-color,@header-bg-deg-color);
+  
+  .divBg {
+    background-color: @menu-bg-color;
+  }
+  
+}
+.banner-logo {
+    max-height: @banner-height;
+}
+.banner-subTitle,.banner-title{
+  font-family: @default-font-family;
 }
 
-.banner .divBg {
-  background-color: #a0c991;
-}
-
-.banner {
-  background: #c7d8cd; /* Cor fixa para Browsers antigos */
-  /* IE9 SVG */
-  background: -moz-linear-gradient(top, #c7d8cd 0%, #dbe5de 90%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #c7d8cd),
-    color-stop(90%, #dbe5de));
-  background: -webkit-linear-gradient(top, #c7d8cd 0%, #dbe5de 90%);
-  background: -o-linear-gradient(top, #c7d8cd 0%, #dbe5de 90%);
-  background: -ms-linear-gradient(top, #c7d8cd 0%, #dbe5de 90%);
-  background: linear-gradient(to bottom, #c7d8cd 0%, #dbe5de 90%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c7d8cd',
-    endColorstr='#dbe5de', GradientType=0);
-}
-
-.banner, .banner-logo {
-    height: 101px;
-}
-.banner-lft, .banner-ctr, .banner-rgt {
+.banner-lft, .banner-ctr, .banner-rgt,.BarraPesquisa, .SeletorSkins {
     display: inline-block;
     vertical-align: top;
 }
@@ -56,10 +57,6 @@
 .BP-lbl {
     font-weight: bold;
 }
-.BarraPesquisa, .SeletorSkins {
-    display: inline-table;
-    vertical-align: top;
-}
 .palette-img-inpt {
     width: 18px;
     height: auto;
@@ -72,10 +69,10 @@
     right: 0%;
     top: 0%;
     text-align: right;
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-family:@default-font-family;
     font-weight: bold;
 }
-.name.painelUsuario-label {
+.property-field-edit-name.painelUsuario-label {
     color: inherit;
 }
 .painelUsuario-label, .painelUsuario-select {

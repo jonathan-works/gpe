@@ -57,7 +57,7 @@
                 value="OK"
                 onmouseup="showLoading()"
                 status="none"
-                styleClass="buttons buttons"
+                styleClass="buttons"
                 eventsQueue="editQueue"
                 oncomplete="#{oncomplete};verifyFields();"
                 render=":script,#{reRenderSave}"
@@ -75,7 +75,7 @@
                     render=":script,#{reRenderSave}"
                     limitRender="true"
                     value="#{transition.name}"
-                    styleClass="buttons buttons"
+                    styleClass="buttons"
                     action="#{taskInstanceHome.end(transition.name)}" />
             </a:repeat>
         </c:if>
