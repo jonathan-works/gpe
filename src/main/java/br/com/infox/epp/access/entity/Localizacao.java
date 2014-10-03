@@ -221,13 +221,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     @Override
     public String toString() {
-        String str = localizacao;
-        if (!getUnidadeDecisoraColegiada().isEmpty()) {
-            str += " - " + getUnidadeDecisoraColegiada().get(0).getNome();
-        } else if (!getUnidadeDecisoraMonocratica().isEmpty()){
-            str += " - " + getUnidadeDecisoraMonocratica().get(0).getNome();
-        }
-        return str;
+        return localizacao;
     }
 
     public void setLocalizacaoTurnoList(
