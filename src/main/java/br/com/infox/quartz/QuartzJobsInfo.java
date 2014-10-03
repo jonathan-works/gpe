@@ -81,7 +81,8 @@ public class QuartzJobsInfo implements Serializable {
             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
             List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
             for (Trigger trigger : triggersOfJob) {
-                maps.add(getTrigerDetailMap(jobDetail, trigger));
+                Map<String, Object> map = getTrigerDetailMap(jobDetail, trigger); 
+                if (map != null) maps.add(map);
             }
         }
         return maps;
@@ -102,8 +103,12 @@ public class QuartzJobsInfo implements Serializable {
         map.put("jobValid", isJobValid(jobExpression));
         if (trigger instanceof CronTrigger) {
             CronTrigger cronTrigger = (CronTrigger) trigger;
-            map.put("cronExpression", cronTrigger.getCronExpression());
-        }
+            String cronExpression = cronTrigger.getCronExpression();
+            if (cronExpression != null && cronExpression.trim().length() > 0)
+                map.put("cronExpression", cronExpression);
+            else return null;
+        } else return null;
+        
         return map;
     }
 
