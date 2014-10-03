@@ -35,8 +35,8 @@ import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 
-@Name(SituacaoProcessoDAO.NAME)
 @AutoCreate
+@Name(SituacaoProcessoDAO.NAME)
 public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     
     @In

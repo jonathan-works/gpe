@@ -94,7 +94,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
             processoManager.iniciarTask(instance, tarefaId,
                     Authenticator.getUsuarioPerfilAtual());
         } catch (java.lang.NullPointerException e) {
-            LOG.error("ProcessoHome.iniciarTarefaProcesso()", e);
+            LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
         } catch (DAOException e) {
             LOG.error("Erro ao vincular Usuario", e);
         }

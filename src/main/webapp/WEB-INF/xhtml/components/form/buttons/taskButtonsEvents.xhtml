@@ -25,7 +25,7 @@
             value="#{empty reRenderSave ? formId : reRenderSave}" />
         <a:commandButton
             id="update"
-            rendered="#{!empty form.fields and processoHome.managed}"
+            rendered="#{!empty form.fields and processoEpaHome.managed}"
             status=":status"
             eventsQueue="editQueue"
             oncomplete="#{oncomplete}"
@@ -36,7 +36,7 @@
             action="#{taskInstanceHome.update(home)}" />
         <a:commandButton
             id="persist"
-            rendered="#{!empty form.fields and !processoHome.managed}"
+            rendered="#{!empty form.fields and !processoEpaHome.managed}"
             status=":status"
             eventsQueue="editQueue"
             render="#{reRenderSave}, taskButtonsDiv"

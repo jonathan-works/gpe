@@ -105,8 +105,8 @@ final class TaskVariableResolver extends TaskVariable {
 
     private void resolveEditor() {
         try {
-            ProcessoEpaHome processoHome = ProcessoEpaHome.instance();
-            Integer valueInt = processoHome.salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinarDocumento, getLabel());
+            ProcessoEpaHome processoEpaHome = ProcessoEpaHome.instance();
+            Integer valueInt = processoEpaHome.salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinarDocumento, getLabel());
             if (valueInt != null && valueInt != 0) {
                 this.value = valueInt;
                 resolve = resolve | SIGNED;

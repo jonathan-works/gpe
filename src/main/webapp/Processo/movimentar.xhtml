@@ -56,7 +56,7 @@
           }
       }
     </h:outputScript>
-    <h:outputScript rendered="#{processoHome.tab=='tabSaida'}">
+    <h:outputScript rendered="#{processoEpaHome.tab=='tabSaida'}">
       invoke([ "infox.Modal" ], function(Modal) {
         var panelTeste = new Modal({
           id : "#{rich:clientId('mp_taskNodeDescription')}"
@@ -73,13 +73,13 @@
     </ui:define>
     <ui:param
         name="home"
-        value="#{processoHome}" />
+        value="#{processoEpaHome}" />
     <ui:param
         name="showMenu"
         value="false" />
     <ui:param
         name="checkPermission"
-        value="#{processoHome.checarVisibilidade()}" />
+        value="#{processoEpaHome.checarVisibilidade()}" />
     <ui:param
         name="isUsuarioExterno"
         value="#{authenticator.usuarioExterno ? 'true':'false'}" />
@@ -92,7 +92,7 @@
     <ui:define name="body">
         <rich:collapsiblePanel
             switchType="client"
-            header="#{eppmessages['processo.titleView']} #{processoHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoHome.instance.itemDoProcesso}"
+            header="#{eppmessages['processo.titleView']} #{processoEpaHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoEpaHome.instance.itemDoProcesso}"
             expanded="false">
             <h:panelGrid
                 columns="2"
@@ -101,13 +101,13 @@
                 <wi:outputText
                     id="dataInicio"
                     label="#{eppmessages['processo.dataInicio']}"
-                    value="#{processoHome.instance.dataInicio}">
+                    value="#{processoEpaHome.instance.dataInicio}">
                     <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
                 </wi:outputText>
                 <wi:outputText
                     id="usuarioCadastroProcesso"
                     label="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                    value="#{processoHome.instance.usuarioCadastroProcesso}" />
+                    value="#{processoEpaHome.instance.usuarioCadastroProcesso}" />
             </h:panelGrid>
         </rich:collapsiblePanel>
         <h:form>
@@ -161,7 +161,7 @@
             <infox:tab
                 id="tabSaida"
                 name="tabSaida"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{eppmessages['movimentar.saida.titleTab']}">
                 <c:if test="#{not taskPageAction.hasTaskPage}">
@@ -179,10 +179,10 @@
             <infox:tab
                 id="tabAnexar"
                 name="tabAnexar"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{eppmessages['movimentar.anexar.titleTab']}"
-                action="#{anexoController.onClickTabAnexar(processoHome.instance)}">
+                action="#{anexoController.onClickTabAnexar(processoEpaHome.instance)}">
                 <wi:dataForm
                     formId="anexarDocumentosForm"
                     formTitle="#{eppmessages['movimentar.anexar.titleForm']}"
@@ -194,9 +194,9 @@
             <infox:tab
                 id="tabAnexos"
                 name="tabAnexos"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
-                action="#{documentoList.entity.setProcesso(processoHome.instance)}"
+                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{eppmessages['movimentar.documentos.titleTab']}">
                 <a:jsFunction name="selectDocumento" immediate="true"
@@ -395,7 +395,7 @@
             <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{eppmessages['movimentar.movimentacoes.titleTab']}">
                 <ui:include
@@ -408,7 +408,7 @@
                 id="documentoFisicoTab"
                 name="documentoFisicoTab"
                 rendered="#{home.isManaged()}"
-                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
+                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
                 title="#{eppmessages['documentoFisico.titleTab']}">
                 <wi:dataForm
                     formId="documentoFisicoForm"

@@ -21,7 +21,7 @@
         <a:commandButton
             id="update"
             status="none"
-            rendered="#{!empty form.fields and processoHome.managed and !isUsuarioExterno}"
+            rendered="#{!empty form.fields and processoEpaHome.managed and !isUsuarioExterno}"
             onmouseup="showLoading()"
             oncomplete="#{oncomplete}; hideLoading(); reloadPanel();"
             render="#{reRenderSave},:pageBodyDialogMessage"
@@ -33,7 +33,7 @@
             id="unlock"
             execute="@this"
             status="none"
-            rendered="#{processoHome.managed and !isUsuarioExterno}"
+            rendered="#{processoEpaHome.managed and !isUsuarioExterno}"
             onmouseup="showLoading()"
             onbeforedomupdate="reloadPanel();"
             oncomplete="#{oncomplete};hideLoading();close()"
@@ -43,7 +43,7 @@
             action="#{taskInstanceHome.removeUsuario()}" />
         <a:commandButton
             id="persist"
-            rendered="#{!empty form.fields and !processoHome.managed and !isUsuarioExterno}"
+            rendered="#{!empty form.fields and !processoEpaHome.managed and !isUsuarioExterno}"
             status="none"
             onmouseup="showLoading()"
             oncomplete="hideLoading()"
@@ -89,7 +89,7 @@
                 value="#{eppmessages['prioridadeProcesso.comboBox']}"
                 style="margin-left: 40px;" />
             <h:selectOneMenu
-                value="#{processoHome.instance.prioridadeProcesso}">
+                value="#{processoEpaHome.instance.prioridadeProcesso}">
                 <s:selectItems
                     value="#{prioridadeProcessoList.listAtivos()}"
                     var="p"

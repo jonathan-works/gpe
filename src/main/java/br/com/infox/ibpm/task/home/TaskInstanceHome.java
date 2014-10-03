@@ -256,7 +256,7 @@ public class TaskInstanceHome implements Serializable {
         updateTransitions();
         // Necessário para gravar a prioridade do processo ao clicar no botão
         // Gravar
-        // Não pode usar ProcessoHome.instance().update() porque por algum
+        // Não pode usar ProcessoEpaHome.instance().update() porque por algum
         // motivo dá um NullPointerException
         // ao finalizar a tarefa, algo relacionado às mensagens do Seam
         taskInstanceManager.flush();
@@ -287,10 +287,10 @@ public class TaskInstanceHome implements Serializable {
             if (variableResolver.isEditor() && variableAccess.isReadable()) {
                 DadosDocumentoAssinavel dados = documentosAssinaveis
                         .get(fieldName);
-                ProcessoEpaHome processoHome = ProcessoEpaHome.instance();
-                processoHome.setClassificacaoDocumento(dados.getClassificacao());
-                processoHome.setSignature(dados.getSignature());
-                processoHome.setCertChain(dados.getCertChain());
+                ProcessoEpaHome processoEpaHome = ProcessoEpaHome.instance();
+                processoEpaHome.setClassificacaoDocumento(dados.getClassificacao());
+                processoEpaHome.setSignature(dados.getSignature());
+                processoEpaHome.setCertChain(dados.getCertChain());
             }
             variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
             variableResolver.resolve();
@@ -536,12 +536,12 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    private void limparEstado(ProcessoEpaHome processoHome) {
+    private void limparEstado(ProcessoEpaHome processoEpaHome) {
         this.currentTaskInstance = null;
-        processoHome.setIdDocumento(null);
-        processoHome.setCertChain(null);
-        processoHome.setSignature(null);
-        processoHome.setClassificacaoDocumento(null);
+        processoEpaHome.setIdDocumento(null);
+        processoEpaHome.setCertChain(null);
+        processoEpaHome.setSignature(null);
+        processoEpaHome.setClassificacaoDocumento(null);
     }
 
     private void checkCurrentTask() {

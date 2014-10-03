@@ -6,18 +6,18 @@
       login-required="true"
 >
     
-    <description>Processo: #{processoHome.instance}</description>
+    <description>Processo: #{processoEpaHome.instance}</description>
     
     <begin-conversation join="true"/>
 
 <!-- Parametros para RESTFull -->
-    <param name="tab" value="#{processoHome.tab}"/>
-    <param name="goBackUrl" value="#{processoHome.goBackUrl}"/>
-    <param name="goBackId" value="#{processoHome.goBackId}"/>
-    <param name="goBackTab" value="#{processoHome.goBackTab}"/>
+    <param name="tab" value="#{processoEpaHome.tab}"/>
+    <param name="goBackUrl" value="#{processoEpaHome.goBackUrl}"/>
+    <param name="goBackId" value="#{processoEpaHome.goBackId}"/>
+    <param name="goBackTab" value="#{processoEpaHome.goBackTab}"/>
 
-    <param name="idProcesso" value="#{processoHome.processoIdProcesso}"/>
-    <param name="tarefaId" value="#{processoHome.tarefaId}" />    
-    <action execute="#{processoHome.visualizarTarefaProcesso()}"/>
+    <param name="idProcesso" value="#{processoEpaHome.processoIdProcesso}"/>
+    <param name="tarefaId" value="#{processoEpaHome.tarefaId}" />    
+    <action execute="#{processoEpaHome.visualizarTarefaProcesso()}"/>
  
 </page>
