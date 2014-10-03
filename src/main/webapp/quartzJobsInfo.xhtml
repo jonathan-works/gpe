@@ -69,7 +69,7 @@
                     <h:form>
                         <h:commandLink
                             value="#{eppmessages['button.delete']}"
-                            action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName)}" />
+                            action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName, row.triggerName)}" />
                     </h:form>
                 </rich:column>
             </wi:dataTable>

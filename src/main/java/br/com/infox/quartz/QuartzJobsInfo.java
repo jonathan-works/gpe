@@ -169,10 +169,10 @@ public class QuartzJobsInfo implements Serializable {
         }
     }
 
-    public void deleteJob(String jobName, String groupName) {
+    public void deleteJob(String jobName, String groupName, String triggerName) {
         try {
             getScheduler().deleteJob(JobKey.jobKey(jobName, groupName));
-            parametroManager.removeParametroByValue(jobName);
+            parametroManager.removeParametroByValue(triggerName);
             FacesMessages.instance().add(Severity.INFO,
                     "Job removido com sucesso: " + jobName);
         } catch (SchedulerException | DAOException e) {
@@ -194,7 +194,7 @@ public class QuartzJobsInfo implements Serializable {
         List<Map<String, Object>> jobs = getDetailJobsInfo();
         
         for (Map<String, Object> job : jobs) {
-           deleteJob((String) job.get("triggerName"), (String) job.get("groupName")); 
+           deleteJob((String) job.get("jobName"), (String) job.get("groupName"), (String) job.get("triggerName")); 
         }
     }
 }
