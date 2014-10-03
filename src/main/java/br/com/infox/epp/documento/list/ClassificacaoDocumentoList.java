@@ -27,7 +27,7 @@ public class ClassificacaoDocumentoList extends EntityList<ClassificacaoDocument
     @Override
     protected void addSearchFields() {
         addSearchField("codigoDocumento", SearchCriteria.CONTENDO);
-        addSearchField("desricao", SearchCriteria.CONTENDO);
+        addSearchField("descricao", SearchCriteria.CONTENDO);
         addSearchField("inTipoDocumento", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
     }

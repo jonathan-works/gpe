@@ -10,8 +10,8 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 
-@Name(ClassificacaoDocumentoPapelList.NAME)
 @Scope(ScopeType.PAGE)
+@Name(ClassificacaoDocumentoPapelList.NAME)
 public class ClassificacaoDocumentoPapelList extends EntityList<ClassificacaoDocumentoPapel> {
 
     private static final long serialVersionUID = 1L;

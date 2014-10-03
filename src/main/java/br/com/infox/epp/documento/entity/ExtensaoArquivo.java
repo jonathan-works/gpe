@@ -80,8 +80,7 @@ public class ExtensaoArquivo implements Serializable {
 		return classificacaoDocumento;
 	}
 
-	public void setClassificacaoDocumento(
-			ClassificacaoDocumento classificacaoDocumento) {
+	public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
 		this.classificacaoDocumento = classificacaoDocumento;
 	}
 

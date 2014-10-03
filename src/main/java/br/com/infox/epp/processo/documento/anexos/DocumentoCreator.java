@@ -28,7 +28,7 @@ public abstract class DocumentoCreator {
         return documento;
     }
 
-    public void setProcessoDocumento(Documento documento) {
+    public void setDocumento(Documento documento) {
         this.documento = documento;
     }
 
@@ -41,7 +41,7 @@ public abstract class DocumentoCreator {
     }
 
     protected void newInstance() {
-        setProcessoDocumento(new Documento());
+        setDocumento(new Documento());
         getDocumento().setAnexo(true);
         getDocumento().setDocumentoBin(new DocumentoBin());
     }

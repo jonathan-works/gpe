@@ -27,6 +27,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -41,6 +43,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
 import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -111,11 +114,16 @@ public class Documento implements Serializable {
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_inclusao", nullable = false)
-    private Date dataInclusao = new Date();
+    private Date dataInclusao;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_inclusao")
     private UsuarioLogin usuarioInclusao;
+    
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_alteracao", nullable = false)
+    private Date dataAlteracao;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_alteracao")
@@ -128,6 +136,21 @@ public class Documento implements Serializable {
     @OneToMany(fetch=FetchType.LAZY, mappedBy="documento")
     @OrderBy(value="dataAlteracao DESC")
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
+    
+    @PrePersist
+    private void prePersist(){
+    	if (getPerfilTemplate() == null){
+    		setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
+    	}
+    	setDataInclusao(new Date());
+    	setUsuarioInclusao(Authenticator.getUsuarioLogado());
+    }
+    
+    @PreUpdate
+    private void preUpdate(){
+    	setDataAlteracao(new Date());
+    	setUsuarioAlteracao(Authenticator.getUsuarioLogado());
+    }
     
 	public Integer getId() {
 		return id;
@@ -223,6 +246,14 @@ public class Documento implements Serializable {
 
 	public void setUsuarioInclusao(UsuarioLogin usuarioInclusao) {
 		this.usuarioInclusao = usuarioInclusao;
+	}
+	
+	public Date getDataAlteracao() {
+		return dataAlteracao;
+	}
+
+	public void setDataAlteracao(Date dataAlteracao) {
+		this.dataAlteracao = dataAlteracao;
 	}
 
 	public UsuarioLogin getUsuarioAlteracao() {

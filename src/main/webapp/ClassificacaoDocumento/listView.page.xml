@@ -15,13 +15,13 @@
 
 	<param name="tab" value="#{classificacaoDocumentoCrudAction.tab}"/>
     
-    <action execute="#{classificacaoDocumentoPapelCrudAction.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
+    <action execute="#{classificacaoDocumentoPapelCrudAction.setClassificacaoDocumento(classificacaoDocumentoCrudAction.instance)}" 
             if="#{classificacaoDocumentoCrudAction.tab eq 'associarPapelTab'}"/>
-    <action execute="#{tipoProcessoDocumentoPapelList.entity.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
+    <action execute="#{classificacaoDocumentoPapelList.entity.setClassificacaoDocumento(classificacaoDocumentoCrudAction.instance)}" 
             if="#{classificacaoDocumentoCrudAction.tab eq 'associarPapelTab'}"/>
-    <action execute="#{extensaoArquivoCrudAction.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
+    <action execute="#{extensaoArquivoCrudAction.setClassificacaoDocumento(classificacaoDocumentoCrudAction.instance)}" 
             if="#{classificacaoDocumentoCrudAction.tab eq 'extensoesTab'}"/>
-    <action execute="#{extensaoArquivoList.entity.setTipoProcessoDocumento(classificacaoDocumentoCrudAction.instance)}" 
+    <action execute="#{extensaoArquivoList.entity.setClassificacaoDocumento(classificacaoDocumentoCrudAction.instance)}" 
             if="#{classificacaoDocumentoCrudAction.tab eq 'extensoesTab'}"/>
     
 

@@ -88,7 +88,7 @@ public class AssinaturaDocumento implements Serializable {
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
+    @JoinColumn(name = "id_documento_bin", nullable = false)
     private DocumentoBin documentoBin;
 
     public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) throws CertificadoException {
