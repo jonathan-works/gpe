@@ -454,6 +454,7 @@
         <epp.name>epp</epp.name>
         <epp.datasource.name>EPADataSource</epp.datasource.name>
         <epp.datasourcebin.name>EPADataSourceBin</epp.datasourcebin.name>
+        <epp.datasourcequartz.name>EPAQuartzDataSource</epp.datasourcequartz.name>
     </properties>
     <profiles>
         <profile>
