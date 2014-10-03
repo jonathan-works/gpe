@@ -358,33 +358,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <attachClasses>true</attachClasses>
-                    <packagingExcludes>WEB-INF/lib/sqljdbc4-4.0.jar,WEB-INF/lib/postgresql-9.3-1101-jdbc41.jar</packagingExcludes>
-                    <webResources>
-                        <resource>
-                            <directory>${basedir}/src/main/webapp</directory>
-                            <filtering>false</filtering>
-                            <excludes>
-                                <exclude>WEB-INF/web.xml</exclude>
-                                <exclude>WEB-INF/components.xml</exclude>
-                            </excludes>
-                        </resource>
-                        <resource>
-                            <directory>${basedir}/src/main/webapp</directory>
-                            <filtering>true</filtering>
-                            <includes>
-                                <include>WEB-INF/web.xml</include>
-                                <include>WEB-INF/components.xml</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.17</version>
             </plugin>
@@ -498,6 +471,22 @@
                                         <include>seam.quartz.properties</include>
                                     </includes>
                                 </resource>
+                                <resource>
+                                    <directory>${basedir}/src/main/webapp</directory>
+                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>WEB-INF/web.xml</exclude>
+                                        <exclude>WEB-INF/components.xml</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/src/main/webapp</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>WEB-INF/web.xml</include>
+                                        <include>WEB-INF/components.xml</include>
+                                    </includes>
+                                </resource>
                             </webResources>
                         </configuration>
                     </plugin>
@@ -525,6 +514,22 @@
                                     <targetPath>WEB-INF/classes</targetPath>
                                     <includes>
                                         <include>seam.quartz.properties</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/src/main/webapp</directory>
+                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>WEB-INF/web.xml</exclude>
+                                        <exclude>WEB-INF/components.xml</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>${basedir}/src/main/webapp</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>WEB-INF/web.xml</include>
+                                        <include>WEB-INF/components.xml</include>
                                     </includes>
                                 </resource>
                             </webResources>
