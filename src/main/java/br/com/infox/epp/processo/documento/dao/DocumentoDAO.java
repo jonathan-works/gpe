@@ -65,7 +65,7 @@ public class DocumentoDAO extends DAO<Documento> {
             Integer idProcessoDocumento) {
         Documento documento = find(idProcessoDocumento);
         if (documento != null) {
-            return documento.getProcessoDocumentoBin().getModeloDocumento();
+            return documento.getDocumentoBin().getModeloDocumento();
         }
         return null;
     }

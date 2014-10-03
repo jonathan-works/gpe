@@ -31,9 +31,9 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
         return getDao().getPapeisNaoAssociadosATipoModeloDocumento(tipoModeloDocumento);
     }
 
-    public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(
-            ClassificacaoDocumento tipoProcessoDocumento) {
-        return getDao().getPapeisNaoAssociadosATipoProcessoDocumento(tipoProcessoDocumento);
+    public List<Papel> getPapeisNaoAssociadosAClassificacaoDocumento(
+            ClassificacaoDocumento classificacaoDocumento) {
+        return getDao().getPapeisNaoAssociadosAClassificacaoDocumento(classificacaoDocumento);
     }
 
     public Papel getPapelByIdentificador(String identificador) {

@@ -1,5 +1,7 @@
 package br.com.infox.epp.ajuda.home;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -9,9 +11,11 @@ import br.com.infox.epp.ajuda.manager.AjudaManager;
 
 @Name(AjudaReindexer.NAME)
 @Scope(ScopeType.PAGE)
-public class AjudaReindexer {
+public class AjudaReindexer implements Serializable {
 
-    public static final String NAME = "ajudaReindexer";
+	private static final long serialVersionUID = 1L;
+
+	public static final String NAME = "ajudaReindexer";
 
     @In
     private AjudaManager ajudaManager;

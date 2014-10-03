@@ -1,5 +1,6 @@
 package br.com.infox.certificado;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -22,25 +23,29 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(ValidaDocumentoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ValidaDocumentoAction {
+@Name(ValidaDocumentoAction.NAME)
+public class ValidaDocumentoAction implements Serializable {
 
-    public static final String NAME = "validaDocumentoAction";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "validaDocumentoAction";
+	private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoAction.class);
+	
     private Documento documento;
-    private ProcessoDocumentoBin processoDocumentoBin;
+    private DocumentoBin documentoBin;
     private Boolean valido;
     private Certificado dadosCertificado;
     private List<AssinaturaDocumento> listAssinaturaDocumento;
+    private Integer idDocumento;
+    private String signature;
+    private String certChain;
     
-    private static final LogProvider LOG = Logging
-            .getLogProvider(ValidaDocumentoAction.class);
     @In
     public DocumentoManager documentoManager;
     @In
@@ -50,10 +55,6 @@ public class ValidaDocumentoAction {
     @In
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
     
-    private Integer idDocumento;
-    private String signature;
-    private String certChain;
-    
 
     /**
      * @deprecated
@@ -61,7 +62,7 @@ public class ValidaDocumentoAction {
     @Deprecated
     public void validaDocumento(Documento documento) {
         this.documento = documento;
-        ProcessoDocumentoBin bin = documento.getProcessoDocumentoBin();
+        DocumentoBin bin = documento.getDocumentoBin();
         // TODO ASSINATURA
         // validaDocumento(bin, bin.getCertChain(), bin.getSignature());
     }
@@ -72,9 +73,9 @@ public class ValidaDocumentoAction {
      * 
      * @param id
      */
-    public void validaDocumento(ProcessoDocumentoBin bin, String certChain,
+    public void validaDocumento(DocumentoBin bin, String certChain,
             String signature) {
-        processoDocumentoBin = bin;
+        documentoBin = bin;
         setValido(false);
         setDadosCertificado(null);
         try {
@@ -104,10 +105,9 @@ public class ValidaDocumentoAction {
     }
     
     public void assinaDocumento(UsuarioPerfil usuarioPerfil) {
-        if (this.processoDocumentoBin != null && !isAssinadoPor(usuarioPerfil.getUsuarioLogin())) {
+        if (this.documentoBin != null && !isAssinadoPor(usuarioPerfil.getUsuarioLogin())) {
             try {
-                assinaturaDocumentoService.assinarDocumento(processoDocumentoBin, usuarioPerfil, certChain, signature);
-                
+                assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certChain, signature);
                 listAssinaturaDocumento=null;
             } catch (CertificadoException | AssinaturaException | DAOException e) {
                 LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
@@ -119,7 +119,7 @@ public class ValidaDocumentoAction {
     public void validaDocumentoId(Integer idDocumento) {
         try {
             this.documento = assinaturaDocumentoService.validaDocumentoId(idDocumento);
-            this.processoDocumentoBin = this.documento.getProcessoDocumentoBin();
+            this.documentoBin = this.documento.getDocumentoBin();
             refresh();
         } catch (IllegalArgumentException e) {
             FacesMessages.instance().add(Severity.ERROR, e.getMessage());
@@ -161,11 +161,12 @@ public class ValidaDocumentoAction {
         return dadosCertificado;
     }
 
-    public ProcessoDocumentoBin getProcessoDocumentoBin() {
-        return processoDocumentoBin;
-    }
 
-    public String getNomeCertificadora() {
+    public DocumentoBin getDocumentoBin() {
+		return documentoBin;
+	}
+
+	public String getNomeCertificadora() {
         return dadosCertificado == null ? null : dadosCertificado.getAutoridadeCertificadora();
     }
 

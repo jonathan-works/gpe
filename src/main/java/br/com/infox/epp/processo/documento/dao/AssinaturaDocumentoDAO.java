@@ -23,7 +23,7 @@ public class AssinaturaDocumentoDAO extends DAO<AssinaturaDocumento> {
     public List<AssinaturaDocumento> listAssinaturaDocumentoByProcessoDocumento(Documento documento) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put(AssinaturaDocumentoQuery.PARAM_DOCUMENTO, documento);
-        return getNamedResultList(AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO, hashMap);
+        return getNamedResultList(AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO, hashMap);
     }
 
     //TODO colocar o atributo nomePerfil na entidade AssinaturaDocumento e remover isso daqui

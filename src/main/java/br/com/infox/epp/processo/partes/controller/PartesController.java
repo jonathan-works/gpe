@@ -21,7 +21,8 @@ import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 @Name(PartesController.NAME)
 public class PartesController extends AbstractPartesController {
 
-    public static final String NAME = "partesController";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "partesController";
     private static final LogProvider LOG = Logging.getLogProvider(PartesController.class);
 
     private Natureza natureza;

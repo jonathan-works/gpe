@@ -16,23 +16,22 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
-@Name(AssinadorDocumento.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Name(AssinadorDocumento.NAME)
 public class AssinadorDocumento extends AbstractController {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "assinadorDocumento";
-    private static final LogProvider LOG = Logging
-            .getLogProvider(AssinadorDocumento.class);
+    private static final LogProvider LOG = Logging.getLogProvider(AssinadorDocumento.class);
 
     private String certChain;
     private String signature;
     private boolean houveErroAoAssinar = false;
 
     private Documento documento;
-    private ProcessoDocumentoBin processoDocumentoBin;
+    private DocumentoBin documentoBin;
 
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
@@ -63,16 +62,15 @@ public class AssinadorDocumento extends AbstractController {
         this.houveErroAoAssinar = houveErroAoAssinar;
     }
 
-    public ProcessoDocumentoBin getProcessoDocumentoBin() {
-        return processoDocumentoBin;
-    }
+    public DocumentoBin getDocumentoBin() {
+		return documentoBin;
+	}
 
-    public void setProcessoDocumentoBin(
-            ProcessoDocumentoBin processoDocumentoBin) {
-        this.processoDocumentoBin = processoDocumentoBin;
-    }
+	public void setDocumentoBin(DocumentoBin documentoBin) {
+		this.documentoBin = documentoBin;
+	}
 
-    public void assinarDocumento() {
+	public void assinarDocumento() {
         final FacesMessages messages = FacesMessages.instance();
         try {
             final UsuarioPerfil perfilAtual = Authenticator
@@ -96,15 +94,14 @@ public class AssinadorDocumento extends AbstractController {
     }
 
     public boolean isSigned() {
-        return assinaturaDocumentoService
-                .isDocumentoAssinado(documento);
+        return assinaturaDocumentoService.isDocumentoAssinado(documento);
     }
 
     @Override
     public void setId(Object id) {
         super.setId(id);
         documento = genericManager.find(Documento.class, id);
-        setProcessoDocumentoBin(documento.getProcessoDocumentoBin());
+        setDocumentoBin(documento.getDocumentoBin());
     }
 
 }

@@ -73,12 +73,12 @@ public class Documento implements Serializable {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
-    private ClassificacaoDocumento tipoProcessoDocumento;
+    private ClassificacaoDocumento classificacaoDocumento;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
-    private ProcessoDocumentoBin processoDocumentoBin;
+    @JoinColumn(name = "id_documento_bin", nullable = false)
+    private DocumentoBin documentoBin;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -137,20 +137,20 @@ public class Documento implements Serializable {
 		this.id = id;
 	}
 
-	public ClassificacaoDocumento getTipoProcessoDocumento() {
-		return tipoProcessoDocumento;
+	public ClassificacaoDocumento getClassificacaoDocumento() {
+		return classificacaoDocumento;
 	}
 
-	public void setTipoProcessoDocumento(ClassificacaoDocumento tipoProcessoDocumento) {
-		this.tipoProcessoDocumento = tipoProcessoDocumento;
+	public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+		this.classificacaoDocumento = classificacaoDocumento;
 	}
 
-	public ProcessoDocumentoBin getProcessoDocumentoBin() {
-		return processoDocumentoBin;
+	public DocumentoBin getDocumentoBin() {
+		return documentoBin;
 	}
 
-	public void setProcessoDocumentoBin(ProcessoDocumentoBin processoDocumentoBin) {
-		this.processoDocumentoBin = processoDocumentoBin;
+	public void setDocumentoBin(DocumentoBin documentoBin) {
+		this.documentoBin = documentoBin;
 	}
 
 	public Processo getProcesso() {
@@ -251,7 +251,7 @@ public class Documento implements Serializable {
 	}
 
 	public boolean isDocumentoAssinavel(Papel papel){
-    	List<ClassificacaoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
+    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
 		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
 			if (tipoProcessoDocumentoPapel.getPapel().equals(papel) 
 					&& tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
@@ -262,7 +262,7 @@ public class Documento implements Serializable {
     }
     
     public boolean isDocumentoAssinavel(){
-    	List<ClassificacaoDocumentoPapel> papeis = getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
+    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
 		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
 			if (tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){
 				return true;
@@ -272,7 +272,7 @@ public class Documento implements Serializable {
     }
     
     public boolean isDocumentoAssinado(Papel papel){
-    	for(AssinaturaDocumento assinaturaDocumento : getProcessoDocumentoBin().getAssinaturas()){
+    	for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
     		if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)){
     			return true;
     		}
@@ -281,14 +281,14 @@ public class Documento implements Serializable {
     }
     
     public boolean hasAssinatura(){
-    	return getProcessoDocumentoBin().getAssinaturas() != null && 
-    			getProcessoDocumentoBin().getAssinaturas().size() > 0;
+    	return getDocumentoBin().getAssinaturas() != null && 
+    			getDocumentoBin().getAssinaturas().size() > 0;
     }
     
     @Transient
     @Field(index = Index.YES, store = Store.NO, name = "texto")
     public String getTextoIndexavel() {
-        return getProcessoDocumentoBin().getModeloDocumento();
+        return getDocumentoBin().getModeloDocumento();
     }
 
     @Transient

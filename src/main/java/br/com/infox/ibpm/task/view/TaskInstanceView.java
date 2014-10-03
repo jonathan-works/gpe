@@ -53,6 +53,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class TaskInstanceView implements Serializable {
+	
     private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceView.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceView";
@@ -106,11 +107,11 @@ public class TaskInstanceView implements Serializable {
                                 try {
                                     Documento documento = documentoManager().find(Integer.parseInt(value.toString(), 10));
                                     if (documento != null) {
-                                        properties.put("modeloDocumentoRO", documento.getProcessoDocumentoBin().getModeloDocumento());
-                                        properties.put("tipoProcessoDocumentoRO", documento.getTipoProcessoDocumento());
+                                        properties.put("modeloDocumentoRO", documento.getDocumentoBin().getModeloDocumento());
+                                        properties.put("tipoProcessoDocumentoRO", documento.getClassificacaoDocumento());
                                     }
                                 } catch (NumberFormatException e) {
-                                    LOG.error("Identificador de Processo Documento inválido", e);
+                                    LOG.error("Identificador de Documento inválido", e);
                                 }
                             }
                         }
@@ -139,7 +140,7 @@ public class TaskInstanceView implements Serializable {
                             if (value != null) {
                                 Documento documento = documentoManager().find(value);
                                 ff.setValue(documento.getDescricao());
-                                ff.getProperties().put("classificacaoDocumento", documento.getTipoProcessoDocumento().getDescricao());
+                                ff.getProperties().put("classificacaoDocumento", documento.getClassificacaoDocumento().getDescricao());
                             } else {
                                 ff.setValue("(sem anexo)");
                                 ff.getProperties().put("classificacaoDocumento", "(sem anexo)");

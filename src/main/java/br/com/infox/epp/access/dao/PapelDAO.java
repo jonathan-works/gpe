@@ -4,13 +4,13 @@ import static br.com.infox.epp.access.query.PapelQuery.ID_PAPEL_PARAM;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
-import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_LISTA_IDENTIFICADORES;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_MODELO_DOCUMENTO;
-import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_PROCESSO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PERMISSOES_BY_PAPEL;
 
 import java.util.HashMap;
@@ -26,8 +26,8 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 
-@Name(PapelDAO.NAME)
 @AutoCreate
+@Name(PapelDAO.NAME)
 public class PapelDAO extends DAO<Papel> {
 
     private static final long serialVersionUID = 1L;
@@ -40,11 +40,11 @@ public class PapelDAO extends DAO<Papel> {
         return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, parameters);
     }
 
-    public List<Papel> getPapeisNaoAssociadosATipoProcessoDocumento(
-            ClassificacaoDocumento tipoProcessoDocumento) {
+    public List<Papel> getPapeisNaoAssociadosAClassificacaoDocumento(
+            ClassificacaoDocumento classificacaoDocumento) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_TIPO_PROCESSO_DOCUMENTO, tipoProcessoDocumento);
-        return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, parameters);
+        parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, classificacaoDocumento);
+        return getNamedResultList(PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO, parameters);
     }
 
     public Papel getPapelByIndentificador(String identificador) {

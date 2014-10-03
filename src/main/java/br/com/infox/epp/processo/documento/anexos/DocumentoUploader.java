@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.anexos;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 
 import javax.faces.component.UIComponent;
@@ -32,17 +33,18 @@ import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 import com.lowagie.text.pdf.PdfReader;
 
-@Name(DocumentoUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class DocumentoUploader extends DocumentoCreator implements FileUploadListener {
+@Name(DocumentoUploader.NAME)
+public class DocumentoUploader extends DocumentoCreator implements FileUploadListener, Serializable {
 
-    public static final String NAME = "documentoUploader";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "documentoUploader";
     private static final String NOME_DOCUMENTO_DECORATION = "inputProcessoDocumentoPdfDecoration";
     private static final String NOME_DOCUMENTO = "inputProcessoDocumentoPdf";
     private static final String CLASSIFICACAO_DOCUMENTO_DECORATION = "tipoProcessoDocumentoPdfDecoration";
@@ -61,7 +63,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private ExtensaoArquivoManager extensaoArquivoManager;
     
     private UploadedFile uploadedFile;
-    private ClassificacaoDocumento tipoProcessoDocumento;
+    private ClassificacaoDocumento classificacaoDocumento;
     private byte[] pdf;
     
     public void onChangeClassificacaoDocumento(AjaxBehaviorEvent ajaxBehaviorEvent){
@@ -70,7 +72,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     }
     
     public void clearUploadFile(){
-    	getDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+    	getDocumento().setDocumentoBin(new DocumentoBin());
     	setValido(false);
     	setUploadedFile(null);
     	pdf = null;
@@ -117,11 +119,11 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         }
     }
 
-    private ProcessoDocumentoBin bin() {
-        if (getDocumento().getProcessoDocumentoBin() == null) {
-            getDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+    private DocumentoBin bin() {
+        if (getDocumento().getDocumentoBin() == null) {
+            getDocumento().setDocumentoBin(new DocumentoBin());
         }
-        return getDocumento().getProcessoDocumentoBin();
+        return getDocumento().getDocumentoBin();
     }
 
     private String getFileType(String nomeArquivo) {
@@ -146,10 +148,10 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         String texto = InfoxPdfReader.readPdfFromByteArray(pdf);
         Documento pd = documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento());
         bin().setModeloDocumento(texto);
-        documentoBinarioManager.salvarBinario(bin().getIdProcessoDocumentoBin(), bin().getProcessoDocumento());
+        documentoBinarioManager.salvarBinario(bin().getId(), bin().getProcessoDocumento());
         //Removida indexação manual daqui
         newInstance();
-        tipoProcessoDocumento = null;
+        classificacaoDocumento = null;
         setValido(false);
         return pd;
     }
@@ -159,7 +161,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.instance().get("documentoUploader.error.noFile"));
             return false;
         }
-        ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(tipoProcessoDocumento, bin().getExtensao());
+        ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, bin().getExtensao());
         if (extensaoArquivo == null) {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.instance().get("documentoUploader.error.invalidExtension"));
             return false;
@@ -205,20 +207,19 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         this.uploadedFile = uploadedFile;
     }
 
-    public ClassificacaoDocumento getTipoProcessoDocumento() {
-        return tipoProcessoDocumento;
+    public ClassificacaoDocumento getClassificacaoDocumento() {
+        return classificacaoDocumento;
     }
 
-    public void setTipoProcessoDocumento(
-            ClassificacaoDocumento tipoProcessoDocumento) {
-        this.tipoProcessoDocumento = tipoProcessoDocumento;
-        getDocumento().setTipoProcessoDocumento(tipoProcessoDocumento);
+    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+        this.classificacaoDocumento = classificacaoDocumento;
+        getDocumento().setClassificacaoDocumento(classificacaoDocumento);
     }
     
     @Override
     public void clear() {
         super.clear();
-        this.tipoProcessoDocumento = null;
+        this.classificacaoDocumento = null;
     }
     
     public void podeRenderizar(AjaxBehaviorEvent ajaxBehaviorEvent) {

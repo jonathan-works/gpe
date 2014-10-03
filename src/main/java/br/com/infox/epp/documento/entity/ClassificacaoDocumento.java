@@ -96,10 +96,10 @@ public class ClassificacaoDocumento implements Serializable {
     private Boolean publico;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "classificacaoDocumento")
-    private List<Documento> processoDocumentoList = new ArrayList<>(0);
+    private List<Documento> documentoList = new ArrayList<>(0);
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "classificacaoDocumento")
-    private List<ClassificacaoDocumentoPapel> tipoProcessoDocumentoPapeis = new ArrayList<>(0);
+    private List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapelList = new ArrayList<>(0);
 
     public ClassificacaoDocumento() {
         visibilidade = VisibilidadeEnum.A;
@@ -193,20 +193,20 @@ public class ClassificacaoDocumento implements Serializable {
 		this.publico = publico;
 	}
 
-	public List<Documento> getProcessoDocumentoList() {
-		return processoDocumentoList;
+	public List<Documento> getDocumentoList() {
+		return documentoList;
 	}
 
-	public void setProcessoDocumentoList(List<Documento> processoDocumentoList) {
-		this.processoDocumentoList = processoDocumentoList;
+	public void setDocumentoList(List<Documento> documentoList) {
+		this.documentoList = documentoList;
 	}
 
-	public List<ClassificacaoDocumentoPapel> getTipoProcessoDocumentoPapeis() {
-		return tipoProcessoDocumentoPapeis;
+	public List<ClassificacaoDocumentoPapel> getClassificacaoDocumentoPapelList() {
+		return classificacaoDocumentoPapelList;
 	}
 
-	public void setTipoProcessoDocumentoPapeis(List<ClassificacaoDocumentoPapel> tipoProcessoDocumentoPapeis) {
-		this.tipoProcessoDocumentoPapeis = tipoProcessoDocumentoPapeis;
+	public void setClassificacaoDocumentoPapelList(List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapelList) {
+		this.classificacaoDocumentoPapelList = classificacaoDocumentoPapelList;
 	}
 
 	@Override

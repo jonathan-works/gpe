@@ -14,10 +14,11 @@ import br.com.infox.epp.fluxo.dao.VariavelClassificacaoDocumentoDAO;
 import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 
-@Name(VariavelClassificacaoDocumentoManager.NAME)
 @AutoCreate
+@Name(VariavelClassificacaoDocumentoManager.NAME)
 public class VariavelClassificacaoDocumentoManager extends Manager<VariavelClassificacaoDocumentoDAO, VariavelClassificacaoDocumento> {
-    private static final long serialVersionUID = 1L;
+    
+	private static final long serialVersionUID = 1L;
     public static final String NAME = "variavelClassificacaoDocumentoManager";
     
     public List<VariavelClassificacaoDocumento> listVariavelClassificacao(String nomeVariavel, Integer idFluxo) {

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,19 +29,19 @@ import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 
 @Entity
-@Table(name = ProcessoDocumentoBin.TABLE_NAME)
-public class ProcessoDocumentoBin implements Serializable {
+@Table(name = DocumentoBin.TABLE_NAME)
+public class DocumentoBin implements Serializable {
 
     private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
     private static final long serialVersionUID = 1L;
-    public static final String TABLE_NAME = "tb_processo_documento_bin";
+    public static final String TABLE_NAME = "tb_documento_bin";
     
     @Id
-    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "generator", sequenceName = "sq_tb_processo_documento_bin")
-    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_processo_documento_bin", unique = true, nullable = false)
-    private Integer idProcessoDocumentoBin;
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "DocumentoBinGenerator", sequenceName = "sq_documento_bin")
+    @GeneratedValue(generator = "DocumentoBinGenerator", strategy = GenerationType.SEQUENCE)
+    @Column(name = "id_documento_bin", unique = true, nullable = false)
+    private Integer id;
     
     @Size(max = LengthConstants.DESCRICAO_MINIMA)
     @Column(name = "ds_extensao", length = LengthConstants.DESCRICAO_MINIMA)
@@ -68,27 +67,27 @@ public class ProcessoDocumentoBin implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataInclusao;
     
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList;
     
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE }, fetch = FetchType.LAZY, mappedBy = "processoDocumentoBin")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<AssinaturaDocumento> assinaturas;
     
     @Transient
     private byte[] processoDocumento;
 
-    public ProcessoDocumentoBin() {
+    public DocumentoBin() {
         this.dataInclusao=new Date();
         this.documentoList = new ArrayList<>(0);
         this.assinaturas = new ArrayList<>(0);
     }
     
-	public Integer getIdProcessoDocumentoBin() {
-		return idProcessoDocumentoBin;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setIdProcessoDocumentoBin(Integer idProcessoDocumentoBin) {
-		this.idProcessoDocumentoBin = idProcessoDocumentoBin;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getExtensao() {
@@ -187,10 +186,7 @@ public class ProcessoDocumentoBin implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((idProcessoDocumentoBin == null) ? 0
-						: idProcessoDocumentoBin.hashCode());
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
 		return result;
 	}
 
@@ -200,13 +196,13 @@ public class ProcessoDocumentoBin implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof ProcessoDocumentoBin))
+		if (!(obj instanceof DocumentoBin))
 			return false;
-		ProcessoDocumentoBin other = (ProcessoDocumentoBin) obj;
-		if (idProcessoDocumentoBin == null) {
-			if (other.idProcessoDocumentoBin != null)
+		DocumentoBin other = (DocumentoBin) obj;
+		if (getId() == null) {
+			if (other.getId() != null)
 				return false;
-		} else if (!idProcessoDocumentoBin.equals(other.idProcessoDocumentoBin))
+		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
 	}

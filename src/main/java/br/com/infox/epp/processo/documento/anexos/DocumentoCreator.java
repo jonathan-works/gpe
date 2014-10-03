@@ -7,7 +7,7 @@ import org.jboss.seam.log.LogProvider;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 
 public abstract class DocumentoCreator {
@@ -43,7 +43,7 @@ public abstract class DocumentoCreator {
     protected void newInstance() {
         setProcessoDocumento(new Documento());
         getDocumento().setAnexo(true);
-        getDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+        getDocumento().setDocumentoBin(new DocumentoBin());
     }
 
     public void clear() {

@@ -31,9 +31,9 @@ import br.com.infox.seam.path.PathResolver;
 import br.com.infox.util.collection.Factory;
 import br.com.infox.util.collection.LazyMap;
 
-@Name(SigiloDocumentoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Scope(ScopeType.CONVERSATION)
+@Name(SigiloDocumentoAction.NAME)
 public class SigiloDocumentoAction implements Serializable {
 
     public static final String NAME = "sigiloDocumentoAction";
@@ -80,7 +80,7 @@ public class SigiloDocumentoAction implements Serializable {
     }
 
     public String getViewUrl(Documento documento) {
-        if (documento.getProcessoDocumentoBin().isBinario()) {
+        if (documento.getDocumentoBin().isBinario()) {
             return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
         }
         return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());

@@ -15,8 +15,8 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
 
-@Scope(ScopeType.CONVERSATION)
 @Name(DocumentoList.NAME)
+@Scope(ScopeType.CONVERSATION)
 public class DocumentoList extends EntityList<Documento> {
 	
     private static final long serialVersionUID = 1L;
@@ -57,7 +57,7 @@ public class DocumentoList extends EntityList<Documento> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
     	Map<String, String> map = new HashMap<>();
-    	map.put("processoDocumentoBin.sizeFormatado", "o.processoDocumentoBin.size");
+    	map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
         return map;
     }
 

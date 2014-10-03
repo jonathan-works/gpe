@@ -24,7 +24,7 @@ import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
@@ -47,18 +47,18 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     @In
     private DocumentoManager documentoManager;
 
-    public ProcessoDocumentoBin createProcessoDocumentoBin(Object value) throws DAOException {
-        ProcessoDocumentoBin bin = new ProcessoDocumentoBin();
+    public DocumentoBin createDocumentoBin(Object value) throws DAOException {
+        DocumentoBin bin = new DocumentoBin();
         bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
         bin.setMd5Documento(MD5Encoder.encode(String.valueOf(value)));
         genericDAO.persist(bin);
         return bin;
     }
 
-    public Documento createProcessoDocumento(Processo processo,
-            String label, ProcessoDocumentoBin bin,
-            ClassificacaoDocumento tipoProcessoDocumento) throws DAOException {
-        return documentoManager.createProcessoDocumento(processo, label, bin, tipoProcessoDocumento);
+    public Documento createDocumento(Processo processo,
+            String label, DocumentoBin bin,
+            ClassificacaoDocumento classificacaoDocumento) throws DAOException {
+        return documentoManager.createDocumento(processo, label, bin, classificacaoDocumento);
     }
 
     private String getDescricaoModeloDocumentoByValue(Object value) {
@@ -69,16 +69,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return modeloDocumento;
     }
 
-    /**
-     * Retorna, se houver, o novo valor do ModeloDocumento. Se nao houver,
-     * retorna o valor o valor inicial inalterado
-     * 
-     * @param value - valor da variável modeloDocumento no contexto jBPM
-     * */
-    public Object getAlteracaoModeloDocumento(
-            ProcessoDocumentoBin processoDocumentoBinAtual, Object value) {
-        if (processoDocumentoBinAtual.getModeloDocumento() != null) {
-            return processoDocumentoBinAtual.getModeloDocumento();
+    public Object getAlteracaoModeloDocumento(DocumentoBin documentoBinAtual, Object value) {
+        if (documentoBinAtual.getModeloDocumento() != null) {
+            return documentoBinAtual.getModeloDocumento();
         } else {
             return value;
         }
@@ -92,7 +85,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         final BusinessProcess bp = BusinessProcess.instance();
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
             final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
-
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
         }

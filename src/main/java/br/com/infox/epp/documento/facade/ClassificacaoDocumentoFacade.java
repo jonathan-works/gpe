@@ -21,7 +21,7 @@ import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 public class ClassificacaoDocumentoFacade {
 
     @In
-    private ClassificacaoDocumentoManager tipoProcessoDocumentoManager;
+    private ClassificacaoDocumentoManager classificacaoDocumentoManager;
     @In
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
 
@@ -43,15 +43,15 @@ public class ClassificacaoDocumentoFacade {
         return TipoAssinaturaEnum.values();
     }
 
-    public List<ClassificacaoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
         List<ClassificacaoDocumento> classificacoes = variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
         if (!classificacoes.isEmpty()) {
             return classificacoes;
         }
-        return getUseableTipoProcessoDocumento(isModelo);
+        return getUseableClassificacaoDocumento(isModelo);
     }
     
-    public List<ClassificacaoDocumento> getUseableTipoProcessoDocumento(boolean isModelo) {
-        return tipoProcessoDocumentoManager.getUseableClassificacaoDocumento(isModelo, Authenticator.getPapelAtual());
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo) {
+        return classificacaoDocumentoManager.getUseableClassificacaoDocumento(isModelo, Authenticator.getPapelAtual());
     }
 }

@@ -142,7 +142,7 @@ public class JbpmUtil {
                 if (documento == null) {
                     LOG.warn("Documento não encontrado: " + id);
                 } else {
-                    variable = documento.getProcessoDocumentoBin().getModeloDocumento();
+                    variable = documento.getDocumentoBin().getModeloDocumento();
                 }
             }
         } else if (VariableType.BOOLEAN.name().equals(type)) {

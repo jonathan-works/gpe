@@ -30,20 +30,19 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(AssinaturaDocumentoService.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
+@Scope(ScopeType.EVENT)
+@Name(AssinaturaDocumentoService.NAME)
 public class AssinaturaDocumentoService implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging
-            .getLogProvider(AssinaturaDocumentoService.class);
+    private static final LogProvider LOG = Logging.getLogProvider(AssinaturaDocumentoService.class);
     public static final String NAME = "assinaturaDocumentoService";
 
     @In
@@ -54,10 +53,9 @@ public class AssinaturaDocumentoService implements Serializable {
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
-        final ProcessoDocumentoBin processoDocumentoBin = documento
-                .getProcessoDocumentoBin();
-        return processoDocumentoBin != null
-                && isSignedAndValid(processoDocumentoBin.getAssinaturas());
+        final DocumentoBin documentoBin = documento.getDocumentoBin();
+        return documentoBin != null
+                && isSignedAndValid(documentoBin.getAssinaturas());
     }
 
     private boolean isSignatureValid(AssinaturaDocumento assinatura) {
@@ -83,16 +81,15 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public boolean isDocumentoTotalmenteAssinado(Integer idDoc) {
-        Documento documento = documentoManager
-                .find(idDoc);
+        Documento documento = documentoManager.find(idDoc);
         return isDocumentoTotalmenteAssinado(documento);
     }
 
     public boolean isDocumentoTotalmenteAssinado(Documento documento) {
         boolean result = true;
-        List<ClassificacaoDocumentoPapel> tipoProcessoDocumentoPapeis = documento
-                .getTipoProcessoDocumento().getTipoProcessoDocumentoPapeis();
-        for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : tipoProcessoDocumentoPapeis) {
+        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = documento
+                .getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
+        for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
             final TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel
                     .getTipoAssinatura();
             if (F.equals(tipoAssinatura)) {
@@ -109,11 +106,9 @@ public class AssinaturaDocumentoService implements Serializable {
         return result;
     }
 
-    public boolean isDocumentoAssinado(Documento documento,
-            UsuarioPerfil usuarioLocalizacao) {
+    public boolean isDocumentoAssinado(Documento documento, UsuarioPerfil usuarioLocalizacao) {
         boolean result = false;
-        for (AssinaturaDocumento assinaturaDocumento : documento
-                .getProcessoDocumentoBin().getAssinaturas()) {
+        for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
             Papel papel = usuarioLocalizacao.getPerfilTemplate().getPapel();
             UsuarioLogin usuario = usuarioLocalizacao.getUsuarioLogin();
             if (result = (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel()
@@ -126,11 +121,9 @@ public class AssinaturaDocumentoService implements Serializable {
         return result;
     }
 
-    public boolean isDocumentoAssinado(Documento documento,
-            UsuarioLogin usuarioLogin) {
+    public boolean isDocumentoAssinado(Documento documento, UsuarioLogin usuarioLogin) {
         boolean result = false;
-        for (AssinaturaDocumento assinaturaDocumento : documento
-                .getProcessoDocumentoBin().getAssinaturas()) {
+        for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
             if (assinaturaDocumento.getUsuario().equals(usuarioLogin)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
@@ -139,11 +132,9 @@ public class AssinaturaDocumentoService implements Serializable {
         return result;
     }
 
-    public boolean isDocumentoAssinado(Documento documento,
-            Papel papel) {
+    public boolean isDocumentoAssinado(Documento documento, Papel papel) {
         boolean result = false;
-        for (AssinaturaDocumento assinaturaDocumento : documento
-                .getProcessoDocumentoBin().getAssinaturas()) {
+        for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
             if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
@@ -181,7 +172,7 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public void assinarDocumento(
-            final ProcessoDocumentoBin processoDocumentoBin,
+            final DocumentoBin documentoBin,
             final UsuarioPerfil usuarioPerfilAtual, final String certChain,
             final String signature) throws CertificadoException,
             AssinaturaException, DAOException {
@@ -189,8 +180,8 @@ public class AssinaturaDocumentoService implements Serializable {
         verificaCertificadoUsuarioLogado(certChain, usuario);
 
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
-                processoDocumentoBin, usuarioPerfilAtual, certChain, signature);
-        processoDocumentoBin.getAssinaturas().add(assinaturaDocumento);
+                documentoBin, usuarioPerfilAtual, certChain, signature);
+        documentoBin.getAssinaturas().add(assinaturaDocumento);
         GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
         genericManager.flush();
     }
@@ -199,7 +190,7 @@ public class AssinaturaDocumentoService implements Serializable {
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws CertificadoException,
             AssinaturaException, DAOException {
-        this.assinarDocumento(documento.getProcessoDocumentoBin(),
+        this.assinarDocumento(documento.getDocumentoBin(),
                 perfilAtual, certChain, signature);
     }
 
@@ -213,14 +204,14 @@ public class AssinaturaDocumentoService implements Serializable {
         return documento != null && isDocumentoAssinado(documento, perfil);
     }
 
-    public ValidaDocumento validaDocumento(ProcessoDocumentoBin bin,
+    public ValidaDocumento validaDocumento(DocumentoBin bin,
             String certChain, String signature) throws CertificadoException {
         byte[] data = null;
         if (!bin.isBinario()) {
             data = ValidaDocumento.removeBR(bin.getModeloDocumento()).getBytes();
         } else {
             try {
-                data = documentoBinarioManager.getData(bin.getIdProcessoDocumentoBin());
+                data = documentoBinarioManager.getData(bin.getId());
             } catch (Exception e) {
                 throw new IllegalArgumentException("Erro ao obter os dados do binário", e);
             }
@@ -244,7 +235,7 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, UsuarioLogin usuarioLogin) {
-        Documento processoDocumento = documentoManager.find(idDocumento);
-        return processoDocumento != null && isDocumentoAssinado(processoDocumento, usuarioLogin);
+        Documento documento = documentoManager.find(idDocumento);
+        return documento != null && isDocumentoAssinado(documento, usuarioLogin);
     }
 }

@@ -16,12 +16,12 @@ public interface PapelQuery {
             + PARAM_TIPO_MODELO_DOCUMENTO
             + ") order by o.nome ";
 
-    String PARAM_TIPO_PROCESSO_DOCUMENTO = "tipoProcessoDocumento";
-    String PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO = "listPapeisNaoAssociadosATipoProcessoDocumento";
-    String PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY = "select o from Papel o where o not in "
-            + "(select p.papel from TipoProcessoDocumentoPapel p "
-            + "where p.tipoProcessoDocumento = :"
-            + PARAM_TIPO_PROCESSO_DOCUMENTO + ")";
+    String PARAM_CLASSIFICACAO_DOCUMENTO = "classificacaoDocumento";
+    String PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO = "listPapeisNaoAssociadosATipoProcessoDocumento";
+    String PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO_QUERY = "select o from Papel o where o not in "
+            + "(select p.papel from ClassificacaoDocumentoPapel p "
+            + "where p.classificacaoDocumento = :"
+            + PARAM_CLASSIFICACAO_DOCUMENTO + ")";
 
     String PARAM_IDENTIFICADOR = "identificador";
     String PAPEL_BY_IDENTIFICADOR = "findPapelByIdentificador";

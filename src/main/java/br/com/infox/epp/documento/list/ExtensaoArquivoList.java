@@ -10,8 +10,8 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 
-@Name(ExtensaoArquivoList.NAME)
 @Scope(ScopeType.PAGE)
+@Name(ExtensaoArquivoList.NAME)
 public class ExtensaoArquivoList extends EntityList<ExtensaoArquivo> {
 
     private static final long serialVersionUID = 1L;
@@ -24,7 +24,7 @@ public class ExtensaoArquivoList extends EntityList<ExtensaoArquivo> {
     protected void addSearchFields() {
         addSearchField("nomeExtensao", SearchCriteria.CONTENDO);
         addSearchField("extensao", SearchCriteria.CONTENDO);
-        addSearchField("tipoProcessoDocumento", SearchCriteria.IGUAL);
+        addSearchField("classificacaoDocumento", SearchCriteria.IGUAL);
     }
 
     @Override

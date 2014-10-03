@@ -31,8 +31,8 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
@@ -61,7 +61,7 @@ public class TermoAdesaoAction implements Serializable {
     @In
     private AuthenticatorService authenticatorService;
     @In
-    private ProcessoDocumentoBinManager processoDocumentoBinManager;
+    private DocumentoBinManager processoDocumentoBinManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
@@ -71,7 +71,7 @@ public class TermoAdesaoAction implements Serializable {
         try {
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
-            ProcessoDocumentoBin bin = processoDocumentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
+            DocumentoBin bin = processoDocumentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
 
             final List<UsuarioPerfil> perfilAtivoList = usuarioLogin.getUsuarioPerfilAtivoList();
             if (perfilAtivoList != null) {

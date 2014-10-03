@@ -12,10 +12,10 @@ public interface AssinaturaDocumentoQuery {
     String COL_CERT_CHAIN = "ds_cert_chain";
     String COL_NOME_PERFIL = "nm_perfil";
 
-    String LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO = "listAssinaturaDocumentoByProcessoDocumento";
-    String LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO_QUERY = "select a "
+    String LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO = "listAssinaturaDocumentoByDocumento";
+    String LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO_QUERY = "select a "
             + "from AssinaturaDocumento a "
-            + "inner join a.processoDocumentoBin pdBin " + "where :"
+            + "inner join a.documentoBin pdBin " + "where :"
             + PARAM_DOCUMENTO
             + " in elements(pdBin.documentoList)";
 

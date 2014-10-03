@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.anexos;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -12,16 +13,18 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
 @Name(DocumentoDownloader.NAME)
-public class DocumentoDownloader {
+public class DocumentoDownloader implements Serializable {
 
-    private static final float BYTES_IN_A_KILOBYTE = 1024f;
+	private static final long serialVersionUID = 1L;
+
+	private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
     @In
     private DocumentoBinarioManager documentoBinarioManager;
@@ -31,7 +34,7 @@ public class DocumentoDownloader {
     public static final String NAME = "documentoDownloader";
 
     public void downloadDocumento(Documento documento) {
-        ProcessoDocumentoBin pdBin = documento.getProcessoDocumentoBin();
+        DocumentoBin pdBin = documento.getDocumentoBin();
         byte[] data = documentoBinarioManager.getData(documento.getId());
         String fileName = pdBin.getNomeArquivo();
         String contentType = "application/" + pdBin.getExtensao();
@@ -44,7 +47,7 @@ public class DocumentoDownloader {
      * @param bytes número em bytes
      * @return número em kilobytes
      */
-    public String getFormattedKb(ProcessoDocumentoBin binario) {
+    public String getFormattedKb(DocumentoBin binario) {
         Integer bytes = binario.getSize();
         if (bytes != null && bytes > 0) {
             NumberFormat formatter = DecimalFormat.getNumberInstance(new Locale("pt", "BR"));

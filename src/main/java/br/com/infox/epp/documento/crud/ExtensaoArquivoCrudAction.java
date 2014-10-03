@@ -18,7 +18,7 @@ public class ExtensaoArquivoCrudAction extends AbstractCrudAction<ExtensaoArquiv
     
     private ClassificacaoDocumento classificacaoDocumento;
 
-    public void setTipoProcessoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         this.classificacaoDocumento = classificacaoDocumento;
     }
     

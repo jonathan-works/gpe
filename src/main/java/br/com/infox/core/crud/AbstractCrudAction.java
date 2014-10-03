@@ -2,7 +2,6 @@ package br.com.infox.core.crud;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 import org.jboss.seam.ScopeType;
@@ -39,7 +38,7 @@ import br.com.infox.core.util.EntityUtil;
  * @param <M>
  */
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, T>> extends AbstractAction<T, M> implements Crudable<T>, Serializable {
+public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, T>> extends AbstractAction<T, M> implements Crudable<T> {
 
     private static final long serialVersionUID = 1L;
     private String tab;

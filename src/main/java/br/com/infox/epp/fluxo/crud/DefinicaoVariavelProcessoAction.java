@@ -16,11 +16,12 @@ import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 
-@Name(DefinicaoVariavelProcessoAction.NAME)
 @Scope(ScopeType.PAGE)
+@Name(DefinicaoVariavelProcessoAction.NAME)
 public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVariavelProcesso, DefinicaoVariavelProcessoManager> {
 
-    public static final String NAME = "definicaoVariavelProcessoAction";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "definicaoVariavelProcessoAction";
     private static final Log LOG = Logging.getLog(DefinicaoVariavelProcessoAction.class);
 
     private Fluxo fluxo;

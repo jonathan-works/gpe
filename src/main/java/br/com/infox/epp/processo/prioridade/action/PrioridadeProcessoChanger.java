@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.prioridade.action;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -11,12 +13,14 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 
-@Name(PrioridadeProcessoChanger.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class PrioridadeProcessoChanger {
+@Scope(ScopeType.CONVERSATION)
+@Name(PrioridadeProcessoChanger.NAME)
+public class PrioridadeProcessoChanger implements Serializable {
 
-    public static final String NAME = "prioridadeProcessoChanger";
+	private static final long serialVersionUID = 1L;
+
+	public static final String NAME = "prioridadeProcessoChanger";
 
     private ProcessoEpa processoEpa;
     private PrioridadeProcesso prioridadeProcesso;

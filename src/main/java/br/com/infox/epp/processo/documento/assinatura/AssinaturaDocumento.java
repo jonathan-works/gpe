@@ -35,27 +35,64 @@ import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
 
 @Entity
 @Table(name = TABLE_NAME)
-@NamedQueries({ @NamedQuery(name = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO, query = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO_QUERY) })
+@NamedQueries({ 
+	@NamedQuery(name = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO, query = AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO_QUERY) 
+})
 public class AssinaturaDocumento implements Serializable {
-    private static final long serialVersionUID = 1L;
+    
+	private static final long serialVersionUID = 1L;
 
+	@Id
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "AssinaturaDocumentoGenerator", sequenceName = SEQUENCE_NAME)
+    @GeneratedValue(generator = "AssinaturaDocumentoGenerator", strategy = GenerationType.SEQUENCE)
+    @Column(name = COL_ID_ASSINATURA, unique = true, nullable = false)
     private Integer idAssinatura;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = UsuarioLoginQuery.ID_USUARIO, nullable = false)
     private UsuarioLogin usuario;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario_perfil", nullable = false)
     private UsuarioPerfil usuarioPerfil;
+	
+	@NotNull
+	@Size(max = NOME_ATRIBUTO)
+	@Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
     private String nomeUsuario;
+	
+	@NotNull
+	@Size(max = NOME_PADRAO)
+	@Column(name = "nm_usuario_perfil", nullable = false, length = NOME_PADRAO)
     private String nomeUsuarioPerfil;
+	
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+    @Column(name = COL_DATA_ASSINATURA, nullable = false)
     private Date dataAssinatura;
+	
+	@NotNull
+	@Column(name = COL_SIGNATURE, nullable = false)
     private String signature;
+	
+	@NotNull
+	@Column(name = COL_CERT_CHAIN, nullable = false)
     private String certChain;
-    private ProcessoDocumentoBin processoDocumentoBin;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
+    private DocumentoBin documentoBin;
 
-    public AssinaturaDocumento(ProcessoDocumentoBin processoDocumentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) throws CertificadoException {
-        this.processoDocumentoBin=processoDocumentoBin;
+    public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) throws CertificadoException {
+        this.documentoBin=documentoBin;
         this.usuario = usuarioPerfil.getUsuarioLogin();
         this.nomeUsuario = CertificadoFactory.createCertificado(certChain).getNome();
         this.usuarioPerfil = usuarioPerfil;
@@ -68,11 +105,6 @@ public class AssinaturaDocumento implements Serializable {
     public AssinaturaDocumento() {
     }
 
-    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "generator", sequenceName = SEQUENCE_NAME)
-    @Id
-    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
-    @Column(name = COL_ID_ASSINATURA, unique = true, nullable = false)
-    @NotNull
     public Integer getIdAssinatura() {
         return idAssinatura;
     }
@@ -81,9 +113,6 @@ public class AssinaturaDocumento implements Serializable {
         this.idAssinatura = idAssinatura;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = UsuarioLoginQuery.ID_USUARIO, nullable = false)
-    @NotNull
     public UsuarioLogin getUsuario() {
         return usuario;
     }
@@ -92,9 +121,6 @@ public class AssinaturaDocumento implements Serializable {
         this.usuario = usuario;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario_perfil", nullable = false)
-    @NotNull
     public UsuarioPerfil getUsuarioPerfil() {
         return usuarioPerfil;
     }
@@ -103,9 +129,6 @@ public class AssinaturaDocumento implements Serializable {
         this.usuarioPerfil = usuarioPerfil;
     }
 
-    @Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
-    @Size(max = NOME_ATRIBUTO)
-    @NotNull
     public String getNomeUsuario() {
         return nomeUsuario;
     }
@@ -114,9 +137,6 @@ public class AssinaturaDocumento implements Serializable {
         this.nomeUsuario = nomeUsuario;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = COL_DATA_ASSINATURA, nullable = false)
-    @NotNull
     public Date getDataAssinatura() {
         return dataAssinatura;
     }
@@ -125,8 +145,6 @@ public class AssinaturaDocumento implements Serializable {
         this.dataAssinatura = dataAssinatura;
     }
 
-    @Column(name = COL_SIGNATURE, nullable = false)
-    @NotNull
     public String getSignature() {
         return signature;
     }
@@ -135,8 +153,6 @@ public class AssinaturaDocumento implements Serializable {
         this.signature = signature;
     }
 
-    @Column(name = COL_CERT_CHAIN, nullable = false)
-    @NotNull
     public String getCertChain() {
         return certChain;
     }
@@ -145,22 +161,15 @@ public class AssinaturaDocumento implements Serializable {
         this.certChain = certChain;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
-    @NotNull
-    public ProcessoDocumentoBin getProcessoDocumentoBin() {
-        return processoDocumentoBin;
-    }
+    public DocumentoBin getDocumentoBin() {
+		return documentoBin;
+	}
 
-    public void setProcessoDocumentoBin(
-            ProcessoDocumentoBin processoDocumentoBin) {
-        this.processoDocumentoBin = processoDocumentoBin;
-    }
+	public void setDocumentoBin(DocumentoBin documentoBin) {
+		this.documentoBin = documentoBin;
+	}
 
-    @Column(name = "nm_usuario_perfil", nullable = false, length = NOME_PADRAO)
-    @Size(max = NOME_PADRAO)
-    @NotNull
-    public String getNomeUsuarioPerfil() {
+	public String getNomeUsuarioPerfil() {
         return nomeUsuarioPerfil;
     }
 
@@ -168,4 +177,30 @@ public class AssinaturaDocumento implements Serializable {
         this.nomeUsuarioPerfil = nomePerfil;
     }
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((getIdAssinatura() == null) ? 0 : getIdAssinatura().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof AssinaturaDocumento))
+			return false;
+		AssinaturaDocumento other = (AssinaturaDocumento) obj;
+		if (getIdAssinatura() == null) {
+			if (other.getIdAssinatura() != null)
+				return false;
+		} else if (!getIdAssinatura().equals(other.getIdAssinatura()))
+			return false;
+		return true;
+	}
+    
 }

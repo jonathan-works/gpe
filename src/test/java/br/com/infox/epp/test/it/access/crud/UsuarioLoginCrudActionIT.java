@@ -25,9 +25,9 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
@@ -61,7 +61,7 @@ public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
                 DocumentoManager.class, DocumentoDAO.class, SessionAssistant.class,
                 SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
                 SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
-                ProcessoDocumentoBinDAO.class, ProcessoDocumentoBinManager.class)
+                DocumentoBinDAO.class, DocumentoBinManager.class)
             .createDeployment()
         ;
     }

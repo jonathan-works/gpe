@@ -22,13 +22,13 @@ public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<Cl
     @In
     private PapelManager papelManager;
 
-    public void setTipoProcessoDocumento(ClassificacaoDocumento tipoProcessoDocumento) {
+    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         newInstance();
-        getInstance().setClassificacaoDocumento(tipoProcessoDocumento);
+        getInstance().setClassificacaoDocumento(classificacaoDocumento);
     }
 
     public List<Papel> papelItems() {
-        return papelManager.getPapeisNaoAssociadosATipoProcessoDocumento(getInstance().getClassificacaoDocumento());
+        return papelManager.getPapeisNaoAssociadosAClassificacaoDocumento(getInstance().getClassificacaoDocumento());
     }
 
 }

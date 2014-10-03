@@ -37,9 +37,9 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
@@ -136,7 +136,7 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
                         DocumentoManager.class, DocumentoDAO.class, SessionAssistant.class,
                         SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
                         SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
-                        ProcessoDocumentoBinDAO.class, ProcessoDocumentoBinManager.class).createDeployment();
+                        DocumentoBinDAO.class, DocumentoBinManager.class).createDeployment();
     }
     
     public static final List<Localizacao> getSuccessfullyPersisted(final ActionContainer<Localizacao> action, final String suffix,final ServletContext servletContext, final HttpSession session) throws Exception {

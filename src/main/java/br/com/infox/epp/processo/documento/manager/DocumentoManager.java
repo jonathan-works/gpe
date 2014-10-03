@@ -15,7 +15,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 
@@ -27,7 +27,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     private static final long serialVersionUID = 1L;
     
     @In
-    private ProcessoDocumentoBinManager processoDocumentoBinManager;
+    private DocumentoBinManager documentoBinManager;
     @In
     private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
 
@@ -36,7 +36,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
 
     public String valorDocumento(Integer idDocumento) {
-        return find(idDocumento).getProcessoDocumentoBin().getModeloDocumento();
+        return find(idDocumento).getDocumentoBin().getModeloDocumento();
     }
     
     public void exclusaoRestauracaoLogicaDocumento(Documento documento, String motivo, 
@@ -54,7 +54,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
             Documento documento) throws DAOException {
         documento.setProcesso(processo);
         documento.setNumeroDocumento(getNextNumeracao(documento));
-        documento.setProcessoDocumentoBin(processoDocumentoBinManager.createProcessoDocumentoBin(documento));
+        documento.setDocumentoBin(documentoBinManager.createProcessoDocumentoBin(documento));
         documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         if (TaskInstance.instance() != null) {
             long idJbpmTask = TaskInstance.instance().getId();
@@ -64,17 +64,17 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         return documento;
     }
 
-    public Documento createProcessoDocumento(Processo processo,
-            String label, ProcessoDocumentoBin bin,
+    public Documento createDocumento(Processo processo,
+            String label, DocumentoBin bin,
             ClassificacaoDocumento classificacaoDocumento) throws DAOException {
         Documento doc = new Documento();
-        doc.setProcessoDocumentoBin(bin);
+        doc.setDocumentoBin(bin);
         doc.setDataInclusao(new Date());
         doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         doc.setProcesso(processo);
         doc.setDescricao(label);
         doc.setExcluido(false);
-        doc.setTipoProcessoDocumento(classificacaoDocumento);
+        doc.setClassificacaoDocumento(classificacaoDocumento);
         doc.setNumeroDocumento(getNextNumeracao(classificacaoDocumento, processo));
         return getDao().persist(doc);
     }
@@ -98,7 +98,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
 
     public Integer getNextNumeracao(Documento documento) {
-        return getNextNumeracao(documento.getTipoProcessoDocumento(), documento.getProcesso());
+        return getNextNumeracao(documento.getClassificacaoDocumento(), documento.getProcesso());
     }
 
     public List<Documento> getAnexosPublicos(long idJbpmTask) {

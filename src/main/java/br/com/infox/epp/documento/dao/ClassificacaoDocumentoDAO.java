@@ -35,9 +35,9 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         return getNamedResultList(ClassificacaoDocumentoQuery.CLASSIFICACAO_DOCUMENTO_USEABLE, parameters);
     }
 
-    public boolean isAssinaturaObrigatoria(ClassificacaoDocumento tipoProcessoDocumento, Papel papel) {
+    public boolean isAssinaturaObrigatoria(ClassificacaoDocumento classificacaoDocumento, Papel papel) {
         HashMap<String, Object> params = new HashMap<String, Object>(0);
-        params.put(CLASSIFICACAO_DOCUMENTO_PARAM, tipoProcessoDocumento);
+        params.put(CLASSIFICACAO_DOCUMENTO_PARAM, classificacaoDocumento);
         params.put(PAPEL_PARAM, papel);
         ClassificacaoDocumentoPapel tpdp = getNamedSingleResult(ASSINATURA_OBRIGATORIA, params);
         if (tpdp != null) {

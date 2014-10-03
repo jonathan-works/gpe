@@ -21,10 +21,10 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 
@@ -39,7 +39,7 @@ public class FileUpload implements FileUploadListener {
     @In
     private GenericManager genericManager;
     @In
-    private ProcessoDocumentoBinManager processoDocumentoBinManager;
+    private DocumentoBinManager documentoBinManager;
     @In
     private DocumentoBinarioManager documentoBinarioManager;
     @In
@@ -63,7 +63,7 @@ public class FileUpload implements FileUploadListener {
         Documento documento = createDocumento(file, uploadFile.getId());
         try {
             documentoManager.gravarDocumentoNoProcesso(ProcessoEpaHome.instance().getInstance(), documento);
-            documentoBinarioManager.salvarBinario(documento.getId(), documento.getProcessoDocumentoBin().getProcessoDocumento());
+            documentoBinarioManager.salvarBinario(documento.getId(), documento.getDocumentoBin().getProcessoDocumento());
             TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), documento.getId());
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + ProcessoEpaHome.instance().getInstance().getIdProcesso(), e);
@@ -75,13 +75,13 @@ public class FileUpload implements FileUploadListener {
         Documento pd = new Documento();
         pd.setDescricao(file.getName());
         pd.setAnexo(true);
-        pd.setProcessoDocumentoBin(createDocumentoBin(file));
-        pd.setTipoProcessoDocumento(TaskInstanceHome.instance().getClassificacoesVariaveisUpload().get(id));
+        pd.setDocumentoBin(createDocumentoBin(file));
+        pd.setClassificacaoDocumento(TaskInstanceHome.instance().getClassificacoesVariaveisUpload().get(id));
         return pd;
     }
 
-    private ProcessoDocumentoBin createDocumentoBin(final UploadedFile file) {
-        ProcessoDocumentoBin pdb = new ProcessoDocumentoBin();
+    private DocumentoBin createDocumentoBin(final UploadedFile file) {
+        DocumentoBin pdb = new DocumentoBin();
         pdb.setNomeArquivo(file.getName());
         pdb.setExtensao(FileUtil.getFileType(file.getName()));
         pdb.setMd5Documento(MD5Encoder.encode(file.getData()));

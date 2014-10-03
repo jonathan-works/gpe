@@ -6,6 +6,6 @@ public interface ExtensaoArquivoQuery {
     String CLASSIFICACAO_PARAM = "classificacao";
     String EXTENSAO_PARAM = "extensao";
     String LIMITE_EXTENSAO_QUERY = "select o from ExtensaoArquivo o "
-            + "where o.tipoProcessoDocumento = :" + CLASSIFICACAO_PARAM +" and o.extensao =:" + EXTENSAO_PARAM;
+            + "where o.classificacaoDocumento = :" + CLASSIFICACAO_PARAM +" and o.extensao =:" + EXTENSAO_PARAM;
 
 }

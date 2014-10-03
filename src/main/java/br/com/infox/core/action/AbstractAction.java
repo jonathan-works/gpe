@@ -2,6 +2,7 @@ package br.com.infox.core.action;
 
 import static java.text.MessageFormat.format;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
@@ -36,9 +37,10 @@ import br.com.infox.seam.util.ComponentUtil;
  * @param <K>
  * 
  */
-public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> {
+public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> implements Serializable {
 
-    public static final String PERSISTED = "persisted";
+	private static final long serialVersionUID = 1L;
+	public static final String PERSISTED = "persisted";
     public static final String UPDATED = "updated";
     public static final String REMOVED = "removed";
 

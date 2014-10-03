@@ -231,7 +231,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
             break;
 
         case EDITOR:
-            expression = documentoManager.find(value).getProcessoDocumentoBin().getModeloDocumento();
+            expression = documentoManager.find(value).getDocumentoBin().getModeloDocumento();
             break;
             
         case MONETARY:

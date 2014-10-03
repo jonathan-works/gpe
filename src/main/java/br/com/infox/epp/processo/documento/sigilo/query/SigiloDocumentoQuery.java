@@ -18,11 +18,11 @@ public interface SigiloDocumentoQuery {
             + QUERY_PARAM_DOCUMENTO;
 
     String NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO = "SigiloDocumento.sigiloDocumentoAtivoPorIdDocumento";
-    String QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO = "select o from SigiloDocumento o where o.ativo = true and o.documento.idProcessoDocumento = :"
+    String QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO = "select o from SigiloDocumento o where o.ativo = true and o.documento.id = :"
             + QUERY_PARAM_ID_DOCUMENTO;
 
     String NAMED_QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO = "SigiloDocumento.documentoSigilosoPorIdDocumento";
-    String QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO = "select 1 from SigiloDocumento o where o.ativo = true and o.documento.idProcessoDocumento = :"
+    String QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO = "select 1 from SigiloDocumento o where o.ativo = true and o.documento.id = :"
             + QUERY_PARAM_ID_DOCUMENTO;
 
     String NAMED_QUERY_INATIVAR_SIGILOS = "SigiloDocumento.inativarSigilos";

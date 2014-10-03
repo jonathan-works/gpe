@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,20 +25,20 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(ProcessoDocumentoSearch.NAME)
-public class ProcessoDocumentoSearch {
+public class ProcessoDocumentoSearch implements Serializable {
 
-    @In
+	private static final long serialVersionUID = 1L;
+	private static final Integer PAGE_SIZE = 15;
+	public static final String NAME = "processoDocumentoSearch";
+    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoSearch.class);
+    
+	@In
     private DocumentoDAO documentoDAO;
     @In
     private ProcessoManager processoManager;
 
-    private static final Integer PAGE_SIZE = 15;
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoSearch.class);
-
     private String palavraPesquisada;
     private List<Documento> resultadoPesquisa = new ArrayList<>();
-
-    public static final String NAME = "processoDocumentoSearch";
 
     public Integer getPageSize() {
         return PAGE_SIZE;

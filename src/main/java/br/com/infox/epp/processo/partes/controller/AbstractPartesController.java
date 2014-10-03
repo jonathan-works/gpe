@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.partes.controller;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
@@ -10,9 +12,10 @@ import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractPartesController {
+public abstract class AbstractPartesController implements Serializable {
 
-    private PessoaFisica pessoaFisica = new PessoaFisica();
+	private static final long serialVersionUID = 1L;
+	private PessoaFisica pessoaFisica = new PessoaFisica();
     private PessoaJuridica pessoaJuridica = new PessoaJuridica();
 
     @In

@@ -32,7 +32,7 @@ public interface SigiloDocumentoPermissaoQuery {
             + "inner join o.sigiloDocumento s "
             + "where o.ativo = true and "
             + "s.ativo = true and "
-            + "s.documento.idProcessoDocumento in (:"
+            + "s.documento.id in (:"
             + QUERY_PARAM_IDS_DOCUMENTO
             + ") and "
             + "o.usuario = :"

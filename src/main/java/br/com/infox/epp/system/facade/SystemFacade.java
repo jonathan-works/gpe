@@ -1,5 +1,7 @@
 package br.com.infox.epp.system.facade;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -8,11 +10,12 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 
-@Name(SystemFacade.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class SystemFacade {
+@Name(SystemFacade.NAME)
+public class SystemFacade implements Serializable {
 
-    public static final String NAME = "systemFacade";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "systemFacade";
 
     @In
     private ParametroManager parametroManager;
