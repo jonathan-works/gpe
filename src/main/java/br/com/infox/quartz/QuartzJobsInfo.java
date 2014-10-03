@@ -13,10 +13,10 @@ import java.util.regex.Pattern;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
@@ -32,11 +32,12 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
 
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(QuartzJobsInfo.NAME)
 @Scope(ScopeType.APPLICATION)
-@BypassInterceptors
 @AutoCreate
 public class QuartzJobsInfo implements Serializable {
 
@@ -45,6 +46,9 @@ public class QuartzJobsInfo implements Serializable {
             .getLogProvider(QuartzJobsInfo.class);
     public static final String NAME = "quartzJobsInfo";
 
+    @In
+    private ParametroManager parametroManager;
+    
     private static Pattern patternExpr = Pattern
             .compile("^AsynchronousInvocation\\((.*)\\)$");
 
@@ -168,9 +172,10 @@ public class QuartzJobsInfo implements Serializable {
     public void deleteJob(String jobName, String groupName) {
         try {
             getScheduler().deleteJob(JobKey.jobKey(jobName, groupName));
+            parametroManager.removeParametroByValue(jobName);
             FacesMessages.instance().add(Severity.INFO,
                     "Job removido com sucesso: " + jobName);
-        } catch (SchedulerException e) {
+        } catch (SchedulerException | DAOException e) {
             FacesMessages.instance().add(Severity.ERROR,
                     "Erro ao remover job " + jobName, e);
             LOG.error(".deleteJob()", e);
@@ -185,4 +190,11 @@ public class QuartzJobsInfo implements Serializable {
         }
     }
 
+    public void apagarJobs() {
+        List<Map<String, Object>> jobs = getDetailJobsInfo();
+        
+        for (Map<String, Object> job : jobs) {
+           deleteJob((String) job.get("triggerName"), (String) job.get("groupName")); 
+        }
+    }
 }
