@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -33,6 +34,7 @@ public class BloqueioUsuarioStarter {
 	public BloqueioUsuarioStarter() {}
 	
 	@Observer(value = QuartzDispatcher.QUARTZ_DISPATCHER_INITIALIZED_EVENT)
+	@Transactional
 	public void init() {
 		if (!Boolean.parseBoolean(QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {
             return;
