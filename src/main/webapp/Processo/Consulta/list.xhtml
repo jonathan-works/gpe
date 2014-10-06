@@ -51,7 +51,7 @@
                 id="tabAnexos"
                 name="tabAnexos"
                 immediate="true"
-                action="#{processoDocumentoList.entity.setProcesso(consultaController.processoEpa)}"
+                action="#{documentoList.entity.setProcesso(consultaController.processoEpa)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 status=":status"
                 title="#{eppmessages['processo.documentos']}">
@@ -60,10 +60,10 @@
 					<a:param name="idDocumento" assignTo="#{documentoProcessoAction.idDocumento}" converter="javax.faces.Integer"/>
 				</a:jsFunction>
                 <wi:dataTable
-                    values="#{processoDocumentoList.list(15)}"
-                    bean="#{processoDocumentoList}"
+                    values="#{documentoList.list(15)}"
+                    bean="#{documentoList}"
                     tableTitle="#{eppmessages['processo.documentos']}"
-                    id="processoDocumentoList"
+                    id="documentoList"
                     rowId="#{row.idProcessoDocumento}"
                     panelStyleClass="full-sized"
                     showSearchForm="false">
@@ -203,7 +203,7 @@
 					        onclick="infox.showLoading();"
 					        oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
 					        value="Enviar"
-					        render="@form, processoDocumentoList, pageBodyDialogMessage"
+					        render="@form, documentoList, pageBodyDialogMessage"
 					        styleClass="buttons"/>
 			          </div>
 			        </h:form>

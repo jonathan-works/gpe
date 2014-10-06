@@ -40,7 +40,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -101,8 +100,6 @@ public class TaskInstanceHome implements Serializable {
     private TaskInstance currentTaskInstance;
     private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
     private Map<String, ClassificacaoDocumento> classificacoesVariaveisUpload;
-    @In
-    private ClassificacaoDocumentoDAO tipoProcessoDocumentoDAO;
     @In
     private SituacaoProcessoManager situacaoProcessoManager;
     @In

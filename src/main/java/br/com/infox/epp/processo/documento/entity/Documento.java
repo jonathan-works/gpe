@@ -78,7 +78,7 @@ public class Documento implements Serializable {
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
+    @JoinColumn(name = "id_classificacao_documento", nullable = false)
     private ClassificacaoDocumento classificacaoDocumento;
     
     @NotNull

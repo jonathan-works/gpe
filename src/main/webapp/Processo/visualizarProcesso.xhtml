@@ -94,7 +94,7 @@
                 name="tabAnexos"
                 rendered="#{processoEpaHome.managed}"
                 status=":status"
-                action="#{processoDocumentoList.entity.setProcesso(processoEpaHome.instance)}"
+                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{eppmessages['processo.documentos']}">
                 <ui:decorate
@@ -106,11 +106,11 @@
 						<a:param name="idDocumento" assignTo="#{documentoProcessoAction.idDocumento}" converter="javax.faces.Integer"/>
 					</a:jsFunction>
                     <wi:dataTable
-                        values="#{processoDocumentoList.list(15)}"
-                        bean="#{processoDocumentoList}"
+                        values="#{documentoList.list(15)}"
+                        bean="#{documentoList}"
                         tableTitle="#{eppmessages['processo.documentos']} #{home.instance}"
-                        id="processoDocumentoList"
-                        rowId="#{row.idProcessoDocumento}"
+                        id="documentoList"
+                        rowId="#{row.id}"
                         searchFormStyleClass="hidden"
                         panelStyleCss="full-sized">
                         <ui:define name="headerToolBar" />
@@ -133,7 +133,7 @@
                         	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                             columnId="processoDocumentoBin"
                             columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
-                            value="#{row.processoDocumento}" />
+                            value="#{row.descricao}" />
                         <ui:define name="toolBar">
                         	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.gif" 
                        		            title="#{eppmessages['button.historico']}" 
