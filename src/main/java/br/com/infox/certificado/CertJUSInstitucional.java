@@ -8,19 +8,19 @@ import org.bouncycastle.asn1.DERObjectIdentifier;
 
 import br.com.infox.certificado.exception.CertificadoException;
 
-public class CertJUSPoderPublico extends CertJUS implements CertificadoDadosPessoaFisica {
+public class CertJUSInstitucional extends CertJUS implements CertificadoDadosPessoaFisica {
 
     private DadosPessoaFisica dadosPessoaFisica;
     
-    public CertJUSPoderPublico(String certChainBase64) throws CertificadoException {
+    public CertJUSInstitucional(String certChainBase64) throws CertificadoException {
         super(certChainBase64);
     }
     
-    public CertJUSPoderPublico(X509Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
+    public CertJUSInstitucional(X509Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
         super(certChain, privateKey);
     }
     
-    public CertJUSPoderPublico(X509Certificate[] certChain) throws CertificadoException {
+    public CertJUSInstitucional(X509Certificate[] certChain) throws CertificadoException {
         super(certChain);
     }
     

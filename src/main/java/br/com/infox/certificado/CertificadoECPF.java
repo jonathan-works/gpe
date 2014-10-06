@@ -10,11 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bouncycastle.asn1.DERObjectIdentifier;
+
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.util.ArrayUtil;
 
-public class CertificadoECPF implements Certificado {
+public class CertificadoECPF implements Certificado, CertificadoDadosPessoaFisica {
 
     private static final int HEX_NUMBER = 16;
 
@@ -34,6 +36,7 @@ public class CertificadoECPF implements Certificado {
     private Date dataValidadeFim;
     private BigInteger serialNumber;
     private String nomeCertificadora;
+    private DadosPessoaFisica dadosPessoaFisica;
 
     public CertificadoECPF(X509Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
         this.certChain = Arrays.copyOf(certChain, certChain.length);
@@ -159,6 +162,11 @@ public class CertificadoECPF implements Certificado {
 
         // Recupera o O
         o = map.get("O");
+        
+        Map<DERObjectIdentifier, String> otherNames = CertificateUtil.parseSubjectAlternativeNames(mainCertificate);
+        for (DERObjectIdentifier oid : otherNames.keySet()) {
+            this.dadosPessoaFisica = CertificateUtil.parseDadosPessoaFisica(oid, otherNames.get(oid), this.dadosPessoaFisica);
+        }
     }
 
     private String getValue(Map<String, String> map, String key) {
@@ -212,9 +220,53 @@ public class CertificadoECPF implements Certificado {
         return false;
     }
 
+    public Date getDataNascimento() {
+        return dadosPessoaFisica.dataNascimento;
+    }
+
     @Override
     public String getCPF() {
-        return getDocumentoIdentificador();
+        return dadosPessoaFisica.cpf;
+    }
+
+    @Override
+    public String getNIS() {
+        return dadosPessoaFisica.nis;
+    }
+
+    @Override
+    public String getRG() {
+        return dadosPessoaFisica.rg;
+    }
+
+    @Override
+    public String getOrgaoExpedidor() {
+        return dadosPessoaFisica.orgaoExpedidor; 
+    }
+
+    @Override
+    public String getTituloEleitor() {
+        return dadosPessoaFisica.tituloEleitor;
+    }
+
+    @Override
+    public String getZonaEleitoral() {
+        return dadosPessoaFisica.zonaEleitoral;
+    }
+
+    @Override
+    public String getSecaoEleitoral() {
+        return dadosPessoaFisica.secaoEleitoral;
+    }
+
+    @Override
+    public String getMunicipioTituloEleitor() {
+        return dadosPessoaFisica.municipioTituloEleitor;
+    }
+
+    @Override
+    public String getCEI() {
+        return dadosPessoaFisica.cei;
     }
 
     @Override

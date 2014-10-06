@@ -17,6 +17,7 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
@@ -171,7 +172,10 @@ public class AssinaturaDocumentoService implements Serializable {
         }
         if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
             final Certificado certificado = CertificadoFactory.createCertificado(certChainBase64Encoded); 
-            final String cpfCertificado = certificado.getCPF();
+            if (!(certificado instanceof CertificadoDadosPessoaFisica)) {
+                throw new CertificadoException("Este certificado não é de pessoa física");
+            }
+            final String cpfCertificado = ((CertificadoDadosPessoaFisica) certificado).getCPF();
             if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf()
                     .replace(".", "").replace("-", ""))) {
                 usuarioLogado.getPessoaFisica().setCertChain(

@@ -7,7 +7,6 @@ import java.util.Date;
 
 public interface Certificado {
     String getNome();
-    String getCPF();
     Date getDataValidadeInicio();
     Date getDataValidadeFim();
     String getAutoridadeCertificadora();
