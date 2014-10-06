@@ -128,8 +128,11 @@ public class VariableAccessHandler implements Serializable {
             Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getFluxo().getIdFluxo(), this.name, auxiliarName);
             this.name = auxiliarName;
             ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
-                    + auxiliarName);
+            if (isData || type == VariableType.DATE) {
+                setValidacaoDataEnum(validacaoDataEnum);
+            } else {
+                ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":" + auxiliarName);
+            }
         }
     }
 
