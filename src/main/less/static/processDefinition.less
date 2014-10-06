@@ -1,18 +1,33 @@
+@import "epp-mixins.less";
+
+@menu-bg-color:#a0c991;
+@menu-txt-color:#030;
+@expr-wiz-Transition-color:#44F;
+@expr-wiz-String-color:#66F;
+@expr-wiz-Boolean-color:#A00;
+@expr-wiz-Arith-color:#040;
+
 .pointer {
   cursor: pointer;
 }
 
-.pd-xml.textarea {
-  min-height: 465px;
-  resize: none;
+.pd-xml {
+  &.textarea {
+    min-height: 465px;
+    resize: none;
+  }
 }
 
-.rf-dt.dt-destinatarios {
-  width: 100%;
+.rf-dt {
+  &.dt-destinatarios {
+    width: 100%;
+  }
 }
 
-.conteudo.minimal {
-  height: calc(~"100% - 125px");
+.conteudo {
+  &.minimal {
+    height: calc(~"100% - 125px");
+  }
 }
 
 .swimlane-list {
@@ -44,23 +59,28 @@
 
 .link {
   text-decoration: none;
-  color: #000
-}
-
-.link:hover {
-  text-decoration: underline;
+  color: #000;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .bold-link {
   font-weight: 900;
 }
 
-.rf-p-b.panel.processDefinition {
-  overflow-x: auto;
+.rf-p-b{
+  &.panel{
+    &.processDefinition {
+      overflow-x: auto;
+    }
+  }
 }
 
-#nodes:hover + .graphHint {
-  display:block;
+.graphHint-title {
+  width:100%;
+  text-align:center;
+  font-weight:bold;
 }
 
 .graphHint {
@@ -78,21 +98,14 @@
   border-radius: 5px;
 }
 
-.graphHint-title {
-  width:100%;
-  text-align:center;
-  font-weight:bold;
+#nodes {
+  &:hover {
+    & + .graphHint {
+      display:block;
+    }
+  }
 }
 
-.Node.Selected{
-  cursor:pointer;
-}
-.Node.Text{
-  color:#CCC;
-}
-.Node.Text.Operator{
-  margin:0 5px;
-}
 .toolbar{
   position:absolute;
   z-index:128;
@@ -100,82 +113,148 @@
   left:0;
   margin:0;
   padding:0 10px 0 0;
+  background-color:@menu-bg-color;
+  color:@menu-txt-color;
+  & > .toolbar-itm {
+    display:block;
+    vertical-align:top;
+    position:relative;
+    &:hover {
+      & > .toolbar {
+        display:block;
+      }
+    }
+    & > .toolbar {
+      display:none;
+      position:absolute;
+      padding:5px;
+      left:100%;
+      top:0;
+      & > .toolbar-itm {
+        display:block;
+        vertical-align:top;
+        position:relative;
+      }
+    }
+  }
 }
 
-.toolbar > .toolbar-itm,
-.toolbar > .toolbar-itm > .toolbar > .toolbar-itm {
-  display:block;
-  vertical-align:top;
-  position:relative;
+.Selected {
+  color:@menu-bg-color;
+  background-color:@menu-txt-color;
 }
 
-.toolbar > .toolbar-itm > .toolbar {
-  display:none;
-  position:absolute;
-  left:100%;
-  top:0;
-}
-.expressionInput.hidden{
-  display:none;
-}
-.Text.Operator {
-  padding:0 5px;
-}
-
-.toolbar > .toolbar-itm:hover > .toolbar {
-  display:block;
-}
-
-.toolbar-itm.Action:hover {
-  color:#FFF;
-  background-color:#505050;
-  cursor:context-menu;
-}
-.toolbar,.toolbar > .toolbar-itm > .toolbar {
-  padding:5px;
-}
-.toolbar {
-  background-color:#C0C0C0;
-  color:#000;
-}
-.Node > .Value:hover, .Node > .Operator:hover,.Selected {
-  background-color:#C0C0C0;
-}
-
-.TransitionNode, .TransitionNode>.Text,.StringNode, .StringNode>.Text{
-  color:#44F;
-}
-.BooleanNode, .BooleanNode>.Text {
-  color:#A00;
-}
-.ArithNode, .ArithNode>.Text {
-  color:#040;
-}
-
-.ArithNode > .Text.Operator {
-  color:#030;
-}
-.StringNode > .Text.Operator,.TransitionNode > .Text.Operator {
-  color:#00E;
-  margin:0;
-  padding:0;
-}
-.BooleanNode > .Text.Operator {
-  color:#900;
-}
-
-.expressionDiv > .Node {
-  margin:0;
-}
-
-.Node > .Expression.Node, .Expression.Node > .ArithNode, .Expression.Node > .StringNode, .Expression.Node > .TransitionNode, .Expression.Node > .BooleanNode {
-  margin:0 0 0 20px;
+.toolbar-itm {
+  &.Action{
+    &:hover {
+      &:extend(.Selected);
+      cursor:context-menu;
+    }
+  }
 }
 
 .Node {
   vertical-align:middle;
+  &.Selected{
+    cursor:pointer;
+  }
+  &.Text {
+    color:#CCC;
+    &.Operator{
+      margin:0 5px;
+    }
+  }
+  & > .Value:hover {
+    &:extend(.Selected);
+  }
+  & > .Operator:hover {
+    &:extend(.Selected);
+  }
+  & > .Node{
+    &.Expression {
+      margin:0 0 0 20px;
+    }
+  }
+  &.Expression {
+    display:inline-block;
+    & > .ArithNode {
+      margin:0 0 0 20px;
+    }
+    & > .StringNode {
+      margin:0 0 0 20px;
+    }
+    & > .TransitionNode {
+      margin:0 0 0 20px;
+    }
+    & > .BooleanNode {
+      margin:0 0 0 20px;
+    }
+  }
 }
 
-.Expression.Node,.BooleanNode, .StringNode, .ArithNode, .TransitionNode {
+.expressionInput {
+  &.hidden{
+    display:none;
+  }
+}
+.Text {
+  &.Operator {
+    padding:0 5px;
+  }
+}
+
+.TransitionNode{
+  color:@expr-wiz-Transition-color;
   display:inline-block;
+  & > .Text{
+    color:@expr-wiz-Transition-color;
+    &.Operator{
+      .darken-color-percentage(color,@expr-wiz-Transition-color,0.5);
+      margin:0;
+      padding:0;
+    }
+  }
+}
+
+.StringNode {
+  color:@expr-wiz-String-color;
+  display:inline-block;
+  & > .Text{
+    color:@expr-wiz-String-color;
+    &.Operator{
+      .darken-color-percentage(color,@expr-wiz-String-color,0.5);
+      margin:0;
+      padding:0;
+    }
+  }
+}
+.BooleanNode{
+  color:@expr-wiz-Boolean-color;
+  display:inline-block;
+  & > .Text {
+    color:@expr-wiz-Boolean-color;
+    &.Operator {
+      .darken-color-percentage(color,@expr-wiz-Boolean-color,0.5);
+      margin:0;
+      padding:0;
+    }
+  }
+}
+.ArithNode{
+  color:@expr-wiz-Arith-color;
+  display:inline-block;
+  & > .Text {
+    color:@expr-wiz-Arith-color;
+    &.Operator {
+      .darken-color-percentage(color,@expr-wiz-Arith-color,0.5);
+      margin:0;
+      padding:0;
+    }
+  }
+}
+
+.expressionDiv{
+  & > .Node {
+    margin:0;
+  }
 }

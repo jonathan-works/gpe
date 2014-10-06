@@ -1,4 +1,17 @@
 @import "epp-mixins.less";
+@import "login.less";
+@import "defaultCRUD.less";
+@import "datatable.less";
+@import "menu.less";
+@import "header.less";
+@import "messages.less";
+@import "minimal.less";
+@import "movimentar.less";
+@import "postit.less";
+@import "paginator.less";
+@import "processDefinition.less";
+@import "termoAdesao.less";
+@import "empty.less";
 
 @imgFolder:~"#{pathResolver.contextPath}/#{a4jSkin.imgFolder}";
 @baseBgColor:#c3d9e4;
@@ -873,8 +886,4 @@ textarea {
 
 select {
   &:extend(.ipt-txt-area-select);
-}
-.input_button.input-button-login {
-  background-color:#FFF;
-  color:#000;
 }

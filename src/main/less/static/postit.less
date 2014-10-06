@@ -1,3 +1,13 @@
+@post-it-bg-color:#FDFB8C;
+@post-it-border-color:#DEDC65;
+@post-it-shadow-color:#DDD;
+@post-it-border-width:1px;
+@post-it-width:164px;
+@post-it-padding:15px;
+@post-it-margin:0px;
+@default-font-family:Arial, sans-serif;
+@post-it-calc-width:(@post-it-width + (2 * @post-it-padding) + (2 * @post-it-margin) + (2 * @post-it-border-width));
+
 .post-it-cont {
     position:relative;
     display:block;
@@ -8,18 +18,17 @@
     padding:15px;
     position:relative;
     top:0;
-    left:calc(~"100% - 196px");
-
-    font-family: Arial, sans-serif;
+    left:calc(~"100% - "@post-it-calc-width);
     
-    background-color:#FDFB8C;
-    border:1px solid #DEDC65;
+    font-family:@default-font-family;
+    background-color:@post-it-bg-color;
+    border:@post-it-border-width solid @post-it-border-color;
 }
 .post-it-cont:before {
-    background-color:#DDD;
+    background-color:@post-it-shadow-color;
     right:-3px;
     top:3px;
-    width:196px;
+    width:@post-it-calc-width;
     height:100%;
     content:"";
     position:absolute;

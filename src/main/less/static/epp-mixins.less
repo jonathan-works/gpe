@@ -40,3 +40,7 @@
   background: linear-gradient(to bottom, @startColor 0%, @endColor 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@startColor', endColorstr='@endColor', GradientType=0);
 }
+
+.darken-color-percentage(@atrib,@color,@perc){
+  @{atrib}:hsl(hue(@color),saturation(@color),lightness(@color)*@perc);
+}
