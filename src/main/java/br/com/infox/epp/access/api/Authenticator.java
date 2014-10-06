@@ -384,9 +384,17 @@ public class Authenticator {
     private void redirectToPainelDoUsuario() {
         Redirect redirect = Redirect.instance();
         redirect.getParameters().clear();
-        redirect.setViewId("/Painel/list.seam");
+        redirect.setViewId(getCaminhoPainel());
         redirect.setParameter("cid", null);
         redirect.execute();
+    }
+    
+    protected String getCaminhoPainel() {
+        return "/Painel/list.seam";
+    }
+    
+    public String getUrlPainel() {
+        return getCaminhoPainel();
     }
 
     private void redirectToTermoAdesao() {
