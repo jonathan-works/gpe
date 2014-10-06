@@ -24,13 +24,13 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
 @Scope(ScopeType.CONVERSATION)
-@Name(ProcessoDocumentoSearch.NAME)
-public class ProcessoDocumentoSearch implements Serializable {
+@Name(DocumentoSearch.NAME)
+public class DocumentoSearch implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final Integer PAGE_SIZE = 15;
-	public static final String NAME = "processoDocumentoSearch";
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoSearch.class);
+	public static final String NAME = "documentoSearch";
+    private static final LogProvider LOG = Logging.getLogProvider(DocumentoSearch.class);
     
 	@In
     private DocumentoDAO documentoDAO;
