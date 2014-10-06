@@ -34,7 +34,7 @@ public class TaskListenerService implements Serializable {
     public static final String NAME = "taskListenerAction";
 
     @In
-    private ProcessoTarefaManager processoEpaTarefaManager;
+    private ProcessoTarefaManager processoTarefaManager;
     @In
     TarefaManager tarefaManager;
     @In
@@ -75,7 +75,7 @@ public class TaskListenerService implements Serializable {
         pTarefa.setTaskInstance(taskInstance.getId());
 
         try {
-            processoEpaTarefaManager.persist(pTarefa);
+        	processoTarefaManager.persist(pTarefa);
         } catch (DAOException e) {
             LOG.error(".createProcessoEpa(processo, taskInstance)", e);
         }

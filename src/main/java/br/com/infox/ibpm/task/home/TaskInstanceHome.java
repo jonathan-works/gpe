@@ -105,7 +105,7 @@ public class TaskInstanceHome implements Serializable {
     @In
     private ProcessoManager processoManager;
     @In
-    private ProcessoTarefaManager processoEpaTarefaManager;
+    private ProcessoTarefaManager processoTarefaManager;
     @In
     private TaskInstanceManager taskInstanceManager;
     @In
@@ -521,13 +521,12 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarBam() {
-        ProcessoTarefa pt = processoEpaTarefaManager
-                .getByTaskInstance(taskInstance.getId());
+        ProcessoTarefa pt = processoTarefaManager.getByTaskInstance(taskInstance.getId());
         Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
         try {
-            processoEpaTarefaManager.update(pt);
-            processoEpaTarefaManager.updateTempoGasto(dtFinalizacao, pt);
+        	processoTarefaManager.update(pt);
+        	processoTarefaManager.updateTempoGasto(dtFinalizacao, pt);
         } catch (DAOException e) {
             LOG.error(".atualizarBam()", e);
         }
@@ -572,7 +571,7 @@ public class TaskInstanceHome implements Serializable {
 
     public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         try {
-            final Map<String, Object> result = processoEpaTarefaManager
+            final Map<String, Object> result = processoTarefaManager
                     .findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso,
                             idTarefa);
             taskInstanceManager.removeUsuario((Long) result
