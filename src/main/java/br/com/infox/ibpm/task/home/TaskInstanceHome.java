@@ -572,10 +572,8 @@ public class TaskInstanceHome implements Serializable {
     public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         try {
             final Map<String, Object> result = processoTarefaManager
-                    .findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso,
-                            idTarefa);
-            taskInstanceManager.removeUsuario((Long) result
-                    .get("idTaskInstance"));
+                    .findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
+            taskInstanceManager.removeUsuario((Long) result.get("idTaskInstance"));
             afterLiberarTarefa();
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
