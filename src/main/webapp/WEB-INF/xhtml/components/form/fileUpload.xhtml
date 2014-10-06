@@ -18,7 +18,7 @@
         id="#{f.id}tipoProcessoDocumento"
         label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
         value="#{home.classificacoesVariaveisUpload[id]}"
-        items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
+        items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
         required="true"
         showLabelSelecione="true"
         rendered="#{not readonly}">

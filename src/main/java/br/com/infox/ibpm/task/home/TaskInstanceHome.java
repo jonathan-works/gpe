@@ -860,7 +860,7 @@ public class TaskInstanceHome implements Serializable {
         return classificacaoDocumentoFacade.getTipoAssinaturaEnumValues();
     }
     
-    public List<ClassificacaoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
         return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
     }
     

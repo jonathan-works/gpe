@@ -24,7 +24,7 @@
           id="#{f.id}tipoProcessoDocumento"
           label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoEditor.documento.classificacaoDocumento}"
-          items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
+          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
           required="true"
           showLabelSelecione="true">
           <a:ajax event="change" status=":status" limitRender="true" 
@@ -89,7 +89,7 @@
           id="tipoProcessoDocumentoPdf"
           label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoUploader.tipoProcessoDocumento}"
-          items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
+          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
           required="true"
           showLabelSelecione="true">
           <a:ajax
