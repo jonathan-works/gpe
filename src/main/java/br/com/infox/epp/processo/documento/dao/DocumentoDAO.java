@@ -61,9 +61,8 @@ public class DocumentoDAO extends DAO<Documento> {
         return getNamedSingleResult(NEXT_SEQUENCIAL, parameters);
     }
 
-    public String getModeloDocumentoByIdDocumento(
-            Integer idProcessoDocumento) {
-        Documento documento = find(idProcessoDocumento);
+    public String getModeloDocumentoByIdDocumento(Integer idDocumento) {
+        Documento documento = find(idDocumento);
         if (documento != null) {
             return documento.getDocumentoBin().getModeloDocumento();
         }

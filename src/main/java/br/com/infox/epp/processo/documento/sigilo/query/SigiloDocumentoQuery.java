@@ -4,7 +4,7 @@ public interface SigiloDocumentoQuery {
     String TABLE_NAME = "tb_sigilo_documento";
     String SEQUENCE_NAME = "sq_tb_sigilo_documento";
     String COLUMN_ID = "id_sigilo_documento";
-    String COLUMN_ID_PROCESSO_DOCUMENTO = "id_processo_documento";
+    String COLUMN_ID_DOCUMENTO = "id_documento";
     String COLUMN_ID_USUARIO_LOGIN = "id_usuario_login";
     String COLUMN_MOTIVO = "ds_motivo";
     String COLUMN_DATA_INCLUSAO = "dt_inclusao";

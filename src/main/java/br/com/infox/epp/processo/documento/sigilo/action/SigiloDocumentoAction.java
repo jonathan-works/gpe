@@ -60,9 +60,9 @@ public class SigiloDocumentoAction implements Serializable {
     public void init() {
         this.sigiloDocumentoMap = new LazyMap<>(new Factory<Integer, Boolean>() {
             @Override
-            public Boolean create(Integer idProcessoDocumento) {
+            public Boolean create(Integer idDocumento) {
                 SigiloDocumentoManager sigiloDocumentoManager = (SigiloDocumentoManager) Component.getInstance(SigiloDocumentoManager.NAME);
-                return sigiloDocumentoManager.isSigiloso(idProcessoDocumento);
+                return sigiloDocumentoManager.isSigiloso(idDocumento);
             }
         });
     }

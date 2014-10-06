@@ -41,36 +41,30 @@
             />
         </h:commandLink>
         <s:link
-            target="idJan#{row.idProcessoDocumento}"
+            target="idJan#{row.id}"
             rendered="#{not empty bin.assinaturas}"
             view="/Processo/Consulta/validaDocumento.xhtml"
-            onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');"
+            onclick="openPopUp('idJan#{row.id}', 'about:blank');"
         >
             <h:graphicImage
                 title="#{eppmessages['assinaturas.validar']}"
                 alt="#{eppmessages['assinaturas.validar']}"
                 url="#{a4jSkin.imgFolder}/lock.png"
             />
-            <f:param
-                value="#{row.idProcessoDocumento}"
-                name="idProcessoDocumento"
-            />
+            <f:param value="#{row.id}" name="idDocumento" />
         </s:link>
         <s:link
-            target="idJan#{row.idProcessoDocumento}"
+            target="idJan#{row.id}"
             rendered="#{empty bin.assinaturas}"
             view="/Processo/Consulta/validaDocumento.xhtml"
-            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');"
+            onclick="infox.abrirPopUp('idJan#{row.id}');"
         >
             <h:graphicImage
                 title="#{eppmessages['assinaturas.assinar']}"
                 alt="#{eppmessages['assinaturas.assinar']}"
                 url="#{a4jSkin.imgFolder}/lock_unlock.png"
             />
-            <f:param
-                value="#{row.idProcessoDocumento}"
-                name="idProcessoDocumento"
-            />
+            <f:param value="#{row.id}" name="idDocumento" />
         </s:link>
     </div>
 </ui:composition>

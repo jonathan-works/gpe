@@ -11,7 +11,7 @@
                 xmlns:wi="http://www.itx.com.br/jsf">
 
     <wi:dataTable values="#{documentoAnexoList.list(10)}" id="documentosTable" bean="#{documentoAnexoList}" 
-       rowId="#{row.idProcessoDocumento}" tableTitle="#{eppmessages['sigiloDocumento.documentos']}" 
+       rowId="#{row.id}" tableTitle="#{eppmessages['sigiloDocumento.documentos']}" 
        hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud" showSearchForm="false">
        
        <ui:define name="toolBar" />
@@ -28,7 +28,7 @@
            <f:facet name="header">
                <h:outputText value="#{eppmessages['sigiloDocumento.documento.nome']}" />
            </f:facet>
-           <h:outputText value="#{row.processoDocumento}" />
+           <h:outputText value="#{row.descricao}" />
        </rich:column>
        
        <rich:column width="10%">
@@ -47,7 +47,7 @@
            </f:facet>
            <center>
                <h:form>
-                   <h:selectBooleanCheckbox value="#{sigiloDocumentoAction.sigiloDocumentoMap[row.idProcessoDocumento]}"
+                   <h:selectBooleanCheckbox value="#{sigiloDocumentoAction.sigiloDocumentoMap[row.id]}"
                        disabled="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}">
                        <a:ajax execute="@this" event="change" render="documentosTable, informacoesAdicionais" limitRender="true" 
                            listener="#{sigiloDocumentoAction.prepararGravacaoSigilo(row)}"/>
@@ -92,7 +92,7 @@
            </f:facet>
            <center>
                <h:form rendered="#{sigiloDocumentoAction.isSigiloso(row)}">
-                   <h:selectBooleanCheckbox value="#{sigiloDocumentoPermissaoAction.permissoesMap[row.idProcessoDocumento]}"
+                   <h:selectBooleanCheckbox value="#{sigiloDocumentoPermissaoAction.permissoesMap[row.id]}"
                        disabled="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}">
                        <a:ajax event="change" execute="@this" render="documentosTable" limitRender="true" />
                    </h:selectBooleanCheckbox>

@@ -50,31 +50,28 @@ final class TaskVariableRetriever extends TaskVariable {
     }
 
     private Object getConteudoEditor(Object variable) {
-        Integer idProcessoDocumento = (Integer) variable;
-        if (idProcessoDocumento != null) {
+        Integer idDocumento = (Integer) variable;
+        if (idDocumento != null) {
             DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
-            Object modeloDocumento = documentoManager
-                    .getModeloDocumentoByIdDocumento(idProcessoDocumento);
+            Object modeloDocumento = documentoManager.getModeloDocumentoByIdDocumento(idDocumento);
             if (modeloDocumento != null) {
                 variable = modeloDocumento;
             } else {
-                LOG.warn("Documento não encontrado: "
-                        + idProcessoDocumento);
+                LOG.warn("Documento não encontrado: " + idDocumento);
             }
         }
         return variable;
     }
     
     private Object getNomeFileUploaded(Object variable) {
-        Integer idProcessoDocumento = (Integer) variable;
-        if (idProcessoDocumento != null) {
+        Integer idDocumento = (Integer) variable;
+        if (idDocumento != null) {
             DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
-            Documento documento = documentoManager.find(idProcessoDocumento);
+            Documento documento = documentoManager.find(idDocumento);
             if (documento != null) {
                 variable = documento.getDescricao();
             } else {
-                LOG.warn("Documento não encontrado: "
-                        + idProcessoDocumento);
+                LOG.warn("Documento não encontrado: " + idDocumento);
             }
         }
         return variable;

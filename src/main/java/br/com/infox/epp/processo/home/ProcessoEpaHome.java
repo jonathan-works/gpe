@@ -260,8 +260,8 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
         return true;
     }
 
-    public void carregarDadosFluxo(Integer idProcessoDocumento) {
-        Documento documento = buscarProcessoDocumento(idProcessoDocumento);
+    public void carregarDadosFluxo(Integer idDocumento) {
+        Documento documento = buscarProcessoDocumento(idDocumento);
         if (documento != null) {
             setPdFluxo(documento);
             documentoBin = documento.getDocumentoBin();

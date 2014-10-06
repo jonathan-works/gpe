@@ -16,11 +16,11 @@ import br.com.infox.epp.system.EppProperties;
 public class DocumentoAnexoList extends EntityList<Documento> {
 	
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_EJBQL = "select pd.* from tb_processo_documento pd "
+    private static final String DEFAULT_EJBQL = "select pd.* from tb_documento pd "
             + "inner join tb_processo p on (p.id_processo = pd.id_processo) where "
             + "pd.id_processo = #{documentoAnexoList.processo} and "
             + "not exists (select 1 from jbpm_variableinstance v where "
-            + "v.longvalue_ = pd.id_processo_documento and "
+            + "v.longvalue_ = pd.id_documento and "
             + "v.taskinstance_ in (select t.id_ from jbpm_taskinstance t where t.procinst_ = p.id_jbpm)"
             + ") "; 
     private static final String DEFAULT_ORDER = "pd.dt_inclusao";

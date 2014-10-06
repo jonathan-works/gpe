@@ -242,9 +242,7 @@
                                 title="#{eppmessages['assinaturas.validar']}"
                                 alt="#{eppmessages['assinaturas.validar']}"
                                 url="#{a4jSkin.imgFolder}/lock.png" />
-                            <f:param
-                                value="#{row.idProcessoDocumento}"
-                                name="idProcessoDocumento" />
+                            <f:param value="#{row.id}" name="idDocumento" />
                         </s:link>
                         <s:link
                             target="idJan#{row.id}"
@@ -255,7 +253,7 @@
                                 title="#{eppmessages['assinaturas.assinar']}"
                                 alt="#{eppmessages['assinaturas.assinar']}"
                                 url="#{a4jSkin.imgFolder}/lock_unlock.png" />
-                            <f:param value="#{row.id}" name="idProcessoDocumento" />	
+                            <f:param value="#{row.id}" name="idDocumento" />	
                         </s:link>
                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.gif" 
                        		            title="#{eppmessages['button.historico']}" 

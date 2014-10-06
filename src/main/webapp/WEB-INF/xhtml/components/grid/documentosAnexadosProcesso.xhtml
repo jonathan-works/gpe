@@ -13,7 +13,7 @@
             values="#{consultaController.getProcessoDocumentoList(task.id)}"
             tableTitle="#{eppmessages['anexosProcesso.titleView']}"
             id="documentosAnexadosList"
-            rowId="#{row.idProcessoDocumento}" panelStyleClass="anexos"
+            rowId="#{row.idDocumento}" panelStyleClass="anexos"
             hideOrder="true">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
@@ -21,12 +21,12 @@
                     <ui:param name="bin"
                         value="#{row.processoDocumentoBin}" />
                     <ui:param name="header"
-                        value="#{row.processoDocumento}" />
+                        value="#{row.descricao}" />
                 </ui:include>
             </ui:define>
             <wi:columnOutputText columnId="processoDocumento"
                 columnHeader="#{eppmessages['anexosProcesso.processoDocumento']}"
-                value="#{row.processoDocumento}" />
+                value="#{row.descricao}" />
             <wi:columnOutputText columnId="dataAnexo"
                 columnHeader="#{eppmessages['anexosProcesso.dataInclusao']}"
                 value="#{row.processoDocumentoBin.dataInclusao}">

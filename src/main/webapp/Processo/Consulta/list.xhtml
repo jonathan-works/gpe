@@ -64,35 +64,31 @@
                     bean="#{documentoList}"
                     tableTitle="#{eppmessages['processo.documentos']}"
                     id="documentoList"
-                    rowId="#{row.idProcessoDocumento}"
+                    rowId="#{row.id}"
                     panelStyleClass="full-sized"
                     showSearchForm="false">
                     <ui:define name="toolBar">
                         <s:link
-                            target="idJan#{row.idProcessoDocumento}"
+                            target="idJan#{row.id}"
                             rendered="#{not empty row.processoDocumentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
-                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 160, 450, 450);">
+                            onclick="infox.openPopUp('idJan#{row.id}', '', 650, 160, 450, 450);">
                             <h:graphicImage
                                 title="#{eppmessages['assinaturas.validar']}"
                                 alt="#{eppmessages['assinaturas.validar']}"
                                 url="#{a4jSkin.imgFolder}/lock.png" />
-                            <f:param
-                                value="#{row.idProcessoDocumento}"
-                                name="idProcessoDocumento" />
+                            <f:param value="#{row.id}" name="idDocumento" />
                         </s:link>
                         <s:link
-                            target="idJan#{row.idProcessoDocumento}"
+                            target="idJan#{row.id}"
                             rendered="#{empty row.processoDocumentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
-                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 200, 450, 450);">
+                            onclick="infox.openPopUp('idJan#{row.id}', '', 650, 200, 450, 450);">
                             <h:graphicImage
                                 title="#{eppmessages['assinaturas.assinar']}"
                                 alt="#{eppmessages['assinaturas.assinar']}"
                                 url="#{a4jSkin.imgFolder}/lock_unlock.png" />
-                            <f:param
-                                value="#{row.idProcessoDocumento}"
-                                name="idProcessoDocumento" />
+                            <f:param value="#{row.id}" name="idDocumento" />
                         </s:link>
                         <h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.gif" 
                        		            title="#{eppmessages['button.historico']}" 
@@ -102,12 +98,12 @@
                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/remove.png"
                        					rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}" 
                        					title="#{eppmessages['button.delete']}"
-                       					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.processoDocumento}', '#{row.tipoProcessoDocumento.tipoProcessoDocumento}');"/>
+                       					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');"/>
                        	
                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/stock_undelete.png"
                        				    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}" 
                        				    title="#{eppmessages['button.restaurar']}"
-                       				    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.processoDocumento}', '#{row.tipoProcessoDocumento.tipoProcessoDocumento}');"/>
+                       				    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');"/>
                     </ui:define>
                     <ui:define name="headerToolBar" />
                     <wi:columnOutputText
@@ -124,7 +120,7 @@
                     	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                         columnId="processoDocumento"
                         columnHeader="#{eppmessages['assinaturas.documento']}"
-                        value="#{row.processoDocumento}" />
+                        value="#{row.descricao" />
                     <wi:columnOutputText
                     	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                         columnId="processoDocumentoBin.sizeFormatado"
