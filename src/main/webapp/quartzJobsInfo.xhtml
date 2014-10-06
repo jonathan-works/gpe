@@ -81,7 +81,7 @@
                     rendered="#{(s:hasRole('admin') or s:hasRole('administrador')) and not producao}"
                     id="btApagarJobs" reRender="pagina"
                     action="#{quartzJobsInfo.apagarJobs()}"
-                    value="Apagar Jobs" />
+                    value="#{eppmessages['quartz.deleteAllJobs']}" />
 
             </h:form>
         </s:div>
