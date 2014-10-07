@@ -28,6 +28,9 @@
   position:absolute;
   padding:0;
   min-width:100%;
+  margin-left:calc(~"100% + "1px);
+  margin-top:-24px;
+  z-index:9000;
 }
 .menu-lnk {
   color: @menu-txt-color;
@@ -37,6 +40,8 @@
 .menu-itm-lbl{
   text-decoration: none;
   white-space: nowrap;
+  padding:4px;
+  margin:1px;
   &:hover {
     cursor:pointer;
     color: @menu-bg-color;
@@ -45,6 +50,12 @@
 }
 
 @media (max-width:660px){
+  .menu-submenu{
+    margin-left:5px;
+    margin-top:0;
+    z-index:9000;
+  }
+  
   .menu-main > .menu-itm {
     display:none;
   }
