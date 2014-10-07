@@ -2,7 +2,6 @@ package br.com.infox.epp.processo.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoEpaQuery.DATA_INICIO_PRIMEIRA_TAREFA;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO;
@@ -18,7 +17,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUME
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,14 +44,8 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.hibernate.util.HibernateUtil;
 
-/**
- * Classe DAO para a entidade ProcessoEpa
- * 
- * @author Daniel
- * 
- */
-@Name(ProcessoEpaDAO.NAME)
 @AutoCreate
+@Name(ProcessoEpaDAO.NAME)
 public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
 
     private static final long serialVersionUID = 8899227886410190168L;
@@ -140,12 +132,6 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
             LOG.info(".getTempoGasto()", e);
         }
         return result;
-    }
-
-    public Date getDataInicioPrimeiraTarefa(ProcessoEpa processoEpa) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(QUERY_PARAM_PROCESSO_EPA, processoEpa);
-        return getNamedSingleResult(DATA_INICIO_PRIMEIRA_TAREFA, parameters);
     }
 
     public Double getMediaTempoGasto(Fluxo fluxo, SituacaoPrazoEnum prazoEnum) {

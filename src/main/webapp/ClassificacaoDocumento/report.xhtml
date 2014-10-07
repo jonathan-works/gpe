@@ -16,9 +16,9 @@
             title="#{eppmessages['tipoProcessoDocumento.uso']}" />
         <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
 
-        <ui:repeat var="row" value="#{tipoProcessoDocumentoList.list()}">
+        <ui:repeat var="row" value="#{classificacaoDocumentoList.list()}">
             <wi:reportColumn value="#{row.codigoDocumento}" />
-            <wi:reportColumn value="#{row.tipoProcessoDocumento}" />
+            <wi:reportColumn value="#{row.descricao}" />
             <wi:reportColumn value="#{row.inTipoDocumento.getLabel()}" />
             <wi:reportColumnSituacao value="#{row.ativo}"
                 columnAlign="center" />

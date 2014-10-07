@@ -281,7 +281,6 @@ function isCnpjValido(cnpj) {
 function counterTextarea(obj, max) {
 	if (!max || max == '') return;
 	typed = obj.nextElementSibling;
-	typed.style.visibility = "inherit";
 	var maxlength = parseInt(max);					  			
 	if(obj.value.length > maxlength) {
 		obj.value = obj.value.substring(0, maxlength);

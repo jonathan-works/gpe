@@ -8,23 +8,24 @@ import org.jboss.seam.annotations.Observer;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.fluxo.dao.VariavelClassificacaoDocumentoDAO;
 import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 
-@Name(VariavelClassificacaoDocumentoManager.NAME)
 @AutoCreate
+@Name(VariavelClassificacaoDocumentoManager.NAME)
 public class VariavelClassificacaoDocumentoManager extends Manager<VariavelClassificacaoDocumentoDAO, VariavelClassificacaoDocumento> {
-    private static final long serialVersionUID = 1L;
+    
+	private static final long serialVersionUID = 1L;
     public static final String NAME = "variavelClassificacaoDocumentoManager";
     
     public List<VariavelClassificacaoDocumento> listVariavelClassificacao(String nomeVariavel, Integer idFluxo) {
         return getDao().listVariavelClassificacao(nomeVariavel, idFluxo);
     }
     
-    public List<TipoProcessoDocumento> listClassificacoesPublicadasDaVariavel(String nomeVariavel, Integer idFluxo) {
+    public List<ClassificacaoDocumento> listClassificacoesPublicadasDaVariavel(String nomeVariavel, Integer idFluxo) {
         return getDao().listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
     }
     
@@ -87,7 +88,7 @@ public class VariavelClassificacaoDocumentoManager extends Manager<VariavelClass
         return super.remove(o);
     }
     
-    public List<TipoProcessoDocumento> listClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, int start, int max) {
+    public List<ClassificacaoDocumento> listClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, int start, int max) {
         return getDao().listClassificacoesDisponiveisParaVariavel(idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento, start, max);
     }
     
@@ -95,7 +96,7 @@ public class VariavelClassificacaoDocumentoManager extends Manager<VariavelClass
         return getDao().totalClassificacoesDisponiveisParaVariavel(idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento);
     }
     
-    public VariavelClassificacaoDocumento findVariavelClassificacao(Integer idFluxo, String variavel, TipoProcessoDocumento classificacao) {
+    public VariavelClassificacaoDocumento findVariavelClassificacao(Integer idFluxo, String variavel, ClassificacaoDocumento classificacao) {
         return getDao().findVariavelClassificacao(idFluxo, variavel, classificacao);
     }
 }

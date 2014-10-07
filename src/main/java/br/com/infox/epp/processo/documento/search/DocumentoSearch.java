@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,28 +18,27 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
 @Scope(ScopeType.CONVERSATION)
-@Name(ProcessoDocumentoSearch.NAME)
-public class ProcessoDocumentoSearch {
+@Name(DocumentoSearch.NAME)
+public class DocumentoSearch implements Serializable {
 
-    @In
-    private ProcessoDocumentoDAO processoDocumentoDAO;
+	private static final long serialVersionUID = 1L;
+	private static final Integer PAGE_SIZE = 15;
+	public static final String NAME = "documentoSearch";
+    private static final LogProvider LOG = Logging.getLogProvider(DocumentoSearch.class);
     
+	@In
+    private DocumentoDAO documentoDAO;
     @In
     private ProcessoManager processoManager;
 
-    private static final Integer PAGE_SIZE = 15;
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoDocumentoSearch.class);
-
     private String palavraPesquisada;
-    private List<ProcessoDocumento> resultadoPesquisa = new ArrayList<>();
-
-    public static final String NAME = "processoDocumentoSearch";
+    private List<Documento> resultadoPesquisa = new ArrayList<>();
 
     public Integer getPageSize() {
         return PAGE_SIZE;
@@ -53,17 +53,17 @@ public class ProcessoDocumentoSearch {
         pesquisar();
     }
 
-    public List<ProcessoDocumento> getResultadoPesquisa() {
+    public List<Documento> getResultadoPesquisa() {
         return resultadoPesquisa;
     }
 
-    public void setResultadoPesquisa(List<ProcessoDocumento> resultadoPesquisa) {
+    public void setResultadoPesquisa(List<Documento> resultadoPesquisa) {
         this.resultadoPesquisa = resultadoPesquisa;
     }
 
     private void pesquisar() {
         try {
-            setResultadoPesquisa(processoDocumentoDAO.pesquisar(getPalavraPesquisada()));
+            setResultadoPesquisa(documentoDAO.pesquisar(getPalavraPesquisada()));
         } catch (TooManyClauses e) {
             LOG.warn("", e);
             FacesMessages.instance().clear();

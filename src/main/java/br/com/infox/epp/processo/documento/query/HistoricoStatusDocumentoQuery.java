@@ -7,10 +7,10 @@ public interface HistoricoStatusDocumentoQuery {
 	
 	String EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO = "existeAlgumHistoricoByDocumento";
 	String EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO_QUERY = "select count(*) from HistoricoStatusDocumento " +
-				"where processoDocumento.idProcessoDocumento = :" + PARAM_ID_DOCUMENTO;
+				"where documento.id = :" + PARAM_ID_DOCUMENTO;
 	
 	String LIST_HISTORICO_BY_DOCUMENTO = "getListHistoricoByDocumento";
 	String LIST_HISTORICO_BY_DOCUMENTO_QUERY = "select o from HistoricoStatusDocumento o " +
-				"where o.processoDocumento = :" + PARAM_DOCUMENTO;
+				"where o.documento = :" + PARAM_DOCUMENTO;
 
 }

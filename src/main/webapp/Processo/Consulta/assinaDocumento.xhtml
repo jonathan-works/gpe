@@ -21,7 +21,7 @@
             />
             <ui:param
                 name="isBinario"
-                value="#{assinadorDocumento.processoDocumentoBin.isBinario()}"
+                value="#{assinadorDocumento.documentoBin.isBinario()}"
             />
             <script>
             var documento= {
@@ -29,7 +29,7 @@
                         return 'true';
                     },
                     getData:function getData() {
-                        return "#{assinadorDocumento.processoDocumentoBin.md5Documento}";        
+                        return "#{assinadorDocumento.documentoBin.md5Documento}";        
                     },
                     hasSignature:function hasSignature() {
                         return #{rich:jQuery("signature")}.val() != ''

@@ -16,9 +16,9 @@ import org.jboss.seam.security.Identity;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.system.Parametros;
 
@@ -30,12 +30,12 @@ public class DocumentoProcessoAction implements Serializable{
 	public static final String NAME = "documentoProcessoAction";
 	
 	private String motivoExclusaoRestauracao;
-	private ProcessoDocumento processoDocumentoSelected;
+	private Documento processoDocumentoSelected;
 	private Integer idDocumentoAlter;
-	private Map<String, Boolean> cache;
+	private Map<String, Boolean> cache = new HashMap<String, Boolean>();
 	
 	@In
-	private ProcessoDocumentoManager processoDocumentoManager;
+	private DocumentoManager documentoManager;
 	@In
 	private ActionMessagesService actionMessagesService;
 	@In
@@ -45,10 +45,10 @@ public class DocumentoProcessoAction implements Serializable{
 		if (idDocumentoAlter == null){
 			FacesMessages.instance().add("Não existe documento para alterar");
 		} else {
-			ProcessoDocumento documento = processoDocumentoManager.find(idDocumentoAlter);
+			Documento documento = documentoManager.find(idDocumentoAlter);
 			TipoAlteracaoDocumento tipoAlteracaoDocumento = documento.getExcluido() ? TipoAlteracaoDocumento.R : TipoAlteracaoDocumento.E;
 			try {
-				processoDocumentoManager.exclusaoRestauracaoLogicaDocumento(documento, getMotivoExclusaoRestauracao(), tipoAlteracaoDocumento);
+				documentoManager.exclusaoRestauracaoLogicaDocumento(documento, getMotivoExclusaoRestauracao(), tipoAlteracaoDocumento);
 				FacesMessages.instance().add("#{eppmessages['ProcessoDocumento_updated']}");
 				if (cache.containsKey(idDocumentoAlter.toString())){
 					cache.remove(idDocumentoAlter.toString());
@@ -60,7 +60,7 @@ public class DocumentoProcessoAction implements Serializable{
 	}
 	
 	public void onClickDocumentosTab(){
-		cache = new HashMap<String, Boolean>();
+		cache.clear();
 	}
 	
 	public String getMotivoExclusaoRestauracao() {
@@ -71,20 +71,20 @@ public class DocumentoProcessoAction implements Serializable{
 		this.motivoExclusaoRestauracao = motivoExclusaoRestauracao;
 	}
 	
-	public ProcessoDocumento getProcessoDocumentoSelected() {
+	public Documento getProcessoDocumentoSelected() {
 		return processoDocumentoSelected;
 	}
 	
-	public void setProcessoDocumentoSelected(ProcessoDocumento processoDocumentoSelected) {
+	public void setProcessoDocumentoSelected(Documento processoDocumentoSelected) {
 		this.processoDocumentoSelected = processoDocumentoSelected;
 	}
 	
 	public void setIdDocumento(Integer idDocumento) {
 		if ( idDocumento <= 0 || 
-				(processoDocumentoSelected != null && idDocumento.equals(processoDocumentoSelected.getIdProcessoDocumento()))) {
+				(processoDocumentoSelected != null && idDocumento.equals(processoDocumentoSelected.getId()))) {
 			processoDocumentoSelected = null;
 		} else {
-			processoDocumentoSelected = processoDocumentoManager.find(idDocumento);
+			processoDocumentoSelected = documentoManager.find(idDocumento);
 		}
 	}
 	

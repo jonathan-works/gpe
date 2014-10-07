@@ -13,7 +13,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumentoPermissao;
 import br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoPermissaoQuery;
@@ -49,7 +49,7 @@ public class SigiloDocumentoPermissaoDAO extends DAO<SigiloDocumentoPermissao> {
         executeNamedQueryUpdate(SigiloDocumentoPermissaoQuery.NAMED_QUERY_INATIVAR_PERMISSOES, params);
     }
 
-    public List<ProcessoDocumento> getDocumentosPermitidos(
+    public List<Documento> getDocumentosPermitidos(
             ProcessoEpa processo, UsuarioLogin usuario) {
         Map<String, Object> params = new HashMap<>();
         params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_PROCESSO, processo);

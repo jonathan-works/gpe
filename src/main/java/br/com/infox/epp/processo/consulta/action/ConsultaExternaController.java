@@ -8,13 +8,13 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.controller.AbstractController;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 
-@Name(ConsultaExternaController.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Name(ConsultaExternaController.NAME)
 public class ConsultaExternaController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +22,7 @@ public class ConsultaExternaController extends AbstractController {
     public static final String TAB_VIEW = "processoExternoView";
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     private ProcessoEpa processoEpa;
 
@@ -39,9 +39,8 @@ public class ConsultaExternaController extends AbstractController {
         setProcessoEpa(processoEpa);
     }
 
-    public List<ProcessoDocumento> getAnexosPublicos(
-            ProcessoEpaTarefa processoEpaTarefa) {
-        return processoDocumentoManager.getAnexosPublicos(processoEpaTarefa.getTaskInstance());
+    public List<Documento> getAnexosPublicos(ProcessoTarefa processoTarefa) {
+        return documentoManager.getAnexosPublicos(processoTarefa.getTaskInstance());
     }
 
     public void onClickSearchNumeroTab() {

@@ -11,16 +11,16 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
 
-@Name(ProcessoDocumentoList.NAME)
+@Name(DocumentoList.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
+public class DocumentoList extends EntityList<Documento> {
 	
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_EJBQL = "select o from ProcessoDocumento o where "
+    private static final String DEFAULT_EJBQL = "select o from Documento o where "
             + "(not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true and "
             + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o)))";
@@ -29,7 +29,7 @@ public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
     
     private static final String DEFAULT_ORDER = "dataInclusao desc";
 
-    public static final String NAME = "processoDocumentoList";
+    public static final String NAME = "documentoList";
     
     @In
     private ParametroManager parametroManager;
@@ -57,7 +57,7 @@ public class ProcessoDocumentoList extends EntityList<ProcessoDocumento> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
     	Map<String, String> map = new HashMap<>();
-    	map.put("processoDocumentoBin.sizeFormatado", "o.processoDocumentoBin.size");
+    	map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
         return map;
     }
 

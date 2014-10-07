@@ -22,12 +22,11 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.ibpm.variable.VariableHandler;
 
@@ -40,16 +39,14 @@ public class ProcessoHandler implements Serializable {
 
     private List<TaskInstance> taskInstanceList;
     private List<TaskInstance> taskDocumentList;
-    private Map<TaskInstance, List<ProcessoDocumento>> anexoMap = new HashMap<TaskInstance, List<ProcessoDocumento>>();
+    private Map<TaskInstance, List<Documento>> anexoMap = new HashMap<TaskInstance, List<Documento>>();
 
     private int inicio;
 
     @In
-    private ClassificacaoDocumentoManager classificacaoDocumentoManager;
-    @In
     private ProcessoEpaManager processoEpaManager;
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     @SuppressWarnings(UNCHECKED)
     public List<TaskInstance> getTaskInstanceList() {
@@ -97,14 +94,14 @@ public class ProcessoHandler implements Serializable {
         return taskDocumentList;
     }
 
-    public List<ProcessoDocumento> getAnexosPublicos(TaskInstance task) {
-        return processoDocumentoManager.getAnexosPublicos(task.getId());
+    public List<Documento> getAnexosPublicos(TaskInstance task) {
+        return documentoManager.getAnexosPublicos(task.getId());
     }
 
-    public List<ProcessoDocumento> getAnexos(TaskInstance task) {
-        List<ProcessoDocumento> anexoList = anexoMap.get(task);
+    public List<Documento> getAnexos(TaskInstance task) {
+        List<Documento> anexoList = anexoMap.get(task);
         if (anexoList == null) {
-            anexoList = classificacaoDocumentoManager.getProcessoDocumentoByTask(task);
+            anexoList = documentoManager.getDocumentoByTask(task);
             anexoMap.put(task, anexoList);
         }
         return anexoList;

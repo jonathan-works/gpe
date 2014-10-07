@@ -11,7 +11,7 @@ import org.jboss.seam.async.QuartzTriggerHandle;
 import br.com.infox.epp.estatistica.abstracts.BamTimerProcessor;
 import br.com.infox.epp.estatistica.manager.BamTimerManager;
 import br.com.infox.epp.estatistica.startup.BamTimerStarter;
-import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 /**
@@ -22,13 +22,14 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
  * 
  * @author Daniel
  */
-@Name(TarefaTimerProcessor.NAME)
 @AutoCreate
+@Name(TarefaTimerProcessor.NAME)
 public class TarefaTimerProcessor extends BamTimerProcessor {
+	
     public static final String NAME = "tarefaTimerProcessor";
 
     @In
-    private ProcessoEpaTarefaManager processoEpaTarefaManager;
+    private ProcessoTarefaManager processoTarefaManager;
     @In
     private BamTimerManager bamTimerManager;
 
@@ -45,12 +46,11 @@ public class TarefaTimerProcessor extends BamTimerProcessor {
         return updateTarefasNaoFinalizadas(PrazoEnum.H);
     }
 
-    @Override
-    protected ProcessoEpaTarefaManager getProcessoEpaTarefamanager() {
-        return processoEpaTarefaManager;
-    }
+    public ProcessoTarefaManager getProcessoTarefaManager() {
+		return processoTarefaManager;
+	}
 
-    @Override
+	@Override
     protected BamTimerManager getBamTimerManager() {
         return bamTimerManager;
     }

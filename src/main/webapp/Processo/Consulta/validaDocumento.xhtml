@@ -87,7 +87,7 @@
               </wi:appletAssinatura>
               <h:inputHidden
                 id="dadosAssinaveis"
-                value="#{assinadorDocumento.processoDocumentoBin.isBinario() ? validaDocumentoAction.processoDocumentoBin.md5Documento : validaDocumentoAction.processoDocumentoBin.modeloDocumento}" />
+                value="#{assinadorDocumento.documentoBin.isBinario() ? validaDocumentoAction.documentoBin.md5Documento : validaDocumentoAction.documentoBin.modeloDocumento}" />
               <h:outputScript>
                 var documento={
                   getData:function getData() {

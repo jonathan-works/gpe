@@ -28,10 +28,11 @@ public abstract class RunnableTest<E> extends AbstractCrudActions<E> {
         }
         
         public abstract void execute(final CrudActions<R> crudActions);
-
+        
         public R getEntity() {
             return entity;
         }
+
         public void setEntity(final R entity) {
             this.entity = entity;
         }

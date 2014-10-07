@@ -17,13 +17,13 @@
     <ui:define name="title">#{pageTitle}</ui:define>
     <ui:param
         name="home"
-        value="#{processoHome}" />
+        value="#{processoEpaHome}" />
     <ui:param
         name="showMenu"
         value="false" />
     <ui:param
         name="checkPermission"
-        value="#{processoHome.checarVisibilidade()}" />
+        value="#{processoEpaHome.checarVisibilidade()}" />
     <ui:define name="body">
         <h:form>
             <a:jsFunction
@@ -32,7 +32,7 @@
         </h:form>
         <rich:collapsiblePanel
             switchType="client"
-            header="#{eppmessages['processo.titleView']} #{processoHome.instance.numeroProcesso}"
+            header="#{eppmessages['processo.titleView']} #{processoEpaHome.instance.numeroProcesso}"
             expanded="false">
             <h:panelGrid
                 columns="2"
@@ -41,13 +41,13 @@
                 <wi:outputText
                     id="dataInicio"
                     label="#{eppmessages['processo.dataInicio']}"
-                    value="#{processoHome.instance.dataInicio}">
+                    value="#{processoEpaHome.instance.dataInicio}">
                     <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
                 </wi:outputText>
                 <wi:outputText
                     id="usuarioCadastroProcesso"
                     label="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                    value="#{processoHome.instance.usuarioCadastroProcesso}" />
+                    value="#{processoEpaHome.instance.usuarioCadastroProcesso}" />
             </h:panelGrid>
         </rich:collapsiblePanel>
         <infox:tabPanel
@@ -78,7 +78,7 @@
             <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{eppmessages['acaoProcesso.menuText']}">
                 <ui:decorate
@@ -92,9 +92,9 @@
             <infox:tab
                 id="tabAnexos"
                 name="tabAnexos"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
-                action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
+                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{eppmessages['processo.documentos']}">
                 <ui:decorate
@@ -106,11 +106,11 @@
 						<a:param name="idDocumento" assignTo="#{documentoProcessoAction.idDocumento}" converter="javax.faces.Integer"/>
 					</a:jsFunction>
                     <wi:dataTable
-                        values="#{processoDocumentoList.list(15)}"
-                        bean="#{processoDocumentoList}"
+                        values="#{documentoList.list(15)}"
+                        bean="#{documentoList}"
                         tableTitle="#{eppmessages['processo.documentos']} #{home.instance}"
-                        id="processoDocumentoList"
-                        rowId="#{row.idProcessoDocumento}"
+                        id="documentoList"
+                        rowId="#{row.id}"
                         searchFormStyleClass="hidden"
                         panelStyleCss="full-sized">
                         <ui:define name="headerToolBar" />
@@ -131,9 +131,9 @@
                             value="#{row.dataInclusao}" />
                         <wi:columnOutputText
                         	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                            columnId="processoDocumentoBin"
+                            columnId="descricao"
                             columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
-                            value="#{row.processoDocumento}" />
+                            value="#{row.descricao}" />
                         <ui:define name="toolBar">
                         	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.gif" 
                        		            title="#{eppmessages['button.historico']}" 
@@ -190,7 +190,7 @@
                 id="documentoFisicoTab"
                 name="documentoFisicoTab"
                 rendered="#{home.isManaged()}"
-                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
+                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
                 title="#{eppmessages['documentoFisico.titleTab']}">
                 <ui:decorate
                     id="frameDecorate"
@@ -241,10 +241,10 @@
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
                 <f:setPropertyActionListener
                     target="#{sigiloProcessoAction.processo}"
-                    value="#{processoHome.instance}" />
+                    value="#{processoEpaHome.instance}" />
                 <f:setPropertyActionListener
                     target="#{sigiloProcessoList.processo}"
-                    value="#{processoHome.instance}" />
+                    value="#{processoEpaHome.instance}" />
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
@@ -260,10 +260,10 @@
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloDocumento', 'access')}">
                 <f:setPropertyActionListener
                     target="#{sigiloDocumentoAction.processo}"
-                    value="#{processoHome.instance}" />
+                    value="#{processoEpaHome.instance}" />
                 <f:setPropertyActionListener
                     target="#{documentoAnexoList.processo}"
-                    value="#{processoHome.instance}" />
+                    value="#{processoEpaHome.instance}" />
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">

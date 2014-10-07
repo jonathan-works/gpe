@@ -49,7 +49,7 @@
                                 <s:link
                                     target="_blank"
                                     view="/Processo/Consulta/paginator.xhtml"
-                                    value="Processo: #{taskConteudo.numeroProcesso} #{processoDocumentoSearch.getNameTarefa(taskConteudo.idTaskInstance)}">
+                                    value="Processo: #{taskConteudo.numeroProcesso} #{documentoSearch.getNameTarefa(taskConteudo.idTaskInstance)}">
                                     <f:param
                                         name="inicio"
                                         value="0" />
@@ -83,20 +83,20 @@
                 <s:div id="resultado">
                     <div>
                         <h:outputText
-                            value="#{processoDocumentoSearch.resultadoPesquisa.size()}"
+                            value="#{documentoSearch.resultadoPesquisa.size()}"
                             style="font-weight: bold" />
                         <h:outputText
                             value=" #{eppmessages['indexedSearch.resultAbout']} " />
                         <h:outputText
-                            value="#{processoDocumentoSearch.palavraPesquisada}"
+                            value="#{documentoSearch.palavraPesquisada}"
                             style="font-weight: bold" />
                     </div>
                     <h:form>
                         <rich:dataTable
                             id="searchResult"
-                            rows="#{processoDocumentoSearch.pageSize}"
-                            rendered="#{! empty processoDocumentoSearch.resultadoPesquisa}"
-                            value="#{processoDocumentoSearch.resultadoPesquisa}"
+                            rows="#{documentoSearch.pageSize}"
+                            rendered="#{not empty documentoSearch.resultadoPesquisa}"
+                            value="#{documentoSearch.resultadoPesquisa}"
                             var="document"
                             styleClass="full-sized">
                             <rich:column>
@@ -104,7 +104,7 @@
                                     <s:link
                                         target="_blank"
                                         view="/Processo/Consulta/paginator.xhtml"
-                                        value="Processo: #{processoSearcher.getNumeroProcesso(document.processo.idProcesso)} #{processoDocumentoSearch.getNameTarefa(document.idJbpmTask)}">
+                                        value="Processo: #{processoSearcher.getNumeroProcesso(document.processo.idProcesso)} #{documentoSearch.getNameTarefa(document.idJbpmTask)}">
                                         <f:param
                                             name="inicio"
                                             value="0" />
@@ -120,7 +120,7 @@
                                     </s:link>
                                     <div>
                                         <h:outputText
-                                            value="#{eppmessages['indexedSearch.foundAt']} #{document.processoDocumento}" />
+                                            value="#{eppmessages['indexedSearch.foundAt']} #{document.descricao}" />
                                     </div>
                                 </div>
                             </rich:column>

@@ -8,21 +8,21 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 
-@Name(TipoProcessoDocumentoPapelList.NAME)
 @Scope(ScopeType.PAGE)
-public class TipoProcessoDocumentoPapelList extends EntityList<TipoProcessoDocumentoPapel> {
+@Name(ClassificacaoDocumentoPapelList.NAME)
+public class ClassificacaoDocumentoPapelList extends EntityList<ClassificacaoDocumentoPapel> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "tipoProcessoDocumentoPapelList";
+    public static final String NAME = "classificacaoDocumentoPapelList";
 
-    public static final String DEFAULT_EJBQL = "select o from TipoProcessoDocumentoPapel o";
+    public static final String DEFAULT_EJBQL = "select o from ClassificacaoDocumentoPapel o";
     public static final String DEFAULT_ORDER = "papel";
 
     @Override
     protected void addSearchFields() {
-        addSearchField("tipoProcessoDocumento", SearchCriteria.IGUAL);
+        addSearchField("classificacaoDocumento", SearchCriteria.IGUAL);
     }
 
     @Override

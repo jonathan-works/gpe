@@ -11,7 +11,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
 
 @Name(AssinaturaDocumentoDAO.NAME)
@@ -20,10 +20,10 @@ public class AssinaturaDocumentoDAO extends DAO<AssinaturaDocumento> {
     public static final String NAME = "assinaturaDocumentoDAO";
     private static final long serialVersionUID = 1L;
     
-    public List<AssinaturaDocumento> listAssinaturaDocumentoByProcessoDocumento(ProcessoDocumento processoDocumento) {
+    public List<AssinaturaDocumento> listAssinaturaDocumentoByDocumento(Documento documento) {
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put(AssinaturaDocumentoQuery.PARAM_PROCESSO_DOCUMENTO, processoDocumento);
-        return getNamedResultList(AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO, hashMap);
+        hashMap.put(AssinaturaDocumentoQuery.PARAM_DOCUMENTO, documento);
+        return getNamedResultList(AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO, hashMap);
     }
 
     //TODO colocar o atributo nomePerfil na entidade AssinaturaDocumento e remover isso daqui

@@ -13,7 +13,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.list.Pageable;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
@@ -37,7 +37,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     private String currentVariable;
     private TipoDocumentoEnum tipoDocumento;
     private Fluxo fluxo;
-    private List<TipoProcessoDocumento> classificacoesDisponiveis;
+    private List<ClassificacaoDocumento> classificacoesDisponiveis;
     private List<VariavelClassificacaoDocumento> classificacoesDaVariavel;
     private int page = 1;
     private int pageCount;
@@ -65,7 +65,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
         }
     }
     
-    public void adicionarClassificacao(TipoProcessoDocumento classificacao) {
+    public void adicionarClassificacao(ClassificacaoDocumento classificacao) {
         variavelClassificacaoDocumento.setVariavel(currentVariable);
         variavelClassificacaoDocumento.setClassificacaoDocumento(classificacao);
         variavelClassificacaoDocumento.setFluxo(fluxo);
@@ -98,7 +98,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
         clearSearch();
     }
     
-    public List<TipoProcessoDocumento> getClassificacoesDisponiveis() {
+    public List<ClassificacaoDocumento> getClassificacoesDisponiveis() {
         if (classificacoesDisponiveis == null) {
             Integer idFluxo = fluxo.getIdFluxo();
             this.total = variavelClassificacaoDocumentoManager.totalClassificacoesDisponiveisParaVariavel(idFluxo, currentVariable, tipoDocumento, nomeClassificacaoDocumento);

@@ -19,9 +19,9 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
-import br.com.infox.epp.tarefa.list.ProcessoEpaTarefaList;
-import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.list.ProcessoTarefaList;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -45,7 +45,7 @@ public class BamAction extends AbstractController {
     @In
     private ProcessoEpaManager processoEpaManager;
     @In
-    private ProcessoEpaTarefaManager processoEpaTarefaManager;
+    private ProcessoTarefaManager processoTarefaManager;
 
     private List<Fluxo> fluxoList;
 
@@ -89,13 +89,13 @@ public class BamAction extends AbstractController {
     }
 
     public void forceUpdateTarefasFinalizadas() {
-        for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getTarefaEnded()) {
+        for (ProcessoTarefa pt : processoTarefaManager.getTarefaEnded()) {
             pt.setUltimoDisparo(pt.getDataInicio());
             pt.setTempoGasto(0);
             pt.setPorcentagem(0);
             try {
-                processoEpaTarefaManager.updateTempoGasto(pt.getDataFim(), pt);
-                corrigirSituacaoPrazoProcesso(pt.getProcessoEpa(), pt.getPorcentagem());
+                processoTarefaManager.updateTempoGasto(pt.getDataFim(), pt);
+                corrigirSituacaoPrazoProcesso(pt.getProcesso().getProcessoEpa(), pt.getPorcentagem());
             } catch (DAOException e) {
                 instance().add(Severity.ERROR, "forceUpdateFinalizadas()", e);
             }
@@ -112,22 +112,22 @@ public class BamAction extends AbstractController {
 
     public void forceUpdateTarefasNaoFinalizadas() {
         Date fireTime = new Date();
-        for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getTarefaNotEnded(PrazoEnum.H)) {
+        for (ProcessoTarefa pt : processoTarefaManager.getTarefaNotEnded(PrazoEnum.H)) {
             pt.setUltimoDisparo(pt.getDataInicio());
             pt.setTempoGasto(0);
             pt.setPorcentagem(0);
             try {
-                processoEpaTarefaManager.updateTempoGasto(fireTime, pt);
-                corrigirSituacaoPrazoProcesso(pt.getProcessoEpa(), pt.getPorcentagem());
+                processoTarefaManager.updateTempoGasto(fireTime, pt);
+                corrigirSituacaoPrazoProcesso(pt.getProcesso().getProcessoEpa(), pt.getPorcentagem());
             } catch (DAOException e) {
                 instance().add(Severity.ERROR, "forceUpdate(H)", e);
             }
         }
-        for (ProcessoEpaTarefa pt : processoEpaTarefaManager.getTarefaNotEnded(PrazoEnum.D)) {
+        for (ProcessoTarefa pt : processoTarefaManager.getTarefaNotEnded(PrazoEnum.D)) {
             pt.setUltimoDisparo(pt.getDataInicio());
             try {
-                processoEpaTarefaManager.updateTempoGasto(fireTime, pt);
-                corrigirSituacaoPrazoProcesso(pt.getProcessoEpa(), pt.getPorcentagem());
+                processoTarefaManager.updateTempoGasto(fireTime, pt);
+                corrigirSituacaoPrazoProcesso(pt.getProcesso().getProcessoEpa(), pt.getPorcentagem());
             } catch (DAOException e) {
                 instance().add(Severity.ERROR, "forceUpdate(D)", e);
             }
@@ -143,7 +143,7 @@ public class BamAction extends AbstractController {
     }
 
     public void onClickSearchTab() {
-        ProcessoEpaTarefaList instance = ComponentUtil.getComponent(ProcessoEpaTarefaList.NAME);
+        ProcessoTarefaList instance = ComponentUtil.getComponent(ProcessoTarefaList.NAME);
         instance.newInstance();
     }
 
@@ -152,19 +152,18 @@ public class BamAction extends AbstractController {
         forceUpdateTarefasNaoFinalizadas();
     }
 
-    private void corrigirSituacaoPrazoProcesso(ProcessoEpa processo,
-            Integer porcentagem) throws DAOException {
+    private void corrigirSituacaoPrazoProcesso(ProcessoEpa processo, Integer porcentagem) throws DAOException {
         if (porcentagem != null && porcentagem > 100) {
             return;
         }
-
+        
         if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.TAT) {
-            processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        	processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
         } else if (processo.getSituacaoPrazo() == SituacaoPrazoEnum.PAT) {
-            processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-            for (ProcessoEpaTarefa tarefa : processo.getProcessoEpaTarefaList()) {
+        	processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+            for (ProcessoTarefa tarefa : processo.getProcessoTarefaList()) {
                 if (tarefa.getPorcentagem() > 100) {
-                    processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
+                	processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
                     break;
                 }
             }

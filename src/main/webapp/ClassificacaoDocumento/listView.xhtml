@@ -19,34 +19,37 @@
 
     <ui:define name="searchGrid">
 
-        <wi:dataTable values="#{tipoProcessoDocumentoList.list(15)}"
-            bean="#{tipoProcessoDocumentoList}"
+        <wi:dataTable values="#{classificacaoDocumentoList.list(15)}"
+            bean="#{classificacaoDocumentoList}"
             tableTitle="#{eppmessages['tipoProcessoDocumento.tableTitle']}"
-            id="tipoProcessoDocumentoList"
-            rowId="#{row.idTipoProcessoDocumento}">
+            id="classificacaoDocumentoList"
+            rowId="#{row.id}">
 
             <ui:define name="searchForm">
 
                 <wi:searchForm
-                    formId="pesquisarTipoProcessoDocumentoForm"
+                    formId="pesquisarClassificacaoDocumentoForm"
                     formTitle="#{eppmessages['searchForm.title']}">
 
                     <wi:inputText id="codigoDocumento"
-                        value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"
+                        value="#{bean.entity.codigoDocumento}"
                         label="#{eppmessages['tipoProcessoDocumento.codigoDocumento']}"
                         maxlength="30" />
-                    <wi:inputText id="tipoProcessoDocumento"
+                        
+                    <wi:inputText id="descricao"
                         label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-                        value="#{tipoProcessoDocumentoList.entity.tipoProcessoDocumento}"
+                        value="#{bean.entity.descricao}"
                         maxlength="100" />
+                        
                     <wi:selectOneMenuEnum id="usoTipoDocumento"
                         label="#{eppmessages['tipoProcessoDocumento.uso']}"
                         items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
-                        value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"
+                        value="#{bean.entity.inTipoDocumento}"
                         noSelectionLabel="#{eppmessages['crud.select.all']}" />
+                        
                     <wi:selectSituacaoOneMenu id="ativo"
                         label="#{eppmessages['field.situacao']}"
-                        value="#{tipoProcessoDocumentoList.entity.ativo}" />
+                        value="#{bean.entity.ativo}" />
 
                 </wi:searchForm>
 
@@ -55,9 +58,9 @@
             <wi:columnOutputText columnId="codigoDocumento"
                 columnHeader="#{eppmessages['tipoProcessoDocumento.codigoDocumento']}"
                 value="#{row.codigoDocumento}" />
-            <wi:columnOutputText columnId="tipoProcessoDocumento"
+            <wi:columnOutputText columnId="descricao"
                 columnHeader="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-                value="#{row.tipoProcessoDocumento}" />
+                value="#{row.descricao}" />
             <wi:columnEnum columnId="inTipoDocumento"
                 columnHeader="#{eppmessages['tipoProcessoDocumento.uso']}"
                 value="#{row.inTipoDocumento}" />
@@ -71,7 +74,7 @@
 
     <ui:define name="form">
 
-        <wi:dataForm formId="tipoProcessoDocumentoForm"
+        <wi:dataForm formId="classificacaoDocumentoForm"
             formTitle="#{eppmessages['form.title']}">
 
             <wi:inputText id="codigoDocumento"
@@ -82,7 +85,7 @@
             <wi:inputText id="tipoProcessoDocumento"
                 label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
                 required="true"
-                value="#{classificacaoDocumentoCrudAction.instance.tipoProcessoDocumento}"
+                value="#{classificacaoDocumentoCrudAction.instance.descricao}"
                 maxlength="150" />
             <wi:selectOneMenuEnum id="usoTipoDocumento"
                 label="#{eppmessages['tipoProcessoDocumento.uso']}"
@@ -100,7 +103,7 @@
                 value="#{classificacaoDocumentoCrudAction.instance.ativo}" />
             <wi:inputTextarea id="tipoProcessoDocumentoObservacao"
                 label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumentoObservacao']}"
-                value="#{classificacaoDocumentoCrudAction.instance.tipoProcessoDocumentoObservacao}"
+                value="#{classificacaoDocumentoCrudAction.instance.observacao}"
                 maxlength="4000" />
 
         </wi:dataForm>
@@ -111,7 +114,7 @@
             rendered="#{home.managed}" name="associarPapelTab"
             title="#{eppmessages['tipoProcessoDocumento.papel']}">
             <s:div id="divAssociarPapel">
-                <wi:dataForm formId="tipoProcessoDocumentoPapelForm"
+                <wi:dataForm formId="classificacaoDocumentoPapelForm"
                     formTitle="#{eppmessages['form.title']}">
                     <wi:selectOneMenuEntity id="papel"
                         label="#{eppmessages['tipoProcessoDocumentoPapel.papel']}"
@@ -135,12 +138,13 @@
                             persistAction="classificacaoDocumentoPapelCrudAction.save()" />
                     </ui:define>
                 </wi:dataForm>
+                
                 <wi:dataTable
-                    values="#{tipoProcessoDocumentoPapelList.list(15)}"
-                    bean="#{tipoProcessoDocumentoPapelList}"
+                    values="#{classificacaoDocumentoPapelList.list(15)}"
+                    bean="#{classificacaoDocumentoPapelList}"
                     tableTitle="#{classificacaoDocumentoCrudAction.instance} - #{eppmessages['form.title']}"
-                    id="tipoProcessoDocumentoPapelList"
-                    rowId="#{row.idTipoProcessoDocumentoPapel}"
+                    id="classificacaoDocumentoPapelList"
+                    rowId="#{row.id}"
                     listReRender="divAssociarPapel" showMsg="false">
                     <wi:columnOutputText columnId="papel"
                         columnHeader="#{eppmessages['tipoProcessoDocumentoPapel.papel']}"
@@ -166,6 +170,7 @@
                 </wi:dataTable>
             </s:div>
         </infox:tab>
+        
         <infox:tab status=":status" id="extensoesTab"
             rendered="#{home.managed and home.instance.canDoUpload()}" name="extensoesTab"
             title="#{eppmessages['tipoProcessoDocumento.extensoesTab']}">

@@ -56,7 +56,7 @@
           }
       }
     </h:outputScript>
-    <h:outputScript rendered="#{processoHome.tab=='tabSaida'}">
+    <h:outputScript rendered="#{processoEpaHome.tab=='tabSaida'}">
       invoke([ "infox.Modal" ], function(Modal) {
         var panelTeste = new Modal({
           id : "#{rich:clientId('mp_taskNodeDescription')}"
@@ -73,13 +73,13 @@
     </ui:define>
     <ui:param
         name="home"
-        value="#{processoHome}" />
+        value="#{processoEpaHome}" />
     <ui:param
         name="showMenu"
         value="false" />
     <ui:param
         name="checkPermission"
-        value="#{processoHome.checarVisibilidade()}" />
+        value="#{processoEpaHome.checarVisibilidade()}" />
     <ui:param
         name="isUsuarioExterno"
         value="#{authenticator.usuarioExterno ? 'true':'false'}" />
@@ -92,7 +92,7 @@
     <ui:define name="body">
         <rich:collapsiblePanel
             switchType="client"
-            header="#{eppmessages['processo.titleView']} #{processoHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoHome.instance.itemDoProcesso}"
+            header="#{eppmessages['processo.titleView']} #{processoEpaHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoEpaHome.instance.itemDoProcesso}"
             expanded="false">
             <h:panelGrid
                 columns="2"
@@ -101,13 +101,13 @@
                 <wi:outputText
                     id="dataInicio"
                     label="#{eppmessages['processo.dataInicio']}"
-                    value="#{processoHome.instance.dataInicio}">
+                    value="#{processoEpaHome.instance.dataInicio}">
                     <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
                 </wi:outputText>
                 <wi:outputText
                     id="usuarioCadastroProcesso"
                     label="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                    value="#{processoHome.instance.usuarioCadastroProcesso}" />
+                    value="#{processoEpaHome.instance.usuarioCadastroProcesso}" />
             </h:panelGrid>
         </rich:collapsiblePanel>
         <h:form>
@@ -161,7 +161,7 @@
             <infox:tab
                 id="tabSaida"
                 name="tabSaida"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{eppmessages['movimentar.saida.titleTab']}">
                 <c:if test="#{not taskPageAction.hasTaskPage}">
@@ -179,10 +179,10 @@
             <infox:tab
                 id="tabAnexar"
                 name="tabAnexar"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{eppmessages['movimentar.anexar.titleTab']}"
-                action="#{anexoController.onClickTabAnexar(processoHome.instance)}">
+                action="#{anexoController.onClickTabAnexar(processoEpaHome.instance)}">
                 <wi:dataForm
                     formId="anexarDocumentosForm"
                     formTitle="#{eppmessages['movimentar.anexar.titleForm']}"
@@ -194,9 +194,9 @@
             <infox:tab
                 id="tabAnexos"
                 name="tabAnexos"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
-                action="#{processoDocumentoList.entity.setProcesso(processoHome.instance)}"
+                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{eppmessages['movimentar.documentos.titleTab']}">
                 <a:jsFunction name="selectDocumento" immediate="true"
@@ -204,11 +204,11 @@
 					<a:param name="idDocumento" assignTo="#{documentoProcessoAction.idDocumento}" converter="javax.faces.Integer"/>
 				</a:jsFunction>
                 <wi:dataTable
-                    values="#{processoDocumentoList.list(15)}"
-                    bean="#{processoDocumentoList}"
+                    values="#{documentoList.list(15)}"
+                    bean="#{documentoList}"
                     tableTitle="#{eppmessages['processo.documentos']} #{home.instance}"
-                    id="processoDocumentoList"
-                    rowId="#{row.idProcessoDocumento}"
+                    id="documentoList"
+                    rowId="#{row.id}"
                     showSearchForm="false"
                     panelStyleCss="full-sized">
                     <ui:define name="headerToolBar" />
@@ -229,35 +229,31 @@
                         value="#{row.dataInclusao}" />
                     <wi:columnOutputText 
                     	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                        columnId="processoDocumento"
+                        columnId="descricao"
                         columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
-                        value="#{row.processoDocumento}" />
+                        value="#{row.descricao}" />
                     <ui:define name="toolBar">
                         <s:link
-                            target="idJan#{row.idProcessoDocumento}"
-                            rendered="#{not empty row.processoDocumentoBin.assinaturas and not row.excluido}"
+                            target="idJan#{row.id}"
+                            rendered="#{not empty row.documentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
-                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 160, 450, 450);">
+                            onclick="infox.openPopUp('idJan#{row.id}', '', 650, 160, 450, 450);">
                             <h:graphicImage
                                 title="#{eppmessages['assinaturas.validar']}"
                                 alt="#{eppmessages['assinaturas.validar']}"
                                 url="#{a4jSkin.imgFolder}/lock.png" />
-                            <f:param
-                                value="#{row.idProcessoDocumento}"
-                                name="idProcessoDocumento" />
+                            <f:param value="#{row.id}" name="idDocumento" />
                         </s:link>
                         <s:link
-                            target="idJan#{row.idProcessoDocumento}"
-                            rendered="#{empty row.processoDocumentoBin.assinaturas and not row.excluido}"
+                            target="idJan#{row.id}"
+                            rendered="#{empty row.documentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
-                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 200, 450, 450);">
+                            onclick="infox.openPopUp('idJan#{row.id}', '', 650, 200, 450, 450);">
                             <h:graphicImage
                                 title="#{eppmessages['assinaturas.assinar']}"
                                 alt="#{eppmessages['assinaturas.assinar']}"
                                 url="#{a4jSkin.imgFolder}/lock_unlock.png" />
-                            <f:param
-                                value="#{row.idProcessoDocumento}"
-                                name="idProcessoDocumento" />	
+                            <f:param value="#{row.id}" name="idDocumento" />	
                         </s:link>
                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.gif" 
                        		            title="#{eppmessages['button.historico']}" 
@@ -267,12 +263,12 @@
                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/remove.png"
                        					rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}" 
                        					title="#{eppmessages['button.delete']}"
-                       					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.processoDocumento}', '#{row.tipoProcessoDocumento.tipoProcessoDocumento}');"/>
+                       					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');"/>
                        	
                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/stock_undelete.png"
                        				    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}" 
                        				    title="#{eppmessages['button.restaurar']}"
-                       				    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.processoDocumento}', '#{row.tipoProcessoDocumento.tipoProcessoDocumento}');"/>
+                       				    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');"/>
                     </ui:define>
                 </wi:dataTable>
                 
@@ -347,7 +343,7 @@
 					        onclick="infox.showLoading();"
 					        oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
 					        value="Enviar"
-					        render="@form, processoDocumentoList, pageBodyDialogMessage"
+					        render="@form, documentoList, pageBodyDialogMessage"
 					        styleClass="buttons"/>
 			          </div>
 			        </h:form>
@@ -397,7 +393,7 @@
             <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
-                rendered="#{processoHome.managed}"
+                rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{eppmessages['movimentar.movimentacoes.titleTab']}">
                 <ui:include
@@ -410,7 +406,7 @@
                 id="documentoFisicoTab"
                 name="documentoFisicoTab"
                 rendered="#{home.isManaged()}"
-                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoHome.instance)}"
+                action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
                 title="#{eppmessages['documentoFisico.titleTab']}">
                 <wi:dataForm
                     formId="documentoFisicoForm"

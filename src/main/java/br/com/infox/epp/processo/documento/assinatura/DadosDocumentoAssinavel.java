@@ -1,18 +1,18 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 
 public class DadosDocumentoAssinavel {
-    private TipoProcessoDocumento classificacao;
+    private ClassificacaoDocumento classificacao;
     private Integer idDocumento;
     private String signature;
     private String certChain;
     
-    public TipoProcessoDocumento getClassificacao() {
+    public ClassificacaoDocumento getClassificacao() {
         return classificacao;
     }
     
-    public void setClassificacao(TipoProcessoDocumento classificacao) {
+    public void setClassificacao(ClassificacaoDocumento classificacao) {
         this.classificacao = classificacao;
     }
     

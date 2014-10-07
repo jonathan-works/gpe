@@ -23,12 +23,12 @@
       <wi:selectOneMenuEntity
         id="#{f.id}tipoProcessoDocumento"
         label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
-        items="#{home.getUseableTipoProcessoDocumento(true, taskInstanceHome.getVariableName(id), processoHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
+        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
         required="#{not readonly}"
         showLabelSelecione="true"
         value="#{home.documentosAssinaveis[id].classificacao}"
-        readonly="#{readonly or home.getUseableTipoProcessoDocumento(true, taskInstanceHome.getVariableName(id), processoHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}"
-        disabled="#{readonly or home.getUseableTipoProcessoDocumento(true, taskInstanceHome.getVariableName(id), processoHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}">
+        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}"
+        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}">
         <a:ajax
           event="change"
           render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}ToolTipDivExterna"
@@ -39,12 +39,12 @@
     <s:div id="#{id}EditorDiv">
     	<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
 		    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty home.documentosAssinaveis[id].classificacao.tipoProcessoDocumentoObservacao and not (readonly or home.possuiAssinatura(id))}">
+			  	rendered="#{not empty home.documentosAssinaveis[id].classificacao.observacao and not (readonly or home.possuiAssinatura(id))}">
 			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
 				<div class="epp-tooltip">
 					<div class="tooltip-panel">
 						<div><h:outputText value="Observação:"/></div>
-						<h:outputText value="#{home.documentosAssinaveis[id].classificacao.tipoProcessoDocumentoObservacao}"/>
+						<h:outputText value="#{home.documentosAssinaveis[id].classificacao.observacao}"/>
 					</div>
 				</div>
 		    </s:div>

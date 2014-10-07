@@ -14,7 +14,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 
 @Name(ExtensaoArquivoDAO.NAME)
 @Scope(ScopeType.EVENT)
@@ -24,7 +24,7 @@ public class ExtensaoArquivoDAO extends DAO<ExtensaoArquivo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "extensaoArquivoDAO";
     
-    public ExtensaoArquivo getTamanhoMaximo(TipoProcessoDocumento classificacao, String extensaoArquivo) {
+    public ExtensaoArquivo getTamanhoMaximo(ClassificacaoDocumento classificacao, String extensaoArquivo) {
         Map<String, Object> params = new HashMap<>();
         params.put(CLASSIFICACAO_PARAM, classificacao);
         params.put(EXTENSAO_PARAM, extensaoArquivo);

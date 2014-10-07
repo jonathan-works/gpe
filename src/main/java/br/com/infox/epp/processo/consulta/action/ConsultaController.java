@@ -10,7 +10,7 @@ import org.jboss.seam.faces.Redirect;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
@@ -23,6 +23,7 @@ public class ConsultaController extends AbstractController {
     public static final String NAME = "consultaController";
 
     private ProcessoEpa processoEpa;
+    
     @In
     private ProcessoEpaManager processoEpaManager;
     @In
@@ -55,17 +56,17 @@ public class ConsultaController extends AbstractController {
         this.processoEpa = processoEpa;
     }
 
-    public List<ProcessoDocumento> getProcessoDocumentoList(Long idTask) {
-        List<ProcessoDocumento> list = sigiloDocumentoPermissaoManager.getDocumentosPermitidos(processoEpa, Authenticator.getUsuarioLogado());
+    public List<Documento> getProcessoDocumentoList(Long idTask) {
+        List<Documento> list = sigiloDocumentoPermissaoManager.getDocumentosPermitidos(processoEpa, Authenticator.getUsuarioLogado());
         list = filtrarPorTarefa(list, idTask);
         return filtrarAnexos(list);
     }
 
-    private List<ProcessoDocumento> filtrarPorTarefa(
-            List<ProcessoDocumento> list, Long taskId) {
+    private List<Documento> filtrarPorTarefa(
+            List<Documento> list, Long taskId) {
         if (!showAllDocuments && taskId != null) {
-            List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
-            for (ProcessoDocumento documento : list) {
+            List<Documento> ret = new ArrayList<Documento>();
+            for (Documento documento : list) {
                 if (taskId.equals(documento.getIdJbpmTask())) {
                     ret.add(documento);
                 }
@@ -75,9 +76,9 @@ public class ConsultaController extends AbstractController {
         return list;
     }
 
-    private List<ProcessoDocumento> filtrarAnexos(List<ProcessoDocumento> list) {
-        List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
-        for (ProcessoDocumento documento : list) {
+    private List<Documento> filtrarAnexos(List<Documento> list) {
+        List<Documento> ret = new ArrayList<Documento>();
+        for (Documento documento : list) {
             if (documento.getAnexo() != null && documento.getAnexo()) {
                 ret.add(documento);
             }

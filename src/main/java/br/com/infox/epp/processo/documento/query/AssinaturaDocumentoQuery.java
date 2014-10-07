@@ -2,7 +2,7 @@ package br.com.infox.epp.processo.documento.query;
 
 public interface AssinaturaDocumentoQuery {
 
-    String PARAM_PROCESSO_DOCUMENTO = "processoDocumento";
+    String PARAM_DOCUMENTO = "documento";
     String TABLE_NAME = "tb_assinatura_documento";
     String SEQUENCE_NAME = "sq_" + TABLE_NAME;
     String COL_ID_ASSINATURA = "id_assinatura";
@@ -12,11 +12,10 @@ public interface AssinaturaDocumentoQuery {
     String COL_CERT_CHAIN = "ds_cert_chain";
     String COL_NOME_PERFIL = "nm_perfil";
 
-    String LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO = "listAssinaturaDocumentoByProcessoDocumento";
-    String LIST_ASSINATURA_DOCUMENTO_BY_PROCESSO_DOCUMENTO_QUERY = "select a "
+    String LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO = "listAssinaturaDocumentoByDocumento";
+    String LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO_QUERY = "select a "
             + "from AssinaturaDocumento a "
-            + "inner join a.processoDocumentoBin pdBin " + "where :"
-            + PARAM_PROCESSO_DOCUMENTO
-            + " in elements(pdBin.processoDocumentoList)";
+            + "where exists (select 1 from Documento d where d = :" + PARAM_DOCUMENTO
+            + " and d.documentoBin = a.documentoBin) ";
 
 }

@@ -41,6 +41,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 @SuppressWarnings(UNCHECKED)
 public class PainelUsuarioHome implements Serializable {
+	
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "painelUsuarioHome";

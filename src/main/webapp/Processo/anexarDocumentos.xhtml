@@ -15,7 +15,7 @@
       <s:div>
         <wi:inputText
           id="#{f.id}inputProcessoDocumento"
-          value="#{documentoEditor.processoDocumento.processoDocumento}"
+          value="#{documentoEditor.documento.descricao}"
           disabled="false"
           required="true"
           label="#{eppmessages['processo.anexarDocumentoDescricao']}">
@@ -23,8 +23,8 @@
         <wi:selectOneMenuEntity
           id="#{f.id}tipoProcessoDocumento"
           label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-          value="#{documentoEditor.processoDocumento.tipoProcessoDocumento}"
-          items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
+          value="#{documentoEditor.documento.classificacaoDocumento}"
+          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
           required="true"
           showLabelSelecione="true">
           <a:ajax event="change" status=":status" limitRender="true" 
@@ -38,14 +38,14 @@
 			<div class="epp-tooltip">
 				<div class="tooltip-panel">
 					<div><h:outputText value="Observação:"/></div>
-					<h:outputText value="#{documentoEditor.processoDocumento.tipoProcessoDocumento.tipoProcessoDocumentoObservacao}"/>
+					<h:outputText value="#{documentoEditor.documento.classificacaoDocumento.observacao}"/>
 				</div>
 			</div>
 	    </s:div>
         <wi:editor
           id="modeloDocumento"
           label="#{eppmessages['tipoProcessoDocumento.modelo']}"
-          value="#{documentoEditor.processoDocumento.processoDocumentoBin.modeloDocumento}"
+          value="#{documentoEditor.documento.documentoBin.modeloDocumento}"
           requiredField="false"
           required="true"
           showVariables="false">
@@ -72,7 +72,7 @@
       <div>
         <wi:inputText
           id="inputProcessoDocumentoPdf"
-          value="#{documentoUploader.processoDocumento.processoDocumento}"
+          value="#{documentoUploader.documento.descricao}"
           disabled="false"
           required="true"
           label="#{eppmessages['processo.anexarDocumentoDescricao']}">
@@ -88,8 +88,8 @@
         <wi:selectOneMenuEntity
           id="tipoProcessoDocumentoPdf"
           label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-          value="#{documentoUploader.tipoProcessoDocumento}"
-          items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false)}"
+          value="#{documentoUploader.classificacaoDocumento}"
+          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
           required="true"
           showLabelSelecione="true">
           <a:ajax
@@ -108,8 +108,8 @@
           id="uploadArquivo"
           label="#{eppmessages['fileUpload.type.file']}"
           reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
-          rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList and not empty documentoUploader.processoDocumento.processoDocumento}"
-          accept="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypes}">
+          rendered="#{not empty documentoUploader.classificacaoDocumento and not empty documentoUploader.classificacaoDocumento.extensaoArquivosList and not empty documentoUploader.documento.descricao}"
+          accept="#{documentoUploader.documento.classificacaoDocumento.acceptedTypes}">
         </wi:fileUpload>
       </s:div>
       <s:div id="buttonsPdfDiv">
@@ -131,7 +131,7 @@
       values="#{documentoEditor.documentosDaSessao}"
       tableTitle="#{eppmessages['documentoEditor.titleView']}"
       id="processoDocumentoDaSessao"
-      rowId="#{row.idProcessoDocumento}"
+      rowId="#{row.idDocumento}"
       showSearchForm="false"
       panelStyleClass="full-sized"
       showToolbarColumn="false">
@@ -146,10 +146,10 @@
         hideOrder="true"
         value="#{row.dataInclusao}" />
       <wi:columnOutputText
-        columnId="processoDocumento"
+        columnId="documento"
         columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
         hideOrder="true"
-        value="#{row.processoDocumento}" />
+        value="#{row.descricao}" />
       <ui:define name="headerToolBar" />
       <ui:define name="toolBar" />
     </wi:dataTable>
@@ -161,7 +161,7 @@
       values="#{documentoUploader.documentosDaSessao}"
       tableTitle="#{eppmessages['documentoUploader.titleView']}"
       id="documentoDaSessao"
-      rowId="#{row.idProcessoDocumento}"
+      rowId="#{row.id}"
       panelStyleClass="full-sized"
       showToolbarColumn="false">
       <wi:columnOutputText
@@ -175,10 +175,10 @@
         hideOrder="true"
         value="#{row.dataInclusao}" />
       <wi:columnOutputText
-        columnId="processoDocumento"
+        columnId="documento"
         columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
         hideOrder="true"
-        value="#{row.processoDocumento}" />
+        value="#{row.descricao}" />
       <ui:define name="headerToolBar" />
       <ui:define name="toolBar" />
     </wi:dataTable>

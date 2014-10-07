@@ -1,11 +1,5 @@
 package br.com.infox.epp.turno.query;
 
-/**
- * Interface com as queries da entidade de NaturezaLocalizacao
- * 
- * @author Daniel
- * 
- */
 public interface LocalizacaoTurnoQuery {
 
     String AND = " and ";

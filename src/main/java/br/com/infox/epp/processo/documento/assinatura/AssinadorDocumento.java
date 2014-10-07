@@ -15,29 +15,28 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
-@Name(AssinadorDocumento.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Name(AssinadorDocumento.NAME)
 public class AssinadorDocumento extends AbstractController {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "assinadorDocumento";
-    private static final LogProvider LOG = Logging
-            .getLogProvider(AssinadorDocumento.class);
+    private static final LogProvider LOG = Logging.getLogProvider(AssinadorDocumento.class);
 
     private String certChain;
     private String signature;
     private boolean houveErroAoAssinar = false;
 
-    private ProcessoDocumento processoDocumento;
-    private ProcessoDocumentoBin processoDocumentoBin;
+    private Documento documento;
+    private DocumentoBin documentoBin;
 
     @In
-    AssinaturaDocumentoService assinaturaDocumentoService;
+    private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
-    GenericManager genericManager;
+    private GenericManager genericManager;
 
     public String getCertChain() {
         return certChain;
@@ -63,28 +62,27 @@ public class AssinadorDocumento extends AbstractController {
         this.houveErroAoAssinar = houveErroAoAssinar;
     }
 
-    public ProcessoDocumentoBin getProcessoDocumentoBin() {
-        return processoDocumentoBin;
-    }
+    public DocumentoBin getDocumentoBin() {
+		return documentoBin;
+	}
 
-    public void setProcessoDocumentoBin(
-            ProcessoDocumentoBin processoDocumentoBin) {
-        this.processoDocumentoBin = processoDocumentoBin;
-    }
+	public void setDocumentoBin(DocumentoBin documentoBin) {
+		this.documentoBin = documentoBin;
+	}
 
-    public void assinarDocumento() {
+	public void assinarDocumento() {
         final FacesMessages messages = FacesMessages.instance();
         try {
             final UsuarioPerfil perfilAtual = Authenticator
                     .getUsuarioPerfilAtual();
-            assinaturaDocumentoService.assinarDocumento(processoDocumento,
+            assinaturaDocumentoService.assinarDocumento(documento,
                     perfilAtual, certChain, signature);
-            genericManager.update(processoDocumento);
+            genericManager.update(documento);
             messages.clear();
             messages.add(Messages.instance().get("assinatura.assinadoSucesso"));
         } catch (DAOException e) {
             LOG.error("Não foi possível assinar o documento "
-                    + processoDocumento, e);
+                    + documento, e);
         } catch (CertificadoException | AssinaturaException e) {
             LOG.error("Não foi possível verificar o certificado do usuário "
                     + Authenticator.getUsuarioLogado(), e);
@@ -96,15 +94,14 @@ public class AssinadorDocumento extends AbstractController {
     }
 
     public boolean isSigned() {
-        return assinaturaDocumentoService
-                .isDocumentoAssinado(processoDocumento);
+        return assinaturaDocumentoService.isDocumentoAssinado(documento);
     }
 
     @Override
     public void setId(Object id) {
         super.setId(id);
-        processoDocumento = genericManager.find(ProcessoDocumento.class, id);
-        setProcessoDocumentoBin(processoDocumento.getProcessoDocumentoBin());
+        documento = genericManager.find(Documento.class, id);
+        setDocumentoBin(documento.getDocumentoBin());
     }
 
 }

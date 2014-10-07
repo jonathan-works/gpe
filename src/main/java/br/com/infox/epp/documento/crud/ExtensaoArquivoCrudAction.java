@@ -6,25 +6,25 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 
-@Name(ExtensaoArquivoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Name(ExtensaoArquivoCrudAction.NAME)
 public class ExtensaoArquivoCrudAction extends AbstractCrudAction<ExtensaoArquivo, ExtensaoArquivoManager>{
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "extensaoArquivoCrudAction";
     
-    private TipoProcessoDocumento tipoProcessoDocumento;
+    private ClassificacaoDocumento classificacaoDocumento;
 
-    public void setTipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {
-        this.tipoProcessoDocumento = tipoProcessoDocumento;
+    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+        this.classificacaoDocumento = classificacaoDocumento;
     }
     
     @Override
     protected boolean isInstanceValid() {
-        getInstance().setTipoProcessoDocumento(tipoProcessoDocumento);
+        getInstance().setClassificacaoDocumento(classificacaoDocumento);
         return super.isInstanceValid();
     }
 

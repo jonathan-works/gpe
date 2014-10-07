@@ -25,7 +25,7 @@
                         <wi:columnOutputText hideOrder="true"
                             columnId="classificacaoDocumento"
                             columnHeader="#{eppmessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
-                            value="#{row.classificacaoDocumento.tipoProcessoDocumento}" />
+                            value="#{row.classificacaoDocumento.descricao}" />
                         <rich:column styleClass="dt-toolbar-col">
                             <h:form>
                                 <a:commandLink limitRender="true"
@@ -46,7 +46,7 @@
                     bean="#{variavelClassificacaoDocumentoAction}"
                     tableTitle="#{eppmessages['variavelClassificacaoDocumento.classificacaoDocumento.tableTitle']}"
                     id="classificacoesDisponiveisList"
-                    rowId="#{row.idTipoProcessoDocumento}" panelStyleClass="picklist"
+                    rowId="#{row.id}" panelStyleClass="picklist"
                     styleClass="picklist-dt"
                     hideOrder="true">
                     <ui:define name="searchForm">
@@ -78,7 +78,7 @@
                     <wi:columnOutputText
                         columnId="classificacaoDocumento"
                         columnHeader="#{eppmessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
-                        value="#{row.tipoProcessoDocumento}" />
+                        value="#{row.descricao}" />
                 </wi:dataTable>
             </div>
         </rich:panel>

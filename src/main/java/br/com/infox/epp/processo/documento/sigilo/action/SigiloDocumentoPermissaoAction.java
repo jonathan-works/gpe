@@ -27,9 +27,9 @@ import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermiss
 import br.com.infox.util.collection.Factory;
 import br.com.infox.util.collection.LazyMap;
 
-@Name(SigiloDocumentoPermissaoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Scope(ScopeType.CONVERSATION)
+@Name(SigiloDocumentoPermissaoAction.NAME)
 public class SigiloDocumentoPermissaoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,16 +38,12 @@ public class SigiloDocumentoPermissaoAction implements Serializable {
 
     @In
     private SigiloDocumentoController sigiloDocumentoController;
-
     @In
     private SigiloDocumentoManager sigiloDocumentoManager;
-
     @In
     private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
-
     @In
     private UsuarioLoginManager usuarioLoginManager;
-
     @In
     private ActionMessagesService actionMessagesService;
 
@@ -59,7 +55,7 @@ public class SigiloDocumentoPermissaoAction implements Serializable {
     public void init() {
         this.permissoesMap = new LazyMap<>(new Factory<Integer, Boolean>() {
             @Override
-            public Boolean create(Integer idProcessoDocumento) {
+            public Boolean create(Integer idDocumento) {
                 return false;
             }
         });

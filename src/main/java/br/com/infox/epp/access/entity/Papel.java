@@ -13,8 +13,8 @@ import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY;
-import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO;
-import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PERMISSOES_BY_PAPEL;
@@ -54,7 +54,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Entity
 @Table(name = TABLE_PAPEL, uniqueConstraints = @UniqueConstraint(columnNames = IDENTIFICADOR))
 @NamedQueries({
-    @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_PROCESSO_DOCUMENTO_QUERY),
+    @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO_QUERY),
     @NamedQuery(name = PAPEL_BY_IDENTIFICADOR, query = PAPEL_BY_IDENTIFICADOR_QUERY),
     @NamedQuery(name = PAPEIS_BY_IDENTIFICADORES, query = PAPEIS_BY_IDENTIFICADORES_QUERY),
     @NamedQuery(name = PAPEIS_BY_LOCALIZACAO, query = PAPEIS_BY_LOCALIZACAO_QUERY),

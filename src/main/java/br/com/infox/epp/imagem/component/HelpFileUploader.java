@@ -6,7 +6,9 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Name(HelpFileUploader.NAME)
 public class HelpFileUploader extends AbstractImageUploader {
-    public static final String NAME = "helpFileUploader";
+	
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "helpFileUploader";
 
     public static final HelpFileUploader instance() {
         return ComponentUtil.getComponent(NAME);

@@ -1,14 +1,15 @@
 package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.ID_JDBPM_TASK_PARAM;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.LIST_PROCESSO_DOCUMENTO_BY_PROCESSO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.NEXT_SEQUENCIAL;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_PROCESSO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.PARAM_TIPO_NUMERACAO;
-import static br.com.infox.epp.processo.documento.query.ProcessoDocumentoQuery.USUARIO_PARAM;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JBPM_TASK_PARAM;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_TIPO_NUMERACAO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.USUARIO_PARAM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,22 +31,23 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.session.SessionAssistant;
 
-@Name(ProcessoDocumentoDAO.NAME)
 @AutoCreate
-public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
+@Name(DocumentoDAO.NAME)
+public class DocumentoDAO extends DAO<Documento> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "processoDocumentoDAO";
+    public static final String NAME = "documentoDAO";
 
     @In
     private SessionAssistant sessionAssistant;
@@ -59,18 +61,17 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         return getNamedSingleResult(NEXT_SEQUENCIAL, parameters);
     }
 
-    public String getModeloDocumentoByIdProcessoDocumento(
-            Integer idProcessoDocumento) {
-        ProcessoDocumento processoDocumento = find(idProcessoDocumento);
-        if (processoDocumento != null) {
-            return processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
+    public String getModeloDocumentoByIdDocumento(Integer idDocumento) {
+        Documento documento = find(idDocumento);
+        if (documento != null) {
+            return documento.getDocumentoBin().getModeloDocumento();
         }
         return null;
     }
 
-    public List<ProcessoDocumento> getAnexosPublicos(long idJbpmTask) {
+    public List<Documento> getAnexosPublicos(long idJbpmTask) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(ID_JDBPM_TASK_PARAM, idJbpmTask);
+        parameters.put(ID_JBPM_TASK_PARAM, idJbpmTask);
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
         String query = LIST_ANEXOS_PUBLICOS;
         if (usuarioLogado != null) {
@@ -84,17 +85,23 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         return (FullTextEntityManager) super.getEntityManager();
     }
     
-    public List<ProcessoDocumento> getListProcessoDocumentoByProcesso(Processo processo){
+    public List<Documento> getListDocumentoByProcesso(Processo processo){
     	Map<String, Object> params = new HashMap<>(1);
     	params.put(PARAM_PROCESSO, processo);
-    	return getNamedResultList(LIST_PROCESSO_DOCUMENTO_BY_PROCESSO, params);
+    	return getNamedResultList(LIST_DOCUMENTO_BY_PROCESSO, params);
+    }
+    
+    public List<Documento> getDocumentoListByTask(TaskInstance task) {
+    	Map<String, Object> params = new HashMap<>(1);
+    	params.put(ID_JBPM_TASK_PARAM, task.getId());
+    	return getNamedResultList(LIST_DOCUMENTO_BY_TASKINSTANCE, params);
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<ProcessoDocumento> pesquisar(String searchPattern) throws TooManyClauses, ParseException {
+    public List<Documento> pesquisar(String searchPattern) throws TooManyClauses, ParseException {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
-        List<ProcessoDocumento> ret = new ArrayList<ProcessoDocumento>();
+        List<Documento> ret = new ArrayList<Documento>();
         QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, new String[] {"nome", "texto"}, new BrazilianAnalyzer(Version.LUCENE_36));
         Query luceneQuery;
         try {
@@ -102,15 +109,15 @@ public class ProcessoDocumentoDAO extends DAO<ProcessoDocumento> {
         } catch (TooManyClauses | ParseException e) {
             throw e;
         }
-        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, ProcessoDocumento.class);
-        List<ProcessoDocumento> temp = hibernateQuery.list();
-        for (ProcessoDocumento documento : temp) {
+        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, Documento.class);
+        List<Documento> temp = hibernateQuery.list();
+        for (Documento documento : temp) {
             if (documento.getAnexo()) {
                 ret.add(documento);
             }
         }
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        for (ProcessoDocumento documento : ret) {
+        for (Documento documento : ret) {
             
             if (!sigiloDocumentoService.possuiPermissao(documento, usuarioLogado)){
                 ret.remove(documento);

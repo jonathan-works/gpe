@@ -33,10 +33,10 @@ import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
@@ -69,10 +69,10 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
                 ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
                 ParametroManager.class,ParametroDAO.class, PessoaFisicaManager.class,
                 UsuarioLoginCrudActionIT.class, SendmailCommand.class, DominioVariavelTarefaManager.class, DominioVariavelTarefaDAO.class,
-                ProcessoDocumentoManager.class, ProcessoDocumentoDAO.class, SessionAssistant.class,
+                DocumentoManager.class, DocumentoDAO.class, SessionAssistant.class,
                 SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
                 SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
-                ProcessoDocumentoBinDAO.class, ProcessoDocumentoBinManager.class)
+                DocumentoBinDAO.class, DocumentoBinManager.class)
         .createDeployment();
     }
 

@@ -199,7 +199,7 @@
                                             <h:commandLink
                                                 action="#{documentoHtmlView.setViewInstance(doc)}"
                                                 onclick="openPopUp('PopUpDocumentoBin', '')"
-                                                rendered="#{! empty doc.processoDocumentoBin.modeloDocumento}"
+                                                rendered="#{! empty doc.documentoBin.modeloDocumento}"
                                                 target="PopUpDocumentoBin">
                                                 <h:graphicImage
                                                     title="Visualizar"
@@ -207,20 +207,20 @@
                                             </h:commandLink>
 
                                             <h:commandLink target="idPdf#{row}"
-                                                rendered="#{empty doc.processoDocumentoBin.modeloDocumento}"
+                                                rendered="#{empty doc.documentoBin.modeloDocumento}"
                                                 action="#{documentoDownloader.downloadDocumento(doc)}">
                                                 <h:graphicImage
                                                     value="#{a4jSkin.imgFolder}/mod/pdf.gif"
-                                                    title="#{doc.processoDocumentoBin.nomeArquivo} (#{documentoDownloader.getFormattedKb(doc.processoDocumentoBin)})" />
+                                                    title="#{doc.documentoBin.nomeArquivo} (#{documentoDownloader.getFormattedKb(doc.documentoBin)})" />
                                             </h:commandLink>
                                         </rich:column>
                                         <rich:column>
                                             <h:outputText
-                                                value="#{doc.processoDocumento}" />
+                                                value="#{doc.descricao}" />
                                         </rich:column>
                                         <rich:column>
                                             <h:outputText
-                                                value="#{doc.processoDocumentoBin.dataInclusao}">
+                                                value="#{doc.documentoBin.dataInclusao}">
                                                 <s:convertDateTime
                                                     pattern="dd/MM/yy" />
                                             </h:outputText>

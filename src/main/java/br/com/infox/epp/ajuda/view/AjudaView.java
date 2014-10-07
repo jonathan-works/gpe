@@ -2,6 +2,7 @@ package br.com.infox.epp.ajuda.view;
 
 import static br.com.infox.constants.WarningConstants.RAWTYPES;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +20,11 @@ import br.com.infox.epp.search.SearchService;
 
 @Name(AjudaView.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class AjudaView {
+public class AjudaView implements Serializable {
 
-    public static final String NAME = "ajudaView";
+	private static final long serialVersionUID = 1L;
+
+	public static final String NAME = "ajudaView";
 
     private Ajuda instance;
 

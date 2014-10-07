@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 
 @Name(SigiloDocumentoController.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -22,7 +22,7 @@ public class SigiloDocumentoController implements Serializable {
     }
 
     private FragmentoSigilo fragmentoARenderizar;
-    private ProcessoDocumento documentoSelecionado;
+    private Documento documentoSelecionado;
 
     public FragmentoSigilo getFragmentoARenderizar() {
         return fragmentoARenderizar;
@@ -32,11 +32,11 @@ public class SigiloDocumentoController implements Serializable {
         this.fragmentoARenderizar = fragmentoARenderizar;
     }
 
-    public ProcessoDocumento getDocumentoSelecionado() {
+    public Documento getDocumentoSelecionado() {
         return documentoSelecionado;
     }
 
-    public void setDocumentoSelecionado(ProcessoDocumento documentoSelecionado) {
+    public void setDocumentoSelecionado(Documento documentoSelecionado) {
         this.documentoSelecionado = documentoSelecionado;
     }
 }
