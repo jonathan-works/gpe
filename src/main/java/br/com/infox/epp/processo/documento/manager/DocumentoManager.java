@@ -105,7 +105,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         return getDao().getAnexosPublicos(idJbpmTask);
     }
     
-    public List<Documento> getListProcessoDocumento(Processo processo){
-    	return getDao().getListProcessoDocumentoByProcesso(processo);
+    public List<Documento> getListDocumentoByProcesso(Processo processo){
+    	return getDao().getListDocumentoByProcesso(processo);
     }
 }

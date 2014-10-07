@@ -85,7 +85,7 @@ public class DocumentoDAO extends DAO<Documento> {
         return (FullTextEntityManager) super.getEntityManager();
     }
     
-    public List<Documento> getListProcessoDocumentoByProcesso(Processo processo){
+    public List<Documento> getListDocumentoByProcesso(Processo processo){
     	Map<String, Object> params = new HashMap<>(1);
     	params.put(PARAM_PROCESSO, processo);
     	return getNamedResultList(LIST_DOCUMENTO_BY_PROCESSO, params);
