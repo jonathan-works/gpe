@@ -10,7 +10,7 @@
 	<param name="restrictionLogicOperator" value="#{tipoProcessoDocumentoList.restrictionLogicOperator}" />
 	
 	<param name="codigoDocumento" value="#{classificacaoDocumentoList.entity.codigoDocumento}"/>
-	<param name="classificacaoDocumento" value="#{classificacaoDocumentoList.entity.classificacaoDocumento}"/>
+	<param name="descricao" value="#{classificacaoDocumentoList.entity.descricao}"/>
 	<param name="inTipoDocumento" value="#{classificacaoDocumentoList.entity.inTipoDocumento}"/>
 	<param name="ativo" value="#{classificacaoDocumentoList.entity.ativo}"/>
 
