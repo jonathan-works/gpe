@@ -9,9 +9,9 @@
 	<param name="order" value="#{tipoProcessoDocumentoList.order}" />
 	<param name="restrictionLogicOperator" value="#{tipoProcessoDocumentoList.restrictionLogicOperator}" />
 	
-	<param name="codigoDocumento" value="#{tipoProcessoDocumentoList.entity.codigoDocumento}"/>
-	<param name="tipoProcessoDocumento" value="#{tipoProcessoDocumentoList.entity.tipoProcessoDocumento}"/>
-	<param name="inTipoDocumento" value="#{tipoProcessoDocumentoList.entity.inTipoDocumento}"/>
-	<param name="ativo" value="#{tipoProcessoDocumentoList.entity.ativo}"/>
+	<param name="codigoDocumento" value="#{classificacaoDocumentoList.entity.codigoDocumento}"/>
+	<param name="classificacaoDocumento" value="#{classificacaoDocumentoList.entity.classificacaoDocumento}"/>
+	<param name="inTipoDocumento" value="#{classificacaoDocumentoList.entity.inTipoDocumento}"/>
+	<param name="ativo" value="#{classificacaoDocumentoList.entity.ativo}"/>
 
 </page>

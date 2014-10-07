@@ -42,11 +42,11 @@
 						<ui:repeat var="documento" value="#{taskInstanceHome.classificacoesVariaveisUpload[id].acceptedTypesList}">
 							<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
 						</ui:repeat>
-						<s:div styleClass="tooltip-panel-top" rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumentoObservacao}">
+						<s:div styleClass="tooltip-panel-top" rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id].observacao}">
 							<div>
 								<h:outputText value="Observação:"/>
 							</div>
-							<h:outputText value="#{taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumentoObservacao}" />
+							<h:outputText value="#{taskInstanceHome.classificacoesVariaveisUpload[id].observacao}" />
 						</s:div>
 					</s:div>
 				</div>
@@ -84,7 +84,7 @@
         <s:fragment rendered="#{not empty taskInstanceHome.instance[id]}">    
             <fieldset>
                 <legend>Documento Anexado</legend>
-                <h:outputText value="#{eppmessages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumento : props.classificacaoDocumento}"/>
+                <h:outputText value="#{eppmessages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].descricao : props.classificacaoDocumento}"/>
                 <br />
                 <h:outputText id="file#{id}" value="Documento: #{not readonly ? taskInstanceHome.instance[id] : value}"/>
             </fieldset>

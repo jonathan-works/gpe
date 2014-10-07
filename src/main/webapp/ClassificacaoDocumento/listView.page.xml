@@ -7,7 +7,7 @@
 	  login-required="true">
 	  
 	<restrict>#{security.checkPage()}</restrict> 
-    <description>TipoProcessoDocumento: #{classificacaoDocumentoCrudAction.instance}</description>
+    <description>ClassificacaoDocumento: #{classificacaoDocumentoCrudAction.instance}</description>
 	
 	<begin-conversation join="true"/>
 	<param name="id" value="#{classificacaoDocumentoCrudAction.id}" 

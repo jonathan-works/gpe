@@ -43,7 +43,7 @@ public class FileUpload implements FileUploadListener {
     @In
     private DocumentoBinarioManager documentoBinarioManager;
     @In
-    private ClassificacaoDocumentoManager tipoProcessoDocumentoManager;
+    private ClassificacaoDocumentoManager classificacaoDocumentoManager;
     
     @Override
     public void processFileUpload(FileUploadEvent event) {

@@ -39,12 +39,12 @@
     <s:div id="#{id}EditorDiv">
     	<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
 		    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty home.documentosAssinaveis[id].classificacao.tipoProcessoDocumentoObservacao and not (readonly or home.possuiAssinatura(id))}">
+			  	rendered="#{not empty home.documentosAssinaveis[id].classificacao.observacao and not (readonly or home.possuiAssinatura(id))}">
 			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
 				<div class="epp-tooltip">
 					<div class="tooltip-panel">
 						<div><h:outputText value="Observação:"/></div>
-						<h:outputText value="#{home.documentosAssinaveis[id].classificacao.tipoProcessoDocumentoObservacao}"/>
+						<h:outputText value="#{home.documentosAssinaveis[id].classificacao.observacao}"/>
 					</div>
 				</div>
 		    </s:div>
