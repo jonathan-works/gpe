@@ -58,6 +58,7 @@ public class DocumentoList extends EntityList<Documento> {
     protected Map<String, String> getCustomColumnsOrder() {
     	Map<String, String> map = new HashMap<>();
     	map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
+    	map.put("documento", "o.descricao");
         return map;
     }
 
