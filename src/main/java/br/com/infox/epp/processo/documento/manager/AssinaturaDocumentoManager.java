@@ -21,7 +21,7 @@ public class AssinaturaDocumentoManager extends Manager<AssinaturaDocumentoDAO, 
     private static final long serialVersionUID = 1L;
 
     public List<AssinaturaDocumento> listAssinaturaDocumentoByDocumento(Documento documento) {
-        return getDao().listAssinaturaDocumentoByProcessoDocumento(documento);
+        return getDao().listAssinaturaDocumentoByDocumento(documento);
     }
 
 }

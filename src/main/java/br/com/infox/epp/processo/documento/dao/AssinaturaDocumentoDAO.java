@@ -20,7 +20,7 @@ public class AssinaturaDocumentoDAO extends DAO<AssinaturaDocumento> {
     public static final String NAME = "assinaturaDocumentoDAO";
     private static final long serialVersionUID = 1L;
     
-    public List<AssinaturaDocumento> listAssinaturaDocumentoByProcessoDocumento(Documento documento) {
+    public List<AssinaturaDocumento> listAssinaturaDocumentoByDocumento(Documento documento) {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put(AssinaturaDocumentoQuery.PARAM_DOCUMENTO, documento);
         return getNamedResultList(AssinaturaDocumentoQuery.LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO, hashMap);

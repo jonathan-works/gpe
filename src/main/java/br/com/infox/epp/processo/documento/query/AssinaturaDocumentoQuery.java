@@ -15,7 +15,7 @@ public interface AssinaturaDocumentoQuery {
     String LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO = "listAssinaturaDocumentoByDocumento";
     String LIST_ASSINATURA_DOCUMENTO_BY_DOCUMENTO_QUERY = "select a "
             + "from AssinaturaDocumento a "
-            + "inner join a.documentoBin pdBin " + "where :"
+            + "inner join a.documentoBin pdBin where :"
             + PARAM_DOCUMENTO
             + " in elements(pdBin.documentoList)";
 

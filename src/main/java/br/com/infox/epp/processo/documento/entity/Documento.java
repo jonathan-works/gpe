@@ -123,7 +123,6 @@ public class Documento implements Serializable {
     @JoinColumn(name = "id_usuario_inclusao")
     private UsuarioLogin usuarioInclusao;
     
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_alteracao", nullable = false)
     private Date dataAlteracao;

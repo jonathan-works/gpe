@@ -88,7 +88,7 @@
         <wi:selectOneMenuEntity
           id="tipoProcessoDocumentoPdf"
           label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
-          value="#{documentoUploader.tipoProcessoDocumento}"
+          value="#{documentoUploader.classificacaoDocumento}"
           items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
           required="true"
           showLabelSelecione="true">
@@ -108,7 +108,7 @@
           id="uploadArquivo"
           label="#{eppmessages['fileUpload.type.file']}"
           reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
-          rendered="#{not empty documentoUploader.tipoProcessoDocumento and not empty documentoUploader.tipoProcessoDocumento.extensaoArquivosList and not empty documentoUploader.documento.descricao}"
+          rendered="#{not empty documentoUploader.classificacaoDocumento and not empty documentoUploader.classificacaoDocumento.extensaoArquivosList and not empty documentoUploader.documento.descricao}"
           accept="#{documentoUploader.documento.classificacaoDocumento.acceptedTypes}">
         </wi:fileUpload>
       </s:div>
@@ -161,7 +161,7 @@
       values="#{documentoUploader.documentosDaSessao}"
       tableTitle="#{eppmessages['documentoUploader.titleView']}"
       id="documentoDaSessao"
-      rowId="#{row.idDocumento}"
+      rowId="#{row.id}"
       panelStyleClass="full-sized"
       showToolbarColumn="false">
       <wi:columnOutputText

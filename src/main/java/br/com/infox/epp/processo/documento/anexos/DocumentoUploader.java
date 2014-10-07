@@ -113,7 +113,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             bin().setSize(Long.valueOf(ui.getSize()).intValue());
             bin().setProcessoDocumento(ui.getData());
             bin().setModeloDocumento(null);
-            FacesMessages.instance().add(Messages.instance().get("documento.doneLabel"));
+            FacesMessages.instance().add(Messages.instance().get("processoDocumento.doneLabel"));
         } else {
             newInstance();
         }

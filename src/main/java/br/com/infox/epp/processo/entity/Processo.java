@@ -109,7 +109,7 @@ public abstract class Processo implements Serializable {
     private String numeroProcesso;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "tp_processo", insertable = false, nullable = false, length = 2)
+    @Column(name = "tp_processo", insertable = false, updatable = false, nullable = false, length = 2)
     private TipoProcesso tipoProcesso;
     
     @NotNull
