@@ -7,6 +7,9 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
@@ -17,7 +20,6 @@ import org.richfaces.event.DropEvent;
 import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
-import br.com.infox.seam.util.ComponentUtil;
 
 /**
  * Monta o menu do usuário baseado nas permissões de acesso às páginas
@@ -33,7 +35,7 @@ public class Menu implements Serializable {
     private List<MenuItem> bookmark = new ArrayList<MenuItem>();
 
     private List<MenuItem> dropMenus;
-
+    
     /**
      * Flag para indicar que as páginas já foram verificadas Isso ocorre apenas
      * uma vez (static)
@@ -52,8 +54,14 @@ public class Menu implements Serializable {
      * @param items
      */
     public void setItems(List<String> items) {
-    	PropertiesLoader p = ComponentUtil.getComponent(PropertiesLoader.NAME);
-    	items.addAll(p.getMenuItems());
+        try {
+            InitialContext ic = new InitialContext();
+            PropertiesLoader propertiesLoader = (PropertiesLoader) ic.lookup(PropertiesLoader.JNDI_PORTABLE_NAME);
+            items.addAll(propertiesLoader.getMenuItems());
+        } catch (NamingException e) {
+            LOG.error("", e);
+        }
+    	
         dropMenus = new ArrayList<MenuItem>();
         boolean ok = true;
 

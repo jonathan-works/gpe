@@ -11,11 +11,11 @@ import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ID_NATURE
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA_QUERY;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_RELATIONSHIP;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO_QUERY;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.SEQUENCE_NATRUEZA_CATEGORIA_FLUXO;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.TABLE_NATUREZA_CATEGORIA_FLUXO;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO_QUERY;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
@@ -88,7 +88,7 @@ public class NaturezaCategoriaFluxo implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_NATUREZA, nullable = false)
-    @NotNull(message = "#{messages['beanValidation.notNull']}")
+    @NotNull(message = "#{eppmessages['beanValidation.notNull']}")
     public Natureza getNatureza() {
         return natureza;
     }
@@ -103,7 +103,7 @@ public class NaturezaCategoriaFluxo implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_FLUXO, nullable = false)
-    @NotNull(message = "#{messages['beanValidation.notNull']}")
+    @NotNull(message = "#{eppmessages['beanValidation.notNull']}")
     public Fluxo getFluxo() {
         return fluxo;
     }
@@ -114,7 +114,7 @@ public class NaturezaCategoriaFluxo implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_CATEGORIA, nullable = false)
-    @NotNull(message = "#{messages['beanValidation.notNull']}")
+    @NotNull(message = "#{eppmessages['beanValidation.notNull']}")
     public Categoria getCategoria() {
         return categoria;
     }

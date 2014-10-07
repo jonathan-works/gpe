@@ -15,9 +15,10 @@ import br.com.infox.epp.documento.list.LocalizacaoFisicaList;
 import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(LocalizacaoDocumentoFisicoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Name(LocalizacaoDocumentoFisicoCrudAction.NAME)
 public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<DocumentoFisico, DocumentoFisicoManager> {
+	
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "localizacaoDocumentoFisicoCrudAction";
@@ -42,7 +43,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
     protected void afterSave() {
         newInstance();
         listByProcesso();
-        final LocalizacaoFisicaTreeHandler tree = (LocalizacaoFisicaTreeHandler) Component.getInstance(LocalizacaoFisicaTreeHandler.NAME);
+        LocalizacaoFisicaTreeHandler tree = (LocalizacaoFisicaTreeHandler) Component.getInstance(LocalizacaoFisicaTreeHandler.NAME);
         tree.clearTree();
     }
     
@@ -69,8 +70,7 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
         return localizacaoFisicaList;
     }
 
-    public void setLocalizacaoFisicaList(
-            final List<LocalizacaoFisica> localizacaoFisicaList) {
+    public void setLocalizacaoFisicaList(List<LocalizacaoFisica> localizacaoFisicaList) {
         this.localizacaoFisicaList = localizacaoFisicaList;
     }
 

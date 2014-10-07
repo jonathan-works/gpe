@@ -14,7 +14,7 @@
             <wi:ajaxDiv id="divM2MVar">
                 <div class="picklist-div">
                     <rich:panel
-                        header="#{messages['associatedModeloDocumentoVariavel.tableTitle']}"
+                        header="#{eppmessages['associatedModeloDocumentoVariavel.tableTitle']}"
                         id="associatedModeloDocumentoVariavelListPanel"
                         bodyClass="dtable-p-b"
                         styleClass="dtable-p picklist">
@@ -26,7 +26,7 @@
                             var="row">
                             <wi:columnOutputText hideOrder="true"
                                 columnId="tituloModeloDocumento"
-                                columnHeader="#{messages['associatedModeloDocumentoVariavel.tituloModeloDocumento']}"
+                                columnHeader="#{eppmessages['associatedModeloDocumentoVariavel.tituloModeloDocumento']}"
                                 value="#{row}" />
                             <rich:column styleClass="dt-toolbar-col">
                                 <h:form>
@@ -35,7 +35,7 @@
                                         action="#{variavel.removeModelo(row)}">
                                         <h:graphicImage
                                             url="#{a4jSkin.imgFolder}/grid/copyRight.gif"
-                                            title="#{messages['button.delete']}" />
+                                            title="#{eppmessages['button.delete']}" />
                                     </a:commandLink>
                                 </h:form>
                             </rich:column>
@@ -46,7 +46,7 @@
                     <wi:dataTable
                         values="#{associativeModeloDocumentoList.list(15)}"
                         bean="#{associativeModeloDocumentoList}"
-                        tableTitle="#{messages['associativeModeloDocumento.tableTitle']}"
+                        tableTitle="#{eppmessages['associativeModeloDocumento.tableTitle']}"
                         id="associativeModeloDocumentoList"
                         rowId="#{row.idModeloDocumento}"
                         panelStyleClass="picklist"
@@ -54,12 +54,12 @@
                         <ui:define name="searchForm">
                             <wi:searchForm
                                 formId="pesquisarModeloDocumentoForm"
-                                formTitle="#{messages['searchForm.title']}"
+                                formTitle="#{eppmessages['searchForm.title']}"
                                 searchReRender="modeloDocumentoDiv"
                                 clearReRender="modeloDocumentoDiv"
                                 clearAction="associativeModeloDocumentoList.newInstance">
                                 <wi:inputText id="tituloModeloDocumento"
-                                    label="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
+                                    label="#{eppmessages['associativeModeloDocumento.tituloModeloDocumento']}"
                                     value="#{associativeModeloDocumentoList.parameters.tituloModeloDocumento}"
                                     maxlength="150" />
                             </wi:searchForm>
@@ -72,13 +72,13 @@
                                     action="#{variavel.addModelo(row)}">
                                     <h:graphicImage
                                         url="#{a4jSkin.imgFolder}/grid/copyLeft.gif"
-                                        title="#{messages['button.add']}" />
+                                        title="#{eppmessages['button.add']}" />
                                 </a:commandLink>
                             </h:form>
                         </ui:define>
                         <wi:columnOutputText
                             columnId="tituloModeloDocumento"
-                            columnHeader="#{messages['associativeModeloDocumento.tituloModeloDocumento']}"
+                            columnHeader="#{eppmessages['associativeModeloDocumento.tituloModeloDocumento']}"
                             value="#{row}" />
                     </wi:dataTable>
                 </div>

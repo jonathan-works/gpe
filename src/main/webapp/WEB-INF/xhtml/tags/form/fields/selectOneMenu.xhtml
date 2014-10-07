@@ -31,7 +31,7 @@
       disabled="#{disabled}">
       <c:if test="#{not empty valueItems}">
                 <c:if test="#{showLabelSelecione}">
-                    <f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="#{messages['crud.select.select']}" />
+                    <f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="#{eppmessages['crud.select.select']}" />
                 </c:if>
         <f:selectItems value="#{valueItems}" />
       </c:if>

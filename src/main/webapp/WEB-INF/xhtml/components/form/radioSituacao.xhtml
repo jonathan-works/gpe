@@ -14,7 +14,7 @@
         value="#{empty inativo ? props.inativo : inativo}" />
 
     <wi:selectOneRadio disabled="#{props.disabled}"
-        valueList="true:#{messages['entity.ativo']},false:#{messages['entity.inativo']}"
+        valueList="true:#{eppmessages['entity.ativo']},false:#{eppmessages['entity.inativo']}"
         boxChecked="#{inativo ? 1 : 0}">
     </wi:selectOneRadio>
 

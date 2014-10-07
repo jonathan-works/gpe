@@ -16,11 +16,12 @@ import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 
-@Name(DefinicaoVariavelProcessoAction.NAME)
 @Scope(ScopeType.PAGE)
+@Name(DefinicaoVariavelProcessoAction.NAME)
 public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVariavelProcesso, DefinicaoVariavelProcessoManager> {
 
-    public static final String NAME = "definicaoVariavelProcessoAction";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "definicaoVariavelProcessoAction";
     private static final Log LOG = Logging.getLog(DefinicaoVariavelProcessoAction.class);
 
     private Fluxo fluxo;
@@ -48,11 +49,11 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
         if (AbstractAction.PERSISTED.equals(ret)) {
             this.variaveis = null;
             this.variavel = null;
-            FacesMessages.instance().add("#{messages['DefinicaoVariavelProcesso_created']}");
+            FacesMessages.instance().add("#{eppmessages['DefinicaoVariavelProcesso_created']}");
         } else if (AbstractAction.UPDATED.equals(ret)) {
             this.variaveis = null;
             this.variavel = null;
-            FacesMessages.instance().add("#{messages['DefinicaoVariavelProcesso_updated']}");
+            FacesMessages.instance().add("#{eppmessages['DefinicaoVariavelProcesso_updated']}");
         }
     }
 
@@ -82,7 +83,7 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
         }
         if (AbstractAction.REMOVED.equals(ret)) {
             this.variaveis = null;
-            FacesMessages.instance().add("#{messages['DefinicaoVariavelProcesso_deleted']}");
+            FacesMessages.instance().add("#{eppmessages['DefinicaoVariavelProcesso_deleted']}");
             if (obj.equals(this.variavel)) {
                 this.variavel = null;
             }

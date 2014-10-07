@@ -32,7 +32,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.constants.FloatFormatConstants;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.search.ProcessoSearcher;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -54,7 +54,7 @@ public class SearchHandler implements Serializable {
     private static final LogProvider LOG = Logging.getLogProvider(SearchHandler.class);
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
     @In
     private ProcessoSearcher processoSearcher;
     
@@ -86,29 +86,14 @@ public class SearchHandler implements Serializable {
         String[] fields = new String[] { "conteudo" };
         Query query = indexer.getQuery(searchText, fields);
         List<Document> search = indexer.search(searchText, fields, 200);
-//        Session session = ManagedJbpmContext.instance().getSession();
 
         for (Document d : search) {
-//            long taskId = Long.parseLong(d.get("id"));
-//            TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);
-
-//            if (ti == null) {
-//                LOG.warn("Task não encontrada: " + taskId);
-//            } else {
-//            String texto = d.get("conteudo");
-//                String s = SearchService.getBestFragments(query, d.get("conteudo"));
                 Map<String, Object> m = new HashMap<String, Object>();
-//                m.put("texto", s);
                 m.put("processo", d.get("idProcesso"));
-//                m.put("taskName", ti.getTask().getName());
                 m.put("taskId", d.get("taskId"));
-//                m.put("processo", ti.getProcessInstance().getContextInstance().getVariable("processo"));
-//                if (s == null || "".equals(s)) {
                     m.put("nomeArquivo", d.get("nomeArquivo"));
-//                }
                 searchResult.add(m);
             }
-//        }
         resultSize = searchResult.size();
     }
 
@@ -277,7 +262,7 @@ public class SearchHandler implements Serializable {
         String texto = null;
         String type = v.getType();
         if (JbpmUtil.isTypeEditor(type)) {
-            texto = processoDocumentoManager.valorProcessoDocumento((Integer) value);
+            texto = documentoManager.valorDocumento((Integer) value);
         } else if (VariableType.BOOLEAN.name().equals(type)) {
             texto = Boolean.valueOf(value.toString()) ? "Sim" : "Não";
         } else if (VariableType.MONETARY.name().equalsIgnoreCase(type)) {
@@ -285,7 +270,7 @@ public class SearchHandler implements Serializable {
         } else if (VariableType.DATE.toString().equals(type)) {
             texto = DateFormat.getDateInstance().format((Date)value);
         } else if (VariableType.FILE.toString().equals(type)) {
-            texto = processoDocumentoManager.find(value).getProcessoDocumento();
+            texto = documentoManager.find(value).getDescricao();
         } else {
             texto = value.toString();
         }

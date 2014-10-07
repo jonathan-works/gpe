@@ -32,7 +32,7 @@
                 onmouseup="showLoading()" oncomplete="verifyFields()"
                 render=":script, #{reRenderEndTask}, :pageBodyDialogMessage"
                 limitRender="true" value="#{transition.name}"
-                styleClass="buttons buttons"
+                styleClass="buttons"
                 action="#{elFunctions.invokeMethod(taskEndAction)}">
                 <f:setPropertyActionListener
                     target="#{taskInstanceHome.name}"
@@ -45,7 +45,7 @@
         <h:outputText value="Prioridade:"
             style="margin-left: 40px;" />
         <h:selectOneMenu
-            value="#{processoHome.instance.prioridadeProcesso}">
+            value="#{processoEpaHome.instance.prioridadeProcesso}">
             <s:selectItems value="#{prioridadeProcessoList.listAtivos()}"
                 var="p" label="#{p.descricaoPrioridade}"
                 showLabelSelecione="true" />

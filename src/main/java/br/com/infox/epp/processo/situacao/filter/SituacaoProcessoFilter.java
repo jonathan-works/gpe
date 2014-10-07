@@ -11,7 +11,7 @@ public interface SituacaoProcessoFilter {
     String FILTER_PAPEL_LOCALIZACAO = "papelLocalizacaoSituacaoProcesso";
     String CONDITION_PAPEL_LOCALIZACAO = "exists (select 1 from tb_processo_localizacao_ibpm tl "
             + "where tl.id_processo = id_processo "
-            + "and tl.id_task_jbpm = id_task "
+            + "and tl.id_task_instance = id_task_instance "
             + "and tl.id_localizacao = :idLocalizacao "
             + "and (tl.id_papel = :idPapel or tl.id_papel is null))";
     String FILTER_PARAM_ID_LOCALIZACAO = "idLocalizacao";

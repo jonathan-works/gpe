@@ -1,0 +1,46 @@
+@imgFolder:~"#{pathResolver.contextPath}/#{a4jSkin.imgFolder}";
+
+.image(@imgName) {
+  background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
+}
+
+.central-block-section() {
+  position:absolute;
+  width: 355px;
+  height: 122px;
+}
+
+.bg-dual-block() {
+  position: fixed;
+  height: 50%;
+  width: 100%;
+}
+
+.anchor(@vertical,@horizontal){
+  @{vertical}:0;
+  @{horizontal}:0;
+}
+
+.full-scr(){
+  width: 100%;
+  height: 100%;
+}
+
+.bg-deg-color(@startColor,@endColor) when (@startColor = @endColor){
+  background: @startColor;
+}
+
+.bg-deg-color(@startColor,@endColor) when not (@startColor = @endColor){
+  background: @startColor;
+  background: -moz-linear-gradient(top, @startColor 0%, @endColor 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @startColor), color-stop(100%, @endColor));
+  background: -webkit-linear-gradient(top, @startColor 0%, @endColor 100%);
+  background: -o-linear-gradient(top, @startColor 0%, @endColor 100%);
+  background: -ms-linear-gradient(top, @startColor 0%, @endColor 100%);
+  background: linear-gradient(to bottom, @startColor 0%, @endColor 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@startColor', endColorstr='@endColor', GradientType=0);
+}
+
+.darken-color-percentage(@atrib,@color,@perc){
+  @{atrib}:hsl(hue(@color),saturation(@color),lightness(@color)*@perc);
+}

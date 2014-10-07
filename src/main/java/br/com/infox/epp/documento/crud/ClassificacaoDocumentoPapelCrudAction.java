@@ -8,16 +8,13 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
-import br.com.infox.epp.documento.manager.TipoProcessoDocumentoPapelManager;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 
 @Name(ClassificacaoDocumentoPapelCrudAction.NAME)
-public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<TipoProcessoDocumentoPapel, TipoProcessoDocumentoPapelManager> {
+public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<ClassificacaoDocumentoPapel, ClassificacaoDocumentoPapelManager> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "classificacaoDocumentoPapelCrudAction";
@@ -25,14 +22,13 @@ public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<Ti
     @In
     private PapelManager papelManager;
 
-    public void setTipoProcessoDocumento(
-            TipoProcessoDocumento tipoProcessoDocumento) {
+    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         newInstance();
-        getInstance().setTipoProcessoDocumento(tipoProcessoDocumento);
+        getInstance().setClassificacaoDocumento(classificacaoDocumento);
     }
 
     public List<Papel> papelItems() {
-        return papelManager.getPapeisNaoAssociadosATipoProcessoDocumento(getInstance().getTipoProcessoDocumento());
+        return papelManager.getPapeisNaoAssociadosAClassificacaoDocumento(getInstance().getClassificacaoDocumento());
     }
 
 }

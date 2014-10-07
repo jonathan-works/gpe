@@ -41,6 +41,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 @SuppressWarnings(UNCHECKED)
 public class PainelUsuarioHome implements Serializable {
+	
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "painelUsuarioHome";
@@ -131,13 +132,6 @@ public class PainelUsuarioHome implements Serializable {
     public Long getTaskId() {
         if (selected != null) {
             return (Long) selected.get("idTask");
-        }
-        return null;
-    }
-
-    public Long getTaskInstanceId() {
-        if (selected != null) {
-            return (Long) selected.get("idTaskInstance");
         }
         return null;
     }

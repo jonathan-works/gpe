@@ -4,19 +4,19 @@
     xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <ui:param name="title"
-        value="#{messages['pessoaJuridica.titlePage']}" />
+        value="#{eppmessages['pessoaJuridica.titlePage']}" />
 
     <wi:dataReport subtitle="Resultado da Pesquisa " title="#{title}"
         columns="4" widths="2 4 3 1"
         headerText="#{pessoaJuridicaList.criteria}">
 
         <wi:reportColumnHeader
-            title="#{messages['pessoaJuridica.cnpj']}" />
+            title="#{eppmessages['pessoaJuridica.cnpj']}" />
         <wi:reportColumnHeader
-            title="#{messages['pessoaJuridica.nome']}" />
+            title="#{eppmessages['pessoaJuridica.nome']}" />
         <wi:reportColumnHeader
-            title="#{messages['pessoaJuridica.razaoSocial']}" />
-        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
+            title="#{eppmessages['pessoaJuridica.razaoSocial']}" />
+        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{pessoaJuridicaList.list()}">
             <wi:reportColumn value="#{row.cnpj}" />

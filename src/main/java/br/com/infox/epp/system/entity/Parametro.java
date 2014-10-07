@@ -1,5 +1,7 @@
 package br.com.infox.epp.system.entity;
 
+import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO;
+import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO_QUERY;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS_QUERY;
 
@@ -29,7 +31,10 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name = "tb_parametro")
-@NamedQueries({ @NamedQuery(name = LIST_PARAMETROS_ATIVOS, query = LIST_PARAMETROS_ATIVOS_QUERY) })
+@NamedQueries({ 
+    @NamedQuery(name = LIST_PARAMETROS_ATIVOS, query = LIST_PARAMETROS_ATIVOS_QUERY),
+    @NamedQuery(name = EXISTE_PARAMETRO, query = EXISTE_PARAMETRO_QUERY)
+})
 public class Parametro implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;

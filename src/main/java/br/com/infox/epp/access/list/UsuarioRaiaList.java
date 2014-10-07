@@ -14,11 +14,11 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.epp.processo.home.ProcessoEpaHome;
 
-@Name(UsuarioRaiaList.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Scope(ScopeType.CONVERSATION)
+@Name(UsuarioRaiaList.NAME)
 public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;
@@ -108,7 +108,7 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
     
     private Fluxo getFluxo() {
         if (fluxo == null) {
-            fluxo = getEntityManager().find(ProcessoEpa.class, ProcessoHome.instance().getId()).getNaturezaCategoriaFluxo().getFluxo();
+            fluxo = getEntityManager().find(ProcessoEpa.class, ProcessoEpaHome.instance().getId()).getNaturezaCategoriaFluxo().getFluxo();
         }
         return fluxo;
     }

@@ -8,17 +8,17 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.documento.dao.ExtensaoArquivoDAO;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 
-@Name(ExtensaoArquivoManager.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
+@Scope(ScopeType.EVENT)
+@Name(ExtensaoArquivoManager.NAME)
 public class ExtensaoArquivoManager extends Manager<ExtensaoArquivoDAO, ExtensaoArquivo> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "extensaoArquivoManager";
     
-    public ExtensaoArquivo getTamanhoMaximo(TipoProcessoDocumento classificacao, String extensaoArquivo) {
+    public ExtensaoArquivo getTamanhoMaximo(ClassificacaoDocumento classificacao, String extensaoArquivo) {
         return getDao().getTamanhoMaximo(classificacao, extensaoArquivo);
     }
     

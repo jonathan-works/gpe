@@ -23,29 +23,25 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
-/**
- * EntityList que consulta todos os processos não finalizados de um determinado
- * fluxo
- * 
- * @author tassio
- */
-@Name(ProcessoEpaNaoFinalizadoList.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> {
+@Name(ProcessoEpaNaoFinalizadoList.NAME)
+public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_EJBQL = "select o from ProcessoEpaTarefa o "
-            + "inner join o.processoEpa p "
+    private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa o "
+            + "inner join o.processo p "
             + "inner join p.naturezaCategoriaFluxo ncf "
-            + "where o.dataFim is null";
+            + "where o.dataFim is null and o.tipoProcesso = 'PE'";
+    
     private static final String DEFAULT_ORDER = "p.idProcesso";
     private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
 
     private static final Map<String, String> CUSTOM_ORDER_MAP;
+    
     static {
         CUSTOM_ORDER_MAP = new HashMap<>();
         CUSTOM_ORDER_MAP.put("fluxo", "ncf.fluxo");
@@ -60,7 +56,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
     private boolean updateFluxoList = true;
 
     @In
-    private ProcessoEpaManager processoEpaManager;
+    private ProcessoTarefaManager processoTarefaManager;
 
     @Override
     protected void addSearchFields() {
@@ -90,8 +86,8 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
             fluxo = fluxos.get(0);
         }
         super.newInstance();
-        getEntity().setProcessoEpa(new ProcessoEpa());
-        getEntity().getProcessoEpa().setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+        getEntity().setProcesso(new ProcessoEpa());
+        getEntity().getProcesso().getProcessoEpa().setSituacaoPrazo(SituacaoPrazoEnum.PAT);
     }
 
     public Fluxo getFluxo() {
@@ -110,15 +106,15 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
         if (getFluxo() != null) {
             hql.append("and ncf.fluxo = :fluxo ");
         }
-        if (getEntity().getProcessoEpa().getSituacaoPrazo() != null) {
+        if (getEntity().getProcesso().getProcessoEpa().getSituacaoPrazo() != null) {
             hql.append("and p.situacaoPrazo = :situacaoPrazo ");
         }
         TypedQuery<Date> query = getEntityManager().createQuery(hql.toString(), Date.class);
         if (getFluxo() != null) {
             query.setParameter("fluxo", getFluxo());
         }
-        if (getEntity().getProcessoEpa().getSituacaoPrazo() != null) {
-            query.setParameter("situacaoPrazo", getEntity().getProcessoEpa().getSituacaoPrazo());
+        if (getEntity().getProcesso().getProcessoEpa().getSituacaoPrazo() != null) {
+            query.setParameter("situacaoPrazo", getEntity().getProcesso().getProcessoEpa().getSituacaoPrazo());
         }
 
         LocalDate now = LocalDate.now();
@@ -157,6 +153,6 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoEpaTarefa> 
     }
 
     public int getDiasDesdeInicioProcesso(ProcessoEpa processoEpa) {
-        return processoEpaManager.getDiasDesdeInicioProcesso(processoEpa);
+        return processoTarefaManager.getDiasDesdeInicioProcesso(processoEpa);
     }
 }

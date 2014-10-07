@@ -11,7 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumentoPermissao;
@@ -39,7 +39,7 @@ public class SigiloDocumentoPermissaoManager extends Manager<SigiloDocumentoPerm
         getDao().inativarPermissoes(sigiloDocumento);
     }
 
-    public List<ProcessoDocumento> getDocumentosPermitidos(
+    public List<Documento> getDocumentosPermitidos(
             ProcessoEpa processo, UsuarioLogin usuario) {
         return getDao().getDocumentosPermitidos(processo, usuario);
     }

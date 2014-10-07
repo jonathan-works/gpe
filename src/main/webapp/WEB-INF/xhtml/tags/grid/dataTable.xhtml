@@ -9,10 +9,6 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
 >
-  <h:outputStylesheet
-    library="styleSkinInfox"
-    name="datatable.css"
-  />
   <s:div
     id="#{id}SearchForm"
     styleClass="dtable-search-form #{searchFormStyleClass}"
@@ -66,7 +62,7 @@
         <ui:insert />
       </rich:dataTable>
       <h:outputText
-        value="#{messages['list.resultPrefix']} #{not empty bean ? bean.resultCount : values.size()} #{messages['list.resultSufix']}"
+        value="#{eppmessages['list.resultPrefix']} #{not empty bean ? bean.resultCount : values.size()} #{eppmessages['list.resultSufix']}"
         styleClass="dt-res-count"
         rendered="#{wi:get(showGridCount, true)}"
       />

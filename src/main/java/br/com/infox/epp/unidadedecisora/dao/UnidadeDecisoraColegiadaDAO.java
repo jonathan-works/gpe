@@ -1,9 +1,9 @@
 package br.com.infox.epp.unidadedecisora.dao;
 
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_USUARIO_LOGIN;
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_USUARIO_LOGIN;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
 
 import java.util.HashMap;
 import java.util.List;

@@ -9,73 +9,73 @@
     xmlns:a="http://richfaces.org/a4j"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-    <ui:define name="title">#{messages['pessoaJuridica.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['pessoaJuridica.titlePage']}</ui:define>
 
     <ui:param name="home" value="#{pessoaJuridicaCrudAction}" />
 
     <ui:define name="searchGrid">
         <wi:dataTable values="#{pessoaJuridicaList.list(15)}"
             bean="#{pessoaJuridicaList}"
-            tableTitle="#{messages['pessoaJuridica.tableTitle']}"
+            tableTitle="#{eppmessages['pessoaJuridica.tableTitle']}"
             id="pessoaJuridicaList" rowId="#{row.idPessoa}">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarPjForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{eppmessages['searchForm.title']}">
                     <wi:inputText id="cnpj"
                         value="#{pessoaJuridicaList.entity.cnpj}"
-                        label="#{messages['pessoaJuridica.cnpj']}" styleClass="cnpj"
+                        label="#{eppmessages['pessoaJuridica.cnpj']}" styleClass="cnpj"
                         size="18" maxlength="18">
                     </wi:inputText>
                     <wi:mask selector=".cnpj" mask="99.999.999/9999-99" />
                     <wi:inputText id="nomePessoa"
-                        label="#{messages['pessoaJuridica.nome']}"
+                        label="#{eppmessages['pessoaJuridica.nome']}"
                         value="#{pessoaJuridicaList.entity.nome}"
                         maxlength="150" />
                     <wi:inputText id="razaoSocial"
-                        label="#{messages['pessoaJuridica.razaoSocial']}"
+                        label="#{eppmessages['pessoaJuridica.razaoSocial']}"
                         value="#{pessoaJuridicaList.entity.razaoSocial}"
                         maxlength="100" />
                     <wi:selectSituacaoOneMenu id="ativo"
-                        label="#{messages['field.situacao']}"
+                        label="#{eppmessages['field.situacao']}"
                         value="#{pessoaJuridicaList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
 
             <wi:columnOutputText columnId="cnpj"
-                columnHeader="#{messages['pessoaJuridica.cnpj']}"
+                columnHeader="#{eppmessages['pessoaJuridica.cnpj']}"
                 value="#{row.cnpj}">
                 <ui:define name="outputText">
                     <f:converter converterId="cnpjConverter"/>
                 </ui:define>
             </wi:columnOutputText>
             <wi:columnOutputText columnId="nome"
-                columnHeader="#{messages['pessoaJuridica.nome']}"
+                columnHeader="#{eppmessages['pessoaJuridica.nome']}"
                 value="#{row.nome}" />
             <wi:columnOutputText columnId="razaoSocial"
-                columnHeader="#{messages['pessoaJuridica.razaoSocial']}"
+                columnHeader="#{eppmessages['pessoaJuridica.razaoSocial']}"
                 value="#{row.razaoSocial}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{messages['field.situacao']}"
+                columnHeader="#{eppmessages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
 
     <ui:define name="form">
         <wi:dataForm formId="pessoaJuridicaForm"
-            formTitle="#{messages['form.title']}">
+            formTitle="#{eppmessages['form.title']}">
             <wi:inputCnpj id="cnpj"
                 value="#{pessoaJuridicaCrudAction.instance.cnpj}"
-                required="true" label="#{messages['pessoaJuridica.cnpj']}" />
-            <wi:inputText id="nomePessoa" label="#{messages['pessoaJuridica.nome']}"
+                required="true" label="#{eppmessages['pessoaJuridica.cnpj']}" />
+            <wi:inputText id="nomePessoa" label="#{eppmessages['pessoaJuridica.nome']}"
                 required="true"
                 value="#{pessoaJuridicaCrudAction.instance.nome}"
                 maxlength="150" />
             <wi:inputText id="razaoSocial"
-                label="#{messages['pessoaJuridica.razaoSocial']}"
+                label="#{eppmessages['pessoaJuridica.razaoSocial']}"
                 value="#{pessoaJuridicaCrudAction.instance.razaoSocial}"
                 required="true" maxlength="100" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{pessoaJuridicaCrudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>

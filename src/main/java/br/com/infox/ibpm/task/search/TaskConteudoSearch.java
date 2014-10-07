@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.task.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +24,15 @@ import br.com.infox.ibpm.task.entity.TaskConteudo;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(TaskConteudoSearch.NAME)
-public class TaskConteudoSearch {
+public class TaskConteudoSearch implements Serializable {
 
-    public static final String NAME = "taskConteudoSearch";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "taskConteudoSearch";
     private static final LogProvider LOG = Logging.getLogProvider(TaskConteudoSearch.class);
+    private static final Integer PAGE_SIZE = 15;
 
     @In
     private TaskConteudoDAO taskConteudoDAO;
-    
-
-    private static final Integer PAGE_SIZE = 15;
 
     private String palavraPesquisada;
     private List<TaskConteudo> resultadoPesquisa = new ArrayList<TaskConteudo>();

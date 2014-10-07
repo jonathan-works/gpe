@@ -4,10 +4,12 @@ import java.util.Properties;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Startup;
+import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.util.ClassLoaderUtil;
@@ -18,8 +20,8 @@ import br.com.infox.epp.access.manager.BloqueioUsuarioTimerManager;
 import br.com.infox.quartz.QuartzConstant;
 
 @Name(BloqueioUsuarioStarter.NAME)
-@Startup(depends = QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER)
-@Scope(ScopeType.APPLICATION)
+@Scope(ScopeType.STATELESS)
+@AutoCreate
 public class BloqueioUsuarioStarter {
 
 	private static final String DEFAULT_CRON_EXPRESSION = "0 0 0 * * ?";
@@ -31,7 +33,8 @@ public class BloqueioUsuarioStarter {
 	
 	public BloqueioUsuarioStarter() {}
 	
-	@Create
+	@Observer(value = QuartzDispatcher.QUARTZ_DISPATCHER_INITIALIZED_EVENT)
+	@Transactional
 	public void init() {
 		if (!Boolean.parseBoolean(QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {
             return;

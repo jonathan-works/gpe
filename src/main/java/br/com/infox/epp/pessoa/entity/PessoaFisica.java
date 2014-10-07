@@ -32,7 +32,7 @@ import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Entity
 @Table(name = PessoaFisica.TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { "nr_cpf" }) })
@@ -61,7 +61,7 @@ public class PessoaFisica extends Pessoa {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_processo_documento_bin", nullable = false)
-    private ProcessoDocumentoBin termoAdesao;
+    private DocumentoBin termoAdesao;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "st_estado_civil")
@@ -115,11 +115,11 @@ public class PessoaFisica extends Pessoa {
         this.certChain = certChain;
     }
 
-    public ProcessoDocumentoBin getTermoAdesao() {
+    public DocumentoBin getTermoAdesao() {
         return termoAdesao;   
     }
 
-    public void setTermoAdesao(ProcessoDocumentoBin termoAdesao) {
+    public void setTermoAdesao(DocumentoBin termoAdesao) {
         this.termoAdesao = termoAdesao;
     }
 

@@ -8,8 +8,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.documento.manager.TipoProcessoDocumentoManager;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
@@ -21,7 +21,7 @@ import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 public class ClassificacaoDocumentoFacade {
 
     @In
-    private TipoProcessoDocumentoManager tipoProcessoDocumentoManager;
+    private ClassificacaoDocumentoManager classificacaoDocumentoManager;
     @In
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
 
@@ -43,15 +43,15 @@ public class ClassificacaoDocumentoFacade {
         return TipoAssinaturaEnum.values();
     }
 
-    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
-        List<TipoProcessoDocumento> classificacoes = variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
+        List<ClassificacaoDocumento> classificacoes = variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
         if (!classificacoes.isEmpty()) {
             return classificacoes;
         }
-        return getUseableTipoProcessoDocumento(isModelo);
+        return getUseableClassificacaoDocumento(isModelo);
     }
     
-    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo) {
-        return tipoProcessoDocumentoManager.getUseableTipoProcessoDocumento(isModelo, Authenticator.getPapelAtual());
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo) {
+        return classificacaoDocumentoManager.getUseableClassificacaoDocumento(isModelo, Authenticator.getPapelAtual());
     }
 }

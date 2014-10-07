@@ -7,16 +7,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.Install;
+import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Startup;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.Messages;
@@ -26,17 +26,19 @@ import org.jboss.seam.log.Logging;
 import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.quartz.impl.matchers.GroupMatcher;
 
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(QuartzJobsInfo.NAME)
 @Scope(ScopeType.APPLICATION)
-@BypassInterceptors
-@Startup(depends = QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER)
-@Install(dependencies = { QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER })
+@AutoCreate
 public class QuartzJobsInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,6 +46,9 @@ public class QuartzJobsInfo implements Serializable {
             .getLogProvider(QuartzJobsInfo.class);
     public static final String NAME = "quartzJobsInfo";
 
+    @In
+    private ParametroManager parametroManager;
+    
     private static Pattern patternExpr = Pattern
             .compile("^AsynchronousInvocation\\((.*)\\)$");
 
@@ -55,7 +60,7 @@ public class QuartzJobsInfo implements Serializable {
         List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
         try {
             Scheduler scheduler = getScheduler();
-            String[] jobGroupNames = scheduler.getJobGroupNames();
+            List<String> jobGroupNames = scheduler.getJobGroupNames();
             for (String groupName : jobGroupNames) {
                 List<Map<String, Object>> mapInfoGroup = getListMapInfoGroupFromJobs(groupName);
                 maps.addAll(mapInfoGroup);
@@ -70,14 +75,14 @@ public class QuartzJobsInfo implements Serializable {
     private List<Map<String, Object>> getListMapInfoGroupFromJobs(
             String groupName) throws SchedulerException {
         Scheduler scheduler = getScheduler();
-        String[] jobNames = scheduler.getJobNames(groupName);
+        Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
         List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
-        for (String jobName : jobNames) {
-            JobDetail jobDetail = scheduler.getJobDetail(jobName, groupName);
-            Trigger[] triggersOfJob = scheduler.getTriggersOfJob(jobName,
-                    groupName);
+        for (JobKey jobKey : jobKeys) {
+            JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+            List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
             for (Trigger trigger : triggersOfJob) {
-                maps.add(getTrigerDetailMap(jobDetail, trigger));
+                Map<String, Object> map = getTrigerDetailMap(jobDetail, trigger); 
+                if (map != null) maps.add(map);
             }
         }
         return maps;
@@ -86,11 +91,11 @@ public class QuartzJobsInfo implements Serializable {
     private Map<String, Object> getTrigerDetailMap(JobDetail jobDetail,
             Trigger trigger) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String jobName = trigger.getJobName();
+        String jobName = trigger.getJobKey().getName();
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
-        map.put("triggerName", trigger.getName());
+        map.put("triggerName", trigger.getKey().getName());
         map.put("jobName", jobName);
-        map.put("groupName", jobDetail.getGroup());
+        map.put("groupName", jobDetail.getKey().getGroup());
         map.put("nextFireTime", trigger.getNextFireTime());
         map.put("previousFireTime", trigger.getPreviousFireTime());
         String jobExpression = getJobExpression(jobDataMap);
@@ -98,8 +103,12 @@ public class QuartzJobsInfo implements Serializable {
         map.put("jobValid", isJobValid(jobExpression));
         if (trigger instanceof CronTrigger) {
             CronTrigger cronTrigger = (CronTrigger) trigger;
-            map.put("cronExpression", cronTrigger.getCronExpression());
-        }
+            String cronExpression = cronTrigger.getCronExpression();
+            if (cronExpression != null && cronExpression.trim().length() > 0)
+                map.put("cronExpression", cronExpression);
+            else return null;
+        } else return null;
+        
         return map;
     }
 
@@ -136,16 +145,16 @@ public class QuartzJobsInfo implements Serializable {
         return isMethodValid(component, medothName);
     }
 
-    private boolean isMethodValid(Object component, String medothName) {
+    private boolean isMethodValid(Object component, String methodName) {
         try {
-            component.getClass().getDeclaredMethod(medothName, Date.class,
-                    String.class);
+            component.getClass().getDeclaredMethod(methodName, String.class);
             return true;
         } catch (Exception e) {
             LOG.error(".isMethodValid(component, medothName)", e);
         }
         try {
-            component.getClass().getDeclaredMethod(medothName, String.class);
+            component.getClass().getDeclaredMethod(methodName, Date.class,
+                    String.class);
             return true;
         } catch (Exception e) {
             LOG.error(".isMethodValid(component, medothName)", e);
@@ -155,7 +164,7 @@ public class QuartzJobsInfo implements Serializable {
 
     public void triggerJob(String jobName, String groupName) {
         try {
-            getScheduler().triggerJob(jobName, groupName);
+            getScheduler().triggerJob(JobKey.jobKey(jobName, groupName));
             FacesMessages.instance().add(Severity.INFO,
                     "Job executado com sucesso: " + jobName);
         } catch (SchedulerException e) {
@@ -165,24 +174,32 @@ public class QuartzJobsInfo implements Serializable {
         }
     }
 
-    public void deleteJob(String jobName, String groupName) {
+    public void deleteJob(String jobName, String groupName, String triggerName) {
         try {
-            getScheduler().deleteJob(jobName, groupName);
+            getScheduler().deleteJob(JobKey.jobKey(jobName, groupName));
+            parametroManager.removeParametroByValue(triggerName);
             FacesMessages.instance().add(Severity.INFO,
                     "Job removido com sucesso: " + jobName);
-        } catch (SchedulerException e) {
+        } catch (SchedulerException | DAOException e) {
             FacesMessages.instance().add(Severity.ERROR,
                     "Erro ao remover job " + jobName, e);
             LOG.error(".deleteJob()", e);
         }
     }
 
-    @Create
+    @Observer(value = QuartzDispatcher.QUARTZ_DISPATCHER_INITIALIZED_EVENT)
     public void addGlobalTriggerListener() throws SchedulerException {
         Scheduler scheduler = QuartzJobsInfo.getScheduler();
-        if (scheduler.getGlobalTriggerListeners().isEmpty()) {
-            scheduler.addGlobalTriggerListener(new TriggerListenerLog());
+        if (scheduler.getListenerManager().getTriggerListeners().isEmpty()) {
+            scheduler.getListenerManager().addTriggerListener(new TriggerListenerLog());
         }
     }
 
+    public void apagarJobs() {
+        List<Map<String, Object>> jobs = getDetailJobsInfo();
+        
+        for (Map<String, Object> job : jobs) {
+           deleteJob((String) job.get("jobName"), (String) job.get("groupName"), (String) job.get("triggerName")); 
+        }
+    }
 }

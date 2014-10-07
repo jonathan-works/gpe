@@ -11,7 +11,7 @@
     xmlns:c="http://java.sun.com/jsp/jstl/core"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-    <ui:define name="title">#{messages['contaTwitter.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['contaTwitter.titlePage']}</ui:define>
 
     <ui:param name="showSearchTab" value="false" />
     <ui:param name="home" value="#{contaTwitterCrudAction}" />
@@ -21,13 +21,13 @@
             <s:div id="idTwitterBody">
                 <h:form>
                     <wi:dataForm formId="contaTwitterForm"
-                        formTitle="#{messages['form.title']}"
+                        formTitle="#{eppmessages['form.title']}"
                         requiredForm="false">
                         <rich:dataTable
                             rendered="#{contaTwitterCrudAction.managed}">
                             <f:facet name="header">
                                 <h:outputText
-                                    value="#{messages['contaTwitter.contaCadastrada']}" />
+                                    value="#{eppmessages['contaTwitter.contaCadastrada']}" />
                             </f:facet>
                             <rich:column>
                                 <f:facet name="header">
@@ -39,7 +39,7 @@
                                         url="#{a4jSkin.imgFolder}/remove.png"
                                         limitToList="true"
                                         status=":status"
-                                        title="#{messages['button.delete']}">
+                                        title="#{eppmessages['button.delete']}">
                                     </wi:toolBar>
                                 </f:facet>
                             </rich:column>
@@ -54,19 +54,19 @@
                             rendered="#{!home.managed and home.requesting}"
                             id="includeTwitterDiv">
                             <wi:inputText id="pin" value="#{home.pin}"
-                                label="#{messages['contaTwitter.pin']}"
+                                label="#{eppmessages['contaTwitter.pin']}"
                                 required="false" />
                         </s:div>
                         <ui:define name="buttons">
                             <s:div rendered="#{!home.managed}">
                                 <wi:commandButton id="includeButton"
                                     action="#{home.setRequesting(true)}"
-                                    value="#{messages['contaTwitter.include']}"
+                                    value="#{eppmessages['contaTwitter.include']}"
                                     rendered="#{!home.requesting}"
                                     reRender="idTwitterBody"
                                     onclick="window.open('#{home.getAuthorizationURL()}', 'Autorizar Aplicação' ,'');" />
                                 <wi:commandButton id="gravarButton"
-                                    value="#{messages['crud.update']}"
+                                    value="#{eppmessages['crud.update']}"
                                     rendered="#{home.requesting}"
                                     reRender="idTwitterBody"
                                     action="#{home.getAutorizacao('U')}" />

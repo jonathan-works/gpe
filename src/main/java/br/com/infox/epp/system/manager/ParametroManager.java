@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.entity.Parametro;
 
@@ -20,8 +21,15 @@ public class ParametroManager extends Manager<ParametroDAO, Parametro> {
         return getDao().getParametroByNomeVariavel(nome);
     }
 
+    public Parametro removeParametroByValue(String value) throws DAOException {
+        return getDao().removeByValue(value);
+    }
+    
     public List<Parametro> listParametrosAtivos() {
         return getDao().listParametrosAtivos();
     }
 
+    public boolean existeParametro(String nome) {
+        return getDao().existeParametro(nome);
+    }
 }

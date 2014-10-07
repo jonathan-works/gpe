@@ -11,7 +11,7 @@
                 xmlns:wi="http://www.itx.com.br/jsf">
 
     <wi:dataTable values="#{documentoAnexoList.list(10)}" id="documentosTable" bean="#{documentoAnexoList}" 
-       rowId="#{row.idProcessoDocumento}" tableTitle="#{messages['sigiloDocumento.documentos']}" 
+       rowId="#{row.id}" tableTitle="#{eppmessages['sigiloDocumento.documentos']}" 
        hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud" showSearchForm="false">
        
        <ui:define name="toolBar" />
@@ -19,21 +19,21 @@
        
        <rich:column width="10%">
            <f:facet name="header">
-               <h:outputText value="#{messages['sigiloDocumento.documento.identificador']}" />
+               <h:outputText value="#{eppmessages['sigiloDocumento.documento.identificador']}" />
            </f:facet>
            <center><h:outputText value="#{row.numeroDocumento}" /></center>
        </rich:column>
        
        <rich:column>
            <f:facet name="header">
-               <h:outputText value="#{messages['sigiloDocumento.documento.nome']}" />
+               <h:outputText value="#{eppmessages['sigiloDocumento.documento.nome']}" />
            </f:facet>
-           <h:outputText value="#{row.processoDocumento}" />
+           <h:outputText value="#{row.descricao}" />
        </rich:column>
        
        <rich:column width="10%">
            <f:facet name="header">
-               <h:outputText value="#{messages['sigiloDocumento.documento.documento']}" />
+               <h:outputText value="#{eppmessages['sigiloDocumento.documento.documento']}" />
            </f:facet>
            <center>
                <h:graphicImage url="#{a4jSkin.imgFolder}/show.gif" title="Visualizar" style="cursor: pointer"
@@ -43,11 +43,11 @@
        
        <rich:column width="10%">
            <f:facet name="header">
-               <h:outputText value="#{messages['sigiloDocumento.sigiloso']}" />
+               <h:outputText value="#{eppmessages['sigiloDocumento.sigiloso']}" />
            </f:facet>
            <center>
                <h:form>
-                   <h:selectBooleanCheckbox value="#{sigiloDocumentoAction.sigiloDocumentoMap[row.idProcessoDocumento]}"
+                   <h:selectBooleanCheckbox value="#{sigiloDocumentoAction.sigiloDocumentoMap[row.id]}"
                        disabled="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}">
                        <a:ajax execute="@this" event="change" render="documentosTable, informacoesAdicionais" limitRender="true" 
                            listener="#{sigiloDocumentoAction.prepararGravacaoSigilo(row)}"/>
@@ -58,18 +58,18 @@
        
        <rich:column width="10%">
            <f:facet name="header">
-               <h:outputText value="#{messages['sigiloDocumento.detalhes']}" />
+               <h:outputText value="#{eppmessages['sigiloDocumento.detalhes']}" />
            </f:facet>
            <center>
                <h:form rendered="#{empty sigiloDocumentoController.fragmentoARenderizar or sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO'}">
                    <a:commandLink style="cursor: default" 
                        execute="@this" render="documentosTable, informacoesAdicionais" limitRender="true">
-                       <h:graphicImage url="#{a4jSkin.imgFolder}/search_16.png" title="#{messages['sigiloDocumento.verDetalhes']}" style="cursor: pointer"/>
+                       <h:graphicImage url="#{a4jSkin.imgFolder}/search_16.png" title="#{eppmessages['sigiloDocumento.verDetalhes']}" style="cursor: pointer"/>
                        <f:setPropertyActionListener target="#{sigiloDocumentoController.fragmentoARenderizar}" value="DETALHE_SIGILO" />
                        <f:setPropertyActionListener target="#{sigiloDocumentoList.documento}" value="#{row}" />
                    </a:commandLink>
                </h:form>
-               <h:graphicImage url="#{a4jSkin.imgFolder}/search_16_gray.png" title="#{messages['sigiloDocumento.verDetalhes']}"
+               <h:graphicImage url="#{a4jSkin.imgFolder}/search_16_gray.png" title="#{eppmessages['sigiloDocumento.verDetalhes']}"
                    rendered="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}" />
            </center>
        </rich:column>
@@ -77,22 +77,22 @@
        <rich:column width="10%">
            <f:facet name="header">
                <h:panelGroup>
-                   <h:outputText value="#{messages['sigiloDocumento.gerenciarPermissoes']}" style="display: block"/>
+                   <h:outputText value="#{eppmessages['sigiloDocumento.gerenciarPermissoes']}" style="display: block"/>
                    <h:form rendered="#{sigiloDocumentoPermissaoAction.canManagePermissions() and (empty sigiloDocumentoController.fragmentoARenderizar or sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO')}">
 	                   <a:commandLink style="cursor: default"
 	                       execute="@this" limitRender="true" render="documentosTable, informacoesAdicionais">
-	                       <h:graphicImage url="#{a4jSkin.imgFolder}/add.gif" title="#{messages['sigiloDocumento.gerenciarPermissoes']}" style="cursor: pointer" />
+	                       <h:graphicImage url="#{a4jSkin.imgFolder}/add.gif" title="#{eppmessages['sigiloDocumento.gerenciarPermissoes']}" style="cursor: pointer" />
 	                       <f:setPropertyActionListener target="#{sigiloDocumentoController.fragmentoARenderizar}" value="PERMISSOES_SIGILO" />
 	                       <f:setPropertyActionListener target="#{sigiloDocumentoList.documento}" value="#{row}" />
 	                   </a:commandLink>
 	               </h:form>
-                   <h:graphicImage url="#{a4jSkin.imgFolder}/add_gray.png" title="#{messages['sigiloDocumento.gerenciarPermissoes']}"
+                   <h:graphicImage url="#{a4jSkin.imgFolder}/add_gray.png" title="#{eppmessages['sigiloDocumento.gerenciarPermissoes']}"
                        rendered="#{sigiloDocumentoPermissaoAction.canManagePermissions() and not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}" />
                </h:panelGroup>
            </f:facet>
            <center>
                <h:form rendered="#{sigiloDocumentoAction.isSigiloso(row)}">
-                   <h:selectBooleanCheckbox value="#{sigiloDocumentoPermissaoAction.permissoesMap[row.idProcessoDocumento]}"
+                   <h:selectBooleanCheckbox value="#{sigiloDocumentoPermissaoAction.permissoesMap[row.id]}"
                        disabled="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}">
                        <a:ajax event="change" execute="@this" render="documentosTable" limitRender="true" />
                    </h:selectBooleanCheckbox>
@@ -104,8 +104,8 @@
     
     <s:div id="informacoesAdicionais">
         <wi:dataForm rendered="#{sigiloDocumentoController.fragmentoARenderizar eq 'MOTIVO_SIGILO'}" formId="sigiloDocumentoForm"
-            formTitle="#{messages['sigiloDocumento.sigiloDocumentoForm']}">
-           <wi:inputTextarea label="#{messages['sigiloDocumento.motivo']}" required="true" showCounter="false" value="#{sigiloDocumentoAction.motivo}" id="motivo"/>
+            formTitle="#{eppmessages['sigiloDocumento.sigiloDocumentoForm']}">
+           <wi:inputTextarea label="#{eppmessages['sigiloDocumento.motivo']}" required="true" showCounter="false" value="#{sigiloDocumentoAction.motivo}" id="motivo"/>
            <ui:define name="buttons">
                <a:commandButton value="Gravar" action="#{sigiloDocumentoAction.gravarSigiloDocumento}" styleClass="buttons"
                    render="informacoesAdicionais, documentosTable, pageBodyDialogMessage" limitRender="true"/>
@@ -115,7 +115,7 @@
         </wi:dataForm>
         
         <wi:dataTable showGrid="#{sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO'}" id="detalheSigiloTable"
-            tableTitle="#{messages['sigiloDocumento.detalhes']}" bean="#{sigiloDocumentoList}" showSearchForm="false"
+            tableTitle="#{eppmessages['sigiloDocumento.detalhes']}" bean="#{sigiloDocumentoList}" showSearchForm="false"
             values="#{sigiloDocumentoList.list(5)}" hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud"
             rowId="#{row.id}">
             
@@ -124,28 +124,28 @@
             
             <rich:column width="5%">
                <f:facet name="header">
-                   <h:outputText value="#{messages['sigiloDocumento.documento.identificador']}" />
+                   <h:outputText value="#{eppmessages['sigiloDocumento.documento.identificador']}" />
                </f:facet>
                <center><h:outputText value="#{row.documento.numeroDocumento}" /></center>
            </rich:column>
            
            <rich:column width="18%">
                <f:facet name="header">
-                   <h:outputText value="#{messages['sigiloDocumento.usuario.nome']}" />
+                   <h:outputText value="#{eppmessages['sigiloDocumento.usuario.nome']}" />
                </f:facet>
                <center><h:outputText value="#{row.usuario}" /></center>
            </rich:column>
     
            <rich:column width="2%">
                <f:facet name="header">
-                   <h:outputText value="#{messages['sigiloDocumento.sigiloso']}" />
+                   <h:outputText value="#{eppmessages['sigiloDocumento.sigiloso']}" />
                </f:facet>
                <center><h:outputText value="#{row.ativo ? 'Sim' : 'Não'}" /></center>
            </rich:column>
               
            <rich:column width="10%">
                <f:facet name="header">
-                   <h:outputText value="#{messages['sigiloDocumento.dataInclusao']}" />
+                   <h:outputText value="#{eppmessages['sigiloDocumento.dataInclusao']}" />
                </f:facet>
                <center>
                    <h:outputText value="#{row.dataInclusao}">
@@ -156,7 +156,7 @@
            
            <rich:column>
                <f:facet name="header">
-                   <h:outputText value="#{messages['sigiloDocumento.motivo']}" />
+                   <h:outputText value="#{eppmessages['sigiloDocumento.motivo']}" />
                </f:facet>
                <h:outputText value="#{row.motivo}" />
            </rich:column>
@@ -164,7 +164,7 @@
         </wi:dataTable>
         
         <wi:dataTable id="permissoesTable" values="#{usuarioRaiaList.list(10)}" bean="#{usuarioRaiaList}"
-           tableTitle="#{messages['sigiloDocumento.usuarios']}" hideOrder="true" showGrid="#{sigiloDocumentoController.fragmentoARenderizar eq 'PERMISSOES_SIGILO'}"
+           tableTitle="#{eppmessages['sigiloDocumento.usuarios']}" hideOrder="true" showGrid="#{sigiloDocumentoController.fragmentoARenderizar eq 'PERMISSOES_SIGILO'}"
            showSearchForm="#{sigiloDocumentoController.fragmentoARenderizar eq 'PERMISSOES_SIGILO'}">
            
            <ui:define name="headerToolBar" />
@@ -179,24 +179,24 @@
            
            <ui:define name="searchForm">
                <wi:searchForm formId="permissoesSearchForm" searchAction="usuarioRaiaList.refreshQuery"
-                   formTitle="#{messages['sigiloDocumento.usuarios']}">
-                   <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{messages['sigiloDocumento.usuario.nome']}" />
+                   formTitle="#{eppmessages['sigiloDocumento.usuarios']}">
+                   <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{eppmessages['sigiloDocumento.usuario.nome']}" />
                    <wi:selectOneMenuEntity id="perfilTemplate" value="#{usuarioRaiaList.perfil}" 
-                       label="#{messages['perfil.titlePage']}"
+                       label="#{eppmessages['perfil.titlePage']}"
                        items="#{usuarioRaiaList.perfis}" showLabelSelecione="true" />
                </wi:searchForm>
            </ui:define>
            
            <rich:column>
                <f:facet name="header">
-                   <h:outputText value="#{messages['sigiloDocumento.usuario.nome']}" />
+                   <h:outputText value="#{eppmessages['sigiloDocumento.usuario.nome']}" />
                </f:facet>
                <h:outputText value="#{row.nomeUsuario}" />
            </rich:column>
            
            <rich:column>
 	           <f:facet name="header">
-	               <h:outputText value="#{messages['sigiloDocumento.usuario.cpf']}" />
+	               <h:outputText value="#{eppmessages['sigiloDocumento.usuario.cpf']}" />
 	           </f:facet>
 	           <h:outputText value="#{row.pessoaFisica.cpf}" />
            </rich:column>

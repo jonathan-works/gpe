@@ -11,7 +11,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.controller.AbstractController;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Name(AnexoController.NAME)
@@ -23,8 +23,8 @@ public class AnexoController extends AbstractController {
 
     private Processo processo;
     private List<DocumentoCreator> creators;
-    private List<ProcessoDocumento> documentosDaSessao;
-
+    private List<Documento> documentosDaSessao;
+    
     @Create
     public void init() {
         creators = new ArrayList<>();
@@ -41,11 +41,11 @@ public class AnexoController extends AbstractController {
         this.processo = processo;
     }
 
-    public List<ProcessoDocumento> getdocumentosDaSessao() {
+    public List<Documento> getdocumentosDaSessao() {
         return documentosDaSessao;
     }
 
-    public void setdocumentosDaSessao(List<ProcessoDocumento> documentosDaSessao) {
+    public void setdocumentosDaSessao(List<Documento> documentosDaSessao) {
         this.documentosDaSessao = documentosDaSessao;
     }
 
@@ -55,5 +55,5 @@ public class AnexoController extends AbstractController {
             creator.clear();
         }
     }
-
+	
 }

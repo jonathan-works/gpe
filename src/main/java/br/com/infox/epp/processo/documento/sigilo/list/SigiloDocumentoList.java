@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 
 @Name(SigiloDocumentoList.NAME)
@@ -22,7 +22,7 @@ public class SigiloDocumentoList extends EntityList<SigiloProcesso> {
     private static final String DEFAULT_EJBQL = "select o from SigiloDocumento o where o.documento = #{sigiloDocumentoList.documento}";
     private static final String DEFAULT_ORDER = "dataInclusao desc";
 
-    private ProcessoDocumento documento;
+    private Documento documento;
 
     @Override
     protected void addSearchFields() {
@@ -43,11 +43,11 @@ public class SigiloDocumentoList extends EntityList<SigiloProcesso> {
         return null;
     }
 
-    public ProcessoDocumento getDocumento() {
+    public Documento getDocumento() {
         return documento;
     }
 
-    public void setDocumento(ProcessoDocumento documento) {
+    public void setDocumento(Documento documento) {
         this.documento = documento;
     }
 }

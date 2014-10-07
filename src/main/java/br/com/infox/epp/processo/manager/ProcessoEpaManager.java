@@ -1,12 +1,11 @@
 package br.com.infox.epp.processo.manager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -18,14 +17,13 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.util.time.DateRange;
 
 @Name(ProcessoEpaManager.NAME)
 @AutoCreate
 public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
 
     private static final int PORCENTAGEM = 100;
-
-    private static final int HOURS_OF_DAY = 24;
 
     private static final long serialVersionUID = 168832523707680478L;
 
@@ -54,12 +52,17 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
 
             if (result != null) {
                 Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
-                Long dias = (Long) result.get("dias");
-                Long tempoGasto = ((Long) result.get("horas")) / HOURS_OF_DAY;
-                if (dias != null) {
-                    tempoGasto += dias;
+                
+                DateRange dateRange;
+                final Date dataInicio = processoEpa.getDataInicio();
+                final Date dataFim = processoEpa.getDataFim();
+                if (dataFim != null){
+                    dateRange = new DateRange(dataInicio, dataFim);
+                } else {
+                    dateRange = new DateRange(dataInicio, new Date());
                 }
-                processoEpa.setTempoGasto(tempoGasto.intValue());
+                
+                processoEpa.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
 
                 if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
                     processoEpa.setPorcentagem((processoEpa.getTempoGasto() * PORCENTAGEM)
@@ -91,12 +94,6 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
 
     public List<PessoaJuridica> getPessoaJuridicaList() {
         return getDao().getPessoaJuridicaList();
-    }
-
-    public int getDiasDesdeInicioProcesso(ProcessoEpa processoEpa) {
-        LocalDate dataInicio = LocalDate.fromDateFields(getDao().getDataInicioPrimeiraTarefa(processoEpa));
-        LocalDate now = LocalDate.now();
-        return Days.daysBetween(dataInicio, now).getDays();
     }
 
     public Double getMediaTempoGasto(Fluxo fluxo, SituacaoPrazoEnum prazoEnum) {

@@ -1,6 +1,6 @@
 package br.com.infox.ibpm.task.handler;
 
-import static java.text.MessageFormat.*;
+import static java.text.MessageFormat.format;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

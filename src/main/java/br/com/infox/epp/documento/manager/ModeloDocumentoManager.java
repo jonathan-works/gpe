@@ -26,7 +26,7 @@ import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -50,7 +50,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     private DominioVariavelTarefaManager dominioVariavelTarefaManager;
     
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
     
     //TODO verificar se esse método ainda é utilizado, senão, remover
     public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento) {
@@ -231,7 +231,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
             break;
 
         case EDITOR:
-            expression = processoDocumentoManager.find(value).getProcessoDocumentoBin().getModeloDocumento();
+            expression = documentoManager.find(value).getDocumentoBin().getModeloDocumento();
             break;
             
         case MONETARY:

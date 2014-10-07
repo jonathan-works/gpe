@@ -13,17 +13,17 @@
     value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
     
    <s:div id="#{id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-   		  rendered="#{wi:get(rendered, true) and not empty documentoUploader.processoDocumento.tipoProcessoDocumento}">
+   		  rendered="#{wi:get(rendered, true) and not empty documentoUploader.documento.classificacaoDocumento}">
    	<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
 	<div class="epp-tooltip">
 		<div class="tooltip-panel">
 			<div><h:outputText value="Extensões Aceitas:" /></div>
-			<ui:repeat var="documento" value="#{documentoUploader.processoDocumento.tipoProcessoDocumento.acceptedTypesList}">
+			<ui:repeat var="documento" value="#{documentoUploader.documento.classificacaoDocumento.acceptedTypesList}">
 				<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
 			</ui:repeat>
-			<s:div styleClass="tooltip-panel-top" rendered="#{not empty documentoUploader.processoDocumento.tipoProcessoDocumento.tipoProcessoDocumentoObservacao}">
+			<s:div styleClass="tooltip-panel-top" rendered="#{not empty documentoUploader.documento.classificacaoDocumento.observacao}">
 				<div><h:outputText value="Observação:"/></div>
-				<h:outputText value="#{documentoUploader.processoDocumento.tipoProcessoDocumento.tipoProcessoDocumentoObservacao}" />
+				<h:outputText value="#{documentoUploader.documento.classificacaoDocumento.observacao}" />
 			</s:div>
 		</div>
 	</div>
@@ -43,12 +43,12 @@
       limitRender="true"
       required="#{wi:get(required, false)}"
       fileUploadListener="#{documentoUploader.processFileUpload}"
-      addLabel="#{messages['processoDocumento.addLabel']}"
-      clearAllLabel="#{messages['processoDocumento.clearAllLabel']}"
-      clearLabel="#{messages['processoDocumento.clearLabel']}"
-      doneLabel="#{messages['processoDocumento.doneLabel']}"
-      uploadLabel="#{messages['processoDocumento.uploadLabel']}"
-      sizeExceededLabel="#{messages['processoDocumento.sizeExceededLabel']}"
+      addLabel="#{eppmessages['processoDocumento.addLabel']}"
+      clearAllLabel="#{eppmessages['processoDocumento.clearAllLabel']}"
+      clearLabel="#{eppmessages['processoDocumento.clearLabel']}"
+      doneLabel="#{eppmessages['processoDocumento.doneLabel']}"
+      uploadLabel="#{eppmessages['processoDocumento.uploadLabel']}"
+      sizeExceededLabel="#{eppmessages['processoDocumento.sizeExceededLabel']}"
       maxFilesQuantity="1"
       listHeight="50px"
       immediateUpload="true"

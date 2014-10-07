@@ -3,14 +3,14 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:ui="http://java.sun.com/jsf/facelets">
     <wi:dataReport
-        title="#{messages['variavel.titlePage']}"
+        title="#{eppmessages['variavel.titlePage']}"
         columns="3"
         widths="3 4 2"
         headerText="#{variavelList.criteria}">
-        <wi:reportColumnHeader title="#{messages['variavel.variavel']}" />
+        <wi:reportColumnHeader title="#{eppmessages['variavel.variavel']}" />
         <wi:reportColumnHeader
-            title="#{messages['variavel.valorVariavel']}" />
-        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
+            title="#{eppmessages['variavel.valorVariavel']}" />
+        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
         <ui:repeat
             var="row"
             value="#{variavelList.list()}">

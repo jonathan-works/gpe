@@ -9,7 +9,7 @@
   var $loaded = false;
   var $execQueue = [];
 
-  window.loadScript = window.loadScript || function loadScript(_path, _callback) {
+  function loadScript(_path, _callback) {
     if(typeof _path !== "string") {
       throw"";
     }
@@ -23,28 +23,28 @@
       script.type = "text/javascript";
       document.head.appendChild(script);
     }, []);
-  };
+  }
   
   function $getObjectFromPath(path) {
-	  var res = {
-	    path:"",
-	    object:{},
-	    get next() {
-	    	return this.object[this.path];
-	    },
-	    set next(obj) {
-	    	this.object[this.path] = obj;
-	    }
-	  };
-	  var $namespace = $library;
-	  for(var i=0,l=path.length;i<l;i++) {
-		  res.path = path[i];
-		  res.object = $namespace;
-		  if (i<l-1) {
-			  $namespace = res.next = res.next || {};
-		  }
-	  }
-	  return res;
+    var res = {
+      path:"",
+      object:{},
+      get next() {
+        return this.object[this.path];
+      },
+      set next(obj) {
+        this.object[this.path] = obj;
+      }
+    };
+    var $namespace = $library;
+    for(var i=0,l=path.length;i<l;i++) {
+      res.path = path[i];
+      res.object = $namespace;
+      if (i<l-1) {
+        $namespace = res.next = res.next || {};
+      }
+    }
+    return res;
   }
   
   function $create(_path, _object, _options) {
@@ -54,11 +54,11 @@
     
     if($nm.next !== _object) {
       if (_options.mergeType === "override") {
-    	  $nm.next = _object;
+        $nm.next = _object;
       } else if (_options.mergeType === "merge") {
-    	  $nm.next = $merge($nm.next, _object);  
+        $nm.next = $merge($nm.next, _object);
       } else {
-    	  $nm.next = $nm.next || _object;
+        $nm.next = $nm.next || _object;
       }
     }
     $nm = $nm.next;
@@ -70,11 +70,13 @@
     return $nm;
   }
   function $flushQueue() {
-    var exec = $execQueue.shift();
-    try {
-      exec.func.apply(exec.func, $merge(exec.args, $loadDependencies(exec.dependencies)));
-    }catch(e) {
-      console.error(e);
+    var exec=$execQueue.shift();
+    if (exec!==undefined){
+      try {
+        exec.func.apply(exec.func, $merge(exec.args, $loadDependencies(exec.dependencies)));
+      }catch(e) {
+        console.error(e,exec);
+      }
     }
     if($execQueue.length > 0) {
       setTimeout($flushQueue, 1);
@@ -108,7 +110,7 @@
     return w1 > w2 ? $processMerge(obj1, obj2) : $processMerge(obj2, obj1);
   }
   function $extend(_object, _path) {
-	var nm = $getObjectFromPath(_path.split("."));
+  var nm = $getObjectFromPath(_path.split("."));
     if(!nm.next) {
       throw"Parent object not found in path " + _path;
     }
@@ -138,10 +140,10 @@
       $execQueue.push({func:callback, args:params, dependencies:dependencies});
     }
   }
-  window.invoke = window.invoke || function invoke(dependencies, callback) {
+  function invoke(dependencies, callback) {
     $invoke(dependencies, callback, []);
-  };
-  window.namespace = window.namespace || function namespace(path, obj, args) {
+  }
+  function namespace(path, obj, args) {
     var params = [];
     if(typeof path !== "string") {
       throw"Path argument is of the wrong type, must be string. Is " + typeof path;
@@ -164,12 +166,23 @@
     }
     $invoke([], $create, [path, obj, args]);
     return 0;
-  };
-  loadScript.toString = invoke.toString = namespace.toString = function toString() {
+  }
+  function toString(){
     return this.name;
-  };
-  Object.freeze(window.namespace);
-  Object.freeze(window.invoke);
-  Object.freeze(window.loadScript);
+  }
+  Object.defineProperty(loadScript,"toString",{value:toString});
+  Object.defineProperty(namespace,"toString",{value:toString});
+  Object.defineProperty(invoke,"toString",{value:toString});
+  Object.defineProperties(window,{
+    namespace:{
+      value:namespace
+    },
+    invoke:{
+      value:invoke
+    },
+    loadScript:{
+      value:loadScript
+    }
+  });
   window.addEventListener("load", $flushQueue);
 })();

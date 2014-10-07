@@ -24,7 +24,7 @@
 
 
         <h:commandButton id="saveH" eventsQueue="editQueue"
-            action="#{home.save()}" value="#{messages['crud.persist']}"
+            action="#{home.save()}" value="#{eppmessages['crud.persist']}"
             styleClass="buttons"
             rendered="#{!home.managed and !isUploadForm and persistSemNewInstance}">
         </h:commandButton>
@@ -33,18 +33,18 @@
             eventsQueue="editQueue" onclick="showLoading();"
             oncomplete="hideLoading();#{oncomplete}"
             render="#{reRenderSave}" limitRender="true"
-            value="#{messages['crud.persist']}" styleClass="buttons"
+            value="#{eppmessages['crud.persist']}" styleClass="buttons"
             rendered="#{!home.managed and !isUploadForm and !persistSemNewInstance}">
         </a:commandButton>
 
         <h:commandButton id="saveUpload" eventsQueue="editQueue"
-            action="#{home.save()}" value="#{messages['crud.persist']}"
+            action="#{home.save()}" value="#{eppmessages['crud.persist']}"
             styleClass="buttons"
             rendered="#{!home.managed and isUploadForm}">
         </h:commandButton>
 
         <h:commandButton id="updateUpload" eventsQueue="editQueue"
-            value="#{messages['crud.update']}" styleClass="buttons"
+            value="#{eppmessages['crud.update']}" styleClass="buttons"
             action="#{home.save()}"
             rendered="#{home.managed and isUploadForm}">
         </h:commandButton>
@@ -53,7 +53,7 @@
             eventsQueue="editQueue" onclick="showLoading();"
             oncomplete="hideLoading();#{oncomplete}"
             render="#{reRenderSave}" limitRender="true"
-            value="#{messages['crud.update']}" styleClass="buttons"
+            value="#{eppmessages['crud.update']}" styleClass="buttons"
             rendered="#{home.managed and !isUploadForm}">
         </a:commandButton>
 
@@ -63,7 +63,7 @@
                 onclick="showLoading();"
                 oncomplete="hideLoading();#{oncomplete}"
                 render="pageBody" limitRender="true" execute="@this"
-                value="#{messages['crud.new']}" styleClass="buttons"
+                value="#{eppmessages['crud.new']}" styleClass="buttons"
                 action="#{home.newInstance}"
                 rendered="#{home.managed and !isUploadForm and mostrarNovo}">
             </a:commandButton>

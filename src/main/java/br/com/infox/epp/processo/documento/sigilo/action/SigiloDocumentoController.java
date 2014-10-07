@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 
 @Name(SigiloDocumentoController.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -15,14 +15,14 @@ import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
 public class SigiloDocumentoController implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "sigiloDocumentoController";
-    public static final String MSG_REGISTRO_ALTERADO = "#{messages['sigiloDocumento.registroAlterado']}";
+    public static final String MSG_REGISTRO_ALTERADO = "#{eppmessages['sigiloDocumento.registroAlterado']}";
 
     public static enum FragmentoSigilo {
         MOTIVO_SIGILO, DETALHE_SIGILO, PERMISSOES_SIGILO
     }
 
     private FragmentoSigilo fragmentoARenderizar;
-    private ProcessoDocumento documentoSelecionado;
+    private Documento documentoSelecionado;
 
     public FragmentoSigilo getFragmentoARenderizar() {
         return fragmentoARenderizar;
@@ -32,11 +32,11 @@ public class SigiloDocumentoController implements Serializable {
         this.fragmentoARenderizar = fragmentoARenderizar;
     }
 
-    public ProcessoDocumento getDocumentoSelecionado() {
+    public Documento getDocumentoSelecionado() {
         return documentoSelecionado;
     }
 
-    public void setDocumentoSelecionado(ProcessoDocumento documentoSelecionado) {
+    public void setDocumentoSelecionado(Documento documentoSelecionado) {
         this.documentoSelecionado = documentoSelecionado;
     }
 }

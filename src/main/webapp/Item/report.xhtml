@@ -9,13 +9,13 @@
     <ui:param name="title" value="Items" />
 
 
-    <wi:dataReport title="#{messages['item.reportTitle']}" columns="4"
+    <wi:dataReport title="#{eppmessages['item.reportTitle']}" columns="4"
         widths="2 4 2 1" headerText="#{itemList.criteria}">
 
-        <wi:reportColumnHeader title="#{messages['item.codigoItem']}" />
-        <wi:reportColumnHeader title="#{messages['item.descricaoItem']}" />
-        <wi:reportColumnHeader title="#{messages['item.itemPai']}" />
-        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
+        <wi:reportColumnHeader title="#{eppmessages['item.codigoItem']}" />
+        <wi:reportColumnHeader title="#{eppmessages['item.descricaoItem']}" />
+        <wi:reportColumnHeader title="#{eppmessages['item.itemPai']}" />
+        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{itemList.list()}">
 

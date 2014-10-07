@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -13,13 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Startup;
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.contexts.ServletLifecycle;
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -32,14 +29,13 @@ import br.com.infox.util.collection.DefaultMap;
  * @author avner
  * 
  */
+@Singleton
 @Startup
-@Name(PropertiesLoader.NAME)
-@Scope(ScopeType.APPLICATION)
-public class PropertiesLoader implements Serializable {
+public class PropertiesLoader {
 	
-	private static final long serialVersionUID = 1L;
+    public static final String JNDI_PORTABLE_NAME = "java:module/PropertiesLoader";
+    
 	private static final LogProvider LOG = Logging.getLogProvider(PropertiesLoader.class);
-	public static final String NAME = "propertiesLoader";
 	
 	private static final String PAGE_PROPERTIES = "/custom_pages.properties";
 	private static final String MENU_PROPERTIES = "/menu.properties";
@@ -49,14 +45,14 @@ public class PropertiesLoader implements Serializable {
 	private static final String STANDARD_MESSAGES_EPP_PATH = "/standard_messages_pt_BR.properties";
 	private static final String PROCESS_DEFINITION_MESSAGES_EPP_PATH = "/process_definition_messages_pt_BR.properties";
 	private static final String VALIDATION_MESSAGES = "/ValidationMessages.properties";
-	public static final String EPP_MESSAGES = "eppmessages";
 	
 	private Properties pageProperties;
 	private Properties menuProperties;
 	private List<String> menuItems;
+	private Map<String, String> messages;
 	
-	@Create
-	public void init() {
+	@PostConstruct
+	private void init() {
 		loadPageProperties();
 		loadMessagesProperties();
 	}
@@ -65,6 +61,8 @@ public class PropertiesLoader implements Serializable {
 		InputStream is = getClass().getResourceAsStream(PAGE_PROPERTIES);
 		if (is != null) {
 			try {
+			    String appPath = getAppPath();
+			    System.out.println(appPath);
 				pageProperties = new Properties();
 				pageProperties.load(is);
 				
@@ -73,7 +71,7 @@ public class PropertiesLoader implements Serializable {
 					String key = (keys.nextElement().toString());
 					String value = pageProperties.getProperty(key);
 
-					performLoad(key, value);
+					performLoad(key, value, appPath);
 				}
 			} catch (IOException e) {
 			    LOG.error("Falha ao recuperar arquivos especificados no Properties Loader.", e);
@@ -81,10 +79,10 @@ public class PropertiesLoader implements Serializable {
 		}
 	}
 	
-	private void performLoad(String key, String path) throws IOException {
+	private void performLoad(String key, String path, String appPath) throws IOException {
 		InputStream newInputStream = getClass().getResourceAsStream(key);
 		if (newInputStream != null) {
-			File file = new File(ServletLifecycle.getServletContext().getRealPath(path));
+			File file = new File(appPath + path);
 			if (file.exists()) {
 				file.delete();
 			} else {
@@ -95,7 +93,7 @@ public class PropertiesLoader implements Serializable {
 			
 			int length;
 			byte[] data = new byte[1024];
-			while ((length = newInputStream.read(data)) > 0) {
+			while ((length = newInputStream.read(data)) != -1) {
 				newOutputStream.write(data, 0, length);
 			}
 			newInputStream.close();
@@ -112,7 +110,7 @@ public class PropertiesLoader implements Serializable {
 		InputStream isMessagesExt = getClass().getResourceAsStream(MESSAGES_PROPERTIES);
 		
 		try {
-			Map<String, String> messages = new DefaultMap<>(new HashMap<String, String>());
+			messages = new DefaultMap<>(new HashMap<String, String>());
 
 			Properties source = new Properties();
             source.load(isEntityMessagesEpp);
@@ -139,9 +137,7 @@ public class PropertiesLoader implements Serializable {
                 source.load(isMessagesExt);
                 copyProperties(source, messages); 
             }
-             
-			Contexts.getApplicationContext().set(EPP_MESSAGES, messages);
-			
+            this.messages = Collections.unmodifiableMap(messages);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -154,6 +150,15 @@ public class PropertiesLoader implements Serializable {
             String value = source.getProperty(key);
             destination.put(key, value);
         }
+	}
+	
+	private String getAppPath() {
+	    URL thisPackage = getClass().getResource("");
+	    File file = new File(thisPackage.getFile());
+	    while (!file.toPath().endsWith("WEB-INF")) {
+	        file = file.getParentFile();
+	    }
+	    return file.getParent(); // o WAR
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -173,4 +178,7 @@ public class PropertiesLoader implements Serializable {
 		return (menuItems == null ? (menuItems = Collections.unmodifiableList(new ArrayList<String>())) : menuItems);
 	}
 	
+	public Map<String, String> getMessages() {
+	    return this.messages;
+    }
 }

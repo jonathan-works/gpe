@@ -17,9 +17,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.epp.system.annotation.Ignore;
 
 @Entity
 @Table(name=LogWebserviceServer.TABLE_NAME)
+@Ignore
 public class LogWebserviceServer implements Serializable {
 
 	private static final long serialVersionUID = 1L;

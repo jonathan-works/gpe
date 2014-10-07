@@ -25,27 +25,27 @@
             value="#{empty reRenderSave ? formId : reRenderSave}" />
         <a:commandButton
             id="update"
-            rendered="#{!empty form.fields and processoHome.managed}"
+            rendered="#{!empty form.fields and processoEpaHome.managed}"
             status=":status"
             eventsQueue="editQueue"
             oncomplete="#{oncomplete}"
             render="#{reRenderSave}, taskButtonsDiv"
             limitRender="true"
-            value="#{messages['crud.update']}"
+            value="#{eppmessages['crud.update']}"
             styleClass="buttons"
             action="#{taskInstanceHome.update(home)}" />
         <a:commandButton
             id="persist"
-            rendered="#{!empty form.fields and !processoHome.managed}"
+            rendered="#{!empty form.fields and !processoEpaHome.managed}"
             status=":status"
             eventsQueue="editQueue"
             render="#{reRenderSave}, taskButtonsDiv"
             limitRender="true"
-            value="#{messages['crud.update']}"
+            value="#{eppmessages['crud.update']}"
             styleClass="buttons"
             action="#{taskInstanceHome.persist(home)}" />
         <h:outputText
-            value="#{messages['movimentar.next']} "
+            value="#{eppmessages['movimentar.next']} "
             rendered="true" />
         <c:if test="#{taskInstanceHome.transitions.size gt 3}">
             <h:selectOneMenu value="#{taskInstanceHome.name}">
@@ -57,7 +57,7 @@
                 value="OK"
                 onmouseup="showLoading()"
                 status="none"
-                styleClass="buttons buttons"
+                styleClass="buttons"
                 eventsQueue="editQueue"
                 oncomplete="#{oncomplete};verifyFields();"
                 render=":script,#{reRenderSave}"
@@ -75,7 +75,7 @@
                     render=":script,#{reRenderSave}"
                     limitRender="true"
                     value="#{transition.name}"
-                    styleClass="buttons buttons"
+                    styleClass="buttons"
                     action="#{taskInstanceHome.end(transition.name)}" />
             </a:repeat>
         </c:if>

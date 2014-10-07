@@ -11,16 +11,16 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.util.time.DateRange;
 
 public class ProcessoEpaTarefaManagerTest {
 
-	private ProcessoEpaTarefaManager processoEpaTarefaManager;
+	private ProcessoTarefaManager processoEpaTarefaManager;
 	
 	@Before
 	public void setup() {
-		processoEpaTarefaManager = new ProcessoEpaTarefaManager();
+		processoEpaTarefaManager = new ProcessoTarefaManager();
 	}
 	
 	@Test
@@ -30,7 +30,7 @@ public class ProcessoEpaTarefaManagerTest {
 		Date ultimoDisparo = calendar.getTime();
 		calendar.set(2013, 5, 15, 18, 00);
 		Date disparoAtual = calendar.getTime();
-		Method method = ProcessoEpaTarefaManager.class.getDeclaredMethod("getDisparoIncrementado", Date.class, Date.class, int.class, int.class);
+		Method method = ProcessoTarefaManager.class.getDeclaredMethod("getDisparoIncrementado", Date.class, Date.class, int.class, int.class);
 		method.setAccessible(true);
 		Date result = (Date) method.invoke(processoEpaTarefaManager, ultimoDisparo, disparoAtual, Calendar.MINUTE, 30);
 		Assert.assertEquals(disparoAtual, result);
@@ -83,7 +83,7 @@ public class ProcessoEpaTarefaManagerTest {
 
     private DateRange assertIncrementoByLocalizacaoTurno(Calendar fim, Calendar inicio, Calendar inicioTurno,
             Calendar fimTurno) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Method method = ProcessoEpaTarefaManager.class.getDeclaredMethod("getIncrementoLocalizacaoTurno", Calendar.class, Calendar.class, Calendar.class, Calendar.class);
+        Method method = ProcessoTarefaManager.class.getDeclaredMethod("getIncrementoLocalizacaoTurno", Calendar.class, Calendar.class, Calendar.class, Calendar.class);
         method.setAccessible(true);
 
         return (DateRange) method.invoke(processoEpaTarefaManager, fim, inicio, inicioTurno, fimTurno);

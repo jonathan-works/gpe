@@ -9,6 +9,7 @@ public interface DefinicaoVariavelProcessoQuery {
     String NOME_VARIAVEL = "nm_variavel";
     String LABEL = "ds_label";
     String ID_FLUXO = "id_fluxo";
+    String VISIVEL = "in_visivel";
 
     String PARAM_FLUXO = "fluxo";
     String PARAM_NOME = "nome";

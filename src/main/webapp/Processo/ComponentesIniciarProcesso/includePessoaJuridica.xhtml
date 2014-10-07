@@ -9,12 +9,12 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <wi:dataForm formId="pessoaJuridicaForm"
-        formTitle="#{messages['pessoaJuridica.formTitle']}"
+        formTitle="#{eppmessages['pessoaJuridica.formTitle']}"
         rendered="#{partesController.podeAdicionarPartesJuridicas() and not partesController.apenasPessoaFisica()}">
 
         <wi:inputCnpj id="cnpj"
             value="#{partesController.pessoaJuridica.cnpj}"
-            label="#{messages['pessoaJuridica.cnpj']}"
+            label="#{eppmessages['pessoaJuridica.cnpj']}"
             assignTo="#{partesController.pessoaJuridica.cnpj}"
             required="true">
             <a:ajax event="blur"
@@ -24,19 +24,19 @@
         <h:panelGroup id="loadedByCNPJ">
             <wi:inputText id="nome"
                 value="#{partesController.pessoaJuridica.nome}"
-                label="#{messages['pessoaJuridica.nome']}"
+                label="#{eppmessages['pessoaJuridica.nome']}"
                 required="true" />
             <wi:inputText id="razao"
                 value="#{partesController.pessoaJuridica.razaoSocial}"
-                label="#{messages['pessoaJuridica.razaoSocial']}"
+                label="#{eppmessages['pessoaJuridica.razaoSocial']}"
                 required="true" />
         </h:panelGroup>
         <ui:define name="buttons">
             <a:commandButton id="pessoaJuridicaSaveButton"
                 action="#{partesController.includePessoaJuridica()}"
                 render="buscaDiv, pessoasListDiv, storeDiv, pessoaJuridicaForm"
-                value="#{messages['crud.persist']}" 
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}"/>
+                value="#{eppmessages['crud.persist']}" 
+                styleClass="#{wi:get(styleClass, 'buttons')}"/>
         </ui:define>
 
     </wi:dataForm>

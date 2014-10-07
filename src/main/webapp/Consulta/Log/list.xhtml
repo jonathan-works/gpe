@@ -8,45 +8,41 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-  <ui:define name="title">#{messages['consultaEntidadeLog.titulo']}</ui:define>
-
-  <ui:define name="head">
-    <h:outputStylesheet library="styleSkinInfox" name="defaultCRUD.css" />
-  </ui:define>
+  <ui:define name="title">#{eppmessages['consultaEntidadeLog.titulo']}</ui:define>
 
   <ui:define name="body">
     <h:form>
       <rich:panel>
         <wi:dataTable values="#{entidadeLogList.list(15)}"
           bean="#{entidadeLogList}"
-          tableTitle="#{messages['consultaEntidadeLogGrid.titulo']}"
+          tableTitle="#{eppmessages['consultaEntidadeLogGrid.titulo']}"
           id="entidadeLogListTable"
           showGrid="#{entidadeLogList.instance.inPesquisa}">
           <ui:define name="searchForm">
             <wi:searchForm formId="pesquisarLogForm"
-              formTitle="#{messages['searchForm.title']}" showLogicOperator="false"
+              formTitle="#{eppmessages['searchForm.title']}" showLogicOperator="false"
               showButtons="false">
               <wi:selectOneMenu id="nomeEntidade"
                 value="#{entidadeLogList.instance.nomeEntidade}"
                 items="#{entidadeLogList.nomesDasEntidades}"
-                noSelectionLabel="#{messages['crud.select.all']}"
-                label="#{messages['entidadeLog.nomeEntidade']}" />
+                noSelectionLabel="#{eppmessages['crud.select.all']}"
+                label="#{eppmessages['entidadeLog.nomeEntidade']}" />
 
               <wi:selectOneMenuEntity id="usuario"
                 value="#{entidadeLogList.instance.usuario}"
                 items="#{entidadeLogList.usuariosQuePossuemLogs}"
-                noSelectionLabel="#{messages['crud.select.all']}"
-                label="#{messages['entidadeLog.usuario']}" />
+                noSelectionLabel="#{eppmessages['crud.select.all']}"
+                label="#{eppmessages['entidadeLog.usuario']}" />
 
               <wi:inputText id="ip"
                 value="#{entidadeLogList.instance.ip}"
-                label="#{messages['entidadeLog.ip']}" />
+                label="#{eppmessages['entidadeLog.ip']}" />
 
               <wi:selectOneMenuEnum id="tipoOperacao"
                 items="#{entidadeLogList.tipoOperacaoLogEnumValues}"
                 value="#{entidadeLogList.instance.tipoOperacaoLogEnum}"
-                label="#{messages['entidadeLog.tipoOperacao']}"
-                noSelectionLabel="#{messages['crud.select.all']}" />
+                label="#{eppmessages['entidadeLog.tipoOperacao']}"
+                noSelectionLabel="#{eppmessages['crud.select.all']}" />
 
               <wi:inputDataPeriodo id="periodo"
                 valueDateFrom="#{entidadeLogList.instance.dataInicio}"
@@ -55,13 +51,13 @@
 
               <s:div styleClass="actionButtons">
                 <wi:commandButton id="consulta"
-                  value="#{messages['entidadeLog.consulta.button']}"
+                  value="#{eppmessages['entidadeLog.consulta.button']}"
                   action="#{entidadeLogList.instance.setInPesquisa(true)}"
                   onclick="infox.showLoading();"
                   oncomplete="infox.hideLoading();" reRender="pageBody" />
 
                 <wi:commandButton id="novaConsulta"
-                  value="#{messages['entidadeLog.novaConsulta.button']}"
+                  value="#{eppmessages['entidadeLog.novaConsulta.button']}"
                   onclick="showLoading();" oncomplete="hideLoading();"
                   action="#{entidadeLogList.limparTela()}"
                   reRender="pageBody" />
@@ -69,7 +65,7 @@
             </wi:searchForm>
           </ui:define>
 
-          <ui:define name="headerToolBar">#{messages['entidadeLog.detalhe']}</ui:define>
+          <ui:define name="headerToolBar">#{eppmessages['entidadeLog.detalhe']}</ui:define>
           <ui:define name="toolBar">
             <s:link view="/Consulta/Log/detalheLog.seam"
               onclick="infox.openPopUp('comprovante', '');"
@@ -82,22 +78,22 @@
           </ui:define>
 
           <wi:columnOutputText columnId="nomeEntidade"
-            columnHeader="#{messages['entidadeLog.nomeEntidade']}"
+            columnHeader="#{eppmessages['entidadeLog.nomeEntidade']}"
             value="#{row.nomeEntidade}" />
           <wi:columnOutputText columnId="idEntidade"
-            columnHeader="#{messages['entidadeLog.idEntidade']}"
+            columnHeader="#{eppmessages['entidadeLog.idEntidade']}"
             value="#{row.idEntidade}" />
           <wi:columnOutputText columnId="ip"
-            columnHeader="#{messages['entidadeLog.ip']}"
+            columnHeader="#{eppmessages['entidadeLog.ip']}"
             value="#{row.ip}" />
           <wi:columnDateTime columnId="dataLog"
-            columnHeader="#{messages['entidadeLog.dataLog']}"
+            columnHeader="#{eppmessages['entidadeLog.dataLog']}"
             value="#{row.dataLog}" pattern="dd/MM/yy kk:mm" />
           <wi:columnOutputText columnId="usuario"
-            columnHeader="#{messages['entidadeLog.usuario']}"
+            columnHeader="#{eppmessages['entidadeLog.usuario']}"
             value="#{row.usuario}" />
           <wi:columnEnum columnId="tipoOperacao"
-            columnHeader="#{messages['entidadeLog.tipoOperacao']}"
+            columnHeader="#{eppmessages['entidadeLog.tipoOperacao']}"
             value="#{row.tipoOperacao}" />
         </wi:dataTable>
       </rich:panel>

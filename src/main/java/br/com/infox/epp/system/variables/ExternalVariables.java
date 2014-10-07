@@ -17,7 +17,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.epp.processo.home.ProcessoEpaHome;
 
 /**
  * @author erikliberal Classe criada para gerenciar variáveis que deverão ser
@@ -82,8 +82,8 @@ public class ExternalVariables implements Serializable {
 
     @Factory(NUMERO_PROCESSO_ATUAL)
     public String getNumeroProcessoAtual() {
-        final Processo processo = ((ProcessoHome) Component
-                .getInstance(ProcessoHome.NAME)).getInstance();
+        final Processo processo = ((ProcessoEpaHome) Component
+                .getInstance(ProcessoEpaHome.NAME)).getInstance();
         String result;
         if (processo == null) {
             result = NULL_STRING;
@@ -95,8 +95,8 @@ public class ExternalVariables implements Serializable {
     
     @Factory(PARTES_PROCESSO_ATUAL)
     public String getPartesProcessoAtual() {
-        final ProcessoEpa processo = (ProcessoEpa) ((ProcessoHome) Component
-                .getInstance(ProcessoHome.NAME)).getInstance();
+        final ProcessoEpa processo = (ProcessoEpa) ((ProcessoEpaHome) Component
+                .getInstance(ProcessoEpaHome.NAME)).getInstance();
         String result;
         if (processo == null) {
             result = NULL_STRING;

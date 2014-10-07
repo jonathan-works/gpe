@@ -42,9 +42,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 
     private static final String MSG_INACTIVE_SUCCESS = "entity_inactived";
     private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
-    private static final String MSG_REGISTRO_CRIADO = "#{messages['entity_created']}";
-    private static final String MSG_REGISTRO_ALTERADO = "#{messages['entity_updated']}";
-    private static final String MSG_REGISTRO_CADASTRADO = "#{messages['constraintViolation.uniqueViolation']}";
+    private static final String MSG_REGISTRO_CRIADO = "#{eppmessages['entity_created']}";
+    private static final String MSG_REGISTRO_ALTERADO = "#{eppmessages['entity_updated']}";
+    private static final String MSG_REGISTRO_CADASTRADO = "#{eppmessages['constraintViolation.uniqueViolation']}";
 
     private static final LogProvider LOG = Logging.getLogProvider(AbstractHome.class);
 
@@ -186,7 +186,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         if ("removed".equals(ret)) {
             FacesMessages fm = instance();
             fm.clear();
-            fm.add("#{messages['entity_deleted']}");
+            fm.add("#{eppmessages['entity_deleted']}");
         }
         return ret;
     }

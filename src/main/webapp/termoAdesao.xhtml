@@ -11,13 +11,9 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
 
-<ui:define name="baseHead">
-	<h:outputStylesheet name="termoAdesao.css" library="stylesheet" />
-</ui:define>
-
 <ui:define name="baseBody">
 	<rich:panel id="#{termoAdesaoAction.termoAdesaoPanelName}" styleClass="painel-termo-adesao">
-	  <f:facet name="header">#{messages['login.termoAdesao']}</f:facet>
+	  <f:facet name="header">#{eppmessages['login.termoAdesao']}</f:facet>
 	  <h:form id="termoAdesaoForm">
 	    <a:jsFunction
 	      name="assinarTermo"
@@ -57,14 +53,14 @@
 	          debug="false"
 	          loginMode="false"
 	          useProviderDll="false"
-	          signButtonCaption="#{messages['login.assinarTermoAdesao']}">
+	          signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}">
 	        </wi:appletAssinatura>
 	        <input
 	          class="input_button close-btn"
 	          id="cancela"
 	          type="button"
 	          onclick="location.href='#{pathResolver.contextPath}/login.seam'"
-	          value="#{messages['login.cancelaTrocaSenhaBtn']}" />
+	          value="#{eppmessages['login.cancelaTrocaSenhaBtn']}" />
 	      </div>
 	    </s:div>
 	  </h:form>

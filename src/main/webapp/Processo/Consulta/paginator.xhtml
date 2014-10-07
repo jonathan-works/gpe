@@ -9,7 +9,7 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/empty.xhtml"
 >
-    <ui:define name="title">#{messages['processo.documentos']} #{consultaController.processoEpa.numeroProcesso}</ui:define>
+    <ui:define name="title">#{eppmessages['processo.documentos']} #{consultaController.processoEpa.numeroProcesso}</ui:define>
     <ui:define name="body">
         <h:outputScript
             name="jquery.hotkeys.js"
@@ -18,10 +18,6 @@
         <h:outputScript
             name="paginator.js"
             library="js"
-        />
-        <h:outputStylesheet
-            name="paginator.css"
-            library="stylesheet"
         />
         <h:form
             id="documento"
@@ -37,7 +33,7 @@
                 styleClass="doc-pag-form"
             >
                 <rich:column>
-                    <f:facet name="header">#{messages['processo.documentos']} #{consultaController.processoEpa.numeroProcesso}</f:facet>
+                    <f:facet name="header">#{eppmessages['processo.documentos']} #{consultaController.processoEpa.numeroProcesso}</f:facet>
                     <div id="areaPagina">
                         <div id="pagina">
                             <div class="post-it-cont">
@@ -64,7 +60,7 @@
                     </div>
                 </rich:column>
                 <rich:column>
-                    <f:facet name="header">#{messages['anexosProcesso.titleView']}</f:facet>
+                    <f:facet name="header">#{eppmessages['anexosProcesso.titleView']}</f:facet>
                     <ui:include
                         src="/WEB-INF/xhtml/components/grid/documentosAnexadosProcesso.xhtml"
                     />

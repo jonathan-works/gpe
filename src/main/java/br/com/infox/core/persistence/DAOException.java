@@ -8,11 +8,11 @@ import org.jboss.seam.annotations.ApplicationException;
 public class DAOException extends Exception {
 
     private static final long serialVersionUID = 1L;
-    public static final String MSG_UNIQUE_VIOLATION = "#{messages['constraintViolation.uniqueViolation']}";
-    public static final String MSG_FOREIGN_KEY_VIOLATION = "#{messages['constraintViolation.foreignKeyViolation']}";
-    public static final String MSG_NOT_NULL_VIOLATION = "#{messages['constraintViolation.notNullViolation']}";
-    public static final String MSG_CHECK_VIOLATION = "#{messages['constraintViolation.checkViolation']}";
-    public static final String MSG_DEADLOCK = "#{messages['databaseError.deadlock']}";
+    public static final String MSG_UNIQUE_VIOLATION = "#{eppmessages['constraintViolation.uniqueViolation']}";
+    public static final String MSG_FOREIGN_KEY_VIOLATION = "#{eppmessages['constraintViolation.foreignKeyViolation']}";
+    public static final String MSG_NOT_NULL_VIOLATION = "#{eppmessages['constraintViolation.notNullViolation']}";
+    public static final String MSG_CHECK_VIOLATION = "#{eppmessages['constraintViolation.checkViolation']}";
+    public static final String MSG_DEADLOCK = "#{eppmessages['databaseError.deadlock']}";
 
     private GenericDatabaseErrorCode databaseErrorCode;
     private String localizedMessage;

@@ -4,11 +4,12 @@ import java.util.Properties;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.Install;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Startup;
+import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.util.ClassLoaderUtil;
@@ -22,9 +23,8 @@ import br.com.infox.epp.estatistica.processor.TarefaTimerProcessor;
 import br.com.infox.quartz.QuartzConstant;
 
 @Name(BamTimerStarter.NAME)
-@Scope(ScopeType.APPLICATION)
-@Startup(depends = QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER)
-@Install(dependencies = { QuartzConstant.JBOSS_SEAM_ASYNC_DISPATCHER })
+@Scope(ScopeType.STATELESS)
+@AutoCreate
 public class BamTimerStarter {
     private static final LogProvider LOG = Logging.getLogProvider(BamTimerStarter.class);
     private static final Properties QUARTZ_PROPERTIES = ClassLoaderUtil.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
@@ -35,7 +35,8 @@ public class BamTimerStarter {
     public static final String ID_INICIAR_PROCESSO_TIMER_PARAMETER = "idProcessoTimerParameter";
     public static final String ID_INICIAR_TASK_TIMER_PARAMETER = "idTaskTimerParameter";
 
-    @Create
+    @Observer(value = QuartzDispatcher.QUARTZ_DISPATCHER_INITIALIZED_EVENT)
+    @Transactional
     public void create() {
         if (!Boolean.parseBoolean(QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {
             return;

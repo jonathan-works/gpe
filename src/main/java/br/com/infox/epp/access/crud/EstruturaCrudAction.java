@@ -72,7 +72,7 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
         try {
             localizacaoManager.persist(localizacaoFilho);
             novaLocalizacao();
-            FacesMessages.instance().add("#{messages['estrutura.localizacaoFilhoAdicionada']}");
+            FacesMessages.instance().add("#{eppmessages['estrutura.localizacaoFilhoAdicionada']}");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
             localizacaoFilho.setIdLocalizacao(null);
@@ -84,7 +84,7 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
         try {
             localizacaoManager.inativar(localizacao);
             novaLocalizacao();
-            FacesMessages.instance().add("#{messages['estrutura.localizacaoFilhoRemovida']}");
+            FacesMessages.instance().add("#{eppmessages['estrutura.localizacaoFilhoRemovida']}");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
             LOG.error(e);
@@ -94,7 +94,7 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
     public void atualizarLocalizacao() {
         try {
             localizacaoManager.update(localizacaoFilho);
-            FacesMessages.instance().add("#{messages['estrutura.localizacaoFilhoAtualizada']}");
+            FacesMessages.instance().add("#{eppmessages['estrutura.localizacaoFilhoAtualizada']}");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
             LOG.error(e);

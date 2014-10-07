@@ -20,7 +20,7 @@
                         render="swimlanesForm, swimlanesTable"
                         limitRender="true">
                         <h:graphicImage
-                            title="#{messages['processBuilder.addSwimlane']}"
+                            title="#{eppmessages['processBuilder.addSwimlane']}"
                             url="#{a4jSkin.imgFolder}/add.gif" />
                     </a:commandLink>
                 </h:form>
@@ -29,13 +29,13 @@
             <ui:define name="toolBar">
                 <h:form>
                     <h:graphicImage
-                        title="#{messages['processBuilder.removeSwimlane']}"
+                        title="#{eppmessages['processBuilder.removeSwimlane']}"
                         url="#{a4jSkin.imgFolder}/remove.png"
                         styleClass="opacityHover pointer">
                         <a:ajax event="click"
                             listener="#{swimlaneFitter.removeSwimlane(row)}"
                             execute="@this"
-                            onbeforesubmit="return confirm('#{messages['processBuilder.confirm']}')"
+                            onbeforesubmit="return confirm('#{eppmessages['processBuilder.confirm']}')"
                             render="swimlanesForm, swimlanesTable"
                             limitRender="true" />
                     </h:graphicImage>
@@ -45,7 +45,7 @@
             <ui:define name="columns">
                 <rich:column>
                     <h:form>
-                        <f:facet name="header">#{messages['processBuilder.swimlanes']}</f:facet>
+                        <f:facet name="header">#{eppmessages['processBuilder.swimlanes']}</f:facet>
                         <ui:param name="current"
                             value="#{row == swimlaneFitter.currentSwimlane}" />
                         <ui:param name="styleNodeName"
@@ -65,7 +65,7 @@
     <h:form id="swimlanesForm" styleClass="swimlane-form">
         <s:div rendered="#{!empty swimlaneFitter.currentSwimlane}">
             <wi:inputText id="swimlaneName"
-                label="#{messages['processBuilder.swimlane.name']}"
+                label="#{eppmessages['processBuilder.swimlane.name']}"
                 value="#{swimlaneFitter.currentSwimlane.name}">
                 <a:ajax event="change" execute="@this"
                     limitRender="true" />
@@ -77,26 +77,26 @@
                 <ui:param name="styleClass" value="PerfilSwimlane" />
                 <ui:define name="toolBar">
                     <h:graphicImage
-                        title="#{messages['processBuilder.swimlane.removeUsuarioPerfil']}"
+                        title="#{eppmessages['processBuilder.swimlane.removeUsuarioPerfil']}"
                         url="#{a4jSkin.imgFolder}/remove.png">
                         <a:ajax event="click"
                             listener="#{swimlaneFitter.currentSwimlane.removePerfil(row)}"
                             execute="@this"
-                            onbeforesubmit="return confirm('#{messages['processBuilder.confirm']}')"
+                            onbeforesubmit="return confirm('#{eppmessages['processBuilder.confirm']}')"
                             render="swimlanesForm" limitRender="true" />
                     </h:graphicImage>
                 </ui:define>
 
                 <ui:define name="columns">
                     <rich:column>
-                        <f:facet name="header">#{messages['perfil.titlePage']}</f:facet>
+                        <f:facet name="header">#{eppmessages['perfil.titlePage']}</f:facet>
                         <h:outputText value="#{row.descricao}" />
                     </rich:column>
                     <f:facet name="footer">
                         <rich:columnGroup>
                             <rich:column>
                                 <h:graphicImage
-                                    title="#{messages['processBuilder.swimlane.addUsuarioPerfil']}"
+                                    title="#{eppmessages['processBuilder.swimlane.addUsuarioPerfil']}"
                                     styleClass="pointer"
                                     id="novoLocPapel" url="#{a4jSkin.imgFolder}/add.gif">
                                     <a:ajax event="click"

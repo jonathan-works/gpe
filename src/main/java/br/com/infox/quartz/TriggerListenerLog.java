@@ -8,6 +8,7 @@ import org.jboss.seam.log.Logging;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.Trigger;
+import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.TriggerListener;
 
 public class TriggerListenerLog implements TriggerListener, Serializable {
@@ -22,27 +23,16 @@ public class TriggerListenerLog implements TriggerListener, Serializable {
     }
 
     @Override
-    public void triggerComplete(Trigger trigger,
-            JobExecutionContext executionContext, int arg2) {
-        Date fireTime = executionContext.getFireTime();
-        long time = new Date().getTime() - fireTime.getTime();
-        JobDataMap jobDataMap = executionContext.getJobDetail().getJobDataMap();
-        LOG.info("triggerComplete: Job (" + trigger.getJobName() + ") / "
-                + QuartzJobsInfo.getJobExpression(jobDataMap) + " [" + time
-                + " ms]");
-    }
-
-    @Override
     public void triggerFired(Trigger trigger,
             JobExecutionContext executionContext) {
         JobDataMap jobDataMap = executionContext.getJobDetail().getJobDataMap();
-        LOG.info("triggerFired: Job (" + trigger.getJobName() + ") / "
+        LOG.info("triggerFired: Job (" + trigger.getJobKey().getName() + ") / "
                 + QuartzJobsInfo.getJobExpression(jobDataMap));
     }
 
     @Override
     public void triggerMisfired(Trigger trigger) {
-        LOG.info("triggerMisfired: " + trigger.getName());
+        LOG.info("triggerMisfired: " + trigger.getJobKey().getName());
     }
 
     @Override
@@ -50,4 +40,13 @@ public class TriggerListenerLog implements TriggerListener, Serializable {
         return false;
     }
 
+    @Override
+    public void triggerComplete(Trigger trigger, JobExecutionContext context, CompletedExecutionInstruction triggerInstructionCode) {
+        Date fireTime = context.getFireTime();
+        long time = new Date().getTime() - fireTime.getTime();
+        JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
+        LOG.info("triggerComplete: Job (" + trigger.getJobKey().getName() + ") / "
+                + QuartzJobsInfo.getJobExpression(jobDataMap) + " [" + time
+                + " ms]");
+    }
 }

@@ -15,7 +15,7 @@
         oncomplete="infox.hideLoading();#{oncomplete}" value="#{value}"
         render="#{reRender}" disabled="#{disabled}"
         immediate="#{immediate}" actionListener="#{elFunctions.invokeMethod(actionListener)}"
-        styleClass="buttons #{wi:get(styleClass, 'buttons')}">
+        styleClass="#{wi:get(styleClass, 'buttons')}">
         <ui:insert />
     </a:commandButton>
 

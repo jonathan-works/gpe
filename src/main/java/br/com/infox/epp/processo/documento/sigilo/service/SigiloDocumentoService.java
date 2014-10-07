@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
@@ -29,7 +29,7 @@ public class SigiloDocumentoService implements Serializable {
     @In
     private SigiloDocumentoManager sigiloDocumentoManager;
 
-    public boolean possuiPermissao(ProcessoDocumento documento,
+    public boolean possuiPermissao(Documento documento,
             UsuarioLogin usuario) {
         SigiloDocumento sigiloDocumento = sigiloDocumentoManager.getSigiloDocumentoAtivo(documento);
         if (sigiloDocumento != null) {

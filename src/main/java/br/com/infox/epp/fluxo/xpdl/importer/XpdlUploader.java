@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.xpdl.importer;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -9,9 +11,11 @@ import org.richfaces.model.UploadedFile;
 
 @Name(XpdlUploader.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class XpdlUploader implements FileUploadListener {
+public class XpdlUploader implements FileUploadListener, Serializable {
 
-    public static final String NAME = "xpdlUploader";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "xpdlUploader";
+	
     private byte[] data;
 
     @Override

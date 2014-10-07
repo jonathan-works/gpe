@@ -58,7 +58,7 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 			boolean existeLoc = getManager().existeUnidadeColegiadaComLocalizacao(idLocalizacao);
 			if (existeLoc){
 				FacesMessages.instance().clearGlobalMessages();
-				FacesMessages.instance().add("#{messages['unidadeDecisoraColegiada.jaExisteLocalizacao']}");
+				FacesMessages.instance().add("#{eppmessages['unidadeDecisoraColegiada.jaExisteLocalizacao']}");
 			}
 		}
 		return ret;
@@ -69,7 +69,7 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 		boolean existeLoc = unidadeDecisoraMonocraticaManager.existeUnidadeMonocraticaComLocalizacao(getInstance().getLocalizacao().getIdLocalizacao());
 		if(existeLoc){
 			FacesMessages.instance().clearGlobalMessages();
-			FacesMessages.instance().add("#{messages['unidadeDecisoraMonocratica.jaExisteLocalizacao']}");
+			FacesMessages.instance().add("#{eppmessages['unidadeDecisoraMonocratica.jaExisteLocalizacao']}");
 			return false;
 		}
 		return super.isInstanceValid();

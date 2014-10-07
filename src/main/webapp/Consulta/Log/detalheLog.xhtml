@@ -24,17 +24,17 @@
     value="#{entidadeLogList.getEntityLogDetailList(param.idPesquisa)}"
     var="var">
     <rich:column>
-      <f:facet name="header">#{messages['log.nomeAtributo']}</f:facet>
+      <f:facet name="header">#{eppmessages['log.nomeAtributo']}</f:facet>
       <h:outputText value="#{var.nomeAtributo}" />
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{messages['log.valorAnterior']}</f:facet>
+      <f:facet name="header">#{eppmessages['log.valorAnterior']}</f:facet>
       <h:outputText
         value="#{var.valorAnterior == null ? 'null' : var.valorAnterior}"
         escape="!var.isBinario()" />
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{messages['log.valorAtual']}</f:facet>
+      <f:facet name="header">#{eppmessages['log.valorAtual']}</f:facet>
       <h:outputText
         value="#{var.valorAtual == null ? 'null' : var.valorAtual}"
         escape="!var.isBinario()" />
@@ -42,7 +42,7 @@
   </rich:dataTable>
 
   <div class="btn-cont">
-    <button id="btnimprimir" class="noprint" onclick="print();">#{messages['button.print']}</button>
+    <button id="btnimprimir" class="noprint" onclick="print();">#{eppmessages['button.print']}</button>
   </div>
 </h:body>
 </html>

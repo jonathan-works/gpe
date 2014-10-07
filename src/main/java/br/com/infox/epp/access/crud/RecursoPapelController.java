@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.crud;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -12,14 +13,14 @@ import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
 import br.com.infox.seam.security.operation.UpdateResourcesOperation;
 
-@Name(RecursoPapelController.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class RecursoPapelController {
+@Name(RecursoPapelController.NAME)
+public class RecursoPapelController implements Serializable {
 
-    public static final String NAME = "recursoPapelController";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "recursoPapelController";
 
     private Recurso recurso;
-
     private List<String> papeis;
     private List<String> papeisDisponiveis;
 

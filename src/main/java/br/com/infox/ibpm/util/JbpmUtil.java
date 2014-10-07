@@ -28,8 +28,8 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.constants.FloatFormatConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -138,11 +138,11 @@ public class JbpmUtil {
         if (isTypeEditor(type)) {
             Integer id = (Integer) variable;
             if (id != null) {
-                ProcessoDocumento processoDocumento = processoDocumentoManager().find(id);
-                if (processoDocumento == null) {
-                    LOG.warn("ProcessoDocumento não encontrado: " + id);
+                Documento documento = documentoManager().find(id);
+                if (documento == null) {
+                    LOG.warn("Documento não encontrado: " + id);
                 } else {
-                    variable = processoDocumento.getProcessoDocumentoBin().getModeloDocumento();
+                    variable = documento.getDocumentoBin().getModeloDocumento();
                 }
             }
         } else if (VariableType.BOOLEAN.name().equals(type)) {
@@ -172,8 +172,8 @@ public class JbpmUtil {
         return VariableType.EDITOR.name().equals(type);
     }
 
-    private ProcessoDocumentoManager processoDocumentoManager() {
-        return ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+    private DocumentoManager documentoManager() {
+        return ComponentUtil.getComponent(DocumentoManager.NAME);
     }
 
     private static ProcessoManager processoManager() {

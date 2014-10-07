@@ -42,7 +42,7 @@
       onkeyup="counterTextarea(this,#{maxlength});">
       <ui:insert />
     </h:inputTextarea>
-    <s:div rendered="#{showCounter and showMaxLength}">
+    <s:div id="#{id}counterDiv" rendered="#{showCounter and showMaxLength}">
       (0 / #{maxlength})
     </s:div>
   </s:decorate>

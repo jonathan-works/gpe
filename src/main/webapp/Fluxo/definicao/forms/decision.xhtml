@@ -10,7 +10,7 @@
     
        <f:facet name="header">
         
-           <h:outputText value="#{messages['expressionWizard.title']}" />
+           <h:outputText value="#{eppmessages['expressionWizard.title']}" />
             
        </f:facet>
        
@@ -18,7 +18,7 @@
 	   
             <ui:param name="id" value="expression" />
             
-            <ui:param name="value" value="#{nodeFitter.currentDecisionExpression}" />
+            <ui:param name="value" value="#{nodeFitter.currentNode.tokenStack}" />
             
         </ui:include>
 	        

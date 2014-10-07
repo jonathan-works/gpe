@@ -9,18 +9,18 @@ import org.quartz.Trigger;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.manager.BamTimerManager;
-import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 public abstract class BamTimerProcessor {
+	
     private static final LogProvider LOG = Logging.getLogProvider(BamTimerProcessor.class);
 
-    public abstract QuartzTriggerHandle increaseTimeSpent(
-            @IntervalCron String cron);
+    public abstract QuartzTriggerHandle increaseTimeSpent(@IntervalCron String cron);
 
     protected abstract String getParameterName();
 
-    protected abstract ProcessoEpaTarefaManager getProcessoEpaTarefamanager();
+    protected abstract ProcessoTarefaManager getProcessoTarefaManager();
 
     protected abstract BamTimerManager getBamTimerManager();
 
@@ -36,7 +36,7 @@ public abstract class BamTimerProcessor {
         }
         if (trigger != null) {
             try {
-                getProcessoEpaTarefamanager().updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), d);
+                getProcessoTarefaManager().updateTarefasNaoFinalizadas(trigger.getPreviousFireTime(), d);
             } catch (DAOException e) {
                 LOG.error(".updateTarefasNaoFinalizadas(d)", e);
             }

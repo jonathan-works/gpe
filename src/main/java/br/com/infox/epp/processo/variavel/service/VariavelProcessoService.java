@@ -38,10 +38,13 @@ public class VariavelProcessoService {
         Map<String, Object> jbpmVariables = contextInstance.getVariables();
 
         for (String variableName : jbpmVariables.keySet()) {
-            if (variableName.startsWith(DefinicaoVariavelProcessoManager.JBPM_VARIABLE_TYPE
-                    + ":")) {
-                DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processoEpa.getNaturezaCategoriaFluxo().getFluxo(), variableName);
-                variaveis.add(buildVariavelProcesso(definicao, processInstance));
+            if (variableName != null) {
+                DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager
+                        .getDefinicao(processoEpa.getNaturezaCategoriaFluxo().getFluxo(), variableName);
+
+                if (definicao != null && definicao.getVisivel()) {
+                    variaveis.add(buildVariavelProcesso(definicao, processInstance));
+                }
             }
         }
 

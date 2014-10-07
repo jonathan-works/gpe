@@ -14,15 +14,15 @@
 				   widths="2 3 3 3 2 2 2 2 2"
 				   headerText="#{produtividadeAction.criteria}">
 				   
-		<wi:reportColumnHeader title="#{messages['usuario.usuario']}" />
-		<wi:reportColumnHeader title="#{messages['produtividade.localizacao']}" />
-		<wi:reportColumnHeader title="#{messages['produtividade.papel']}" />
-		<wi:reportColumnHeader title="#{messages['produtividade.tarefa']}" />
-		<wi:reportColumnHeader title="#{messages['produtividade.quantidade']}" />
-		<wi:reportColumnHeader title="#{messages['produtividade.tempoMedio']}" />
-		<wi:reportColumnHeader title="#{messages['produtividade.tempoPrevisto']}" />
-		<wi:reportColumnHeader title="#{messages['produtividade.tempoMinimo']}" />
-		<wi:reportColumnHeader title="#{messages['produtividade.tempoMaximo']}" />
+		<wi:reportColumnHeader title="#{eppmessages['usuario.usuario']}" />
+		<wi:reportColumnHeader title="#{eppmessages['produtividade.localizacao']}" />
+		<wi:reportColumnHeader title="#{eppmessages['produtividade.papel']}" />
+		<wi:reportColumnHeader title="#{eppmessages['produtividade.tarefa']}" />
+		<wi:reportColumnHeader title="#{eppmessages['produtividade.quantidade']}" />
+		<wi:reportColumnHeader title="#{eppmessages['produtividade.tempoMedio']}" />
+		<wi:reportColumnHeader title="#{eppmessages['produtividade.tempoPrevisto']}" />
+		<wi:reportColumnHeader title="#{eppmessages['produtividade.tempoMinimo']}" />
+		<wi:reportColumnHeader title="#{eppmessages['produtividade.tempoMaximo']}" />
 				
 		<ui:repeat var="row" value="#{produtividadeAction.list(10000)}">
 			

@@ -23,8 +23,8 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -53,6 +53,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 @BypassInterceptors
 public class TaskInstanceView implements Serializable {
+	
     private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceView.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceView";
@@ -104,13 +105,13 @@ public class TaskInstanceView implements Serializable {
                             properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
                             if (value != null) {
                                 try {
-                                    ProcessoDocumento processoDocumento = processoDocumentoManager().find(Integer.parseInt(value.toString(), 10));
-                                    if (processoDocumento != null) {
-                                        properties.put("modeloDocumentoRO", processoDocumento.getProcessoDocumentoBin().getModeloDocumento());
-                                        properties.put("tipoProcessoDocumentoRO", processoDocumento.getTipoProcessoDocumento());
+                                    Documento documento = documentoManager().find(Integer.parseInt(value.toString(), 10));
+                                    if (documento != null) {
+                                        properties.put("modeloDocumentoRO", documento.getDocumentoBin().getModeloDocumento());
+                                        properties.put("tipoProcessoDocumentoRO", documento.getClassificacaoDocumento());
                                     }
                                 } catch (NumberFormatException e) {
-                                    LOG.error("Identificador de Processo Documento inválido", e);
+                                    LOG.error("Identificador de Documento inválido", e);
                                 }
                             }
                         }
@@ -137,9 +138,9 @@ public class TaskInstanceView implements Serializable {
                             ff.setType(type.name());
                             ff.getProperties().put("readonly", true);
                             if (value != null) {
-                                ProcessoDocumento documento = processoDocumentoManager().find(value);
-                                ff.setValue(documento.getProcessoDocumento());
-                                ff.getProperties().put("classificacaoDocumento", documento.getTipoProcessoDocumento().getTipoProcessoDocumento());
+                                Documento documento = documentoManager().find(value);
+                                ff.setValue(documento.getDescricao());
+                                ff.getProperties().put("classificacaoDocumento", documento.getClassificacaoDocumento().getDescricao());
                             } else {
                                 ff.setValue("(sem anexo)");
                                 ff.getProperties().put("classificacaoDocumento", "(sem anexo)");
@@ -174,7 +175,7 @@ public class TaskInstanceView implements Serializable {
         taskInstance = newInstance;
     }
 
-    private ProcessoDocumentoManager processoDocumentoManager() {
-        return ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
+    private DocumentoManager documentoManager() {
+        return ComponentUtil.getComponent(DocumentoManager.NAME);
     }
 }

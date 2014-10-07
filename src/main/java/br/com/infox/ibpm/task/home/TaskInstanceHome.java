@@ -40,10 +40,9 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.documento.dao.TipoProcessoDocumentoDAO;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
-import br.com.infox.epp.documento.entity.TipoProcessoDocumentoPapel;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
@@ -52,14 +51,14 @@ import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.home.ProcessoHome;
+import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
-import br.com.infox.epp.tarefa.entity.ProcessoEpaTarefa;
-import br.com.infox.epp.tarefa.manager.ProcessoEpaTarefaManager;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
@@ -100,15 +99,13 @@ public class TaskInstanceHome implements Serializable {
     private Boolean assinado = Boolean.FALSE;
     private TaskInstance currentTaskInstance;
     private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
-    private Map<String, TipoProcessoDocumento> classificacoesVariaveisUpload;
-    @In
-    private TipoProcessoDocumentoDAO tipoProcessoDocumentoDAO;
+    private Map<String, ClassificacaoDocumento> classificacoesVariaveisUpload;
     @In
     private SituacaoProcessoManager situacaoProcessoManager;
     @In
     private ProcessoManager processoManager;
     @In
-    private ProcessoEpaTarefaManager processoEpaTarefaManager;
+    private ProcessoTarefaManager processoTarefaManager;
     @In
     private TaskInstanceManager taskInstanceManager;
     @In
@@ -164,14 +161,14 @@ public class TaskInstanceHome implements Serializable {
             DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
             Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
             if (id != null) {
-                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
-                ProcessoDocumento pd = processoDocumentoManager.find(id);
+                DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+                Documento pd = documentoManager.find(id);
                 if (pd != null) {
                     dados.setIdDocumento(id);
-                    dados.setClassificacao(pd.getTipoProcessoDocumento());
+                    dados.setClassificacao(pd.getClassificacaoDocumento());
                 }
             }
-            List<TipoProcessoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(true, getVariableName(variableRetriever.getName()), ((ProcessoEpa)ProcessoHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
+            List<ClassificacaoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true, getVariableName(variableRetriever.getName()), ((ProcessoEpa)ProcessoEpaHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
             if (useableTipoProcessoDocumento != null && useableTipoProcessoDocumento.size()>0 && dados.getClassificacao() == null){
                 dados.setClassificacao(useableTipoProcessoDocumento.get(0));
             }
@@ -179,9 +176,9 @@ public class TaskInstanceHome implements Serializable {
         } else if (variableRetriever.isVariableType(VariableType.FILE)) {
             Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
             if (id != null) {
-                ProcessoDocumentoManager processoDocumentoManager = ComponentUtil.getComponent(ProcessoDocumentoManager.NAME);
-                ProcessoDocumento pd = processoDocumentoManager.find(id);
-                classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), pd.getTipoProcessoDocumento());
+                DocumentoManager documentoManger = ComponentUtil.getComponent(DocumentoManager.NAME);
+                Documento pd = documentoManger.find(id);
+                classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), pd.getClassificacaoDocumento());
             } else {
                 classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), null);
             }
@@ -256,7 +253,7 @@ public class TaskInstanceHome implements Serializable {
         updateTransitions();
         // Necessário para gravar a prioridade do processo ao clicar no botão
         // Gravar
-        // Não pode usar ProcessoHome.instance().update() porque por algum
+        // Não pode usar ProcessoEpaHome.instance().update() porque por algum
         // motivo dá um NullPointerException
         // ao finalizar a tarefa, algo relacionado às mensagens do Seam
         taskInstanceManager.flush();
@@ -276,8 +273,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void updateVariable(VariableAccess variableAccess) {
         boolean documentoCorreto = false;
-        String fieldName = getFieldName(variableAccess.getMappedName().split(
-                ":")[1]);
+        String fieldName = getFieldName(variableAccess.getMappedName().split(":")[1]);
         if (documentoAAssinar != null && fieldName.equals(documentoAAssinar)) {
             documentoCorreto = true;
         }
@@ -288,10 +284,10 @@ public class TaskInstanceHome implements Serializable {
             if (variableResolver.isEditor() && variableAccess.isReadable()) {
                 DadosDocumentoAssinavel dados = documentosAssinaveis
                         .get(fieldName);
-                ProcessoHome processoHome = ProcessoHome.instance();
-                processoHome.setTipoProcessoDocumento(dados.getClassificacao());
-                processoHome.setSignature(dados.getSignature());
-                processoHome.setCertChain(dados.getCertChain());
+                ProcessoEpaHome processoEpaHome = ProcessoEpaHome.instance();
+                processoEpaHome.setClassificacaoDocumento(dados.getClassificacao());
+                processoEpaHome.setSignature(dados.getSignature());
+                processoEpaHome.setCertChain(dados.getCertChain());
             }
             variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
             variableResolver.resolve();
@@ -318,7 +314,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private Boolean checkAccess() {
-        int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
+        int idProcesso = ProcessoEpaHome.instance().getInstance().getIdProcesso();
         String login = Authenticator.getUsuarioLogado().getLogin();
         if (processoManager.checkAccess(idProcesso, login)) {
             return Boolean.TRUE;
@@ -392,7 +388,7 @@ public class TaskInstanceHome implements Serializable {
         TaskConteudoDAO taskConteudoDAO = ComponentUtil
                 .getComponent(TaskConteudoDAO.NAME);
         TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
-        int idProcesso = ProcessoHome.instance().getInstance().getIdProcesso();
+        int idProcesso = ProcessoEpaHome.instance().getInstance().getIdProcesso();
         if (taskConteudo != null) {
             try {
                 taskConteudoDAO.update(taskConteudo);
@@ -431,8 +427,8 @@ public class TaskInstanceHome implements Serializable {
     public String end(String transition) {
         if (checkAccess()) {
             checkCurrentTask();
-            ProcessoHome processoHome = ComponentUtil
-                    .getComponent(ProcessoHome.NAME);
+            ProcessoEpaHome processoHome = ComponentUtil
+                    .getComponent(ProcessoEpaHome.NAME);
 
             if (!update()) {
                 return null;
@@ -525,24 +521,23 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private void atualizarBam() {
-        ProcessoEpaTarefa pt = processoEpaTarefaManager
-                .getByTaskInstance(taskInstance.getId());
+        ProcessoTarefa pt = processoTarefaManager.getByTaskInstance(taskInstance.getId());
         Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
         try {
-            processoEpaTarefaManager.update(pt);
-            processoEpaTarefaManager.updateTempoGasto(dtFinalizacao, pt);
+        	processoTarefaManager.update(pt);
+        	processoTarefaManager.updateTempoGasto(dtFinalizacao, pt);
         } catch (DAOException e) {
             LOG.error(".atualizarBam()", e);
         }
     }
 
-    private void limparEstado(ProcessoHome processoHome) {
+    private void limparEstado(ProcessoEpaHome processoEpaHome) {
         this.currentTaskInstance = null;
-        processoHome.setIdProcessoDocumento(null);
-        processoHome.setCertChain(null);
-        processoHome.setSignature(null);
-        processoHome.setTipoProcessoDocumento(null);
+        processoEpaHome.setIdDocumento(null);
+        processoEpaHome.setCertChain(null);
+        processoEpaHome.setSignature(null);
+        processoEpaHome.setClassificacaoDocumento(null);
     }
 
     private void checkCurrentTask() {
@@ -576,11 +571,9 @@ public class TaskInstanceHome implements Serializable {
 
     public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
         try {
-            final Map<String, Object> result = processoEpaTarefaManager
-                    .findProcessoEpaTarefaByIdProcessoAndIdTarefa(idProcesso,
-                            idTarefa);
-            taskInstanceManager.removeUsuario((Long) result
-                    .get("idTaskInstance"));
+            final Map<String, Object> result = processoTarefaManager
+                    .findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
+            taskInstanceManager.removeUsuario((Long) result.get("idTaskInstance"));
             afterLiberarTarefa();
         } catch (NoResultException e) {
             LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
@@ -813,12 +806,12 @@ public class TaskInstanceHome implements Serializable {
     private boolean podeAssinar(String idEditor,
             UsuarioPerfil usuarioPerfilAtual) {
         boolean assinavel = false;
-        TipoProcessoDocumento classificacao = documentosAssinaveis
+        ClassificacaoDocumento classificacao = documentosAssinaveis
                 .get(idEditor).getClassificacao();
         if (classificacao != null) {
-            List<TipoProcessoDocumentoPapel> tipoProcessoDocumentoPapeis = classificacao
-                    .getTipoProcessoDocumentoPapeis();
-            for (TipoProcessoDocumentoPapel tipoProcessoDocumentoPapel : tipoProcessoDocumentoPapeis) {
+            List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = classificacao
+                    .getClassificacaoDocumentoPapelList();
+            for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
                 if (usuarioPerfilAtual.getPerfilTemplate().getPapel().equals(tipoProcessoDocumentoPapel.getPapel())
                 		&& tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P) {
                 	assinavel = true;
@@ -833,7 +826,7 @@ public class TaskInstanceHome implements Serializable {
         return documentosAssinaveis;
     }
     
-    public Map<String, TipoProcessoDocumento> getClassificacoesVariaveisUpload() {
+    public Map<String, ClassificacaoDocumento> getClassificacoesVariaveisUpload() {
         return classificacoesVariaveisUpload;
     }
     
@@ -867,8 +860,8 @@ public class TaskInstanceHome implements Serializable {
         return classificacaoDocumentoFacade.getTipoAssinaturaEnumValues();
     }
     
-    public List<TipoProcessoDocumento> getUseableTipoProcessoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
-        return classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(isModelo, nomeVariavel, idFluxo);
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
+        return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
     }
     
 }

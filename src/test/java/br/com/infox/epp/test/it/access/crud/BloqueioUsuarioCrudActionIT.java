@@ -35,10 +35,10 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.service.AccessMailService;
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
@@ -70,10 +70,10 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
                     ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
                     ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,SendmailCommand.class,
                     DominioVariavelTarefaManager.class, DominioVariavelTarefaDAO.class,
-                    ProcessoDocumentoManager.class, ProcessoDocumentoDAO.class, SessionAssistant.class,
+                    DocumentoManager.class, DocumentoDAO.class, SessionAssistant.class,
                     SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
                     SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
-                    ProcessoDocumentoBinDAO.class, ProcessoDocumentoBinManager.class)
+                    DocumentoBinDAO.class, DocumentoBinManager.class)
         .createDeployment();
     }
     
@@ -87,20 +87,20 @@ public class BloqueioUsuarioCrudActionIT extends AbstractCrudTest<BloqueioUsuari
      * 
     <wi:dataForm
         formId="bloqueioUsuarioForm"
-        formTitle="#{messages['form.title']}"
+        formTitle="#{eppmessages['form.title']}"
         home="#{bloqueioUsuarioCrudAction}"
         requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
         <wi:outputText
             id="bloqueio"
             value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? 'Sim': 'Não'}"
-            label="#{messages['usuario.bloqueio']}" />
+            label="#{eppmessages['usuario.bloqueio']}" />
         
         <ui:define name="buttons">
            <wi:commandButton id="bloqueioButton" rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-               value="#{messages['usuario.bloquear']}" action="bloqueioUsuarioCrudAction.bloquear"
+               value="#{eppmessages['usuario.bloquear']}" action="bloqueioUsuarioCrudAction.bloquear"
                reRender="historicoBloqueioUsuario, pageBodyDialogMessage"/>
            <wi:commandButton id="desbloqueioButton" rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-               value="#{messages['usuario.desbloquear']}" action="bloqueioUsuarioCrudAction.desbloquear"
+               value="#{eppmessages['usuario.desbloquear']}" action="bloqueioUsuarioCrudAction.desbloquear"
                reRender="historicoBloqueioUsuario, pageBodyDialogMessage"/>
         </ui:define>
     </wi:dataForm>

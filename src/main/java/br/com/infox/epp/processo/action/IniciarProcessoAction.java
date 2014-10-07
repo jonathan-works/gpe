@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.action;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,8 +17,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -42,9 +43,10 @@ import br.com.infox.seam.exception.BusinessException;
 
 @Name(IniciarProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class IniciarProcessoAction {
+public class IniciarProcessoAction implements Serializable {
 
-    public static final String NAME = "iniciarProcessoAction";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "iniciarProcessoAction";
     private static final LogProvider LOG = Logging.getLogProvider(IniciarProcessoAction.class);
 
     @In

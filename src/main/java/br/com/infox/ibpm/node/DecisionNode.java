@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
+import org.jboss.el.parser.ParseException;
 import org.jboss.seam.international.Messages;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmException;
@@ -21,6 +22,9 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
+import br.com.infox.epp.documento.entity.Variavel;
+import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.ibpm.process.definition.expressionWizard.ExpressionTokenizer;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.VariableCollector;
 import br.com.infox.seam.exception.ApplicationException;
@@ -34,7 +38,26 @@ public class DecisionNode extends Node {
     private List<String> booleanVariables = new ArrayList<>();
     private List<String> numberVariables = new ArrayList<>();
     private List<String> leavingTransitionList = new ArrayList<>();
+    private List<String> stringVariables = new ArrayList<>();
 
+    public List<String> getStringVariables(List<DefinicaoVariavelProcesso> processVariables, List<Variavel> externalVariables){
+        List<String> variables = getProcessedVariables(stringVariables, VariableType.STRING, VariableType.ENUMERATION);
+        
+        for (DefinicaoVariavelProcesso variable : processVariables) {
+        	String name = variable.getNome();
+			if (name == null) {
+				throw new ApplicationException(Messages.instance().get("processDefinition.variable.invalid"));
+			}
+			variables.add(format("''{0}''", name));
+		}
+        
+        for (Variavel variavel : externalVariables) {
+            variables.add(format("''{0}''", variavel.getValorVariavel().replaceAll("[#\\{\\}]", "")));
+        }
+        
+        return variables;
+    }
+    
     public List<String> getNumberVariables() {
         return getProcessedVariables(numberVariables, VariableType.INTEGER, VariableType.MONETARY);
     }
@@ -73,6 +96,24 @@ public class DecisionNode extends Node {
         this.decisionExpression = decisionExpression;
     }
 
+    public String getTokenStack(){
+        String result="";
+        try {
+            if (decisionExpression==null){
+                decisionExpression=format("#'{'{0}'}'", getLeavingTransitionList().get(0));
+            }
+            result = ExpressionTokenizer.toNodeJSON(decisionExpression);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public void setTokenStack(String stack){
+        this.decisionExpression=ExpressionTokenizer.fromNodeJSON(stack);
+    }
+    
     // ----------
 
     public DecisionNode() {

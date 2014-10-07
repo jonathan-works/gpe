@@ -5,8 +5,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 final class TaskVariableRetriever extends TaskVariable {
@@ -50,34 +50,28 @@ final class TaskVariableRetriever extends TaskVariable {
     }
 
     private Object getConteudoEditor(Object variable) {
-        Integer idProcessoDocumento = (Integer) variable;
-        if (idProcessoDocumento != null) {
-            ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
-                    .getComponent(ProcessoDocumentoManager.NAME);
-            Object modeloDocumento = processoDocumentoManager
-                    .getModeloDocumentoByIdProcessoDocumento(idProcessoDocumento);
+        Integer idDocumento = (Integer) variable;
+        if (idDocumento != null) {
+            DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+            Object modeloDocumento = documentoManager.getModeloDocumentoByIdDocumento(idDocumento);
             if (modeloDocumento != null) {
                 variable = modeloDocumento;
             } else {
-                LOG.warn("ProcessoDocumento não encontrado: "
-                        + idProcessoDocumento);
+                LOG.warn("Documento não encontrado: " + idDocumento);
             }
         }
         return variable;
     }
     
     private Object getNomeFileUploaded(Object variable) {
-        Integer idProcessoDocumento = (Integer) variable;
-        if (idProcessoDocumento != null) {
-            ProcessoDocumentoManager processoDocumentoManager = ComponentUtil
-                    .getComponent(ProcessoDocumentoManager.NAME);
-            ProcessoDocumento documento = processoDocumentoManager
-                    .find(idProcessoDocumento);
+        Integer idDocumento = (Integer) variable;
+        if (idDocumento != null) {
+            DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+            Documento documento = documentoManager.find(idDocumento);
             if (documento != null) {
-                variable = documento.getProcessoDocumento();
+                variable = documento.getDescricao();
             } else {
-                LOG.warn("ProcessoDocumento não encontrado: "
-                        + idProcessoDocumento);
+                LOG.warn("Documento não encontrado: " + idDocumento);
             }
         }
         return variable;

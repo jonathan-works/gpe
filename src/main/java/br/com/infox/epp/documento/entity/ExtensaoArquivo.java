@@ -6,6 +6,8 @@ import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.documento.query.ExtensaoArquivoQuery.LIMITE_EXTENSAO;
 import static br.com.infox.epp.documento.query.ExtensaoArquivoQuery.LIMITE_EXTENSAO_QUERY;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,94 +25,131 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="tb_extensao_arquivo")
+@Table(name = ExtensaoArquivo.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name=LIMITE_EXTENSAO, query=LIMITE_EXTENSAO_QUERY)
 })
-public class ExtensaoArquivo {
+public class ExtensaoArquivo implements Serializable {
     
-    private Integer idExtensaoArquivo;
-    private TipoProcessoDocumento tipoProcessoDocumento;
-    private String nomeExtensao;
-    private String extensao;
-    private Integer tamanho;
-    private Boolean paginavel;
-    private Integer tamanhoPorPagina;
+	private static final long serialVersionUID = 1L;
+	public static final String TABLE_NAME = "tb_extensao_arquivo";
 
+	@Id
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = "sq_tb_extensao_arquivo")
-    @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_extensao_arquivo", unique = true, nullable = false)
-    public Integer getIdExtensaoArquivo() {
-        return idExtensaoArquivo;
-    }
-    
-    public void setIdExtensaoArquivo(Integer idExtensaoArquivo) {
-        this.idExtensaoArquivo = idExtensaoArquivo;
-    }
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
-    @NotNull
-    public TipoProcessoDocumento getTipoProcessoDocumento() {
-        return tipoProcessoDocumento;
-    }
+    private Integer idExtensaoArquivo;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_classificacao_documento", nullable = false)
+    private ClassificacaoDocumento classificacaoDocumento;
+	
+	@NotNull
+	@Size(min = FLAG, max = DESCRICAO_PEQUENA)
+	@Column(name = "nm_extensao", nullable = false, length = DESCRICAO_PEQUENA, unique = true)
+    private String nomeExtensao;
+	
+	@NotNull
+	@Size(min = FLAG, max = DESCRICAO_PEQUENA)
+	@Column(name = "ds_extensao", nullable = false, length = DESCRICAO_PEQUENA, unique = true)
+    private String extensao;
+	
+	@Min(1)
+	@NotNull
+	@Column(name = "nr_tamanho", nullable = false)
+    private Integer tamanho;
+	
+	@NotNull
+	@Column(name = "in_paginavel", nullable = false)
+    private Boolean paginavel;
+	
+	@Min(1)
+	@Column(name = "nr_tamanho_pagina", nullable = true)
+    private Integer tamanhoPorPagina;
 
-    public void setTipoProcessoDocumento(TipoProcessoDocumento tipoProcessoDocumento) {
-        this.tipoProcessoDocumento = tipoProcessoDocumento;
-    }
+	public Integer getIdExtensaoArquivo() {
+		return idExtensaoArquivo;
+	}
 
-    @Column(name = "nm_extensao", nullable = false, length = DESCRICAO_PEQUENA, unique = true)
-    @Size(min = FLAG, max = DESCRICAO_PEQUENA)
-    @NotNull
-    public String getNomeExtensao() {
-        return nomeExtensao;
-    }
-    
-    public void setNomeExtensao(String nomeExtensao) {
-        this.nomeExtensao = nomeExtensao;
-    }
+	public void setIdExtensaoArquivo(Integer idExtensaoArquivo) {
+		this.idExtensaoArquivo = idExtensaoArquivo;
+	}
 
-    @Column(name = "ds_extensao", nullable = false, length = DESCRICAO_PEQUENA, unique = true)
-    @Size(min = FLAG, max = DESCRICAO_PEQUENA)
-    @NotNull
-    public String getExtensao() {
-        return extensao;
-    }
+	public ClassificacaoDocumento getClassificacaoDocumento() {
+		return classificacaoDocumento;
+	}
 
-    public void setExtensao(String extensao) {
-        this.extensao = extensao;
-    }
-    
-    @Column(name = "nr_tamanho", nullable = false)
-    @NotNull
-    @Min(1)
-    public Integer getTamanho() {
-        return this.tamanho;
-    }
+	public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+		this.classificacaoDocumento = classificacaoDocumento;
+	}
 
-    public void setTamanho(Integer tamanho) {
-        this.tamanho = tamanho;
-    }
+	public String getNomeExtensao() {
+		return nomeExtensao;
+	}
 
-    @Column(name = "in_paginavel", nullable = false)
-    @NotNull
-    public Boolean getPaginavel() {
-        return paginavel;
-    }
+	public void setNomeExtensao(String nomeExtensao) {
+		this.nomeExtensao = nomeExtensao;
+	}
 
-    public void setPaginavel(Boolean paginavel) {
-        this.paginavel = paginavel;
-    }
+	public String getExtensao() {
+		return extensao;
+	}
 
-    @Column(name = "nr_tamanho_pagina", nullable = true)
-    @Min(1)
-    public Integer getTamanhoPorPagina() {
-        return tamanhoPorPagina;
-    }
+	public void setExtensao(String extensao) {
+		this.extensao = extensao;
+	}
 
-    public void setTamanhoPorPagina(Integer tamanhoPorPagina) {
-        this.tamanhoPorPagina = tamanhoPorPagina;
-    }
+	public Integer getTamanho() {
+		return tamanho;
+	}
 
+	public void setTamanho(Integer tamanho) {
+		this.tamanho = tamanho;
+	}
+
+	public Boolean getPaginavel() {
+		return paginavel;
+	}
+
+	public void setPaginavel(Boolean paginavel) {
+		this.paginavel = paginavel;
+	}
+
+	public Integer getTamanhoPorPagina() {
+		return tamanhoPorPagina;
+	}
+
+	public void setTamanhoPorPagina(Integer tamanhoPorPagina) {
+		this.tamanhoPorPagina = tamanhoPorPagina;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((getIdExtensaoArquivo() == null) ? 0 : getIdExtensaoArquivo()
+						.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof ExtensaoArquivo))
+			return false;
+		ExtensaoArquivo other = (ExtensaoArquivo) obj;
+		if (getIdExtensaoArquivo() == null) {
+			if (other.getIdExtensaoArquivo() != null)
+				return false;
+		} else if (!getIdExtensaoArquivo().equals(other.getIdExtensaoArquivo()))
+			return false;
+		return true;
+	}
 }
+

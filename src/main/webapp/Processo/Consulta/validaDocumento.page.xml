@@ -6,7 +6,6 @@
 
   <begin-conversation join="true" />
 
-  <param name="idProcessoDocumento" value="#{validaDocumentoAction.idProcessoDocumento}"
-    converterId="integerConverter" />
+  <param name="idDocumento" value="#{validaDocumentoAction.idDocumento}" converterId="integerConverter" />
 
 </page>

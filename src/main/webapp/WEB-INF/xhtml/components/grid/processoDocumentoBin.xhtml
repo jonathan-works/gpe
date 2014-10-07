@@ -18,7 +18,7 @@
         value="#{empty bin.extensao}"
     />
     <div id="teste">
-        <span class="#{row.ativo ? '' : 'inativo'}" />
+        <span class="#{row.excluido ? 'inativo' : ''}" />
         <h:commandLink
             action="#{documentoHtmlView.setViewInstance(row)}"
             onclick="openPopUp('PopUpDocumentoBin', '')"
@@ -26,7 +26,7 @@
             target="PopUpDocumentoBin"
         >
             <h:graphicImage
-                title="#{messages['processoDocumento.visualizar']}"
+                title="#{eppmessages['processoDocumento.visualizar']}"
                 url="#{a4jSkin.imgFolder}/view.gif"
             />
         </h:commandLink>
@@ -41,36 +41,30 @@
             />
         </h:commandLink>
         <s:link
-            target="idJan#{row.idProcessoDocumento}"
-            rendered="#{not empty bin.assinaturas}"
+            target="idJan#{row.id}"
+            rendered="#{not empty bin.assinaturas and not row.excluido}"
             view="/Processo/Consulta/validaDocumento.xhtml"
-            onclick="openPopUp('idJan#{row.idProcessoDocumento}', 'about:blank');"
+            onclick="openPopUp('idJan#{row.id}', 'about:blank');"
         >
             <h:graphicImage
-                title="#{messages['assinaturas.validar']}"
-                alt="#{messages['assinaturas.validar']}"
+                title="#{eppmessages['assinaturas.validar']}"
+                alt="#{eppmessages['assinaturas.validar']}"
                 url="#{a4jSkin.imgFolder}/lock.png"
             />
-            <f:param
-                value="#{row.idProcessoDocumento}"
-                name="idProcessoDocumento"
-            />
+            <f:param value="#{row.id}" name="idDocumento" />
         </s:link>
         <s:link
-            target="idJan#{row.idProcessoDocumento}"
-            rendered="#{empty bin.assinaturas}"
+            target="idJan#{row.id}"
+            rendered="#{empty bin.assinaturas and not row.excluido}"
             view="/Processo/Consulta/validaDocumento.xhtml"
-            onclick="infox.abrirPopUp('idJan#{row.idProcessoDocumento}');"
+            onclick="infox.abrirPopUp('idJan#{row.id}');"
         >
             <h:graphicImage
-                title="#{messages['assinaturas.assinar']}"
-                alt="#{messages['assinaturas.assinar']}"
+                title="#{eppmessages['assinaturas.assinar']}"
+                alt="#{eppmessages['assinaturas.assinar']}"
                 url="#{a4jSkin.imgFolder}/lock_unlock.png"
             />
-            <f:param
-                value="#{row.idProcessoDocumento}"
-                name="idProcessoDocumento"
-            />
+            <f:param value="#{row.id}" name="idDocumento" />
         </s:link>
     </div>
 </ui:composition>

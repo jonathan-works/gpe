@@ -38,10 +38,10 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.manager.GrupoModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoBinDAO;
-import br.com.infox.epp.processo.documento.dao.ProcessoDocumentoDAO;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoDAO;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
@@ -72,10 +72,10 @@ public class TipoModeloDocumentoCrudActionIT extends AbstractCrudTest<TipoModelo
                 ModeloDocumentoDAO.class, GrupoModeloDocumentoCrudActionIT.class,
                 GrupoModeloDocumentoCrudAtion.class, GrupoModeloDocumentoManager.class,
                 GrupoModeloDocumentoDAO.class, DominioVariavelTarefaManager.class, DominioVariavelTarefaDAO.class,
-                ProcessoDocumentoManager.class, ProcessoDocumentoDAO.class, SessionAssistant.class,
+                DocumentoManager.class, DocumentoDAO.class, SessionAssistant.class,
                 SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
                 SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
-                ProcessoDocumentoBinDAO.class, ProcessoDocumentoBinManager.class)
+                DocumentoBinDAO.class, DocumentoBinManager.class)
         .createDeployment();
     }
     
@@ -91,18 +91,18 @@ public class TipoModeloDocumentoCrudActionIT extends AbstractCrudTest<TipoModelo
             <wi:suggest id="grupoModeloDocumento"
                 suggestProvider="#{grupoModeloDocumentoSuggest}"
                 value="#{tipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
-                label="#{messages['tipoModeloDocumento.grupoModeloDocumento']}"
+                label="#{eppmessages['tipoModeloDocumento.grupoModeloDocumento']}"
                 required="true" />
             <wi:inputText id="tipoModeloDocumento"
-                label="#{messages['tipoModeloDocumento.tipoModeloDocumento']}"
+                label="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.tipoModeloDocumento}"
                 maxlength="50" required="true" />
             <wi:inputText id="abreviacao"
-                label="#{messages['tipoModeloDocumento.abreviacao']}"
+                label="#{eppmessages['tipoModeloDocumento.abreviacao']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.abreviacao}"
                 required="true" maxlength="5" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{tipoModeloDocumentoCrudAction.instance.ativo}" />
             */
         }

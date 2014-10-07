@@ -11,31 +11,31 @@
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
 
-    <ui:define name="title">#{messages['modeloDocumento.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['modeloDocumento.titlePage']}</ui:define>
     <ui:param name="home" value="#{modeloDocumentoCrudAction}" />
 
     <ui:define name="searchGrid">
 
         <wi:dataTable values="#{modeloDocumentoList.list(15)}"
             bean="#{modeloDocumentoList}"
-            tableTitle="#{messages['modeloDocumento.titleView']}"
+            tableTitle="#{eppmessages['modeloDocumento.titleView']}"
             id="modeloDocumentoList" rowId="#{row.idModeloDocumento}">
 
             <ui:define name="searchForm">
 
                 <wi:searchForm formId="modeloDocumentoSearchForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{eppmessages['searchForm.title']}">
 
                     <wi:inputText id="tituloModeloDocumento"
-                        label="#{messages['modeloDocumento.tituloModeloDocumento']}"
+                        label="#{eppmessages['modeloDocumento.tituloModeloDocumento']}"
                         value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
                     <wi:selectOneMenuEntity id="tipoModeloDocumento"
-                        label="#{messages['modeloDocumento.tipoModeloDocumento']}"
+                        label="#{eppmessages['modeloDocumento.tipoModeloDocumento']}"
                         value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
                         items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
                         showLabelTodos="true" />
                     <wi:selectSituacaoOneMenu id="situacao"
-                        label="#{messages['field.situacao']}"
+                        label="#{eppmessages['field.situacao']}"
                         value="#{modeloDocumentoList.entity.ativo}" />
 
                 </wi:searchForm>
@@ -43,13 +43,13 @@
             </ui:define>
 
             <wi:columnOutputText columnId="tituloModeloDocumento"
-                columnHeader="#{messages['modeloDocumento.tituloModeloDocumento']}"
+                columnHeader="#{eppmessages['modeloDocumento.tituloModeloDocumento']}"
                 value="#{row.tituloModeloDocumento}" />
             <wi:columnOutputText columnId="tipoModeloDocumento"
-                columnHeader="#{messages['modeloDocumento.tipoModeloDocumento']}"
+                columnHeader="#{eppmessages['modeloDocumento.tipoModeloDocumento']}"
                 value="#{row.tipoModeloDocumento}" />
             <wi:columnSituacao
-                columnHeader="#{messages['field.situacao']}"
+                columnHeader="#{eppmessages['field.situacao']}"
                 value="#{row.ativo}" />
 
         </wi:dataTable>
@@ -59,24 +59,24 @@
     <ui:define name="form">
 
         <wi:dataForm formId="modeloDocumentoForm"
-            formTitle="#{messages['form.title']}" isUploadForm="true">
+            formTitle="#{eppmessages['form.title']}" isUploadForm="true">
 
             <wi:selectOneMenuEntity id="tipoModeloDocumento"
-                label="#{messages['modeloDocumento.tipoModeloDocumento']}"
+                label="#{eppmessages['modeloDocumento.tipoModeloDocumento']}"
                 value="#{modeloDocumentoCrudAction.instance.tipoModeloDocumento}"
                 items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
                 required="true" inactiveCond="#{!item.ativo}"
                 showLabelSelecione="true" />
             <wi:inputText id="tituloModeloDocumento"
-                label="#{messages['modeloDocumento.tituloModeloDocumento']}"
+                label="#{eppmessages['modeloDocumento.tituloModeloDocumento']}"
                 value="#{modeloDocumentoCrudAction.instance.tituloModeloDocumento}"
                 required="true" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{modeloDocumentoCrudAction.instance.ativo}" />
             <div class="decoration-div">
 	            <wi:editor id="modeloDocumento"
-	                label="#{messages['modeloDocumento.modeloDocumento']}"
+	                label="#{eppmessages['modeloDocumento.modeloDocumento']}"
 	                value="#{modeloDocumentoCrudAction.instance.modeloDocumento}"
 	                showVariables="true" required="true" />
 	            <a:region>
@@ -93,13 +93,13 @@
 
         <infox:tab id="historicoModeloDocumento"
             rendered="#{modeloDocumentoCrudAction.isManaged()}"
-            title="#{messages['historicoModeloDocumento.titleTab']}"
+            title="#{eppmessages['historicoModeloDocumento.titleTab']}"
             name="historicoModeloDocumento">
 
             <wi:dataTable
                 values="#{historicoModeloDocumentoList.list(10)}"
                 bean="#{historicoModeloDocumentoList}"
-                tableTitle="#{messages['historicoModeloDocumento.titleView']}"
+                tableTitle="#{eppmessages['historicoModeloDocumento.titleView']}"
                 id="historicoModeloDocumentoList">
 
                 <ui:define name="headerToolBar">
@@ -114,33 +114,33 @@
 
                     <wi:searchForm
                         formId="historicoModeloDocumentoSearchForm"
-                        formTitle="#{messages['searchForm.title']}">
+                        formTitle="#{eppmessages['searchForm.title']}">
 
                         <wi:inputText
                             id="historicoTituloModeloDocumento"
-                            label="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+                            label="#{eppmessages['historicoModeloDocumento.tituloModeloDocumento']}"
                             value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
                         <wi:selectOneMenuEntity id="usuarioAlteracao"
-                            label="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
+                            label="#{eppmessages['historicoModeloDocumento.usuarioAlteracao']}"
                             value="#{historicoModeloDocumentoList.entity.usuarioAlteracao}"
                             items="#{historicoModeloDocumentoCrudAction.usuarioAlteracaoList}"
                             showLabelTodos="true" />
                         <wi:inputDate id="dataAlteracao"
                             value="#{historicoModeloDocumentoList.entity.dataAlteracao}"
-                            label="#{messages['historicoModeloDocumento.dataAlteracao']}" />
+                            label="#{eppmessages['historicoModeloDocumento.dataAlteracao']}" />
 
                     </wi:searchForm>
 
                 </ui:define>
 
                 <wi:columnOutputText columnId="tituloModeloDocumento"
-                    columnHeader="#{messages['historicoModeloDocumento.tituloModeloDocumento']}"
+                    columnHeader="#{eppmessages['historicoModeloDocumento.tituloModeloDocumento']}"
                     value="#{row.tituloModeloDocumento}" />
                 <wi:columnOutputText columnId="usuarioAlteracao"
-                    columnHeader="#{messages['historicoModeloDocumento.usuarioAlteracao']}"
+                    columnHeader="#{eppmessages['historicoModeloDocumento.usuarioAlteracao']}"
                     value="#{row.usuarioAlteracao}" />
                 <wi:columnOutputText columnId="dataAlteracao"
-                    columnHeader="#{messages['historicoModeloDocumento.dataAlteracao']}"
+                    columnHeader="#{eppmessages['historicoModeloDocumento.dataAlteracao']}"
                     value="#{row.dataAlteracao}">
 
                     <ui:define name="outputText">

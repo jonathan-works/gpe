@@ -1,5 +1,7 @@
 package br.com.infox.epp.turno.crud;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -17,19 +19,15 @@ import br.com.infox.epp.turno.component.TurnoHandler;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.manager.LocalizacaoTurnoManager;
 
-/**
- * 
- * @author Daniel
- * 
- */
-@Name(LocalizacaoTurnoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class LocalizacaoTurnoAction {
+@Name(LocalizacaoTurnoAction.NAME)
+public class LocalizacaoTurnoAction implements Serializable {
 
-    private static final int UMA_HORA_EM_MINUTOS = 60;
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "localizacaoTurnoAction";
+	private static final Log LOG = Logging.getLog(LocalizacaoTurnoAction.class);
 
-    public static final String NAME = "localizacaoTurnoAction";
-    private static final Log LOG = Logging.getLog(LocalizacaoTurnoAction.class);
+	private static final int UMA_HORA_EM_MINUTOS = 60;
 
     @In
     private LocalizacaoTurnoManager localizacaoTurnoManager;
@@ -87,9 +85,9 @@ public class LocalizacaoTurnoAction {
             }
         }
         if (!houveErro) {
-            FacesMessages.instance().add("#{messages['entity_updated']}");
+            FacesMessages.instance().add("#{eppmessages['entity_updated']}");
         } else {
-            FacesMessages.instance().add("#{messages['localizacaoTurno.erroGravacaoTurno']}");
+            FacesMessages.instance().add("#{eppmessages['localizacaoTurno.erroGravacaoTurno']}");
         }
     }
 }

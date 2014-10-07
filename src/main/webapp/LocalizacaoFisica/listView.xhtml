@@ -9,21 +9,21 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-    <ui:define name="title">#{messages['localizacaoFisica.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['localizacaoFisica.titlePage']}</ui:define>
 
     <ui:param name="home" value="#{localizacaoFisicaCrudAction}" />
 
     <ui:define name="searchGrid">
         <wi:dataTable values="#{localizacaoFisicaList.list(15)}"
             bean="#{localizacaoFisicaList}"
-            tableTitle="#{messages['localizacaoFisica.tableTitle']}"
+            tableTitle="#{eppmessages['localizacaoFisica.tableTitle']}"
             id="localizacaoFisicaList"
             rowId="#{row.idLocalizacaoFisica}" hideOrder="true">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarlocalizacaoFisicaForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{eppmessages['searchForm.title']}">
                     <wi:inputText id="descricao"
-                        label="#{messages['localizacaoFisica.descricao']}"
+                        label="#{eppmessages['localizacaoFisica.descricao']}"
                         value="#{localizacaoFisicaList.entity.descricao}"
                         maxlength="150" />
                     <wi:tree id="localizacaoFisicaPai"
@@ -31,39 +31,39 @@
                         tree="#{localizacaoFisicaTree}"
                         icon="#{a4jSkin.imgFolder}/nivelTree.gif"
                         iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-                        label="#{messages['localizacaoFisica.localizacaoFisicaPai']}" />
+                        label="#{eppmessages['localizacaoFisica.localizacaoFisicaPai']}" />
                     <wi:selectSituacaoOneMenu id="ativo"
-                        label="#{messages['field.situacao']}"
+                        label="#{eppmessages['field.situacao']}"
                         value="#{localizacaoFisicaList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
 
             <wi:columnOutputTextIdent columnId="descricao"
-                columnHeader="#{messages['localizacaoFisica.descricao']}"
+                columnHeader="#{eppmessages['localizacaoFisica.descricao']}"
                 value="#{row.descricao}"
                 fullPath="#{row.caminhoCompleto}" />
             <wi:columnOutputText columnId="localizacaoFisicaPai"
-                columnHeader="#{messages['localizacaoFisica.localizacaoFisicaPai']}"
+                columnHeader="#{eppmessages['localizacaoFisica.localizacaoFisicaPai']}"
                 value="#{row.localizacaoFisicaPai}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{messages['field.situacao']}"
+                columnHeader="#{eppmessages['field.situacao']}"
                 columnWidth="10%" value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
 
     <ui:define name="form">
         <wi:dataForm formId="localizacaoFisicaForm"
-            formTitle="#{messages['form.title']}">
+            formTitle="#{eppmessages['form.title']}">
             <wi:inputText id="descricao" required="true"
-                label="#{messages['localizacaoFisica.descricao']}"
+                label="#{eppmessages['localizacaoFisica.descricao']}"
                 value="#{localizacaoFisicaCrudAction.instance.descricao}" />
             <wi:tree id="localizacaoFisicaPai"
                 assignTo="localizacaoFisicaCrudAction.instance.localizacaoFisicaPai"
                 tree="#{localizacaoFisicaTree}"
                 icon="#{a4jSkin.imgFolder}/nivelTree.gif" iconLeaf="#{a4jSkin.imgFolder}/file.gif"
-                label="#{messages['localizacaoFisica.pai']}" />
+                label="#{eppmessages['localizacaoFisica.pai']}" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{messages['field.situacao']}"
+                label="#{eppmessages['field.situacao']}"
                 value="#{localizacaoFisicaCrudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>

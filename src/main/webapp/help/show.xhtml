@@ -16,15 +16,10 @@
         http-equiv="Content-Type"
         content="text/html; charset=UTF-8"
     />
-    <title>#{messages['ajuda.titlePage']}</title>
-    <h:outputStylesheet
-        library="stylesheet"
-        name="theme.css"
-    />
+    <title>#{eppmessages['ajuda.titlePage']}</title>
     <h:outputStylesheet
         library="styleSkinInfox"
-        name="padrao.css"
-    />
+        name="#{a4jSkin.colorCSS}" />
     <link
         rel="icon"
         href="#{pathResolver.contextPath}/favicon.ico"
@@ -73,7 +68,7 @@
             <h:panelGrid columns="2">
                 <h:panelGroup>
                     <h:outputLabel
-                        value="#{messages['ajuda.search']} "
+                        value="#{eppmessages['ajuda.search']} "
                         for="searchText"
                     />
                     <h:inputText
@@ -91,7 +86,7 @@
         </h:form>
         <s:div id="resultado">
             <h:outputText
-                value="#{messages['ajuda.noResult']}"
+                value="#{eppmessages['ajuda.noResult']}"
                 rendered="#{empty ajudaView.resultadoPesquisa and !empty ajudaView.textoPesquisa}"
                 styleClass="sem-resultado-ajuda"
             />
@@ -103,7 +98,7 @@
             >
                 <rich:tab
                     id="help"
-                    header="#{messages['ajuda.panelHeader']}"
+                    header="#{eppmessages['ajuda.panelHeader']}"
                     name="help"
                 >
                     <s:div
@@ -115,12 +110,12 @@
                         >
                             <h:graphicImage
                                 url="#{a4jSkin.imgFolder}/link.gif"
-                                title="#{messages['ajuda.link']}"
+                                title="#{eppmessages['ajuda.link']}"
                             />
                         </h:outputLink>
                         <h:graphicImage
                             url="#{a4jSkin.imgFolder}/mod/edit.gif"
-                            title="#{messages['ajuda.edit']}"
+                            title="#{eppmessages['ajuda.edit']}"
                             styleClass="cursor-pointer"
                             onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/help/edit.seam?cid=#{conversation.id}','1024');"
                         />
@@ -135,7 +130,7 @@
                 <rich:tab
                     id="search"
                     rendered="#{!empty ajudaView.resultadoPesquisa and !empty ajudaView.textoPesquisa}"
-                    header="#{messages['ajuda.result']}"
+                    header="#{eppmessages['ajuda.result']}"
                     name="search"
                 >
                     <h:form>

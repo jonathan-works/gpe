@@ -9,11 +9,11 @@
     <s:div id="includePessoaFisicaDiv" styleClass="padding-top-5">
 
         <wi:dataForm formId="pessoaFisicaForm"
-            formTitle="#{messages['form.title']}" panelWidth="70%"
+            formTitle="#{eppmessages['form.title']}" panelWidth="70%"
             rendered="#{isUsuarioAtualResponsavel and partesProcessoController.podeAdicionarPartesFisicas() and !partesProcessoController.apenasPessoaJuridica()}">
             <wi:inputCpf id="cpf"
                 value="#{partesProcessoController.pessoaFisica.cpf}"
-                label="#{messages['pessoaFisica.cpf']}"
+                label="#{eppmessages['pessoaFisica.cpf']}"
                 assignTo="#{partesProcessoController.pessoaFisica.cpf}"
                 required="true">
                 <a:ajax event="blur"
@@ -24,18 +24,18 @@
             <h:panelGroup id="loadedByCPF">
                 <wi:inputText id="nome"
                     value="#{partesProcessoController.pessoaFisica.nome}"
-                    label="#{messages['pessoaFisica.nome']}"
+                    label="#{eppmessages['pessoaFisica.nome']}"
                     required="true" />
                 <wi:inputDate id="dataNascimento"
                     value="#{partesProcessoController.pessoaFisica.dataNascimento}"
-                    label="#{messages['pessoaFisica.dataNascimento']}"
+                    label="#{eppmessages['pessoaFisica.dataNascimento']}"
                     required="true" />
             </h:panelGroup>
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
                     action="#{partesProcessoController.includePessoaFisica()}"
                     reRender="buscaDiv, parteProcessoListDiv, includePessoaFisicaDiv, pessoasListDiv, storeDiv, pageBodyDialogMessage"
-                    value="#{messages['crud.persist']}" />
+                    value="#{eppmessages['crud.persist']}" />
             </ui:define>
         </wi:dataForm>
     </s:div>

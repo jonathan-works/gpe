@@ -16,9 +16,9 @@
     <s:div id="#{f.id}TipoDocDiv" styleClass="padding-top-10">
       <wi:selectOneMenuEntity
         id="#{f.id}tipoProcessoDocumento"
-        label="#{messages['processoDocumento.classificacaoDocumento']}"
+        label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
         value="#{home.classificacoesVariaveisUpload[id]}"
-        items="#{classificacaoDocumentoFacade.getUseableTipoProcessoDocumento(false, taskInstanceHome.getVariableName(id), processoHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
+        items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
         required="true"
         showLabelSelecione="true"
         rendered="#{not readonly}">
@@ -42,11 +42,11 @@
 						<ui:repeat var="documento" value="#{taskInstanceHome.classificacoesVariaveisUpload[id].acceptedTypesList}">
 							<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
 						</ui:repeat>
-						<s:div styleClass="tooltip-panel-top" rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumentoObservacao}">
+						<s:div styleClass="tooltip-panel-top" rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id].observacao}">
 							<div>
 								<h:outputText value="Observação:"/>
 							</div>
-							<h:outputText value="#{taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumentoObservacao}" />
+							<h:outputText value="#{taskInstanceHome.classificacoesVariaveisUpload[id].observacao}" />
 						</s:div>
 					</s:div>
 				</div>
@@ -64,12 +64,12 @@
           limitRender="true"
           required="#{wi:get(required, false)}"
           fileUploadListener="#{fileUpload.processFileUpload}"
-          addLabel="#{messages['processoDocumento.addLabel']}"
-          clearAllLabel="#{messages['processoDocumento.clearAllLabel']}"
-          clearLabel="#{messages['processoDocumento.clearLabel']}"
-          doneLabel="#{messages['processoDocumento.doneLabel']}"
-          uploadLabel="#{messages['processoDocumento.uploadLabel']}"
-          sizeExceededLabel="#{messages['processoDocumento.sizeExceededLabel']}"
+          addLabel="#{eppmessages['processoDocumento.addLabel']}"
+          clearAllLabel="#{eppmessages['processoDocumento.clearAllLabel']}"
+          clearLabel="#{eppmessages['processoDocumento.clearLabel']}"
+          doneLabel="#{eppmessages['processoDocumento.doneLabel']}"
+          uploadLabel="#{eppmessages['processoDocumento.uploadLabel']}"
+          sizeExceededLabel="#{eppmessages['processoDocumento.sizeExceededLabel']}"
           maxFilesQuantity="1"
           listHeight="50px"
           immediateUpload="true"
@@ -77,14 +77,14 @@
           render="#{id}Decoration, #{id}, #{reRender}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente"
           acceptedTypes="#{home.classificacoesVariaveisUpload[id].acceptedTypes}"
           rendered="#{not empty home.classificacoesVariaveisUpload[id] and not readonly}"
-          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{messages['processoDocumento.extensaoNaoPermitida']}\')">
+          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{eppmessages['processoDocumento.extensaoNaoPermitida']}\')">
         </rich:fileUpload>
     </s:decorate>
     <s:div id="#{f.id}documentoExistente">
         <s:fragment rendered="#{not empty taskInstanceHome.instance[id]}">    
             <fieldset>
                 <legend>Documento Anexado</legend>
-                <h:outputText value="#{messages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].tipoProcessoDocumento : props.classificacaoDocumento}"/>
+                <h:outputText value="#{eppmessages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].descricao : props.classificacaoDocumento}"/>
                 <br />
                 <h:outputText id="file#{id}" value="Documento: #{not readonly ? taskInstanceHome.instance[id] : value}"/>
             </fieldset>

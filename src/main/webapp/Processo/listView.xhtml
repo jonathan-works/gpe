@@ -11,7 +11,7 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-    <ui:define name="title">#{messages['processo.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['processo.titlePage']}</ui:define>
     
     <ui:param name="action" value="#{iniciarProcessoAction}" />
     
@@ -19,7 +19,7 @@
         <s:div id="isCadastrandoPartes" >
         
             <rich:panel id="iniciarProcesso"
-                header="#{messages['processo.titleFormIniciarProcesso']}">
+                header="#{eppmessages['processo.titleFormIniciarProcesso']}">
                 <ui:include
                     src="ComponentesIniciarProcesso/naturezaCategoria.xhtml" />
                 <ui:include

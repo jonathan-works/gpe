@@ -10,8 +10,8 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 
-@Name(SituacaoProcessoManager.NAME)
 @AutoCreate
+@Name(SituacaoProcessoManager.NAME)
 public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, SituacaoProcesso> {
 
     private static final long serialVersionUID = 1L;
@@ -21,8 +21,7 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
         return getDao().getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
     }
 
-    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa,
-            Map<String, Object> selected) {
+    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
         return getDao().getProcessosAbertosByIdTarefa(idTarefa, selected);
     }
 

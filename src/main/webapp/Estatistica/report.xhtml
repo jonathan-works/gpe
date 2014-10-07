@@ -4,13 +4,13 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <wi:dataReport title="#{messages['temposMedios.reportPage']}"
+    <wi:dataReport title="#{eppmessages['temposMedios.reportPage']}"
                    columns="3"
                    widths="4 4 4">
                    
-        <wi:reportColumnHeader title="#{messages['temposMedios.descricaoTarefa']}" />
-        <wi:reportColumnHeader title="#{messages['temposMedios.tempoMedio']}" />
-        <wi:reportColumnHeader title="#{messages['temposMedios.prazo']}" />
+        <wi:reportColumnHeader title="#{eppmessages['temposMedios.descricaoTarefa']}" />
+        <wi:reportColumnHeader title="#{eppmessages['temposMedios.tempoMedio']}" />
+        <wi:reportColumnHeader title="#{eppmessages['temposMedios.prazo']}" />
                 
         <ui:repeat var="row" value="#{tempoMedioTarefaList.list()}">
             <wi:reportColumn value="#{row.nomeTarefa}"/>

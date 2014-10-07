@@ -6,56 +6,41 @@
 
     <h:outputStylesheet
         library="styleSkinInfox"
-        name="padrao.ecss" />
-    <h:outputStylesheet
-        library="styleSkinInfox"
-        name="padrao.css" />
-    <h:outputStylesheet
-        library="styleSkinInfox"
         name="#{a4jSkin.colorCSS}" />
     <style>
         #body, .message, .inputText, .buttons, div.rf-ddm-nd {
             font-size:#{skinZoom.skinZoom}px;
         }
-        .home-body {
-            height: 100%;
-        }
-        .buttons {
-            height: #{skinZoom.skinZoom+skinZoom.skinZoom}px;
-        }
-        .d-msg-h {
-            height: #{skinZoom.skinZoom+6}px;
-        }
-        .d-msg, .d-msg-c {
-            height: #{120 + ((skinZoom.skinZoom - 12) * 4)}px;
-        }
         
         .label-header.tituloPagina, .conteudo, .sem-resultado-ajuda {
-            font-size:#{skinZoom.skinZoom+2}px;
-        }
-        .rich-calendar-input,.inputText {
-            height:#{skinZoom.skinZoom+3}px;
+            font-size:#{2+skinZoom.skinZoom}px;
         }
         .input_button{
-            font-size:#{skinZoom.skinZoom+4}px;
+            font-size:#{4+skinZoom.skinZoom}px;
         }
         .input_login.label-general, .bg_login, th.banner, td.banner, .banner-ctr {
-            font-size:#{skinZoom.skinZoom+8}px;
+            font-size:#{8+skinZoom.skinZoom}px;
         }
         .banner-subTitle {
-            font-family: Arial, sans-serif;
-            font-size:#{skinZoom.skinZoom+6}px;
+            font-size:#{6+skinZoom.skinZoom}px;
         }
         .banner-title{
-            font-family: Arial, sans-serif;
-            font-size:#{skinZoom.skinZoom+12}px;
+            font-size:#{12+skinZoom.skinZoom}px;
         }
-        .banner {
-            height:#{85 + ((skinZoom.skinZoom - 12) * 2)}px;
+        .versao{
+          font-size:#{4+skinZoom.skinZoom}px;
         }
-        .left-column {
-            text-align: left;
+        h1{
+          font-size:#{7+skinZoom.skinZoom}px;
         }
-        
+        .nivelpai {
+          font-size: calc(15% + #{skinZoom.skinZoom}px);
+        }
+        .note {
+          font-size:#{skinZoom.skinZoom}px;
+        }
+        .expressionDiv{
+          font-size:#{skinZoom.skinZoom}px;
+        }
     </style>
 </ui:composition>

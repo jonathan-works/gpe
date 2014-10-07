@@ -18,13 +18,13 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.documento.entity.TipoProcessoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.fluxo.query.VariavelClassificacaoDocumentoQuery;
 
 @Entity
 @Table(name = "tb_variavel_classificacao_doc", uniqueConstraints = {
     @UniqueConstraint(columnNames = {
-        "nm_variavel", "id_fluxo", "id_tipo_processo_documento"
+        "nm_variavel", "id_fluxo", "id_classificacao_documento"
     })
 })
 @NamedQueries({
@@ -34,6 +34,7 @@ import br.com.infox.epp.fluxo.query.VariavelClassificacaoDocumentoQuery;
     @NamedQuery(name = VariavelClassificacaoDocumentoQuery.FIND_VARIAVEL_CLASSIFICACAO, query = VariavelClassificacaoDocumentoQuery.FIND_VARIAVEL_CLASSIFICACAO_QUERY)
 })
 public class VariavelClassificacaoDocumento implements Serializable {
+	
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -60,8 +61,8 @@ public class VariavelClassificacaoDocumento implements Serializable {
     private Fluxo fluxo;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_tipo_processo_documento", nullable = false)
-    private TipoProcessoDocumento classificacaoDocumento;
+    @JoinColumn(name = "id_classificacao_documento", nullable = false)
+    private ClassificacaoDocumento classificacaoDocumento;
     
     public Long getId() {
         return id;
@@ -87,11 +88,11 @@ public class VariavelClassificacaoDocumento implements Serializable {
         this.fluxo = fluxo;
     }
 
-    public TipoProcessoDocumento getClassificacaoDocumento() {
+    public ClassificacaoDocumento getClassificacaoDocumento() {
         return classificacaoDocumento;
     }
 
-    public void setClassificacaoDocumento(TipoProcessoDocumento classificacaoDocumento) {
+    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         this.classificacaoDocumento = classificacaoDocumento;
     }
     

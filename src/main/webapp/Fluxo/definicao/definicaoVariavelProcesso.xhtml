@@ -27,7 +27,7 @@
                     limitRender="true"
                 >
                     <h:graphicImage
-                        title="#{messages['definicaoVariavelProcesso.addVariavel']}"
+                        title="#{eppmessages['definicaoVariavelProcesso.addVariavel']}"
                         url="#{a4jSkin.imgFolder}/add.gif"
                     />
                 </a:commandLink>
@@ -36,7 +36,7 @@
         <ui:define name="toolBar">
             <h:form>
                 <h:graphicImage
-                    title="#{messages['definicaoVariavelProcesso.removeVariavel']}"
+                    title="#{eppmessages['definicaoVariavelProcesso.removeVariavel']}"
                     url="#{a4jSkin.imgFolder}/remove.png"
                     styleClass="opacityHover pointer"
                 >
@@ -44,7 +44,7 @@
                         event="click"
                         listener="#{definicaoVariavelProcessoAction.remove(row)}"
                         execute="@this"
-                        onbeforesubmit="return confirm('#{messages['processBuilder.confirm']}')"
+                        onbeforesubmit="return confirm('#{eppmessages['processBuilder.confirm']}')"
                         render="variavelTable, variavelForm, pageBodyDialogMessage, variavelPaginator"
                         limitRender="true"
                     />
@@ -54,7 +54,7 @@
         <ui:define name="columns">
             <rich:column>
                 <h:form>
-                    <f:facet name="header">#{messages['processBuilder.definicaoVariavelProcesso']}</f:facet>
+                    <f:facet name="header">#{eppmessages['processBuilder.definicaoVariavelProcesso']}</f:facet>
                     <ui:param
                         name="current"
                         value="#{row == definicaoVariavelProcessoAction.instance}"
@@ -100,23 +100,28 @@
             <s:div>
                 <wi:inputText
                     id="nomeVariavel"
-                    label="#{messages['definicaoVariavelProcesso.nome']}"
+                    label="#{eppmessages['definicaoVariavelProcesso.nome']}"
                     required="true"
                     value="#{definicaoVariavelProcessoAction.nomeAmigavel}"
                 />
                 <wi:inputText
                     id="labelProcesso"
-                    label="#{messages['definicaoVariavelProcesso.label']}"
+                    label="#{eppmessages['definicaoVariavelProcesso.label']}"
                     required="true"
                     value="#{definicaoVariavelProcessoAction.variavel.label}"
                 />
+                <wi:selectBooleanCheckbox
+                	id="variavelVisivel"
+                	label="#{eppmessages['definicaoVariavelProcesso.visivel']}"
+                	value="#{definicaoVariavelProcessoAction.variavel.visivel}"
+              	/>
             </s:div>
             <a:commandButton
                 action="#{definicaoVariavelProcessoAction.save}"
                 render="variavelForm, variavelTable, pageBodyDialogMessage, variavelPaginator"
                 limitRender="true"
                 value="#{definicaoVariavelProcessoAction.persisted ? messages['crud.update'] : messages['crud.persist']}"
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}"
+                styleClass="#{wi:get(styleClass, 'buttons')}"
             />
         </ui:fragment>
     </h:form>

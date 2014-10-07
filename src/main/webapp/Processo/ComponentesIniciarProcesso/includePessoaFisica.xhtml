@@ -9,12 +9,12 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <wi:dataForm formId="pessoaFisicaForm"
-        formTitle="#{messages['pessoaFisica.formTitle']}"
+        formTitle="#{eppmessages['pessoaFisica.formTitle']}"
         rendered="#{partesController.podeAdicionarPartesFisicas() and not partesController.apenasPessoaJuridica()}">
 
         <wi:inputCpf id="cpf"
             value="#{partesController.pessoaFisica.cpf}"
-            label="#{messages['pessoaFisica.cpf']}"
+            label="#{eppmessages['pessoaFisica.cpf']}"
             assignTo="#{partesController.pessoaFisica.cpf}"
             required="true">
             <a:ajax event="blur"
@@ -24,10 +24,10 @@
         <h:panelGroup id="loadedByCPF">
             <wi:inputText id="nome"
                 value="#{partesController.pessoaFisica.nome}"
-                label="#{messages['pessoaFisica.nome']}" required="true" />
+                label="#{eppmessages['pessoaFisica.nome']}" required="true" />
             <wi:inputDate id="dataNascimento"
                 value="#{partesController.pessoaFisica.dataNascimento}"
-                label="#{messages['pessoaFisica.dataNascimento']}"
+                label="#{eppmessages['pessoaFisica.dataNascimento']}"
                 required="true" />
         </h:panelGroup>
         <!-- TODO: Verificar porque este botão não funciona quando é um wi:commandButton -->
@@ -35,8 +35,8 @@
             <a:commandButton id="pessoaFisicaSaveButton"
                 action="#{partesController.includePessoaFisica()}"
                 render="buscaDiv, pessoasListDiv, storeDiv, pessoaFisicaForm"
-                value="#{messages['crud.persist']}" 
-                styleClass="buttons #{wi:get(styleClass, 'buttons')}" />
+                value="#{eppmessages['crud.persist']}" 
+                styleClass="#{wi:get(styleClass, 'buttons')}" />
         </ui:define>
 
     </wi:dataForm>

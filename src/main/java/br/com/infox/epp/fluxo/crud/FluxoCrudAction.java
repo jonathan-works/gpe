@@ -51,11 +51,11 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         final boolean existeFluxoComDescricao = getManager().existeFluxoComDescricao(getInstance().getFluxo());
 
         if (existeFluxoComCodigo) {
-            final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.codigoDuplicado']}");
+            final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{eppmessages['fluxo.codigoDuplicado']}");
             FacesContext.getCurrentInstance().addMessage(COD_FLUXO_COMPONENT_ID, message);
         }
         if (existeFluxoComDescricao) {
-            final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{messages['fluxo.descricaoDuplicada']}");
+            final FacesMessage message = FacesMessages.createFacesMessage(FacesMessage.SEVERITY_ERROR, "#{eppmessages['fluxo.descricaoDuplicada']}");
             FacesContext.getCurrentInstance().addMessage(DESCRICAO_FLUXO_COMPONENT_ID, message);
         }
 
@@ -70,7 +70,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         final boolean instanceValid = dataInicioPublicacao != null
                 && (dataFimPublicacao == null || !dataFimPublicacao.before(dataInicioPublicacao));
         if (!instanceValid) {
-            getMessagesHandler().add(ERROR, "#{messages['fluxo.dataPublicacaoErrada']}");
+            getMessagesHandler().add(ERROR, "#{eppmessages['fluxo.dataPublicacaoErrada']}");
         }
         return instanceValid;
     }
@@ -117,7 +117,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         if (!getManager().existemProcessosAssociadosAFluxo(fluxo)) {
             return super.inactive(fluxo);
         } else {
-            final String message = "#{messages['fluxo.remocaoProibida']}";
+            final String message = "#{eppmessages['fluxo.remocaoProibida']}";
             LOG.error(message);
             getMessagesHandler().add(ERROR, message);
         }

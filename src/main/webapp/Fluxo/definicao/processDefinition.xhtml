@@ -11,11 +11,8 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:infox="http://www.infox.com.br/jsf"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
-  <ui:define name="title">#{messages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
+  <ui:define name="title">#{eppmessages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
   <ui:define name="head">
-    <h:outputStylesheet
-      name="processDefinition.css"
-      library="stylesheet" />
     <h:outputScript
       name="jbpmGraph.js"
       library="js" />
@@ -37,25 +34,25 @@
       <infox:tab
         name="propriedadesTab"
         id="propriedadesTab"
-        title="#{messages['processBuilder.properties']}">
-        <rich:panel header="#{messages['processBuilder.info']}">
+        title="#{eppmessages['processBuilder.properties']}">
+        <rich:panel header="#{eppmessages['processBuilder.info']}">
           <h:form>
             <wi:inputText
               id="codFluxo"
-              label="#{messages['fluxo.codFluxo']}"
+              label="#{eppmessages['fluxo.codFluxo']}"
               value="#{processBuilder.id}"
               readonly="true">
               <f:validator validatorId="jsfComponentIdValidator" />
             </wi:inputText>
             <wi:inputText
               id="nome"
-              label="#{messages['fluxo.fluxo']}"
+              label="#{eppmessages['fluxo.fluxo']}"
               value="#{def.name}"
               readonly="true" />
             <wi:inputTextarea
               id="description"
               value="#{def.description}"
-              label="#{messages['processBuilder.description']}"
+              label="#{eppmessages['processBuilder.description']}"
               showCounter="false">
               <a:ajax
                 event="change"
@@ -64,13 +61,13 @@
           </h:form>
         </rich:panel>
         <rich:panel
-          header="#{messages['processBuilder.definicaoVariavelProcesso']}"
+          header="#{eppmessages['processBuilder.definicaoVariavelProcesso']}"
           rendered="#{processBuilder.exists}">
           <ui:include src="definicaoVariavelProcesso.xhtml" />
         </rich:panel>
         <rich:panel
           styleClass="SwimlanePanel"
-          header="#{messages['processBuilder.swimlanes']}"
+          header="#{eppmessages['processBuilder.swimlanes']}"
           rendered="#{processBuilder.exists}">
           <ui:include src="swimlanes.xhtml" />
         </rich:panel>
@@ -79,13 +76,13 @@
         name="nodesTab"
         id="nodesTab"
         rendered="#{processBuilder.exists}"
-        title="#{messages['processBuilder.nodes']}">
+        title="#{eppmessages['processBuilder.nodes']}">
         <ui:include src="nodes.xhtml" />
       </infox:tab>
       <infox:tab
         name="graphTab"
         id="graphTab"
-        title="#{messages['processBuilder.graph']}">
+        title="#{eppmessages['processBuilder.graph']}">
         <ui:include src="graph.xhtml" />
       </infox:tab>
     </infox:tabPanel>
@@ -106,7 +103,7 @@
         action="#{processBuilder.update}"></a:jsFunction>
       <a:commandButton
         id="gravar"
-        value="#{messages['processBuilder.saveBtn']}"
+        value="#{eppmessages['processBuilder.saveBtn']}"
         rendered="#{processBuilder.exists}"
         styleClass="buttons #{wi:get(styleClass, '')}"
         onclick="checkIfEditorExists();" />
@@ -114,7 +111,7 @@
         id="publicar"
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.deploy}"
-        value="#{messages['processBuilder.deployBtn']}"
+        value="#{eppmessages['processBuilder.deployBtn']}"
         rendered="#{processBuilder.exists}"
         oncomplete="opener.refreshPage();"
         styleClass="buttons #{wi:get(styleClass, '')}" />
@@ -122,15 +119,15 @@
         id="novoProcesso"
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.update}"
-        value="#{messages['processBuilder.saveBtn']}"
+        value="#{eppmessages['processBuilder.saveBtn']}"
         rendered="#{!processBuilder.exists}"
         styleClass="buttons #{wi:get(styleClass, '')}" />
       <a:commandButton
         id="new"
         action="#{processBuilder.clearDefinition}"
-        value="#{messages['processBuilder.newBtn']}"
+        value="#{eppmessages['processBuilder.newBtn']}"
         render=":processDefinition, @form"
-        onclick="return confirm('#{messages['processBuilder.confirmNew']}');"
+        onclick="return confirm('#{eppmessages['processBuilder.confirmNew']}');"
         rendered="#{processBuilder.exists}"
         styleClass="buttons #{wi:get(styleClass, '')}" />
     </h:form>

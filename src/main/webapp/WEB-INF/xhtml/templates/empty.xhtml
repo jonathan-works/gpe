@@ -14,7 +14,6 @@
   <link rel="icon" href="#{pathResolver.contextPath}/favicon.ico"
     type="image/x-icon" />
   <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
-  <h:outputStylesheet library="styleSkinInfox" name="empty.css" />
   <ui:insert name="head" />
   <ui:include src="/WEB-INF/xhtml/templates/jsPage.xhtml" />
 </h:head>
@@ -25,7 +24,7 @@
   <ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
   <ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 
-  <s:div styleClass="clean-pageBody" id="pageBody">
+  <s:div styleClass="empty pageBody" id="pageBody">
     <wi:messages formId="pageBody"
       showDialogMessage="#{showDialogMessage}"
       timeCloseMSG="#{timeCloseMSG}" />

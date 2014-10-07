@@ -17,7 +17,7 @@
         <h:outputLabel
         	for="searchText"
         	styleClass="BP-lbl"
-        	value="#{messages['template.abaPesquisaText']}" />
+        	value="#{eppmessages['template.abaPesquisaText']}" />
 		<h:inputText
 			id="searchText"
 			styleClass="BP-ipt"
@@ -26,7 +26,7 @@
         <h:commandButton
                  action="/Pesquisa/indexedSearch.xhtml"
                  image="#{a4jSkin.imgFolder}/imgPes.png" 
-                 onclick="if (#{rich:element('searchText')}.value == '') { new infox.Messages({'timeout': 3000}).dialog('#{messages['pesquisa.campoPesquisaVazio']}'); return false; }"/>
+                 onclick="if (#{rich:element('searchText')}.value == '') { new infox.Messages({'timeout': 3000}).dialog('#{eppmessages['pesquisa.campoPesquisaVazio']}'); return false; }"/>
         <h:commandLink
           action="/help/show.xhtml"
           target="helpwnd"
@@ -34,7 +34,7 @@
           actionListener="#{ajudaView.setViewId('/Pesquisa/indexedSearch.seam', true)}">
           <h:graphicImage
             url="#{a4jSkin.imgFolder}/question.png"
-            title="#{messages['ajuda.ajudaBtn']}"
+            title="#{eppmessages['ajuda.ajudaBtn']}"
             onclick="openPopUp('helpwnd', 'about:blank');" />
         </h:commandLink>
 	</h:form>

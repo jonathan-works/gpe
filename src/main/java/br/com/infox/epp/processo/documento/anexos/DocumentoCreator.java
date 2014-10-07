@@ -6,15 +6,15 @@ import java.util.List;
 import org.jboss.seam.log.LogProvider;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 
 public abstract class DocumentoCreator {
 
     private Processo processo;
-    private ProcessoDocumento processoDocumento;
-    private List<ProcessoDocumento> documentosDaSessao;
+    private Documento documento;
+    private List<Documento> documentosDaSessao;
 
     public Processo getProcesso() {
         return processo;
@@ -24,30 +24,30 @@ public abstract class DocumentoCreator {
         this.processo = processo;
     }
 
-    public ProcessoDocumento getProcessoDocumento() {
-        return processoDocumento;
+    public Documento getDocumento() {
+        return documento;
     }
 
-    public void setProcessoDocumento(ProcessoDocumento processoDocumento) {
-        this.processoDocumento = processoDocumento;
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
     }
 
-    public List<ProcessoDocumento> getDocumentosDaSessao() {
+    public List<Documento> getDocumentosDaSessao() {
         return documentosDaSessao;
     }
 
-    public void setDocumentosDaSessao(List<ProcessoDocumento> documentosDaSessao) {
+    public void setDocumentosDaSessao(List<Documento> documentosDaSessao) {
         this.documentosDaSessao = documentosDaSessao;
     }
 
     protected void newInstance() {
-        setProcessoDocumento(new ProcessoDocumento());
-        getProcessoDocumento().setAnexo(true);
-        getProcessoDocumento().setProcessoDocumentoBin(new ProcessoDocumentoBin());
+        setDocumento(new Documento());
+        getDocumento().setAnexo(true);
+        getDocumento().setDocumentoBin(new DocumentoBin());
     }
 
     public void clear() {
-        setDocumentosDaSessao(new ArrayList<ProcessoDocumento>());
+        setDocumentosDaSessao(new ArrayList<Documento>());
         newInstance();
     }
 
@@ -56,13 +56,13 @@ public abstract class DocumentoCreator {
             getDocumentosDaSessao().add(gravarDocumento());
         } catch (DAOException e) {
             getLogger().error("Não foi possível gravar o documento "
-                    + getProcessoDocumento() + " no processo " + getProcesso(), e);
+                    + getDocumento() + " no processo " + getProcesso(), e);
         }
         newInstance();
     }
 
     protected abstract LogProvider getLogger();
 
-    protected abstract ProcessoDocumento gravarDocumento() throws DAOException;
+    protected abstract Documento gravarDocumento() throws DAOException;
 
 }

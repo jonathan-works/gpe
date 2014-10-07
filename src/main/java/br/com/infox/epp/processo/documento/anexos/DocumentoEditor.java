@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.documento.anexos;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -8,18 +10,19 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.documento.entity.ProcessoDocumento;
-import br.com.infox.epp.processo.documento.manager.ProcessoDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
-@Name(DocumentoEditor.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class DocumentoEditor extends DocumentoCreator {
+@Name(DocumentoEditor.NAME)
+public class DocumentoEditor extends DocumentoCreator implements Serializable {
 
-    public static final String NAME = "documentoEditor";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "documentoEditor";
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoEditor.class);
 
     @In
-    private ProcessoDocumentoManager processoDocumentoManager;
+    private DocumentoManager documentoManager;
 
     @Override
     protected LogProvider getLogger() {
@@ -27,8 +30,8 @@ public class DocumentoEditor extends DocumentoCreator {
     }
 
     @Override
-    protected ProcessoDocumento gravarDocumento() throws DAOException {
-        return processoDocumentoManager.gravarDocumentoNoProcesso(getProcesso(), getProcessoDocumento());
+    protected Documento gravarDocumento() throws DAOException {
+        return documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento());
     }
 
 }

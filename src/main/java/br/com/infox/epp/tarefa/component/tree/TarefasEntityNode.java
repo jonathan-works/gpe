@@ -3,7 +3,6 @@ package br.com.infox.epp.tarefa.component.tree;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,8 +10,8 @@ import javax.persistence.Query;
 
 import org.jboss.seam.core.Events;
 
-import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.EntityNode;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
@@ -23,19 +22,13 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     private List<EntityNode<E>> caixas;
     private List<Query> queryCaixas = new ArrayList<Query>();
 
-    public TarefasEntityNode(String queryChildren) {
-        super(queryChildren);
-    }
-
-    public TarefasEntityNode(String[] queryChildren, List<Query> queryCaixas) {
-        super(queryChildren);
+    public TarefasEntityNode(List<Query> queryCaixas) {
+        super("");
         this.queryCaixas = queryCaixas;
     }
 
-    public TarefasEntityNode(EntityNode<Map<String, Object>> parent,
-            Map<String, Object> entity, String[] queryChildren,
-            List<Query> queryCaixas) {
-        super(parent, entity, queryChildren);
+    public TarefasEntityNode(EntityNode<Map<String, Object>> parent, Map<String, Object> entity, List<Query> queryCaixas) {
+        super(parent, entity, new String[0]);
         this.queryCaixas = queryCaixas;
     }
 
@@ -85,9 +78,9 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
         if (nodes == null) {
             nodes = new ArrayList<TarefasEntityNode<E>>();
             boolean parent = true;
-            for (String query : getQueryChildrenList()) {
                 if (!isLeaf()) {
-                    List<E> children = (List<E>) getChildrenList(query, getEntity());
+                    Query query = getSituacaoProcessoDAO().createQueryChildren((Integer) getEntity().get("idFluxo"));
+                    List<E> children = (List<E>) query.getResultList();
                     for (E n : children) {
                         if (!n.equals(getIgnore())) {
                             TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
@@ -98,7 +91,6 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
                     }
                     parent = false;
                 }
-            }
 
             Events.instance().raiseEvent("entityNodesPostGetNodes", nodes);
         }
@@ -108,16 +100,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     @Override
     protected TarefasEntityNode<Map<String, Object>> createRootNode(
             Map<String, Object> n) {
-        return new TarefasEntityNode<Map<String, Object>>(null, n, getQueryChildren(), queryCaixas);
-    }
-
-    @Override
-    protected List<Map<String, Object>> getChildrenList(String hql,
-            Map<String, Object> entity) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("idFluxo", entity.get("idFluxo"));
-        GenericDAO genericDAO = ComponentUtil.getComponent(GenericDAO.NAME);
-        return genericDAO.getResultList(hql, parameters);
+        return new TarefasEntityNode<Map<String, Object>>(null, n, queryCaixas);
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -134,7 +117,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     @Override
     protected TarefasEntityNode<Map<String, Object>> createChildNode(
             Map<String, Object> n) {
-        return new TarefasEntityNode<Map<String, Object>>(this, n, getQueryChildren(), queryCaixas);
+        return new TarefasEntityNode<Map<String, Object>>(this, n, queryCaixas);
     }
 
     public Integer getTarefaId() {
@@ -151,12 +134,8 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
         return 0;
     }
 
-    public void setQueryCaixas(List<Query> queryCaixas) {
-        this.queryCaixas = queryCaixas;
-    }
-
-    public List<Query> getQueryCaixas() {
-        return queryCaixas;
+    private SituacaoProcessoDAO getSituacaoProcessoDAO() {
+        return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
     }
 
 }

@@ -32,14 +32,14 @@ public interface SigiloDocumentoPermissaoQuery {
             + "inner join o.sigiloDocumento s "
             + "where o.ativo = true and "
             + "s.ativo = true and "
-            + "s.documento.idProcessoDocumento in (:"
+            + "s.documento.id in (:"
             + QUERY_PARAM_IDS_DOCUMENTO
             + ") and "
             + "o.usuario = :"
             + QUERY_PARAM_USUARIO;
 
     String NAMED_QUERY_DOCUMENTOS_PERMITIDOS = "SigiloDocumentoPermissao.documentosPermitidos";
-    String QUERY_DOCUMENTOS_PERMITIDOS = "select o from ProcessoDocumento o "
+    String QUERY_DOCUMENTOS_PERMITIDOS = "select o from Documento o "
             + "where o.processo = :"
             + QUERY_PARAM_PROCESSO
             + " and (not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "

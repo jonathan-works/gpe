@@ -1,77 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:h="http://java.sun.com/jsf/html">
-	
-	<h:outputScript
-        name="expressionWizard.js"
-        library="js" />
-	<script language="javascript" charset="ISO-8859-1">
-	//<![CDATA[
-		invoke(["infox.ExpressionWizard"],function(ExpressionWizard){
-			new ExpressionWizard({
-				inputId:"#{rich:clientId(id)}TextDecoration:#{id}Text",
-				imagePath:"#{pathResolver.contextPath}#{a4jSkin.imgFolder}/jbpm/wizard.gif",
-				id:"#{rich:clientId(id)}Div",
-				variables:{
-					boolean:#{nodeFitter.currentNode.getBooleanVariables()},
-					number:#{nodeFitter.currentNode.getNumberVariables()},
-					transition:#{nodeFitter.currentNode.getLeavingTransitionList()},
-				},
-				messages:{
-					image:{
-						title:"#{messages['expressionWizard.title']}"
-					},
-					numberInput:{
-						label:"#{messages['expressionWizard.numberPrompt']}",
-						error:"#{messages['expressionWizard.numberPromptError']}"
-					},
-					select:{
-						arithmetic:{
-							null:"#{messages['expressionWizard.aritSelect.null']}",
-							plus:"#{messages['expressionWizard.aritSelect.plus']}",
-							minus:"#{messages['expressionWizard.aritSelect.minus']}",
-							mult:"#{messages['expressionWizard.aritSelect.mult']}",
-							div:"#{messages['expressionWizard.aritSelect.div']}",
-							number:"#{messages['expressionWizard.aritSelect.numb']}"
-						},
-						boolean:{
-							null:"#{messages['expressionWizard.booleanSelect.null']}",
-							true:"#{messages['expressionWizard.booleanSelect.true']}",
-							false:"#{messages['expressionWizard.booleanSelect.false']}",
-							or:"#{messages['expressionWizard.booleanSelect.or']}",
-							and:"#{messages['expressionWizard.booleanSelect.and']}",
-							not:"#{messages['expressionWizard.booleanSelect.not']}",
-							equals:"#{messages['expressionWizard.booleanSelect.equals']}",
-							notEqual:"#{messages['expressionWizard.booleanSelect.notEqual']}",
-							gte:"#{messages['expressionWizard.booleanSelect.gte']}",
-							gt:"#{messages['expressionWizard.booleanSelect.gt']}",
-							lte:"#{messages['expressionWizard.booleanSelect.lte']}",
-							lt:"#{messages['expressionWizard.booleanSelect.lt']}"
-						},
-						conclusion:{
-							null:"#{messages['expressionWizard.condSelect.null']}",
-							condition:"#{messages['expressionWizard.condSelect.cond']}"
-						}
-					}
-				}
-		  });
-		});
-	//]]>
-	</script>
-	<s:div id="#{id}" >
-		<s:div id="#{id}Div" styleClass="expressionDiv"></s:div>
-		<wi:inputTextarea id="#{id}Text" styleClass="expressionInput"
-			label="#{messages['expressionWizard.expressao']}" value="#{value}" showCounter="false">
-			<a:ajax execute="@this" event="change" render="#{id} pageBodyDialogMessage" limitRender="true"/>
-		</wi:inputTextarea>
-
-	</s:div>
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:h="http://java.sun.com/jsf/html">
+  <h:outputScript
+    library="js/expressionWizard"
+    name="Enum.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="Node.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="Toolbar.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="BooleanOper.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="BooleanNode.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="StringNode.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="TransitionNode.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="ArithOper.js" />
+  <h:outputScript
+    library="js/expressionWizard"
+    name="ArithNode.js" />
+  <s:div id="#{id}">
+    <s:div
+      id="#{id}Div"
+      styleClass="expressionDiv">
+      <div class="toolbar-cont"></div>
+    </s:div>
+    <div class="expressionInput hidden">
+      <wi:inputTextarea
+        id="#{id}Text"
+        styleClass="expressionInput"
+        label="#{messages['expressionWizard.expressao']}"
+        value="#{value}"
+        showCounter="false">
+        <a:ajax
+          execute="@this"
+          event="change"
+          render="#{id}Text setVariables"
+          limitRender="true" />
+      </wi:inputTextarea>
+    </div>
+  </s:div>
+  <h:outputScript id="setVariables">
+    (function(K){
+      var Node=K.Node;
+      var VariableType=Node.VariableType;
+      Node.clearVariables(VariableType.BOOLEAN);
+      Node.clearVariables(VariableType.NUMBER);
+      Node.clearVariables(VariableType.STRING);
+      Node.clearVariables(VariableType.TRANSITION);
+      Node.addVariable(#{nodeFitter.currentNode.getBooleanVariables()},VariableType.BOOLEAN);
+      Node.addVariable(#{nodeFitter.currentNode.getNumberVariables()},VariableType.NUMBER);
+      Node.addVariable(#{nodeFitter.currentNode.getStringVariables(definicaoVariavelProcessoAction.listVariaveis(100), variavelList.list(100))},VariableType.STRING);
+      Node.addVariable(#{nodeFitter.currentNode.getLeavingTransitionList()},VariableType.TRANSITION);
+      K.messages={
+          "pt-BR":{
+            "BooleanOper.and":"E",
+            "BooleanOper.or":"OU",
+            "BooleanOper.not":"NEGAÇÃO",
+            "BooleanOper.eq":"=",
+            "BooleanOper.neq":"=|=",
+            "BooleanOper.gt":"&gt;",
+            "BooleanOper.gte":"&gt;=",
+            "BooleanOper.lt":"&lt;",
+            "BooleanOper.lte":"&lt;=",
+            "BooleanNode.negate":"Negar",
+            "BooleanNode.and":"Conjunção",
+            "BooleanNode.or":"Disjunção",
+            "BooleanNode.eq":"Igual a",
+            "BooleanNode.neq":"Diferente de",
+            "BooleanNode.gte":"Maior ou igual a",
+            "BooleanNode.gt":"Maior que",
+            "BooleanNode.lte":"Menor ou igual a",
+            "BooleanNode.lt":"Menor que",
+            "BooleanNode.var":"Variáveis",
+            "BooleanNode.TRUE":"VERDADEIRO",
+            "BooleanNode.FALSE":"FALSO",
+            "BooleanNode.ARIT":"Expr. Aritmética",
+            "BooleanNode.STR_COMP":"Comparação de literal",
+            "BooleanNode.EXPR":"Expressão ternária",
+            "BooleanNode.OVERRIDE":"Sobrescrever pai",
+            "BooleanNode.COMPARATION":"Comparação de valores",
+            "ArithOper.negative":"-",
+            "ArithOper.div":"/",
+            "ArithOper.minus":"-",
+            "ArithOper.mult":"x",
+            "ArithOper.plus":"+",
+            "ArithNode.if":"SE",
+            "ArithNode.then":"ENTÃO RETORNE",
+            "ArithNode.else":"SENÃO RETORNE",
+            "ArithNode.negative":"Negativar",
+            "ArithNode.minus":"Subtrair",
+            "ArithNode.plus":"Somar",
+            "ArithNode.mult":"Multiplicar",
+            "ArithNode.div":"Dividir",
+            "ArithNode.constant":"Valor constante",
+            "ArithNode.expression":"Expressão de decisão",
+            "ArithNode.variable":"Variáveis",
+            "ArithNode.override":"Sobrescrever valor",
+            "ArithNode.number.valid.prompt":"Insira um número válido (formato: 9999999.99)",
+            "StringNode.if":"SE",
+            "StringNode.then":"ENTÃO RETORNE",
+            "StringNode.else":"SENÃO RETORNE",
+            "StringOper.plus":"+",
+            "StringNode.addPrefix":"Inserir antes",
+            "StringNode.addSufix":"Inserir após",
+            "StringNode.booleanValue":"Valor Lógico",
+            "StringNode.stringValue":"Valor Literal",
+            "StringNode.numberValue":"Valor Numérico",
+            "StringNode.var":"Variáveis",
+            "StringNode.constant":"Valor constante",
+            "StringNode.expression":"Expressão de decisão",
+            "StringNode.override":"Sobrescrever com valor",
+            "TransitionNode.if":"SE",
+            "TransitionNode.then":"ENTÃO VÁ PARA",
+            "TransitionNode.else":"SENÃO VÁ PARA",
+            "TransitionNode.var":"Transições",
+            "TransitionNode.expression":"Decisão",
+            "TransitionNode.override":"Sobrescrever pai com este valor"
+          }
+        };
+    })(_parser);
+  </h:outputScript>
+  <script
+    language="javascript"
+    charset="utf-8">
+    _parser.TransitionNode.generateTree(#{value}, #{rich:jQuery(id.concat('Div'))}[0], #{rich:jQuery(id.concat("Text"))}[0]);
+    </script>
 </ui:composition>

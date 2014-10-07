@@ -3,17 +3,17 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <ui:param name="title" value="#{messages['pessoaFisica.titlePage']}" />
+    <ui:param name="title" value="#{eppmessages['pessoaFisica.titlePage']}" />
 
     <wi:dataReport subtitle="Resultado da Pesquisa " title="#{title}"
         columns="4" widths="2 4 3 1"
         headerText="#{pessoaFisicaList.criteria}">
 
-        <wi:reportColumnHeader title="#{messages['pessoaFisica.cpf']}" />
-        <wi:reportColumnHeader title="#{messages['pessoaFisica.nome']}" />
+        <wi:reportColumnHeader title="#{eppmessages['pessoaFisica.cpf']}" />
+        <wi:reportColumnHeader title="#{eppmessages['pessoaFisica.nome']}" />
         <wi:reportColumnHeader
-            title="#{messages['pessoaFisica.dataNascimento']}" />
-        <wi:reportColumnHeader title="#{messages['field.situacao']}" />
+            title="#{eppmessages['pessoaFisica.dataNascimento']}" />
+        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{pessoaFisicaList.list()}">
             <wi:reportColumn value="#{row.cpf}" />

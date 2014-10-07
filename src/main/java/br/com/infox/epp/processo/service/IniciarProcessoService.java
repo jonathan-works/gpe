@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.service;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -28,17 +29,17 @@ import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 
-@Name(IniciarProcessoService.NAME)
-@Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class IniciarProcessoService {
+@Scope(ScopeType.CONVERSATION)
+@Name(IniciarProcessoService.NAME)
+public class IniciarProcessoService implements Serializable {
 
-    @In
+	private static final long serialVersionUID = 1L;
+	
+	@In
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
-
     @In
     private ProcessoEpaManager processoEpaManager;
-
     @In
     private NaturezaManager naturezaManager;
 
@@ -47,11 +48,6 @@ public class IniciarProcessoService {
     public static final String TYPE_MISMATCH_EXCEPTION = "Tipo informado não é uma instância de "
             + "br.com.infox.ibpm.entity.Processo";
 
-    /**
-     * 
-     * @param processoEpa
-     * @throws DAOException
-     */
     public void iniciarProcesso(ProcessoEpa processoEpa) throws DAOException {
         iniciarProcesso(processoEpa, null);
     }

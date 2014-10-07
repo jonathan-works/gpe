@@ -1,6 +1,7 @@
 package br.com.infox.epp.imagem.component;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -20,8 +21,10 @@ import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.epp.imagem.manager.ImagemBinManager;
 
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractImageUploader implements FileUploadListener {
-    public static final LogProvider LOG = Logging.getLogProvider(AbstractImageUploader.class);
+public abstract class AbstractImageUploader implements FileUploadListener, Serializable {
+    
+	private static final long serialVersionUID = 1L;
+	public static final LogProvider LOG = Logging.getLogProvider(AbstractImageUploader.class);
 
     private String fileName;
     private Integer fileSize;

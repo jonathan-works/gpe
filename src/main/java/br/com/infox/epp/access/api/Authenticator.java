@@ -62,6 +62,8 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Name(Authenticator.NAME)
 @Install(precedence = Install.APPLICATION)
@@ -86,6 +88,7 @@ public class Authenticator {
     public static final String INDENTIFICADOR_PAPEL_ATUAL = "identificadorPapelAtual";
     public static final String LOCALIZACOES_FILHAS_ATUAIS = "localizacoesFilhasAtuais";
     public static final String ID_LOCALIZACOES_FILHAS_ATUAIS = "idLocalizacoesFilhasAtuais";
+    public static final String COLEGIADA_DA_MONOCRATICA_LOGADA = "colegiadaDaMonocraticaLogada";
 
     public String getNewPassword1() {
         return newPassword1;
@@ -141,7 +144,7 @@ public class Authenticator {
         }
     }
 
-    public boolean hasToSignTermoAdesao() {
+    public boolean hasToSignTermoAdesao() throws LoginException {
     	UsuarioLogin usuarioLogado = getUsuarioLogado();
     	if (usuarioLogado != null) {
     		return hasToSignTermoAdesao(usuarioLogado);
@@ -149,26 +152,24 @@ public class Authenticator {
     	return false;
     }
     
-    private boolean hasToSignTermoAdesao(UsuarioLogin usuario) {
-        boolean termoAdesao = false;
+    private boolean hasToSignTermoAdesao(UsuarioLogin usuario) throws LoginException {
         final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
+        PessoaFisica pessoaFisica = usuario.getPessoaFisica();
+        boolean hasToSign = false;
         if (perfilAtivoList != null) {
-            PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-            if (pessoaFisica != null) {
-            	if (pessoaFisica.getTermoAdesao() != null) {
-            		termoAdesao = false;
-            	} else {
-	                for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
-	                    Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-	                    if (termoAdesao=papel.getTermoAdesao()) {
-	                        break;
-	                    }
-	                }
-            	}
+            for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
+                Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
+                if (papel.getTermoAdesao()) {
+                    if (pessoaFisica == null) {
+                        throw new LoginException("Usuário sem pessoa física associada");
+                    }
+                    hasToSign = pessoaFisica.getTermoAdesao() == null;
+                    break;
+                }
             }
         }
-        Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, termoAdesao);
-        return termoAdesao;
+        Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, hasToSign);
+        return hasToSign;
     }
 
     private void realizarLoginDoUsuario(final UsuarioLogin usuario) throws LoginException {
@@ -284,6 +285,7 @@ public class Authenticator {
         context.remove(LOCALIZACOES_FILHAS_ATUAIS);
         context.remove(ID_LOCALIZACOES_FILHAS_ATUAIS);
         context.remove(USUARIO_PERFIL_LIST);
+        context.remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
     }
 
     public static List<Localizacao> getLocalizacoesFilhas(
@@ -361,9 +363,11 @@ public class Authenticator {
      * localização, recursivamente.
      * 
      * @param usuarioPerfil
+     * @throws LoginException 
      */
-    public void setUsuarioPerfilAtual(UsuarioPerfil usuarioPerfil) {
+    public void setUsuarioPerfilAtual(UsuarioPerfil usuarioPerfil) throws LoginException {
         Set<String> roleSet = getRolesAtuais(usuarioPerfil);
+        Contexts.getSessionContext().remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
         getAuthenticatorService().removeRolesAntigas();
         getAuthenticatorService().logDaBuscaDasRoles(usuarioPerfil);
         getAuthenticatorService().addRolesAtuais(roleSet);
@@ -380,9 +384,17 @@ public class Authenticator {
     private void redirectToPainelDoUsuario() {
         Redirect redirect = Redirect.instance();
         redirect.getParameters().clear();
-        redirect.setViewId("/Painel/list.seam");
+        redirect.setViewId(getCaminhoPainel());
         redirect.setParameter("cid", null);
         redirect.execute();
+    }
+    
+    protected String getCaminhoPainel() {
+        return "/Painel/list.seam";
+    }
+    
+    public String getUrlPainel() {
+        return getCaminhoPainel();
     }
 
     private void redirectToTermoAdesao() {
@@ -483,12 +495,58 @@ public class Authenticator {
         return list;
     }
 
-    public void setUsuarioPerfilAtualCombo(Integer id) {
+    public void setUsuarioPerfilAtualCombo(Integer id) throws LoginException {
         setUsuarioPerfilAtual(getUsuarioPerfilDAO().find(id));
     }
 
     public Integer getUsuarioPerfilAtualCombo() {
         return getUsuarioPerfilAtual().getIdUsuarioPerfil();
+    }
+    
+    public boolean isUsuarioLogadoInMonocratica() {
+        return getUsuarioPerfilAtual().getLocalizacao().isDecisoraMonocratica();
+    }
+    
+    public boolean isUsuarioLogadoInColegiada() {
+        return getUsuarioPerfilAtual().getLocalizacao().isDecisoraColegiada();
+    }
+    
+    public boolean isUsuarioLogandoInMonocraticaAndColegiada() {
+        return isUsuarioLogadoInMonocratica() && getColegiadaParaMonocraticaLogada() != null;
+    }
+    
+    public UnidadeDecisoraMonocratica getMonocraticaLogada() {
+        if (isUsuarioLogadoInMonocratica()) {
+            return getUsuarioPerfilAtual().getLocalizacao().getUnidadeDecisoraMonocratica().get(0);
+        } else {
+            return null;
+        }
+    }
+    
+    public UnidadeDecisoraColegiada getColegiadaLogada() {
+        if (isUsuarioLogadoInColegiada()) {
+            return getUsuarioPerfilAtual().getLocalizacao().getUnidadeDecisoraColegiada().get(0);
+        } else if (isUsuarioLogadoInMonocratica()) {
+            return getColegiadaParaMonocraticaLogada();
+        } else {
+            return null;
+        }
+    }
+    
+    public void setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada) {
+        Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
+    }
+    
+    public UnidadeDecisoraColegiada getColegiadaParaMonocraticaLogada() {
+        return (UnidadeDecisoraColegiada) Contexts.getSessionContext().get(COLEGIADA_DA_MONOCRATICA_LOGADA);
+    }
+     
+    public List<UnidadeDecisoraColegiada> getColegiadasParaMonocraticaLogada() {
+        if (isUsuarioLogadoInMonocratica()) {
+            return getMonocraticaLogada().getUnidadeDecisoraColegiadaList();
+        } else {
+            return new ArrayList<>();
+        }
     }
     
     public String getUsuarioPerfilAtualSingle(){

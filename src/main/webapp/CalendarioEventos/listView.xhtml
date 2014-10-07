@@ -9,40 +9,40 @@
     xmlns:a="http://richfaces.org/a4j"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-    <ui:define name="title">#{messages['calendarioEventos.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['calendarioEventos.titlePage']}</ui:define>
 
     <ui:param name="home" value="#{calendarioEventosCrudAction}" />
     <ui:param name="list" value="#{calendarioEventosList}" />
 
     <ui:define name="searchGrid">
         <wi:dataTable values="#{list.list(15)}" bean="#{list}"
-            tableTitle="#{messages['calendarioEventos.tableTitle']}"
+            tableTitle="#{eppmessages['calendarioEventos.tableTitle']}"
             id="calendarioEventosList" rowId="#{row.idCalendarioEvento}">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarCalendarioEventosForm"
-                    formTitle="#{messages['searchForm.title']}">
+                    formTitle="#{eppmessages['searchForm.title']}">
                     <wi:tree id="localizacao"
-                        label="#{messages['calendarioEventos.localizacao']}"
+                        label="#{eppmessages['calendarioEventos.localizacao']}"
                         assignTo="calendarioEventosList.entity.localizacao"
                         tree="#{localizacaoTree}" />
                     <wi:inputText id="descricaoEvento"
-                        label="#{messages['calendarioEventos.descricaoEvento']}"
+                        label="#{eppmessages['calendarioEventos.descricaoEvento']}"
                         value="#{list.entity.descricaoEvento}"
                         maxlength="100" />
                     <wi:inputText id="dia"
-                        label="#{messages['calendarioEventos.dia']}"
+                        label="#{eppmessages['calendarioEventos.dia']}"
                         value="#{list.entity.dia}"
                         onkeyup="onlyPositiveNumber(this); clamp(this,1,31)"
                         converterId="integerConverter" maxlength="2">
                     </wi:inputText>
                     <wi:inputText id="mes"
-                        label="#{messages['calendarioEventos.mes']}"
+                        label="#{eppmessages['calendarioEventos.mes']}"
                         value="#{list.entity.mes}"
                         onkeyup="onlyPositiveNumber(this); clamp(this,1,12)"
                         converterId="integerConverter" maxlength="2">
                     </wi:inputText>
                     <wi:inputText id="ano"
-                        label="#{messages['calendarioEventos.ano']}"
+                        label="#{eppmessages['calendarioEventos.ano']}"
                         value="#{list.entity.ano}"
                         onkeyup="onlyPositiveNumber(this)"
                         converterId="integerConverter" maxlength="4">
@@ -61,34 +61,34 @@
             </ui:define>
 
             <wi:columnOutputText columnId="localizacao"
-                columnHeader="#{messages['calendarioEventos.localizacao']}"
+                columnHeader="#{eppmessages['calendarioEventos.localizacao']}"
                 value="#{row.localizacao}" />
             <wi:columnOutputText columnId="descricaoEvento"
-                columnHeader="#{messages['calendarioEventos.descricaoEvento']}"
+                columnHeader="#{eppmessages['calendarioEventos.descricaoEvento']}"
                 value="#{row.descricaoEvento}" />
             <wi:columnOutputText columnId="dataEvento" hideOrder="true"
-                columnHeader="#{messages['calendarioEventos.dataEvento']}"
+                columnHeader="#{eppmessages['calendarioEventos.dataEvento']}"
                 value="#{row.stringDataEvento}" />
         </wi:dataTable>
     </ui:define>
 
     <ui:define name="form">
         <wi:dataForm formId="calendarioEventosForm"
-            formTitle="#{messages['form.title']}">
+            formTitle="#{eppmessages['form.title']}">
             <wi:tree id="localizacao"
-                label="#{messages['calendarioEventos.localizacao']}"
+                label="#{eppmessages['calendarioEventos.localizacao']}"
                 assignTo="calendarioEventosCrudAction.instance.localizacao"
                 tree="#{localizacaoTree}" required="true" />
             <wi:inputText id="descricaoEvento"
-                label="#{messages['calendarioEventos.descricaoEvento']}"
+                label="#{eppmessages['calendarioEventos.descricaoEvento']}"
                 value="#{home.instance.descricaoEvento}" maxlength="100"
                 required="true" />
             <wi:inputDate id="dataNascimento"
                 value="#{home.instance.dataEvento}"
-                label="#{messages['calendarioEventos.dataEvento']}"
+                label="#{eppmessages['calendarioEventos.dataEvento']}"
                 required="true" />
             <wi:selectBooleanCheckbox id="periodico"
-                label="#{messages['calendarioEventos.periodico']}"
+                label="#{eppmessages['calendarioEventos.periodico']}"
                 value="#{home.instance.repeteAno}" />
 
         </wi:dataForm>

@@ -1,9 +1,5 @@
 package br.com.infox.epp.tarefa.component.tree;
 
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +12,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
 
-import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(TarefasTreeHandler.NAME)
@@ -33,16 +29,12 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected String getQueryRoots() {
-        return TAREFAS_TREE_QUERY_ROOTS;
+        throw new IllegalStateException("Usar SituacaoProcessoDAO::createQueryRoots ao invés de TarefasTreeHanlder::getQueryRoots");
     }
 
     @Override
     protected String getQueryChildren() {
-        return TAREFAS_TREE_QUERY_CHILDREN;
-    }
-
-    protected String getQueryCaixas() {
-        return TAREFAS_TREE_QUERY_CAIXAS;
+        throw new IllegalStateException("Usar SituacaoProcessoDAO::createQueryChildren ao invés de TarefasTreeHanlder::getQueryChildren");
     }
 
     @Override
@@ -67,15 +59,14 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected TarefasEntityNode<Map<String, Object>> createNode() {
-        return new TarefasEntityNode<Map<String, Object>>(getQueryChildrenList(), getQueryCaixasList());
+        return new TarefasEntityNode<Map<String, Object>>(getQueryCaixasList());
     }
 
     public List<TarefasEntityNode<Map<String, Object>>> getTarefasRoots() {
         if (rootList == null || rootList.isEmpty()) {
             Events.instance().raiseEvent(FILTER_TAREFAS_TREE);
-            Query query = genericDAO().createQuery(getQueryRoots());
             TarefasEntityNode<Map<String, Object>> entityNode = createNode();
-            rootList = entityNode.getRootsFluxos(query);
+            rootList = entityNode.getRootsFluxos(getSituacaoProcessoDAO().createQueryRoots());
         }
         return rootList;
     }
@@ -88,8 +79,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     private List<Query> getQueryCaixasList() {
         List<Query> list = new ArrayList<Query>();
-        Query query = genericDAO().createQuery(getQueryCaixas());
-        list.add(query);
+        list.add(getSituacaoProcessoDAO().createQueryCaixas());
         return list;
     }
 
@@ -100,7 +90,8 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
         super.clearTree();
     }
 
-    private GenericDAO genericDAO() {
-        return ComponentUtil.getComponent(GenericDAO.NAME);
+    private SituacaoProcessoDAO getSituacaoProcessoDAO() {
+        return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
     }
+    
 }

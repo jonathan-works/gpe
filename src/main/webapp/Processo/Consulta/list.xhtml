@@ -10,11 +10,11 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-    <ui:define name="title">#{messages['consultaProcesso.titlePage']}</ui:define>
+    <ui:define name="title">#{eppmessages['consultaProcesso.titlePage']}</ui:define>
     <ui:define name="body">
         <rich:collapsiblePanel
             switchType="client"
-            header="#{messages['processo.titleView']} #{consultaController.processoEpa.numeroProcesso}"
+            header="#{eppmessages['processo.titleView']} #{consultaController.processoEpa.numeroProcesso}"
             expanded="false">
             <h:panelGrid
                 columns="2"
@@ -22,13 +22,13 @@
                 columnClasses="viewColumn">
                 <wi:outputText
                     id="dataInicio"
-                    label="#{messages['processo.dataInicio']}"
+                    label="#{eppmessages['processo.dataInicio']}"
                     value="#{consultaController.processoEpa.dataInicio}">
                     <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
                 </wi:outputText>
                 <wi:outputText
                     id="usuarioCadastroProcesso"
-                    label="#{messages['processo.usuarioCadastroProcesso']}"
+                    label="#{eppmessages['processo.usuarioCadastroProcesso']}"
                     value="#{consultaController.processoEpa.usuarioCadastroProcesso}" />
             </h:panelGrid>
         </rich:collapsiblePanel>
@@ -43,7 +43,7 @@
                 name="form"
                 immediate="true"
                 status=":status"
-                title="#{messages['acaoProcesso.menuText']}">
+                title="#{eppmessages['acaoProcesso.menuText']}">
                 <ui:include
                     src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
             </infox:tab>
@@ -51,76 +51,212 @@
                 id="tabAnexos"
                 name="tabAnexos"
                 immediate="true"
-                action="#{processoDocumentoList.entity.setProcesso(consultaController.processoEpa)}"
+                action="#{documentoList.entity.setProcesso(consultaController.processoEpa)}"
+                actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 status=":status"
-                title="#{messages['processo.documentos']}">
+                title="#{eppmessages['processo.documentos']}">
+                <a:jsFunction name="selectDocumento" immediate="true"
+					execute="@this" render="historicoDocumentoPanelDiv" limitRender="true" status=":status">
+					<a:param name="idDocumento" assignTo="#{documentoProcessoAction.idDocumento}" converter="javax.faces.Integer"/>
+				</a:jsFunction>
                 <wi:dataTable
-                    values="#{processoDocumentoList.list(15)}"
-                    bean="#{processoDocumentoList}"
-                    tableTitle="#{messages['processo.documentos']}"
-                    id="processoDocumentoList"
-                    rowId="#{row.idProcessoDocumento}"
+                    values="#{documentoList.list(15)}"
+                    bean="#{documentoList}"
+                    tableTitle="#{eppmessages['processo.documentos']}"
+                    id="documentoList"
+                    rowId="#{row.id}"
                     panelStyleClass="full-sized"
                     showSearchForm="false">
                     <ui:define name="toolBar">
                         <s:link
-                            target="idJan#{row.idProcessoDocumento}"
-                            rendered="#{not empty row.processoDocumentoBin.assinaturas}"
+                            target="idJan#{row.id}"
+                            rendered="#{not empty row.documentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
-                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 160, 450, 450);">
+                            onclick="infox.openPopUp('idJan#{row.id}', '', 650, 160, 450, 450);">
                             <h:graphicImage
-                                title="#{messages['assinaturas.validar']}"
-                                alt="#{messages['assinaturas.validar']}"
+                                title="#{eppmessages['assinaturas.validar']}"
+                                alt="#{eppmessages['assinaturas.validar']}"
                                 url="#{a4jSkin.imgFolder}/lock.png" />
-                            <f:param
-                                value="#{row.idProcessoDocumento}"
-                                name="idProcessoDocumento" />
+                            <f:param value="#{row.id}" name="idDocumento" />
                         </s:link>
                         <s:link
-                            target="idJan#{row.idProcessoDocumento}"
-                            rendered="#{empty row.processoDocumentoBin.assinaturas}"
+                            target="idJan#{row.id}"
+                            rendered="#{empty row.documentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
-                            onclick="infox.openPopUp('idJan#{row.idProcessoDocumento}', '', 650, 200, 450, 450);">
+                            onclick="infox.openPopUp('idJan#{row.id}', '', 650, 200, 450, 450);">
                             <h:graphicImage
-                                title="#{messages['assinaturas.assinar']}"
-                                alt="#{messages['assinaturas.assinar']}"
+                                title="#{eppmessages['assinaturas.assinar']}"
+                                alt="#{eppmessages['assinaturas.assinar']}"
                                 url="#{a4jSkin.imgFolder}/lock_unlock.png" />
-                            <f:param
-                                value="#{row.idProcessoDocumento}"
-                                name="idProcessoDocumento" />
+                            <f:param value="#{row.id}" name="idDocumento" />
                         </s:link>
+                        <h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.gif" 
+                       		            title="#{eppmessages['button.historico']}" 
+                       		            rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
+                       		            onmouseup="selectDocumento(#{rowId});"/>
+                        
+                       	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/remove.png"
+                       					rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}" 
+                       					title="#{eppmessages['button.delete']}"
+                       					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');"/>
+                       	
+                       	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/stock_undelete.png"
+                       				    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}" 
+                       				    title="#{eppmessages['button.restaurar']}"
+                       				    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');"/>
                     </ui:define>
                     <ui:define name="headerToolBar" />
                     <wi:columnOutputText
+                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                         columnId="usuarioInclusao"
-                        columnHeader="#{messages['assinaturas.usuario']}"
+                        columnHeader="#{eppmessages['assinaturas.usuario']}"
                         value="#{row.usuarioInclusao}" />
                     <wi:columnOutputText
+                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                         columnId="dataInclusao"
-                        columnHeader="#{messages['assinaturas.dataInclusao']}"
+                        columnHeader="#{eppmessages['assinaturas.dataInclusao']}"
                         value="#{row.dataInclusao}" />
                     <wi:columnOutputText
+                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                         columnId="processoDocumento"
-                        columnHeader="#{messages['assinaturas.documento']}"
-                        value="#{row.processoDocumento}" />
+                        columnHeader="#{eppmessages['assinaturas.documento']}"
+                        value="#{row.descricao}" />
                     <wi:columnOutputText
+                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                         columnId="processoDocumentoBin.sizeFormatado"
-                        columnHeader="#{messages['processoDocumento.tamanho']}"
-                        value="#{row.processoDocumentoBin.sizeFormatado}"/>
+                        columnHeader="#{eppmessages['processoDocumento.tamanho']}"
+                        value="#{row.documentoBin.sizeFormatado}"/>
                 </wi:dataTable>
+                
+                <script type="text/javascript">
+					function clearFieldsExcludeRestore() {
+						var maxlength = 4000;
+						#{rich:jQuery('motivoExclusaoRestauracao')}.val('');
+						#{rich:jQuery('motivoExclusaoRestauracaocounterDiv')}.text('(0 / '+maxlength+')');
+						$('.errorFields.errors').remove();
+						$('.errors').removeClass('errors');
+				  	}
+				  	
+				  	function setValuesToExcludeRestore(isExclusao, idDocumento, numeroDocumento, dsDocumento, classificacao) {
+					  	#{rich:jQuery('hiddenIdDocumento')}.val(idDocumento);
+				  		#{rich:jQuery('numeroDocumento')}.text(numeroDocumento);
+						#{rich:jQuery('processoDocumento')}.text(dsDocumento);
+						#{rich:jQuery('tipoProcessoDocumentoOutPanel')}.text(classificacao);
+						if (isExclusao) {
+							$('.rf-pp-hdr.motivo-header > div').text('Exclusão de Documento');
+							#{rich:jQuery('excluirRestaurarDocButton')}.attr('value','Excluir');
+							alterarMotivoDaExlusaoRestauracao('Motivo da Exclusão');
+						} else {
+							$('.rf-pp-hdr.motivo-header > div').text('Restauração de Documento');
+							#{rich:jQuery('excluirRestaurarDocButton')}.attr('value', 'Restaurar');
+							alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
+						}
+					}
+
+				  	function alterarMotivoDaExlusaoRestauracao(label){
+						var labelTextArea = $('label[for=\''+#{rich:jQuery('motivoExclusaoRestauracao')}.attr('id')+'\']');
+						labelTextArea.text(label);
+						labelTextArea.append($("<span> * </span>").addClass("required"));
+					}
+
+					function atualizarOnValidationFailed() {
+						var teste = $('.rf-pp-hdr.motivo-header').children(0).text();
+						if (teste === 'Exclusão de Documento') {
+							#{rich:jQuery('excluirRestaurarDocButton')}.attr('value','Excluir');
+							alterarMotivoDaExlusaoRestauracao('Motivo da Exclusão');
+						} else {
+							#{rich:jQuery('excluirRestaurarDocButton')}.attr('value', 'Restaurar');
+							alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
+						}
+					}
+                </script>
+                
+                <rich:popupPanel id="requestMotivoPanel" header="teste" headerClass="motivo-header" moveable="true" 
+                				 show="false" resizeable="true" minWidth="690" minHeight="310"
+                				 onbeforehide="clearFieldsExcludeRestore();">
+			        <f:facet name="controls">
+			        	<h:graphicImage id="mp_taskNodeCloseBtn" styleClass="mp-close" value="#{a4jSkin.imgFolder}/closeMP.gif" 
+			        					onmouseup="#{rich:component('requestMotivoPanel')}.hide();"/>
+			        </f:facet>
+		          	<wi:outputText id="numeroDocumento" label="#{eppmessages['processoDocumento.numeroDocumento']}" />
+		          	
+		          	<wi:outputText id="tipoProcessoDocumentoOutPanel" label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
+		          					
+		          	<wi:outputText id="processoDocumento" label="#{eppmessages['processoDocumentoBin.documento']}" />
+			        <h:form id="excluirRestaurarDocumentoForm">
+			          <div>
+		          		<h:inputHidden id="hiddenIdDocumento" value="#{documentoProcessoAction.idDocumentoAlter}" converter="javax.faces.Integer"/>
+			            <wi:inputTextarea id="motivoExclusaoRestauracao"
+			            	maxlength="4000" required="true" cols="60" rows="5"
+			            	label="Motivo" value="#{documentoProcessoAction.motivoExclusaoRestauracao}">
+			           		<f:validator validatorId="emptyStringValidator"/>
+			           	</wi:inputTextarea>
+			          </div>
+			          <div>
+			          	<a:commandButton id="excluirRestaurarDocButton" 
+			          		actionListener="#{documentoProcessoAction.exclusaoRestauracaoDocumento()}"
+					        limitRender="true" execute="@form"
+					        onclick="infox.showLoading();"
+					        oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
+					        value="Enviar"
+					        render="@form, documentoList, pageBodyDialogMessage"
+					        styleClass="buttons"/>
+			          </div>
+			        </h:form>
+                </rich:popupPanel>
+                
+                <s:div id="historicoDocumentoPanelDiv" style="margin-top:20px; width:100%;">
+	                <rich:panel id="historicoDocumentoPanel" headerClass=""
+	                			rendered="#{not empty documentoProcessoAction.processoDocumentoSelected}"
+	                			bodyClass="dtable-p-b" styleClass="dtable-p" style="width:100%;" >
+	                			
+	                	<f:facet name="header">
+	                		<h:outputText value="#{eppmessages['historicoStatusDocumento.tableTile']}" />
+	                		<h:graphicImage value="#{a4jSkin.imgFolder}/closeMP.gif" onmouseup="selectDocumento(0);" style="float:right;"/>
+			        	</f:facet>
+			        	
+					  	<rich:dataTable id="historicoDocumentoDataTable"
+					  			var="historicoDocumento" style="width:100%"
+					  			value="#{documentoProcessoAction.listHistoricoStatusDocumento}">
+					  			
+					  		<rich:column style="text-align:center;">
+					  			<f:facet name="header">#{eppmessages['historicoStatusDocumento.nomeUsuarioAlterou']}</f:facet>
+					  			<h:outputText value="#{historicoDocumento.usuarioAlteracao.nomeUsuario}" />
+					  		</rich:column>
+					  		
+					  		<rich:column style="text-align:center;">
+					  			<f:facet name="header">#{eppmessages['historicoStatusDocumento.dataAlteracao']}</f:facet>
+					  			<h:outputText value="#{historicoDocumento.dataAlteracao}">
+					  				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+					  			</h:outputText>
+					  		</rich:column>
+					  		
+					  		<rich:column style="text-align:center;">
+					  			<f:facet name="header">Tipo Operação</f:facet>
+					  			<h:outputText value="#{historicoDocumento.tipoAlteracaoDocumento.label}" />
+					  		</rich:column>
+					  		
+					  		<rich:column>
+					  			<f:facet name="header">#{eppmessages['historicoStatusDocumento.motivo']}</f:facet>
+					  			<h:outputText value="#{historicoDocumento.motivo}" />
+					  		</rich:column>
+					  		
+					  	</rich:dataTable>              
+	                </rich:panel>
+                 </s:div>
             </infox:tab>
             <infox:tab
                 id="tabAnexar"
                 name="tabAnexar"
                 immediate="true"
                 status=":status"
-                title="#{messages['processoDocumento.anexarDocumento']}"
+                title="#{eppmessages['processoDocumento.anexarDocumento']}"
                 rendered="#{empty consultaController.processoEpa.dataFim}"
                 action="#{anexoController.onClickTabAnexar(consultaController.processoEpa)}">
                 <wi:ajaxDiv id="divAnexarDocumentos">
                     <wi:dataForm
                         formId="anexarDocumentosForm"
-                        formTitle="#{messages['processoDocumento.anexarDocumento']}">
+                        formTitle="#{eppmessages['processoDocumento.anexarDocumento']}">
                         <ui:include
                             src="/Processo/anexarDocumentos.xhtml" />
                         <ui:define name="buttons" />
@@ -133,14 +269,14 @@
                 immediate="true"
                 status=":status"
                 rendered="#{processoHandler.hasPartes()}"
-                title="#{messages['parteProcesso.partes']}"
+                title="#{eppmessages['parteProcesso.partes']}"
                 action="#{parteProcessoList.entity.setProcesso(consultaController.processoEpa)}">
                 <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
             </infox:tab>
             <div>
             <button
                 onclick="infox.redirect({url:'#{pathResolver.contextPath}/Processo/Consulta/listView.seam'})"
-                class="buttons branco">#{messages['page.return']}</button>
+                class="buttons branco">#{eppmessages['page.return']}</button>
         </div>
         </infox:tabPanel>
         
