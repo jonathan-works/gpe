@@ -7,8 +7,11 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/template.xhtml">
-
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:param
+      name="pageTitle"
+      value="#{eppmessages['quartz.titlePage']}"
+    />
     <ui:define name="body">
 
         <s:div id="pagina">

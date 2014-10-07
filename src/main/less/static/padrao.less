@@ -8,6 +8,7 @@
 @import "minimal.less";
 @import "movimentar.less";
 @import "postit.less";
+@import "tree.less";
 @import "paginator.less";
 @import "processDefinition.less";
 @import "termoAdesao.less";
@@ -19,7 +20,6 @@
 
 @bgColorSelect:#ECF7EC;
 @borderColorButton:#A0BC93;
-@borderColorInputTree:#090;
 @bgColorInputTextareaSelect:#EFFBEF;
 @borderColorInputTextareaSelect:#D1E9D3;
 @bgColorRequired:#F00;
@@ -47,24 +47,6 @@
   padding-top: 10px;
 }
 
-.tree-p.rf-cp.rf-tgp {
-  border-color: #fff;
-  display: inline-table;
-  width: calc(~"100% - 21px");
-}
-
-.tree-b {
-  position: relative;
-  z-index: 10;
-  background-color: #fff;
-  border-style: solid;
-  border-width: 1px;
-}
-
-.tree-div-clear {
-  height: 18px;
-  display: inline-table;
-}
 .property-field-edit {
   margin: 0 15px 15px 0;
 }
@@ -505,24 +487,6 @@ img.disabled {
   border-radius: 5px;
   height: 24px;
 }
-.tree-cont {
-  min-width:200px;
-  position:relative;
-}
-.rf-cp-b.tree-b {
-  width:100%;
-  overflow:auto;
-}
-.rf-cp-hdr.tree-hdr {
-  border:1px solid #c0c0c0;
-  font-weight: normal;
-  padding: 0px;
-}
-.tree-hdr > .rf-cp-gr {
-  background-size: auto 100%;
-  background-position: right bottom;
-  background-repeat:no-repeat;
-}
 
 .suggest {
   padding-right: 20px;
@@ -688,13 +652,6 @@ div.rf-trn {
   text-align: left;
 }
 
-.tree-inactive {
-  text-decoration: line-through;
-}
-.tree-notselectable {
-  color: lightgray;
-}
-
 .img-panel-cont {
   display: inline-block;
 }
@@ -799,11 +756,6 @@ select {
 .modPesqInputText {
   .image("img_textPesq.png");
 }
-.tree-hdr {
-  & > .rf-cp-gr {
-    .image("tree.png");
-  }
-}
 .inputTextMiniW69 {
   .image("inputTextMini-W69.png");
 }
@@ -831,10 +783,6 @@ select {
   color: #5B7961;
   cursor: all-scroll;
 }
-
-.tree-b {
-  border-color:@borderColorInputTree;
-}
 option {
   background-color:@bgColorSelect;
 }
@@ -846,11 +794,6 @@ textarea {
   border-color:@borderColorButton;
   &.branco{
     background-color:@headerBackgroundColor;
-  }
-}
-.tree-hdr {
-  & > .rf-cp-gr {
-    background-color:transparent;
   }
 }
 .required {
