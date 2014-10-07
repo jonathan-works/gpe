@@ -202,6 +202,9 @@ public class ValidaDocumentoAction implements Serializable {
 	}
 
 	public void setIdDocumento(Integer idDocumento) {
+		if (idDocumento != null) {
+			this.documento = documentoManager.find(idDocumento);
+		}
 		this.idDocumento = idDocumento;
 	}
 
