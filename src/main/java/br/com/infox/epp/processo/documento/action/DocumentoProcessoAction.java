@@ -32,7 +32,7 @@ public class DocumentoProcessoAction implements Serializable{
 	private String motivoExclusaoRestauracao;
 	private Documento processoDocumentoSelected;
 	private Integer idDocumentoAlter;
-	private Map<String, Boolean> cache;
+	private Map<String, Boolean> cache = new HashMap<String, Boolean>();
 	
 	@In
 	private DocumentoManager documentoManager;
@@ -60,7 +60,7 @@ public class DocumentoProcessoAction implements Serializable{
 	}
 	
 	public void onClickDocumentosTab(){
-		cache = new HashMap<String, Boolean>();
+		cache.clear();
 	}
 	
 	public String getMotivoExclusaoRestauracao() {

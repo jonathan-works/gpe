@@ -18,7 +18,7 @@
         value="#{empty bin.extensao}"
     />
     <div id="teste">
-        <span class="#{row.ativo ? '' : 'inativo'}" />
+        <span class="#{row.excluido ? 'inativo' : ''}" />
         <h:commandLink
             action="#{documentoHtmlView.setViewInstance(row)}"
             onclick="openPopUp('PopUpDocumentoBin', '')"
@@ -42,7 +42,7 @@
         </h:commandLink>
         <s:link
             target="idJan#{row.id}"
-            rendered="#{not empty bin.assinaturas}"
+            rendered="#{not empty bin.assinaturas and not row.excluido}"
             view="/Processo/Consulta/validaDocumento.xhtml"
             onclick="openPopUp('idJan#{row.id}', 'about:blank');"
         >
@@ -55,7 +55,7 @@
         </s:link>
         <s:link
             target="idJan#{row.id}"
-            rendered="#{empty bin.assinaturas}"
+            rendered="#{empty bin.assinaturas and not row.excluido}"
             view="/Processo/Consulta/validaDocumento.xhtml"
             onclick="infox.abrirPopUp('idJan#{row.id}');"
         >

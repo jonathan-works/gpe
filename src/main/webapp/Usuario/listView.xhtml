@@ -404,10 +404,10 @@
         <ui:define name="toolBar">
           <ui:param
             name="isModelo"
-            value="#{empty row.processoDocumentoBin.extensao}" />
+            value="#{empty row.documentoBin.extensao}" />
           <h:form>
             <h:commandLink
-              action="#{documentoHtmlView.setViewInstanceBin(row.processoDocumentoBin)}"
+              action="#{documentoHtmlView.setViewInstanceBin(row.documentoBin)}"
               onclick="openPopUp('PopUpDocumentoBin', '')"
               rendered="#{isModelo}"
               target="PopUpDocumentoBin">
@@ -424,7 +424,7 @@
         <wi:columnOutputText
           columnId="processoDocumentoBin.nomeArquivo"
           columnHeader="#{eppmessages['processoDocumentoBin.nomeArquivo']}"
-          value="#{row.processoDocumentoBin.nomeArquivo}" />
+          value="#{row.documentoBin.nomeArquivo}" />
       </wi:dataTable>
     </infox:tab>
     <infox:tab 

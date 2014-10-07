@@ -23,6 +23,7 @@ public class ConsultaController extends AbstractController {
     public static final String NAME = "consultaController";
 
     private ProcessoEpa processoEpa;
+    
     @In
     private ProcessoEpaManager processoEpaManager;
     @In

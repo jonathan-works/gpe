@@ -70,7 +70,7 @@
                     <ui:define name="toolBar">
                         <s:link
                             target="idJan#{row.id}"
-                            rendered="#{not empty row.processoDocumentoBin.assinaturas and not row.excluido}"
+                            rendered="#{not empty row.documentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.openPopUp('idJan#{row.id}', '', 650, 160, 450, 450);">
                             <h:graphicImage
@@ -81,7 +81,7 @@
                         </s:link>
                         <s:link
                             target="idJan#{row.id}"
-                            rendered="#{empty row.processoDocumentoBin.assinaturas and not row.excluido}"
+                            rendered="#{empty row.documentoBin.assinaturas and not row.excluido}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.openPopUp('idJan#{row.id}', '', 650, 200, 450, 450);">
                             <h:graphicImage
@@ -120,12 +120,12 @@
                     	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                         columnId="processoDocumento"
                         columnHeader="#{eppmessages['assinaturas.documento']}"
-                        value="#{row.descricao" />
+                        value="#{row.descricao}" />
                     <wi:columnOutputText
                     	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                         columnId="processoDocumentoBin.sizeFormatado"
                         columnHeader="#{eppmessages['processoDocumento.tamanho']}"
-                        value="#{row.processoDocumentoBin.sizeFormatado}"/>
+                        value="#{row.documentoBin.sizeFormatado}"/>
                 </wi:dataTable>
                 
                 <script type="text/javascript">

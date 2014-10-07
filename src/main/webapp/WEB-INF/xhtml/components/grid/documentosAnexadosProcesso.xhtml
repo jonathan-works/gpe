@@ -19,17 +19,19 @@
             <ui:define name="toolBar">
                 <ui:include src="processoDocumentoBin.xhtml">
                     <ui:param name="bin"
-                        value="#{row.processoDocumentoBin}" />
+                        value="#{row.documentoBin}" />
                     <ui:param name="header"
                         value="#{row.descricao}" />
                 </ui:include>
             </ui:define>
             <wi:columnOutputText columnId="processoDocumento"
+            	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                 columnHeader="#{eppmessages['anexosProcesso.processoDocumento']}"
                 value="#{row.descricao}" />
             <wi:columnOutputText columnId="dataAnexo"
+            	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
                 columnHeader="#{eppmessages['anexosProcesso.dataInclusao']}"
-                value="#{row.processoDocumentoBin.dataInclusao}">
+                value="#{row.documentoBin.dataInclusao}">
                 <ui:define name="outputText">
                     <f:convertDateTime pattern="dd/MM/yyyy" />
                 </ui:define>

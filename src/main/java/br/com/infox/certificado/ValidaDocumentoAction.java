@@ -54,7 +54,6 @@ public class ValidaDocumentoAction implements Serializable {
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
-    
 
     /**
      * @deprecated
