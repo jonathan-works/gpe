@@ -1,0 +1,56 @@
+@borderColorInputTree:#090;
+
+.tree-p{
+  &.rf-cp{
+    &.rf-tgp {
+      border-color: #fff;
+      display: inline-table;
+      width: calc(~"100% - 21px");
+    }
+  }
+}
+
+.tree-b {
+  position: relative;
+  z-index: 10;
+  background-color: #fff;
+  border-style: solid;
+  border-width: 1px;
+  border-color:@borderColorInputTree;
+  &.rf-cp-b {
+    width:100%;
+    overflow:auto;
+  }
+}
+
+.tree-div-clear {
+  height: 18px;
+  display: inline-table;
+}
+
+.tree-cont {
+  min-width:200px;
+  position:relative;
+}
+
+.tree-inactive {
+  text-decoration: line-through;
+}
+.tree-notselectable {
+  color: lightgray;
+}
+
+.tree-hdr {
+  &.rf-cp-hdr{
+    border:1px solid #c0c0c0;
+    font-weight: normal;
+    padding: 0px;
+  }
+  & > .rf-cp-gr {
+    .image("tree.png");
+    background-color:transparent;
+    background-size: auto 100%;
+    background-position: right bottom;
+    background-repeat:no-repeat;
+  }
+}
