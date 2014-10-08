@@ -61,7 +61,7 @@ public class TermoAdesaoAction implements Serializable {
     @In
     private AuthenticatorService authenticatorService;
     @In
-    private DocumentoBinManager processoDocumentoBinManager;
+    private DocumentoBinManager documentoBinManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
@@ -71,7 +71,7 @@ public class TermoAdesaoAction implements Serializable {
         try {
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
-            DocumentoBin bin = processoDocumentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
+            DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
 
             final List<UsuarioPerfil> perfilAtivoList = usuarioLogin.getUsuarioPerfilAtivoList();
             if (perfilAtivoList != null) {
@@ -85,7 +85,7 @@ public class TermoAdesaoAction implements Serializable {
                 PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
                 pessoaFisica.setTermoAdesao(bin);
             }
-            processoDocumentoBinManager.flush();
+            documentoBinManager.flush();
             Redirect r = Redirect.instance();
             r.setViewId("/Painel/list.seam");
             r.setConversationPropagationEnabled(false);

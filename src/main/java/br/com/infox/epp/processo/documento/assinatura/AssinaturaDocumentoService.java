@@ -185,8 +185,8 @@ public class AssinaturaDocumentoService implements Serializable {
 
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
                 documentoBin, usuarioPerfilAtual, certChain, signature);
-        documentoBin.getAssinaturas().add(assinaturaDocumento);
         GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
+        genericManager.persist(assinaturaDocumento);
         genericManager.flush();
     }
 
