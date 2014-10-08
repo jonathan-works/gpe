@@ -105,7 +105,7 @@ public class ProcessoEpa extends Processo {
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE })
     private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE, cascade={CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE)
     @OrderBy("dataInclusao DESC")
     private List<Documento> documentoList = new ArrayList<Documento>(0);
     
