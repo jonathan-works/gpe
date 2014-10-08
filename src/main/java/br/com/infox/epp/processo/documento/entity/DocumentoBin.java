@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -70,7 +71,7 @@ public class DocumentoBin implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
     private List<AssinaturaDocumento> assinaturas;
     
     @Transient

@@ -135,7 +135,7 @@ public class Documento implements Serializable {
     @Column(name="in_excluido", nullable = false)
     private Boolean excluido = Boolean.FALSE;
     
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="documento")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento", cascade = CascadeType.REMOVE)
     @OrderBy(value="dataAlteracao DESC")
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
     
