@@ -82,7 +82,7 @@ public class Documento implements Serializable {
     private ClassificacaoDocumento classificacaoDocumento;
     
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_documento_bin", nullable = false)
     private DocumentoBin documentoBin;
     

@@ -93,7 +93,7 @@ public interface ProcessoQuery {
 			"DELETE FROM jbpm_variableinstance WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM tb_usuario_taskinstance WHERE id_taskinstance = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"DELETE FROM tb_processo_localizacao_ibpm WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
-			"DELETE FROM tb_processo_epa_tarefa WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
+			"DELETE FROM tb_processo_tarefa WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
 			"DELETE FROM jbpm_taskactorpool WHERE taskinstance_ = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" + 
 			"DELETE FROM jbpm_pooledactor WHERE swimlaneinstance_ = (select swimlaninstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"DELETE FROM jbpm_taskinstance WHERE procinst_ = :" + PARAM_ID_JBPM + " ;\n" +
