@@ -70,7 +70,7 @@
                     <ui:define name="toolBar">
                         <s:link
                             target="idJan#{row.id}"
-                            rendered="#{not empty row.documentoBin.assinaturas and not row.excluido}"
+                            rendered="#{not empty row.documentoBin.assinaturas}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.openPopUp('idJan#{row.id}', '', 650, 160, 450, 450);">
                             <h:graphicImage
@@ -81,7 +81,7 @@
                         </s:link>
                         <s:link
                             target="idJan#{row.id}"
-                            rendered="#{empty row.documentoBin.assinaturas and not row.excluido}"
+                            rendered="#{empty row.documentoBin.assinaturas}"
                             view="/Processo/Consulta/validaDocumento.xhtml"
                             onclick="infox.openPopUp('idJan#{row.id}', '', 650, 200, 450, 450);">
                             <h:graphicImage
