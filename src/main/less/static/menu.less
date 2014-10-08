@@ -1,5 +1,8 @@
+@import "epp-mixins.less";
+
 @menu-bg-color:#a0c991;
 @menu-txt-color:#030;
+@menu-itm-lbl-padding:4px;
 
 .menu-nav {
   color: @menu-txt-color;
@@ -16,8 +19,7 @@
   margin:0;
   padding:0;
   & > .menu-itm {
-    display:inline-block;
-    vertical-align:top;
+    &:extend(.organized);
     & > .menu-submenu {
       margin:0;
     }
@@ -28,7 +30,7 @@
   position:absolute;
   padding:0;
   min-width:100%;
-  margin-left:calc(~"100% + "1px);
+  margin-left:100%;
   margin-top:-24px;
   z-index:9000;
 }
@@ -36,16 +38,22 @@
   color: @menu-txt-color;
   text-decoration:none;
 }
-
 .menu-itm-lbl{
   text-decoration: none;
   white-space: nowrap;
-  padding:4px;
-  margin:1px;
+  padding:@menu-itm-lbl-padding;
+  border-width:1px;
+  border-style:solid;
+  border-color:darken(@menu-bg-color,5%);
   &:hover {
     cursor:pointer;
     color: @menu-bg-color;
     background-color: @menu-txt-color;
+    border-color:@menu-bg-color;
+  }
+  .sub-menu-lbl {
+    .image("arrow-right.png");
+    padding-right:@menu-itm-lbl-padding+10px;
   }
 }
 
