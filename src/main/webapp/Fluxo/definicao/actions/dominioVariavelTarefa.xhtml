@@ -91,8 +91,8 @@
                         </wi:inputTextarea>
                             
                         <ui:define name="buttons">
-                            <wi:commandButtonSave reRender="defaultTabPanel pageBodyDialogMessage" />
-                            <wi:commandButtonNew reRender="defaultTabPanel pageBodyDialogMessage" />
+                            <wi:commandButtonSave reRender="defaultTabPanel pageBodyDialogMessage" styleClass="buttons" />
+                            <wi:commandButtonNew reRender="defaultTabPanel pageBodyDialogMessage" styleClass="buttons" />
                             <a:commandButton action="#{dominioVariavelTarefaCrudAction.selecionarDominio}"
 								onbegin="showLoading()" execute="@this" limitRender="true" 
 								oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()" 
