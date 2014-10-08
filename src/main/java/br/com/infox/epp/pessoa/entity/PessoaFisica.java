@@ -60,7 +60,7 @@ public class PessoaFisica extends Pessoa {
     private String certChain;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo_documento_bin", nullable = false)
+    @JoinColumn(name = "id_documento_bin", nullable = false)
     private DocumentoBin termoAdesao;
     
     @Enumerated(EnumType.STRING)
