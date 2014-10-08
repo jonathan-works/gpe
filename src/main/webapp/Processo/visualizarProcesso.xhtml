@@ -150,7 +150,7 @@
                             columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
                             value="#{row.descricao}" />
                         <ui:define name="toolBar">
-                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.gif" 
+                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.png" 
                        		            title="#{eppmessages['button.historico']}" 
                        		            rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
                        		            onmouseup="selectDocumento(#{rowId});"/>

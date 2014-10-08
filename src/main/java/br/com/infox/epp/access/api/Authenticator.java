@@ -159,7 +159,7 @@ public class Authenticator {
         if (perfilAtivoList != null) {
             for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
                 Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-                if (papel.getTermoAdesao()) {
+                if (papel != null && papel.getTermoAdesao()) {
                     if (pessoaFisica == null) {
                         throw new LoginException("Usuário sem pessoa física associada");
                     }
