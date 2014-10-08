@@ -90,6 +90,21 @@
                 </ui:decorate>
             </infox:tab>
             <infox:tab
+                id="tabAnexar"
+                name="tabAnexar"
+                rendered="#{not s:hasRole('usuarioExterno')}"
+                status=":status"
+                title="#{eppmessages['movimentar.anexar.titleTab']}"
+                action="#{anexoController.onClickTabAnexar(processoEpaHome.instance)}">
+                <wi:dataForm
+                    formId="anexarDocumentosForm"
+                    formTitle="#{eppmessages['movimentar.anexar.titleForm']}"
+                    isUploadForm="true">
+                    <ui:include src="anexarDocumentos.xhtml" />
+                    <ui:define name="buttons" />
+                </wi:dataForm>
+            </infox:tab>
+            <infox:tab
                 id="tabAnexos"
                 name="tabAnexos"
                 rendered="#{processoEpaHome.managed}"
