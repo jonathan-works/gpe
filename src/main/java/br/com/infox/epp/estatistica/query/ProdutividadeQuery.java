@@ -11,9 +11,9 @@ public interface ProdutividadeQuery {
 
     String BASE_QUERY = "SELECT t.nr_prazo, l.ds_localizacao, p.ds_nome, ul.nm_usuario, "
             + "	t.ds_tarefa, AVG(pet.nr_tempo_gasto) AS media_tempo_gasto, MIN(pet.nr_tempo_gasto) AS min_tempo_gasto,"
-            + " MAX(pet.nr_tempo_gasto) AS max_tempo_gasto, COUNT(pet.id_processo_epa_tarefa) AS quantidade_tarefas,"
+            + " MAX(pet.nr_tempo_gasto) AS max_tempo_gasto, COUNT(pet.id_processo_tarefa) AS quantidade_tarefas,"
             + " t.tp_prazo"
-            + "	FROM tb_processo_epa_tarefa pet"
+            + "	FROM tb_processo_tarefa pet"
             + "	INNER JOIN tb_usuario_taskinstance ut ON (ut.id_taskinstance = pet.id_task_instance)"
             + "	INNER JOIN tb_papel p ON (p.id_papel = ut.id_papel)"
             + "	INNER JOIN tb_usuario_login ul ON (ul.id_usuario_login = ut.id_usuario_login)"

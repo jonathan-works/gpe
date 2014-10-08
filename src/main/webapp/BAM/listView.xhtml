@@ -19,7 +19,7 @@
   />
   <ui:param
     name="showFormTab"
-    value="#{not empty processoEpaTarefaList.entity.processoEpa}"
+    value="#{not empty processoTarefaList.entity.processo}"
   />
   <ui:define name="head">
     <h:outputScript
@@ -60,7 +60,7 @@
             id="tipoDeprocesso"
             label="#{eppmessages['bam.tipoAtraso']}"
             items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
-            value="#{processoEpaNaoFinalizadoList.entity.processoEpa.situacaoPrazo}"
+            value="#{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}"
           />
         </wi:searchForm>
         <dojo:defaultGauge
@@ -80,19 +80,19 @@
         <div class="tbar-div">
           <h:graphicImage
             value="#{a4jSkin.imgFolder}/mod/balao.png"
-            rendered="#{not (row.processoEpa.situacaoPrazo == 'SAT')}"
+            rendered="#{not (row.processo.situacaoPrazo == 'SAT')}"
           />
-          <h:form id="#{row.processoEpa.numeroProcesso}Form">
+          <h:form id="#{row.processo.numeroProcesso}Form">
             <h:selectBooleanCheckbox
-              id="#{row.processoEpa.numeroProcesso}Contab"
+              id="#{row.processo.numeroProcesso}Contab"
               styleClass="checkbox"
-              value="#{row.processoEpa.contabilizar}"
+              value="#{row.processo.contabilizar}"
               required="false"
               disabled="false"
             >
               <a:ajax
                 event="change"
-                listener="#{processoEpaAction.alternarContabilizar(row.processoEpa)}"
+                listener="#{processoEpaAction.alternarContabilizar(row.processo)}"
                 render="processoListPanel gaugeAjaxDivprocesso"
                 limitRender="true"
                 status=":status"
@@ -103,37 +103,37 @@
             </h:selectBooleanCheckbox>
           </h:form>
           <wi:toolBarEdit
-            action="#{processoEpaTarefaList.entity.setProcessoEpa(row.processoEpa)}"
+            action="#{processoTarefaList.entity.setProcesso(row.processo)}"
           />
         </div>
       </ui:define>
       <wi:columnOutputText
         columnId="numeroProcesso"
         columnHeader="#{eppmessages['processo.menuText']}"
-        value="#{row.processoEpa.numeroProcesso}"
+        value="#{row.processo.numeroProcesso}"
         hideOrder="true"
       />
       <wi:columnOutputText
         columnId="fluxo"
         columnHeader="#{eppmessages['naturezaCategoriaFluxo.fluxo']}"
-        value="#{row.processoEpa.naturezaCategoriaFluxo.fluxo}"
+        value="#{row.processo.naturezaCategoriaFluxo.fluxo}"
         hideOrder="true"
       />
       <wi:columnDateTime
         columnId="dataInicio"
         columnHeader="#{eppmessages['processo.dataInicio']}"
-        value="#{row.processoEpa.dataInicio}"
+        value="#{row.processo.dataInicio}"
       />
       <wi:columnOutputText
         columnId="naturezaCategoriaItem"
         columnHeader="#{eppmessages['processoEpa.naturezaCategoriaItem']}"
-        value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processoEpa)}"
+        value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processo)}"
         hideOrder="true"
       />
       <wi:columnOutputText
         columnId="prioridadeProcesso"
         columnHeader="#{eppmessages['bam.prioridade']}"
-        value="#{row.processoEpa.prioridadeProcesso}"
+        value="#{row.processo.prioridadeProcesso}"
       />
       <wi:columnDateTime
         columnId="dataChegadaTarefa"
@@ -167,14 +167,14 @@
       <wi:columnOutputText
         columnId="tempoDesdeInicio"
         columnHeader="#{eppmessages['processoEpa.tempoDesdeInicioDias']}"
-        value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processoEpa)}"
+        value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processo)}"
         hideOrder="true"
       />
     </wi:dataTable>
   </ui:define>
   <ui:define name="form">
     <dojo:defaultGauge
-      id="#{processoEpaTarefaList.entity.processoEpa.numeroProcesso}"
+      id="#{processoTarefaList.entity.processo.numeroProcesso}"
       max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
       width="210"
       height="200"
@@ -186,13 +186,13 @@
       value="#{processoEpaTarefaList.diasDesdeInicioProcesso}"
     />
     <wi:dataTable
-      values="#{processoEpaTarefaList.list(15)}"
-      bean="#{processoEpaTarefaList}"
-      tableTitle="Processo #{processoEpaTarefaList.entity.processoEpa.numeroProcesso} - Tarefas"
+      values="#{processoTarefaList.list(15)}"
+      bean="#{processoTarefaList}"
+      tableTitle="Processo #{processoTarefaList.entity.processo.numeroProcesso} - Tarefas"
       showToolbarColumn="false"
       showSearchForm="false"
       panelStyleClass="bam-table"
-      showGrid="#{not empty processoEpaTarefaList.entity.processoEpa}"
+      showGrid="#{not empty processoTarefaList.entity.processo}"
       id="processoTarefaDataTable"
     >
       <ui:define name="toolBar"></ui:define>
