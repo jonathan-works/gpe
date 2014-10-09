@@ -162,7 +162,8 @@
       <h:form>
         <wi:turnoCalendar
           handler="#{localizacaoTurnoAction.turnoHandler}" />
-        <a:commandButton
+        <wi:commandButton
+          id="localizacaoTurnoTabPersistButton"
           action="#{localizacaoTurnoAction.gravarTurnos()}"
           render="pageBodyDialogMessage"
           limitRender="true"
