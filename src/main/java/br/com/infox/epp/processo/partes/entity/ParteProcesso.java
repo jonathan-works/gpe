@@ -33,9 +33,9 @@ public class ParteProcesso implements Serializable {
     public static final String TABLE_NAME = "tb_parte_processo";
 
     @Id
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_parte_processo")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "ParteProcessoGenerator", sequenceName = "sq_tb_parte_processo")
+    @GeneratedValue(generator = "ParteProcessoGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_parte_processo")
-    @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     private Integer idParteProcesso;
     
     @ManyToOne(fetch = FetchType.LAZY)

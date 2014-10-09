@@ -150,7 +150,7 @@ public abstract class Processo implements Serializable {
     }
     
     @Transient
-    public ProcessoDocumento processoDocumento(){
+    public ProcessoDocumento getProcessoDocumento(){
     	return (ProcessoDocumento) this;
     }
     
