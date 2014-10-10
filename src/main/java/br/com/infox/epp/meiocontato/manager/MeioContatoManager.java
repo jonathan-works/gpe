@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.meiocontato.dao.MeioContatoDAO;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
@@ -59,5 +60,12 @@ public class MeioContatoManager extends Manager<MeioContatoDAO, MeioContato>{
 		meioContato.setPessoa(pessoa);
 		meioContato.setTipoMeioContato(tipoMeioContato);
 		return meioContato;
+	}
+	
+	public void removeMeioContatoByPessoa(Pessoa pessoa) throws DAOException {
+	    List<MeioContato> meioContatoList = getByPessoa(pessoa);
+	    for (MeioContato meioContato : meioContatoList) {
+            getDao().remove(meioContato);
+        }
 	}
 }
