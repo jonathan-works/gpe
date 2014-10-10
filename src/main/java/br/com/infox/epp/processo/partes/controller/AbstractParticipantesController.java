@@ -12,7 +12,7 @@ import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 
 @Scope(ScopeType.CONVERSATION)
-public abstract class AbstractPartesController implements Serializable {
+public abstract class AbstractParticipantesController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private PessoaFisica pessoaFisica = new PessoaFisica();

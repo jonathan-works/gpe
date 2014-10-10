@@ -37,7 +37,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -73,14 +73,23 @@ public class IniciarProcessoAction implements Serializable {
         enviarProcessoParaJbpm();
     }
 
-    private void inserirPartes(List<PessoaFisica> pessoasFisicas,
-            List<PessoaJuridica> pessoasJuridicas) {
+    private void inserirPartes(List<PessoaFisica> pessoasFisicas, List<PessoaJuridica> pessoasJuridicas) {
         if (necessitaPartes()) {
-            for (PessoaFisica p : pessoasFisicas) {
-                processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
+            for (PessoaFisica pessoa : pessoasFisicas) {
+            	ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
+            	participanteProcesso.setProcesso(processoEpa);
+            	participanteProcesso.setPessoa(pessoa);
+            	participanteProcesso.setParte(Boolean.TRUE);
+            	participanteProcesso.setNome(pessoa.getNome());
+                processoEpa.getParticipantes().add(participanteProcesso);
             }
-            for (PessoaJuridica p : pessoasJuridicas) {
-                processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
+            for (PessoaJuridica pessoa : pessoasJuridicas) {
+            	ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
+            	participanteProcesso.setProcesso(processoEpa);
+            	participanteProcesso.setPessoa(pessoa);
+            	participanteProcesso.setParte(Boolean.TRUE);
+            	participanteProcesso.setNome(pessoa.getNome());
+                processoEpa.getParticipantes().add(participanteProcesso);
             }
         }
     }

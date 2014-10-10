@@ -101,7 +101,7 @@ public class ExternalVariables implements Serializable {
         if (processo == null) {
             result = NULL_STRING;
         } else {
-            result = extractObjectStringValue(processo.getPartes());
+            result = extractObjectStringValue(processo.getParticipantes());
         }
         return result;
     }

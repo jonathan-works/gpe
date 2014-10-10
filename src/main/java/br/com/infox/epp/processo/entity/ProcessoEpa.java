@@ -45,7 +45,7 @@ import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
@@ -103,7 +103,7 @@ public class ProcessoEpa extends Processo {
     private PrioridadeProcesso prioridadeProcesso;
     
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE })
-    private List<ParteProcesso> partes = new ArrayList<ParteProcesso>(0);
+    private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE)
     @OrderBy("dataInclusao DESC")
@@ -203,15 +203,15 @@ public class ProcessoEpa extends Processo {
         return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
 
-    public List<ParteProcesso> getPartes() {
-        return partes;
-    }
+    public List<ParticipanteProcesso> getParticipantes() {
+		return participantes;
+	}
 
-    public void setPartes(List<ParteProcesso> partes) {
-        this.partes = partes;
-    }
-    
-    public List<Documento> getDocumentoList() {
+	public void setParticipantes(List<ParticipanteProcesso> participantes) {
+		this.participantes = participantes;
+	}
+
+	public List<Documento> getDocumentoList() {
 		return documentoList;
 	}
 

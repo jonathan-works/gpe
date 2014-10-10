@@ -156,7 +156,7 @@
                 name="tabPartesDoProcesso"
                 status=":status"
                 rendered="#{home.hasPartes() and s:hasPermission('/pages/Processo/abaPartesProcesso', 'access')}"
-                action="#{parteProcessoList.entity.setProcesso(home.instance)}"
+                action="#{participanteProcessoList.entity.setProcesso(home.instance)}"
                 title="#{eppmessages['parteProcesso.partes']}">
                 <ui:decorate
                     id="frameDecorate"

@@ -11,15 +11,15 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <s:div id="parteProcessoListDiv">
-        <wi:dataTable values="#{parteProcessoList.list(15)}"
-            bean="#{parteProcessoList}"
+        <wi:dataTable values="#{participanteProcessoList.list(15)}"
+            bean="#{participanteProcessoList}"
             tableTitle="#{eppmessages['parteProcesso.tableTitle']}"
-            id="parteProcessoList" showSearchForm="false">
+            id="participanteProcessoList" showSearchForm="false">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar" />
             <wi:columnOutputText columnId="pessoa.nome"
                 columnHeader="#{eppmessages['parteProcesso.nome']}"
-                value="#{row.pessoa.nome}" />
+                value="#{row.nome}" />
             <rich:column>
                 <f:facet name="header">#{eppmessages['parteProcesso.codigo']}</f:facet>
                 <h:outputText value="#{row.pessoa.codigo}" rendered="#{row.pessoa.tipoPessoa eq 'F'}">

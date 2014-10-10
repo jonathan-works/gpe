@@ -19,7 +19,7 @@ import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 
 @Name(PartesController.NAME)
-public class PartesController extends AbstractPartesController {
+public class PartesController extends AbstractParticipantesController {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "partesController";

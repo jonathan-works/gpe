@@ -10,30 +10,30 @@
 
         <wi:dataForm formId="pessoaFisicaForm"
             formTitle="#{eppmessages['form.title']}" panelWidth="70%"
-            rendered="#{isUsuarioAtualResponsavel and partesProcessoController.podeAdicionarPartesFisicas() and !partesProcessoController.apenasPessoaJuridica()}">
+            rendered="#{isUsuarioAtualResponsavel and participantesProcessoController.podeAdicionarPartesFisicas() and !participantesProcessoController.apenasPessoaJuridica()}">
             <wi:inputCpf id="cpf"
-                value="#{partesProcessoController.pessoaFisica.cpf}"
+                value="#{participantesProcessoController.pessoaFisica.cpf}"
                 label="#{eppmessages['pessoaFisica.cpf']}"
-                assignTo="#{partesProcessoController.pessoaFisica.cpf}"
+                assignTo="#{participantesProcessoController.pessoaFisica.cpf}"
                 required="true">
                 <a:ajax event="blur"
-                    listener="#{partesProcessoController.searchByCpf()}"
+                    listener="#{participantesProcessoController.searchByCpf()}"
                     execute="@this" render="loadedByCPF"
                     limitRender="true" />
             </wi:inputCpf>
             <h:panelGroup id="loadedByCPF">
                 <wi:inputText id="nome"
-                    value="#{partesProcessoController.pessoaFisica.nome}"
+                    value="#{participantesProcessoController.pessoaFisica.nome}"
                     label="#{eppmessages['pessoaFisica.nome']}"
                     required="true" />
                 <wi:inputDate id="dataNascimento"
-                    value="#{partesProcessoController.pessoaFisica.dataNascimento}"
+                    value="#{participantesProcessoController.pessoaFisica.dataNascimento}"
                     label="#{eppmessages['pessoaFisica.dataNascimento']}"
                     required="true" />
             </h:panelGroup>
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
-                    action="#{partesProcessoController.includePessoaFisica()}"
+                    action="#{participantesProcessoController.includePessoaFisica()}"
                     reRender="buscaDiv, parteProcessoListDiv, includePessoaFisicaDiv, pessoasListDiv, storeDiv, pageBodyDialogMessage"
                     value="#{eppmessages['crud.persist']}" />
             </ui:define>

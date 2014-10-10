@@ -19,30 +19,31 @@ import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.infox.epp.processo.partes.manager.ParteProcessoManager;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 
-@Name(PartesProcessoController.NAME)
-public class PartesProcessoController extends AbstractPartesController {
+@Name(ParticipantesProcessoController.NAME)
+public class ParticipantesProcessoController extends AbstractParticipantesController {
 
-    private static final int QUANTIDADE_INFINITA_PARTES = 0;
+	private static final long serialVersionUID = 1L;
+	private static final int QUANTIDADE_INFINITA_PARTES = 0;
     private static final int QUANTIDADE_MINIMA_PARTES = 1;
-    public static final String NAME = "partesProcessoController";
-    private static final LogProvider LOG = Logging.getLogProvider(PartesProcessoController.class);
-
-    private ProcessoEpa processoEpa;
+    public static final String NAME = "participantesProcessoController";
+    private static final LogProvider LOG = Logging.getLogProvider(ParticipantesProcessoController.class);
 
     @In
     private ActionMessagesService actionMessagesService;
     @In
-    private ParteProcessoManager parteProcessoManager;
+    private ParticipanteProcessoManager participanteProcessoManager;
     @In
     private PessoaFisicaManager pessoaFisicaManager;
     @In
     private PessoaJuridicaManager pessoaJuridicaManager;
     @In
     private ProcessoEpaManager processoEpaManager;
+    
+    private ProcessoEpa processoEpa;
 
     public void setProcessoEpa(ProcessoEpa processoEpa) {
         this.processoEpa = processoEpa;
@@ -54,8 +55,8 @@ public class PartesProcessoController extends AbstractPartesController {
         return processoEpa.getNaturezaCategoriaFluxo().getNatureza();
     }
 
-    public List<ParteProcesso> getPartesFisicas() {
-        List<ParteProcesso> fisicas = filtrar(processoEpa.getPartes(), TipoPessoaEnum.F);
+    public List<ParticipanteProcesso> getPartesFisicas() {
+        List<ParticipanteProcesso> fisicas = filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.F);
         if (Authenticator.isUsuarioAtualResponsavel()) {
             return fisicas;
         } else {
@@ -63,8 +64,8 @@ public class PartesProcessoController extends AbstractPartesController {
         }
     }
 
-    public List<ParteProcesso> getPartesJuridicas() {
-        List<ParteProcesso> juridicas = filtrar(processoEpa.getPartes(), TipoPessoaEnum.J);
+    public List<ParticipanteProcesso> getPartesJuridicas() {
+        List<ParticipanteProcesso> juridicas = filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.J);
         if (Authenticator.isUsuarioAtualResponsavel()) {
             return juridicas;
         } else {
@@ -72,12 +73,12 @@ public class PartesProcessoController extends AbstractPartesController {
         }
     }
 
-    private List<ParteProcesso> filtrar(List<ParteProcesso> partes,
-            TipoPessoaEnum tipoParte) {
-        List<ParteProcesso> filtrado = new ArrayList<ParteProcesso>();
-        for (ParteProcesso parte : partes) {
-            if (tipoParte.equals(parte.getPessoa().getTipoPessoa())) {
-                filtrado.add(parte);
+    private List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes,
+            TipoPessoaEnum tipoPessoa) {
+        List<ParticipanteProcesso> filtrado = new ArrayList<>();
+        for (ParticipanteProcesso participante : participantes) {
+            if (tipoPessoa.equals(participante.getPessoa().getTipoPessoa())) {
+                filtrado.add(participante);
             }
         }
         return filtrado;
@@ -87,7 +88,7 @@ public class PartesProcessoController extends AbstractPartesController {
     public void includePessoaFisica() {
         try {
             pessoaFisicaManager.persist(getPessoaFisica());
-            parteProcessoManager.incluir(processoEpa, getPessoaFisica());
+            participanteProcessoManager.incluir(processoEpa, getPessoaFisica(), Boolean.TRUE);
             processoEpaManager.refresh(processoEpa);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
@@ -101,7 +102,7 @@ public class PartesProcessoController extends AbstractPartesController {
     public void includePessoaJuridica() {
         try {
             pessoaJuridicaManager.persist(getPessoaJuridica());
-            parteProcessoManager.incluir(processoEpa, getPessoaJuridica());
+            participanteProcessoManager.incluir(processoEpa, getPessoaJuridica(), Boolean.TRUE);
             processoEpaManager.refresh(processoEpa);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
@@ -126,32 +127,32 @@ public class PartesProcessoController extends AbstractPartesController {
     public boolean podeAdicionarPartesFisicas() {
         return getNatureza().getHasPartes()
                 && !apenasPessoaJuridica()
-                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
+                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
     }
 
     @Override
     public boolean podeAdicionarPartesJuridicas() {
         return getNatureza().getHasPartes()
                 && !apenasPessoaFisica()
-                && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
+                && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
     }
 
     public boolean podeInativarPartesFisicas() {
-        return getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
+        return getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
     }
 
     public boolean podeInativarPartesJuridicas() {
-        return getPartesAtivas(filtrar(processoEpa.getPartes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
+        return getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
     }
 
-    private List<ParteProcesso> getPartesAtivas(List<ParteProcesso> partes) {
-        List<ParteProcesso> partesAtivas = new ArrayList<>();
-        for (ParteProcesso pp : partes) {
-            if (pp.getAtivo()) {
-                partesAtivas.add(pp);
+    private List<ParticipanteProcesso> getPartesAtivas(List<ParticipanteProcesso> participantes) {
+        List<ParticipanteProcesso> participantesAtivas = new ArrayList<>();
+        for (ParticipanteProcesso participante : participantes) {
+            if (participante.getAtivo()) {
+                participantesAtivas.add(participante);
             }
         }
-        return partesAtivas;
+        return participantesAtivas;
     }
 
 }
