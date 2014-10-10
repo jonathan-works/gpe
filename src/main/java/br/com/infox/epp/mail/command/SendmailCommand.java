@@ -8,6 +8,8 @@ import org.jboss.seam.faces.Renderer;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.seam.exception.BusinessException;
+
 public class SendmailCommand {
 
     private static final String SENDMAIL_LOG_PATTERN = ".execute(sendmail): {0}";
@@ -22,8 +24,8 @@ public class SendmailCommand {
             messages.add("Email enviado com sucesso.");
             LOG.info(format(SENDMAIL_LOG_PATTERN, sw.getTime()));
         } catch (Exception e) {
-            messages.add("Erro ao enviar eMail", e);
             LOG.error(format(SENDMAIL_LOG_PATTERN, sw.getTime()), e);
+            throw new BusinessException("Erro ao enviar eMail", e);
         }
     }
 }

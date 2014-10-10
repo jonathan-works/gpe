@@ -4,7 +4,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED;
-import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.*;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_FLUXO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_ID_PROCESSO;

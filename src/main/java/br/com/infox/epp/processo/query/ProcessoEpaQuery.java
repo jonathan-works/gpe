@@ -46,5 +46,4 @@ public interface ProcessoEpaQuery {
             + PARAM_FLUXO
             + " and pEpa.dataFim is null and pEpa.contabilizar=true and pEpa.situacaoPrazo=:"
             + PARAM_SITUACAO + " group by ncf.fluxo";
-
 }

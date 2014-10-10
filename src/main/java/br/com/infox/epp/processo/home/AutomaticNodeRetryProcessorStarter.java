@@ -19,20 +19,20 @@ import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.quartz.QuartzConstant;
 
-@Name(SystemNodeRetryProcessorStarter.NAME)
+@Name(AutomaticNodeRetryProcessorStarter.NAME)
 @Scope(ScopeType.STATELESS)
 @AutoCreate
-public class SystemNodeRetryProcessorStarter {
-    public static final String NAME = "systemNodeRetryProcessorStarter";
+public class AutomaticNodeRetryProcessorStarter {
+    public static final String NAME = "automaticNodeRetryProcessorStarter";
     
     public static final String CRON = "0 0/10 * * * ?";
-    public static final String SYSTEM_NODE_RETRY_PROCESSOR_PARAMETER = "idSystemNodeRetryProcessorTimer";
+    public static final String AUTOMATIC_NODE_RETRY_PROCESSOR_PARAMETER = "idAutomaticNodeRetryProcessorTimer";
     
     @In
     private ParametroManager parametroManager;
     
     @In
-    private SystemNodeRetryProcessor systemNodeRetryProcessor;
+    private AutomaticNodeRetryProcessor automaticNodeRetryProcessor;
     
     @Observer(value = QuartzDispatcher.QUARTZ_DISPATCHER_INITIALIZED_EVENT)
     @Transactional
@@ -41,15 +41,15 @@ public class SystemNodeRetryProcessorStarter {
             return;
         }
         
-        if (!parametroManager.existeParametro(SYSTEM_NODE_RETRY_PROCESSOR_PARAMETER)) {
+        if (!parametroManager.existeParametro(AUTOMATIC_NODE_RETRY_PROCESSOR_PARAMETER)) {
             Parametro parametro = new Parametro();
             parametro.setAtivo(true);
             parametro.setDataAtualizacao(new Date());
-            parametro.setDescricaoVariavel("ID do timer do processor que executa novamente os nós de sistema parados");
+            parametro.setDescricaoVariavel("ID do timer do processor que executa novamente os nós automáticos parados");
             parametro.setSistema(true);
-            parametro.setNomeVariavel(SYSTEM_NODE_RETRY_PROCESSOR_PARAMETER);
+            parametro.setNomeVariavel(AUTOMATIC_NODE_RETRY_PROCESSOR_PARAMETER);
             
-            QuartzTriggerHandle handle = systemNodeRetryProcessor.retrySystemNodes(CRON);
+            QuartzTriggerHandle handle = automaticNodeRetryProcessor.retryAutomaticNodes(CRON);
             
             parametro.setValorVariavel(handle.getTrigger().getKey().getName());
             

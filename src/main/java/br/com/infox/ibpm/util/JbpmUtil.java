@@ -173,8 +173,8 @@ public class JbpmUtil {
     }
 
     @SuppressWarnings(UNCHECKED)
-    public static List<Token> getTokensOfSystemNodesNotEnded() {
-        return getJbpmSession().createQuery(JbpmQueries.TOKENS_OF_SYSTEM_NODES_NOT_ENDED_QUERY).list();
+    public static List<Token> getTokensOfAutomaticNodesNotEnded() {
+        return getJbpmSession().createQuery(JbpmQueries.TOKENS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY).list();
     }
     
     private DocumentoManager documentoManager() {

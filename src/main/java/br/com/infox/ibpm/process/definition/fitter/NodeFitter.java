@@ -26,7 +26,6 @@ import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jbpm.graph.def.ExceptionHandler;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -146,8 +145,6 @@ public class NodeFitter extends Fitter implements Serializable {
 
             if (nodeType.equals(Fork.class)) {
                 handleForkNode(node);
-            } else if (nodeType.equals(InfoxMailNode.class)) {
-                handleMailNode(node);
             }
 
             newNodeName = null;
@@ -162,12 +159,6 @@ public class NodeFitter extends Fitter implements Serializable {
             getProcessBuilder().getTransitionFitter().clear();
             getProcessBuilder().getTransitionFitter().checkTransitions();
         }
-    }
-
-    private void handleMailNode(Node node) {
-        ExceptionHandler exceptionHandler = new ExceptionHandler();
-        exceptionHandler.setExceptionClassName(Throwable.class.getCanonicalName());
-        node.addExceptionHandler(exceptionHandler);
     }
 
     public List<ModeloDocumento> getModeloDocumentoList() {
