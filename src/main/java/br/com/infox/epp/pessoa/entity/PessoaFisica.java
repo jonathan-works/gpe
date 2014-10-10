@@ -51,8 +51,7 @@ public class PessoaFisica extends Pessoa {
     @Column(name = "nr_cpf", nullable = false, unique = true)
     private String cpf;
     
-    @NotNull
-    @Column(name = "dt_nascimento", nullable = false)
+    @Column(name = "dt_nascimento", nullable = true)
     private Date dataNascimento;
     
     @Basic(fetch = LAZY)
@@ -141,7 +140,7 @@ public class PessoaFisica extends Pessoa {
 
 	@Transient
     public String getDataFormatada() {
-        return DateFormat.getDateInstance().format(dataNascimento);
+        return dataNascimento == null ? "" : DateFormat.getDateInstance().format(dataNascimento);
     }
 
     @Override
