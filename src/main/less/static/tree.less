@@ -11,6 +11,35 @@
     }
   }
 }
+.tree-cont {
+  min-width:200px;
+  position:relative;
+}
+.rf-cp-b.tree-b {
+  width:100%;
+  overflow:auto;
+}
+
+.tree-p.rf-cp.rf-tgp {
+  border-color: #fff;
+  display: inline-table;
+  width: calc(~"100% - 21px");
+}
+
+.tree-hdr {
+  & > .rf-cp-gr {
+    background-size: auto 100%;
+    background-position: right bottom;
+    background-repeat:no-repeat;
+    background-color:transparent;
+    .image("tree.png");
+  }
+  & > .rf-cp-hdr {
+    border:1px solid #c0c0c0;
+    font-weight: normal;
+    padding: 0px;
+  }
+}
 
 .tree-b {
   position: relative;
@@ -39,7 +68,7 @@
   text-decoration: line-through;
 }
 .tree-notselectable {
-  color: lightgray;
+  color:#999;
 }
 
 .tree-hdr {
