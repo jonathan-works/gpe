@@ -36,7 +36,12 @@
 @sub-borda-pad:5px;
 @sub-borda-bord-width:0px;
 
-@default-font-family:dax_lightregular;
+@default-font-family:Arial, Verdana, sans-serif;
+
+@header-bg-color:#c7d8cd;
+@header-bg-deg-color:#dbe5de;
+@menu-bg-color:#a0c991;
+@menu-txt-color:#030;
 
 /*LAYOUT GERAL DA PÁGINA*/
 .width-5 {
@@ -85,6 +90,7 @@
   &.rf-tgp{
     padding: 0px;
     background-color:@baseBgColor;
+    border-color:@panelBorderColor;
   }
 }
 
@@ -93,6 +99,9 @@
     &:extend(.rf-cp.rf-tgp);
     &:extend(.rf-cp-gr);
   }
+}
+.pageBody {
+  height:calc(~"100% - "(@banner-calc-height+23))
 }
 .clean-pageBody {
   height:calc(~"100% - 2px");
@@ -104,7 +113,7 @@
   overflow: auto;
   margin: 5px 0 0 0;
   &.minimal {
-    height:calc(~"100% - "174px);
+    height:calc(~"100% - "(@banner-calc-height));
   }
 }
 
@@ -117,23 +126,18 @@
 .pageContent {
   background-color: #FFF;
   border: 1px solid #999;
-  border-radius: 10px;
   height: 100%;
 }
 .subBorda {
-  border-radius: 7px;
   margin: @sub-borda-marg;
   padding: @sub-borda-pad;
   height: calc(~"100% - "2*(@sub-borda-marg+@sub-borda-pad+@sub-borda-bord-width));
   color: @sub-borda-title-color;
   .bg-deg-color(@sub-borda-bg-color,@sub-borda-bg-deg-color);
 }
-.v-align-top(){
-  vertical-align: top;
-}
 .organized {
   display: inline-block;
-  .v-align-top();
+  vertical-align: top;
 }
 
 .nodeDiv {
@@ -158,7 +162,7 @@
 }
 
 .panelGridCell {
-  .v-align-top();
+  vertical-align: top;
 }
 
 .grid {
@@ -197,7 +201,7 @@ h1 {
 }
 
 .viewColumn {
-  .v-align-top();
+  vertical-align: top;
 }
 .property-field-edit-name {
   &:extend(.viewColumn);
@@ -238,7 +242,7 @@ h1 {
 
 .decoration-div {
   display: inline-block;
-  .v-align-top();
+  vertical-align: top;
 }
 
 .activeRow {
@@ -565,7 +569,7 @@ img.disabled {
     text-align: center;
     display: inline-block;
     box-sizing: border-box;
-    .v-align-top();
+    vertical-align: top;
     -moz-box-sizing: border-box;
     cursor: default;
   }
@@ -635,13 +639,13 @@ img.disabled {
   margin-left: 20px;
   margin-top: 15px;
   display: inline-block;
-  .v-align-top();
+  vertical-align: top;
 }
 
 @p-list-margin:5px;
 .p-list {
   display: inline-block;
-  .v-align-top();
+  vertical-align: top;
   width: 76%;
   margin-right: 10px;
   margin-top: 15px;
@@ -763,6 +767,7 @@ div.rf-trn {
   width:210px;
 }
 .rf-p {
+  border-color:@panelBorderColor;
   &.dt-form-p {
     background-color:@baseBgColor;
   }
@@ -992,4 +997,89 @@ input.buttons,.rf-pick-add-all.rf-pick-btn,.rf-pick-add.rf-pick-btn,.rf-pick-rem
 }
 .palette-img-inpt{
   cursor:pointer;
+}
+
+.rf-cal-popup {
+  background-color:@menu-bg-color;
+  color:@menu-txt-color;
+}
+.rf-cal-c {
+  background-color:#fff;
+}
+td.rf-cal-hdr-month {
+  background-color:@menu-bg-color;
+  color:@menu-txt-color;
+}
+td.rf-cal-tl {
+  background-color:@menu-bg-color;
+  color:@menu-txt-color;
+}
+td.rf-cal-hdr {
+  background-color:#fff;
+}
+td.rf-cal-day-lbl {
+  background-color:#fff;
+}
+td.rf-cal-ftr {
+  background-color:@menu-bg-color;
+}
+td.rf-cal-tl-ftr {
+  background:#fff;
+}
+td.rf-cal-holiday {
+  background-color:lighten(@menu-bg-color,10%);
+  color:darken(@menu-bg-color,10%);
+}
+.rf-cal-tl-btn {
+  &.rf-cal-tl-btn-hov{
+    background-color:lighten(@menu-bg-color,10%);
+    color:@menu-txt-color;
+  }
+}
+td.rf-cal-hov {
+  background-color:lighten(@menu-bg-color,15%);
+}
+td.rf-cal-today {
+  color:#fff;
+  background-color:@menu-txt-color;
+}
+td.rf-cal-sel {
+  background-color:@menu-bg-color;
+  color:@menu-txt-color;
+}
+div.rf-ctx-lst {
+  background-color:lighten(@menu-bg-color,10%);
+  color:@menu-txt-color;
+}
+span.rf-ctx-itm-lbl {
+  color:@menu-txt-color;
+  font-family:@default-font-family; 
+}
+div.rf-ctx-lst-bg {
+  background-image:none;
+  border:lighten(@menu-bg-color,10%);
+}
+div.rf-ctx-itm-sel {
+  background-image:none;
+  background-color:darken(@menu-bg-color,10%);
+  color:lighten(@menu-bg-color,10%);
+}
+div.rf-cal-edtr-btn-sel {
+  background-image:none;
+  background-color:darken(@menu-bg-color,10%);
+  color:lighten(@menu-bg-color,10%);
+}
+td.rf-cal-monthpicker-ok,td.rf-cal-monthpicker-cancel {
+  background-color:lighten(@menu-bg-color,10%);
+  color:darken(@menu-bg-color,10%);
+}
+div.rf-cal-time-btn {
+  background:lighten(@menu-bg-color,10%);
+}
+div.rf-pp-hdr-cnt {
+  color:@menu-txt-color;
+}
+
+div.rf-pp-hdr {
+  background:@menu-bg-color;
 }

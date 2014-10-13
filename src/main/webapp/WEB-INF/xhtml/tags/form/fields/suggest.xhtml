@@ -7,14 +7,6 @@
   xmlns:wi="http://www.itx.com.br/jsf"
 >
   <ui:param
-    name="width"
-    value="#{empty props.width ? '250' : props.width}"
-  />
-  <ui:param
-    name="widthBoxSuggest"
-    value="#{empty props.widthBoxSuggest ? '250' : props.widthBoxSuggest}"
-  />
-  <ui:param
     name="maxlength"
     value="#{empty maxlength ? '50' : maxlength}"
   />
@@ -41,7 +33,6 @@
       disabled="#{disabled}"
       ajax="#{ajax}"
       render="#{render}"
-      width="#{width}"
       style="#{style}"
       styleClass="#{styleClass}"
       maxlength="#{maxlength}"
