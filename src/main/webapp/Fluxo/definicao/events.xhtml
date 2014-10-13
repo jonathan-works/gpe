@@ -75,7 +75,7 @@
                                 showLabelSelecione="true"
                                 width="150px"
                                 widthDiv="150px"
-                                rendered="#{row.event.eventType == 'new-event'}"
+                                rendered="#{row.event.eventType == 'new-event' and not parent.systemNode}"
                                 items="#{parent.supportedEventTypes}"
                                 optionLabel="#{eppmessages['jbpm.'.concat(item)]}"
                                 value="#{parent.eventType}"
