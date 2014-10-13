@@ -18,8 +18,8 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     public static final String NAME = "participanteProcessoManager";
     private static final long serialVersionUID = 1L;
 
-    public void incluir(ProcessoEpa processoEpa, Pessoa pessoa, Boolean isParte) throws DAOException {
-    	ParticipanteProcesso participanteProcesso = new ParticipanteProcesso(processoEpa, pessoa, isParte);
+    public void incluir(ProcessoEpa processoEpa, Pessoa pessoa) throws DAOException {
+    	ParticipanteProcesso participanteProcesso = new ParticipanteProcesso(processoEpa, pessoa);
     	participanteProcesso.setNome(pessoa.getNome());
         persist(participanteProcesso);
     }

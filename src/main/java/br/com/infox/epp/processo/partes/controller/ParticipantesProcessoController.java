@@ -88,7 +88,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     public void includePessoaFisica() {
         try {
             pessoaFisicaManager.persist(getPessoaFisica());
-            participanteProcessoManager.incluir(processoEpa, getPessoaFisica(), Boolean.TRUE);
+            participanteProcessoManager.incluir(processoEpa, getPessoaFisica());
             processoEpaManager.refresh(processoEpa);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
@@ -102,7 +102,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     public void includePessoaJuridica() {
         try {
             pessoaJuridicaManager.persist(getPessoaJuridica());
-            participanteProcessoManager.incluir(processoEpa, getPessoaJuridica(), Boolean.TRUE);
+            participanteProcessoManager.incluir(processoEpa, getPessoaJuridica());
             processoEpaManager.refresh(processoEpa);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);

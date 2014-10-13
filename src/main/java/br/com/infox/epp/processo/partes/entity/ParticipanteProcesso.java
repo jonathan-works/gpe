@@ -58,19 +58,15 @@ public class ParticipanteProcesso implements Serializable {
     @JoinColumn(name = "id_participante_pai", nullable = true)
     private ParticipanteProcesso participantePai;
     
-    @Column(name = "in_parte")
-    private Boolean parte = Boolean.FALSE;
-    
     @Column(name = "in_ativo")
     private Boolean ativo = Boolean.TRUE;
     
     public ParticipanteProcesso() {
     }
     
-    public ParticipanteProcesso(ProcessoEpa processo, Pessoa pessoa, Boolean isParte) {
+    public ParticipanteProcesso(ProcessoEpa processo, Pessoa pessoa) {
     	this.processo = processo;
         this.pessoa = pessoa;
-        this.parte = isParte;
     }
 
     public Integer getId() {
@@ -121,14 +117,6 @@ public class ParticipanteProcesso implements Serializable {
 		this.nome = nome;
 	}
 
-	public Boolean getParte() {
-		return parte;
-	}
-
-	public void setParte(Boolean parte) {
-		this.parte = parte;
-	}
-	
 	public Boolean getAtivo() {
         return ativo;
     }

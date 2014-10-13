@@ -79,7 +79,6 @@ public class IniciarProcessoAction implements Serializable {
             	ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
             	participanteProcesso.setProcesso(processoEpa);
             	participanteProcesso.setPessoa(pessoa);
-            	participanteProcesso.setParte(Boolean.TRUE);
             	participanteProcesso.setNome(pessoa.getNome());
                 processoEpa.getParticipantes().add(participanteProcesso);
             }
@@ -87,7 +86,6 @@ public class IniciarProcessoAction implements Serializable {
             	ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
             	participanteProcesso.setProcesso(processoEpa);
             	participanteProcesso.setPessoa(pessoa);
-            	participanteProcesso.setParte(Boolean.TRUE);
             	participanteProcesso.setNome(pessoa.getNome());
                 processoEpa.getParticipantes().add(participanteProcesso);
             }
