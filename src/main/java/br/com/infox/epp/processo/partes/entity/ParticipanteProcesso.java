@@ -4,6 +4,7 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.P
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -60,6 +62,12 @@ public class ParticipanteProcesso implements Serializable {
     
     @Column(name = "in_ativo")
     private Boolean ativo = Boolean.TRUE;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "participantePai")
+    private List<ParticipanteProcesso> participantesFilhos;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "participanteProcesso")
+    private List<PeriodoParticipacaoProcesso> periodoParticipacaoList;
     
     public ParticipanteProcesso() {
     }
@@ -124,6 +132,22 @@ public class ParticipanteProcesso implements Serializable {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
+    
+	public List<ParticipanteProcesso> getParticipantesFilhos() {
+		return participantesFilhos;
+	}
+
+	public void setParticipantesFilhos(List<ParticipanteProcesso> participantesFilhos) {
+		this.participantesFilhos = participantesFilhos;
+	}
+	
+	public List<PeriodoParticipacaoProcesso> getPeriodoParticipacaoList() {
+		return periodoParticipacaoList;
+	}
+
+	public void setPeriodoParticipacaoList(List<PeriodoParticipacaoProcesso> periodoParticipacaoList) {
+		this.periodoParticipacaoList = periodoParticipacaoList;
+	}
 
 	@Override
 	public int hashCode() {
