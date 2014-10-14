@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -54,8 +55,8 @@ public class ParticipanteProcesso implements Serializable {
     private String nome;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tipo_participante", nullable = false)
-    private TipoParte tipoParticipante;
+    @JoinColumn(name = "id_tipo_parte", nullable = false)
+    private TipoParte tipoParte;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_participante_pai", nullable = true)
@@ -67,7 +68,7 @@ public class ParticipanteProcesso implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "participantePai")
     private List<ParticipanteProcesso> participantesFilhos = new ArrayList<>();
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "participanteProcesso")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "participanteProcesso", cascade = CascadeType.REMOVE)
     private List<PeriodoParticipacaoProcesso> periodoParticipacaoList = new ArrayList<>();
     
     public ParticipanteProcesso() {
@@ -102,12 +103,12 @@ public class ParticipanteProcesso implements Serializable {
         this.pessoa = pessoa;
     }
     
-	public TipoParte getTipoParticipante() {
-		return tipoParticipante;
+	public TipoParte getTipoParte() {
+		return tipoParte;
 	}
 
-	public void setTipoParticipante(TipoParte tipoParticipante) {
-		this.tipoParticipante = tipoParticipante;
+	public void setTipoParte(TipoParte tipoParte) {
+		this.tipoParte = tipoParte;
 	}
 
 	public ParticipanteProcesso getParticipantePai() {
