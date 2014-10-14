@@ -60,7 +60,7 @@
             id="tipoDeprocesso"
             label="#{eppmessages['bam.tipoAtraso']}"
             items="#{processoEpaNaoFinalizadoList.getTiposSituacaoPrazo()}"
-            value="#{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}"
+            value="#{processoEpaNaoFinalizadoList.entity.processo.processoEpa.situacaoPrazo}"
           />
         </wi:searchForm>
         <dojo:defaultGauge
@@ -80,13 +80,13 @@
         <div class="tbar-div">
           <h:graphicImage
             value="#{a4jSkin.imgFolder}/mod/balao.png"
-            rendered="#{not (row.processo.situacaoPrazo == 'SAT')}"
+            rendered="#{row.processo.processoEpa.situacaoPrazo ne 'SAT'}"
           />
           <h:form id="#{row.processo.numeroProcesso}Form">
             <h:selectBooleanCheckbox
               id="#{row.processo.numeroProcesso}Contab"
               styleClass="checkbox"
-              value="#{row.processo.contabilizar}"
+              value="#{row.processo.processoEpa.contabilizar}"
               required="false"
               disabled="false"
             >
@@ -116,7 +116,7 @@
       <wi:columnOutputText
         columnId="fluxo"
         columnHeader="#{eppmessages['naturezaCategoriaFluxo.fluxo']}"
-        value="#{row.processo.naturezaCategoriaFluxo.fluxo}"
+        value="#{row.processo.processoEpa.naturezaCategoriaFluxo.fluxo}"
         hideOrder="true"
       />
       <wi:columnDateTime
@@ -127,13 +127,13 @@
       <wi:columnOutputText
         columnId="naturezaCategoriaItem"
         columnHeader="#{eppmessages['processoEpa.naturezaCategoriaItem']}"
-        value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processo)}"
+        value="#{processoEpaNaoFinalizadoList.getNaturezaCategoriaItem(row.processo.processoEpa)}"
         hideOrder="true"
       />
       <wi:columnOutputText
         columnId="prioridadeProcesso"
         columnHeader="#{eppmessages['bam.prioridade']}"
-        value="#{row.processo.prioridadeProcesso}"
+        value="#{row.processo.processoEpa.prioridadeProcesso}"
       />
       <wi:columnDateTime
         columnId="dataChegadaTarefa"
@@ -167,7 +167,7 @@
       <wi:columnOutputText
         columnId="tempoDesdeInicio"
         columnHeader="#{eppmessages['processoEpa.tempoDesdeInicioDias']}"
-        value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processo)}"
+        value="#{processoEpaNaoFinalizadoList.getDiasDesdeInicioProcesso(row.processo.processoEpa)}"
         hideOrder="true"
       />
     </wi:dataTable>

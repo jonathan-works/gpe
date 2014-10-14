@@ -75,8 +75,7 @@
           id="codigo"
           required="true"
           label="#{eppmessages['localizacao.codigo']}"
-          value="#{estruturaCrudAction.localizacaoFilho.codigo}" 
-          disabled="#{not empty estruturaCrudAction.localizacaoFilho.idLocalizacao}"/>
+          value="#{estruturaCrudAction.localizacaoFilho.codigo}"/>
         <wi:inputText
           id="localizacao"
           required="true"
@@ -162,7 +161,8 @@
       <h:form>
         <wi:turnoCalendar
           handler="#{localizacaoTurnoAction.turnoHandler}" />
-        <a:commandButton
+        <wi:commandButton
+          id="localizacaoTurnoTabPersistButton"
           action="#{localizacaoTurnoAction.gravarTurnos()}"
           render="pageBodyDialogMessage"
           limitRender="true"

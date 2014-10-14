@@ -14,6 +14,7 @@ public class EstadoCivilValidator implements ConstraintValidator<EstadoCivil, St
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
+	    if (value == null) return true;
 		for (EstadoCivilEnum estadoCivilEnum : EstadoCivilEnum.values()){
 			if (estadoCivilEnum.name().equals(value)){
 				return true;

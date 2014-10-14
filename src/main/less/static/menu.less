@@ -2,7 +2,10 @@
 
 @menu-bg-color:#a0c991;
 @menu-txt-color:#030;
-@menu-itm-lbl-padding:4px;
+@default-font-family:Arial;
+@menu-itm-lbl-pad:4px;
+@menu-itm-lbl-marg:0px;
+@menu-itm-lbl-bord-width:1px;
 
 .menu-nav {
   color: @menu-txt-color;
@@ -12,6 +15,14 @@
   position:relative;
   list-style:none;
   background-color: @menu-bg-color;
+  & > .menu-submenu {
+    & > .menu-itm {
+      & > .menu-submenu {
+        margin-left:100%;
+        margin-top:-(16em + 2*@menu-itm-lbl-pad + 2*@menu-itm-lbl-bord-width + 2*@menu-itm-lbl-marg)/16;
+      }
+    }
+  }
 }
 .menu-main {
   position:relative;
@@ -19,7 +30,8 @@
   margin:0;
   padding:0;
   & > .menu-itm {
-    &:extend(.organized);
+    display:inline-block;
+    vertical-align:top;
     & > .menu-submenu {
       margin:0;
     }
@@ -30,55 +42,35 @@
   position:absolute;
   padding:0;
   min-width:100%;
-  margin-left:100%;
-  margin-top:-24px;
-  z-index:9000;
+  z-index:1;
 }
 .menu-lnk {
   color: @menu-txt-color;
   text-decoration:none;
+  font-family:@default-font-family;
+  display:block;
 }
+
 .menu-itm-lbl{
   text-decoration: none;
   white-space: nowrap;
-  padding:@menu-itm-lbl-padding;
-  border-width:1px;
-  border-style:solid;
-  border-color:darken(@menu-bg-color,5%);
+  padding: @menu-itm-lbl-pad;
+  margin: @menu-itm-lbl-marg;
+  border-width: @menu-itm-lbl-bord-width;
+  border-style: solid;
+  border-color: darken(@menu-bg-color,5%);
+  height:14em/16;
   &:hover {
     cursor:pointer;
     color: @menu-bg-color;
     background-color: @menu-txt-color;
-    border-color:@menu-bg-color;
+    border-color: @menu-bg-color;
   }
-  .sub-menu-lbl {
+  &.sub-menu-lbl {
     .image("arrow-right.png");
-    padding-right:@menu-itm-lbl-padding+10px;
-  }
-}
-
-@media (max-width:660px){
-  .menu-submenu{
-    margin-left:5px;
-    margin-top:0;
-    z-index:9000;
-  }
-  
-  .menu-main > .menu-itm {
-    display:none;
-  }
-  .menu-main:after{
-    content: "\2000";
-  }
-  .menu-main:hover > .menu-itm {
-    display:block;
-  }
-  .menu-main > .menu-itm > .menu-submenu,.menu-submenu {
-    display:none;
-    position:relative;
-    margin-left:15px;
-    margin-top:0;
-    padding:0;
+    background-repeat:no-repeat;
+    background-position:center right;
+    padding-right:(6em+@menu-itm-lbl-pad)/16;
   }
 }
 

@@ -101,28 +101,28 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     }
 
     public void updateTempoGasto(Date fireTime,
-            ProcessoTarefa processoEpaTarefa) throws DAOException {
-        if (processoEpaTarefa.getTarefa().getTipoPrazo() == null) {
+            ProcessoTarefa processoTarefa) throws DAOException {
+        if (processoTarefa.getTarefa().getTipoPrazo() == null) {
             return;
         }
-        if (processoEpaTarefa.getUltimoDisparo().before(fireTime)) {
-            float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoEpaTarefa);
-            Integer prazo = processoEpaTarefa.getTarefa().getPrazo();
+        if (processoTarefa.getUltimoDisparo().before(fireTime)) {
+            float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoTarefa);
+            Integer prazo = processoTarefa.getTarefa().getPrazo();
             int porcentagem = 0;
-            int tempoGasto = (int) (processoEpaTarefa.getTempoGasto() + incrementoTempoGasto);
+            int tempoGasto = (int) (processoTarefa.getTempoGasto() + incrementoTempoGasto);
             if (prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
                 porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / (prazo * 60);
             }
 
-            ProcessoEpa processoEpa = (ProcessoEpa) processoEpaTarefa.getProcesso();
+            ProcessoEpa processoEpa = (ProcessoEpa) processoTarefa.getProcesso();
             if (porcentagem > PORCENTAGEM_MAXIMA) {
                 processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }
 
-            processoEpaTarefa.setPorcentagem(porcentagem);
-            processoEpaTarefa.setTempoGasto(tempoGasto);
-            processoEpaTarefa.setUltimoDisparo(fireTime);
-            update(processoEpaTarefa);
+            processoTarefa.setPorcentagem(porcentagem);
+            processoTarefa.setTempoGasto(tempoGasto);
+            processoTarefa.setUltimoDisparo(fireTime);
+            update(processoTarefa);
             updateTempoGasto(processoEpa);
         }
     }
@@ -158,23 +158,23 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
      * a data em que ocorreu o disparo.
      * 
      * @param horaDisparo
-     * @param processoEpaTarefa
+     * @param processoTarefa
      * @return Incremento a ser adicionado ao tempo gasto de um
      *         {@link ProcessoTarefa}
      */
     private float getIncrementoTempoGasto(Date horaDisparo,
-            ProcessoTarefa processoEpaTarefa) {
-        PrazoEnum tipoPrazo = processoEpaTarefa.getTarefa().getTipoPrazo();
+            ProcessoTarefa processoTarefa) {
+        PrazoEnum tipoPrazo = processoTarefa.getTarefa().getTipoPrazo();
         float result = 0;
         if (tipoPrazo == null) {
             return 0;
         }
         switch (tipoPrazo) {
             case H:
-                result = calcularTempoGastoMinutos(horaDisparo, processoEpaTarefa.getTaskInstance(), processoEpaTarefa.getUltimoDisparo());
+                result = calcularTempoGastoMinutos(horaDisparo, processoTarefa.getTaskInstance(), processoTarefa.getUltimoDisparo());
             break;
             case D:
-                result = calcularTempoGastoDias(horaDisparo, processoEpaTarefa);
+                result = calcularTempoGastoDias(horaDisparo, processoTarefa);
             break;
         }
         return result;
@@ -257,13 +257,13 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     }
 
     private int calcularTempoGastoDias(Date dataDisparo,
-            ProcessoTarefa processoEpaTarefa) {
+            ProcessoTarefa processoTarefa) {
         int result = 0;
-        Date ultimaAtualizacao = processoEpaTarefa.getUltimoDisparo();
+        Date ultimaAtualizacao = processoTarefa.getUltimoDisparo();
 
         while (ultimaAtualizacao.before(dataDisparo)) {
             Date disparoAtual = getDisparoIncrementado(ultimaAtualizacao, dataDisparo, Calendar.DAY_OF_MONTH, 1);
-            if (contemTurnoTarefaDia(processoEpaTarefa, disparoAtual)) {
+            if (contemTurnoTarefaDia(processoTarefa, disparoAtual)) {
                 result += DateUtil.diferencaDias(disparoAtual, ultimaAtualizacao);
             }
             ultimaAtualizacao = disparoAtual;

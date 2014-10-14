@@ -24,12 +24,6 @@
   }
 }
 
-.conteudo {
-  &.minimal {
-    height: calc(~"100% - 125px");
-  }
-}
-
 .swimlane-list {
   display: inline-block;
   vertical-align: top;
@@ -146,9 +140,11 @@
 
 .toolbar-itm {
   &.Action{
+  white-space:nowrap;
     &:hover {
-      &:extend(.Selected);
       cursor:context-menu;
+      color:@menu-txt-color;
+      background-color:@menu-bg-color;
     }
   }
 }

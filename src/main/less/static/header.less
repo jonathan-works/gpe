@@ -6,75 +6,81 @@
 @menu-bg-color:#a0c991;
 @menu-txt-color:#030;
 
-@banner-height:115px;
+@banner-height:123px;
+@banner-pad:20px;
+@banner-marg:0px;
+@banner-border-width:0px;
+@banner-calc-height:@banner-height + (2 * @banner-pad) + (2 * @banner-marg) + (2 * @banner-border-width);
 
-.banner {
-  color:@menu-txt-color;
+.logo-top{
+  width:400px;
   height:@banner-height;
-  .bg-deg-color(@header-bg-color,@header-bg-deg-color);
-  
-  .divBg {
-    background-color: @menu-bg-color;
+}
+.logo-top img {
+  max-width:400px;
+  max-height:@banner-height;
+}
+.help-banner {
+  vertical-align:bottom;
+  display:inline-block;
+}
+.header-field {
+  vertical-align:middle;
+  display:inline-block;
+}
+.banner-skin-sel {
+  margin:0 0 20px 0;
+}
+.banner{
+  padding:@banner-pad;
+  .minimal {
+    height: @banner-height;
+    width: calc(~"100% - "(2 * @banner-pad));
+    background: transparent;
   }
-  
-}
-.banner-logo {
-    max-height: @banner-height;
-}
-.banner-subTitle,.banner-title{
-  font-family: @default-font-family;
 }
 
-.banner-lft, .banner-ctr, .banner-rgt,.BarraPesquisa, .SeletorSkins {
-    display: inline-block;
-    vertical-align: top;
-}
-.banner-lft, .banner-rgt {
-    width: 34%;
-}
-.banner-ctr {
-    text-align: center;
-    width: 32%;
-}
-.banner-title {
-    margin-top: 15px;
+.banner-lft {
+  text-align: left;
 }
 
 .banner-rgt {
-    text-align: right;
+  text-align: right;
 }
-.divBg {
-    width: 100%;
-    height: 28px;
-    border-bottom-left-radius: 28px;
+
+.banner-lft,.banner-rgt {
+  width:calc(~"50% - "3px);
+  height:@banner-height;
+  vertical-align:top;
+  display:inline-block;
 }
-.divBg.hidden {
-    visibility: hidden;
+.painelUsuario-label{
+  &.name {
+    &.minimal {
+      text-align:right;
+      color:#FFF;
+      font-weight:900;
+    }
+  }
 }
-.BP-ipt {
-    width: 120px;
+.formPesquisa,.painelUsuario {
+  &:extend(.help-banner);
 }
-.BP-lbl {
-    font-weight: bold;
+
+.input.select.usuario-perfil{
+  margin-left:15px;
+  padding:0 0 10px 10px;
+  font-size:1rem;
+  border:none;
+  height:30px;
+  width:220px;
 }
-.palette-img-inpt {
-    width: 18px;
-    height: auto;
-    cursor: pointer;
-}
-.PaletteMenu {
-    width: 250px;
-}
-.bannerclock.liveclock {
-    right: 0%;
-    top: 0%;
-    text-align: right;
-    font-family:@default-font-family;
-    font-weight: bold;
-}
-.property-field-edit-name.painelUsuario-label {
-    color: inherit;
-}
-.painelUsuario-label, .painelUsuario-select {
-    display: block;
+
+.input.BP-ipt{
+  padding:3px 0 10px 10px;
+  font-size:1rem;
+  border:none;
+  height:18px;
+  width:193px;
+  border-radius:5px;
 }
