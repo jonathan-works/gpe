@@ -7,16 +7,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.epp.processo.partes.query.TipoParteQuery;
+
 @Entity
-@Table(name = "tb_tipo_parte")
+@Table(name = TipoParte.TABLE_NAME)
+@NamedQueries(value = {
+		@NamedQuery(name=TipoParteQuery.TIPO_PARTE_BY_IDENTIFICADOR, query=TipoParteQuery.TIPO_PARTE_BY_IDENTIFICADOR_QUERY)
+})
 public class TipoParte implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    public static final String TABLE_NAME = "tb_tipo_parte";
 
     @Id
     @SequenceGenerator(name = "TipoParteGenerator", allocationSize = 1, sequenceName = "sq_tipo_parte")

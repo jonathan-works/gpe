@@ -14,5 +14,8 @@ public class TipoParteManager extends Manager<TipoParteDAO, TipoParte> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tipoParteManager";
     
+    public TipoParte getTipoParteByIdentificador(String identificador){
+    	return getDao().getTipoParteByIdentificador(identificador);
+    }
    
 }

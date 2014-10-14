@@ -4,6 +4,7 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.P
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -64,10 +65,10 @@ public class ParticipanteProcesso implements Serializable {
     private Boolean ativo = Boolean.TRUE;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "participantePai")
-    private List<ParticipanteProcesso> participantesFilhos;
+    private List<ParticipanteProcesso> participantesFilhos = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "participanteProcesso")
-    private List<PeriodoParticipacaoProcesso> periodoParticipacaoList;
+    private List<PeriodoParticipacaoProcesso> periodoParticipacaoList = new ArrayList<>();
     
     public ParticipanteProcesso() {
     }

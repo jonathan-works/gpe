@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,7 +25,7 @@ public class PeriodoParticipacaoProcesso implements Serializable {
 	public static final String TABLE_NAME = "tb_periodo_participacao_proc";
 	
 	@Id
-	@GeneratedValue(generator = "ParticipacaoGenerator")
+	@GeneratedValue(generator = "ParticipacaoGenerator", strategy = GenerationType.SEQUENCE)
 	@SequenceGenerator(initialValue=1, allocationSize=1, sequenceName="id_periodo_participacao_proc", name="ParticipacaoGenerator")
 	@Column(name = "id_periodo_participacao_proc", nullable = false, unique = true)
 	private Long id;
