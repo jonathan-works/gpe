@@ -67,7 +67,7 @@ public class LogWebserviceServer implements Serializable {
 	}
 
 	public void setDataInicio(Date dataInicio) {
-		this.dataInicio = DateUtil.getBeginningOfDay(dataInicio);
+		this.dataInicio = dataInicio;
 	}
 
 	public Date getDataFim() {
@@ -75,7 +75,7 @@ public class LogWebserviceServer implements Serializable {
 	}
 
 	public void setDataFim(Date dataFim) {
-		this.dataFim = DateUtil.getEndOfDay(dataFim);
+		this.dataFim = dataFim;
 	}
 
 	public String getMensagemRetorno() {
