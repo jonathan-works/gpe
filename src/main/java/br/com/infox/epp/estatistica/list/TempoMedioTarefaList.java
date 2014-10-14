@@ -16,13 +16,14 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
  */
 @Name(TempoMedioTarefaList.NAME)
 public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa> {
-    private static final String GROUP_BY = "group by t, ncf";
+    
+	private static final String GROUP_BY = "group by t, ncf";
 
-    private static final String QUERY = "select new br.com.infox.epp.estatistica.entity.TempoMedioTarefa(t, ncf, count(pet) , avg(pet.tempoGasto))"
-            + " from ProcessoEpaTarefa pet"
-            + " inner join pet.processoEpa p"
+    private static final String QUERY = "select new br.com.infox.epp.estatistica.entity.TempoMedioTarefa(t, ncf, count(pt) , avg(pt.tempoGasto))"
+            + " from ProcessoTarefa pt"
+            + " inner join pt.processo p"
             + " inner join p.naturezaCategoriaFluxo ncf"
-            + " right join pet.tarefa t";
+            + " right join pt.tarefa t ";
 
     public static final String NAME = "tempoMedioTarefaList";
 
@@ -34,11 +35,11 @@ public class TempoMedioTarefaList extends AbstractPageableList<TempoMedioTarefa>
 
     @Override
     protected void initCriteria() {
-        addSearchCriteria("naturezaCategoriaFluxo.natureza", "(ncf.natureza=:natureza or pet is null)");
-        addSearchCriteria("naturezaCategoriaFluxo.categoria", "(ncf.categoria=:categoria or pet is null)");
+        addSearchCriteria("naturezaCategoriaFluxo.natureza", "(ncf.natureza=:natureza or pt is null)");
+        addSearchCriteria("naturezaCategoriaFluxo.categoria", "(ncf.categoria=:categoria or pt is null)");
         addSearchCriteria("naturezaCategoriaFluxo.fluxo", "t.fluxo=:fluxo");
-        addSearchCriteria("dataInicio", "cast(pet.dataInicio as timestamp) >= cast(:dataInicio as timestamp)");
-        addSearchCriteria("dataFim", "cast(pet.dataFim as timestamp) >= cast(:dataFim as timestamp)");
+        addSearchCriteria("dataInicio", "cast(pt.dataInicio as timestamp) >= cast(:dataInicio as timestamp)");
+        addSearchCriteria("dataFim", "cast(pt.dataFim as timestamp) >= cast(:dataFim as timestamp)");
         addSearchCriteria("tipoPrazo", "(not t.tipoPrazo is null and true=:tipoPrazo)");
     }
 

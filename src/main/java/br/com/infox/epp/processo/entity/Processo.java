@@ -143,10 +143,12 @@ public abstract class Processo implements Serializable {
 
     @Transient
     public ProcessoEpa getProcessoEpa(){
-    	if (this instanceof ProcessoEpa) {
-    		return (ProcessoEpa) this;
-    	}
-    	throw new IllegalStateException("Inválido converter tipo de processo " + getTipoProcesso() + " em ProcessoEpa");
+		return (ProcessoEpa) this;
+    }
+    
+    @Transient
+    public ProcessoDocumento processoDocumento(){
+    	return (ProcessoDocumento) this;
     }
     
     public Integer getIdProcesso() {

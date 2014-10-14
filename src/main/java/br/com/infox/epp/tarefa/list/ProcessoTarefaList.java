@@ -29,7 +29,7 @@ public class ProcessoTarefaList extends EntityList<ProcessoTarefa> {
 
     @Override
     protected void addSearchFields() {
-        addSearchField("processoEpa", SearchCriteria.IGUAL);
+        addSearchField("processo", SearchCriteria.IGUAL);
     }
 
     @Override
