@@ -26,7 +26,7 @@ public class PeriodoParticipacaoProcesso implements Serializable {
 	
 	@Id
 	@GeneratedValue(generator = "ParticipacaoGenerator", strategy = GenerationType.SEQUENCE)
-	@SequenceGenerator(initialValue=1, allocationSize=1, sequenceName="id_periodo_participacao_proc", name="ParticipacaoGenerator")
+	@SequenceGenerator(initialValue=1, allocationSize=1, sequenceName="sq_periodo_participacao_proc", name="ParticipacaoGenerator")
 	@Column(name = "id_periodo_participacao_proc", nullable = false, unique = true)
 	private Long id;
 	
