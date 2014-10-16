@@ -122,13 +122,15 @@
   color: #fff;
   text-align: right;
 }
-
+@content-border-radius:7em/16;
 .pageContent {
+  border-radius:@content-border-radius;
   background-color: #FFF;
   border: 1px solid #999;
   height: 100%;
 }
 .subBorda {
+  border-radius:@content-border-radius;
   margin: @sub-borda-marg;
   padding: @sub-borda-pad;
   height: calc(~"100% - "2*(@sub-borda-marg+@sub-borda-pad+@sub-borda-bord-width));
@@ -534,11 +536,9 @@ img.disabled {
   margin-bottom: 10px;
   padding-left: 10px;
 }
-
-.buttons {
+.def-but {
   background-color: transparent;
   min-width: 80px;
-  margin: 25px 4px 0 0;
   font-size: 14rem/16;
   padding: 8.5px 18px;
   border-style: solid;
@@ -548,6 +548,18 @@ img.disabled {
   color:@button-txt-color;
   text-decoration: none;
   vertical-align: middle;
+}
+input.buttons,button.rf-pick-btn {
+  &:extend(.buttons.button.submit);
+  &:extend(.def-but);
+  margin:4px;
+}
+span.rf-ds-btn {
+  background:#fff;
+}
+.buttons {
+  &:extend(.def-but);
+  margin: 25px 4px 0 0;
   &.branco{
     background-color:@menu-bg-color;
   }
@@ -574,7 +586,6 @@ img.disabled {
     cursor: default;
   }
 }
-
 .suggest {
   padding-right: 20px;
   border-width: 0px;
@@ -963,16 +974,6 @@ option {
   background-color: @menu-bg-color;
   color: @menu-txt-color;
   font-family: dax_lightregular;
-}
-input.buttons,.rf-pick-add-all.rf-pick-btn,.rf-pick-add.rf-pick-btn,.rf-pick-rem-all.rf-pick-btn,.rf-pick-rem.rf-pick-btn {
-  background-image:none;
-  background-color: @menu-bg-color;
-  color: @menu-txt-color;
-  font-family: dax_lightregular;
-  background: -moz-linear-gradient(center top, #d4e89c, #c7da94) repeat scroll 0% 0% transparent;
-  box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.4), 0px 1px 0px rgba(255, 255, 255, 0.4) inset;
-  text-shadow: 0px 1px 0px #ADDC7E;
-  height: auto;
 }
 .processo-panel-form.hidden {
   display:none;
