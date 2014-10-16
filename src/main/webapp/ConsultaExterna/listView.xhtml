@@ -165,7 +165,7 @@
                             style="border-style: solid; border-width: 1px; border-color: lightgray">
 
                             <rich:dataTable
-                                value="#{controller.processoEpa.processoEpaTarefaList}"
+                                value="#{controller.processoEpa.processoTarefaList}"
                                 rowKeyVar="key" var="task" styleClass="rf-dt-crud">
                                 <rich:column styleClass="defaultCell">
                                     <f:facet name="header">#{eppmessages['tarefa.nome']}</f:facet>
@@ -199,7 +199,7 @@
                                             <h:commandLink
                                                 action="#{documentoHtmlView.setViewInstance(doc)}"
                                                 onclick="openPopUp('PopUpDocumentoBin', '')"
-                                                rendered="#{! empty doc.documentoBin.modeloDocumento}"
+                                                rendered="#{empty doc.documentoBin.extensao}"
                                                 target="PopUpDocumentoBin">
                                                 <h:graphicImage
                                                     title="Visualizar"
@@ -207,7 +207,7 @@
                                             </h:commandLink>
 
                                             <h:commandLink target="idPdf#{row}"
-                                                rendered="#{empty doc.documentoBin.modeloDocumento}"
+                                                rendered="#{not empty doc.documentoBin.extensao}"
                                                 action="#{documentoDownloader.downloadDocumento(doc)}">
                                                 <h:graphicImage
                                                     value="#{a4jSkin.imgFolder}/mod/pdf.gif"
