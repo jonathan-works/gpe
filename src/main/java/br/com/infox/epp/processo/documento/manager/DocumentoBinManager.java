@@ -20,6 +20,7 @@ import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.path.PathResolver;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -39,7 +40,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     public static final String NAME = "documentoBinManager";
     
     @In
-    private String urlValidacaoDocumento;
+    private PathResolver pathResolver;
     
     public DocumentoBin createProcessoDocumentoBin(
             Documento documento) throws DAOException {
@@ -71,7 +72,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
             Phrase phrase = createPhraseAssinatura(documento, font);
             Phrase codPhrase = createPhraseCodigo(font, documento.getUuid().toString());
             
-            byte[] qrcode = QRCode.from(urlValidacaoDocumento + "?cod=" + documento.getUuid().toString()).to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
+            byte[] qrcode = QRCode.from(getUrlValidacaoDocumento() + "?cod=" + documento.getUuid().toString()).to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
             
             for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
                 PdfContentByte content = stamper.getOverContent(page);
@@ -91,7 +92,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     
     private Phrase createPhraseCodigo(Font font, String uuid) {
         StringBuilder sb = new StringBuilder("Acesse em: ");
-        sb.append(urlValidacaoDocumento);
+        sb.append(getUrlValidacaoDocumento());
         sb.append(" Código do documento: ");
         sb.append(uuid);        
         Phrase codPhrase = new Phrase(sb.toString(), font);
@@ -121,5 +122,9 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                 throw e;
             }
         }
+    }
+    
+    private String getUrlValidacaoDocumento() {
+        return pathResolver.getUrlProject() + "/validaDoc.seam";
     }
 }
