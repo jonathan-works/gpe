@@ -12,12 +12,14 @@
   xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:cc="http://java.sun.com/jsf/composite/components"
+  xmlns:infox="http://www.infox.com.br/jsf"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
   <ui:define name="body">
       <h:form>
         <cc:inputUUID value="#{documentoValidator.uuid}" required="true" id="uuid" label="Código de Validação" />
         <div />
+        <infox:recaptcha />
         <h:commandButton action="#{documentoValidator.download}" value="Validar" styleClass="buttons"/>
       </h:form>
   </ui:define>
