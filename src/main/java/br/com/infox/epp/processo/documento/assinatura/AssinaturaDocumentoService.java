@@ -33,6 +33,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -52,6 +53,8 @@ public class AssinaturaDocumentoService implements Serializable {
     private DocumentoBinarioManager documentoBinarioManager;
     @In
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
+    @In
+    private DocumentoBinManager documentoBinManager;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
@@ -187,6 +190,7 @@ public class AssinaturaDocumentoService implements Serializable {
                 documentoBin, usuarioPerfilAtual, certChain, signature);
         GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
         genericManager.persist(assinaturaDocumento);
+        documentoBinManager.assignUUID(documentoBin);
         genericManager.flush();
     }
 

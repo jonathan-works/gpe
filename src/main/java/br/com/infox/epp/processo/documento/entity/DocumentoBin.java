@@ -6,6 +6,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -23,14 +26,20 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
+import br.com.infox.hibernate.UUIDGenericType;
 
 @Entity
 @Table(name = DocumentoBin.TABLE_NAME)
+@NamedQueries({
+    @NamedQuery(name = DocumentoBinQuery.GET_BY_UUID, query = DocumentoBinQuery.GET_BY_UUID_QUERY)
+})
 public class DocumentoBin implements Serializable {
 
     private static final float BYTES_IN_A_KILOBYTE = 1024f;
@@ -67,6 +76,10 @@ public class DocumentoBin implements Serializable {
     @Column(name = "dt_inclusao", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataInclusao;
+    
+    @Column(name = "ds_uuid")
+    @Type(type = UUIDGenericType.TYPE_NAME)
+    private UUID uuid;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList;
@@ -161,6 +174,14 @@ public class DocumentoBin implements Serializable {
 
     public void setProcessoDocumento(byte[] processoDocumento) {
         this.processoDocumento = ArrayUtil.copyOf(processoDocumento);
+    }
+    
+    public UUID getUuid() {
+        return uuid;
+    }
+    
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
     
     @Override

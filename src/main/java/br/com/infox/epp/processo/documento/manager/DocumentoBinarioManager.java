@@ -26,4 +26,8 @@ public class DocumentoBinarioManager extends Manager<DocumentoBinarioDAO, Docume
     public void remove(Integer idDocumentoExistente) throws DAOException {
         remove(getDao().getReference(idDocumentoExistente));
     }
+    
+    public boolean existeBinario(int idDocumentoBinario) {
+        return getDao().existeBinario(idDocumentoBinario);
+    }
 }
