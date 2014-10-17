@@ -72,7 +72,7 @@ public class PessoaFisica extends Pessoa {
     public PessoaFisica() {
         setTipoPessoa(TipoPessoaEnum.F);
     }
-
+    
     public PessoaFisica(final String cpf, final String nome,
             final Date dataNascimento, final boolean ativo) {
         setTipoPessoa(TipoPessoaEnum.F);

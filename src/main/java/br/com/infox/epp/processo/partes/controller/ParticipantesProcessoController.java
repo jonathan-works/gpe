@@ -7,20 +7,20 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
-import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
+import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 
 @Name(ParticipantesProcessoController.NAME)
@@ -37,44 +37,29 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     @In
     private ParticipanteProcessoManager participanteProcessoManager;
     @In
-    private PessoaFisicaManager pessoaFisicaManager;
-    @In
-    private PessoaJuridicaManager pessoaJuridicaManager;
-    @In
     private ProcessoEpaManager processoEpaManager;
+    @In
+    private TipoParteManager tipoParteManager;
     
     private ProcessoEpa processoEpa;
+    private List<TipoParte> tipoPartes; 
 
     public void setProcessoEpa(ProcessoEpa processoEpa) {
         this.processoEpa = processoEpa;
-        setPessoaFisica(new PessoaFisica());
-        setPessoaJuridica(new PessoaJuridica());
+        clearParticipantePessoaFisica();
+        clearParticipantePessoaJuridica();
     }
 
     private Natureza getNatureza() {
         return processoEpa.getNaturezaCategoriaFluxo().getNatureza();
     }
-
-    public List<ParticipanteProcesso> getPartesFisicas() {
-        List<ParticipanteProcesso> fisicas = filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.F);
-        if (Authenticator.isUsuarioAtualResponsavel()) {
-            return fisicas;
-        } else {
-            return getPartesAtivas(fisicas);
-        }
+    
+    public List<ParticipanteProcesso> getParticipantes() {
+    	return processoEpa.getParticipantes();
     }
 
-    public List<ParticipanteProcesso> getPartesJuridicas() {
-        List<ParticipanteProcesso> juridicas = filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.J);
-        if (Authenticator.isUsuarioAtualResponsavel()) {
-            return juridicas;
-        } else {
-            return getPartesAtivas(juridicas);
-        }
-    }
-
-    private List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes,
-            TipoPessoaEnum tipoPessoa) {
+    private List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes, 
+    		TipoPessoaEnum tipoPessoa) {
         List<ParticipanteProcesso> filtrado = new ArrayList<>();
         for (ParticipanteProcesso participante : participantes) {
             if (tipoPessoa.equals(participante.getPessoa().getTipoPessoa())) {
@@ -83,33 +68,79 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         }
         return filtrado;
     }
+    
+    private List<ParticipanteProcesso> getPartesAtivas(List<ParticipanteProcesso> participantes) {
+        List<ParticipanteProcesso> participantesAtivas = new ArrayList<>();
+        for (ParticipanteProcesso participante : participantes) {
+            if (participante.getAtivo()) {
+                participantesAtivas.add(participante);
+            }
+        }
+        return participantesAtivas;
+    }
+    
+    public boolean podeInativarPartesFisicas() {
+        return Identity.instance().hasPermission(RECURSO_EXCLUIR, "access")
+        		&& getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
+    }
+
+    public boolean podeInativarPartesJuridicas() {
+        return Identity.instance().hasPermission(RECURSO_EXCLUIR, "access")
+        		&& getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
+    }
+    
+    public List<TipoParte> getTipoPartes() {
+    	if (tipoPartes == null){
+    		tipoPartes = tipoParteManager.findAll();
+    	}
+		return tipoPartes;
+	}
+    
+    @Override
+    public boolean podeAdicionarPartesFisicas() {
+        return getNatureza().getHasPartes()
+                && !apenasPessoaJuridica()
+                && Identity.instance().hasPermission(RECURSO_ADICIONAR, "access")
+                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
+    }
+
+    @Override
+    public boolean podeAdicionarPartesJuridicas() {
+        return getNatureza().getHasPartes()
+                && !apenasPessoaFisica()
+                && Identity.instance().hasPermission(RECURSO_ADICIONAR, "access")
+                && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
+    }
 
     @Override
     public void includePessoaFisica() {
         try {
-            pessoaFisicaManager.persist(getPessoaFisica());
-            participanteProcessoManager.incluir(processoEpa, getPessoaFisica());
+        	getParticipantePessoaFisica().setProcesso(processoEpa);
+            getParticipantePessoaFisica().setNome(getParticipantePessoaFisica().getPessoa().getNome());
+            pessoaFisicaManager.persist((PessoaFisica) getParticipantePessoaFisica().getPessoa());
+            participanteProcessoManager.persist(getParticipantePessoaFisica());
             processoEpaManager.refresh(processoEpa);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
-            LOG.error("Não foi possível inserir a pessoa " + getPessoaFisica(), e);
+            LOG.error("Não foi possível inserir a pessoa " + getParticipantePessoaFisica().getPessoa(), e);
         } finally {
-            setPessoaFisica(new PessoaFisica());
+        	clearParticipantePessoaFisica();
         }
     }
 
     @Override
     public void includePessoaJuridica() {
         try {
-            pessoaJuridicaManager.persist(getPessoaJuridica());
-            participanteProcessoManager.incluir(processoEpa, getPessoaJuridica());
+        	getParticipantePessoaJuridica().setProcesso(processoEpa);
+        	getParticipantePessoaJuridica().setNome(getParticipantePessoaJuridica().getPessoa().getNome());
+            pessoaJuridicaManager.persist((PessoaJuridica) getParticipantePessoaJuridica().getPessoa());
+            participanteProcessoManager.persist(getParticipantePessoaJuridica());
             processoEpaManager.refresh(processoEpa);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
-            LOG.error("Não foi possível inserir a pessoa "
-                    + getPessoaJuridica(), e);
+            LOG.error("Não foi possível inserir a pessoa " + getParticipantePessoaJuridica().getPessoa(), e);
         } finally {
-            setPessoaJuridica(new PessoaJuridica());
+            clearParticipantePessoaJuridica();
         }
     }
 
@@ -121,38 +152,6 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     @Override
     public boolean apenasPessoaJuridica() {
         return ParteProcessoEnum.J.equals(getNatureza().getTipoPartes());
-    }
-
-    @Override
-    public boolean podeAdicionarPartesFisicas() {
-        return getNatureza().getHasPartes()
-                && !apenasPessoaJuridica()
-                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
-    }
-
-    @Override
-    public boolean podeAdicionarPartesJuridicas() {
-        return getNatureza().getHasPartes()
-                && !apenasPessoaFisica()
-                && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
-    }
-
-    public boolean podeInativarPartesFisicas() {
-        return getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
-    }
-
-    public boolean podeInativarPartesJuridicas() {
-        return getPartesAtivas(filtrar(processoEpa.getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
-    }
-
-    private List<ParticipanteProcesso> getPartesAtivas(List<ParticipanteProcesso> participantes) {
-        List<ParticipanteProcesso> participantesAtivas = new ArrayList<>();
-        for (ParticipanteProcesso participante : participantes) {
-            if (participante.getAtivo()) {
-                participantesAtivas.add(participante);
-            }
-        }
-        return participantesAtivas;
     }
 
 }

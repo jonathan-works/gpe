@@ -5,9 +5,9 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.P
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,8 +19,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -65,18 +68,29 @@ public class ParticipanteProcesso implements Serializable {
     @Column(name = "in_ativo")
     private Boolean ativo = Boolean.TRUE;
     
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "dt_inicio_participacao", nullable = false)
+	private Date dataInicio;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "dt_fim_participacao")
+	private Date dataFim;
+	
+	@NotNull
+	@Column(name = "ds_caminho_absoluto")
+	private String caminhoAbsoluto;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "participantePai")
     private List<ParticipanteProcesso> participantesFilhos = new ArrayList<>();
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "participanteProcesso", cascade = CascadeType.REMOVE)
-    private List<PeriodoParticipacaoProcesso> periodoParticipacaoList = new ArrayList<>();
-    
-    public ParticipanteProcesso() {
-    }
-    
-    public ParticipanteProcesso(ProcessoEpa processo, Pessoa pessoa) {
-    	this.processo = processo;
-        this.pessoa = pessoa;
+    @PrePersist
+    private void prePersist() {
+    	if (getParticipantePai() == null){
+    		setCaminhoAbsoluto("|");
+    	} else {
+    		String caminho = String.format("%sP%09d|", getParticipantePai().getCaminhoAbsoluto(), getParticipantePai().getId());
+    		setCaminhoAbsoluto(caminho);
+    	}
     }
 
     public Integer getId() {
@@ -135,20 +149,36 @@ public class ParticipanteProcesso implements Serializable {
         this.ativo = ativo;
     }
     
+	public Date getDataInicio() {
+		return dataInicio;
+	}
+
+	public void setDataInicio(Date dataInicio) {
+		this.dataInicio = dataInicio;
+	}
+
+	public Date getDataFim() {
+		return dataFim;
+	}
+
+	public void setDataFim(Date dataFim) {
+		this.dataFim = dataFim;
+	}
+	
+	public String getCaminhoAbsoluto() {
+		return caminhoAbsoluto;
+	}
+
+	public void setCaminhoAbsoluto(String caminhoAbsoluto) {
+		this.caminhoAbsoluto = caminhoAbsoluto;
+	}
+
 	public List<ParticipanteProcesso> getParticipantesFilhos() {
 		return participantesFilhos;
 	}
 
 	public void setParticipantesFilhos(List<ParticipanteProcesso> participantesFilhos) {
 		this.participantesFilhos = participantesFilhos;
-	}
-	
-	public List<PeriodoParticipacaoProcesso> getPeriodoParticipacaoList() {
-		return periodoParticipacaoList;
-	}
-
-	public void setPeriodoParticipacaoList(List<PeriodoParticipacaoProcesso> periodoParticipacaoList) {
-		this.periodoParticipacaoList = periodoParticipacaoList;
 	}
 
 	@Override
@@ -175,5 +205,5 @@ public class ParticipanteProcesso implements Serializable {
 			return false;
 		return true;
 	}
-
+	
 }

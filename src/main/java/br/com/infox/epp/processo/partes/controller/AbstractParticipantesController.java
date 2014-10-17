@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.partes.controller;
 import java.io.Serializable;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 
@@ -10,55 +11,39 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractParticipantesController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private PessoaFisica pessoaFisica = new PessoaFisica();
-    private PessoaJuridica pessoaJuridica = new PessoaJuridica();
-
+	protected static final String RECURSO_ADICIONAR = "/pages/Processo/adicionarParticipanteProcesso";
+	protected static final String RECURSO_EXCLUIR = "/pages/Processo/excluirParticipanteProcesso";
+	
     @In
-    private PessoaFisicaManager pessoaFisicaManager;
+    protected PessoaFisicaManager pessoaFisicaManager;
     @In
-    private PessoaJuridicaManager pessoaJuridicaManager;
-
-    public PessoaFisica getPessoaFisica() {
-        return pessoaFisica;
+    protected PessoaJuridicaManager pessoaJuridicaManager;
+    
+    private ParticipanteProcesso participantePessoaFisica;
+    private ParticipanteProcesso participantePessoaJuridica;
+    
+    @Create
+    public void init(){
+    	clearParticipantePessoaFisica();
+    	clearParticipantePessoaJuridica();
     }
-
-    public void setPessoaFisica(PessoaFisica pessoaFisica) {
-        this.pessoaFisica = pessoaFisica;
+    
+    protected void clearParticipantePessoaFisica(){
+    	participantePessoaFisica = new ParticipanteProcesso();
+    	participantePessoaFisica.setPessoa(new PessoaFisica());
     }
-
-    public PessoaJuridica getPessoaJuridica() {
-        return pessoaJuridica;
+    
+    protected void clearParticipantePessoaJuridica(){
+    	participantePessoaJuridica = new ParticipanteProcesso();
+    	participantePessoaJuridica.setPessoa(new PessoaJuridica());
     }
-
-    public void setPessoaJuridica(PessoaJuridica pessoaJuridica) {
-        this.pessoaJuridica = pessoaJuridica;
-    }
-
-    public void searchByCpf() {
-        final String cpf = getPessoaFisica().getCpf();
-        setPessoaFisica(pessoaFisicaManager.getByCpf(cpf));
-        if (getPessoaFisica() == null) {
-            setPessoaFisica(new PessoaFisica());
-            getPessoaFisica().setCpf(cpf);
-            getPessoaFisica().setAtivo(true);
-        }
-    }
-
-    public void searchByCnpj() {
-        final String cnpj = getPessoaJuridica().getCnpj();
-        setPessoaJuridica(pessoaJuridicaManager.getByCnpj(cnpj));
-        if (getPessoaJuridica() == null) {
-            setPessoaJuridica(new PessoaJuridica());
-            getPessoaJuridica().setCnpj(cnpj);
-            getPessoaJuridica().setAtivo(true);
-        }
-    }
-
+    
     public abstract boolean podeAdicionarPartesFisicas();
     
     public abstract boolean podeAdicionarPartesJuridicas();
@@ -70,5 +55,45 @@ public abstract class AbstractParticipantesController implements Serializable {
     public abstract boolean apenasPessoaFisica();
 
     public abstract boolean apenasPessoaJuridica();
+
+	public void searchByCpf() {
+        final String cpf = getParticipantePessoaFisica().getPessoa().getCodigo();
+        getParticipantePessoaFisica().setPessoa(pessoaFisicaManager.getByCpf(cpf));
+        if (getParticipantePessoaFisica().getPessoa() == null) {
+        	PessoaFisica pessoaFisica = new PessoaFisica();
+        	pessoaFisica.setCpf(cpf);
+        	pessoaFisica.setAtivo(true);
+        	getParticipantePessoaFisica().setPessoa(pessoaFisica);
+        }
+    }
+
+    public void searchByCnpj() {
+        final String cnpj = getParticipantePessoaJuridica().getPessoa().getCodigo();
+        getParticipantePessoaJuridica().setPessoa(pessoaJuridicaManager.getByCnpj(cnpj));
+        if (getParticipantePessoaJuridica().getPessoa() == null) {
+        	PessoaJuridica pessoaJuridica = new PessoaJuridica();
+        	pessoaJuridica.setCnpj(cnpj);
+        	pessoaJuridica.setAtivo(true);
+            getParticipantePessoaJuridica().setPessoa(pessoaJuridica);
+        }
+    }
+    
+    public ParticipanteProcesso getParticipantePessoaFisica() {
+		return participantePessoaFisica;
+	}
+
+	public void setParticipantePessoaFisica(
+			ParticipanteProcesso participantePessoaFisica) {
+		this.participantePessoaFisica = participantePessoaFisica;
+	}
+
+	public ParticipanteProcesso getParticipantePessoaJuridica() {
+		return participantePessoaJuridica;
+	}
+
+	public void setParticipantePessoaJuridica(
+			ParticipanteProcesso participantePessoaJuridica) {
+		this.participantePessoaJuridica = participantePessoaJuridica;
+	}
 
 }

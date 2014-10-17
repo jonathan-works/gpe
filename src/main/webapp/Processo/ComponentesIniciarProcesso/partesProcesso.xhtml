@@ -27,13 +27,13 @@
                     actionRemove="#{partesController.removePessoaFisica(row)}" />
             </ui:define>
             <wi:columnOutputText columnId="pessoa"
-                columnHeader="#{eppmessages['partes.nome']}"
+                columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
                 value="#{row.nome}" />
             <wi:columnEnum columnId="tipo"
-                columnHeader="#{eppmessages['partes.tipoParte']}"
+                columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
                 value="#{row.tipoPessoa}" />
             <wi:columnOutputText columnId="codigo"
-                columnHeader="#{eppmessages['partes.cpf']}"
+                columnHeader="#{eppmessages['participanteProcesso.cpf']}"
                 value="#{row.cpf}">
                 <ui:define name="outputText">
                     <f:converter converterId="cpfConverter"/>
@@ -52,13 +52,13 @@
                     actionRemove="#{partesController.removePessoaJuridica(row)}" />
             </ui:define>
             <wi:columnOutputText columnId="pessoa"
-                columnHeader="#{eppmessages['partes.nome']}"
+                columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
                 value="#{row.nome}" />
             <wi:columnEnum columnId="tipo"
-                columnHeader="#{eppmessages['partes.tipoParte']}"
+                columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
                 value="#{row.tipoPessoa}" />
             <wi:columnOutputText columnId="codigo"
-                columnHeader="#{eppmessages['partes.cnpj']}"
+                columnHeader="#{eppmessages['participanteProcesso.cnpj']}"
                 value="#{row.cnpj}">
                 <ui:define name="outputText">
                     <f:converter converterId="cnpjConverter"/>

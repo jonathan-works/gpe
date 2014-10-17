@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.partes.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.annotations.Name;
@@ -14,6 +15,12 @@ public class TipoParteDAO extends DAO<TipoParte> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "tipoParteDAO";
+	
+	@Override
+	public List<TipoParte> findAll() {
+		String hql = "from TipoParte order by descricao";
+		return getResultList(hql, null);
+	}
 	
 	public TipoParte getTipoParteByIdentificador(String identificador){
 		Map<String, Object> params = new HashMap<>();

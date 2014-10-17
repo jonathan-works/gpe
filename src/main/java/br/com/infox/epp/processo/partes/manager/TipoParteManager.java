@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.partes.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -16,6 +18,10 @@ public class TipoParteManager extends Manager<TipoParteDAO, TipoParte> {
     
     public TipoParte getTipoParteByIdentificador(String identificador){
     	return getDao().getTipoParteByIdentificador(identificador);
+    }
+    
+    public List<TipoParte> getTipoPartes() {
+    	return getDao().findAll();
     }
    
 }

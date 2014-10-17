@@ -22,14 +22,33 @@
                 execute="@this" render="loadedByCNPJ" limitRender="true" />
         </wi:inputCnpj>
         <h:panelGroup id="loadedByCNPJ">
+        
             <wi:inputText id="nome"
                 value="#{partesController.pessoaJuridica.nome}"
-                label="#{eppmessages['pessoaJuridica.nome']}"
+                label="#{eppmessages['pessoaJuridica.nomeFantasia']}"
                 required="true" />
+                
             <wi:inputText id="razao"
                 value="#{partesController.pessoaJuridica.razaoSocial}"
                 label="#{eppmessages['pessoaJuridica.razaoSocial']}"
                 required="true" />
+                
+            <wi:selectOneMenuEntity id="tipoPartes"
+				items="#{partesController.tipoPartes}"
+				label="#{eppmessages['participanteProcesso.tipoParticipante']}"
+				showLabelSelecione="true" />
+				
+			<wi:selectOneMenuEntity id="participanteSuperior"
+				items="#{partesController.tipoPartes}"
+				label="#{eppmessages['participanteProcesso.superior']}"
+				showLabelSelecione="true"/>
+				
+			<wi:inputDate id="dataInicio"
+				label="#{eppmessages['participanteProcesso.dataInicioParticipacao']}" />
+					
+			<wi:inputDate id="dataFim"
+				label="#{eppmessages['participanteProcesso.dataFimParticipacao']}" />
+				
         </h:panelGroup>
         <ui:define name="buttons">
             <a:commandButton id="pessoaJuridicaSaveButton"
