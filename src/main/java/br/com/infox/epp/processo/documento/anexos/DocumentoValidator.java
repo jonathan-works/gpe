@@ -14,7 +14,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 
 @Name(DocumentoValidator.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.SESSION)
 @AutoCreate
 public class DocumentoValidator {
     public static final String NAME = "documentoValidator";
@@ -29,6 +29,9 @@ public class DocumentoValidator {
     
     @In
     private DocumentoDownloader documentoDownloader;
+    
+    private int tentativas;
+    private boolean acessoBloqueado;
     
     public String getUuid() {
         return uuid;
@@ -53,5 +56,21 @@ public class DocumentoValidator {
         if (documentoBinarioManager.existeBinario(pdBin.getId())) {
             documentoDownloader.downloadDocumento(pdBin.getDocumentoList().get(0));
         }
+        tentativas = 0;
+    }
+    
+    public void incrementTries() {
+        tentativas++;
+        if (tentativas == 3) {
+            acessoBloqueado = true;
+        }
+    }
+ 
+    public boolean isAcessoBloqueado() {
+        return acessoBloqueado;
+    }
+    
+    public int getTentativas() {
+        return tentativas;
     }
 }

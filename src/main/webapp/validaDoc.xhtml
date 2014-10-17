@@ -16,12 +16,18 @@
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
   <ui:define name="body">
-      <h:form>
+      <h:form rendered="#{not documentoValidator.acessoBloqueado}">
         <cc:inputUUID value="#{documentoValidator.uuid}" required="true" id="uuid" label="Código de Validação" />
         <div />
-        <infox:recaptcha />
+        <infox:recaptcha triesListener="documentoValidator.incrementTries" />
+        <div />
+        <ui:param name="tentativasRestantes" value="#{3 - documentoValidator.tentativas}" />
+        <h:outputText rendered="#{documentoValidator.tentativas gt 0}" 
+            value="Você possui #{tentativasRestantes} tentativa#{tentativasRestantes gt 1 ? 's' : ''}" />
+        <div />
         <h:commandButton action="#{documentoValidator.download}" value="Validar" styleClass="buttons"/>
       </h:form>
+      <h:outputText value="Acesso Bloqueado" rendered="#{documentoValidator.acessoBloqueado}"/>
   </ui:define>
   
 </ui:composition>
