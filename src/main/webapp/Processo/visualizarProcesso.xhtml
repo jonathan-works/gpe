@@ -61,7 +61,7 @@
             <infox:tab
                 id="tabEntrada"
                 name="tabEntrada"
-                rendered="#{!empty taskInstanceView.fields}"
+                rendered="#{!empty taskInstanceView.fields and s:hasPermission('/pages/Processo/abaEntrada', 'access')}"
                 status=":status"
                 title="#{eppmessages['movimentar.entrada.titleTab']}">
                 <ui:decorate
@@ -78,7 +78,7 @@
             <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
-                rendered="#{processoEpaHome.managed}"
+                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaMovimentacoes', 'access')}"
                 status=":status"
                 title="#{eppmessages['acaoProcesso.menuText']}">
                 <ui:decorate
@@ -92,7 +92,7 @@
             <infox:tab
                 id="tabAnexar"
                 name="tabAnexar"
-                rendered="#{s:hasRole('usuarioInterno')}"
+                rendered="#{s:hasRole('usuarioInterno') and s:hasPermission('/pages/Processo/abaAnexar', 'access')}"
                 status=":status"
                 title="#{eppmessages['movimentar.anexar.titleTab']}"
                 action="#{anexoController.onClickTabAnexar(processoEpaHome.instance)}">
@@ -107,7 +107,7 @@
             <infox:tab
                 id="tabAnexos"
                 name="tabAnexos"
-                rendered="#{processoEpaHome.managed}"
+                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaAnexos', 'access')}"
                 status=":status"
                 action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
@@ -120,7 +120,7 @@
             <infox:tab
                 id="documentoFisicoTab"
                 name="documentoFisicoTab"
-                rendered="#{home.isManaged()}"
+                rendered="#{home.isManaged() and s:hasPermission('/pages/Processo/abaDocumentoFisico', 'access')}"
                 action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
                 title="#{eppmessages['documentoFisico.titleTab']}">
                 <ui:decorate
@@ -154,7 +154,7 @@
                 id="tabPartesDoProcesso"
                 name="tabPartesDoProcesso"
                 status=":status"
-                rendered="#{home.hasPartes()}"
+                rendered="#{home.hasPartes() and s:hasPermission('/pages/Processo/abaPartesProcesso', 'access')}"
                 action="#{parteProcessoList.entity.setProcesso(home.instance)}"
                 title="#{eppmessages['parteProcesso.partes']}">
                 <ui:decorate
