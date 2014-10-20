@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.list;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -44,9 +45,6 @@ public class DocumentoList extends EntityList<Documento> {
     @In
     private ActionMessagesService actionMessagesService;
    
-    private Processo processo;
-    private Pasta pasta;
-    
     @Override
     protected void addSearchFields() {
         addSearchField("pasta", SearchCriteria.IGUAL);
@@ -55,13 +53,6 @@ public class DocumentoList extends EntityList<Documento> {
     @Override
     protected String getDefaultEjbql() {
     	String usuarioExternoPodeVer = (String) Parametros.IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO.getValue();
-    	if (getEntity().getPasta() == null) {
-    	    try {
-                setPasta(pastaManager.getByProcesso(processo).get(0));
-            } catch (DAOException e) {
-                actionMessagesService.handleDAOException(e);
-            }
-    	}
         if(Identity.instance().hasRole("usuarioExterno") && "false".equals(usuarioExternoPodeVer)){
         	return DEFAULT_EJBQL + DOCUMENTO_EXCLUIDO_FILTER;
         } else {
@@ -80,14 +71,21 @@ public class DocumentoList extends EntityList<Documento> {
     	map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
         return map;
     }
+    public Processo getProcesso() {
+        return getEntity().getProcesso();
+    }
     
-    public Pasta getPasta() {
-        return pasta;
+    public void setProcesso(Processo processo) {
+        Documento documento = getEntity();
+        documento.setProcesso(processo);
+        if (documento.getPasta()== null){
+            try {
+                List<Pasta> byProcesso = pastaManager.getByProcesso(documento.getProcesso());
+                documento.setPasta(byProcesso.get(0));
+            } catch (DAOException e) {
+                actionMessagesService.handleDAOException(e);
+            }
+        }
     }
-
-    public void setPasta(Pasta pasta) {
-        this.pasta = pasta;
-        getEntity().setPasta(pasta);
-        setEjbql(getDefaultEjbql());
-    }
+    
 }
