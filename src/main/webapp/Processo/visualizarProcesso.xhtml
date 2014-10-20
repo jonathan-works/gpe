@@ -156,12 +156,12 @@
                 name="tabPartesDoProcesso"
                 status=":status"
                 rendered="#{home.hasPartes() and s:hasPermission('/pages/Processo/abaPartesProcesso', 'access')}"
-                action="#{parteProcessoList.entity.setProcesso(home.instance)}"
-                title="#{eppmessages['parteProcesso.partes']}">
+                action="#{participanteProcessoList.entity.setProcesso(home.instance)}"
+                title="#{eppmessages['participanteProcesso.participantes']}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{eppmessages['parteProcesso.partes']}</ui:define>
+                    <ui:define name="title">#{eppmessages['participanteProcesso.partes']}</ui:define>
                     <ui:include src="parteProcessoGridRO.xhtml" />
                 </ui:decorate>
             </infox:tab>
