@@ -27,6 +27,7 @@
 	                label="#{eppmessages['pessoaFisica.nome']}" required="true" />
 	                
 	            <wi:inputEmail id="email"
+	            	value="#{participantesProcessoController.email}"
 	            	label="#{eppmessages['pessoaFisica.email']}" />
 	                
 	            <wi:inputDate id="dataNascimento"
@@ -41,17 +42,17 @@
 					showLabelSelecione="true" />
 					
 				<wi:selectOneMenuEntity id="participanteSuperior"
-					items="#{participantesProcessoController.tipoPartes}"
+					items="#{participantesProcessoController.participantesAtivos}"
 					value="#{participantesProcessoController.participantePessoaFisica.participantePai}"
 					label="#{eppmessages['participanteProcesso.superior']}"
 					showLabelSelecione="true"/>
 					
 				<wi:inputDate id="dataInicio"
-					value="#{participantesProcessoController.periodoParticipacaoFisica.dataInicio}"
+					value="#{participantesProcessoController.participantePessoaFisica.dataInicio}"
 					label="#{eppmessages['participanteProcesso.dataInicioParticipacao']}" />
 						
 				<wi:inputDate id="dataFim"
-					value="#{participantesProcessoController.periodoParticipacaoFisica.dataFim}"
+					value="#{participantesProcessoController.participantePessoaFisica.dataFim}"
 					label="#{eppmessages['participanteProcesso.dataFimParticipacao']}" />
 						
 	        </h:panelGroup>

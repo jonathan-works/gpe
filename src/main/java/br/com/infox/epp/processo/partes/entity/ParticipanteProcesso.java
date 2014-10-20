@@ -1,13 +1,18 @@
 package br.com.infox.epp.processo.partes.entity;
 
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO_QUERY;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -32,7 +38,9 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 @Entity
 @Table(name = ParticipanteProcesso.TABLE_NAME)
 @NamedQueries(value={
-		@NamedQuery(name=PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, query=PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY)
+		@NamedQuery(name=PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, query=PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY),
+		@NamedQuery(name=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO, query=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO_QUERY),
+		@NamedQuery(name=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO, query=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO_QUERY)
 })
 public class ParticipanteProcesso implements Serializable {
 
@@ -76,23 +84,33 @@ public class ParticipanteProcesso implements Serializable {
 	@Column(name = "dt_fim_participacao")
 	private Date dataFim;
 	
-	@NotNull
 	@Column(name = "ds_caminho_absoluto")
 	private String caminhoAbsoluto;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "participantePai")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="participantePai")
     private List<ParticipanteProcesso> participantesFilhos = new ArrayList<>();
     
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="participanteModificado", cascade=CascadeType.REMOVE)
+    private List<HistoricoParticipanteProcesso> historicoParticipanteList;
+    
     @PrePersist
-    private void prePersist() {
+    private void prePersist(){
+    	if (getNome() == null){
+    		setNome(getPessoa().getNome());
+    	}
+    }
+    
+    @PostPersist
+    private void postPersist(){
     	if (getParticipantePai() == null){
-    		setCaminhoAbsoluto("|");
+    		String caminho = String.format("P%09d", getId());
+    		setCaminhoAbsoluto(caminho);
     	} else {
-    		String caminho = String.format("%sP%09d|", getParticipantePai().getCaminhoAbsoluto(), getParticipantePai().getId());
+    		String caminho = String.format("%s|P%09d", getParticipantePai().getCaminhoAbsoluto(), getId());
     		setCaminhoAbsoluto(caminho);
     	}
     }
-
+    
     public Integer getId() {
 		return id;
 	}
@@ -179,6 +197,11 @@ public class ParticipanteProcesso implements Serializable {
 
 	public void setParticipantesFilhos(List<ParticipanteProcesso> participantesFilhos) {
 		this.participantesFilhos = participantesFilhos;
+	}
+	
+	@Override
+	public String toString() {
+		return nome;
 	}
 
 	@Override

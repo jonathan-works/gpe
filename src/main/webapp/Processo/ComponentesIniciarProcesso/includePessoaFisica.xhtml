@@ -10,43 +10,49 @@
 
     <wi:dataForm formId="pessoaFisicaForm"
         formTitle="#{eppmessages['pessoaFisica.formTitle']}"
-        rendered="#{participantesController.podeAdicionarPartesFisicas() and not participantesController.apenasPessoaJuridica()}">
-
+        rendered="#{participantesController.podeAdicionarPartesFisicas()}">
+        
         <wi:inputCpf id="cpf"
-            value="#{participantesController.pessoaFisica.cpf}"
-            label="#{eppmessages['pessoaFisica.cpf']}"
-            assignTo="#{participantesController.pessoaFisica.cpf}"
-            required="true">
-            <a:ajax event="blur"
+               value="#{participantesController.participantePessoaFisica.pessoa.cpf}"
+               label="#{eppmessages['pessoaFisica.cpf']}"
+               assignTo="#{participantesController.participantePessoaFisica.pessoa.cpf}"
+               required="true">
+               <a:ajax event="blur"
                 listener="#{participantesController.searchByCpf()}"
                 execute="@this" render="loadedByCPF" limitRender="true" />
-        </wi:inputCpf>
-        <h:panelGroup id="loadedByCPF">
+           </wi:inputCpf>
+           <h:panelGroup id="loadedByCPF">
             <wi:inputText id="nome"
-                value="#{participantesController.pessoaFisica.nome}"
+                value="#{participantesController.participantePessoaFisica.pessoa.nome}"
                 label="#{eppmessages['pessoaFisica.nome']}" required="true" />
                 
             <wi:inputEmail id="email"
+            	value="#{participantesController.email}"
             	label="#{eppmessages['pessoaFisica.email']}" />
                 
             <wi:inputDate id="dataNascimento"
-                value="#{participantesController.pessoaFisica.dataNascimento}"
+                value="#{participantesController.participantePessoaFisica.pessoa.dataNascimento}"
                 label="#{eppmessages['pessoaFisica.dataNascimento']}" />
                 
             <wi:selectOneMenuEntity id="tipoPartes"
 				items="#{participantesController.tipoPartes}"
+				value="#{participantesController.participantePessoaFisica.tipoParte}"
 				label="#{eppmessages['participanteProcesso.tipoParticipante']}"
+				required="true"
 				showLabelSelecione="true" />
 				
 			<wi:selectOneMenuEntity id="participanteSuperior"
-				items="#{participantesController.tipoPartes}"
+				items="#{participantesController.participantesAtivos}"
+				value="#{participantesController.participantePessoaFisica.participantePai}"
 				label="#{eppmessages['participanteProcesso.superior']}"
 				showLabelSelecione="true"/>
 				
 			<wi:inputDate id="dataInicio"
+				value="#{participantesController.participantePessoaFisica.dataInicio}"
 				label="#{eppmessages['participanteProcesso.dataInicioParticipacao']}" />
 					
 			<wi:inputDate id="dataFim"
+				value="#{participantesController.participantePessoaFisica.dataFim}"
 				label="#{eppmessages['participanteProcesso.dataFimParticipacao']}" />
         </h:panelGroup>
 		

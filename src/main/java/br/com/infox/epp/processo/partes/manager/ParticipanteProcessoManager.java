@@ -8,6 +8,7 @@ import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoDAO;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.entity.TipoParte;
 
 @AutoCreate
 @Name(ParticipanteProcessoManager.NAME)
@@ -18,6 +19,17 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
 
     public ParticipanteProcesso getParticipanteProcessoByPessoaProcesso(Pessoa pessoa, Processo processo){
     	return getDao().getParticipanteProcessoByPessoaProcesso(pessoa, processo);
+    }
+    
+    public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa, 
+    		Processo processo, ParticipanteProcesso pai, TipoParte tipo) {
+    	return getDao().existeParticipanteByPessoaProcessoPaiTipo(pessoa, processo, pai, tipo);
+    }
+    
+    public boolean existeParticipanteByPessoaProcessoPaiTipoLock(Pessoa pessoa, 
+    		Processo processo, ParticipanteProcesso pai, TipoParte tipo) {
+    	getDao().lockPessimistic(processo);
+    	return existeParticipanteByPessoaProcessoPaiTipo(pessoa, processo, pai, tipo);
     }
     
 }

@@ -103,6 +103,7 @@ public class ProcessoEpa extends Processo {
     private PrioridadeProcesso prioridadeProcesso;
     
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE })
+    @OrderBy(value = "ds_caminho_absoluto")
     private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE)

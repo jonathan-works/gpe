@@ -39,17 +39,17 @@
 					showLabelSelecione="true" />
 					
 				<wi:selectOneMenuEntity id="participanteSuperior"
-					items="#{participantesProcessoController.tipoPartes}"
+					items="#{participantesProcessoController.participantesAtivos}"
 					value="#{participantesProcessoController.participantePessoaJuridica.participantePai}"
 					label="#{eppmessages['participanteProcesso.superior']}"
 					showLabelSelecione="true"/>
 					
 				<wi:inputDate id="dataInicio"
-					value="#{participantesProcessoController.periodoParticipacaoJuridica.dataInicio}"
+					value="#{participantesProcessoController.participantePessoaJuridica.dataInicio}"
 					label="#{eppmessages['participanteProcesso.dataInicioParticipacao']}" />
 						
 				<wi:inputDate id="dataFim"
-					value="#{participantesProcessoController.periodoParticipacaoJuridica.dataFim}"
+					value="#{participantesProcessoController.participantePessoaJuridica.dataFim}"
 					label="#{eppmessages['participanteProcesso.dataFimParticipacao']}" />
 					
 	        </h:panelGroup>

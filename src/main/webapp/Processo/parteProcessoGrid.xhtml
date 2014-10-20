@@ -24,40 +24,38 @@
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBar
-                    rendered="#{row.ativo and participantesProcessoController.podeInativarPartesFisicas()}"
+                    rendered="#{row.ativo and participantesProcessoController.podeInativarPartes(row.pessoa.tipoPessoa)}"
                     action="#{participanteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv"
                     url="#{a4jSkin.imgFolder}/remove.png" id="ativo" />
                 <wi:toolBar
-                    rendered="#{not row.ativo and participantesProcessoController.podeAdicionarPartesFisicas()}"
+                    rendered="#{not row.ativo and participantesProcessoController.podeAdicionarPartes(row.pessoa.tipoPessoa)}"
                     action="#{participanteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv" url="#{a4jSkin.imgFolder}/add.gif"
                     id="inativo" />
             </ui:define>
             <wi:columnOutputTextIdent columnId="pessoa.nome"
+            	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
                 columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
                 value="#{row.nome}" 
-                hideOrder="true"/>
-            <wi:columnOutputText columnId="cpf"
+                hideOrder="true"
+                fullPath="#{row.caminhoAbsoluto}"/>
+      		<wi:columnOutputText columnId="cpfCnpj"
+       			styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
                 columnHeader="#{eppmessages['participanteProcesso.codigo']}"
-                value="#{row.pessoa.getCodigo()}" hideOrder="true">
-                <ui:define name="outputText">
-                	<c:if test="#{row.pessoa.tipoPessoa eq 'F'}">
-                		<f:converter converterId="cpfConverter"/>
-                	</c:if>
-                    <c:if test="#{row.pessoa.tipoPessoa eq 'J'}" >
-                    	<f:converter converterId="cnpjConverter"/>
-                    </c:if>
-                </ui:define>
+                value="#{row.pessoa.codigoFormatado}" hideOrder="true" >
             </wi:columnOutputText>
             <wi:columnOutputText columnId="tipoParticipante" 
+            	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
             	value="#{row.tipoParte}"
             	columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
             	hideOrder="true"/>
-           	<wi:columnDateTime columnId="dataInicio" 
+           	<wi:columnDateTime columnId="dataInicio" value="#{row.dataInicio}"
+           		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
            		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataInicio']}"
            		hideOrder="true"/>
-           	<wi:columnDateTime columnId="dataFim" 
+           	<wi:columnDateTime columnId="dataFim" value="#{row.dataFim}"
+           		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
            		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataFim']}"
           		hideOrder="true"/>
 

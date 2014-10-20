@@ -18,7 +18,7 @@ public class ParticipanteProcessoList extends EntityList<ParticipanteProcesso> {
     private static final long serialVersionUID = 1L;
 
     private static final String DEFAULT_EJBQL = "select o from ParticipanteProcesso o";
-    private static final String DEFAULT_ORDER = "pessoa";
+    private static final String DEFAULT_ORDER = "caminhoAbsoluto";
     private static final String REGRA_IS_RESPONSAVEL = "(#{authenticator.isUsuarioAtualResponsavel()}=true or o.ativo=true)";
 
     @Override

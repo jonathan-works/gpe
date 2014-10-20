@@ -7,6 +7,9 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.epp.meiocontato.entity.MeioContato;
+import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
+import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
@@ -24,9 +27,13 @@ public abstract class AbstractParticipantesController implements Serializable {
     protected PessoaFisicaManager pessoaFisicaManager;
     @In
     protected PessoaJuridicaManager pessoaJuridicaManager;
+    @In
+    protected MeioContatoManager meioContatoManager;
     
     private ParticipanteProcesso participantePessoaFisica;
     private ParticipanteProcesso participantePessoaJuridica;
+    private String email;
+    private MeioContato meioContato;
     
     @Create
     public void init(){
@@ -37,6 +44,8 @@ public abstract class AbstractParticipantesController implements Serializable {
     protected void clearParticipantePessoaFisica(){
     	participantePessoaFisica = new ParticipanteProcesso();
     	participantePessoaFisica.setPessoa(new PessoaFisica());
+    	meioContato = new MeioContato();
+    	email = null;
     }
     
     protected void clearParticipantePessoaJuridica(){
@@ -64,6 +73,13 @@ public abstract class AbstractParticipantesController implements Serializable {
         	pessoaFisica.setCpf(cpf);
         	pessoaFisica.setAtivo(true);
         	getParticipantePessoaFisica().setPessoa(pessoaFisica);
+        } else {
+        	meioContato = meioContatoManager.getMeioContatoByPessoaAndTipo(getParticipantePessoaFisica().getPessoa(), TipoMeioContatoEnum.EM);
+        	if (meioContato == null){
+        		meioContato = new MeioContato();
+        	} else {
+        		email = meioContato.getMeioContato();
+        	}
         }
     }
 
@@ -96,4 +112,20 @@ public abstract class AbstractParticipantesController implements Serializable {
 		this.participantePessoaJuridica = participantePessoaJuridica;
 	}
 
+	public MeioContato getMeioContato() {
+		return meioContato;
+	}
+
+	public void setMeioContato(MeioContato meioContato) {
+		this.meioContato = meioContato;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 }
