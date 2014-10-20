@@ -82,7 +82,6 @@
                 styleClass="folder-ul"
                 rowClass="folder-li"
                 var="pasta">
-                <h:form>
                   <rich:dropTarget
                     acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
                     dropListener="#{pastaAction.associaDocumento}"
@@ -102,7 +101,6 @@
                       class="folder" />
                       
                   </a:commandLink>
-                </h:form>
               </rich:list>
             </rich:panel>
             <wi:commandButton
@@ -115,6 +113,8 @@
               value="Remover Pasta"
               rendered="#{s:hasRole('usuarioInterno')}"
               disabled="#{not pastaAction.canRemove(documentoList.entity.pasta)}"
+              reRender="documentoListSearchForm, documentoListPanel"
+              execute="@this"
               action="#{pastaAction.removePasta(documentoList.entity.pasta)}"
               onclick="" />
           </ui:define>

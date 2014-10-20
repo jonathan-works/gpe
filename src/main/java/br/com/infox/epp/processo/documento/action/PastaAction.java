@@ -63,15 +63,12 @@ public class PastaAction implements Serializable {
         }
     }
     
-    public Boolean removePasta(Pasta pasta) {
-        return Boolean.TRUE;
-//        try {
-//            pastaManager.remove(pasta);
-//            return Boolean.TRUE;
-//        } catch (DAOException e) {
-//            actionMessagesService.handleDAOException(e);
-//            return Boolean.FALSE;
-//        }
+    public void removePasta(Pasta pasta) {
+        try {
+            pastaManager.remove(pasta);
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
+        }
     }
 
     public void associaDocumento(DropEvent evt) {
