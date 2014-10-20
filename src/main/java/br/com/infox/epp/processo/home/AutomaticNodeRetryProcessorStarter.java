@@ -25,7 +25,7 @@ import br.com.infox.quartz.QuartzConstant;
 public class AutomaticNodeRetryProcessorStarter {
     public static final String NAME = "automaticNodeRetryProcessorStarter";
     
-    public static final String CRON = "0 0/10 * * * ?";
+    public static final String CRON = "0 0/30 * * * ?";
     public static final String AUTOMATIC_NODE_RETRY_PROCESSOR_PARAMETER = "idAutomaticNodeRetryProcessorTimer";
     
     @In
