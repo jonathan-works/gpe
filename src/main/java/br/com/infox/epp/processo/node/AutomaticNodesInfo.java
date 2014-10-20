@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.node;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,9 +62,13 @@ public class AutomaticNodesInfo implements Serializable {
     
     @Transactional
     public void executeNode(Long tokenId) {
+        String nodeName = null;
+        long processId = 0;
         try {
             Token token = jbpmContext.getTokenForUpdate(tokenId);
             Node node = (Node) HibernateUtil.removeProxy(token.getNode());
+            nodeName = node.getName();
+            processId = token.getProcessInstance().getId();
             if (node instanceof InfoxMailNode) {
                 ExecutionContext context = new ExecutionContext(token);
                 node.execute(context);
@@ -71,9 +76,8 @@ public class AutomaticNodesInfo implements Serializable {
                 token.signal(); // Sistema
             }
         } catch (Exception e) {
-            LOG.error("", e);
-            String mensagem = e instanceof DelegationException ? e.getCause().getMessage() : e.getMessage();
-            FacesMessages.instance().add("Erro ao executar nó: " + mensagem);
+            LOG.error(MessageFormat.format("Nó: {0}\tProcesso Jbpm: {1}", nodeName, processId), e);
+            FacesMessages.instance().add("Erro ao executar nó");
         }
         this.nodes = null;
     }
