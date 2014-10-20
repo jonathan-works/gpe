@@ -62,6 +62,17 @@ public class PastaAction implements Serializable {
             actionMessagesService.handleDAOException(e);
         }
     }
+    
+    public Boolean removePasta(Pasta pasta) {
+        return Boolean.TRUE;
+//        try {
+//            pastaManager.remove(pasta);
+//            return Boolean.TRUE;
+//        } catch (DAOException e) {
+//            actionMessagesService.handleDAOException(e);
+//            return Boolean.FALSE;
+//        }
+    }
 
     public void associaDocumento(DropEvent evt) {
         Object od = evt.getDragValue();
@@ -76,6 +87,11 @@ public class PastaAction implements Serializable {
                 actionMessagesService.handleDAOException(e);
             }
         }
+    }
+    
+    public Boolean canRemove(Pasta pasta) {
+        List<Documento> documentoList = pasta.getDocumentosList();
+        return pasta.getRemovivel() && (documentoList == null || documentoList.isEmpty());
     }
     
     public Integer getIdPasta() {

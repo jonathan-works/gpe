@@ -89,15 +89,18 @@
                     dropValue="#{pasta}"
                     render="documentoListPanel, documentoListSearchForm"
                     limitRender="true" />
+                  
                   <a:commandLink
                     action="#{documentoList.entity.setPasta(pasta)}"
-                    render="documentoListPanel"
+                    render="documentoListPanel, documentoListSearchForm"
                     execute="@form"
                     styleClass="folder"
                     limitRender="true">
+                    
                     <h:outputText
                       value="#{pasta.nome}"
                       class="folder" />
+                      
                   </a:commandLink>
                 </h:form>
               </rich:list>
@@ -110,7 +113,9 @@
             <wi:commandButton
               id="rmFolderBtm"
               value="Remover Pasta"
-              disabled="true"
+              rendered="#{s:hasRole('usuarioInterno')}"
+              disabled="#{not pastaAction.canRemove(documentoList.entity.pasta)}"
+              action="#{pastaAction.removePasta(documentoList.entity.pasta)}"
               onclick="" />
           </ui:define>
 
@@ -125,7 +130,7 @@
                   acceptClass="pasta-acpt"
                   draggingClass="pasta-drag"
                   rejectClass="pasta-rejt">
-                  <span class="pasta-ind-lbl">#{eppmessages['documento.titlePage']}:
+                  <span class="pasta-ind-lbl">#{eppmessages['documentoProcesso.titlePage']}:
                     #{row.descricao}</span>
                 </rich:dragIndicator>
               </rich:dragSource>

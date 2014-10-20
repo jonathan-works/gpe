@@ -30,7 +30,6 @@ public class DocumentoList extends EntityList<Documento> {
             + "(not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true and "
             + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o)))";
-    private static final String DEFAULT_EJBQL_EMPTY = "select o from Documento o where 1=0";
     
     private static final String DOCUMENTO_EXCLUIDO_FILTER = " and o.excluido = false";
     

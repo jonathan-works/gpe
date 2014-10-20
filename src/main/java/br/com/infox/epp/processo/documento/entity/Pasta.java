@@ -100,4 +100,12 @@ public class Pasta implements Serializable {
     public void setRemovivel(Boolean removivel) {
         this.removivel = removivel;
     }
+
+    public List<Documento> getDocumentosList() {
+        return documentosList;
+    }
+
+    public void setDocumentosList(List<Documento> documentosList) {
+        this.documentosList = documentosList;
+    }
 }
