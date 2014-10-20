@@ -9,9 +9,14 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.security.Identity;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
 
@@ -24,6 +29,7 @@ public class DocumentoList extends EntityList<Documento> {
             + "(not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true and "
             + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o)))";
+    private static final String DEFAULT_EJBQL_EMPTY = "select o from Documento o where 1=0";
     
     private static final String DOCUMENTO_EXCLUIDO_FILTER = " and o.excluido = false";
     
@@ -33,15 +39,29 @@ public class DocumentoList extends EntityList<Documento> {
     
     @In
     private ParametroManager parametroManager;
+    @In
+    private PastaManager pastaManager;
+    @In
+    private ActionMessagesService actionMessagesService;
+   
+    private Processo processo;
+    private Pasta pasta;
     
     @Override
     protected void addSearchFields() {
-        addSearchField("processo", SearchCriteria.IGUAL);
+        addSearchField("pasta", SearchCriteria.IGUAL);
     }
 
     @Override
     protected String getDefaultEjbql() {
     	String usuarioExternoPodeVer = (String) Parametros.IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO.getValue();
+    	if (getEntity().getPasta() == null) {
+    	    try {
+                setPasta(pastaManager.getByProcesso(processo).get(0));
+            } catch (DAOException e) {
+                actionMessagesService.handleDAOException(e);
+            }
+    	}
         if(Identity.instance().hasRole("usuarioExterno") && "false".equals(usuarioExternoPodeVer)){
         	return DEFAULT_EJBQL + DOCUMENTO_EXCLUIDO_FILTER;
         } else {
@@ -60,5 +80,14 @@ public class DocumentoList extends EntityList<Documento> {
     	map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
         return map;
     }
+    
+    public Pasta getPasta() {
+        return pasta;
+    }
 
+    public void setPasta(Pasta pasta) {
+        this.pasta = pasta;
+        getEntity().setPasta(pasta);
+        setEjbql(getDefaultEjbql());
+    }
 }

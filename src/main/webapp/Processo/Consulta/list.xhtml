@@ -69,7 +69,7 @@
                 id="tabAnexos"
                 name="tabAnexos"
                 immediate="true"
-                action="#{documentoList.entity.setProcesso(consultaController.processoEpa)}"
+                action="#{pastaAction.setProcesso(consultaController.processoEpa)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 status=":status"
                 title="#{eppmessages['processo.documentos']}">
@@ -77,15 +77,64 @@
                     execute="@this" render="historicoDocumentoPanelDiv" limitRender="true" status=":status">
                     <a:param name="idDocumento" assignTo="#{documentoProcessoAction.idDocumento}" converter="javax.faces.Integer"/>
                 </a:jsFunction>
-                <wi:dataTable
+
+				<wi:dataTable
                     values="#{documentoList.list(15)}"
                     bean="#{documentoList}"
-                    tableTitle="#{eppmessages['processo.documentos']}"
                     id="documentoList"
+                    tableTitle="#{empty documentoList.pasta ? '' : documentoList.pasta.nome}"
                     rowId="#{row.id}"
-                    panelStyleClass="full-sized"
-                    showSearchForm="false">
-                    <ui:define name="toolBar">
+                    showSearchForm="true">
+					
+					<ui:define name="searchForm">
+						<rich:panel header="Pastas">
+							<rich:list
+								value="#{pastaAction.pastaList}"
+								styleClass="folder-ul"
+								rowClass="folder-li"
+								var="pasta">
+								<h:form>
+									<rich:dropTarget
+					                  acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
+					                  dropListener="#{pastaAction.associaDocumento}"
+					                  dropValue="#{pasta}"
+					                  render="documentoListPanel, documentoListSearchForm"
+					                  limitRender="true" />
+									<a:commandLink action="#{documentoList.setPasta(pasta)}"
+										render="documentoListPanel"
+										execute="@form"
+										styleClass="folder"
+										limitRender="true">
+										<h:outputText value="#{pasta.nome}" class="folder" />
+									</a:commandLink>
+								</h:form>
+							</rich:list>
+						</rich:panel>
+						<wi:commandButton id="addFolderBtn" value="Adicionar Pasta"
+                            disabled="false"
+                            onclick="#{rich:component('addPastaPanel')}.show();" />
+						<wi:commandButton id="rmFolderBtm" value="Remover Pasta"
+                            disabled="true"
+                            onclick="" />
+					</ui:define>
+					
+					<ui:define name="toolBar">
+						<a:outputPanel>
+					      <rich:dragSource type="doc#{consultaController.processoEpa.idProcesso}" dragValue="#{row}"
+					        dragIndicator="indicator">
+					        <rich:dragIndicator
+					          id="indicator"
+					          acceptClass="pasta-acpt"
+					          draggingClass="pasta-drag"
+					          rejectClass="pasta-rejt"
+					        >
+					          <span class="pasta-ind-lbl">#{eppmessages['documento.titlePage']}: #{row.descricao}</span>
+					        </rich:dragIndicator>
+					      </rich:dragSource>
+					
+					      <h:graphicImage url="#{a4jSkin.imgFolder}/anexo.png" title="#{eppmessages['pasta.moverDocumento']}" />
+					
+					    </a:outputPanel>
                         <s:link
                             target="idJan#{row.id}"
                             rendered="#{not empty row.documentoBin.assinaturas}"
@@ -123,29 +172,28 @@
                                         title="#{eppmessages['button.restaurar']}"
                                         onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');"/>
                     </ui:define>
-                    <ui:define name="headerToolBar" />
-                    <wi:columnOutputText
-                        styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                        columnId="usuarioInclusao"
-                        columnHeader="#{eppmessages['assinaturas.usuario']}"
-                        value="#{row.usuarioInclusao}" />
-                    <wi:columnOutputText
-                        styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                        columnId="dataInclusao"
-                        columnHeader="#{eppmessages['assinaturas.dataInclusao']}"
-                        value="#{row.dataInclusao}" />
-                    <wi:columnOutputText
-                        styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                        columnId="processoDocumento"
-                        columnHeader="#{eppmessages['assinaturas.documento']}"
-                        value="#{row.descricao}" />
-                    <wi:columnOutputText
-                        styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                        columnId="processoDocumentoBin.sizeFormatado"
-                        columnHeader="#{eppmessages['processoDocumento.tamanho']}"
-                        value="#{row.documentoBin.sizeFormatado}"/>
-                </wi:dataTable>
-                
+	                    <ui:define name="headerToolBar" />
+	                    <wi:columnOutputText
+	                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+	                        columnId="usuarioInclusao"
+	                        columnHeader="#{eppmessages['assinaturas.usuario']}"
+	                        value="#{row.usuarioInclusao}" />
+	                    <wi:columnOutputText
+	                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+	                        columnId="dataInclusao"
+	                        columnHeader="#{eppmessages['assinaturas.dataInclusao']}"
+	                        value="#{row.dataInclusao}" />
+	                    <wi:columnOutputText
+	                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+	                        columnId="processoDocumento"
+	                        columnHeader="#{eppmessages['assinaturas.documento']}"
+	                        value="#{row.descricao}" />
+	                    <wi:columnOutputText
+	                    	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+	                        columnId="processoDocumentoBin.sizeFormatado"
+	                        columnHeader="#{eppmessages['processoDocumento.tamanho']}"
+	                        value="#{row.documentoBin.sizeFormatado}"/>
+				</wi:dataTable>
                 <script type="text/javascript">
                     function clearFieldsExcludeRestore() {
                         var maxlength = 4000;
@@ -187,7 +235,43 @@
                             alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
                         }
                     }
+					
+					function clearAddPastaFields() {
+						#{rich:jQuery('addPastaInputName')}.val('');
+					}
+					
                 </script>
+                
+                <rich:popupPanel id="addPastaPanel" moveable="true"
+                	show="false" resizeable="false" minWidth="310" minHeight="230"
+                	header="Adicionar Pasta" onbeforehide="clearAddPastaFields();">
+                	<f:facet name="controls">
+			        	<h:graphicImage id="pastaPanelCloseBtn"
+			        		styleClass="mp-close"
+			        		value="#{a4jSkin.imgFolder}/closeMP.gif" 
+        					onmouseup="#{rich:component('addPastaPanel')}.hide();"/>
+			        </f:facet>
+                	<h:form id="addPastaForm">
+                		<wi:inputText id="addPastaInputName" 
+                			value="#{pastaAction.nome}"
+                			required="true"
+                			maxLength="100"
+                			label="Nome da pasta">
+                		</wi:inputText>
+                		<wi:selectBooleanCheckbox id="addPastaInputVisivelExterno"
+                			value="#{pastaAction.visivelExterno}"
+                			required="true"
+                			label="Usuário externo pode ver?" />
+                		<a:commandButton id="addPastaButton" 
+			          		actionListener="#{pastaAction.addPasta()}"
+					        limitRender="true" execute="@form"
+					        onclick="infox.showLoading();"
+					        oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{}"
+					        value="Adicionar"
+					        render="@form, documentoListSearchForm"
+					        styleClass="buttons"/>
+                	</h:form>
+                </rich:popupPanel>
                 
                 <rich:popupPanel id="requestMotivoPanel" header="teste" headerClass="motivo-header" moveable="true" 
                                  show="false" resizeable="true" minWidth="690" minHeight="310"
@@ -262,6 +346,24 @@
                         </rich:dataTable>              
                     </rich:panel>
                  </s:div>
+            </infox:tab>
+            <infox:tab
+                id="tabAnexar"
+                name="tabAnexar"
+                immediate="true"
+                status=":status"
+                title="#{eppmessages['processoDocumento.anexarDocumento']}"
+                rendered="#{empty consultaController.processoEpa.dataFim}"
+                action="#{anexoController.onClickTabAnexar(consultaController.processoEpa)}">
+                <wi:ajaxDiv id="divAnexarDocumentos">
+                    <wi:dataForm
+                        formId="anexarDocumentosForm"
+                        formTitle="#{eppmessages['processoDocumento.anexarDocumento']}">
+                        <ui:include
+                            src="/Processo/anexarDocumentos.xhtml" />
+                        <ui:define name="buttons" />
+                    </wi:dataForm>
+                </wi:ajaxDiv>
             </infox:tab>
             <infox:tab
                 id="documentoFisicoTab"

@@ -135,6 +135,10 @@ public class Documento implements Serializable {
     @Column(name="in_excluido", nullable = false)
     private Boolean excluido = Boolean.FALSE;
     
+    @ManyToOne
+    @JoinColumn(name="id_pasta")
+    private Pasta pasta;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento", cascade = CascadeType.REMOVE)
     @OrderBy(value="dataAlteracao DESC")
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
@@ -283,6 +287,14 @@ public class Documento implements Serializable {
 		this.historicoStatusDocumentoList = historicoStatusDocumentoList;
 	}
 
+	public Pasta getPasta() {
+	    return pasta;
+	}
+	
+	public void setPasta(Pasta pasta) {
+	    this.pasta = pasta;
+	}
+	
 	public boolean isDocumentoAssinavel(Papel papel){
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
 		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
