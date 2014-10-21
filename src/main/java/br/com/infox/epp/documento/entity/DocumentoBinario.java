@@ -5,11 +5,18 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.processo.documento.query.DocumentoBinarioQuery;
+
 @Entity
 @Table(name = DocumentoBinario.TABLE_NAME)
+@NamedQueries({
+    @NamedQuery(name = DocumentoBinarioQuery.EXISTE_BINARIO, query = DocumentoBinarioQuery.EXISTE_BINARIO_QUERY)
+})
 public class DocumentoBinario implements Serializable {
 
     private static final long serialVersionUID = 1L;

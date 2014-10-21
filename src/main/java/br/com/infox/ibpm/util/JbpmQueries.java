@@ -8,4 +8,6 @@ interface JbpmQueries {
     String ALL_TASKS_QUERY = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti "
             + "where ti.isSuspended = false and ti.isOpen = true order by ti.name";
 
+    String TOKENS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY = "SELECT t FROM org.jbpm.graph.exe.Token t "
+            + "WHERE t.end IS NULL AND t.node.class IN ('N', 'M')";
 }

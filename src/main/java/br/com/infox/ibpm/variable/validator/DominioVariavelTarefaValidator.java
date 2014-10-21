@@ -20,7 +20,7 @@ public class DominioVariavelTarefaValidator implements Validator {
             Pattern pattern = Pattern.compile("(.+?=.+?;)*");
             Matcher matcher = pattern.matcher(dominio);
             if (!matcher.matches()) {
-                throw new ValidatorException(new FacesMessage("Valores inválidos. Deve estar no formato valor=label, separado por ;"));
+                throw new ValidatorException(new FacesMessage("Valores inválidos. Deve estar no formato label=valor, separado por ;"));
             }
         }
     }

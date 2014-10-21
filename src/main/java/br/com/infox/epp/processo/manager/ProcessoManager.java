@@ -25,6 +25,7 @@ import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
@@ -43,15 +44,17 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     @In
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
     @In
+    private DocumentoManager documentoManager;
+    @In
     private GenericDAO genericDAO;
     @In
-    private DocumentoManager documentoManager;
+    private DocumentoBinManager documentoBinManager;
 
     public DocumentoBin createDocumentoBin(Object value) throws DAOException {
         DocumentoBin bin = new DocumentoBin();
         bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
         bin.setMd5Documento(MD5Encoder.encode(String.valueOf(value)));
-        genericDAO.persist(bin);
+        documentoBinManager.persist(bin);
         return bin;
     }
 
@@ -209,5 +212,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     	Long idToken = ((Number) ids[1]).longValue();
     	getDao().removerProcessoJbpm(processo.getIdProcesso(), idJbpm, idTaskMgmInstance, idToken);
     	processo.setIdJbpm(null);
+    }
+    
+    public String getNumeroProcessoByIdJbpm(Long processInstanceId) {
+        return getDao().getNumeroProcessoByIdJbpm(processInstanceId);
     }
 }

@@ -11,7 +11,9 @@ import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 @Name(ProcessoEpaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoEpaAction extends AbstractAction<ProcessoEpa, ProcessoEpaManager> {
-    public static final String NAME = "processoEpaAction";
+	
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "processoEpaAction";
 
     public boolean alternarContabilizar(ProcessoEpa processoEpa) {
         processoEpa.getSituacaoPrazo().toString();

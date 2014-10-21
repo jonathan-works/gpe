@@ -107,5 +107,8 @@ public interface ProcessoQuery {
 	String GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST = "getIdTaskMgmInstanceAndIdTokenByProcInst";
 	String GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY = "select taskmgmtinstance_ , token_ " +
 			"from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM;
+	
+	String NUMERO_PROCESSO_BY_ID_JBPM = "Processo.numeroProcessoByIdJbpm";
+	String NUMERO_PROCESSO_BY_ID_JBPM_QUERY = "select o.numeroProcesso from Processo o where o.idJbpm = :" + PARAM_ID_JBPM;
 
 }

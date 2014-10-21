@@ -172,6 +172,11 @@ public class JbpmUtil {
         return VariableType.EDITOR.name().equals(type);
     }
 
+    @SuppressWarnings(UNCHECKED)
+    public static List<Token> getTokensOfAutomaticNodesNotEnded() {
+        return getJbpmSession().createQuery(JbpmQueries.TOKENS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY).list();
+    }
+    
     private DocumentoManager documentoManager() {
         return ComponentUtil.getComponent(DocumentoManager.NAME);
     }

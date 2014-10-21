@@ -26,7 +26,6 @@ import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jbpm.graph.def.ExceptionHandler;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -41,6 +40,8 @@ import org.jbpm.graph.node.TaskNode;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
+import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.constants.NodeTypeConstants;
@@ -78,6 +79,8 @@ public class NodeFitter extends Fitter implements Serializable {
     private JbpmNodeManager jbpmNodeManager;
     @In
     private TransitionFitter transitionFitter;
+    @In
+    private StatusProcessoManager statusProcessoManager;
     
     @SuppressWarnings(UNCHECKED)
     public void addNewNode() {
@@ -146,8 +149,6 @@ public class NodeFitter extends Fitter implements Serializable {
 
             if (nodeType.equals(Fork.class)) {
                 handleForkNode(node);
-            } else if (nodeType.equals(InfoxMailNode.class)) {
-                handleMailNode(node);
             }
 
             newNodeName = null;
@@ -162,12 +163,6 @@ public class NodeFitter extends Fitter implements Serializable {
             getProcessBuilder().getTransitionFitter().clear();
             getProcessBuilder().getTransitionFitter().checkTransitions();
         }
-    }
-
-    private void handleMailNode(Node node) {
-        ExceptionHandler exceptionHandler = new ExceptionHandler();
-        exceptionHandler.setExceptionClassName(Throwable.class.getCanonicalName());
-        node.addExceptionHandler(exceptionHandler);
     }
 
     public List<ModeloDocumento> getModeloDocumentoList() {
@@ -472,6 +467,34 @@ public class NodeFitter extends Fitter implements Serializable {
         }
         return nodeType.substring(0, 1).toLowerCase() + nodeType.substring(1);
     }
+    
+    public String getNodeType() {
+        if (currentNode instanceof TaskNode) {
+            return NodeTypeConstants.TASK;
+        }
+        if (currentNode instanceof InfoxMailNode) {
+            return NodeTypeConstants.MAIL_NODE;
+        }
+        if (currentNode instanceof DecisionNode) {
+            return NodeTypeConstants.DECISION;
+        }
+        if (currentNode instanceof StartState) {
+            return NodeTypeConstants.START_STATE;
+        }
+        if (currentNode instanceof EndState) {
+            return NodeTypeConstants.END_STATE;
+        }
+        if (currentNode instanceof ProcessState) {
+            return NodeTypeConstants.PROCESS_STATE;
+        }
+        if (currentNode instanceof Fork) {
+            return NodeTypeConstants.FORK;
+        }
+        if (currentNode instanceof Join) {
+            return NodeTypeConstants.JOIN;
+        }
+        return NodeTypeConstants.NODE;
+    }
 
     public String getIcon(Node node) {
         String icon = node.getNodeType().toString();
@@ -545,5 +568,9 @@ public class NodeFitter extends Fitter implements Serializable {
             }
         }
         decision.setDecisionExpression(expression);
+    }
+    
+    public List<StatusProcesso> getStatusProcessoList() {
+        return statusProcessoManager.findAll();
     }
 }

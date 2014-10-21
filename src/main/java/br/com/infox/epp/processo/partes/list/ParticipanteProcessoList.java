@@ -8,17 +8,17 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 
-@Name(ParteProcessoList.NAME)
 @Scope(ScopeType.PAGE)
-public class ParteProcessoList extends EntityList<ParteProcesso> {
+@Name(ParticipanteProcessoList.NAME)
+public class ParticipanteProcessoList extends EntityList<ParticipanteProcesso> {
 
-    public static final String NAME = "parteProcessoList";
+    public static final String NAME = "participanteProcessoList";
     private static final long serialVersionUID = 1L;
 
-    private static final String DEFAULT_EJBQL = "select o from ParteProcesso o";
-    private static final String DEFAULT_ORDER = "pessoa";
+    private static final String DEFAULT_EJBQL = "select o from ParticipanteProcesso o";
+    private static final String DEFAULT_ORDER = "caminhoAbsoluto";
     private static final String REGRA_IS_RESPONSAVEL = "(#{authenticator.isUsuarioAtualResponsavel()}=true or o.ativo=true)";
 
     @Override

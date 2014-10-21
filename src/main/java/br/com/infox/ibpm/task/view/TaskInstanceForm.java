@@ -132,7 +132,7 @@ public class TaskInstanceForm implements Serializable {
                             List<SelectItem> selectItens = new ArrayList<>();
                             for (String item : itens) {
                                 String[] pair = item.split("=");
-                                selectItens.add(new SelectItem(pair[0], pair[1]));
+                                selectItens.add(new SelectItem(pair[1], pair[0]));
                             }
                             ff.getProperties().put("items", selectItens);
                         }

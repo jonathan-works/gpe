@@ -5,18 +5,18 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
-import br.com.infox.epp.processo.partes.manager.HistoricoParteProcessoManager;
-import br.com.infox.epp.processo.partes.manager.ParteProcessoManager;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.manager.HistoricoParticipanteProcessoManager;
+import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 
-@Name(ParteProcessoCrudAction.NAME)
-public class ParteProcessoCrudAction extends AbstractCrudAction<ParteProcesso, ParteProcessoManager> {
+@Name(ParticipanteProcessoCrudAction.NAME)
+public class ParticipanteProcessoCrudAction extends AbstractCrudAction<ParticipanteProcesso, ParticipanteProcessoManager> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "parteProcessoCrudAction";
+    public static final String NAME = "participanteProcessoCrudAction";
 
     @In
-    private HistoricoParteProcessoManager historicoParteProcessoManager;
+    private HistoricoParticipanteProcessoManager historicoParticipanteProcessoManager;
 
     private String motivoModificacao;
 
@@ -30,14 +30,14 @@ public class ParteProcessoCrudAction extends AbstractCrudAction<ParteProcesso, P
 
     public void inverterSituacao() {
         try {
-            historicoParteProcessoManager.createHistorico(getInstance(), motivoModificacao);
+        	historicoParticipanteProcessoManager.createHistorico(getInstance(), getMotivoModificacao());
             getInstance().setAtivo(!getInstance().getAtivo());
         } catch (DAOException daoException) {
             onDAOExcecption(daoException);
         }
         super.save();
         newInstance();
-        motivoModificacao = null;
+        setMotivoModificacao(null);
     }
 
 }

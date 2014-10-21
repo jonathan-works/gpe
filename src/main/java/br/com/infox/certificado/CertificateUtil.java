@@ -17,20 +17,15 @@ import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DERUTF8String;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
 
 class CertificateUtil {
-    private static final LogProvider LOG = Logging.getLogProvider(CertificateUtil.class);
-    
     private static final DERObjectIdentifier OID_DADOS_TITULAR_PF = new DERObjectIdentifier("2.16.76.1.3.1");
     private static final DERObjectIdentifier OID_DADOS_ELEITORAIS = new DERObjectIdentifier("2.16.76.1.3.5");
     private static final DERObjectIdentifier OID_DADOS_INSS = new DERObjectIdentifier("2.16.76.1.3.6");
 
     static DadosPessoaFisica parseDadosPessoaFisica(DERObjectIdentifier oid, String info, DadosPessoaFisica dadosPessoaFisica) throws CertificadoException {
-        LOG.info("OID: " + oid.getId() + "\nDADOS: " + info);
         SimpleDateFormat certJUSDateFormatter = new SimpleDateFormat("ddMMyyyy");
         if (dadosPessoaFisica == null) {
             dadosPessoaFisica = new DadosPessoaFisica();

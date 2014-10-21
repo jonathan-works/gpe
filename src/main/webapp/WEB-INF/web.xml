@@ -53,6 +53,14 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
         <param-name>org.richfaces.fileUpload.createTempFiles</param-name>
         <param-value>true</param-value>
     </context-param>
+    <context-param>
+        <param-name>COMPONENTES.recaptchaPrivateKey</param-name>
+        <param-value>#{recaptchaPrivateKey}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>COMPONENTES.recaptchaPublicKey</param-name>
+        <param-value>#{recaptchaPublicKey}</param-value>
+    </context-param>
     <filter>
         <filter-name>Seam Filter</filter-name>
         <filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>

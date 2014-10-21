@@ -31,7 +31,7 @@ public interface ProcessoEpaQuery {
             + PARAM_ID_JBPM;
 
     String COUNT_PARTES_ATIVAS_DO_PROCESSO = "countPartesAtivasDoProcesso";
-    String COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY = "select count(*) from ParteProcesso partes where partes.processo = :"
+    String COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY = "select count(*) from ParticipanteProcesso partes where partes.processo = :"
             + QUERY_PARAM_PROCESSO_EPA + " and partes.ativo = true";
 
     String PARAM_ID_PROCESSO = "idProcesso";
@@ -46,5 +46,4 @@ public interface ProcessoEpaQuery {
             + PARAM_FLUXO
             + " and pEpa.dataFim is null and pEpa.contabilizar=true and pEpa.situacaoPrazo=:"
             + PARAM_SITUACAO + " group by ncf.fluxo";
-
 }

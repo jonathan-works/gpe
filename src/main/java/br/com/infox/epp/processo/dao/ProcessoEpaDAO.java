@@ -4,7 +4,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED;
-import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.*;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_FLUXO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_ID_PROCESSO;
@@ -41,7 +41,7 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @AutoCreate
@@ -75,20 +75,20 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
     public List<PessoaFisica> getPessoaFisicaList() {
         ProcessoEpa pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
         List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
-        for (ParteProcesso parte : pe.getPartes()) {
-            if (parte.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F)) {
-                pessoaFisicaList.add((PessoaFisica) HibernateUtil.removeProxy(parte.getPessoa()));
+        for (ParticipanteProcesso participante : pe.getParticipantes()) {
+            if (participante.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F)) {
+                pessoaFisicaList.add((PessoaFisica) HibernateUtil.removeProxy(participante.getPessoa()));
             }
         }
         return pessoaFisicaList;
     }
 
     public List<PessoaJuridica> getPessoaJuridicaList() {
-        ProcessoEpa pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+        ProcessoEpa processo = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
         List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
-        for (ParteProcesso parte : pe.getPartes()) {
-            if (parte.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.J)) {
-                pessoaJuridicaList.add((PessoaJuridica) HibernateUtil.removeProxy(parte.getPessoa()));
+        for (ParticipanteProcesso participante : processo.getParticipantes()) {
+            if (participante.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.J)) {
+                pessoaJuridicaList.add((PessoaJuridica) HibernateUtil.removeProxy(participante.getPessoa()));
             }
         }
         return pessoaJuridicaList;

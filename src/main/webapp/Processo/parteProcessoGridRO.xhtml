@@ -11,31 +11,42 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <s:div id="parteProcessoListDiv">
-        <wi:dataTable values="#{parteProcessoList.list(15)}"
-            bean="#{parteProcessoList}"
-            tableTitle="#{eppmessages['parteProcesso.tableTitle']}"
-            id="parteProcessoList" showSearchForm="false">
+        <wi:dataTable values="#{participanteProcessoList.list()}"
+            bean="#{participanteProcessoList}"
+            tableTitle="#{eppmessages['participanteProcesso.tableTitle']}"
+            id="participanteProcessoList" showSearchForm="false">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar" />
-            <wi:columnOutputText columnId="pessoa.nome"
-                columnHeader="#{eppmessages['parteProcesso.nome']}"
-                value="#{row.pessoa.nome}" />
-            <rich:column>
-                <f:facet name="header">#{eppmessages['parteProcesso.codigo']}</f:facet>
-                <h:outputText value="#{row.pessoa.codigo}" rendered="#{row.pessoa.tipoPessoa eq 'F'}">
-                    <f:converter converterId="cpfConverter" />
-                </h:outputText>
-                <h:outputText value="#{row.pessoa.codigo}" rendered="#{row.pessoa.tipoPessoa eq 'J'}">
-                    <f:converter converterId="cnpjConverter" />
-                </h:outputText>
-            </rich:column>
-            <wi:columnOutputText columnId="pessoa.tipoPessoa"
-                columnHeader="#{eppmessages['parteProcesso.tipoPessoa']}"
-                value="#{row.pessoa.tipoPessoa.label}" />
-            <wi:columnSituacao columnId="ativo"
-                rendered="#{isUsuarioAtualResponsavel}"
-                columnHeader="#{eppmessages['field.situacao']}"
-                value="#{row.ativo}" />
+            
+            <wi:columnOutputTextIdent columnId="pessoa.nome"
+            	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+                columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
+                value="#{row.nome}" 
+                hideOrder="true"
+                fullPath="#{row.caminhoAbsoluto}"/>
+                
+      		<wi:columnOutputText columnId="cpfCnpj"
+       			styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+                columnHeader="#{eppmessages['participanteProcesso.codigo']}"
+                value="#{row.pessoa.codigoFormatado}" hideOrder="true" >
+            </wi:columnOutputText>
+            
+            <wi:columnOutputText columnId="tipoParticipante" 
+            	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+            	value="#{row.tipoParte}"
+            	columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
+            	hideOrder="true"/>
+            	
+           	<wi:columnDateTime columnId="dataInicio" value="#{row.dataInicio}"
+           		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataInicio']}"
+           		hideOrder="true"/>
+           		
+           	<wi:columnDateTime columnId="dataFim" value="#{row.dataFim}"
+           		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataFim']}"
+          		hideOrder="true"/>
+            
         </wi:dataTable>
     </s:div>
 

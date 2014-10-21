@@ -10,30 +10,54 @@
 
         <wi:dataForm formId="pessoaFisicaForm"
             formTitle="#{eppmessages['form.title']}" panelWidth="70%"
-            rendered="#{isUsuarioAtualResponsavel and partesProcessoController.podeAdicionarPartesFisicas() and !partesProcessoController.apenasPessoaJuridica()}">
+            rendered="#{participantesProcessoController.podeAdicionarPartesFisicas()}">
             <wi:inputCpf id="cpf"
-                value="#{partesProcessoController.pessoaFisica.cpf}"
+                value="#{participantesProcessoController.participantePessoaFisica.pessoa.cpf}"
                 label="#{eppmessages['pessoaFisica.cpf']}"
-                assignTo="#{partesProcessoController.pessoaFisica.cpf}"
+                assignTo="#{participantesProcessoController.participantePessoaFisica.pessoa.cpf}"
                 required="true">
                 <a:ajax event="blur"
-                    listener="#{partesProcessoController.searchByCpf()}"
+                    listener="#{participantesProcessoController.searchByCpf()}"
                     execute="@this" render="loadedByCPF"
                     limitRender="true" />
             </wi:inputCpf>
             <h:panelGroup id="loadedByCPF">
-                <wi:inputText id="nome"
-                    value="#{partesProcessoController.pessoaFisica.nome}"
-                    label="#{eppmessages['pessoaFisica.nome']}"
-                    required="true" />
-                <wi:inputDate id="dataNascimento"
-                    value="#{partesProcessoController.pessoaFisica.dataNascimento}"
-                    label="#{eppmessages['pessoaFisica.dataNascimento']}"
-                    required="true" />
-            </h:panelGroup>
+	            <wi:inputText id="nome"
+	                value="#{participantesProcessoController.participantePessoaFisica.pessoa.nome}"
+	                label="#{eppmessages['pessoaFisica.nome']}" required="true" />
+	                
+	            <wi:inputEmail id="email"
+	            	value="#{participantesProcessoController.email}"
+	            	label="#{eppmessages['pessoaFisica.email']}" />
+	                
+	            <wi:inputDate id="dataNascimento"
+	                value="#{participantesProcessoController.participantePessoaFisica.pessoa.dataNascimento}"
+	                label="#{eppmessages['pessoaFisica.dataNascimento']}" />
+	                
+	            <wi:selectOneMenuEntity id="tipoPartes"
+					items="#{participantesProcessoController.tipoPartes}"
+					value="#{participantesProcessoController.participantePessoaFisica.tipoParte}"
+					label="#{eppmessages['participanteProcesso.tipoParticipante']}"
+					required="true"
+					showLabelSelecione="true" />
+					
+				<wi:tree id="participanteSuperior"
+                       label="#{eppmessages['participanteProcesso.superior']}"
+                       assignTo="participantesProcessoController.participantePaiPessoaFisica"
+                       tree="#{participanteProcessoTree}"/>
+					
+				<wi:inputDate id="dataInicio"
+					value="#{participantesProcessoController.participantePessoaFisica.dataInicio}"
+					label="#{eppmessages['participanteProcesso.dataInicioParticipacao']}" />
+						
+				<wi:inputDate id="dataFim"
+					value="#{participantesProcessoController.participantePessoaFisica.dataFim}"
+					label="#{eppmessages['participanteProcesso.dataFimParticipacao']}" />
+						
+	        </h:panelGroup>
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
-                    action="#{partesProcessoController.includePessoaFisica()}"
+                    action="#{participantesProcessoController.includePessoaFisica()}"
                     reRender="buscaDiv, parteProcessoListDiv, includePessoaFisicaDiv, pessoasListDiv, storeDiv, pageBodyDialogMessage"
                     value="#{eppmessages['crud.persist']}" />
             </ui:define>

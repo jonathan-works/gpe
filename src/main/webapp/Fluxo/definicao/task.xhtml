@@ -62,18 +62,6 @@
           limitRender="true"
           listener="#{taskFitter.marcarTarefaAtual()}" />
       </wi:selectOneMenuEnum>
-      <wi:selectOneMenuEntity
-        id="statusProcesso"
-        label="#{eppmessages['process.status.nome']}"
-        value="#{taskFitter.currentTask.statusProcesso}"
-        items="#{taskFitter.statusProcessoList}"
-        showLabelSelecione="true">
-        <a:ajax
-          event="change"
-          execute="@this"
-          limitRender="true"
-          render="@this" />
-      </wi:selectOneMenuEntity>
     </h:form>
   </s:div>
   <rich:dataTable

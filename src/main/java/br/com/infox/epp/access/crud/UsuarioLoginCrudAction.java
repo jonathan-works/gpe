@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -12,10 +15,12 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
+import br.com.infox.seam.exception.BusinessException;
 
 @Name(UsuarioLoginCrudAction.NAME)
 public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, UsuarioLoginManager> {
     
+    private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginCrudAction.class);
 	private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginCrudAction";
     
@@ -58,4 +63,14 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
     	return unidadeDecisoraColegiadaList;
     }
 
+    @Override
+    public String save() {
+        try {
+            return super.save();
+        } catch (BusinessException e) {
+            LOG.error("", e);
+            FacesMessages.instance().add(e.getMessage());
+        }
+        return null;
+    }
 }

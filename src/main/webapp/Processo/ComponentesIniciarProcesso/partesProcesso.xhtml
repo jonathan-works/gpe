@@ -15,64 +15,53 @@
     </s:div>
 
     <s:div id="pessoasListDiv">
-        <wi:dataTable id="partesFisicasTable"
-            showGrid="#{not partesController.pessoasFisicas.isEmpty()}"
-            tableTitle="#{eppmessages['partesFisicas.titleTable']}"
-            values="#{partesController.pessoasFisicas}" rowId="#{row.idPessoa}"
-            searchFormStyleClass="hidden">
+    	<wi:dataTable id="participantesTable"
+    		showGrid="#{not participantesController.participantesProcesso.isEmpty()}"
+            values="#{participantesController.participantesProcesso}"
+            tableTitle="#{eppmessages['participanteProcesso.participantes']}"
+            showSearchForm="false">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBarRemove id="toolBarRemove"
                     reRender="pessoasListDiv, storeDiv"
-                    actionRemove="#{partesController.removePessoaFisica(row)}" />
+                    rendered="#{participantesController.podeRemoverParticipante(row)}"
+                    actionRemove="#{participantesController.removeParticipanteProcesso(row)}" />
             </ui:define>
-            <wi:columnOutputText columnId="pessoa"
-                columnHeader="#{eppmessages['partes.nome']}"
-                value="#{row.nome}" />
-            <wi:columnEnum columnId="tipo"
-                columnHeader="#{eppmessages['partes.tipoParte']}"
-                value="#{row.tipoPessoa}" />
-            <wi:columnOutputText columnId="codigo"
-                columnHeader="#{eppmessages['partes.cpf']}"
-                value="#{row.cpf}">
-                <ui:define name="outputText">
-                    <f:converter converterId="cpfConverter"/>
-                </ui:define>
+            
+            <wi:columnOutputTextIdent columnId="pessoa.nome"
+                columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
+                value="#{row.nome}" 
+                hideOrder="true"
+                fullPath="#{row.caminhoAbsoluto}"/>
+                
+      		<wi:columnOutputText columnId="cpfCnpj"
+                columnHeader="#{eppmessages['participanteProcesso.codigo']}"
+                value="#{row.pessoa.codigoFormatado}" hideOrder="true" >
             </wi:columnOutputText>
+            
+            <wi:columnOutputText columnId="tipoParticipante" 
+            	value="#{row.tipoParte}"
+            	columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
+            	hideOrder="true"/>
+            	
+           	<wi:columnDateTime columnId="dataInicio" value="#{row.dataInicio}"
+           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataInicio']}"
+           		hideOrder="true"/>
+           		
+           	<wi:columnDateTime columnId="dataFim" value="#{row.dataFim}"
+           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataFim']}"
+          		hideOrder="true"/>
+          		
         </wi:dataTable>
-        <wi:dataTable id="partesJuridicasTable"
-            showGrid="#{not partesController.pessoasJuridicas.isEmpty()}"
-            tableTitle="#{eppmessages['partesJuridicas.titleTable']}"
-            values="#{partesController.pessoasJuridicas}" rowId="#{row.idPessoa}"
-            searchFormStyleClass="hidden">
-            <ui:define name="headerToolBar" />
-            <ui:define name="toolBar">
-                <wi:toolBarRemove id="toolBarRemove"
-                    reRender="pessoasListDiv, storeDiv"
-                    actionRemove="#{partesController.removePessoaJuridica(row)}" />
-            </ui:define>
-            <wi:columnOutputText columnId="pessoa"
-                columnHeader="#{eppmessages['partes.nome']}"
-                value="#{row.nome}" />
-            <wi:columnEnum columnId="tipo"
-                columnHeader="#{eppmessages['partes.tipoParte']}"
-                value="#{row.tipoPessoa}" />
-            <wi:columnOutputText columnId="codigo"
-                columnHeader="#{eppmessages['partes.cnpj']}"
-                value="#{row.cnpj}">
-                <ui:define name="outputText">
-                    <f:converter converterId="cnpjConverter"/>
-                </ui:define>
-            </wi:columnOutputText>
-        </wi:dataTable>
+    
         <h:form>
             <s:div id="storeDiv">
                 <a:commandButton id="storeButton"
                     execute="@this"
-                    render="@this"
+                    render="@form pageBodyDialogMessages"
                     limitRender="true"
-                    action="#{action.iniciarProcesso(partesController.pessoasFisicas, partesController.pessoasJuridicas)}"
-                    rendered="#{!partesController.pessoasFisicas.isEmpty() or !partesController.pessoasJuridicas.isEmpty()}"
+                    action="#{action.iniciarProcesso(participantesController.processoEpa)}"
+                    rendered="#{participantesController.podeIniciarProcesso()}"
                     value="#{eppmessages['processo.iniciarBtn']}"
                     styleClass="#{wi:get(styleClass, 'buttons')}"
                     oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); window.location='#{pathResolver.contextPath}/Painel/list.seam';" />

@@ -10,6 +10,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ID_LIST_PROCESSO_PAR
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA;
+import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
@@ -111,4 +112,9 @@ public class ProcessoDAO extends DAO<Processo> {
     	return getNamedSingleResult(GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, params);
     }
 
+    public String getNumeroProcessoByIdJbpm(Long processInstanceId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(PARAM_ID_JBPM, processInstanceId);
+        return getNamedSingleResult(NUMERO_PROCESSO_BY_ID_JBPM, params);
+    }
 }

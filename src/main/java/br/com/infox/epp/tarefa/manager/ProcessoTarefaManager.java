@@ -114,7 +114,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
                 porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / (prazo * 60);
             }
 
-            ProcessoEpa processoEpa = (ProcessoEpa) processoTarefa.getProcesso();
+            ProcessoEpa processoEpa = processoTarefa.getProcesso().getProcessoEpa();
             if (porcentagem > PORCENTAGEM_MAXIMA) {
                 processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }

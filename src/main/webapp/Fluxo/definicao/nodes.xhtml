@@ -166,6 +166,25 @@
                             </h:form>
                         </s:div>
                         <h:form>
+							<rich:collapsiblePanel
+								switchType="ajax"
+								expanded="true"
+								rendered="#{nodeFitter.nodeType == 'Task' || nodeFitter.nodeType == 'Node'}"
+								header="#{eppmessages['process.status.nome']}">
+								<wi:selectOneMenuEntity
+									id="statusProcesso"
+									label="#{eppmessages['process.status.nome']}"
+									value="#{nodeFitter.nodeHandler.statusProcesso}"
+									items="#{nodeFitter.statusProcessoList}"
+									showLabelSelecione="true">
+									<a:ajax event="change"
+										execute="@this"
+										limitRender="true"
+										render="@this" />
+								</wi:selectOneMenuEntity>
+							</rich:collapsiblePanel>
+						</h:form>
+                        <h:form>
                             <rich:collapsiblePanel
                                 switchType="ajax"
                                 expanded="false"
@@ -196,7 +215,7 @@
                                 </ui:include>
                             </rich:collapsiblePanel>
                         </h:form>
-                    </rich:panel>
+					</rich:panel>
                     <br />
                     <rich:panel
                         header="#{eppmessages['process.node.new']}"
