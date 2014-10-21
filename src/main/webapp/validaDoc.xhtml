@@ -17,7 +17,7 @@
 
   <ui:define name="body">
       <h:form rendered="#{not documentoValidator.acessoBloqueado}">
-        <cc:inputUUID value="#{documentoValidator.uuid}" required="true" id="uuid" label="Código de Validação" />
+        <cc:inputUUID value="#{documentoValidator.uuid}" id="uuid" label="Código de Validação" />
         <div />
         <infox:recaptcha triesListener="documentoValidator.incrementTries" />
         <div />
