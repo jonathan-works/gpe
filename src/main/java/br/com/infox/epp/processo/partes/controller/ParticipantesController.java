@@ -173,7 +173,12 @@ public class ParticipantesController extends AbstractParticipantesController {
     }
 
     public void removeParticipanteProcesso(ParticipanteProcesso participanteProcesso) {
-		processoEpa.getParticipantes().remove(participanteProcesso);
+    	try {
+    		processoEpa.getParticipantes().remove(participanteProcesso);
+			participanteProcessoManager.remove(participanteProcesso);
+		} catch (DAOException e) {
+			actionMessagesService.handleDAOException(e);		
+		}
     }
 
     @Override

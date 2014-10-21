@@ -102,7 +102,7 @@ public class ProcessoEpa extends Processo {
     @JoinColumn(name = "id_prioridade_processo", nullable = true)
     private PrioridadeProcesso prioridadeProcesso;
     
-    @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
     @OrderBy(value = "ds_caminho_absoluto")
     private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
     

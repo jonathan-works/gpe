@@ -58,7 +58,7 @@
             <s:div id="storeDiv">
                 <a:commandButton id="storeButton"
                     execute="@this"
-                    render="@this"
+                    render="@form pageBodyDialogMessages"
                     limitRender="true"
                     action="#{action.iniciarProcesso(participantesController.processoEpa)}"
                     rendered="#{participantesController.podeIniciarProcesso()}"
