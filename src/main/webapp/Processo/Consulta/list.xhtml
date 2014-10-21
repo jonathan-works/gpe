@@ -82,25 +82,27 @@
                 styleClass="folder-ul"
                 rowClass="folder-li"
                 var="pasta">
-                  <rich:dropTarget
-                    acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
-                    dropListener="#{pastaAction.associaDocumento}"
-                    dropValue="#{pasta}"
-                    render="documentoListPanel, documentoListSearchForm"
-                    limitRender="true" />
+                <h:form>
+                <rich:dropTarget
+                  acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
+                  dropListener="#{pastaAction.associaDocumento}"
+                  dropValue="#{pasta}"
+                  render="documentoListPanel, documentoListSearchForm"
+                  limitRender="true" />
+                
+                <a:commandLink
+                  action="#{documentoList.entity.setPasta(pasta)}"
+                  render="documentoListPanel, documentoListSearchForm"
+                  execute="@form"
+                  styleClass="folder"
+                  limitRender="true">
                   
-                  <a:commandLink
-                    action="#{documentoList.entity.setPasta(pasta)}"
-                    render="documentoListPanel, documentoListSearchForm"
-                    execute="@form"
-                    styleClass="folder"
-                    limitRender="true">
+                  <h:outputText
+                    value="#{pasta.nome}"
+                    class="folder" />
                     
-                    <h:outputText
-                      value="#{pasta.nome}"
-                      class="folder" />
-                      
-                  </a:commandLink>
+                </a:commandLink>
+                </h:form>
               </rich:list>
             </rich:panel>
             <wi:commandButton
@@ -127,11 +129,10 @@
                 dragIndicator="indicator">
                 <rich:dragIndicator
                   id="indicator"
-                  acceptClass="pasta-acpt"
-                  draggingClass="pasta-drag"
-                  rejectClass="pasta-rejt">
-                  <span class="pasta-ind-lbl">#{eppmessages['documentoProcesso.titlePage']}:
-                    #{row.descricao}</span>
+                  acceptClass="caixa-acpt"
+                  draggingClass="caixa-drag"
+                  rejectClass="caixa-rejt">
+                  <span class="caixa-ind-lbl">#{row.descricao}</span>
                 </rich:dragIndicator>
               </rich:dragSource>
 
@@ -201,8 +202,13 @@
           <wi:columnOutputText
             styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
             columnId="processoDocumento"
-            columnHeader="#{eppmessages['assinaturas.documento']}"
+            columnHeader="#{eppmessages['documentoProcesso.descricao']}"
             value="#{row.descricao}" />
+          <wi:columnOutputText
+            styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+            columnId="classificacaoDocumento"
+            columnHeader="#{eppmessages['documentoProcesso.classificacaoDocumento']}"
+            value="#{row.classificacaoDocumento}" />
           <wi:columnOutputText
             styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
             columnId="processoDocumentoBin.sizeFormatado"
