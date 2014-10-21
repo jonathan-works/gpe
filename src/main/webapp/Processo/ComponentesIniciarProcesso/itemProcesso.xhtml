@@ -28,7 +28,7 @@
                     <a:commandLink
                         rendered="#{action.necessitaPartes()}"
                         action="#{action.onSelectItem(row)}"
-                        oncomplete="#{partesController.setNatureza(action.natureza)}"
+                        oncomplete="#{participantesController.setNatureza(action.natureza)}"
                         execute="@this" render="@all" limitRender="true">
                         <h:graphicImage value="#{a4jSkin.imgFolder}/start.gif" />
                     </a:commandLink>

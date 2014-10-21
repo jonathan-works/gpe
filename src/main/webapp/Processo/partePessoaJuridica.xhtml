@@ -10,29 +10,52 @@
     <s:div id="includePessoaJuridicaDiv" styleClass="padding-top-5">
         <wi:dataForm formId="pessoaJuridicaForm"
             formTitle="#{eppmessages['form.title']}" panelWidth="70%"
-            rendered="#{isUsuarioAtualResponsavel and partesProcessoController.podeAdicionarPartesJuridicas() and !partesProcessoController.apenasPessoaFisica()}">
+            rendered="#{participantesProcessoController.podeAdicionarPartesJuridicas()}">
             <wi:inputCnpj id="cnpj"
-                value="#{partesProcessoController.pessoaJuridica.cnpj}"
+                value="#{participantesProcessoController.participantePessoaJuridica.pessoa.cnpj}"
                 label="#{eppmessages['pessoaJuridica.cnpj']}"
-                assignTo="#{partesProcessoController.pessoaJuridica.cnpj}"
+                assignTo="#{participantesProcessoController.participantePessoaJuridica.pessoa.cnpj}"
                 required="true">
                 <a:ajax event="blur" execute="@this"
                     render="loadedByCNPJ" limitRender="true"
-                    listener="#{partesProcessoController.searchByCnpj()}" />
+                    listener="#{participantesProcessoController.searchByCnpj()}" />
             </wi:inputCnpj>
             <h:panelGroup id="loadedByCNPJ">
-                <wi:inputText id="nome"
-                    value="#{partesProcessoController.pessoaJuridica.nome}"
-                    label="#{eppmessages['pessoaJuridica.nome']}"
-                    required="true" />
-                <wi:inputText id="razao"
-                    value="#{partesProcessoController.pessoaJuridica.razaoSocial}"
-                    label="#{eppmessages['pessoaJuridica.razaoSocial']}"
-                    required="true" />
-            </h:panelGroup>
+	            <wi:inputText id="nome"
+	                value="#{participantesProcessoController.participantePessoaJuridica.pessoa.nome}"
+	                label="#{eppmessages['pessoaJuridica.nomeFantasia']}"
+	                required="true" />
+	                
+	            <wi:inputText id="razao"
+	                value="#{participantesProcessoController.participantePessoaJuridica.pessoa.razaoSocial}"
+	                label="#{eppmessages['pessoaJuridica.razaoSocial']}"
+	                required="true" />
+	                
+	            <wi:selectOneMenuEntity id="tipoPartes"
+					items="#{participantesProcessoController.tipoPartes}"
+					value="#{participantesProcessoController.participantePessoaJuridica.tipoParte}"
+					label="#{eppmessages['participanteProcesso.tipoParticipante']}"
+					required="true"
+					showLabelSelecione="true" />
+					
+				<wi:selectOneMenuEntity id="participanteSuperior"
+					items="#{participantesProcessoController.participantesAtivos}"
+					value="#{participantesProcessoController.participantePessoaJuridica.participantePai}"
+					label="#{eppmessages['participanteProcesso.superior']}"
+					showLabelSelecione="true"/>
+					
+				<wi:inputDate id="dataInicio"
+					value="#{participantesProcessoController.participantePessoaJuridica.dataInicio}"
+					label="#{eppmessages['participanteProcesso.dataInicioParticipacao']}" />
+						
+				<wi:inputDate id="dataFim"
+					value="#{participantesProcessoController.participantePessoaJuridica.dataFim}"
+					label="#{eppmessages['participanteProcesso.dataFimParticipacao']}" />
+					
+	        </h:panelGroup>
             <ui:define name="buttons">
                 <wi:commandButton id="saveButton"
-                    action="#{partesProcessoController.includePessoaJuridica()}"
+                    action="#{participantesProcessoController.includePessoaJuridica()}"
                     reRender="buscaDiv, parteProcessoListDiv, includePessoaJuridicaDiv, pessoasListDiv, storeDiv, pageBodyDialogMessage"
                     value="#{eppmessages['crud.persist']}" />
             </ui:define>

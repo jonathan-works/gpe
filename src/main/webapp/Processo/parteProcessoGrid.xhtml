@@ -14,88 +14,69 @@
 
     <s:div id="buscaDiv">
         <ui:include src="partePessoaFisica.xhtml" />
-        <ui:include src="partePessoaJuridica.xhtml" />
+		<ui:include src="partePessoaJuridica.xhtml" />
     </s:div>
+    
     <s:div id="parteProcessoListDiv" styleClass="padding-top-5">
-        <wi:dataTable id="partesFisicasTable"
-            values="#{partesProcessoController.partesFisicas}"
-            tableTitle="#{eppmessages['partesFisicas.titleTable']}">
+        <wi:dataTable id="participantesTable"
+            values="#{participantesProcessoController.participantes}"
+            tableTitle="#{eppmessages['participanteProcesso.participantes']}">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBar
-                    rendered="#{isUsuarioAtualResponsavel and row.ativo and partesProcessoController.podeInativarPartesFisicas()}"
-                    action="#{parteProcessoCrudAction.setInstance(row)}"
+                    rendered="#{row.ativo and participantesProcessoController.podeInativarPartes(row.pessoa.tipoPessoa)}"
+                    action="#{participanteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv"
                     url="#{a4jSkin.imgFolder}/remove.png" id="ativo" />
                 <wi:toolBar
-                    rendered="#{isUsuarioAtualResponsavel and !row.ativo and partesProcessoController.podeAdicionarPartesFisicas()}"
-                    action="#{parteProcessoCrudAction.setInstance(row)}"
+                    rendered="#{not row.ativo and participantesProcessoController.podeAdicionarPartes(row.pessoa.tipoPessoa)}"
+                    action="#{participanteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv" url="#{a4jSkin.imgFolder}/add.gif"
                     id="inativo" />
             </ui:define>
-            <wi:columnOutputText columnId="pessoa.nome"
-                columnHeader="#{eppmessages['parteProcesso.nome']}"
-                value="#{row.pessoa.nome}" />
-            <wi:columnOutputText columnId="cpf"
-                columnHeader="#{eppmessages['parteProcesso.cpf']}"
-                value="#{row.pessoa.getCodigo()}" hideOrder="true">
-                <ui:define name="outputText">
-                    <f:converter converterId="cpfConverter"/>
-                </ui:define>
+            <wi:columnOutputTextIdent columnId="pessoa.nome"
+            	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+                columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
+                value="#{row.nome}" 
+                hideOrder="true"
+                fullPath="#{row.caminhoAbsoluto}"/>
+      		<wi:columnOutputText columnId="cpfCnpj"
+       			styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+                columnHeader="#{eppmessages['participanteProcesso.codigo']}"
+                value="#{row.pessoa.codigoFormatado}" hideOrder="true" >
             </wi:columnOutputText>
-            <wi:columnSituacao columnId="ativo"
-                rendered="#{isUsuarioAtualResponsavel}"
-                columnHeader="#{eppmessages['field.situacao']}"
-                value="#{row.ativo}" />
-        </wi:dataTable>
-        <wi:dataTable id="partesJuridicasTable"
-            values="#{partesProcessoController.partesJuridicas}"
-            tableTitle="#{eppmessages['partesJuridicas.titleTable']}">
-            <ui:define name="headerToolBar" />
-            <ui:define name="toolBar">
-                <wi:toolBar
-                    rendered="#{isUsuarioAtualResponsavel and row.ativo and partesProcessoController.podeInativarPartesJuridicas()}"
-                    action="#{parteProcessoCrudAction.setInstance(row)}"
-                    reRender="parteProcessoListDiv"
-                    url="#{a4jSkin.imgFolder}/remove.png" id="ativo" />
-                <wi:toolBar
-                    rendered="#{isUsuarioAtualResponsavel and !row.ativo and partesProcessoController.podeAdicionarPartesJuridicas()}"
-                    action="#{parteProcessoCrudAction.setInstance(row)}"
-                    reRender="parteProcessoListDiv" url="#{a4jSkin.imgFolder}/add.gif"
-                    id="inativo" />
-            </ui:define>
-            <wi:columnOutputText columnId="pessoa.nome"
-                columnHeader="#{eppmessages['parteProcesso.nome']}"
-                value="#{row.pessoa.nome}" />
-            <wi:columnOutputText columnId="cnpj"
-                columnHeader="#{eppmessages['parteProcesso.cnpj']}"
-                value="#{row.pessoa.getCodigo()}" hideOrder="true">
-                <ui:define name="outputText">
-                    <f:converter converterId="cnpjConverter"/>
-                </ui:define>
-            </wi:columnOutputText>
-            <wi:columnSituacao columnId="ativo"
-                rendered="#{isUsuarioAtualResponsavel}"
-                columnHeader="#{eppmessages['field.situacao']}"
-                value="#{row.ativo}" />
+            <wi:columnOutputText columnId="tipoParticipante" 
+            	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+            	value="#{row.tipoParte}"
+            	columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
+            	hideOrder="true"/>
+           	<wi:columnDateTime columnId="dataInicio" value="#{row.dataInicio}"
+           		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataInicio']}"
+           		hideOrder="true"/>
+           	<wi:columnDateTime columnId="dataFim" value="#{row.dataFim}"
+           		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
+           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataFim']}"
+          		hideOrder="true"/>
+
         </wi:dataTable>
 
         <s:div id="atividadeParteDiv"
-            rendered="#{parteProcessoCrudAction.isManaged()}" styleClass="padding-top-5">
+            rendered="#{participanteProcessoCrudAction.isManaged()}" styleClass="padding-top-5">
             <s:div id="backgroundBlock"></s:div>
             <br />
             <wi:dataForm formId="atividadeParte"
-                formTitle="#{eppmessages['partes.alteracao']}">
+                formTitle="#{eppmessages['participanteProcesso.alteracao']}">
                 <wi:inputText id="motivo" required="true"
                     label="Motivo da Modificação"
-                    value="#{parteProcessoCrudAction.motivoModificacao}" />
+                    value="#{participanteProcessoCrudAction.motivoModificacao}" />
                 <ui:define name="buttons">
                     <wi:commandButton id="persistButton"
-                        action="#{parteProcessoCrudAction.inverterSituacao()}"
+                        action="#{participanteProcessoCrudAction.inverterSituacao()}"
                         rendered="true" reRender="parteProcessoListDiv, buscaDiv"
-                        value="#{eppmessages['partes.modificar']}" />
+                        value="#{eppmessages['participanteProcesso.modificar']}" />
                     <wi:commandButton id="cancelarButton"
-                        action="#{parteProcessoCrudAction.newInstance()}"
+                        action="#{participanteProcessoCrudAction.newInstance()}"
                         rendered="true" execute="@this"
                         reRender="parteProcessoListDiv, buscaDiv" value="Cancelar" />
                 </ui:define>

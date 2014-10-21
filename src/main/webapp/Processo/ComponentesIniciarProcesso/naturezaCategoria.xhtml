@@ -30,7 +30,7 @@
                     <a:commandLink
                         rendered="#{not row.hasItens() and row.necessitaPartes()}"
                         action="#{action.onSelectNatCatFluxo(row)}"
-                        oncomplete="#{partesController.setNatureza(action.natureza)}"
+                        oncomplete="#{participantesController.setNaturezaCategoriaFluxo(row)}"
                         execute="@this"
                         render="@all"
                         limitRender="true">

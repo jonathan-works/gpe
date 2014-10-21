@@ -62,7 +62,7 @@
                 action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
                 execute="@this certChain signature"
                 render="@all"
-                oncomplete="infox.hideLoading();" />
+                oncomplete="infox.hideLoading();if (opener != undefined &amp;&amp; typeof opener.reloadLock === 'function' ){ opener.reloadLock(); };" />
               <h:inputHidden
                 id="certChain"
                 value="#{validaDocumentoAction.certChain}" />
