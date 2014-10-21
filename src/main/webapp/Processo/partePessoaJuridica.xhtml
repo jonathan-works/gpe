@@ -38,11 +38,10 @@
 					required="true"
 					showLabelSelecione="true" />
 					
-				<wi:selectOneMenuEntity id="participanteSuperior"
-					items="#{participantesProcessoController.participantesAtivos}"
-					value="#{participantesProcessoController.participantePessoaJuridica.participantePai}"
-					label="#{eppmessages['participanteProcesso.superior']}"
-					showLabelSelecione="true"/>
+				<wi:tree id="participanteSuperior"
+                       label="#{eppmessages['participanteProcesso.superior']}"
+                       assignTo="participantesProcessoController.participantePaiPessoaJuridica"
+                       tree="#{participanteProcessoTree}" />
 					
 				<wi:inputDate id="dataInicio"
 					value="#{participantesProcessoController.participantePessoaJuridica.dataInicio}"

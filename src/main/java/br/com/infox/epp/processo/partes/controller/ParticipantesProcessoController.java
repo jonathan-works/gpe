@@ -12,6 +12,7 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -27,6 +28,7 @@ import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ParticipantesProcessoController.NAME)
 public class ParticipantesProcessoController extends AbstractParticipantesController {
@@ -48,7 +50,21 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     
     private ProcessoEpa processoEpa;
     private List<TipoParte> tipoPartes;
-
+    
+    @Override
+    protected void clearParticipantePessoaFisica() {
+    	super.clearParticipantePessoaFisica();
+    	ParticipanteProcessoTreeHandler tree = ComponentUtil.getComponent(ParticipanteProcessoTreeHandler.NAME);
+    	tree.clearTree();
+    }
+    
+    @Override
+    protected void clearParticipantePessoaJuridica() {
+    	super.clearParticipantePessoaJuridica();
+    	ParticipanteProcessoTreeHandler tree = ComponentUtil.getComponent(ParticipanteProcessoTreeHandler.NAME);
+    	tree.clearTree();
+    }
+    
     public void setProcessoEpa(ProcessoEpa processoEpa) {
         this.processoEpa = processoEpa;
         clearParticipantePessoaFisica();
@@ -215,5 +231,25 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     public boolean apenasPessoaJuridica() {
         return ParteProcessoEnum.J.equals(getNatureza().getTipoPartes());
     }
+    
+    public ParticipanteProcesso getParticipantePaiPessoaFisica() {
+		return getParticipantePessoaFisica().getParticipantePai();
+	}
+
+	public void setParticipantePaiPessoaFisica(ParticipanteProcesso participantePai) {
+		if (participantePai != null && participantePai.getAtivo()){
+			getParticipantePessoaFisica().setParticipantePai(participantePai);
+		}
+	}
+	
+	public ParticipanteProcesso getParticipantePaiPessoaJuridica() {
+		return getParticipantePessoaJuridica().getParticipantePai();
+	}
+
+	public void setParticipantePaiPessoaJuridica(ParticipanteProcesso participantePai) {
+		if (participantePai != null && participantePai.getAtivo()){
+			getParticipantePessoaJuridica().setParticipantePai(participantePai);
+		}
+	}
 
 }
