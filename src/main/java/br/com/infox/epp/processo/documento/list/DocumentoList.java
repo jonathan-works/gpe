@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -23,7 +27,7 @@ import br.com.infox.epp.system.manager.ParametroManager;
 
 @Name(DocumentoList.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class DocumentoList extends EntityList<Documento> {
+public class DocumentoList extends EntityList<Documento> implements ActionListener {
 	
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_EJBQL = "select o from Documento o where "
@@ -86,5 +90,14 @@ public class DocumentoList extends EntityList<Documento> {
             }
         }
     }
-    
+
+    @Override
+    public void processAction(ActionEvent event)
+            throws AbortProcessingException {
+        Map<String, Object> attributes = event.getComponent().getAttributes();
+        Object o = attributes.get("pasta");
+        if (o instanceof Pasta) {
+            getEntity().setPasta((Pasta) o);
+        }
+    }
 }
