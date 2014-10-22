@@ -2,6 +2,11 @@ package br.com.infox.epp.processo.documento.action;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
@@ -21,7 +26,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 
 @Name(PastaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class PastaAction implements Serializable {
+public class PastaAction implements Serializable, ActionListener {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pastaAction";
@@ -35,37 +40,47 @@ public class PastaAction implements Serializable {
     @In
     private DocumentoManager documentoManager;
     
-    private Integer idPasta;
-    private Integer idProcesso;
     private Processo processo;
-    private String nome;
-    private Boolean visivelExterno;
-    private Boolean removivel;
     private List<Pasta> pastaList;
+    private Pasta instance;
+    private Integer id;
 
     @Create
     public void create() {
+        newInstance();
+    }
+    
+    public void newInstance() {
+        setInstance(new Pasta());
         setVisivelExterno(true);
         setRemovivel(true);
     }
     
-    public void addPasta() {
-        Pasta pasta = new Pasta();
-        pasta.setNome(nome);
-        pasta.setVisivelExterno(visivelExterno);
-        pasta.setProcesso(processo);
-        pasta.setRemovivel(removivel);
+    public void persist() {
         try {
-            pastaManager.persist(pasta);
+            getInstance().setProcesso(processo);
+            pastaManager.persist(getInstance());
             setPastaList(pastaManager.getByProcesso(processo));
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }
     }
     
-    public void removePasta(Pasta pasta) {
+    public void update() {
+        try {
+            Pasta pasta = pastaManager.find(getId());
+            pasta.setNome(getNome());
+            pasta.setVisivelExterno(getVisivelExterno());
+            pastaManager.update(pasta);
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
+        }
+    }
+    
+    public void remove(Pasta pasta) {
         try {
             pastaManager.remove(pasta);
+            pastaList = pastaManager.getByProcesso(processo);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }
@@ -77,9 +92,12 @@ public class PastaAction implements Serializable {
         if (od instanceof Documento && op instanceof Pasta) {
             Documento doc = (Documento) od;
             Pasta pasta = (Pasta) op;
+            Pasta pastaAnterior = doc.getPasta();
             doc.setPasta(pasta);
             try {
                 documentoManager.update(doc);
+                pastaManager.refresh(pasta);
+                pastaManager.refresh(pastaAnterior);
             } catch (DAOException e) {
                 actionMessagesService.handleDAOException(e);
             }
@@ -87,52 +105,56 @@ public class PastaAction implements Serializable {
     }
     
     public Boolean canRemove(Pasta pasta) {
+        if (pasta == null) {
+            return false;
+        }
+        if (!pasta.getRemovivel()) {
+            return false;
+        }
         List<Documento> documentoList = pasta.getDocumentosList();
-        return pasta.getRemovivel() && (documentoList == null || documentoList.isEmpty());
-    }
-    
-    public Integer getIdPasta() {
-        return idPasta;
+        return (documentoList == null || documentoList.isEmpty());
     }
 
-    public void setIdPasta(Integer idPasta) {
-        this.idPasta = idPasta;
+    @Override
+    public void processAction(ActionEvent event)
+            throws AbortProcessingException {
+        Map<String, Object> attributes = event.getComponent().getAttributes();
+        Object o = attributes.get("pasta");
+        if (o instanceof Pasta) {
+            setInstance((Pasta) o);
+        }
+    }
+
+    public Pasta getInstance() {
+        return instance;
+    }
+
+    public void setInstance(Pasta pasta) {
+        this.instance = pasta;
     }
 
     public String getNome() {
-        return nome;
+        return getInstance().getNome();
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.getInstance().setNome(nome);
     }
 
     public Boolean getVisivelExterno() {
-        return visivelExterno;
+        return getInstance().getVisivelExterno();
     }
 
     public void setVisivelExterno(Boolean visivelExterno) {
-        this.visivelExterno = visivelExterno;
+        this.getInstance().setVisivelExterno(visivelExterno);
     }
 
     public Boolean getRemovivel() {
-        return removivel;
+        return getInstance().getRemovivel();
     }
 
     public void setRemovivel(Boolean removivel) {
-        this.removivel = removivel;
-    }
-
-    public Integer getIdProcesso() {
-        return idProcesso;
-    }
-
-    public void setIdProcesso(Integer idProcesso) {
-        this.idProcesso = idProcesso;
-        Processo processo = processoManager.find(idProcesso);
-        if (processo != null) {
-            setProcesso(processo);
-        }
+        this.getInstance().setRemovivel(removivel);
     }
 
     public Processo getProcesso() {
@@ -154,6 +176,15 @@ public class PastaAction implements Serializable {
 
     public void setPastaList(List<Pasta> pastaList) {
         this.pastaList = pastaList;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+        setInstance(pastaManager.find(id));
     }
 
 }
