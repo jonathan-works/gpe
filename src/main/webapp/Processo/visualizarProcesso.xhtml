@@ -92,7 +92,7 @@
             <infox:tab
                 id="tabAnexar"
                 name="tabAnexar"
-                rendered="#{s:hasRole('usuarioInterno') and s:hasPermission('/pages/Processo/abaAnexar', 'access')}"
+                rendered="#{s:hasPermission('/pages/Processo/abaAnexar', 'access')}"
                 status=":status"
                 title="#{eppmessages['movimentar.anexar.titleTab']}"
                 action="#{anexoController.onClickTabAnexar(processoEpaHome.instance)}">
