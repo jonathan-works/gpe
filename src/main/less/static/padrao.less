@@ -549,9 +549,12 @@ img.disabled {
   text-decoration: none;
   vertical-align: middle;
 }
-input.buttons,button.rf-pick-btn {
+button.buttons,input.buttons,button.rf-pick-btn {
   &:extend(.buttons.button.submit);
   &:extend(.def-but);
+  &:hover {
+    background: -moz-linear-gradient(center top, #C7DA94, #D4E89C) repeat scroll 0% 0% transparent;
+  }
   margin:4px;
 }
 span.rf-ds-btn {
