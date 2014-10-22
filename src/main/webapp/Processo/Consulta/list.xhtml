@@ -91,12 +91,39 @@
                   limitRender="true" />
                 
                 <a:commandLink
-                  action="#{documentoList.entity.setPasta(pasta)}"
+                  render="documentoListPanel, documentoListSearchForm"
+                  execute="@form"
+                  rendered="#{pastaAction.canRemove(pasta)}"
+                  action="#{pastaAction.remove(pasta)}"
+                  limitRender="true">
+                  <h:graphicImage
+		              styleClass="opacityHover"
+		              url="#{a4jSkin.imgFolder}/remove.png"
+		              rendered="true"
+		              title="#{eppmessages['button.delete']}" />
+                </a:commandLink>
+                <a:commandLink
+                  render="documentoListSearchForm"
+                  execute="@form"
+                  rendered="#{s:hasRole('usuarioInterno')}"
+                  action="setValuesToEditPasta();"
+                  limitRender="true">
+                  <h:graphicImage
+		              styleClass="opacityHover"
+		              url="#{a4jSkin.imgFolder}/view.png"
+		              rendered="true"
+		              title="#{eppmessages['button.delete']}" />
+                </a:commandLink>
+                <a:commandLink
                   render="documentoListPanel, documentoListSearchForm"
                   execute="@form"
                   styleClass="folder"
                   limitRender="true">
                   
+                  <f:attribute name="pasta" value="#{pasta}" />
+                  <f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
+                  <f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
+
                   <h:outputText
                     value="#{pasta.nome}"
                     class="folder" />
@@ -106,23 +133,13 @@
               </rich:list>
             </rich:panel>
             <wi:commandButton
-              id="addFolderBtn"
-              value="Adicionar Pasta"
+              id="addPastaBtn"
+              value="#{eppmessages['documentoProcesso.addFolder']}"
               disabled="false"
               onclick="#{rich:component('addPastaPanel')}.show();" />
-            <wi:commandButton
-              id="rmFolderBtm"
-              value="Remover Pasta"
-              rendered="#{s:hasRole('usuarioInterno')}"
-              disabled="#{not pastaAction.canRemove(documentoList.entity.pasta)}"
-              reRender="documentoListSearchForm, documentoListPanel"
-              execute="@this"
-              action="#{pastaAction.removePasta(documentoList.entity.pasta)}"
-              onclick="" />
           </ui:define>
-
+		  
           <ui:define name="toolBar">
-            <a:outputPanel>
               <rich:dragSource
                 type="doc#{consultaController.processoEpa.idProcesso}"
                 dragValue="#{row}"
@@ -135,58 +152,33 @@
                   <span class="caixa-ind-lbl">#{row.descricao}</span>
                 </rich:dragIndicator>
               </rich:dragSource>
-
               <h:graphicImage
                 url="#{a4jSkin.imgFolder}/anexo.png"
                 title="#{eppmessages['pasta.moverDocumento']}" />
-
-            </a:outputPanel>
-            <s:link
-              target="idJan#{row.id}"
-              rendered="#{not empty row.documentoBin.assinaturas}"
-              view="/Processo/Consulta/validaDocumento.xhtml"
-              onclick="infox.openPopUp('idJan#{row.id}', '', 650, 160, 450, 450);">
-              <h:graphicImage
-                title="#{eppmessages['assinaturas.validar']}"
-                alt="#{eppmessages['assinaturas.validar']}"
-                url="#{a4jSkin.imgFolder}/lock.png" />
-              <f:param
-                value="#{row.id}"
-                name="idDocumento" />
-            </s:link>
-            <s:link
-              target="idJan#{row.id}"
-              rendered="#{empty row.documentoBin.assinaturas}"
-              view="/Processo/Consulta/validaDocumento.xhtml"
-              onclick="infox.openPopUp('idJan#{row.id}', '', 650, 200, 450, 450);">
-              <h:graphicImage
-                title="#{eppmessages['assinaturas.assinar']}"
-                alt="#{eppmessages['assinaturas.assinar']}"
-                url="#{a4jSkin.imgFolder}/lock_unlock.png" />
-              <f:param
-                value="#{row.id}"
-                name="idDocumento" />
-            </s:link>
             <h:graphicImage
               styleClass="opacityHover"
               url="#{a4jSkin.imgFolder}/view.png"
               title="#{eppmessages['button.historico']}"
               rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
               onmouseup="selectDocumento(#{rowId});" />
-
             <h:graphicImage
               styleClass="opacityHover"
               url="#{a4jSkin.imgFolder}/remove.png"
               rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
               title="#{eppmessages['button.delete']}"
               onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
-
             <h:graphicImage
               styleClass="opacityHover"
               url="#{a4jSkin.imgFolder}/stock_undelete.png"
               rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
               title="#{eppmessages['button.restaurar']}"
               onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+            <h:form>
+              <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+                <ui:param name="bin" value="#{row.documentoBin}" />
+                <ui:param name="header" value="#{row.descricao}" />
+              </ui:include>
+		    </h:form>
           </ui:define>
           <ui:define name="headerToolBar" />
           <wi:columnOutputText
@@ -261,6 +253,13 @@
 						#{rich:jQuery('addPastaInputName')}.val('');
 					}
 					
+					function setValuesToEditPasta() {
+						#{rich:component('editPastaPanel')}.show();
+						#{rich:jQuery('hiddenIdPasta')}.val(id);
+						#{rich:jQuery('editPastaInputName')}.val(nome);
+						#{rich:jQuery('editPastaInputVisivelExterno')}.val(visivelExterno);
+					}
+					
                 </script>
 
         <rich:popupPanel
@@ -292,16 +291,56 @@
               value="#{pastaAction.visivelExterno}"
               required="true"
               label="Usuário externo pode ver?" />
-            <a:commandButton
+            <wi:commandButton
               id="addPastaButton"
-              actionListener="#{pastaAction.addPasta()}"
-              limitRender="true"
+              action="#{pastaAction.persist()}"
               execute="@form"
-              onclick="infox.showLoading();"
-              oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{}"
+              oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{}"
               value="Adicionar"
-              render="@form, documentoListSearchForm"
-              styleClass="buttons" />
+              reRender="@form, documentoListSearchForm" />
+          </h:form>
+        </rich:popupPanel>
+        
+        <rich:popupPanel
+          id="editPastaPanel"
+          moveable="true"
+          show="false"
+          resizeable="false"
+          minWidth="310"
+          minHeight="230"
+          header="Editar Pasta"
+          onbeforehide="clearAddPastaFields();">
+          <f:facet name="controls">
+            <h:graphicImage
+              id="editPastaPanelCloseBtn"
+              styleClass="mp-close"
+              value="#{a4jSkin.imgFolder}/closeMP.gif"
+              onmouseup="#{rich:component('editPastaPanel')}.hide();" />
+          </f:facet>
+          <h:form id="editPastaForm">
+            <h:inputHidden
+                id="hiddenIdPasta"
+                value="#{pastaAction.id}"
+                converter="javax.faces.Integer" />
+            <wi:inputText
+              id="editPastaInputName"
+              value="#{pastaAction.nome}"
+              required="true"
+              maxLength="100"
+              label="Nome da pasta">
+            </wi:inputText>
+            <wi:selectBooleanCheckbox
+              id="editPastaInputVisivelExterno"
+              value="#{pastaAction.visivelExterno}"
+              required="true"
+              label="Usuário externo pode ver?" />
+            <wi:commandButton
+              id="editPastaButton"
+              action="#{pastaAction.update()}"
+              execute="@form"
+              oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{}"
+              value="Gravar"
+              reRender="@form, documentoListSearchForm" />
           </h:form>
         </rich:popupPanel>
 
@@ -356,6 +395,7 @@
                 actionListener="#{documentoProcessoAction.exclusaoRestauracaoDocumento()}"
                 limitRender="true"
                 execute="@form"
+                rendered="#{empty hiddenIdDocumento}"
                 onclick="infox.showLoading();"
                 oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
                 value="Enviar"
