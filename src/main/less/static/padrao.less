@@ -11,6 +11,10 @@
 @import "processDefinition.less";
 @import "termoAdesao.less";
 @import "empty.less";
+@import "popup-panel.less";
+@import "calendar.less";
+@import "context-menu.less";
+@import "file-upload.less";
 
 @imgFolder:~"#{pathResolver.contextPath}/#{a4jSkin.imgFolder}";
 @baseBgColor:#c3d9e4;
@@ -209,7 +213,7 @@ h1 {
   &:extend(.viewColumn);
   font-weight: bold;
   margin: 0px;
-  
+
   padding: 0px;
   color: #000;
   display: block;
@@ -396,7 +400,7 @@ img.disabled {
   & a {
     position: relative;
     top: 3px;
-    margin-right: 15px;    
+    margin-right: 15px;
   }
 }
 
@@ -418,12 +422,6 @@ img.disabled {
   padding: 0 0 0 25px;
 }
 
-.rf-cal-btn{
-  &.hidden{
-    display:none;
-  } 
-}
-
 .input {
   &.select {
     background-color: #FFF;
@@ -438,9 +436,9 @@ img.disabled {
     }
     &.usuario-perfil{
       width:auto;
-    }    
+    }
   }
-  
+
   &.crud {
     &.text{
     }
@@ -574,7 +572,7 @@ span.rf-ds-btn {
       &:extend(.buttons.button.submit);
     }
   }
-  
+
   &.link{
     padding: 3px 12px 3px 3px;
     text-decoration: none;
@@ -798,7 +796,7 @@ div.rf-trn {
 }
 
 .tooltip-panel {
-	max-width: 450px; 
+	max-width: 450px;
 	max-height: 130px;
 	background-color: #ffc;
 	overflow: auto;
@@ -884,7 +882,7 @@ option {
 .process-panel-dt-col-hdr{
   &.rf-dt-shdr-c {
     padding: 10px;
-    font-family: daxbold;
+    font-family: @default-font-family;
     font-style: italic;
     background-color: @baseBgColor;
     text-align: center;
@@ -963,7 +961,7 @@ option {
 }
 
 .rf-p.dtable-p > .rf-p-hdr{
-  font-family: dax_lightregular;
+  font-family: @default-font-family;
   background-color: @menu-bg-color;
   border-color: @menu-bg-color;
   color: @menu-txt-color;
@@ -973,7 +971,7 @@ option {
   background-image:none;
   background-color: @menu-bg-color;
   color: @menu-txt-color;
-  font-family: dax_lightregular;
+  font-family: @default-font-family;
 }
 .processo-panel-form.hidden {
   display:none;
@@ -988,101 +986,8 @@ option {
 .rf-pick-src > .rf-pick-src-cptn,.rf-pick-tgt > .rf-pick-tgt-cptn {
   color: @menu-txt-color;
 }
-.rf-fu>.rf-fu-hdr {
-  background-image:none;
-  background-color:@menu-bg-color;
-}
-.rf-fu-btns-lft>.rf-fu-btn-add, .rf-fu-btns-lft>.rf-fu-btn-upl, .rf-fu-btns-lft>.rf-fu-btn-clr {
-  background-image:none;
-  background-color:@baseBgColor;
-}
 .palette-img-inpt{
   cursor:pointer;
-}
-
-.rf-cal-popup {
-  background-color:@menu-bg-color;
-  color:@menu-txt-color;
-}
-.rf-cal-c {
-  background-color:#fff;
-}
-td.rf-cal-hdr-month {
-  background-color:@menu-bg-color;
-  color:@menu-txt-color;
-}
-td.rf-cal-tl {
-  background-color:@menu-bg-color;
-  color:@menu-txt-color;
-}
-td.rf-cal-hdr {
-  background-color:#fff;
-}
-td.rf-cal-day-lbl {
-  background-color:#fff;
-}
-td.rf-cal-ftr {
-  background-color:@menu-bg-color;
-}
-td.rf-cal-tl-ftr {
-  background:#fff;
-}
-td.rf-cal-holiday {
-  background-color:lighten(@menu-bg-color,10%);
-  color:darken(@menu-bg-color,10%);
-}
-.rf-cal-tl-btn {
-  &.rf-cal-tl-btn-hov{
-    background-color:lighten(@menu-bg-color,10%);
-    color:@menu-txt-color;
-  }
-}
-td.rf-cal-hov {
-  background-color:lighten(@menu-bg-color,15%);
-}
-td.rf-cal-today {
-  color:#fff;
-  background-color:@menu-txt-color;
-}
-td.rf-cal-sel {
-  background-color:@menu-bg-color;
-  color:@menu-txt-color;
-}
-div.rf-ctx-lst {
-  background-color:lighten(@menu-bg-color,10%);
-  color:@menu-txt-color;
-}
-span.rf-ctx-itm-lbl {
-  color:@menu-txt-color;
-  font-family:@default-font-family; 
-}
-div.rf-ctx-lst-bg {
-  background-image:none;
-  border:lighten(@menu-bg-color,10%);
-}
-div.rf-ctx-itm-sel {
-  background-image:none;
-  background-color:darken(@menu-bg-color,10%);
-  color:lighten(@menu-bg-color,10%);
-}
-div.rf-cal-edtr-btn-sel {
-  background-image:none;
-  background-color:darken(@menu-bg-color,10%);
-  color:lighten(@menu-bg-color,10%);
-}
-td.rf-cal-monthpicker-ok,td.rf-cal-monthpicker-cancel {
-  background-color:lighten(@menu-bg-color,10%);
-  color:darken(@menu-bg-color,10%);
-}
-div.rf-cal-time-btn {
-  background:lighten(@menu-bg-color,10%);
-}
-div.rf-pp-hdr-cnt {
-  color:@menu-txt-color;
-}
-
-div.rf-pp-hdr {
-  background:@menu-bg-color;
 }
 .folder {
   color:@menu-txt-color;
