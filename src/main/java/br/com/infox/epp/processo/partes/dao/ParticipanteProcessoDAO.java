@@ -33,6 +33,9 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
     public static final String NAME = "participanteProcessoDAO";
     
     public void lockPessimistic(Processo processo){
+    	if (!getEntityManager().contains(processo)){
+    		processo = getEntityManager().merge(processo);
+    	}
     	getEntityManager().lock(processo, LockModeType.PESSIMISTIC_READ);
     }
     

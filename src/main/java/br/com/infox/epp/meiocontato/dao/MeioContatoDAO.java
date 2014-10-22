@@ -4,6 +4,8 @@ import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_B
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_PESSOA;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_TIPO_CONTATO;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_VALOR;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,5 +44,13 @@ public class MeioContatoDAO extends DAO<MeioContato> {
         parameters.put(PARAM_PESSOA, pessoa);
         parameters.put(PARAM_TIPO_CONTATO, tipoMeioContato);
         return getNamedResultList(MEIO_CONTATO_BY_PESSOA_AND_TIPO, parameters);
+    }
+    
+    public boolean existeMeioContatoByPessoaTipoValor(Pessoa pessoa, TipoMeioContatoEnum tipo, String valor){
+    	Map<String, Object> parameters = new HashMap<>(3);
+        parameters.put(PARAM_PESSOA, pessoa);
+        parameters.put(PARAM_TIPO_CONTATO, tipo);
+        parameters.put(PARAM_VALOR, valor);
+        return (Long) getNamedSingleResult(EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR, parameters) > 0;
     }
 }
