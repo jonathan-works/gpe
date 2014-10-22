@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:f="http://java.sun.com/jsf/core"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{eppmessages['tipoComunicacao.titlePage']}</ui:define>
+    <ui:param name="home" value="#{tipoComunicacaoCrudAction}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{tipoComunicacaoList.list(15)}"
+            bean="#{tipoComunicacaoList}"
+            tableTitle="#{eppmessages['tipoComunicacao.tableTitle']}"
+            id="tipoComunicacaoList" rowId="#{row.id}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="tipoComunicacaoSearchForm"
+                    formTitle="#{eppmessages['searchForm.title']}">
+                    <wi:inputText id="descricao"
+                        label="#{eppmessages['tipoComunicacao.descricao']}" 
+                        value="#{tipoComunicacaoList.entity.descricao}"/>
+                    <wi:selectSituacaoOneMenu
+                        id="ativo"
+                        label="#{eppmessages['field.situacao']}"
+                        value="#{tipoComunicacaoList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+
+            <wi:columnOutputText columnId="descricao"
+                columnHeader="#{eppmessages['tipoComunicacao.descricao']}"
+                value="#{row.descricao}" />
+            <wi:columnOutputText columnId="quantidadeDiasCiencia"
+                columnHeader="#{eppmessages['tipoComunicacao.diasCiencia']}"
+                value="#{row.quantidadeDiasCiencia}" />
+            <wi:columnSituacao
+                columnId="ativo"
+                columnHeader="#{eppmessages['field.situacao']}"
+                value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+        <wi:dataForm formId="tipoComunicacaoForm"
+            formTitle="#{eppmessages['form.title']}">
+            <wi:inputText id="descricao"
+                label="#{eppmessages['tipoComunicacao.descricao']}"
+                value="#{tipoComunicacaoCrudAction.instance.descricao}"
+                required="true" />
+            <wi:inputNumber id="diasCiencia"
+                label="#{eppmessages['tipoComunicacao.diasCiencia']}"
+                value="#{tipoComunicacaoCrudAction.instance.quantidadeDiasCiencia}" />
+            <wi:selectSituacaoRadio
+                id="ativo"
+                label="#{eppmessages['field.situacao']}"
+                value="#{tipoComunicacaoCrudAction.instance.ativo}" />
+        </wi:dataForm>
+    </ui:define>
+
+</ui:composition>
