@@ -76,7 +76,7 @@ public class ProcessoSearcher {
             LOG.debug(e.getMessage(), e);
         }
         Processo processo = processoManager.find(prc);
-        if (processo.getNumeroProcesso() != null) {
+        if (processo == null || processo.getNumeroProcesso() != null) {
         	return null;
         } else {
         	return processo;
