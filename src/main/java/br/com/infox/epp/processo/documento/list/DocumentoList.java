@@ -95,9 +95,18 @@ public class DocumentoList extends EntityList<Documento> implements ActionListen
     public void processAction(ActionEvent event)
             throws AbortProcessingException {
         Map<String, Object> attributes = event.getComponent().getAttributes();
-        Object o = attributes.get("pasta");
+        Object o = attributes.get("pastaToSelect");
         if (o instanceof Pasta) {
             getEntity().setPasta((Pasta) o);
+            return;
+        }
+        o = attributes.get("pastaToRemove");
+        if (o instanceof Pasta) {
+            Pasta selected = getEntity().getPasta();
+            Pasta toRemove = (Pasta) o;
+            if (selected == toRemove) {
+                getEntity().setPasta(null);
+            }
         }
     }
 }
