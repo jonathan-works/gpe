@@ -13,8 +13,7 @@
         value="#{authenticator.isUsuarioAtualResponsavel() ? true : false}" />
 
     <s:div id="buscaDiv">
-        <ui:include src="partePessoaFisica.xhtml" />
-		<ui:include src="partePessoaJuridica.xhtml" />
+        <ui:include src="participanteProcesso.xhtml" />
     </s:div>
     
     <s:div id="parteProcessoListDiv" styleClass="padding-top-5">
@@ -31,7 +30,7 @@
                 <wi:toolBar
                     rendered="#{not row.ativo and participantesProcessoController.podeAdicionarPartes(row.pessoa.tipoPessoa)}"
                     action="#{participanteProcessoCrudAction.setInstance(row)}"
-                    reRender="parteProcessoListDiv" url="#{a4jSkin.imgFolder}/add.gif"
+                    reRender="parteProcessoListDiv" url="#{a4jSkin.imgFolder}/stock_undelete.png"
                     id="inativo" />
             </ui:define>
             <wi:columnOutputTextIdent columnId="pessoa.nome"

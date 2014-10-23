@@ -10,16 +10,16 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <s:div id="buscaDiv">
-        <ui:include src="includePessoaFisica.xhtml" />
-        <ui:include src="includePessoaJuridica.xhtml" />
+        <ui:include src="includeParticipante.xhtml" />
     </s:div>
 
     <s:div id="pessoasListDiv">
+    
     	<wi:dataTable id="participantesTable"
     		showGrid="#{not participantesController.participantesProcesso.isEmpty()}"
             values="#{participantesController.participantesProcesso}"
             tableTitle="#{eppmessages['participanteProcesso.participantes']}"
-            showSearchForm="false">
+            showSearchForm="false" panelStyleClass="full-sized">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBarRemove id="toolBarRemove"

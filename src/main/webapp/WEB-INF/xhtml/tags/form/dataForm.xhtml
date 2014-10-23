@@ -14,26 +14,46 @@
         enctype="#{isUploadForm ? 'multipart/form-data' : 'application/x-www-form-urlencoded'}"
         acceptcharset="UTF-8">
         <a:region rendered="#{wi:get(rendered, true)}">
-            <ui:param name="panelWidth"
-                value="#{wi:get(panelWidth, '100%')}" />
+            <ui:param name="panelWidth" value="#{wi:get(panelWidth, '100%')}" />
+            <ui:param name="collapsiblePanel" value="#{wi:get(collapsiblePanel, 'false')}" />
             <s:token allowMultiplePosts="true" requireSession="true" />
-            <rich:panel styleClass="dt-form-p" bodyClass="dt-form-p-b"
-                headerClass="dt-form-p-h">
-                <f:facet name="header">#{empty formTitle ? formId : formTitle}</f:facet>
-                <ui:insert />
-                <s:div styleClass="required-alert"
-                    rendered="#{wi:get(requiredForm,true)}">
-                    <img
-                        src="#{pathResolver.contextPath}#{a4jSkin.imgFolder}/mod/balao.png" />
-                    <span class="required">*</span>
-                    <span>#{eppmessages['form.required']}</span>
-                </s:div>
-            </rich:panel>
-            <div />
-            <ui:insert name="buttons">
-                <wi:commandButtonSave />
-                <wi:commandButtonNew />
-            </ui:insert>
+            <c:if test="#{not collapsiblePanel}">
+	            <rich:panel styleClass="dt-form-p" bodyClass="dt-form-p-b"
+	                headerClass="dt-form-p-h" header="#{empty formTitle ? formId : formTitle}">
+	                <ui:insert />
+	                <s:div styleClass="required-alert"
+	                    rendered="#{wi:get(requiredForm,true)}">
+	                    <img
+	                        src="#{pathResolver.contextPath}#{a4jSkin.imgFolder}/mod/balao.png" />
+	                    <span class="required">*</span>
+	                    <span>#{eppmessages['form.required']}</span>
+	                </s:div>
+	            </rich:panel>
+	            <div/>
+	            <ui:insert name="buttons">	
+	                <wi:commandButtonSave />
+	                <wi:commandButtonNew />
+	            </ui:insert>
+            </c:if>
+            <c:if test="#{collapsiblePanel}">
+	            <rich:collapsiblePanel styleClass="dt-form-p" bodyClass="dt-form-p-b"
+	                headerClass="dt-form-p-h" expanded="#{expandedPanelForm}" switchType="client"
+	                header="#{empty formTitle ? formId : formTitle}" >
+	                <ui:insert />
+	                <s:div styleClass="required-alert"
+	                    rendered="#{wi:get(requiredForm,true)}">
+	                    <img
+	                        src="#{pathResolver.contextPath}#{a4jSkin.imgFolder}/mod/balao.png" />
+	                    <span class="required">*</span>
+	                    <span>#{eppmessages['form.required']}</span>
+	                </s:div>
+	                <div/>
+		            <ui:insert name="buttons">
+		                <wi:commandButtonSave />
+		                <wi:commandButtonNew />
+		            </ui:insert>
+	            </rich:collapsiblePanel>
+            </c:if>
         </a:region>
     </h:form>
 </ui:composition>
