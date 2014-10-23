@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -23,16 +24,20 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     @In
     private DocumentoService documentoService;
     
+    public Pasta getDefaultFolder(Processo processo) throws DAOException {
+        List<Pasta> pastas = getByProcesso(processo);
+        return pastas.get(0);
+    }
+    
     public List<Pasta> getByProcesso(Processo processo) throws DAOException {
         List<Pasta> pastaList = getDao().getByProcesso(processo);
         if (pastaList == null || pastaList.isEmpty()) {
-            createDefaultFolders(processo);
-            pastaList = getDao().getByProcesso(processo);
+            pastaList = createDefaultFolders(processo); 
         }
         return pastaList;
     }
     
-    public void createDefaultFolders(Processo processo) throws DAOException {
+    public List<Pasta> createDefaultFolders(Processo processo) throws DAOException {
         Pasta documentosProcesso = new Pasta();
         documentosProcesso.setRemovivel(Boolean.FALSE);
         documentosProcesso.setVisivelExterno(Boolean.TRUE);
@@ -49,5 +54,9 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         persist(naoAceitos);
         
         documentoService.setDefaultFolder(documentosProcesso);
+        List<Pasta> pastas = new ArrayList<>();
+        pastas.add(documentosProcesso);
+        pastas.add(naoAceitos);
+        return pastas;
     }
 }
