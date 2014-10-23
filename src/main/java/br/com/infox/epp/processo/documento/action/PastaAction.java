@@ -23,6 +23,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PastaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -79,10 +80,12 @@ public class PastaAction implements Serializable, ActionListener {
     
     public void remove(Pasta pasta) {
         try {
+            if (pastaManager == null) {
+                pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
+            }
             pastaManager.remove(pasta);
-            pastaList = pastaManager.getByProcesso(processo);
-        } catch (DAOException e) {
-            actionMessagesService.handleDAOException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -119,9 +122,14 @@ public class PastaAction implements Serializable, ActionListener {
     public void processAction(ActionEvent event)
             throws AbortProcessingException {
         Map<String, Object> attributes = event.getComponent().getAttributes();
-        Object o = attributes.get("pasta");
+        Object o = attributes.get("pastaToSelect");
         if (o instanceof Pasta) {
             setInstance((Pasta) o);
+            return;
+        }
+        o = attributes.get("pastaToRemove");
+        if (o instanceof Pasta) {
+            remove((Pasta) o); 
         }
     }
 
