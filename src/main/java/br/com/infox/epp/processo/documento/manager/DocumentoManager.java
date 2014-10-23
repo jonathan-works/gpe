@@ -16,6 +16,7 @@ import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 
@@ -30,6 +31,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     private DocumentoBinManager documentoBinManager;
     @In
     private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
+    @In
+    private PastaManager pastaManager;
 
     public String getModeloDocumentoByIdDocumento(Integer idDocumento) {
         return getDao().getModeloDocumentoByIdDocumento(idDocumento);
@@ -60,6 +63,9 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
             long idJbpmTask = TaskInstance.instance().getId();
             documento.setIdJbpmTask(idJbpmTask);
         }
+        Pasta padrao = pastaManager.getDefaultFolder(processo);
+        documento.setPasta(padrao);
+
         persist(documento);
         return documento;
     }
