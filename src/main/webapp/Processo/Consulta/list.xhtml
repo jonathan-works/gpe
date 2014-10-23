@@ -106,7 +106,7 @@
                   render="documentoListSearchForm"
                   execute="@form"
                   rendered="#{s:hasRole('usuarioInterno')}"
-                  action="setValuesToEditPasta();"
+                  onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno});"
                   limitRender="true">
                   <h:graphicImage
 		              styleClass="opacityHover"
@@ -253,7 +253,7 @@
 						#{rich:jQuery('addPastaInputName')}.val('');
 					}
 					
-					function setValuesToEditPasta() {
+					function setValuesToEditPasta(id, nome, visivelExterno) {
 						#{rich:component('editPastaPanel')}.show();
 						#{rich:jQuery('hiddenIdPasta')}.val(id);
 						#{rich:jQuery('editPastaInputName')}.val(nome);
@@ -338,7 +338,7 @@
               id="editPastaButton"
               action="#{pastaAction.update()}"
               execute="@form"
-              oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{}"
+              oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editPastaPanel')}.hide();}else{}"
               value="Gravar"
               reRender="@form, documentoListSearchForm" />
           </h:form>
