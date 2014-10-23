@@ -36,7 +36,7 @@ public class ProcessoSearcher {
      * @param processo Processo a ser visualizado no paginador
      */
     public void visualizarProcesso(Processo processo) {
-        Redirect.instance().setConversationPropagationEnabled(false);
+        Redirect.instance().setConversationPropagationEnabled(true);
         Redirect.instance().setViewId("/Processo/Consulta/list.xhtml");
         Redirect.instance().setParameter("id", processo.getIdProcesso());
         Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
@@ -52,9 +52,12 @@ public class ProcessoSearcher {
      * @return TRUE se o resultado for um processo, FALSE do contrário
      */
     public boolean searchProcesso(String searchText) {
-        Processo processo = searchIdProcesso(searchText);
-        if (processo != null
-                && sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoEpaManager.find(processo.getIdProcesso()))) {
+    	Processo processo = searchByNumero(searchText);
+    	if (processo == null) {
+    		processo = searchIdProcesso(searchText);
+    	}
+        if (processo != null && processo.getIdJbpm() != null 
+        		&& sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoEpaManager.find(processo.getIdProcesso()))) {
             visualizarProcesso(processo);
         }
         return false;
@@ -72,8 +75,22 @@ public class ProcessoSearcher {
         } catch (NumberFormatException e) {
             LOG.debug(e.getMessage(), e);
         }
-        return processoManager.find(prc);
+        Processo processo = processoManager.find(prc);
+        if (processo.getNumeroProcesso() != null) {
+        	return null;
+        } else {
+        	return processo;
+        }
     }
+
+	public Processo searchByNumero(String searchText) {
+		Processo processo = processoManager.getProcessoByNumero(searchText);
+    	if (processo != null) {
+    		return processo;
+    	} else {
+    		return null;
+    	}
+	}
 
     public String getNumeroProcesso(int idProcesso) {
         return processoManager.getNumeroProcesso(idProcesso);

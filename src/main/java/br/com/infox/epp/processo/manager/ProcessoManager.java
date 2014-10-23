@@ -217,4 +217,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public String getNumeroProcessoByIdJbpm(Long processInstanceId) {
         return getDao().getNumeroProcessoByIdJbpm(processInstanceId);
     }
+    
+    public Processo getProcessoByNumero(String numeroProcesso) {
+    	return getDao().getProcessoByNumero(numeroProcesso);
+    }
 }

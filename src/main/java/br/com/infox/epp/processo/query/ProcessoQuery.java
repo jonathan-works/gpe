@@ -2,7 +2,7 @@ package br.com.infox.epp.processo.query;
 
 public interface ProcessoQuery {
 
-    String TABLE_PROCESSO = "tb_processo";
+	String TABLE_PROCESSO = "tb_processo";
     String SEQUENCE_PROCESSO = "sq_tb_processo";
     String ID_PROCESSO = "id_processo";
     String ID_JBPM = "id_jbpm";
@@ -110,5 +110,9 @@ public interface ProcessoQuery {
 	
 	String NUMERO_PROCESSO_BY_ID_JBPM = "Processo.numeroProcessoByIdJbpm";
 	String NUMERO_PROCESSO_BY_ID_JBPM_QUERY = "select o.numeroProcesso from Processo o where o.idJbpm = :" + PARAM_ID_JBPM;
+	
+	String NUMERO_PROCESSO_PARAM = "numeroProcesso";
+	String PROCESSO_BY_NUMERO = "getProcessoByNumero";
+	String PROCESSO_BY_NUMERO_QUERY = "select o from Processo o where o.numeroProcesso = :" + NUMERO_PROCESSO_PARAM;
 
 }

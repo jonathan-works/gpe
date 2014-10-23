@@ -11,11 +11,13 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TASKMGMINSTANCE;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TOKEN;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 
@@ -116,5 +118,11 @@ public class ProcessoDAO extends DAO<Processo> {
         Map<String, Object> params = new HashMap<>();
         params.put(PARAM_ID_JBPM, processInstanceId);
         return getNamedSingleResult(NUMERO_PROCESSO_BY_ID_JBPM, params);
+    }
+    
+    public Processo getProcessoByNumero(String numeroProcesso) {
+    	Map<String, Object> params = new HashMap<>();
+    	params.put(NUMERO_PROCESSO_PARAM, numeroProcesso);
+    	return getNamedSingleResult(PROCESSO_BY_NUMERO, params);
     }
 }
