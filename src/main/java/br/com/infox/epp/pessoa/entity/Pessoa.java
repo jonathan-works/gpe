@@ -52,7 +52,7 @@ public abstract class Pessoa implements Serializable {
     private String nome;
     
     @Column(name = "in_ativo", nullable = false)
-    private Boolean ativo;
+    private Boolean ativo = Boolean.TRUE;
     
     @OneToMany(fetch=FetchType.LAZY, mappedBy="pessoa")
     private List<MeioContato> meioContatoList = new ArrayList<>();

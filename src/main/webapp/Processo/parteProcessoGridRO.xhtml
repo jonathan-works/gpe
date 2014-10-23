@@ -14,7 +14,8 @@
         <wi:dataTable values="#{participanteProcessoList.list()}"
             bean="#{participanteProcessoList}"
             tableTitle="#{eppmessages['participanteProcesso.tableTitle']}"
-            id="participanteProcessoList" showSearchForm="false">
+            id="participanteProcessoList" showSearchForm="false" panelStyleClass="full-sized">
+            
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar" />
             
@@ -28,8 +29,7 @@
       		<wi:columnOutputText columnId="cpfCnpj"
        			styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
                 columnHeader="#{eppmessages['participanteProcesso.codigo']}"
-                value="#{row.pessoa.codigoFormatado}" hideOrder="true" >
-            </wi:columnOutputText>
+                value="#{row.pessoa.codigoFormatado}" hideOrder="true" />
             
             <wi:columnOutputText columnId="tipoParticipante" 
             	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
