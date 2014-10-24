@@ -91,11 +91,11 @@ public interface ProcessoQuery {
 			"DELETE FROM tb_task_conteudo_index WHERE id_taskinstance in (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"UPDATE jbpm_processinstance SET roottoken_ = null, superprocesstoken_ = null where id_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM jbpm_variableinstance WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
-			"DELETE FROM tb_usuario_taskinstance WHERE id_taskinstance = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
+			"DELETE FROM tb_usuario_taskinstance WHERE id_taskinstance in (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"DELETE FROM tb_processo_localizacao_ibpm WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
 			"DELETE FROM tb_processo_tarefa WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
-			"DELETE FROM jbpm_taskactorpool WHERE taskinstance_ = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" + 
-			"DELETE FROM jbpm_pooledactor WHERE swimlaneinstance_ = (select swimlaninstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
+			"DELETE FROM jbpm_taskactorpool WHERE taskinstance_ in (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" + 
+			"DELETE FROM jbpm_pooledactor WHERE swimlaneinstance_ in (select swimlaninstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"DELETE FROM jbpm_taskinstance WHERE procinst_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM jbpm_swimlaneinstance WHERE taskmgmtinstance_ = :" + PARAM_ID_TASKMGMINSTANCE + " ;\n" +
 			"DELETE FROM jbpm_tokenvariablemap WHERE token_ = :" + PARAM_ID_TOKEN + " ;\n" +
