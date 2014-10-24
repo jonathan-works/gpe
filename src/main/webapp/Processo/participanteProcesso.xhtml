@@ -46,7 +46,8 @@
 	            
 	            <wi:inputText id="nome"
 	                value="#{participantesProcessoController.participanteProcesso.pessoa.nome}"
-	                label="#{eppmessages['pessoaFisica.nome']}" required="true" />
+	                label="#{participantesProcessoController.tipoPessoa eq 'F' ? eppmessages['pessoaFisica.nome'] : eppmessages['pessoaJuridica.nomeFantasia']}" 
+	                required="true" />
 	             
 	            <wi:inputEmail id="email"
 	            	value="#{participantesProcessoController.email}"
