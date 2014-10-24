@@ -17,7 +17,7 @@
         name="isModelo"
         value="#{empty bin.extensao}"
     />
-    <div id="teste">
+    <span>
         <span class="#{row.excluido ? 'inativo' : ''}" />
         <h:commandLink
             action="#{documentoHtmlView.setViewInstance(row)}"
@@ -66,5 +66,5 @@
             />
             <f:param value="#{row.id}" name="idDocumento" />
         </s:link>
-    </div>
+    </span>
 </ui:composition>

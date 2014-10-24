@@ -1,7 +1,12 @@
 package br.com.infox.epp.processo.documento.list;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -9,15 +14,20 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.security.Identity;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
 
 @Name(DocumentoList.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class DocumentoList extends EntityList<Documento> {
+public class DocumentoList extends EntityList<Documento> implements ActionListener {
 	
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_EJBQL = "select o from Documento o where "
@@ -33,10 +43,14 @@ public class DocumentoList extends EntityList<Documento> {
     
     @In
     private ParametroManager parametroManager;
-    
+    @In
+    private PastaManager pastaManager;
+    @In
+    private ActionMessagesService actionMessagesService;
+   
     @Override
     protected void addSearchFields() {
-        addSearchField("processo", SearchCriteria.IGUAL);
+        addSearchField("pasta", SearchCriteria.IGUAL);
     }
 
     @Override
@@ -60,5 +74,39 @@ public class DocumentoList extends EntityList<Documento> {
     	map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
         return map;
     }
+    public Processo getProcesso() {
+        return getEntity().getProcesso();
+    }
+    
+    public void setProcesso(Processo processo) {
+        Documento documento = getEntity();
+        documento.setProcesso(processo);
+        if (documento.getPasta()== null){
+            try {
+                List<Pasta> byProcesso = pastaManager.getByProcesso(documento.getProcesso());
+                documento.setPasta(byProcesso.get(0));
+            } catch (DAOException e) {
+                actionMessagesService.handleDAOException(e);
+            }
+        }
+    }
 
+    @Override
+    public void processAction(ActionEvent event)
+            throws AbortProcessingException {
+        Map<String, Object> attributes = event.getComponent().getAttributes();
+        Object o = attributes.get("pastaToSelect");
+        if (o instanceof Pasta) {
+            getEntity().setPasta((Pasta) o);
+            return;
+        }
+        o = attributes.get("pastaToRemove");
+        if (o instanceof Pasta) {
+            Pasta selected = getEntity().getPasta();
+            Pasta toRemove = (Pasta) o;
+            if (selected == toRemove) {
+                getEntity().setPasta(null);
+            }
+        }
+    }
 }
