@@ -735,17 +735,39 @@ form {
   margin: 0;
   padding: 0;
 }
-
-.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all,.ui-tabs.ui-widget.ui-widget-content.ui-corner-all {
-  background: none;
-  border-width: 0;
+.ui-corner-all{
+  &.ui-tabs-nav{
+    &.ui-helper-reset{
+      &.ui-helper-clearfix{
+        &.ui-widget-header {
+          background: none;
+          border-width: 0;
+        }
+      }
+    }
+  }
+  &.ui-tabs{
+    &.ui-widget{
+      &.ui-widget-content {
+        background: none;
+        border-width: 0;
+      }
+    }
+  }
 }
 
-.ui-tabs-panel.ui-widget-content.ui-corner-bottom {
-  background: white;
-  margin: 1px 0 0 3px;
-  overflow-x: auto;
-  overflow-y: visible;
+.ui-tabs-panel{
+  &.ui-widget-content{
+    &.ui-corner-bottom {
+      background: white;
+      margin: 1px 0 0 3px;
+      overflow-x: auto;
+      overflow-y: visible;
+      &.papelTab {
+        border:1px solid #94B7CC;
+      }
+    }
+  }
 }
 
 #javax_faces_developmentstage_messages {
@@ -769,10 +791,6 @@ div.rf-trn {
 .caixa-ind-lbl {
   width:200px;
 }
-.ui-tabs-panel.ui-widget-content.ui-corner-bottom.papelTab {
-  border:1px solid #94B7CC;
-}
-
 .margin-top-div {
   margin:15px 0 0 0;
 }
@@ -809,10 +827,6 @@ div.rf-trn {
 	border:1px solid #000;
 }
 
-.epp-fu {
-	width: 400px;
-}
-
 .panel-relative {
 	position: relative;
 }
@@ -830,16 +844,24 @@ div.rf-trn {
 	color: #f00;
 }
 
-.caixa-drag:before {
-  .image("dragDropDefault.gif");
-}
-
-.caixa-drag.caixa-acpt:before {
-  .image("dragDropAccept.gif")
-}
-
-.caixa-drag.caixa-rejt:before {
-  .image("dragDropReject.gif")
+.caixa-drag{
+  border: 1px solid @menu-txt-color;
+  background-color: @menu-bg-color;
+  color: @menu-txt-color;
+  cursor: all-scroll;
+  &:before{
+    .image("dragDropDefault.gif");
+  }
+  &.caixa-acpt {
+    &:before{
+      .image("dragDropAccept.gif");
+    }
+  }
+  &.caixa-rejt {
+    &:before{
+      .image("dragDropReject.gif");
+    }
+  }
 }
 
 .home-body {
@@ -851,13 +873,6 @@ div.rf-trn {
 
 .rf-tr-nd.rf-drp-hlight {
   border: 1px solid @menu-txt-color;
-}
-
-.caixa-drag {
-  border: 1px solid @menu-txt-color;
-  background-color: @menu-bg-color;
-  color: @menu-txt-color;
-  cursor: all-scroll;
 }
 
 option {
