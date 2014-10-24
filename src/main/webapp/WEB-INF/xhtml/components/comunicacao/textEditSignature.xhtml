@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  <ui:param
+    name="editorId"
+    value="#{id}Editor" />
+  <ui:param
+    name="idSignature"
+    value="#{id}signature" />
+  <ui:param
+    name="idCertChain"
+    value="#{id}certChain" />
+    
+ <s:div id="#{id}TipoDocDiv">
+    <wi:selectOneMenuEntity	id="#{id}tipoProcessoDocumento"	label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+      	items="#{home.classificacoes}"
+      	required="true"
+      	showLabelSelecione="true"
+      	value="#{home.modeloComunicacao.classificacaoComunicacao}"
+      	readonly="#{home.classificacoes.size eq 1 or readonly}"
+      	disabled="#{home.classificacoes.size eq 1 or readonly}">
+      	<a:ajax event="change"
+        	render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}ToolTipDivExterna"
+        	execute="@this"
+        	limitRender="true" />
+    </wi:selectOneMenuEntity>
+  </s:div>
+  <s:div id="#{id}EditorDiv">
+  	<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
+	    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+		  	rendered="#{not empty home.modeloComunicacao.classificacaoComunicacao.observacao}">
+		  	<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
+			<div class="epp-tooltip">
+				<div class="tooltip-panel">
+					<div><h:outputText value="Observação:"/></div>
+					<h:outputText value="#{home.modeloComunicacao.classificacaoComunicacao.observacao}"/>
+				</div>
+			</div>
+	    </s:div>
+ 	</s:div>
+  	<wi:editor id="#{editorId}" value="#{home.textoComunicacao}" readonly="#{readonly}" />
+  </s:div>
+  <s:div id="#{editorId.replace('-','')}SignatureDiv">
+    <s:div rendered="#{home.podeRenderizarApplet(id)}">
+      <a:jsFunction name="#{editorId.replace('-', '')}submitForm"
+        action="#{home.expedirComunicacao()}"
+        execute="@this #{idCertChain} #{idSignature} #{editorId} #{id}tipoProcessoDocumento"
+        render="#{id}TipoDocDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}AppletDiv #{id}EditorDiv pageBodyDialogMessage #{renderAfterSignature}"
+        oncomplete="infox.hideLoading();" />
+      <h:inputHidden id="#{idCertChain}" value="#{home.certChain}" />
+      <h:inputHidden id="#{idSignature}" value="#{home.signature}" />
+    </s:div>
+  </s:div>
+  <s:div id="#{editorId.replace('-','')}AppletDiv" styleClass="applet-div">
+    <wi:appletAssinatura
+      id="#{id}"
+      urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+      formId="#{rich:clientId(formId)}"
+      certificationChainField="#{rich:clientId(idCertChain)}"
+      signatureField="#{rich:clientId(idSignature)}"
+      getDataFunction="infox.editor['#{editorId}'].instance.getData()"
+      useBase64Function="infox.editor['#{editorId}'].useBase64()"
+      functionPreSign="infox.showLoading();"
+      functionPosSign="#{editorId.replace('-', '')}submitForm();infox.showLoading();"
+      debug="false"
+      loginMode="false"
+      useProviderDll="false"
+      rendered="#{home.podeRenderizarApplet() and not readonly}">
+    </wi:appletAssinatura>
+  </s:div>
+  <h:outputScript
+    rendered="#{home.podeRenderizarApplet()}">
+	namespace("infox.editor.#{editorId}",{
+		useBase64:function useBase64() {
+			return "true";
+		},
+		get isSigned() {
+			return ((#{rich:jQuery(idSignature)}.val().trim() != "") 
+					&amp;&amp; (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
+		},
+		addSignature:function addSignature() {
+			infox.showLoading();
+				#{editorId.replace('-', '')}submitForm();
+		},
+		postSign:function postSign() {
+			infox.hideLoading();
+		},
+		sign:function sign() {
+			#{rich:jQuery(idSignature)}.val("signature");
+			#{rich:jQuery(idCertChain)}.val("certChain");
+			this.addSignature();
+		}
+	},{
+		callback:function callback(Editor) {
+			Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
+				#{rich:jQuery(idSignature)}.val("");
+				#{rich:jQuery(idCertChain)}.val("");
+				#{rich:jQuery(editorId.replace('-','').concat('AppletDiv'))}.removeClass("hidden");
+			});
+		}
+	});
+</h:outputScript>
+</ui:composition>

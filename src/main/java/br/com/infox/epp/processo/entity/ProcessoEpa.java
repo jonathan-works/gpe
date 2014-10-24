@@ -16,14 +16,10 @@ import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCE
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -34,8 +30,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
@@ -47,8 +41,6 @@ import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
@@ -107,14 +99,6 @@ public class ProcessoEpa extends Processo {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "id_prioridade_processo", nullable = true)
     private PrioridadeProcesso prioridadeProcesso;
-    
-    @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
-    @OrderBy(value = "ds_caminho_absoluto")
-    private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
-    
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE)
-    @OrderBy("dataInclusao DESC")
-    private List<Documento> documentoList = new ArrayList<Documento>(0);
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_uni_decisora_monocratica", nullable = true)
@@ -213,22 +197,6 @@ public class ProcessoEpa extends Processo {
     public boolean hasPartes() {
         return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
-
-    public List<ParticipanteProcesso> getParticipantes() {
-		return participantes;
-	}
-
-	public void setParticipantes(List<ParticipanteProcesso> participantes) {
-		this.participantes = participantes;
-	}
-
-	public List<Documento> getDocumentoList() {
-		return documentoList;
-	}
-
-	public void setDocumentoList(List<Documento> documentoList) {
-		this.documentoList = documentoList;
-	}
 
 	public UnidadeDecisoraMonocratica getDecisoraMonocratica() {
         return decisoraMonocratica;

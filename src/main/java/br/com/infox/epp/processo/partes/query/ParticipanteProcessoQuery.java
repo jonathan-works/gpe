@@ -21,5 +21,8 @@ public interface ParticipanteProcessoQuery {
 			"where o.pessoa = :" + PARAM_PESSOA + " and o.processo = :" + PARAM_PROCESSO +
 			" and o.tipoParte = :" + PARAM_TIPO_PARTE + " and o.participantePai is null";
 			
+	String PARTICIPANTES_PROCESSO = "ParticipanteProcesso.participantesProcesso";
+	String PARTICIPANTES_PROCESSO_QUERY = "select o from ParticipanteProcesso o "
+			+ "where o.processo = :" + PARAM_PROCESSO + " and o.ativo = true";
 	
 }

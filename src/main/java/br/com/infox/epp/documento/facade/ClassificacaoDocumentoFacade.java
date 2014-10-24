@@ -3,6 +3,7 @@ package br.com.infox.epp.documento.facade;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -18,6 +19,7 @@ import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 
 @Name(ClassificacaoDocumentoFacade.NAME)
 @Scope(ScopeType.EVENT)
+@AutoCreate
 public class ClassificacaoDocumentoFacade {
 
     @In
@@ -44,10 +46,12 @@ public class ClassificacaoDocumentoFacade {
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
-        List<ClassificacaoDocumento> classificacoes = variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
-        if (!classificacoes.isEmpty()) {
-            return classificacoes;
-        }
+    	if (nomeVariavel != null) {
+	        List<ClassificacaoDocumento> classificacoes = variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
+	        if (!classificacoes.isEmpty()) {
+	            return classificacoes;
+	        }
+    	}
         return getUseableClassificacaoDocumento(isModelo);
     }
     

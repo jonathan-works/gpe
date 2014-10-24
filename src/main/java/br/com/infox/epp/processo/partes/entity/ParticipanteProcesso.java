@@ -4,6 +4,8 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.E
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO_QUERY;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY;
 
@@ -33,6 +35,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.pessoa.entity.Pessoa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
@@ -40,7 +43,8 @@ import br.com.infox.epp.processo.entity.ProcessoEpa;
 @NamedQueries(value={
 		@NamedQuery(name=PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, query=PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY),
 		@NamedQuery(name=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO, query=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO_QUERY),
-		@NamedQuery(name=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO, query=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO_QUERY)
+		@NamedQuery(name=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO, query=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO_QUERY),
+		@NamedQuery(name = PARTICIPANTES_PROCESSO, query = PARTICIPANTES_PROCESSO_QUERY)
 })
 public class ParticipanteProcesso implements Serializable {
 
@@ -55,7 +59,7 @@ public class ParticipanteProcesso implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_processo", nullable = false)
-    private ProcessoEpa processo;
+    private Processo processo;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pessoa", nullable = false)
@@ -119,7 +123,7 @@ public class ParticipanteProcesso implements Serializable {
 		this.id = id;
 	}
 
-	public ProcessoEpa getProcesso() {
+	public Processo getProcesso() {
         return processo;
     }
 
