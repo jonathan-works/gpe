@@ -52,7 +52,7 @@ public class UserHandler {
                 || !this.taskInstance.equals(taskInstance)) {
             try {
                 this.taskInstance = taskInstance;
-                this.usuarioTarefa = usuarioLoginManager.getUsuarioByTarefa(taskInstance);
+                this.usuarioTarefa = usuarioLoginManager.getNomeUsuarioByTarefa(taskInstance);
             } catch (NoResultException e) {
                 this.usuarioTarefa = "";
                 LOG.warn("Não houve resultado. UserHandler.getUsuarioByTarefa(TaskInstance)", e);
