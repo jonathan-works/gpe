@@ -29,7 +29,7 @@ public class ProcessoTimerProcessor extends BamTimerProcessor {
     public static final String NAME = "processoTimerProcessor";
 
     @In
-    private ProcessoTarefaManager ProcessoTarefaManager;
+    private ProcessoTarefaManager processoTarefaManager;
     @In
     private BamTimerManager bamTimerManager;
 
@@ -52,7 +52,7 @@ public class ProcessoTimerProcessor extends BamTimerProcessor {
 
     @Override
     protected ProcessoTarefaManager getProcessoTarefaManager() {
-        return ProcessoTarefaManager;
+        return processoTarefaManager;
     }
 
     @Override
