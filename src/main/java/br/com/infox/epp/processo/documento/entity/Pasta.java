@@ -32,7 +32,7 @@ public class Pasta implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pasta";
-    private static final String SEQUENCE_NAME = "sq_tb_pasta";
+    private static final String SEQUENCE_NAME = "sq_pasta";
     private static final String GENERATOR_NAME = "PastaGenerator";
     
     @Id
