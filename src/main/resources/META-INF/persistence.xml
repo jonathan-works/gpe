@@ -34,14 +34,14 @@
 
             <property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/EPAPersistenceUnit" />
                        
+            <property name="hibernate.cache.region_prefix" value="" /> 
             <property name="hibernate.cache.use_second_level_cache" value="true" />
 			<property name="hibernate.cache.use_query_cache" value="true" />
-			<property name="hibernate.cache.infinispan.cachemanager" value="java:jboss/infinispan/hibernate"/>
-			<property name="hibernate.cache.infinispan.use_synchronization"  value="false"/>
-			<property name="hibernate.cache.region.factory_class" value="org.jboss.as.jpa.hibernate4.infinispan.InfinispanRegionFactory"/>
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.system.entity.Parametro.expiration.lifespan" value="5000"/>
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.access.entity.Permissao.expiration.lifespan" value="5000"/>
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.entity.ProcessoEpa.expiration.lifespan" value="5000"/>
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.sigilo.entity.SigiloProcesso.expiration.lifespan" value="5000"/>
 			
-			<!--  <property name="hibernate.cache.region.factory_class" value="org.jboss.as.jpa.hibernate4.infinispan.InfinispanRegionFactory"/> -->
-                
         </properties>
     </persistence-unit>
 
