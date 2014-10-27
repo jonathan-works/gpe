@@ -13,6 +13,9 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -59,9 +62,18 @@ public class PastaAction implements Serializable, ActionListener {
     
     public void persist() {
         try {
+            String nome = getNome();
+            for (Pasta pasta : pastaList) {
+                if (nome.equals(pasta.getNome())) {
+                    FacesMessages.instance().add(Severity.INFO, "Já existe pasta com este nome.");
+                    return;
+                }
+            }
             getInstance().setProcesso(processo);
             pastaManager.persist(getInstance());
             setPastaList(pastaManager.getByProcesso(processo));
+            newInstance();
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Pasta adicionada com sucesso.");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }
@@ -73,6 +85,7 @@ public class PastaAction implements Serializable, ActionListener {
             pasta.setNome(getNome());
             pasta.setVisivelExterno(getVisivelExterno());
             pastaManager.update(pasta);
+            FacesMessages.instance().add(Severity.INFO, "Pasta atualizada com sucesso.");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }
@@ -84,6 +97,7 @@ public class PastaAction implements Serializable, ActionListener {
                 pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
             }
             pastaManager.remove(pasta);
+            FacesMessages.instance().add(Severity.INFO, "Pasta removida com sucesso.");
         } catch (Exception e) {
             e.printStackTrace();
         }
