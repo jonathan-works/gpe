@@ -67,9 +67,33 @@ public class IniciarProcessoService implements Serializable {
     }
 
     private Long iniciarProcessoJbpm(ProcessoEpa processoEpa, String fluxo, Map<String, Object> variaveis) {
+        
         BusinessProcess businessProcess = BusinessProcess.instance();
         businessProcess.createProcess(fluxo, false);
         org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
+        
+        iniciaVariaveisProcesso(processoEpa, variaveis, processInstance);
+        
+        processInstance.signal();
+        
+        iniciaPrimeiraTarefa(businessProcess, processInstance);
+        
+        atribuiSwimlaneTarefa();
+        
+        return businessProcess.getProcessId();
+    }
+
+    private void atribuiSwimlaneTarefa() {
+        SwimlaneInstance swimlaneInstance = TaskInstance.instance().getSwimlaneInstance();
+        String actorsExpression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
+        Set<String> pooledActors = LocalizacaoAssignment.instance().getPooledActors(actorsExpression);
+        String[] actorIds = pooledActors.toArray(new String[pooledActors.size()]);
+        swimlaneInstance.setPooledActors(actorIds);
+    }
+
+    private void iniciaVariaveisProcesso(ProcessoEpa processoEpa,
+            Map<String, Object> variaveis,
+            org.jbpm.graph.exe.ProcessInstance processInstance) {
         ContextInstance contextInstance = processInstance.getContextInstance();
         contextInstance.setVariable("processo", processoEpa.getIdProcesso());
         createJbpmVariables(processoEpa, contextInstance);
@@ -78,7 +102,10 @@ public class IniciarProcessoService implements Serializable {
                 contextInstance.setVariable(variavel, variaveis.get(variavel));
             }
         }
-        processInstance.signal();
+    }
+
+    private void iniciaPrimeiraTarefa(BusinessProcess businessProcess,
+            org.jbpm.graph.exe.ProcessInstance processInstance) {
         @SuppressWarnings(UNCHECKED) Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
         if (taskInstances != null && !taskInstances.isEmpty()) {
@@ -87,13 +114,6 @@ public class IniciarProcessoService implements Serializable {
             businessProcess.setTaskId(taskInstanceId);
             businessProcess.startTask();
         }
-        SwimlaneInstance swimlaneInstance = TaskInstance.instance().getSwimlaneInstance();
-        String actorsExpression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
-        Set<String> pooledActors = LocalizacaoAssignment.instance().getPooledActors(actorsExpression);
-        String[] actorIds = pooledActors.toArray(new String[pooledActors.size()]);
-        swimlaneInstance.setPooledActors(actorIds);
-        Events.instance().raiseEvent(ON_CREATE_PROCESS, taskInstance, processoEpa);
-        return businessProcess.getProcessId();
     }
 
     private void createJbpmVariables(ProcessoEpa processoEpa,

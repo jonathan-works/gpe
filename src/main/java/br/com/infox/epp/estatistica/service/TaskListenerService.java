@@ -44,7 +44,7 @@ public class TaskListenerService implements Serializable {
 
     @Observer(IniciarProcessoService.ON_CREATE_PROCESS)
     public void onStartProcess(TaskInstance taskInstance, Processo processo) {
-        createProcessoEpa(processo, taskInstance);
+        createProcessoTarefa(processo, taskInstance);
     }
 
     @Observer(Event.EVENTTYPE_TASK_CREATE)
@@ -52,11 +52,11 @@ public class TaskListenerService implements Serializable {
         Processo processo = JbpmUtil.getProcesso();
         if (processo != null) {
             TaskInstance taskInstance = context.getTaskInstance();
-            createProcessoEpa(processo, taskInstance);
+            createProcessoTarefa(processo, taskInstance);
         }
     }
 
-    private void createProcessoEpa(Processo processo, TaskInstance taskInstance) {
+    private void createProcessoTarefa(Processo processo, TaskInstance taskInstance) {
         String taskName = taskInstance.getTask().getName();
         String procDefName = taskInstance.getProcessInstance().getProcessDefinition().getName();
         Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
