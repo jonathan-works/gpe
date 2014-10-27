@@ -11,6 +11,7 @@ import static br.com.infox.epp.access.query.PermissaoQuery.TABLE_PERMISSAO;
 
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,9 @@ import org.jboss.seam.annotations.security.permission.PermissionUser;
 
 @Entity
 @Table(name = TABLE_PERMISSAO)
+@Cacheable
 public class Permissao implements Serializable {
+	
     private static final long serialVersionUID = 1L;
 
     private Long idPermissao;
