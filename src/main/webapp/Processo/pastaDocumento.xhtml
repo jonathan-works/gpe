@@ -82,7 +82,7 @@
 						<f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
 						<f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
 		
-						<h:outputText value="#{pasta.nome}" class="folder" />
+						<h:outputText value="#{pasta.nome} (#{pasta.documentosList.size()})" class="folder" />
 		
 					</a:commandLink>
 				</h:form>
