@@ -299,7 +299,12 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     @Transient
 	public String getCaminhoCompletoFormatado() {
 		if (caminhoCompletoFormatado == null) {
-			StringBuilder sb = new StringBuilder(this.getCaminhoCompleto());
+			StringBuilder sb = new StringBuilder();
+			if (this.getEstruturaPai() != null) {
+			    sb.append(this.getEstruturaPai().getNome());
+			    sb.append('|');
+			}
+			sb.append(this.getCaminhoCompleto());
 	        if (sb.charAt(sb.length() -1) == '|') {
 	            sb.deleteCharAt(sb.length() - 1);
 	        }
