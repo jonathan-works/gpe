@@ -5,6 +5,6 @@ public interface PastaQuery {
     
     String GET_BY_PROCESSO = "getByProcesso";
     String GET_BY_PROCESSO_QUERY = "select o from Pasta o where o.processo = :" + PARAM_PROCESSO
-            + " order by o.id"; 
+            + " order by o.nome"; 
             
 }
