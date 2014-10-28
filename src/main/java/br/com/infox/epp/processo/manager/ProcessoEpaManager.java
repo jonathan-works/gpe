@@ -17,6 +17,8 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.util.time.DateRange;
 
 @Name(ProcessoEpaManager.NAME)
@@ -111,5 +113,31 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
     
     public ProcessoEpa persistProcessoComNumero(ProcessoEpa processoEpa) throws DAOException{
     	return getDao().persistProcessoComNumero(processoEpa);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) {
+        processoEpa.setDecisoraMonocratica(unidadeDecisoraMonocratica);
+        //TODO processoEpa.setRelator(relator);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) {
+        processoEpa.setDecisoraColegiada(unidadeDecisoraColegiada);
+        processoEpa.setDecisoraMonocratica(unidadeDecisoraMonocratica);
+        //TODO processoEpa.setRelator(relator);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa, UnidadeDecisoraColegiada unidadeDecisoraColegiada) {
+        processoEpa.setDecisoraColegiada(unidadeDecisoraColegiada);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa) {
+        processoEpa.setDecisoraColegiada(null);
+        processoEpa.setDecisoraMonocratica(null);
+    }
+
+    public PessoaFisica findRelatorByCpfAndMatricula(String cpf,
+            String matricula) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

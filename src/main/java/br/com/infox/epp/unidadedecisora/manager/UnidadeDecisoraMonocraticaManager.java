@@ -31,6 +31,12 @@ public class UnidadeDecisoraMonocraticaManager extends Manager<UnidadeDecisoraMo
 	public boolean existeUnidadeMonocraticaComLocalizacao(Integer idLocalizacao){
 		return getDao().existeUnidadeDecisoraComLocalizacao(idLocalizacao);
 	}
+
+    public UnidadeDecisoraMonocratica findByCodigoLocalizacao(
+            String codigoLocalizacao) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 	
 	
 }
