@@ -58,6 +58,10 @@ public class Pasta implements Serializable {
     @Column(name = "in_removivel", nullable = false)
     private Boolean removivel;
     
+    @NotNull
+    @Column(name = "in_sistema", nullable = false)
+    private Boolean sistema;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta", cascade = CascadeType.REMOVE)
     private List<Documento> documentosList; 
 
@@ -107,5 +111,13 @@ public class Pasta implements Serializable {
 
     public void setDocumentosList(List<Documento> documentosList) {
         this.documentosList = documentosList;
+    }
+
+    public Boolean getSistema() {
+        return sistema;
+    }
+
+    public void setSistema(Boolean sistema) {
+        this.sistema = sistema;
     }
 }
