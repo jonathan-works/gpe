@@ -37,7 +37,8 @@
 				styleClass="folder-ul"
 				rowClass="folder-li"
 				var="pasta">
-				<h:form rendered="#{s:hasRole('usuarioInterno') or pasta.visivelExterno}">
+				<h:form rendered="#{s:hasRole('usuarioInterno') or pasta.visivelExterno}"
+					styleClass="rf-tr-nd">
 					<rich:dropTarget
 						acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
 						dropListener="#{pastaAction.associaDocumento}"
@@ -48,7 +49,7 @@
 					<a:commandLink
 						render="documentoListSearchForm"
 						execute="@form"
-						rendered="#{s:hasRole('usuarioInterno')}"
+						rendered="#{s:hasRole('usuarioInterno') and pastaAction.canEdit(pasta)}"
 						onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno});"
 						limitRender="true">
 						<h:graphicImage
