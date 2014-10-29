@@ -171,12 +171,6 @@
                 status=":status"
                 title="#{eppmessages['sigiloProcesso.sigiloProcesso']}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
-                <f:setPropertyActionListener
-                    target="#{sigiloProcessoAction.processo}"
-                    value="#{processoEpaHome.instance}" />
-                <f:setPropertyActionListener
-                    target="#{sigiloProcessoList.processo}"
-                    value="#{processoEpaHome.instance}" />
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
@@ -190,12 +184,6 @@
                 status=":status"
                 title="#{eppmessages['sigiloDocumento.sigiloDocumento']}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloDocumento', 'access')}">
-                <f:setPropertyActionListener
-                    target="#{sigiloDocumentoAction.processo}"
-                    value="#{processoEpaHome.instance}" />
-                <f:setPropertyActionListener
-                    target="#{documentoAnexoList.processo}"
-                    value="#{processoEpaHome.instance}" />
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">

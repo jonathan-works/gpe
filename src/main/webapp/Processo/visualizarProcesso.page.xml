@@ -20,4 +20,9 @@
     <param name="tarefaId" value="#{processoEpaHome.tarefaId}" />    
     <action execute="#{processoEpaHome.visualizarTarefaProcesso()}"/>
  
+    <action execute="#{sigiloProcessoAction.setProcesso(processoEpaHome.instance)}"/>
+    <action execute="#{sigiloProcessoList.setProcesso(processoEpaHome.instance)}" />
+    <action execute="#{sigiloDocumentoAction.setProcesso(processoEpaHome.instance)}"/>
+    <action execute="#{documentoAnexoList.setProcesso(processoEpaHome.instance)}" />
+
 </page>
