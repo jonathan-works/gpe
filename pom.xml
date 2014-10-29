@@ -313,7 +313,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>epp_${maven.build.timestamp}</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
