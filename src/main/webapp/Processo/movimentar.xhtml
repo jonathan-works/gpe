@@ -139,11 +139,11 @@
                                 value="#{variavel.valor}" />
                         </ui:repeat>
                     </rich:panel>
-                    <a:commandButton
+                    <wi:commandButton
+                        id="btnGravarVariaveis"
                         value="Gravar"
-                        action="#{variavelProcessoAction.save}"
-                        render="@form, pageBodyDialogMessage"
-                        styleClass="#{wi:get(styleClass, 'buttons')}" />
+                        action="#{variavelProcessoAction.save()}"
+                        reRender="@form, pageBodyDialogMessage" />
                 </h:form>
             </infox:tab>
             <infox:tab
