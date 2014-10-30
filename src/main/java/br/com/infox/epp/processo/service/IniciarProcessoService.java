@@ -17,7 +17,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
-import org.jboss.seam.core.Events;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 

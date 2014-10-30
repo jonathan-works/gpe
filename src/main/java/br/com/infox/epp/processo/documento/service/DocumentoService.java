@@ -28,8 +28,10 @@ public class DocumentoService implements Serializable {
     public void setDefaultFolder(Pasta pasta) throws DAOException {
         List<Documento> documentoList = documentoManager.getListDocumentoByProcesso(pasta.getProcesso());
         for (Documento documento : documentoList) {
-            documento.setPasta(pasta);
-            documentoManager.update(documento);
+            if (documento.getPasta() == null) {
+                documento.setPasta(pasta);
+                documentoManager.update(documento);
+            }
         }
     }
 }

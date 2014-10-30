@@ -25,8 +25,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private DocumentoService documentoService;
     
     public Pasta getDefaultFolder(Processo processo) throws DAOException {
-        List<Pasta> pastas = getByProcesso(processo);
-        return pastas.get(0);
+        Pasta pasta = getDao().getDefaultByProcesso(processo);
+        return pasta;
     }
     
     public List<Pasta> getByProcesso(Processo processo) throws DAOException {
