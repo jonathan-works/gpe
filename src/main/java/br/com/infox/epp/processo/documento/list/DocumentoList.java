@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.documento.list;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.event.AbortProcessingException;
@@ -83,8 +82,8 @@ public class DocumentoList extends EntityList<Documento> implements ActionListen
         documento.setProcesso(processo);
         if (documento.getPasta()== null){
             try {
-                List<Pasta> byProcesso = pastaManager.getByProcesso(documento.getProcesso());
-                documento.setPasta(byProcesso.get(0));
+                Pasta pasta = pastaManager.getDefaultFolder(documento.getProcesso());
+                documento.setPasta(pasta);
             } catch (DAOException e) {
                 actionMessagesService.handleDAOException(e);
             }

@@ -48,7 +48,6 @@ public class PastaAction implements Serializable, ActionListener {
     private List<Pasta> pastaList;
     private Pasta instance;
     private Integer id;
-    
 
     @Create
     public void create() {
