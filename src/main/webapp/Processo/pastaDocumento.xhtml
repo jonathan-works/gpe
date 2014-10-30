@@ -47,32 +47,6 @@
 						limitRender="true" />
 		
 					<a:commandLink
-						render="documentoListSearchForm"
-						execute="@form"
-						rendered="#{s:hasRole('usuarioInterno') and pastaAction.canEdit(pasta)}"
-						onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno});"
-						limitRender="true">
-						<h:graphicImage
-							styleClass="opacityHover"
-							url="#{a4jSkin.imgFolder}/view.png"
-							rendered="true"
-							title="#{eppmessages['button.delete']}" />
-					</a:commandLink>
-					<a:commandLink
-						render="documentoListPanel, documentoListSearchForm, pageBodyDialogMessage"
-						execute="@form"
-						rendered="#{s:hasRole('usuarioInterno') and pastaAction.canRemove(pasta)}"
-						limitRender="true">
-						<h:graphicImage
-							styleClass="opacityHover"
-							url="#{a4jSkin.imgFolder}/remove.png"
-							rendered="true"
-							title="#{eppmessages['button.delete']}" />
-						<f:attribute name="pastaToRemove" value="#{pasta}" />
-						<f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
-						<f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
-					</a:commandLink>
-					<a:commandLink
 						render="documentoListPanel, documentoListSearchForm"
 						execute="@form"
 						styleClass="folder"
@@ -82,9 +56,35 @@
 						<f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
 						<f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
 		
-						<h:outputText value="#{pasta.nome} (#{pasta.documentosList.size()})" class="folder" />
+						<h:outputText value="#{pasta.toString()}" class="folder" />
 		
 					</a:commandLink>
+                    <a:commandLink
+                      render="documentoListSearchForm"
+                      execute="@form"
+                      rendered="#{s:hasRole('usuarioInterno') and pastaAction.canEdit(pasta)}"
+                      onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno});"
+                      limitRender="true">
+                      <h:graphicImage
+                        styleClass="opacityHover"
+                        url="#{a4jSkin.imgFolder}/view.png"
+                        rendered="true"
+                        title="#{eppmessages['button.delete']}" />
+                    </a:commandLink>
+                    <a:commandLink
+                      render="documentoListPanel, documentoListSearchForm, pageBodyDialogMessage"
+                      execute="@form"
+                      rendered="#{s:hasRole('usuarioInterno') and pastaAction.canRemove(pasta)}"
+                      limitRender="true">
+                      <h:graphicImage
+                        styleClass="opacityHover"
+                        url="#{a4jSkin.imgFolder}/remove.png"
+                        rendered="true"
+                        title="#{eppmessages['button.delete']}" />
+                      <f:attribute name="pastaToRemove" value="#{pasta}" />
+                      <f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
+                      <f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
+                    </a:commandLink>
 				</h:form>
 			</rich:list>
 		</rich:panel>
