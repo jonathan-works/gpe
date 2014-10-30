@@ -26,7 +26,8 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.*;
 @Entity
 @Table(name = Pasta.TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name = GET_BY_PROCESSO, query = GET_BY_PROCESSO_QUERY)
+    @NamedQuery(name = GET_BY_PROCESSO, query = GET_BY_PROCESSO_QUERY),
+    @NamedQuery(name = GET_DEFAULT_BY_PROCESSO, query = GET_DEFAULT_BY_PROCESSO_QUERY)
 })
 public class Pasta implements Serializable {
 
@@ -119,5 +120,9 @@ public class Pasta implements Serializable {
 
     public void setSistema(Boolean sistema) {
         this.sistema = sistema;
+    }
+    
+    public String toString() {
+        return documentosList != null ? nome + " (" + documentosList.size() + ")" : nome + " (0)";
     }
 }
