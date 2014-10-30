@@ -24,4 +24,10 @@ public class PastaDAO extends DAO<Pasta> {
         parameters.put(PARAM_PROCESSO, processo);
         return getNamedResultList(GET_BY_PROCESSO, parameters);
     }
+    
+    public Pasta getDefaultByProcesso(Processo processo) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_PROCESSO, processo);
+        return getNamedSingleResult(GET_DEFAULT_BY_PROCESSO, parameters);
+    }
 }

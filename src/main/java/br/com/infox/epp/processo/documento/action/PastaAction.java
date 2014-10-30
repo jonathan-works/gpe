@@ -48,6 +48,7 @@ public class PastaAction implements Serializable, ActionListener {
     private List<Pasta> pastaList;
     private Pasta instance;
     private Integer id;
+    
 
     @Create
     public void create() {
@@ -58,7 +59,7 @@ public class PastaAction implements Serializable, ActionListener {
         setInstance(new Pasta());
         setVisivelExterno(true);
         setRemovivel(true);
-        setSistema(true);
+        setSistema(false);
     }
     
     public void persist() {
@@ -87,6 +88,7 @@ public class PastaAction implements Serializable, ActionListener {
             pasta.setNome(getNome());
             pasta.setVisivelExterno(getVisivelExterno());
             pastaManager.update(pasta);
+            newInstance();
             FacesMessages.instance().add(Severity.INFO, "Pasta atualizada com sucesso.");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
