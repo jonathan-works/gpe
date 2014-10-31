@@ -10,6 +10,8 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
 import org.jboss.el.parser.ParseException;
 import org.jboss.seam.international.Messages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
@@ -104,7 +106,10 @@ public class DecisionNode extends Node {
             }
             result = ExpressionTokenizer.toNodeJSON(decisionExpression);
         } catch (ParseException e) {
-            e.printStackTrace();
+            LogProvider logProvider = Logging.getLogProvider(DecisionNode.class);
+            logProvider.error("Erro ao recuperar expressão", e);
+            decisionExpression=null;
+            return getTokenStack();
         } catch (Exception e) {
             e.printStackTrace();
         }
