@@ -28,11 +28,12 @@ public class TipoComunicacao implements Serializable {
     @Column(name = "ds_tipo_comunicacao", nullable = false, length = LengthConstants.DESCRICAO_MEDIA, unique = true)
     private String descricao;
     
-    @Column(name = "nr_dias_prazo_ciencia")
+    @NotNull
+    @Column(name = "nr_dias_prazo_ciencia", nullable = false)
     private Integer quantidadeDiasCiencia;
     
     @NotNull
-    @Column(name = "in_ativo")
+    @Column(name = "in_ativo", nullable = false)
     private Boolean ativo;
 
     public Long getId() {
