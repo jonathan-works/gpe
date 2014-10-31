@@ -1,5 +1,10 @@
 package br.com.infox.epp.processo.documento.dao;
 
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.PARAM_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.PARAM_ID_DOCUMENTO;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +13,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.PARAM_DOCUMENTO;
-import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.PARAM_ID_DOCUMENTO;
-import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO;
-import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO;
+import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 
 @AutoCreate
 @Name(HistoricoStatusDocumentoDAO.NAME)

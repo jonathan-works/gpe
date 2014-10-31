@@ -5,10 +5,10 @@ import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_N
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_RELATIONSHIP;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.NATCATFLUXO_BY_DS_NATUREZA_DS_CATEGORIA;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_DS_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_DS_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_FLUXO;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_NATUREZA;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_DS_NATUREZA;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_DS_CATEGORIA;
 
 import java.util.HashMap;
 import java.util.List;

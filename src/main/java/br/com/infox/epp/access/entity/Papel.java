@@ -11,10 +11,10 @@ import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO_QUERY;
-import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
-import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PERMISSOES_BY_PAPEL;

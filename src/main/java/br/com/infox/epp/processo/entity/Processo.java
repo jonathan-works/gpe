@@ -1,8 +1,8 @@
 package br.com.infox.epp.processo.entity;
 
-import static br.com.infox.core.constants.LengthConstants.*;
+import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.processo.query.ProcessoQuery.*;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_TODOS_OS_ACTOR_IDS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_TODOS_OS_ACTOR_IDS_QUERY;
@@ -29,6 +29,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;

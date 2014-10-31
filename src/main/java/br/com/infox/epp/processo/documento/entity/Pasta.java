@@ -1,7 +1,11 @@
 package br.com.infox.epp.processo.documento.entity;
 
-import java.io.Serializable;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_BY_PROCESSO_QUERY;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,7 +25,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.Processo;
-import static br.com.infox.epp.processo.documento.query.PastaQuery.*;
 
 @Entity
 @Table(name = Pasta.TABLE_NAME)

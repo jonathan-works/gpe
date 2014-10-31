@@ -7,8 +7,8 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.documento.dao.ExtensaoArquivoDAO;
-import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)

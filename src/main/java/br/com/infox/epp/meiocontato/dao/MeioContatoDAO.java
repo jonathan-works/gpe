@@ -1,11 +1,11 @@
 package br.com.infox.epp.meiocontato.dao;
 
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_PESSOA;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_TIPO_CONTATO;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.PARAM_VALOR;
-import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR;
 
 import java.util.HashMap;
 import java.util.List;

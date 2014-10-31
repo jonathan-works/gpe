@@ -8,8 +8,8 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.dao.HistoricoStatusDocumentoDAO;
-import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 
 @AutoCreate

@@ -1,8 +1,8 @@
 package br.com.infox.ibpm.node.handler;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static java.text.MessageFormat.format;
 import static br.com.infox.epp.processo.status.entity.StatusProcesso.STATUS_PROCESSO_ACTION_NAME;
+import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.text.MessageFormat;

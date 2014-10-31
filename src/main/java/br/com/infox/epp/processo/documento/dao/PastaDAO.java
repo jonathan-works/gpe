@@ -1,5 +1,9 @@
 package br.com.infox.epp.processo.documento.dao;
 
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PROCESSO;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +14,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.entity.Processo;
-import static br.com.infox.epp.processo.documento.query.PastaQuery.*;
 
 @AutoCreate
 @Name(PastaDAO.NAME)
