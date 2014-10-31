@@ -46,6 +46,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
@@ -118,6 +119,10 @@ public class ProcessoEpa extends Processo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_uni_decisora_monocratica", nullable = true)
     private UnidadeDecisoraMonocratica decisoraMonocratica;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_relator", nullable = true)
+    private PessoaFisica relator;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_uni_decisora_colegiada", nullable = true)
@@ -239,5 +244,12 @@ public class ProcessoEpa extends Processo {
 
     public void setDecisoraColegiada(UnidadeDecisoraColegiada decisoraColegiada) {
         this.decisoraColegiada = decisoraColegiada;
+    }
+
+    public void setRelator(PessoaFisica relator) {
+        this.relator = relator;
+    }
+    public PessoaFisica getRelator(){
+        return relator;
     }
 }
