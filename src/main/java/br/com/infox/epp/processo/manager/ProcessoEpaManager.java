@@ -115,29 +115,26 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
     	return getDao().persistProcessoComNumero(processoEpa);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) {
-        processoEpa.setDecisoraMonocratica(unidadeDecisoraMonocratica);
-        //TODO processoEpa.setRelator(relator);
+    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+        distribuirProcesso(processoEpa, relator, unidadeDecisoraMonocratica, null);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) {
+    public void distribuirProcesso(ProcessoEpa processoEpa, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+        distribuirProcesso(processoEpa, null, unidadeDecisoraMonocratica, null);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
         processoEpa.setDecisoraColegiada(unidadeDecisoraColegiada);
         processoEpa.setDecisoraMonocratica(unidadeDecisoraMonocratica);
-        //TODO processoEpa.setRelator(relator);
+        processoEpa.setRelator(relator);
+        getDao().update(processoEpa);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa, UnidadeDecisoraColegiada unidadeDecisoraColegiada) {
-        processoEpa.setDecisoraColegiada(unidadeDecisoraColegiada);
+    public void distribuirProcesso(ProcessoEpa processoEpa, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+        distribuirProcesso(processoEpa, null, null, unidadeDecisoraColegiada);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa) {
-        processoEpa.setDecisoraColegiada(null);
-        processoEpa.setDecisoraMonocratica(null);
-    }
-
-    public PessoaFisica findRelatorByCpfAndMatricula(String cpf,
-            String matricula) {
-        // TODO Auto-generated method stub
-        return null;
+    public void distribuirProcesso(ProcessoEpa processoEpa) throws DAOException {
+        distribuirProcesso(processoEpa,null,null,null);
     }
 }
