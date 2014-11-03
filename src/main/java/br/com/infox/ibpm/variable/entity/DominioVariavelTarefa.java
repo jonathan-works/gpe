@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import br.com.infox.core.constants.LengthConstants;
 
@@ -60,4 +61,35 @@ public class DominioVariavelTarefa implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
+    
+    @Transient
+    public boolean isDominioSqlQuery(){
+    	return dominio.startsWith("select");
+    }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DominioVariavelTarefa))
+			return false;
+		DominioVariavelTarefa other = (DominioVariavelTarefa) obj;
+		if (getId() == null) {
+			if (other.getId() != null)
+				return false;
+		} else if (!getId().equals(other.getId()))
+			return false;
+		return true;
+	}
+    
 }
