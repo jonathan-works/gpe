@@ -1,9 +1,5 @@
 package br.com.infox.ibpm.variable.manager;
 
-import java.util.List;
-
-import javax.faces.model.SelectItem;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -21,7 +17,4 @@ public class DominioVariavelTarefaManager extends Manager<DominioVariavelTarefaD
     private static final long serialVersionUID = 1L;
     public static final String NAME = "dominioVariavelTarefaManager";
     
-    public List<SelectItem> getListSelectItem(String nativeQuery) {
-    	return getDao().getListSelectItem(nativeQuery);
-    }
 }

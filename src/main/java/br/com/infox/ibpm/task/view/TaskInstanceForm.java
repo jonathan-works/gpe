@@ -25,9 +25,11 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.process.definition.variable.constants.VariableConstants;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
+import br.com.infox.seam.util.ComponentUtil;
 
 /**
  * Gera um formulario a partir do controller da tarefa atual (taskInstance) Para
@@ -58,8 +60,9 @@ public class TaskInstanceForm implements Serializable {
     private Form form;
 
     private TaskInstance taskInstance;
-
+    
     @Unwrap
+    @SuppressWarnings("unchecked")
     public Form getTaskForm() {
         getTaskInstance();
         if (form != null || taskInstance == null) {
@@ -129,7 +132,8 @@ public class TaskInstanceForm implements Serializable {
                             DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
                             List<SelectItem> selectItens = new ArrayList<>();
                             if (dominio.isDominioSqlQuery()){
-                            	selectItens.addAll(dominioVariavelTarefaManager.getListSelectItem(dominio.getDominio()));
+                            	ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
+                            	selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
                             } else {
                             	String[] itens = dominio.getDominio().split(";");
                             	for (String item : itens) {

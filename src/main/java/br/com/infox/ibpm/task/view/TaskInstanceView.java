@@ -28,6 +28,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -126,7 +127,8 @@ public class TaskInstanceView implements Serializable {
 
                             List<SelectItem> selectItens = new ArrayList<>();
                             if (dominio.isDominioSqlQuery()){
-                            	selectItens.addAll(dominioVariavelTarefaManager.getListSelectItem(dominio.getDominio()));
+                            	ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
+                            	selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
                             } else {
                             	String[] itens = dominio.getDominio().split(";");
                             	for (String item : itens) {
