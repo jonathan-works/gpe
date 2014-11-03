@@ -124,11 +124,15 @@ public class TaskInstanceView implements Serializable {
                             Integer id = Integer.valueOf(tokens[2]);
                             DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
 
-                            String[] itens = dominio.getDominio().split(";");
                             List<SelectItem> selectItens = new ArrayList<>();
-                            for (String item : itens) {
-                                String[] pair = item.split("=");
-                                selectItens.add(new SelectItem(pair[1], pair[0]));
+                            if (dominio.isDominioSqlQuery()){
+                            	selectItens.addAll(dominioVariavelTarefaManager.getListSelectItem(dominio.getDominio()));
+                            } else {
+                            	String[] itens = dominio.getDominio().split(";");
+                            	for (String item : itens) {
+                            		String[] pair = item.split("=");
+                            		selectItens.add(new SelectItem(pair[1], pair[0]));
+                            	}
                             }
                             ff.getProperties().put("items", selectItens);
                         }

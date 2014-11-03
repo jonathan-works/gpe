@@ -15,13 +15,25 @@ public class DominioVariavelTarefaValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        if (value != null) {
-            String dominio = (String) value;
-            Pattern pattern = Pattern.compile("(.+?=.+?;)*");
-            Matcher matcher = pattern.matcher(dominio);
-            if (!matcher.matches()) {
-                throw new ValidatorException(new FacesMessage("Valores inválidos. Deve estar no formato label=valor, separado por ;"));
-            }
+        if (value == null) return;
+        String dominio = (String) value;
+        if (isDominioSqlQuery(dominio)){
+        	
+        } else {
+        	validateDominio(dominio);
         }
     }
+    
+    private boolean isDominioSqlQuery(String value){
+    	return value.startsWith("select");
+    }
+    
+    private void validateDominio(String dominio){
+    	 Pattern pattern = Pattern.compile("(.+?=.+?;)*");
+         Matcher matcher = pattern.matcher(dominio);
+         if (!matcher.matches()) {
+             throw new ValidatorException(new FacesMessage("Valores inválidos. Deve estar no formato label=valor, separado por ;"));
+         }
+    }
+    
 }
