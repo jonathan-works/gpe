@@ -45,19 +45,19 @@
 						dropValue="#{pasta}"
 						render="documentoListPanel, documentoListSearchForm"
 						limitRender="true" />
-		
 					<a:commandLink
 						render="documentoListPanel, documentoListSearchForm"
 						execute="@form"
 						styleClass="folder"
 						limitRender="true">
-		
+  		              <h:graphicImage
+                          url="#{a4jSkin.imgFolder}/folder.png"
+                          rendered="true"
+                          title="#{pasta}" />
 						<f:attribute name="pastaToSelect" value="#{pasta}" />
 						<f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
 						<f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
-		
 						<h:outputText value="#{pasta.toString()}" class="folder" />
-		
 					</a:commandLink>
                     <a:commandLink
                       render="documentoListSearchForm"
@@ -69,7 +69,7 @@
                         styleClass="opacityHover"
                         url="#{a4jSkin.imgFolder}/view.png"
                         rendered="true"
-                        title="#{eppmessages['button.delete']}" />
+                        title="#{eppmessages['button.selecionar']}" />
                     </a:commandLink>
                     <a:commandLink
                       render="documentoListPanel, documentoListSearchForm, pageBodyDialogMessage"
@@ -311,7 +311,7 @@
 	      execute="@form"
 	      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editPastaPanel')}.hide();}else{}"
 	      value="Gravar"
-	      reRender="@form, documentoListSearchForm, pageBodyDialogMessage" />
+	      reRender="@form, documentoListSearchForm, pageBodyDialogMessage, documentoListPanel" />
 	  </h:form>
 	</rich:popupPanel>
         
