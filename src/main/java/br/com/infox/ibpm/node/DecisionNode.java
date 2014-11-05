@@ -24,15 +24,19 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.ibpm.process.definition.expressionWizard.ExpressionTokenizer;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.VariableCollector;
 import br.com.infox.seam.exception.ApplicationException;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class DecisionNode extends Node {
     private static final long serialVersionUID = 1L;
+
+    private static final LogProvider LOG = Logging.getLogProvider(DecisionNode.class);
 
     private List<DecisionCondition> decisionConditions = null;
     private Delegation decisionDelegation = null;
@@ -91,32 +95,40 @@ public class DecisionNode extends Node {
     }
 
     public String getDecisionExpression() {
+        if (decisionExpression==null){
+            decisionExpression=format("#'{'{0}'}'", getLeavingTransitionList().get(0));
+        }
         return decisionExpression;
     }
 
     public void setDecisionExpression(String decisionExpression) {
-        this.decisionExpression = decisionExpression;
+        try {
+            ExpressionTokenizer.validateExpression(decisionExpression);
+            this.decisionExpression = decisionExpression;
+        } catch (ParseException e){
+            this.decisionExpression=format("#'{'{0}'}'", getLeavingTransitionList().get(0));
+            LogProvider logProvider = Logging.getLogProvider(DecisionNode.class);
+            ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
+            actionMessagesService.handleException("Erro na expressão",e);
+            logProvider.error("Erro ao recuperar expressão", e);
+        }
     }
 
     public String getTokenStack(){
         String result="";
         try {
-            if (decisionExpression==null){
-                decisionExpression=format("#'{'{0}'}'", getLeavingTransitionList().get(0));
-            }
-            result = ExpressionTokenizer.toNodeJSON(decisionExpression);
+            result = ExpressionTokenizer.toNodeJSON(getDecisionExpression());
         } catch (ParseException e) {
-            LogProvider logProvider = Logging.getLogProvider(DecisionNode.class);
-            logProvider.error("Erro ao recuperar expressão", e);
+            LOG.error("Erro ao recuperar expressão", e);
             decisionExpression=null;
             return getTokenStack();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Erro inesperado", e);
         }
         return result;
     }
     public void setTokenStack(String stack){
-        this.decisionExpression=ExpressionTokenizer.fromNodeJSON(stack);
+        setDecisionExpression(ExpressionTokenizer.fromNodeJSON(stack));
     }
     
     // ----------
