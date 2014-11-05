@@ -173,6 +173,7 @@ public class Authenticator {
     }
 
     private void realizarLoginDoUsuario(final UsuarioLogin usuario) throws LoginException {
+        Contexts.getSessionContext().remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
         getAuthenticatorService().setUsuarioLogadoSessao(usuario);
         obterPerfilAtual(usuario);
         Actor.instance().setId(usuario.getLogin());
