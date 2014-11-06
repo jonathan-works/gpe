@@ -69,11 +69,6 @@ public class ProcessoEpa extends Processo {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_natureza_categoria_fluxo", nullable = false)
-    private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
-    
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_localizacao", nullable = false)
     private Localizacao localizacao;
     
@@ -128,14 +123,6 @@ public class ProcessoEpa extends Processo {
         this.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
         this.setLocalizacao(localizacao);
         this.setItemDoProcesso(itemDoProcesso);
-    }
-
-    public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
-        this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
-    }
-
-    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
-        return naturezaCategoriaFluxo;
     }
 
     public void setLocalizacao(Localizacao localizacao) {
@@ -195,7 +182,7 @@ public class ProcessoEpa extends Processo {
     }
 
     public boolean hasPartes() {
-        return naturezaCategoriaFluxo.getNatureza().getHasPartes();
+        return getNaturezaCategoriaFluxo().getNatureza().getHasPartes();
     }
 
 	public UnidadeDecisoraMonocratica getDecisoraMonocratica() {

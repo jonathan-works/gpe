@@ -73,6 +73,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
@@ -148,6 +149,11 @@ public abstract class Processo implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "id_status_processo", nullable = true)
     private StatusProcesso statusProcesso;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_natureza_categoria_fluxo", nullable = false)
+    private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
     
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY)
     private List<ProcessoTarefa> processoTarefaList = new ArrayList<ProcessoTarefa>(0);
@@ -248,6 +254,14 @@ public abstract class Processo implements Serializable {
 
 	public void setStatusProcesso(StatusProcesso statusProcesso) {
 		this.statusProcesso = statusProcesso;
+	}
+	
+	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
+		return naturezaCategoriaFluxo;
+	}
+
+	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
+		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
 	}
 
 	public List<ProcessoTarefa> getProcessoTarefaList() {
