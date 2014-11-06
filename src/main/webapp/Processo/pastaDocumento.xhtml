@@ -37,7 +37,7 @@
 				styleClass="folder-ul"
 				rowClass="folder-li"
 				var="pasta">
-				<h:form rendered="#{s:hasRole('usuarioInterno') or pasta.visivelExterno}"
+				<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pasta.visivelExterno}"
 					styleClass="rf-tr-nd">
 					<rich:dropTarget
 						acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
@@ -62,7 +62,7 @@
                     <a:commandLink
                       render="documentoListSearchForm"
                       execute="@form"
-                      rendered="#{s:hasRole('usuarioInterno') and pastaAction.canEdit(pasta)}"
+                      rendered="#{s:hasPermission('/pages/Pasta/editarPasta', 'access') and pastaAction.canEdit(pasta)}"
                       onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno});"
                       limitRender="true">
                       <h:graphicImage
@@ -74,7 +74,7 @@
                     <a:commandLink
                       render="documentoListPanel, documentoListSearchForm, pageBodyDialogMessage"
                       execute="@form"
-                      rendered="#{s:hasRole('usuarioInterno') and pastaAction.canRemove(pasta)}"
+                      rendered="#{s:hasPermission('/pages/Pasta/removerPasta', 'access') and pastaAction.canRemove(pasta)}"
                       limitRender="true">
                       <h:graphicImage
                         styleClass="opacityHover"
@@ -91,7 +91,7 @@
 		<wi:commandButton
 			id="addPastaBtn"
 			value="#{eppmessages['documentoProcesso.addFolder']}"
-			rendered="#{s:hasRole('usuarioInterno')}"
+			rendered="#{s:hasPermission('/pages/Pasta/adicionarPasta', 'access')}"
 			onclick="#{rich:component('addPastaPanel')}.show();" />
 	</ui:define>
 	
@@ -99,7 +99,7 @@
 	    <rich:dragSource
 	      type="doc#{consultaController.processoEpa.idProcesso}"
 	      dragValue="#{row}"
-	      rendered="#{s:hasRole('usuarioInterno')}"
+	      rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
 	      dragIndicator="indicator">
 	      <rich:dragIndicator
 	        id="indicator"
@@ -110,7 +110,7 @@
 	      </rich:dragIndicator>
 	    </rich:dragSource>
 	    <h:graphicImage
-	      rendered="#{s:hasRole('usuarioInterno')}"
+	      rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
 	      url="#{a4jSkin.imgFolder}/anexo.png"
 	      title="#{eppmessages['documentoProcesso.moverDocumento']}" />
 	  <h:graphicImage
