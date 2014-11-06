@@ -54,6 +54,10 @@ public class ProcessoComunicacao extends Processo {
 	@Column(name = "nr_prazo")
 	private Integer prazo;
 	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "dt_fim_prazo")
+	private Date dataFimPrazo;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_pessoa_fisica")
 	private PessoaFisica destinatario;
@@ -136,5 +140,13 @@ public class ProcessoComunicacao extends Processo {
 	
 	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
+	}
+	
+	public Date getDataFimPrazo() {
+		return dataFimPrazo;
+	}
+	
+	public void setDataFimPrazo(Date dataFimPrazo) {
+		this.dataFimPrazo = dataFimPrazo;
 	}
 }
