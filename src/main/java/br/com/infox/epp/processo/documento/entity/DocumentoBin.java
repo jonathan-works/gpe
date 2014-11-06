@@ -85,7 +85,7 @@ public class DocumentoBin implements Serializable {
     private List<Documento> documentoList;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
-    private List<AssinaturaDocumento> assinaturas;
+    private List<AssinaturaDocumento> assinaturas = new ArrayList<>();
     
     @Transient
     private byte[] processoDocumento;

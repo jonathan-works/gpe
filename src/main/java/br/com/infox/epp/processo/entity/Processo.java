@@ -29,6 +29,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -61,6 +63,7 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -71,6 +74,8 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.painel.caixa.Caixa;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -146,6 +151,14 @@ public abstract class Processo implements Serializable {
     
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY)
     private List<ProcessoTarefa> processoTarefaList = new ArrayList<ProcessoTarefa>(0);
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE)
+    @OrderBy("dataInclusao DESC")
+    private List<Documento> documentoList = new ArrayList<Documento>(0);
+    
+    @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
+    @OrderBy(value = "ds_caminho_absoluto")
+    private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
 
     @Transient
     public ProcessoEpa getProcessoEpa(){
@@ -255,6 +268,22 @@ public abstract class Processo implements Serializable {
     public void setDuracao(Long duracao) {
         this.duracao = duracao;
     }
+    
+    public List<Documento> getDocumentoList() {
+		return documentoList;
+	}
+    
+    public void setDocumentoList(List<Documento> documentoList) {
+		this.documentoList = documentoList;
+	}
+    
+    public List<ParticipanteProcesso> getParticipantes() {
+		return participantes;
+	}
+    
+    public void setParticipantes(List<ParticipanteProcesso> participantes) {
+		this.participantes = participantes;
+	}
 
 	@Override
     public String toString() {

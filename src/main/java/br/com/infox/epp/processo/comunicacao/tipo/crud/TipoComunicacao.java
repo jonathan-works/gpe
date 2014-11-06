@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.comunicacao.crud;
+package br.com.infox.epp.processo.comunicacao.tipo.crud;
 
 import java.io.Serializable;
 
@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -15,6 +17,9 @@ import br.com.infox.core.constants.LengthConstants;
 
 @Entity
 @Table(name = "tb_tipo_comunicacao")
+@NamedQueries({
+	@NamedQuery(name = TipoComunicacaoQuery.LIST_TIPO_COMUNICACAO_ATIVOS, query = TipoComunicacaoQuery.LIST_TIPO_COMUNICACAO_ATIVOS_QUERY)
+})
 public class TipoComunicacao implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -66,5 +71,10 @@ public class TipoComunicacao implements Serializable {
     
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+    
+    @Override
+    public String toString() {
+    	return descricao;
     }
 }

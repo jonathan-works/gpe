@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.comunicacao.crud;
+package br.com.infox.epp.processo.comunicacao.tipo.crud;
 
 import java.util.Map;
 

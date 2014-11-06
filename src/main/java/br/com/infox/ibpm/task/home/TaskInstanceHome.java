@@ -39,9 +39,9 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -789,37 +789,16 @@ public class TaskInstanceHome implements Serializable {
     }
 
     public boolean podeRenderizarApplet(String idEditor) {
-        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
-                .get(idEditor);
-        boolean podeAssinar = false;
+        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis.get(idEditor);
         if (documentoAssinavel != null) {
-            UsuarioPerfil usuarioPerfilAtual = Authenticator
-                    .getUsuarioPerfilAtual();
-            podeAssinar = podeAssinar(idEditor, usuarioPerfilAtual)
-                    && !assinaturaDocumentoService.isDocumentoAssinado(
-                            documentoAssinavel.getIdDocumento(),
-                            usuarioPerfilAtual.getUsuarioLogin());
-        }
-        return podeAssinar;
-    }
-
-    private boolean podeAssinar(String idEditor,
-            UsuarioPerfil usuarioPerfilAtual) {
-        boolean assinavel = false;
-        ClassificacaoDocumento classificacao = documentosAssinaveis
-                .get(idEditor).getClassificacao();
-        if (classificacao != null) {
-            List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = classificacao
-                    .getClassificacaoDocumentoPapelList();
-            for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
-                if (usuarioPerfilAtual.getPerfilTemplate().getPapel().equals(tipoProcessoDocumentoPapel.getPapel())
-                		&& tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P) {
-                	assinavel = true;
-                    break;
-                }
+            UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
+            Papel papel = usuarioPerfilAtual.getPerfilTemplate().getPapel();
+            ClassificacaoDocumento classificacao = documentosAssinaveis.get(idEditor).getClassificacao();
+            if (classificacao != null) {
+            	return assinaturaDocumentoService.podeRenderizarApplet(papel, classificacao, documentoAssinavel.getIdDocumento(), usuarioPerfilAtual.getUsuarioLogin());
             }
         }
-        return assinavel;
+        return false;
     }
 
     public Map<String, DadosDocumentoAssinavel> getDocumentosAssinaveis() {

@@ -46,7 +46,7 @@ public class TransactionService {
     public static void rollbackTransaction() {
         try {
             UserTransaction ut = Transaction.instance();
-            if (ut != null) {
+            if (ut != null && ut.isActive()) {
                 ut.rollback();
             }
         } catch (Exception e) {

@@ -19,13 +19,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.documento.query.ClassificacaoDocumentoPapelQuery;
 import br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 
 @Entity
 @Table(name = ClassificacaoDocumentoPapel.TABLE_NAME)
 @NamedQueries(value = { 
-		@NamedQuery(name = ClassificacaoDocumentoQuery.ASSINATURA_OBRIGATORIA, query = ClassificacaoDocumentoQuery.ASSINATURA_OBRIGATORIA_QUERY) 
+	@NamedQuery(name = ClassificacaoDocumentoQuery.ASSINATURA_OBRIGATORIA, query = ClassificacaoDocumentoQuery.ASSINATURA_OBRIGATORIA_QUERY),
+	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.PAPEL_PODE_ASSINAR_CLASSIFICACAO, query = ClassificacaoDocumentoPapelQuery.PAPEL_PODE_ASSINAR_CLASSIFICACAO_QUERY)
 })
 public class ClassificacaoDocumentoPapel implements Serializable {
     

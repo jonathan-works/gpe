@@ -110,18 +110,20 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         return phrase;
     }
 
-    public void assignUUID(DocumentoBin documentoBin) throws DAOException {
-        try {
-            documentoBin.setUuid(UUID.randomUUID());
-            update(documentoBin);
+    @Override
+    public DocumentoBin persist(DocumentoBin o) throws DAOException {
+    	try {
+            o.setUuid(UUID.randomUUID());
+        	o = super.persist(o);
         } catch (DAOException e) {
             GenericDatabaseErrorCode error = e.getDatabaseErrorCode();
-            if (error != null && error == GenericDatabaseErrorCode.UNIQUE_VIOLATION && getByUUID(documentoBin.getUuid()) != null) {
-                assignUUID(documentoBin);
+            if (error != null && error == GenericDatabaseErrorCode.UNIQUE_VIOLATION && getByUUID(o.getUuid()) != null) {
+                o = persist(o);
             } else {
                 throw e;
             }
         }
+    	return o;
     }
     
     private String getUrlValidacaoDocumento() {
