@@ -27,7 +27,7 @@
         >
             <h:graphicImage
                 title="#{eppmessages['processoDocumento.visualizar']}"
-                url="#{a4jSkin.imgFolder}/view.png"
+                url="#{wiSkin.imageFolder}/view.png"
             />
         </h:commandLink>
         <h:commandLink
@@ -36,7 +36,7 @@
             action="#{documentoDownloader.downloadDocumento(row)}"
         >
             <h:graphicImage
-                value="#{a4jSkin.imgFolder}/mod/pdf.gif"
+                value="#{wiSkin.imageFolder}/mod/pdf.gif"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"
             />
         </h:commandLink>
@@ -49,7 +49,7 @@
             <h:graphicImage
                 title="#{eppmessages['assinaturas.validar']}"
                 alt="#{eppmessages['assinaturas.validar']}"
-                url="#{a4jSkin.imgFolder}/lock.png"
+                url="#{wiSkin.imageFolder}/lock.png"
             />
             <f:param value="#{row.id}" name="idDocumento" />
         </s:link>
@@ -62,7 +62,7 @@
             <h:graphicImage
                 title="#{eppmessages['assinaturas.assinar']}"
                 alt="#{eppmessages['assinaturas.assinar']}"
-                url="#{a4jSkin.imgFolder}/lock_unlock.png"
+                url="#{wiSkin.imageFolder}/lock_unlock.png"
             />
             <f:param value="#{row.id}" name="idDocumento" />
         </s:link>

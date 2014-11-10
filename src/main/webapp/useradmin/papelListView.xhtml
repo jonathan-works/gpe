@@ -108,14 +108,14 @@
             nodes="#{item.nodes}"
           >
             <rich:treeNode
-              iconCollapsed="#{a4jSkin.imgFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
-              iconExpanded="#{a4jSkin.imgFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
-              iconLeaf="#{a4jSkin.imgFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
+              iconCollapsed="#{wiSkin.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
+              iconExpanded="#{wiSkin.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
+              iconLeaf="#{wiSkin.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
             >
               #{item.entity}
             </rich:treeNode>
             <rich:treeModelAdaptor nodes="#{item.entity.recursos}">
-              <rich:treeNode iconLeaf="#{a4jSkin.imgFolder}/resource.gif">#{item}</rich:treeNode>
+              <rich:treeNode iconLeaf="#{wiSkin.imageFolder}/resource.gif">#{item}</rich:treeNode>
             </rich:treeModelAdaptor>
           </rich:treeModelRecursiveAdaptor>
         </rich:tree>

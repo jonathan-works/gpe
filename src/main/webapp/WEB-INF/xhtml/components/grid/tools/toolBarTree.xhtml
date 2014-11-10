@@ -18,7 +18,7 @@
             <a:region renderRegionOnly="false">
                 <a:commandLink status=":status" render=":pageBody"
                     limitRender="true" id="#{gridId}Edit">
-                    <h:graphicImage url="#{a4jSkin.imgFolder}/view.png"
+                    <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
                         title="#{eppmessages['button.selecionar']}" />
                     <f:param name="id"
                         value="#{treeMode ? row.entity[bean.key] : row[bean.key]}" />
@@ -31,7 +31,7 @@
                 status=":status" render=":#{gridId}"
                 onclick="if(!confirm('Esta ação irá inativar todos os filhos deste registro. Confirma?')) return false;">
 
-                <h:graphicImage url="#{a4jSkin.imgFolder}/remove.png"
+                <h:graphicImage url="#{wiSkin.imageFolder}/remove.png"
                     title="#{eppmessages['button.inactive']}" />
                 <f:param name="firstResult" value="#{bean.firstResult}" />
                 <f:param name="page" value="#{bean.page}" />

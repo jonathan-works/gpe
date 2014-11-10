@@ -51,7 +51,7 @@
 						styleClass="folder"
 						limitRender="true">
   		              <h:graphicImage
-                          url="#{a4jSkin.imgFolder}/folder.png"
+                          url="#{wiSkin.imageFolder}/folder.png"
                           rendered="true"
                           title="#{pasta}" />
 						<f:attribute name="pastaToSelect" value="#{pasta}" />
@@ -67,7 +67,7 @@
                       limitRender="true">
                       <h:graphicImage
                         styleClass="opacityHover"
-                        url="#{a4jSkin.imgFolder}/view.png"
+                        url="#{wiSkin.imageFolder}/view.png"
                         rendered="true"
                         title="#{eppmessages['button.selecionar']}" />
                     </a:commandLink>
@@ -78,7 +78,7 @@
                       limitRender="true">
                       <h:graphicImage
                         styleClass="opacityHover"
-                        url="#{a4jSkin.imgFolder}/remove.png"
+                        url="#{wiSkin.imageFolder}/remove.png"
                         rendered="true"
                         title="#{eppmessages['button.delete']}" />
                       <f:attribute name="pastaToRemove" value="#{pasta}" />
@@ -111,23 +111,23 @@
 	    </rich:dragSource>
 	    <h:graphicImage
 	      rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
-	      url="#{a4jSkin.imgFolder}/anexo.png"
+	      url="#{wiSkin.imageFolder}/anexo.png"
 	      title="#{eppmessages['documentoProcesso.moverDocumento']}" />
 	  <h:graphicImage
 	    styleClass="opacityHover"
-	    url="#{a4jSkin.imgFolder}/view.png"
+	    url="#{wiSkin.imageFolder}/view.png"
 	    title="#{eppmessages['button.historico']}"
 	    rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
 	    onmouseup="selectDocumento(#{rowId});" />
 	  <h:graphicImage
 	    styleClass="opacityHover"
-	    url="#{a4jSkin.imgFolder}/remove.png"
+	    url="#{wiSkin.imageFolder}/remove.png"
 	    rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
 	    title="#{eppmessages['button.delete']}"
 	    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
 	  <h:graphicImage
 	    styleClass="opacityHover"
-	    url="#{a4jSkin.imgFolder}/stock_undelete.png"
+	    url="#{wiSkin.imageFolder}/stock_undelete.png"
 	    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
 	    title="#{eppmessages['button.restaurar']}"
 	    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
@@ -246,7 +246,7 @@
 		  <h:graphicImage
 		    id="pastaPanelCloseBtn"
 		    styleClass="mp-close"
-		    value="#{a4jSkin.imgFolder}/closeMP.gif"
+		    value="#{wiSkin.imageFolder}/closeMP.gif"
 		    onmouseup="#{rich:component('addPastaPanel')}.hide();" />
 		  </f:facet>
 		  <h:form id="addPastaForm">
@@ -285,7 +285,7 @@
 	    <h:graphicImage
 	      id="editPastaPanelCloseBtn"
 	      styleClass="mp-close"
-	      value="#{a4jSkin.imgFolder}/closeMP.gif"
+	      value="#{wiSkin.imageFolder}/closeMP.gif"
 	      onmouseup="#{rich:component('editPastaPanel')}.hide();" />
 	  </f:facet>
 	  <h:form id="editPastaForm">
@@ -329,7 +329,7 @@
 	    <h:graphicImage
 	      id="mp_taskNodeCloseBtn"
 	      styleClass="mp-close"
-	      value="#{a4jSkin.imgFolder}/closeMP.gif"
+	      value="#{wiSkin.imageFolder}/closeMP.gif"
 	      onmouseup="#{rich:component('requestMotivoPanel')}.hide();" />
 	  </f:facet>
 	  <wi:outputText
@@ -391,7 +391,7 @@
            <h:outputText
              value="#{eppmessages['historicoStatusDocumento.tableTile']}" />
            <h:graphicImage
-             value="#{a4jSkin.imgFolder}/closeMP.gif"
+             value="#{wiSkin.imageFolder}/closeMP.gif"
              onmouseup="selectDocumento(0);"
              style="float:right;" />
          </f:facet>

@@ -40,7 +40,7 @@
                             rendered="#{not parent.systemNode or (parent.systemNode and empty parent.eventList)}"
                         >
                             <h:graphicImage
-                                url="#{a4jSkin.imgFolder}/add.gif"
+                                url="#{wiSkin.imageFolder}/add.gif"
                                 title="#{eppmessages['process.events.new']}"
                             />
                         </a:commandLink>
@@ -48,7 +48,7 @@
                     <ui:define name="toolBar">
                         <h:graphicImage
                             title="#{eppmessages['process.events.remove']}"
-                            url="#{a4jSkin.imgFolder}/remove.png"
+                            url="#{wiSkin.imageFolder}/remove.png"
                         >
                             <a:ajax
                                 event="click"
@@ -122,7 +122,7 @@
                                 limitRender="true"
                             >
                                 <h:graphicImage
-                                    url="#{a4jSkin.imgFolder}/add.gif"
+                                    url="#{wiSkin.imageFolder}/add.gif"
                                     title="#{eppmessages['process.events.action.new']}"
                                 />
                             </a:commandLink>
@@ -130,7 +130,7 @@
                         <ui:define name="toolBar">
                             <h:graphicImage
                                 title="#{eppmessages['process.events.action.remove']}"
-                                url="#{a4jSkin.imgFolder}/remove.png"
+                                url="#{wiSkin.imageFolder}/remove.png"
                             >
                                 <a:ajax
                                     event="click"
@@ -159,7 +159,7 @@
                                             cellspacing="0"
                                         >
                                             <h:graphicImage
-                                                url="#{a4jSkin.imgFolder}/jbpm/#{event.getIcon(row)}.gif"
+                                                url="#{wiSkin.imageFolder}/jbpm/#{event.getIcon(row)}.gif"
                                             />
                                             <h:outputText
                                                 value="#{empty row.name ? messages['process.events.action'].concat(key + 1) : row.name}"

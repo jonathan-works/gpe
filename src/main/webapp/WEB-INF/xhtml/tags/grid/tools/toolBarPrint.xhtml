@@ -8,11 +8,11 @@
 
     <s:link view="#{printPath}" target="_blank"
         rendered="#{not empty printPath}">
-        <h:graphicImage url="#{a4jSkin.imgFolder}/printer.png" title="Imprimir" />
+        <h:graphicImage url="#{wiSkin.imageFolder}/printer.png" title="Imprimir" />
     </s:link>
 
     <h:outputLink onclick="window.print()" rendered="#{empty printPath}">
-        <h:graphicImage url="#{a4jSkin.imgFolder}/printer.png" title="Imprimir" />
+        <h:graphicImage url="#{wiSkin.imageFolder}/printer.png" title="Imprimir" />
     </h:outputLink>
 
 </ui:composition>

@@ -85,8 +85,8 @@
           id="localizacaoPai"
           assignTo="estruturaCrudAction.localizacaoFilho.localizacaoPai"
           tree="#{localizacoesDaEstruturaTree}"
-          icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-          iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+          icon="#{wiSkin.imageFolder}/nivelTree.gif"
+          iconLeaf="#{wiSkin.imageFolder}/file.gif"
           label="#{eppmessages['localizacao.localizacaoPai']}" />
         <wi:selectSituacaoRadio
           columnId="ativoLocalizacao"
@@ -124,13 +124,13 @@
         <ui:define name="headerToolBar" />
         <ui:define name="toolBar">
           <wi:toolBar
-            url="#{a4jSkin.imgFolder}/view.png"
+            url="#{wiSkin.imageFolder}/view.png"
             title="#{eppmessages['button.selecionar']}"
             id="toolBarEdit"
             action="#{estruturaCrudAction.setLocalizacaoFilho(row)}"
             render="localizacoesTab, pageBodyDialogMessage, defaultTabPanel" />
           <wi:toolBar
-            url="#{a4jSkin.imgFolder}/remove.png"
+            url="#{wiSkin.imageFolder}/remove.png"
             title="#{eppmessages['button.inactive']}"
             id="toolBarInactive"
             action="#{estruturaCrudAction.inativarLocalizacao(row)}"
