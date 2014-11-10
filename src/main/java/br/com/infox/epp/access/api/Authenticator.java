@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.el.ELException;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
@@ -36,6 +37,7 @@ import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.faces.RedirectException;
 import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
@@ -209,13 +211,21 @@ public class Authenticator {
     }
 
     public void login() {
-        final Identity identity = Identity.instance();
-        final Credentials credentials = identity.getCredentials();
-        if (loginExists(credentials) || ldapLoginExists(credentials)) {
-            identity.login();
-        } else {
-            getMessagesHandler().add(Severity.ERROR, Messages.instance().get("login.error.invalid"));
-        }
+            final Identity identity = Identity.instance();
+            final Credentials credentials = identity.getCredentials();
+            if (loginExists(credentials) || ldapLoginExists(credentials)) {
+                try {
+                    identity.login();
+                } catch (ELException e) {
+                    if (e.getCause() instanceof RedirectException) {
+                        LOG.warn("Erro de redirecionamento", e);                        
+                    } else {
+                        LOG.error(e);
+                    }
+                }
+            } else {
+                getMessagesHandler().add(Severity.ERROR, Messages.instance().get("login.error.invalid"));
+            }
     }
 
     private boolean loginExists(final Credentials credentials) {
