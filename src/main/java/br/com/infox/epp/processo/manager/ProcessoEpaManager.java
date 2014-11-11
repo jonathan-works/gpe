@@ -16,14 +16,13 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.util.time.DateRange;
 
 @Name(ProcessoEpaManager.NAME)
 @AutoCreate
-public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
+public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, Processo> {
 
     private static final int PORCENTAGEM = 100;
 
@@ -31,11 +30,11 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
 
     public static final String NAME = "processoEpaManager";
 
-    public List<ProcessoEpa> listAllNotEnded() {
+    public List<Processo> listAllNotEnded() {
         return getDao().listAllNotEnded();
     }
 
-    public List<ProcessoEpa> listNotEnded(Fluxo fluxo) {
+    public List<Processo> listNotEnded(Fluxo fluxo) {
         return getDao().listNotEnded(fluxo);
     }
 
@@ -43,13 +42,9 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
         return getDao().podeInativarPartes(getDao().getProcessoEpaByProcesso(processo));
     }
 
-    public boolean podeInativarPartesDoProcesso(ProcessoEpa processoEpa) {
-        return getDao().podeInativarPartes(processoEpa);
-    }
-
     public void updateTempoGastoProcessoEpa() throws DAOException {
-        List<ProcessoEpa> listAllNotEnded = listAllNotEnded();
-        for (ProcessoEpa processoEpa : listAllNotEnded) {
+        List<Processo> listAllNotEnded = listAllNotEnded();
+        for (Processo processoEpa : listAllNotEnded) {
             Map<String, Object> result = getDao().getTempoGasto(processoEpa);
 
             if (result != null) {
@@ -102,39 +97,39 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
         return getDao().getMediaTempoGasto(fluxo, prazoEnum);
     }
 
-    public ProcessoEpa getProcessoEpaByNumeroProcesso(
+    public Processo getProcessoEpaByNumeroProcesso(
             final String numeroProcesso) {
-        ProcessoEpa processo = null;
+    	Processo processo = null;
         if (numeroProcesso != null) {
             processo = getDao().getProcessoEpaByNumeroProcesso(numeroProcesso);
         }
         return processo;
     }
     
-    public ProcessoEpa persistProcessoComNumero(ProcessoEpa processoEpa) throws DAOException{
-    	return getDao().persistProcessoComNumero(processoEpa);
+    public Processo persistProcessoComNumero(Processo processo) throws DAOException{
+    	return getDao().persistProcessoComNumero(processo);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
-        distribuirProcesso(processoEpa, relator, unidadeDecisoraMonocratica, null);
+    public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+        distribuirProcesso(processo, relator, unidadeDecisoraMonocratica, null);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
-        distribuirProcesso(processoEpa, null, unidadeDecisoraMonocratica, null);
+    public void distribuirProcesso(Processo processo, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+        distribuirProcesso(processo, null, unidadeDecisoraMonocratica, null);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
-        processoEpa.setDecisoraColegiada(unidadeDecisoraColegiada);
-        processoEpa.setDecisoraMonocratica(unidadeDecisoraMonocratica);
-        processoEpa.setRelator(relator);
-        getDao().update(processoEpa);
+    public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+//    	processo.setDecisoraColegiada(unidadeDecisoraColegiada);
+//    	processo.setDecisoraMonocratica(unidadeDecisoraMonocratica);
+//    	processo.setRelator(relator);
+        getDao().update(processo);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
-        distribuirProcesso(processoEpa, null, null, unidadeDecisoraColegiada);
+    public void distribuirProcesso(Processo processo, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+        distribuirProcesso(processo, null, null, unidadeDecisoraColegiada);
     }
 
-    public void distribuirProcesso(ProcessoEpa processoEpa) throws DAOException {
-        distribuirProcesso(processoEpa,null,null,null);
+    public void distribuirProcesso(Processo processo) throws DAOException {
+        distribuirProcesso(processo,null,null,null);
     }
 }
