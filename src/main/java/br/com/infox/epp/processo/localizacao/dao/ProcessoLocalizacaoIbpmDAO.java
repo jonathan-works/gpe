@@ -26,7 +26,6 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
@@ -60,20 +59,18 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         return count != null && count > 0;
     }
     
+    @Deprecated // regra para pegar unidade decisora
     private boolean isUsuarioLogadoEmUnidadesDecisorasDoProcesso(Processo processo) {
-        if (processo instanceof ProcessoEpa) {
-            ProcessoEpa pe = (ProcessoEpa) processo;
-            UnidadeDecisoraMonocratica monocraticaLogada = getAuthenticator().getMonocraticaLogada();
-            UnidadeDecisoraColegiada colegiadaLogada = getAuthenticator().getColegiadaLogada();
-            UnidadeDecisoraMonocratica monocraticaDoProcesso = pe.getDecisoraMonocratica();
-            UnidadeDecisoraColegiada colegiadaDoProcesso = pe.getDecisoraColegiada();
-            return (monocraticaLogada == null && monocraticaDoProcesso == null && colegiadaLogada == null && colegiadaDoProcesso == null) 
-                    || (monocraticaLogada != null && colegiadaLogada == null && monocraticaLogada.equals(monocraticaDoProcesso)) 
-                    || (colegiadaLogada != null && monocraticaLogada == null && colegiadaLogada.equals(colegiadaDoProcesso))
-                    || (monocraticaLogada != null && colegiadaLogada != null && monocraticaLogada.equals(monocraticaDoProcesso)) && colegiadaLogada.equals(colegiadaDoProcesso);
-        } else {
-            return false;
-        }
+        UnidadeDecisoraMonocratica monocraticaLogada = getAuthenticator().getMonocraticaLogada();
+        UnidadeDecisoraColegiada colegiadaLogada = getAuthenticator().getColegiadaLogada();
+//        UnidadeDecisoraMonocratica monocraticaDoProcesso = pe.getDecisoraMonocratica();
+//        UnidadeDecisoraColegiada colegiadaDoProcesso = pe.getDecisoraColegiada();
+        UnidadeDecisoraMonocratica monocraticaDoProcesso = null;
+        UnidadeDecisoraColegiada colegiadaDoProcesso = null;
+        return (monocraticaLogada == null && monocraticaDoProcesso == null && colegiadaLogada == null && colegiadaDoProcesso == null) 
+                || (monocraticaLogada != null && colegiadaLogada == null && monocraticaLogada.equals(monocraticaDoProcesso)) 
+                || (colegiadaLogada != null && monocraticaLogada == null && colegiadaLogada.equals(colegiadaDoProcesso))
+                || (monocraticaLogada != null && colegiadaLogada != null && monocraticaLogada.equals(monocraticaDoProcesso)) && colegiadaLogada.equals(colegiadaDoProcesso);
     }
     
     public Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo,

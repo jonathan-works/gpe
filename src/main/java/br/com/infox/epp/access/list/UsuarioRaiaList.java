@@ -13,7 +13,7 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 
 @AutoCreate
@@ -108,7 +108,7 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
     
     private Fluxo getFluxo() {
         if (fluxo == null) {
-            fluxo = getEntityManager().find(ProcessoEpa.class, ProcessoEpaHome.instance().getId()).getNaturezaCategoriaFluxo().getFluxo();
+            fluxo = getEntityManager().find(Processo.class, ProcessoEpaHome.instance().getId()).getNaturezaCategoriaFluxo().getFluxo();
         }
         return fluxo;
     }

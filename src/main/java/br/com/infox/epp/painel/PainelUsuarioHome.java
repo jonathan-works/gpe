@@ -28,7 +28,6 @@ import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoEpaList;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
@@ -182,8 +181,8 @@ public class PainelUsuarioHome implements Serializable {
 
         if (idsProcesso != null
                 && (idsProcesso.size() > 1 || (idsProcesso.size() == 1 && idsProcesso.get(0) != -1))) {
-            ProcessoEpa processoEpa = processoEpaManager.find(idsProcesso.get(0));
-            Fluxo fluxo = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+            Processo processo = processoEpaManager.find(idsProcesso.get(0));
+            Fluxo fluxo = processo.getNaturezaCategoriaFluxo().getFluxo();
 
             List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo);
             this.dynamicColumns = new ArrayList<>();
@@ -194,8 +193,7 @@ public class PainelUsuarioHome implements Serializable {
         }
     }
 
-    public VariavelProcesso getVariavelProcesso(ProcessoEpa processo,
-            String nome) {
+    public VariavelProcesso getVariavelProcesso(Processo processo, String nome) {
         return variavelProcessoService.getVariavelProcesso(processo, nome);
     }
 

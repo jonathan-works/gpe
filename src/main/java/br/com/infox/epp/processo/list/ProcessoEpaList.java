@@ -13,13 +13,13 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 
 @Name(ProcessoEpaList.NAME)
 @BypassInterceptors
 @Scope(ScopeType.PAGE)
-public class ProcessoEpaList extends EntityList<ProcessoEpa> {
+public class ProcessoEpaList extends EntityList<Processo> {
     public static final String NAME = "processoEpaList";
 
     private static final long serialVersionUID = 1L;
