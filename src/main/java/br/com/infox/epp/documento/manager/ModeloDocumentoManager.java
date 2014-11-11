@@ -116,6 +116,9 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
      *         modelo
      */
     public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, Map<String, Pair<String, VariableType>> variableTypeMap) {
+    	if (modeloDocumento == null) {
+    		return null;
+    	}
         return evaluateModeloDocumento(modeloDocumento, modeloDocumento.getModeloDocumento(), variableTypeMap);
     }
     
