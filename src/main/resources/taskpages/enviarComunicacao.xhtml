@@ -28,7 +28,7 @@
 						<a:commandLink execute="@this" render="destinatariosPanel"
 							action="#{comunicacaoAction.removerDestinatario(row)}"
 							rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
-							<h:graphicImage url="#{a4jSkin.imgFolder}/remove.png" title="#{eppmessages['button.delete']}" />
+							<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['button.delete']}" />
 						</a:commandLink>
 					</rich:column>
 					<rich:column>
@@ -79,7 +79,7 @@
 							<h:form>
 								<a:commandLink render="destinatariosPanel"
 									action="#{comunicacaoAction.adicionarParticipanteDestinatario(row)}">
-									<h:graphicImage url="#{a4jSkin.imgFolder}/add.gif" title="#{eppmessages['button.add']}" />
+									<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{eppmessages['button.add']}" />
 								</a:commandLink>
 							</h:form>
 						</ui:define>
@@ -119,16 +119,17 @@
 					<ui:param name="renderAfterSignature" value="comunicacaoDiv, :script" />
 				</ui:include>
 			</s:div>
-			<s:div id="documentos" style="display: inline-block; vertical-align: top; margin-top: 116px">
+			<s:div id="documentos" style="display: inline-block; vertical-align: top; margin-top: 112px">
 				<wi:dataTable id="documentosProcesso" values="#{documentoComunicacaoList.list(15)}" 
 					bean="#{documentoComunicacaoList}" showSearchForm="false" rowId="#{row.id}"
-					showGrid="#{not comunicacaoAction.modeloComunicacao.finalizada and documentoComunicacaoList.resultCount gt 0}">
+					showGrid="#{not comunicacaoAction.modeloComunicacao.finalizada and documentoComunicacaoList.resultCount gt 0}"
+					panelStyle="width: auto">
 					<ui:define name="headerToolBar" />
 					<ui:define name="toolBar">
 						<h:form>
 							<a:commandLink action="#{comunicacaoAction.adicionarDocumento(row)}" 
 								execute="@this" render="documentos">
-								<h:graphicImage url="#{a4jSkin.imgFolder}/add.gif" title="#{eppmessages['button.add']}" />
+								<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{eppmessages['button.add']}" />
 							</a:commandLink>
 						</h:form>
 					</ui:define>
@@ -144,11 +145,11 @@
 							<a:commandLink action="#{comunicacaoAction.removerDocumento(row)}" 
 								execute="@this" render="documentos"
 								rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
-								<h:graphicImage url="#{a4jSkin.imgFolder}/remove.png" title="#{eppmessages['button.delete']}" />
+								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['button.delete']}" />
 							</a:commandLink>
 							<a:commandLink
 								onclick="infox.editor['comunicacaoEditor'].insertText('#{comunicacaoAction.getLink(row.documento.documentoBin)}')">
-								<h:graphicImage url="#{a4jSkin.imgFolder}/link.gif" title="#{eppmessages['button.copiarLink']}" />
+								<h:graphicImage url="#{wiSkin.imageFolder}/link.gif" title="#{eppmessages['button.copiarLink']}" />
 							</a:commandLink> 
 						</h:form>
 					</rich:column>
