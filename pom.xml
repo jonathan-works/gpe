@@ -396,6 +396,9 @@
                             <compress>false</compress>
                             <force>false</force>
                             <outputFileFormat>{fileName}.css</outputFileFormat>
+                            <excludes>
+                              <exclude>*.import.less</exclude>
+                            </excludes>
                         </configuration>
                         <goals>
                             <goal>compile</goal>
