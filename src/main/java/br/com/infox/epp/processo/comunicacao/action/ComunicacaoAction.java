@@ -246,6 +246,8 @@ public class ComunicacaoAction implements Serializable {
 	}
 
 	private void resetEntityIds() {
+		this.finalizada = false;
+		modeloComunicacao.setFinalizada(false);
 		if (!modeloComunicacaoManager.contains(modeloComunicacao)) {
 			modeloComunicacao.setId(null);
 			setIdModeloVariable(null);
@@ -286,9 +288,7 @@ public class ComunicacaoAction implements Serializable {
 		} catch (Exception e) {
 			LOG.error("", e);
 			resetEntityIds();
-			this.finalizada = false;
 			modeloComunicacao.setLocalizacaoResponsavelAssinatura(null);
-			modeloComunicacao.setFinalizada(false);
 			TransactionService.rollbackTransaction(); // Caso dê erro de assinatura, exceções que não causam rollback
 			if (e instanceof AssinaturaException) {
 				FacesMessages.instance().add(e.getMessage());

@@ -24,7 +24,7 @@
 			<h:form>
 				<rich:dataTable id="destinatarios" value="#{comunicacaoAction.modeloComunicacao.destinatarios}"
 							styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty comunicacaoAction.modeloComunicacao.destinatarios}">
-					<rich:column styleClass="dt-toolbar-col">
+					<rich:column styleClass="dt-toolbar-col" rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
 						<a:commandLink execute="@this" render="destinatariosPanel"
 							action="#{comunicacaoAction.removerDestinatario(row)}"
 							rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
@@ -54,7 +54,7 @@
 						</h:inputText>
 						<h:outputText value="#{row.prazo}" rendered="#{comunicacaoAction.modeloComunicacao.finalizada}" />
 					</rich:column>
-					<rich:column styleClass="dt-toolbar-col">
+					<rich:column styleClass="dt-toolbar-col" rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
 						<a:commandButton value="Replicar Prazo" render="destinatarios" action="#{comunicacaoAction.replicarPrazo(row)}"
 							rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}"/>
 					</rich:column>
@@ -140,11 +140,10 @@
 				</wi:dataTable>
 				<rich:dataTable id="documentosSelecionados" value="#{comunicacaoAction.modeloComunicacao.documentos}"
 					styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty comunicacaoAction.modeloComunicacao.documentos}">
-					<rich:column styleClass="dt-toolbar-col">
+					<rich:column styleClass="dt-toolbar-col" rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
 						<h:form>
 							<a:commandLink action="#{comunicacaoAction.removerDocumento(row)}" 
-								execute="@this" render="documentos"
-								rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
+								execute="@this" render="documentos">
 								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['button.delete']}" />
 							</a:commandLink>
 							<a:commandLink
