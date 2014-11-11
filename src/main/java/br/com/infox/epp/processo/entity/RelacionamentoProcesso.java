@@ -39,7 +39,7 @@ public class RelacionamentoProcesso implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer idRelacionamentoProcesso;
-	private ProcessoEpa processo;
+	private Processo processo;
 	private Relacionamento relacionamento;
 	private String numeroProcesso;
 
@@ -67,11 +67,11 @@ public class RelacionamentoProcesso implements Serializable {
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = ID_PROCESSO, nullable = true, unique = true)
-	public ProcessoEpa getProcesso() {
+	public Processo getProcesso() {
 		return processo;
 	}
 
-	public void setProcesso(final ProcessoEpa processo) {
+	public void setProcesso(Processo processo) {
 		this.processo = processo;
 	}
 

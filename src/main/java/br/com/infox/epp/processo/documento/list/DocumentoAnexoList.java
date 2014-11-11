@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.EppProperties;
 
 @Name(DocumentoAnexoList.NAME)
@@ -27,7 +27,7 @@ public class DocumentoAnexoList extends EntityList<Documento> {
 
     public static final String NAME = "documentoAnexoList";
 
-    private ProcessoEpa processo;
+    private Processo processo;
     
     public DocumentoAnexoList() {
         setNativeQuery(true);
@@ -60,11 +60,12 @@ public class DocumentoAnexoList extends EntityList<Documento> {
         return null;
     }
 
-    public ProcessoEpa getProcesso() {
-        return processo;
-    }
+	public Processo getProcesso() {
+		return processo;
+	}
 
-    public void setProcesso(ProcessoEpa processo) {
-        this.processo = processo;
-    }
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+	}
+
 }

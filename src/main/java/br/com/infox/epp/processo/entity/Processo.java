@@ -2,6 +2,20 @@ package br.com.infox.epp.processo.entity;
 
 import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.ITEM_DO_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_ALL_NOT_ENDED_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_TODOS_OS_ACTOR_IDS;
@@ -12,9 +26,10 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DURACAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
@@ -46,7 +61,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -54,8 +68,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQueries;
@@ -64,27 +76,27 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
+import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
-import br.com.infox.epp.processo.status.entity.StatusProcesso;
-import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 
 @Entity
 @Table(name = TABLE_PROCESSO)
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "tp_processo", length = 2)
 @NamedNativeQueries(value = {
     @NamedNativeQuery(name = APAGA_ACTOR_ID_DO_PROCESSO, query = APAGA_ACTOR_ID_DO_PROCESSO_QUERY),
     @NamedNativeQuery(name = REMOVE_PROCESSO_DA_CAIXA_ATUAL, query = REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY),
@@ -99,9 +111,20 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedQuery(name = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
     @NamedQuery(name = MOVER_PROCESSOS_PARA_CAIXA, query = MOVER_PROCESSOS_PARA_CAIXA_QUERY),
     @NamedQuery(name = PROCESSO_BY_NUMERO, query = PROCESSO_BY_NUMERO_QUERY),
-    @NamedQuery(name = NUMERO_PROCESSO_BY_ID_JBPM, query = NUMERO_PROCESSO_BY_ID_JBPM_QUERY)
+    @NamedQuery(name = NUMERO_PROCESSO_BY_ID_JBPM, query = NUMERO_PROCESSO_BY_ID_JBPM_QUERY),
+    
+    @NamedQuery(name = LIST_ALL_NOT_ENDED, query = LIST_ALL_NOT_ENDED_QUERY),
+    @NamedQuery(name = PROCESSO_EPA_BY_ID_JBPM, query = PROCESSO_EPA_BY_ID_JBPM_QUERY,
+    		    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+    					 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.processo.entity.ProcessoEpa")}),
+    @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO, query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
+    @NamedQuery(name = ITEM_DO_PROCESSO, query = ITEM_DO_PROCESSO_QUERY),
+    @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
+    @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
+    @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
+    @NamedQuery(name = GET_PROCESSO_BY_NUMERO_PROCESSO, query = GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY) 
 })
-public abstract class Processo implements Serializable {
+public class Processo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -116,13 +139,33 @@ public abstract class Processo implements Serializable {
     private UsuarioLogin usuarioCadastroProcesso;
     
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_localizacao", nullable = false)
+    private Localizacao localizacao;
+    
+    @NotNull
     @Size(max = NUMERACAO_PROCESSO)
     @Column(name = NUMERO_PROCESSO, nullable = false, length = NUMERACAO_PROCESSO)
     private String numeroProcesso;
     
+    @Column(name = "nr_tempo_gasto")
+    private Integer tempoGasto;
+    
+    @Column(name = "nr_porcentagem")
+    private Integer porcentagem;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_item_processo")
+    private Item itemDoProcesso;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_prioridade_processo", nullable = true)
+    private PrioridadeProcesso prioridadeProcesso;
+    
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "tp_processo", insertable = false, updatable = false, nullable = false, length = 2)
-    private TipoProcesso tipoProcesso;
+    @Column(name = "st_prazo", nullable = false)
+    private SituacaoPrazoEnum situacaoPrazo;
     
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
@@ -133,9 +176,6 @@ public abstract class Processo implements Serializable {
     @Column(name = DATA_FIM)
     private Date dataFim;
     
-    @Column(name = DURACAO)
-    private Long duracao;
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_CAIXA)
     private Caixa caixa;
@@ -145,10 +185,6 @@ public abstract class Processo implements Serializable {
 
     @Column(name = NOME_ACTOR_ID)
     private String actorId;
-    
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "id_status_processo", nullable = true)
-    private StatusProcesso statusProcesso;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -166,16 +202,6 @@ public abstract class Processo implements Serializable {
     @OrderBy(value = "ds_caminho_absoluto")
     private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
 
-    @Transient
-    public ProcessoEpa getProcessoEpa(){
-		return (ProcessoEpa) this;
-    }
-    
-    @Transient
-    public ProcessoDocumento getProcessoDocumento(){
-    	return (ProcessoDocumento) this;
-    }
-    
     public Integer getIdProcesso() {
 		return idProcesso;
 	}
@@ -198,14 +224,6 @@ public abstract class Processo implements Serializable {
 
 	public void setNumeroProcesso(String numeroProcesso) {
 		this.numeroProcesso = numeroProcesso;
-	}
-
-	public TipoProcesso getTipoProcesso() {
-		return tipoProcesso;
-	}
-
-	public void setTipoProcesso(TipoProcesso tipoProcesso) {
-		this.tipoProcesso = tipoProcesso;
 	}
 
 	public Date getDataInicio() {
@@ -248,14 +266,6 @@ public abstract class Processo implements Serializable {
 		this.actorId = actorId;
 	}
 
-	public StatusProcesso getStatusProcesso() {
-		return statusProcesso;
-	}
-
-	public void setStatusProcesso(StatusProcesso statusProcesso) {
-		this.statusProcesso = statusProcesso;
-	}
-	
 	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
 		return naturezaCategoriaFluxo;
 	}
@@ -272,17 +282,6 @@ public abstract class Processo implements Serializable {
 		this.processoTarefaList = processoTarefaList;
 	}
 
-	public Long getDuracao() {
-		if (duracao == null && dataFim != null && dataInicio != null) {
-			setDuracao(dataFim.getTime() - dataInicio.getTime());
-	    }
-	    return duracao;
-    }
-
-    public void setDuracao(Long duracao) {
-        this.duracao = duracao;
-    }
-    
     public List<Documento> getDocumentoList() {
 		return documentoList;
 	}
