@@ -62,7 +62,7 @@ public class IniciarProcessoService implements Serializable {
         processoEpa.setNumeroProcesso(String.valueOf(processoEpa.getIdProcesso()));
         naturezaManager.lockNatureza(processoEpa.getNaturezaCategoriaFluxo().getNatureza());
         processoEpaManager.update(processoEpa);
-        pastaManager.createDefaultFolders(processoEpa);
+        pastaManager.getByProcesso(processoEpa);
     }
 
     private Long iniciarProcessoJbpm(ProcessoEpa processoEpa, String fluxo, Map<String, Object> variaveis) {
