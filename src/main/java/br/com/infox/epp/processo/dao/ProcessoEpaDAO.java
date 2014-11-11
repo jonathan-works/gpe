@@ -40,40 +40,39 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @AutoCreate
 @Name(ProcessoEpaDAO.NAME)
-public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
+public class ProcessoEpaDAO extends DAO<Processo> {
 
     private static final long serialVersionUID = 8899227886410190168L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoEpaDAO.class);
     public static final String NAME = "processoEpaDAO";
 
-    public List<ProcessoEpa> listAllNotEnded() {
+    public List<Processo> listAllNotEnded() {
         return getNamedResultList(LIST_ALL_NOT_ENDED);
     }
 
-    public List<ProcessoEpa> listNotEnded(Fluxo fluxo) {
+    public List<Processo> listNotEnded(Fluxo fluxo) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_FLUXO, fluxo);
         return getNamedResultList(LIST_NOT_ENDED_BY_FLUXO, parameters);
     }
 
-    public ProcessoEpa getProcessoEpaByProcesso(Processo processo) {
+    public Processo getProcessoEpaByProcesso(Processo processo) {
         return find(processo.getIdProcesso());
     }
 
-    private ProcessoEpa getProcessoEpaByIdJbpm(Long idJbpm) {
+    private Processo getProcessoEpaByIdJbpm(Long idJbpm) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_JBPM, idJbpm);
         return getNamedSingleResult(PROCESSO_EPA_BY_ID_JBPM, parameters);
     }
 
     public List<PessoaFisica> getPessoaFisicaList() {
-        ProcessoEpa pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+    	Processo pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
         List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
         for (ParticipanteProcesso participante : pe.getParticipantes()) {
             if (participante.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F)) {
@@ -84,7 +83,7 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
     }
 
     public List<PessoaJuridica> getPessoaJuridicaList() {
-        ProcessoEpa processo = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+    	Processo processo = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
         List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
         for (ParticipanteProcesso participante : processo.getParticipantes()) {
             if (participante.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.J)) {
@@ -99,7 +98,7 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
     }
 
     public boolean hasPartes(Long idJbpm) {
-        ProcessoEpa pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+    	Processo pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
         return (pe != null) && (pe.hasPartes());
     }
 
@@ -109,9 +108,9 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
      * permissão de inativar) se o processo possuir uma única parte ativa no
      * momento.
      * */
-    public Boolean podeInativarPartes(ProcessoEpa processoEpa) {
+    public Boolean podeInativarPartes(Processo processo) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(QUERY_PARAM_PROCESSO_EPA, processoEpa);
+        parameters.put(QUERY_PARAM_PROCESSO_EPA, processo);
         Long count = (Long) getNamedSingleResult(COUNT_PARTES_ATIVAS_DO_PROCESSO, parameters);
         return count != null && count.compareTo(1L) > 0;
     }
@@ -123,8 +122,8 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
     }
 
     @SuppressWarnings(UNCHECKED)
-    public Map<String, Object> getTempoGasto(ProcessoEpa processoEpa) {
-        Query q = getEntityManager().createQuery(TEMPO_GASTO_PROCESSO_EPP_QUERY).setParameter("idProcesso", processoEpa.getIdProcesso());
+    public Map<String, Object> getTempoGasto(Processo processo) {
+        Query q = getEntityManager().createQuery(TEMPO_GASTO_PROCESSO_EPP_QUERY).setParameter("idProcesso", processo.getIdProcesso());
         Map<String, Object> result = null;
         try {
             result = (Map<String, Object>) q.getSingleResult();
@@ -141,21 +140,20 @@ public class ProcessoEpaDAO extends DAO<ProcessoEpa> {
         return getNamedSingleResult(TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, parameters);
     }
 
-    public ProcessoEpa getProcessoEpaByNumeroProcesso(
-            final String numeroProcesso) {
+    public Processo getProcessoEpaByNumeroProcesso(String numeroProcesso) {
         final HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(NUMERO_PROCESSO, numeroProcesso);
         return getNamedSingleResult(GET_PROCESSO_BY_NUMERO_PROCESSO, parameters);
     }
     
     @Transactional
-    public ProcessoEpa persistProcessoComNumero(ProcessoEpa processoEpa) throws DAOException{
+    public Processo persistProcessoComNumero(Processo processo) throws DAOException{
     	try {
-    		processoEpa.setNumeroProcesso("");
-    		getEntityManager().persist(processoEpa);
-        	processoEpa.setNumeroProcesso(processoEpa.getIdProcesso().toString());
+    		processo.setNumeroProcesso("");
+    		getEntityManager().persist(processo);
+    		processo.setNumeroProcesso(processo.getIdProcesso().toString());
         	getEntityManager().flush();
-            return processoEpa;
+            return processo;
         } catch (Exception e) {
             throw new DAOException(e);
         } finally {

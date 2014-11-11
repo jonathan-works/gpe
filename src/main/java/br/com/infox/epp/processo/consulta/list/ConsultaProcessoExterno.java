@@ -8,12 +8,12 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 
 @Name(ConsultaProcessoExterno.NAME)
 @Scope(ScopeType.PAGE)
-public class ConsultaProcessoExterno extends EntityList<ProcessoEpa> {
+public class ConsultaProcessoExterno extends EntityList<Processo> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoExterno";

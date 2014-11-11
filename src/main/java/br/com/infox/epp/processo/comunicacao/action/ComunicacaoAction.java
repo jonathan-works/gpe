@@ -54,7 +54,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
@@ -173,7 +173,7 @@ public class ComunicacaoAction implements Serializable {
 		Long idModeloComunicacao = (Long) context.getVariable("idModeloComunicacao", taskToken);
 		if (idModeloComunicacao == null) {
 			this.modeloComunicacao = new ModeloComunicacao();
-			this.modeloComunicacao.setProcesso((ProcessoEpa) JbpmUtil.getProcesso());
+			this.modeloComunicacao.setProcesso((Processo) JbpmUtil.getProcesso());
 		} else {
 			this.modeloComunicacao = modeloComunicacaoManager.find(idModeloComunicacao);
 			setFinalizada(modeloComunicacao.getFinalizada() != null ? modeloComunicacao.getFinalizada() : false);

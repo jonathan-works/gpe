@@ -201,7 +201,7 @@ public class Processo implements Serializable {
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
     @OrderBy(value = "ds_caminho_absoluto")
     private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
-
+    
     public Integer getIdProcesso() {
 		return idProcesso;
 	}
@@ -218,12 +218,60 @@ public class Processo implements Serializable {
 		this.usuarioCadastroProcesso = usuarioCadastroProcesso;
 	}
 
+	public Localizacao getLocalizacao() {
+		return localizacao;
+	}
+
+	public void setLocalizacao(Localizacao localizacao) {
+		this.localizacao = localizacao;
+	}
+
 	public String getNumeroProcesso() {
 		return numeroProcesso;
 	}
 
 	public void setNumeroProcesso(String numeroProcesso) {
 		this.numeroProcesso = numeroProcesso;
+	}
+
+	public Integer getTempoGasto() {
+		return tempoGasto;
+	}
+
+	public void setTempoGasto(Integer tempoGasto) {
+		this.tempoGasto = tempoGasto;
+	}
+
+	public Integer getPorcentagem() {
+		return porcentagem;
+	}
+
+	public void setPorcentagem(Integer porcentagem) {
+		this.porcentagem = porcentagem;
+	}
+
+	public Item getItemDoProcesso() {
+		return itemDoProcesso;
+	}
+
+	public void setItemDoProcesso(Item itemDoProcesso) {
+		this.itemDoProcesso = itemDoProcesso;
+	}
+
+	public PrioridadeProcesso getPrioridadeProcesso() {
+		return prioridadeProcesso;
+	}
+
+	public void setPrioridadeProcesso(PrioridadeProcesso prioridadeProcesso) {
+		this.prioridadeProcesso = prioridadeProcesso;
+	}
+
+	public SituacaoPrazoEnum getSituacaoPrazo() {
+		return situacaoPrazo;
+	}
+
+	public void setSituacaoPrazo(SituacaoPrazoEnum situacaoPrazo) {
+		this.situacaoPrazo = situacaoPrazo;
 	}
 
 	public Date getDataInicio() {
@@ -270,7 +318,8 @@ public class Processo implements Serializable {
 		return naturezaCategoriaFluxo;
 	}
 
-	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
+	public void setNaturezaCategoriaFluxo(
+			NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
 		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
 	}
 
@@ -282,21 +331,25 @@ public class Processo implements Serializable {
 		this.processoTarefaList = processoTarefaList;
 	}
 
-    public List<Documento> getDocumentoList() {
+	public List<Documento> getDocumentoList() {
 		return documentoList;
 	}
-    
-    public void setDocumentoList(List<Documento> documentoList) {
+
+	public void setDocumentoList(List<Documento> documentoList) {
 		this.documentoList = documentoList;
 	}
-    
-    public List<ParticipanteProcesso> getParticipantes() {
+
+	public List<ParticipanteProcesso> getParticipantes() {
 		return participantes;
 	}
-    
-    public void setParticipantes(List<ParticipanteProcesso> participantes) {
+
+	public void setParticipantes(List<ParticipanteProcesso> participantes) {
 		this.participantes = participantes;
 	}
+
+	public boolean hasPartes(){
+    	return true;
+    }
 
 	@Override
     public String toString() {

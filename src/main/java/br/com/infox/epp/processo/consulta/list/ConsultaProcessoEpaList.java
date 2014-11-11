@@ -11,12 +11,12 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Name(ConsultaProcessoEpaList.NAME)
 @Scope(ScopeType.PAGE)
 @AutoCreate
-public class ConsultaProcessoEpaList extends EntityList<ProcessoEpa> {
+public class ConsultaProcessoEpaList extends EntityList<Processo> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoEpaList";

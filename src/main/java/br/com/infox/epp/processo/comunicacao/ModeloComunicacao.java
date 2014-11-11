@@ -24,7 +24,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
 @Table(name = "tb_modelo_comunicacao")
@@ -60,7 +60,7 @@ public class ModeloComunicacao implements Serializable {
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_processo_epa", nullable = false)
-	private ProcessoEpa processo;
+	private Processo processo;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_localizacao_resp_assinat", nullable = false)
@@ -152,14 +152,14 @@ public class ModeloComunicacao implements Serializable {
 		this.documentos = documentos;
 	}
 	
-	public ProcessoEpa getProcesso() {
+	public Processo getProcesso() {
 		return processo;
 	}
-	
-	public void setProcesso(ProcessoEpa processo) {
+
+	public void setProcesso(Processo processo) {
 		this.processo = processo;
 	}
-	
+
 	public Boolean getExpedida() {
 		return expedida;
 	}

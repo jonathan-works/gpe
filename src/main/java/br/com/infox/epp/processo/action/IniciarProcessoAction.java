@@ -34,7 +34,7 @@ import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -53,7 +53,7 @@ public class IniciarProcessoAction implements Serializable {
     private boolean renderizarCadastroPartes;
     private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
     private Item itemDoProcesso;
-    private ProcessoEpa processoEpa;
+    private Processo processo;
     private List<ItemBean> itemList;
 
     private String viewId;
@@ -63,21 +63,27 @@ public class IniciarProcessoAction implements Serializable {
         enviarProcessoParaJbpm();
     }
     
-    public void iniciarProcesso(ProcessoEpa processoEpa) {
-    	setProcessoEpa(processoEpa);
-    	getProcessoEpa().setItemDoProcesso(itemDoProcesso);
+    public void iniciarProcesso(Processo processo) {
+    	setProcesso(processo);
+    	getProcesso().setItemDoProcesso(itemDoProcesso);
     	enviarProcessoParaJbpm();
     }
     
     public void newProcessoEpa() {
 		final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
         final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-        processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
+        processo = new Processo();
+        processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        processo.setNumeroProcesso("");
+        processo.setUsuarioCadastroProcesso(usuarioLogado);
+        processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
+        processo.setLocalizacao(localizacao);
+        processo.setItemDoProcesso(itemDoProcesso);
     }
 
     private void enviarProcessoParaJbpm() {
         try {
-            iniciarProcessoService.iniciarProcesso(processoEpa);
+            iniciarProcessoService.iniciarProcesso(processo);
             getMessagesHandler().add("Processo inserido com sucesso!");
         } catch (TypeMismatchException tme) {
             sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);
@@ -144,7 +150,7 @@ public class IniciarProcessoAction implements Serializable {
             final Redirect redirect = Redirect.instance();
             redirect.setViewId("/Processo/movimentar.seam");
             redirect.setParameter("cid", Conversation.instance().getId());
-            redirect.setParameter("idProcesso", getProcessoEpa().getIdProcesso());
+            redirect.setParameter("idProcesso", getProcesso().getIdProcesso());
             redirect.execute();
         }
     }
@@ -170,15 +176,15 @@ public class IniciarProcessoAction implements Serializable {
         this.renderedByItem = renderedByItem;
     }
 
-    public void setProcessoEpa(final ProcessoEpa processoEpa) {
-        this.processoEpa = processoEpa;
-    }
+    public Processo getProcesso() {
+		return processo;
+	}
 
-    public ProcessoEpa getProcessoEpa() {
-        return processoEpa;
-    }
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+	}
 
-    public List<ItemBean> getItemList() {
+	public List<ItemBean> getItemList() {
         return itemList;
     }
 
