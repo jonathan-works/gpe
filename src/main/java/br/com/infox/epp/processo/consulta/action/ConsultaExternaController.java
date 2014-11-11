@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 
 @Scope(ScopeType.CONVERSATION)
@@ -24,19 +24,19 @@ public class ConsultaExternaController extends AbstractController {
     @In
     private DocumentoManager documentoManager;
 
-    private ProcessoEpa processoEpa;
+    private Processo processo;
+    
+    public Processo getProcesso() {
+		return processo;
+	}
 
-    public ProcessoEpa getProcessoEpa() {
-        return processoEpa;
-    }
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+	}
 
-    public void setProcessoEpa(ProcessoEpa processoEpa) {
-        this.processoEpa = processoEpa;
-    }
-
-    public void selectProcesso(ProcessoEpa processoEpa) {
+	public void selectProcesso(Processo processo) {
         setTab(TAB_VIEW);
-        setProcessoEpa(processoEpa);
+        setProcesso(processo);
     }
 
     public List<Documento> getAnexosPublicos(ProcessoTarefa processoTarefa) {
@@ -44,10 +44,10 @@ public class ConsultaExternaController extends AbstractController {
     }
 
     public void onClickSearchNumeroTab() {
-        setProcessoEpa(null);
+        setProcesso(null);
     }
 
     public void onClickSearchParteTab() {
-        setProcessoEpa(null);
+        setProcesso(null);
     }
 }

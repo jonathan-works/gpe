@@ -42,7 +42,7 @@ public class ParticipanteProcessoTreeHandler extends AbstractTreeHandler<Partici
     	if (controller == null){
     		controller = (ParticipantesProcessoController) Component.getInstance(ParticipantesProcessoController.class, false);
     	}
-    	return controller.getProcessoEpa().getIdProcesso();
+    	return controller.getProcesso().getIdProcesso();
     }
 
 }

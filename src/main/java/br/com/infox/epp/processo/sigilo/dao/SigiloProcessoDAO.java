@@ -12,7 +12,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 
 @Name(SigiloProcessoDAO.NAME)
@@ -23,9 +23,9 @@ public class SigiloProcessoDAO extends DAO<SigiloProcesso> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "sigiloProcessoDAO";
 
-    public SigiloProcesso getSigiloProcessoAtivo(ProcessoEpa processoEpa) {
+    public SigiloProcesso getSigiloProcessoAtivo(Processo processo) {
         Map<String, Object> params = new HashMap<>();
-        params.put(QUERY_PARAM_PROCESSO, processoEpa);
+        params.put(QUERY_PARAM_PROCESSO, processo);
         return getNamedSingleResult(NAMED_QUERY_SIGILO_PROCESSO_ATIVO, params);
     }
 }

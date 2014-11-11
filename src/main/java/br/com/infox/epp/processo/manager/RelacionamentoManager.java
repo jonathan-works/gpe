@@ -9,7 +9,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.processo.dao.RelacionamentoDAO;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Relacionamento;
 
 @AutoCreate
@@ -19,7 +19,7 @@ public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionam
     public static final String NAME = "relacionamentoManager";
     private static final long serialVersionUID = 1L;
 
-    public Relacionamento getRelacionamentoByProcesso(final ProcessoEpa processo) {
+    public Relacionamento getRelacionamentoByProcesso(Processo processo) {
         Relacionamento relacionamento = null;
         if (processo != null) {
             relacionamento = getDao().getRelacionamentoByProcesso(processo);

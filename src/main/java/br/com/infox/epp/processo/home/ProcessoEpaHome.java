@@ -27,7 +27,6 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -45,9 +44,9 @@ import br.com.itx.component.AbstractHome;
 @Deprecated
 @Name(ProcessoEpaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
-public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
+public class ProcessoEpaHome extends AbstractHome<Processo> {
 	
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoEpa.class);
+    private static final LogProvider LOG = Logging.getLogProvider(Processo.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoEpaHome";
 
@@ -286,8 +285,8 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
     }
 
     @Override
-    protected ProcessoEpa createInstance() {
-        ProcessoEpa processoEpa = super.createInstance();
+    protected Processo createInstance() {
+    	Processo processoEpa = super.createInstance();
         processoEpa.setUsuarioCadastroProcesso(Authenticator.getUsuarioLogado());
         return processoEpa;
     }
@@ -300,7 +299,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
     }
 
     @Override
-    public String remove(ProcessoEpa obj) {
+    public String remove(Processo obj) {
         setInstance(obj);
         String ret = super.remove();
         newInstance();
@@ -308,7 +307,7 @@ public class ProcessoEpaHome extends AbstractHome<ProcessoEpa> {
     }
 
     public List<Documento> getProcessoDocumentoList() {
-        return getInstance() == null ? null : getInstance().getProcessoEpa().getDocumentoList();
+        return getInstance() == null ? null : getInstance().getDocumentoList();
     }
 
     public boolean hasPartes() {

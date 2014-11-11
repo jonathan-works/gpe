@@ -36,7 +36,6 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
 @Table(name = ParticipanteProcesso.TABLE_NAME)
@@ -127,7 +126,7 @@ public class ParticipanteProcesso implements Serializable {
         return processo;
     }
 
-    public void setProcesso(ProcessoEpa processo) {
+    public void setProcesso(Processo processo) {
         this.processo = processo;
     }
 

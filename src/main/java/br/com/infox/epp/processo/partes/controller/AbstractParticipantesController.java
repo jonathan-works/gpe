@@ -21,7 +21,6 @@ import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
@@ -50,7 +49,7 @@ public abstract class AbstractParticipantesController implements Serializable {
     protected ActionMessagesService actionMessagesService;
     
     private ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
-    private ProcessoEpa processoEpa;
+    private Processo processo;
     private TipoPessoaEnum tipoPessoa = TipoPessoaEnum.F;
     private String email;
     private MeioContato meioContato;
@@ -113,7 +112,7 @@ public abstract class AbstractParticipantesController implements Serializable {
     
     public void includeParticipanteProcesso(){
 		try {
-			getParticipanteProcesso().setProcesso(getProcessoEpa());
+			getParticipanteProcesso().setProcesso(getProcesso());
 	    	existeParticipante(getParticipanteProcesso());
 	    	if (getParticipanteProcesso().getPessoa().getTipoPessoa() == TipoPessoaEnum.F) {
 	    		pessoaFisicaManager.persist((PessoaFisica) getParticipanteProcesso().getPessoa());
@@ -122,7 +121,7 @@ public abstract class AbstractParticipantesController implements Serializable {
 	    		pessoaJuridicaManager.persist((PessoaJuridica) getParticipanteProcesso().getPessoa());
 	    	}
 		    participanteProcessoManager.persist(getParticipanteProcesso());
-		    processoEpaManager.refresh(getProcessoEpa());
+		    processoEpaManager.refresh(getProcesso());
 		    participanteProcessoManager.flush();
 		} catch (DAOException e) {
 		    actionMessagesService.handleDAOException(e);
@@ -188,12 +187,12 @@ public abstract class AbstractParticipantesController implements Serializable {
 		this.email = email;
 	}
 
-	public ProcessoEpa getProcessoEpa() {
-		return processoEpa;
+	public Processo getProcesso() {
+		return processo;
 	}
 
-	public void setProcessoEpa(ProcessoEpa processoEpa) {
-		this.processoEpa = processoEpa;
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
 	}
 
 	public TipoPessoaEnum getTipoPessoa() {
