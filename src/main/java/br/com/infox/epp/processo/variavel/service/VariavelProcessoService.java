@@ -17,7 +17,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 
 @Name(VariavelProcessoService.NAME)
@@ -31,8 +31,8 @@ public class VariavelProcessoService {
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 
     @SuppressWarnings(UNCHECKED)
-    public List<VariavelProcesso> getVariaveis(ProcessoEpa processoEpa) {
-        ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoEpa.getIdJbpm());
+    public List<VariavelProcesso> getVariaveis(Processo processo) {
+        ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
         ContextInstance contextInstance = processInstance.getContextInstance();
         List<VariavelProcesso> variaveis = new ArrayList<>();
         Map<String, Object> jbpmVariables = contextInstance.getVariables();
@@ -40,7 +40,7 @@ public class VariavelProcessoService {
         for (String variableName : jbpmVariables.keySet()) {
             if (variableName != null) {
                 DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager
-                        .getDefinicao(processoEpa.getNaturezaCategoriaFluxo().getFluxo(), variableName);
+                        .getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), variableName);
 
                 if (definicao != null && definicao.getVisivel()) {
                     variaveis.add(buildVariavelProcesso(definicao, processInstance));
@@ -57,8 +57,7 @@ public class VariavelProcessoService {
         contextInstance.setVariable(variavel.getNome(), variavel.getValor());
     }
 
-    public VariavelProcesso getVariavelProcesso(ProcessoEpa processo,
-            String nome) {
+    public VariavelProcesso getVariavelProcesso(Processo processo, String nome) {
         ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
         DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
         return buildVariavelProcesso(definicao, processInstance);

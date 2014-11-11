@@ -30,7 +30,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
 @Table(name = UnidadeDecisoraMonocratica.TABLE_NAME)
@@ -64,9 +63,6 @@ public class UnidadeDecisoraMonocratica implements Serializable {
     @OrderBy("unidadeDecisoraColegiada ASC")
     private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 
-	@OneToMany(mappedBy="decisoraMonocratica", fetch=FetchType.LAZY)
-	private List<ProcessoEpa> processoEpaList;
-	
 	public Integer getIdUnidadeDecisoraMonocratica() {
 		return idUnidadeDecisoraMonocratica;
 	}
@@ -115,14 +111,6 @@ public class UnidadeDecisoraMonocratica implements Serializable {
             unidadeDecisoraColegiadaList.add(colegiadaMonocratica.getUnidadeDecisoraColegiada());
         }
         return unidadeDecisoraColegiadaList;
-    }
-
-    public List<ProcessoEpa> getProcessoEpaList() {
-        return processoEpaList;
-    }
-
-    public void setProcessoEpaList(List<ProcessoEpa> processoEpaList) {
-        this.processoEpaList = processoEpaList;
     }
 
     @Override
