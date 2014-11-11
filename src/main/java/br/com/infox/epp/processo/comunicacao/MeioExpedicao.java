@@ -27,7 +27,7 @@ public enum MeioExpedicao implements Displayable {
 	 */
 	public static MeioExpedicao[] getValues(boolean hasTermoAdesao) {
 		if (hasTermoAdesao) {
-			order(values());
+			return order(values());
 		}
 		return order(new MeioExpedicao[] {EM, DO, IM});
 	}
