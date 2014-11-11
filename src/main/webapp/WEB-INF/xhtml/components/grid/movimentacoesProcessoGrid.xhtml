@@ -29,13 +29,13 @@
         <f:facet name="header">#{eppmessages['localizacao.localizacao']} / #{eppmessages['usuario.usuario']}</f:facet>
         <div>
           <h:graphicImage
-            url="#{a4jSkin.imgFolder}/localizacao.gif"
+            url="#{wiSkin.imageFolder}/localizacao.gif"
             rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
           <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
         </div>
         <s:div id="usuarioTarefaDiv">
           <h:graphicImage
-            url="#{a4jSkin.imgFolder}/usuario.gif"
+            url="#{wiSkin.imageFolder}/usuario.gif"
             rendered="#{!empty userHandler.getNomeUsuarioByTarefa(task)}" />
           <h:outputText
             value="#{userHandler.getNomeUsuarioByTarefa(task)} " />
@@ -48,7 +48,7 @@
             oncomplete="close()"
             rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
             <h:graphicImage
-              url="#{a4jSkin.imgFolder}/unlocked.gif"
+              url="#{wiSkin.imageFolder}/unlocked.gif"
               title="#{eppmessages['movimentar.liberarTarefa']}" />
           </a:commandLink>
         </s:div>
@@ -71,14 +71,14 @@
           target="_blank"
           rendered="#{processoHandler.taskDocumentList.contains(task)}"
           view="/Processo/Consulta/paginator.seam">
-          <h:graphicImage url="#{a4jSkin.imgFolder}/view.png" />
+          <h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
           <f:param
             name="inicio"
             value="#{key + 1}" />
         </s:link>
         <h:graphicImage
           rendered="#{!empty processoHandler.getAnexos(task)}"
-          url="#{a4jSkin.imgFolder}/anexo.png" />
+          url="#{wiSkin.imageFolder}/anexo.png" />
       </rich:column>
     </rich:dataTable>
   </rich:panel>

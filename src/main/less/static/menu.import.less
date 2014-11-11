@@ -1,5 +1,3 @@
-@import "epp-mixins.less";
-
 @menu-bg-color:#a0c991;
 @menu-txt-color:#030;
 @default-font-family:Arial;
@@ -44,11 +42,19 @@
   min-width:100%;
   z-index:1;
 }
+
+.menu-lnk, .menu-itm-lbl {
+  font-size:14rem/16;
+}
+
 .menu-lnk {
   color: @menu-txt-color;
   text-decoration:none;
   font-family:@default-font-family;
   display:block;
+  &:hover{
+    color: @menu-bg-color;
+  }
 }
 
 .menu-itm-lbl{

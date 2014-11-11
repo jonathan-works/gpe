@@ -40,7 +40,7 @@
     	<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
 		    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
 			  	rendered="#{not empty home.documentosAssinaveis[id].classificacao.observacao and not (readonly or home.possuiAssinatura(id))}">
-			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{a4jSkin.imgFolder}/help.gif" />
+			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif" />
 				<div class="epp-tooltip">
 					<div class="tooltip-panel">
 						<div><h:outputText value="Observação:"/></div>

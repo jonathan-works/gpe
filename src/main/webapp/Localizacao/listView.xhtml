@@ -34,8 +34,8 @@
             id="localizacaoPai"
             assignTo="localizacaoList.entity.localizacaoPai"
             tree="#{localizacaoTree}"
-            icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-            iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+            icon="#{wiSkin.imageFolder}/nivelTree.gif"
+            iconLeaf="#{wiSkin.imageFolder}/file.gif"
             label="#{eppmessages['localizacao.localizacaoPai']}" />
           <wi:selectSituacaoOneMenu
             id="ativo"
@@ -44,7 +44,7 @@
         </wi:searchForm>
       </ui:define>
       <wi:columnOutputText
-        styleClass="width-5"
+        styleClass="rf-tr"
         hideOrder="true"
         columnId="codigo"
         columnHeader="#{eppmessages['localizacao.codigo']}"
@@ -88,8 +88,8 @@
         id="localizacaoPai"
         assignTo="localizacaoCrudAction.localizacaoPai"
         tree="#{localizacaoTree}"
-        icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-        iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+        icon="#{wiSkin.imageFolder}/nivelTree.gif"
+        iconLeaf="#{wiSkin.imageFolder}/file.gif"
         required="true"
         rendered="#{isEditable}"
         label="#{eppmessages['localizacao.localizacaoPai']}" />

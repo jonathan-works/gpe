@@ -27,7 +27,7 @@
         </rich:dragIndicator>
       </rich:dragSource>
 
-      <h:graphicImage url="#{a4jSkin.imgFolder}/annotate.gif" title="#{eppmessages['caixa.moverCaixa']}" />
+      <h:graphicImage url="#{wiSkin.imageFolder}/annotate.gif" title="#{eppmessages['caixa.moverCaixa']}" />
 
     </a:outputPanel>
 
@@ -38,7 +38,7 @@
 
       <f:param name="tarefaId" value="#{tarefaId}" />
 
-      <h:graphicImage url="#{a4jSkin.imgFolder}/view.png" />
+      <h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
 
     </a:commandLink>
 
@@ -50,7 +50,7 @@
 
       <f:param name="tarefaId" value="#{tarefaId}" />
 
-      <h:graphicImage url="#{a4jSkin.imgFolder}/mod/edit.png" />
+      <h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.png" />
 
     </a:commandLink>
 
@@ -63,11 +63,11 @@
 
       <f:param name="tarefaId" value="#{tarefaId}" />
 
-      <h:graphicImage url="#{a4jSkin.imgFolder}/processAssigned.png" />
+      <h:graphicImage url="#{wiSkin.imageFolder}/processAssigned.png" />
 
     </a:commandLink>
 
-    <h:graphicImage url="#{a4jSkin.imgFolder}/role.gif"
+    <h:graphicImage url="#{wiSkin.imageFolder}/role.gif"
       rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and !authenticator.isUsuarioAtualResponsavel())}"
       title="Processo bloqueado pelo servidor #{owner}" />
 
@@ -77,7 +77,7 @@
       onclick="return confirm(\'#{eppmessages['movimentar.confirmLiberarTarefa']}\');"
       limitRender="true"
       rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and authenticator.isUsuarioAtualResponsavel())}">
-      <h:graphicImage url="#{a4jSkin.imgFolder}/role.gif"
+      <h:graphicImage url="#{wiSkin.imageFolder}/role.gif"
         title="#{eppmessages['painel.list.liberarTarefaServidor']} #{owner}" />
     </a:commandLink>
   </h:form>

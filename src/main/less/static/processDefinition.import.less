@@ -1,8 +1,6 @@
-@import "epp-mixins.less";
-
-@menu-bg-color:#a0c991;
-@menu-txt-color:#030;
-@expr-wiz-Transition-color:#44F;
+@expr-wiz-toolbar-bg-color:#a0c991;
+@expr-wiz-toolbar-color:#030;
+@expr-wiz-Transition-color:#88F;
 @expr-wiz-String-color:#66F;
 @expr-wiz-Boolean-color:#A00;
 @expr-wiz-Arith-color:#040;
@@ -107,8 +105,8 @@
   left:0;
   margin:0;
   padding:0 10px 0 0;
-  background-color:@menu-bg-color;
-  color:@menu-txt-color;
+  background-color:@expr-wiz-toolbar-bg-color;
+  color:@expr-wiz-toolbar-color;
   & > .toolbar-itm {
     display:block;
     vertical-align:top;
@@ -133,18 +131,13 @@
   }
 }
 
-.Selected {
-  color:@menu-bg-color;
-  background-color:@menu-txt-color;
-}
-
 .toolbar-itm {
   &.Action{
-  white-space:nowrap;
+    white-space:nowrap;
     &:hover {
       cursor:context-menu;
-      color:@menu-txt-color;
-      background-color:@menu-bg-color;
+      color:@expr-wiz-toolbar-bg-color;
+      background-color:@expr-wiz-toolbar-color;
     }
   }
 }

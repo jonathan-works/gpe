@@ -44,7 +44,7 @@
                     </ui:define>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
-                        <wi:toolBar url="#{a4jSkin.imgFolder}/view.png"
+                        <wi:toolBar url="#{wiSkin.imageFolder}/view.png"
                             title="#{eppmessages['button.selecionar']}"
                             action="#{processoSearcher.visualizarProcesso(row)}">
                         </wi:toolBar>
@@ -57,7 +57,7 @@
                             oncomplete="#{rich:component('prioridadeProcessoPanel')}.show()">
                             <h:graphicImage
                                 title="#{eppmessages['prioridadeProcesso.select']}"
-                                url="#{a4jSkin.imgFolder}/priority.gif" />
+                                url="#{wiSkin.imageFolder}/priority.gif" />
                         </a:commandLink>
                     </ui:define>
 
@@ -92,7 +92,7 @@
             <f:facet name="controls">
                 <h:panelGroup>
                     <h:graphicImage
-                        value="#{a4jSkin.imgFolder}/closeMP.gif"
+                        value="#{wiSkin.imageFolder}/closeMP.gif"
                         onclick="#{rich:component('prioridadeProcessoPanel')}.hide()" />
                 </h:panelGroup>
             </f:facet>

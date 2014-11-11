@@ -26,11 +26,11 @@
                     rendered="#{row.ativo and participantesProcessoController.podeInativarPartes(row.pessoa.tipoPessoa)}"
                     action="#{participanteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv"
-                    url="#{a4jSkin.imgFolder}/remove.png" id="ativo" />
+                    url="#{wiSkin.imageFolder}/remove.png" id="ativo" />
                 <wi:toolBar
                     rendered="#{not row.ativo and participantesProcessoController.podeAdicionarPartes(row.pessoa.tipoPessoa)}"
                     action="#{participanteProcessoCrudAction.setInstance(row)}"
-                    reRender="parteProcessoListDiv" url="#{a4jSkin.imgFolder}/stock_undelete.png"
+                    reRender="parteProcessoListDiv" url="#{wiSkin.imageFolder}/stock_undelete.png"
                     id="inativo" />
             </ui:define>
             <wi:columnOutputTextIdent columnId="pessoa.nome"

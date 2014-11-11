@@ -40,14 +40,14 @@
                   </ui:include>
                 </ul>
               </h:panelGroup> <h:panelGroup rendered="#{not empty drop.url}">
-                <h:commandLink
-                  styleClass="menu-lnk"
-                  action="#{drop.url}">
-                  <div class="menu-lbl">
-                    <h:outputText value="#{drop.label}" />
-                  </div>
-                  <s:conversationPropagation type="end" />
-                </h:commandLink>
+                <div class="menu-itm-lbl">
+                  <h:commandLink
+                    styleClass="menu-lnk"
+                    action="#{drop.url}">
+                      <h:outputText value="#{drop.label}" />
+                    <s:conversationPropagation type="end" />
+                  </h:commandLink>
+                </div>
               </h:panelGroup></li>
           </c:forEach>
         </c:if>
