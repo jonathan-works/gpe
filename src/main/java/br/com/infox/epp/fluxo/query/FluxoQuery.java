@@ -29,6 +29,10 @@ public interface FluxoQuery {
     String FLUXO_BY_DESCRICAO_QUERY = "select o from Fluxo o where o.fluxo like :"
             + PARAM_DESCRICAO;
 
+    String FLUXO_BY_CODIGO = "fluxoByNome";
+    String FLUXO_BY_CODIGO_QUERY = "select o from Fluxo o where o.codFluxo = :"
+            + PARAM_NOME;
+    
     String FLUXO_BY_NOME = "fluxoByNome";
     String FLUXO_BY_NOME_QUERY = "select o from Fluxo o where o.fluxo = :"
             + PARAM_NOME;

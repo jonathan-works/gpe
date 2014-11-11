@@ -4,6 +4,7 @@ import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_DESCRICAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_BY_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_CODIGO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICACAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.LIST_ATIVOS;
@@ -54,6 +55,12 @@ public class FluxoDAO extends DAO<Fluxo> {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_DESCRICAO, descricao);
         return getNamedSingleResult(FLUXO_BY_DESCRICACAO, parameters);
+    }
+    
+    public Fluxo getFluxoByCodigo(String codigo) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_CODIGO, codigo);
+        return getNamedSingleResult(FLUXO_BY_CODIGO, parameters);
     }
 
     public Fluxo getFluxoByName(String nomeFluxo) {

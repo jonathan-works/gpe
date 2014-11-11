@@ -47,6 +47,10 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         return getDao().getFluxoByDescricao(descricao);
     }
 
+    public Fluxo getFluxoByCodigo(final String codigo) {
+        return getDao().getFluxoByCodigo(codigo);
+    }
+    
     public boolean existemProcessosAssociadosAFluxo(final Fluxo fluxo) {
         return getDao().getQuantidadeDeProcessoAssociadosAFluxo(fluxo) > 0;
     }

@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.comunicacao.action;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -33,7 +34,9 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -99,11 +102,14 @@ public class ComunicacaoAction implements Serializable {
 	private DocumentoBinManager documentoBinManager;
 	@In
 	private GenericManager genericManager;
+	@In
+	private ModeloDocumentoManager modeloDocumentoManager;
 	
 	private ModeloComunicacao modeloComunicacao;
 	
 	private List<TipoComunicacao> tiposComunicacao;
 	private List<ClassificacaoDocumento> classificacoes;
+	private List<ModeloDocumento> modelosDocumento;
 	
 	private Localizacao localizacao;
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
@@ -111,6 +117,7 @@ public class ComunicacaoAction implements Serializable {
 	private String textoComunicacao;
 	private String certChain;
 	private String signature;
+	private boolean adicionarDestinatarioRelator;
 	
 	@Create
 	public void init() {
@@ -147,9 +154,13 @@ public class ComunicacaoAction implements Serializable {
 			documentoComunicacaoList.adicionarIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
 		}
 		
+		PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getDestinatario() != null) {
 				participanteProcessoComunicacaoList.adicionarIdPessoa(destinatario.getDestinatario().getIdPessoa());
+				if (relator != null && !adicionarDestinatarioRelator && relator.equals(destinatario.getDestinatario())) {
+					adicionarDestinatarioRelator = true;
+				}
 			} else if (destinatario.getLocalizacaoDestinataria() != null) {
 				idsLocalizacoesSelecionadas.add(destinatario.getLocalizacaoDestinataria().getIdLocalizacao());
 			}
@@ -325,6 +336,9 @@ public class ComunicacaoAction implements Serializable {
 		modeloComunicacao.getDestinatarios().remove(destinatario);
 		if (destinatario.getDestinatario() != null) {
 			participanteProcessoComunicacaoList.removerIdPessoa(destinatario.getDestinatario().getIdPessoa());
+			if (adicionarDestinatarioRelator && destinatario.getDestinatario().equals(modeloComunicacao.getProcesso().getRelator())) {
+				adicionarDestinatarioRelator = false;
+			}
 		} else if (destinatario.getLocalizacaoDestinataria() != null) {
 			idsLocalizacoesSelecionadas.remove(destinatario.getLocalizacaoDestinataria().getIdLocalizacao());
 		}
@@ -351,6 +365,39 @@ public class ComunicacaoAction implements Serializable {
 		Papel papel = perfil.getPerfilTemplate().getPapel();
 		UsuarioLogin usuario = perfil.getUsuarioLogin();
 		return assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), modeloComunicacao.getComunicacao(), usuario);
+	}
+	
+	public void assignModeloDocumento() {
+		if (modeloComunicacao.getModeloDocumento() == null) {
+			textoComunicacao = "";
+			return;
+		}
+		textoComunicacao = modeloComunicacao.getModeloDocumento().getModeloDocumento();
+	}
+	
+	public void gerenciarRelator() {
+		PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
+		if (adicionarDestinatarioRelator) {
+			DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
+			destinatario.setDestinatario(relator);
+			destinatario.setModeloComunicacao(modeloComunicacao);
+			modeloComunicacao.getDestinatarios().add(destinatario);
+			participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
+		} else {
+			Iterator<DestinatarioModeloComunicacao> it = modeloComunicacao.getDestinatarios().iterator();
+			while (it.hasNext()) {
+				DestinatarioModeloComunicacao destinatario = it.next();
+				if (destinatario.getDestinatario() != null && destinatario.getDestinatario().equals(relator)) {
+					it.remove();
+					participanteProcessoComunicacaoList.removerIdPessoa(relator.getIdPessoa());
+					break;
+				}
+			}
+		}
+	}
+	
+	public String getLink(DocumentoBin documento) {
+		return documentoBinManager.getUrlValidacaoDocumento(documento);
 	}
 	
 	public MeioExpedicao[] getMeiosExpedicao(DestinatarioModeloComunicacao destinatario) {
@@ -432,5 +479,20 @@ public class ComunicacaoAction implements Serializable {
 	
 	public ModeloComunicacao getModeloComunicacao() {
 		return modeloComunicacao;
+	}
+	
+	public List<ModeloDocumento> getModelosDocumento() {
+		if (modelosDocumento == null) {
+			modelosDocumento = modeloDocumentoManager.getModeloDocumentoList();
+		}
+		return modelosDocumento;
+	}
+
+	public boolean isAdicionarDestinatarioRelator() {
+		return adicionarDestinatarioRelator;
+	}
+	
+	public void setAdicionarDestinatarioRelator(boolean adicionarDestinatarioRelator) {
+		this.adicionarDestinatarioRelator = adicionarDestinatarioRelator;
 	}
 }

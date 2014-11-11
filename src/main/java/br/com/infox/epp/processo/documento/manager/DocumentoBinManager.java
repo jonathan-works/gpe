@@ -129,4 +129,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     private String getUrlValidacaoDocumento() {
         return pathResolver.getUrlProject() + "/validaDoc.seam";
     }
+    
+    public String getUrlValidacaoDocumento(DocumentoBin documento) {
+    	return getUrlValidacaoDocumento() + "?cod=" + documento.getUuid();
+    }
 }

@@ -39,7 +39,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
@@ -60,7 +60,7 @@ public class NaturezaCategoriaFluxo implements Serializable {
     private Categoria categoria;
     private Fluxo fluxo;
 
-    private List<ProcessoEpa> processoEpaList = new ArrayList<ProcessoEpa>(0);
+    private List<Processo> processoEpaList = new ArrayList<>(0);
 
     private List<NatCatFluxoLocalizacao> natCatFluxoLocalizacaoList = new ArrayList<NatCatFluxoLocalizacao>(0);
 
@@ -162,12 +162,12 @@ public class NaturezaCategoriaFluxo implements Serializable {
         return true;
     }
 
-    public void setProcessoEpaList(List<ProcessoEpa> processoEpaList) {
+    public void setProcessoEpaList(List<Processo> processoEpaList) {
         this.processoEpaList = processoEpaList;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE)
-    public List<ProcessoEpa> getProcessoEpaList() {
+    public List<Processo> getProcessoEpaList() {
         return processoEpaList;
     }
 

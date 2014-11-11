@@ -61,6 +61,14 @@
 				</rich:dataTable>
 			</h:form>
 			<div />
+			<h:form rendered="#{not empty comunicacaoAction.modeloComunicacao.processo.relator}">
+				<wi:selectBooleanCheckbox id="relator" label="Relator" disabled="#{comunicacaoAction.modeloComunicacao.finalizada}"
+					value="#{comunicacaoAction.adicionarDestinatarioRelator}">
+					<a:ajax event="change" render="destinatariosPanel" limitRender="true" execute="@this"
+						listener="#{comunicacaoAction.gerenciarRelator}"/>
+				</wi:selectBooleanCheckbox>
+			</h:form>
+			<div />
 			<h:form rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
 				<rich:collapsiblePanel header="#{eppmessages['comunicacao.participantesProcesso']}" switchType="client"
 					rendered="#{participanteProcessoComunicacaoList.resultCount gt 0}">
@@ -89,20 +97,29 @@
 			          tree="#{localizacaoSubTree}" icon="#{a4jSkin.imgFolder}/nivelTree.gif"
 			          iconLeaf="#{a4jSkin.imgFolder}/file.gif" label="#{eppmessages['localizacao.localizacao']}" 
 			          required="true"/>
-			        <wi:commandButton id="adicionarLocalizacao" reRender="destinatarios, pageBodyDialogMessage" value="Adicionar"
+			        <wi:commandButton id="adicionarLocalizacao" reRender="destinatariosPanel, pageBodyDialogMessage" value="Adicionar"
 			        	action="#{comunicacaoAction.adicionarLocalizacaoDestinataria(comunicacaoAction.localizacao)}" />
 				</rich:collapsiblePanel>
 			</h:form>
 		</rich:panel>
 		<h:form id="documentoComunicacaoForm">
-			<ui:include src="/WEB-INF/xhtml/components/comunicacao/textEditSignature.xhtml">
-				<ui:param name="id" value="comunicacao" />
-				<ui:param name="home" value="#{comunicacaoAction}" />
-				<ui:param name="formId" value="documentoComunicacaoForm" />
-				<ui:param name="readonly" value="#{comunicacaoAction.modeloComunicacao.finalizada}" />
-				<ui:param name="renderAfterSignature" value="comunicacaoDiv, :script" />
-			</ui:include>
-			<s:div id="documentos">
+			<s:div style="display: inline-block; vertical-align: top">
+				<wi:selectOneMenuEntity id="modeloDocumento" value="#{comunicacaoAction.modeloComunicacao.modeloDocumento}" 
+					label="#{eppmessages['modeloDocumento.modeloDocumento']}"
+					noSelectionLabel="[Selecione o modelo]" items="#{comunicacaoAction.modelosDocumento}"
+					rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
+					<a:ajax event="change" render="comunicacaoEditorDiv" execute="@this" limitRender="true"
+						listener="#{comunicacaoAction.assignModeloDocumento}"/>
+				</wi:selectOneMenuEntity>
+				<ui:include src="/WEB-INF/xhtml/components/comunicacao/textEditSignature.xhtml">
+					<ui:param name="id" value="comunicacao" />
+					<ui:param name="home" value="#{comunicacaoAction}" />
+					<ui:param name="formId" value="documentoComunicacaoForm" />
+					<ui:param name="readonly" value="#{comunicacaoAction.modeloComunicacao.finalizada}" />
+					<ui:param name="renderAfterSignature" value="comunicacaoDiv, :script" />
+				</ui:include>
+			</s:div>
+			<s:div id="documentos" style="display: inline-block; vertical-align: top; margin-top: 116px">
 				<wi:dataTable id="documentosProcesso" values="#{documentoComunicacaoList.list(15)}" 
 					bean="#{documentoComunicacaoList}" showSearchForm="false" rowId="#{row.id}"
 					showGrid="#{not comunicacaoAction.modeloComunicacao.finalizada and documentoComunicacaoList.resultCount gt 0}">
@@ -129,8 +146,10 @@
 								rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
 								<h:graphicImage url="#{a4jSkin.imgFolder}/remove.png" title="#{eppmessages['button.delete']}" />
 							</a:commandLink>
-							<wi:toolBar url="#{a4jSkin.imgFolder}/link.gif" title="#{eppmessages['button.copiarLink']}" 
-								id="copiarLink" /> 
+							<a:commandLink
+								onclick="infox.editor['comunicacaoEditor'].insertText('#{comunicacaoAction.getLink(row.documento.documentoBin)}')">
+								<h:graphicImage url="#{a4jSkin.imgFolder}/link.gif" title="#{eppmessages['button.copiarLink']}" />
+							</a:commandLink> 
 						</h:form>
 					</rich:column>
 					<rich:column>
@@ -139,11 +158,11 @@
 					</rich:column>
 				</rich:dataTable>
 			</s:div>
-			<wi:selectBooleanCheckbox id="finalizada" label="#{eppmessages['comunicacao.finalizada']}" 
-				value="#{comunicacaoAction.finalizada}" disabled="#{comunicacaoAction.modeloComunicacao.finalizada}">
-				<a:ajax event="change" execute="@this" render="responsaveisAssinatura" />
-			</wi:selectBooleanCheckbox>
 			<s:div id="responsaveisAssinatura">
+				<wi:selectBooleanCheckbox id="finalizada" label="#{eppmessages['comunicacao.finalizada']}" 
+					value="#{comunicacaoAction.finalizada}" disabled="#{comunicacaoAction.modeloComunicacao.finalizada}">
+					<a:ajax event="change" execute="@this" render="responsaveisAssinatura" />
+				</wi:selectBooleanCheckbox>
 				<s:fragment rendered="#{comunicacaoAction.finalizada and not comunicacaoAction.modeloComunicacao.finalizada}">
 					<wi:tree
 			            id="localizacoesTree"

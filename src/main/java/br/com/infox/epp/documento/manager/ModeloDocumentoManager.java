@@ -116,11 +116,15 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
      *         modelo
      */
     public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, Map<String, Pair<String, VariableType>> variableTypeMap) {
-        if (modeloDocumento == null) {
+        return evaluateModeloDocumento(modeloDocumento, modeloDocumento.getModeloDocumento(), variableTypeMap);
+    }
+    
+    public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, String texto, Map<String, Pair<String, VariableType>> variableTypeMap) {
+    	if (modeloDocumento == null) {
             return null;
         }
         StringBuilder modeloProcessado = new StringBuilder();
-        String[] linhas = modeloDocumento.getModeloDocumento().split("\n");
+        String[] linhas = texto.split("\n");
 
         StringBuffer sb = new StringBuffer();
         Pattern pattern = Pattern.compile("#[{][^{}]+[}]");

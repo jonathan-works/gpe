@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
@@ -68,6 +69,10 @@ public class ModeloComunicacao implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_perfil_template_resp_assinat")
 	private PerfilTemplate perfilResponsavelAssinatura;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_modelo_documento")
+	private ModeloDocumento modeloDocumento;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
@@ -161,5 +166,13 @@ public class ModeloComunicacao implements Serializable {
 	
 	public void setExpedida(Boolean expedida) {
 		this.expedida = expedida;
+	}
+	
+	public ModeloDocumento getModeloDocumento() {
+		return modeloDocumento;
+	}
+	
+	public void setModeloDocumento(ModeloDocumento modeloDocumento) {
+		this.modeloDocumento = modeloDocumento;
 	}
 }
