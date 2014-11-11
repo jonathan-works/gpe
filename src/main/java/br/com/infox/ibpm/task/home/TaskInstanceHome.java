@@ -53,7 +53,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
@@ -168,7 +168,7 @@ public class TaskInstanceHome implements Serializable {
                     dados.setClassificacao(pd.getClassificacaoDocumento());
                 }
             }
-            List<ClassificacaoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true, getVariableName(variableRetriever.getName()), ((ProcessoEpa)ProcessoEpaHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
+            List<ClassificacaoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true, getVariableName(variableRetriever.getName()), ((Processo)ProcessoEpaHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
             if (useableTipoProcessoDocumento != null && useableTipoProcessoDocumento.size()>0 && dados.getClassificacao() == null){
                 dados.setClassificacao(useableTipoProcessoDocumento.get(0));
             }

@@ -21,8 +21,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jboss.seam.log.Log;
-import org.jboss.seam.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -33,7 +31,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
@@ -46,7 +44,6 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskConteudoDAO";
-    private static final Log LOG = Logging.getLog(TaskConteudoDAO.class);
 
     @In
     private SessionAssistant sessionAssistant;
@@ -112,7 +109,7 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
         List<TaskConteudo> taskConteudos = hibernateQuery.list();
         UsuarioLogin usuario = Authenticator.getUsuarioLogado();
         for (TaskConteudo tc : taskConteudos) {
-            ProcessoEpa processo = getEntityManager().find(ProcessoEpa.class, tc.getNumeroProcesso());
+            Processo processo = getEntityManager().find(Processo.class, tc.getNumeroProcesso());
             if (sigiloProcessoService.usuarioPossuiPermissao(usuario, processo)){
                 ret.add(tc);
             }

@@ -12,13 +12,14 @@ import org.jbpm.graph.def.ActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.seam.util.ComponentUtil;
 
+@Deprecated // verificar como ficará o status do processo como variável
 public class StatusHandler implements ActionHandler, CustomAction {
 
 	private static final LogProvider LOG = Logging.getLogProvider(StatusHandler.class);
@@ -37,16 +38,17 @@ public class StatusHandler implements ActionHandler, CustomAction {
 	}
 	
 	@Override
+	@Deprecated // duas linhas comentadas
 	public void execute(ExecutionContext executionContext) throws Exception {
 		ProcessoEpaManager processoEpaManager = ComponentUtil.getComponent(ProcessoEpaManager.NAME);
 		StatusProcessoManager statusProcessoManager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
 		
 		try {
 			StatusProcesso status = statusProcessoManager.find(statusProcesso);
-			ProcessoEpa processoEpa = processoEpaManager.find(Integer.parseInt(executionContext.getContextInstance().getVariable("processo").toString(), 10));
-			processoEpa.setStatusProcesso(status);
-			
-			processoEpaManager.update(processoEpa);
+			Processo processo = processoEpaManager.find(Integer.parseInt(executionContext.getContextInstance().getVariable("processo").toString(), 10));
+//			processo.setStatusProcesso(status);
+//			
+//			processoEpaManager.update(processo);
 			String varName = format("{0}:{1}", VariableType.STRING, "statusProcesso");
 			
 			ContextInstance contextInstance = executionContext.getProcessInstance().getContextInstance();
