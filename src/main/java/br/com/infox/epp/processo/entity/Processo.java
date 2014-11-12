@@ -154,7 +154,7 @@ public class Processo implements Serializable {
     @Column(name = "nr_tempo_gasto")
     private Integer tempoGasto;
     
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_item_processo")
     private Item itemDoProcesso;
     
@@ -247,8 +247,8 @@ public class Processo implements Serializable {
 		this.tempoGasto = tempoGasto;
 	}
 
-	public Integer getPorcentagem(){
-		return 0;
+	public Float getPorcentagem(){
+		return getTempoGasto().floatValue()/getNaturezaCategoriaFluxo().getFluxo().getQtPrazo();
 	}
 	
 	public Item getItemDoProcesso() {

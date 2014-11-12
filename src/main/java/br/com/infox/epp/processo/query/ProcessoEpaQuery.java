@@ -7,11 +7,11 @@ public interface ProcessoEpaQuery {
 
     String LIST_ALL_NOT_ENDED = "listAllProcessoEpaNotEnded";
 
-    String LIST_ALL_NOT_ENDED_QUERY = "select o from ProcessoEpa o where "
+    String LIST_ALL_NOT_ENDED_QUERY = "select o from Processo o where "
             + "o.dataFim is null";
 
     String LIST_NOT_ENDED_BY_FLUXO = "listNotEndedByFluxo";
-    String LIST_NOT_ENDED_BY_FLUXO_QUERY = "select o from ProcessoEpa o where "
+    String LIST_NOT_ENDED_BY_FLUXO_QUERY = "select o from Processo o where "
             + " o.naturezaCategoriaFluxo.fluxo = :" + PARAM_FLUXO
             + " and o.dataFim is null";
 
@@ -27,7 +27,7 @@ public interface ProcessoEpaQuery {
 
     String PARAM_ID_JBPM = "idJbpm";
     String PROCESSO_EPA_BY_ID_JBPM = "getProcessoEpaByIdJbpm";
-    String PROCESSO_EPA_BY_ID_JBPM_QUERY = "select pe from ProcessoEpa pe where pe.idJbpm = :"
+    String PROCESSO_EPA_BY_ID_JBPM_QUERY = "select pe from Processo pe where pe.idJbpm = :"
             + PARAM_ID_JBPM;
 
     String COUNT_PARTES_ATIVAS_DO_PROCESSO = "countPartesAtivasDoProcesso";
@@ -36,14 +36,14 @@ public interface ProcessoEpaQuery {
 
     String PARAM_ID_PROCESSO = "idProcesso";
     String ITEM_DO_PROCESSO = "getItemDoProcessoByIdProcesso";
-    String ITEM_DO_PROCESSO_QUERY = "select o.itemDoProcesso from ProcessoEpa o where o.idProcesso =:"
+    String ITEM_DO_PROCESSO_QUERY = "select o.itemDoProcesso from Processo o where o.idProcesso =:"
             + PARAM_ID_PROCESSO;
 
     String PARAM_SITUACAO = "situacao";
     String TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO = "mediaTempoGasto";
-    String TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY = "select avg(pEpa.tempoGasto) from ProcessoEpa pEpa "
+    String TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY = "select avg(pEpa.tempoGasto) from Processo pEpa "
             + "inner join pEpa.naturezaCategoriaFluxo ncf where ncf.fluxo=:"
             + PARAM_FLUXO
-            + " and pEpa.dataFim is null and pEpa.contabilizar=true and pEpa.situacaoPrazo=:"
+            + " and pEpa.dataFim is null and pEpa.situacaoPrazo=:"
             + PARAM_SITUACAO + " group by ncf.fluxo";
 }

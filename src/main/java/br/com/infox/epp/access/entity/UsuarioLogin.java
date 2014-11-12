@@ -332,7 +332,7 @@ public class UsuarioLogin implements Serializable {
         this.usuarioPerfilList = usuarioPerfilList;
     }
 
-    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioCadastroProcesso")
+    @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioCadastro")
     public List<Processo> getProcessoListForIdUsuarioCadastroProcesso() {
         return this.processoListForIdUsuarioCadastroProcesso;
     }

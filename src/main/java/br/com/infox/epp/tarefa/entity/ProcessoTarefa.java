@@ -151,8 +151,8 @@ public class ProcessoTarefa implements Serializable {
 		this.ultimoDisparo = ultimoDisparo;
 	}
 
-	public Integer getPorcentagem() {
-		return 0;
+	public Float getPorcentagem() {
+		return getTempoGasto().floatValue()/getTempoPrevisto().floatValue();
 	}
 
 	public Integer getTempoGasto() {

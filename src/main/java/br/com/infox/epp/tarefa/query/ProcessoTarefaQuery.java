@@ -28,18 +28,18 @@ public interface ProcessoTarefaQuery {
     String PARAM_CATEGORIA = "categoria";
     String FORA_PRAZO_FLUXO = "listForaPrazoFluxo";
     String FORA_PRAZO_FLUXO_QUERY = BASE_QUERY_FORA_FLUXO
-            + "where p.porcentagem > 100 " + "and pt.dataFim is null and c = :"
+            + "where (p.tempoGasto / f.qtPrazo) > 1 " + "and pt.dataFim is null and c = :"
             + PARAM_CATEGORIA;
 
     String FORA_PRAZO_TAREFA = "listForaPrazoTarefa";
     String FORA_PRAZO_TAREFA_QUERY = BASE_QUERY_FORA_FLUXO
-            + "where pt.porcentagem > 100 "
+    		+ "where (pt.tempoGasto / pt.tempoPrevisto) > 1 "
             + "and pt.dataFim is null and c = :" + PARAM_CATEGORIA;
 
     String TAREFA_PROXIMA_LIMITE = "listTarefaPertoLimite";
     String TAREFA_PROXIMA_LIMITE_QUERY = BASE_QUERY_FORA_FLUXO
-            + "where pt.porcentagem <= 100 "
-            + "and pt.porcentagem >= 70 and pt.dataFim is null";
+            + "where (pt.tempoGasto / pt.tempoPrevisto) <= 1 "
+            + "and (pt.tempoGasto / pt.tempoPrevisto) >= 0.7 and pt.dataFim is null";
 
     String PARAM_ID_TAREFA = "idTarefa";
     String PARAM_ID_PROCESSO = "idProcesso";

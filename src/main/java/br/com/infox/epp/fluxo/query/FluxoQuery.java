@@ -45,7 +45,7 @@ public interface FluxoQuery {
     String COUNT_PROCESSOS_BY_FLUXO_QUERY = "select count(o) from Processo o where o.naturezaCategoriaFluxo.fluxo = :fluxo";
 
     String COUNT_PROCESSOS_ATRASADOS = "countProcessosAtrasadosByFluxo";
-    String COUNT_PROCESSOS_ATRASADOS_QUERY = "select count(o) from ProcessoEpa o "
+    String COUNT_PROCESSOS_ATRASADOS_QUERY = "select count(o) from Processo o "
             + "where o.dataFim is null "
             + "  and o.situacaoPrazo != 'SAT'"
             + "  and o.naturezaCategoriaFluxo.fluxo = :" + PARAM_FLUXO;

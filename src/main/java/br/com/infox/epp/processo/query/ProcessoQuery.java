@@ -35,9 +35,15 @@ public interface ProcessoQuery {
     String REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY = "update tb_processo set id_caixa = null where id_processo = :"
             + PARAM_ID_PROCESSO;
 
+    
+    @Deprecated 
     String LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID = "listProcessosByIdProcessoAndActorId";
+    /**
+     * Retirado actorId do processo
+     */
+    @Deprecated
     String LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY = "select o from Processo o where o.idProcesso = :"
-            + PARAM_ID_PROCESSO + " and o.actorId like :" + PARAM_ACTOR_ID;
+            + PARAM_ID_PROCESSO ;
 
     String ID_LIST_PROCESSO_PARAM = "idList";
     String CAIXA_PARAM = "caixa";
@@ -83,8 +89,7 @@ public interface ProcessoQuery {
             + "and ta.id_ = tb_processo_localizacao_ibpm.id_task_jbpm))";
 
     String GET_PROCESSO_BY_NUMERO_PROCESSO = "getProcessoByNumeroProcesso";
-    String GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY = "select o from ProcessoEpa o where o.numeroProcesso=:"
-            + NUMERO_PROCESSO;
+    String GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY = "select o from Processo o where o.numeroProcesso=:" + NUMERO_PROCESSO;
     
     String REMOVER_PROCESSO_JBMP = "removerProcessoJbpm";
 	String REMOVER_PROCESSO_JBMP_QUERY = 
