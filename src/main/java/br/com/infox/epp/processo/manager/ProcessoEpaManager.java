@@ -41,34 +41,35 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, Processo> {
     public Boolean podeInativarPartesDoProcesso(Processo processo) {
         return getDao().podeInativarPartes(getDao().getProcessoEpaByProcesso(processo));
     }
-
+    
+    @Deprecated
     public void updateTempoGastoProcessoEpa() throws DAOException {
         List<Processo> listAllNotEnded = listAllNotEnded();
-        for (Processo processoEpa : listAllNotEnded) {
-            Map<String, Object> result = getDao().getTempoGasto(processoEpa);
+        for (Processo processo : listAllNotEnded) {
+            Map<String, Object> result = getDao().getTempoGasto(processo);
 
             if (result != null) {
-                Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
+                Fluxo f = processo.getNaturezaCategoriaFluxo().getFluxo();
                 
                 DateRange dateRange;
-                final Date dataInicio = processoEpa.getDataInicio();
-                final Date dataFim = processoEpa.getDataFim();
+                final Date dataInicio = processo.getDataInicio();
+                final Date dataFim = processo.getDataFim();
                 if (dataFim != null){
                     dateRange = new DateRange(dataInicio, dataFim);
                 } else {
                     dateRange = new DateRange(dataInicio, new Date());
                 }
                 
-                processoEpa.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
+                processo.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
 
-                if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
-                    processoEpa.setPorcentagem((processoEpa.getTempoGasto() * PORCENTAGEM)
-                            / f.getQtPrazo());
+//                if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
+//                    processo.setPorcentagem((processo.getTempoGasto() * PORCENTAGEM)
+//                            / f.getQtPrazo());
+//                }
+                if (processo.getPorcentagem() > PORCENTAGEM) {
+                    processo.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
                 }
-                if (processoEpa.getPorcentagem() > PORCENTAGEM) {
-                    processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
-                }
-                getDao().update(processoEpa);
+                getDao().update(processo);
             }
         }
     }
@@ -118,6 +119,7 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, Processo> {
         distribuirProcesso(processo, null, unidadeDecisoraMonocratica, null);
     }
 
+    @Deprecated
     public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
 //    	processo.setDecisoraColegiada(unidadeDecisoraColegiada);
 //    	processo.setDecisoraMonocratica(unidadeDecisoraMonocratica);

@@ -75,7 +75,7 @@ public class IniciarProcessoAction implements Serializable {
         processo = new Processo();
         processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
         processo.setNumeroProcesso("");
-        processo.setUsuarioCadastroProcesso(usuarioLogado);
+        processo.setUsuarioCadastro(usuarioLogado);
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
         processo.setLocalizacao(localizacao);
         processo.setItemDoProcesso(itemDoProcesso);

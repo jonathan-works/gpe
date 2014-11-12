@@ -43,7 +43,7 @@ public class ParticipantesController extends AbstractParticipantesController {
         Localizacao localizacao = Authenticator.getLocalizacaoAtual();
         Processo processo = new Processo();
         processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-        processo.setUsuarioCadastroProcesso(usuarioLogado);
+        processo.setUsuarioCadastro(usuarioLogado);
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
         processo.setLocalizacao(localizacao);
         processo.setNumeroProcesso("");

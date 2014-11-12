@@ -92,7 +92,6 @@ public class BamAction extends AbstractController {
         for (ProcessoTarefa pt : processoTarefaManager.getTarefaEnded()) {
             pt.setUltimoDisparo(pt.getDataInicio());
             pt.setTempoGasto(0);
-            pt.setPorcentagem(0);
             try {
                 processoTarefaManager.updateTempoGasto(pt.getDataFim(), pt);
                 corrigirSituacaoPrazoProcesso(pt.getProcesso(), pt.getPorcentagem());
@@ -115,7 +114,6 @@ public class BamAction extends AbstractController {
         for (ProcessoTarefa pt : processoTarefaManager.getTarefaNotEnded(PrazoEnum.H)) {
             pt.setUltimoDisparo(pt.getDataInicio());
             pt.setTempoGasto(0);
-            pt.setPorcentagem(0);
             try {
                 processoTarefaManager.updateTempoGasto(fireTime, pt);
                 corrigirSituacaoPrazoProcesso(pt.getProcesso(), pt.getPorcentagem());

@@ -67,7 +67,6 @@ public class TaskListenerService implements Serializable {
         pTarefa.setDataInicio(taskInstance.getCreate());
         pTarefa.setUltimoDisparo(new Date());
         pTarefa.setTempoGasto(0);
-        pTarefa.setPorcentagem(0);
         pTarefa.setTempoPrevisto(tarefa.getPrazo());
         if (pTarefa.getTempoPrevisto() == null) {
             pTarefa.setTempoPrevisto(0);

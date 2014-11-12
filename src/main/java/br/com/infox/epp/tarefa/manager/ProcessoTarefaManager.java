@@ -118,7 +118,6 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
                 processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }
 
-            processoTarefa.setPorcentagem(porcentagem);
             processoTarefa.setTempoGasto(tempoGasto);
             processoTarefa.setUltimoDisparo(fireTime);
             update(processoTarefa);
@@ -126,6 +125,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         }
     }
 
+    @Deprecated
     public void updateTempoGasto(Processo processo) throws DAOException {
         Map<String, Object> result = processoEpaDAO.getTempoGasto(processo);
 
@@ -141,10 +141,10 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
             processo.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
             Fluxo f = processo.getNaturezaCategoriaFluxo().getFluxo();
 
-            if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
-            	processo.setPorcentagem((processo.getTempoGasto() * PORCENTAGEM_MAXIMA)
-                        / f.getQtPrazo());
-            }
+//            if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
+//            	processo.setPorcentagem((processo.getTempoGasto() * PORCENTAGEM_MAXIMA)
+//                        / f.getQtPrazo());
+//            }
             if (processo.getPorcentagem() > PORCENTAGEM_MAXIMA) {
             	processo.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
             }

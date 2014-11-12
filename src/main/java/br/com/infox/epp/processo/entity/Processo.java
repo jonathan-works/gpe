@@ -135,7 +135,11 @@ public class Processo implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_USUARIO_CADASTRO_PROCESSO)
-    private UsuarioLogin usuarioCadastroProcesso;
+    private UsuarioLogin usuarioCadastro;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "id_processo_pai", nullable = true)
+    private Processo processoPai;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -149,9 +153,6 @@ public class Processo implements Serializable {
     
     @Column(name = "nr_tempo_gasto")
     private Integer tempoGasto;
-    
-    @Column(name = "nr_porcentagem")
-    private Integer porcentagem;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_item_processo")
@@ -206,12 +207,20 @@ public class Processo implements Serializable {
 		this.idProcesso = idProcesso;
 	}
 
-	public UsuarioLogin getUsuarioCadastroProcesso() {
-		return usuarioCadastroProcesso;
+	public UsuarioLogin getUsuarioCadastro() {
+		return usuarioCadastro;
 	}
 
-	public void setUsuarioCadastroProcesso(UsuarioLogin usuarioCadastroProcesso) {
-		this.usuarioCadastroProcesso = usuarioCadastroProcesso;
+	public void setUsuarioCadastro(UsuarioLogin usuarioCadastro) {
+		this.usuarioCadastro = usuarioCadastro;
+	}
+
+	public Processo getProcessoPai() {
+		return processoPai;
+	}
+
+	public void setProcessoPai(Processo processoPai) {
+		this.processoPai = processoPai;
 	}
 
 	public Localizacao getLocalizacao() {
@@ -238,14 +247,10 @@ public class Processo implements Serializable {
 		this.tempoGasto = tempoGasto;
 	}
 
-	public Integer getPorcentagem() {
-		return porcentagem;
+	public Integer getPorcentagem(){
+		return 0;
 	}
-
-	public void setPorcentagem(Integer porcentagem) {
-		this.porcentagem = porcentagem;
-	}
-
+	
 	public Item getItemDoProcesso() {
 		return itemDoProcesso;
 	}

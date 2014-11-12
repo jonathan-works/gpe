@@ -87,9 +87,6 @@ public class ProcessoTarefa implements Serializable {
     @Column(name = "dt_ultimo_disparo", nullable = false)
     private Date ultimoDisparo;
     
-    @Column(name = "nr_porcentagem")
-    private Integer porcentagem;
-    
     @NotNull
     @Column(name = "nr_tempo_gasto", nullable = false)
     private Integer tempoGasto;
@@ -155,11 +152,7 @@ public class ProcessoTarefa implements Serializable {
 	}
 
 	public Integer getPorcentagem() {
-		return porcentagem;
-	}
-
-	public void setPorcentagem(Integer porcentagem) {
-		this.porcentagem = porcentagem;
+		return 0;
 	}
 
 	public Integer getTempoGasto() {

@@ -287,7 +287,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     @Override
     protected Processo createInstance() {
     	Processo processoEpa = super.createInstance();
-        processoEpa.setUsuarioCadastroProcesso(Authenticator.getUsuarioLogado());
+        processoEpa.setUsuarioCadastro(Authenticator.getUsuarioLogado());
         return processoEpa;
     }
 
