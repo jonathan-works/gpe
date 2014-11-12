@@ -150,7 +150,7 @@ public class BamAction extends AbstractController {
         forceUpdateTarefasNaoFinalizadas();
     }
 
-    private void corrigirSituacaoPrazoProcesso(Processo processo, Integer porcentagem) throws DAOException {
+    private void corrigirSituacaoPrazoProcesso(Processo processo, Float porcentagem) throws DAOException {
         if (porcentagem != null && porcentagem > 100) {
             return;
         }

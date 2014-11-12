@@ -1,8 +1,5 @@
 package br.com.infox.epp.processo.dao;
 
-import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_ACTOR_ID;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ANULA_TODOS_OS_ACTOR_IDS;
-import static br.com.infox.epp.processo.query.ProcessoQuery.APAGA_ACTOR_ID_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.CAIXA_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
@@ -43,24 +40,24 @@ public class ProcessoDAO extends DAO<Processo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDAO";
 
-    @Transactional(TransactionPropagationType.REQUIRED)
-    public void anulaActorId(String actorId) throws DAOException {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_ACTOR_ID, actorId);
-        executeNamedQueryUpdate(ANULA_ACTOR_ID, parameters);
-    }
+//    @Transactional(TransactionPropagationType.REQUIRED)
+//    public void anulaActorId(String actorId) throws DAOException {
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put(PARAM_ACTOR_ID, actorId);
+//        executeNamedQueryUpdate(ANULA_ACTOR_ID, parameters);
+//    }
 
-    @Transactional(TransactionPropagationType.REQUIRED)
-    public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
-        executeNamedQueryUpdate(APAGA_ACTOR_ID_DO_PROCESSO, parameters);
-    }
+//    @Transactional(TransactionPropagationType.REQUIRED)
+//    public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
+//        executeNamedQueryUpdate(APAGA_ACTOR_ID_DO_PROCESSO, parameters);
+//    }
 
-    @Transactional(TransactionPropagationType.REQUIRED)
-    public void anularTodosActorId() throws DAOException {
-        executeNamedQueryUpdate(ANULA_TODOS_OS_ACTOR_IDS);
-    }
+//    @Transactional(TransactionPropagationType.REQUIRED)
+//    public void anularTodosActorId() throws DAOException {
+//        executeNamedQueryUpdate(ANULA_TODOS_OS_ACTOR_IDS);
+//    }
 
     @Transactional(TransactionPropagationType.REQUIRED)
     public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) throws DAOException {

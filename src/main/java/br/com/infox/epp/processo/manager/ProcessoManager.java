@@ -185,8 +185,14 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         getDao().removerProcessoDaCaixaAtual(processo);
     }
 
+    /**
+     * Retirado actorId
+     * @param processo
+     * @throws DAOException
+     */
+    @Deprecated
     public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
-        getDao().apagarActorIdDoProcesso(processo);
+//        getDao().apagarActorIdDoProcesso(processo);
     }
 
     public void atualizarProcessos() {
