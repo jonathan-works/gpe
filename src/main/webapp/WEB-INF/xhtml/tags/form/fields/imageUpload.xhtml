@@ -61,7 +61,7 @@
       <h:outputScript id="initImageUploadScript">
         invoke(["infox.imageUpload"],function initImageUpload(imageUpload) {
           $(".grid-img").click(function gridImgOnClick() {
-            imageUpload.click(this, "#{wi:get(editorId, 'editorId')}");
+            imageUpload.click(this, "#{wi:get(editorId, 'editorId')}", '#{useBase64}');
           });
         });
       </h:outputScript>
