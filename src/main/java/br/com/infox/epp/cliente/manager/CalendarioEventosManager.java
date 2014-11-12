@@ -1,5 +1,7 @@
 package br.com.infox.epp.cliente.manager;
 
+import java.util.Date;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -16,4 +18,8 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "calendarioEventosManager";
+    
+    public CalendarioEventos getByDate(Date date) {
+        return getDao().getByDate(date);
+    }
 }
