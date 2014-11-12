@@ -124,8 +124,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
+    @Deprecated
     private void vinculaUsuario(Processo processo, String actorId) throws DAOException {
-        processo.setActorId(actorId);
+//        processo.setActorId(actorId);
         processo = merge(processo);
         flush();
     }

@@ -146,6 +146,7 @@ public class ComunicacaoAction implements Serializable {
 	/**
 	 * Inicialização dos entity lists
 	 */
+	@Deprecated
 	private void initLists() {
 		documentoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso());
 		participanteProcessoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso());
@@ -154,7 +155,8 @@ public class ComunicacaoAction implements Serializable {
 			documentoComunicacaoList.adicionarIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
 		}
 		
-		PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
+//		PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
+		PessoaFisica relator = null;
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getDestinatario() != null) {
 				participanteProcessoComunicacaoList.adicionarIdPessoa(destinatario.getDestinatario().getIdPessoa());
@@ -332,11 +334,14 @@ public class ComunicacaoAction implements Serializable {
 		idsLocalizacoesSelecionadas.add(localizacao.getIdLocalizacao());
 	}
 	
+	@Deprecated
 	public void removerDestinatario(DestinatarioModeloComunicacao destinatario) {
 		modeloComunicacao.getDestinatarios().remove(destinatario);
 		if (destinatario.getDestinatario() != null) {
 			participanteProcessoComunicacaoList.removerIdPessoa(destinatario.getDestinatario().getIdPessoa());
-			if (adicionarDestinatarioRelator && destinatario.getDestinatario().equals(modeloComunicacao.getProcesso().getRelator())) {
+//			PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
+			PessoaFisica relator = null;
+			if (adicionarDestinatarioRelator && destinatario.getDestinatario().equals(relator)) {
 				adicionarDestinatarioRelator = false;
 			}
 		} else if (destinatario.getLocalizacaoDestinataria() != null) {
@@ -375,8 +380,10 @@ public class ComunicacaoAction implements Serializable {
 		textoComunicacao = modeloComunicacao.getModeloDocumento().getModeloDocumento();
 	}
 	
+	@Deprecated
 	public void gerenciarRelator() {
-		PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
+//		PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
+		PessoaFisica relator = null;
 		if (adicionarDestinatarioRelator) {
 			DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
 			destinatario.setDestinatario(relator);

@@ -40,7 +40,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
@@ -183,9 +182,6 @@ public class Processo implements Serializable {
     @Column(name = ID_JBPM)
     private Long idJbpm;
 
-    @Column(name = NOME_ACTOR_ID)
-    private String actorId;
-    
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_natureza_categoria_fluxo", nullable = false)
@@ -306,14 +302,6 @@ public class Processo implements Serializable {
 		this.idJbpm = idJbpm;
 	}
 
-	public String getActorId() {
-		return actorId;
-	}
-
-	public void setActorId(String actorId) {
-		this.actorId = actorId;
-	}
-
 	public NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() {
 		return naturezaCategoriaFluxo;
 	}
@@ -350,7 +338,7 @@ public class Processo implements Serializable {
 	public boolean hasPartes(){
     	return true;
     }
-
+	
 	@Override
     public String toString() {
         return numeroProcesso;
