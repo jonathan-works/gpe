@@ -27,12 +27,18 @@ public class ContabilizarPrazoService {
     private ComunicacaoManager comunicacaoManager;
     
     public void contabilizarPrazoCiencia(Comunicacao comunicacao) throws DAOException {
-        
         TipoComunicacao tipoComunicacao = comunicacao.getModeloComunicacao().getTipoComunicacao();
         Integer qtdDias = tipoComunicacao.getQuantidadeDiasCiencia();
         Date hoje = new Date();
         Date prazo = getPrimeiroDiaUtil(hoje, qtdDias);
-        comunicacaoManager.setDataFimPrazo(comunicacao, prazo);
+        comunicacaoManager.setDataFimPrazoCiencia(comunicacao, prazo);
+    }
+    
+    public void contabilizarPrazoCumprimento(Comunicacao comunicacao) {
+        Integer qtdDias = comunicacaoManager.getQtdDiasCumprimento(comunicacao);
+        Date hoje = new Date();
+        Date prazo = getPrimeiroDiaUtil(hoje, qtdDias);
+        comunicacaoManager.setDataFimPrazoCumprimento(comunicacao, prazo);
     }
     
     /**

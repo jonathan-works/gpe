@@ -48,11 +48,27 @@ public class ContabilizarPrazoProcessor {
         
         for (Comunicacao comunicacao : comunicacoes) {
             Date hoje = new Date();
-            
+            Date prazoCiencia = comunicacaoManager.getDataFimPrazoCiencia(comunicacao);
+            if (prazoCiencia.before(hoje)) {
+                finalizarPrazoAtendimento(comunicacao);
+            }
         }
     }
 
     private void finalizarPrazoCiencia(Comunicacao comunicacao) {
-        
+        /*
+         * Seta data de ciência
+         * Seta usuário da ciência como o Sistema (usuarioLogin com id = 0)
+         * Calcula prazo para cumprimento
+         * Anda o processo
+         */
+    }
+
+    private void finalizarPrazoAtendimento(Comunicacao comunicacao) {
+        /*
+         * Seta a data de atendimento
+         * Seta o usuário de atendimento?
+         * Anda o processo? Finaliza?
+         */
     }
 }
