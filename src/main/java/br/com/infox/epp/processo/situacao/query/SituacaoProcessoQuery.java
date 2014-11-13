@@ -37,18 +37,14 @@ public interface SituacaoProcessoQuery {
     
     String GROUP_BY_PROCESSO_SUFIX = " group by s.idProcesso";
     
-//    String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from ProcessoEpa pe LEFT JOIN pe.decisoraColegiada dc LEFT JOIN pe.decisoraMonocratica dm WHERE";
     String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from Processo pe LEFT JOIN pe.metadadoProcessoList mpl WHERE";
     String FILTRO_SUFIX = ") ";
     String AND = " and ";
 
-//    String COM_COLEGIADA = " dc = :colegiadaLogada";
-    String COM_COLEGIADA = " mpl.nome = 'decisoraColegiada' AND cast(mpl.valor, integer) = :colegiadaLogada";
-    String COM_MONOCRATICA = " dm = :monocraticaLogada";
-//    String SEM_COLEGIADA = " dc is null";
-    String SEM_COLEGIADA = " mpl is null or (mpl.nome = 'decisoraColegiada' AND mpl.valor is null)";
-    String SEM_MONOCRATICA = " mpl is null or (mpl.nome = 'decisoraMonocratica' AND mpl.valor is null)";
-//    String SEM_MONOCRATICA = " dm is null";
+    String COM_COLEGIADA = " mpl.nome = 'decisoraColegiada' and cast(mpl.valor, integer) = :colegiadaLogada";
+    String COM_MONOCRATICA = " mpl.nome = 'decisoraMonocratica' and cast(mpl.valor, integer)";
+    String SEM_COLEGIADA = " mpl is null or (mpl.nome = 'decisoraColegiada' and mpl.valor is null)";
+    String SEM_MONOCRATICA = " mpl is null or (mpl.nome = 'decisoraMonocratica' and mpl.valor is null)";
     
     String PARAM_COLEGIADA = "";
     String PROCESSOS_COM_COLEGIADA_COND = FILTRO_PREFIX + COM_COLEGIADA + FILTRO_SUFIX;
