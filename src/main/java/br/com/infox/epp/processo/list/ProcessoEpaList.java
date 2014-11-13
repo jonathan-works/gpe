@@ -24,7 +24,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o where o.idJbpm is not null and "
+    private static final String DEFAULT_EJBQL = "select o from Processo o where o.idJbpm is not null and "
             + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     private static final String DEFAULT_ORDER = "dataInicio DESC";
     private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.entity.dataInicio}";

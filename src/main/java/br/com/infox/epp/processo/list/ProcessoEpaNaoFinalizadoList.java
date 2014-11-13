@@ -38,7 +38,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     
     private static final String DEFAULT_ORDER = "p.idProcesso";
     private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
-    private static final String R2 = "p.situacaoPrazo = #{processoEpaNaoFinalizadoList.entity.processo.processoEpa.situacaoPrazo}";
+    private static final String R2 = "p.situacaoPrazo = #{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
 
     private static final Map<String, String> CUSTOM_ORDER_MAP;
@@ -101,7 +101,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     public long getMediaTempoGastoDesdeInicioProcesso() {
         long media = 0;
-        StringBuilder hql = new StringBuilder("select p.dataInicio from ProcessoEpa p ");
+        StringBuilder hql = new StringBuilder("select p.dataInicio from Processo p ");
         hql.append("inner join p.naturezaCategoriaFluxo ncf ");
         hql.append("where p.dataFim is null and p.contabilizar = true ");
         if (getFluxo() != null) {

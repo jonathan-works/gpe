@@ -15,8 +15,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = VariavelProcesso.TABLE_NAME)
-public class VariavelProcesso implements Serializable {
+@Table(name = MetadadoProcesso.TABLE_NAME)
+public class MetadadoProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_variavel_processo";
@@ -98,9 +98,9 @@ public class VariavelProcesso implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof VariavelProcesso))
+		if (!(obj instanceof MetadadoProcesso))
 			return false;
-		VariavelProcesso other = (VariavelProcesso) obj;
+		MetadadoProcesso other = (MetadadoProcesso) obj;
 		if (getId() == null) {
 			if (other.getId() != null)
 				return false;

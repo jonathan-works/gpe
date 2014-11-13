@@ -21,7 +21,7 @@ public class ConsultaProcessoEpaList extends EntityList<Processo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoEpaList";
 
-    private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o";
+    private static final String DEFAULT_EJBQL = "select o from Processo o";
     private static final String DEFAULT_ORDER = "o.prioridadeProcesso, o.dataInicio";
 
     private static final String R1 = "o.idProcesso in (#{painelUsuarioHome.processoIdList})";

@@ -37,7 +37,7 @@ public interface SituacaoProcessoQuery {
     
     String GROUP_BY_PROCESSO_SUFIX = " group by s.idProcesso";
     
-    String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from ProcessoEpa pe LEFT JOIN pe.decisoraColegiada dc LEFT JOIN pe.decisoraMonocratica dm WHERE";
+    String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from Processo pe LEFT JOIN pe.decisoraColegiada dc LEFT JOIN pe.decisoraMonocratica dm WHERE";
     String FILTRO_SUFIX = ") ";
     String AND = " and ";
 

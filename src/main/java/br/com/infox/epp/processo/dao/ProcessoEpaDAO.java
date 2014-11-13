@@ -10,7 +10,7 @@ import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PARAM_SITUACAO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.PROCESSO_EPA_BY_ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoEpaQuery.QUERY_PARAM_PROCESSO_EPA;
+import static br.com.infox.epp.processo.query.ProcessoEpaQuery.QUERY_PARAM_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoEpaQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
@@ -110,7 +110,7 @@ public class ProcessoEpaDAO extends DAO<Processo> {
      * */
     public Boolean podeInativarPartes(Processo processo) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(QUERY_PARAM_PROCESSO_EPA, processo);
+        parameters.put(QUERY_PARAM_PROCESSO, processo);
         Long count = (Long) getNamedSingleResult(COUNT_PARTES_ATIVAS_DO_PROCESSO, parameters);
         return count != null && count.compareTo(1L) > 0;
     }

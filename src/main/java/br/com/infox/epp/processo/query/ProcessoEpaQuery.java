@@ -3,7 +3,7 @@ package br.com.infox.epp.processo.query;
 public interface ProcessoEpaQuery {
 
     String PARAM_FLUXO = "fluxo";
-    String QUERY_PARAM_PROCESSO_EPA = "processoEpa";
+    String QUERY_PARAM_PROCESSO = "processo";
 
     String LIST_ALL_NOT_ENDED = "listAllProcessoEpaNotEnded";
 
@@ -32,7 +32,7 @@ public interface ProcessoEpaQuery {
 
     String COUNT_PARTES_ATIVAS_DO_PROCESSO = "countPartesAtivasDoProcesso";
     String COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY = "select count(*) from ParticipanteProcesso partes where partes.processo = :"
-            + QUERY_PARAM_PROCESSO_EPA + " and partes.ativo = true";
+            + QUERY_PARAM_PROCESSO + " and partes.ativo = true";
 
     String PARAM_ID_PROCESSO = "idProcesso";
     String ITEM_DO_PROCESSO = "getItemDoProcessoByIdProcesso";
