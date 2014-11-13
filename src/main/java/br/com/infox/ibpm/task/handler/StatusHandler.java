@@ -13,7 +13,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -40,12 +40,12 @@ public class StatusHandler implements ActionHandler, CustomAction {
 	@Override
 	@Deprecated // duas linhas comentadas
 	public void execute(ExecutionContext executionContext) throws Exception {
-		ProcessoEpaManager processoEpaManager = ComponentUtil.getComponent(ProcessoEpaManager.NAME);
+		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
 		StatusProcessoManager statusProcessoManager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
 		
 		try {
 			StatusProcesso status = statusProcessoManager.find(statusProcesso);
-			Processo processo = processoEpaManager.find(Integer.parseInt(executionContext.getContextInstance().getVariable("processo").toString(), 10));
+			Processo processo = processoManager.find(Integer.parseInt(executionContext.getContextInstance().getVariable("processo").toString(), 10));
 //			processo.setStatusProcesso(status);
 //			
 //			processoEpaManager.update(processo);
@@ -59,7 +59,7 @@ public class StatusHandler implements ActionHandler, CustomAction {
 			} else {
 				contextInstance.createVariable(varName, nome, token);
 			}
-			processoEpaManager.flush();
+			processoManager.flush();
 		} catch (Exception e) {
 			LOG.error("Falha na atribuição de status do processo", e);
 		}

@@ -11,7 +11,6 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
@@ -24,11 +23,9 @@ public class ProcessoSearcher {
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoSearcher.class);
 
     @In
-    ProcessoManager processoManager;
+    private ProcessoManager processoManager;
     @In
-    private ProcessoEpaManager processoEpaManager;
-    @In
-    SigiloProcessoService sigiloProcessoService;
+    private SigiloProcessoService sigiloProcessoService;
 
     /**
      * Método redireciona para visualização do processo escolhido no paginador
@@ -57,7 +54,7 @@ public class ProcessoSearcher {
     		processo = searchIdProcesso(searchText);
     	}
         if (processo != null && processo.getIdJbpm() != null 
-        		&& sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoEpaManager.find(processo.getIdProcesso()))) {
+        		&& sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoManager.find(processo.getIdProcesso()))) {
             visualizarProcesso(processo);
         }
         return false;

@@ -13,7 +13,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
 @Name(ConsultaController.NAME)
@@ -25,7 +25,7 @@ public class ConsultaController extends AbstractController {
     private Processo processo;
     
     @In
-    private ProcessoEpaManager processoEpaManager;
+    private ProcessoManager processoManager;
     @In
     private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
     @In
@@ -43,7 +43,7 @@ public class ConsultaController extends AbstractController {
 
     @Override
     public void setId(Object id) {
-        this.setProcesso(processoEpaManager.find(Integer.valueOf((String) id)));
+        this.setProcesso(processoManager.find(Integer.valueOf((String) id)));
         super.setId(id);
     }
     

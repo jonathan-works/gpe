@@ -27,7 +27,7 @@ import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
@@ -38,8 +38,8 @@ public class IniciarProcessoService implements Serializable {
 	
 	@In
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
-    @In
-    private ProcessoEpaManager processoEpaManager;
+	@In
+	private ProcessoManager processoManager;
     @In
     private NaturezaManager naturezaManager;
     @In
@@ -55,13 +55,13 @@ public class IniciarProcessoService implements Serializable {
     }
     
     public void iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
-        processoEpaManager.persist(processo);
+    	processoManager.persist(processo);
         processo.setDataInicio(new Date());
         Long idProcessoJbpm = iniciarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo(), variaveis);
         processo.setIdJbpm(idProcessoJbpm);
         processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
-        processoEpaManager.update(processo);
+        processoManager.update(processo);
         pastaManager.createDefaultFolders(processo);
     }
 

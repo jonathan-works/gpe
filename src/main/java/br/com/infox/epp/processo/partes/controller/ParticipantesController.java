@@ -49,7 +49,7 @@ public class ParticipantesController extends AbstractParticipantesController {
         processo.setNumeroProcesso("");
         setProcesso(processo);
     	try {
-			processoEpaManager.persist(getProcesso());
+			processoManager.persist(getProcesso());
 		} catch (DAOException e) {
 			actionMessagesService.handleDAOException(e);
 		}

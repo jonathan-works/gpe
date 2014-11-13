@@ -1,6 +1,8 @@
 package br.com.infox.epp.processo.manager;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -20,16 +22,23 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.painel.caixa.Caixa;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
-import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
+import br.com.infox.util.time.DateRange;
 
 @Name(ProcessoManager.NAME)
 @AutoCreate
@@ -38,9 +47,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private static final long serialVersionUID = 8095772422429350875L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
     public static final String NAME = "processoManager";
+    private static final int PORCENTAGEM = 100;
 
-    @In
-    private ProcessoEpaDAO processoEpaDAO;
     @In
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
     @In
@@ -78,10 +86,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         } else {
             return value;
         }
-    }
-
-    public boolean hasPartes(Processo processo) {
-        return processoEpaDAO.hasPartes(processo);
     }
 
     public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioPerfil usuarioPerfil) {
@@ -227,5 +231,100 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     
     public Processo getProcessoByNumero(String numeroProcesso) {
     	return getDao().getProcessoByNumero(numeroProcesso);
+    }
+    
+    public List<Processo> listAllNotEnded() {
+        return getDao().listAllNotEnded();
+    }
+
+    public List<Processo> listNotEnded(Fluxo fluxo) {
+        return getDao().listNotEnded(fluxo);
+    }
+
+    public Boolean podeInativarPartesDoProcesso(Processo processo) {
+        return getDao().podeInativarPartes(getDao().getProcessoEpaByProcesso(processo));
+    }
+    
+    public void updateTempoGastoProcessoEpa() throws DAOException {
+        List<Processo> listAllNotEnded = listAllNotEnded();
+        for (Processo processo : listAllNotEnded) {
+            Map<String, Object> result = getDao().getTempoGasto(processo);
+            if (result != null) {
+                DateRange dateRange;
+                final Date dataInicio = processo.getDataInicio();
+                final Date dataFim = processo.getDataFim();
+                if (dataFim != null){
+                    dateRange = new DateRange(dataInicio, dataFim);
+                } else {
+                    dateRange = new DateRange(dataInicio, new Date());
+                }
+                processo.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
+                if (processo.getPorcentagem() > PORCENTAGEM) {
+                    processo.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+                }
+                getDao().update(processo);
+            }
+        }
+    }
+
+    public Item getItemDoProcesso(int idProcesso) {
+        return getDao().getItemDoProcesso(idProcesso);
+    }
+
+    public boolean hasPartes(Processo processo) {
+        return getDao().hasPartes(processo);
+    }
+
+    public boolean hasPartes(Long idJbpm) {
+        return getDao().hasPartes(idJbpm);
+    }
+
+    public List<PessoaFisica> getPessoaFisicaList() {
+        return getDao().getPessoaFisicaList();
+    }
+
+    public List<PessoaJuridica> getPessoaJuridicaList() {
+        return getDao().getPessoaJuridicaList();
+    }
+
+    public Double getMediaTempoGasto(Fluxo fluxo, SituacaoPrazoEnum prazoEnum) {
+        return getDao().getMediaTempoGasto(fluxo, prazoEnum);
+    }
+
+    public Processo getProcessoEpaByNumeroProcesso(
+            final String numeroProcesso) {
+    	Processo processo = null;
+        if (numeroProcesso != null) {
+            processo = getDao().getProcessoEpaByNumeroProcesso(numeroProcesso);
+        }
+        return processo;
+    }
+    
+    public Processo persistProcessoComNumero(Processo processo) throws DAOException{
+    	return getDao().persistProcessoComNumero(processo);
+    }
+
+    public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+        distribuirProcesso(processo, relator, unidadeDecisoraMonocratica, null);
+    }
+
+    public void distribuirProcesso(Processo processo, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+        distribuirProcesso(processo, null, unidadeDecisoraMonocratica, null);
+    }
+
+    @Deprecated
+    public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+//    	processo.setDecisoraColegiada(unidadeDecisoraColegiada);
+//    	processo.setDecisoraMonocratica(unidadeDecisoraMonocratica);
+//    	processo.setRelator(relator);
+        getDao().update(processo);
+    }
+
+    public void distribuirProcesso(Processo processo, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+        distribuirProcesso(processo, null, null, unidadeDecisoraColegiada);
+    }
+
+    public void distribuirProcesso(Processo processo) throws DAOException {
+        distribuirProcesso(processo,null,null,null);
     }
 }

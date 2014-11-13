@@ -27,7 +27,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.variable.VariableHandler;
 
 @Name(ProcessoHandler.NAME)
@@ -44,7 +44,7 @@ public class ProcessoHandler implements Serializable {
     private int inicio;
 
     @In
-    private ProcessoEpaManager processoEpaManager;
+    private ProcessoManager processoManager;
     @In
     private DocumentoManager documentoManager;
 
@@ -147,20 +147,20 @@ public class ProcessoHandler implements Serializable {
     }
 
     public Item getItemDoProcesso(int idProcesso) {
-        return processoEpaManager.getItemDoProcesso(idProcesso);
+        return processoManager.getItemDoProcesso(idProcesso);
     }
 
     public boolean hasPartes() {
         Long idJbpm = ProcessInstance.instance().getId();
-        return processoEpaManager.hasPartes(idJbpm);
+        return processoManager.hasPartes(idJbpm);
     }
 
     public List<PessoaFisica> getPessoaFisicaList() {
-        return processoEpaManager.getPessoaFisicaList();
+        return processoManager.getPessoaFisicaList();
     }
 
     public List<PessoaJuridica> getPessoaJuridicaList() {
-        return processoEpaManager.getPessoaJuridicaList();
+        return processoManager.getPessoaJuridicaList();
     }
 
 }

@@ -18,7 +18,7 @@ import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.list.ProcessoTarefaList;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
@@ -43,7 +43,7 @@ public class BamAction extends AbstractController {
     @In
     private FluxoManager fluxoManager;
     @In
-    private ProcessoEpaManager processoEpaManager;
+    private ProcessoManager processoManager;
     @In
     private ProcessoTarefaManager processoTarefaManager;
 
@@ -81,7 +81,7 @@ public class BamAction extends AbstractController {
      * Retorna os processo não finalizados de um determinado fluxo
      */
     public List<Processo> getProcessosNaoFinalizados(Fluxo fluxo) {
-        return processoEpaManager.listNotEnded(fluxo);
+        return processoManager.listNotEnded(fluxo);
     }
 
     public TaskInstance getTaskInstance(Long idTaskInstance) {
@@ -100,8 +100,8 @@ public class BamAction extends AbstractController {
             }
         }
         try {
-            processoEpaManager.updateTempoGastoProcessoEpa();
-            for (Processo processo : processoEpaManager.listAllNotEnded()) {
+        	processoManager.updateTempoGastoProcessoEpa();
+            for (Processo processo : processoManager.listAllNotEnded()) {
                 corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
             }
         } catch (DAOException e) {
@@ -131,8 +131,8 @@ public class BamAction extends AbstractController {
             }
         }
         try {
-            processoEpaManager.updateTempoGastoProcessoEpa();
-            for (Processo processo : processoEpaManager.listAllNotEnded()) {
+        	processoManager.updateTempoGastoProcessoEpa();
+            for (Processo processo : processoManager.listAllNotEnded()) {
                 corrigirSituacaoPrazoProcesso(processo, processo.getPorcentagem());
             }
         } catch (DAOException e) {
@@ -167,6 +167,6 @@ public class BamAction extends AbstractController {
             }
         }
 
-        processoEpaManager.update(processo);
+        processoManager.update(processo);
     }
 }

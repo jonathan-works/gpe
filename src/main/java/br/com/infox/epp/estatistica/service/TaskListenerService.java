@@ -14,7 +14,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -38,8 +37,6 @@ public class TaskListenerService implements Serializable {
     @In
     TarefaManager tarefaManager;
     @In
-    private ProcessoEpaManager processoEpaManager;
-    @In
     private ProcessoManager processoManager;
 
     @Observer(IniciarProcessoService.ON_CREATE_PROCESS)
@@ -62,7 +59,7 @@ public class TaskListenerService implements Serializable {
         Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
 
         ProcessoTarefa pTarefa = new ProcessoTarefa();
-        pTarefa.setProcesso(processoEpaManager.find(processo.getIdProcesso()));
+        pTarefa.setProcesso(processoManager.find(processo.getIdProcesso()));
         pTarefa.setTarefa(tarefa);
         pTarefa.setDataInicio(taskInstance.getCreate());
         pTarefa.setUltimoDisparo(new Date());

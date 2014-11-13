@@ -10,7 +10,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 
@@ -27,8 +26,6 @@ public class VariavelProcessoAction implements Serializable {
 
     @In
     private VariavelProcessoService variavelProcessoService;
-    @In
-    private ProcessoEpaManager processoEpaManager;
 
     public Boolean possuiVariaveis() {
         if (this.possuiVariaveis == null) {

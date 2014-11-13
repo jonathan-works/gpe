@@ -28,7 +28,6 @@ import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoEpaList;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
@@ -62,8 +61,6 @@ public class PainelUsuarioHome implements Serializable {
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
     @In
     private CaixaManager caixaManager;
-    @In
-    private ProcessoEpaManager processoEpaManager;
     @In
     private ActionMessagesService actionMessagesService;
 
@@ -181,7 +178,7 @@ public class PainelUsuarioHome implements Serializable {
 
         if (idsProcesso != null
                 && (idsProcesso.size() > 1 || (idsProcesso.size() == 1 && idsProcesso.get(0) != -1))) {
-            Processo processo = processoEpaManager.find(idsProcesso.get(0));
+            Processo processo = processoManager.find(idsProcesso.get(0));
             Fluxo fluxo = processo.getNaturezaCategoriaFluxo().getFluxo();
 
             List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo);

@@ -8,9 +8,10 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 
 @AutoCreate
@@ -19,15 +20,15 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 public class PrioridadeProcessoChanger implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
 	public static final String NAME = "prioridadeProcessoChanger";
-
+	
+	@In
+    private ProcessoManager processoManager;
+	@In
+	private ActionMessagesService actionMessagesService;
+	
     private Processo processo;
     private PrioridadeProcesso prioridadeProcesso;
-
-    @In
-    private ProcessoEpaManager processoEpaManager;
-
 
     public Processo getProcesso() {
 		return processo;
@@ -53,10 +54,9 @@ public class PrioridadeProcessoChanger implements Serializable {
     public void atualizarPrioridade() {
         processo.setPrioridadeProcesso(getPrioridadeProcesso());
         try {
-            processoEpaManager.update(processo);
+        	processoManager.update(processo);
         } catch (DAOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        	actionMessagesService.handleDAOException(e);
         }
     }
 

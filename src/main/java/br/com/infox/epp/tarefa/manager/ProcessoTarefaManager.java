@@ -17,8 +17,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
+import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.dao.ProcessoTarefaDAO;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -40,7 +39,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     @In
     private LocalizacaoTurnoDAO localizacaoTurnoDAO;
     @In
-    private ProcessoEpaDAO processoEpaDAO;
+    private ProcessoDAO processoDAO;
 
     public ProcessoTarefa getByTaskInstance(Long taskInstance) {
         return getDao().getByTaskInstance(taskInstance);
@@ -125,12 +124,9 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         }
     }
 
-    @Deprecated
     public void updateTempoGasto(Processo processo) throws DAOException {
-        Map<String, Object> result = processoEpaDAO.getTempoGasto(processo);
-
+        Map<String, Object> result = processoDAO.getTempoGasto(processo);
         if (result != null) {
-            
             Date dataFim = processo.getDataFim();
             DateRange dateRange;
             if (dataFim != null) {
@@ -139,16 +135,10 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
                 dateRange = new DateRange(processo.getDataInicio(), new Date());
             }
             processo.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
-            Fluxo f = processo.getNaturezaCategoriaFluxo().getFluxo();
-
-//            if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
-//            	processo.setPorcentagem((processo.getTempoGasto() * PORCENTAGEM_MAXIMA)
-//                        / f.getQtPrazo());
-//            }
             if (processo.getPorcentagem() > PORCENTAGEM_MAXIMA) {
             	processo.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
             }
-            processoEpaDAO.update(processo);
+            processoDAO.update(processo);
         }
     }
 

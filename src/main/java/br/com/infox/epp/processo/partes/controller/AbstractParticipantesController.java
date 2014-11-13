@@ -21,7 +21,7 @@ import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.manager.PessoaJuridicaManager;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
@@ -44,7 +44,7 @@ public abstract class AbstractParticipantesController implements Serializable {
     @In
     protected MeioContatoManager meioContatoManager;
     @In
-    protected ProcessoEpaManager processoEpaManager;
+    protected ProcessoManager processoManager;
     @In
     protected ActionMessagesService actionMessagesService;
     
@@ -121,7 +121,7 @@ public abstract class AbstractParticipantesController implements Serializable {
 	    		pessoaJuridicaManager.persist((PessoaJuridica) getParticipanteProcesso().getPessoa());
 	    	}
 		    participanteProcessoManager.persist(getParticipanteProcesso());
-		    processoEpaManager.refresh(getProcesso());
+		    processoManager.refresh(getProcesso());
 		    participanteProcessoManager.flush();
 		} catch (DAOException e) {
 		    actionMessagesService.handleDAOException(e);

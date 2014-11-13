@@ -28,7 +28,6 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
@@ -56,8 +55,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
     @In
     private ProcessoManager processoManager;
-    @In
-    private ProcessoEpaManager processoEpaManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
@@ -116,7 +113,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     public Boolean checarVisibilidade() {
         if (!sigiloProcessoService.usuarioPossuiPermissao(
                 Authenticator.getUsuarioLogado(),
-                processoEpaManager.find(getInstance().getIdProcesso()))) {
+                processoManager.find(getInstance().getIdProcesso()))) {
             possuiPermissaoVisibilidade = false;
         } else if (checkVisibilidade) {
             possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO
