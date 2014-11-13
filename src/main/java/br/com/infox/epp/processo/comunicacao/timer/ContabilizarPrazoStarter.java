@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.util.ClassLoaderUtil;
@@ -16,10 +17,9 @@ import org.quartz.SchedulerException;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.comunicacao.manager.ContabilizarPrazoTimerManager;
-import br.com.infox.epp.processo.comunicacao.service.ContabilizarPrazoService;
 import br.com.infox.quartz.QuartzConstant;
 
-@Name(ContabilizarPrazoService.NAME)
+@Name(ContabilizarPrazoStarter.NAME)
 @Scope(ScopeType.STATELESS)
 @AutoCreate
 public class ContabilizarPrazoStarter {
@@ -33,7 +33,7 @@ public class ContabilizarPrazoStarter {
     
     public ContabilizarPrazoStarter() {}
     
-    @Observer
+    @Observer(value = QuartzDispatcher.QUARTZ_DISPATCHER_INITIALIZED_EVENT)
     @Transactional
     public void init() {
         if (!Boolean.parseBoolean(QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_TIMER_ENABLED))) {

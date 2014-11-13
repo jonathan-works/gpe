@@ -9,12 +9,12 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.comunicacao.Comunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ContabilizarPrazoService;
-import br.com.infox.ibpm.process.definition.annotations.DefinitionAvailable;
+import br.com.infox.ibpm.process.definition.annotations.DefinitionAvaliable;
 
 @Name(Contabilizador.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-@DefinitionAvailable
+@DefinitionAvaliable
 public class Contabilizador {
     public static final String NAME = "contabilizador";
     
