@@ -4,7 +4,7 @@ public interface SigiloProcessoQuery {
     String TABLE_NAME = "tb_sigilo_processo";
     String SEQUENCE_NAME = "sq_tb_sigilo_processo";
     String COLUMN_ID = "id_sigilo_processo";
-    String COLUMN_ID_PROCESSO_EPA = "id_processo_epa";
+    String COLUMN_ID_PROCESSO = "id_processo";
     String COLUMN_ID_USUARIO_LOGIN = "id_usuario_login";
     String COLUMN_SIGILOSO = "in_sigiloso";
     String COLUMN_MOTIVO = "ds_motivo";

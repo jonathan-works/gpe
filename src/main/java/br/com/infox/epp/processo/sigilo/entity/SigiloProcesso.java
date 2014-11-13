@@ -4,7 +4,7 @@ import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_ATIVO;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_DATA_INCLUSAO;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_ID;
-import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_ID_PROCESSO_EPA;
+import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_ID_PROCESSO;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_ID_USUARIO_LOGIN;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_MOTIVO;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_SIGILOSO;
@@ -55,7 +55,7 @@ public class SigiloProcesso implements Serializable {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = COLUMN_ID_PROCESSO_EPA, nullable = false)
+    @JoinColumn(name = COLUMN_ID_PROCESSO, nullable = false)
     private Processo processo;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
