@@ -40,7 +40,7 @@
 				<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pasta.visivelExterno}"
 					styleClass="rf-tr-nd">
 					<rich:dropTarget
-						acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
+						acceptedTypes="doc#{consultaController.processo.idProcesso}"
 						dropListener="#{pastaAction.associaDocumento}"
 						dropValue="#{pasta}"
 						render="documentoListPanel, documentoListSearchForm"
@@ -97,7 +97,7 @@
 	
 	<ui:define name="toolBar">
 	    <rich:dragSource
-	      type="doc#{consultaController.processoEpa.idProcesso}"
+	      type="doc#{consultaController.processo.idProcesso}"
 	      dragValue="#{row}"
 	      rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
 	      dragIndicator="indicator">

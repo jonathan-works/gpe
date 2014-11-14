@@ -92,7 +92,7 @@
     <ui:define name="body">
         <rich:collapsiblePanel
             switchType="client"
-            header="#{eppmessages['processo.titleView']} #{processoEpaHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoEpaHome.instance.itemDoProcesso}"
+            header="#{eppmessages['processo.titleView']} #{processoEpaHome.instance.numeroProcesso} - #{taskInstance.name} "
             expanded="false">
             <h:panelGrid
                 columns="2"
@@ -107,7 +107,7 @@
                 <wi:outputText
                     id="usuarioCadastroProcesso"
                     label="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                    value="#{processoEpaHome.instance.usuarioCadastroProcesso}" />
+                    value="#{processoEpaHome.instance.usuarioCadastro}" />
             </h:panelGrid>
         </rich:collapsiblePanel>
         <h:form>
@@ -382,7 +382,7 @@
                 id="tabPartesDoProcesso"
                 name="tabPartesDoProcesso"
                 status=":status"
-                action="#{participantesProcessoController.setProcessoEpa(home.instance)}"
+                action="#{participantesProcessoController.setProcesso(home.instance)}"
                 rendered="#{home.hasPartes()}"
                 title="#{eppmessages['participanteProcesso.participantes']}">
                 <ui:include src="parteProcessoGrid.xhtml" />

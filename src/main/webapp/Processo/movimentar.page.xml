@@ -17,13 +17,9 @@ login-required="true"
     <param name="idProcesso" value="#{processoEpaHome.processoIdProcesso}" />
     <param name="tarefaId" value="#{processoEpaHome.tarefaId}" />
     <action execute="#{processoEpaHome.iniciarTarefaProcesso()}" if="#{not contextFacade.ajaxRequest}"/>
-    <action execute="#{variavelProcessoAction.setProcessoEpa(processoEpaHome.instance)}" on-postback="false"/>
-    <action execute="#{relacionamentoCrudAction.setProcesso(processoEpaHome.instance.numeroProcesso)}"
-        if="#{processoEpaHome.tab eq 'relacionamentoProcessoTab'}"/>
-    <action execute="#{consultaController.setProcessoEpa(processoEpaHome.instance)}"
-        if="#{processoEpaHome.tab eq 'tabMovimentacoes'}"/>
-	<action execute="#{pastaAction.setProcesso(processoEpaHome.instance)}"
-      if="#{processoEpaHome.tab eq 'tabAnexos'}" />
-    <action execute="#{documentoList.setProcesso(processoEpaHome.instance)}"
-      if="#{processoEpaHome.tab eq 'tabAnexos'}" />
+    <action execute="#{variavelProcessoAction.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
+    <action execute="#{relacionamentoCrudAction.setProcesso(processoEpaHome.instance.numeroProcesso)}" if="#{processoEpaHome.tab eq 'relacionamentoProcessoTab'}"/>
+    <action execute="#{consultaController.setProcesso(processoEpaHome.instance)}" if="#{processoEpaHome.tab eq 'tabMovimentacoes'}"/>
+	<action execute="#{pastaAction.setProcesso(processoEpaHome.instance)}" if="#{processoEpaHome.tab eq 'tabAnexos'}" />
+    <action execute="#{documentoList.setProcesso(processoEpaHome.instance)}" if="#{processoEpaHome.tab eq 'tabAnexos'}" />
 </page>
