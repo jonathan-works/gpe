@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.partes.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -24,4 +26,11 @@ public class HistoricoParticipanteProcessoManager extends Manager<HistoricoParti
         persist(historicoParticipanteProcesso);
     }
 
+    public List<HistoricoParticipanteProcesso> listByParticipanteProcesso(ParticipanteProcesso pp) {
+        return getDao().listByParticipanteProcesso(pp);
+    }
+    
+    public boolean hasHistoricoParticipante(ParticipanteProcesso pp) {
+        return getDao().hasHistoricoParticipante(pp);
+    }
 }
