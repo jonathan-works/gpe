@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.type;
+package br.com.infox.epp.processo.metadado.type;
 
 public enum MetadadoProcessoType {
 	
@@ -6,7 +6,8 @@ public enum MetadadoProcessoType {
 	UNIDADE_DECISORA_COLEGIADA("unidadeDecisoraColegiada"),
 	RELATOR("relator"),
 	LOCALIZACAO_DESTINO("destino"),
-	PESSOA_DESTINATARIO("destinatario");
+	PESSOA_DESTINATARIO("destinatario"),
+	ITEM_DO_PROCESSO("itemDoProcesso");
 	
 	private String label;
 	

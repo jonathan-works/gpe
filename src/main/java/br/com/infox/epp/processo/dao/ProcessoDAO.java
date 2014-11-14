@@ -7,7 +7,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_LIST_PROCESSO_PARAM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ITEM_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
@@ -216,11 +215,11 @@ public class ProcessoDAO extends DAO<Processo> {
         return count != null && count.compareTo(1L) > 0;
     }
 
-    public Item getItemDoProcesso(int idProcesso) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_ID_PROCESSO, idProcesso);
-        return getNamedSingleResult(ITEM_DO_PROCESSO, parameters);
-    }
+//    public Item getItemDoProcesso(int idProcesso) {
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put(PARAM_ID_PROCESSO, idProcesso);
+//        return getNamedSingleResult(ITEM_DO_PROCESSO, parameters);
+//    }
 
     @SuppressWarnings(UNCHECKED)
     public Map<String, Object> getTempoGasto(Processo processo) {

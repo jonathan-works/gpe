@@ -41,7 +41,7 @@ public class VariavelProcessoAction implements Serializable {
         return this.variaveis;
     }
 
-    public void setProcessoEpa(Processo processo) {
+    public void setProcesso(Processo processo) {
         this.processo = processo;
     }
 

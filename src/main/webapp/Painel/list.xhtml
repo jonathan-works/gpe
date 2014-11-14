@@ -57,8 +57,8 @@
           rendered="#{not empty painelUsuarioHome.processoIdList or not empty painelUsuarioHome.idCaixa}"
         >
           <wi:dataTable
-            values="#{consultaProcessoEpaList.list(10)}"
-            bean="#{consultaProcessoEpaList}"
+            values="#{consultaProcessoList.list(10)}"
+            bean="#{consultaProcessoList}"
             styleClass="p-list-dtable"
             tableTitle="#{eppmessages['consultaProcesso.processos']}"
             id="consultaProcessoEpaList"
@@ -73,31 +73,31 @@
                 formId="consultaProcessoForm"
                 formTitle="#{eppmessages['searchForm.title']}"
                 searchReRender="painelProcessos"
-                clearAction="consultaProcessoEpaList.newInstance()"
+                clearAction="consultaProcessoList.newInstance()"
                 clearReRender="painelProcessos"
               >
                 <wi:inputText
                   id="numeroProcesso"
                   label="#{eppmessages['consultaProcesso.numeroProcesso']}"
-                  value="#{consultaProcessoEpaList.entity.numeroProcesso}"
+                  value="#{consultaProcessoList.entity.numeroProcesso}"
                 />
                 <wi:inputDataPeriodo
                   id="periodo"
                   label="#{eppmessages['data.inputPeriodo']}"
-                  valueDateFrom="#{consultaProcessoEpaList.dataInicio}"
-                  valueDateTo="#{consultaProcessoEpaList.dataFim}"
+                  valueDateFrom="#{consultaProcessoList.dataInicio}"
+                  valueDateTo="#{consultaProcessoList.dataFim}"
                 />
                 <wi:selectOneMenuEntity
                   id="natureza"
                   label="#{eppmessages['natureza.tableTitle']}"
-                  value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.natureza}"
+                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
                   showLabelSelecione="true"
                   items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}"
                 />
                 <wi:selectOneMenuEntity
                   id="categoria"
                   label="#{eppmessages['categoria.tableTitle']}"
-                  value="#{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}"
+                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
                   showLabelSelecione="true"
                   inNewLine="true"
                   items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}"
@@ -132,8 +132,8 @@
             <wi:columnOutputText
               columnId="itemDoProcesso"
               columnHeader="#{eppmessages['consultaProcesso.item']}"
-              value="#{row.itemDoProcesso}"
-            />
+              value="Precisa ALterar"  />
+              <!--  value="#{row.itemDoProcesso}" -->
             <wi:columnOutputText
               columnId="prioridadeProcesso"
               columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"
@@ -193,5 +193,6 @@
         </h:outputScript>
       </rich:popupPanel>
     </a:region>
+    
   </ui:define>
 </ui:composition>

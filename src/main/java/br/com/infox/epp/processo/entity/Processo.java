@@ -16,8 +16,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ID_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_USUARIO_CADASTRO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ITEM_DO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ITEM_DO_PROCESSO_QUERY;
+//import static br.com.infox.epp.processo.query.ProcessoQuery.ITEM_DO_PROCESSO;
+//import static br.com.infox.epp.processo.query.ProcessoQuery.ITEM_DO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO;
@@ -81,10 +81,10 @@ import javax.validation.constraints.Size;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
-import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -112,7 +112,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     		    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
     					 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.processo.entity.Processo")}),
     @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO, query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
-    @NamedQuery(name = ITEM_DO_PROCESSO, query = ITEM_DO_PROCESSO_QUERY),
+//    @NamedQuery(name = ITEM_DO_PROCESSO, query = ITEM_DO_PROCESSO_QUERY),
     @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
     @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
     @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
@@ -149,10 +149,6 @@ public class Processo implements Serializable {
     
     @Column(name = "nr_tempo_gasto")
     private Integer tempoGasto;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_item_processo")
-    private Item itemDoProcesso;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "id_prioridade_processo", nullable = true)
@@ -195,7 +191,7 @@ public class Processo implements Serializable {
     @OrderBy(value = "ds_caminho_absoluto")
     private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<MetadadoProcesso> metadadoProcessoList = new ArrayList<>();
     
     public Integer getIdProcesso() {
@@ -250,14 +246,6 @@ public class Processo implements Serializable {
 		return getTempoGasto().floatValue()/getNaturezaCategoriaFluxo().getFluxo().getQtPrazo();
 	}
 	
-	public Item getItemDoProcesso() {
-		return itemDoProcesso;
-	}
-
-	public void setItemDoProcesso(Item itemDoProcesso) {
-		this.itemDoProcesso = itemDoProcesso;
-	}
-
 	public PrioridadeProcesso getPrioridadeProcesso() {
 		return prioridadeProcesso;
 	}

@@ -267,9 +267,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public Item getItemDoProcesso(int idProcesso) {
-        return getDao().getItemDoProcesso(idProcesso);
-    }
+//    public Item getItemDoProcesso(int idProcesso) {
+//        return getDao().getItemDoProcesso(idProcesso);
+//    }
 
     public boolean hasPartes(Processo processo) {
         return getDao().hasPartes(processo);

@@ -26,7 +26,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
-import br.com.infox.epp.processo.consulta.list.ConsultaProcessoEpaList;
+import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
@@ -50,7 +50,7 @@ public class PainelUsuarioHome implements Serializable {
     private List<DynamicColumnModel> dynamicColumns;
 
     @In
-    private ConsultaProcessoEpaList consultaProcessoEpaList;
+    private ConsultaProcessoList consultaProcessoList;
     @In
     private ProcessoManager processoManager;
     @In
@@ -165,8 +165,8 @@ public class PainelUsuarioHome implements Serializable {
     }
 
     public void setProcessoCaixa(Caixa caixa) {
-        if (consultaProcessoEpaList.getResultCount() > 0) {
-            List<Integer> idList = getProcessoIdList(consultaProcessoEpaList.getResultList());
+        if (consultaProcessoList.getResultCount() > 0) {
+            List<Integer> idList = getProcessoIdList(consultaProcessoList.getResultList());
             setProcessoCaixa(idList, caixa);
             refresh();
             processoIdList = null;

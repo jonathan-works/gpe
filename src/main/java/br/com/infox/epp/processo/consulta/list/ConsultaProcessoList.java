@@ -13,24 +13,24 @@ import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(ConsultaProcessoEpaList.NAME)
+@Name(ConsultaProcessoList.NAME)
 @Scope(ScopeType.PAGE)
 @AutoCreate
-public class ConsultaProcessoEpaList extends EntityList<Processo> {
+public class ConsultaProcessoList extends EntityList<Processo> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "consultaProcessoEpaList";
+    public static final String NAME = "consultaProcessoList";
 
     private static final String DEFAULT_EJBQL = "select o from Processo o";
     private static final String DEFAULT_ORDER = "o.prioridadeProcesso, o.dataInicio";
 
     private static final String R1 = "o.idProcesso in (#{painelUsuarioHome.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioHome.idCaixa}";
-    private static final String R3 = "o.numeroProcesso = #{consultaProcessoEpaList.entity.numeroProcesso}";
-    private static final String R4 = "o.naturezaCategoriaFluxo.natureza = #{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.natureza}";
-    private static final String R5 = "o.naturezaCategoriaFluxo.categoria = #{consultaProcessoEpaList.entity.naturezaCategoriaFluxo.categoria}";
-    private static final String R6 = "cast(o.dataInicio as date) >= #{consultaProcessoEpaList.dataInicio}";
-    private static final String R7 = "cast(o.dataInicio as date) <= #{consultaProcessoEpaList.dataFim}";
+    private static final String R3 = "o.numeroProcesso = #{consultaProcessoList.entity.numeroProcesso}";
+    private static final String R4 = "o.naturezaCategoriaFluxo.natureza = #{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}";
+    private static final String R5 = "o.naturezaCategoriaFluxo.categoria = #{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}";
+    private static final String R6 = "cast(o.dataInicio as date) >= #{consultaProcessoList.dataInicio}";
+    private static final String R7 = "cast(o.dataInicio as date) <= #{consultaProcessoList.dataFim}";
     private static final String R8 = "o.decisoraMonocratica = #{authenticator.monocraticaLogada}";
     private static final String R9 = "o.decisoraColegiada = #{authenticator.colegiadaLogada}";
 

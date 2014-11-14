@@ -1,9 +1,14 @@
-package br.com.infox.epp.processo.entity;
+package br.com.infox.epp.processo.metadado.entity;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,27 +17,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
 @Table(name = MetadadoProcesso.TABLE_NAME)
 public class MetadadoProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "tb_variavel_processo";
+	public static final String TABLE_NAME = "tb_metadado_processo";
 	
 	@Id
-	@SequenceGenerator(initialValue=1, allocationSize=1, name="GeneratorVariavelProcesso", sequenceName="sq_variavel_processo")
-	@GeneratedValue(generator = "GeneratorVariavelProcesso", strategy = GenerationType.SEQUENCE)
-	@Column(name = "id_variavel_processo", unique = true, nullable = false)
+	@SequenceGenerator(initialValue=1, allocationSize=1, name="GeneratorMetadadoProcesso", sequenceName="sq_metadado_processo")
+	@GeneratedValue(generator = "GeneratorMetadadoProcesso", strategy = GenerationType.SEQUENCE)
+	@Column(name = "id_metadado_processo", unique = true, nullable = false)
 	private Long id;
 
 	@NotNull
-	@Column(name = "nm_variavel_processo", nullable = false)
-	private String nome;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "nm_metadado_processo", nullable = false)
+	private MetadadoProcessoType nome;
 	
 	@NotNull
-	@Column(name = "vl_variavel_processo", nullable = false)
+	@Column(name = "vl_metadado_processo", nullable = false)
 	private String valor;
 	
 	@NotNull
@@ -43,6 +55,9 @@ public class MetadadoProcesso implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_processo", nullable = false)
 	private Processo processo;
+	
+	@Transient
+	private Object value;
 
 	public Long getId() {
 		return id;
@@ -52,11 +67,11 @@ public class MetadadoProcesso implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
+	public MetadadoProcessoType getNome() {
 		return nome;
 	}
 
-	public void setNome(String nome) {
+	public void setNome(MetadadoProcessoType nome) {
 		this.nome = nome;
 	}
 
@@ -82,6 +97,24 @@ public class MetadadoProcesso implements Serializable {
 
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <E> E getValue() {
+		if (value != null) {
+			if (EntityUtil.isEntity(getTipo())) {
+				EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+				value = (E) entityManager.find(getTipo(), getValor());
+			} else {
+				try {
+					Constructor<?> constructor = getTipo().getConstructor(String.class);
+					value = constructor.newInstance(getValor());
+				} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return (E) value;
 	}
 
 	@Override

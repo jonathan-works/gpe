@@ -146,8 +146,15 @@ public class ProcessoHandler implements Serializable {
         }
     }
 
+    /**
+     * Processo nao tem mais itemDoProcesso
+     * @param idProcesso
+     * @return
+     */
+    @Deprecated
     public Item getItemDoProcesso(int idProcesso) {
-        return processoManager.getItemDoProcesso(idProcesso);
+//        return processoManager.getItemDoProcesso(idProcesso);
+    	return null;
     }
 
     public boolean hasPartes() {

@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.partes.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
@@ -47,6 +48,7 @@ public class ParticipantesController extends AbstractParticipantesController {
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
         processo.setLocalizacao(localizacao);
         processo.setNumeroProcesso("");
+        processo.setDataInicio(new Date());
         setProcesso(processo);
     	try {
 			processoManager.persist(getProcesso());

@@ -34,7 +34,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa o "
             + "inner join o.processo p "
             + "inner join p.naturezaCategoriaFluxo ncf "
-            + "where o.dataFim is null and p.tipoProcesso = 'PE'";
+            + "where o.dataFim is null";
     
     private static final String DEFAULT_ORDER = "p.idProcesso";
     private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
@@ -143,9 +143,16 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
         this.fluxoList = fluxoList;
     }
 
+    /**
+     * Item agora é variavel do jbpm
+     * @param processo
+     * @return
+     */
+    @Deprecated
     public String getNaturezaCategoriaItem(Processo processo) {
         NaturezaCategoriaFluxo naturezaCategoriaFluxo = processo.getNaturezaCategoriaFluxo();
-        Item item = processo.getItemDoProcesso();
+//        Item item = processo.getItemDoProcesso();
+        Item item = null;
         if (item == null) {
             return MessageFormat.format("{0}/{1}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria());
         } else {

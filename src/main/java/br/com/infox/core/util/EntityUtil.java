@@ -111,7 +111,7 @@ public final class EntityUtil implements Serializable {
      * @param obj
      * @return
      */
-    private static boolean isEntity(Class<?> cl) {
+    public static boolean isEntity(Class<?> cl) {
         if (cl.isPrimitive()
                 || String.class.getPackage().equals(cl.getPackage())) {
             return false;

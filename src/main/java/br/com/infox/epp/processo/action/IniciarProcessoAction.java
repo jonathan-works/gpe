@@ -24,8 +24,6 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -34,6 +32,8 @@ import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -59,25 +59,33 @@ public class IniciarProcessoAction implements Serializable {
 
     public void iniciarProcesso() {
     	newProcessoEpa();
+    	if (itemDoProcesso != null) {
+    		addItemDoProcesso(processo);
+    	}
         enviarProcessoParaJbpm();
     }
     
-    public void iniciarProcesso(Processo processo) {
+    private void addItemDoProcesso(Processo processo) {
+		MetadadoProcesso metadadoProcesso = new MetadadoProcesso();
+		metadadoProcesso.setNome(MetadadoProcessoType.ITEM_DO_PROCESSO);
+		metadadoProcesso.setTipo(itemDoProcesso.getClass());
+		metadadoProcesso.setValor(itemDoProcesso.getIdItem().toString());
+		metadadoProcesso.setProcesso(processo);
+		processo.getMetadadoProcessoList().add(metadadoProcesso);
+	}
+
+	public void iniciarProcesso(Processo processo) {
     	setProcesso(processo);
-    	getProcesso().setItemDoProcesso(itemDoProcesso);
     	enviarProcessoParaJbpm();
     }
     
     public void newProcessoEpa() {
-		final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
         processo = new Processo();
         processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
         processo.setNumeroProcesso("");
-        processo.setUsuarioCadastro(usuarioLogado);
+        processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
-        processo.setLocalizacao(localizacao);
-        processo.setItemDoProcesso(itemDoProcesso);
+        processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
     }
 
     private void enviarProcessoParaJbpm() {
@@ -104,8 +112,7 @@ public class IniciarProcessoAction implements Serializable {
         }
     }
 
-    private void sendIniciarProcessoErrorMessage(final String message,
-            final Exception exception) {
+    private void sendIniciarProcessoErrorMessage(String message, Exception exception) {
         LOG.error(".iniciarProcesso()", exception);
         getMessagesHandler().add(Severity.ERROR, Messages.instance().get(message));
     }
@@ -192,17 +199,11 @@ public class IniciarProcessoAction implements Serializable {
     }
 
     public Natureza getNatureza() {
-        if (naturezaCategoriaFluxo != null) {
-            return naturezaCategoriaFluxo.getNatureza();
-        }
-        return null;
+        return naturezaCategoriaFluxo != null ? naturezaCategoriaFluxo.getNatureza() : null;
     }
 
     public boolean necessitaPartes() {
-        if (getNatureza() != null) {
-            return getNatureza().getHasPartes();
-        }
-        return Boolean.FALSE;
+        return getNatureza() != null && getNatureza().getHasPartes();
     }
 
     public boolean isRenderizarCadastroPartes() {
@@ -216,5 +217,5 @@ public class IniciarProcessoAction implements Serializable {
     public void setViewId(String viewId) {
         this.viewId = viewId;
     }
-
+    
 }
