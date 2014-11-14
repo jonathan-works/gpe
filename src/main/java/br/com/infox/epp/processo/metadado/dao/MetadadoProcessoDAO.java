@@ -13,12 +13,4 @@ public class MetadadoProcessoDAO extends DAO<MetadadoProcesso> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "metadadoProcessoDAO";
 	
-//	public MetadadoProcesso getMetadadoProcessoByNome() {
-//		
-//	}
-//	
-//	public <E> E getMetadadoProcessoByNome(MetadadoProcessoType type) {
-//		
-//	}
-	
 }

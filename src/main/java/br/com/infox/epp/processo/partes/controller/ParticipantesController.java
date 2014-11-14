@@ -2,17 +2,13 @@ package br.com.infox.epp.processo.partes.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
-import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
@@ -40,15 +36,10 @@ public class ParticipantesController extends AbstractParticipantesController {
     	if (getProcesso() != null)  {
     		return;
     	}
-    	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        Localizacao localizacao = Authenticator.getLocalizacaoAtual();
         Processo processo = new Processo();
         processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-        processo.setUsuarioCadastro(usuarioLogado);
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
-        processo.setLocalizacao(localizacao);
         processo.setNumeroProcesso("");
-        processo.setDataInicio(new Date());
         setProcesso(processo);
     	try {
 			processoManager.persist(getProcesso());
