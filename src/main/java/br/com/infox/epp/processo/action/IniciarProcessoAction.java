@@ -68,7 +68,7 @@ public class IniciarProcessoAction implements Serializable {
     private void addItemDoProcesso(Processo processo) {
 		MetadadoProcesso metadadoProcesso = new MetadadoProcesso();
 		metadadoProcesso.setNome(MetadadoProcessoType.ITEM_DO_PROCESSO);
-		metadadoProcesso.setTipo(itemDoProcesso.getClass());
+		metadadoProcesso.setClassType(itemDoProcesso.getClass());
 		metadadoProcesso.setValor(itemDoProcesso.getIdItem().toString());
 		metadadoProcesso.setProcesso(processo);
 		processo.getMetadadoProcessoList().add(metadadoProcesso);

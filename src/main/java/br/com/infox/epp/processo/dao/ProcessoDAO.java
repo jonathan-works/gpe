@@ -50,7 +50,6 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
@@ -67,25 +66,6 @@ public class ProcessoDAO extends DAO<Processo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoDAO";
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoDAO.class);
-
-//    @Transactional(TransactionPropagationType.REQUIRED)
-//    public void anulaActorId(String actorId) throws DAOException {
-//        Map<String, Object> parameters = new HashMap<>();
-//        parameters.put(PARAM_ACTOR_ID, actorId);
-//        executeNamedQueryUpdate(ANULA_ACTOR_ID, parameters);
-//    }
-
-//    @Transactional(TransactionPropagationType.REQUIRED)
-//    public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
-//        Map<String, Object> parameters = new HashMap<>();
-//        parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
-//        executeNamedQueryUpdate(APAGA_ACTOR_ID_DO_PROCESSO, parameters);
-//    }
-
-//    @Transactional(TransactionPropagationType.REQUIRED)
-//    public void anularTodosActorId() throws DAOException {
-//        executeNamedQueryUpdate(ANULA_TODOS_OS_ACTOR_IDS);
-//    }
 
     @Transactional(TransactionPropagationType.REQUIRED)
     public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) throws DAOException {

@@ -49,7 +49,7 @@ public class MetadadoProcesso implements Serializable {
 	
 	@NotNull
 	@Column(name = "ds_tipo", nullable = false)
-	private Class<?> tipo;
+	private Class<?> classType;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -83,12 +83,12 @@ public class MetadadoProcesso implements Serializable {
 		this.valor = valor;
 	}
 
-	public Class<?> getTipo() {
-		return tipo;
+	public Class<?> getClassType() {
+		return classType;
 	}
 
-	public void setTipo(Class<?> tipo) {
-		this.tipo = tipo;
+	public void setClassType(Class<?> classType) {
+		this.classType = classType;
 	}
 
 	public Processo getProcesso() {
@@ -101,13 +101,13 @@ public class MetadadoProcesso implements Serializable {
 	
 	@SuppressWarnings("unchecked")
 	public <E> E getValue() {
-		if (value != null) {
-			if (EntityUtil.isEntity(getTipo())) {
+		if (value == null) {
+			if (EntityUtil.isEntity(getClassType())) {
 				EntityManager entityManager = ComponentUtil.getComponent("entityManager");
-				value = (E) entityManager.find(getTipo(), getValor());
+				value = (E) entityManager.find(getClassType(), getValor());
 			} else {
 				try {
-					Constructor<?> constructor = getTipo().getConstructor(String.class);
+					Constructor<?> constructor = getClassType().getConstructor(String.class);
 					value = constructor.newInstance(getValor());
 				} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					e.printStackTrace();

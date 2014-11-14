@@ -332,30 +332,6 @@ public class Authenticator {
     public void unAuthenticate() throws DAOException {
         Identity.instance().unAuthenticate();
         limparContexto();
-        anulaActorId();
-    }
-
-    /**
-     * Ao encerrar uma sessao, limpa os processos que o servidor estava
-     * trabalhando
-     * @throws DAOException 
-     * 
-     */
-    @Observer("org.jboss.seam.preDestroyContext.SESSION")
-    public void anulaActorId() throws DAOException {
-        String actorId = Actor.instance().getId();
-        if (actorId != null) {
-            getAuthenticatorService().anulaActorId(actorId);
-        }
-    }
-
-    /**
-     * Ao ligar a aplicação, limpa todos os actorIds dos processos
-     * @throws DAOException 
-     */
-    @Observer("org.jboss.seam.postInitialization")
-    public void anulaTodosActorId() throws DAOException {
-        getAuthenticatorService().anularTodosActorId();
     }
 
     private boolean obterPerfilAtual(UsuarioLogin usuario) throws LoginException {

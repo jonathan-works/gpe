@@ -60,7 +60,7 @@
                         value="#{row.numeroProcesso}" hideOrder="true" />
                     <wi:columnOutputText columnId="usuarioCadastro"
                         columnHeader="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                        value="#{row.usuarioCadastroProcesso}"
+                        value="#{row.usuarioCadastro}"
                         hideOrder="true" />
                     <wi:columnDateTime columnId="dataInicioProcesso"
                         columnHeader="#{eppmessages['processo.dataInicio']}"
@@ -114,7 +114,7 @@
                         value="#{row.numeroProcesso}" hideOrder="true" />
                     <wi:columnOutputText columnId="usuarioCadastro"
                         columnHeader="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                        value="#{row.usuarioCadastroProcesso}"
+                        value="#{row.usuarioCadastro}"
                         hideOrder="true" />
                     <wi:columnDateTime columnId="dataInicioProcesso"
                         columnHeader="#{eppmessages['processo.dataInicio']}"
@@ -149,7 +149,7 @@
                                 <f:convertDateTime
                                     pattern="dd/MM/yyyy kk:mm" />
                             </wi:outputText>
-                            <wi:outputText id="usuarioCadastroProcesso"
+                            <wi:outputText id="usuarioCadastro"
                                 label="#{eppmessages['processo.usuarioCadastroProcesso']}"
                                 value="#{controller.processo.usuarioCadastro.nomeUsuario}" />
                         </h:panelGrid>

@@ -51,20 +51,24 @@ public class JbpmEventsHandler implements Serializable {
                     + exception.getLocalizedMessage(), "removerProcessoLocalizacao()", JBPM_EVENTS_HANDLER, BPM), exception);
         }
     }
+    
+    /**
+     * Comentado pode ser removido no futuro 14-11-2014
+     */
 
-    @Observer(Event.EVENTTYPE_TASK_END)
-    @End(beforeRedirect = true)
-    public void refreshPainel(ExecutionContext context) throws DAOException {
-        context.getTaskInstance().setActorId(null);
-        try {
-            getProcessoManager().apagarActorIdDoProcesso(JbpmUtil.getProcesso());
-        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException exception) {
-            String action = "Limpar as variáveis do painel para atualização: ";
-            LOG.error(action, exception);
-            throw new ApplicationException(ApplicationException.createMessage(action
-                    + exception.getLocalizedMessage(), "refreshPainel()", JBPM_EVENTS_HANDLER, BPM), exception);
-        }
-    }
+//    @Observer(Event.EVENTTYPE_TASK_END)
+//    @End(beforeRedirect = true)
+//    public void refreshPainel(ExecutionContext context) throws DAOException {
+//        context.getTaskInstance().setActorId(null);
+//        try {
+//            getProcessoManager().apagarActorIdDoProcesso(JbpmUtil.getProcesso());
+//        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException exception) {
+//            String action = "Limpar as variáveis do painel para atualização: ";
+//            LOG.error(action, exception);
+//            throw new ApplicationException(ApplicationException.createMessage(action
+//                    + exception.getLocalizedMessage(), "refreshPainel()", JBPM_EVENTS_HANDLER, BPM), exception);
+//        }
+//    }
 
     /**
      * Atualiza o dicionário de Tarefas (tb_tarefa) com seus respectivos id's de

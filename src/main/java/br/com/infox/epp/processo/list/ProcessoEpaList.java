@@ -36,14 +36,14 @@ public class ProcessoEpaList extends EntityList<Processo> {
     private void iniciaListaUsuarios() {
         StringBuilder sb = new StringBuilder();
         sb.append("select distinct user from Processo o ");
-        sb.append("join o.usuarioCadastroProcesso user");
+        sb.append("join o.usuarioCadastro user");
         listaUsuarios = getEntityManager().createQuery(sb.toString()).getResultList();
     }
 
     @Override
     protected void addSearchFields() {
         addSearchField("numeroProcesso", SearchCriteria.IGUAL);
-        addSearchField("usuarioCadastroProcesso", SearchCriteria.IGUAL);
+        addSearchField("usuarioCadastro", SearchCriteria.IGUAL);
         addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL, R1);
         addSearchField("dataFim", SearchCriteria.MENOR_IGUAL, R2);
         iniciaListaUsuarios();

@@ -62,16 +62,6 @@ public interface ProcessoQuery {
             + PARAM_SITUACAO + " group by ncf.fluxo";
     
     String PARAM_ACTOR_ID = "actorId";
-//    String ANULA_ACTOR_ID = "anulaActorId";
-//    String ANULA_ACTOR_ID_QUERY = "update tb_processo set nm_actor_id = null where nm_actor_id = :"
-//            + PARAM_ACTOR_ID;
-
-//    String ANULA_TODOS_OS_ACTOR_IDS = "anularTodosOsActorIds";
-//    String ANULA_TODOS_OS_ACTOR_IDS_QUERY = "update tb_processo set nm_actor_id = null ";
-
-//    String APAGA_ACTOR_ID_DO_PROCESSO = "apagaActorIdDeProcesso";
-//    String APAGA_ACTOR_ID_DO_PROCESSO_QUERY = "update tb_processo set nm_actor_id = null where id_processo = :"
-//            + PARAM_ID_PROCESSO;
 
     String REMOVE_PROCESSO_DA_CAIXA_ATUAL = "removerProcessoDaCaixaAtual";
     String REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY = "update tb_processo set id_caixa = null where id_processo = :"

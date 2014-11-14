@@ -7,7 +7,6 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -24,7 +23,6 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
@@ -120,20 +118,12 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public void iniciarTask(final Processo processo, final Long idTarefa,
             final UsuarioPerfil usuarioPerfil) throws DAOException {
         final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo, idTarefa);
-        final String actorId = Actor.instance().getId();
         if (taskInstanceId != null) {
             iniciaTask(processo, taskInstanceId);
             storeUsuario(taskInstanceId, usuarioPerfil.getUsuarioLogin(), usuarioPerfil.getPerfilTemplate().getLocalizacao(), usuarioPerfil.getPerfilTemplate().getPapel());
-            vinculaUsuario(processo, actorId);
         }
     }
 
-    @Deprecated
-    private void vinculaUsuario(Processo processo, String actorId) throws DAOException {
-//        processo.setActorId(actorId);
-        processo = merge(processo);
-        flush();
-    }
 
     private Long getTaskInstanceId(final UsuarioPerfil usuarioPerfil,
             final Processo processo, final Long idTarefa) {
@@ -187,16 +177,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     public void removerProcessoDaCaixaAtual(Processo processo) throws DAOException {
         getDao().removerProcessoDaCaixaAtual(processo);
-    }
-
-    /**
-     * Retirado actorId
-     * @param processo
-     * @throws DAOException
-     */
-    @Deprecated
-    public void apagarActorIdDoProcesso(Processo processo) throws DAOException {
-//        getDao().apagarActorIdDoProcesso(processo);
     }
 
     public void atualizarProcessos() {
