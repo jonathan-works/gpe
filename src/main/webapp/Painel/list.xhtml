@@ -132,8 +132,7 @@
             <wi:columnOutputText
               columnId="itemDoProcesso"
               columnHeader="#{eppmessages['consultaProcesso.item']}"
-              value="Precisa ALterar"  />
-              <!--  value="#{row.itemDoProcesso}" -->
+              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
             <wi:columnOutputText
               columnId="prioridadeProcesso"
               columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"

@@ -10,8 +10,11 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 
 @Name(ConsultaProcessoList.NAME)
 @Scope(ScopeType.PAGE)
@@ -31,9 +34,15 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     private static final String R5 = "o.naturezaCategoriaFluxo.categoria = #{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}";
     private static final String R6 = "cast(o.dataInicio as date) >= #{consultaProcessoList.dataInicio}";
     private static final String R7 = "cast(o.dataInicio as date) <= #{consultaProcessoList.dataFim}";
-    private static final String R8 = "o.decisoraMonocratica = #{authenticator.monocraticaLogada}";
-    private static final String R9 = "o.decisoraColegiada = #{authenticator.colegiadaLogada}";
-
+    
+    private static final String R8 = "exists (select 1 from MetadadoProcesso mp where mp.processo = o and mp.metadadoType = " 
+    									+ MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA 
+    									+ " and cast(mp.valor, integer) = #{authenticator.monocraticaLogada.idUnidadeDecisoraMonocratica})";
+    
+    private static final String R9 = "exists (select 1 from MetadadoProcesso mp where mp.processo = o and mp.metadadoType = " 
+										+ MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA 
+										+ " and cast(mp.valor, integer) = #{authenticator.colegiadaLogada.idUnidadeDecisoraColegiada})";
+    		
     private Date dataInicio;
     private Date dataFim;
 
@@ -87,6 +96,11 @@ public class ConsultaProcessoList extends EntityList<Processo> {
 
     public void setDataFim(Date dataFim) {
         this.dataFim = br.com.infox.core.util.DateUtil.getEndOfDay(dataFim);
+    }
+    
+    public Item getItemDoProcesso(Processo processo){
+    	MetadadoProcesso metadado = processo.getMetadado(MetadadoProcessoType.ITEM_DO_PROCESSO);
+    	return  metadado != null ? (Item) metadado.getValue() : null;
     }
 
 }

@@ -41,10 +41,10 @@ public interface SituacaoProcessoQuery {
     String FILTRO_SUFIX = ") ";
     String AND = " and ";
 
-    String COM_COLEGIADA = " mpl.nome = 'decisoraColegiada' and cast(mpl.valor, integer) = :colegiadaLogada";
-    String COM_MONOCRATICA = " mpl.nome = 'decisoraMonocratica' and cast(mpl.valor, integer)";
-    String SEM_COLEGIADA = " mpl is null or (mpl.nome = 'decisoraColegiada' and mpl.valor is null)";
-    String SEM_MONOCRATICA = " mpl is null or (mpl.nome = 'decisoraMonocratica' and mpl.valor is null)";
+    String COM_COLEGIADA = " mpl.metadadoType = 'decisoraColegiada' and cast(mpl.valor, integer) = :colegiadaLogada";
+    String COM_MONOCRATICA = " mpl.metadadoType = 'decisoraMonocratica' and cast(mpl.valor, integer)";
+    String SEM_COLEGIADA = " mpl is null or (mpl.metadadoType = 'decisoraColegiada' and mpl.valor is null)";
+    String SEM_MONOCRATICA = " mpl is null or (mpl.metadadoType = 'decisoraMonocratica' and mpl.valor is null)";
     
     String PARAM_COLEGIADA = "";
     String PROCESSOS_COM_COLEGIADA_COND = FILTRO_PREFIX + COM_COLEGIADA + FILTRO_SUFIX;
