@@ -19,6 +19,7 @@ public class ParticipanteProcessoCrudAction extends AbstractCrudAction<Participa
     private HistoricoParticipanteProcessoManager historicoParticipanteProcessoManager;
 
     private String motivoModificacao;
+    private Boolean showHistory;
 
     public String getMotivoModificacao() {
         return motivoModificacao;
@@ -36,8 +37,33 @@ public class ParticipanteProcessoCrudAction extends AbstractCrudAction<Participa
             onDAOExcecption(daoException);
         }
         super.save();
+        getManager().refresh(getInstance());
         newInstance();
         setMotivoModificacao(null);
     }
 
+    public Boolean getShowHistory() {
+        return showHistory;
+    }
+
+    public void setShowHistory(Boolean showHistory) {
+        this.showHistory = showHistory;
+    }
+    
+    public void setShowHistory(ParticipanteProcesso instance) {
+        setInstance(instance);
+        setShowHistory(true);
+    }
+    
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        setShowHistory(false);
+    }
+    
+    @Override
+    public void setInstance(ParticipanteProcesso instance) {
+        super.setInstance(instance);
+        setShowHistory(false);
+    }
 }
