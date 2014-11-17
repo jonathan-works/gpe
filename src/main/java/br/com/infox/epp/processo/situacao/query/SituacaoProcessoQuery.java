@@ -37,14 +37,15 @@ public interface SituacaoProcessoQuery {
     
     String GROUP_BY_PROCESSO_SUFIX = " group by s.idProcesso";
     
-    String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from Processo pe LEFT JOIN pe.metadadoProcessoList mpl WHERE";
+    String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from Processo pe WHERE";
     String FILTRO_SUFIX = ") ";
     String AND = " and ";
 
     String COM_COLEGIADA = " mpl.metadadoType = 'decisoraColegiada' and cast(mpl.valor, integer) = :colegiadaLogada";
     String COM_MONOCRATICA = " mpl.metadadoType = 'decisoraMonocratica' and cast(mpl.valor, integer)";
-    String SEM_COLEGIADA = " mpl is null or (mpl.metadadoType = 'decisoraColegiada' and mpl.valor is null)";
-    String SEM_MONOCRATICA = " mpl is null or (mpl.metadadoType = 'decisoraMonocratica' and mpl.valor is null)";
+    String SEM_COLEGIADA = " 'decisoraColegiada' != any (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe) ";
+
+    String SEM_MONOCRATICA = " 'decisoraMonocratica' != any (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe) ";
     
     String PARAM_COLEGIADA = "";
     String PROCESSOS_COM_COLEGIADA_COND = FILTRO_PREFIX + COM_COLEGIADA + FILTRO_SUFIX;
