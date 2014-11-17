@@ -18,6 +18,8 @@ public interface ProcessoQuery {
     String PARAM_ID_TASKMGMINSTANCE = "idTaskMgmInstance";
     String PARAM_ID_TOKEN = "idToken";
     String PARAM_ID_PROCESSO = "idProcesso";
+    String PARAM_ID_USUARIO = "id_usuario";
+    String PARAM_ID_TASK = "idTask";
     String PARAM_FLUXO = "fluxo";
     String QUERY_PARAM_PROCESSO = "processo";
 
@@ -49,9 +51,9 @@ public interface ProcessoQuery {
     String COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY = "select count(*) from ParticipanteProcesso partes where partes.processo = :"
             + QUERY_PARAM_PROCESSO + " and partes.ativo = true";
 
-//    String ITEM_DO_PROCESSO = "getItemDoProcessoByIdProcesso";
-//    String ITEM_DO_PROCESSO_QUERY = "select o.itemDoProcesso from Processo o where o.idProcesso =:"
-//            + PARAM_ID_PROCESSO;
+    String ITEM_DO_PROCESSO = "getItemDoProcessoByIdProcesso";
+    String ITEM_DO_PROCESSO_QUERY = "select o.itemDoProcesso from Processo o where o.idProcesso =:"
+            + PARAM_ID_PROCESSO;
 
     String PARAM_SITUACAO = "situacao";
     String TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO = "mediaTempoGasto";
@@ -68,14 +70,14 @@ public interface ProcessoQuery {
             + PARAM_ID_PROCESSO;
 
     
-    @Deprecated 
-    String LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID = "listProcessosByIdProcessoAndActorId";
-    /**
-     * Retirado actorId do processo
-     */
-    @Deprecated
-    String LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY = "select o from Processo o where o.idProcesso = :"
-            + PARAM_ID_PROCESSO ;
+    String GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO = "getProcessoByIdProcessoAndIdUsuario";
+    String GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY = "SELECT p.* "
+    		+ "FROM tb_processo p " 
+    		+ "INNER JOIN tb_processo_tarefa pt on (p.id_processo = pt.id_processo) "
+            + "INNER JOIN tb_usuario_taskinstance uti ON (pt.id_task_instance = uti.id_taskinstance) "
+            + "WHERE p.id_processo = :" + PARAM_ID_PROCESSO
+            + " AND uti.id_usuario_login = :" + PARAM_ID_USUARIO
+            + " AND pt.id_task_instance = :" + PARAM_ID_TASK;
 
     String ID_LIST_PROCESSO_PARAM = "idList";
     String CAIXA_PARAM = "caixa";

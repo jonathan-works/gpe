@@ -5,22 +5,23 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_
 import static br.com.infox.epp.processo.query.ProcessoQuery.CAIXA_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_LIST_PROCESSO_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_PARAM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_FLUXO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TASK;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TASKMGMINSTANCE;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TOKEN;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_USUARIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_SITUACAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
@@ -37,6 +38,7 @@ import java.util.Map;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -90,12 +92,13 @@ public class ProcessoDAO extends DAO<Processo> {
         executeNamedQueryUpdate(REMOVE_PROCESSO_DA_CAIXA_ATUAL, parameters);
     }
 
-    public List<Processo> findProcessosByIdProcessoAndActorId(int idProcesso,
-            String login) {
-        Map<String, Object> parameters = new HashMap<>();
+    public Processo findProcessosByIdProcessoAndIdUsuario(int idProcesso, Integer idUsuarioLogin,
+    		Long idTask) {
+    	Map<String, Object> parameters = new HashMap<>(3);
         parameters.put(PARAM_ID_PROCESSO, idProcesso);
-        parameters.put(PARAM_ACTOR_ID, login);
-        return getNamedResultList(LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, parameters);
+        parameters.put(PARAM_ID_USUARIO, idUsuarioLogin);
+        parameters.put(PARAM_ID_TASK, idTask);
+        return getNamedSingleResult(GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO, parameters);
     }
 
     @Transactional(TransactionPropagationType.REQUIRED)
@@ -194,12 +197,6 @@ public class ProcessoDAO extends DAO<Processo> {
         Long count = (Long) getNamedSingleResult(COUNT_PARTES_ATIVAS_DO_PROCESSO, parameters);
         return count != null && count.compareTo(1L) > 0;
     }
-
-//    public Item getItemDoProcesso(int idProcesso) {
-//        Map<String, Object> parameters = new HashMap<>();
-//        parameters.put(PARAM_ID_PROCESSO, idProcesso);
-//        return getNamedSingleResult(ITEM_DO_PROCESSO, parameters);
-//    }
 
     @SuppressWarnings(UNCHECKED)
     public Map<String, Object> getTempoGasto(Processo processo) {

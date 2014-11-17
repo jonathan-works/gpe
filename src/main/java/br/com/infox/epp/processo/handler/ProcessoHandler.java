@@ -22,7 +22,6 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -144,17 +143,6 @@ public class ProcessoHandler implements Serializable {
             taskInstanceList = null;
             inicio = 1;
         }
-    }
-
-    /**
-     * Processo nao tem mais itemDoProcesso
-     * @param idProcesso
-     * @return
-     */
-    @Deprecated
-    public Item getItemDoProcesso(int idProcesso) {
-//        return processoManager.getItemDoProcesso(idProcesso);
-    	return null;
     }
 
     public boolean hasPartes() {

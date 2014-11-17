@@ -10,20 +10,18 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_USUARIO_CADASTRO_PROCESSO;
-//import static br.com.infox.epp.processo.query.ProcessoQuery.ITEM_DO_PROCESSO;
-//import static br.com.infox.epp.processo.query.ProcessoQuery.ITEM_DO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA;
@@ -100,20 +98,19 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedNativeQuery(name = ATUALIZAR_PROCESSOS, query = ATUALIZAR_PROCESSOS_QUERY),
     @NamedNativeQuery(name = MOVER_PROCESSO_PARA_CAIXA, query = MOVER_PROCESSO_PARA_CAIXA_QUERY),
     @NamedNativeQuery(name = REMOVER_PROCESSO_JBMP, query = REMOVER_PROCESSO_JBMP_QUERY),
-    @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY)
+    @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY),
+    @NamedNativeQuery(name = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO, query = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY,
+    				  resultClass = Processo.class)
 })
 @NamedQueries(value = {
-    @NamedQuery(name = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
     @NamedQuery(name = MOVER_PROCESSOS_PARA_CAIXA, query = MOVER_PROCESSOS_PARA_CAIXA_QUERY),
     @NamedQuery(name = PROCESSO_BY_NUMERO, query = PROCESSO_BY_NUMERO_QUERY),
     @NamedQuery(name = NUMERO_PROCESSO_BY_ID_JBPM, query = NUMERO_PROCESSO_BY_ID_JBPM_QUERY),
-    
     @NamedQuery(name = LIST_ALL_NOT_ENDED, query = LIST_ALL_NOT_ENDED_QUERY),
     @NamedQuery(name = PROCESSO_EPA_BY_ID_JBPM, query = PROCESSO_EPA_BY_ID_JBPM_QUERY,
     		    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
     					 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.processo.entity.Processo")}),
     @NamedQuery(name = COUNT_PARTES_ATIVAS_DO_PROCESSO, query = COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY),
-//    @NamedQuery(name = ITEM_DO_PROCESSO, query = ITEM_DO_PROCESSO_QUERY),
     @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
     @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
     @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),

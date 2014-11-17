@@ -315,8 +315,8 @@ public class TaskInstanceHome implements Serializable {
 
     private Boolean checkAccess() {
         int idProcesso = ProcessoEpaHome.instance().getInstance().getIdProcesso();
-        String login = Authenticator.getUsuarioLogado().getLogin();
-        if (processoManager.checkAccess(idProcesso, login)) {
+        Integer idUsuarioLogin = Authenticator.getUsuarioLogado().getIdUsuarioLogin();
+        if (processoManager.checkAccess(idProcesso, idUsuarioLogin, taskId)) {
             return Boolean.TRUE;
         } else {
             acusarUsuarioSemAcesso();

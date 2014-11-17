@@ -183,8 +183,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         getDao().atualizarProcessos();
     }
 
-    public boolean checkAccess(int idProcesso, String login) {
-        return !getDao().findProcessosByIdProcessoAndActorId(idProcesso, login).isEmpty();
+    public boolean checkAccess(int idProcesso, Integer idUsuarioLogado, Long idTask) {
+        return getDao().findProcessosByIdProcessoAndIdUsuario(idProcesso, idUsuarioLogado, idTask) != null;
     }
 
     public String getNumeroProcesso(int idProcesso) {
@@ -246,10 +246,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
             }
         }
     }
-
-//    public Item getItemDoProcesso(int idProcesso) {
-//        return getDao().getItemDoProcesso(idProcesso);
-//    }
 
     public boolean hasPartes(Processo processo) {
         return getDao().hasPartes(processo);
