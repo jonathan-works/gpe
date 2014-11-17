@@ -76,6 +76,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -87,6 +88,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -304,8 +306,7 @@ public class Processo implements Serializable {
 		return naturezaCategoriaFluxo;
 	}
 
-	public void setNaturezaCategoriaFluxo(
-			NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
+	public void setNaturezaCategoriaFluxo(NaturezaCategoriaFluxo naturezaCategoriaFluxo) {
 		this.naturezaCategoriaFluxo = naturezaCategoriaFluxo;
 	}
 
@@ -342,8 +343,18 @@ public class Processo implements Serializable {
 	}
 
 	public boolean hasPartes(){
-    	return true;
+    	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
+	
+	@Transient
+	public MetadadoProcesso getMetadado(MetadadoProcessoType metadadoProcessoType) {
+		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
+			if (metadadoProcesso.getMetadadoType() == metadadoProcessoType) {
+				return metadadoProcesso;
+			}
+		}
+		return null;
+	}
 	
 	@Override
     public String toString() {

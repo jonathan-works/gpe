@@ -35,6 +35,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
+import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(IniciarProcessoAction.NAME)
@@ -67,7 +68,8 @@ public class IniciarProcessoAction implements Serializable {
     
     private void addItemDoProcesso(Processo processo) {
 		MetadadoProcesso metadadoProcesso = new MetadadoProcesso();
-		metadadoProcesso.setNome(MetadadoProcessoType.ITEM_DO_PROCESSO);
+		itemDoProcesso = (Item) HibernateUtil.removeProxy(itemDoProcesso);
+		metadadoProcesso.setMetadadoType(MetadadoProcessoType.ITEM_DO_PROCESSO);
 		metadadoProcesso.setClassType(itemDoProcesso.getClass());
 		metadadoProcesso.setValor(itemDoProcesso.getIdItem().toString());
 		metadadoProcesso.setProcesso(processo);
@@ -215,5 +217,4 @@ public class IniciarProcessoAction implements Serializable {
     public void setViewId(String viewId) {
         this.viewId = viewId;
     }
-    
 }

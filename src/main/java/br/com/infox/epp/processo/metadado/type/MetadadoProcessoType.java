@@ -2,12 +2,12 @@ package br.com.infox.epp.processo.metadado.type;
 
 public enum MetadadoProcessoType {
 	
-	UNIDADE_DECISORA_MONOCRATICA("unidadeDecisoraMonocratica"),
-	UNIDADE_DECISORA_COLEGIADA("unidadeDecisoraColegiada"),
-	RELATOR("relator"),
-	LOCALIZACAO_DESTINO("destino"),
-	PESSOA_DESTINATARIO("destinatario"),
-	ITEM_DO_PROCESSO("itemDoProcesso");
+	UNIDADE_DECISORA_MONOCRATICA("Unidade Decisora Monocrática"),
+	UNIDADE_DECISORA_COLEGIADA("Unidade Decisora Colegiada"),
+	RELATOR("Relator do Processo"),
+	LOCALIZACAO_DESTINO("Destino para Localizacao"),
+	PESSOA_DESTINATARIO("Destinatário"),
+	ITEM_DO_PROCESSO("Item do Processo");
 	
 	private String label;
 	

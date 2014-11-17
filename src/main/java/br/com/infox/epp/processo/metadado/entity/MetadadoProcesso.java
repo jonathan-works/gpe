@@ -1,8 +1,6 @@
 package br.com.infox.epp.processo.metadado.entity;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +19,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.seam.util.ComponentUtil;
@@ -41,7 +40,7 @@ public class MetadadoProcesso implements Serializable {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name = "nm_metadado_processo", nullable = false)
-	private MetadadoProcessoType nome;
+	private MetadadoProcessoType metadadoType;
 	
 	@NotNull
 	@Column(name = "vl_metadado_processo", nullable = false)
@@ -67,12 +66,12 @@ public class MetadadoProcesso implements Serializable {
 		this.id = id;
 	}
 
-	public MetadadoProcessoType getNome() {
-		return nome;
+	public MetadadoProcessoType getMetadadoType() {
+		return metadadoType;
 	}
 
-	public void setNome(MetadadoProcessoType nome) {
-		this.nome = nome;
+	public void setMetadadoType(MetadadoProcessoType metadadoType) {
+		this.metadadoType = metadadoType;
 	}
 
 	public String getValor() {
@@ -104,14 +103,11 @@ public class MetadadoProcesso implements Serializable {
 		if (value == null) {
 			if (EntityUtil.isEntity(getClassType())) {
 				EntityManager entityManager = ComponentUtil.getComponent("entityManager");
-				value = (E) entityManager.find(getClassType(), getValor());
-			} else {
-				try {
-					Constructor<?> constructor = getClassType().getConstructor(String.class);
-					value = constructor.newInstance(getValor());
-				} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					e.printStackTrace();
-				}
+				Class<?> idClass = EntityUtil.getId(getClassType()).getPropertyType();
+				Object id = ReflectionsUtil.newInstance(idClass, String.class, getValor());
+				value = (E) entityManager.find(getClassType(), id);
+			} else if (getClassType() != String.class) {
+				value = ReflectionsUtil.newInstance(getClassType(), String.class, getValor());
 			}
 		}
 		return (E) value;

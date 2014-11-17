@@ -2,7 +2,9 @@ package br.com.infox.core.util;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.jboss.seam.log.LogProvider;
@@ -79,6 +81,21 @@ public final class ReflectionsUtil {
 
         }
         return false;
+    }
+    
+    public static Object newInstance(Class<?> clazz, Class<?> parameterType, Object value) {
+    	return newInstance(clazz, new Class<?>[]{parameterType} , new Object[] {value});
+    }
+    
+    public static Object newInstance(Class<?> clazz, Class<?>[] parameterTypes, Object[] values) {
+    	Object ret = null;
+		try {
+			Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+			ret = constructor.newInstance(values);
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			LOG.debug(".newInstance", e);
+		}
+    	return ret;
     }
 
 }

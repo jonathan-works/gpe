@@ -83,7 +83,7 @@ public final class EntityUtil implements Serializable {
      * @param objId Entidade
      * @return
      */
-    private static PropertyDescriptor getId(Class<?> clazz) {
+    public static PropertyDescriptor getId(Class<?> clazz) {
         PropertyDescriptor[] pds = ComponentUtil.getPropertyDescriptors(clazz);
         for (int i = 0; i < pds.length; i++) {
             PropertyDescriptor pd = pds[i];
