@@ -108,6 +108,8 @@ public class MetadadoProcesso implements Serializable {
 				value = (E) entityManager.find(getClassType(), id);
 			} else if (getClassType() != String.class) {
 				value = ReflectionsUtil.newInstance(getClassType(), String.class, getValor());
+			} else {
+				value = getValor();
 			}
 		}
 		return (E) value;

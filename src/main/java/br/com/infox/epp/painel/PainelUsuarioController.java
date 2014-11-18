@@ -1,10 +1,7 @@
-/* $Id: PainelUsuarioHome.java 704 2010-08-12 23:21:10Z jplacerda $ */
-
 package br.com.infox.epp.painel;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +17,7 @@ import org.richfaces.event.DropEvent;
 
 import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -33,21 +31,16 @@ import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(PainelUsuarioHome.NAME)
+@Name(PainelUsuarioController.NAME)
 @Scope(ScopeType.CONVERSATION)
 @SuppressWarnings(UNCHECKED)
-public class PainelUsuarioHome implements Serializable {
+public class PainelUsuarioController extends AbstractController {
 	
     private static final long serialVersionUID = 1L;
 
-    public static final String NAME = "painelUsuarioHome";
-    private static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioHome.getVariavelProcesso(row, '%s').valor}";
-
-    private Map<String, Object> selected;
-    private List<Integer> processoIdList;
-    private List<DynamicColumnModel> dynamicColumns;
+    public static final String NAME = "painelUsuarioController";
+    private static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s').valor}";
 
     @In
     private ConsultaProcessoList consultaProcessoList;
@@ -63,6 +56,10 @@ public class PainelUsuarioHome implements Serializable {
     private CaixaManager caixaManager;
     @In
     private ActionMessagesService actionMessagesService;
+    
+    private Map<String, Object> selected;
+    private List<Integer> processoIdList;
+    private List<DynamicColumnModel> dynamicColumns;
 
     @Observer("selectedTarefasTree")
     public void onSelected(Object obj) {
@@ -156,12 +153,11 @@ public class PainelUsuarioHome implements Serializable {
     }
 
     public void refresh() {
-        TarefasTreeHandler tree = ComponentUtil.getComponent("tarefasTree");
-        tree.refresh();
+        TarefasTreeHandler.instance().refresh();
     }
 
-    public static PainelUsuarioHome instance() {
-        return (PainelUsuarioHome) Contexts.getConversationContext().get(NAME);
+    public static PainelUsuarioController instance() {
+        return (PainelUsuarioController) Contexts.getConversationContext().get(NAME);
     }
 
     public void setProcessoCaixa(Caixa caixa) {
@@ -199,5 +195,11 @@ public class PainelUsuarioHome implements Serializable {
             updateDatatable();
         }
         return this.dynamicColumns;
+    }
+    
+    @Override
+    public void setTab(String tab) {
+    	super.setTab(tab);
+    	TarefasTreeHandler.instance().setTipoProcesso(tab);
     }
 }

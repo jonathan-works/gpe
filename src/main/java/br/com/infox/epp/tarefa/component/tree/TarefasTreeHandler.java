@@ -25,6 +25,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
     public static final String FILTER_TAREFAS_TREE = "br.com.infox.ibpm.component.tree.FilterTarefasTree";
     public static final String CLEAR_TAREFAS_TREE_EVENT = "clearTarefasTreeEvent";
     private static final long serialVersionUID = 1L;
+    private String tipoProcesso;
     private List<TarefasEntityNode<Map<String, Object>>> rootList;
 
     @Override
@@ -93,5 +94,13 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
     private SituacaoProcessoDAO getSituacaoProcessoDAO() {
         return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
     }
+
+	public String getTipoProcesso() {
+		return tipoProcesso;
+	}
+
+	public void setTipoProcesso(String tipoProcesso) {
+		this.tipoProcesso = tipoProcesso;
+	}
     
 }

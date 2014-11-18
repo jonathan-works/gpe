@@ -18,6 +18,10 @@ public enum SearchCriteria {
 
     DATA_IGUAL("cast(o.{0} as date) = cast(#'{'{1}.entity.{0}} as date)"),
     
+    DATA_MAIOR_IGUAL("cast(o.{0} as date) >= cast(#'{'{1}.entity.{0}} as date)"),
+    
+    DATA_MENOR_IGUAL("cast(o.{0} as date) <= cast(#'{'{1}.entity.{0}} as date)"),
+    
     NONE("");
 
     private String pattern;
