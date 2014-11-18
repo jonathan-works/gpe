@@ -192,10 +192,10 @@
             <groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
             <exclusions>
-                <exclusion>
-                        <artifactId>bctsp-jdk14</artifactId>
-                        <groupId>org.bouncycastle</groupId>
-                </exclusion>
+              <exclusion>
+                      <artifactId>bctsp-jdk14</artifactId>
+                      <groupId>org.bouncycastle</groupId>
+              </exclusion>
             </exclusions>
         </dependency>
         <dependency>
