@@ -65,7 +65,7 @@ import br.com.infox.epp.processo.entity.Processo;
     @NamedQuery(name = LIST_DOCUMENTO_BY_TASKINSTANCE, query = lIST_DOCUMENTO_BY_TASKINSTANCE_QUERY)
 })
 @Indexed(index="IndexProcessoDocumento")
-public class Documento implements Serializable {
+public class Documento implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_documento";
@@ -371,5 +371,18 @@ public class Documento implements Serializable {
 			return false;
 		return true;
 	}
-    
+	
+	public Documento makeCopy() throws CloneNotSupportedException {
+		Documento cDocumento = (Documento) clone();
+		cDocumento.setId(null);
+		cDocumento.setProcesso(null);
+		List<HistoricoStatusDocumento> cList = new ArrayList<>();
+		for (HistoricoStatusDocumento hsd : cDocumento.getHistoricoStatusDocumentoList()) {
+			HistoricoStatusDocumento cHistorico = hsd.makeCopy();
+			cHistorico.setDocumento(cDocumento);
+			cList.add(cHistorico);
+		}
+		cDocumento.setHistoricoStatusDocumentoList(cList);
+		return cDocumento;
+	}
 }

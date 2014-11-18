@@ -37,4 +37,8 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     public List<ParticipanteProcesso> getParticipantesProcesso(Processo processo) {
     	return getDao().getParticipantesProcesso(processo);
     }
+    
+    public List<ParticipanteProcesso> getParticipantesProcessoRaiz(Processo processo) {
+    	return getDao().getParticipantesProcessoRaiz(processo);
+    }
 }
