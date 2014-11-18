@@ -1,8 +1,14 @@
 package br.com.infox.epp.processo.situacao.query;
 
+import static br.com.infox.epp.processo.metadado.type.MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA;
+import static br.com.infox.epp.processo.metadado.type.MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA;
+
 public interface SituacaoProcessoQuery {
 
     String PARAM_ID_TASKINSTANCE = "idTaskInstance";
+    String PARAM_COLEGIADA_LOGADA = "colegiadaLogada";
+    String PARAM_MONOCRATICA_LOGADA = "monocraticaLogada";
+    
     String COUNT_TAREFAS_ATIVAS_BY_TASK_ID = "countTarefasAtivasByTaskId";
     String COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY = "select count(o.idTaskInstance) from SituacaoProcesso o "
             + "where o.idTaskInstance = :" + PARAM_ID_TASKINSTANCE;
@@ -41,13 +47,13 @@ public interface SituacaoProcessoQuery {
     String FILTRO_SUFIX = ") ";
     String AND = " and ";
 
-    String COM_COLEGIADA = " mpl.metadadoType = 'decisoraColegiada' and cast(mpl.valor, integer) = :colegiadaLogada";
-    String COM_MONOCRATICA = " mpl.metadadoType = 'decisoraMonocratica' and cast(mpl.valor, integer)";
-    String SEM_COLEGIADA = " 'decisoraColegiada' != any (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe) ";
-
-    String SEM_MONOCRATICA = " 'decisoraMonocratica' != any (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe) ";
+    String COM_COLEGIADA = " '" + UNIDADE_DECISORA_COLEGIADA + "' = any "
+            + "(select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe and mpl.valor = :" + PARAM_COLEGIADA_LOGADA +")";
+    String COM_MONOCRATICA = " '" + UNIDADE_DECISORA_MONOCRATICA + "' = any "
+            + "(select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe and mpl.valor = :" + PARAM_MONOCRATICA_LOGADA + ")";
+    String SEM_COLEGIADA = " not ('" + UNIDADE_DECISORA_COLEGIADA + "' = all (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe))";
+    String SEM_MONOCRATICA = " not ('" + UNIDADE_DECISORA_MONOCRATICA + "' = all (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe))";
     
-    String PARAM_COLEGIADA = "";
     String PROCESSOS_COM_COLEGIADA_COND = FILTRO_PREFIX + COM_COLEGIADA + FILTRO_SUFIX;
     String PROCESSOS_COM_MONOCRATICA_COND = FILTRO_PREFIX + COM_MONOCRATICA + FILTRO_SUFIX;
     String PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND = FILTRO_PREFIX + COM_COLEGIADA + AND + COM_MONOCRATICA + FILTRO_SUFIX;

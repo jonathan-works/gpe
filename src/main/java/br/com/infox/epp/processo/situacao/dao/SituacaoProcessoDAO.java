@@ -17,6 +17,8 @@ import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAR
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BASE;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_SUFIX;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_COLEGIADA_LOGADA;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_MONOCRATICA_LOGADA;
 
 import java.util.HashMap;
 import java.util.List;
@@ -125,10 +127,10 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 
     private Query putParametrosDosFiltrosDeUnidadesDecisoras(Query query) {
         if (authenticator.getColegiadaLogada() != null) {
-            query.setParameter("colegiadaLogada", authenticator.getColegiadaLogada());
+            query.setParameter(PARAM_COLEGIADA_LOGADA, authenticator.getColegiadaLogada());
         }
         if (authenticator.isUsuarioLogadoInMonocratica()) {
-            query.setParameter("monocraticaLogada", authenticator.getMonocraticaLogada());
+            query.setParameter(PARAM_MONOCRATICA_LOGADA, authenticator.getMonocraticaLogada());
         }
         return query;
     }
