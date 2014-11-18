@@ -35,7 +35,7 @@ public class DocumentoDownloader implements Serializable {
 
     public void downloadDocumento(Documento documento) {
         DocumentoBin pdBin = documento.getDocumentoBin();
-        byte[] data = documentoBinarioManager.getData(documento.getId());
+        byte[] data = documentoBinarioManager.getData(pdBin.getId());
         String fileName = pdBin.getNomeArquivo();
         String contentType = "application/" + pdBin.getExtensao();
         FileDownloader.download(data, contentType, fileName);
