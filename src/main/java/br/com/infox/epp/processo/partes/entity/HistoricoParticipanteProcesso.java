@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -23,8 +25,14 @@ import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
+import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.*;
+
 @Entity
 @Table(name = HistoricoParticipanteProcesso.TABLE_NAME)
+@NamedQueries(value = {
+        @NamedQuery(name = LIST_BY_PARTICIPANTE_PROCESSO, query = LIST_BY_PARTICIPANTE_PROCESSO_QUERY),
+        @NamedQuery(name = HAS_HISTORICO_BY_PARTICIPANTE, query = HAS_HISTORICO_BY_PARTICIPANTE_QUERY)
+})
 public class HistoricoParticipanteProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;

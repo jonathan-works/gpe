@@ -13,9 +13,6 @@
   xmlns:c="http://java.sun.com/jstl/core"
   template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
   
-  <ui:param name="reRenderExternal" 
-  	value="#{wi:get(facesContext.getCurrentInstance().externalContext.requestParameterMap['renderExternal'], true)}"/>
-  
   <ui:define name="baseBody">
     <div class="pageBody">
       <rich:panel id="mp_ass">
@@ -61,8 +58,8 @@
                 name="assinar"
                 action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
                 execute="@this certChain signature"
-                render="@all"
-                oncomplete="infox.hideLoading();if (opener != undefined &amp;&amp; typeof opener.reloadLock === 'function' ){ opener.reloadLock(); };" />
+                render="mp_ass, pageBodyDialogMessage"
+                oncomplete="infox.hideLoading(); checkExternalCallback();" />
               <h:inputHidden
                 id="certChain"
                 value="#{validaDocumentoAction.certChain}" />
@@ -78,7 +75,7 @@
                 getDataFunction="documento.getData()"
                 useBase64Function="'true'"
                 functionPreSign="infox.showLoading();"
-                functionPosSign="documento.reRenderExternal(); assinar();"
+                functionPosSign="assinar();"
                 debug="false"
                 loginMode="false"
                 useProviderDll="false"
@@ -89,14 +86,14 @@
                 id="dadosAssinaveis"
                 value="#{assinadorDocumento.documentoBin.isBinario() ? validaDocumentoAction.documentoBin.md5Documento : validaDocumentoAction.documentoBin.modeloDocumento}" />
               <h:outputScript>
+              	function checkExternalCallback() {
+              		if (opener &amp;&amp; typeof opener["#{validaDocumentoAction.externalCallback}"] === 'function') { 
+              			opener["#{validaDocumentoAction.externalCallback}"]();
+              		}
+              	}
                 var documento={
                   getData:function getData() {
                     return #{rich:jQuery('dadosAssinaveis')}.val();
-                  },
-                  reRenderExternal:function(){
-                  	if (#{reRenderExternal}){
-                  		opener.location=opener.location;
-                  	}
                   }
                 };
               </h:outputScript>

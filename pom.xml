@@ -93,6 +93,10 @@
                     <artifactId>jboss-jsf-api_2.1_spec</artifactId>
                     <groupId>org.jboss.spec.javax.faces</groupId>
                 </exclusion>
+                <exclusion>
+                        <artifactId>bctsp-jdk14</artifactId>
+                        <groupId>org.bouncycastle</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -187,6 +191,12 @@
         <dependency>
             <groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
+            <exclusions>
+              <exclusion>
+                      <artifactId>bctsp-jdk14</artifactId>
+                      <groupId>org.bouncycastle</groupId>
+              </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>

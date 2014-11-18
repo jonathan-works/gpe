@@ -17,7 +17,7 @@
     </s:div>
     
     <s:div id="parteProcessoListDiv" styleClass="padding-top-5">
-        <wi:dataTable id="participantesTable"
+        <wi:dataTable id="participantesTable" showSearchForm="false"
             values="#{participantesProcessoController.participantes}"
             tableTitle="#{eppmessages['participanteProcesso.participantes']}">
             <ui:define name="headerToolBar" />
@@ -32,11 +32,17 @@
                     action="#{participanteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv" url="#{wiSkin.imageFolder}/stock_undelete.png"
                     id="inativo" />
+                <wi:toolBar
+                    rendered="#{row.historicoParticipanteList.size > 0}"
+                    action="participanteProcessoCrudAction.setShowHistory(row)"
+                    reRender="historicoParticipantePanelDiv"
+                    url="#{wiSkin.imageFolder}/view.png"
+                    id="viewHistorico" />
             </ui:define>
             <wi:columnOutputTextIdent columnId="pessoa.nome"
             	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
                 columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
-                value="#{row.nome}" 
+                value="#{row.nome}"
                 hideOrder="true"
                 fullPath="#{row.caminhoAbsoluto}"/>
       		<wi:columnOutputText columnId="cpfCnpj"
@@ -59,9 +65,10 @@
           		hideOrder="true"/>
 
         </wi:dataTable>
-
+     
         <s:div id="atividadeParteDiv"
-            rendered="#{participanteProcessoCrudAction.isManaged()}" styleClass="padding-top-5">
+            rendered="#{participanteProcessoCrudAction.isManaged() and !participanteProcessoCrudAction.showHistory}"
+            styleClass="padding-top-5">
             <s:div id="backgroundBlock"></s:div>
             <br />
             <wi:dataForm formId="atividadeParte"
@@ -80,6 +87,49 @@
                         reRender="parteProcessoListDiv, buscaDiv" value="Cancelar" />
                 </ui:define>
             </wi:dataForm>
+        </s:div>
+        
+        <s:div
+          id="historicoParticipantePanelDiv"
+          rendered="#{participanteProcessoCrudAction.showHistory}"
+          style="margin-top:20px; width:100%;">
+          <rich:panel
+            id="historicoParticipantePanel"
+            headerClass=""
+            bodyClass="dtable-p-b"
+            styleClass="dtable-p"
+            style="width:100%;">
+
+            <f:facet name="header">
+              <h:outputText value="#{eppmessages['historicoParticipanteProcesso.tableTile']}" />
+            </f:facet>
+
+            <rich:dataTable id="historicoParticipanteDataTable"
+              var="historicoParticipante" style="width:100%"
+              value="#{participanteProcessoCrudAction.getInstance().historicoParticipanteList}">
+
+              <rich:column style="text-align:center;">
+                <f:facet name="header">#{eppmessages['historicoParticipanteProcesso.responsavelPorModificacao']}</f:facet>
+                <h:outputText
+                  value="#{historicoParticipante.responsavelPorModificacao}" />
+              </rich:column>
+              <rich:column style="text-align:center;">
+                <f:facet name="header">#{eppmessages['historicoParticipanteProcesso.dataModificacao']}</f:facet>
+                <h:outputText
+                  value="#{historicoParticipante.dataModificacao}" />
+              </rich:column>
+              <rich:column style="text-align:center;">
+                <f:facet name="header">#{eppmessages['historicoParticipanteProcesso.motivoModificacao']}</f:facet>
+                <h:outputText
+                  value="#{historicoParticipante.motivoModificacao}" />
+              </rich:column>
+              <rich:column style="text-align:center;">
+                <f:facet name="header">#{eppmessages['historicoParticipanteProcesso.ativo']}</f:facet>
+                <h:outputText
+                  value="#{historicoParticipante.ativo ? 'Excluído' : 'Restaurado'}" />
+              </rich:column>
+            </rich:dataTable>
+          </rich:panel>
         </s:div>
     </s:div>
 </ui:composition>

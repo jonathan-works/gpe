@@ -231,5 +231,14 @@ public class ParticipanteProcesso implements Serializable {
 			return false;
 		return true;
 	}
+
+    public List<HistoricoParticipanteProcesso> getHistoricoParticipanteList() {
+        return historicoParticipanteList;
+    }
+
+    public void setHistoricoParticipanteList(
+            List<HistoricoParticipanteProcesso> historicoParticipanteList) {
+        this.historicoParticipanteList = historicoParticipanteList;
+    }
 	
 }

@@ -55,9 +55,18 @@
                     editor.insertText(content);
                     editor.fire('saveSnapshot');
                 },
-                insertImage:function(path) {
+                insertImageBase64:function(path) {
                     var img = document.createElement("img");
                     img.src = infox.imageSrcToBase64(path);
+                    var container = document.createElement("div");
+                    container.appendChild(img);
+                    this.insertHtml(container.innerHTML);
+                },
+                insertImage:function(path) {
+                    var img = document.createElement("img");
+                    var a = document.createElement("a");
+                    a.href = path;
+                    img.src = a.pathname;
                     var container = document.createElement("div");
                     container.appendChild(img);
                     this.insertHtml(container.innerHTML);

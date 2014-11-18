@@ -45,6 +45,7 @@ public class ValidaDocumentoAction implements Serializable {
     private Integer idDocumento;
     private String signature;
     private String certChain;
+    private String externalCallback;
     
     @In
     public DocumentoManager documentoManager;
@@ -206,4 +207,11 @@ public class ValidaDocumentoAction implements Serializable {
 	    this.idDocumento = idDocumento;
 	}
 
+	public String getExternalCallback() {
+		return externalCallback;
+	}
+	
+	public void setExternalCallback(String externalCallback) {
+		this.externalCallback = externalCallback;
+	}
 }
