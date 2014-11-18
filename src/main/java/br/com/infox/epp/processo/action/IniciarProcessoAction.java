@@ -34,6 +34,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.seam.exception.BusinessException;
@@ -136,6 +137,9 @@ public class IniciarProcessoAction implements Serializable {
             } else {
                 setRenderedByItem(Boolean.TRUE);
             }
+        }
+        if (naturezaCategoriaFluxo.necessitaPartes()){
+        	ParticipantesController.instance().setNaturezaCategoriaFluxo(ncf);
         }
     }
 

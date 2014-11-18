@@ -85,12 +85,23 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return count != null && count > 0;
     }
     
-    public Query createQueryRoots() {
-        return putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryRoots()));
+    @SuppressWarnings("unchecked")
+	public <T> List<T> getRootList() {
+    	Query query = putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryRoots()));
+        return query.getResultList();
     }
     
-    public Query createQueryChildren(Integer idFluxo) {
-        return putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryChildren()))).setParameter("idFluxo", idFluxo);
+    @SuppressWarnings("unchecked")
+	public <T> List<T> getRootComunicacaoList() {
+    	Query query = createQuery(createHqlQueryRoots());
+        return query.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+	public <E> List<E> getChildrenList(Integer idFluxo) {
+    	Query query = putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryChildren())));
+    	query.setParameter("idFluxo", idFluxo);
+        return query.getResultList();
     }
     
     public Query createQueryCaixas() {

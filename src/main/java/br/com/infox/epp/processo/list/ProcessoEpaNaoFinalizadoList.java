@@ -103,7 +103,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
         long media = 0;
         StringBuilder hql = new StringBuilder("select p.dataInicio from Processo p ");
         hql.append("inner join p.naturezaCategoriaFluxo ncf ");
-        hql.append("where p.dataFim is null and p.contabilizar = true ");
+        hql.append("where p.dataFim is null ");
         if (getFluxo() != null) {
             hql.append("and ncf.fluxo = :fluxo ");
         }

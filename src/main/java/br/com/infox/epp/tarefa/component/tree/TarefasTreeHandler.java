@@ -25,8 +25,8 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
     public static final String FILTER_TAREFAS_TREE = "br.com.infox.ibpm.component.tree.FilterTarefasTree";
     public static final String CLEAR_TAREFAS_TREE_EVENT = "clearTarefasTreeEvent";
     private static final long serialVersionUID = 1L;
-    private String tipoProcesso;
     private List<TarefasEntityNode<Map<String, Object>>> rootList;
+    private String tipoProcesso;
 
     @Override
     protected String getQueryRoots() {
@@ -60,14 +60,14 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     @Override
     protected TarefasEntityNode<Map<String, Object>> createNode() {
-        return new TarefasEntityNode<Map<String, Object>>(getQueryCaixasList());
+        return new TarefasEntityNode<Map<String, Object>>(getQueryCaixasList(), getTipoProcesso());
     }
 
     public List<TarefasEntityNode<Map<String, Object>>> getTarefasRoots() {
         if (rootList == null || rootList.isEmpty()) {
             Events.instance().raiseEvent(FILTER_TAREFAS_TREE);
             TarefasEntityNode<Map<String, Object>> entityNode = createNode();
-            rootList = entityNode.getRootsFluxos(getSituacaoProcessoDAO().createQueryRoots());
+            rootList = entityNode.getRootsFluxos();
         }
         return rootList;
     }

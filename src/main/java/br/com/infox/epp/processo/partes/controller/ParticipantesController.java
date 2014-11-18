@@ -162,5 +162,9 @@ public class ParticipantesController extends AbstractParticipantesController {
         		&& getNaturezaCategoriaFluxo().getNatureza() != null 
         		&& getNaturezaCategoriaFluxo().getNatureza().getHasPartes();
     }
+    
+    public static ParticipantesController instance() {
+    	return ComponentUtil.getComponent(ParticipantesController.NAME);
+    }
 
 }

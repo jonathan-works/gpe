@@ -28,8 +28,8 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     private static final String DEFAULT_EJBQL = "select o from Processo o";
     private static final String DEFAULT_ORDER = "o.prioridadeProcesso, o.dataInicio";
 
-    private static final String R1 = "o.idProcesso in (#{painelUsuarioHome.processoIdList})";
-    private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioHome.idCaixa}";
+    private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
+    private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
     
     private static final String R3 = "exists (select 1 from MetadadoProcesso mp where mp.processo = o and mp.metadadoType = '" 
     									+ MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA

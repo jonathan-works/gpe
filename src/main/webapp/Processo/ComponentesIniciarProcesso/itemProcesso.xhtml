@@ -28,7 +28,6 @@
                     <a:commandLink
                         rendered="#{action.necessitaPartes()}"
                         action="#{action.onSelectItem(row)}"
-                        oncomplete="#{participantesController.setNatureza(action.natureza)}"
                         execute="@this" render="@all" limitRender="true">
                         <h:graphicImage value="#{wiSkin.imageFolder}/start.gif" />
                     </a:commandLink>

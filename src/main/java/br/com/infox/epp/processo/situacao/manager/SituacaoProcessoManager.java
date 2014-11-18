@@ -28,5 +28,33 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
     public boolean canOpenTask(long currentTaskId) {
         return getDao().canOpenTask(currentTaskId);
     }
+    
+    public <E> List<E> getChildrenTarefas(String tipoProcesso, Integer idFluxo) {
+    	if (tipoProcesso.equals("processo")) {
+    		return getDao().getChildrenList(idFluxo);
+    	} 
+//    	else if (tipoProcesso.equals("processoComunicacao")) {
+//    		return 
+//    	} else if (tipoProcesso.equals("processoDocumento")) {
+//    		return 
+//    	} else {
+//    		return null;
+//    	}
+    	return null;
+    }
+    
+    public <E> List<E> getRootsFluxos(String tipoProcesso) {
+    	if (tipoProcesso.equals("processo")) {
+    		return getDao().getRootList();
+    	} 
+//    	else if (tipoProcesso.equals("processoComunicacao")) {
+//    		return 
+//    	} else if (tipoProcesso.equals("processoDocumento")) {
+//    		return 
+//    	} else {
+//    		return null;
+//    	}
+    	return null;
+    }
 
 }

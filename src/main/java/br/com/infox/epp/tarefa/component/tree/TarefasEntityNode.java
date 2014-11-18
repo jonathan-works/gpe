@@ -11,7 +11,7 @@ import javax.persistence.Query;
 import org.jboss.seam.core.Events;
 
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
@@ -21,15 +21,18 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     private List<TarefasEntityNode<E>> nodes;
     private List<EntityNode<E>> caixas;
     private List<Query> queryCaixas = new ArrayList<Query>();
+    private String tipoProcesso;
 
-    public TarefasEntityNode(List<Query> queryCaixas) {
+    public TarefasEntityNode(List<Query> queryCaixas, String tipoProcesso) {
         super("");
         this.queryCaixas = queryCaixas;
+        this.tipoProcesso = tipoProcesso;
     }
 
-    public TarefasEntityNode(EntityNode<Map<String, Object>> parent, Map<String, Object> entity, List<Query> queryCaixas) {
+    public TarefasEntityNode(EntityNode<Map<String, Object>> parent, Map<String, Object> entity, List<Query> queryCaixas, String tipoProcesso) {
         super(parent, entity, new String[0]);
         this.queryCaixas = queryCaixas;
+        this.tipoProcesso = tipoProcesso;
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -58,10 +61,10 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<TarefasEntityNode<E>> getRootsFluxos(Query queryRoots) {
+    public List<TarefasEntityNode<E>> getRootsFluxos() {
         if (rootNodes == null) {
             rootNodes = new ArrayList<TarefasEntityNode<E>>();
-            List<E> roots = queryRoots.getResultList();
+            List<E> roots = getSituacaoProcessoManager().getRootsFluxos(tipoProcesso);
             for (E e : roots) {
                 if (!e.equals(getIgnore())) {
                     TarefasEntityNode<Map<String, Object>> node = createRootNode((Map<String, Object>) e);
@@ -79,8 +82,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
             nodes = new ArrayList<TarefasEntityNode<E>>();
             boolean parent = true;
                 if (!isLeaf()) {
-                    Query query = getSituacaoProcessoDAO().createQueryChildren((Integer) getEntity().get("idFluxo"));
-                    List<E> children = (List<E>) query.getResultList();
+                    List<E> children = getSituacaoProcessoManager().getChildrenTarefas(tipoProcesso, (Integer) getEntity().get("idFluxo"));
                     for (E n : children) {
                         if (!n.equals(getIgnore())) {
                             TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
@@ -100,12 +102,11 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     @Override
     protected TarefasEntityNode<Map<String, Object>> createRootNode(
             Map<String, Object> n) {
-        return new TarefasEntityNode<Map<String, Object>>(null, n, queryCaixas);
+        return new TarefasEntityNode<Map<String, Object>>(null, n, queryCaixas, tipoProcesso);
     }
 
     @SuppressWarnings(UNCHECKED)
-    protected List<Map<String, Object>> getCaixasList(Query query,
-            Map<String, Object> entity) {
+    protected List<Map<String, Object>> getCaixasList(Query query, Map<String, Object> entity) {
         return query.setParameter("taskId", entity.get("idTarefa")).getResultList();
     }
 
@@ -115,9 +116,8 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     }
 
     @Override
-    protected TarefasEntityNode<Map<String, Object>> createChildNode(
-            Map<String, Object> n) {
-        return new TarefasEntityNode<Map<String, Object>>(this, n, queryCaixas);
+    protected TarefasEntityNode<Map<String, Object>> createChildNode(Map<String, Object> n) {
+        return new TarefasEntityNode<Map<String, Object>>(this, n, queryCaixas, tipoProcesso);
     }
 
     public Integer getTarefaId() {
@@ -134,8 +134,8 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
         return 0;
     }
 
-    private SituacaoProcessoDAO getSituacaoProcessoDAO() {
-        return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
+    private SituacaoProcessoManager getSituacaoProcessoManager() {
+        return ComponentUtil.getComponent(SituacaoProcessoManager.NAME);
     }
-
+    
 }

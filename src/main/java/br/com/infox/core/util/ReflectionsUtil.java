@@ -90,12 +90,25 @@ public final class ReflectionsUtil {
     public static Object newInstance(Class<?> clazz, Class<?>[] parameterTypes, Object[] values) {
     	Object ret = null;
 		try {
-			Constructor<?> constructor = clazz.getConstructor(parameterTypes);
-			ret = constructor.newInstance(values);
+			if (clazz.isEnum()) {
+				return newInstanceEnum(clazz, values[0]);
+			} else {
+				return newInstanceClass(clazz, parameterTypes, values);
+			}
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			LOG.debug(".newInstance", e);
 		}
     	return ret;
+    }
+    
+    private static Object newInstanceEnum(Class<?> clazz, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    	Method method = clazz.getMethod("valueOf", String.class);
+		return method.invoke(null, value);
+    }
+    
+    private static Object newInstanceClass(Class<?> clazz, Class<?>[] parameterTypes, Object[] values) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
+    	Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+		return constructor.newInstance(values);
     }
 
 }
