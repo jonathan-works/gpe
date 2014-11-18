@@ -8,7 +8,8 @@ public enum MetadadoProcessoType {
 	LOCALIZACAO_DESTINO("Destino para Localizacao"),
 	PESSOA_DESTINATARIO("Destinatário"),
 	ITEM_DO_PROCESSO("Item do Processo"),
-	TIPO_PROCESSO("Tipo de Processo");
+	TIPO_PROCESSO("Tipo de Processo"),
+	STATUS_PROCESSO("Status do Processo");
 	
 	private String label;
 	

@@ -127,10 +127,10 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 
     private Query putParametrosDosFiltrosDeUnidadesDecisoras(Query query) {
         if (authenticator.getColegiadaLogada() != null) {
-            query.setParameter(PARAM_COLEGIADA_LOGADA, authenticator.getColegiadaLogada());
+            query.setParameter(PARAM_COLEGIADA_LOGADA, authenticator.getColegiadaLogada().getIdUnidadeDecisoraColegiada().toString());
         }
         if (authenticator.isUsuarioLogadoInMonocratica()) {
-            query.setParameter(PARAM_MONOCRATICA_LOGADA, authenticator.getMonocraticaLogada());
+            query.setParameter(PARAM_MONOCRATICA_LOGADA, authenticator.getMonocraticaLogada().getIdUnidadeDecisoraMonocratica().toString());
         }
         return query;
     }
