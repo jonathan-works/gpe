@@ -1,10 +1,19 @@
 package br.com.infox.epp.processo.situacao.dao;
 
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.AND;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.COM_CAIXA_COND;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.COUNT_TAREFAS_ATIVAS_BY_TASK_ID;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.FILTRO_LOCALIZACAO_DESTINO;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.FILTRO_PESSOA_DESTINATARIO;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.GROUP_BY_PROCESSO_SUFIX;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.ID_TAREFA_PARAM;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.OR;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_COLEGIADA_LOGADA;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_ID_LOCALIZACAO;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_ID_PESSOA;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_ID_TASKINSTANCE;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_MONOCRATICA_LOGADA;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_TIPO_PROCESSO;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_ABERTOS_BASE_QUERY;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_COM_COLEGIADA_COND;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND;
@@ -16,9 +25,8 @@ import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAR
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_BASE;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BASE;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BY_TIPO;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_SUFIX;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_COLEGIADA_LOGADA;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_MONOCRATICA_LOGADA;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +41,9 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 
@@ -93,8 +103,20 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     
     @SuppressWarnings("unchecked")
 	public <T> List<T> getRootComunicacaoList() {
-    	Query query = createQuery(createHqlQueryRoots());
-        return query.getResultList();
+    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_ROOTS_BASE);
+    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
+    	putFiltroLocalizacaoAndPessoa(sb);
+    	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
+        return putParametersLocalizacaoAndPessoa(createQuery(sb.toString()), TipoProcesso.COMUNICACAO).getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+	public <T> List<T> getRootDocumentoList() {
+    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_ROOTS_BASE);
+    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
+    	putFiltroLocalizacaoAndPessoa(sb);
+    	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
+        return putParametersLocalizacaoAndPessoa(createQuery(sb.toString()), TipoProcesso.DOCUMENTO).getResultList();
     }
     
     @SuppressWarnings("unchecked")
@@ -102,6 +124,26 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	Query query = putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryChildren())));
     	query.setParameter("idFluxo", idFluxo);
         return query.getResultList();
+    }
+    
+    private void putFiltroLocalizacaoAndPessoa(StringBuilder sb) {
+    	if ( Authenticator.getUsuarioLogado().getPessoaFisica() != null ) {
+    		sb.append(AND).append(" ( ");
+    		sb.append(FILTRO_LOCALIZACAO_DESTINO).append(OR);
+    		sb.append(FILTRO_PESSOA_DESTINATARIO).append(" ) ");
+    	} else {
+    		sb.append(AND).append(FILTRO_LOCALIZACAO_DESTINO);
+    	}
+    }
+    
+    private Query putParametersLocalizacaoAndPessoa(Query query, TipoProcesso tipoProcesso){
+    	PessoaFisica pessoaLogada = Authenticator.getUsuarioLogado().getPessoaFisica();
+    	query.setParameter(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
+    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
+    	if (pessoaLogada != null) {
+    		query.setParameter(PARAM_ID_PESSOA, pessoaLogada.getIdPessoa());
+    	}
+    	return query;
     }
     
     public Query createQueryCaixas() {
@@ -123,7 +165,6 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CAIXAS_SUFIX;
     }
     
-
     private String putFiltrosDeUnidadesDecisoras(String baseQuery) {
         if (authenticator.isUsuarioLogandoInMonocraticaAndColegiada()) {
             return baseQuery + PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND;

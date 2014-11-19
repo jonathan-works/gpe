@@ -12,6 +12,7 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
@@ -21,15 +22,15 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     private List<TarefasEntityNode<E>> nodes;
     private List<EntityNode<E>> caixas;
     private List<Query> queryCaixas = new ArrayList<Query>();
-    private String tipoProcesso;
+    private TipoProcesso tipoProcesso;
 
-    public TarefasEntityNode(List<Query> queryCaixas, String tipoProcesso) {
+    public TarefasEntityNode(List<Query> queryCaixas, TipoProcesso tipoProcesso) {
         super("");
         this.queryCaixas = queryCaixas;
         this.tipoProcesso = tipoProcesso;
     }
 
-    public TarefasEntityNode(EntityNode<Map<String, Object>> parent, Map<String, Object> entity, List<Query> queryCaixas, String tipoProcesso) {
+    public TarefasEntityNode(EntityNode<Map<String, Object>> parent, Map<String, Object> entity, List<Query> queryCaixas, TipoProcesso tipoProcesso) {
         super(parent, entity, new String[0]);
         this.queryCaixas = queryCaixas;
         this.tipoProcesso = tipoProcesso;
@@ -81,18 +82,18 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
         if (nodes == null) {
             nodes = new ArrayList<TarefasEntityNode<E>>();
             boolean parent = true;
-                if (!isLeaf()) {
-                    List<E> children = getSituacaoProcessoManager().getChildrenTarefas(tipoProcesso, (Integer) getEntity().get("idFluxo"));
-                    for (E n : children) {
-                        if (!n.equals(getIgnore())) {
-                            TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
-                            node.setIgnore(getIgnore());
-                            node.setLeaf(!parent);
-                            nodes.add((TarefasEntityNode<E>) node);
-                        }
+            if (!isLeaf()) {
+                List<E> children = getSituacaoProcessoManager().getChildrenTarefas(tipoProcesso, (Integer) getEntity().get("idFluxo"));
+                for (E n : children) {
+                    if (!n.equals(getIgnore())) {
+                        TarefasEntityNode<Map<String, Object>> node = createChildNode((Map<String, Object>) n);
+                        node.setIgnore(getIgnore());
+                        node.setLeaf(!parent);
+                        nodes.add((TarefasEntityNode<E>) node);
                     }
-                    parent = false;
                 }
+                parent = false;
+            }
 
             Events.instance().raiseEvent("entityNodesPostGetNodes", nodes);
         }
@@ -100,8 +101,7 @@ public class TarefasEntityNode<E> extends EntityNode<Map<String, Object>> {
     }
 
     @Override
-    protected TarefasEntityNode<Map<String, Object>> createRootNode(
-            Map<String, Object> n) {
+    protected TarefasEntityNode<Map<String, Object>> createRootNode(Map<String, Object> n) {
         return new TarefasEntityNode<Map<String, Object>>(null, n, queryCaixas, tipoProcesso);
     }
 

@@ -14,6 +14,7 @@ import org.jboss.seam.core.Events;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(TarefasTreeHandler.NAME)
@@ -26,7 +27,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
     public static final String CLEAR_TAREFAS_TREE_EVENT = "clearTarefasTreeEvent";
     private static final long serialVersionUID = 1L;
     private List<TarefasEntityNode<Map<String, Object>>> rootList;
-    private String tipoProcesso;
+    private TipoProcesso tipoProcesso;
 
     @Override
     protected String getQueryRoots() {
@@ -95,12 +96,12 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
         return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
     }
 
-	public String getTipoProcesso() {
+	public TipoProcesso getTipoProcesso() {
 		return tipoProcesso;
 	}
 
-	public void setTipoProcesso(String tipoProcesso) {
+	public void setTipoProcesso(TipoProcesso tipoProcesso) {
 		this.tipoProcesso = tipoProcesso;
 	}
-    
+
 }

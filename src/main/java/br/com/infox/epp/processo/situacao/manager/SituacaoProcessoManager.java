@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
+import br.com.infox.epp.processo.type.TipoProcesso;
 
 @AutoCreate
 @Name(SituacaoProcessoManager.NAME)
@@ -29,32 +30,24 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
         return getDao().canOpenTask(currentTaskId);
     }
     
-    public <E> List<E> getChildrenTarefas(String tipoProcesso, Integer idFluxo) {
-    	if (tipoProcesso.equals("processo")) {
+    public <E> List<E> getChildrenTarefas(TipoProcesso tipoProcesso, Integer idFluxo) {
+    	if (tipoProcesso == TipoProcesso.COMUNICACAO) {
     		return getDao().getChildrenList(idFluxo);
-    	} 
-//    	else if (tipoProcesso.equals("processoComunicacao")) {
-//    		return 
-//    	} else if (tipoProcesso.equals("processoDocumento")) {
-//    		return 
-//    	} else {
-//    		return null;
-//    	}
-    	return null;
+    	} else if (tipoProcesso == TipoProcesso.DOCUMENTO) {
+    		return getDao().getChildrenList(idFluxo);
+    	} else {
+    		return getDao().getChildrenList(idFluxo);
+    	}
     }
     
-    public <E> List<E> getRootsFluxos(String tipoProcesso) {
-    	if (tipoProcesso.equals("processo")) {
-    		return getDao().getRootList();
-    	} 
-//    	else if (tipoProcesso.equals("processoComunicacao")) {
-//    		return 
-//    	} else if (tipoProcesso.equals("processoDocumento")) {
-//    		return 
-//    	} else {
-//    		return null;
-//    	}
-    	return null;
+	public <E> List<E> getRootsFluxos(TipoProcesso tipoProcesso) {
+		if (tipoProcesso == TipoProcesso.COMUNICACAO) {
+			return getDao().getRootComunicacaoList();
+		} else if (tipoProcesso == TipoProcesso.DOCUMENTO) {
+			return getDao().getRootDocumentoList();
+		} else {
+			return getDao().getRootList();
+		}
     }
 
 }

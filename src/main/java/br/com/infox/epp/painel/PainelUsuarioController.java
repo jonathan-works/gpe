@@ -5,6 +5,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -28,6 +29,7 @@ import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
@@ -67,6 +69,12 @@ public class PainelUsuarioController extends AbstractController {
         processoIdList = null;
         dynamicColumns = null;
         updateDatatable();
+    }
+    
+    private void onTabChange() {
+    	processoIdList = null;
+    	selected = null;
+		TarefasTreeHandler.instance().setTipoProcesso(TipoProcesso.getByName(getTab()));
     }
 
     public Integer getIdCaixa() {
@@ -199,7 +207,8 @@ public class PainelUsuarioController extends AbstractController {
     
     @Override
     public void setTab(String tab) {
+    	boolean changed = !Objects.equals(tab, getTab());
     	super.setTab(tab);
-    	TarefasTreeHandler.instance().setTipoProcesso(tab);
+    	if (changed) onTabChange();
     }
 }

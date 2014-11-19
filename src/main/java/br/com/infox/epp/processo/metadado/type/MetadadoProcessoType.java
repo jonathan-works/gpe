@@ -2,7 +2,7 @@ package br.com.infox.epp.processo.metadado.type;
 
 public interface MetadadoProcessoType {
   
-  String UNIDADE_DECISORA_MONOCRATICA = "unidadeDecisoraMonocrática";
+  String UNIDADE_DECISORA_MONOCRATICA = "unidadeDecisoraMonocratica";
   String UNIDADE_DECISORA_COLEGIADA = "unidadeDecisoraColegiada";
   String RELATOR = "relator";
   String LOCALIZACAO_DESTINO = "localizacaoDestino";

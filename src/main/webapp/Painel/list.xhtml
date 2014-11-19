@@ -26,7 +26,7 @@
       </h:outputScript>
       
       <infox:tabPanel id="tabPainelUsuario" switchType="ajax"
-        status=":status" activeTab="#{painelUsuarioController.tab}">
+        status=":status" activeTab="#{painelUsuarioController.tab}" >
         
         <h:form>
           <infox:tabHeaders />
@@ -45,7 +45,8 @@
           
        	  <s:div id="painelProcessos" styleClass="p-list" >
             <s:div id="processos" 
-        		rendered="#{not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa}" >
+        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
+        					 and painelUsuarioController.tab eq 'processo'}" >
         
 	            <wi:dataTable
 	              values="#{consultaProcessoList.list(10)}"
@@ -150,7 +151,7 @@
         </infox:tab>
         
         <infox:tab id="comunicacoes"
-          	name="processoComunicacao" render="painelProcessosComunicacao"
+          	name="comunicacao" render="painelProcessosComunicacao"
           	limitRender="true" action="#{tarefasTree.clearTree()}"
           	title="Fluxo/Comunicação" >
           
@@ -162,7 +163,8 @@
           
        	  <s:div id="painelProcessosComunicacao" styleClass="p-list" >
             <s:div id="processosComunicacao" 
-        		rendered="#{not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa}" >
+        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
+        					and painelUsuarioController.tab eq 'comunicacao'}" >
         
 	            <wi:dataTable
 	              values="#{consultaProcessoList.list(10)}"
@@ -267,7 +269,7 @@
         </infox:tab>
         
         <infox:tab id="documentos"
-          	name="processoDocumento" render="painelProcessosDocumento"
+          	name="documento" render="painelProcessosDocumento"
           	limitRender="true" action="#{tarefasTree.clearTree()}"
           	title="Fluxo/Documento" >
           
@@ -279,7 +281,8 @@
           
        	  <s:div id="painelProcessosDocumento" styleClass="p-list" >
             <s:div id="processosDocumento" 
-        		rendered="#{not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa}" >
+        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
+        					 and painelUsuarioController.tab eq 'documento'}" >
         
 	            <wi:dataTable
 	              values="#{consultaProcessoList.list(10)}"

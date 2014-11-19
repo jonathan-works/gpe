@@ -2,12 +2,16 @@ package br.com.infox.epp.processo.situacao.query;
 
 import static br.com.infox.epp.processo.metadado.type.MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA;
 import static br.com.infox.epp.processo.metadado.type.MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 
 public interface SituacaoProcessoQuery {
 
     String PARAM_ID_TASKINSTANCE = "idTaskInstance";
     String PARAM_COLEGIADA_LOGADA = "colegiadaLogada";
     String PARAM_MONOCRATICA_LOGADA = "monocraticaLogada";
+    String PARAM_ID_LOCALIZACAO = "idLocalizacao";
+    String PARAM_ID_PESSOA = "idPessoa";
+    String PARAM_TIPO_PROCESSO = "tipoProcesso";
     
     String COUNT_TAREFAS_ATIVAS_BY_TASK_ID = "countTarefasAtivasByTaskId";
     String COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY = "select count(o.idTaskInstance) from SituacaoProcesso o "
@@ -15,9 +19,20 @@ public interface SituacaoProcessoQuery {
 
     String TAREFAS_TREE_ROOTS = "tarefasTreeQueryRoots";
     String TAREFAS_TREE_QUERY_ROOTS_BASE = "select new map(s.nomeFluxo as nomeFluxo, max(s.idFluxo) as idFluxo, 'Fluxo' as type) "
-            + "from SituacaoProcesso s where 1=1";
+            + "from SituacaoProcesso s where 1=1 ";
+    
     String TAREFAS_TREE_QUERY_ROOTS_SUFIX = "group by s.nomeFluxo order by s.nomeFluxo";
     
+    String TAREFAS_TREE_QUERY_ROOTS_BY_TIPO = "and exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '" 
+    		+ MetadadoProcessoType.TIPO_PROCESSO + "' and mp.valor = :" + PARAM_TIPO_PROCESSO + " and mp.processo.idProcesso = s.idProcesso) ";
+    
+    String FILTRO_LOCALIZACAO_DESTINO = "exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
+    		+ MetadadoProcessoType.LOCALIZACAO_DESTINO + "' and cast(mp.valor as integer) = :" + PARAM_ID_LOCALIZACAO
+    		+ " and s.idProcesso = mp.processo.idProcesso) ";
+    
+    String FILTRO_PESSOA_DESTINATARIO = "exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
+    		+ MetadadoProcessoType.PESSOA_DESTINATARIO + "' and cast(mp.valor as integer) = :" + PARAM_ID_PESSOA
+    		+ " and s.idProcesso = mp.processo.idProcesso )";
 
     String TAREFAS_TREE_CHILDREN = "tarefasTreeQueryChildren";
     String TAREFAS_TREE_QUERY_CHILDREN_SUFIX = " group by s.nomeTarefa order by s.nomeTarefa";
@@ -46,6 +61,7 @@ public interface SituacaoProcessoQuery {
     String FILTRO_PREFIX = " and s.idProcesso IN (SELECT pe.idProcesso from Processo pe WHERE";
     String FILTRO_SUFIX = ") ";
     String AND = " and ";
+    String OR = " or ";
 
     String COM_COLEGIADA = " '" + UNIDADE_DECISORA_COLEGIADA + "' = any "
             + "(select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe and mpl.valor = :" + PARAM_COLEGIADA_LOGADA +")";

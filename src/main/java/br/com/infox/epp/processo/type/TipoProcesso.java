@@ -2,6 +2,15 @@ package br.com.infox.epp.processo.type;
 
 public enum TipoProcesso {
 	
-	PROCESSO_DOCUMETO, PROCESSO_COMUNICACAO;
+	DOCUMENTO, COMUNICACAO;
+	
+	public static TipoProcesso getByName(String name) {
+		for (TipoProcesso tp : values()) {
+			if (tp.name().equalsIgnoreCase(name)){
+				return tp;
+			}
+		}
+		return null;
+	}
 
 }
