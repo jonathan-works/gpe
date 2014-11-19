@@ -133,13 +133,11 @@ public class IniciarProcessoAction implements Serializable {
                 } else {
                     renderizarCadastroPartes = Boolean.TRUE;
                     renderedByItem = Boolean.FALSE;
+                    ParticipantesController.instance().setNaturezaCategoriaFluxo(ncf);
                 }
             } else {
                 setRenderedByItem(Boolean.TRUE);
             }
-        }
-        if (naturezaCategoriaFluxo.necessitaPartes()){
-        	ParticipantesController.instance().setNaturezaCategoriaFluxo(ncf);
         }
     }
 
@@ -152,6 +150,7 @@ public class IniciarProcessoAction implements Serializable {
         } else {
             renderizarCadastroPartes = Boolean.TRUE;
             renderedByItem = Boolean.FALSE;
+            ParticipantesController.instance().setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
         }
     }
 
