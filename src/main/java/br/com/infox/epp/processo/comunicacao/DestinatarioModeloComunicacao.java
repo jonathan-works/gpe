@@ -54,6 +54,10 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	
 	@Column(name = "nr_prazo")
 	private Integer prazo;
+	
+	@Column(name = "in_expedido", nullable = false)
+	@NotNull
+	private Boolean expedido = false;
 
 	public Long getId() {
 		return id;
@@ -101,5 +105,13 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	
 	public void setDestinatario(PessoaFisica destinatario) {
 		this.destinatario = destinatario;
+	}
+	
+	public Boolean getExpedido() {
+		return expedido;
+	}
+	
+	public void setExpedido(Boolean expedido) {
+		this.expedido = expedido;
 	}
 }
