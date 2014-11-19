@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +19,6 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
@@ -38,9 +35,8 @@ public class MetadadoProcesso implements Serializable {
 	private Long id;
 
 	@NotNull
-	@Enumerated(EnumType.STRING)
 	@Column(name = "nm_metadado_processo", nullable = false)
-	private MetadadoProcessoType metadadoType;
+	private String metadadoType;
 	
 	@NotNull
 	@Column(name = "vl_metadado_processo", nullable = false)
@@ -66,11 +62,11 @@ public class MetadadoProcesso implements Serializable {
 		this.id = id;
 	}
 
-	public MetadadoProcessoType getMetadadoType() {
+	public String getMetadadoType() {
 		return metadadoType;
 	}
 
-	public void setMetadadoType(MetadadoProcessoType metadadoType) {
+	public void setMetadadoType(String metadadoType) {
 		this.metadadoType = metadadoType;
 	}
 
