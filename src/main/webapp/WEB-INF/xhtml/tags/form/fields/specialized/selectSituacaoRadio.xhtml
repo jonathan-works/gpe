@@ -5,7 +5,7 @@
     xmlns:wi="http://www.itx.com.br/jsf">
 
     <wi:selectOneRadio id="#{wi:get(columnId, 'ativo')}"
-        label="#{wi:get(label, 'Situação')}"
+        label="#{wi:get(label, eppmessages['field.situacao'])}"
         valueList="true:#{eppmessages['entity.ativo']},false:#{eppmessages['entity.inativo']}"
         boxChecked="#{inativo ? 1 : 0}" />
 
