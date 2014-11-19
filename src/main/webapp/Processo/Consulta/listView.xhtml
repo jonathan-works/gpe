@@ -83,8 +83,7 @@
                     <wi:columnOutputText
                     	columnId="statusProcesso"
                     	columnHeader="#{eppmessages['processoEpa.status']}"
-                    	 value = "Corrigir Status Processo !!!"/>
-                    	 <!--  value="#{row.statusProcesso}" -->
+                    	value="#{processoEpaList.getStatusProcesso(row)}"/>
                 </wi:dataTable>
             </rich:panel>
         </h:form>

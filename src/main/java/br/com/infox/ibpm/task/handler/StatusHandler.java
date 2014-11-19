@@ -12,19 +12,22 @@ import org.jbpm.graph.def.ActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Deprecated // verificar como ficará o status do processo como variável
 public class StatusHandler implements ActionHandler, CustomAction {
 
 	private static final LogProvider LOG = Logging.getLogProvider(StatusHandler.class);
 	private static final long serialVersionUID = 1L;
-	private Integer statusProcesso;
+	private Integer idStatusProcesso;
 
 	public StatusHandler() {}
 	
@@ -33,22 +36,20 @@ public class StatusHandler implements ActionHandler, CustomAction {
 		Matcher matcher = pattern.matcher(s);
 		if (matcher.find()) {
 			String status = matcher.group(1);
-			this.statusProcesso = Integer.parseInt(status);
+			this.idStatusProcesso = Integer.parseInt(status);
 		}
 	}
 	
 	@Override
-	@Deprecated // duas linhas comentadas
 	public void execute(ExecutionContext executionContext) throws Exception {
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
 		StatusProcessoManager statusProcessoManager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
 		
 		try {
-			StatusProcesso status = statusProcessoManager.find(statusProcesso);
+			StatusProcesso status = statusProcessoManager.find(idStatusProcesso);
 			Processo processo = processoManager.find(Integer.parseInt(executionContext.getContextInstance().getVariable("processo").toString(), 10));
-//			processo.setStatusProcesso(status);
-//			
-//			processoEpaManager.update(processo);
+			setStatusProcesso(processo, status);
+			
 			String varName = format("{0}:{1}", VariableType.STRING, "statusProcesso");
 			
 			ContextInstance contextInstance = executionContext.getProcessInstance().getContextInstance();
@@ -74,4 +75,21 @@ public class StatusHandler implements ActionHandler, CustomAction {
         }
         return configuration;
     }
+    
+    private void setStatusProcesso(Processo processo, StatusProcesso status) throws DAOException {
+        MetadadoProcesso statusMetadado = processo.getMetadado(MetadadoProcessoType.STATUS_PROCESSO);
+        MetadadoProcessoManager metadadoManager = ComponentUtil.getComponent(MetadadoProcessoManager.NAME);
+        if (statusMetadado != null) {
+            statusMetadado.setValor(status.getIdStatusProcesso().toString());
+            metadadoManager.update(statusMetadado);
+        } else {
+            statusMetadado = new MetadadoProcesso();
+            statusMetadado.setClassType(StatusProcesso.class);
+            statusMetadado.setMetadadoType(MetadadoProcessoType.STATUS_PROCESSO);
+            statusMetadado.setProcesso(processo);
+            statusMetadado.setValor(status.getIdStatusProcesso().toString());
+            metadadoManager.persist(statusMetadado);
+        }
+    }
+
 }

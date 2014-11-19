@@ -14,7 +14,10 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
 
 @Name(ProcessoEpaList.NAME)
 @BypassInterceptors
@@ -71,5 +74,9 @@ public class ProcessoEpaList extends EntityList<Processo> {
     public void setListaUsuarios(List<UsuarioLogin> listaUsuarios) {
         this.listaUsuarios = listaUsuarios;
     }
-
+    
+    public StatusProcesso getStatusProcesso(Processo processo) {
+        MetadadoProcesso mp = processo.getMetadado(MetadadoProcessoType.STATUS_PROCESSO);
+        return mp != null ? (StatusProcesso) mp.getValue() : null;
+    }
 }
