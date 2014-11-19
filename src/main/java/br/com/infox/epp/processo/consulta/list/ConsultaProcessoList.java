@@ -33,11 +33,11 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     
     private static final String R3 = "exists (select 1 from MetadadoProcesso mp where mp.processo = o and mp.metadadoType = '" 
     									+ MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA
-    									+ "' and cast(mp.valor, integer) = #{authenticator.monocraticaLogada.idUnidadeDecisoraMonocratica})";
+    									+ "' and cast(mp.valor as integer) = #{authenticator.monocraticaLogada.idUnidadeDecisoraMonocratica})";
     
     private static final String R4 = "exists (select 1 from MetadadoProcesso mp where mp.processo = o and mp.metadadoType = '" 
 										+ MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA 
-										+ "' and cast(mp.valor, integer) = #{authenticator.colegiadaLogada.idUnidadeDecisoraColegiada})";
+										+ "' and cast(mp.valor as integer) = #{authenticator.colegiadaLogada.idUnidadeDecisoraColegiada})";
     		
     @Override
     public void newInstance() {

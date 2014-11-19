@@ -20,6 +20,7 @@ import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PRO
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_COM_MONOCRATICA_COND;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.SEM_CAIXA_COND;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_FILTER_POOLEDACTOR;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS_BASE;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS_SUFIX;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_BASE;
@@ -64,15 +65,23 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
-        return (List<Integer>) getQueryProcessoAbertosByIdTarefa(idTarefa, selected).getResultList();
-    }
-    
-    public Query getQueryProcessoAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
+	public <T> List<T> getQueryProcessoAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
         String hql = putFiltrosDeUnidadesDecisoras(getHqlQueryBaseProcessosAbertos(selected)) + GROUP_BY_PROCESSO_SUFIX;
         Query query = getEntityManager().createQuery(hql);
         query.setParameter(ID_TAREFA_PARAM, idTarefa);
-        return putParametrosDosFiltrosDeUnidadesDecisoras(query);
+        return putParametrosDosFiltrosDeUnidadesDecisoras(query).getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+	public <T> List<T> getProcessosAbertosByIdTarefaAndTipoProcesso(Integer idTarefa, Map<String, Object> selected, TipoProcesso tipoProcesso) {
+    	StringBuilder sb = new StringBuilder(getHqlQueryBaseProcessosAbertos(selected));
+    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
+    	putFiltroLocalizacaoAndPessoa(sb);
+    	sb.append(GROUP_BY_PROCESSO_SUFIX);
+    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
+        query.setParameter(ID_TAREFA_PARAM, idTarefa);
+        query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
+        return query.getResultList();
     }
 
     private String getHqlQueryBaseProcessosAbertos(Map<String, Object> selected) {
@@ -102,26 +111,29 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     }
     
     @SuppressWarnings("unchecked")
-	public <T> List<T> getRootComunicacaoList() {
+	public <T> List<T> getRootList(TipoProcesso tipoProcesso) {
     	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_ROOTS_BASE);
     	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
     	putFiltroLocalizacaoAndPessoa(sb);
     	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
-        return putParametersLocalizacaoAndPessoa(createQuery(sb.toString()), TipoProcesso.COMUNICACAO).getResultList();
-    }
-    
-    @SuppressWarnings("unchecked")
-	public <T> List<T> getRootDocumentoList() {
-    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_ROOTS_BASE);
-    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
-    	putFiltroLocalizacaoAndPessoa(sb);
-    	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
-        return putParametersLocalizacaoAndPessoa(createQuery(sb.toString()), TipoProcesso.DOCUMENTO).getResultList();
+    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
+    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
+        return query.getResultList();
     }
     
     @SuppressWarnings("unchecked")
 	public <E> List<E> getChildrenList(Integer idFluxo) {
     	Query query = putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryChildren())));
+    	query.setParameter("idFluxo", idFluxo);
+        return query.getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+	public <E> List<E> getChildrenComunicacaoDocumentoList(Integer idFluxo) {
+    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_CHILDREN_BASE);
+    	putFiltroLocalizacaoAndPessoa(sb);
+    	sb.append(TAREFAS_TREE_QUERY_CHILDREN_SUFIX);
+    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
     	query.setParameter("idFluxo", idFluxo);
         return query.getResultList();
     }
@@ -136,10 +148,9 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	}
     }
     
-    private Query putParametersLocalizacaoAndPessoa(Query query, TipoProcesso tipoProcesso){
+    private Query putParametersLocalizacaoAndPessoa(Query query){
     	PessoaFisica pessoaLogada = Authenticator.getUsuarioLogado().getPessoaFisica();
     	query.setParameter(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
-    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
     	if (pessoaLogada != null) {
     		query.setParameter(PARAM_ID_PESSOA, pessoaLogada.getIdPessoa());
     	}
@@ -150,18 +161,28 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryCaixa())));
     }
     
+    public Query createQueryCaixas(TipoProcesso tipoProcesso) {
+    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_CAIXAS_BASE);
+    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
+    	putFiltroLocalizacaoAndPessoa(sb);
+    	sb.append(TAREFAS_TREE_QUERY_CAIXAS_SUFIX);
+    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
+    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
+        return query;
+    }
+    
     private String createHqlQueryRoots() {
         String baseQuery = TAREFAS_TREE_QUERY_ROOTS_BASE;
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_ROOTS_SUFIX;
     }
     
     private String createHqlQueryChildren() {
-        String baseQuery = TAREFAS_TREE_QUERY_CHILDREN_BASE;
+        String baseQuery = TAREFAS_TREE_QUERY_CHILDREN_BASE + TAREFAS_TREE_FILTER_POOLEDACTOR;
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
     }
     
     private String createHqlQueryCaixa() {
-        String baseQuery = TAREFAS_TREE_QUERY_CAIXAS_BASE;
+        String baseQuery = TAREFAS_TREE_QUERY_CAIXAS_BASE + TAREFAS_TREE_FILTER_POOLEDACTOR;
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CAIXAS_SUFIX;
     }
     

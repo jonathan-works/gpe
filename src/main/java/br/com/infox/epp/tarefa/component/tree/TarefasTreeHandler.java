@@ -13,7 +13,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.core.Events;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
-import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -81,7 +81,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
 
     private List<Query> getQueryCaixasList() {
         List<Query> list = new ArrayList<Query>();
-        list.add(getSituacaoProcessoDAO().createQueryCaixas());
+        list.add(getSituacaoProcessoManager().createQueryCaixas(getTipoProcesso()));
         return list;
     }
 
@@ -92,8 +92,8 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Map<String, Object>>
         super.clearTree();
     }
 
-    private SituacaoProcessoDAO getSituacaoProcessoDAO() {
-        return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
+    private SituacaoProcessoManager getSituacaoProcessoManager() {
+        return ComponentUtil.getComponent(SituacaoProcessoManager.NAME);
     }
 
 	public TipoProcesso getTipoProcesso() {

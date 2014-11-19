@@ -35,18 +35,24 @@ public interface SituacaoProcessoQuery {
     		+ " and s.idProcesso = mp.processo.idProcesso )";
 
     String TAREFAS_TREE_CHILDREN = "tarefasTreeQueryChildren";
+    
     String TAREFAS_TREE_QUERY_CHILDREN_SUFIX = " group by s.nomeTarefa order by s.nomeTarefa";
+    
     String TAREFAS_TREE_QUERY_CHILDREN_BASE = "select new map(s.nomeTarefa as nomeTarefa, "
             + "max(s.idTask) as idTask, max(s.idTarefa) as idTarefa, count(s.nomeCaixa) as qtdEmCaixa, "
             + "count(s.idProcesso) as qtd, 'caixa' as tree, 'Task' as type) from SituacaoProcesso s "
-            + "where s.idFluxo = :idFluxo and s.pooledActor = :idPerfilTemplate";
+            + "where s.idFluxo = :idFluxo ";
+    
+    String TAREFAS_TREE_FILTER_POOLEDACTOR = " and s.pooledActor = :idPerfilTemplate ";
     
     String TAREFAS_TREE_CAIXAS = "tarefasTreeQueryCaixas";
+    
     String TAREFAS_TREE_QUERY_CAIXAS_BASE = "select new map(c.idCaixa as idCaixa, "
             + "c.tarefa.idTarefa as idTarefa, "
             + "c.nomeCaixa as nomeCaixa, "
             + "'Caixa' as type, "
-            + "(select count(distinct s.idProcesso) from SituacaoProcesso s where s.idCaixa = c.idCaixa and s.pooledActor = :idPerfilTemplate";
+            + "(select count(distinct s.idProcesso) from SituacaoProcesso s where s.idCaixa = c.idCaixa ";
+    
     String TAREFAS_TREE_QUERY_CAIXAS_SUFIX = ") as qtd) from Caixa c where c.tarefa.idTarefa = :taskId order by c.nomeCaixa";
 
     String ID_TAREFA_PARAM = "idTarefa";

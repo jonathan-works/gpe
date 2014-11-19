@@ -62,6 +62,7 @@ public class PainelUsuarioController extends AbstractController {
     private Map<String, Object> selected;
     private List<Integer> processoIdList;
     private List<DynamicColumnModel> dynamicColumns;
+    private TipoProcesso tipoProcesso;
 
     @Observer("selectedTarefasTree")
     public void onSelected(Object obj) {
@@ -74,7 +75,8 @@ public class PainelUsuarioController extends AbstractController {
     private void onTabChange() {
     	processoIdList = null;
     	selected = null;
-		TarefasTreeHandler.instance().setTipoProcesso(TipoProcesso.getByName(getTab()));
+    	tipoProcesso = TipoProcesso.getByName(getTab());
+		TarefasTreeHandler.instance().setTipoProcesso(tipoProcesso);
     }
 
     public Integer getIdCaixa() {
@@ -87,7 +89,7 @@ public class PainelUsuarioController extends AbstractController {
     public List<Integer> getProcessoIdList() {
         if (selected != null) {
             if (processoIdList == null) {
-                processoIdList = situacaoProcessoManager.getProcessosAbertosByIdTarefa(getTarefaId(), selected);
+                processoIdList = situacaoProcessoManager.getProcessosAbertosByIdTarefa(getTarefaId(), selected, tipoProcesso);
             }
             if (processoIdList.size() == 0) {
                 processoIdList.add(-1);

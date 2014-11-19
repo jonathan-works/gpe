@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.situacao.manager;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Query;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -22,8 +24,12 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
         return getDao().getQuantidadeTarefasAtivasByTaskId(taskId) > 0;
     }
 
-    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
-        return getDao().getProcessosAbertosByIdTarefa(idTarefa, selected);
+    public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected, TipoProcesso tipoProcesso) {
+    	if (tipoProcesso == TipoProcesso.COMUNICACAO || tipoProcesso == TipoProcesso.DOCUMENTO){
+    		return getDao().getProcessosAbertosByIdTarefaAndTipoProcesso(idTarefa, selected, tipoProcesso);
+    	} else {
+    		return getDao().getQueryProcessoAbertosByIdTarefa(idTarefa, selected);
+    	}
     }
 
     public boolean canOpenTask(long currentTaskId) {
@@ -31,23 +37,27 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
     }
     
     public <E> List<E> getChildrenTarefas(TipoProcesso tipoProcesso, Integer idFluxo) {
-    	if (tipoProcesso == TipoProcesso.COMUNICACAO) {
-    		return getDao().getChildrenList(idFluxo);
-    	} else if (tipoProcesso == TipoProcesso.DOCUMENTO) {
-    		return getDao().getChildrenList(idFluxo);
+    	if (tipoProcesso == TipoProcesso.COMUNICACAO || tipoProcesso == TipoProcesso.DOCUMENTO) {
+    		return getDao().getChildrenComunicacaoDocumentoList(idFluxo);
     	} else {
     		return getDao().getChildrenList(idFluxo);
     	}
     }
     
 	public <E> List<E> getRootsFluxos(TipoProcesso tipoProcesso) {
-		if (tipoProcesso == TipoProcesso.COMUNICACAO) {
-			return getDao().getRootComunicacaoList();
-		} else if (tipoProcesso == TipoProcesso.DOCUMENTO) {
-			return getDao().getRootDocumentoList();
+		if (tipoProcesso == TipoProcesso.COMUNICACAO || tipoProcesso == TipoProcesso.DOCUMENTO) {
+			return getDao().getRootList(tipoProcesso);
 		} else {
 			return getDao().getRootList();
 		}
     }
+	
+	public Query createQueryCaixas(TipoProcesso tipoProcesso) {
+		if (tipoProcesso == TipoProcesso.DOCUMENTO || tipoProcesso == TipoProcesso.COMUNICACAO) {
+			return getDao().createQueryCaixas(tipoProcesso);
+		} else {
+			return getDao().createQueryCaixas();
+		}
+	}
 
 }
