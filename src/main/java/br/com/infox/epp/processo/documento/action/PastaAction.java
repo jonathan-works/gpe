@@ -30,6 +30,7 @@ import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PastaAction.NAME)
@@ -47,6 +48,8 @@ public class PastaAction implements Serializable, ActionListener {
     private ActionMessagesService actionMessagesService;
     @In
     private DocumentoManager documentoManager;
+    @In
+    private ParticipanteProcessoManager participanteProcessoManager;
     
     private Processo processo;
     private List<Pasta> pastaList;
@@ -146,14 +149,16 @@ public class PastaAction implements Serializable, ActionListener {
     }
     
     public Boolean canSee(Pasta pasta) {
+        if (!pasta.getVisivelExterno())
+            return false;
         if (pasta.getVisivelExterno() && pasta.getVisivelNaoParticipante())
             return true;
         UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
         if (usuario == null || usuario.getPessoaFisica() == null)
             return false;
         PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-        List<ParticipanteProcesso> participantes = pasta.getProcesso().getParticipantes();
-        return participantes.contains(pessoaFisica) ? true : false;
+        ParticipanteProcesso participante = participanteProcessoManager.getParticipanteProcessoByPessoaProcesso(pessoaFisica, pasta.getProcesso());
+        return participante != null && pessoaFisica.equals(participante.getPessoa());
     }
 
     @Override

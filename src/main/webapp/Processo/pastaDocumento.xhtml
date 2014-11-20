@@ -37,7 +37,7 @@
 				styleClass="folder-ul"
 				rowClass="folder-li"
 				var="pasta">
-				<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pasta.visivelExterno}"
+				<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)}"
 					styleClass="rf-tr-nd">
 					<rich:dropTarget
 						acceptedTypes="doc#{consultaController.processo.idProcesso}"
@@ -230,7 +230,7 @@
 			$('.errorFields.errors').remove();
 		                   $('.errors').removeClass('errors');
 		}
-
+		
 	</script>
 	
 	<rich:popupPanel
@@ -239,7 +239,7 @@
 		show="false"
 		resizeable="false"
 		minWidth="310"
-		minHeight="230"
+		minHeight="260"
 		header="Adicionar Pasta"
 		onbeforehide="clearAddPastaFields();">
 		<f:facet name="controls">
@@ -261,7 +261,15 @@
 		      id="addPastaInputVisivelExterno"
 		      value="#{pastaAction.visivelExterno}"
 		      required="true"
+              onclick="#{rich:jQuery('addPastaInputVisivelExterno')}.prop('checked') ? #{rich:jQuery('addPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('addPastaDivVisivelNaoParticipante')}.hide();"
 		      label="Usuário externo pode ver?" />
+            <s:div id="addPastaDivVisivelNaoParticipante" style="display: none">
+              <wi:selectBooleanCheckbox
+                id="addPastaInputVisivelNaoParticipante"
+                value="#{pastaAction.visivelNaoParticipante}"
+                required="true"
+                label="Usuário não participante pode ver?" />
+            </s:div>
 		    <wi:commandButton
 		      id="addPastaButton"
 		      action="#{pastaAction.persist()}"
@@ -304,7 +312,13 @@
 	      id="editPastaInputVisivelExterno"
 	      value="#{pastaAction.visivelExterno}"
 	      required="true"
+          onclick="alert(#{pastaAction.visivelExterno})"
 	      label="Usuário externo pode ver?" />
+        <wi:selectBooleanCheckbox
+          id="editPastaInputVisivelNaoParticipante"
+          value="#{pastaAction.visivelNaoParticipante}"
+          required="true"
+          label="Usuário não participante pode ver?" />
 	    <wi:commandButton
 	      id="editPastaButton"
 	      action="#{pastaAction.update()}"

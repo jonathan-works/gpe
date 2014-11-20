@@ -41,6 +41,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         Pasta documentosProcesso = new Pasta();
         documentosProcesso.setRemovivel(Boolean.FALSE);
         documentosProcesso.setVisivelExterno(Boolean.TRUE);
+        documentosProcesso.setVisivelNaoParticipante(Boolean.TRUE);
         documentosProcesso.setNome("Documentos do Processo");
         documentosProcesso.setProcesso(processo);
         documentosProcesso.setSistema(Boolean.TRUE);
@@ -48,6 +49,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         Pasta naoAceitos = new Pasta();
         naoAceitos.setRemovivel(Boolean.FALSE);
         naoAceitos.setVisivelExterno(Boolean.FALSE);
+        naoAceitos.setVisivelNaoParticipante(Boolean.FALSE);
         naoAceitos.setNome("Não Aceitos");
         naoAceitos.setProcesso(processo);
         naoAceitos.setSistema(Boolean.TRUE);
