@@ -25,4 +25,8 @@ public interface ParticipanteProcessoQuery {
 	String PARTICIPANTES_PROCESSO_QUERY = "select o from ParticipanteProcesso o "
 			+ "where o.processo = :" + PARAM_PROCESSO + " and o.ativo = true";
 	
+	String PARTICIPANTES_PROCESSO_RAIZ = "ParticipanteProcesso.participantesProcessoRaiz";
+	String PARTICIPANTES_PROCESSO_RAIZ_QUERY = "select o from ParticipanteProcesso o "
+			+ "where o.processo = :" + PARAM_PROCESSO + " and o.participantePai is null and o.ativo = true";
+	
 }

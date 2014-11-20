@@ -24,7 +24,6 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-
 import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.*;
 
 @Entity
@@ -33,7 +32,7 @@ import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProces
         @NamedQuery(name = LIST_BY_PARTICIPANTE_PROCESSO, query = LIST_BY_PARTICIPANTE_PROCESSO_QUERY),
         @NamedQuery(name = HAS_HISTORICO_BY_PARTICIPANTE, query = HAS_HISTORICO_BY_PARTICIPANTE_QUERY)
 })
-public class HistoricoParticipanteProcesso implements Serializable {
+public class HistoricoParticipanteProcesso implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_hist_participante_processo";
@@ -144,6 +143,13 @@ public class HistoricoParticipanteProcesso implements Serializable {
 		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
+	}
+	
+	public HistoricoParticipanteProcesso makeCopy() throws CloneNotSupportedException {
+		HistoricoParticipanteProcesso cHistorico = (HistoricoParticipanteProcesso) clone();
+		cHistorico.setId(null);
+		cHistorico.setParticipanteModificado(null);
+		return cHistorico;
 	}
     
 }

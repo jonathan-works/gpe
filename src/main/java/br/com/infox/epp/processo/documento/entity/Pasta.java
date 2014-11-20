@@ -6,6 +6,7 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_B
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_BY_PROCESSO_QUERY;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,7 +33,7 @@ import br.com.infox.epp.processo.entity.Processo;
     @NamedQuery(name = GET_BY_PROCESSO, query = GET_BY_PROCESSO_QUERY),
     @NamedQuery(name = GET_DEFAULT_BY_PROCESSO, query = GET_DEFAULT_BY_PROCESSO_QUERY)
 })
-public class Pasta implements Serializable {
+public class Pasta implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pasta";
@@ -66,7 +67,7 @@ public class Pasta implements Serializable {
     @Column(name = "in_sistema", nullable = false)
     private Boolean sistema;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Documento> documentosList; 
 
     public Integer getId() {
@@ -127,5 +128,19 @@ public class Pasta implements Serializable {
     
     public String toString() {
         return documentosList != null ? nome + " (" + documentosList.size() + ")" : nome + " (0)";
+    }
+    
+    public Pasta makeCopy() throws CloneNotSupportedException {
+    	Pasta cPasta = (Pasta) super.clone();
+    	cPasta.setId(null);
+    	cPasta.setProcesso(null);
+    	List<Documento> cDocumentos = new ArrayList<>();
+    	for (Documento documento : getDocumentosList()) {
+    		Documento cDoc = documento.makeCopy();
+    		cDoc.setPasta(cPasta);
+    		cDocumentos.add(cDoc);
+    	}
+    	cPasta.setDocumentosList(cDocumentos);
+    	return cPasta;
     }
 }
