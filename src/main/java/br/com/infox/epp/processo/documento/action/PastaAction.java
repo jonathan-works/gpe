@@ -13,6 +13,7 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -20,12 +21,15 @@ import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PastaAction.NAME)
@@ -56,7 +60,8 @@ public class PastaAction implements Serializable, ActionListener {
     
     public void newInstance() {
         setInstance(new Pasta());
-        setVisivelExterno(true);
+        setVisivelExterno(false);
+        setVisivelNaoParticipante(false);
         setRemovivel(true);
         setSistema(false);
     }
@@ -69,6 +74,9 @@ public class PastaAction implements Serializable, ActionListener {
                     FacesMessages.instance().add(Severity.INFO, "Já existe pasta com este nome.");
                     return;
                 }
+            }
+            if (!getVisivelExterno() && getVisivelNaoParticipante()) {
+                setVisivelNaoParticipante(false);
             }
             getInstance().setProcesso(processo);
             setSistema(false);
@@ -136,6 +144,17 @@ public class PastaAction implements Serializable, ActionListener {
     public Boolean canEdit(Pasta pasta) {
         return pasta != null && !pasta.getSistema();
     }
+    
+    public Boolean canSee(Pasta pasta) {
+        if (pasta.getVisivelExterno() && pasta.getVisivelNaoParticipante())
+            return true;
+        UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
+        if (usuario == null || usuario.getPessoaFisica() == null)
+            return false;
+        PessoaFisica pessoaFisica = usuario.getPessoaFisica();
+        List<ParticipanteProcesso> participantes = pasta.getProcesso().getParticipantes();
+        return participantes.contains(pessoaFisica) ? true : false;
+    }
 
     @Override
     public void processAction(ActionEvent event)
@@ -175,7 +194,15 @@ public class PastaAction implements Serializable, ActionListener {
     public void setVisivelExterno(Boolean visivelExterno) {
         this.getInstance().setVisivelExterno(visivelExterno);
     }
+    
+    public Boolean getVisivelNaoParticipante() {
+        return getInstance().getVisivelNaoParticipante();
+    }
 
+    public void setVisivelNaoParticipante(Boolean visivelNaoParticipante) {
+        getInstance().setVisivelNaoParticipante(visivelNaoParticipante);
+    }
+    
     public Boolean getRemovivel() {
         return getInstance().getRemovivel();
     }
