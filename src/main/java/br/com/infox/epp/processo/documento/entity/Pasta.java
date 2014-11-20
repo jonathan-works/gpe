@@ -58,7 +58,11 @@ public class Pasta implements Serializable, Cloneable {
     @NotNull
     @Column(name = "in_visivel_externo", nullable = false)
     private Boolean visivelExterno = Boolean.FALSE;
-    
+
+    @NotNull
+    @Column(name = "in_visivel_nao_participante", nullable = false)
+    private Boolean visivelNaoParticipante = Boolean.FALSE;
+
     @NotNull
     @Column(name = "in_removivel", nullable = false)
     private Boolean removivel;
@@ -92,6 +96,14 @@ public class Pasta implements Serializable, Cloneable {
 
     public void setVisivelExterno(Boolean visivelExterno) {
         this.visivelExterno = visivelExterno;
+    }
+
+    public Boolean getVisivelNaoParticipante() {
+        return visivelNaoParticipante;
+    }
+
+    public void setVisivelNaoParticipante(Boolean visivelNaoParticipante) {
+        this.visivelNaoParticipante = visivelNaoParticipante;
     }
 
     public String getNome() {
