@@ -4,37 +4,59 @@
   xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-  <ui:define name="title">#{eppmessages['item.titlePage']}</ui:define>
+  <ui:define name="title">#{eppmessages['sala.titlePage']}</ui:define>
   <ui:param
     name="home"
-    value="#{itemCrudAction}" />
+    value="#{salaCrudAction}" />
 
   <ui:define name="searchGrid">
     <wi:dataTable
-      values="#{itemList.list(15)}"
-      bean="#{itemList}"
-      tableTitle="#{eppmessages['item.tableTitle']}"
-      id="itemList"
-      rowId="#{row.idItem}">
+      values="#{salaList.list(15)}"
+      bean="#{salaList}"
+      tableTitle="#{eppmessages['sala.tableTitle']}"
+      id="salaList"
+      rowId="#{row.idSala}">
       <ui:define name="searchForm">
         <wi:searchForm
-          formId="pesquisarItemForm"
+          formId="pesquisarSalaForm"
           formTitle="#{eppmessages['searchForm.title']}">
-
+          <wi:inputText
+            id="nome"
+            label="#{eppmessages['sala.nome']}"
+            value="#{salaList.entity.nome}" />
+          <wi:selectOneMenuEntity
+            id="unidadeDecisoraColegiada"
+            label="#{eppmessages['sala.colegiado']}"
+            value="#{salaList.entity.unidadeDecisoraColegiada}"
+            items="#{salaCrudAction.unidadeDecisoraColegiadaList}">
+          </wi:selectOneMenuEntity>
+          <wi:selectSituacaoOneMenu
+            id="ativo"
+            value="#{salaList.entity.ativo}" />
         </wi:searchForm>
       </ui:define>
       <wi:columnOutputText
         columnId="nome"
-        columnHeader="Nome da Sala"
-        columnWidth="20%" />
-      <wi:columnOutputText columnId="colegiado" />
-      <wi:columnOutputText columnId="endereco" />
-      <wi:columnOutputText columnId="funcionaForaExpediente" />
+        columnHeader="#{eppmessages['sala.nome']}"
+        value="#{row.nome}" />
+      <wi:columnOutputText
+        columnId="unidadeDecisoraColegiada"
+        columnHeader="#{eppmessages['sala.colegiado']}"
+        value="#{row.unidadeDecisoraColegiada}" />
+      <wi:columnOutputText
+        columnId="endereco"
+        columnHeader="#{eppmessages['sala.endereco']}"
+        value="#{row.endereco}" />
+      <wi:columnBoolean
+        columnId="funcionaForaExpediente"
+        columnHeader="#{eppmessages['sala.foraExpediente']}"
+        value="#{row.foraExpediente}" />
       <wi:columnSituacao
         columnId="ativo"
-        columnWidth="15%" />
+        value="#{row.ativo}" />
     </wi:dataTable>
   </ui:define>
 
@@ -42,15 +64,31 @@
     <wi:dataForm
       formId="salaJulgamentoForm"
       formTitle="#{eppmessages['form.title']}">
-
-      <wi:inputText label="Nome da Sala" />
-      <wi:inputText label="Colegiado" />
-      <wi:inputText label="Endereço" />
-
-      <wi:selectBooleanRadio label="Funciona fora de expediente?" />
-
-      <wi:selectSituacaoRadio />
-
+      <wi:inputText
+        id="nome"
+        label="#{eppmessages['sala.nome']}"
+        value="#{salaCrudAction.instance.nome}"
+        required="true" />
+      <wi:selectOneMenuEntity
+        id="unidadeDecisoraColegiada"
+        label="#{eppmessages['sala.colegiado']}"
+        value="#{salaCrudAction.instance.unidadeDecisoraColegiada}"
+        items="#{salaCrudAction.unidadeDecisoraColegiadaList}"
+        inactiveCond="#{not item.ativo}"
+        required="true">
+      </wi:selectOneMenuEntity>
+      <wi:inputText
+        id="endereco"
+        label="#{eppmessages['sala.endereco']}"
+        value="#{salaCrudAction.instance.endereco}"
+        required="true" />
+      <wi:selectBooleanRadio
+        id="foraExpediente"
+        label="#{eppmessages['sala.foraExpediente']}"
+        value="#{salaCrudAction.instance.foraExpediente}" />
+      <wi:selectSituacaoRadio
+        id="ativo"
+        value="#{salaCrudAction.instance.ativo}" />
     </wi:dataForm>
   </ui:define>
 
