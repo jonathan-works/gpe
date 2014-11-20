@@ -14,7 +14,7 @@
     value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
   <ui:param
     name="noSelectionLabel"
-    value="#{ empty showLabel ? (empty noSelectionLabel ? (showLabelSelecione ? messages['crud.select.select'] : (showLabelTodos ? messages['crud.select.all'] : '' )) : noSelectionLabel) : showLabel }" />
+    value="#{ empty showLabel ? (empty noSelectionLabel ? (showLabelTodos ? messages['crud.select.all'] :messages['crud.select.select'] ) : noSelectionLabel) : showLabel }" />
   <s:decorate
     id="#{id}Decoration"
     template="#{template}"
@@ -30,9 +30,10 @@
       readonly="#{readonly}"
       disabled="#{disabled}">
       <c:if test="#{not empty valueItems}">
-                <c:if test="#{showLabelSelecione}">
-                    <f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="#{eppmessages['crud.select.select']}" />
-                </c:if>
+        <f:selectItem
+          noSelectionOption="true"
+          itemValue="#{null}"
+          itemLabel="#{noSelectionLabel}" />
         <f:selectItems value="#{valueItems}" />
       </c:if>
       <c:if test="#{empty valueItems}">
