@@ -20,7 +20,7 @@ import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.CODIGO_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO_QUERY;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.*;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_DESCRICAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_DESCRICAO_QUERY;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS;
@@ -85,7 +85,8 @@ import br.com.infox.hibernate.util.HibernateUtil;
     @NamedQuery(name = COUNT_PROCESSOS_BY_FLUXO, query = COUNT_PROCESSOS_BY_FLUXO_QUERY),
     @NamedQuery(name = FLUXO_BY_NOME, query = FLUXO_BY_NOME_QUERY),
     @NamedQuery(name = COUNT_FLUXO_BY_CODIGO, query = COUNT_FLUXO_BY_CODIGO_QUERY),
-    @NamedQuery(name = COUNT_FLUXO_BY_DESCRICAO, query = COUNT_FLUXO_BY_DESCRICAO_QUERY) })
+    @NamedQuery(name = COUNT_FLUXO_BY_DESCRICAO, query = COUNT_FLUXO_BY_DESCRICAO_QUERY), 
+    @NamedQuery(name = FLUXO_BY_CODIGO, query = FLUXO_BY_CODIGO_QUERY)})
 public class Fluxo implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -49,7 +49,7 @@ public class JbpmExpressionResolver implements ExpressionResolver {
             break;
             
         case MONETARY:
-            expression.setValue(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(value).replace("$", "\\$"));
+            expression.setValue(NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(value));
             break;
             
         case TEXT:

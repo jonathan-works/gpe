@@ -41,20 +41,20 @@
    							<a:commandLink action="#{expedicaoComunicacaoAction.setDestinatario(row)}" render="comunicacaoForm" execute="@this">
    								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}" />
    							</a:commandLink>
-   							<a:commandLink action="#{expedicaoComunicacaoAction.downloadComunicacao(row)}" rendered="#{row.expedido}">
+   							<h:commandLink action="#{expedicaoComunicacaoAction.downloadComunicacao(row)}" rendered="#{row.expedido}">
    								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="Imprimir Comunicação"/>
-   							</a:commandLink>
+   							</h:commandLink>
    						</h:form>
    					</ui:define>
    					<ui:define name="headerToolBar" />
    					
-   					<wi:columnOutputText id="nome" columnHeader="Nome" value="#{expedicaoComunicacaoAction.getNomeDestinatario(row)}" />
+   					<wi:columnOutputText id="nome" columnHeader="Nome" value="#{row.nome}" />
    					<wi:columnOutputText id="meioExpedicao" columnHeader="Meio de Expedição" value="#{row.meioExpedicao.label}" />
    					<wi:columnOutputText id="prazo" columnHeader="Prazo" value="#{row.prazo}" />
    					<wi:columnOutputText id="expedida" columnHeader="Expedida Por" value="-" />
    				</wi:dataTable>
    				<h:form id="comunicacaoForm">
-   					<rich:collapsiblePanel header="Comunicação #{not empty expedicaoComunicacaoAction.nomeDestinatario ? '- '.concat(expedicaoComunicacaoAction.nomeDestinatario) : ''}" 
+   					<rich:collapsiblePanel header="Comunicação #{not empty expedicaoComunicacaoAction.destinatario.nome ? '- '.concat(expedicaoComunicacaoAction.destinatario.nome) : ''}" 
    						expanded="false" id="painelComunicacao" switchType="client">
 	   					<wi:editor id="comunicacao" readonly="true" value="#{expedicaoComunicacaoAction.comunicacao}" />
 	   					<s:div id="assinatura_pers">
@@ -62,8 +62,8 @@
 				              	execute="@this certChain signature" render="comunicacaoForm, pageBodyDialogMessage, destinatarios"
 				                oncomplete="infox.hideLoading();" />
 				              
-				              <h:inputHidden id="certChain" value="#{validaDocumentoAction.certChain}" />
-				              <h:inputHidden id="signature" value="#{validaDocumentoAction.signature}" />
+				              <h:inputHidden id="certChain" value="#{expedicaoComunicacaoAction.certChain}" />
+				              <h:inputHidden id="signature" value="#{expedicaoComunicacaoAction.signature}" />
 				              <wi:appletAssinatura id="appletAssinatura" urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
 				                formId="#{rich:clientId('comunicacaoForm')}" certificationChainField="#{rich:clientId('certChain')}"
 				                signatureField="#{rich:clientId('signature')}" getDataFunction="documento.getData()"

@@ -55,7 +55,9 @@ public class IniciarProcessoService implements Serializable {
     }
     
     public void iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
-    	processoManager.persist(processo);
+    	if (processo.getIdProcesso() == null) {
+    		processoManager.persist(processo);
+    	}
         processo.setDataInicio(new Date());
         Long idProcessoJbpm = iniciarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo(), variaveis);
         processo.setIdJbpm(idProcessoJbpm);
