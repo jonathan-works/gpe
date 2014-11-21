@@ -97,6 +97,10 @@ public class PastaAction implements Serializable, ActionListener {
             Pasta pasta = pastaManager.find(getId());
             pasta.setNome(getNome());
             pasta.setVisivelExterno(getVisivelExterno());
+            pasta.setVisivelNaoParticipante(getVisivelNaoParticipante());
+            if (!getVisivelExterno() && getVisivelNaoParticipante()) {
+                setVisivelNaoParticipante(false);
+            }
             pastaManager.update(pasta);
             newInstance();
             FacesMessages.instance().add(Severity.INFO, "Pasta atualizada com sucesso.");

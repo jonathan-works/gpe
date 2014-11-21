@@ -63,7 +63,7 @@
                       render="documentoListSearchForm"
                       execute="@form"
                       rendered="#{s:hasPermission('/pages/Pasta/editarPasta', 'access') and pastaAction.canEdit(pasta)}"
-                      onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno});"
+                      onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno}, #{pasta.visivelNaoParticipante});"
                       limitRender="true">
                       <h:graphicImage
                         styleClass="opacityHover"
@@ -216,11 +216,13 @@
 		                   $('.errors').removeClass('errors');
 		}
 		
-		function setValuesToEditPasta(id, nome, visivelExterno) {
+		function setValuesToEditPasta(id, nome, visivelExterno, visivelNaoParticipante) {
 			#{rich:component('editPastaPanel')}.show();
 			#{rich:jQuery('hiddenIdPasta')}.val(id);
 			#{rich:jQuery('editPastaInputName')}.val(nome);
 			#{rich:jQuery('editPastaInputVisivelExterno')}.prop('checked', visivelExterno);
+			#{rich:jQuery('editPastaInputVisivelNaoParticipante')}.prop('checked', visivelNaoParticipante);
+			visivelExterno ? #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.hide();
 		}
 		
 		function clearEditPastaFields() {
@@ -285,8 +287,8 @@
 	  moveable="true"
 	  show="false"
 	  resizeable="false"
-	  minWidth="310"
-	  minHeight="230"
+	  minWidth="290"
+	  minHeight="260"
 	  header="Editar Pasta"
 	  onbeforehide="clearEditPastaFields();">
 	  <f:facet name="controls">
@@ -312,13 +314,15 @@
 	      id="editPastaInputVisivelExterno"
 	      value="#{pastaAction.visivelExterno}"
 	      required="true"
-          onclick="alert(#{pastaAction.visivelExterno})"
+          onclick="#{rich:jQuery('editPastaInputVisivelExterno')}.prop('checked') ? #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.hide();"
 	      label="Usuário externo pode ver?" />
-        <wi:selectBooleanCheckbox
-          id="editPastaInputVisivelNaoParticipante"
-          value="#{pastaAction.visivelNaoParticipante}"
-          required="true"
-          label="Usuário não participante pode ver?" />
+        <s:div id="editPastaDivVisivelNaoParticipante" style="display: none">
+          <wi:selectBooleanCheckbox
+            id="editPastaInputVisivelNaoParticipante"
+            value="#{pastaAction.visivelNaoParticipante}"
+            required="true"
+            label="Usuário não participante pode ver?" />
+        </s:div>
 	    <wi:commandButton
 	      id="editPastaButton"
 	      action="#{pastaAction.update()}"
