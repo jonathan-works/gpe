@@ -18,10 +18,10 @@
     		<h:form>
     			<infox:tabHeaders />
    			</h:form>
-   			<infox:tab id="list" name="list" immediate="true" title="Comunicações não expedidas"
+   			<infox:tab id="list" name="list" immediate="true" title="Comunicações"
    				action="#{expedicaoComunicacaoAction.setModeloComunicacao(null)}">
    				<wi:dataTable id="comunicacoes" bean="#{expedicaoComunicacaoList}" values="#{expedicaoComunicacaoList.list(15)}"
-   					tableTitle="Comunicações não expedidas" rowId="#{row.id}" showSearchForm="false" hideOrder="true">
+   					tableTitle="Comunicações" rowId="#{row.id}" showSearchForm="false" hideOrder="true">
    					<ui:define name="toolBar">
    						<wi:toolBarEdit />
    					</ui:define>
@@ -30,6 +30,7 @@
    					<wi:columnOutputText id="numeroProcesso" columnHeader="Número do Processo" value="#{row.processo.numeroProcesso}" />
    					<wi:columnOutputText id="tipoComunicacao" columnHeader="Tipo de Comunicação" value="#{row.tipoComunicacao.descricao}" />
    					<wi:columnOutputText id="classificacao" columnHeader="Classificação de Documento" value="#{row.classificacaoComunicacao.descricao}" />
+   					<wi:columnBoolean id="expedida" columnHeader="Expedida?" value="#{row.expedida}" />
    				</wi:dataTable>
    			</infox:tab>
    			<infox:tab id="form" name="form" immediate="true" title="Expedição" rendered="#{not empty expedicaoComunicacaoAction.modeloComunicacao}">
@@ -37,8 +38,11 @@
    					tableTitle="Destinatários" rowId="#{row.id}" showSearchForm="false" hideOrder="true">
    					<ui:define name="toolBar">
    						<h:form>
-   							<a:commandLink action="#{expedicaoComunicacaoAction.setDestinatario(row)}" render="comunicacaoForm">
+   							<a:commandLink action="#{expedicaoComunicacaoAction.setDestinatario(row)}" render="comunicacaoForm" execute="@this">
    								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}" />
+   							</a:commandLink>
+   							<a:commandLink action="#{expedicaoComunicacaoAction.downloadComunicacao(row)}" rendered="#{row.expedido}">
+   								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="Imprimir Comunicação"/>
    							</a:commandLink>
    						</h:form>
    					</ui:define>

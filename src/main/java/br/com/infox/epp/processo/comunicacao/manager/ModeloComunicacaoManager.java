@@ -1,32 +1,30 @@
 package br.com.infox.epp.processo.comunicacao.manager;
 
-import java.util.Date;
-import java.util.List;
+import java.io.ByteArrayOutputStream;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.joda.time.DateTime;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Entities.EscapeMode;
+import org.jsoup.parser.Tag;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
-import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.ModeloComunicacaoDAO;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
-import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+
+import com.github.neoflyingsaucer.defaultuseragent.DefaultUserAgent;
+import com.github.neoflyingsaucer.jsouptodom.DOMBuilder;
+import com.lowagie.text.DocumentException;
 
 @Name(ModeloComunicacaoManager.NAME)
 @AutoCreate
@@ -102,5 +100,25 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 //			comunicacao.setMd5Documento(MD5Encoder.encode(oldText));
 //			throw new DAOException(e);
 //		}
+	}
+	
+	public byte[] gerarPdfCompleto(ModeloComunicacao modeloComunicacao) throws DAOException {
+		ByteArrayOutputStream pdf = new ByteArrayOutputStream();
+		Document doc = Jsoup.parse(modeloComunicacao.getComunicacao().getModeloDocumento());
+		doc.outputSettings().escapeMode(EscapeMode.xhtml);
+		Element head = doc.head();
+		Element style = new Element(Tag.valueOf("style"), doc.baseUri());
+		style.text("img { -fs-fit-images-to-width: 100% }");
+		head.appendChild(style);
+		DefaultUserAgent userAgent = new DefaultUserAgent();
+		ITextRenderer renderer = new ITextRenderer(userAgent);
+		renderer.setDocument(DOMBuilder.jsoup2DOM(doc), doc.baseUri());
+		renderer.layout();
+		try {
+			renderer.createPDF(pdf);
+		} catch (DocumentException e) {
+			throw new DAOException(e);
+		}
+		return pdf.toByteArray();
 	}
 }

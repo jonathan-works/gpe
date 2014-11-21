@@ -15,8 +15,7 @@ public class ExpedicaoComunicacaoList extends EntityList<ModeloComunicacao> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "expedicaoComunicacaoList";
 	
-	private static final String DEFAULT_EJBQL = "select o from ModeloComunicacao o where "
-			+ "o.finalizada = true and o.expedida = false and "
+	private static final String DEFAULT_EJBQL = "select o from ModeloComunicacao o where o.finalizada = true and "
 			+ "o.localizacaoResponsavelAssinatura = #{authenticator.getUsuarioPerfilAtual().localizacao} and "
 			+ "(o.perfilResponsavelAssinatura is null or o.perfilResponsavelAssinatura = #{authenticator.getUsuarioPerfilAtual().perfilTemplate})";
 	
