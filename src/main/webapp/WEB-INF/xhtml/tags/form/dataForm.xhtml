@@ -16,7 +16,6 @@
         <a:region rendered="#{wi:get(rendered, true)}">
             <ui:param name="panelWidth" value="#{wi:get(panelWidth, '100%')}" />
             <ui:param name="collapsiblePanel" value="#{wi:get(collapsiblePanel, 'false')}" />
-            <s:token allowMultiplePosts="true" requireSession="true" />
             <c:if test="#{not collapsiblePanel}">
 	            <rich:panel styleClass="dt-form-p" bodyClass="dt-form-p-b"
 	                headerClass="dt-form-p-h" header="#{empty formTitle ? formId : formTitle}">
