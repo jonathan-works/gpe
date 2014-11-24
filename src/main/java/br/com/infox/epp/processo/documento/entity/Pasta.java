@@ -71,7 +71,7 @@ public class Pasta implements Serializable, Cloneable {
     @Column(name = "in_sistema", nullable = false)
     private Boolean sistema;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta", cascade = {CascadeType.REMOVE})
     private List<Documento> documentosList; 
 
     public Integer getId() {

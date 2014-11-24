@@ -4,10 +4,13 @@ import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.ASSIN
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.CLASSIFICACAO_DOCUMENTO_PARAM;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.CODIGO_DOCUMENTO_PARAM;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PARAM_DESCRICAO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PAPEL_PARAM;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -50,5 +53,11 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         final HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(CODIGO_DOCUMENTO_PARAM, codigo);
         return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, parameters);
+    }
+    
+    public ClassificacaoDocumento findByDescricao(String descricao) {
+    	Map<String, Object> params = new HashMap<>(1);
+    	params.put(PARAM_DESCRICAO, descricao);
+    	return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, params);
     }
 }
