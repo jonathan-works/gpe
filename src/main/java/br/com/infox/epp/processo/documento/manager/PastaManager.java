@@ -26,6 +26,9 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     
     public Pasta getDefaultFolder(Processo processo) throws DAOException {
         Pasta pasta = getDao().getDefaultByProcesso(processo);
+        if (pasta == null) {
+        	pasta = createDefaultFolders(processo).get(0); 
+        }
         return pasta;
     }
     
@@ -37,7 +40,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         return pastaList;
     }
     
-    public List<Pasta> createDefaultFolders(Processo processo) throws DAOException {
+    private List<Pasta> createDefaultFolders(Processo processo) throws DAOException {
         Pasta documentosProcesso = new Pasta();
         documentosProcesso.setRemovivel(Boolean.FALSE);
         documentosProcesso.setVisivelExterno(Boolean.TRUE);

@@ -30,4 +30,8 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
     public ClassificacaoDocumento getClassificaoParaAcessoDireto() {
         return getDao().findByCodigo(CODIGO_CLASSIFICACAO_ACESSO_DIRETO);
     }
+    
+    public ClassificacaoDocumento findByDescricao(String descricao) {
+    	return getDao().findByDescricao(descricao);
+    }
 }

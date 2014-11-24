@@ -5,6 +5,7 @@ public interface ClassificacaoDocumentoQuery {
 	String CLASSIFICACAO_DOCUMENTO_PARAM = "classificacaoDocumento";
     String PAPEL_PARAM = "papel";
     String TIPO_DOCUMENTO_PARAM = "tipoDocumento";
+    String PARAM_DESCRICAO = "descricao";
 
     String CLASSIFICACAO_DOCUMENTO_USEABLE = "useableTipoProcessoDocumento";
     String CLASSIFICACAO_DOCUMENTO_USEABLE_QUERY = "select t from ClassificacaoDocumentoPapel o "
@@ -28,4 +29,7 @@ public interface ClassificacaoDocumentoQuery {
     String CODIGO_DOCUMENTO_PARAM = "codigoDocumento";
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO = "findClassificacaoDocumentoByCodigo";
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY = "select o from ClassificacaoDocumento o where o.codigoDocumento = :" + CODIGO_DOCUMENTO_PARAM;
+    
+    String FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO = "findClassificacaoDocumentoByDescricao";
+    String FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY = "select o from ClassificacaoDocumento o where o.descricao like :" + PARAM_DESCRICAO;
 }

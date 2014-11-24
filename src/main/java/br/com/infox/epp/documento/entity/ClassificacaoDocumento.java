@@ -6,6 +6,8 @@ import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO_QUERY;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -15,6 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -43,7 +46,8 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 @NamedQueries({
     @NamedQuery(name = LIST_CLASSIFICACAO_DOCUMENTO, query = LIST_CLASSIFICACAO_DOCUMENTO_QUERY),
     @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY),
-    @NamedQuery(name = CLASSIFICACAO_DOCUMENTO_USEABLE, query = CLASSIFICACAO_DOCUMENTO_USEABLE_QUERY) 
+    @NamedQuery(name = CLASSIFICACAO_DOCUMENTO_USEABLE, query = CLASSIFICACAO_DOCUMENTO_USEABLE_QUERY),
+    @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY) 
 })
 public class ClassificacaoDocumento implements Serializable {
 	

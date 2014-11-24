@@ -85,6 +85,7 @@ import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
@@ -188,8 +189,11 @@ public class Processo implements Serializable {
     @OrderBy(value = "ds_caminho_absoluto")
     private List<ParticipanteProcesso> participantes = new ArrayList<>(0);
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<MetadadoProcesso> metadadoProcessoList = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
+    private List<Pasta> pastaList = new ArrayList<>();
     
     @PrePersist
     private void prePersist() {
@@ -336,6 +340,14 @@ public class Processo implements Serializable {
 
 	public void setMetadadoProcessoList(List<MetadadoProcesso> metadadoProcessoList) {
 		this.metadadoProcessoList = metadadoProcessoList;
+	}
+	
+	public List<Pasta> getPastaList() {
+		return pastaList;
+	}
+
+	public void setPastaList(List<Pasta> pastaList) {
+		this.pastaList = pastaList;
 	}
 
 	public boolean hasPartes(){
