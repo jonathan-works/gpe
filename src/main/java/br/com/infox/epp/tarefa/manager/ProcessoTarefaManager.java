@@ -9,6 +9,7 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
@@ -277,4 +278,23 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         LocalDate now = LocalDate.now();
         return Days.daysBetween(dataInicio, now).getDays();
     }
+
+    public void finalizarInstanciaTarefa(TaskInstance taskInstance) throws DAOException {
+        taskInstance.end();
+        ProcessoTarefa pt = getByTaskInstance(taskInstance.getId());
+        Date dtFinalizacao = taskInstance.getEnd();
+        pt.setDataFim(dtFinalizacao);
+        update(pt);
+        updateTempoGasto(dtFinalizacao, pt);
+    }
+
+    public void finalizarInstanciaTarefa(TaskInstance taskInstance, String transicao) throws DAOException {
+        taskInstance.end(transicao);
+        ProcessoTarefa pt = getByTaskInstance(taskInstance.getId());
+        Date dtFinalizacao = taskInstance.getEnd();
+        pt.setDataFim(dtFinalizacao);
+        update(pt);
+        updateTempoGasto(dtFinalizacao, pt);
+    }
+
 }
