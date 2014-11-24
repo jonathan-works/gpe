@@ -30,18 +30,19 @@ import br.com.infox.seam.util.ComponentUtil;
 @Entity
 @Table(name = MetadadoProcesso.TABLE_NAME)
 @NamedQueries(value = {
+		@NamedQuery(name = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_BY_TYPE, 
+				query = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_BY_TYPE_QUERY),
 		@NamedQuery(name = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_VISIVEL_BY_PROCESSO, 
 					 query = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_VISIVEL_BY_PROCESSO_QUERY),
 		@NamedQuery(name = MetadadoProcessoQuery.GET_METADADO, query = MetadadoProcessoQuery.GET_METADADO_QUERY),
-		@NamedQuery(name = MetadadoProcessoQuery.REMOVER_METADADO, query = MetadadoProcessoQuery.REMOVER_METADADO_QUERY),
-})
+		@NamedQuery(name = MetadadoProcessoQuery.REMOVER_METADADO, query = MetadadoProcessoQuery.REMOVER_METADADO_QUERY)})
 public class MetadadoProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_metadado_processo";
-	
+
 	@Id
-	@SequenceGenerator(initialValue=1, allocationSize=1, name="GeneratorMetadadoProcesso", sequenceName="sq_metadado_processo")
+	@SequenceGenerator(initialValue = 1, allocationSize = 1, name = "GeneratorMetadadoProcesso", sequenceName = "sq_metadado_processo")
 	@GeneratedValue(generator = "GeneratorMetadadoProcesso", strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_metadado_processo", unique = true, nullable = false)
 	private Long id;
@@ -49,27 +50,27 @@ public class MetadadoProcesso implements Serializable {
 	@NotNull
 	@Column(name = "nm_metadado_processo", nullable = false)
 	private String metadadoType;
-	
+
 	@NotNull
 	@Column(name = "vl_metadado_processo", nullable = false)
 	private String valor;
-	
+
 	@NotNull
 	@Column(name = "ds_tipo", nullable = false)
 	private Class<?> classType;
-	
+
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_processo", nullable = false)
 	private Processo processo;
-	
+
 	@NotNull
 	@Column(name = "in_visivel", nullable = true)
 	private Boolean visivel = Boolean.TRUE;
-	
+
 	@Transient
 	private Object value;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -110,7 +111,7 @@ public class MetadadoProcesso implements Serializable {
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
 	}
-	
+
 	public Boolean getVisivel() {
 		return visivel;
 	}
@@ -141,12 +142,12 @@ public class MetadadoProcesso implements Serializable {
 		}
 		return (E) value;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getValue().toString();
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -171,12 +172,12 @@ public class MetadadoProcesso implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 	private void limparValue(String novoValor) {
-		if (novoValor != null && !novoValor.equals(getValor())) {		
+		if (novoValor != null && !novoValor.equals(getValor())) {
 			this.value = null;
 		}
 	}
-	
+
 	public static final String DATE_PATTERN = "dd/MM/yyyy HH:mm:ss";
 }

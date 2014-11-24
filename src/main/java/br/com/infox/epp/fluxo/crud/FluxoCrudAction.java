@@ -2,7 +2,6 @@ package br.com.infox.epp.fluxo.crud;
 
 import static org.jboss.seam.international.StatusMessage.Severity.ERROR;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
@@ -87,45 +86,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     }
 
     @Override
-    protected void beforeSave() {
-        final SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        final String dataHoje = formato.format(new Date());
-        final Fluxo fluxo = getInstance();
-        final String dataInicio = formato.format(fluxo
-                .getDataInicioPublicacao());
 
-        if (!isManaged()) {
-            if (dataHoje.equals(dataInicio)) {
-                fluxo.setPublicado(Boolean.TRUE);
-            } else {
-                fluxo.setPublicado(Boolean.FALSE);
-            }
-        }
-    }
-
-    // TODO: rever como proceder em relação a usuarioPublicado. Esta
-    // implementação estava fora de uso
-    // @Override
-    // public String save() {
-    // try {
-    // final String ret = super.save();
-    // final UsuarioLogin usuarioPublicacao =
-    // getInstance().getUsuarioPublicacao();
-    // if (usuarioPublicacao != null) {
-    // final List<Fluxo> usuarioPublicacaoList = usuarioPublicacao
-    // .getFluxoList();
-    // if (!usuarioPublicacaoList.contains(getInstance())) {
-    // fluxoManager.refresh(usuarioPublicacao);
-    // }
-    // }
-    // return ret;
-    // } catch (final Exception e){
-    // LOG.error(e.getMessage(), e);
-    // return null;
-    // }
-    // }
-
-    @Override
     public String inactive(final Fluxo fluxo) {
         setInstanceId(fluxo.getIdFluxo());
         if (!getManager().existemProcessosAssociadosAFluxo(fluxo)) {
@@ -146,6 +107,6 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     @Override
     public void newInstance() {
         super.newInstance();
-        this.replica = false;
+        getInstance().setPublicado(false);
     }
 }

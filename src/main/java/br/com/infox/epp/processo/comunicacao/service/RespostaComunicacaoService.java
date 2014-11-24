@@ -134,7 +134,7 @@ public class RespostaComunicacaoService {
 	
 	private void criarMetadadosProcessoResposta(Processo processoResposta) throws DAOException {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoResposta);
-		MetadadoProcesso metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.DOCUMENTO.name());
+		MetadadoProcesso metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.DOCUMENTO);
 		metadadoProcessoManager.persist(metadado);
 		
 		metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, processoResposta.getProcessoPai().getLocalizacao().getIdLocalizacao().toString());

@@ -75,9 +75,16 @@ public class PainelUsuarioController extends AbstractController {
     private void onTabChange() {
     	processoIdList = null;
     	selected = null;
-    	tipoProcesso = TipoProcesso.getByName(getTab());
-		TarefasTreeHandler.instance().setTipoProcesso(tipoProcesso);
+    	setTipoProcesso();
+		TarefasTreeHandler.instance().setTipoProcesso(getTipoProcesso());
     }
+
+    /**
+     * Método protected para poder ser sobrescrito pelos módulos do epp
+     * */
+	protected void setTipoProcesso() {
+		setTipoProcesso(TipoProcesso.getByName(getTab()));
+	}
 
     public Integer getIdCaixa() {
         if (selected != null) {
@@ -89,7 +96,7 @@ public class PainelUsuarioController extends AbstractController {
     public List<Integer> getProcessoIdList() {
         if (selected != null) {
             if (processoIdList == null) {
-                processoIdList = situacaoProcessoManager.getProcessosAbertosByIdTarefa(getTarefaId(), selected, tipoProcesso);
+                processoIdList = situacaoProcessoManager.getProcessosAbertosByIdTarefa(getTarefaId(), selected, getTipoProcesso());
             }
             if (processoIdList.size() == 0) {
                 processoIdList.add(-1);
@@ -213,4 +220,12 @@ public class PainelUsuarioController extends AbstractController {
     	super.setTab(tab);
     	if (changed) onTabChange();
     }
+
+	protected TipoProcesso getTipoProcesso() {
+		return tipoProcesso;
+	}
+
+	protected void setTipoProcesso(TipoProcesso tipoProcesso) {
+		this.tipoProcesso = tipoProcesso;
+	}
 }

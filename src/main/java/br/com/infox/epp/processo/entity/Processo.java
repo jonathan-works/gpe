@@ -29,6 +29,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_QUERY;
@@ -115,6 +117,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedQuery(name = LIST_NOT_ENDED_BY_FLUXO, query = LIST_NOT_ENDED_BY_FLUXO_QUERY),
     @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
     @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
+    @NamedQuery(name = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO, query = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY),
     @NamedQuery(name = GET_PROCESSO_BY_NUMERO_PROCESSO, query = GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY) 
 })
 @Cacheable

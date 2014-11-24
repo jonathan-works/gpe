@@ -13,6 +13,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.epp.access.dao.LocalizacaoDAO;
+import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
@@ -148,8 +149,17 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     public Localizacao getLocalizacaoForaEstruturaByNome(String nomeLocalizacao){
     	return getDao().getLocalizacaoForaEstruturaByNome(nomeLocalizacao);
     }
+    
+        public Localizacao getLocalizacaoByCodigo(String codigo) {
+    	return getDao().getLocalizacaoByCodigo(codigo);
+    }
 
 	public Localizacao getLocalizacaoByNome(String nomeLocalizacao) throws DAOException {
 		return getDao().getLocalizacaoByNome(nomeLocalizacao); 
 	}
+	
+	public List<Localizacao> getLocalizacoesByEstruturaFilho(Estrutura estruturaFilho) {
+		return getDao().getLocalizacoesByEstruturaFilho(estruturaFilho);
+	}
+    
 }

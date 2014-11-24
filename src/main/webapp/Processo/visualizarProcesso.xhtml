@@ -207,6 +207,7 @@
                 action="#{comunicacaoAction.clear}">
                 <ui:include src="comunicacao.xhtml" />
             </infox:tab>
+            <ui:include src="abasCustomizadasDoVisualizar.xhtml"/>
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">
             <wi:outputText

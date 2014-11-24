@@ -325,7 +325,7 @@ public class ComunicacaoService {
 					ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO, destinatario.getPrazo().toString()));
 		}
 		
-		metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO.name()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO));
 		
 		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
 			metadados.add(metadadoProcessoProvider.gerarMetadado(

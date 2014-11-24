@@ -32,7 +32,7 @@ public class Estrutura implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name = ORConstants.GENERATOR, sequenceName = EstruturaQuery.SEQUENCE_NAME)
+    @SequenceGenerator(name = ORConstants.GENERATOR, sequenceName = EstruturaQuery.SEQUENCE_NAME, allocationSize = 1, initialValue = 1)
     @GeneratedValue(generator = ORConstants.GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = EstruturaQuery.COLUMN_ID)
     private Integer id;
