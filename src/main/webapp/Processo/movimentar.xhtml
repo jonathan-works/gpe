@@ -387,6 +387,14 @@
                 title="#{eppmessages['participanteProcesso.participantes']}">
                 <ui:include src="parteProcessoGrid.xhtml" />
             </infox:tab>
+            <infox:tab
+                id="tabComunicacao"
+                name="tabComunicacao"
+                status=":status"
+                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
+                title="Comunicação">
+                <ui:include src="comunicacao.xhtml" />
+            </infox:tab>
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">
             <wi:outputText

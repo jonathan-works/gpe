@@ -51,7 +51,10 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     }
     
     public List<ParticipanteProcesso> getParticipantes() {
-    	return getProcesso().getParticipantes();
+    	if (getProcesso() != null) {
+    		return getProcesso().getParticipantes();
+    	}
+    	return null;
     }
     
     public List<ParticipanteProcesso> getParticipantesAtivos() {

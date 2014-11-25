@@ -14,11 +14,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Entity
 @Table(name = "tb_destinatario_modelo_comunic", uniqueConstraints = {
@@ -40,7 +42,7 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_localizacao")
-	private Localizacao localizacaoDestinataria;
+	private Localizacao destino;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -54,6 +56,14 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	
 	@Column(name = "nr_prazo")
 	private Integer prazo;
+	
+	@Column(name = "in_expedido", nullable = false)
+	@NotNull
+	private Boolean expedido = false;
+	
+	@JoinColumn(name = "id_documento_bin")
+	@ManyToOne(fetch = FetchType.LAZY)
+	private DocumentoBin comunicacao;
 
 	public Long getId() {
 		return id;
@@ -86,13 +96,13 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	public void setPrazo(Integer prazo) {
 		this.prazo = prazo;
 	}
-	
-	public Localizacao getLocalizacaoDestinataria() {
-		return localizacaoDestinataria;
+
+	public Localizacao getDestino() {
+		return destino;
 	}
 	
-	public void setLocalizacaoDestinataria(Localizacao localizacaoDestinataria) {
-		this.localizacaoDestinataria = localizacaoDestinataria;
+	public void setDestino(Localizacao destino) {
+		this.destino = destino;
 	}
 	
 	public PessoaFisica getDestinatario() {
@@ -101,5 +111,31 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	
 	public void setDestinatario(PessoaFisica destinatario) {
 		this.destinatario = destinatario;
+	}
+	
+	public Boolean getExpedido() {
+		return expedido;
+	}
+	
+	public void setExpedido(Boolean expedido) {
+		this.expedido = expedido;
+	}
+	
+	public DocumentoBin getComunicacao() {
+		return comunicacao;
+	}
+	
+	public void setComunicacao(DocumentoBin comunicacao) {
+		this.comunicacao = comunicacao;
+	}
+	
+	@Transient
+	public String getNome() {
+		if (destinatario != null) {
+			return destinatario.getNome();
+		} else if (destino != null) {
+			return destino.getCaminhoCompletoFormatado();
+		}
+		return null;
 	}
 }

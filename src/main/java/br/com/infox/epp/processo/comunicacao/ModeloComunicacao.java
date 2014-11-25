@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -22,12 +24,15 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.processo.comunicacao.query.ModeloComunicacaoQuery;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
 @Table(name = "tb_modelo_comunicacao")
+@NamedQueries({
+	@NamedQuery(name = ModeloComunicacaoQuery.IS_EXPEDIDA, query = ModeloComunicacaoQuery.IS_EXPEDIDA_QUERY)
+})
 public class ModeloComunicacao implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -41,9 +46,8 @@ public class ModeloComunicacao implements Serializable {
 	@JoinColumn(name = "id_tipo_comunicacao", nullable = false)
 	private TipoComunicacao tipoComunicacao;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_documento_bin", nullable = false)
-	private DocumentoBin comunicacao;
+	@Column(name = "ds_comunicacao", nullable = false)
+	private String comunicacao;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_classificacao_documento", nullable = false)
@@ -54,12 +58,8 @@ public class ModeloComunicacao implements Serializable {
 	private Boolean finalizada = false;
 	
 	@NotNull
-	@Column(name = "in_expedida", nullable = false)
-	private Boolean expedida = false;
-	
-	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_processo_epa", nullable = false)
+	@JoinColumn(name = "id_processo", nullable = false)
 	private Processo processo;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -74,10 +74,10 @@ public class ModeloComunicacao implements Serializable {
 	@JoinColumn(name = "id_modelo_documento")
 	private ModeloDocumento modeloDocumento;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao", cascade = CascadeType.REMOVE)
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
 	
-	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DocumentoModeloComunicacao> documentos = new ArrayList<>(0);
 	
 	public Long getId() {
@@ -96,14 +96,6 @@ public class ModeloComunicacao implements Serializable {
 		this.tipoComunicacao = tipoComunicacao;
 	}
 
-	public DocumentoBin getComunicacao() {
-		return comunicacao;
-	}
-	
-	public void setComunicacao(DocumentoBin comunicacao) {
-		this.comunicacao = comunicacao;
-	}
-	
 	public ClassificacaoDocumento getClassificacaoComunicacao() {
 		return classificacaoComunicacao;
 	}
@@ -159,14 +151,6 @@ public class ModeloComunicacao implements Serializable {
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
 	}
-
-	public Boolean getExpedida() {
-		return expedida;
-	}
-	
-	public void setExpedida(Boolean expedida) {
-		this.expedida = expedida;
-	}
 	
 	public ModeloDocumento getModeloDocumento() {
 		return modeloDocumento;
@@ -174,5 +158,13 @@ public class ModeloComunicacao implements Serializable {
 	
 	public void setModeloDocumento(ModeloDocumento modeloDocumento) {
 		this.modeloDocumento = modeloDocumento;
+	}
+	
+	public String getComunicacao() {
+		return comunicacao;
+	}
+	
+	public void setComunicacao(String comunicacao) {
+		this.comunicacao = comunicacao;
 	}
 }

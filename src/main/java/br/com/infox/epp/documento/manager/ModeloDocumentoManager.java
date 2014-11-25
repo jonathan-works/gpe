@@ -1,21 +1,15 @@
 package br.com.infox.epp.documento.manager;
 
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.bpm.TaskInstance;
-import org.jboss.seam.core.Expressions;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -26,9 +20,9 @@ import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
+import br.com.infox.epp.documento.type.Expression;
+import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 
 /**
@@ -96,6 +90,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
      * substitui-las por seus respectivos valores
      * 
      * @param modeloDocumento Modelo de Documento não nulo a ser usado na tarefa
+     * @param resolver 
      * @return Documento contendo valores armazenados nas variáveis inseridas no
      *         modelo
      */
@@ -115,14 +110,14 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
      * @return Documento contendo valores armazenados nas variáveis inseridas no
      *         modelo
      */
-    public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, Map<String, Pair<String, VariableType>> variableTypeMap) {
+    public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, ExpressionResolver resolver) {
     	if (modeloDocumento == null) {
     		return null;
     	}
-        return evaluateModeloDocumento(modeloDocumento, modeloDocumento.getModeloDocumento(), variableTypeMap);
+        return evaluateModeloDocumento(modeloDocumento, modeloDocumento.getModeloDocumento(), resolver);
     }
     
-    public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, String texto, Map<String, Pair<String, VariableType>> variableTypeMap) {
+    public String evaluateModeloDocumento(ModeloDocumento modeloDocumento, String texto, ExpressionResolver resolver) {
     	if (modeloDocumento == null) {
             return null;
         }
@@ -148,29 +143,28 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 if (expression == null) {
                     matcher.appendReplacement(sb, group);
                 } else {
-                    if (variableTypeMap != null) {
-                        expression = resolveJbpmVariable(expression, variableTypeMap);
-                        if (expression != null) {
-                            // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
-                            // Matcher#appendReplacement (ver o Javadoc correspondente).
-                            // Importante manter a ordem dos replaces abaixo
-                            expression = expression.replace("\\", "\\\\");
-                            expression = expression.replace("$", "\\$");
-                        }
+                	Expression expr = new Expression(expression);
+                	if (resolver != null) {
+                		try {
+                			expr = resolver.resolve(expr);
+                		} catch (RuntimeException e) {
+                			modeloProcessado.append("Erro na linha: '" + linhas[i]);
+                            modeloProcessado.append("': " + e.getMessage());
+                            LOG.error(".appendTail()", e);
+                		}
                     }
-                    matcher.appendReplacement(sb, expression);
+                    if (expr.isResolved()) {
+                        // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
+                        // Matcher#appendReplacement (ver o Javadoc correspondente).
+                        // Importante manter a ordem dos replaces abaixo
+                        expr.setValue(expr.getValue().replace("\\", "\\\\"));
+                        expr.setValue(expr.getValue().replace("$", "\\$"));
+                        matcher.appendReplacement(sb, expr.getValue());
+                    }
                 }
             }
             matcher.appendTail(sb);
-
-            try {
-                String linha = (String) Expressions.instance().createValueExpression(sb.toString()).getValue();
-                modeloProcessado.append(linha);
-            } catch (RuntimeException e) {
-                modeloProcessado.append("Erro na linha: '" + linhas[i]);
-                modeloProcessado.append("': " + e.getMessage());
-                LOG.error(".appendTail()", e);
-            }
+            modeloProcessado.append(sb.toString());
         }
         return modeloProcessado.toString();
     }
@@ -220,53 +214,8 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         return evaluateModeloDocumento(modeloDocumento);
     }
     
-    public String getConteudo(int idModeloDocumento, Map<String, Pair<String, VariableType>> variableTypeMap) {
+    public String getConteudo(int idModeloDocumento, ExpressionResolver resolver) {
         final ModeloDocumento modeloDocumento = find(idModeloDocumento);
-        return evaluateModeloDocumento(modeloDocumento, variableTypeMap);
-    }
-
-    private String resolveJbpmVariable(String expression, Map<String, Pair<String, VariableType>> variableTypeMap) {
-        String realVariableName = expression.substring(2, expression.length() - 1);
-        Object value = TaskInstance.instance().getVariable(realVariableName);
-        Pair<String, VariableType> variableInfo = variableTypeMap.get(realVariableName);
-        if (variableInfo == null || value == null) {
-            return expression;
-        }
-        switch (variableInfo.getRight()) {
-        case DATE:
-            expression = new SimpleDateFormat("dd/MM/yyyy").format(value);
-            break;
-
-        case EDITOR:
-            expression = documentoManager.find(value).getDocumentoBin().getModeloDocumento();
-            break;
-            
-        case MONETARY:
-            expression = NumberFormat.getCurrencyInstance(new Locale("pt", "BR")).format(value).replace("$", "\\$");
-            break;
-            
-        case TEXT:
-            expression = ((String) value).replaceAll("[\n]+?|[\r\n]+?", "<br />");
-            break;
-            
-        case BOOLEAN:
-            expression = Boolean.valueOf((String) value) ? "Sim" : "Não";
-            break;
-            
-        case ENUMERATION:
-            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(Integer.valueOf(variableInfo.getLeft().split(":")[2]));
-            String[] itens = dominio.getDominio().split(";");
-            for (String item : itens) {
-                String[] pair = item.split("=");
-                if (pair[0].equals(value))  {
-                    expression = pair[1];
-                }
-            }
-            break;
-            
-        default:
-            break;
-        }
-        return expression;
+        return evaluateModeloDocumento(modeloDocumento, resolver);
     }
 }

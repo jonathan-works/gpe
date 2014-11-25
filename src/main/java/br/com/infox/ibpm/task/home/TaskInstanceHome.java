@@ -45,6 +45,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.type.JbpmExpressionResolver;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
@@ -681,7 +682,7 @@ public class TaskInstanceHome implements Serializable {
         String modelo = "";
         if (modeloDocumento != null) {
             modelo = modeloDocumentoManager.evaluateModeloDocumento(
-                    modeloDocumento, variableTypeResolver.getVariableTypeMap());
+                    modeloDocumento, new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()));
         }
         mapaDeVariaveis.put(id, modelo);
     }
@@ -731,7 +732,7 @@ public class TaskInstanceHome implements Serializable {
         this.modeloDocumento = modelo;
         mapaDeVariaveis.put(getFieldName(variavelDocumento),
                 modeloDocumentoManager.evaluateModeloDocumento(modelo,
-                        variableTypeResolver.getVariableTypeMap()));
+                        new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance())));
     }
 
     public String getHomeName() {

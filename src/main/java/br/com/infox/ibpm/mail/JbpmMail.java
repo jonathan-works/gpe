@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import twitter4j.TwitterException;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.type.JbpmExpressionResolver;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
@@ -75,7 +77,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
         data.setUseHtmlBody(true);
         ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
         VariableTypeResolver variableTypeResolver = (VariableTypeResolver) Component.getInstance(VariableTypeResolver.NAME);
-        data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), variableTypeResolver.getVariableTypeMap()));
+        data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance())));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;
         if (idGrupo != null) {

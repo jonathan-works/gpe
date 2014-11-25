@@ -20,7 +20,9 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.Token;
 
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
@@ -46,6 +48,7 @@ import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.ParticipanteProcessoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -55,12 +58,13 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.transaction.TransactionService;
 
 @Name(ComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -104,6 +108,8 @@ public class ComunicacaoAction implements Serializable {
 	private GenericManager genericManager;
 	@In
 	private ModeloDocumentoManager modeloDocumentoManager;
+	@In
+	private ComunicacaoService comunicacaoService;
 	
 	private ModeloComunicacao modeloComunicacao;
 	
@@ -114,10 +120,12 @@ public class ComunicacaoAction implements Serializable {
 	private Localizacao localizacao;
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private boolean finalizada;
-	private String textoComunicacao;
 	private String certChain;
 	private String signature;
 	private boolean adicionarDestinatarioRelator;
+	private boolean processoPossuiRelator;
+	private Boolean expedida;
+	private DestinatarioModeloComunicacao destinatario;
 	
 	@Create
 	public void init() {
@@ -146,7 +154,6 @@ public class ComunicacaoAction implements Serializable {
 	/**
 	 * Inicialização dos entity lists
 	 */
-	@Deprecated
 	private void initLists() {
 		documentoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso());
 		participanteProcessoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso());
@@ -155,16 +162,16 @@ public class ComunicacaoAction implements Serializable {
 			documentoComunicacaoList.adicionarIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
 		}
 		
-//		PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
-		PessoaFisica relator = null;
+		PessoaFisica relator = getRelator();
+		processoPossuiRelator = relator != null;
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getDestinatario() != null) {
 				participanteProcessoComunicacaoList.adicionarIdPessoa(destinatario.getDestinatario().getIdPessoa());
 				if (relator != null && !adicionarDestinatarioRelator && relator.equals(destinatario.getDestinatario())) {
 					adicionarDestinatarioRelator = true;
 				}
-			} else if (destinatario.getLocalizacaoDestinataria() != null) {
-				idsLocalizacoesSelecionadas.add(destinatario.getLocalizacaoDestinataria().getIdLocalizacao());
+			} else {
+				idsLocalizacoesSelecionadas.add(destinatario.getDestino().getIdLocalizacao());
 			}
 		}
 	}
@@ -179,14 +186,33 @@ public class ComunicacaoAction implements Serializable {
 		} else {
 			this.modeloComunicacao = modeloComunicacaoManager.find(idModeloComunicacao);
 			setFinalizada(modeloComunicacao.getFinalizada() != null ? modeloComunicacao.getFinalizada() : false);
-			DocumentoBin doc = modeloComunicacao.getComunicacao();
-			setTextoComunicacao(doc != null ? doc.getModeloDocumento() : null);
 		}
 	}
 	
 	public void gravar() {
 		try {
-			executeGravar();
+			validarGravacao();
+			modeloComunicacao.setFinalizada(isFinalizada());
+			
+			if (modeloComunicacao.getId() == null) {
+				modeloComunicacaoManager.persist(modeloComunicacao);
+			}
+			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+				if (destinatario.getId() == null) {
+					genericManager.persist(destinatario);
+				}
+			}
+			for (DocumentoModeloComunicacao documento : modeloComunicacao.getDocumentos()) {
+				if (documento.getId() == null) {
+					genericManager.persist(documento);
+				}
+			}
+			
+			modeloComunicacaoManager.update(modeloComunicacao);
+			setIdModeloVariable(modeloComunicacao.getId());
+			if (isFinalizada()) {
+				comunicacaoService.finalizarComunicacao(modeloComunicacao);
+			}
 		} catch (Exception e) {
 			LOG.error("", e);
 			if (e instanceof DAOException) {
@@ -198,29 +224,6 @@ public class ComunicacaoAction implements Serializable {
 		}
 	}
 
-	private void executeGravar() throws DAOException {
-		validarGravacao();
-		atualizarComunicacao();
-		modeloComunicacao.setFinalizada(isFinalizada());
-		
-		if (modeloComunicacao.getId() == null) {
-			modeloComunicacaoManager.persist(modeloComunicacao);
-		}
-		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
-			if (destinatario.getId() == null) {
-				genericManager.persist(destinatario);
-			}
-		}
-		for (DocumentoModeloComunicacao documento : modeloComunicacao.getDocumentos()) {
-			if (documento.getId() == null) {
-				genericManager.persist(documento);
-			}
-		}
-		
-		modeloComunicacaoManager.update(modeloComunicacao);
-		setIdModeloVariable(modeloComunicacao.getId());
-	}
-	
 	private void setIdModeloVariable(Long id) {
 		ContextInstance context = ProcessInstance.instance().getContextInstance();
 		Token taskToken = TaskInstance.instance().getToken();
@@ -242,7 +245,7 @@ public class ComunicacaoAction implements Serializable {
 		if (modeloComunicacao.getClassificacaoComunicacao() == null) {
 			throw new BusinessException("Informe a classificação do documento");
 		}
-		if (textoComunicacao == null) {
+		if (modeloComunicacao.getComunicacao() == null || modeloComunicacao.getComunicacao().isEmpty()) {
 			throw new BusinessException("Insira o texto da comunicação");
 		}
 	}
@@ -269,35 +272,24 @@ public class ComunicacaoAction implements Serializable {
 		}
 	}
 
-	private void atualizarComunicacao() throws DAOException {
-		if (textoComunicacao != null && modeloComunicacao.getComunicacao() == null) {
-			modeloComunicacao.setComunicacao(documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacao));
-		} else if (modeloComunicacao.getComunicacao() != null) {
-			modeloComunicacao.getComunicacao().setModeloDocumento(textoComunicacao);
-			modeloComunicacao.getComunicacao().setMd5Documento(MD5Encoder.encode(textoComunicacao));
-		}
+	private PessoaFisica getRelator() {
+		MetadadoProcesso metadadoProcesso = modeloComunicacao.getProcesso().getMetadado(MetadadoProcessoType.RELATOR);
+		return (PessoaFisica) (metadadoProcesso != null ? metadadoProcesso.getValue() : null);
 	}
-
+	
 	public void expedirComunicacao() {
-		UsuarioPerfil perfil = Authenticator.getUsuarioPerfilAtual();
 		try {
-			modeloComunicacao.setFinalizada(true);
-			modeloComunicacao.setLocalizacaoResponsavelAssinatura(perfil.getPerfilTemplate().getLocalizacao());
-			this.finalizada = true;
-			executeGravar();
-			assinaturaDocumentoService.assinarDocumento(modeloComunicacao.getComunicacao(), perfil, certChain, signature);
-			modeloComunicacaoManager.expedirComunicacao(modeloComunicacao);
-		} catch (Exception e) {
-			LOG.error("", e);
-			resetEntityIds();
-			modeloComunicacao.setLocalizacaoResponsavelAssinatura(null);
-			TransactionService.rollbackTransaction(); // Caso dê erro de assinatura, exceções que não causam rollback
-			if (e instanceof AssinaturaException) {
-				FacesMessages.instance().add(e.getMessage());
-				return;
-			}
-			DAOException ex = (DAOException) (e instanceof DAOException ? e : new DAOException(e));
-			actionMessagesService.handleDAOException(ex);
+			assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+			comunicacaoService.expedirComunicacao(destinatario);
+		} catch (DAOException e) {
+			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			actionMessagesService.handleDAOException(e);
+		} catch (CertificadoException e) {
+			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			actionMessagesService.handleException("Erro ao expedir comunicação", e);
+		} catch (AssinaturaException e) {
+			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			FacesMessages.instance().add(e.getMessage());
 		}
 	}
 
@@ -307,7 +299,7 @@ public class ComunicacaoAction implements Serializable {
 		}
 	}
 	
-	public void adicionarParticipanteDestinatario(ParticipanteProcesso participante) {
+	public void adicionarDestinatario(ParticipanteProcesso participante) {
 		DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
 		destinatario.setModeloComunicacao(modeloComunicacao);
 		try {
@@ -322,30 +314,28 @@ public class ComunicacaoAction implements Serializable {
 		}
 	}
 	
-	public void adicionarLocalizacaoDestinataria(Localizacao localizacao) {
+	public void adicionarDestino(Localizacao localizacao) {
 		if (idsLocalizacoesSelecionadas.contains(localizacao.getIdLocalizacao())) {
 			FacesMessages.instance().add("Localização já adicionada");
 			return;
 		}
 		DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
 		destinatario.setModeloComunicacao(modeloComunicacao);
-		destinatario.setLocalizacaoDestinataria(localizacao);
+		destinatario.setDestino(localizacao);
 		modeloComunicacao.getDestinatarios().add(destinatario);
 		idsLocalizacoesSelecionadas.add(localizacao.getIdLocalizacao());
 	}
 	
-	@Deprecated
 	public void removerDestinatario(DestinatarioModeloComunicacao destinatario) {
 		modeloComunicacao.getDestinatarios().remove(destinatario);
 		if (destinatario.getDestinatario() != null) {
 			participanteProcessoComunicacaoList.removerIdPessoa(destinatario.getDestinatario().getIdPessoa());
-//			PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
-			PessoaFisica relator = null;
+			PessoaFisica relator = getRelator();
 			if (adicionarDestinatarioRelator && destinatario.getDestinatario().equals(relator)) {
 				adicionarDestinatarioRelator = false;
 			}
-		} else if (destinatario.getLocalizacaoDestinataria() != null) {
-			idsLocalizacoesSelecionadas.remove(destinatario.getLocalizacaoDestinataria().getIdLocalizacao());
+		} else {
+			idsLocalizacoesSelecionadas.remove(destinatario.getDestino().getIdLocalizacao());
 		}
 	}
 	
@@ -362,28 +352,16 @@ public class ComunicacaoAction implements Serializable {
 		documentoComunicacaoList.removerIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
 	}
 	
-	public boolean podeRenderizarApplet() {
-		if (modeloComunicacao.getClassificacaoComunicacao() == null) {
-			return false;
-		}
-		UsuarioPerfil perfil = Authenticator.getUsuarioPerfilAtual();
-		Papel papel = perfil.getPerfilTemplate().getPapel();
-		UsuarioLogin usuario = perfil.getUsuarioLogin();
-		return assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), modeloComunicacao.getComunicacao(), usuario);
-	}
-	
 	public void assignModeloDocumento() {
 		if (modeloComunicacao.getModeloDocumento() == null) {
-			textoComunicacao = "";
+			modeloComunicacao.setComunicacao("");
 			return;
 		}
-		textoComunicacao = modeloComunicacao.getModeloDocumento().getModeloDocumento();
+		modeloComunicacao.setComunicacao(modeloComunicacao.getModeloDocumento().getModeloDocumento());
 	}
 	
-	@Deprecated
 	public void gerenciarRelator() {
-//		PessoaFisica relator = modeloComunicacao.getProcesso().getRelator();
-		PessoaFisica relator = null;
+		PessoaFisica relator = getRelator();
 		if (adicionarDestinatarioRelator) {
 			DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
 			destinatario.setDestinatario(relator);
@@ -400,6 +378,20 @@ public class ComunicacaoAction implements Serializable {
 					break;
 				}
 			}
+		}
+	}
+
+	public void download() {
+		downloadComunicacao(destinatario);
+	}
+	
+	public void downloadComunicacao(DestinatarioModeloComunicacao destinatario) {
+		try {
+			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
+			FileDownloader.download(pdf, "application/pdf", "comunicacao");
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
 		}
 	}
 	
@@ -467,15 +459,7 @@ public class ComunicacaoAction implements Serializable {
 	public void setClassificacoes(List<ClassificacaoDocumento> classificacoes) {
 		this.classificacoes = classificacoes;
 	}
-	
-	public String getTextoComunicacao() {
-		return textoComunicacao;
-	}
-	
-	public void setTextoComunicacao(String textoComunicacao) {
-		this.textoComunicacao = textoComunicacao;
-	}
-	
+
 	public Localizacao getLocalizacao() {
 		return localizacao;
 	}
@@ -501,5 +485,37 @@ public class ComunicacaoAction implements Serializable {
 	
 	public void setAdicionarDestinatarioRelator(boolean adicionarDestinatarioRelator) {
 		this.adicionarDestinatarioRelator = adicionarDestinatarioRelator;
+	}
+	
+	public boolean isProcessoPossuiRelator() {
+		return processoPossuiRelator;
+	}
+	
+	public boolean isExpedida() {
+		if (expedida == null && modeloComunicacao.getFinalizada()) {
+			expedida = modeloComunicacaoManager.isExpedida(modeloComunicacao);
+		}
+		return modeloComunicacao.getFinalizada() && expedida;
+	}
+	
+	public boolean podeRenderizarApplet() {
+		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
+		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
+		return destinatario != null && assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), destinatario.getComunicacao(), usuario);
+	}
+	
+	public DestinatarioModeloComunicacao getDestinatario() {
+		return destinatario;
+	}
+	
+	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
+		this.destinatario = destinatario;
+		destinatario.getComunicacao().setModeloDocumento(comunicacaoService.evaluateComunicacao(destinatario));
+		destinatario.getComunicacao().setMd5Documento(MD5Encoder.encode(destinatario.getComunicacao().getModeloDocumento()));
+	}
+	
+	public String getFaceletPath() {
+		return getClass().getResource("/taskpages/enviarComunicacao.xhtml").toString();
 	}
 }
