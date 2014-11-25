@@ -162,7 +162,7 @@ public class PastaAction implements Serializable, ActionListener {
             return false;
         PessoaFisica pessoaFisica = usuario.getPessoaFisica();
         ParticipanteProcesso participante = participanteProcessoManager.getParticipanteProcessoByPessoaProcesso(pessoaFisica, pasta.getProcesso());
-        return participante != null && pessoaFisica.equals(participante.getPessoa());
+        return participante != null && participante.getAtivo() && pessoaFisica.equals(participante.getPessoa());
     }
 
     @Override

@@ -212,8 +212,11 @@
 		
 		function clearAddPastaFields() {
 			#{rich:jQuery('addPastaInputName')}.val('');
+			#{rich:jQuery('addPastaInputName')}.val('');
+			#{rich:jQuery('addPastaInputVisivelExterno')}.prop('checked', false);
+			#{rich:jQuery('addPastaInputVisivelNaoParticipante')}.prop('checked', false);
 			$('.errorFields.errors').remove();
-		                   $('.errors').removeClass('errors');
+		    $('.errors').removeClass('errors');
 		}
 		
 		function setValuesToEditPasta(id, nome, visivelExterno, visivelNaoParticipante) {
@@ -226,11 +229,12 @@
 		}
 		
 		function clearEditPastaFields() {
-			#{rich:jQuery('hiddenIdPasta')}.val(null);
+			#{rich:jQuery('hiddenIdPasta')}.val('');
 			#{rich:jQuery('editPastaInputName')}.val('');
-			#{rich:jQuery('editPastaInputVisivelExterno')}.val(null);
+			#{rich:jQuery('editPastaInputVisivelExterno')}.prop('checked', false);
+			#{rich:jQuery('editPastaInputVisivelNaoParticipante')}.prop('checked', false);
 			$('.errorFields.errors').remove();
-		                   $('.errors').removeClass('errors');
+		    $('.errors').removeClass('errors');
 		}
 		
 	</script>
@@ -276,7 +280,7 @@
 		      id="addPastaButton"
 		      action="#{pastaAction.persist()}"
 		      execute="@form"
-		      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{}"
+		      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{clearAddPastaFields()}"
 		      value="Adicionar"
 		      reRender="@form, documentoListSearchForm, pageBodyDialogMessage" />
 		  </h:form>
@@ -327,7 +331,7 @@
 	      id="editPastaButton"
 	      action="#{pastaAction.update()}"
 	      execute="@form"
-	      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editPastaPanel')}.hide();}else{}"
+	      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editPastaPanel')}.hide();}else{clearEditPastaFields()}"
 	      value="Gravar"
 	      reRender="@form, documentoListSearchForm, pageBodyDialogMessage, documentoListPanel" />
 	  </h:form>
