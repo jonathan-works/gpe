@@ -3,12 +3,14 @@ package br.com.infox.epp.turno.component;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
+import br.com.infox.util.time.DateRange;
 
 /**
  * Classe que gerencia o componenete de criação de turnos.
@@ -30,7 +32,7 @@ public class TurnoHandler {
     }
 
     private List<Time> createHorarios(Integer intervalInMinutes) {
-        List<Time> horarioList = new ArrayList<Time>();
+        List<Time> horarioList = new ArrayList<>();
         Calendar calendar = DateUtil.getBeginningOfDay();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         while (calendar.get(Calendar.DAY_OF_MONTH) == 1) {
@@ -42,7 +44,7 @@ public class TurnoHandler {
     }
 
     private Map<Time, Integer> createHorarioMap() {
-        Map<Time, Integer> map = new HashMap<Time, Integer>();
+        Map<Time, Integer> map = new HashMap<>();
         int i = 0;
         for (Time horario : horarios) {
             map.put(horario, i);
@@ -52,7 +54,7 @@ public class TurnoHandler {
     }
 
     private Map<DiaSemanaEnum, List<HorarioBean>> createHorarioBeanMap() {
-        Map<DiaSemanaEnum, List<HorarioBean>> map = new HashMap<DiaSemanaEnum, List<HorarioBean>>();
+        Map<DiaSemanaEnum, List<HorarioBean>> map = new HashMap<>();
         for (DiaSemanaEnum dia : DiaSemanaEnum.values()) {
             map.put(dia, createHorarioBeanList());
         }
@@ -120,7 +122,7 @@ public class TurnoHandler {
      * @return
      */
     private List<TurnoBean> getTurnosSelecionados(DiaSemanaEnum diaSemana) {
-        List<TurnoBean> turnos = new ArrayList<TurnoBean>();
+        List<TurnoBean> turnos = new ArrayList<>();
         Time begin = null;
         for (HorarioBean horarioBean : getHorarioBeanList(diaSemana)) {
             if (horarioBean.getSelected()) {
@@ -146,8 +148,7 @@ public class TurnoHandler {
      * @param horaInicio
      * @param horaFim
      */
-    public void addIntervalo(DiaSemanaEnum diaSemana, Time horaInicio,
-            Time horaFim) {
+    public void addIntervalo(DiaSemanaEnum diaSemana, Time horaInicio, Time horaFim) {
         List<HorarioBean> horarioBeanList = horarioBeanMap.get(diaSemana);
         HorarioBean horarioBean;
         int i = 0;
@@ -160,6 +161,23 @@ public class TurnoHandler {
             i++;
         } while (horarioBean.getHora().before(horaFim)
                 && i < horarioBeanList.size());
+    }
+    
+    public void addIntervalo(final DiaSemanaEnum diaSemana, final DateRange intervalo){
+        final List<HorarioBean> horarioBeanList = horarioBeanMap.get(diaSemana);
+        HorarioBean horarioBean;
+        int i = 0;
+        final Date start = intervalo.getStart();
+        final Date end = intervalo.getEnd();
+        Time hora;
+        do {
+            horarioBean = horarioBeanList.get(i);
+            hora = horarioBean.getHora();
+            if (hora.equals(start) || (hora.after(start) && hora.before(end))) {
+                horarioBean.setSelected(true);
+            }
+            i++;
+        } while (hora.before(end) && i < horarioBeanList.size());
     }
 
     /**
