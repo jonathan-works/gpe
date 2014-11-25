@@ -19,11 +19,11 @@
   <a:region>
     <rich:panel
       rendered="#{wi:get(showGrid, true)}"
-      header="#{tableTitle}"
+      header="#{tableTitle}}"
       id="#{id}Panel"
       bodyClass="dtable-p-b"
       style="#{panelStyle}"
-      styleClass="dtable-p #{panelStyleClass} #{not showSearchForm ? 'full-sized' : ''}"
+      styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}"
     >
       <rich:dataTable
         value="#{values}"
