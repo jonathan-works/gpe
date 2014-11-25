@@ -18,6 +18,11 @@ public class DateRange {
     public static final int WEEKS = 5;
     public static final int YEARS = 5;
 
+    public DateRange(){
+        start=0;
+        end=0;
+    }
+    
     public DateRange(Date date1, Date date2) {
         long _d1 = date1.getTime();
         long _d2 = date2.getTime();
