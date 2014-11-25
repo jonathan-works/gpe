@@ -4,6 +4,8 @@
   xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:h="http://java.sun.com/jsf/html"
   xmlns:s="http://jboss.org/schema/seam/taglib"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
@@ -50,6 +52,12 @@
         columnId="endereco"
         columnHeader="#{eppmessages['sala.endereco']}"
         value="#{row.endereco}" />
+      <wi:columnOutputText
+        columnId="turnosFormatado"
+        columnHeader="#{eppmessages['sala.turnos']}"
+        value="#{row.turnosFormatado}"
+        hideOrder="true"
+      />
       <wi:columnBoolean
         columnId="funcionaForaExpediente"
         columnHeader="#{eppmessages['sala.foraExpediente']}"
@@ -90,6 +98,28 @@
         id="ativo"
         value="#{salaCrudAction.instance.ativo}" />
     </wi:dataForm>
+  </ui:define>
+
+  <ui:define name="tabs">
+    <infox:tab
+      status=":status"
+      id="salaTurnoTab"
+      action="#{salaTurnoAction.newInstance(salaCrudAction.getInstance())}"
+      rendered="#{home.managed}"
+      title="#{eppmessages['sala.turnos']}"
+      name="salaTurnoTab">
+      <h:form>
+        <wi:turnoCalendar
+          handler="#{salaTurnoAction.turnoHandler}" />
+        <wi:commandButton
+          id="salaTurnoTabPersistButton"
+          action="#{salaTurnoAction.gravarTurnos()}"
+          render="pageBodyDialogMessage"
+          limitRender="true"
+          execute="@form"
+          value="#{eppmessages['crud.update']}" />
+      </h:form>
+    </infox:tab>
   </ui:define>
 
 </ui:composition>

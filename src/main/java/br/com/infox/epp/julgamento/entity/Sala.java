@@ -1,7 +1,9 @@
 package br.com.infox.epp.julgamento.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,8 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -44,7 +48,9 @@ public class Sala implements Serializable {
     @NotNull
     @Column(name = "in_fora_expediente", nullable = false)
     private Boolean foraExpediente;
-
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sala", cascade = {CascadeType.REMOVE})
+    private List<SalaTurno> turnos;
+    
     public Long getIdSala() {
         return idSala;
     }
@@ -94,6 +100,23 @@ public class Sala implements Serializable {
         this.foraExpediente = foraExpediente;
     }
 
+    public List<SalaTurno> getTurnos() {
+        return turnos;
+    }
+    public void setTurnos(List<SalaTurno> turnos) {
+        this.turnos = turnos;
+    }
+    
+    @Transient
+    public String getTurnosFormatado(){
+        StringBuilder sb = new StringBuilder();
+        for (SalaTurno salaTurno : this.getTurnos()) {
+            sb.append(salaTurno.toString());
+            sb.append(" ; ");
+        }
+        return sb.toString();
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
