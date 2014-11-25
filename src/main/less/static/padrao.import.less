@@ -877,6 +877,9 @@ div.rf-trn {
 
 option {
   background-color:@bgColorSelect;
+  &[disabled="disabled"] {
+      text-decoration: line-through;
+  }
 }
 .required {
   color:@bgColorRequired;
