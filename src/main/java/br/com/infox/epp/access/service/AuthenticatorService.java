@@ -215,9 +215,6 @@ public class AuthenticatorService implements Serializable {
 
     public UsuarioLogin getUsuarioLoginFromCertChain(String certChain) throws CertificadoException, LoginException, CertificateException{
         final Certificado c = CertificadoFactory.createCertificado(certChain);
-        if (!(c instanceof CertificadoDadosPessoaFisica)) {
-            throw new CertificadoException("O certificado não é de pessoa física");
-        }
         checkValidadeCertificado(c);
         String cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.').insert(3, '.').toString();
         return checkValidadeUsuarioLogin(cpf);
