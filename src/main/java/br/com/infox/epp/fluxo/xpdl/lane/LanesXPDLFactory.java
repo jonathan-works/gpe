@@ -1,5 +1,6 @@
 package br.com.infox.epp.fluxo.xpdl.lane;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +25,20 @@ public final class LanesXPDLFactory implements Serializable {
         }
 
         Element poll = poolsList.get(1);
+        Element graphics = XmlUtil.getChildByIndex(poll, "NodeGraphicsInfos", 0);
+        Element graphic = XmlUtil.getChildByIndex(graphics, "NodeGraphicsInfo", 0);
+        Element coordinates = XmlUtil.getChildByIndex(graphic, "Coordinates", 0);
+        Point2D poolCoordinates = new Point2D.Float(Float.valueOf(coordinates.getAttributeValue("XCoordinate")), Float.valueOf(coordinates.getAttributeValue("YCoordinate")));
         List<Element> lanesElement = XmlUtil.getChildren(poll, "Lanes");
         List<Element> laneList = XmlUtil.getChildren(lanesElement.get(0), "Lane");
-        return createLaneXPDLList(laneList);
+        return createLaneXPDLList(laneList, poolCoordinates);
     }
 
-    private static List<LaneXPDL> createLaneXPDLList(List<Element> list) {
+    private static List<LaneXPDL> createLaneXPDLList(List<Element> list, Point2D poolCoordinates) {
         List<LaneXPDL> laneList = new ArrayList<LaneXPDL>();
         int index = 1;
         for (Element ele : list) {
-            LaneXPDL lane = LaneXPDL.createInstance(ele, FluxoXPDL.NO_NAME
-                    + index);
+            LaneXPDL lane = LaneXPDL.createInstance(ele, FluxoXPDL.NO_NAME + index, poolCoordinates);
             laneList.add(lane);
 
             index++;
