@@ -54,6 +54,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 
 import com.lowagie.text.DocumentException;
@@ -229,7 +230,7 @@ public class ComunicacaoService {
 			metadados.add(criarMetadado(PRAZO_DESTINATARIO, Integer.class, destinatario.getPrazo().toString(), processo));
 		}
 		
-		metadados.add(criarMetadado(MetadadoProcessoType.TIPO_PROCESSO, String.class, TIPO_PROCESSO_COMUNICACAO, processo));
+		metadados.add(criarMetadado(MetadadoProcessoType.TIPO_PROCESSO, TipoProcesso.class, TipoProcesso.COMUNICACAO.name(), processo));
 		
 		return metadados;
 	}
@@ -240,7 +241,7 @@ public class ComunicacaoService {
 		
 		Map<String, String> variaveis = new HashMap<>();
 		String format = "#'{'{0}'}'";
-
+		
 		Date dataFimPrazoCiencia = DateTime.now().plusDays(modeloComunicacao.getTipoComunicacao().getQuantidadeDiasCiencia()).toDate();
 		variaveis.put(MessageFormat.format(format, DATA_FIM_PRAZO_CIENCIA), dateFormatter.format(dataFimPrazoCiencia));
 		
@@ -259,6 +260,4 @@ public class ComunicacaoService {
 	public static final String MODELO_COMUNICACAO = "modeloComunicacao";
 	public static final String PRAZO_DESTINATARIO = "prazoDestinatario";
 	public static final String COMUNICACAO = "comunicacao";
-	
-	public static final String TIPO_PROCESSO_COMUNICACAO = "Comunicação";
 }
