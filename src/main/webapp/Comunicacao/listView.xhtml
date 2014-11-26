@@ -30,7 +30,7 @@
    					<wi:columnOutputText id="numeroProcesso" columnHeader="Número do Processo" value="#{row.processo.numeroProcesso}" />
    					<wi:columnOutputText id="tipoComunicacao" columnHeader="Tipo de Comunicação" value="#{row.tipoComunicacao.descricao}" />
    					<wi:columnOutputText id="classificacao" columnHeader="Classificação de Documento" value="#{row.classificacaoComunicacao.descricao}" />
-   					<wi:columnBoolean id="expedida" columnHeader="Expedida?" value="#{row.expedida}" />
+   					<wi:columnBoolean id="expedida" columnHeader="Expedida?" value="#{expedicaoComunicacaoAction.isExpedida(row)}" />
    				</wi:dataTable>
    			</infox:tab>
    			<infox:tab id="form" name="form" immediate="true" title="Expedição" rendered="#{not empty expedicaoComunicacaoAction.modeloComunicacao}">
@@ -51,7 +51,6 @@
    					<wi:columnOutputText id="nome" columnHeader="Nome" value="#{row.nome}" />
    					<wi:columnOutputText id="meioExpedicao" columnHeader="Meio de Expedição" value="#{row.meioExpedicao.label}" />
    					<wi:columnOutputText id="prazo" columnHeader="Prazo" value="#{row.prazo}" />
-   					<wi:columnOutputText id="expedida" columnHeader="Expedida Por" value="-" />
    				</wi:dataTable>
    				<h:form id="comunicacaoForm">
    					<rich:collapsiblePanel header="Comunicação #{not empty expedicaoComunicacaoAction.destinatario.nome ? '- '.concat(expedicaoComunicacaoAction.destinatario.nome) : ''}" 

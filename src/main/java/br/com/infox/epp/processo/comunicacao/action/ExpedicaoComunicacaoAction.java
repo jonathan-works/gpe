@@ -165,4 +165,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public boolean isExpedida(ModeloComunicacao modeloComunicacao) {
+		return modeloComunicacao.getFinalizada() && modeloComunicacaoManager.isExpedida(modeloComunicacao);
+	}
 }
