@@ -18,7 +18,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -28,6 +27,7 @@ import org.richfaces.model.UploadedFile;
 
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
@@ -113,7 +113,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             bin().setSize(Long.valueOf(ui.getSize()).intValue());
             bin().setProcessoDocumento(ui.getData());
             bin().setModeloDocumento(null);
-            FacesMessages.instance().add(Messages.instance().get("processoDocumento.doneLabel"));
+            FacesMessages.instance().add(Messages.resolveMessage("processoDocumento.doneLabel"));
         } else {
             newInstance();
         }
@@ -158,23 +158,23 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     private boolean isDocumentoBinValido(final UploadedFile file) {
         if (file == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.instance().get("documentoUploader.error.noFile"));
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.resolveMessage("documentoUploader.error.noFile"));
             return false;
         }
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, bin().getExtensao());
         if (extensaoArquivo == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.instance().get("documentoUploader.error.invalidExtension"));
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.resolveMessage("documentoUploader.error.invalidExtension"));
             return false;
         }
         if ((file.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, format(Messages.resolveMessage("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
             return false;
         }
         if (extensaoArquivo.getPaginavel()) {
             if(validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina())){
                 return true;
             } else {
-                FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.instance().get("documentoUploader.error.notPaginable"));
+                FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.resolveMessage("documentoUploader.error.notPaginable"));
                 return false;
             }
         }

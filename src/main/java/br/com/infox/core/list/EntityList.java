@@ -19,12 +19,12 @@ import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.framework.EntityQuery;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.ExcelExportException;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.core.util.ReflectionsUtil;
@@ -325,7 +325,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
         List<E> beanList = list(TAMANHO_XLS_PADRAO);
         try {
             if (beanList == null || beanList.isEmpty()) {
-                FacesMessages.instance().add(Severity.INFO, Messages.instance().get("entity.noDataAvailable"));
+                FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage("entity.noDataAvailable"));
             } else {
                 exportarXLS(getTemplate(), beanList);
             }

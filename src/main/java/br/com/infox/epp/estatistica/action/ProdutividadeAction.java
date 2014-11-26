@@ -14,12 +14,12 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.Log;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.exception.ExcelExportException;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
@@ -189,14 +189,13 @@ public class ProdutividadeAction implements Serializable {
         List<ProdutividadeBean> beanList = list(10000);
         try {
             if (beanList == null || beanList.isEmpty()) {
-                FacesMessages.instance().add(Severity.INFO, Messages.instance().get("entity.noDataAvailable"));
+                FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage("entity.noDataAvailable"));
             } else {
                 exportarXLS(getTemplate(), beanList);
             }
         } catch (ExcelExportException e) {
             LOG.error(".exportarXLS()", e);
-            FacesMessages.instance().add(Severity.ERROR, "Erro ao exportar arquivo."
-                    + e.getMessage());
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao exportar arquivo." + e.getMessage());
         }
     }
 

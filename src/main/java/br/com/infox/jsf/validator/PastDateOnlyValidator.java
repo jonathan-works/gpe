@@ -11,7 +11,9 @@ import javax.faces.validator.ValidatorException;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.international.Messages;
+
+import br.com.infox.core.messages.Messages;
+
 
 @org.jboss.seam.annotations.faces.Validator(id = PastDateOnlyValidator.NAME)
 @Name(PastDateOnlyValidator.NAME)
@@ -33,7 +35,7 @@ public class PastDateOnlyValidator implements Validator {
         dataAtual.set(Calendar.SECOND, 0);
         dataAtual.set(Calendar.MILLISECOND, 0);
         if (data.equals(dataAtual) || data.after(dataAtual)) {
-            throw new ValidatorException(new FacesMessage(Messages.instance().get("validator.Date.PAST_ONLY")));
+            throw new ValidatorException(new FacesMessage(Messages.resolveMessage("validator.Date.PAST_ONLY")));
         }
     }
 

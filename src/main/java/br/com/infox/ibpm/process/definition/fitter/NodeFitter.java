@@ -1,7 +1,6 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,6 +37,7 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
@@ -335,7 +335,7 @@ public class NodeFitter extends Fitter implements Serializable {
             List<Node> list = getProcessBuilder().getInstance().getNodes();
             if (list != null) {
                 nodesItems = new ArrayList<SelectItem>();
-                nodesItems.add(new SelectItem(null, internacionalize("process.task.select")));
+                nodesItems.add(new SelectItem(null, Messages.resolveMessage("process.task.select")));
                 for (Node node : list) {
                     nodesItems.add(new SelectItem(node.toString(), node.getName()));
                 }
@@ -434,15 +434,15 @@ public class NodeFitter extends Fitter implements Serializable {
 
     public List<String[]> getNodeTypes() {
         List<String[]> list = new ArrayList<String[]>();
-        list.add(new String[] { NodeTypeConstants.START_STATE, internacionalize("process.node.type.start") });
-        list.add(new String[] { NodeTypeConstants.TASK, internacionalize("process.node.type.task") });
-        list.add(new String[] { NodeTypeConstants.DECISION, internacionalize("process.node.type.decision") });
-        list.add(new String[] { NodeTypeConstants.MAIL_NODE, internacionalize("process.node.type.mail") });
-        list.add(new String[] { NodeTypeConstants.FORK, internacionalize("process.node.type.fork") });
-        list.add(new String[] { NodeTypeConstants.JOIN, internacionalize("process.node.type.join") });
-        list.add(new String[] { NodeTypeConstants.PROCESS_STATE, internacionalize("process.node.type.subprocess") });
-        list.add(new String[] { NodeTypeConstants.NODE, internacionalize("process.node.type.system") });
-        list.add(new String[] { NodeTypeConstants.END_STATE, internacionalize("process.node.type.end") });
+        list.add(new String[] { NodeTypeConstants.START_STATE, Messages.resolveMessage("process.node.type.start") });
+        list.add(new String[] { NodeTypeConstants.TASK, Messages.resolveMessage("process.node.type.task") });
+        list.add(new String[] { NodeTypeConstants.DECISION, Messages.resolveMessage("process.node.type.decision") });
+        list.add(new String[] { NodeTypeConstants.MAIL_NODE, Messages.resolveMessage("process.node.type.mail") });
+        list.add(new String[] { NodeTypeConstants.FORK, Messages.resolveMessage("process.node.type.fork") });
+        list.add(new String[] { NodeTypeConstants.JOIN, Messages.resolveMessage("process.node.type.join") });
+        list.add(new String[] { NodeTypeConstants.PROCESS_STATE, Messages.resolveMessage("process.node.type.subprocess") });
+        list.add(new String[] { NodeTypeConstants.NODE, Messages.resolveMessage("process.node.type.system") });
+        list.add(new String[] { NodeTypeConstants.END_STATE, Messages.resolveMessage("process.node.type.end") });
         return list;
     }
 

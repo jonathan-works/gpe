@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.xpdl.lane;
 
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +20,11 @@ public final class LaneXPDL extends ElementXPDL {
         super(element, name);
     }
 
-    public static LaneXPDL createInstance(Element element, String name) {
-        return new LaneXPDL(element, name);
+    public static LaneXPDL createInstance(Element element, String name, Point2D poolCoordinates) {
+    	LaneXPDL lane = new LaneXPDL(element, name);
+    	Rectangle2D rect = lane.getGraphics().getRectangle();
+        rect.setRect(new Rectangle2D.Double(rect.getX() + poolCoordinates.getX(), rect.getY() + poolCoordinates.getY(), rect.getWidth(), rect.getHeight()));
+    	return lane;
     }
 
     /**
