@@ -23,14 +23,17 @@ public interface SituacaoProcessoQuery {
     
     String TAREFAS_TREE_QUERY_ROOTS_SUFIX = "group by s.nomeFluxo order by s.nomeFluxo";
     
-    String TAREFAS_TREE_QUERY_ROOTS_BY_TIPO = "and exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '" 
+    String TAREFAS_TREE_QUERY_ROOTS_BY_TIPO = " and exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '" 
     		+ MetadadoProcessoType.TIPO_PROCESSO + "' and mp.valor = :" + PARAM_TIPO_PROCESSO + " and mp.processo.idProcesso = s.idProcesso) ";
     
-    String FILTRO_LOCALIZACAO_DESTINO = "exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
+    String TAREFAS_TREE_QUERY_ROOTS_SEM_TIPO = " and not exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
+    		+ MetadadoProcessoType.TIPO_PROCESSO + "' and mp.processo.idProcesso = s.idProcesso)";
+    
+    String FILTRO_LOCALIZACAO_DESTINO = " exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
     		+ MetadadoProcessoType.LOCALIZACAO_DESTINO + "' and cast(mp.valor as integer) = :" + PARAM_ID_LOCALIZACAO
     		+ " and s.idProcesso = mp.processo.idProcesso) ";
     
-    String FILTRO_PESSOA_DESTINATARIO = "exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
+    String FILTRO_PESSOA_DESTINATARIO = " exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
     		+ MetadadoProcessoType.PESSOA_DESTINATARIO + "' and cast(mp.valor as integer) = :" + PARAM_ID_PESSOA
     		+ " and s.idProcesso = mp.processo.idProcesso )";
 

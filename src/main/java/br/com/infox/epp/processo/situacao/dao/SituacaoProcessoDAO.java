@@ -27,6 +27,7 @@ import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAR
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BASE;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BY_TIPO;
+import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_SEM_TIPO;
 import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_SUFIX;
 
 import java.util.HashMap;
@@ -118,7 +119,8 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
     	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
     	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
-        return query.getResultList();
+        List<T> l = query.getResultList();
+        return l;
     }
     
     @SuppressWarnings("unchecked")
@@ -172,7 +174,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     }
     
     private String createHqlQueryRoots() {
-        String baseQuery = TAREFAS_TREE_QUERY_ROOTS_BASE;
+        String baseQuery = TAREFAS_TREE_QUERY_ROOTS_BASE + TAREFAS_TREE_QUERY_ROOTS_SEM_TIPO;
         return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_ROOTS_SUFIX;
     }
     
