@@ -127,7 +127,7 @@ public class ComunicacaoService {
 			processo.getDocumentoList().add(documentoManager.createDocumento(processo, documento.getDescricao(), documento.getDocumentoBin(), documento.getClassificacaoDocumento()));
 		}
 		
-		iniciarProcessoService.iniciarProcesso(processo);
+		iniciarProcessoService.iniciarProcesso(processo, createVariaveisJbpm(destinatario));
 		destinatario.setExpedido(true);
 		genericManager.update(destinatario);
 	}
@@ -246,10 +246,24 @@ public class ComunicacaoService {
 		variaveis.put(MessageFormat.format(format, DATA_FIM_PRAZO_CIENCIA), dateFormatter.format(dataFimPrazoCiencia));
 		
 		variaveis.put(MessageFormat.format(format, MEIO_EXPEDICAO), destinatario.getMeioExpedicao().getLabel());
-		variaveis.put(MessageFormat.format(format, MODELO_COMUNICACAO), modeloComunicacao.getId().toString());
 		variaveis.put(MessageFormat.format(format, PRAZO_DESTINATARIO), destinatario.getPrazo() != null ? destinatario.getPrazo().toString() : null);
 		variaveis.put(MessageFormat.format(format, TIPO_COMUNICACAO), modeloComunicacao.getTipoComunicacao().getId().toString());
 		variaveis.put(MessageFormat.format(format, "nomeDestinatario"), destinatario.getNome());
+		return variaveis;
+	}
+	
+	private Map<String, Object> createVariaveisJbpm(DestinatarioModeloComunicacao destinatario) {
+		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
+		
+		Map<String, Object> variaveis = new HashMap<>();
+		
+		Date dataFimPrazoCiencia = DateTime.now().plusDays(modeloComunicacao.getTipoComunicacao().getQuantidadeDiasCiencia()).toDate();
+		variaveis.put(DATA_FIM_PRAZO_CIENCIA, dataFimPrazoCiencia);
+		
+		variaveis.put(MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getLabel());
+		variaveis.put(PRAZO_DESTINATARIO, destinatario.getPrazo());
+		variaveis.put(TIPO_COMUNICACAO, modeloComunicacao.getTipoComunicacao().getDescricao());
+		variaveis.put("nomeDestinatario", destinatario.getNome());
 		return variaveis;
 	}
 	
