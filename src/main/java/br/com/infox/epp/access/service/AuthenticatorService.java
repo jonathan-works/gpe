@@ -19,7 +19,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Credentials;
@@ -31,6 +30,7 @@ import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -219,16 +219,13 @@ public class AuthenticatorService implements Serializable {
                 pessoaFisicaManager.flush();
             }
             if (signature == null && termoAdesao) {
-                throw new RedirectToLoginApplicationException(Messages.instance().get("login.termoAdesao.failed"));
+                throw new RedirectToLoginApplicationException(Messages.resolveMessage("login.termoAdesao.failed"));
             }
         }
     }
 
     public UsuarioLogin getUsuarioLoginFromCertChain(String certChain) throws CertificadoException, LoginException, CertificateException{
         final Certificado c = CertificadoFactory.createCertificado(certChain);
-        if (!(c instanceof CertificadoDadosPessoaFisica)) {
-            throw new CertificadoException("O certificado não é de pessoa física");
-        }
         checkValidadeCertificado(c);
         String cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.').insert(3, '.').toString();
         return checkValidadeUsuarioLogin(cpf);
@@ -238,31 +235,31 @@ public class AuthenticatorService implements Serializable {
             throws LoginException {
         final PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(cpf);
         if (pessoaFisica == null) {
-            throw new LoginException(Messages.instance().get(
+            throw new LoginException(Messages.resolveMessage(
                     CERTIFICATE_ERROR_SEM_PESSOA_FISICA));
         }
         final UsuarioLogin usuarioLogin;
         usuarioLogin = usuarioLoginManager
                 .getUsuarioLoginByPessoaFisica(pessoaFisica);
         if (usuarioLogin == null) {
-            throw new LoginException(Messages.instance().get(
+            throw new LoginException(Messages.resolveMessage(
                     CERTIFICATE_ERROR_SEM_USUARIO_LOGIN));
         }
         if (!usuarioLogin.isHumano()) {
-            throw new LoginException(Messages.instance().get(
+            throw new LoginException(Messages.resolveMessage(
                     CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA));
         }
         if (!usuarioLogin.getAtivo()) {
-            throw new LoginException(Messages.instance().get(
+            throw new LoginException(Messages.resolveMessage(
                     CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO));
         }
         if (usuarioLogin.getBloqueio()) {
-            throw new LoginException(Messages.instance().get(
+            throw new LoginException(Messages.resolveMessage(
                     CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO));
         }
         if (usuarioLogin.getProvisorio()
                 && new Date().after(usuarioLogin.getDataExpiracao())) {
-            throw new LoginException(Messages.instance().get(
+            throw new LoginException(Messages.resolveMessage(
                     CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO));
         }
         return usuarioLogin;

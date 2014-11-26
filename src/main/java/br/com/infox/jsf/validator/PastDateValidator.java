@@ -10,7 +10,9 @@ import javax.faces.validator.ValidatorException;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.international.Messages;
+
+import br.com.infox.core.messages.Messages;
+
 
 @org.jboss.seam.annotations.faces.Validator(id = PastDateValidator.NAME)
 @Name(PastDateValidator.NAME)
@@ -25,7 +27,7 @@ public class PastDateValidator implements Validator {
         Date date = (Date) value;
         Date now = new Date();
         if (date != null && date.after(now)) {
-            throw new ValidatorException(new FacesMessage(Messages.instance().get("validator.Date.PAST")));
+            throw new ValidatorException(new FacesMessage(Messages.resolveMessage("validator.Date.PAST")));
         }
 
     }

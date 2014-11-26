@@ -25,7 +25,6 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.JbpmException;
@@ -36,6 +35,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
@@ -606,7 +606,7 @@ public class TaskInstanceHome implements Serializable {
             }
         } else {
             FacesMessages.instance().add(
-                    Messages.instance().get("org.jboss.seam.TaskNotFound"));
+                    Messages.resolveMessage("org.jboss.seam.TaskNotFound"));
         }
     }
 

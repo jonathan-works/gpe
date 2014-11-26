@@ -17,13 +17,13 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.messages.LocaleUtil;
 import br.com.infox.seam.transaction.TransactionService;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -59,7 +59,7 @@ public class LocalizacaoAssignment implements Serializable {
             currentTaskInstance = TaskInstance.instance();
         }
         if (localPapel == null || allNullElements(localPapel)) {
-            throw new BusinessException(LocaleUtil.internacionalize("process.swimlane.notDefined"));
+            throw new BusinessException(Messages.resolveMessage("process.swimlane.notDefined"));
         }
         if (currentTaskInstance == null || processo == null) {
             return false;

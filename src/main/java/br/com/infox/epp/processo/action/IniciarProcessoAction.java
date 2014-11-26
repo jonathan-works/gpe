@@ -16,12 +16,12 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
@@ -115,7 +115,7 @@ public class IniciarProcessoAction implements Serializable {
 
     private void sendIniciarProcessoErrorMessage(String message, Exception exception) {
         LOG.error(".iniciarProcesso()", exception);
-        getMessagesHandler().add(Severity.ERROR, Messages.instance().get(message));
+        getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage(message));
     }
 
     public void onSelectNatCatFluxo(final NaturezaCategoriaFluxo ncf) {

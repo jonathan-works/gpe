@@ -8,7 +8,6 @@ import javax.faces.model.SelectItem;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
@@ -17,6 +16,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
@@ -80,7 +80,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
             if (PostgreSQLErrorCode.valueOf(ret) == PostgreSQLErrorCode.UNIQUE_VIOLATION) {
                 final StatusMessages messages = getMessagesHandler();
                 messages.clear();
-                messages.add(Severity.ERROR, Messages.instance().get("caixa.error.previousNodeExists"));
+                messages.add(Severity.ERROR, Messages.resolveMessage("caixa.error.previousNodeExists"));
             }
         } catch (IllegalArgumentException e) {
             LOG.warn(".update()", e);
@@ -123,7 +123,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
         if (getInstance() != null) {
             remove();
         } else {
-            getMessagesHandler().add(Severity.ERROR, Messages.instance().get("caixa.error.notSelected"));
+            getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage("caixa.error.notSelected"));
         }
         final TarefasTreeHandler tree = ComponentUtil.getComponent(TarefasTreeHandler.NAME);
         tree.clearTree();

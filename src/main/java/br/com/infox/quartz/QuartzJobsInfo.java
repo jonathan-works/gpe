@@ -19,7 +19,6 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -32,6 +31,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -67,7 +67,7 @@ public class QuartzJobsInfo implements Serializable {
             }
         } catch (SchedulerException e) {
             FacesMessages.instance().add(Severity.ERROR,
-                    Messages.instance().get("quartz.error.retrieveData"), e);
+                    Messages.resolveMessage("quartz.error.retrieveData"), e);
         }
         return maps;
     }

@@ -7,7 +7,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -17,6 +16,7 @@ import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -155,7 +155,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                 save();
             } catch (TwitterException e) {
                 if (UNAUTHORIZED == e.getStatusCode()) {
-                    FacesMessages.instance().add(Severity.ERROR, Messages.instance().get("contaTwitter.error.tokenNotFound"));
+                    FacesMessages.instance().add(Severity.ERROR, Messages.resolveMessage("contaTwitter.error.tokenNotFound"));
                 } else {
                     LOG.error(".getAutorizacao()", e);
                 }

@@ -16,11 +16,11 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -93,10 +93,10 @@ public class TermoAdesaoAction implements Serializable {
             r.execute();
         } catch (final CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
-            throw new RedirectToLoginApplicationException(Messages.instance().get(CERTIFICATE_ERROR_EXPIRED), e);
+            throw new RedirectToLoginApplicationException(Messages.resolveMessage(CERTIFICATE_ERROR_EXPIRED), e);
         } catch (final CertificateException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
-            throw new RedirectToLoginApplicationException(format(Messages.instance().get(CERTIFICATE_ERROR_UNKNOWN),e.getMessage()), e);
+            throw new RedirectToLoginApplicationException(format(Messages.resolveMessage(CERTIFICATE_ERROR_UNKNOWN),e.getMessage()), e);
         } catch (CertificadoException | LoginException | DAOException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(e.getMessage(), e);

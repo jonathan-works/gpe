@@ -8,12 +8,12 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -157,7 +157,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
                     msgKey = "ProcessoDocumento_created";
                 }
                 messages.clear();
-                messages.add(StatusMessage.Severity.INFO, Messages.instance().get(msgKey));
+                messages.add(StatusMessage.Severity.INFO, Messages.resolveMessage(msgKey));
             }
         } catch (DAOException | AssinaturaException e) {
             LOG.error("Não foi possível salvar o Documento " + idDocumento, e);

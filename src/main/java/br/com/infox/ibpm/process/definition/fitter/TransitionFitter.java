@@ -1,7 +1,6 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.ibpm.transition.TransitionHandler;
 
 @Name(TransitionFitter.NAME)
@@ -227,7 +227,7 @@ public class TransitionFitter extends Fitter implements Serializable {
     public List<SelectItem> getTransitionsItems(List<Node> nodes) {
         if (transitionsItems == null) {
             transitionsItems = new ArrayList<SelectItem>();
-            transitionsItems.add(new SelectItem(null, internacionalize("process.transition.select")));
+            transitionsItems.add(new SelectItem(null, Messages.resolveMessage("process.transition.select")));
             for (Node n : nodes) {
                 if (n.getLeavingTransitions() != null) {
                     for (TransitionHandler t : TransitionHandler.getList((List<Transition>) n.getLeavingTransitions())) {

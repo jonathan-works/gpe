@@ -38,7 +38,6 @@ import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.faces.RedirectException;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -47,6 +46,7 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.crud.TermoAdesaoAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
@@ -224,7 +224,7 @@ public class Authenticator {
                     }
                 }
             } else {
-                getMessagesHandler().add(Severity.ERROR, Messages.instance().get("login.error.invalid"));
+                getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage("login.error.invalid"));
             }
     }
 
