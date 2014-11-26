@@ -10,8 +10,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.util.Strings;
+
+import br.com.infox.core.messages.Messages;
 
 @Name(SelectItemFunctions.NAME)
 @Scope(ScopeType.APPLICATION)
@@ -36,7 +37,7 @@ public class SelectItemFunctions {
             if (split.length < 2) {
                 l.add(new SelectItem(value));
             } else {
-                final String label = Messages.instance().get(split[1]);
+                final String label = Messages.resolveMessage(split[1]);
                 l.add(new SelectItem(value, label));
             }
         }

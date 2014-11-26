@@ -12,12 +12,12 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -63,7 +63,7 @@ public class UsuarioExternoAction {
             iniciarProcessoAction.onSelectNatCatFluxo(naturezaCategoriaFluxo);
             iniciarProcessoAction.onSelectItem(new ItemBean(item));
         } else {
-            FacesMessages.instance().add(Messages.instance().get("acessoExterno.LoggedIn"));
+            FacesMessages.instance().add(Messages.resolveMessage("acessoExterno.LoggedIn"));
         }
     }
 

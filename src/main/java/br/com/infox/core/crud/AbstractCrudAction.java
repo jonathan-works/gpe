@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
@@ -16,6 +15,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
@@ -146,7 +146,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
             try {
                 setInstance(getManager().merge(activeEntity));
             } catch (final DAOException e) {
-                getMessagesHandler().add(Severity.ERROR, Messages.instance().get("entity.error.merge"), e);
+                getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage("entity.error.merge"), e);
             }
         }
     }

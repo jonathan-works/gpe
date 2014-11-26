@@ -1,7 +1,6 @@
 package br.com.infox.ibpm.process.definition;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.seam.messages.LocaleUtil.internacionalize;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
@@ -49,6 +48,7 @@ import org.xml.sax.InputSource;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
@@ -142,9 +142,9 @@ public class ProcessBuilder implements Serializable {
         taskFitter.setStarTaskHandler(new TaskHandler(startTask));
         instance.getTaskMgmtDefinition().setStartTask(taskFitter.getStartTaskHandler().getTask());
 
-        StartState startState = new StartState(internacionalize("process.node.first"));
+        StartState startState = new StartState(Messages.resolveMessage("process.node.first"));
         instance.addNode(startState);
-        EndState endState = new EndState(internacionalize("process.node.last"));
+        EndState endState = new EndState(Messages.resolveMessage("process.node.last"));
         instance.addNode(endState);
         Transition t = new Transition();
         t.setName(endState.getName());

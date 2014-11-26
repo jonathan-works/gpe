@@ -12,11 +12,11 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 
@@ -56,7 +56,7 @@ public class ActionMessagesService implements Serializable {
             messages.add(daoException.getLocalizedMessage());
             return ret;
         } else {
-            String pattern = Messages.instance().get("entity.error.save");
+            String pattern = Messages.resolveMessage("entity.error.save");
             if (daoException.getMessage() != null) {
                 messages.add(StatusMessage.Severity.ERROR, format(pattern, daoException.getMessage()), daoException);
             } else {
