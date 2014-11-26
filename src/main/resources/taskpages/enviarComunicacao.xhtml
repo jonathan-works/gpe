@@ -118,7 +118,8 @@
 				<wi:editor id="comunicacao" readonly="true" value="#{comunicacaoAction.destinatario.comunicacao.modeloDocumento}" />
 				<s:div id="assinatura_pers">
 					<a:jsFunction name="assinar" action="#{comunicacaoAction.expedirComunicacao()}"
-						execute="@this certChain signature" render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios"
+						execute="@this certChain signature" 
+						render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
 					  	oncomplete="infox.hideLoading();" />
              
 					<h:inputHidden id="certChain" value="#{comunicacaoAction.certChain}" />
