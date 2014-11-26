@@ -36,354 +36,354 @@
           	name="processo" render="painelProcessos"
           	limitRender="true" action="#{tarefasTree.clearTree()}"
           	title="#{eppmessages['caixa.tab']}" >
-          
-          <s:div id="tarefasDiv" styleClass="p-caixas" style="margin-right:10px;">
-          	<h:form id="treeProcessoForm">
-            	<ui:include src="tarefasTree.xhtml" />
-            </h:form>
+          <s:div rendered="#{painelUsuarioController.tab eq 'processo'}">
+	          <s:div id="tarefasDiv" styleClass="p-caixas" style="margin-right:10px;">
+	          	<h:form id="treeProcessoForm">
+	            	<ui:include src="tarefasTree.xhtml" />
+	            </h:form>
+	          </s:div>
+	          
+	       	  <s:div id="painelProcessos" styleClass="p-list" >
+	            <s:div id="processos" 
+	        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
+	        					 and painelUsuarioController.tab eq 'processo'}" >
+	        
+		            <wi:dataTable
+		              values="#{consultaProcessoList.list(10)}"
+		              bean="#{consultaProcessoList}"
+		              styleClass="p-list-dtable"
+		              tableTitle="#{eppmessages['consultaProcesso.processos']}"
+		              id="consultaProcessoList"
+		              rowId="#{row.idProcesso}"
+		              searchFormStyleClass="p-list-search"
+		              panelStyleClass="p-list-panel"
+		              hideOrder="true" >
+		            
+		            <ui:define name="searchForm">
+		              <wi:searchForm
+		                opened="false"
+		                formId="consultaProcessoForm"
+		                formTitle="#{eppmessages['searchForm.title']}"
+		                searchReRender="painelProcessos"
+		                clearAction="consultaProcessoList.newInstance()"
+		                clearReRender="painelProcessos" >
+		                
+		                <wi:inputText
+		                  id="numeroProcesso"
+		                  label="#{eppmessages['consultaProcesso.numeroProcesso']}"
+		                  value="#{consultaProcessoList.entity.numeroProcesso}" />
+		                  
+		                <wi:inputDataPeriodo
+		                  id="periodo"
+		                  label="#{eppmessages['data.inputPeriodo']}"
+		                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
+		                  valueDateTo="#{consultaProcessoList.dataFim}" />
+		                  
+		                <wi:selectOneMenuEntity
+		                  id="natureza"
+		                  label="#{eppmessages['natureza.tableTitle']}"
+		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
+		                  showLabelSelecione="true"
+		                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
+		                  
+		                <wi:selectOneMenuEntity
+		                  id="categoria"
+		                  label="#{eppmessages['categoria.tableTitle']}"
+		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
+		                  showLabelSelecione="true"
+		                  inNewLine="true"
+		                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+		                  
+		              </wi:searchForm>
+		            </ui:define>
+		            
+		            <wi:columnOutputText
+		              columnId="numeroProcesso"
+		              columnHeader="#{eppmessages['consultaProcesso.numeroProcesso']}"
+		              value="#{row.numeroProcesso}"
+		            />
+		            <wi:columnOutputText
+		              columnId="usuarioSolicitante"
+		              columnHeader="#{eppmessages['consultaProcesso.usuarioCadastroProcesso']}"
+		              value="#{row.usuarioCadastro}"
+		            />
+		            <wi:columnDateTime
+		              columnId="dataInicio"
+		              columnHeader="#{eppmessages['consultaProcesso.dataInicio']}"
+		              value="#{row.dataInicio}"
+		            />
+		            <wi:columnOutputText
+		              columnId="natureza"
+		              columnHeader="#{eppmessages['consultaProcesso.natureza']}"
+		              value="#{row.naturezaCategoriaFluxo.natureza}"
+		            />
+		            <wi:columnOutputText
+		              columnId="categoria"
+		              columnHeader="#{eppmessages['consultaProcesso.categoria']}"
+		              value="#{row.naturezaCategoriaFluxo.categoria}"
+		            />
+		            <wi:columnOutputText
+		              columnId="itemDoProcesso"
+		              columnHeader="#{eppmessages['consultaProcesso.item']}"
+		              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
+		            <wi:columnOutputText
+		              columnId="prioridadeProcesso"
+		              columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"
+		              value="#{row.prioridadeProcesso}"
+		            />
+		            <infox:dynamicColumns
+		              columns="#{painelUsuarioController.dynamicColumns}"
+		            />
+		            <ui:define name="headerToolBar">
+		              <ui:include
+		                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml"
+		              />
+		            </ui:define>
+		            <ui:define name="toolBar">
+		              <ui:include
+		                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml"
+		              />
+		            </ui:define>
+	              </wi:dataTable>
+	            </s:div>
+	          </s:div>
           </s:div>
-          
-       	  <s:div id="painelProcessos" styleClass="p-list" >
-            <s:div id="processos" 
-        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
-        					 and painelUsuarioController.tab eq 'processo'}" >
-        
-	            <wi:dataTable
-	              values="#{consultaProcessoList.list(10)}"
-	              bean="#{consultaProcessoList}"
-	              styleClass="p-list-dtable"
-	              tableTitle="#{eppmessages['consultaProcesso.processos']}"
-	              id="consultaProcessoList"
-	              rowId="#{row.idProcesso}"
-	              searchFormStyleClass="p-list-search"
-	              panelStyleClass="p-list-panel"
-	              hideOrder="true" >
-	            
-	            <ui:define name="searchForm">
-	              <wi:searchForm
-	                opened="false"
-	                formId="consultaProcessoForm"
-	                formTitle="#{eppmessages['searchForm.title']}"
-	                searchReRender="painelProcessos"
-	                clearAction="consultaProcessoList.newInstance()"
-	                clearReRender="painelProcessos" >
-	                
-	                <wi:inputText
-	                  id="numeroProcesso"
-	                  label="#{eppmessages['consultaProcesso.numeroProcesso']}"
-	                  value="#{consultaProcessoList.entity.numeroProcesso}" />
-	                  
-	                <wi:inputDataPeriodo
-	                  id="periodo"
-	                  label="#{eppmessages['data.inputPeriodo']}"
-	                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
-	                  valueDateTo="#{consultaProcessoList.dataFim}" />
-	                  
-	                <wi:selectOneMenuEntity
-	                  id="natureza"
-	                  label="#{eppmessages['natureza.tableTitle']}"
-	                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
-	                  showLabelSelecione="true"
-	                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-	                  
-	                <wi:selectOneMenuEntity
-	                  id="categoria"
-	                  label="#{eppmessages['categoria.tableTitle']}"
-	                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
-	                  showLabelSelecione="true"
-	                  inNewLine="true"
-	                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-	                  
-	              </wi:searchForm>
-	            </ui:define>
-	            
-	            <wi:columnOutputText
-	              columnId="numeroProcesso"
-	              columnHeader="#{eppmessages['consultaProcesso.numeroProcesso']}"
-	              value="#{row.numeroProcesso}"
-	            />
-	            <wi:columnOutputText
-	              columnId="usuarioSolicitante"
-	              columnHeader="#{eppmessages['consultaProcesso.usuarioCadastroProcesso']}"
-	              value="#{row.usuarioCadastro}"
-	            />
-	            <wi:columnDateTime
-	              columnId="dataInicio"
-	              columnHeader="#{eppmessages['consultaProcesso.dataInicio']}"
-	              value="#{row.dataInicio}"
-	            />
-	            <wi:columnOutputText
-	              columnId="natureza"
-	              columnHeader="#{eppmessages['consultaProcesso.natureza']}"
-	              value="#{row.naturezaCategoriaFluxo.natureza}"
-	            />
-	            <wi:columnOutputText
-	              columnId="categoria"
-	              columnHeader="#{eppmessages['consultaProcesso.categoria']}"
-	              value="#{row.naturezaCategoriaFluxo.categoria}"
-	            />
-	            <wi:columnOutputText
-	              columnId="itemDoProcesso"
-	              columnHeader="#{eppmessages['consultaProcesso.item']}"
-	              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
-	            <wi:columnOutputText
-	              columnId="prioridadeProcesso"
-	              columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"
-	              value="#{row.prioridadeProcesso}"
-	            />
-	            <infox:dynamicColumns
-	              columns="#{painelUsuarioController.dynamicColumns}"
-	            />
-	            <ui:define name="headerToolBar">
-	              <ui:include
-	                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml"
-	              />
-	            </ui:define>
-	            <ui:define name="toolBar">
-	              <ui:include
-	                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml"
-	              />
-	            </ui:define>
-              </wi:dataTable>
-            </s:div>
-          </s:div>
-          
         </infox:tab>
         
         <infox:tab id="comunicacoes"
           	name="comunicacao" render="painelProcessosComunicacao"
           	limitRender="true" action="#{tarefasTree.clearTree()}"
           	title="Fluxo/Comunicação" >
-          
-          <s:div id="comunicacoesTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
-          	<h:form id="treeProcessoComunicacaoForm">
-            	<ui:include src="tarefasTree.xhtml" />
-            </h:form>
+          <s:div rendered="#{painelUsuarioController.tab eq 'comunicacao'}">
+	          <s:div id="comunicacoesTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
+	          	<h:form id="treeProcessoComunicacaoForm">
+	            	<ui:include src="tarefasTree.xhtml" />
+	            </h:form>
+	          </s:div>
+	          
+	       	  <s:div id="painelProcessosComunicacao" styleClass="p-list" >
+	            <s:div id="processosComunicacao" 
+	        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
+	        					and painelUsuarioController.tab eq 'comunicacao'}" >
+	        
+		            <wi:dataTable
+		              values="#{consultaProcessoList.list(10)}"
+		              bean="#{consultaProcessoList}"
+		              styleClass="p-list-dtable"
+		              tableTitle="#{eppmessages['consultaProcesso.processos']}"
+		              id="consultaProcessoComunicacaoList"
+		              rowId="#{row.idProcesso}"
+		              searchFormStyleClass="p-list-search"
+		              panelStyleClass="p-list-panel"
+		              hideOrder="true" >
+		            
+		            <ui:define name="searchForm">
+		              <wi:searchForm
+		                opened="false"
+		                formId="consultaProcessoComunicacaoForm"
+		                formTitle="#{eppmessages['searchForm.title']}"
+		                searchReRender="painelProcessos"
+		                clearAction="consultaProcessoList.newInstance()"
+		                clearReRender="painelProcessos" >
+		                
+		                <wi:inputText
+		                  id="numeroProcesso"
+		                  label="#{eppmessages['consultaProcesso.numeroProcesso']}"
+		                  value="#{consultaProcessoList.entity.numeroProcesso}" />
+		                  
+		                <wi:inputDataPeriodo
+		                  id="periodo"
+		                  label="#{eppmessages['data.inputPeriodo']}"
+		                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
+		                  valueDateTo="#{consultaProcessoList.dataFim}" />
+		                  
+		                <wi:selectOneMenuEntity
+		                  id="natureza"
+		                  label="#{eppmessages['natureza.tableTitle']}"
+		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
+		                  showLabelSelecione="true"
+		                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
+		                  
+		                <wi:selectOneMenuEntity
+		                  id="categoria"
+		                  label="#{eppmessages['categoria.tableTitle']}"
+		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
+		                  showLabelSelecione="true"
+		                  inNewLine="true"
+		                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+		                  
+		              </wi:searchForm>
+		            </ui:define>
+		            
+		            <wi:columnOutputText
+		              columnId="numeroProcesso"
+		              columnHeader="#{eppmessages['consultaProcesso.numeroProcesso']}"
+		              value="#{row.numeroProcesso}"
+		            />
+		            <wi:columnOutputText
+		              columnId="usuarioSolicitante"
+		              columnHeader="#{eppmessages['consultaProcesso.usuarioCadastroProcesso']}"
+		              value="#{row.usuarioCadastro}"
+		            />
+		            <wi:columnDateTime
+		              columnId="dataInicio"
+		              columnHeader="#{eppmessages['consultaProcesso.dataInicio']}"
+		              value="#{row.dataInicio}"
+		            />
+		            <wi:columnOutputText
+		              columnId="natureza"
+		              columnHeader="#{eppmessages['consultaProcesso.natureza']}"
+		              value="#{row.naturezaCategoriaFluxo.natureza}"
+		            />
+		            <wi:columnOutputText
+		              columnId="categoria"
+		              columnHeader="#{eppmessages['consultaProcesso.categoria']}"
+		              value="#{row.naturezaCategoriaFluxo.categoria}"
+		            />
+		            <wi:columnOutputText
+		              columnId="itemDoProcesso"
+		              columnHeader="#{eppmessages['consultaProcesso.item']}"
+		              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
+		            <wi:columnOutputText
+		              columnId="prioridadeProcesso"
+		              columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"
+		              value="#{row.prioridadeProcesso}"
+		            />
+		            <infox:dynamicColumns
+		              columns="#{painelUsuarioController.dynamicColumns}"
+		            />
+		            <ui:define name="headerToolBar">
+		              <ui:include
+		                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml"
+		              />
+		            </ui:define>
+		            <ui:define name="toolBar">
+		              <ui:include
+		                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml"
+		              />
+		            </ui:define>
+	              </wi:dataTable>
+	            </s:div>
+	          </s:div>
           </s:div>
-          
-       	  <s:div id="painelProcessosComunicacao" styleClass="p-list" >
-            <s:div id="processosComunicacao" 
-        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
-        					and painelUsuarioController.tab eq 'comunicacao'}" >
-        
-	            <wi:dataTable
-	              values="#{consultaProcessoList.list(10)}"
-	              bean="#{consultaProcessoList}"
-	              styleClass="p-list-dtable"
-	              tableTitle="#{eppmessages['consultaProcesso.processos']}"
-	              id="consultaProcessoComunicacaoList"
-	              rowId="#{row.idProcesso}"
-	              searchFormStyleClass="p-list-search"
-	              panelStyleClass="p-list-panel"
-	              hideOrder="true" >
-	            
-	            <ui:define name="searchForm">
-	              <wi:searchForm
-	                opened="false"
-	                formId="consultaProcessoComunicacaoForm"
-	                formTitle="#{eppmessages['searchForm.title']}"
-	                searchReRender="painelProcessos"
-	                clearAction="consultaProcessoList.newInstance()"
-	                clearReRender="painelProcessos" >
-	                
-	                <wi:inputText
-	                  id="numeroProcesso"
-	                  label="#{eppmessages['consultaProcesso.numeroProcesso']}"
-	                  value="#{consultaProcessoList.entity.numeroProcesso}" />
-	                  
-	                <wi:inputDataPeriodo
-	                  id="periodo"
-	                  label="#{eppmessages['data.inputPeriodo']}"
-	                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
-	                  valueDateTo="#{consultaProcessoList.dataFim}" />
-	                  
-	                <wi:selectOneMenuEntity
-	                  id="natureza"
-	                  label="#{eppmessages['natureza.tableTitle']}"
-	                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
-	                  showLabelSelecione="true"
-	                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-	                  
-	                <wi:selectOneMenuEntity
-	                  id="categoria"
-	                  label="#{eppmessages['categoria.tableTitle']}"
-	                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
-	                  showLabelSelecione="true"
-	                  inNewLine="true"
-	                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-	                  
-	              </wi:searchForm>
-	            </ui:define>
-	            
-	            <wi:columnOutputText
-	              columnId="numeroProcesso"
-	              columnHeader="#{eppmessages['consultaProcesso.numeroProcesso']}"
-	              value="#{row.numeroProcesso}"
-	            />
-	            <wi:columnOutputText
-	              columnId="usuarioSolicitante"
-	              columnHeader="#{eppmessages['consultaProcesso.usuarioCadastroProcesso']}"
-	              value="#{row.usuarioCadastro}"
-	            />
-	            <wi:columnDateTime
-	              columnId="dataInicio"
-	              columnHeader="#{eppmessages['consultaProcesso.dataInicio']}"
-	              value="#{row.dataInicio}"
-	            />
-	            <wi:columnOutputText
-	              columnId="natureza"
-	              columnHeader="#{eppmessages['consultaProcesso.natureza']}"
-	              value="#{row.naturezaCategoriaFluxo.natureza}"
-	            />
-	            <wi:columnOutputText
-	              columnId="categoria"
-	              columnHeader="#{eppmessages['consultaProcesso.categoria']}"
-	              value="#{row.naturezaCategoriaFluxo.categoria}"
-	            />
-	            <wi:columnOutputText
-	              columnId="itemDoProcesso"
-	              columnHeader="#{eppmessages['consultaProcesso.item']}"
-	              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
-	            <wi:columnOutputText
-	              columnId="prioridadeProcesso"
-	              columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"
-	              value="#{row.prioridadeProcesso}"
-	            />
-	            <infox:dynamicColumns
-	              columns="#{painelUsuarioController.dynamicColumns}"
-	            />
-	            <ui:define name="headerToolBar">
-	              <ui:include
-	                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml"
-	              />
-	            </ui:define>
-	            <ui:define name="toolBar">
-	              <ui:include
-	                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml"
-	              />
-	            </ui:define>
-              </wi:dataTable>
-            </s:div>
-          </s:div>
-          
         </infox:tab>
         
         <infox:tab id="documentos"
           	name="documento" render="painelProcessosDocumento"
           	limitRender="true" action="#{tarefasTree.clearTree()}"
           	title="Fluxo/Documento" >
-          
-          <s:div id="documentosTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
-          	<h:form id="treeProcessoDocumentoForm">
-            	<ui:include src="tarefasTree.xhtml" />
-            </h:form>
+          <s:div rendered="#{painelUsuarioController.tab eq 'documento'}">
+	          <s:div id="documentosTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
+	          	<h:form id="treeProcessoDocumentoForm">
+	            	<ui:include src="tarefasTree.xhtml" />
+	            </h:form>
+	          </s:div>
+	          
+	       	  <s:div id="painelProcessosDocumento" styleClass="p-list" >
+	            <s:div id="processosDocumento" 
+	        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
+	        					 and painelUsuarioController.tab eq 'documento'}" >
+	        
+		            <wi:dataTable
+		              values="#{consultaProcessoList.list(10)}"
+		              bean="#{consultaProcessoList}"
+		              styleClass="p-list-dtable"
+		              tableTitle="#{eppmessages['consultaProcesso.processos']}"
+		              id="consultaProcessoDocumentoList"
+		              rowId="#{row.idProcesso}"
+		              searchFormStyleClass="p-list-search"
+		              panelStyleClass="p-list-panel"
+		              hideOrder="true" >
+		            
+		            <ui:define name="searchForm">
+		              <wi:searchForm
+		                opened="false"
+		                formId="consultaProcessoDocumentoForm"
+		                formTitle="#{eppmessages['searchForm.title']}"
+		                searchReRender="painelProcessos"
+		                clearAction="consultaProcessoList.newInstance()"
+		                clearReRender="painelProcessos" >
+		                
+		                <wi:inputText
+		                  id="numeroProcesso"
+		                  label="#{eppmessages['consultaProcesso.numeroProcesso']}"
+		                  value="#{consultaProcessoList.entity.numeroProcesso}" />
+		                  
+		                <wi:inputDataPeriodo
+		                  id="periodo"
+		                  label="#{eppmessages['data.inputPeriodo']}"
+		                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
+		                  valueDateTo="#{consultaProcessoList.dataFim}" />
+		                  
+		                <wi:selectOneMenuEntity
+		                  id="natureza"
+		                  label="#{eppmessages['natureza.tableTitle']}"
+		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
+		                  showLabelSelecione="true"
+		                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
+		                  
+		                <wi:selectOneMenuEntity
+		                  id="categoria"
+		                  label="#{eppmessages['categoria.tableTitle']}"
+		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
+		                  showLabelSelecione="true"
+		                  inNewLine="true"
+		                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+		                  
+		              </wi:searchForm>
+		            </ui:define>
+		            
+		            <wi:columnOutputText
+		              columnId="numeroProcesso"
+		              columnHeader="#{eppmessages['consultaProcesso.numeroProcesso']}"
+		              value="#{row.numeroProcesso}"
+		            />
+		            <wi:columnOutputText
+		              columnId="usuarioSolicitante"
+		              columnHeader="#{eppmessages['consultaProcesso.usuarioCadastroProcesso']}"
+		              value="#{row.usuarioCadastro}"
+		            />
+		            <wi:columnDateTime
+		              columnId="dataInicio"
+		              columnHeader="#{eppmessages['consultaProcesso.dataInicio']}"
+		              value="#{row.dataInicio}"
+		            />
+		            <wi:columnOutputText
+		              columnId="natureza"
+		              columnHeader="#{eppmessages['consultaProcesso.natureza']}"
+		              value="#{row.naturezaCategoriaFluxo.natureza}"
+		            />
+		            <wi:columnOutputText
+		              columnId="categoria"
+		              columnHeader="#{eppmessages['consultaProcesso.categoria']}"
+		              value="#{row.naturezaCategoriaFluxo.categoria}"
+		            />
+		            <wi:columnOutputText
+		              columnId="itemDoProcesso"
+		              columnHeader="#{eppmessages['consultaProcesso.item']}"
+		              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
+		            <wi:columnOutputText
+		              columnId="prioridadeProcesso"
+		              columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"
+		              value="#{row.prioridadeProcesso}"
+		            />
+		            <infox:dynamicColumns
+		              columns="#{painelUsuarioController.dynamicColumns}"
+		            />
+		            <ui:define name="headerToolBar">
+		              <ui:include
+		                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml"
+		              />
+		            </ui:define>
+		            <ui:define name="toolBar">
+		              <ui:include
+		                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml"
+		              />
+		            </ui:define>
+	              </wi:dataTable>
+	            </s:div>
+	          </s:div>
           </s:div>
-          
-       	  <s:div id="painelProcessosDocumento" styleClass="p-list" >
-            <s:div id="processosDocumento" 
-        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
-        					 and painelUsuarioController.tab eq 'documento'}" >
-        
-	            <wi:dataTable
-	              values="#{consultaProcessoList.list(10)}"
-	              bean="#{consultaProcessoList}"
-	              styleClass="p-list-dtable"
-	              tableTitle="#{eppmessages['consultaProcesso.processos']}"
-	              id="consultaProcessoDocumentoList"
-	              rowId="#{row.idProcesso}"
-	              searchFormStyleClass="p-list-search"
-	              panelStyleClass="p-list-panel"
-	              hideOrder="true" >
-	            
-	            <ui:define name="searchForm">
-	              <wi:searchForm
-	                opened="false"
-	                formId="consultaProcessoDocumentoForm"
-	                formTitle="#{eppmessages['searchForm.title']}"
-	                searchReRender="painelProcessos"
-	                clearAction="consultaProcessoList.newInstance()"
-	                clearReRender="painelProcessos" >
-	                
-	                <wi:inputText
-	                  id="numeroProcesso"
-	                  label="#{eppmessages['consultaProcesso.numeroProcesso']}"
-	                  value="#{consultaProcessoList.entity.numeroProcesso}" />
-	                  
-	                <wi:inputDataPeriodo
-	                  id="periodo"
-	                  label="#{eppmessages['data.inputPeriodo']}"
-	                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
-	                  valueDateTo="#{consultaProcessoList.dataFim}" />
-	                  
-	                <wi:selectOneMenuEntity
-	                  id="natureza"
-	                  label="#{eppmessages['natureza.tableTitle']}"
-	                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
-	                  showLabelSelecione="true"
-	                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-	                  
-	                <wi:selectOneMenuEntity
-	                  id="categoria"
-	                  label="#{eppmessages['categoria.tableTitle']}"
-	                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
-	                  showLabelSelecione="true"
-	                  inNewLine="true"
-	                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-	                  
-	              </wi:searchForm>
-	            </ui:define>
-	            
-	            <wi:columnOutputText
-	              columnId="numeroProcesso"
-	              columnHeader="#{eppmessages['consultaProcesso.numeroProcesso']}"
-	              value="#{row.numeroProcesso}"
-	            />
-	            <wi:columnOutputText
-	              columnId="usuarioSolicitante"
-	              columnHeader="#{eppmessages['consultaProcesso.usuarioCadastroProcesso']}"
-	              value="#{row.usuarioCadastro}"
-	            />
-	            <wi:columnDateTime
-	              columnId="dataInicio"
-	              columnHeader="#{eppmessages['consultaProcesso.dataInicio']}"
-	              value="#{row.dataInicio}"
-	            />
-	            <wi:columnOutputText
-	              columnId="natureza"
-	              columnHeader="#{eppmessages['consultaProcesso.natureza']}"
-	              value="#{row.naturezaCategoriaFluxo.natureza}"
-	            />
-	            <wi:columnOutputText
-	              columnId="categoria"
-	              columnHeader="#{eppmessages['consultaProcesso.categoria']}"
-	              value="#{row.naturezaCategoriaFluxo.categoria}"
-	            />
-	            <wi:columnOutputText
-	              columnId="itemDoProcesso"
-	              columnHeader="#{eppmessages['consultaProcesso.item']}"
-	              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
-	            <wi:columnOutputText
-	              columnId="prioridadeProcesso"
-	              columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"
-	              value="#{row.prioridadeProcesso}"
-	            />
-	            <infox:dynamicColumns
-	              columns="#{painelUsuarioController.dynamicColumns}"
-	            />
-	            <ui:define name="headerToolBar">
-	              <ui:include
-	                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml"
-	              />
-	            </ui:define>
-	            <ui:define name="toolBar">
-	              <ui:include
-	                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml"
-	              />
-	            </ui:define>
-              </wi:dataTable>
-            </s:div>
-          </s:div>
-          
         </infox:tab>
       </infox:tabPanel>
       
