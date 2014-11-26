@@ -281,6 +281,7 @@ public class ComunicacaoAction implements Serializable {
 		try {
 			assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
 			comunicacaoService.expedirComunicacao(destinatario);
+			expedida = null;
 		} catch (DAOException e) {
 			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
 			actionMessagesService.handleDAOException(e);
