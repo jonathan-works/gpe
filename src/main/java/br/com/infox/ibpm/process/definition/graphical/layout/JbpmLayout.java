@@ -17,7 +17,6 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import org.jboss.seam.international.Messages;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -34,6 +33,7 @@ import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -122,7 +122,7 @@ public class JbpmLayout {
             } else {
                 name = processDefinition.getName() + ":" + mappedName[1];
             }
-            String component = Messages.instance().get(VariableType.valueOf(mappedName[0]).getLabel());
+            String component = Messages.resolveMessage(VariableType.valueOf(mappedName[0]).getLabel());
             sb.append(i).append(": {name:'").append(JbpmUtil.getJbpmMessages().get(name)).append("', type:'").append(component).append("', readonly:'").append(!v.isWritable()).append("'}");
             if (i < list.size() - 1) {
                 sb.append(",");

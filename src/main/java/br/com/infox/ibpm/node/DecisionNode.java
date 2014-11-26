@@ -9,7 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
 import org.jboss.el.parser.ParseException;
-import org.jboss.seam.international.Messages;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
@@ -22,6 +21,7 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.ibpm.process.definition.expressionWizard.ExpressionTokenizer;
@@ -46,7 +46,7 @@ public class DecisionNode extends Node {
         for (DefinicaoVariavelProcesso variable : processVariables) {
         	String name = variable.getNome();
 			if (name == null) {
-				throw new ApplicationException(Messages.instance().get("processDefinition.variable.invalid"));
+				throw new ApplicationException(Messages.resolveMessage("processDefinition.variable.invalid"));
 			}
 			variables.add(format("''{0}''", name));
 		}
@@ -77,7 +77,7 @@ public class DecisionNode extends Node {
         for (VariableAccess variableAccess : variablesOfTypes) {
 			String[] split = variableAccess.getMappedName().split(":");
 			if (split.length < 2) {
-				throw new ApplicationException(Messages.instance().get("processDefinition.variable.invalid"));
+				throw new ApplicationException(Messages.resolveMessage("processDefinition.variable.invalid"));
 			}
 			variables.add(format("''{0}''", split[1]));
 		}

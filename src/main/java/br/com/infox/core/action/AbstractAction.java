@@ -13,7 +13,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.LogProvider;
@@ -22,6 +21,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.core.util.EntityUtil;
@@ -158,12 +158,13 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
                     ComponentUtil.setValue(t, "ativo", false);
                 }
                 ret = flushObject(t, false);
-                messages.add(Messages.instance().get("entity_inactived"));
+                
+                messages.add(Messages.resolveMessage("entity_inactived"));
                 final String message = format(".inactive({0}){1}): {2}", t, objectClassName, sw.getTime());
                 LOG.info(message);
             } catch (final Exception e) {
                 LOG.error(".inactive()", e);
-                final String message = format(Messages.instance().get("entity.ativo.error"), objectClassName);
+                final String message = format(Messages.resolveMessage("entity.ativo.error"), objectClassName);
                 messages.add(StatusMessage.Severity.ERROR, message);
             }
         } else {

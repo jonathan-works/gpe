@@ -9,8 +9,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.international.Messages;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -84,7 +84,7 @@ public class AccessMailService {
         if (result == null) {
             result = new ModeloDocumento();
             StringBuilder defaultEmail = new StringBuilder();
-            Map<String, String> localeMsgs = Messages.instance();
+            Map<String, String> localeMsgs = Messages.getInstance().getMessages();
             defaultEmail.append(format(DEFAULT_EMAIL_LINE, localeMsgs.get(USUARIO_MAIL_DEFAULT_FIELD_NOME), CAMPO_USUARIO));
             defaultEmail.append(format(DEFAULT_EMAIL_LINE, localeMsgs.get(USUARIO_MAIL_DEFAULT_FIELD_SENHA), CAMPO_SENHA));
             result.setModeloDocumento(defaultEmail.toString());
@@ -100,7 +100,7 @@ public class AccessMailService {
         emailData.setBody(conteudo);
         emailData.getRecipientList().clear();
         emailData.getRecipientList().add(usuario);
-        emailData.setSubject(Messages.instance().get("usuario.senha.generated.subject"));
+        emailData.setSubject(Messages.resolveMessage("usuario.senha.generated.subject"));
         new SendmailCommand().execute("/WEB-INF/email/emailTemplate.xhtml");
     }
 

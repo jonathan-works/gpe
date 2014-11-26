@@ -8,7 +8,8 @@ import javax.faces.validator.ValidatorException;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.international.Messages;
+
+import br.com.infox.core.messages.Messages;
 
 @org.jboss.seam.annotations.faces.Validator(id = ExtensaoDocumentoValidator.NAME)
 @Name(ExtensaoDocumentoValidator.NAME)
@@ -21,7 +22,7 @@ public class ExtensaoDocumentoValidator implements Validator{
 		try {
 			String extensao = (String) value;
 			if (extensao.substring(0, 1).equals(".")) {
-				String errorMessage = Messages.instance().get("javax.faces.validator.ExtensaoDocumentoValidator");
+				String errorMessage = Messages.resolveMessage("javax.faces.validator.ExtensaoDocumentoValidator");
 				throw new ValidatorException(new FacesMessage(errorMessage));
 			}
 		} catch (ValidatorException e) {

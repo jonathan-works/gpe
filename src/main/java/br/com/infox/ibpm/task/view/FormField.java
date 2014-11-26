@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.international.Messages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.messages.Messages;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 
 public class FormField implements Serializable {
@@ -50,7 +50,7 @@ public class FormField implements Serializable {
                 key = key.substring(0, key.indexOf('.'));
             }
             key = getFormId() + "." + key;
-            Map<String, String> msg = Messages.instance();
+            Map<String, String> msg = Messages.getInstance().getMessages();
             if (msg != null && msg.containsKey(key)) {
                 label = msg.get(key);
             } else {
