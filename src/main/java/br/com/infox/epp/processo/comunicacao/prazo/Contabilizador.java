@@ -7,8 +7,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.comunicacao.Comunicacao;
-import br.com.infox.epp.processo.comunicacao.service.ContabilizarPrazoService;
+import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.ibpm.process.definition.annotations.DefinitionAvaliable;
 
 @Name(Contabilizador.NAME)
@@ -19,7 +18,7 @@ public class Contabilizador {
     public static final String NAME = "contabilizador";
     
     @In
-    private ContabilizarPrazoService contabilizarPrazoService;
+    private ComunicacaoService comunicacaoService;
     
     /**
      * Calcula o prazo para tomar ciência de uma Comunicação
@@ -28,8 +27,6 @@ public class Contabilizador {
      * @throws DAOException 
      */
     public void contabilizarPrazo(Integer idProcesso) throws DAOException {
-//        ProcessoComunicacao processoComunicacao = processoComunicacaoManager.find(idProcesso);
-        Comunicacao comunicacao = new Comunicacao();
-        contabilizarPrazoService.contabilizarPrazoCiencia(comunicacao);
+//        contabilizarPrazoService.contabilizarPrazoCiencia(comunicacao);
     }
 }

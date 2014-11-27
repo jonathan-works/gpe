@@ -11,8 +11,9 @@ import org.jboss.seam.annotations.async.Asynchronous;
 import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
 
-import br.com.infox.epp.processo.comunicacao.Comunicacao;
-import br.com.infox.epp.processo.comunicacao.manager.ComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 
 @Name(ContabilizarPrazoProcessor.NAME)
 @AutoCreate
@@ -20,7 +21,7 @@ public class ContabilizarPrazoProcessor {
     static final String NAME = "contabilizarPrazoProcessor";
     
     @In
-    private ComunicacaoManager comunicacaoManager;
+    private ComunicacaoService comunicacaoService;
     
     @Asynchronous
     @Transactional
@@ -32,11 +33,11 @@ public class ContabilizarPrazoProcessor {
     }
 
     private void processPrazoCiencia() {
-        List<Comunicacao> comunicacoes = comunicacaoManager.getComunicacoesAguardandoCumprimento();
+        List<Processo> comunicacoes = comunicacaoService.getComunicacoesAguardandoCiencia();
         
-        for (Comunicacao comunicacao : comunicacoes) {
+        for (Processo comunicacao : comunicacoes) {
             Date hoje = new Date();
-            Date prazoCiencia = comunicacaoManager.getDataFimPrazoCiencia(comunicacao);
+            Date prazoCiencia = comunicacao.getMetadado(ComunicacaoService.DATA_FIM_PRAZO_CIENCIA).getValue();
             if (prazoCiencia.before(hoje)) {
                 finalizarPrazoCiencia(comunicacao);
             }
@@ -44,18 +45,18 @@ public class ContabilizarPrazoProcessor {
     }
     
     private void processPrazoAtendimento() {
-        List<Comunicacao> comunicacoes = comunicacaoManager.getComunicacoesAguardandoCiencia();
+        List<Processo> comunicacoes = comunicacaoService.getComunicacoesAguardandoCumprimento();
         
-        for (Comunicacao comunicacao : comunicacoes) {
+        for (Processo comunicacao : comunicacoes) {
             Date hoje = new Date();
-            Date prazoCiencia = comunicacaoManager.getDataFimPrazoCiencia(comunicacao);
-            if (prazoCiencia.before(hoje)) {
+            MetadadoProcesso prazoDestinatario = comunicacao.getMetadado(ComunicacaoService.DATA_FIM_PRAZO_DESTINATARIO);
+            if (prazoDestinatario != null && ((Date) prazoDestinatario.getValue()).before(hoje)) {
                 finalizarPrazoAtendimento(comunicacao);
             }
         }
     }
 
-    private void finalizarPrazoCiencia(Comunicacao comunicacao) {
+    private void finalizarPrazoCiencia(Processo comunicacao) {
         /*
          * Seta data de ciência
          * Seta usuário da ciência como o Sistema (usuarioLogin com id = 0)
@@ -64,7 +65,7 @@ public class ContabilizarPrazoProcessor {
          */
     }
 
-    private void finalizarPrazoAtendimento(Comunicacao comunicacao) {
+    private void finalizarPrazoAtendimento(Processo comunicacao) {
         /*
          * Seta a data de atendimento
          * Seta o usuário de atendimento?

@@ -19,13 +19,13 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
-import org.joda.time.DateTime;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ArbitraryExpressionResolver;
@@ -43,6 +43,7 @@ import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -96,6 +97,8 @@ public class ComunicacaoService {
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@In
+	private CalendarioEventosManager calendarioEventosManager;
 	
 	public void expedirComunicacao(DestinatarioModeloComunicacao destinatario) throws DAOException {
 		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
@@ -201,6 +204,32 @@ public class ComunicacaoService {
 		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, comunicacao.getModeloDocumento(), chain);
 	}
 	
+	public List<Processo> getComunicacoesAguardandoCumprimento() {
+        // TODO criar método para retornar comunicações aguardando cumprimento
+        return null;
+    }
+    
+    public List<Processo> getComunicacoesAguardandoCiencia() {
+        // TODO criar método para retornar comunicações aguardando cumprimento
+        return null;
+    }
+    
+	private Date contabilizarPrazoCiencia(ModeloComunicacao modeloComunicacao) {
+        TipoComunicacao tipoComunicacao = modeloComunicacao.getTipoComunicacao();
+        Integer qtdDias = tipoComunicacao.getQuantidadeDiasCiencia();
+        Date hoje = new Date();
+        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
+    }
+    
+    private Date contabilizarPrazoCumprimento(DestinatarioModeloComunicacao destinatario) {
+        Integer qtdDias = destinatario.getPrazo();
+        if (qtdDias == null) {
+        	return null;
+        }
+        Date hoje = new Date();
+        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
+    }
+	
 	private MetadadoProcesso criarMetadado(String tipo, Class<?> classType, String valor, Processo processo) {
 		MetadadoProcesso metadadoProcesso = new MetadadoProcesso();
 		metadadoProcesso.setClassType(classType);
@@ -221,14 +250,14 @@ public class ComunicacaoService {
 			metadados.add(criarMetadado(MetadadoProcessoType.LOCALIZACAO_DESTINO, Localizacao.class, destinatario.getDestino().getIdLocalizacao().toString(), processo));
 		}
 		
-		metadados.add(criarMetadado(DATA_FIM_PRAZO_CIENCIA, Date.class, dateFormatter.format(getDataFimPrazoCiencia(destinatario)), processo));
+		metadados.add(criarMetadado(DATA_FIM_PRAZO_CIENCIA, Date.class, dateFormatter.format(contabilizarPrazoCiencia(destinatario.getModeloComunicacao())), processo));
 		
 		metadados.add(criarMetadado(MEIO_EXPEDICAO, MeioExpedicao.class, destinatario.getMeioExpedicao().getLabel(), processo));
 		
 		metadados.add(criarMetadado(DESTINATARIO, DestinatarioModeloComunicacao.class, destinatario.getId().toString(), processo));
 		
 		if (destinatario.getPrazo() != null) {
-			metadados.add(criarMetadado(PRAZO_DESTINATARIO, Integer.class, destinatario.getPrazo().toString(), processo));
+			metadados.add(criarMetadado(DATA_FIM_PRAZO_DESTINATARIO, Date.class, dateFormatter.format(contabilizarPrazoCumprimento(destinatario)), processo));
 		}
 		
 		metadados.add(criarMetadado(MetadadoProcessoType.TIPO_PROCESSO, TipoProcesso.class, TipoProcesso.COMUNICACAO.name(), processo));
@@ -241,35 +270,30 @@ public class ComunicacaoService {
 		Map<String, String> variaveis = new HashMap<>();
 		String format = "#'{'{0}'}'";
 		
-		variaveis.put(MessageFormat.format(format, DATA_FIM_PRAZO_CIENCIA), dateFormatter.format(getDataFimPrazoCiencia(destinatario)));
+		variaveis.put(MessageFormat.format(format, DATA_FIM_PRAZO_CIENCIA), dateFormatter.format(contabilizarPrazoCiencia(destinatario.getModeloComunicacao())));
 		variaveis.put(MessageFormat.format(format, MEIO_EXPEDICAO), destinatario.getMeioExpedicao().getLabel());
-		variaveis.put(MessageFormat.format(format, PRAZO_DESTINATARIO), destinatario.getPrazo() != null ? destinatario.getPrazo().toString() : null);
+		Date dataFimPrazoDestinatario = contabilizarPrazoCumprimento(destinatario);
+		variaveis.put(MessageFormat.format(format, DATA_FIM_PRAZO_DESTINATARIO), dataFimPrazoDestinatario != null ? dateFormatter.format(dataFimPrazoDestinatario) : null);
 		variaveis.put(MessageFormat.format(format, NOME_DESTINATARIO), destinatario.getNome());
 		return variaveis;
 	}
 	
 	private Map<String, Object> createVariaveisJbpm(DestinatarioModeloComunicacao destinatario) {
 		Map<String, Object> variaveis = new HashMap<>();
-		variaveis.put(DATA_FIM_PRAZO_CIENCIA, getDataFimPrazoCiencia(destinatario));
+		variaveis.put(DATA_FIM_PRAZO_CIENCIA, contabilizarPrazoCiencia(destinatario.getModeloComunicacao()));
 		variaveis.put(MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getLabel());
-		variaveis.put(PRAZO_DESTINATARIO, destinatario.getPrazo());
+		variaveis.put(DATA_FIM_PRAZO_DESTINATARIO, contabilizarPrazoCumprimento(destinatario));
 		variaveis.put(NOME_DESTINATARIO, destinatario.getNome());
 		return variaveis;
 	}
 	
-	private Date getDataFimPrazoCiencia(DestinatarioModeloComunicacao destinatario) {
-		DateTime dataFimPrazoCiencia = DateTime.now().plusDays(destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia());
-		dataFimPrazoCiencia = dataFimPrazoCiencia.withTime(0, 0, 0, 0);
-		return dataFimPrazoCiencia.toDate();
-	}
-	
 	// Metadados
-	public static final String DATA_FIM_PRAZO_CIENCIA = "dataFimPrazoCiencia";
-	public static final String MEIO_EXPEDICAO = "meioExpedicao";
-	public static final String DESTINATARIO = "destinatario";
-	public static final String PRAZO_DESTINATARIO = "prazoDestinatario";
+	public static final String DATA_FIM_PRAZO_CIENCIA = "dataFimPrazoCienciaComunicacao";
+	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao";
+	public static final String DESTINATARIO = "destinatarioComunicacao";
+	public static final String DATA_FIM_PRAZO_DESTINATARIO = "dataFimPrazoDestinatarioComunicacao";
 	public static final String COMUNICACAO = "comunicacao";
 	
 	// Variáveis
-	public static final String NOME_DESTINATARIO = "nomeDestinatario";
+	public static final String NOME_DESTINATARIO = "nomeDestinatarioComunicacao";
 }
