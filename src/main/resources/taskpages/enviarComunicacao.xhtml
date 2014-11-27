@@ -145,6 +145,45 @@
           		</s:div>
 			</rich:collapsiblePanel>
 		</h:form>
+		<rich:panel id="documentos" header="Documentos" 
+			rendered="#{not comunicacaoAction.modeloComunicacao.finalizada or not empty comunicacaoAction.modeloComunicacao.documentos}">
+			<wi:dataTable id="documentosProcesso" values="#{documentoComunicacaoList.list(15)}" 
+				bean="#{documentoComunicacaoList}" showSearchForm="false" rowId="#{row.id}"
+				showGrid="#{not comunicacaoAction.modeloComunicacao.finalizada and documentoComunicacaoList.resultCount gt 0}">
+				<ui:define name="headerToolBar" />
+				<ui:define name="toolBar">
+					<h:form>
+						<a:commandLink action="#{comunicacaoAction.adicionarDocumento(row)}" 
+							execute="@this" render="documentos">
+							<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{eppmessages['button.add']}" />
+						</a:commandLink>
+					</h:form>
+				</ui:define>
+				<rich:column>
+					<f:facet name="header">#{eppmessages['processoDocumentoBin.documento']}</f:facet>
+					<h:outputText value="#{row.descricao}" />
+				</rich:column>
+			</wi:dataTable>
+			<rich:dataTable id="documentosSelecionados" value="#{comunicacaoAction.modeloComunicacao.documentos}"
+				styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty comunicacaoAction.modeloComunicacao.documentos}">
+				<rich:column styleClass="dt-toolbar-col" rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
+					<h:form>
+						<a:commandLink action="#{comunicacaoAction.removerDocumento(row)}" 
+							execute="@this" render="documentos">
+							<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['button.delete']}" />
+						</a:commandLink>
+						<a:commandLink
+							onclick="infox.editor['comunicacao'].insertText('#{comunicacaoAction.getLink(row.documento.documentoBin)}'); return false;">
+							<h:graphicImage url="#{wiSkin.imageFolder}/link.gif" title="#{eppmessages['button.copiarLink']}" />
+						</a:commandLink>
+					</h:form> 
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">#{eppmessages['processoDocumentoBin.documento']}</f:facet>
+					<h:outputText value="#{row.documento.descricao}" />
+				</rich:column>
+			</rich:dataTable>
+		</rich:panel>
 		<h:form id="documentoComunicacaoForm">
 			<s:div style="display: inline-block; vertical-align: top" rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
 				<wi:selectOneMenuEntity id="modeloDocumento" value="#{comunicacaoAction.modeloComunicacao.modeloDocumento}" 
@@ -186,41 +225,6 @@
 				<s:div id="comunicacaoEditorDiv">
 					<wi:editor id="comunicacao" value="#{comunicacaoAction.modeloComunicacao.comunicacao}" />
 				</s:div>
-			</s:div>
-			<s:div id="documentos" style="display: inline-block; vertical-align: top; margin-top: 112px">
-				<wi:dataTable id="documentosProcesso" values="#{documentoComunicacaoList.list(15)}" 
-					bean="#{documentoComunicacaoList}" showSearchForm="false" rowId="#{row.id}"
-					showGrid="#{not comunicacaoAction.modeloComunicacao.finalizada and documentoComunicacaoList.resultCount gt 0}"
-					panelStyle="width: auto" inForm="true">
-					<ui:define name="headerToolBar" />
-					<ui:define name="toolBar">
-						<a:commandLink action="#{comunicacaoAction.adicionarDocumento(row)}" 
-							execute="@this" render="documentos">
-							<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{eppmessages['button.add']}" />
-						</a:commandLink>
-					</ui:define>
-					<rich:column>
-						<f:facet name="header">#{eppmessages['processoDocumentoBin.documento']}</f:facet>
-						<h:outputText value="#{row.descricao}" />
-					</rich:column>
-				</wi:dataTable>
-				<rich:dataTable id="documentosSelecionados" value="#{comunicacaoAction.modeloComunicacao.documentos}"
-					styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty comunicacaoAction.modeloComunicacao.documentos}">
-					<rich:column styleClass="dt-toolbar-col" rendered="#{not comunicacaoAction.modeloComunicacao.finalizada}">
-						<a:commandLink action="#{comunicacaoAction.removerDocumento(row)}" 
-							execute="@this" render="documentos">
-							<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['button.delete']}" />
-						</a:commandLink>
-						<a:commandLink
-							onclick="infox.editor['comunicacaoEditor'].insertText('#{comunicacaoAction.getLink(row.documento.documentoBin)}')">
-							<h:graphicImage url="#{wiSkin.imageFolder}/link.gif" title="#{eppmessages['button.copiarLink']}" />
-						</a:commandLink> 
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">#{eppmessages['processoDocumentoBin.documento']}</f:facet>
-						<h:outputText value="#{row.documento.descricao}" />
-					</rich:column>
-				</rich:dataTable>
 			</s:div>
 			<s:div id="responsaveisAssinatura">
 				<wi:selectBooleanCheckbox id="finalizada" label="#{eppmessages['comunicacao.finalizada']}" 

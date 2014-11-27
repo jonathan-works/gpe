@@ -213,6 +213,7 @@ public class ComunicacaoAction implements Serializable {
 			if (isFinalizada()) {
 				comunicacaoService.finalizarComunicacao(modeloComunicacao);
 			}
+			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (Exception e) {
 			LOG.error("", e);
 			if (e instanceof DAOException) {
@@ -265,9 +266,6 @@ public class ComunicacaoAction implements Serializable {
 				if (!genericManager.contains(dest)) {
 					dest.setId(null);
 				}
-			}
-			if (!documentoBinManager.contains(modeloComunicacao.getComunicacao())) {
-				modeloComunicacao.setComunicacao(null);
 			}
 		}
 	}
