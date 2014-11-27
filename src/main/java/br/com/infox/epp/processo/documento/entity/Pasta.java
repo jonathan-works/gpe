@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -71,7 +70,7 @@ public class Pasta implements Serializable, Cloneable {
     @Column(name = "in_sistema", nullable = false)
     private Boolean sistema;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta", cascade = {CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
     private List<Documento> documentosList; 
 
     public Integer getId() {

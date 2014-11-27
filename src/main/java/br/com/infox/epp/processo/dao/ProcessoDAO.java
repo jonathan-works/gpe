@@ -38,7 +38,6 @@ import java.util.Map;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
