@@ -25,7 +25,6 @@ Infox.CertDig.Connection = function() {
 	var that = this;
 	var setTimeoutId = null;
 	var webSocket = null;
-	var messages = getById("messages");
 
 	/**
 	 * @description It tries to establish a connection with the server.
@@ -71,7 +70,7 @@ Infox.CertDig.Connection = function() {
 			// 01 - It ensures only one connection is open at a time.
 			if ((null !== webSocket)
 					&& (WebSocket.CLOSED !== webSocket.readyState)) {
-				writeResponse("WebSocket is already opened.");
+				logInfo("WebSocket is already opened.");
 				return;
 			}
 
@@ -95,20 +94,20 @@ Infox.CertDig.Connection = function() {
 				handleResponse(event);
 			};
 
+			webSocket.onmessage = function(event) {
+				handleResponse(event);
+			};
+
 			webSocket.onerror = function(event) {
 				handleException("The following error occurred: " + event.data);
 
 				tryToReconnect(nrAttempt);
 			};
 
-			webSocket.onmessage = function(event) {
-				handleResponse(event);
-			};
-
 			webSocket.onclose = function(event) {
-				handleException("Connection closed: " + event.data);
-
 				handleResponse(event);
+
+				tryToReconnect(nrAttempt);
 			};
 		} catch (ex) {
 			handleException(ex);
@@ -125,6 +124,12 @@ Infox.CertDig.Connection = function() {
 	}
 
 	function handleResponse(event) {
+		if ((null == event) || (undefined === event.data)) {
+			return;
+		}
+
+		// alert("2 " + event.data);
+
 		// 01 - Parse the data into an json object.
 		var message = JSON.parse(event.data);
 		// type {text, image, ...}
@@ -144,11 +149,11 @@ Infox.CertDig.Connection = function() {
 			receivedCredentials(message.data);
 			break;
 		default:
-			writeResponse("Default CMD: " + message.cmd);
+			logInfo("Default CMD: " + message.cmd);
 			break;
 		}
 
-		writeResponse(event.data);
+		logInfo(event.data);
 	}
 
 	/**
@@ -186,7 +191,7 @@ Infox.CertDig.Connection = function() {
 			// TODO .
 			break;
 		default:
-			writeResponse("runJavaScript: " + data);
+			logInfo("runJavaScript: " + data);
 			break;
 		}
 
@@ -228,19 +233,19 @@ Infox.CertDig.Connection = function() {
 			handleException(ex);
 		}
 
-		writeResponse(dataValue);
-	}
-
-	function writeResponse(text) {
-		messages.innerText += "\r\n" + text;
-	}
-
-	function alertConnectionWasNotEstablished() {
-		alert("alertConnectionWasNotEstablished");
+		logInfo(dataValue);
 	}
 
 	function getById(id) {
 		return document.getElementById(id);
+	}
+
+	function alertConnectionWasNotEstablished() {
+		logInfo("alertConnectionWasNotEstablished");
+	}
+
+	function logInfo(text) {
+		console.info(text);
 	}
 
 };
