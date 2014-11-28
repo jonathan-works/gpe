@@ -13,9 +13,12 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
   <ui:define name="baseHead">
+    <!-- <ui:param
+      name="useCertLogin"
+      value="#{certificateAuthenticator.certificateLogin}" /> -->
     <ui:param
       name="useCertLogin"
-      value="#{certificateAuthenticator.certificateLogin}" />
+      value="true" />
   </ui:define>
   <ui:define name="scripts">
     <h:outputScript
@@ -139,23 +142,12 @@
             <s:div
               styleClass="cert-div"
               rendered="#{useCertLogin}">
-              <wi:appletAssinatura
-                id="certificacao"
-                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-                formId="#{rich:clientId('login')}"
-                certificationChainField="#{rich:clientId('certChain')}"
-                signatureField="#{rich:clientId('signature')}"
-                signButtonCaption="#{eppmessages['signature.loginBtn']}"
-                getDataFunction="''"
-                useBase64Function="'true'"
-                functionPreSign="RichFaces.$('mp_formValidar').show();"
-                functionPosSign="RichFaces.$('mp_formValidar').hide();"
-                functionPosSignOk="submitForm();"
-                debug="false"
-                loginMode="true"
-                useProviderDll="false"
-                rendered="#{useCertLogin}">
-              </wi:appletAssinatura>
+              <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/constant.js" />
+              <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/websocket.js" />
+              <a href="#{pathResolver.contextPath}/resources/jws/certificado_digital.jnlp"
+                  onclick="userClickedOnDownloadJNPLButton();">Entrar com o
+                  Certificado Digital</a>
+              
               <h:inputHidden
                 id="signature"
                 value="#{certificateAuthenticator.assinatura}">
