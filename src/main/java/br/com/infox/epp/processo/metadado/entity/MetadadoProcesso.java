@@ -1,6 +1,9 @@
 package br.com.infox.epp.processo.metadado.entity;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -102,6 +105,12 @@ public class MetadadoProcesso implements Serializable {
 				Class<?> idClass = EntityUtil.getId(getClassType()).getPropertyType();
 				Object id = ReflectionsUtil.newInstance(idClass, String.class, getValor());
 				value = (E) entityManager.find(getClassType(), id);
+			} else if (getClassType() == Date.class) {
+				try {
+					value = new SimpleDateFormat(DATE_PATTERN).parse(getValor());
+				} catch (ParseException e) {
+					throw new RuntimeException("Erro ao converter data", e);
+				}
 			} else if (getClassType() != String.class) {
 				value = ReflectionsUtil.newInstance(getClassType(), String.class, getValor());
 			} else {
@@ -136,4 +145,5 @@ public class MetadadoProcesso implements Serializable {
 		return true;
 	}
 	
+	public static final String DATE_PATTERN = "dd/MM/yyyy HH:mm:ss";
 }

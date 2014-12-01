@@ -274,6 +274,9 @@ public class ComunicacaoService {
 	public static final String PRAZO_DESTINATARIO = "prazoDestinatarioComunicacao";
 	public static final String COMUNICACAO = "comunicacao";
 	
+	public static final String DATA_CIENCIA = "dataCiencia";
+	public static final String DATA_CUMPRIMENTO = "dataCumprimento";
+	
 	// Variáveis
 	public static final String NOME_DESTINATARIO = "nomeDestinatarioComunicacao";
 }

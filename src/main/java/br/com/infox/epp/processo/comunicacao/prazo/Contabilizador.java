@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.prazo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.jboss.seam.ScopeType;
@@ -7,10 +8,15 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.timer.TaskExpirationInfo;
 import br.com.infox.epp.processo.timer.TaskExpirationProcessor;
 import br.com.infox.ibpm.process.definition.annotations.DefinitionAvaliable;
@@ -22,13 +28,16 @@ import br.com.infox.ibpm.util.JbpmUtil;
 @DefinitionAvaliable
 public class Contabilizador {
     public static final String NAME = "contabilizador";
+    private static final LogProvider LOG = Logging.getLogProvider(Contabilizador.class);
     
     @In
     private ComunicacaoService comunicacaoService;
-    @In("org.jboss.seam.bpm.taskInstance")
+    @In(value = "org.jboss.seam.bpm.taskInstance")
     private TaskInstance taskInstance;
     @In
     private TaskExpirationProcessor taskExpirationProcessor;
+    @In
+    private MetadadoProcessoManager metadadoProcessoManager;
     
     public void contabilizarPrazoCiencia(String transition) {
     	Processo comunicacao = JbpmUtil.getProcesso();
@@ -46,6 +55,28 @@ public class Contabilizador {
     	} else {
     		contabilizarPrazo(fimPrazo, transition);
     	}
+    }
+    
+    public void darCiencia(String transition) {
+    	Processo comunicacao = JbpmUtil.getProcesso();
+    	Date ciencia = new Date();
+    	MetadadoProcesso metadado = new MetadadoProcesso();
+    	metadado.setProcesso(comunicacao);
+    	metadado.setMetadadoType(ComunicacaoService.DATA_CIENCIA);
+    	metadado.setClassType(Date.class);
+    	metadado.setValor(new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(ciencia));
+    	try {
+			metadadoProcessoManager.persist(metadado);
+		} catch (DAOException e) {
+			LOG.error("", e);
+			throw new RuntimeException(e);
+		}
+    	
+    	// Falta remover o job antigo
+    }
+    
+    public void darCumprimento(String transition) {
+    	
     }
     
     private void contabilizarPrazo(Date fimPrazo, String transition) {
