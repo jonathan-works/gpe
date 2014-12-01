@@ -15,7 +15,6 @@ function userClickedOnDownloadJNPLButton() {
 }
 
 function handleException(ex) {
-	// alert("Error: " + ex.message);
 	console.error("Error: " + ex);
 }
 
@@ -164,8 +163,6 @@ Infox.CertDig.Connection = function() {
 		if ((null == event) || (undefined === event.data)) {
 			return;
 		}
-
-		// alert("2 " + event.data);
 
 		// 01 - Parse the data into an json object.
 		var message = JSON.parse(event.data);
