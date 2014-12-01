@@ -279,7 +279,9 @@ Infox.CertDig.Connection = function() {
 
 	function alertConnectionWasNotEstablished() {
 		invoke([ "infox.Messages" ], function(msg) {
-			msg.dialog("A conexão não foi estabelecida.");
+			msg({
+				'timeout' : 3000
+			}).dialog("A conexão não foi estabelecida.");
 			logInfo("A conexão não foi estabelecida.");
 		});
 	}
