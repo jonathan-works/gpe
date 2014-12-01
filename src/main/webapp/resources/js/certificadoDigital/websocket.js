@@ -25,6 +25,7 @@ Infox.CertDig.Connection = function() {
 	var that = this;
 	var setTimeoutId = null;
 	var webSocket = null;
+	var connectionHasBeenEstablished = false;
 
 	/**
 	 * @description It tries to establish a connection with the server.
@@ -34,6 +35,9 @@ Infox.CertDig.Connection = function() {
 		startConnectionToServer(1);
 	}
 
+	/**
+	 * Close the WebSocket connection.
+	 */
 	this.close = function() {
 		if (null != webSocket) {
 			try {
@@ -76,13 +80,18 @@ Infox.CertDig.Connection = function() {
 
 			// 02 - Create a new instance of the WebSocket.
 			webSocket = new WebSocket(Infox.CertDig.Constant.Connection.URL);
+
 			/**
 			 * Binds functions to the listeners for the WebSocket.
 			 */
 			webSocket.onopen = function(event) {
 				// 01 - The connection has been successfully established, so
 				// stop the timer.
-				clearTimeout(setTimeoutId);
+				stopReconnectTimer(setTimeoutId);
+
+				// 02 - The connection has been successfully established, so
+				// change the flag.
+				setHasConnectionBeenEstablished(true);
 
 				// For reasons I can't determine, onopen gets called twice
 				// and the first time event.data is undefined.
@@ -101,16 +110,44 @@ Infox.CertDig.Connection = function() {
 			webSocket.onerror = function(event) {
 				handleException("The following error occurred: " + event.data);
 
-				tryToReconnect(nrAttempt);
+				if (!hasConnectionBeenEstablished()) {
+					tryToReconnect(nrAttempt);
+				}
 			};
 
 			webSocket.onclose = function(event) {
 				handleResponse(event);
 
-				tryToReconnect(nrAttempt);
+				if (!hasConnectionBeenEstablished()) {
+					tryToReconnect(nrAttempt);
+				}
 			};
 		} catch (ex) {
 			handleException(ex);
+		}
+	}
+
+	/**
+	 * This flag holds the information that tells if the connection has been
+	 * established.
+	 */
+	function hasConnectionBeenEstablished() {
+		return connectionHasBeenEstablished;
+	}
+
+	/**
+	 * Update the variable with the informed value.
+	 */
+	function setHasConnectionBeenEstablished(value) {
+		connectionHasBeenEstablished = value;
+	}
+
+	/**
+	 * Update the variable with the informed value.
+	 */
+	function stopReconnectTimer(setTimeoutId) {
+		if (null != setTimeoutId) {
+			clearTimeout(setTimeoutId);
 		}
 	}
 
@@ -176,19 +213,19 @@ Infox.CertDig.Connection = function() {
 	function runJavaScript(data) {
 		switch (data) {
 		case Infox.CertDig.Constant.JSAction.actionPre:
-			// show();
+			infox.showLoading();
 			break;
 		case Infox.CertDig.Constant.JSAction.actionPos:
-			// Hide();
+			infox.hideLoading();
 			break;
 		case Infox.CertDig.Constant.JSAction.actionPosOk:
 			// Now, the server can be shutdown.
 			sendQuit();
 
-			// submitForm();
+			// Submit the form with the informed credentials.
+			submitForm();
 			break;
 		case Infox.CertDig.Constant.JSAction.actionPosError:
-			// TODO .
 			break;
 		default:
 			logInfo("runJavaScript: " + data);
@@ -241,7 +278,10 @@ Infox.CertDig.Connection = function() {
 	}
 
 	function alertConnectionWasNotEstablished() {
-		logInfo("alertConnectionWasNotEstablished");
+		invoke([ "infox.Messages" ], function(msg) {
+			msg.dialog("A conexão não foi estabelecida.");
+			logInfo("A conexão não foi estabelecida.");
+		});
 	}
 
 	function logInfo(text) {
