@@ -39,6 +39,7 @@
 	          width="#{800-15}"
 	          height="#{600-157}" />
 	      </div>
+	      
 	      <div>
 	        <wi:appletAssinatura
 	          id="assinarTermoAdesao"
@@ -55,8 +56,9 @@
 	          useProviderDll="false"
 	          signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}">
 	        </wi:appletAssinatura>
+	          
 	        <input
-	          class="input_button close-btn"
+	          style="vertical-align: top; width: 140px !important; height: 25px;"
 	          id="cancela"
 	          type="button"
 	          onclick="location.href='#{pathResolver.contextPath}/login.seam'"
