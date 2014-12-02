@@ -6,7 +6,6 @@
 		<homepage href="http://epp.infox.com.br/epp/" />
 		<description>Certificado Digital</description>
 	</information>
-	<update check="always"/>
 	<security>
 		<all-permissions/>
 	</security>
