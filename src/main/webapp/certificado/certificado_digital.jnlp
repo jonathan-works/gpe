@@ -6,6 +6,7 @@
 		<homepage href="http://localhost:8080/epp/" />
 		<description>Certificado Digital</description>
 	</information>
+	<update check="always"/>
 	<security>
 		<all-permissions/>
 	</security>
