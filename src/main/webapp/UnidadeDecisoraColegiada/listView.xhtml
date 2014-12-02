@@ -103,8 +103,9 @@
 	                icon="#{wiSkin.imageFolder}/nivelTree.gif"
 	                iconLeaf="#{wiSkin.imageFolder}/file.gif"
 	                clearRender="@this"
+	                required="true"
 	                label="#{eppmessages['unidadeDecisoraMonocratica.localizacao']}" 
-                    styleClass="#{empty item.entity.estruturaFilho ? 'tree-notselectable' : ''}"/>
+                    styleClass="#{empty item.entity.estruturaFilho ? 'tree-notselectable' : ''}" />
                 
              <wi:selectSituacaoRadio
 	               	id="ativo"
@@ -175,7 +176,7 @@
 	         </rich:panel>
 	         
 	         <ui:define name="buttons">
-	         	<wi:commandButtonSave execute="nomeDecoration, ativoDecoration"/>
+	         	<wi:commandButtonSave />
                 <wi:commandButtonNew />
 	         </ui:define>
 	         

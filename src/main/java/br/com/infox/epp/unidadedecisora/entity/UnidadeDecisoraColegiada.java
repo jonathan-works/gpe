@@ -58,6 +58,7 @@ public class UnidadeDecisoraColegiada implements Serializable {
 	@OrderBy("unidadeDecisoraMonocratica ASC")
 	private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 	
+	@NotNull
 	@OneToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="id_localizacao", nullable=false)
 	private Localizacao localizacao;
