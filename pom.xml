@@ -407,10 +407,10 @@
           <execution>
             <id>css</id>
             <configuration>
-              <sourceDirectory>${project.basedir}/src/main/less/static</sourceDirectory>
+              <sourceDirectory>${project.basedir}/src/main/webapp/WEB-INF/less</sourceDirectory>
               <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
               <watch>false</watch>
-              <compress>false</compress>
+              <compress>true</compress>
               <force>false</force>
               <outputFileFormat>{fileName}.css</outputFileFormat>
               <excludes>
