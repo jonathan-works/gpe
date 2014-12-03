@@ -450,8 +450,8 @@
               <sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
               <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
               <watch>false</watch>
-              <compress>true</compress>
-              <force>true</force>
+              <compress>${desenvolvimento}</compress>
+              <force>${desenvolvimento}</force>
               <outputFileFormat>{fileName}.css</outputFileFormat>
               <excludes>
                 <exclude>*.import.less</exclude>
