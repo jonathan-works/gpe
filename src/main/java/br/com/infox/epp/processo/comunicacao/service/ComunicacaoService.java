@@ -276,6 +276,8 @@ public class ComunicacaoService {
 	
 	public static final String DATA_CIENCIA = "dataCiencia";
 	public static final String DATA_CUMPRIMENTO = "dataCumprimento";
+	public static final String RESPONSAVEL_CIENCIA = "responsavelCiencia";
+	public static final String DOCUMENTO_COMPROVACAO_CIENCIA = "documentoComprovacaoCiencia";
 	
 	// Variáveis
 	public static final String NOME_DESTINATARIO = "nomeDestinatarioComunicacao";

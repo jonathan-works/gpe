@@ -7,8 +7,85 @@
     xmlns:a="http://richfaces.org/a4j"
     xmlns:rich="http://richfaces.org/rich">
 
-	<f:subview id="comunicacaoTab">
-		<ui:include src="#{comunicacaoAction.faceletPath}" />
-	</f:subview>
-    
+	<wi:commandButton id="criarComunicacao" value="Criar Comunicação"
+		onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{comunicacaoAction.jbpmProcessId}','1024'); hideLoading(); return false;" 
+		rendered="#{s:hasRole('usuarioInterno')}" />
+	<rich:collapsiblePanel header="Comunicações" switchType="client" id="comunicacoes">
+		<ui:repeat var="modeloComunicacao" value="#{comunicacaoAction.comunicacoesDoProcesso}">
+			<rich:panel header="Comunicação - #{modeloComunicacao.tipoComunicacao.descricao}">
+				<rich:dataTable value="#{comunicacaoAction.getDestinatarios(modeloComunicacao)}" 
+					var="bean" styleClass="dtable rf-dt-crud">
+					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
+						<h:form>
+							<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" render="painelCiencia" 
+								execute="@this" limitRender="true" rendered="#{destinatario.dataConfirmacao eq '-'}">
+								<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="Informar Ciência" />
+							</a:commandLink>
+							<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
+								render="painelProrrogacaoPrazo, pageBodyDialogMessage" execute="@this" limitRender="true">
+								<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="Prorrogação de Prazo" />
+							</a:commandLink>
+						</h:form>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Destinatário</f:facet>
+						<h:outputText value="#{bean.nome}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Meio de Expedição</f:facet>
+						<h:outputText value="#{bean.meioExpedicao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Data de Envio</f:facet>
+						<h:outputText value="#{bean.dataEnvio}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Data de Confirmação</f:facet>
+						<h:outputText value="#{bean.dataConfirmacao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Confirmado Por</f:facet>
+						<h:outputText value="#{bean.responsavelConfirmacao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Prazo de Atendimento</f:facet>
+						<h:outputText value="#{bean.prazoAtendimento}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Prazo Final</f:facet>
+						<h:outputText value="#{bean.prazoFinal}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Documentos</f:facet>
+					</rich:column>
+				</rich:dataTable>
+			</rich:panel>
+		</ui:repeat>
+	</rich:collapsiblePanel>
+    <s:div id="painelCiencia">
+    	<rich:panel header="Informar Ciência - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
+    		rendered="#{comunicacaoAction.ciencia}">
+    		<h:form>
+    			<wi:inputDate past="true" id="dataCiencia" required="true" label="Data Ciência" 
+    				value="#{comunicacaoAction.dataCiencia}"/>
+    			<wi:selectOneMenuEntity id="classificacaoCiencia" required="true" label="Classificação de Documento"
+    				showLabelSelecione="true" value="#{comunicacaoAction.classificacaoDocumento}"
+    				disabled="#{comunicacaoAction.classificacoesDocumento.size eq 1}"
+    				items="#{comunicacaoAction.classificacoesDocumento}"/>
+    			<wi:fileUpload id="documentoComprovacaoCiencia" />
+    			<wi:commandButton id="gravar" value="Gravar" action="comunicacaoAction.darCiencia()" 
+    				reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"/>
+    		</h:form>
+    	</rich:panel>
+    </s:div>
+    <s:div id="painelProrrogacaoPrazo">
+    	<rich:panel header="Prorrogação de Prazo - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
+    		rendered="#{comunicacaoAction.prorrogacaoPrazo}">
+    		<h:form>
+    			<wi:outputText id="classificacaoProrrogacao" label="Classificação de Documento"
+    				value="#{comunicacaoAction.classificacaoDocumento}"/>
+    			<wi:fileUpload id="documentoProrrogacaoPrazo" />
+    		</h:form>
+    	</rich:panel>
+    </s:div>
 </ui:composition>

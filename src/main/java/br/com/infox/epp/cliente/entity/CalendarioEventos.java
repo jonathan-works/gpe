@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -21,9 +23,13 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.cliente.query.CalendarioEventosQuery;
 
 @Entity
 @Table(name = CalendarioEventos.TABLE_NAME)
+@NamedQueries({
+	@NamedQuery(name = CalendarioEventosQuery.GET_BY_DATA, query = CalendarioEventosQuery.GET_BY_DATA_QUERY)
+})
 public class CalendarioEventos implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_calendario_eventos";

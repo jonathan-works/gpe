@@ -31,7 +31,9 @@ import br.com.infox.epp.processo.entity.Processo;
 @Entity
 @Table(name = "tb_modelo_comunicacao")
 @NamedQueries({
-	@NamedQuery(name = ModeloComunicacaoQuery.IS_EXPEDIDA, query = ModeloComunicacaoQuery.IS_EXPEDIDA_QUERY)
+	@NamedQuery(name = ModeloComunicacaoQuery.IS_EXPEDIDA, query = ModeloComunicacaoQuery.IS_EXPEDIDA_QUERY),
+	@NamedQuery(name = ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO, query = ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO_QUERY),
+	@NamedQuery(name = ModeloComunicacaoQuery.LIST_BY_PROCESSO, query = ModeloComunicacaoQuery.LIST_BY_PROCESSO_QUERY)
 })
 public class ModeloComunicacao implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -46,11 +48,11 @@ public class ModeloComunicacao implements Serializable {
 	@JoinColumn(name = "id_tipo_comunicacao", nullable = false)
 	private TipoComunicacao tipoComunicacao;
 	
-	@Column(name = "ds_comunicacao", nullable = false)
+	@Column(name = "ds_comunicacao")
 	private String comunicacao;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "id_classificacao_documento", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_classificacao_documento")
 	private ClassificacaoDocumento classificacaoComunicacao;
 	
 	@NotNull

@@ -14,6 +14,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -41,6 +42,7 @@ import com.lowagie.text.pdf.PdfReader;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(DocumentoUploader.NAME)
+@AutoCreate
 public class DocumentoUploader extends DocumentoCreator implements FileUploadListener, Serializable {
 
 	private static final long serialVersionUID = 1L;
