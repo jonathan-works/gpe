@@ -400,6 +400,46 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <configuration>
+              <classifier>${db.classifier}.${dep.classifier}</classifier>
+              <attachClasses>true</attachClasses>
+              <webResources>
+                <resource>
+                  <directory>${basedir}/profiles/${db.classifier}</directory>
+                  <filtering>true</filtering>
+                  <targetPath>WEB-INF/classes</targetPath>
+                  <includes>
+                    <include>seam.quartz.properties</include>
+                  </includes>
+                </resource>
+                <resource>
+                  <directory>${basedir}/src/main/webapp</directory>
+                  <filtering>false</filtering>
+                  <excludes>
+                    <exclude>WEB-INF/web.xml</exclude>
+                    <exclude>WEB-INF/components.xml</exclude>
+                  </excludes>
+                </resource>
+                <resource>
+                  <directory>${basedir}/src/main/webapp</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>WEB-INF/web.xml</include>
+                    <include>WEB-INF/components.xml</include>
+                  </includes>
+                </resource>
+              </webResources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.lesscss</groupId>
         <artifactId>lesscss-maven-plugin</artifactId>
         <version>1.7.0.1.1</version>
@@ -407,11 +447,11 @@
           <execution>
             <id>css</id>
             <configuration>
-              <sourceDirectory>${project.basedir}/src/main/webapp/WEB-INF/less</sourceDirectory>
+              <sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
               <outputDirectory>${project.basedir}/src/main/webapp/resources/styleSkinInfox</outputDirectory>
               <watch>false</watch>
               <compress>true</compress>
-              <force>false</force>
+              <force>true</force>
               <outputFileFormat>{fileName}.css</outputFileFormat>
               <excludes>
                 <exclude>*.import.less</exclude>
@@ -446,41 +486,6 @@
           </gitDescribe>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <classifier>${db.classifier}.${dep.classifier}</classifier>
-          <attachClasses>true</attachClasses>
-          <webResources>
-            <resource>
-              <directory>${basedir}/profiles/${db.classifier}</directory>
-              <filtering>true</filtering>
-              <targetPath>WEB-INF/classes</targetPath>
-              <includes>
-                <include>seam.quartz.properties</include>
-              </includes>
-            </resource>
-            <resource>
-              <directory>${basedir}/src/main/webapp</directory>
-              <filtering>false</filtering>
-              <excludes>
-                <exclude>WEB-INF/web.xml</exclude>
-                <exclude>WEB-INF/components.xml</exclude>
-              </excludes>
-            </resource>
-            <resource>
-              <directory>${basedir}/src/main/webapp</directory>
-              <filtering>true</filtering>
-              <includes>
-                <include>WEB-INF/web.xml</include>
-                <include>WEB-INF/components.xml</include>
-              </includes>
-            </resource>
-          </webResources>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
   <properties>
@@ -490,19 +495,22 @@
     <epp.datasource.name>EPADataSource</epp.datasource.name>
     <epp.datasourcebin.name>EPADataSourceBin</epp.datasourcebin.name>
     <epp.datasourcequartz.name>EPAQuartzDataSource</epp.datasourcequartz.name>
+    <desenvolvimento>false</desenvolvimento>
+    <log.jbpm>WARNING</log.jbpm>
+    <log.hibernate.sql>ERROR</log.hibernate.sql>
+    <project.stage>Production</project.stage>
+    <dep.classifier>prod</dep.classifier>
+    <hibernate.dialect>br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
+    <quartz.delegate>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</quartz.delegate>
+    <database.type>PostgreSQL</database.type>
+    <db.classifier>postgresql</db.classifier>
   </properties>
   <profiles>
     <profile>
+      <!-- Valores já definidos por padrão. Campo está aqui apenas para manter compatibilidade -->
       <id>producao</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
       <properties>
-        <desenvolvimento>false</desenvolvimento>
-        <log.jbpm>WARNING</log.jbpm>
-        <log.hibernate.sql>ERROR</log.hibernate.sql>
-        <project.stage>Production</project.stage>
-        <dep.classifier>prod</dep.classifier>
+
       </properties>
     </profile>
     <profile>
@@ -525,15 +533,10 @@
       </properties>
     </profile>
     <profile>
+      <!-- Valores já definidos por padrão. Campo está aqui apenas para manter compatibilidade -->
       <id>postgresql</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
       <properties>
-        <hibernate.dialect>br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
-        <quartz.delegate>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</quartz.delegate>
-        <database.type>PostgreSQL</database.type>
-        <db.classifier>postgresql</db.classifier>
+
       </properties>
     </profile>
     <profile>
