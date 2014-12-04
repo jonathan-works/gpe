@@ -14,8 +14,6 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
@@ -66,6 +64,7 @@ import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(ModeloComunicacaoAction.NAME)
@@ -116,7 +115,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	private ProcessoManager processoManager;
 	
 	private ModeloComunicacao modeloComunicacao;
-	private org.jbpm.graph.exe.ProcessInstance processInstance;
+	private Long processInstanceId;
 	
 	private List<TipoComunicacao> tiposComunicacao;
 	private List<ClassificacaoDocumento> classificacoes;
@@ -131,19 +130,19 @@ public class ModeloComunicacaoAction implements Serializable {
 	private boolean processoPossuiRelator;
 	private Boolean expedida;
 	private DestinatarioModeloComunicacao destinatario;
-	private boolean inTask;
+	private boolean inTask = false;
 	
 	@Create
 	public void init() {
-		String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("jbpmProcessId");
-		if (id != null) {
-			processInstance = ManagedJbpmContext.instance().getProcessInstance(Long.valueOf(id));
-			inTask = false;
-		} else {
-			processInstance = ProcessInstance.instance();
+		String idJbpm = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("jbpmProcessId");
+		String idModelo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idModeloComunicacao");
+		if (idJbpm != null) { // Nova comunicação fora da aba de saída
+			processInstanceId = Long.valueOf(idJbpm);
+		} else if (idModelo == null) { // Nova comunicação dentro da aba de saída
+			processInstanceId = Long.valueOf(JbpmUtil.getProcesso().getIdJbpm());
 			inTask = true;
 		}
-		initModelo();
+		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
 		initLists();
 		initLocalizacaoRaiz();
 		initClassificacoes();
@@ -190,20 +189,22 @@ public class ModeloComunicacaoAction implements Serializable {
 		}
 	}
 
-	private void initModelo() {
-		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
-		Long idModeloComunicacao = null;
-		if (taskInstance != null) {
-			ContextInstance context = processInstance.getContextInstance();
-			Token taskToken = taskInstance.getToken();
-			idModeloComunicacao = (Long) context.getVariable("idModeloComunicacao", taskToken);
+	private void initModelo(Long idModelo) {
+		if (idModelo == null) { // Nova comunicação
+			org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
+			if (taskInstance != null) { // Nova comunicação na aba de saída
+				ContextInstance context = taskInstance.getContextInstance();
+				Token taskToken = taskInstance.getToken();
+				idModelo = (Long) context.getVariable("idModeloComunicacao", taskToken);
+			}
 		}
-		if (idModeloComunicacao == null) {
+		if (idModelo == null) { // Nova Comunicação fora da aba de saída
 			this.modeloComunicacao = new ModeloComunicacao();
-			this.modeloComunicacao.setProcesso(processoManager.getProcessoByNumero(processoManager.getNumeroProcessoByIdJbpm(processInstance.getId())));
-		} else {
-			this.modeloComunicacao = modeloComunicacaoManager.find(idModeloComunicacao);
+			this.modeloComunicacao.setProcesso(processoManager.getProcessoByNumero(processoManager.getNumeroProcessoByIdJbpm(processInstanceId)));
+		} else { // Comunicação existente
+			this.modeloComunicacao = modeloComunicacaoManager.find(idModelo);
 			setFinalizada(modeloComunicacao.getFinalizada() != null ? modeloComunicacao.getFinalizada() : false);
+			this.processInstanceId = this.modeloComunicacao.getProcesso().getIdJbpm();
 		}
 	}
 	
@@ -245,7 +246,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	private void setIdModeloVariable(Long id) {
 		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
 		if (taskInstance != null) {
-			ContextInstance context = processInstance.getContextInstance();
+			ContextInstance context = taskInstance.getContextInstance();
 			Token taskToken = taskInstance.getToken();
 			context.setVariable("idModeloComunicacao", id, taskToken);
 		}
