@@ -49,7 +49,7 @@ public class ModeloComunicacao implements Serializable {
 	private TipoComunicacao tipoComunicacao;
 	
 	@Column(name = "ds_comunicacao")
-	private String comunicacao;
+	private String textoComunicacao;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_classificacao_documento")
@@ -162,11 +162,11 @@ public class ModeloComunicacao implements Serializable {
 		this.modeloDocumento = modeloDocumento;
 	}
 	
-	public String getComunicacao() {
-		return comunicacao;
+	public String getTextoComunicacao() {
+		return textoComunicacao;
 	}
 	
-	public void setComunicacao(String comunicacao) {
-		this.comunicacao = comunicacao;
+	public void setTextoComunicacao(String textoComunicacao) {
+		this.textoComunicacao = textoComunicacao;
 	}
 }

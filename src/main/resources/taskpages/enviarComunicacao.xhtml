@@ -20,7 +20,7 @@
 					<a:ajax event="change" />
 				</wi:selectOneMenuEntity>
 				<div />
-				<h:commandButton action="#{modeloComunicacaoAction.download()}" value="Visualizar Comunicação" rendered="#{not empty modeloComunicacaoAction.modeloComunicacao.comunicacao}" 
+				<h:commandButton action="#{modeloComunicacaoAction.download()}" value="Visualizar Comunicação" rendered="#{not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}" 
 						immediate="true"/>
 			</h:form>
 			<rich:panel header="#{eppmessages['comunicacao.destinatarios']}" id="destinatariosPanel">
@@ -114,7 +114,7 @@
 				</h:form>
 			</rich:panel>
 			<h:form id="comunicacaoDestinatarioForm">
-				<rich:collapsiblePanel switchType="client" rendered="#{not empty modeloComunicacaoAction.destinatario}" 
+				<rich:collapsiblePanel switchType="client" rendered="#{not empty modeloComunicacaoAction.destinatario and not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}" 
 					header="Comunicação - #{comunicacao.destinatario.nome}">
 					<wi:editor id="comunicacao" readonly="true" value="#{modeloComunicacaoAction.destinatario.comunicacao.modeloDocumento}" />
 					<s:div id="assinatura_pers">
@@ -223,7 +223,7 @@
 				   		</s:div>
 					</s:div>
 					<s:div id="comunicacaoEditorDiv">
-						<wi:editor id="comunicacao" value="#{modeloComunicacaoAction.modeloComunicacao.comunicacao}" />
+						<wi:editor id="comunicacao" value="#{modeloComunicacaoAction.modeloComunicacao.textoComunicacao}" />
 					</s:div>
 				</s:div>
 				<s:div id="responsaveisAssinatura">

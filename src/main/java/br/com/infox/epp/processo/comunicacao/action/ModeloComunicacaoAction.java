@@ -210,7 +210,6 @@ public class ModeloComunicacaoAction implements Serializable {
 	public void gravar() {
 		try {
 			validarGravacao();
-			modeloComunicacao.setFinalizada(isFinalizada());
 			
 			if (modeloComunicacao.getId() == null) {
 				modeloComunicacaoManager.persist(modeloComunicacao);
@@ -368,10 +367,10 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void assignModeloDocumento() {
 		if (modeloComunicacao.getModeloDocumento() == null) {
-			modeloComunicacao.setComunicacao("");
+			modeloComunicacao.setTextoComunicacao("");
 			return;
 		}
-		modeloComunicacao.setComunicacao(modeloComunicacao.getModeloDocumento().getModeloDocumento());
+		modeloComunicacao.setTextoComunicacao(modeloComunicacao.getModeloDocumento().getModeloDocumento());
 	}
 	
 	public void gerenciarRelator() {

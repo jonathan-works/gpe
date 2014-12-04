@@ -104,11 +104,13 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public String getComunicacao() {
 		if (comunicacao == null) {
-			String modeloDocumento = modeloComunicacao.getComunicacao();
-			if (destinatario == null) {
-				comunicacao = modeloDocumento;
-			} else {
-				comunicacao = comunicacaoService.evaluateComunicacao(destinatario);
+			String modeloDocumento = modeloComunicacao.getTextoComunicacao();
+			if (modeloDocumento != null) {
+				if (destinatario == null) {
+					comunicacao = modeloDocumento;
+				} else {
+					comunicacao = comunicacaoService.evaluateComunicacao(destinatario);
+				}
 			}
 		}
 		return comunicacao;
