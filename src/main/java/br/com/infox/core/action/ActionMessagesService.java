@@ -57,6 +57,9 @@ public class ActionMessagesService implements Serializable {
             return ret;
         } else {
             String pattern = Messages.resolveMessage("entity.error.save");
+            if (!pattern.contains("{")) {
+            	pattern = "{0}";
+            }
             if (daoException.getMessage() != null) {
                 messages.add(StatusMessage.Severity.ERROR, format(pattern, daoException.getMessage()), daoException);
             } else {
