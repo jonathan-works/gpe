@@ -26,14 +26,13 @@ Infox.CertDig.Constant.JsonParameter = {
 	COMMAND : "cmd",
 	DATA : "data",
 
-	TEXT : "text",
-	CERT_CHAIN : "login:certChain",
-	SIGNATURE : "login:signature"
+	TEXT : "text"
 };
 
 Infox.CertDig.Constant.Command = {
 	CONNECTION_OPENED : "CONNECTION_OPENED",
 	SIGN_LOGIN : "SIGN_LOGIN",
+	SIGN_DOCUMENT : "SIGN_DOCUMENT",
 	JS_ACTION : "JS_ACTION",
 	CREDENTIALS : "CREDENTIALS",
 	QUIT : "QUIT",

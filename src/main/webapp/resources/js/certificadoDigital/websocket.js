@@ -3,7 +3,7 @@
  * @description The user has clicked on the download button of the JNLP file.
  * 
  */
-function userClickedOnDownloadJNPLButton() {
+Infox.CertDig.userClickedOnDownloadJNPLButton = function() {
 	try {
 		// 01 - It creates the object that knows how to handle WebSocket
 		// connections.
@@ -172,9 +172,15 @@ Infox.CertDig.Connection = function() {
 
 		switch (message.cmd) {
 		case Infox.CertDig.Constant.Command.CONNECTION_OPENED:
-			// 01 - Start the Java code to read the smart card.
-			sendSignLogin();
+			// 01 - This will inform which screen to open on the smart card
+			// reader.
+			var loginMode = Infox.CertDig.Constant.Parameter.LOGIN_MODE;
 
+			if (loginMode) {
+				sendSignLogin();
+			} else {
+				sendAssignDocument();
+			}
 			break;
 		case Infox.CertDig.Constant.Command.JS_ACTION:
 			runJavaScript(message.data);
@@ -196,7 +202,34 @@ Infox.CertDig.Connection = function() {
 	 */
 	function sendSignLogin() {
 		sendMessage(Infox.CertDig.Constant.JsonParameter.TEXT,
-				Infox.CertDig.Constant.Command.SIGN_LOGIN, "");
+				Infox.CertDig.Constant.Command.SIGN_LOGIN,
+				getInitialParameters());
+	}
+
+	/**
+	 * Send the command to sign a document.
+	 */
+	function sendAssignDocument() {
+		sendMessage(Infox.CertDig.Constant.JsonParameter.TEXT,
+				Infox.CertDig.Constant.Command.SIGN_DOCUMENT,
+				getInitialParameters());
+	}
+
+	function getInitialParameters() {
+		var debug = Infox.CertDig.Constant.Parameter.DEBUG;
+		var useBase64Function = Infox.CertDig.Constant.Parameter.USE_BASE64_FUNCTION;
+		var useProviderDLL = Infox.CertDig.Constant.Parameter.USE_PROVIDER_DLL;
+
+		var documentMD5 = eval(Infox.CertDig.Constant.Parameter.GET_DATA_FUNCTION);
+
+		var data = JSON.stringify({
+			debug : debug,
+			useBase64Function : useBase64Function,
+			useProviderDLL : useProviderDLL,
+			documentMD5 : documentMD5
+		});
+
+		return data;
 	}
 
 	/**
@@ -205,49 +238,6 @@ Infox.CertDig.Connection = function() {
 	function sendQuit() {
 		sendMessage(Infox.CertDig.Constant.JsonParameter.TEXT,
 				Infox.CertDig.Constant.Command.QUIT, "");
-	}
-
-	function runJavaScript(data) {
-		switch (data) {
-		case Infox.CertDig.Constant.JSAction.actionPre:
-			infox.showLoading();
-			break;
-		case Infox.CertDig.Constant.JSAction.actionPos:
-			infox.hideLoading();
-			break;
-		case Infox.CertDig.Constant.JSAction.actionPosOk:
-			// Now, the server can be shutdown.
-			sendQuit();
-
-			// Submit the form with the informed credentials.
-			submitForm();
-			break;
-		case Infox.CertDig.Constant.JSAction.actionPosError:
-			break;
-		default:
-			logInfo("runJavaScript: " + data);
-			break;
-		}
-
-	}
-
-	function receivedCredentials(data) {
-		// 01 - Get the reference to the form fields;
-		var certChain = getById(Infox.CertDig.Constant.JsonParameter.CERT_CHAIN);
-		var signature = getById(Infox.CertDig.Constant.JsonParameter.SIGNATURE);
-
-		// 02 - Parse the json message.
-		var credentials = JSON.parse(data);
-
-		// 03 - Set the value of the form fields;
-		setValue(certChain, credentials.certChain);
-		setValue(signature, credentials.signature);
-	}
-
-	function setValue(element, value) {
-		if (null != element) {
-			element.value = value;
-		}
 	}
 
 	function sendMessage(dataType, command, dataValue) {
@@ -268,6 +258,54 @@ Infox.CertDig.Connection = function() {
 		}
 
 		logInfo(dataValue);
+	}
+
+	function runJavaScript(data) {
+		switch (data) {
+		case Infox.CertDig.Constant.JSAction.actionPre:
+			functionToCall(Infox.CertDig.Constant.Parameter.FUNCTION_PRE_SIGN); // infox.showLoading();
+			break;
+		case Infox.CertDig.Constant.JSAction.actionPos:
+			functionToCall(Infox.CertDig.Constant.Parameter.FUNCTION_POS_SIGN); // infox.hideLoading();
+			break;
+		case Infox.CertDig.Constant.JSAction.actionPosOk:
+			// Now, the server can be shutdown.
+			sendQuit();
+
+			// Submit the form with the informed credentials.
+			functionToCall(Infox.CertDig.Constant.Parameter.FUNCTION_POS_SIGN_OK); // submitForm();
+			break;
+		case Infox.CertDig.Constant.JSAction.actionPosError:
+			functionToCall(Infox.CertDig.Constant.Parameter.FUNCTION_POS_SIGN_ERROR); // ...
+			break;
+		default:
+			logInfo("runJavaScript: " + data);
+			break;
+		}
+	}
+
+	function functionToCall(value) {
+		if ((null != value) && ("" != value)) {
+			eval(value);
+		}
+	}
+
+	function receivedCredentials(data) {
+		// 01 - Get the reference to the form fields;
+		var certChain = getById(Infox.CertDig.Constant.Parameter.CERTIFICATION_CHAIN_FIELD);
+		var signature = getById(Infox.CertDig.Constant.Parameter.SIGNATURE_FIELD);
+		// 02 - Parse the json message.
+		var credentials = JSON.parse(data);
+
+		// 03 - Set the value of the form fields;
+		setValue(certChain, credentials.certChain);
+		setValue(signature, credentials.signature);
+	}
+
+	function setValue(element, value) {
+		if (null != element) {
+			element.value = value;
+		}
 	}
 
 	function getById(id) {

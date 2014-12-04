@@ -6,6 +6,10 @@ version="2.0">
 
     <namespace>http://www.itx.com.br/jsf</namespace>
     <tag>
+        <tag-name>certificadoDigital</tag-name>
+        <source>tags/form/fields/certificadoDigital.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>appletAssinatura</tag-name>
         <source>tags/form/fields/appletAssinatura.xhtml</source>
     </tag>
