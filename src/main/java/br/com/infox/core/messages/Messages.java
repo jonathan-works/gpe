@@ -31,7 +31,7 @@ public final class Messages {
         if (result==null || result.trim().isEmpty()) {
             result = property;
         }
-        return property;
+        return result;
     }
     
     public final static String resolveMessage(String property){
