@@ -1,5 +1,12 @@
 package br.com.infox.epp.julgamento.entity;
 
+import static br.com.infox.epp.julgamento.query.SalaQuery.LIST_SALA_ATIVO_ORDER_BY_NOME;
+import static br.com.infox.epp.julgamento.query.SalaQuery.LIST_SALA_ATIVO_ORDER_BY_NOME_QUERY;
+import static br.com.infox.epp.julgamento.query.SalaQuery.LIST_SALA_ORDER_BY_NOME;
+import static br.com.infox.epp.julgamento.query.SalaQuery.LIST_SALA_ORDER_BY_NOME_QUERY;
+import static br.com.infox.epp.julgamento.query.SalaQuery.LIST_SALA_FILTER_BY_COLEGIADA;
+import static br.com.infox.epp.julgamento.query.SalaQuery.LIST_SALA_FILTER_BY_COLEGIADA_QUERY;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,6 +19,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -24,6 +33,11 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 
 @Entity
 @Table(name = "tb_sala")
+@NamedQueries(value = {
+		@NamedQuery(name = LIST_SALA_ORDER_BY_NOME, query = LIST_SALA_ORDER_BY_NOME_QUERY),
+		@NamedQuery(name = LIST_SALA_ATIVO_ORDER_BY_NOME, query = LIST_SALA_ATIVO_ORDER_BY_NOME_QUERY),
+		@NamedQuery(name = LIST_SALA_FILTER_BY_COLEGIADA, query = LIST_SALA_FILTER_BY_COLEGIADA_QUERY)
+})
 public class Sala implements Serializable {
 
     @Id
@@ -31,23 +45,29 @@ public class Sala implements Serializable {
     @GeneratedValue(generator = "SalaGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name="id_sala", unique = true, nullable = false)
     private Long idSala;
+    
     @NotNull
     @Size(min=1,max=LengthConstants.DESCRICAO_MEDIA)
     @Column(name = "nm_sala", nullable = false, unique=true, length=LengthConstants.DESCRICAO_MEDIA)
     private String nome;
+    
     @NotNull
     @Size(min=1,max=LengthConstants.DESCRICAO_MEDIA)
     @Column(name = "ds_endereco", nullable = false, unique=true, length=LengthConstants.DESCRICAO_MEDIA)
     private String endereco;
+    
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "id_uni_decisora_colegiada", nullable=false)
     private UnidadeDecisoraColegiada unidadeDecisoraColegiada;
+    
     @NotNull
     @Column(name = "in_ativo", nullable = false)
     private Boolean ativo;
+    
     @NotNull
     @Column(name = "in_fora_expediente", nullable = false)
     private Boolean foraExpediente;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "sala", cascade = {CascadeType.REMOVE})
     private List<SalaTurno> turnos;
     
@@ -115,6 +135,11 @@ public class Sala implements Serializable {
             sb.append(" ; ");
         }
         return sb.toString();
+    }
+    
+    @Override
+    public String toString() {
+    	return nome;
     }
     
     @Override
