@@ -10,7 +10,25 @@
 	<wi:commandButton id="criarComunicacao" value="Criar Comunicação"
 		onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{comunicacaoAction.jbpmProcessId}','1024'); hideLoading(); return false;" 
 		rendered="#{s:hasRole('usuarioInterno')}" />
-	<rich:collapsiblePanel header="Comunicações" switchType="client" id="comunicacoes">
+	<h:form>
+		<a:jsFunction name="reloadRascunhos" render="rascunhos" limitRender="true" />
+	</h:form>
+	<rich:collapsiblePanel switchType="client" id="rascunhos" header="Rascunhos">
+		<wi:dataTable id="rascunhosTable" bean="#{modeloComunicacaoRascunhoList}" showSearchForm="false"
+			values="#{modeloComunicacaoRascunhoList.list(5)}" rowId="#{row.id}">
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<h:form>
+					<a:commandLink execute="@this"
+						onclick="infox.openPopUp('comunicacao#{row.id}', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?idModeloComunicacao=#{row.id}','1024'); return false;">
+						<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}" />
+					</a:commandLink>
+				</h:form>
+			</ui:define>
+			<wi:columnOutputText columnHeader="Tipo de Comunicação" value="#{row.tipoComunicacao.descricao}"/>
+		</wi:dataTable>
+	</rich:collapsiblePanel>
+	<rich:collapsiblePanel header="Comunicações" switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 		<ui:repeat var="modeloComunicacao" value="#{comunicacaoAction.comunicacoesDoProcesso}">
 			<rich:panel header="Comunicação - #{modeloComunicacao.tipoComunicacao.descricao}">
 				<rich:dataTable value="#{comunicacaoAction.getDestinatarios(modeloComunicacao)}" 

@@ -258,7 +258,8 @@
 		        </s:div>
 				<wi:commandButton id="gravar" value="#{eppmessages['crud.update']}" 
 					action="modeloComunicacaoAction.gravar" reRender="comunicacaoDiv, pageBodyDialogMessage"
-					rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"/>
+					rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
+					oncomplete="if (opener &amp;&amp; opener['reloadRascunhos']) opener['reloadRascunhos']();"/>
 				<s:fragment rendered="#{modeloComunicacaoAction.expedida and modeloComunicacaoAction.inTask}">
 					<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
 					<ui:include src="#{modeloComunicacaoAction.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml' : ''}" />
