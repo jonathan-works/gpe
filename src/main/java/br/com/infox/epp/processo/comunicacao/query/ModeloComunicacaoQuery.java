@@ -6,6 +6,7 @@ public interface ModeloComunicacaoQuery {
 	String PARAM_MODELO_COMUNICACAO = "modeloComunicacao";
 	String PARAM_PROCESSO = "processo";
 	String PARAM_ID_DESTINATARIO = "idDestinatario";
+	String PARAM_IDENTIFICADORES_PAPEL = "identificadoresPapel";
 	
 	String IS_EXPEDIDA = "ModeloComunicacao.isExpedida";
 	String IS_EXPEDIDA_QUERY = "select 1 from DestinatarioModeloComunicacao d where"
@@ -23,4 +24,11 @@ public interface ModeloComunicacaoQuery {
 			+ "exists (select 1 from MetadadoProcesso m where m.processo = o and "
 			+ "m.metadadoType = '" + ComunicacaoService.DESTINATARIO + "' and "
 			+ "m.valor = :" + PARAM_ID_DESTINATARIO + ")";
+	
+	String GET_DOCUMENTO_INCLUSO_POR_PAPEL = "ModeloComunicacao.getDocumentoInclusoPorPapel";
+	String GET_DOCUMENTO_INCLUSO_POR_PAPEL_QUERY = "select o from DocumentoModeloComunicacao o "
+			+ "inner join o.documento d inner join d.perfilTemplate pt inner join pt.papel p where "
+			+ "o.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO + " "
+			+ "and p.identificador in :" + PARAM_IDENTIFICADORES_PAPEL + " "
+			+ "order by d.dataInclusao desc";
 }

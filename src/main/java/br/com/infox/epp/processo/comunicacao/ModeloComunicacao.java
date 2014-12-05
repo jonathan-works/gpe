@@ -33,7 +33,8 @@ import br.com.infox.epp.processo.entity.Processo;
 @NamedQueries({
 	@NamedQuery(name = ModeloComunicacaoQuery.IS_EXPEDIDA, query = ModeloComunicacaoQuery.IS_EXPEDIDA_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO, query = ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO_QUERY),
-	@NamedQuery(name = ModeloComunicacaoQuery.LIST_BY_PROCESSO, query = ModeloComunicacaoQuery.LIST_BY_PROCESSO_QUERY)
+	@NamedQuery(name = ModeloComunicacaoQuery.LIST_BY_PROCESSO, query = ModeloComunicacaoQuery.LIST_BY_PROCESSO_QUERY),
+	@NamedQuery(name = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL, query = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL_QUERY)
 })
 public class ModeloComunicacao implements Serializable {
 	private static final long serialVersionUID = 1L;

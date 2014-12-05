@@ -2,12 +2,9 @@ package br.com.infox.epp.processo.comunicacao.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +23,7 @@ import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -57,7 +55,6 @@ import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
-import br.com.infox.seam.security.operation.PopulateRoleMembersListOperation;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfCopy;
@@ -100,6 +97,8 @@ public class ComunicacaoService {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@In
 	private CalendarioEventosManager calendarioEventosManager;
+	@In
+	private PapelManager papelManager;
 	
 	public void expedirComunicacao(DestinatarioModeloComunicacao destinatario) throws DAOException {
 		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
@@ -191,30 +190,8 @@ public class ComunicacaoService {
 				DocumentoBin comunicacao = documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacao);
 				destinatario.setComunicacao(comunicacao);
 			}
-		} else {
-			List<DocumentoModeloComunicacao> documentos = new ArrayList<>(modeloComunicacao.getDocumentos());
-			Collections.sort(documentos, new Comparator<DocumentoModeloComunicacao>() {
-				@Override
-				public int compare(DocumentoModeloComunicacao o1, DocumentoModeloComunicacao o2) {
-					return o2.getDocumento().getDataInclusao().compareTo(o1.getDocumento().getDataInclusao());
-				}
-			});
-			List<Principal> roles = new ArrayList<>();
-			new PopulateRoleMembersListOperation("usuarioInterno", roles).run();
-			List<String> papeisUsuarioInterno = new ArrayList<>();
-			for (Principal role : roles) {
-				papeisUsuarioInterno.add(role.getName());
-			}
-			boolean existeDocumentoInclusoPorUsuarioInterno = false;
-			for (DocumentoModeloComunicacao documento : documentos) {
-				if (papeisUsuarioInterno.contains(documento.getDocumento().getPerfilTemplate().getPapel().getIdentificador())) {
-					existeDocumentoInclusoPorUsuarioInterno = true;
-					break;
-				}
-			}
-			if (!existeDocumentoInclusoPorUsuarioInterno) {
-				throw new DAOException("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
-			}
+		} else if (modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisMembros("usuarioInterno"), modeloComunicacao) == null) {
+			throw new DAOException("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
 		}
 		modeloComunicacao.setFinalizada(true);
 		modeloComunicacaoManager.update(modeloComunicacao);
