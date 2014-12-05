@@ -23,6 +23,8 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
@@ -143,19 +145,13 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
         this.fluxoList = fluxoList;
     }
 
-    /**
-     * Item agora é variavel do jbpm
-     * @param processo
-     * @return
-     */
-    @Deprecated
     public String getNaturezaCategoriaItem(Processo processo) {
         NaturezaCategoriaFluxo naturezaCategoriaFluxo = processo.getNaturezaCategoriaFluxo();
-//        Item item = processo.getItemDoProcesso();
-        Item item = null;
-        if (item == null) {
+        MetadadoProcesso metadadoProcesso = processo.getMetadado(MetadadoProcessoType.ITEM_DO_PROCESSO);
+        if (metadadoProcesso == null) {
             return MessageFormat.format("{0}/{1}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria());
         } else {
+        	Item item = metadadoProcesso.getValue();
             return MessageFormat.format("{0}/{1}/{2}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria(), item.getDescricaoItem());
         }
     }
