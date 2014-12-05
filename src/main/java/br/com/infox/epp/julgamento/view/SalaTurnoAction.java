@@ -30,64 +30,71 @@ public class SalaTurnoAction implements Serializable {
     private Sala sala;
     private TurnoHandler turnoHandler;
 
-    public Sala getSala() {
-        return sala;
+    public static final String NAME = "salaTurnoAction";
+
+    private static final int UMA_HORA_EM_MINUTOS = 60;
+
+    private static final long serialVersionUID = 1L;
+
+    private static final Log LOG = Logging.getLog(SalaTurnoAction.class);
+
+    private void createTurnoHandler() {
+        this.turnoHandler = new TurnoHandler(
+                SalaTurnoAction.UMA_HORA_EM_MINUTOS);
+        for (final SalaTurno salaTurno : this.salaTurnoManager
+                .listBySala(this.sala)) {
+            this.turnoHandler.addIntervalo(salaTurno.getDiaSemana(),
+                    salaTurno.getHoraInicio(), salaTurno.getHoraFim());
+        }
     }
 
-    public void setSala(Sala sala) {
-        this.sala = sala;
+    public Sala getSala() {
+        return this.sala;
     }
 
     public TurnoHandler getTurnoHandler() {
-        return turnoHandler;
-    }
-
-    public void setTurnoHandler(TurnoHandler turnoHandler) {
-        this.turnoHandler = turnoHandler;
-    }
-
-    public void newInstance(Sala sala) {
-        this.sala = sala;
-        createTurnoHandler();
-    }
-
-    private void createTurnoHandler() {
-        turnoHandler = new TurnoHandler(UMA_HORA_EM_MINUTOS);
-        for (SalaTurno salaTurno : salaTurnoManager.listBySala(sala)) {
-            turnoHandler.addIntervalo(salaTurno.getDiaSemana(), salaTurno.getHoraInicio(), salaTurno.getHoraFim());
-        }
+        return this.turnoHandler;
     }
 
     public void gravarTurnos() {
         try {
-            salaTurnoManager.removerTurnosAnteriores(sala);
-        } catch (DAOException e) {
-            actionMessagesService.handleDAOException(e);
+            this.salaTurnoManager.removerTurnosAnteriores(this.sala);
+        } catch (final DAOException e) {
+            this.actionMessagesService.handleDAOException(e);
         }
         String resultMessage = "#{eppmessages['salaTurno.erroGravacaoTurno']}";
         try {
             inserirTurnosSelecionados();
             resultMessage = "#{eppmessages['entity_updated']}";
-        } catch (DAOException e) {
-            LOG.error(".inserirTurnosSelecionados()", e);
+        } catch (final DAOException e) {
+            SalaTurnoAction.LOG.error(".inserirTurnosSelecionados()", e);
         }
         FacesMessages.instance().add(resultMessage);
     }
 
     private void inserirTurnosSelecionados() throws DAOException {
-        for (TurnoBean turno : turnoHandler.getTurnosSelecionados()) {
-            SalaTurno salaTurno = new SalaTurno();
-            salaTurno.setSala(sala);
+        for (final TurnoBean turno : this.turnoHandler.getTurnosSelecionados()) {
+            final SalaTurno salaTurno = new SalaTurno();
+            salaTurno.setSala(this.sala);
             salaTurno.setDiaSemana(turno.getDiaSemana());
             salaTurno.setHoraInicio(turno.getHoraInicial());
             salaTurno.setHoraFim(turno.getHoraFinal());
-            salaTurnoManager.persist(salaTurno);
+
+            this.salaTurnoManager.persist(salaTurno);
         }
     }
 
-    public static final String NAME = "salaTurnoAction";
-    private static final int UMA_HORA_EM_MINUTOS = 60;
-    private static final long serialVersionUID = 1L;
-    private static final Log LOG = Logging.getLog(SalaTurnoAction.class);
+    public void newInstance(final Sala sala) {
+        this.sala = sala;
+        createTurnoHandler();
+    }
+
+    public void setSala(final Sala sala) {
+        this.sala = sala;
+    }
+
+    public void setTurnoHandler(final TurnoHandler turnoHandler) {
+        this.turnoHandler = turnoHandler;
+    }
 
 }

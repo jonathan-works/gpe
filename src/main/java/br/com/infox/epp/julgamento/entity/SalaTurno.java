@@ -1,13 +1,8 @@
 package br.com.infox.epp.julgamento.entity;
 
-import static br.com.infox.epp.julgamento.query.SalaTurnoQuery.DELETE_TURNOS_ANTERIORES;
-import static br.com.infox.epp.julgamento.query.SalaTurnoQuery.DELETE_TURNOS_ANTERIORES_QUERY;
-import static br.com.infox.epp.julgamento.query.SalaTurnoQuery.LIST_BY_SALA;
-import static br.com.infox.epp.julgamento.query.SalaTurnoQuery.LIST_BY_SALA_QUERY;
-import static java.text.MessageFormat.format;
-
 import java.io.Serializable;
-import java.sql.Time;
+import java.text.MessageFormat;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,17 +18,20 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.julgamento.query.SalaTurnoQuery;
 import br.com.infox.epp.turno.type.DiaSemanaEnum;
 import br.com.infox.util.time.DateRange;
 
 @Entity
 @Table(name = "tb_sala_turno")
 @NamedQueries(value = {
-        @NamedQuery(name = DELETE_TURNOS_ANTERIORES, query = DELETE_TURNOS_ANTERIORES_QUERY),
-        @NamedQuery(name = LIST_BY_SALA, query = LIST_BY_SALA_QUERY) })
+        @NamedQuery(name = SalaTurnoQuery.DELETE_TURNOS_ANTERIORES, query = SalaTurnoQuery.DELETE_TURNOS_ANTERIORES_QUERY),
+        @NamedQuery(name = SalaTurnoQuery.LIST_BY_SALA, query = SalaTurnoQuery.LIST_BY_SALA_QUERY) })
 public class SalaTurno implements Serializable {
 
     @Id
@@ -50,72 +48,19 @@ public class SalaTurno implements Serializable {
     private Sala sala;
     @Column(name = "dt_hora_inicio", nullable = false)
     @NotNull
-    private Time horaInicio;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date horaInicio;
     @Column(name = "dt_hora_fim", nullable = false)
     @NotNull
-    private Time horaFim;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date horaFim;
     @Transient
     private DateRange periodo = new DateRange();
 
-    public Long getIdSalaTurno() {
-        return idSalaTurno;
-    }
-
-    public void setIdSalaTurno(Long idSalaTurno) {
-        this.idSalaTurno = idSalaTurno;
-    }
-
-    public DiaSemanaEnum getDiaSemana() {
-        return diaSemana;
-    }
-
-    public void setDiaSemana(DiaSemanaEnum diaSemana) {
-        this.diaSemana = diaSemana;
-    }
-
-    public Sala getSala() {
-        return sala;
-    }
-
-    public void setSala(Sala sala) {
-        this.sala = sala;
-    }
-
-    public Time getHoraInicio() {
-        return horaInicio;
-    }
-
-    public void setHoraInicio(Time horaInicio) {
-        this.periodo.setStart(this.horaInicio = horaInicio);
-    }
-
-    public Time getHoraFim() {
-        return horaFim;
-    }
-
-    public void setHoraFim(Time horaFim) {
-        this.periodo.setEnd(this.horaFim = horaFim);
-    }
-
-    public DateRange getPeriodo() {
-        return periodo;
-    }
-
-    public void setPeriodo(DateRange periodo) {
-        this.periodo = periodo;
-    }
+    private static final long serialVersionUID = 1L;
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((idSalaTurno == null) ? 0 : idSalaTurno.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -125,22 +70,77 @@ public class SalaTurno implements Serializable {
         if (!(obj instanceof SalaTurno)) {
             return false;
         }
-        SalaTurno other = (SalaTurno) obj;
-        if (idSalaTurno == null) {
+        final SalaTurno other = (SalaTurno) obj;
+        if (this.idSalaTurno == null) {
             if (other.idSalaTurno != null) {
                 return false;
             }
-        } else if (!idSalaTurno.equals(other.idSalaTurno)) {
+        } else if (!this.idSalaTurno.equals(other.idSalaTurno)) {
             return false;
         }
         return true;
     }
 
-    @Override
-    public String toString() {
-        return format("{0} {1,time,short} - {2,time,short}", diaSemana.getLabel(),
-                horaInicio, horaFim);
+    public DiaSemanaEnum getDiaSemana() {
+        return this.diaSemana;
     }
 
-    private static final long serialVersionUID = 1L;
+    public Date getHoraFim() {
+        return this.horaFim;
+    }
+
+    public Date getHoraInicio() {
+        return this.horaInicio;
+    }
+
+    public Long getIdSalaTurno() {
+        return this.idSalaTurno;
+    }
+
+    public DateRange getPeriodo() {
+        return this.periodo;
+    }
+
+    public Sala getSala() {
+        return this.sala;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = (prime * result)
+                + ((this.idSalaTurno == null) ? 0 : this.idSalaTurno.hashCode());
+        return result;
+    }
+
+    public void setDiaSemana(final DiaSemanaEnum diaSemana) {
+        this.diaSemana = diaSemana;
+    }
+
+    public void setHoraFim(final Date horaFim) {
+        this.periodo.setEnd(this.horaFim = horaFim);
+    }
+
+    public void setHoraInicio(final Date horaInicio) {
+        this.periodo.setStart(this.horaInicio = horaInicio);
+    }
+
+    public void setIdSalaTurno(final Long idSalaTurno) {
+        this.idSalaTurno = idSalaTurno;
+    }
+
+    public void setPeriodo(final DateRange periodo) {
+        this.periodo = periodo;
+    }
+
+    public void setSala(final Sala sala) {
+        this.sala = sala;
+    }
+
+    @Override
+    public String toString() {
+        return MessageFormat.format("{0} {1,time,short} - {2,time,short}",
+                this.diaSemana.getLabel(), this.horaInicio, this.horaFim);
+    }
 }
