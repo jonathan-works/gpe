@@ -5,17 +5,15 @@
 
 	<wi:dataReport
          title="#{eppmessages['sessaoJulgamento.reportTitle']}"
-         columns="7"
-         widths="1 1 1 1 1 1 1"
+         columns="6"
+         widths="1 1 1 1 1 1"
          headerText="#{sessaoJulgamentoList.criteria}">
 				   
 		<wi:reportColumnHeader title="#{eppmessages['sala.colegiado']}" />
 		
-		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.data']}" />
+		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.dataInicio']}" />
 		
-		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.horaInicio']}" />
-		
-		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.horaFim']}" />
+		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.dataFim']}" />
 		
 		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.sala']}" /> 
 		
@@ -27,11 +25,9 @@
 			
 			<wi:reportColumn value="#{row.sala.unidadeDecisoraColegiada}" />
 			
-			<wi:reportColumnDate value="#{row.data}" pattern="dd/MM/yyyy" columnAlign="center"/>
+			<wi:reportColumnDate value="#{row.dataInicio}" pattern="dd/MM/yyyy kk:mm" columnAlign="center"/>
 			
-			<wi:reportColumnDate value="#{row.horaInicio}" pattern="kk:mm" columnAlign="center"/>
-			
-			<wi:reportColumnDate value="#{row.horaFim}" pattern="kk:mm" columnAlign="center"/>
+			<wi:reportColumnDate value="#{row.dataFim}" pattern="dd/MM/yyyy kk:mm" columnAlign="center"/>
 			
 			<wi:reportColumn value="#{row.sala}" />
 			

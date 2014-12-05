@@ -28,7 +28,7 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
     private static final String DOWNLOAD_XLS_NAME = "SessaoJulgamento.xls";
 	 
 	private static final String DEFAULT_EJBQL = "select o from SessaoJulgamento o ";
-	private static final String DEFAULT_ORDER = "nome";
+	private static final String DEFAULT_ORDER = "dataInicio";
 	
 	@In
 	private SalaManager salaManager;
@@ -53,9 +53,8 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
 	
 	@Override
 	protected void addSearchFields() {
-        addSearchField("data", SearchCriteria.DATA_IGUAL);
-        addSearchField("horaInicio", SearchCriteria.DATA_MAIOR_IGUAL);
-        addSearchField("horaFim", SearchCriteria.DATA_MENOR_IGUAL);
+        addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL);
+        addSearchField("dataFim", SearchCriteria.MENOR_IGUAL);
         addSearchField("sala", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
 	}

@@ -5,7 +5,9 @@ import java.util.List;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.suggest.AbstractSuggestBean;
 import br.com.infox.core.type.Displayable;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.julgamento.entity.Sala;
@@ -15,8 +17,10 @@ import br.com.infox.epp.julgamento.manager.SalaManager;
 import br.com.infox.epp.julgamento.manager.SessaoJulgamentoManager;
 import br.com.infox.epp.julgamento.manager.StatusSessaoJulgamentoManager;
 import br.com.infox.epp.julgamento.type.Periodicidade;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
+import br.com.infox.seam.exception.BusinessException;
 
 @Name(SessaoJulgamentoCrudAction.NAME)
 public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgamento, SessaoJulgamentoManager> {
@@ -30,6 +34,8 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 	private UnidadeDecisoraColegiadaManager unidadeDecisoraColegiadaManager;
 	@In
 	private StatusSessaoJulgamentoManager statusSessaoJulgamentoManager;
+	@In
+	private ActionMessagesService actionMessagesService;
 	
 	private List<Sala> salas;
 	private List<UnidadeDecisoraColegiada> colegiadas;
@@ -45,12 +51,37 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 		this.colegiada = Authenticator.instance().getColegiadaLogada();
 	}
 	
+	@Override
+	protected boolean isInstanceValid() {
+		return super.isInstanceValid() && getManager().isInstanceValid(getInstance());
+	}
+	
+	@Override
+	protected void beforeSave() {
+		super.beforeSave();
+		if (isManaged()) { return; }
+		try {
+			getManager().beforeSave(getInstance(), periodicidade, valorPeriodicidade);
+		} catch (BusinessException e) {
+			getMessagesHandler().add(e.getMessage());
+		}
+	}
+	
 	public Periodicidade[] getPeriodicidades() {
 		return Periodicidade.values();
 	}
 	
+	public TipoPeriodicidade[] getTiposPeriodicidade() {
+		return TipoPeriodicidade.values();
+	}
+	
+	public void clearValorPeriodicidade() {
+		setValorPeriodicidade(null);
+	}
+	
 	public void onChangeColegiada() {
 		this.salas = null;
+		getInstance().setSala(null);
 	}
 
 	public List<Sala> getSalas() {
@@ -109,10 +140,38 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 	public void setValorPeriodicidade(Object valorPeriodicidade) {
 		this.valorPeriodicidade = valorPeriodicidade;
 	}
+	
+	public AbstractSuggestBean<PessoaFisica> getSuggestPessoaFisicaBean() {
+		return suggestPessoaFisicaBean;
+	}
+
+	private AbstractSuggestBean<PessoaFisica> suggestPessoaFisicaBean = new AbstractSuggestBean<PessoaFisica>() {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public PessoaFisica load(Object id) {
+			return entityManager.find(PessoaFisica.class, id);
+		}
+
+		@Override
+		public String getEjbql(String typed) {
+			StringBuilder sb = new StringBuilder();
+		    sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idPessoa, (o.cpf || ' - ' ||o.nome)) ");
+		    sb.append("from PessoaFisica o where o.ativo = true ");
+		    if (typed.matches("\\d+")) {
+				sb.append(" o.cpf = :").append(INPUT_PARAMETER).append(" ");
+			} else {
+				sb.append("and lower(o.nome) like lower(concat('%', :").append(INPUT_PARAMETER).append(", '%')) ");
+			}
+		    sb.append("order by o.nome");
+		    return sb.toString();
+		}
+	};
 
 	enum TipoPeriodicidade implements Displayable {
 		
-		D("Até Data"), Q("Quantidade Repetições");
+		D("Data Até"), Q("Quantidade Repetições");
 		
 		private String label;
 		

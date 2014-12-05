@@ -32,23 +32,14 @@ public class SessaoJulgamento implements Serializable {
 	private Long id;
 	
 	@NotNull
-	@Column(name = "nm_sessao_julgamento", nullable = false)
-	private String nome;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "dt_inicio_sessao_julgamento", nullable = false)
+	private Date dataInicio;
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_sessao_julgamento", nullable = false)
-	private Date data;
-	
-	@NotNull
-	@Temporal(TemporalType.TIME)
-	@Column(name = "vl_hora_inicio", nullable = false)
-	private Date horaInicio;
-	
-	@NotNull
-	@Temporal(TemporalType.TIME)
-	@Column(name = "vl_hora_fim", nullable = false)
-	private Date horaFim;
+	@Column(name = "dt_fim_sessao_julgamento", nullable = false)
+	private Date dataFim;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -77,36 +68,20 @@ public class SessaoJulgamento implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public Date getDataInicio() {
+		return dataInicio;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setDataInicio(Date dataInicio) {
+		this.dataInicio = dataInicio;
 	}
 
-	public Date getData() {
-		return data;
+	public Date getDataFim() {
+		return dataFim;
 	}
 
-	public void setData(Date data) {
-		this.data = data;
-	}
-
-	public Date getHoraInicio() {
-		return horaInicio;
-	}
-
-	public void setHoraInicio(Date horaInicio) {
-		this.horaInicio = horaInicio;
-	}
-
-	public Date getHoraFim() {
-		return horaFim;
-	}
-
-	public void setHoraFim(Date horaFim) {
-		this.horaFim = horaFim;
+	public void setDataFim(Date dataFim) {
+		this.dataFim = dataFim;
 	}
 
 	public Sala getSala() {
@@ -141,11 +116,6 @@ public class SessaoJulgamento implements Serializable {
 		this.ativo = ativo;
 	}
 	
-	@Override
-	public String toString() {
-		return nome;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

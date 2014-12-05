@@ -12,11 +12,11 @@
 
     <s:decorate id="#{id}Decoration"
         template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-        rendered="#{wi:get(rendered, true)}">
+        rendered="#{wi:get(rendered, true)}" styleClass="decoration-div">
         <ui:define name="label">#{label}</ui:define>
         <h:selectOneRadio id="#{id}" value="#{value}"
             layout="#{direction}" required="#{required}"
-            disabled="#{disabled}" styleClass="radio">
+            disabled="#{disabled}" styleClass="radio" >
             <s:selectItems
                 value="#{empty items ? value.values() : items}"
                 var="enum" label="#{enum.label}" />
