@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
@@ -44,6 +45,10 @@ public abstract class DAO<T> implements Serializable {
         }
         Class<T> entityClass = getEntityClass();
         return getEntityManager().find(entityClass, id);
+    }
+    
+    public void lock(T entity) {
+    	entityManager.lock(entity, LockModeType.READ);
     }
 
     @SuppressWarnings(UNCHECKED)
