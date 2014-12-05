@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.list;
 
+import java.text.MessageFormat;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -20,9 +21,13 @@ public class ModeloComunicacaoRascunhoList extends EntityList<ModeloComunicacao>
 	public static final String NAME = "modeloComunicacaoRascunhoList";
 	
 	private static final String DEFAULT_EJBQL = "select m.* from tb_modelo_comunicacao m where "
-			+ "m.id_processo = #{modeloComunicacaoRascunhoList.processo.idProcesso} and "
-			+ "not exists (select 1 from jbpm_variableinstance v where v.name_ = 'idModeloComunicacao' and "
-				+ "v.longvalue_ = m.id_modelo_comunicacao)";
+			+ "m.id_processo = #'{'modeloComunicacaoRascunhoList.processo.idProcesso'}' and "
+			+ "not exists (select 1 from jbpm_variableinstance v where v.name_ = '''idModeloComunicacao''' and "
+				+ "v.longvalue_ = m.id_modelo_comunicacao) "
+			+ " and (m.in_finalizada = {0} or m.id_localizacao_resp_assinat is null) "
+			+ " and exists (select 1 from tb_destinatario_modelo_comunic d "
+					+ " where d.id_modelo_comunicacao = m.id_modelo_comunicacao and "
+					+ " d.in_expedido = {0})";
 	private static final String DEFAULT_ORDER = "m.id_modelo_comunicacao";
 
 	private Processo processo;
@@ -39,13 +44,13 @@ public class ModeloComunicacaoRascunhoList extends EntityList<ModeloComunicacao>
 	@Override
 	protected String getDefaultEjbql() {
 		String banco = EppProperties.getInstance().getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
-		String fragment = "";
+		String sql = DEFAULT_EJBQL;
 		if ("postgresql".equalsIgnoreCase(banco)) {
-			fragment = " and (m.in_finalizada = false or m.id_localizacao_resp_assinat is null) ";
+			sql = MessageFormat.format(DEFAULT_EJBQL, "false");
 		} else if ("sqlserver".equalsIgnoreCase(banco)) {
-			fragment = " and (m.in_finalizada = 0 or m.id_localizacao_resp_assinat is null) ";
+			sql = MessageFormat.format(DEFAULT_EJBQL, "0");
 		}
-		return DEFAULT_EJBQL + fragment;
+		return sql;
 	}
 
 	@Override

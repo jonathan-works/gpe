@@ -100,6 +100,14 @@ public class ComunicacaoService {
 	@In
 	private PapelManager papelManager;
 	
+	public void expedirComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
+		DocumentoBin documento = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento().getDocumentoBin();
+		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+			destinatario.setComunicacao(documento);
+			expedirComunicacao(destinatario);
+		}
+	}
+	
 	public void expedirComunicacao(DestinatarioModeloComunicacao destinatario) throws DAOException {
 		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
 		Localizacao localizacao = Authenticator.getLocalizacaoAtual();
@@ -151,6 +159,12 @@ public class ComunicacaoService {
 				} else {
 					pdfManager.convertHtmlToPdf(evaluateComunicacao(destinatario), pdfComunicacao);
 				}
+			} else {
+				DocumentoModeloComunicacao documento = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
+				if (documento != null) {
+					byte[] doc = documentoBinarioManager.getData(documento.getDocumento().getDocumentoBin().getId());
+					pdfComunicacao.write(doc);
+				}
 			}
 			
 			com.lowagie.text.Document pdfDocument = new com.lowagie.text.Document();
@@ -181,6 +195,10 @@ public class ComunicacaoService {
 		}
 		return pdf.toByteArray();
 	}
+
+	public DocumentoModeloComunicacao getDocumentoInclusoPorUsuarioInterno(ModeloComunicacao modeloComunicacao) {
+		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisMembros("usuarioInterno"), modeloComunicacao);
+	}
 	
 
 	public void finalizarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
@@ -190,7 +208,7 @@ public class ComunicacaoService {
 				DocumentoBin comunicacao = documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacao);
 				destinatario.setComunicacao(comunicacao);
 			}
-		} else if (modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisMembros("usuarioInterno"), modeloComunicacao) == null) {
+		} else if (getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) == null) {
 			throw new DAOException("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
 		}
 		modeloComunicacao.setFinalizada(true);

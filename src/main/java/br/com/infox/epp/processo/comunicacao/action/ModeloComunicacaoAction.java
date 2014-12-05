@@ -35,6 +35,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -113,6 +114,8 @@ public class ModeloComunicacaoAction implements Serializable {
 	private ComunicacaoService comunicacaoService;
 	@In
 	private ProcessoManager processoManager;
+	@In
+	private PapelManager papelManager;
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
@@ -131,6 +134,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	private Boolean expedida;
 	private DestinatarioModeloComunicacao destinatario;
 	private boolean inTask = false;
+	private boolean possuiDocumentoInclusoPorUsuarioInterno = false;
 	
 	@Create
 	public void init() {
@@ -205,6 +209,7 @@ public class ModeloComunicacaoAction implements Serializable {
 			this.modeloComunicacao = modeloComunicacaoManager.find(idModelo);
 			setFinalizada(modeloComunicacao.getFinalizada() != null ? modeloComunicacao.getFinalizada() : false);
 			this.processInstanceId = this.modeloComunicacao.getProcesso().getIdJbpm();
+			this.possuiDocumentoInclusoPorUsuarioInterno = comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
 		}
 	}
 	
@@ -292,9 +297,17 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void expedirComunicacao() {
 		try {
-			assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
-			comunicacaoService.expedirComunicacao(destinatario);
-			expedida = null;
+			if (destinatario != null) {
+				assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+				comunicacaoService.expedirComunicacao(destinatario);
+			} else if (possuiDocumentoInclusoPorUsuarioInterno) {
+				Documento documento = getDocumentoComunicacao().getDocumento();
+				if (!documento.hasAssinatura()) {
+					assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+				}
+				comunicacaoService.expedirComunicacao(modeloComunicacao);
+			}
+			expedida = true;
 		} catch (DAOException e) {
 			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
 			actionMessagesService.handleDAOException(e);
@@ -359,11 +372,18 @@ public class ModeloComunicacaoAction implements Serializable {
 		documentoModelo.setModeloComunicacao(modeloComunicacao);
 		modeloComunicacao.getDocumentos().add(documentoModelo);
 		documentoComunicacaoList.adicionarIdDocumentoBin(documento.getDocumentoBin().getId());
+		if (!possuiDocumentoInclusoPorUsuarioInterno) {
+			List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisMembros("usuarioInterno");
+			possuiDocumentoInclusoPorUsuarioInterno = papeisUsuarioInterno.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
+		}
 	}
 	
 	public void removerDocumento(DocumentoModeloComunicacao documentoModelo) {
 		modeloComunicacao.getDocumentos().remove(documentoModelo);
 		documentoComunicacaoList.removerIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
+		if (possuiDocumentoInclusoPorUsuarioInterno) {
+			possuiDocumentoInclusoPorUsuarioInterno = comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
+		}
 	}
 	
 	public void assignModeloDocumento() {
@@ -516,7 +536,13 @@ public class ModeloComunicacaoAction implements Serializable {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
-		return destinatario != null && assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), destinatario.getComunicacao(), usuario);
+		DocumentoBin documento = null; 
+		if (possuiDocumentoInclusoPorUsuarioInterno) {
+			documento = getDocumentoComunicacao().getDocumento().getDocumentoBin();
+		} else if (destinatario != null) {
+			documento = destinatario.getComunicacao();
+		}
+		return documento != null && assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), documento, usuario);
 	}
 	
 	public DestinatarioModeloComunicacao getDestinatario() {
@@ -525,8 +551,10 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-		destinatario.getComunicacao().setModeloDocumento(comunicacaoService.evaluateComunicacao(destinatario));
-		destinatario.getComunicacao().setMd5Documento(MD5Encoder.encode(destinatario.getComunicacao().getModeloDocumento()));
+		if (destinatario.getModeloComunicacao().getTextoComunicacao() != null) {
+			destinatario.getComunicacao().setModeloDocumento(comunicacaoService.evaluateComunicacao(destinatario));
+			destinatario.getComunicacao().setMd5Documento(MD5Encoder.encode(destinatario.getComunicacao().getModeloDocumento()));
+		}
 	}
 	
 	public String getFaceletPath() {
@@ -535,5 +563,13 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public boolean isInTask() {
 		return inTask;
+	}
+	
+	public boolean isPossuiDocumentoInclusoPorUsuarioInterno() {
+		return possuiDocumentoInclusoPorUsuarioInterno;
+	}
+	
+	public DocumentoModeloComunicacao getDocumentoComunicacao() {
+		return comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
 	}
 }
