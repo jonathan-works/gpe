@@ -36,7 +36,7 @@ public class ProcessoEpaTarefaManagerTest {
 
     @Test
     public void calcularMinutosEmIntervaloTest() throws NoSuchMethodException,
-            IllegalAccessException, InvocationTargetException {
+    IllegalAccessException, InvocationTargetException {
         final Calendar inicioTurno = new GregorianCalendar(2013, 5, 15, 8, 00);
         final Calendar fimTurno = new GregorianCalendar(2013, 5, 15, 12, 00);
         {
@@ -45,7 +45,7 @@ public class ProcessoEpaTarefaManagerTest {
 
             final DateRange result = assertIncrementoByLocalizacaoTurno(fim,
                     inicio, inicioTurno, fimTurno);
-            assertEquals(240, result.get(DateRange.MINUTES).longValue());
+            assertEquals(new Long(240), result.get(DateRange.MINUTES));
         }
         {
             final Calendar inicio = new GregorianCalendar(2013, 5, 15, 8, 45);
@@ -53,7 +53,7 @@ public class ProcessoEpaTarefaManagerTest {
 
             final DateRange result = assertIncrementoByLocalizacaoTurno(fim,
                     inicio, inicioTurno, fimTurno);
-            assertEquals(195, result.get(DateRange.MINUTES));
+            assertEquals(new Long(195), result.get(DateRange.MINUTES));
         }
         {
             final Calendar inicio = new GregorianCalendar(2013, 5, 15, 7, 45);
@@ -61,7 +61,7 @@ public class ProcessoEpaTarefaManagerTest {
 
             final DateRange result = assertIncrementoByLocalizacaoTurno(fim,
                     inicio, inicioTurno, fimTurno);
-            assertEquals(180, result.get(DateRange.MINUTES));
+            assertEquals(new Long(180), result.get(DateRange.MINUTES));
         }
         {
             final Calendar inicio = new GregorianCalendar(2013, 5, 15, 8, 45);
@@ -69,7 +69,7 @@ public class ProcessoEpaTarefaManagerTest {
 
             final DateRange result = assertIncrementoByLocalizacaoTurno(fim,
                     inicio, inicioTurno, fimTurno);
-            assertEquals(135, result.get(DateRange.MINUTES));
+            assertEquals(new Long(135), result.get(DateRange.MINUTES));
         }
         {
             final Calendar inicio = new GregorianCalendar(2013, 5, 15, 14, 00);
@@ -77,14 +77,14 @@ public class ProcessoEpaTarefaManagerTest {
 
             final DateRange result = assertIncrementoByLocalizacaoTurno(fim,
                     inicio, inicioTurno, fimTurno);
-            assertEquals(0, result.get(DateRange.MINUTES));
+            assertEquals(new Long(0), result.get(DateRange.MINUTES));
         }
     }
 
     @Test
     public void getDisparoIncrementadoTest() throws IllegalArgumentException,
-            IllegalAccessException, InvocationTargetException,
-            SecurityException, NoSuchMethodException {
+    IllegalAccessException, InvocationTargetException,
+    SecurityException, NoSuchMethodException {
         final Calendar calendar = Calendar.getInstance();
         calendar.set(2013, 5, 15, 17, 45);
         final Date ultimoDisparo = calendar.getTime();
