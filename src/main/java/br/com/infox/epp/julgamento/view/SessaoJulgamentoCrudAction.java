@@ -52,19 +52,21 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 	}
 	
 	@Override
-	protected boolean isInstanceValid() {
-		return super.isInstanceValid() && getManager().isInstanceValid(getInstance());
+	public String save() {
+		String ret = "";
+		try {
+			ret = super.save();
+		} catch (BusinessException e) {
+			getMessagesHandler().add(e.getMessage());
+		}
+		return ret;
 	}
 	
 	@Override
 	protected void beforeSave() {
 		super.beforeSave();
 		if (isManaged()) { return; }
-		try {
-			getManager().beforeSave(getInstance(), periodicidade, valorPeriodicidade);
-		} catch (BusinessException e) {
-			getMessagesHandler().add(e.getMessage());
-		}
+		getManager().beforeSave(getInstance(), periodicidade, valorPeriodicidade);
 	}
 	
 	public Periodicidade[] getPeriodicidades() {

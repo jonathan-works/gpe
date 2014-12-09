@@ -1,5 +1,6 @@
 package br.com.infox.epp.julgamento.view;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,14 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
 
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
-		return null;
+		Map<String, String> orderMap = new HashMap<>();
+		orderMap.put("colegiada", "o.sala.unidadeDecisoraColegiada");
+		orderMap.put("dataInicio", "o.dataInicio");
+		orderMap.put("dataFim", "o.dataFim");
+		orderMap.put("sala", "o.sala.nome");
+		orderMap.put("statusSessao", "statusSessao");
+		orderMap.put("ativo", "ativo");
+		return orderMap;
 	}
 	
 	@Override

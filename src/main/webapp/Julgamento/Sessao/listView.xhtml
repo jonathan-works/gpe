@@ -48,8 +48,8 @@
                    		label="#{eppmessages['sessaoJulgamento.periodo']}"
                    		valueDateFrom="#{sessaoJulgamentoList.entity.dataInicio}"
                    		valueDateTo="#{sessaoJulgamentoList.entity.dataFim}"
-                   		pattern="dd/MM/yyyy HH:mm" 
-                   		popup="true" />
+                   		pattern="dd/MM/yyyy HH:mm" showApplyButton="true" 
+                   		maskDate="99/99/9999 99:99" canWeekend="true" />
                    	 
                     <wi:selectSituacaoOneMenu id="ativo"
                         label="#{eppmessages['field.situacao']}"
@@ -130,7 +130,8 @@
           	<wi:selectOneMenuEnum id="periodicidade" 
           		label="#{eppmessages['sessaoJulgamento.periodicidade']}"
           		items="#{sessaoJulgamentoCrudAction.periodicidades}" 
-          		value="#{sessaoJulgamentoCrudAction.periodicidade}" 
+          		value="#{sessaoJulgamentoCrudAction.periodicidade}"
+          		rendered="#{not home.managed}" 
           		noSelectionLabel="#{eppmessages['sessaoJulgamento.semPeriodicidade']}" >
           		<a:ajax event="change" execute="@this" render="periodo" limitRender="true" 
           				listener="#{sessaoJulgamentoCrudAction.clearValorPeriodicidade()}" />

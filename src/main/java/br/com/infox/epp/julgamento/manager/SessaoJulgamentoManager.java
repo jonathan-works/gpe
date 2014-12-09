@@ -8,8 +8,10 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.julgamento.dao.SessaoJulgamentoDAO;
+import br.com.infox.epp.julgamento.entity.Sala;
 import br.com.infox.epp.julgamento.entity.SessaoJulgamento;
 import br.com.infox.epp.julgamento.type.Periodicidade;
+import br.com.infox.seam.exception.BusinessException;
 
 @AutoCreate
 @Name(SessaoJulgamentoManager.NAME)
@@ -21,14 +23,23 @@ public class SessaoJulgamentoManager extends Manager<SessaoJulgamentoDAO, Sessao
 	@In
 	private SalaManager salaManager;
 
-	public boolean isInstanceValid(SessaoJulgamento sessaoJulgamento) {
+	private void validateBeforePersist(SessaoJulgamento sessaoJulgamento) throws BusinessException {
 		salaManager.lock(sessaoJulgamento.getSala());
-		
-		return false;
+		Sala sala = sessaoJulgamento.getSala();
+		Date dataInicio = sessaoJulgamento.getDataInicio();
+		Date dataFim = sessaoJulgamento.getDataFim();
+		if (!sessaoJulgamento.getSala().getForaExpediente()) {
+			
+		}
+		boolean isSalaOcupada = getDao().existeSessaoJulgamentoComSalaEHorario(sala, dataInicio, dataFim);
+		if (isSalaOcupada) {
+			throw new BusinessException("Sala já está ocupada para o horário");
+		}
 	}
 
 	public void beforeSave(SessaoJulgamento sessaoJulgamento, Periodicidade periodicidade, 
-			Object periodicidadeValue) {
+			Object periodicidadeValue) throws BusinessException {
+		validateBeforePersist(sessaoJulgamento);
 		if (periodicidadeValue instanceof Date) {
 			
 		} else if (periodicidadeValue instanceof Integer) {

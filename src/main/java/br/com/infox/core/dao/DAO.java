@@ -48,7 +48,7 @@ public abstract class DAO<T> implements Serializable {
     }
     
     public void lock(T entity) {
-    	entityManager.lock(entity, LockModeType.READ);
+    	entityManager.lock(entity, LockModeType.PESSIMISTIC_READ);
     }
 
     @SuppressWarnings(UNCHECKED)

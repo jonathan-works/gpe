@@ -1,5 +1,8 @@
 package br.com.infox.epp.julgamento.entity;
 
+import static br.com.infox.epp.julgamento.query.SessaoJulgamentoQuery.EXISTE_SESSAO_COM_SALA_E_HORARIO;
+import static br.com.infox.epp.julgamento.query.SessaoJulgamentoQuery.EXISTE_SESSAO_COM_SALA_E_HORARIO_QUERY;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -21,6 +26,9 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Entity
 @Table(name = "tb_sessao_julgamento")
+@NamedQueries(value = {
+		@NamedQuery(name = EXISTE_SESSAO_COM_SALA_E_HORARIO, query = EXISTE_SESSAO_COM_SALA_E_HORARIO_QUERY)
+})
 public class SessaoJulgamento implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
