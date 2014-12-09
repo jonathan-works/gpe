@@ -49,7 +49,7 @@
             <value>menu.controle/produtividade.menuText:/BAM/Produtividade/listView.seam</value>
             <value>menu.controle/relatorios.menuText/temposMedios.menuText:/Estatistica/listView.seam</value>
             
-
+			<value>menu.operacoes/comunicacoes.menuText:/Comunicacao/listView.seam</value>
         </property>
     </component>
 </components>

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
+import javax.persistence.NonUniqueResultException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -160,11 +161,20 @@ public class ModeloComunicacaoAction implements Serializable {
 	}
 
 	private void initLocalizacaoRaiz() {
-		Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoDentroEstrutura(raizLocalizacoesComunicacao);
-		if (localizacaoRaiz != null) {
-			localizacaoSubTree.setIdLocalizacaoPai(localizacaoRaiz.getIdLocalizacao());
-		} else {
-			FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
+		try {
+			Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
+			if (localizacaoRaiz != null) {
+				localizacaoSubTree.setIdLocalizacaoPai(localizacaoRaiz.getIdLocalizacao());
+			} else {
+				FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
+			}
+		} catch (DAOException e) {
+			LOG.error("", e);
+			if (e.getCause() instanceof NonUniqueResultException) {
+				FacesMessages.instance().add("Existe mais de uma localização com o nome definido no parâmetro raizLocalizacoesComunicacao: " + raizLocalizacoesComunicacao);
+			} else {
+				actionMessagesService.handleDAOException(e);
+			}
 		}
 	}
 

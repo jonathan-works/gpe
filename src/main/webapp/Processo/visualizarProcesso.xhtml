@@ -191,6 +191,14 @@
                     <ui:include src="sigiloDocumento.xhtml" />
                 </ui:decorate>
             </infox:tab>
+            <infox:tab
+                id="tabComunicacao"
+                name="tabComunicacao"
+                status=":status"
+                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
+                title="Comunicação">
+                <ui:include src="comunicacao.xhtml" />
+            </infox:tab>
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">
             <wi:outputText

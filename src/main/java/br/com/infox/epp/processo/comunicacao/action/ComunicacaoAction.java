@@ -23,6 +23,8 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.file.download.FileDownloader;
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -30,10 +32,12 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.ModeloComunicacaoRascunhoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
@@ -65,6 +69,10 @@ public class ComunicacaoAction implements Serializable {
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	@In
 	private ModeloComunicacaoRascunhoList modeloComunicacaoRascunhoList;
+	@In
+	private GenericManager genericManager;
+	@In
+	private DocumentoDownloader documentoDownloader;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private Map<Long, List<DestinatarioBean>> destinatarioBeans = new HashMap<>();
@@ -72,12 +80,14 @@ public class ComunicacaoAction implements Serializable {
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private boolean usuarioExterno = Identity.instance().hasRole("usuarioExterno");
 	private Processo processo;
+	private List<Documento> documentosDestinatario;
 	
 	private DestinatarioBean destinatario;
 	private Date dataCiencia;
 	private boolean ciencia;
 	
 	private boolean prorrogacaoPrazo;
+	private boolean documentos;
 	
 	@Create
 	public void init() {
@@ -136,8 +146,10 @@ public class ComunicacaoAction implements Serializable {
 	
 	public void setDestinatarioCiencia(DestinatarioBean destinatario) {
 		this.destinatario = destinatario;
+		this.documentosDestinatario = null;
 		ciencia = true;
 		prorrogacaoPrazo = false;
+		documentos = false;
 		documentoUploader.clear();
 	}
 	
@@ -209,10 +221,24 @@ public class ComunicacaoAction implements Serializable {
 			return;
 		}
 		this.destinatario = destinatario;
+		this.documentosDestinatario = null;
 		prorrogacaoPrazo = true;
 		ciencia = false;
+		documentos = false;
 		documentoUploader.clear();
 		documentoUploader.setClassificacaoDocumento(classificacaoProrrogacao);
+	}
+	
+	public boolean isDocumentos() {
+		return documentos;
+	}
+	
+	public void setDestinatarioDocumentos(DestinatarioBean destinatario) {
+		this.destinatario = destinatario;
+		this.documentosDestinatario = null;
+		documentos = true;
+		prorrogacaoPrazo = false;
+		ciencia = false;
 	}
 	
 	public void pedirProrrogacaoPrazo() {
@@ -229,6 +255,36 @@ public class ComunicacaoAction implements Serializable {
 	
 	public Long getJbpmProcessId() {
 		return JbpmUtil.getProcesso().getIdJbpm();
+	}
+	
+	public void downloadComunicacao(DestinatarioBean destinatario) {
+		DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
+		try {
+			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatarioModelo.getModeloComunicacao(), destinatarioModelo);
+			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
+		}
+	}
+	
+	public List<Documento> getDocumentosDestinatario() {
+		if (documentosDestinatario == null) {
+			DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
+			documentosDestinatario = new ArrayList<>();
+			Documento comunicacao = new Documento();
+			comunicacao.setDescricao("Comunicação");
+			comunicacao.setDocumentoBin(destinatarioModelo.getComunicacao());
+			documentosDestinatario.add(comunicacao);
+			for (DocumentoModeloComunicacao documentoModelo : destinatarioModelo.getModeloComunicacao().getDocumentos()) {
+				documentosDestinatario.add(documentoModelo.getDocumento());
+			}
+		}
+		return documentosDestinatario;
+	}
+	
+	public void downloadDocumento(Documento documento) {
+		documentoDownloader.downloadDocumento(documento);
 	}
 	
 	private DestinatarioBean createDestinatarioBean(DestinatarioModeloComunicacao destinatario) {

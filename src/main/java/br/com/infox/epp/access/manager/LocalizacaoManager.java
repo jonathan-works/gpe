@@ -148,5 +148,8 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     public Localizacao getLocalizacaoForaEstruturaByNome(String nomeLocalizacao){
     	return getDao().getLocalizacaoForaEstruturaByNome(nomeLocalizacao);
     }
-    
+
+	public Localizacao getLocalizacaoByNome(String nomeLocalizacao) throws DAOException {
+		return getDao().getLocalizacaoByNome(nomeLocalizacao); 
+	}
 }

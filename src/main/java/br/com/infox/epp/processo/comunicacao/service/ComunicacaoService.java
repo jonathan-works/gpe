@@ -101,9 +101,7 @@ public class ComunicacaoService {
 	private PapelManager papelManager;
 	
 	public void expedirComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
-		DocumentoBin documento = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento().getDocumentoBin();
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
-			destinatario.setComunicacao(documento);
 			expedirComunicacao(destinatario);
 		}
 	}
@@ -200,7 +198,6 @@ public class ComunicacaoService {
 		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisMembros("usuarioInterno"), modeloComunicacao);
 	}
 	
-
 	public void finalizarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
 		String textoComunicacao = modeloComunicacao.getTextoComunicacao();
 		if (textoComunicacao != null) {
@@ -208,8 +205,16 @@ public class ComunicacaoService {
 				DocumentoBin comunicacao = documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacao);
 				destinatario.setComunicacao(comunicacao);
 			}
-		} else if (getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) == null) {
-			throw new DAOException("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
+		} else {
+			DocumentoModeloComunicacao documentoModeloComunicacao = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
+			if (documentoModeloComunicacao != null) {
+				DocumentoBin comunicacao = documentoModeloComunicacao.getDocumento().getDocumentoBin();
+				for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+					destinatario.setComunicacao(comunicacao);
+				}
+			} else {
+				throw new DAOException("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
+			}
 		}
 		modeloComunicacao.setFinalizada(true);
 		modeloComunicacaoManager.update(modeloComunicacao);
