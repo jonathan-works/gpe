@@ -10,14 +10,25 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:infox="http://www.infox.com.br/jsf"
-  template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml"
+  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml"
 >
   <ui:param
     name="pageTitle"
     value="#{eppmessages['painel.titlePage']}"
   />
   <ui:define name="title">#{pageTitle}</ui:define>
-  <ui:define name="body">
+  <ui:define name="baseBody">
+  
+    <ui:include src="/WEB-INF/xhtml/templates/core/include/header.xhtml" />
+    <ui:param
+      name="showMenu"
+      value="#{not empty showMenu ? showMenu : identity.loggedIn}" />
+    <c:if test="#{showMenu}">
+      <ui:include src="/WEB-INF/xhtml/templates/core/include/menu.xhtml" />
+      <ui:param
+        name="required"
+        value="false" />
+    </c:if>
     <a:region>
       <h:outputScript>
         function atualizaPainelFluxo() { 
