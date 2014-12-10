@@ -145,8 +145,8 @@
 				<h:form rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
 					<rich:collapsiblePanel header="#{eppmessages['comunicacao.localizacoes']}" switchType="client">
 						<wi:tree id="localizacao" assignTo="modeloComunicacaoAction.localizacao"
-				          tree="#{localizacaoSubTree}" icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-				          iconLeaf="#{a4jSkin.imgFolder}/file.gif" label="#{eppmessages['localizacao.localizacao']}" 
+				          tree="#{localizacaoSubTree}" icon="#{wiSkin.imageFolder}/nivelTree.gif"
+				          iconLeaf="#{wiSkin.imageFolder}/file.gif" label="#{eppmessages['localizacao.localizacao']}" 
 				          required="true"/>
 				        <wi:commandButton id="adicionarLocalizacao" reRender="destinatariosPanel, pageBodyDialogMessage" value="Adicionar"
 				        	action="#{modeloComunicacaoAction.adicionarDestino(modeloComunicacaoAction.localizacao)}" />
@@ -253,7 +253,7 @@
 					<s:div id="tooltipComunicacao">
 				   		<s:div styleClass="tooltip-parent" style="width: 10px" 
 				  			rendered="#{not empty modeloComunicacaoAction.modeloComunicacao.classificacaoComunicacao.observacao}">
-				  		<h:graphicImage url="#{a4jSkin.imgFolder}/help.gif" />
+				  		<h:graphicImage url="#{wiSkin.imageFolder}/help.gif" />
 							<div class="epp-tooltip">
 								<div class="tooltip-panel">
 									<div><h:outputText value="Observação:"/></div>
@@ -276,8 +276,8 @@
 				            id="localizacoesTree"
 				            assignTo="modeloComunicacaoAction.modeloComunicacao.localizacaoResponsavelAssinatura"
 				            tree="#{localizacaoTree}"
-				            icon="#{a4jSkin.imgFolder}/nivelTree.gif"
-				            iconLeaf="#{a4jSkin.imgFolder}/file.gif"
+				            icon="#{wiSkin.imageFolder}/nivelTree.gif"
+				            iconLeaf="#{wiSkin.imageFolder}/file.gif"
 				            clearRender="@this"
 				            label="#{eppmessages['perfilTemplate.localizacao']}" 
 				            render="perfisPermitidos" />
