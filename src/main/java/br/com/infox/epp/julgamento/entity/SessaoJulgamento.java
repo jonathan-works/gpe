@@ -22,6 +22,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.joda.time.DateTime;
+
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Entity
@@ -135,6 +137,18 @@ public class SessaoJulgamento implements Serializable, Cloneable {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+	
+	public String getHoraInicioFormatada() {
+		return new DateTime(getHoraInicio()).toString("kk:mm");
+	}
+	
+	public String getHoraFimFormatada() {
+		return new DateTime(getHoraFim()).toString("kk:mm");
+	}
+	
+	public String getDataFormatada() {
+		return new DateTime(getData()).toString("dd/MM/yyyy");
 	}
 	
 	@Override

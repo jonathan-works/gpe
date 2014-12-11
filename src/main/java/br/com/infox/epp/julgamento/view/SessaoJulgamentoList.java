@@ -26,7 +26,7 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "sessaoJulgamentoList";
 	
-	private static final String TEMPLATE = "/Julgamento/Sessao/sessaoJulgamentoTemplate.xls";
+	private static final String TEMPLATE = "/Julgamento/Colegiado/Sessao/sessaoJulgamentoTemplate.xls";
     private static final String DOWNLOAD_XLS_NAME = "SessaoJulgamento.xls";
 	 
 	private static final String DEFAULT_EJBQL = "select o from SessaoJulgamento o ";
