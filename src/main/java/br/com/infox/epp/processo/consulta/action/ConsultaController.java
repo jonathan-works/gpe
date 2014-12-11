@@ -14,6 +14,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
 @Name(ConsultaController.NAME)
@@ -93,4 +94,13 @@ public class ConsultaController extends AbstractController {
             Redirect.instance().execute();
         }
     }
+    
+    public Object getMetadadoValue(String tipoMetadado) {
+		MetadadoProcesso metadado = getProcesso().getMetadado(tipoMetadado);
+		if (metadado == null) {
+			return null;
+		} else {
+			return metadado.getValue();
+		}
+	}
 }

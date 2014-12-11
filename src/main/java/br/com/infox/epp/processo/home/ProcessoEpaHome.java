@@ -29,6 +29,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.seam.context.ContextFacade;
@@ -425,5 +426,14 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
         }
         return String.valueOf(idProcesso);
     }
+	
+	public Object getMetadadoValue(String tipoMetadado) {
+		MetadadoProcesso metadado = getInstance().getMetadado(tipoMetadado);
+		if (metadado == null) {
+			return null;
+		} else {
+			return metadado.getValue();
+		}
+	}
 
 }
