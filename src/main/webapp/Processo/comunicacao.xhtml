@@ -12,7 +12,8 @@
 		rendered="#{s:hasRole('usuarioInterno')}" />
 	<h:form>
 		<a:jsFunction name="reloadRascunhos" render="rascunhos" limitRender="true" execute="@this" />
-		<a:jsFunction name="reloadComunicacoes" render="comunicacoes" limitRender="true" execute="@this" />
+		<a:jsFunction name="reloadAll" render="comunicacoes, rascunhos" limitRender="true" execute="@this" 
+			action="#{comunicacaoAction.clearCacheModelos}"/>
 	</h:form>
 	<rich:collapsiblePanel switchType="client" id="rascunhos" header="Rascunhos">
 		<wi:dataTable id="rascunhosTable" bean="#{modeloComunicacaoRascunhoList}" showSearchForm="false"
@@ -30,71 +31,69 @@
 		</wi:dataTable>
 	</rich:collapsiblePanel>
 	<rich:collapsiblePanel header="Comunicações" switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
-		<ui:repeat var="modeloComunicacao" value="#{comunicacaoAction.comunicacoesDoProcesso}">
-			<rich:panel header="Comunicação - #{modeloComunicacao.tipoComunicacao.descricao}">
-				<rich:dataTable value="#{comunicacaoAction.getDestinatarios(modeloComunicacao)}" 
-					var="bean" styleClass="dtable rf-dt-crud">
-					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
-						<h:form>
-							<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
-								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
-								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
-								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="Confirmar Ciência" />
-							</a:commandLink>
-							<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
-								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage" 
-								execute="@this" limitRender="true"
-								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="Pedir Prorrogação de Prazo" />
-							</a:commandLink>
-						</h:form>
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">Destinatário</f:facet>
-						<h:outputText value="#{bean.nome}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">Meio de Expedição</f:facet>
-						<h:outputText value="#{bean.meioExpedicao}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">Data de Envio</f:facet>
-						<h:outputText value="#{bean.dataEnvio}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">Data de Confirmação</f:facet>
-						<h:outputText value="#{bean.dataConfirmacao}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">Confirmado Por</f:facet>
-						<h:outputText value="#{bean.responsavelConfirmacao}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">Prazo de Atendimento (dias)</f:facet>
-						<h:outputText value="#{bean.prazoAtendimento}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">Prazo Final</f:facet>
-						<h:outputText value="#{bean.prazoFinal}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">Documentos</f:facet>
-						<h:form>
-							<a:commandLink action="#{comunicacaoAction.setDestinatarioDocumentos(bean)}"
-								execute="@this" limitRender="true"
-								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
-								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="Visualizar Documentos"/>
-							</a:commandLink>
-							<h:commandLink action="#{comunicacaoAction.downloadComunicacao(bean)}">
-								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Baixar Comunicação"/>
-							</h:commandLink>
-						</h:form>
-					</rich:column>
-				</rich:dataTable>
-			</rich:panel>
-		</ui:repeat>
+		<h:form>
+			<ui:repeat var="modeloComunicacao" value="#{comunicacaoAction.comunicacoesDoProcesso}">
+				<rich:panel header="Comunicação - #{modeloComunicacao.tipoComunicacao.descricao}">
+					<rich:dataTable value="#{comunicacaoAction.getDestinatarios(modeloComunicacao)}" 
+						var="bean" styleClass="dtable rf-dt-crud">
+						<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
+								<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
+									execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
+									render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
+									onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+									<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="Confirmar Ciência" />
+								</a:commandLink>
+								<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
+									render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage" 
+									execute="@this" limitRender="true"
+									onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+									<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="Pedir Prorrogação de Prazo" />
+								</a:commandLink>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Destinatário</f:facet>
+							<h:outputText value="#{bean.nome}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Meio de Expedição</f:facet>
+							<h:outputText value="#{bean.meioExpedicao}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Data de Envio</f:facet>
+							<h:outputText value="#{bean.dataEnvio}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Data de Confirmação</f:facet>
+							<h:outputText value="#{bean.dataConfirmacao}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Confirmado Por</f:facet>
+							<h:outputText value="#{bean.responsavelConfirmacao}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Prazo de Atendimento (dias)</f:facet>
+							<h:outputText value="#{bean.prazoAtendimento}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Prazo Final</f:facet>
+							<h:outputText value="#{bean.prazoFinal}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Documentos</f:facet>
+								<a:commandLink action="#{comunicacaoAction.setDestinatarioDocumentos(bean)}"
+									execute="@this" limitRender="true"
+									render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
+									onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+									<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="Visualizar Documentos"/>
+								</a:commandLink>
+								<h:commandLink action="#{comunicacaoAction.downloadComunicacao(bean)}">
+									<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Baixar Comunicação"/>
+								</h:commandLink>
+						</rich:column>
+					</rich:dataTable>
+				</rich:panel>
+			</ui:repeat>
+		</h:form>
 	</rich:collapsiblePanel>
     <s:div id="painelCiencia">
     	<rich:panel header="Informar Ciência - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 

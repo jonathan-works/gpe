@@ -103,6 +103,10 @@ public class ComunicacaoAction implements Serializable {
 		return comunicacoes;
 	}
 	
+	public void clearCacheModelos() {
+		this.comunicacoes = null;
+	}
+	
 	public List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
 		List<DestinatarioBean> destinatarios = destinatarioBeans.get(modeloComunicacao.getId());
 		if (destinatarios == null) {
