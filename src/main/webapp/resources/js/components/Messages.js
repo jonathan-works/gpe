@@ -1,5 +1,5 @@
 namespace("infox.Messages",function Messages(args) {
-	var timeout = args.timeout || 1;
+	var timeout = args.timeout || -1;
 	var existsMessages = args.existsMessages || false;
 	var existsGlobalMessages = args.existsGlobalMessages || false;
 	var timer = timer || false;
@@ -30,7 +30,7 @@ namespace("infox.Messages",function Messages(args) {
 				&& existsMessages
 				&& $(".d-msg-c").text().trim()!== "") {
 			$_showDialog();
-			if ($('.rf-msgs-err').html() == null) {
+			if ($('.rf-msgs-err').html() == null && timeout !== -1) {
 				timer = setTimeout($_hideDialog, timeout);
 			}
 		}
