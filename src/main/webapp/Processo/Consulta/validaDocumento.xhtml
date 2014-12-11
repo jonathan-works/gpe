@@ -63,23 +63,20 @@
 								render="mp_ass, pageBodyDialogMessage"
 								oncomplete="infox.hideLoading(); checkExternalCallback();" />
 
-              <wi:certificadoDigital
-                id="appletAssinatura"
-                debug="false"
-                loginMode="false"
-                formId="#{rich:clientId('assinaturaDocumento')}"
-                signButtonCaption="#{eppmessages['signature.loginBtn']}"
-                certificationChainField="#{rich:clientId('certChain')}"
-                signatureField="#{rich:clientId('signature')}"
-                getDataFunction="documento.getData()"
-                functionPreSign="infox.showLoading();"
-                functionPosSign="assinar();"
-                useBase64Function="true"
-                useProviderDll="false"
-                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-                rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado) 
+							<wi:certificadoDigital id="appletAssinatura" debug="false"
+								loginMode="false"
+								formId="#{rich:clientId('assinaturaDocumento')}"
+								signButtonCaption="#{eppmessages['assinaturas.assinar']}"
+								certificationChainField="#{rich:clientId('certChain')}"
+								signatureField="#{rich:clientId('signature')}"
+								getDataFunction="documento.getData()"
+								functionPreSign="infox.showLoading();"
+								functionPosSign="assinar();" useBase64Function="true"
+								useProviderDll="false"
+								urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+								rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado) 
                 				and validaDocumentoAction.documento.isDocumentoAssinavel(usuarioLogadoPerfilAtual.perfilTemplate.papel)}">
-              </wi:certificadoDigital>
+                            </wi:certificadoDigital>
 
               <h:outputScript>
               	function checkExternalCallback() {
