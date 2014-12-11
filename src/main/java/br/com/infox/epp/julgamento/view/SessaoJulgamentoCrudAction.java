@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.suggest.AbstractSuggestBean;
 import br.com.infox.core.type.Displayable;
 import br.com.infox.epp.access.api.Authenticator;
@@ -27,6 +30,7 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "sessaoJulgamentoCrudAction";
+	private static final LogProvider LOG = Logging.getLogProvider(SessaoJulgamentoCrudAction.class);
 	
 	@In
 	private SalaManager salaManager;
@@ -52,21 +56,32 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 	}
 	
 	@Override
-	public String save() {
-		String ret = "";
-		try {
-			ret = super.save();
-		} catch (BusinessException e) {
-			getMessagesHandler().add(e.getMessage());
-		}
-		return ret;
+	public void newInstance() {
+		super.newInstance();
+		this.salas = null;
+		this.periodicidade = null;
+		this.valorPeriodicidade = null;
 	}
 	
 	@Override
-	protected void beforeSave() {
-		super.beforeSave();
-		if (isManaged()) { return; }
-		getManager().beforeSave(getInstance(), periodicidade, valorPeriodicidade);
+	protected boolean isInstanceValid() {
+		try {
+			getManager().validate(getInstance());
+			return super.isInstanceValid();
+		} catch (BusinessException e) {
+			getMessagesHandler().add(e.getMessage());
+			return false;
+		}
+	}
+	
+	@Override
+	protected void afterSave(String ret) {
+		super.afterSave(ret);
+		try {
+			getManager().afterSave(getInstance(), getPeriodicidade(), valorPeriodicidade);
+		} catch (CloneNotSupportedException | DAOException e) {
+			LOG.error("afterSave(ret)", e);
+		}
 	}
 	
 	public Periodicidade[] getPeriodicidades() {
@@ -173,7 +188,7 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 
 	enum TipoPeriodicidade implements Displayable {
 		
-		D("Data Até"), Q("Quantidade Repetições");
+		D("Data Até"), Q("Quantidade");
 		
 		private String label;
 		

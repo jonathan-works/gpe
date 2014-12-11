@@ -34,7 +34,8 @@
             oninputblur="validarData(this); #{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}#{oninputblur}"
             onchanged="#{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}#{onchanged}"
             reRender="#{reRender}" dataModel="#{dataModel}"
-            showApplyButton="#{wi:get(showApplyButton, false)}">
+            showApplyButton="#{wi:get(showApplyButton, false)}"
+            popup="#{empty popup ? 'true' : popup}">
 
             <c:if test="#{wi:get(future, false)}">
                 <f:validator validatorId="futureDateOnlyValidator" />

@@ -31,7 +31,9 @@ import br.com.infox.util.time.DateRange;
 @Table(name = "tb_sala_turno")
 @NamedQueries(value = {
         @NamedQuery(name = SalaTurnoQuery.DELETE_TURNOS_ANTERIORES, query = SalaTurnoQuery.DELETE_TURNOS_ANTERIORES_QUERY),
-        @NamedQuery(name = SalaTurnoQuery.LIST_BY_SALA, query = SalaTurnoQuery.LIST_BY_SALA_QUERY) })
+        @NamedQuery(name = SalaTurnoQuery.LIST_BY_SALA, query = SalaTurnoQuery.LIST_BY_SALA_QUERY),
+        @NamedQuery(name = SalaTurnoQuery.EXISTE_SALA_DISPONIVEL_HORARIO_DIA_SEMANA, query = SalaTurnoQuery.EXISTE_SALA_DISPONIVEL_HORARIO_DIA_SEMANA_QUERY)
+})
 public class SalaTurno implements Serializable {
 
     @Id
@@ -39,21 +41,26 @@ public class SalaTurno implements Serializable {
     @GeneratedValue(generator = "SalaTurnoGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_sala_turno", unique = true, nullable = false)
     private Long idSalaTurno;
+    
     @Column(name = "cd_dia_semana", nullable = false)
     @NotNull
     @Enumerated(EnumType.STRING)
     private DiaSemanaEnum diaSemana;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_sala", nullable = false)
     private Sala sala;
+    
     @Column(name = "dt_hora_inicio", nullable = false)
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date horaInicio;
+    
     @Column(name = "dt_hora_fim", nullable = false)
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date horaFim;
+    
     @Transient
     private DateRange periodo = new DateRange();
 

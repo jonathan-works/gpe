@@ -29,7 +29,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 @NamedQueries(value = {
 		@NamedQuery(name = EXISTE_SESSAO_COM_SALA_E_HORARIO, query = EXISTE_SESSAO_COM_SALA_E_HORARIO_QUERY)
 })
-public class SessaoJulgamento implements Serializable {
+public class SessaoJulgamento implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -41,13 +41,18 @@ public class SessaoJulgamento implements Serializable {
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_inicio_sessao_julgamento", nullable = false)
-	private Date dataInicio;
+	@Column(name = "dt_sessao_julgamento", nullable = false)
+	private Date data;
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dt_fim_sessao_julgamento", nullable = false)
-	private Date dataFim;
+	@Column(name = "vl_hora_inicio", nullable = false)
+	private Date horaInicio;
+	
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "vl_hora_fim", nullable = false)
+	private Date horaFim;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -76,20 +81,28 @@ public class SessaoJulgamento implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDataInicio() {
-		return dataInicio;
+	public Date getData() {
+		return data;
 	}
 
-	public void setDataInicio(Date dataInicio) {
-		this.dataInicio = dataInicio;
+	public void setData(Date data) {
+		this.data = data;
 	}
 
-	public Date getDataFim() {
-		return dataFim;
+	public Date getHoraInicio() {
+		return horaInicio;
 	}
 
-	public void setDataFim(Date dataFim) {
-		this.dataFim = dataFim;
+	public void setHoraInicio(Date horaInicio) {
+		this.horaInicio = horaInicio;
+	}
+
+	public Date getHoraFim() {
+		return horaFim;
+	}
+
+	public void setHoraFim(Date horaFim) {
+		this.horaFim = horaFim;
 	}
 
 	public Sala getSala() {
@@ -122,6 +135,14 @@ public class SessaoJulgamento implements Serializable {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+	
+	@Override
+	public SessaoJulgamento clone() throws CloneNotSupportedException {
+		SessaoJulgamento sessaoJulgamentoClone = (SessaoJulgamento) super.clone();
+		sessaoJulgamentoClone.setId(null);
+		sessaoJulgamentoClone.setData(null);
+		return sessaoJulgamentoClone;
 	}
 	
 	@Override

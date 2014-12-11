@@ -1,5 +1,6 @@
 package br.com.infox.epp.julgamento.view;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
     private static final String DOWNLOAD_XLS_NAME = "SessaoJulgamento.xls";
 	 
 	private static final String DEFAULT_EJBQL = "select o from SessaoJulgamento o ";
-	private static final String DEFAULT_ORDER = "dataInicio";
+	private static final String DEFAULT_ORDER = "data, horaInicio";
 	
 	@In
 	private SalaManager salaManager;
@@ -39,6 +40,8 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
 	private List<Sala> salas;
 	private List<UnidadeDecisoraColegiada> colegiadas;
 	private UnidadeDecisoraColegiada colegiada;
+	private Date dataInicio;
+	private Date dataFim;
 	
 	public void validate() {
 		super.validate();
@@ -54,8 +57,9 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
 	
 	@Override
 	protected void addSearchFields() {
-        addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL);
-        addSearchField("dataFim", SearchCriteria.MENOR_IGUAL);
+        addSearchField("data", SearchCriteria.DATA_IGUAL);
+        addSearchField("horaInicio", SearchCriteria.MAIOR_IGUAL);
+        addSearchField("horaFim", SearchCriteria.MENOR_IGUAL);
         addSearchField("sala", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
 	}
@@ -74,8 +78,7 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
 	protected Map<String, String> getCustomColumnsOrder() {
 		Map<String, String> orderMap = new HashMap<>();
 		orderMap.put("colegiada", "o.sala.unidadeDecisoraColegiada");
-		orderMap.put("dataInicio", "o.dataInicio");
-		orderMap.put("dataFim", "o.dataFim");
+		orderMap.put("data", "o.data");
 		orderMap.put("sala", "o.sala.nome");
 		orderMap.put("statusSessao", "statusSessao");
 		orderMap.put("ativo", "ativo");
@@ -121,5 +124,22 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
 	public void setColegiada(UnidadeDecisoraColegiada colegiada) {
 		this.colegiada = colegiada;
 	}
+
+	public Date getDataInicio() {
+		return dataInicio;
+	}
+
+	public void setDataInicio(Date dataInicio) {
+		this.dataInicio = dataInicio;
+	}
+
+	public Date getDataFim() {
+		return dataFim;
+	}
+
+	public void setDataFim(Date dataFim) {
+		this.dataFim = dataFim;
+	}
+	
 
 }

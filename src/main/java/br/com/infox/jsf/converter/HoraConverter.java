@@ -17,8 +17,8 @@ import org.joda.time.DateTime;
 @BypassInterceptors
 public class HoraConverter implements Converter {
 	
+	private static final String HOUR_FORMAT = "%02d:%02d";
 	
-
     @Override
     public Object getAsObject(FacesContext context, UIComponent component,
             String value) {
@@ -40,9 +40,12 @@ public class HoraConverter implements Converter {
     @Override
     public String getAsString(FacesContext context, UIComponent component,
             Object value) {
-    	Date date = (Date) value;
-    	DateTime dateTime = new DateTime(date.getTime());
-        return value.toString().substring(0, 5);
+    	if (value == null) {
+    		return "";
+    	} else {
+    		DateTime date = new DateTime((Date) value);
+    		return String.format(HOUR_FORMAT, date.getHourOfDay(), date.getMinuteOfHour());
+    	}
     }
 
 }

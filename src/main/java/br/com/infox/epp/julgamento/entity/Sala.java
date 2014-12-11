@@ -146,7 +146,7 @@ public class Sala implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((idSala == null) ? 0 : idSala.hashCode());
+        result = prime * result + ((getIdSala() == null) ? 0 : getIdSala().hashCode());
         return result;
     }
 
@@ -162,11 +162,11 @@ public class Sala implements Serializable {
             return false;
         }
         Sala other = (Sala) obj;
-        if (idSala == null) {
-            if (other.idSala != null) {
+        if (getIdSala() == null) {
+            if (other.getIdSala() != null) {
                 return false;
             }
-        } else if (!idSala.equals(other.idSala)) {
+        } else if (!getIdSala().equals(other.getIdSala())) {
             return false;
         }
         return true;
