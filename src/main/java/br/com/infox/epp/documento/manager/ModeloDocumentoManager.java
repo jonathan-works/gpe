@@ -22,6 +22,7 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.type.Expression;
 import br.com.infox.epp.documento.type.ExpressionResolver;
+import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 
@@ -95,7 +96,8 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
      *         modelo
      */
     public String evaluateModeloDocumento(ModeloDocumento modeloDocumento) {
-        return evaluateModeloDocumento(modeloDocumento, null);
+		SeamExpressionResolver seamExpressionResolver = new SeamExpressionResolver();
+        return evaluateModeloDocumento(modeloDocumento, seamExpressionResolver);
     }
     
     /**
@@ -152,15 +154,13 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                             modeloProcessado.append("': " + e.getMessage());
                             LOG.error(".appendTail()", e);
                 		}
-                    }
-                    if (expr.isResolved()) {
-                        // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
-                        // Matcher#appendReplacement (ver o Javadoc correspondente).
-                        // Importante manter a ordem dos replaces abaixo
-                        expr.setValue(expr.getValue().replace("\\", "\\\\"));
-                        expr.setValue(expr.getValue().replace("$", "\\$"));
-                        matcher.appendReplacement(sb, expr.getValue());
-                    }
+	                }
+                    // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
+                    // Matcher#appendReplacement (ver o Javadoc correspondente).
+                    // Importante manter a ordem dos replaces abaixo
+                	String value = expr.isResolved() ? expr.getValue() : "";
+                    value = value.replace("\\", "\\\\").replace("$", "\\$");
+                    matcher.appendReplacement(sb, value);
                 }
             }
             matcher.appendTail(sb);

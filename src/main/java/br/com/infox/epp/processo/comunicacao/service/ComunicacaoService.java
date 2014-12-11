@@ -32,6 +32,7 @@ import br.com.infox.epp.documento.type.ArbitraryExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.JbpmExpressionResolver;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
+import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -225,17 +226,15 @@ public class ComunicacaoService {
 	
 	public String evaluateComunicacao(DestinatarioModeloComunicacao destinatario) {
 		Map<String, String> variaveis = createVariaveis(destinatario);
-		ArbitraryExpressionResolver arbitraryExpressionResolver = new ArbitraryExpressionResolver(variaveis);
-		
 		ProcessInstance processInstance = jbpmContext.getProcessInstance(destinatario.getModeloComunicacao().getProcesso().getIdJbpm());
 		variableTypeResolver.setProcessInstance(processInstance);
-		JbpmExpressionResolver jbpmExpressionResolver = new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), processInstance.getContextInstance());
-		
-		SeamExpressionResolver seamExpressionResolver = new SeamExpressionResolver();
-		
-		ExpressionResolverChain chain = new ExpressionResolverChain(arbitraryExpressionResolver, jbpmExpressionResolver, seamExpressionResolver);
+
 		DocumentoBin comunicacao = destinatario.getComunicacao();
 		ModeloDocumento modeloDocumento = destinatario.getModeloComunicacao().getModeloDocumento();
+		
+		ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new ArbitraryExpressionResolver(variaveis))
+				.and(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), processInstance.getContextInstance()))
+				.and(new SeamExpressionResolver()).build();
 		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, comunicacao.getModeloDocumento(), chain);
 	}
 	

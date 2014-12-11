@@ -28,6 +28,28 @@ public class ExpressionResolverChain implements ExpressionResolver {
 				return expr;
 			}
 		}
-		return new Expression("");
+		return expression;
+	}
+	
+	public static class ExpressionResolverChainBuilder {
+		private List<ExpressionResolver> resolvers;
+		
+		public ExpressionResolverChainBuilder(ExpressionResolver resolver) {
+			this.resolvers = new ArrayList<>();
+			this.resolvers.add(resolver);
+		}
+		
+		public static ExpressionResolverChainBuilder with(ExpressionResolver resolver) {
+			return new ExpressionResolverChainBuilder(resolver);
+		}
+		
+		public ExpressionResolverChainBuilder and(ExpressionResolver resolver) {
+			this.resolvers.add(resolver);
+			return this;
+		}
+		
+		public ExpressionResolverChain build() {
+			return new ExpressionResolverChain(resolvers);
+		}
 	}
 }

@@ -45,7 +45,10 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.type.ExpressionResolverChain;
+import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.JbpmExpressionResolver;
+import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
@@ -681,8 +684,9 @@ public class TaskInstanceHome implements Serializable {
     public void assignModeloDocumento(final String id) {
         String modelo = "";
         if (modeloDocumento != null) {
-            modelo = modeloDocumentoManager.evaluateModeloDocumento(
-                    modeloDocumento, new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()));
+        	ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()))
+                	.and(new SeamExpressionResolver()).build();
+            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
         }
         mapaDeVariaveis.put(id, modelo);
     }
@@ -730,9 +734,10 @@ public class TaskInstanceHome implements Serializable {
 
     public void setModeloDocumento(ModeloDocumento modelo) {
         this.modeloDocumento = modelo;
+        ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()))
+        	.and(new SeamExpressionResolver()).build();
         mapaDeVariaveis.put(getFieldName(variavelDocumento),
-                modeloDocumentoManager.evaluateModeloDocumento(modelo,
-                        new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance())));
+                modeloDocumentoManager.evaluateModeloDocumento(modelo, chain));
     }
 
     public String getHomeName() {
