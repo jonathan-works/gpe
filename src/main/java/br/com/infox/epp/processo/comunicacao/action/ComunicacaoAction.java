@@ -75,12 +75,13 @@ public class ComunicacaoAction implements Serializable {
 	private DocumentoDownloader documentoDownloader;
 	
 	private List<ModeloComunicacao> comunicacoes;
-	private Map<Long, List<DestinatarioBean>> destinatarioBeans = new HashMap<>();
+	private Map<Long, List<DestinatarioBean>> destinatarioBeans = new HashMap<>(); // Cache dos destinatários da comunicação
 	private List<ClassificacaoDocumento> classificacoesDocumento;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private boolean usuarioExterno = Identity.instance().hasRole("usuarioExterno");
 	private Processo processo;
-	private List<Documento> documentosDestinatario;
+	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
+	private Map<Long, Boolean> dadosCiencia = new HashMap<>(); // Cache das confirmações de ciência dos destinatários
 	
 	private DestinatarioBean destinatario;
 	private Date dataCiencia;
@@ -107,7 +108,9 @@ public class ComunicacaoAction implements Serializable {
 		if (destinatarios == null) {
 			destinatarios = new ArrayList<>();
 			for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
-				if (usuarioExterno && !isCienciaConfirmada(destinatarioModeloComunicacao)) {
+				boolean cienciaConfirmada = isCienciaConfirmada(destinatarioModeloComunicacao);
+				dadosCiencia.put(destinatarioModeloComunicacao.getId(), cienciaConfirmada);
+				if (usuarioExterno && !cienciaConfirmada) {
 					continue;
 				}
 				destinatarios.add(createDestinatarioBean(destinatarioModeloComunicacao));
@@ -201,9 +204,10 @@ public class ComunicacaoAction implements Serializable {
 			metadadoProcessoManager.persist(metadadoResponsavelCiencia);
 			
 			FacesMessages.instance().add("Ciência informada com sucesso");
+			destinatarioBeans.remove(destinatario.getIdModeloComunicacao());
+			dadosCiencia.put(destinatario.getIdDestinatario(), true);
 			destinatario = null;
 			dataCiencia = null;
-			destinatarioBeans.remove(destinatario.getIdModeloComunicacao());
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -287,6 +291,10 @@ public class ComunicacaoAction implements Serializable {
 		documentoDownloader.downloadDocumento(documento);
 	}
 	
+	public boolean isCienciaConfirmada(DestinatarioBean bean) {
+		return dadosCiencia.get(bean.getIdDestinatario());
+	}
+	
 	private DestinatarioBean createDestinatarioBean(DestinatarioModeloComunicacao destinatario) {
 		DestinatarioBean bean = new DestinatarioBean();
 		bean.setIdDestinatario(destinatario.getId());
@@ -327,9 +335,13 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	private String getPrazoFinal(Processo comunicacao) {
-		Date prazo = comunicacaoService.contabilizarPrazoCumprimento(comunicacao);
-		if (prazo != null) {
-			return dateFormat.format(prazo);
+		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoService.DATA_CIENCIA);
+		if (metadado != null) {
+			Date dataCiencia = metadado.getValue();
+			Date prazo = comunicacaoService.contabilizarPrazoCumprimento(comunicacao, dataCiencia);
+			if (prazo != null) {
+				return dateFormat.format(prazo);
+			}
 		}
 		return "-";
 	}

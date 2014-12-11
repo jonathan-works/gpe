@@ -28,6 +28,6 @@ public class ExpressionResolverChain implements ExpressionResolver {
 				return expr;
 			}
 		}
-		return expression;
+		return new Expression("");
 	}
 }

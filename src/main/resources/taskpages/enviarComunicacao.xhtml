@@ -21,7 +21,7 @@
 				</wi:selectOneMenuEntity>
 				<div />
 				<h:commandButton action="#{modeloComunicacaoAction.download()}" value="Visualizar Comunicação" immediate="true" 
-					rendered="#{not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao or modeloComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno}" 
+					rendered="#{(not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao or modeloComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno) and not modeloComunicacaoAction.modeloComunicacao.finalizada}" 
 					styleClass="buttons"/> 
 			</h:form>
 			<rich:panel header="#{eppmessages['comunicacao.destinatarios']}" id="destinatariosPanel">
@@ -50,8 +50,8 @@
 							<h:outputText value="#{row.nome}" />
 						</rich:column>
 						<rich:column styleClass="dt-toolbar-col">
-							<f:facet name="header">#{eppmessages['comunicacao.meioExpedicao']}</f:facet>
-							<h:selectOneMenu value="#{row.meioExpedicao}" required="true" 
+							<f:facet name="header">#{eppmessages['comunicacao.meioExpedicao']}<span class="required">*</span></f:facet>
+							<h:selectOneMenu value="#{row.meioExpedicao}" 
 								rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
 								<f:selectItem noSelectionOption="true" itemLabel="#{eppmessages['crud.select.select']}" />
 								<f:selectItems var="v" value="#{modeloComunicacaoAction.getMeiosExpedicao(row)}" 
@@ -79,12 +79,13 @@
 						rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada and empty modeloComunicacaoAction.modeloComunicacao.localizacaoResponsavelAssinatura and not modeloComunicacaoAction.expedida and empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}">
 						<wi:commandButton id="expedir" action="modeloComunicacaoAction.expedirComunicacao()" 
 							rendered="#{modeloComunicacaoAction.documentoComunicacao.documento.hasAssinatura()}"
-							value="Expedir Comunicações"/>
+							value="Expedir Comunicações"
+							oncomplete="if (opener &amp;&amp; opener['reloadComunicacoes']) opener['reloadComunicacoes']();"/>
 						<s:div id="assinatura_pers" rendered="#{not modeloComunicacaoAction.documentoComunicacao.documento.hasAssinatura()}">
 							<a:jsFunction name="assinarBin" action="#{modeloComunicacaoAction.expedirComunicacao()}"
 								execute="@this certChain signature" 
 								render="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
-							  	oncomplete="infox.hideLoading();" />
+							  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadComunicacoes']) opener['reloadComunicacoes']();" />
 							<h:inputHidden id="certChain" value="#{modeloComunicacaoAction.certChain}" />
 							<h:inputHidden id="signature" value="#{modeloComunicacaoAction.signature}" />
 							

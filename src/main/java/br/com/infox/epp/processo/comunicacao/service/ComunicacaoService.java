@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.comunicacao.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -54,6 +55,7 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 
 import com.lowagie.text.DocumentException;
@@ -209,6 +211,7 @@ public class ComunicacaoService {
 			DocumentoModeloComunicacao documentoModeloComunicacao = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
 			if (documentoModeloComunicacao != null) {
 				DocumentoBin comunicacao = documentoModeloComunicacao.getDocumento().getDocumentoBin();
+				modeloComunicacao.setClassificacaoComunicacao(documentoModeloComunicacao.getDocumento().getClassificacaoDocumento());
 				for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 					destinatario.setComunicacao(comunicacao);
 				}
@@ -243,14 +246,13 @@ public class ComunicacaoService {
         return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
     }
     
-	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
+	public Date contabilizarPrazoCumprimento(Processo comunicacao, Date dataCiencia) {
 		DestinatarioModeloComunicacao destinatario = comunicacao.getMetadado(DESTINATARIO).getValue();
         Integer qtdDias = destinatario.getPrazo();
-        if (qtdDias == null) {
+        if (qtdDias == null || dataCiencia == null) {
         	return null;
         }
-        Date hoje = new Date();
-        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
+        return calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia, qtdDias);
     }
 	
 	private MetadadoProcesso criarMetadado(String tipo, Class<?> classType, String valor, Processo processo) {
@@ -267,7 +269,19 @@ public class ComunicacaoService {
 		
 		// Destinatário / Destino
 		if (destinatario.getDestinatario() != null) {
-			metadados.add(criarMetadado(MetadadoProcessoType.PESSOA_DESTINATARIO, PessoaFisica.class, destinatario.getDestinatario().getIdPessoa().toString(), processo));
+			PessoaFisica pessoaDestinatario = destinatario.getDestinatario();
+			MetadadoProcesso metadadoRelator = destinatario.getModeloComunicacao().getProcesso().getMetadado(MetadadoProcessoType.RELATOR);
+			if (metadadoRelator != null) {
+				PessoaFisica relator = metadadoRelator.getValue();
+				// Vai pra UDM do relator
+				if (relator.equals(pessoaDestinatario)) {
+					MetadadoProcesso metadadoUdm = destinatario.getModeloComunicacao().getProcesso().getMetadado(MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA);
+					UnidadeDecisoraMonocratica udmRelator = metadadoUdm.getValue();
+					metadados.add(criarMetadado(MetadadoProcessoType.LOCALIZACAO_DESTINO, Localizacao.class, udmRelator.getLocalizacao().getIdLocalizacao().toString(), processo));
+				}
+			} else {
+				metadados.add(criarMetadado(MetadadoProcessoType.PESSOA_DESTINATARIO, PessoaFisica.class, destinatario.getDestinatario().getIdPessoa().toString(), processo));
+			}
 		} else {
 			metadados.add(criarMetadado(MetadadoProcessoType.LOCALIZACAO_DESTINO, Localizacao.class, destinatario.getDestino().getIdLocalizacao().toString(), processo));
 		}
@@ -281,6 +295,10 @@ public class ComunicacaoService {
 		}
 		
 		metadados.add(criarMetadado(MetadadoProcessoType.TIPO_PROCESSO, TipoProcesso.class, TipoProcesso.COMUNICACAO.name(), processo));
+		
+		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
+			metadados.add(criarMetadado(DATA_CIENCIA, Date.class, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(processo.getDataInicio()), processo));
+		}
 		
 		return metadados;
 	}
@@ -303,17 +321,15 @@ public class ComunicacaoService {
 		return variaveis;
 	}
 	
-	// Metadados
-	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao";
-	public static final String DESTINATARIO = "destinatarioComunicacao";
-	public static final String PRAZO_DESTINATARIO = "prazoDestinatarioComunicacao";
-	public static final String COMUNICACAO = "comunicacao";
+	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao"; // Variável e Metadado
+	public static final String DESTINATARIO = "destinatarioComunicacao"; // Metadado
+	public static final String PRAZO_DESTINATARIO = "prazoDestinatarioComunicacao"; // Variável e Metadado
+	public static final String COMUNICACAO = "comunicacao"; // Metadado
 	
-	public static final String DATA_CIENCIA = "dataCiencia";
-	public static final String DATA_CUMPRIMENTO = "dataCumprimento";
-	public static final String RESPONSAVEL_CIENCIA = "responsavelCiencia";
-	public static final String DOCUMENTO_COMPROVACAO_CIENCIA = "documentoComprovacaoCiencia";
+	public static final String DATA_CIENCIA = "dataCiencia"; // Metadado
+	public static final String DATA_CUMPRIMENTO = "dataCumprimento"; // Metadado
+	public static final String RESPONSAVEL_CIENCIA = "responsavelCiencia"; // Metadado
+	public static final String DOCUMENTO_COMPROVACAO_CIENCIA = "documentoComprovacaoCiencia"; // Metadado
 	
-	// Variáveis
-	public static final String NOME_DESTINATARIO = "nomeDestinatarioComunicacao";
+	public static final String NOME_DESTINATARIO = "nomeDestinatarioComunicacao"; // Variável
 }

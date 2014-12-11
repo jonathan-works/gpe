@@ -547,12 +547,16 @@ public class ModeloComunicacaoAction implements Serializable {
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		DocumentoBin documento = null; 
+		ClassificacaoDocumento classificacao = null;
 		if (possuiDocumentoInclusoPorUsuarioInterno) {
-			documento = getDocumentoComunicacao().getDocumento().getDocumentoBin();
+			Documento documentoProcesso = getDocumentoComunicacao().getDocumento();
+			documento = documentoProcesso.getDocumentoBin();
+			classificacao = documentoProcesso.getClassificacaoDocumento();
 		} else if (destinatario != null) {
 			documento = destinatario.getComunicacao();
+			classificacao = destinatario.getModeloComunicacao().getClassificacaoComunicacao();
 		}
-		return documento != null && assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), documento, usuario);
+		return documento != null && assinaturaDocumentoService.podeRenderizarApplet(papel, classificacao, documento, usuario);
 	}
 	
 	public DestinatarioModeloComunicacao getDestinatario() {

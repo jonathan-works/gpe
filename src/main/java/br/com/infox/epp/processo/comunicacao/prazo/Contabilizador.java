@@ -48,7 +48,9 @@ public class Contabilizador {
     
     public void contabilizarPrazoCumprimento(String transition) {
     	Processo comunicacao = JbpmUtil.getProcesso();
-    	Date fimPrazo = comunicacaoService.contabilizarPrazoCumprimento(comunicacao);
+    	MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoService.DATA_CIENCIA);
+    	Date dataCiencia = metadado.getValue();
+    	Date fimPrazo = comunicacaoService.contabilizarPrazoCumprimento(comunicacao, dataCiencia);
     	
     	if (fimPrazo == null) {
     		taskInstance.end(transition);
