@@ -7,6 +7,7 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_CAMINHO_COMPLETO
 import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCESTOR;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_BY_NOME;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
@@ -22,6 +23,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.TypedQuery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -124,4 +129,16 @@ public class LocalizacaoDAO extends DAO<Localizacao> {
         params.put(QUERY_PARAM_LOCALIZACAO, nomeLocalizacao);
         return getNamedSingleResult(LOCALIZACAO_FORA_ESTRUTURA_BY_NOME, params);
     }
+
+	public Localizacao getLocalizacaoByNome(String nomeLocalizacao) throws DAOException {
+		TypedQuery<Localizacao> query = getEntityManager().createNamedQuery(LOCALIZACAO_BY_NOME, Localizacao.class);
+		query.setParameter(QUERY_PARAM_LOCALIZACAO, nomeLocalizacao);
+		try {
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		} catch (NonUniqueResultException e) {
+			throw new DAOException(e);
+		}
+	}
 }

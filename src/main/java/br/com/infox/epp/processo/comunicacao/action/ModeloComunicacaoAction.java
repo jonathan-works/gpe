@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
+import javax.persistence.NonUniqueResultException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -35,6 +36,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -113,6 +115,8 @@ public class ModeloComunicacaoAction implements Serializable {
 	private ComunicacaoService comunicacaoService;
 	@In
 	private ProcessoManager processoManager;
+	@In
+	private PapelManager papelManager;
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
@@ -131,6 +135,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	private Boolean expedida;
 	private DestinatarioModeloComunicacao destinatario;
 	private boolean inTask = false;
+	private boolean possuiDocumentoInclusoPorUsuarioInterno = false;
 	
 	@Create
 	public void init() {
@@ -156,11 +161,20 @@ public class ModeloComunicacaoAction implements Serializable {
 	}
 
 	private void initLocalizacaoRaiz() {
-		Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoDentroEstrutura(raizLocalizacoesComunicacao);
-		if (localizacaoRaiz != null) {
-			localizacaoSubTree.setIdLocalizacaoPai(localizacaoRaiz.getIdLocalizacao());
-		} else {
-			FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
+		try {
+			Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
+			if (localizacaoRaiz != null) {
+				localizacaoSubTree.setIdLocalizacaoPai(localizacaoRaiz.getIdLocalizacao());
+			} else {
+				FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
+			}
+		} catch (DAOException e) {
+			LOG.error("", e);
+			if (e.getCause() instanceof NonUniqueResultException) {
+				FacesMessages.instance().add("Existe mais de uma localização com o nome definido no parâmetro raizLocalizacoesComunicacao: " + raizLocalizacoesComunicacao);
+			} else {
+				actionMessagesService.handleDAOException(e);
+			}
 		}
 	}
 
@@ -205,6 +219,7 @@ public class ModeloComunicacaoAction implements Serializable {
 			this.modeloComunicacao = modeloComunicacaoManager.find(idModelo);
 			setFinalizada(modeloComunicacao.getFinalizada() != null ? modeloComunicacao.getFinalizada() : false);
 			this.processInstanceId = this.modeloComunicacao.getProcesso().getIdJbpm();
+			this.possuiDocumentoInclusoPorUsuarioInterno = comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
 		}
 	}
 	
@@ -292,9 +307,17 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void expedirComunicacao() {
 		try {
-			assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
-			comunicacaoService.expedirComunicacao(destinatario);
-			expedida = null;
+			if (destinatario != null) {
+				assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+				comunicacaoService.expedirComunicacao(destinatario);
+			} else if (possuiDocumentoInclusoPorUsuarioInterno) {
+				Documento documento = getDocumentoComunicacao().getDocumento();
+				if (!documento.hasAssinatura()) {
+					assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+				}
+				comunicacaoService.expedirComunicacao(modeloComunicacao);
+			}
+			expedida = true;
 		} catch (DAOException e) {
 			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
 			actionMessagesService.handleDAOException(e);
@@ -359,11 +382,18 @@ public class ModeloComunicacaoAction implements Serializable {
 		documentoModelo.setModeloComunicacao(modeloComunicacao);
 		modeloComunicacao.getDocumentos().add(documentoModelo);
 		documentoComunicacaoList.adicionarIdDocumentoBin(documento.getDocumentoBin().getId());
+		if (!possuiDocumentoInclusoPorUsuarioInterno) {
+			List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisMembros("usuarioInterno");
+			possuiDocumentoInclusoPorUsuarioInterno = papeisUsuarioInterno.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
+		}
 	}
 	
 	public void removerDocumento(DocumentoModeloComunicacao documentoModelo) {
 		modeloComunicacao.getDocumentos().remove(documentoModelo);
 		documentoComunicacaoList.removerIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
+		if (possuiDocumentoInclusoPorUsuarioInterno) {
+			possuiDocumentoInclusoPorUsuarioInterno = comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
+		}
 	}
 	
 	public void assignModeloDocumento() {
@@ -516,7 +546,17 @@ public class ModeloComunicacaoAction implements Serializable {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
-		return destinatario != null && assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), destinatario.getComunicacao(), usuario);
+		DocumentoBin documento = null; 
+		ClassificacaoDocumento classificacao = null;
+		if (possuiDocumentoInclusoPorUsuarioInterno) {
+			Documento documentoProcesso = getDocumentoComunicacao().getDocumento();
+			documento = documentoProcesso.getDocumentoBin();
+			classificacao = documentoProcesso.getClassificacaoDocumento();
+		} else if (destinatario != null) {
+			documento = destinatario.getComunicacao();
+			classificacao = destinatario.getModeloComunicacao().getClassificacaoComunicacao();
+		}
+		return documento != null && assinaturaDocumentoService.podeRenderizarApplet(papel, classificacao, documento, usuario);
 	}
 	
 	public DestinatarioModeloComunicacao getDestinatario() {
@@ -525,8 +565,10 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-		destinatario.getComunicacao().setModeloDocumento(comunicacaoService.evaluateComunicacao(destinatario));
-		destinatario.getComunicacao().setMd5Documento(MD5Encoder.encode(destinatario.getComunicacao().getModeloDocumento()));
+		if (destinatario.getModeloComunicacao().getTextoComunicacao() != null) {
+			destinatario.getComunicacao().setModeloDocumento(comunicacaoService.evaluateComunicacao(destinatario));
+			destinatario.getComunicacao().setMd5Documento(MD5Encoder.encode(destinatario.getComunicacao().getModeloDocumento()));
+		}
 	}
 	
 	public String getFaceletPath() {
@@ -535,5 +577,13 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public boolean isInTask() {
 		return inTask;
+	}
+	
+	public boolean isPossuiDocumentoInclusoPorUsuarioInterno() {
+		return possuiDocumentoInclusoPorUsuarioInterno;
+	}
+	
+	public DocumentoModeloComunicacao getDocumentoComunicacao() {
+		return comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
 	}
 }
