@@ -110,12 +110,13 @@
     				items="#{comunicacaoAction.classificacoesDocumento}">
     				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
     			</wi:selectOneMenuEntity>
-    			<wi:fileUpload id="documentoComprovacaoCiencia" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
-    				rendered="#{not empty comunicacaoAction.classificacaoDocumento and not empty comunicacaoAction.dataCiencia and not empty comunicacaoAction.classificacaoDocumento.extensaoArquivosList}"
-    				reRender="@form"/>
-    			<wi:commandButton id="gravar" value="Gravar" action="comunicacaoAction.darCiencia()" 
-    				reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"
-    				rendered="#{documentoUploader.valido}"/>
+    			<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumento and not empty comunicacaoAction.dataCiencia and not empty comunicacaoAction.classificacaoDocumento.extensaoArquivosList}">
+    				<wi:fileUpload id="documentoComprovacaoCiencia" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
+    					reRender="@form"/>
+    				<wi:commandButton id="gravar" value="Gravar" action="comunicacaoAction.darCiencia()" 
+    					reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"
+    					rendered="#{documentoUploader.valido}"/>
+    			</s:div>
     		</h:form>
     	</rich:panel>
     </s:div>
