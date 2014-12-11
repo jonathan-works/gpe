@@ -42,9 +42,15 @@
             <tr class="rf-dt-r"
                 onmouseover="rowColor=this.style.backgroundColor; this.style.backgroundColor='#f1f1f1'"
                 onmouseout="this.style.backgroundColor=rowColor">
-                <td class="rf-dt-c">#{horario} -
-                    #{rowStatus.index lt handler.horarios.size()-1 ?
-                    handler.horarios.get(rowStatus.index + 1) : '00:00:00'}</td>
+                <td class="rf-dt-c">
+                	<h:outputText value="#{horario}" >
+                		<f:convertDateTime pattern="HH:mm:ss"/>
+                	</h:outputText> 
+                	<h:outputText value="&#160; &#160; - &#160; &#160;" />
+                	<h:outputText value="#{rowStatus.index lt handler.horarios.size()-1 ? handler.horarios.get(rowStatus.index + 1) : '00:00:00'}" >
+                		<f:convertDateTime pattern="HH:mm:ss"/>
+                	</h:outputText>
+                </td>
                 <c:forEach items="#{handler.diasSemana}" var="dia"
                     varStatus="colStatus" begin="0" step="1">
                     <ui:param name="selected"

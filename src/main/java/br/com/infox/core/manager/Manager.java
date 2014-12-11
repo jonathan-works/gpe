@@ -40,6 +40,10 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
     public T find(Object id) {
         return dao.find(id);
     }
+    
+    public void lock(T entity) {
+    	getDao().lock(entity);
+    }
 
     public List<T> findAll() {
         return dao.findAll();

@@ -68,8 +68,7 @@ public class UnidadeDecisoraColegiadaCrudAction extends AbstractCrudAction<Unida
 	protected boolean isInstanceValid() {
 		boolean existeLoc = unidadeDecisoraMonocraticaManager.existeUnidadeMonocraticaComLocalizacao(getInstance().getLocalizacao().getIdLocalizacao());
 		if(existeLoc){
-			FacesMessages.instance().clearGlobalMessages();
-			FacesMessages.instance().add("#{eppmessages['unidadeDecisoraMonocratica.jaExisteLocalizacao']}");
+			getMessagesHandler().add("#{eppmessages['unidadeDecisoraMonocratica.jaExisteLocalizacao']}");
 			return false;
 		}
 		return super.isInstanceValid();
