@@ -22,6 +22,9 @@
   <action
     execute="#{pessoaDocumentoList.setPessoa(usuarioLoginCrudAction.instance.pessoaFisica)}"
     if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica' and not empty usuarioLoginCrudAction.instance.pessoaFisica}" />
+  <action
+    execute="#{pessoaEnderecoList.setPessoa(usuarioLoginCrudAction.instance.pessoaFisica)}"
+    if="#{usuarioLoginCrudAction.tab eq 'usuarioPessoaFisica' and not empty usuarioLoginCrudAction.instance.pessoaFisica}" />
 
   <action
     execute="#{usuarioPerfilCrudAction.setUsuarioLogin(usuarioLoginCrudAction.instance)}"
