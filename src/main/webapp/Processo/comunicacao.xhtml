@@ -88,7 +88,7 @@
 								<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="Visualizar Documentos"/>
 							</a:commandLink>
 							<h:commandLink action="#{comunicacaoAction.downloadComunicacao(bean)}">
-								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Download"/>
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Baixar o documento"/>
 							</h:commandLink>
 						</h:form>
 					</rich:column>
@@ -137,11 +137,11 @@
     				<h:form>
     					<h:commandLink action="#{comunicacaoAction.downloadDocumento(documento)}"
     						rendered="#{not empty documento.documentoBin.extensao}">
-							<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Download"/>
+							<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Baixar o documento"/>
 						</h:commandLink>
 						<a:commandLink rendered="#{empty documento.documentoBin.extensao}"
 							onclick="infox.openPopUp('doc#{documento.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{documento.documentoBin.id}','1024'); return false;">
-							<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Download"/>
+							<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Baixar o documento"/>
 						</a:commandLink>
     				</h:form>
     			</rich:column>
