@@ -172,21 +172,35 @@ public class ComunicacaoAction implements Serializable {
 		Documento documento = documentoUploader.getDocumento();
 		Processo comunicacao = destinatario.getComunicacao();
 
+		StringBuilder msg = new StringBuilder();
+		if (getClassificacaoDocumento() == null) {
+			msg.append("Informe a classificação do documento\n");
+		}
+		if (getDataCiencia() == null) {
+			msg.append("Informe a data de ciência\n");
+		}
+		if (documento == null) {
+			msg.append("Informe o documento de comprovação de ciência");
+		}
+		
+		if (msg.length() > 0) {
+			FacesMessages.instance().add(msg.toString());
+			return;
+		}
+		
 		try {
-			if (documento != null) {
-				documento.setProcesso(comunicacao);
-				Processo processo = documentoUploader.getProcesso();
-				documentoUploader.setProcesso(comunicacao);
-				documentoUploader.persist();
-				documentoUploader.setProcesso(processo);
-				
-				MetadadoProcesso metadadoDocumento = new MetadadoProcesso();
-				metadadoDocumento.setClassType(Documento.class);
-				metadadoDocumento.setMetadadoType(ComunicacaoService.DOCUMENTO_COMPROVACAO_CIENCIA);
-				metadadoDocumento.setProcesso(comunicacao);
-				metadadoDocumento.setValor(documento.getId().toString());
-				metadadoProcessoManager.persist(metadadoDocumento);
-			}
+			documento.setProcesso(comunicacao);
+			Processo processo = documentoUploader.getProcesso();
+			documentoUploader.setProcesso(comunicacao);
+			documentoUploader.persist();
+			documentoUploader.setProcesso(processo);
+			
+			MetadadoProcesso metadadoDocumento = new MetadadoProcesso();
+			metadadoDocumento.setClassType(Documento.class);
+			metadadoDocumento.setMetadadoType(ComunicacaoService.DOCUMENTO_COMPROVACAO_CIENCIA);
+			metadadoDocumento.setProcesso(comunicacao);
+			metadadoDocumento.setValor(documento.getId().toString());
+			metadadoProcessoManager.persist(metadadoDocumento);
 			
 			MetadadoProcesso metadadoDataCiencia = new MetadadoProcesso();
 			metadadoDataCiencia.setClassType(Date.class);

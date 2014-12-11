@@ -268,16 +268,21 @@ public class ModeloComunicacaoAction implements Serializable {
 	}
 
 	private void validarGravacao() {
+		StringBuilder msg = new StringBuilder();
 		if (modeloComunicacao.getTipoComunicacao() == null) {
-			throw new BusinessException("Escolha o tipo de comunicação");
+			msg.append("Escolha o tipo de comunicação\n");
 		}
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
-			throw new BusinessException("Nenhum destinatário foi selecionado");
+			msg.append("Nenhum destinatário foi selecionado\n");
 		}
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getMeioExpedicao() == null) {
-				throw new BusinessException("Existe destinatário sem meio de expedição selecionado");
+				msg.append("Existe destinatário sem meio de expedição selecionado");
+				break;
 			}
+		}
+		if (msg.length() > 0) {
+			throw new BusinessException(msg.toString());
 		}
 	}
 
@@ -392,7 +397,18 @@ public class ModeloComunicacaoAction implements Serializable {
 		modeloComunicacao.getDocumentos().remove(documentoModelo);
 		documentoComunicacaoList.removerIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
 		if (possuiDocumentoInclusoPorUsuarioInterno) {
-			possuiDocumentoInclusoPorUsuarioInterno = comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
+			if (modeloComunicacao.getId() != null) {
+				possuiDocumentoInclusoPorUsuarioInterno = comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
+			} else {
+				List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisMembros("usuarioInterno");
+				possuiDocumentoInclusoPorUsuarioInterno = false;
+				for (DocumentoModeloComunicacao documentoModeloComunicacao : modeloComunicacao.getDocumentos()) {
+					if (papeisUsuarioInterno.contains(documentoModeloComunicacao.getDocumento().getPerfilTemplate().getPapel().getIdentificador())) {
+						possuiDocumentoInclusoPorUsuarioInterno = true;
+						break;
+					}
+				}
+			}
 		}
 	}
 	
