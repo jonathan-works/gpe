@@ -227,12 +227,16 @@ public class ComunicacaoService {
 	}
 	
 	public String evaluateComunicacao(DestinatarioModeloComunicacao destinatario) {
+		DocumentoBin comunicacao = destinatario.getComunicacao();
+		ModeloDocumento modeloDocumento = destinatario.getModeloComunicacao().getModeloDocumento();
+		if (modeloDocumento == null) {
+			return comunicacao.getModeloDocumento();
+		}
+
 		Map<String, String> variaveis = createVariaveis(destinatario);
 		ProcessInstance processInstance = jbpmContext.getProcessInstance(destinatario.getModeloComunicacao().getProcesso().getIdJbpm());
 		variableTypeResolver.setProcessInstance(processInstance);
 
-		DocumentoBin comunicacao = destinatario.getComunicacao();
-		ModeloDocumento modeloDocumento = destinatario.getModeloComunicacao().getModeloDocumento();
 		
 		ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new ArbitraryExpressionResolver(variaveis))
 				.and(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), processInstance.getContextInstance()))
