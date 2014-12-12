@@ -412,7 +412,8 @@
                 name="tabComunicacao"
                 status=":status"
                 rendered="#{s:hasPermission('abaComunicacao', 'access')}"
-                title="Comunicação">
+                title="Comunicação"
+                action="#{comunicacaoAction.clear}">
                 <ui:include src="comunicacao.xhtml" />
             </infox:tab>
         </infox:tabPanel>

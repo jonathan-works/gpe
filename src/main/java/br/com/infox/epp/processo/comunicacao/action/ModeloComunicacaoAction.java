@@ -22,6 +22,8 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.Token;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
@@ -54,6 +56,7 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
+import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -117,6 +120,8 @@ public class ModeloComunicacaoAction implements Serializable {
 	private ProcessoManager processoManager;
 	@In
 	private PapelManager papelManager;
+	@In
+	private DocumentoDownloader documentoDownloader;
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
@@ -441,18 +446,22 @@ public class ModeloComunicacaoAction implements Serializable {
 		}
 	}
 
-	public void download() {
-		downloadComunicacao(destinatario);
+	public void downloadComunicacaoCompleta() {
+		downloadComunicacaoCompleta(destinatario);
 	}
 	
-	public void downloadComunicacao(DestinatarioModeloComunicacao destinatario) {
+	public void downloadComunicacaoCompleta(DestinatarioModeloComunicacao destinatario) {
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
-			FileDownloader.download(pdf, "application/pdf", "comunicacao");
+			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
+	}
+	
+	public void downloadComunicacao() {
+		documentoDownloader.downloadDocumento(modeloComunicacao.getDestinatarios().get(0).getComunicacao());
 	}
 	
 	public String getLink(DocumentoBin documento) {
@@ -564,13 +573,13 @@ public class ModeloComunicacaoAction implements Serializable {
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		DocumentoBin documento = null; 
 		ClassificacaoDocumento classificacao = null;
-		if (possuiDocumentoInclusoPorUsuarioInterno) {
-			Documento documentoProcesso = getDocumentoComunicacao().getDocumento();
-			documento = documentoProcesso.getDocumentoBin();
-			classificacao = documentoProcesso.getClassificacaoDocumento();
-		} else if (destinatario != null) {
+		if (Strings.isNullOrEmpty(modeloComunicacao.getTextoComunicacao())) {
+			Documento documentoComunicacao = getDocumentoComunicacao().getDocumento();
+			documento = documentoComunicacao.getDocumentoBin();
+			classificacao = documentoComunicacao.getClassificacaoDocumento();
+		} else {
 			documento = destinatario.getComunicacao();
-			classificacao = destinatario.getModeloComunicacao().getClassificacaoComunicacao();
+			classificacao = modeloComunicacao.getClassificacaoComunicacao();
 		}
 		return documento != null && assinaturaDocumentoService.podeRenderizarApplet(papel, classificacao, documento, usuario);
 	}

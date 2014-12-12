@@ -87,7 +87,7 @@
 										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 										<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="Visualizar Documentos"/>
 									</a:commandLink>
-									<h:commandLink action="#{comunicacaoAction.downloadComunicacao(bean)}">
+									<h:commandLink action="#{comunicacaoAction.downloadComunicacaoCompleta(bean)}">
 										<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="Baixar Comunicação"/>
 									</h:commandLink>
 							</rich:column>
@@ -132,6 +132,11 @@
 	    <s:div id="painelDocumentos">
 	    	<rich:panel header="Documentos - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}"
 	    		rendered="#{comunicacaoAction.documentos}">
+	    		<h:form>
+	    			<h:commandButton styleClass="buttons" action="#{comunicacaoAction.downloadComunicacao}" 
+	    				value="Comunicação"
+	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.extensao}"/>
+	    		</h:form>
 	    		<rich:dataTable value="#{comunicacaoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
 	    			<rich:column styleClass="dt-toolbar-col">
 	    				<h:form>

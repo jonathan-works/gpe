@@ -178,6 +178,12 @@ public abstract class DAO<T> implements Serializable {
         }
     }
 
+    @Transactional
+    public T removeWithoutFlush(final T object) {
+		getEntityManager().remove(object);
+		return object;
+    }
+
     public T merge(final T object) throws DAOException {
         try {
             return getEntityManager().merge(object);

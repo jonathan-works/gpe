@@ -30,9 +30,9 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ArbitraryExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
+import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.JbpmExpressionResolver;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
-import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -216,6 +216,8 @@ public class ComunicacaoService {
 				for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 					destinatario.setComunicacao(comunicacao);
 				}
+				genericManager.removeWithoutFlush(documentoModeloComunicacao);
+				modeloComunicacao.getDocumentos().remove(documentoModeloComunicacao);
 			} else {
 				throw new DAOException("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
 			}

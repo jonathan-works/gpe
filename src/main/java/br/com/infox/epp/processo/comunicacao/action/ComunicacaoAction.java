@@ -40,6 +40,7 @@ import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -248,7 +249,6 @@ public class ComunicacaoAction implements Serializable {
 		prorrogacaoPrazo = true;
 		ciencia = false;
 		documentos = false;
-		dataCiencia = null;
 		documentoUploader.clear();
 		documentoUploader.setClassificacaoDocumento(classificacaoProrrogacao);
 	}
@@ -262,7 +262,6 @@ public class ComunicacaoAction implements Serializable {
 		this.documentosDestinatario = null;
 		documentos = true;
 		prorrogacaoPrazo = false;
-		dataCiencia = null;
 		ciencia = false;
 	}
 	
@@ -282,7 +281,7 @@ public class ComunicacaoAction implements Serializable {
 		return JbpmUtil.getProcesso().getIdJbpm();
 	}
 	
-	public void downloadComunicacao(DestinatarioBean destinatario) {
+	public void downloadComunicacaoCompleta(DestinatarioBean destinatario) {
 		DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatarioModelo.getModeloComunicacao(), destinatarioModelo);
@@ -297,10 +296,6 @@ public class ComunicacaoAction implements Serializable {
 		if (documentosDestinatario == null) {
 			DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
 			documentosDestinatario = new ArrayList<>();
-			Documento comunicacao = new Documento();
-			comunicacao.setDescricao("Comunicação");
-			comunicacao.setDocumentoBin(destinatarioModelo.getComunicacao());
-			documentosDestinatario.add(comunicacao);
 			for (DocumentoModeloComunicacao documentoModelo : destinatarioModelo.getModeloComunicacao().getDocumentos()) {
 				documentosDestinatario.add(documentoModelo.getDocumento());
 			}
@@ -312,8 +307,23 @@ public class ComunicacaoAction implements Serializable {
 		documentoDownloader.downloadDocumento(documento);
 	}
 	
+	public void downloadComunicacao() {
+		documentoDownloader.downloadDocumento(destinatario.getDocumentoComunicacao());
+	}
+	
 	public boolean isCienciaConfirmada(DestinatarioBean bean) {
 		return dadosCiencia.get(bean.getIdDestinatario());
+	}
+	
+	public void clear() {
+		clearCacheModelos();
+		ciencia = false;
+		prorrogacaoPrazo = false;
+		documentos = false;
+		documentosDestinatario = null;
+		destinatario = null;
+		dataCiencia = null;
+		documentoUploader.clear();
 	}
 	
 	private DestinatarioBean createDestinatarioBean(DestinatarioModeloComunicacao destinatario) {
@@ -324,6 +334,7 @@ public class ComunicacaoAction implements Serializable {
 		bean.setTipoComunicacao(destinatario.getModeloComunicacao().getTipoComunicacao().getDescricao());
 		bean.setNome(destinatario.getNome());
 		bean.setPrazoAtendimento(destinatario.getPrazo() != null ? destinatario.getPrazo().toString() : "-");
+		bean.setDocumentoComunicacao(destinatario.getComunicacao());
 		
 		Processo comunicacao = bean.getComunicacao();
 		bean.setDataEnvio(dateFormat.format(comunicacao.getDataInicio()));
@@ -379,6 +390,7 @@ public class ComunicacaoAction implements Serializable {
 		private String prazoFinal;
 		private Processo comunicacao;
 		private Long idModeloComunicacao;
+		private DocumentoBin documentoComunicacao;
 		
 		public Long getIdDestinatario() {
 			return idDestinatario;
@@ -445,6 +457,12 @@ public class ComunicacaoAction implements Serializable {
 		}
 		public void setIdModeloComunicacao(Long idModeloComunicacao) {
 			this.idModeloComunicacao = idModeloComunicacao;
+		}
+		public DocumentoBin getDocumentoComunicacao() {
+			return documentoComunicacao;
+		}
+		public void setDocumentoComunicacao(DocumentoBin documentoComunicacao) {
+			this.documentoComunicacao = documentoComunicacao;
 		}
 	}
 }

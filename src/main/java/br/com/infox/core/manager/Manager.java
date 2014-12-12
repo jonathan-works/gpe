@@ -37,6 +37,10 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
         return (T) dao.remove(o);
     }
 
+    public T removeWithoutFlush(T o) {
+    	return (T) dao.removeWithoutFlush(o);
+    }
+    
     public T find(Object id) {
         return dao.find(id);
     }

@@ -54,20 +54,23 @@ public class DocumentoDownloader implements Serializable {
 
 
     public void downloadDocumento(Documento documento) {
-        UsuarioLogin usuario = Authenticator.getUsuarioLogado();
-        if (sigiloDocumentoManager.isSigiloso(documento.getId()) && (usuario == null || !sigiloDocumentoService.possuiPermissao(documento, usuario))) {
+    	UsuarioLogin usuario = Authenticator.getUsuarioLogado();
+    	if (sigiloDocumentoManager.isSigiloso(documento.getId()) && (usuario == null || !sigiloDocumentoService.possuiPermissao(documento, usuario))) {
             FacesMessages.instance().add("Este documento é sigiloso.");
             LOG.warn("Tentativa não autorizada de acesso a documento sigiloso, id: " + documento.getId());
             return;
         }
-        DocumentoBin pdBin = documento.getDocumentoBin();
-        byte[] data = documentoBinarioManager.getData(pdBin.getId());
-        String fileName = pdBin.getNomeArquivo();
-        String contentType = "application/" + pdBin.getExtensao();
-        if (contentType.equals("application/pdf") && documento.hasAssinatura()) {
+        downloadDocumento(documento.getDocumentoBin());
+    }
+    
+    public void downloadDocumento(DocumentoBin documento) {
+        byte[] data = documentoBinarioManager.getData(documento.getId());
+        String fileName = documento.getNomeArquivo();
+        String contentType = "application/" + documento.getExtensao();
+        if (contentType.equals("application/pdf") && !documento.getAssinaturas().isEmpty()) {
             HttpServletResponse response = FileDownloader.prepareDownloadResponse(contentType, fileName);
             try {
-                documentoBinManager.writeMargemDocumento(pdBin, data, response.getOutputStream());
+                documentoBinManager.writeMargemDocumento(documento, data, response.getOutputStream());
                 FacesContext.getCurrentInstance().responseComplete();
             } catch (IOException | BusinessException e) {
                 LOG.error("", e);
