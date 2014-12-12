@@ -1,12 +1,9 @@
 package br.com.infox.epp.access.crud;
 
-import static br.com.infox.epp.access.service.AuthenticatorService.CERTIFICATE_ERROR_EXPIRED;
-import static br.com.infox.epp.access.service.AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN;
-import static java.text.MessageFormat.format;
-
 import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
+import java.text.MessageFormat;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -22,6 +19,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -55,6 +53,7 @@ public class TermoAdesaoAction implements Serializable {
     private String signature;
     private String certChain;
     private String termoAdesao;
+    private String md5Sum;
     private String tituloTermoAdesao;
 
     @In
@@ -70,76 +69,107 @@ public class TermoAdesaoAction implements Serializable {
     @In
     private PessoaFisicaManager pessoaFisicaManager;
 
-    public void assinarTermoAdesao(String certChain, String signature) {
+    public void assinarTermoAdesao(final String certChain,
+            final String signature) {
         try {
-            UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
-            authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
-            DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
+            final UsuarioLogin usuarioLogin = this.authenticatorService
+                    .getUsuarioLoginFromCertChain(certChain);
+            this.authenticatorService.signatureAuthentication(usuarioLogin,
+                    signature, certChain, true);
+            final DocumentoBin bin = this.documentoBinManager
+                    .createProcessoDocumentoBin(this.tituloTermoAdesao,
+                            getTermoAdesao());
 
-            final List<UsuarioPerfil> perfilAtivoList = usuarioLogin.getUsuarioPerfilAtivoList();
+            final List<UsuarioPerfil> perfilAtivoList = usuarioLogin
+                    .getUsuarioPerfilAtivoList();
             if (perfilAtivoList != null) {
                 UsuarioPerfil perfil = null;
-                for (UsuarioPerfil usuarioPerfil : perfilAtivoList) {
-                    if ((perfil = usuarioPerfil).getPerfilTemplate().getPapel().getTermoAdesao()) {
+                for (final UsuarioPerfil usuarioPerfil : perfilAtivoList) {
+                    if ((perfil = usuarioPerfil).getPerfilTemplate().getPapel()
+                            .getTermoAdesao()) {
                         break;
                     }
                 }
-                assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature);
-                PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
+                this.assinaturaDocumentoService.assinarDocumento(bin, perfil,
+                        certChain, signature);
+                final PessoaFisica pessoaFisica = usuarioLogin
+                        .getPessoaFisica();
                 pessoaFisica.setTermoAdesao(bin);
             }
-            documentoBinManager.flush();
-            Redirect r = Redirect.instance();
+            this.documentoBinManager.flush();
+            final Redirect r = Redirect.instance();
             r.setViewId("/Painel/list.seam");
             r.setConversationPropagationEnabled(false);
             r.setParameter("cid", null);
             r.execute();
-            FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
+            FacesMessages
+            .instance()
+            .add(Severity.INFO,
+                    Messages.resolveMessage(TermoAdesaoAction.TERMS_CONDITIONS_SIGN_SUCCESS));
         } catch (final CertificateExpiredException e) {
-            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
-            throw new RedirectToLoginApplicationException(Messages.resolveMessage(CERTIFICATE_ERROR_EXPIRED), e);
+            TermoAdesaoAction.LOG.error(
+                    TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
+            throw new RedirectToLoginApplicationException(
+                    Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_EXPIRED),
+                    e);
         } catch (final CertificateException e) {
-            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
-            throw new RedirectToLoginApplicationException(format(Messages.resolveMessage(CERTIFICATE_ERROR_UNKNOWN),e.getMessage()), e);
+            TermoAdesaoAction.LOG.error(
+                    TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
+            throw new RedirectToLoginApplicationException(
+                    MessageFormat.format(
+                            Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN),
+                            e.getMessage()), e);
         } catch (CertificadoException | LoginException | DAOException e) {
-            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
+            TermoAdesaoAction.LOG.error(
+                    TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
-        } catch (AssinaturaException e) {
-            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
+        } catch (final AssinaturaException e) {
+            TermoAdesaoAction.LOG.error(
+                    TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
         }
     }
 
     public String getTermoAdesao() {
-        if (termoAdesao == null) {
-            Parametro parametro = parametroManager.getParametro(PARAMETRO_TERMO_ADESAO);
+        if (this.termoAdesao == null) {
+            final Parametro parametro = this.parametroManager
+                    .getParametro(TermoAdesaoAction.PARAMETRO_TERMO_ADESAO);
             if (parametro != null) {
-                ModeloDocumento modeloDocumento = modeloDocumentoManager.getModeloDocumentoByTitulo(tituloTermoAdesao=parametro.getValorVariavel());
-                termoAdesao = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
+                final ModeloDocumento modeloDocumento = this.modeloDocumentoManager
+                        .getModeloDocumentoByTitulo(this.tituloTermoAdesao = parametro
+                                .getValorVariavel());
+                this.termoAdesao = this.modeloDocumentoManager
+                        .evaluateModeloDocumento(modeloDocumento);
             }
-            if (termoAdesao == null) {
-                termoAdesao = "<div><p>TERMO DE ADESÃO</p></div>";
+            if (this.termoAdesao == null) {
+                this.termoAdesao = "<div><p>TERMO DE ADESÃO</p></div>";
             }
+            this.md5Sum = MD5Encoder.encode(this.termoAdesao);
         }
-        return termoAdesao;
+        return this.termoAdesao;
     }
 
     public String getTermoAdesaoPanelName() {
-        return PANEL_NAME;
+        return TermoAdesaoAction.PANEL_NAME;
     }
 
     public String getSignature() {
-        return signature;
+        return this.signature;
     }
 
-    public void setSignature(String signature) {
+    public void setSignature(final String signature) {
         this.signature = signature;
     }
 
     public String getCertChain() {
-        return certChain;
+        return this.certChain;
     }
 
-    public void setCertChain(String certChain) {
+    public void setCertChain(final String certChain) {
         this.certChain = certChain;
     }
+
+    public String getMd5Sum() {
+        return this.md5Sum;
+    }
+
 }
