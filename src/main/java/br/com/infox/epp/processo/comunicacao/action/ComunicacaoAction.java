@@ -157,6 +157,7 @@ public class ComunicacaoAction implements Serializable {
 		ciencia = true;
 		prorrogacaoPrazo = false;
 		documentos = false;
+		dataCiencia = null;
 		documentoUploader.clear();
 	}
 	
@@ -247,6 +248,7 @@ public class ComunicacaoAction implements Serializable {
 		prorrogacaoPrazo = true;
 		ciencia = false;
 		documentos = false;
+		dataCiencia = null;
 		documentoUploader.clear();
 		documentoUploader.setClassificacaoDocumento(classificacaoProrrogacao);
 	}
@@ -260,6 +262,7 @@ public class ComunicacaoAction implements Serializable {
 		this.documentosDestinatario = null;
 		documentos = true;
 		prorrogacaoPrazo = false;
+		dataCiencia = null;
 		ciencia = false;
 	}
 	

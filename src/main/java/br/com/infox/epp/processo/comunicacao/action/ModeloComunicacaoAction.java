@@ -322,7 +322,7 @@ public class ModeloComunicacaoAction implements Serializable {
 				}
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 			}
-			expedida = true;
+			expedida = null;
 		} catch (DAOException e) {
 			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
 			actionMessagesService.handleDAOException(e);
