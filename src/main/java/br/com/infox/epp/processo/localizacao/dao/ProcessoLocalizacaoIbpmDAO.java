@@ -27,6 +27,8 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.seam.util.ComponentUtil;
@@ -59,14 +61,19 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         return count != null && count > 0;
     }
     
-    @Deprecated // regra para pegar unidade decisora
     private boolean isUsuarioLogadoEmUnidadesDecisorasDoProcesso(Processo processo) {
         UnidadeDecisoraMonocratica monocraticaLogada = getAuthenticator().getMonocraticaLogada();
         UnidadeDecisoraColegiada colegiadaLogada = getAuthenticator().getColegiadaLogada();
-//        UnidadeDecisoraMonocratica monocraticaDoProcesso = pe.getDecisoraMonocratica();
-//        UnidadeDecisoraColegiada colegiadaDoProcesso = pe.getDecisoraColegiada();
+        MetadadoProcesso metadado = processo.getMetadado(MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA);
         UnidadeDecisoraMonocratica monocraticaDoProcesso = null;
+        if (metadado != null) {
+        	monocraticaDoProcesso = metadado.getValue();
+        }
         UnidadeDecisoraColegiada colegiadaDoProcesso = null;
+        metadado = processo.getMetadado(MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA);
+        if (metadado != null) {
+        	colegiadaDoProcesso = metadado.getValue();
+        }
         return (monocraticaLogada == null && monocraticaDoProcesso == null && colegiadaLogada == null && colegiadaDoProcesso == null) 
                 || (monocraticaLogada != null && colegiadaLogada == null && monocraticaLogada.equals(monocraticaDoProcesso)) 
                 || (colegiadaLogada != null && monocraticaLogada == null && colegiadaLogada.equals(colegiadaDoProcesso))
