@@ -87,20 +87,19 @@ import br.com.infox.epp.system.entity.EntityLog;
 
 @Entity
 @Table(name = TABLE_USUARIO_LOGIN, uniqueConstraints = {
-    @UniqueConstraint(columnNames = LOGIN),
-    @UniqueConstraint(columnNames = "id_pessoa_fisica") })
+        @UniqueConstraint(columnNames = LOGIN),
+        @UniqueConstraint(columnNames = "id_pessoa_fisica") })
 @NamedQueries(value = {
-    @NamedQuery(name = USUARIO_LOGIN_NAME, query = USUARIO_LOGIN_QUERY),
-    @NamedQuery(name = USUARIO_BY_LOGIN_TASK_INSTANCE, query = USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY),
-    @NamedQuery(name = USUARIO_BY_EMAIL, query = USUARIO_LOGIN_EMAIL_QUERY),
-    @NamedQuery(name = INATIVAR_USUARIO, query = INATIVAR_USUARIO_QUERY),
-    @NamedQuery(name = USUARIO_BY_PESSOA, query = USUARIO_BY_PESSOA_QUERY),
-    @NamedQuery(name = USUARIO_FETCH_PF_BY_NUMERO_CPF, query = USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY)
-})
+        @NamedQuery(name = USUARIO_LOGIN_NAME, query = USUARIO_LOGIN_QUERY),
+        @NamedQuery(name = USUARIO_BY_LOGIN_TASK_INSTANCE, query = USUARIO_BY_LOGIN_TASK_INSTANCE_QUERY),
+        @NamedQuery(name = USUARIO_BY_EMAIL, query = USUARIO_LOGIN_EMAIL_QUERY),
+        @NamedQuery(name = INATIVAR_USUARIO, query = INATIVAR_USUARIO_QUERY),
+        @NamedQuery(name = USUARIO_BY_PESSOA, query = USUARIO_BY_PESSOA_QUERY),
+        @NamedQuery(name = USUARIO_FETCH_PF_BY_NUMERO_CPF, query = USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY) })
 @NamedNativeQueries({
-    @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE, query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
-    @NamedNativeQuery(name = ACTORID_TAREFA_ATUAL_BY_PROCESSO, query = ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY),
-    @NamedNativeQuery(name = NOME_USUARIO_BY_ID_TASK_INSTANCE, query = NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY)})
+        @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE, query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
+        @NamedNativeQuery(name = ACTORID_TAREFA_ATUAL_BY_PROCESSO, query = ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY),
+        @NamedNativeQuery(name = NOME_USUARIO_BY_ID_TASK_INSTANCE, query = NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY) })
 public class UsuarioLogin implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -121,43 +120,51 @@ public class UsuarioLogin implements Serializable {
     private UsuarioEnum tipoUsuario;
     private PessoaFisica pessoaFisica;
 
-    private Set<Papel> papelSet = new TreeSet<Papel>();
+    private Set<Papel> papelSet;
 
-    private List<Fluxo> fluxoList = new ArrayList<Fluxo>(0);
-    private List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>(0);
-    private List<Processo> processoListForIdUsuarioCadastroProcesso = new ArrayList<Processo>(0);
-    private List<BloqueioUsuario> bloqueioUsuarioList = new ArrayList<BloqueioUsuario>(0);
-    private List<Documento> processoDocumentoListForIdUsuarioInclusao = new ArrayList<Documento>(0);
-    private List<EntityLog> entityLogList = new ArrayList<EntityLog>(0);
+    private List<Fluxo> fluxoList;
+    private List<UsuarioPerfil> usuarioPerfilList;
+    private List<Processo> processoListForIdUsuarioCadastroProcesso;
+    private List<BloqueioUsuario> bloqueioUsuarioList;
+    private List<Documento> processoDocumentoListForIdUsuarioInclusao;
+    private List<EntityLog> entityLogList;
 
     public UsuarioLogin() {
-        dataExpiracao = null;
+        papelSet = new TreeSet<>();
+        fluxoList = new ArrayList<>(0);
+        usuarioPerfilList = new ArrayList<>(0);
+        processoListForIdUsuarioCadastroProcesso = new ArrayList<>(0);
+        bloqueioUsuarioList = new ArrayList<>(0);
+        processoDocumentoListForIdUsuarioInclusao = new ArrayList<>(0);
+        entityLogList = new ArrayList<>(0);
     }
 
-    public UsuarioLogin(final String nomeUsuario, final String email,
-            final String login) {
-        this.nomeUsuario = nomeUsuario;
-        this.email = email;
-        this.login = login;
-        this.tipoUsuario = UsuarioEnum.H;
-        this.ativo = Boolean.TRUE;
-        this.provisorio = Boolean.FALSE;
-        this.bloqueio = Boolean.FALSE;
-    }
-
-    public UsuarioLogin(final String nomeUsuario, final String email,
-            final String login, final UsuarioEnum tipoUsuario,
-            final Boolean ativo) {
+    private UsuarioLogin(final String nomeUsuario, final String email,
+            final String login, UsuarioEnum tipoUsuario, Boolean ativo,
+            Boolean provisorio, Boolean bloqueio) {
+        this();
         this.nomeUsuario = nomeUsuario;
         this.email = email;
         this.login = login;
         this.tipoUsuario = tipoUsuario;
         this.ativo = ativo;
-        this.provisorio = Boolean.FALSE;
-        this.bloqueio = Boolean.FALSE;
+        this.provisorio = provisorio;
+        this.bloqueio = bloqueio;
     }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_USUARIO)
+    public UsuarioLogin(final String nomeUsuario, final String email,
+            final String login, final UsuarioEnum tipoUsuario,
+            final Boolean ativo) {
+        this(nomeUsuario, email, login, tipoUsuario, ativo, Boolean.FALSE,
+                Boolean.FALSE);
+    }
+
+    public UsuarioLogin(final String nomeUsuario, final String email,
+            final String login) {
+        this(nomeUsuario, email, login, UsuarioEnum.H, Boolean.TRUE);
+    }
+
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR, sequenceName = SEQUENCE_USUARIO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_USUARIO, unique = true, nullable = false)
@@ -279,7 +286,8 @@ public class UsuarioLogin implements Serializable {
         int result = 1;
         result = prime
                 * result
-                + ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin().hashCode());
+                + ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin()
+                        .hashCode());
         return result;
     }
 
@@ -327,8 +335,7 @@ public class UsuarioLogin implements Serializable {
         return this.usuarioPerfilList;
     }
 
-    public void setUsuarioPerfilList(
-            List<UsuarioPerfil> usuarioPerfilList) {
+    public void setUsuarioPerfilList(List<UsuarioPerfil> usuarioPerfilList) {
         this.usuarioPerfilList = usuarioPerfilList;
     }
 
@@ -402,18 +409,18 @@ public class UsuarioLogin implements Serializable {
     public boolean isHumano() {
         return UsuarioEnum.H.equals(tipoUsuario);
     }
-    
+
     @Transient
     public List<UsuarioPerfil> getUsuarioPerfilAtivoList() {
         List<UsuarioPerfil> result = new ArrayList<>();
         for (UsuarioPerfil usuarioPerfil : getUsuarioPerfilList()) {
             if (usuarioPerfil.getPerfilTemplate().getAtivo()) {
-              result.add(usuarioPerfil);
+                result.add(usuarioPerfil);
             }
         }
         return result;
     }
-    
+
     @Transient
     public String getPerfisFormatados() {
         if (getUsuarioPerfilList().isEmpty()) {
@@ -421,7 +428,7 @@ public class UsuarioLogin implements Serializable {
         } else {
             return getUsuarioPerfilList().toString();
         }
-            
+
     }
 
 }
