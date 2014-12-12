@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf">
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
 
-	<h:panelGroup id="#{empty id ? 'divApplet' : id}">
-		<s:fragment rendered="#{empty rendered ? true : rendered}">
-			<script
-				src="#{pathResolver.contextPath}/resources/js/certificadoDigital/constant.js" />
-			<script
-				src="#{pathResolver.contextPath}/resources/js/certificadoDigital/websocket.js" />
-			<a
-				href="#{pathResolver.contextPath}/certificado/certificado_digital.jnlp"
-				onclick="Infox.CertDig.userClickedOnDownloadJNPLButton();">#{empty
-				signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}</a>
+  <h:panelGroup id="#{empty id ? 'divApplet' : id}">
+    <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-			<h:outputScript>
+      <h:inputHidden
+        id="#{id}Signature"
+        value="#{signatureField}">
+      </h:inputHidden>
+      <h:inputHidden
+        id="#{id}CertChain"
+        value="#{certificationChainField}">
+      </h:inputHidden>
+      <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/constant.js" />
+      <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/websocket.js" />
+      <a
+        href="#{pathResolver.contextPath}/certificado/certificado_digital.jnlp"
+        onclick="Infox.CertDig.userClickedOnDownloadJNPLButton();">#{empty signButtonCaption ? 'Assinar Digitalmente' :
+        signButtonCaption}</a>
+
+      <h:outputScript>
+      Infox.CertDig.Functions = {
+        getData : function getData() {
+          return "#{signableData}";
+        }
+      };
 			Infox.CertDig.Constant.Parameter = 
 			{
 				DEBUG                      : #{empty debug ? false : debug},
@@ -27,9 +41,9 @@
 				LOGIN_MODE                 : #{empty loginMode ? false : loginMode},
 
 				FORM_ID                    : "#{formId}",
-				CERTIFICATION_CHAIN_FIELD  : "#{certificationChainField}",
-				SIGNATURE_FIELD            : "#{signatureField}",
-				GET_DATA_FUNCTION          : "#{getDataFunction}",
+				CERTIFICATION_CHAIN_FIELD  : "#{rich:clientId(id.concat('CertChain'))}",
+				SIGNATURE_FIELD            : "#{rich:clientId(id.concat('Signature'))}",
+				GET_DATA_FUNCTION          : "Infox.CertDig.Functions.getData()",
 				
 				FUNCTION_PRE_SIGN          : "#{functionPreSign}",
 				FUNCTION_POS_SIGN          : "#{functionPosSign}",
@@ -41,6 +55,6 @@
 				USE_PROVIDER_DLL           : #{empty useProviderDll ? false : useProviderDll}
 			};
 			</h:outputScript>
-		</s:fragment>
-	</h:panelGroup>
+    </s:fragment>
+  </h:panelGroup>
 </ui:composition>

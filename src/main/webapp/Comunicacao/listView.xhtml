@@ -87,23 +87,16 @@
 						<s:div id="assinatura_pers">
 							<a:jsFunction name="assinar"
 								action="#{expedicaoComunicacaoAction.expedirComunicacao()}"
-								execute="@this certChain signature"
+								execute="@this appletAssinaturaCertChain appletAssinaturaSignature"
 								render="comunicacaoForm, pageBodyDialogMessage, destinatarios"
 								oncomplete="infox.hideLoading();" />
-
-							<h:inputHidden id="certChain"
-								value="#{expedicaoComunicacaoAction.certChain}" />
-							<h:inputHidden id="signature"
-								value="#{expedicaoComunicacaoAction.signature}" />
-							<h:inputHidden id="dadosAssinaveis"
-								value="#{expedicaoComunicacaoAction.comunicacao}" />
 
 							<wi:certificadoDigital id="appletAssinatura"
 								urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
 								formId="#{rich:clientId('comunicacaoForm')}"
-								certificationChainField="#{rich:clientId('certChain')}"
-								signatureField="#{rich:clientId('signature')}"
-								getDataFunction="documento.getData()" useBase64Function="true"
+								certificationChainField="#{expedicaoComunicacaoAction.certChain}"
+								signatureField="#{expedicaoComunicacaoAction.signature}"
+								signableData="#{expedicaoComunicacaoAction.comunicacao}" useBase64Function="true"
 								functionPreSign="infox.showLoading();"
 								functionPosSign="assinar();" debug="false" loginMode="false"
 								useProviderDll="false"
@@ -111,13 +104,6 @@
 								signButtonCaption="#{eppmessages['comunicacao.expedirComunicacao']}">
 							</wi:certificadoDigital>
 
-							<h:outputScript>
-				                var documento={
-				                  getData:function getData() {
-				                    return #{rich:jQuery('dadosAssinaveis')}.val();
-				                  }
-				                };
-				              </h:outputScript>
 						</s:div>
 					</rich:collapsiblePanel>
 				</h:form>

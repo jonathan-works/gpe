@@ -19,32 +19,26 @@
 					execute="@this termoAdesaoSignature termoAdesaoCertChain"
 					render="DialogMessage" limitRender="true" />
 
-				<h:inputHidden id="termoAdesaoSignature"
-					value="#{termoAdesaoAction.signature}">
-				</h:inputHidden>
-				<h:inputHidden id="termoAdesaoCertChain"
-					value="#{termoAdesaoAction.certChain}">
-				</h:inputHidden>
 				<s:div>
 					<div>
 						<wi:editor id="termoAdesao"
 							value="#{termoAdesaoAction.termoAdesao}" readonly="true"
-							showVariables="false" width="#{800-15}" height="#{600-157}" />
+							showVariables="false" width="785" height="443" />
 					</div>
 
 					<div>
-						<wi:certificadoDigital id="assinarTermoAdesao"
+						<wi:certificadoDigital id="termoAdesao"
 							urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
 							formId="#{rich:clientId('termoAdesaoForm')}"
-							certificationChainField="#{rich:clientId('termoAdesaoCertChain')}"
-							signatureField="#{rich:clientId('termoAdesaoSignature')}"
-							getDataFunction="infox.editor.termoAdesao.instance.getData()"
+							certificationChainField="#{termoAdesaoAction.certChain}"
+							signatureField="#{termoAdesaoAction.signature}"
+							signableData="#{termoAdesaoAction.md5Sum}"
 							useBase64Function="true" functionPreSign="infox.showLoading();"
 							functionPosSign="assinarTermo();infox.hideLoading();"
 							debug="false" loginMode="false" useProviderDll="false"
 							signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}">
 						</wi:certificadoDigital>
-
+            
 						<input
 							style="vertical-align: top; width: 140px !important; height: 25px;"
 							id="cancela" type="button"

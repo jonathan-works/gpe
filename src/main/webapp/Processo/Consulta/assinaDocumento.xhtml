@@ -17,9 +17,6 @@
                     useBase64:function useBase64() {
                         return 'true';
                     },
-                    getData:function getData() {
-                        return "#{assinadorDocumento.documentoBin.md5Documento}";        
-                    },
                     hasSignature:function hasSignature() {
                         return #{rich:jQuery("signature")}.val() != ''
                     },
@@ -41,9 +38,9 @@
 						<wi:certificadoDigital id="certificacao"
 							urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
 							formId="formValidar"
-							certificationChainField="#{rich:clientId('certChain')}"
-							signatureField="#{rich:clientId('signature')}"
-							getDataFunction="documento.getData()"
+							certificationChainField="#{assinadorDocumento.certChain}"
+							signatureField="#{assinadorDocumento.signature}"
+							signableData="#{assinadorDocumento.documentoBin.md5Documento}"
 							functionPreSign="showLoading()"
 							functionPosSign="hideLoading();documento.postValidate();"
 							debug="false" loginMode="false" useProviderDll="false">
@@ -56,10 +53,6 @@
 							execute="@form" data="#{assinadorDocumento.houveErroAoAssinar}"
 							render="painel, pageBodyDialogMessage" />
 
-						<h:inputHidden id="certChain"
-							value="#{assinadorDocumento.certChain}" />
-						<h:inputHidden id="signature"
-							value="#{assinadorDocumento.signature}" />
 					</h:form>
 				</s:div>
 			</rich:panel>

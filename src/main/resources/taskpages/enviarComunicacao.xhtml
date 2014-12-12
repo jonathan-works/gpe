@@ -87,34 +87,27 @@
 								reRender="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"/>
 							<s:div id="assinatura_pers" rendered="#{not modeloComunicacaoAction.documentoComunicacao.documento.hasAssinatura()}">
 								<a:jsFunction name="assinarBin" action="#{modeloComunicacaoAction.expedirComunicacao()}"
-									execute="@this certChain signature" 
+									execute="@this appletAssinaturaCertChain appletAssinaturaSignature" 
 									render="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
 								  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
-								<h:inputHidden id="certChain" value="#{modeloComunicacaoAction.certChain}" />
-								<h:inputHidden id="signature" value="#{modeloComunicacaoAction.signature}" />
-								
-								<wi:certificadoDigital id="appletAssinatura"
-									urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-									formId="#{rich:clientId('expedicaoForm')}"
-									certificationChainField="#{rich:clientId('certChain')}"
-									signatureField="#{rich:clientId('signature')}"
-									getDataFunction="documento.getData()" useBase64Function="true"
-									functionPreSign="infox.showLoading();"
-									functionPosSign="assinarBin();" debug="false" loginMode="false"
-									useProviderDll="false"
-									rendered="#{modeloComunicacaoAction.podeRenderizarApplet()}"
-									signButtonCaption="Expedir Comunicação" />
-								
-		             			<h:inputHidden id="dadosAssinaveis" value="#{modeloComunicacaoAction.documentoComunicacao.documento.documentoBin.md5Documento}" />
-		             
-								<h:outputScript>
-								  var documento={
-								    getData:function getData() {
-								      return #{rich:jQuery('dadosAssinaveis')}.val();
-								    }
-								  };
-								</h:outputScript>
-		          			</s:div>
+
+                <wi:certificadoDigital
+                  id="appletAssinatura"
+                  urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+                  formId="#{rich:clientId('expedicaoForm')}"
+                  certificationChainField="#{modeloComunicacaoAction.certChain}"
+                  signatureField="#{modeloComunicacaoAction.signature}"
+                  signableData="#{modeloComunicacaoAction.documentoComunicacao.documento.documentoBin.md5Documento}"
+                  useBase64Function="true"
+                  functionPreSign="infox.showLoading();"
+                  functionPosSign="assinarBin();"
+                  debug="false"
+                  loginMode="false"
+                  useProviderDll="false"
+                  rendered="#{modeloComunicacaoAction.podeRenderizarApplet()}"
+                  signButtonCaption="Expedir Comunicação" />
+
+              </s:div>
 		          		</s:div>
 					</h:form>
 				</div>
@@ -169,34 +162,22 @@
 					<wi:editor id="comunicacao" readonly="true" value="#{modeloComunicacaoAction.destinatario.comunicacao.modeloDocumento}" />
 					<s:div id="assinatura_pers">
 						<a:jsFunction name="assinar" action="#{modeloComunicacaoAction.expedirComunicacao()}"
-							execute="@this certChain signature" 
+							execute="@this appletAssinaturaCertChain appletAssinaturaSignature" 
 							render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
 						  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
 	             
-						<h:inputHidden id="certChain" value="#{modeloComunicacaoAction.certChain}" />
-						<h:inputHidden id="signature" value="#{modeloComunicacaoAction.signature}" />
 						
 						<wi:certificadoDigital id="appletAssinatura"
 								urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
 								formId="#{rich:clientId('comunicacaoDestinatarioForm')}"
-								certificationChainField="#{rich:clientId('certChain')}"
-								signatureField="#{rich:clientId('signature')}"
-								getDataFunction="documentoEditor.getData()" useBase64Function="true"
+								certificationChainField="#{modeloComunicacaoAction.certChain}"
+								signatureField="#{modeloComunicacaoAction.signature}"
+								signableData="#{modeloComunicacaoAction.destinatario.comunicacao.md5Documento}" useBase64Function="true"
 								functionPreSign="infox.showLoading();"
 								functionPosSign="assinar();" debug="false" loginMode="false"
 								useProviderDll="false"
 								rendered="#{not modeloComunicacaoAction.destinatario.expedido and modeloComunicacaoAction.podeRenderizarApplet()}"
 								signButtonCaption="Expedir Comunicação" />
-	             
-	             		<h:inputHidden id="dadosAssinaveis" value="#{modeloComunicacaoAction.destinatario.comunicacao.md5Documento}" />
-	             
-						<h:outputScript>
-						  var documentoEditor={
-						    getData:function getData() {
-						      return #{rich:jQuery('dadosAssinaveis')}.val();
-						    }
-						  };
-						</h:outputScript>
 	          		</s:div>
 				</rich:collapsiblePanel>
 			</h:form>

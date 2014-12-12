@@ -50,16 +50,10 @@
 				<s:div id="conteudoAssinatura">
 					<h:form id="assinaturaDocumento">
 						<s:div id="assinatura_pers">
-							<h:inputHidden id="certChain"
-								value="#{validaDocumentoAction.certChain}" />
-							<h:inputHidden id="signature"
-								value="#{validaDocumentoAction.signature}" />
-							<h:inputHidden id="dadosAssinaveis"
-								value="#{validaDocumentoAction.documentoBin.md5Documento}" />
 
 							<a:jsFunction name="assinar"
 								action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
-								execute="@this certChain signature"
+								execute="@this appletAssinaturaCertChain appletAssinaturaSignature"
 								render="mp_ass, pageBodyDialogMessage"
 								oncomplete="infox.hideLoading(); checkExternalCallback();" />
 
@@ -67,9 +61,9 @@
 								loginMode="false"
 								formId="#{rich:clientId('assinaturaDocumento')}"
 								signButtonCaption="#{eppmessages['assinaturas.assinar']}"
-								certificationChainField="#{rich:clientId('certChain')}"
-								signatureField="#{rich:clientId('signature')}"
-								getDataFunction="documento.getData()"
+								certificationChainField="#{validaDocumentoAction.certChain}"
+								signatureField="#{validaDocumentoAction.signature}"
+								signableData="#{validaDocumentoAction.documentoBin.md5Documento}"
 								functionPreSign="infox.showLoading();"
 								functionPosSign="assinar();" useBase64Function="true"
 								useProviderDll="false"
@@ -84,11 +78,6 @@
               			opener["#{validaDocumentoAction.externalCallback}"]();
               		}
               	}
-                var documento={
-                  getData:function getData() {
-                    return #{rich:jQuery('dadosAssinaveis')}.val();
-                  }
-                };
               </h:outputScript>
 						</s:div>
 					</h:form>
