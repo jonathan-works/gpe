@@ -27,17 +27,15 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(CaixaCrudAction.NAME)
 public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging.getLogProvider(CaixaCrudAction.class);
+    private static final LogProvider LOG = Logging
+            .getLogProvider(CaixaCrudAction.class);
 
     public static final String NAME = "caixaCrudAction";
     public static final String ADD_CAIXA_EVENT = "addCaixaEvent";
 
-    @In
-    private TarefaManager tarefaManager;
-    @In
-    private CaixaManager caixaManager;
-    @In
-    private ActionMessagesService actionMessagesService;
+    @In private TarefaManager tarefaManager;
+    @In private CaixaManager caixaManager;
+    @In private ActionMessagesService actionMessagesService;
 
     public List<SelectItem> getPreviousNodes() {
         return tarefaManager.getPreviousNodes(getInstance().getTarefa());
@@ -80,7 +78,8 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
             if (PostgreSQLErrorCode.valueOf(ret) == PostgreSQLErrorCode.UNIQUE_VIOLATION) {
                 final StatusMessages messages = getMessagesHandler();
                 messages.clear();
-                messages.add(Severity.ERROR, Messages.resolveMessage("caixa.error.previousNodeExists"));
+                messages.add(Severity.ERROR, Messages
+                        .resolveMessage("caixa.error.previousNodeExists"));
             }
         } catch (IllegalArgumentException e) {
             LOG.warn(".update()", e);
@@ -123,9 +122,11 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
         if (getInstance() != null) {
             remove();
         } else {
-            getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage("caixa.error.notSelected"));
+            getMessagesHandler().add(Severity.ERROR,
+                    Messages.resolveMessage("caixa.error.notSelected"));
         }
-        final TarefasTreeHandler tree = ComponentUtil.getComponent(TarefasTreeHandler.NAME);
+        final TarefasTreeHandler tree = ComponentUtil
+                .getComponent(TarefasTreeHandler.NAME);
         tree.clearTree();
     }
 }

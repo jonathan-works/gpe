@@ -40,17 +40,12 @@ public class PastaAction implements Serializable, ActionListener {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pastaAction";
 
-    @In
-    private ProcessoManager processoManager;
-    @In
-    private PastaManager pastaManager;
-    @In
-    private ActionMessagesService actionMessagesService;
-    @In
-    private DocumentoManager documentoManager;
-    @In
-    private ParticipanteProcessoManager participanteProcessoManager;
-    
+    @In private ProcessoManager processoManager;
+    @In private PastaManager pastaManager;
+    @In private ActionMessagesService actionMessagesService;
+    @In private DocumentoManager documentoManager;
+    @In private ParticipanteProcessoManager participanteProcessoManager;
+
     private Processo processo;
     private List<Pasta> pastaList;
     private Pasta instance;
@@ -60,7 +55,7 @@ public class PastaAction implements Serializable, ActionListener {
     public void create() {
         newInstance();
     }
-    
+
     public void newInstance() {
         setInstance(new Pasta());
         setVisivelExterno(false);
@@ -68,13 +63,14 @@ public class PastaAction implements Serializable, ActionListener {
         setRemovivel(true);
         setSistema(false);
     }
-    
+
     public void persist() {
         try {
             String nome = getNome();
             for (Pasta pasta : pastaList) {
                 if (nome.equals(pasta.getNome())) {
-                    FacesMessages.instance().add(Severity.INFO, "Já existe pasta com este nome.");
+                    FacesMessages.instance().add(Severity.INFO,
+                            "Já existe pasta com este nome.");
                     return;
                 }
             }
@@ -86,12 +82,13 @@ public class PastaAction implements Serializable, ActionListener {
             pastaManager.persist(getInstance());
             setPastaList(pastaManager.getByProcesso(processo));
             newInstance();
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Pasta adicionada com sucesso.");
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR,
+                    "Pasta adicionada com sucesso.");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }
     }
-    
+
     public void update() {
         try {
             Pasta pasta = pastaManager.find(getId());
@@ -103,12 +100,13 @@ public class PastaAction implements Serializable, ActionListener {
             }
             pastaManager.update(pasta);
             newInstance();
-            FacesMessages.instance().add(Severity.INFO, "Pasta atualizada com sucesso.");
+            FacesMessages.instance().add(Severity.INFO,
+                    "Pasta atualizada com sucesso.");
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }
     }
-    
+
     public void remove(Pasta pasta) {
         try {
             if (pastaManager == null) {
@@ -116,8 +114,11 @@ public class PastaAction implements Serializable, ActionListener {
             }
             pastaManager.remove(pasta);
             newInstance();
-            FacesMessages.instance().add(Severity.INFO, "Pasta removida com sucesso.");
+            FacesMessages.instance().add(Severity.INFO,
+                    "Pasta removida com sucesso.");
         } catch (Exception e) {
+            // TODO logar este erro.
+            // actionMessagesService.handleDAOException(e);
             e.printStackTrace();
         }
     }
@@ -139,7 +140,7 @@ public class PastaAction implements Serializable, ActionListener {
             }
         }
     }
-    
+
     public Boolean canRemove(Pasta pasta) {
         if (!pasta.getRemovivel() || !canEdit(pasta)) {
             return false;
@@ -147,22 +148,26 @@ public class PastaAction implements Serializable, ActionListener {
         List<Documento> documentoList = pasta.getDocumentosList();
         return (documentoList == null || documentoList.isEmpty());
     }
-    
+
     public Boolean canEdit(Pasta pasta) {
         return pasta != null && !pasta.getSistema();
     }
-    
+
     public Boolean canSee(Pasta pasta) {
         if (!pasta.getVisivelExterno())
             return false;
         if (pasta.getVisivelExterno() && pasta.getVisivelNaoParticipante())
             return true;
-        UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
+        UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get(
+                "usuarioLogado");
         if (usuario == null || usuario.getPessoaFisica() == null)
             return false;
         PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-        ParticipanteProcesso participante = participanteProcessoManager.getParticipanteProcessoByPessoaProcesso(pessoaFisica, pasta.getProcesso());
-        return participante != null && participante.getAtivo() && pessoaFisica.equals(participante.getPessoa());
+        ParticipanteProcesso participante = participanteProcessoManager
+                .getParticipanteProcessoByPessoaProcesso(pessoaFisica,
+                        pasta.getProcesso());
+        return participante != null && participante.getAtivo()
+                && pessoaFisica.equals(participante.getPessoa());
     }
 
     @Override
@@ -176,7 +181,7 @@ public class PastaAction implements Serializable, ActionListener {
         }
         o = attributes.get("pastaToRemove");
         if (o instanceof Pasta) {
-            remove((Pasta) o); 
+            remove((Pasta) o);
         }
     }
 
@@ -203,7 +208,7 @@ public class PastaAction implements Serializable, ActionListener {
     public void setVisivelExterno(Boolean visivelExterno) {
         this.getInstance().setVisivelExterno(visivelExterno);
     }
-    
+
     public Boolean getVisivelNaoParticipante() {
         return getInstance().getVisivelNaoParticipante();
     }
@@ -211,7 +216,7 @@ public class PastaAction implements Serializable, ActionListener {
     public void setVisivelNaoParticipante(Boolean visivelNaoParticipante) {
         getInstance().setVisivelNaoParticipante(visivelNaoParticipante);
     }
-    
+
     public Boolean getRemovivel() {
         return getInstance().getRemovivel();
     }
@@ -249,11 +254,11 @@ public class PastaAction implements Serializable, ActionListener {
         this.id = id;
         setInstance(pastaManager.find(id));
     }
-    
+
     public Boolean getSistema() {
         return getInstance().getSistema();
     }
-    
+
     public void setSistema(Boolean sistema) {
         getInstance().setSistema(sistema);
     }

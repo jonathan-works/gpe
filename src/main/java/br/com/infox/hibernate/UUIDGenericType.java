@@ -31,15 +31,17 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
     private static final long serialVersionUID = 1L;
 
     private SingleColumnType<UUID> realType;
-    
+
     public UUIDGenericType() {
         Properties properties = new Properties();
         try {
             properties.load(getClass().getResourceAsStream("/epp.properties"));
         } catch (IOException e) {
+            // TODO logar este erro.
             e.printStackTrace();
         }
-        String banco = properties.getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
+        String banco = properties
+                .getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
         if (banco.equals("PostgreSQL")) {
             realType = PostgresUUIDType.INSTANCE;
         } else if (banco.equals("SQLServer")) {
@@ -122,7 +124,8 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
     }
 
     @Override
-    public boolean isEqual(Object x, Object y, SessionFactoryImplementor factory) throws HibernateException {
+    public boolean isEqual(Object x, Object y, SessionFactoryImplementor factory)
+            throws HibernateException {
         return realType.isEqual(x, y, factory);
     }
 
@@ -132,7 +135,8 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
     }
 
     @Override
-    public int getHashCode(Object x, SessionFactoryImplementor factory) throws HibernateException {
+    public int getHashCode(Object x, SessionFactoryImplementor factory)
+            throws HibernateException {
         return realType.getHashCode(x, factory);
     }
 
@@ -142,59 +146,75 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
     }
 
     @Override
-    public boolean isDirty(Object old, Object current, SessionImplementor session) throws HibernateException {
+    public boolean isDirty(Object old, Object current,
+            SessionImplementor session) throws HibernateException {
         return realType.isDirty(old, current, session);
     }
 
     @Override
-    public boolean isDirty(Object oldState, Object currentState, boolean[] checkable, SessionImplementor session) throws HibernateException {
+    public boolean isDirty(Object oldState, Object currentState,
+            boolean[] checkable, SessionImplementor session)
+            throws HibernateException {
         return realType.isDirty(oldState, currentState, checkable, session);
     }
 
     @Override
-    public boolean isModified(Object dbState, Object currentState, boolean[] checkable, SessionImplementor session) throws HibernateException {
+    public boolean isModified(Object dbState, Object currentState,
+            boolean[] checkable, SessionImplementor session)
+            throws HibernateException {
         return realType.isModified(dbState, currentState, checkable, session);
     }
 
     @Override
-    public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet rs, String[] names,
+            SessionImplementor session, Object owner)
+            throws HibernateException, SQLException {
         return realType.nullSafeGet(rs, names, session, owner);
     }
 
     @Override
-    public Object nullSafeGet(ResultSet rs, String name, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet rs, String name,
+            SessionImplementor session, Object owner)
+            throws HibernateException, SQLException {
         return realType.nullSafeGet(rs, name, session, owner);
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, Object value, int index, boolean[] settable, SessionImplementor session) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement st, Object value, int index,
+            boolean[] settable, SessionImplementor session)
+            throws HibernateException, SQLException {
         realType.nullSafeSet(st, value, index, settable, session);
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement st, Object value, int index,
+            SessionImplementor session) throws HibernateException, SQLException {
         realType.nullSafeSet(st, value, index, session);
     }
 
     @Override
-    public String toLoggableString(Object value, SessionFactoryImplementor factory) throws HibernateException {
+    public String toLoggableString(Object value,
+            SessionFactoryImplementor factory) throws HibernateException {
         return realType.toLoggableString(value, factory);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void setToXMLNode(Node node, Object value, SessionFactoryImplementor factory) throws HibernateException {
+    public void setToXMLNode(Node node, Object value,
+            SessionFactoryImplementor factory) throws HibernateException {
         realType.setToXMLNode(node, value, factory);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public Object fromXMLNode(Node xml, Mapping factory) throws HibernateException {
+    public Object fromXMLNode(Node xml, Mapping factory)
+            throws HibernateException {
         return realType.fromXMLNode(xml, factory);
     }
 
     @Override
-    public Object deepCopy(Object value, SessionFactoryImplementor factory) throws HibernateException {
+    public Object deepCopy(Object value, SessionFactoryImplementor factory)
+            throws HibernateException {
         return realType.deepCopy(value, factory);
     }
 
@@ -204,12 +224,14 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
     }
 
     @Override
-    public Serializable disassemble(Object value, SessionImplementor session, Object owner) throws HibernateException {
+    public Serializable disassemble(Object value, SessionImplementor session,
+            Object owner) throws HibernateException {
         return realType.disassemble(value, session, owner);
     }
 
     @Override
-    public Object assemble(Serializable cached, SessionImplementor session, Object owner) throws HibernateException {
+    public Object assemble(Serializable cached, SessionImplementor session,
+            Object owner) throws HibernateException {
         return realType.assemble(cached, session, owner);
     }
 
@@ -219,17 +241,21 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
     }
 
     @Override
-    public Object hydrate(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+    public Object hydrate(ResultSet rs, String[] names,
+            SessionImplementor session, Object owner)
+            throws HibernateException, SQLException {
         return realType.hydrate(rs, names, session, owner);
     }
 
     @Override
-    public Object resolve(Object value, SessionImplementor session, Object owner) throws HibernateException {
+    public Object resolve(Object value, SessionImplementor session, Object owner)
+            throws HibernateException {
         return realType.resolve(value, session, owner);
     }
 
     @Override
-    public Object semiResolve(Object value, SessionImplementor session, Object owner) throws HibernateException {
+    public Object semiResolve(Object value, SessionImplementor session,
+            Object owner) throws HibernateException {
         return realType.semiResolve(value, session, owner);
     }
 
@@ -240,13 +266,17 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Object replace(Object original, Object target, SessionImplementor session, Object owner, Map copyCache) throws HibernateException {
+    public Object replace(Object original, Object target,
+            SessionImplementor session, Object owner, Map copyCache)
+            throws HibernateException {
         return realType.replace(original, target, session, owner, copyCache);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Object replace(Object original, Object target, SessionImplementor session, Object owner, Map copyCache, ForeignKeyDirection foreignKeyDirection) throws HibernateException {
+    public Object replace(Object original, Object target,
+            SessionImplementor session, Object owner, Map copyCache,
+            ForeignKeyDirection foreignKeyDirection) throws HibernateException {
         return realType.replace(original, target, session, owner, copyCache);
     }
 
@@ -271,17 +301,20 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
     }
 
     @Override
-    public UUID nullSafeGet(ResultSet rs, String name, SessionImplementor session) throws HibernateException, SQLException {
+    public UUID nullSafeGet(ResultSet rs, String name,
+            SessionImplementor session) throws HibernateException, SQLException {
         return realType.nullSafeGet(rs, name, session);
     }
 
     @Override
-    public Object get(ResultSet rs, String name, SessionImplementor session) throws HibernateException, SQLException {
+    public Object get(ResultSet rs, String name, SessionImplementor session)
+            throws HibernateException, SQLException {
         return realType.get(rs, name, session);
     }
 
     @Override
-    public void set(PreparedStatement st, UUID value, int index, SessionImplementor session) throws HibernateException, SQLException {
+    public void set(PreparedStatement st, UUID value, int index,
+            SessionImplementor session) throws HibernateException, SQLException {
         realType.set(st, value, index, session);
     }
 }
