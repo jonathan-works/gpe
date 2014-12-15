@@ -1,22 +1,17 @@
 package br.com.infox.epp.test.it.access.crud;
 
-import static br.com.infox.core.action.AbstractAction.PERSISTED;
-import static br.com.infox.core.action.AbstractAction.REMOVED;
-import static java.text.MessageFormat.format;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-
+import java.text.MessageFormat;
 import java.util.GregorianCalendar;
+
+import junit.framework.Assert;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
+import br.com.infox.core.action.AbstractAction;
 import br.com.infox.epp.access.crud.UsuarioLoginCrudAction;
 import br.com.infox.epp.access.crud.UsuarioPessoaFisicaCrudAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
@@ -54,81 +49,91 @@ import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.seam.exception.BusinessException;
 
-@RunWith(Arquillian.class)
-public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisica>{
+//@RunWith(Arquillian.class)
+public class UsuarioPessoaFisicaCrudActionIT extends
+        AbstractCrudTest<PessoaFisica> {
 
     @Deployment
-    @OverProtocol(SERVLET_3_0)
+    @OverProtocol(AbstractCrudTest.SERVLET_3_0)
     public static WebArchive createDeployment() {
-        return new ArquillianSeamTestSetup()
-        .addClasses(UsuarioPessoaFisicaCrudAction.class,
-                PessoaFisicaDAO.class,PessoaJuridicaDAO.class,
-                UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
-                UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
-                ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
-                ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-                ParametroManager.class,ParametroDAO.class, PessoaFisicaManager.class,
-                UsuarioLoginCrudActionIT.class, SendmailCommand.class, DominioVariavelTarefaManager.class, DominioVariavelTarefaDAO.class,
-                DocumentoManager.class, DocumentoDAO.class, SessionAssistant.class,
-                SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
-                SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
-                DocumentoBinDAO.class, DocumentoBinManager.class)
-        .createDeployment();
+        return new ArquillianSeamTestSetup().addClasses(
+                UsuarioPessoaFisicaCrudAction.class, PessoaFisicaDAO.class,
+                PessoaJuridicaDAO.class, UsuarioLoginCrudAction.class,
+                PasswordService.class, AccessMailService.class,
+                UsuarioLoginManager.class, BusinessException.class,
+                UsuarioLoginDAO.class, ModeloDocumentoManager.class,
+                EMailData.class, UsuarioLoginDAO.class,
+                ModeloDocumentoDAO.class, VariavelDAO.class, LogProvider.class,
+                ParametroManager.class, ParametroDAO.class,
+                PessoaFisicaManager.class, UsuarioLoginCrudActionIT.class,
+                SendmailCommand.class, DominioVariavelTarefaManager.class,
+                DominioVariavelTarefaDAO.class, DocumentoManager.class,
+                DocumentoDAO.class, SessionAssistant.class,
+                SigiloDocumentoService.class, SigiloDocumentoManager.class,
+                SigiloDocumentoDAO.class,
+                SigiloDocumentoPermissaoManager.class,
+                SigiloDocumentoPermissaoDAO.class, DocumentoBinDAO.class,
+                DocumentoBinManager.class).createDeployment();
     }
 
-    private final CrudActions<UsuarioLogin> crudActionsUsuarioLogin = new CrudActionsImpl<>(UsuarioLoginCrudAction.NAME);
-    
-    //TODO: listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
+    private final CrudActions<UsuarioLogin> crudActionsUsuarioLogin = new CrudActionsImpl<>(
+            UsuarioLoginCrudAction.NAME);
+
+    // TODO:
+    // listener="#{usuarioPessoaFisicaCrudAction.searchByCpf(usuarioPessoaFisicaCrudAction.instance.cpf)}"
     public static final ActionContainer<PessoaFisica> initEntityAction = new ActionContainer<PessoaFisica>() {
         @Override
-        public void execute(CrudActions<PessoaFisica> crud) {
+        public void execute(final CrudActions<PessoaFisica> crud) {
             final PessoaFisica entity = getEntity();
-            crud.setEntityValue("cpf",entity.getCpf());
-            crud.setEntityValue("nome",entity.getNome());
-            crud.setEntityValue("dataNascimento",entity.getDataNascimento());            
+            crud.setEntityValue("cpf", entity.getCpf());
+            crud.setEntityValue("nome", entity.getNome());
+            crud.setEntityValue("dataNascimento", entity.getDataNascimento());
         }
-    }; 
-    
+    };
+
     @Override
     protected ActionContainer<PessoaFisica> getInitEntityAction() {
-        return initEntityAction;
+        return UsuarioPessoaFisicaCrudActionIT.initEntityAction;
     }
 
     private void initUsuarioLogin(final UsuarioLogin usuario) {
-        UsuarioLoginCrudActionIT.initEntityAction.execute(usuario, crudActionsUsuarioLogin);
+        UsuarioLoginCrudActionIT.initEntityAction.execute(usuario,
+                this.crudActionsUsuarioLogin);
     }
-    
+
     protected Integer persistUsuarioLogin(final UsuarioLogin entity) {
-        crudActionsUsuarioLogin.newInstance();
+        this.crudActionsUsuarioLogin.newInstance();
         initUsuarioLogin(entity);
-        crudActionsUsuarioLogin.save();
-        return (Integer) crudActionsUsuarioLogin.getId();
+        this.crudActionsUsuarioLogin.save();
+        return this.crudActionsUsuarioLogin.getId();
     }
 
     @Override
     protected String getComponentName() {
         return UsuarioPessoaFisicaCrudAction.NAME;
     }
-    
-    private static int usr_id=0;
-    
-    private final RunnableTest<PessoaFisica> persistSuccess = new RunnableTest<PessoaFisica>(UsuarioPessoaFisicaCrudAction.NAME) {
+
+    private static int usr_id = 0;
+
+    private final RunnableTest<PessoaFisica> persistSuccess = new RunnableTest<PessoaFisica>(
+            UsuarioPessoaFisicaCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final PessoaFisica entity = getEntity();
             final UsuarioLogin user = createUser(entity);
 
             this.newInstance();
-            initEntityAction.execute(entity, this);
+            UsuarioPessoaFisicaCrudActionIT.initEntityAction.execute(entity,
+                    this);
             this.setComponentValue("usuarioAssociado", user);
             final String persistResult = this.save();
-            assertEquals(PERSISTED, persistResult);
+            Assert.assertEquals(AbstractAction.PERSISTED, persistResult);
 
             final Integer id = this.getId();
-            assertNotNull(id);
+            Assert.assertNotNull(id);
             this.newInstance();
             final Integer nullId = this.getId();
-            assertNull(nullId);
+            Assert.assertNull(nullId);
             this.setId(id);
             assert compareEntityValues(entity, this);
 
@@ -138,53 +143,72 @@ public class UsuarioPessoaFisicaCrudActionIT extends AbstractCrudTest<PessoaFisi
     };
 
     private UsuarioLogin createUser(final PessoaFisica entity) {
-        crudActionsUsuarioLogin.newInstance();
-        usr_id++;
-        final String login = format("login-{0}", usr_id);
-        initUsuarioLogin(new UsuarioLogin(entity.getNome(), format("{0}@infox.com.br", login), login));
-        crudActionsUsuarioLogin.save();
-        final Integer id = crudActionsUsuarioLogin.getId();
-        crudActionsUsuarioLogin.newInstance();
-        crudActionsUsuarioLogin.setId(id);
-        return crudActionsUsuarioLogin.getInstance();
+        this.crudActionsUsuarioLogin.newInstance();
+        UsuarioPessoaFisicaCrudActionIT.usr_id++;
+        final String login = MessageFormat.format("login-{0}",
+                UsuarioPessoaFisicaCrudActionIT.usr_id);
+        initUsuarioLogin(new UsuarioLogin(entity.getNome(),
+                MessageFormat.format("{0}@infox.com.br", login), login));
+        this.crudActionsUsuarioLogin.save();
+        final Integer id = this.crudActionsUsuarioLogin.getId();
+        this.crudActionsUsuarioLogin.newInstance();
+        this.crudActionsUsuarioLogin.setId(id);
+        return this.crudActionsUsuarioLogin.getInstance();
     }
-    
-    @Test
+
+    //@Test
     public void persistSuccessTest() throws Exception {
-        persistSuccess.runTest(new PessoaFisica("", "", new GregorianCalendar(1960,11,10).getTime(), Boolean.TRUE), servletContext, session);
+        this.persistSuccess.runTest(new PessoaFisica("", "",
+                new GregorianCalendar(1960, 11, 10).getTime(), Boolean.TRUE),
+                this.servletContext, this.session);
     }
-    
-    private final RunnableTest<PessoaFisica> removeSuccess = new RunnableTest<PessoaFisica>(UsuarioPessoaFisicaCrudAction.NAME) {
+
+    private final RunnableTest<PessoaFisica> removeSuccess = new RunnableTest<PessoaFisica>(
+            UsuarioPessoaFisicaCrudAction.NAME) {
         @Override
         protected void testComponent() throws Exception {
             final PessoaFisica entity = getEntity();
             UsuarioLogin user = createUser(entity);
-            
+
             this.setComponentValue("usuarioAssociado", user);
-            
+
             this.newInstance();
-            initEntityAction.execute(entity, this);
-            assert PERSISTED.equals(this.save());
+            UsuarioPessoaFisicaCrudActionIT.initEntityAction.execute(entity,
+                    this);
+            assert AbstractAction.PERSISTED.equals(this.save());
             assert this.getId() != null;
-            
-            crudActionsUsuarioLogin.newInstance();
-            crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
-            user = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
+
+            UsuarioPessoaFisicaCrudActionIT.this.crudActionsUsuarioLogin
+                    .newInstance();
+            UsuarioPessoaFisicaCrudActionIT.this.crudActionsUsuarioLogin
+                    .setId(user.getIdUsuarioLogin());
+            user = UsuarioPessoaFisicaCrudActionIT.this.crudActionsUsuarioLogin
+                    .getInstance();
             assert user.getPessoaFisica() != null;
-            assert REMOVED.equals(this.remove(user.getPessoaFisica()));
-            
-            crudActionsUsuarioLogin.newInstance();
-            crudActionsUsuarioLogin.setId(user.getIdUsuarioLogin());
-            user = (UsuarioLogin) crudActionsUsuarioLogin.getInstance();
+            assert AbstractAction.REMOVED.equals(this.remove(user
+                    .getPessoaFisica()));
+
+            UsuarioPessoaFisicaCrudActionIT.this.crudActionsUsuarioLogin
+                    .newInstance();
+            UsuarioPessoaFisicaCrudActionIT.this.crudActionsUsuarioLogin
+                    .setId(user.getIdUsuarioLogin());
+            user = UsuarioPessoaFisicaCrudActionIT.this.crudActionsUsuarioLogin
+                    .getInstance();
             assert user.getPessoaFisica() == null;
         }
     };
-    
-    @Test
+
+    //@Test
     public void removeSuccessTest() throws Exception {
-        removeSuccess.runTest(new PessoaFisica("111111111","",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE), servletContext, session);
-        removeSuccess.runTest(new PessoaFisica("324789655","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE), servletContext, session);
-        removeSuccess.runTest(new PessoaFisica("123332123","Pessoa",new GregorianCalendar(1955,11,9).getTime(),Boolean.TRUE), servletContext, session);
+        this.removeSuccess.runTest(new PessoaFisica("111111111", "",
+                new GregorianCalendar(1955, 11, 9).getTime(), Boolean.TRUE),
+                this.servletContext, this.session);
+        this.removeSuccess.runTest(new PessoaFisica("324789655", "Pessoa",
+                new GregorianCalendar(1955, 11, 9).getTime(), Boolean.TRUE),
+                this.servletContext, this.session);
+        this.removeSuccess.runTest(new PessoaFisica("123332123", "Pessoa",
+                new GregorianCalendar(1955, 11, 9).getTime(), Boolean.TRUE),
+                this.servletContext, this.session);
     }
-    
+
 }
