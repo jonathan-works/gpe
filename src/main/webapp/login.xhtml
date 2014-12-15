@@ -139,26 +139,28 @@
             <s:div
               styleClass="cert-div"
               rendered="#{useCertLogin}">
-              <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/constant.js" />
-              <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/websocket.js" />
-              <a href="#{pathResolver.contextPath}/certificado/certificado_digital.jnlp"
-                  onclick="userClickedOnDownloadJNPLButton();">Entrar com o
-                  Certificado Digital</a>
-              
-              <h:inputHidden
-                id="signature"
-                value="#{certificateAuthenticator.assinatura}">
-              </h:inputHidden>
-              <h:inputHidden
-                id="certChain"
-                value="#{certificateAuthenticator.certChain}">
-              </h:inputHidden>
               <a:jsFunction
-                name="submitForm"
-                action="#{certificateAuthenticator.authenticate()}"
-                execute="signature, certChain, certChainStringLog, @this"
-                render="DialogMessage"
-                limitRender="true" />
+                  name="submitForm"
+                  action="#{certificateAuthenticator.authenticate()}"
+                  execute="certificacaoSignature, certificacaoCertChain, certChainStringLog, @this"
+                  render="DialogMessage"
+                  limitRender="true" />
+                  
+                <wi:certificadoDigital
+                  id="certificacao"
+                  urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+                  formId="#{rich:clientId('login')}"
+                  certificationChainField="#{certificateAuthenticator.certChain}"
+                  signatureField="#{certificateAuthenticator.assinatura}"
+                  signableData=""
+                  useBase64Function="true"
+                  functionPreSign="infox.showLoading();"
+                  functionPosSign="submitForm();"
+                  debug="false"
+                  loginMode="true"
+                  useProviderDll="false"
+                  signButtonCaption="#{eppmessages['signature.loginBtn']}">
+                </wi:certificadoDigital>
             </s:div>
           </div>
           <div
