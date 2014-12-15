@@ -29,6 +29,7 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Name(ExpedicaoComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -116,8 +117,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		return comunicacao;
 	}
 	
-	public void setComunicacao(String comunicacao) {
-		this.comunicacao = comunicacao;
+	public String getMd5Comunicacao() {
+		return getDocumentoComunicacao().getMd5Documento();
 	}
 	
 	public String getCertChain() {
@@ -140,7 +141,11 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-		return destinatario != null && assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), destinatario.getComunicacao(), usuario);
+		boolean expedida = (getComunicacao() == null && !isExpedida(modeloComunicacao)) || 
+			(getComunicacao() != null && destinatario != null && !destinatario.getExpedido());
+		return expedida && 
+				assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), 
+						getDocumentoComunicacao(), usuario);
 	}
 	
 	public void expedirComunicacao() {
@@ -162,7 +167,16 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	public void downloadComunicacao(DestinatarioModeloComunicacao destinatario) {
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
-			FileDownloader.download(pdf, "application/pdf", "comunicacao");
+			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void downloadComunicacao() {
+		try {
+			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, null);
+			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
@@ -170,5 +184,9 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public boolean isExpedida(ModeloComunicacao modeloComunicacao) {
 		return modeloComunicacaoManager.isExpedida(modeloComunicacao);
+	}
+	
+	private DocumentoBin getDocumentoComunicacao() {
+		return getComunicacao() != null ? this.destinatario.getComunicacao() : modeloComunicacao.getDestinatarios().get(0).getComunicacao();
 	}
 }

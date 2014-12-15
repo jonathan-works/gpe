@@ -91,23 +91,23 @@
 									render="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
 								  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
 
-                <wi:certificadoDigital
-                  id="appletAssinatura"
-                  urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-                  formId="#{rich:clientId('expedicaoForm')}"
-                  certificationChainField="#{modeloComunicacaoAction.certChain}"
-                  signatureField="#{modeloComunicacaoAction.signature}"
-                  signableData="#{modeloComunicacaoAction.documentoComunicacao.documento.documentoBin.md5Documento}"
-                  useBase64Function="true"
-                  functionPreSign="infox.showLoading();"
-                  functionPosSign="assinarBin();"
-                  debug="false"
-                  loginMode="false"
-                  useProviderDll="false"
-                  rendered="#{modeloComunicacaoAction.podeRenderizarApplet()}"
-                  signButtonCaption="Expedir Comunicação" />
-
-              </s:div>
+				                <wi:certificadoDigital
+				                  id="appletAssinatura"
+				                  urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+				                  formId="#{rich:clientId('expedicaoForm')}"
+				                  certificationChainField="#{modeloComunicacaoAction.certChain}"
+				                  signatureField="#{modeloComunicacaoAction.signature}"
+				                  signableData="#{modeloComunicacaoAction.documentoComunicacao.documento.documentoBin.md5Documento}"
+				                  useBase64Function="true"
+				                  functionPreSign="infox.showLoading();"
+				                  functionPosSign="assinarBin();"
+				                  debug="false"
+				                  loginMode="false"
+				                  useProviderDll="false"
+				                  rendered="#{modeloComunicacaoAction.podeRenderizarApplet()}"
+				                  signButtonCaption="Expedir Comunicação" />
+				
+				              </s:div>
 		          		</s:div>
 					</h:form>
 				</div>

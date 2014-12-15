@@ -56,7 +56,8 @@
 						<h:form>
 							<a:commandLink
 								action="#{expedicaoComunicacaoAction.setDestinatario(row)}"
-								render="comunicacaoForm" execute="@this">
+								render="comunicacaoForm" execute="@this"
+								rendered="#{not empty expedicaoComunicacaoAction.comunicacao}">
 								<h:graphicImage url="#{wiSkin.imageFolder}/view.png"
 									title="#{eppmessages['button.selecionar']}" />
 							</a:commandLink>
@@ -81,31 +82,31 @@
 				<h:form id="comunicacaoForm">
 					<rich:collapsiblePanel
 						header="Comunicação #{not empty expedicaoComunicacaoAction.destinatario.nome ? '- '.concat(expedicaoComunicacaoAction.destinatario.nome) : ''}"
-						expanded="false" id="painelComunicacao" switchType="client">
+						expanded="false" id="painelComunicacao" switchType="client"
+						rendered="#{not empty expedicaoComunicacaoAction.comunicacao}">
 						<wi:editor id="comunicacao" readonly="true"
 							value="#{expedicaoComunicacaoAction.comunicacao}" />
-						<s:div id="assinatura_pers">
-							<a:jsFunction name="assinar"
+					</rich:collapsiblePanel>
+					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao}" 
+						value="Visualizar Comunicação" styleClass="buttons" 
+						rendered="#{empty expedicaoComunicacaoAction.comunicacao}"/>
+					<a:jsFunction name="assinar"
 								action="#{expedicaoComunicacaoAction.expedirComunicacao()}"
-								execute="@this appletAssinaturaCertChain appletAssinaturaSignature"
+								execute="@form"
 								render="comunicacaoForm, pageBodyDialogMessage, destinatarios"
 								oncomplete="infox.hideLoading();" />
-
-							<wi:certificadoDigital id="appletAssinatura"
-								urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-								formId="#{rich:clientId('comunicacaoForm')}"
-								certificationChainField="#{expedicaoComunicacaoAction.certChain}"
-								signatureField="#{expedicaoComunicacaoAction.signature}"
-								signableData="#{expedicaoComunicacaoAction.comunicacao}" useBase64Function="true"
-								functionPreSign="infox.showLoading();"
-								functionPosSign="assinar();" debug="false" loginMode="false"
-								useProviderDll="false"
-								rendered="#{not empty expedicaoComunicacaoAction.destinatario and not expedicaoComunicacaoAction.destinatario.expedido and expedicaoComunicacaoAction.podeRenderizarApplet()}"
-								signButtonCaption="#{eppmessages['comunicacao.expedirComunicacao']}">
-							</wi:certificadoDigital>
-
-						</s:div>
-					</rich:collapsiblePanel>
+					<wi:certificadoDigital id="appletAssinatura"
+							urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+							formId="#{rich:clientId('comunicacaoForm')}"
+							certificationChainField="#{expedicaoComunicacaoAction.certChain}"
+							signatureField="#{expedicaoComunicacaoAction.signature}"
+							signableData="#{expedicaoComunicacaoAction.md5Comunicacao}" useBase64Function="true"
+							functionPreSign="infox.showLoading();"
+							functionPosSign="assinar();" debug="false" loginMode="false"
+							useProviderDll="false"
+							rendered="#{expedicaoComunicacaoAction.podeRenderizarApplet()}"
+							signButtonCaption="#{eppmessages['comunicacao.expedirComunicacao']}">
+					</wi:certificadoDigital>
 				</h:form>
 			</infox:tab>
 		</infox:tabPanel>

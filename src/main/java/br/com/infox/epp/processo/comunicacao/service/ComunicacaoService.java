@@ -161,11 +161,16 @@ public class ComunicacaoService {
 					pdfManager.convertHtmlToPdf(evaluateComunicacao(destinatario), pdfComunicacao);
 				}
 			} else {
-				DocumentoModeloComunicacao documento = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
-				if (documento != null) {
-					byte[] doc = documentoBinarioManager.getData(documento.getDocumento().getDocumentoBin().getId());
-					pdfComunicacao.write(doc);
+				DocumentoBin documentoComunicacao;
+				if (!modeloComunicacao.getFinalizada()) {
+					documentoComunicacao = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento().getDocumentoBin();
+				} else if (destinatario != null) {
+					documentoComunicacao = destinatario.getComunicacao();
+				} else {
+					documentoComunicacao = modeloComunicacao.getDestinatarios().get(0).getComunicacao();
 				}
+				byte[] doc = documentoBinarioManager.getData(documentoComunicacao.getId());
+				pdfComunicacao.write(doc);
 			}
 			
 			com.lowagie.text.Document pdfDocument = new com.lowagie.text.Document();
