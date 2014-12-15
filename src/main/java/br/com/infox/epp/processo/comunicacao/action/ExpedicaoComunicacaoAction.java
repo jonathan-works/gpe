@@ -169,16 +169,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
 			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
 		} catch (DAOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void downloadComunicacao() {
-		try {
-			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, null);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
-		} catch (DAOException e) {
-			e.printStackTrace();
+			LOG.error("", e);
 		}
 	}
 	

@@ -87,7 +87,7 @@
 						<wi:editor id="comunicacao" readonly="true"
 							value="#{expedicaoComunicacaoAction.comunicacao}" />
 					</rich:collapsiblePanel>
-					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao}" 
+					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao(null)}" 
 						value="Visualizar Comunicação" styleClass="buttons" 
 						rendered="#{empty expedicaoComunicacaoAction.comunicacao}"/>
 					<a:jsFunction name="assinar"
