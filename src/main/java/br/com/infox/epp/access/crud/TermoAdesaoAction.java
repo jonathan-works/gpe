@@ -53,7 +53,6 @@ public class TermoAdesaoAction implements Serializable {
     private String signature;
     private String certChain;
     private String termoAdesao;
-    private String md5Sum;
     private String tituloTermoAdesao;
 
     @In
@@ -143,7 +142,6 @@ public class TermoAdesaoAction implements Serializable {
             if (this.termoAdesao == null) {
                 this.termoAdesao = "<div><p>TERMO DE ADESÃO</p></div>";
             }
-            this.md5Sum = MD5Encoder.encode(this.termoAdesao);
         }
         return this.termoAdesao;
     }
@@ -169,7 +167,7 @@ public class TermoAdesaoAction implements Serializable {
     }
 
     public String getMd5Sum() {
-        return this.md5Sum;
+        return MD5Encoder.encode(getTermoAdesao());
     }
 
 }

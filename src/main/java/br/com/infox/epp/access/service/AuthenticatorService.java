@@ -190,25 +190,6 @@ public class AuthenticatorService implements Serializable {
         throw new LoginException("O usuário " + usuario + " não possui Perfil");
     }
 
-    /**
-     * 
-     * @param actorId
-     * @throws DAOException
-     */
-    @Deprecated
-    public void anulaActorId(String actorId) throws DAOException {
-//        processoDAO.anulaActorId(actorId);
-    }
-
-    /**
-     * Retirado anular todos actor id
-     * @throws DAOException
-     */
-    @Deprecated
-    public void anularTodosActorId() throws DAOException {
-//        processoDAO.anularTodosActorId();
-    }
-
     public void signatureAuthentication(UsuarioLogin usuario, String signature, String certChain,boolean termoAdesao) throws CertificadoException, LoginException,CertificateException, DAOException {
         final boolean loggedIn = login(usuario.getLogin());
         if (loggedIn) {

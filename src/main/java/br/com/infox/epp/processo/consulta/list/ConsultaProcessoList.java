@@ -31,14 +31,6 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
     
-    private static final String R3 = "exists (select 1 from MetadadoProcesso mp where mp.processo = o and mp.metadadoType = '" 
-    									+ MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA
-    									+ "' and cast(mp.valor as integer) = #{authenticator.monocraticaLogada.idUnidadeDecisoraMonocratica})";
-    
-    private static final String R4 = "exists (select 1 from MetadadoProcesso mp where mp.processo = o and mp.metadadoType = '" 
-										+ MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA 
-										+ "' and cast(mp.valor as integer) = #{authenticator.colegiadaLogada.idUnidadeDecisoraColegiada})";
-    		
     @Override
     public void newInstance() {
         super.newInstance();
@@ -54,8 +46,6 @@ public class ConsultaProcessoList extends EntityList<Processo> {
         addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL);
         addSearchField("dataInicio", SearchCriteria.DATA_MAIOR_IGUAL);
         addSearchField("dataFim", SearchCriteria.DATA_MENOR_IGUAL);
-        addSearchField("decisoraMonocratica", SearchCriteria.IGUAL, R3);
-        addSearchField("decisoraColegiada", SearchCriteria.IGUAL, R4);
     }
 
     @Override
