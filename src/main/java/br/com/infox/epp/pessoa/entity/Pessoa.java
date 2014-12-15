@@ -36,27 +36,16 @@ public abstract class Pessoa implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pessoa";
 
-    @Id
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "PessoaGenerator", sequenceName = "sq_tb_pessoa")
-    @GeneratedValue(generator = "PessoaGenerator", strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_pessoa", unique = true, nullable = false)
-    private Integer idPessoa;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG)
-    private TipoPessoaEnum tipoPessoa;
-    
-    @NotNull
-    @Size(max = LengthConstants.NOME_ATRIBUTO)
-    @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO)
-    private String nome;
-    
-    @Column(name = "in_ativo", nullable = false)
-    private Boolean ativo = Boolean.TRUE;
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="pessoa")
-    private List<MeioContato> meioContatoList = new ArrayList<>();
-   
+    @Id @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "PessoaGenerator", sequenceName = "sq_tb_pessoa") @GeneratedValue(generator = "PessoaGenerator", strategy = GenerationType.SEQUENCE) @Column(name = "id_pessoa", unique = true, nullable = false) private Integer idPessoa;
+
+    @Enumerated(EnumType.STRING) @Column(name = "tp_pessoa", nullable = false, columnDefinition = "varchar(1)", length = LengthConstants.FLAG) private TipoPessoaEnum tipoPessoa;
+
+    @NotNull @Size(max = LengthConstants.NOME_ATRIBUTO) @Column(name = "nm_pessoa", nullable = false, length = LengthConstants.NOME_ATRIBUTO) private String nome;
+
+    @Column(name = "in_ativo", nullable = false) private Boolean ativo = Boolean.TRUE;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pessoa") private List<MeioContato> meioContatoList = new ArrayList<>();
+
     public Integer getIdPessoa() {
         return idPessoa;
     }
@@ -88,27 +77,27 @@ public abstract class Pessoa implements Serializable {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
-    
+
     public List<MeioContato> getMeioContatoList() {
-		return meioContatoList;
-	}
+        return meioContatoList;
+    }
 
-	public void setMeioContatoList(List<MeioContato> meioContatoList) {
-		this.meioContatoList = meioContatoList;
-	}
+    public void setMeioContatoList(List<MeioContato> meioContatoList) {
+        this.meioContatoList = meioContatoList;
+    }
 
-	@Transient
+    @Transient
     public abstract String getCodigo();
-	
-	@Transient
-	public String getCodigoFormatado(){
-		if (tipoPessoa == TipoPessoaEnum.F){
-			return CpfConverter.getInstance().format(getCodigo());
-		} else if (tipoPessoa == TipoPessoaEnum.J) {
-			return CnpjConverter.getInstance().format(getCodigo());
-		}
-		return getCodigo();
-	}
+
+    @Transient
+    public String getCodigoFormatado() {
+        if (tipoPessoa == TipoPessoaEnum.F) {
+            return CpfConverter.getInstance().format(getCodigo());
+        } else if (tipoPessoa == TipoPessoaEnum.J) {
+            return CnpjConverter.getInstance().format(getCodigo());
+        }
+        return getCodigo();
+    }
 
     @Override
     public String toString() {
@@ -145,27 +134,27 @@ public abstract class Pessoa implements Serializable {
         }
         return true;
     }
-    
-    @Transient
-    public MeioContato getTelefoneFixo() {
-		List<MeioContato> meioContatoList = getMeioContatoList();
-		for (MeioContato meioContato : meioContatoList){
-			if (meioContato.getTipoMeioContato() == TipoMeioContatoEnum.TF){
-				return meioContato;
-			}
-		}
-		return null;
-	}
 
     @Transient
-	public MeioContato getTelefoneMovel() {
-		List<MeioContato> meioContatoList = getMeioContatoList();
-		for (MeioContato meioContato : meioContatoList){
-			if (meioContato.getTipoMeioContato() == TipoMeioContatoEnum.TM){
-				return meioContato;
-			}
-		}
-		return null;
-	}
+    private MeioContato getMeioContatoListByTipoMeioContato(
+            TipoMeioContatoEnum meioContatoEnum) {
+        List<MeioContato> meioContatoList = getMeioContatoList();
+        for (MeioContato meioContato : meioContatoList) {
+            if (meioContato.getTipoMeioContato() == meioContatoEnum) {
+                return meioContato;
+            }
+        }
+        return null;
+    }
+
+    @Transient
+    public MeioContato getTelefoneFixo() {
+        return getMeioContatoListByTipoMeioContato(TipoMeioContatoEnum.TF);
+    }
+
+    @Transient
+    public MeioContato getTelefoneMovel() {
+        return getMeioContatoListByTipoMeioContato(TipoMeioContatoEnum.TM);
+    }
 
 }
