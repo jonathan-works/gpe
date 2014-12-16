@@ -20,7 +20,7 @@ import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.CODIGO_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO;
-import static br.com.infox.epp.fluxo.query.FluxoQuery.*;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_CODIGO_QUERY;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_DESCRICAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_FLUXO_BY_DESCRICAO_QUERY;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.COUNT_PROCESSOS_ATRASADOS;
@@ -31,6 +31,8 @@ import static br.com.infox.epp.fluxo.query.FluxoQuery.DATA_FIM_PUBLICACAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.DATA_INICIO_PUBLICACAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.DESCRICAO_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_CODIGO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_CODIGO_QUERY;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICACAO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_DESCRICAO_QUERY;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.FLUXO_BY_NOME;
@@ -76,17 +78,17 @@ import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = TABLE_FLUXO, uniqueConstraints = {
-    @UniqueConstraint(columnNames = { DESCRICAO_FLUXO }),
-    @UniqueConstraint(columnNames = { CODIGO_FLUXO }) })
+        @UniqueConstraint(columnNames = { DESCRICAO_FLUXO }),
+        @UniqueConstraint(columnNames = { CODIGO_FLUXO }) })
 @NamedQueries(value = {
-    @NamedQuery(name = LIST_ATIVOS, query = LIST_ATIVOS_QUERY),
-    @NamedQuery(name = COUNT_PROCESSOS_ATRASADOS, query = COUNT_PROCESSOS_ATRASADOS_QUERY),
-    @NamedQuery(name = FLUXO_BY_DESCRICACAO, query = FLUXO_BY_DESCRICAO_QUERY),
-    @NamedQuery(name = COUNT_PROCESSOS_BY_FLUXO, query = COUNT_PROCESSOS_BY_FLUXO_QUERY),
-    @NamedQuery(name = FLUXO_BY_NOME, query = FLUXO_BY_NOME_QUERY),
-    @NamedQuery(name = COUNT_FLUXO_BY_CODIGO, query = COUNT_FLUXO_BY_CODIGO_QUERY),
-    @NamedQuery(name = COUNT_FLUXO_BY_DESCRICAO, query = COUNT_FLUXO_BY_DESCRICAO_QUERY), 
-    @NamedQuery(name = FLUXO_BY_CODIGO, query = FLUXO_BY_CODIGO_QUERY)})
+        @NamedQuery(name = LIST_ATIVOS, query = LIST_ATIVOS_QUERY),
+        @NamedQuery(name = COUNT_PROCESSOS_ATRASADOS, query = COUNT_PROCESSOS_ATRASADOS_QUERY),
+        @NamedQuery(name = FLUXO_BY_DESCRICACAO, query = FLUXO_BY_DESCRICAO_QUERY),
+        @NamedQuery(name = COUNT_PROCESSOS_BY_FLUXO, query = COUNT_PROCESSOS_BY_FLUXO_QUERY),
+        @NamedQuery(name = FLUXO_BY_NOME, query = FLUXO_BY_NOME_QUERY),
+        @NamedQuery(name = COUNT_FLUXO_BY_CODIGO, query = COUNT_FLUXO_BY_CODIGO_QUERY),
+        @NamedQuery(name = COUNT_FLUXO_BY_DESCRICAO, query = COUNT_FLUXO_BY_DESCRICAO_QUERY),
+        @NamedQuery(name = FLUXO_BY_CODIGO, query = FLUXO_BY_CODIGO_QUERY) })
 public class Fluxo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -121,16 +123,11 @@ public class Fluxo implements Serializable {
             final Integer qtPrazo, final Date dataInicioPublicacao,
             final Date dataFimPublicacao, final Boolean publicado,
             final Boolean ativo) {
-        this.codFluxo = codFluxo;
-        this.fluxo = fluxo;
-        this.ativo = ativo;
-        this.qtPrazo = qtPrazo;
-        this.publicado = publicado;
-        this.dataInicioPublicacao = dataInicioPublicacao;
+        this(codFluxo, fluxo, qtPrazo, dataInicioPublicacao, publicado, ativo);
         this.dataFimPublicacao = dataFimPublicacao;
     }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_FLUXO, unique = true, nullable = false)
