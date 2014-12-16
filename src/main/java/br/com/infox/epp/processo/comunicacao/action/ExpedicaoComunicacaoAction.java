@@ -117,6 +117,10 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		return comunicacao;
 	}
 	
+	public void setComunicacao(String comunicacao) {
+		this.comunicacao = comunicacao;
+	}
+	
 	public String getMd5Comunicacao() {
 		return getDocumentoComunicacao().getMd5Documento();
 	}
@@ -150,8 +154,12 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public void expedirComunicacao() {
 		try {
-			assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
-			comunicacaoService.expedirComunicacao(destinatario);
+			assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+			if (getComunicacao() != null) {
+				comunicacaoService.expedirComunicacao(destinatario);
+			} else {
+				comunicacaoService.expedirComunicacao(modeloComunicacao);
+			}
 		} catch (DAOException e) {
 			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
 			actionMessagesService.handleDAOException(e);
