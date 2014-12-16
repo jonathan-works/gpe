@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:wi="http://www.itx.com.br/jsf"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a="http://richfaces.org/a4j"
+      xmlns:s="http://jboss.org/schema/seam/taglib">
+<h:head />
+<h:body>
+	<h:form>
+		<h:commandButton value="Visualizar Comunicação" action="#{responderComunicacaoAction.downloadComunicacao}" 
+			styleClass="buttons" />
+	</h:form>
+	<h:form>
+		<rich:collapsiblePanel header="Editor" switchType="client">
+			<wi:selectOneMenuEntity id="modeloDocumento" value="#{responderComunicacaoAction.modeloDocumento}" 
+				label="#{eppmessages['modeloDocumento.modeloDocumento']}"
+				noSelectionLabel="[Selecione o modelo]" items="#{responderComunicacaoAction.modelosDocumento}">
+				<a:ajax event="change" render="respostaComunicacaoDiv" execute="@this" limitRender="true"
+					listener="#{responderComunicacaoAction.assignModeloDocumento}"/>
+			</wi:selectOneMenuEntity>
+			
+			<s:div>
+ 				<wi:selectOneMenuEntity id="classificacao"
+	  				label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+		      		items="#{responderComunicacaoAction.classificacoesEditor}"
+		      		showLabelSelecione="true"
+		      		required="true"
+		      		value="#{responderComunicacaoAction.classificacaoDocumento}"
+		      		readonly="#{responderComunicacaoAction.classificacoesEditor.size eq 1}"
+   					disabled="#{responderComunicacaoAction.classificacoesEditor.size eq 1}">
+   					<a:ajax event="change"
+      					render="tooltipComunicacao"
+      					execute="@this"
+      					limitRender="true" />
+  				</wi:selectOneMenuEntity>
+			</s:div>
+					
+			<s:div id="tooltipComunicacao">
+		   		<s:div styleClass="tooltip-parent" style="width: 10px" 
+		  			rendered="#{not empty responderComunicacaoAction.classificacaoDocumento.observacao}">
+		  		<h:graphicImage url="#{wiSkin.imageFolder}/help.gif" />
+					<div class="epp-tooltip">
+						<div class="tooltip-panel">
+							<div><h:outputText value="Observação:"/></div>
+							<h:outputText value="#{responderComunicacaoAction.classificacaoDocumento.observacao}"/>
+						</div>
+					</div>
+		   		</s:div>
+			</s:div>
+			<wi:selectBooleanRadio id="minuta" value="#{responderComunicacaoAction.minuta}" label="Minuta" />
+			<s:div id="respostaComunicacaoDiv">
+				<wi:editor id="respostaComunicacao" value="#{responderComunicacaoAction.textoResposta}" />
+			</s:div>
+			<wi:commandButton id="gravarResposta" action="responderComunicacaoAction.gravarResposta}" 
+				value="Gravar" reRender="pageBodyDialogMessage, @form, respostasPanel"/>
+		</rich:collapsiblePanel>
+	</h:form>
+	<h:form>
+		<rich:collapsiblePanel header="Anexo" switchType="client">
+			<wi:fileUpload id="documentoResposta" 
+				accept="#{responderComunicacaoAction.classificacaoAnexo.acceptedTypes}" />
+			<wi:commandButton id="gravarResposta" action="responderComunicacaoAction.gravarAnexoResposta}" 
+				value="Gravar" reRender="pageBodyDialogMessage, @form, respostasPanel"/>
+		</rich:collapsiblePanel>
+	</h:form>
+</h:body>
+</html>
