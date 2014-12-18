@@ -61,21 +61,20 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     @In
     private MetadadoProcessoManager metadadoProcessoManager;
 
-    public DocumentoBin createDocumentoBin(Object value) throws DAOException {
-        DocumentoBin bin = new DocumentoBin();
+    public DocumentoBin createDocumentoBin(final Object value) throws DAOException {
+        final DocumentoBin bin = new DocumentoBin();
         bin.setModeloDocumento(getDescricaoModeloDocumentoByValue(value));
         bin.setMd5Documento(MD5Encoder.encode(String.valueOf(value)));
-        documentoBinManager.persist(bin);
+        this.documentoBinManager.persist(bin);
         return bin;
     }
 
-    public Documento createDocumento(Processo processo,
-            String label, DocumentoBin bin,
-            ClassificacaoDocumento classificacaoDocumento) throws DAOException {
-        return documentoManager.createDocumento(processo, label, bin, classificacaoDocumento);
+    public Documento createDocumento(final Processo processo, final String label, final DocumentoBin bin,
+            final ClassificacaoDocumento classificacaoDocumento) throws DAOException {
+        return this.documentoManager.createDocumento(processo, label, bin, classificacaoDocumento);
     }
 
-    private String getDescricaoModeloDocumentoByValue(Object value) {
+    private String getDescricaoModeloDocumentoByValue(final Object value) {
         String modeloDocumento = String.valueOf(value);
         if (Strings.isEmpty(modeloDocumento)) {
             modeloDocumento = " ";
@@ -83,7 +82,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return modeloDocumento;
     }
 
-    public Object getAlteracaoModeloDocumento(DocumentoBin documentoBinAtual, Object value) {
+    public Object getAlteracaoModeloDocumento(final DocumentoBin documentoBinAtual, final Object value) {
         if (documentoBinAtual.getModeloDocumento() != null) {
             return documentoBinAtual.getModeloDocumento();
         } else {
@@ -94,7 +93,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioPerfil usuarioPerfil) {
         final BusinessProcess bp = BusinessProcess.instance();
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            final Long taskInstanceId = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
+            final Long taskInstanceId = this.processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo,
+                    idTarefa);
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
         }
@@ -109,34 +109,33 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
             try {
                 bp.startTask();
                 result = true;
-            } catch (IllegalStateException e) {
+            } catch (final IllegalStateException e) {
                 // Caso já exista deve-se ignorar este trecho, outras
                 // illegalstate devem ser averiguadas
                 // TODO Ideal para processos já iniciados seria chamar o método
                 // resumeTask
-                LOG.warn(".iniciaTask()", e);
+                ProcessoManager.LOG.warn(".iniciaTask()", e);
             }
         }
         return result;
     }
 
-    public void iniciarTask(final Processo processo, final Long idTarefa,
-            final UsuarioPerfil usuarioPerfil) throws DAOException {
+    public void iniciarTask(final Processo processo, final Long idTarefa, final UsuarioPerfil usuarioPerfil)
+            throws DAOException {
         final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo, idTarefa);
         if (taskInstanceId != null) {
             iniciaTask(processo, taskInstanceId);
-            storeUsuario(taskInstanceId, usuarioPerfil.getUsuarioLogin(), usuarioPerfil.getPerfilTemplate().getLocalizacao(), usuarioPerfil.getPerfilTemplate().getPapel());
+            storeUsuario(taskInstanceId, usuarioPerfil.getUsuarioLogin(), usuarioPerfil.getPerfilTemplate()
+                    .getLocalizacao(), usuarioPerfil.getPerfilTemplate().getPapel());
         }
     }
 
-
-    private Long getTaskInstanceId(final UsuarioPerfil usuarioPerfil,
-            final Processo processo, final Long idTarefa) {
+    private Long getTaskInstanceId(final UsuarioPerfil usuarioPerfil, final Processo processo, final Long idTarefa) {
         Long result;
         if (idTarefa != null) {
-            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
+            result = this.processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
         } else {
-            result = processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo);
+            result = this.processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo);
         }
         return result;
     }
@@ -147,40 +146,39 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
      * é finalizada (ver tabela jbpm_taskinstance, campo actorid_) Porém surgiu
      * a necessidade de armazenar os usuários das tarefas já finalizas para
      * exibir no histórico de Movimentação do Processo
-     * 
+     *
      * @param idTaskInstance
      * @param actorId
      * @throws DAOException
      * */
-    private void storeUsuario(final Long idTaskInstance,
-            final UsuarioLogin user, final Localizacao localizacao,
+    private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao,
             final Papel papel) throws DAOException {
-        if (genericDAO.find(UsuarioTaskInstance.class, idTaskInstance) == null) {
-            genericDAO.persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
+        if (this.genericDAO.find(UsuarioTaskInstance.class, idTaskInstance) == null) {
+            this.genericDAO.persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
         }
     }
 
-    public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) throws DAOException {
+    public void moverProcessosParaCaixa(final List<Integer> idList, final Caixa caixa) throws DAOException {
         getDao().moverProcessosParaCaixa(idList, caixa);
     }
 
-    public void moverProcessoParaCaixa(Caixa caixa, Processo processo) throws DAOException {
+    public void moverProcessoParaCaixa(final Caixa caixa, final Processo processo) throws DAOException {
         getDao().moverProcessoParaCaixa(caixa, processo);
     }
 
-    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) throws DAOException {
-        Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
+    public void moverProcessoParaCaixa(final List<Caixa> caixaList, final Processo processo) throws DAOException {
+        final Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
         getDao().moverProcessoParaCaixa(caixaEscolhida, processo);
     }
 
     /*
      * Atualmente a regra para escolher a caixa é simplesmente pegar a primeira
      */
-    private Caixa escolherCaixaParaAlocarProcesso(List<Caixa> caixaList) {
+    private Caixa escolherCaixaParaAlocarProcesso(final List<Caixa> caixaList) {
         return caixaList.get(0);
     }
 
-    public void removerProcessoDaCaixaAtual(Processo processo) throws DAOException {
+    public void removerProcessoDaCaixaAtual(final Processo processo) throws DAOException {
         getDao().removerProcessoDaCaixaAtual(processo);
     }
 
@@ -188,63 +186,65 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         getDao().atualizarProcessos();
     }
 
-    public boolean checkAccess(int idProcesso, Integer idUsuarioLogado, Long idTask) {
+    public boolean checkAccess(final int idProcesso, final Integer idUsuarioLogado, final Long idTask) {
         return getDao().findProcessosByIdProcessoAndIdUsuario(idProcesso, idUsuarioLogado, idTask) != null;
     }
 
-    public String getNumeroProcesso(int idProcesso) {
-        Processo processo = find(idProcesso);
+    public String getNumeroProcesso(final int idProcesso) {
+        final Processo processo = find(idProcesso);
         if (processo != null) {
             return processo.getNumeroProcesso();
         }
         return String.valueOf(idProcesso);
     }
-    
-    public void removerProcessoJbpm(Processo processo) throws DAOException {
-    	Long idJbpm = processo.getIdJbpm();
-    	if (idJbpm == null) throw new DAOException("Processo sem tarefa no Jbpm");
-    	Object[] ids = getDao().getIdTaskMgmInstanceAndIdTokenByidJbpm(idJbpm);
-    	Long idTaskMgmInstance = ((Number) ids[0]).longValue();
-    	Long idToken = ((Number) ids[1]).longValue();
-    	getDao().removerProcessoJbpm(processo.getIdProcesso(), idJbpm, idTaskMgmInstance, idToken);
-    	processo.setIdJbpm(null);
+
+    public void removerProcessoJbpm(final Processo processo) throws DAOException {
+        final Long idJbpm = processo.getIdJbpm();
+        if (idJbpm == null) {
+            throw new DAOException("Processo sem tarefa no Jbpm");
+        }
+        final Object[] ids = getDao().getIdTaskMgmInstanceAndIdTokenByidJbpm(idJbpm);
+        final Long idTaskMgmInstance = ((Number) ids[0]).longValue();
+        final Long idToken = ((Number) ids[1]).longValue();
+        getDao().removerProcessoJbpm(processo.getIdProcesso(), idJbpm, idTaskMgmInstance, idToken);
+        processo.setIdJbpm(null);
     }
-    
-    public String getNumeroProcessoByIdJbpm(Long processInstanceId) {
+
+    public String getNumeroProcessoByIdJbpm(final Long processInstanceId) {
         return getDao().getNumeroProcessoByIdJbpm(processInstanceId);
     }
-    
-    public Processo getProcessoByNumero(String numeroProcesso) {
-    	return getDao().getProcessoByNumero(numeroProcesso);
+
+    public Processo getProcessoByNumero(final String numeroProcesso) {
+        return getDao().getProcessoByNumero(numeroProcesso);
     }
-    
+
     public List<Processo> listAllNotEnded() {
         return getDao().listAllNotEnded();
     }
 
-    public List<Processo> listNotEnded(Fluxo fluxo) {
+    public List<Processo> listNotEnded(final Fluxo fluxo) {
         return getDao().listNotEnded(fluxo);
     }
 
-    public Boolean podeInativarPartesDoProcesso(Processo processo) {
+    public Boolean podeInativarPartesDoProcesso(final Processo processo) {
         return getDao().podeInativarPartes(getDao().getProcessoEpaByProcesso(processo));
     }
-    
+
     public void updateTempoGastoProcessoEpa() throws DAOException {
-        List<Processo> listAllNotEnded = listAllNotEnded();
-        for (Processo processo : listAllNotEnded) {
-            Map<String, Object> result = getDao().getTempoGasto(processo);
+        final List<Processo> listAllNotEnded = listAllNotEnded();
+        for (final Processo processo : listAllNotEnded) {
+            final Map<String, Object> result = getDao().getTempoGasto(processo);
             if (result != null) {
                 DateRange dateRange;
                 final Date dataInicio = processo.getDataInicio();
                 final Date dataFim = processo.getDataFim();
-                if (dataFim != null){
+                if (dataFim != null) {
                     dateRange = new DateRange(dataInicio, dataFim);
                 } else {
                     dateRange = new DateRange(dataInicio, new Date());
                 }
                 processo.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
-                if (processo.getPorcentagem() > PORCENTAGEM) {
+                if (processo.getPorcentagem() > ProcessoManager.PORCENTAGEM) {
                     processo.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
                 }
                 getDao().update(processo);
@@ -252,11 +252,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public boolean hasPartes(Processo processo) {
+    public boolean hasPartes(final Processo processo) {
         return getDao().hasPartes(processo);
     }
 
-    public boolean hasPartes(Long idJbpm) {
+    public boolean hasPartes(final Long idJbpm) {
         return getDao().hasPartes(idJbpm);
     }
 
@@ -268,70 +268,82 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return getDao().getPessoaJuridicaList();
     }
 
-    public Double getMediaTempoGasto(Fluxo fluxo, SituacaoPrazoEnum prazoEnum) {
+    public Double getMediaTempoGasto(final Fluxo fluxo, final SituacaoPrazoEnum prazoEnum) {
         return getDao().getMediaTempoGasto(fluxo, prazoEnum);
     }
 
-    public Processo getProcessoEpaByNumeroProcesso(
-            final String numeroProcesso) {
-    	Processo processo = null;
+    public Processo getProcessoEpaByNumeroProcesso(final String numeroProcesso) {
+        Processo processo = null;
         if (numeroProcesso != null) {
             processo = getDao().getProcessoEpaByNumeroProcesso(numeroProcesso);
         }
         return processo;
     }
-    
-    public Processo persistProcessoComNumero(Processo processo) throws DAOException{
-    	return getDao().persistProcessoComNumero(processo);
+
+    public Processo persistProcessoComNumero(final Processo processo) throws DAOException {
+        return getDao().persistProcessoComNumero(processo);
     }
 
-    public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+    public void distribuirProcesso(final Processo processo, final PessoaFisica relator,
+            final UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
         distribuirProcesso(processo, relator, unidadeDecisoraMonocratica, null);
     }
 
-    public void distribuirProcesso(Processo processo, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+    public void distribuirProcesso(final Processo processo, final UnidadeDecisoraMonocratica unidadeDecisoraMonocratica)
+            throws DAOException {
         distribuirProcesso(processo, null, unidadeDecisoraMonocratica, null);
     }
 
-    public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+    public void distribuirProcesso(final Processo processo, final PessoaFisica relator,
+            final UnidadeDecisoraMonocratica unidadeDecisoraMonocratica,
+            final UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
         setRelator(processo, relator);
         setUnidadeDecisoraMonocratica(processo, unidadeDecisoraMonocratica);
         setUnidadeDecisoraColegiada(processo, unidadeDecisoraColegiada);
         getDao().update(processo);
     }
 
-    private void setRelator(Processo processo, PessoaFisica relator)
-            throws DAOException {
+    private void setRelator(final Processo processo, final PessoaFisica relator) throws DAOException {
         if (relator != null) {
-            addMetadadoProcesso(processo, MetadadoProcessoType.RELATOR, relator.getClass(), relator.getIdPessoa().toString());
+            addMetadadoProcesso(processo, MetadadoProcessoType.RELATOR, relator.getClass(), relator.getIdPessoa()
+                    .toString());
         } else {
-            metadadoProcessoManager.remove(processo.getMetadado(MetadadoProcessoType.RELATOR));
+            removeMetadadoIfExists(processo, MetadadoProcessoType.RELATOR);
         }
     }
 
-    private void setUnidadeDecisoraMonocratica(Processo processo,
-            UnidadeDecisoraMonocratica unidadeDecisoraMonocratica)
-            throws DAOException {
+    private void removeMetadadoIfExists(final Processo processo, final String metadadoProcessoType) throws DAOException {
+        final MetadadoProcesso metadado = processo.getMetadado(metadadoProcessoType);
+        if (metadado != null) {
+            this.metadadoProcessoManager.remove(metadado);
+        }
+    }
+
+    private void setUnidadeDecisoraMonocratica(final Processo processo,
+            final UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
         if (unidadeDecisoraMonocratica != null) {
-            addMetadadoProcesso(processo, MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA, unidadeDecisoraMonocratica.getClass(), unidadeDecisoraMonocratica.getIdUnidadeDecisoraMonocratica().toString());
+            addMetadadoProcesso(processo, MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA,
+                    unidadeDecisoraMonocratica.getClass(), unidadeDecisoraMonocratica.getIdUnidadeDecisoraMonocratica()
+                            .toString());
         } else {
-            metadadoProcessoManager.remove(processo.getMetadado(MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA));
+            removeMetadadoIfExists(processo, MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA);
         }
     }
 
-    private void setUnidadeDecisoraColegiada(Processo processo,
-            UnidadeDecisoraColegiada unidadeDecisoraColegiada)
-            throws DAOException {
+    private void setUnidadeDecisoraColegiada(final Processo processo,
+            final UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
         if (unidadeDecisoraColegiada != null) {
-            addMetadadoProcesso(processo, MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA, unidadeDecisoraColegiada.getClass(), unidadeDecisoraColegiada.getIdUnidadeDecisoraColegiada().toString());
+            addMetadadoProcesso(processo, MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA,
+                    unidadeDecisoraColegiada.getClass(), unidadeDecisoraColegiada.getIdUnidadeDecisoraColegiada()
+                            .toString());
         } else {
-            metadadoProcessoManager.remove(processo.getMetadado(MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA));
+            removeMetadadoIfExists(processo, MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA);
         }
     }
 
-    private void addMetadadoProcesso(Processo processo, String type, Class<?> classType,
-            String valor) {
-        MetadadoProcesso metadadoProcesso = new MetadadoProcesso();
+    private void addMetadadoProcesso(final Processo processo, final String type, final Class<?> classType,
+            final String valor) {
+        final MetadadoProcesso metadadoProcesso = new MetadadoProcesso();
         metadadoProcesso.setProcesso(processo);
         metadadoProcesso.setMetadadoType(type);
         metadadoProcesso.setClassType(classType);
@@ -339,11 +351,12 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         processo.getMetadadoProcessoList().add(metadadoProcesso);
     }
 
-    public void distribuirProcesso(Processo processo, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+    public void distribuirProcesso(final Processo processo, final UnidadeDecisoraColegiada unidadeDecisoraColegiada)
+            throws DAOException {
         distribuirProcesso(processo, null, null, unidadeDecisoraColegiada);
     }
 
-    public void distribuirProcesso(Processo processo) throws DAOException {
-        distribuirProcesso(processo,null,null,null);
+    public void distribuirProcesso(final Processo processo) throws DAOException {
+        distribuirProcesso(processo, null, null, null);
     }
 }
