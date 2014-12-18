@@ -236,6 +236,10 @@ version="2.0">
         <source>tags/generic/quadro.xhtml</source>
     </tag>
     <tag>
+        <tag-name>panel</tag-name>
+        <source>tags/generic/panel.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>helpIcon</tag-name>
         <source>tags/generic/helpIcon.xhtml</source>
     </tag>
