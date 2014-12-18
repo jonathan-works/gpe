@@ -1,38 +1,67 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+import org.jboss.seam.transaction.Transaction;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.service.IniciarProcessoService;
+import br.com.infox.epp.processo.type.TipoProcesso;
 
 @Name(RespostaComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
 public class RespostaComunicacaoService {
 	public static final String NAME = "respostaComunicacaoService";
+	private static final LogProvider LOG = Logging.getLogProvider(RespostaComunicacaoService.class);
 	
 	@In
 	private DocumentoManager documentoManager;
-	
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@In
+	private ProcessoManager processoManager;
+	@In
+	private DocumentoBinManager documentoBinManager;
+	@In
+	private DocumentoBinarioManager documentoBinarioManager;
+	@In(required = false)
+	private String codigoFluxoDocumento;
+	@In
+	private FluxoManager fluxoManager;
+	@In
+	private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
+	@In
+	private IniciarProcessoService iniciarProcessoService;
 	
-	public Documento gravarResposta(Documento resposta, Processo processoComunicacao) throws DAOException {
+	public Documento gravarDocumentoResposta(Documento resposta, Processo processoResposta) throws DAOException {
 		if (resposta.getId() == null) {
 			resposta.setDataInclusao(new Date());
-			resposta = documentoManager.gravarDocumentoNoProcesso(processoComunicacao, resposta);
-			criarMetadadoResposta(processoComunicacao, resposta.getId().toString());
+			resposta = documentoManager.gravarDocumentoNoProcesso(processoResposta, resposta);
 		} else {
 			resposta.setDataAlteracao(new Date());
 			resposta.setUsuarioAlteracao(Authenticator.getUsuarioLogado());
@@ -40,15 +69,85 @@ public class RespostaComunicacaoService {
 		}
 		return resposta;
 	}
+
+	public Processo criarProcessoResposta(Processo processoComunicacao) throws DAOException {
+		Fluxo fluxoDocumento = getFluxoDocumento();
+		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoDocumento);
+		if (ncfs == null || ncfs.isEmpty()) {
+			throw new DAOException("Não existe Natureza/Categoria para o fluxo " + fluxoDocumento.getFluxo());
+		}
+		
+		Processo processoResposta = new Processo();
+		processoResposta.setNaturezaCategoriaFluxo(ncfs.get(0));
+		processoResposta.setProcessoPai(processoComunicacao);
+		processoResposta.setLocalizacao(Authenticator.getLocalizacaoAtual());
+		processoResposta.setNumeroProcesso("");
+		processoResposta.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+		processoManager.persist(processoResposta);
+		
+		criarMetadadoResposta(processoComunicacao, processoResposta.getIdProcesso().toString());
+		criarMetadadoTipo(processoResposta);
+		
+		return processoResposta;
+	}
+
+	public void removerDocumento(Documento documento) throws DAOException {
+		DocumentoBin documentoBin = documento.getDocumentoBin();
+		documentoManager.remove(documento);
+		try {
+			Transaction.instance().commit(); // O documento sempre deve ser removido
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+		
+		try {
+			Transaction.instance().begin(); // Mas o bin associado apenas se ninguém mais o referenciar
+			Integer idDocumentoBin = documentoBin.getId();
+			documentoBinManager.remove(documentoBin);
+			if (documentoBin.getExtensao() != null) {
+				documentoBinarioManager.remove(idDocumentoBin);
+			}
+		} catch (Exception e) {
+			LOG.warn("", e);
+		}
+	}
 	
-	private void criarMetadadoResposta(Processo processoComunicacao, String idDocumento) throws DAOException {
+	public void inicializarFluxoDocumento(Processo processoResposta) throws DAOException {
+		iniciarProcessoService.iniciarProcesso(processoResposta);
+		MetadadoProcesso metadado = processoResposta.getProcessoPai().getMetadado(RESPOSTA_COMUNICACAO_ATUAL);
+		metadadoProcessoManager.remove(metadado);
+	}
+	
+	private Fluxo getFluxoDocumento() throws DAOException {
+		if (codigoFluxoDocumento == null) {
+			throw new DAOException("Fluxo de documento não encontrado");
+		}
+		Fluxo fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoDocumento);
+		if (fluxo == null) {
+			throw new DAOException("Fluxo de documento não encontrado");
+		}
+		return fluxo;
+	}
+	
+	private void criarMetadadoResposta(Processo processoComunicacao, String idProcesso) throws DAOException {
 		MetadadoProcesso metadado = new MetadadoProcesso();
-		metadado.setClassType(Documento.class);
-		metadado.setMetadadoType(RESPOSTA_COMUNICACAO);
+		metadado.setClassType(Processo.class);
+		metadado.setMetadadoType(RESPOSTA_COMUNICACAO_ATUAL);
 		metadado.setProcesso(processoComunicacao);
-		metadado.setValor(idDocumento);
+		metadado.setValor(idProcesso);
+		metadado.setVisivel(false);
 		metadadoProcessoManager.persist(metadado);
 	}
 	
-	public static final String RESPOSTA_COMUNICACAO = "respostaComunicacao";
+	private void criarMetadadoTipo(Processo processoResposta) throws DAOException {
+		MetadadoProcesso metadado = new MetadadoProcesso();
+		metadado.setClassType(TipoProcesso.class);
+		metadado.setMetadadoType(MetadadoProcessoType.TIPO_PROCESSO);
+		metadado.setProcesso(processoResposta);
+		metadado.setValor(TipoProcesso.DOCUMENTO.name());
+		metadado.setVisivel(false);
+		metadadoProcessoManager.persist(metadado);
+	}
+	
+	public static final String RESPOSTA_COMUNICACAO_ATUAL = "respostaComunicacaoAtual";
 }

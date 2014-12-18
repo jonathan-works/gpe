@@ -127,6 +127,7 @@ public class ComunicacaoService {
 		processo.setNaturezaCategoriaFluxo(ncf);
 		processo.setNumeroProcesso("");
 		processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+		processo.setProcessoPai(modeloComunicacao.getProcesso());
 		processoManager.persist(processo);
 
 		processo.getMetadadoProcessoList().addAll(criarMetadados(destinatario, processo));

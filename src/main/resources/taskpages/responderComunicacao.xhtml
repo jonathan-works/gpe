@@ -13,15 +13,20 @@
 		<h:commandButton value="Visualizar Comunicação" action="#{respostaComunicacaoAction.downloadComunicacao}" 
 			styleClass="buttons" />
 	</h:form>
-	<h:form>
-		<rich:collapsiblePanel header="Editor" switchType="client">
+	<h:form rendered="#{respostaComunicacaoAction.possuiProcessoResposta}">
+		<rich:collapsiblePanel header="Editor" switchType="client" id="painelEditor">
+			<ui:param name="minuta" 
+				value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
+							respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" />
 			<s:div>
 				<wi:inputText id="descricao" value="#{respostaComunicacaoAction.documentoEdicao.descricao}"
-					required="true" label="#{eppmessages['processo.anexarDocumentoDescricao']}" />
+					required="true" label="#{eppmessages['processo.anexarDocumentoDescricao']}" 
+					readonly="#{not minuta}" disabled="#{not minuta}"/>
 			</s:div>
 			<wi:selectOneMenuEntity id="modeloDocumento" value="#{respostaComunicacaoAction.modeloDocumento}" 
 				label="#{eppmessages['modeloDocumento.modeloDocumento']}"
-				noSelectionLabel="[Selecione o modelo]" items="#{respostaComunicacaoAction.modelosDocumento}">
+				noSelectionLabel="[Selecione o modelo]" items="#{respostaComunicacaoAction.modelosDocumento}"
+				readonly="#{not minuta}" disabled="#{not minuta}">
 				<a:ajax event="change" render="respostaComunicacaoDiv" execute="@this" limitRender="true"
 					listener="#{respostaComunicacaoAction.assignModeloDocumento}"/>
 			</wi:selectOneMenuEntity>
@@ -33,8 +38,8 @@
 		      		showLabelSelecione="true"
 		      		required="true"
 		      		value="#{respostaComunicacaoAction.documentoEdicao.classificacaoDocumento}"
-		      		readonly="#{respostaComunicacaoAction.classificacoesEditor.size eq 1}"
-   					disabled="#{respostaComunicacaoAction.classificacoesEditor.size eq 1}">
+		      		readonly="#{respostaComunicacaoAction.classificacoesEditor.size eq 1 or not minuta}"
+   					disabled="#{respostaComunicacaoAction.classificacoesEditor.size eq 1 or not minuta}">
    					<a:ajax event="change"
       					render="tooltipComunicacao"
       					execute="@this"
@@ -54,34 +59,98 @@
 					</div>
 		   		</s:div>
 			</s:div>
-			<wi:selectBooleanRadio id="minuta" value="#{respostaComunicacaoAction.minuta}" label="Minuta" />
+			<wi:selectBooleanRadio id="minuta" value="#{respostaComunicacaoAction.minuta}" label="Minuta" 
+				readonly="#{not minuta}" disabled="#{not minuta}"/>
 			<s:div id="respostaComunicacaoDiv">
-				<wi:editor id="respostaComunicacao" value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.modeloDocumento}" />
+				<wi:editor id="respostaComunicacao" readonly="#{not minuta}" 
+					value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.modeloDocumento}" />
 			</s:div>
 			<wi:commandButton id="gravarResposta" action="respostaComunicacaoAction.gravarResposta" 
-				value="Gravar" reRender="pageBodyDialogMessage, @form, respostasPanel"/>
+				value="Gravar" reRender="pageBodyDialogMessage, @form, respostasPanel"
+				rendered="#{minuta}"/>
+			<wi:commandButton id="newDocumento" action="respostaComunicacaoAction.newDocumentoEdicao" 
+				value="Novo" reRender="pageBodyDialogMessage, @form" execute="@this"/>
 		</rich:collapsiblePanel>
 	</h:form>
-	<h:form>
+	
+	<h:form rendered="#{respostaComunicacaoAction.possuiProcessoResposta}">
 		<rich:collapsiblePanel header="Anexo" switchType="client">
-			<wi:fileUpload id="documentoResposta" 
-				accept="#{respostaComunicacaoAction.classificacaoAnexo.acceptedTypes}" />
-			<wi:commandButton id="gravarResposta" action="respostaComunicacaoAction.gravarAnexoResposta" 
-				value="Gravar" reRender="pageBodyDialogMessage, @form, respostasPanel"/>
+			<wi:inputText id="descricaoAnexo" value="#{respostaComunicacaoAction.descricaoAnexo}" label="Descrição"
+				showRequired="true">
+				<a:ajax event="change" execute="@this" limitRender="true" render="uploadDiv"/>
+			</wi:inputText>
+			<wi:selectOneMenuEntity id="classificacaoAnexo" label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+		      	items="#{respostaComunicacaoAction.classificacoesAnexo}" showLabelSelecione="true"
+		      	showRequired="true"	value="#{respostaComunicacaoAction.classificacaoAnexo}"
+		      	readonly="#{respostaComunicacaoAction.classificacoesAnexo.size eq 1}"
+   				disabled="#{respostaComunicacaoAction.classificacoesAnexo.size eq 1}">
+				<a:ajax event="change" execute="@this" limitRender="true" render="uploadDiv"/>
+			</wi:selectOneMenuEntity>
+			<s:div id="tooltipClassificacaoAnexo">
+		   		<s:div styleClass="tooltip-parent" style="width: 10px" 
+		  			rendered="#{not empty respostaComunicacaoAction.classificacaoAnexo.observacao}">
+		  		<h:graphicImage url="#{wiSkin.imageFolder}/help.gif" />
+					<div class="epp-tooltip">
+						<div class="tooltip-panel">
+							<div><h:outputText value="Observação:"/></div>
+							<h:outputText value="#{respostaComunicacaoAction.classificacaoAnexo.observacao}"/>
+						</div>
+					</div>
+		   		</s:div>
+			</s:div>
+			<s:div id="uploadDiv">
+				<wi:fileUpload id="documentoResposta"
+					reRender="pageBodyDialogMessage, @form"
+					accept="#{respostaComunicacaoAction.classificacaoAnexo.acceptedTypes}"
+					rendered="#{not empty respostaComunicacaoAction.classificacaoAnexo 
+						and not empty respostaComunicacaoAction.descricaoAnexo
+						and not empty respostaComunicacaoAction.classificacaoAnexo.extensaoArquivosList}" />
+			</s:div>
+			<s:div id="uploadButton">
+				<wi:commandButton id="gravarResposta"
+					action="respostaComunicacaoAction.gravarAnexoResposta"
+					value="Gravar"
+					reRender="pageBodyDialogMessage, @form, respostasPanel"
+					rendered="#{respostaComunicacaoAction.anexoValido}" />
+			</s:div>
 		</rich:collapsiblePanel>
 	</h:form>
-	<wi:dataTable id="respostas" tableTitle="Respostas" bean="#{respostaComunicacaoList}"
-		values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true">
+	
+	<wi:dataTable id="respostas" tableTitle="Documentos da Resposta" bean="#{respostaComunicacaoList}"
+		values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true"
+		showGrid="#{respostaComunicacaoAction.possuiProcessoResposta}"
+		showSearchForm="#{respostaComunicacaoAction.possuiProcessoResposta}">
 		<ui:define name="searchForm">
 			<wi:searchForm formId="respostasForm" searchReRender="respostasPanel, respostasSearchForm"
-				clearReRender="respostasPanel, respostasSearchForm">
+				clearReRender="respostasPanel, respostasSearchForm" formTitle="Pesquisa">
 				<wi:inputText value="#{respostaComunicacaoList.entity.descricao}" label="Descrição" />
 			</wi:searchForm>
 		</ui:define>
 		<ui:define name="headerToolBar" />
 		<ui:define name="toolBar">
+			<h:form>
+				<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row)}"
+					render="painelEditor" rendered="#{empty row.documentoBin.extensao}">
+					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}"/>
+				</a:commandLink>
+				<h:commandLink action="#{respostaComunicacaoAction.downloadDocumento(row)}"
+					rendered="#{not empty row.documentoBin.extensao}">
+					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}"/>
+				</h:commandLink>
+				<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row)}"
+					render="respostasPanel, paineleditor, pageBodyDialogMessage"
+					onclick="return confirm('#{eppmessages['crud.confirmRemove']}')">
+					<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['crud.remove']}" />
+				</a:commandLink>
+			</h:form>
 		</ui:define>
 		<wi:columnOutputText columnHeader="Descrição" value="#{row.descricao}" />
 	</wi:dataTable>
+	
+	<h:form rendered="#{respostaComunicacaoAction.possuiProcessoResposta}">
+		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml">
+			<ui:param name="taskEndAction" value="respostaComunicacaoAction.endTask" />
+		</ui:include>
+	</h:form>
 </h:body>
 </html>

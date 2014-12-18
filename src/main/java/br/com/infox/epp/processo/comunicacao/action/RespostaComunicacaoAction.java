@@ -25,10 +25,14 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
+import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(RespostaComunicacaoAction.NAME)
@@ -53,9 +57,14 @@ public class RespostaComunicacaoAction implements Serializable {
 	private RespostaComunicacaoService respostaComunicacaoService;
 	@In
 	private RespostaComunicacaoList respostaComunicacaoList;
+	@In
+	private DocumentoDownloader documentoDownloader;
+	@In
+	private DocumentoManager documentoManager;
 	
 	private DestinatarioModeloComunicacao destinatario;
 	private Processo processoComunicacao;
+	private Processo processoResposta;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
@@ -70,11 +79,15 @@ public class RespostaComunicacaoAction implements Serializable {
 	public void init() {
 		this.processoComunicacao = JbpmUtil.getProcesso();
 		this.destinatario = processoComunicacao.getMetadado(ComunicacaoService.DESTINATARIO).getValue();
-		respostaComunicacaoList.setProcessoComunicacao(processoComunicacao);
+		criarProcessoResposta();
+		documentoUploader.newInstance();
+		documentoUploader.clear();
+		documentoUploader.setProcesso(processoResposta);
+		respostaComunicacaoList.setProcessoResposta(processoResposta);
 		newDocumentoEdicao();
 		initClassificacoes();
 	}
-	
+
 	public void downloadComunicacao() {
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatario.getModeloComunicacao(), destinatario);
@@ -83,6 +96,10 @@ public class RespostaComunicacaoAction implements Serializable {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
+	}
+	
+	public void downloadDocumento(Documento documento) {
+		documentoDownloader.downloadDocumento(documento);
 	}
 	
 	public void assignModeloDocumento() {
@@ -96,7 +113,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	public void gravarResposta() {
 		boolean hasId = documentoEdicao.getId() != null;
 		try {
-			documentoEdicao = respostaComunicacaoService.gravarResposta(documentoEdicao, processoComunicacao);
+			documentoEdicao = respostaComunicacaoService.gravarDocumentoResposta(documentoEdicao, processoResposta);
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -108,8 +125,43 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 	}
 	
+	public void newDocumentoEdicao() {
+		documentoEdicao = new Documento();
+		DocumentoBin bin = new DocumentoBin();
+		documentoEdicao.setDocumentoBin(bin);
+		documentoEdicao.setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
+	}
+	
 	public void gravarAnexoResposta() {
 		documentoUploader.persist();
+		documentoUploader.clear();
+	}
+	
+	public void removerDocumento(Documento documento) {
+		boolean isDocumentoEdicao = documentoEdicao != null && documentoEdicao.equals(documento);
+		try {
+			respostaComunicacaoService.removerDocumento(documento);
+			if (isDocumentoEdicao) {
+				newDocumentoEdicao();
+			}
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
+		}
+	}
+	
+	public void endTask() {
+		try {
+			respostaComunicacaoService.inicializarFluxoDocumento(processoResposta);
+			TaskInstanceHome.instance().end(TaskInstanceHome.instance().getName());
+		} catch (Exception e) {
+			LOG.error("", e);
+			if (e instanceof DAOException) {
+				actionMessagesService.handleDAOException((DAOException) e);
+			} else {
+				actionMessagesService.handleException("Erro ao enviar resposta", e);
+			}
+		}
 	}
 	
 	public List<ClassificacaoDocumento> getClassificacoesEditor() {
@@ -143,6 +195,18 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoUploader.setClassificacaoDocumento(classificacaoDocumento);
 	}
 	
+	public String getDescricaoAnexo() {
+		return documentoUploader.getDocumento().getDescricao();
+	}
+	
+	public void setDescricaoAnexo(String descricao) {
+		documentoUploader.getDocumento().setDescricao(descricao);
+	}
+	
+	public boolean isAnexoValido() {
+		return documentoUploader.isValido();
+	}
+	
 	public Documento getDocumentoEdicao() {
 		return documentoEdicao;
 	}
@@ -164,6 +228,10 @@ public class RespostaComunicacaoAction implements Serializable {
 		this.minuta = minuta;
 	}
 	
+	public boolean isPossuiProcessoResposta() {
+		return processoResposta != null;
+	}
+	
 	private void initClassificacoes() {
 		classificacoesEditor = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true);
 		if (classificacoesEditor != null && !classificacoesEditor.isEmpty() && classificacoesEditor.size() == 1) {
@@ -175,11 +243,18 @@ public class RespostaComunicacaoAction implements Serializable {
 			setClassificacaoAnexo(classificacoesAnexo.get(0));
 		}
 	}
-	
-	private void newDocumentoEdicao() {
-		documentoEdicao = new Documento();
-		DocumentoBin bin = new DocumentoBin();
-		documentoEdicao.setDocumentoBin(bin);
-		documentoEdicao.setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
+
+	private void criarProcessoResposta() {
+		MetadadoProcesso metadado = processoComunicacao.getMetadado(RespostaComunicacaoService.RESPOSTA_COMUNICACAO_ATUAL);
+		if (metadado != null) {
+			processoResposta = metadado.getValue();
+		} else {
+			try {
+				processoResposta = respostaComunicacaoService.criarProcessoResposta(processoComunicacao);
+			} catch (DAOException e) {
+				LOG.error("", e);
+				actionMessagesService.handleDAOException(e);
+			}
+		}
 	}
 }

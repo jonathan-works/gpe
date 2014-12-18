@@ -24,7 +24,7 @@
     value="#{required or requiredField}" />
   <ui:param
     name="showRequired"
-    value="#{showRequired == false ? false : required and not empty label}" />
+    value="#{not empty showRequired ? showRequired : required and not empty label}" />
   <ui:param
     name="homeRef"
     value="#{empty homeRef ? home : homeRef}" />

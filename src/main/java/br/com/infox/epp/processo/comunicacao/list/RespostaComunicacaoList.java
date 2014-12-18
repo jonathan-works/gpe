@@ -9,7 +9,6 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
@@ -21,14 +20,11 @@ public class RespostaComunicacaoList extends EntityList<Documento> {
 	private static final long serialVersionUID = 1L;
 
 	private static final String DEFAULT_EJBQL = "select o from Documento o where "
-			+ "o.processo = #{respostaComunicacaoList.processoComunicacao} and "
-			+ "exists (select 1 from MetadadoProcesso m where m.processo = #{respostaComunicacaoList.processoComunicacao} "
-			+ "and m.metadadoType = '" + RespostaComunicacaoService.RESPOSTA_COMUNICACAO + "' and "
-			+ "m.valor = cast(o.id as string))";
+			+ "o.processo = #{respostaComunicacaoList.processoResposta}";
 	
-	private static final String DEFAULT_ORDER = "dataInclusao";
+	private static final String DEFAULT_ORDER = "dataInclusao desc";
 
-	private Processo processoComunicacao;		
+	private Processo processoResposta;		
 	
 	@Override
 	protected void addSearchFields() {
@@ -50,11 +46,11 @@ public class RespostaComunicacaoList extends EntityList<Documento> {
 		return null;
 	}
 	
-	public Processo getProcessoComunicacao() {
-		return processoComunicacao;
+	public Processo getProcessoResposta() {
+		return processoResposta;
 	}
 	
-	public void setProcessoComunicacao(Processo processoComunicacao) {
-		this.processoComunicacao = processoComunicacao;
+	public void setProcessoResposta(Processo processoResposta) {
+		this.processoResposta = processoResposta;
 	}
 }
