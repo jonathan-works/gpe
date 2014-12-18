@@ -152,33 +152,13 @@ public class ComunicacaoService {
 	public byte[] gerarPdfCompleto(ModeloComunicacao modeloComunicacao, DestinatarioModeloComunicacao destinatario) throws DAOException {
 		ByteArrayOutputStream pdf = new ByteArrayOutputStream();
 		try {
-			ByteArrayOutputStream pdfComunicacao = new ByteArrayOutputStream();
-			String textoComunicacao = modeloComunicacao.getTextoComunicacao();
-			if (textoComunicacao != null) {
-				if (destinatario == null) {
-					pdfManager.convertHtmlToPdf(modeloComunicacao.getTextoComunicacao(), pdfComunicacao);
-				} else {
-					pdfManager.convertHtmlToPdf(evaluateComunicacao(destinatario), pdfComunicacao);
-				}
-			} else {
-				DocumentoBin documentoComunicacao;
-				if (!modeloComunicacao.getFinalizada()) {
-					documentoComunicacao = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento().getDocumentoBin();
-				} else if (destinatario != null) {
-					documentoComunicacao = destinatario.getComunicacao();
-				} else {
-					documentoComunicacao = modeloComunicacao.getDestinatarios().get(0).getComunicacao();
-				}
-				byte[] doc = documentoBinarioManager.getData(documentoComunicacao.getId());
-				pdfComunicacao.write(doc);
-			}
+			ByteArrayOutputStream pdfComunicacao = gerarByteArrayComunicacao(modeloComunicacao, destinatario);
 			
 			com.lowagie.text.Document pdfDocument = new com.lowagie.text.Document();
 			PdfCopy copy = new PdfCopy(pdfDocument, pdf);
 			pdfDocument.open();
 			
 			copy = pdfManager.copyPdf(copy, pdfComunicacao.toByteArray());
-			pdfComunicacao.reset();
 			pdfComunicacao = null;
 			
 			for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
@@ -200,6 +180,44 @@ public class ComunicacaoService {
 			throw new DAOException(e);
 		}
 		return pdf.toByteArray();
+	}
+	
+	public byte[] gerarPdfComunicacao(ModeloComunicacao modeloComunicacao, DestinatarioModeloComunicacao destinatario) throws DAOException {
+		ByteArrayOutputStream pdf = gerarByteArrayComunicacao(modeloComunicacao, destinatario);
+		if (destinatario != null && destinatario.getExpedido()) {
+			byte[] generatedPdf = pdf.toByteArray();
+			pdf = new ByteArrayOutputStream();
+			documentoBinManager.writeMargemDocumento(destinatario.getComunicacao(), generatedPdf, pdf);
+		}
+		return pdf.toByteArray();
+	}
+	
+	private ByteArrayOutputStream gerarByteArrayComunicacao(ModeloComunicacao modeloComunicacao, DestinatarioModeloComunicacao destinatario) throws DAOException {
+		ByteArrayOutputStream pdfComunicacao = new ByteArrayOutputStream();
+		try {
+			String textoComunicacao = modeloComunicacao.getTextoComunicacao();
+			if (textoComunicacao != null) {
+				if (destinatario == null) {
+					pdfManager.convertHtmlToPdf(modeloComunicacao.getTextoComunicacao(), pdfComunicacao);
+				} else {
+					pdfManager.convertHtmlToPdf(evaluateComunicacao(destinatario), pdfComunicacao);
+				}
+			} else {
+				DocumentoBin documentoComunicacao;
+				if (!modeloComunicacao.getFinalizada()) {
+					documentoComunicacao = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento().getDocumentoBin();
+				} else if (destinatario != null) {
+					documentoComunicacao = destinatario.getComunicacao();
+				} else {
+					documentoComunicacao = modeloComunicacao.getDestinatarios().get(0).getComunicacao();
+				}
+				byte[] doc = documentoBinarioManager.getData(documentoComunicacao.getId());
+				pdfComunicacao.write(doc);
+			}
+		} catch (DocumentException | IOException e) {
+			throw new DAOException(e);
+		}
+		return pdfComunicacao;
 	}
 
 	public DocumentoModeloComunicacao getDocumentoInclusoPorUsuarioInterno(ModeloComunicacao modeloComunicacao) {
@@ -296,7 +314,7 @@ public class ComunicacaoService {
 			metadados.add(criarMetadado(MetadadoProcessoType.LOCALIZACAO_DESTINO, Localizacao.class, destinatario.getDestino().getIdLocalizacao().toString(), processo));
 		}
 		
-		metadados.add(criarMetadado(MEIO_EXPEDICAO, MeioExpedicao.class, destinatario.getMeioExpedicao().getLabel(), processo));
+		metadados.add(criarMetadado(MEIO_EXPEDICAO, MeioExpedicao.class, destinatario.getMeioExpedicao().name(), processo));
 		
 		metadados.add(criarMetadado(DESTINATARIO, DestinatarioModeloComunicacao.class, destinatario.getId().toString(), processo));
 		
@@ -334,7 +352,8 @@ public class ComunicacaoService {
 	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao"; // Variável e Metadado
 	public static final String DESTINATARIO = "destinatarioComunicacao"; // Metadado
 	public static final String PRAZO_DESTINATARIO = "prazoDestinatarioComunicacao"; // Variável e Metadado
-	public static final String COMUNICACAO = "comunicacao"; // Metadado
+	public static final String COMUNICACAO = "comunicacao"; // Metadado 
+	public static final String IMPRESSA = "impressa"; // Metadado
 	
 	public static final String DATA_CIENCIA = "dataCiencia"; // Metadado
 	public static final String DATA_CUMPRIMENTO = "dataCumprimento"; // Metadado
