@@ -7,14 +7,20 @@ import java.util.Map;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 
 public class MetadadoProcessoProvider {
-	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoMetadadoProvider.class);
+	
+	private static final LogProvider LOG = Logging.getLogProvider(MetadadoProcessoProvider.class);
 	
 	private Processo processo;
+	
+	public MetadadoProcessoProvider() {}
+	
+	public MetadadoProcessoProvider(Processo processo) {
+		this.processo = processo;
+	}
 
 	public Map<String, MetadadoProcessoDefinition> getDefinicoesMetadados() {
 		Map<String, MetadadoProcessoDefinition> metadados = new HashMap<>();

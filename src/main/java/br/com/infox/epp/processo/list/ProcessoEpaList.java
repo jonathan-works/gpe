@@ -15,7 +15,7 @@ import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 
@@ -76,7 +76,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
     }
     
     public StatusProcesso getStatusProcesso(Processo processo) {
-        MetadadoProcesso mp = processo.getMetadado(MetadadoProcessoType.STATUS_PROCESSO);
+        MetadadoProcesso mp = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO);
         return mp != null ? (StatusProcesso) mp.getValue() : null;
     }
 }

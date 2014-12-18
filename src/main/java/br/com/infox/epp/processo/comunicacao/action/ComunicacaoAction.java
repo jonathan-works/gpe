@@ -31,6 +31,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
@@ -196,30 +197,20 @@ public class ComunicacaoAction implements Serializable {
 		
 		try {
 			documento.setProcesso(comunicacao);
+			ComunicacaoMetadadoProvider comunicacaoMetaProvider = new ComunicacaoMetadadoProvider(comunicacao);
 			Processo processo = documentoUploader.getProcesso();
 			documentoUploader.setProcesso(comunicacao);
 			documentoUploader.persist();
 			documentoUploader.setProcesso(processo);
 			
-			MetadadoProcesso metadadoDocumento = new MetadadoProcesso();
-			metadadoDocumento.setClassType(Documento.class);
-			metadadoDocumento.setMetadadoType(ComunicacaoService.DOCUMENTO_COMPROVACAO_CIENCIA);
-			metadadoDocumento.setProcesso(comunicacao);
-			metadadoDocumento.setValor(documento.getId().toString());
-			metadadoProcessoManager.persist(metadadoDocumento);
+			MetadadoProcesso documentoCiencia = comunicacaoMetaProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documento.getId().toString());
+			MetadadoProcesso metadadoDataCiencia = comunicacaoMetaProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCiencia));
+			MetadadoProcesso metadadoResponsavelCiencia = comunicacaoMetaProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA, Authenticator.getUsuarioLogado().getIdUsuarioLogin().toString());
 			
-			MetadadoProcesso metadadoDataCiencia = new MetadadoProcesso();
-			metadadoDataCiencia.setClassType(Date.class);
-			metadadoDataCiencia.setMetadadoType(ComunicacaoService.DATA_CIENCIA);
-			metadadoDataCiencia.setProcesso(comunicacao);
-			metadadoDataCiencia.setValor(new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCiencia));
-			
-			MetadadoProcesso metadadoResponsavelCiencia = new MetadadoProcesso();
-			metadadoResponsavelCiencia.setClassType(UsuarioLogin.class);
-			metadadoResponsavelCiencia.setMetadadoType(ComunicacaoService.RESPONSAVEL_CIENCIA);
-			metadadoResponsavelCiencia.setProcesso(comunicacao);
-			metadadoResponsavelCiencia.setValor(Authenticator.getUsuarioLogado().getIdUsuarioLogin().toString());
-			
+			metadadoProcessoManager.persist(documentoCiencia);
 			metadadoProcessoManager.persist(metadadoDataCiencia);
 			metadadoProcessoManager.persist(metadadoResponsavelCiencia);
 			
@@ -350,7 +341,7 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	private String getDataConfirmacao(Processo comunicacao) {
-		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoService.DATA_CIENCIA);
+		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
 		if (metadado != null) {
 			return dateFormat.format(metadado.getValue());
 		}
@@ -358,7 +349,7 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	private String getResponsavelConfirmacao(Processo comunicacao) {
-		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoService.RESPONSAVEL_CIENCIA);
+		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA);
 		if (metadado != null) {
 			UsuarioLogin usuario = metadado.getValue();
 			return usuario.getNomeUsuario();

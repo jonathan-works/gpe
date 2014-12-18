@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
@@ -36,8 +37,9 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 	}
 	
 	public Processo getComunicacao(DestinatarioModeloComunicacao destinatario) {
-		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> params = new HashMap<>(2);
 		params.put(ModeloComunicacaoQuery.PARAM_ID_DESTINATARIO, destinatario.getId().toString());
+		params.put(ModeloComunicacaoQuery.PARAM_METADADO_DESTINATARIO, ComunicacaoMetadadoProvider.DESTINATARIO.getMetadadoType());
 		return getNamedSingleResult(ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO, params);
 	}
 

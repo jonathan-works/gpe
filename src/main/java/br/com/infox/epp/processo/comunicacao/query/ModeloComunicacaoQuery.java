@@ -1,12 +1,12 @@
 package br.com.infox.epp.processo.comunicacao.query;
 
-import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 
 public interface ModeloComunicacaoQuery {
 	String PARAM_MODELO_COMUNICACAO = "modeloComunicacao";
 	String PARAM_PROCESSO = "processo";
 	String PARAM_ID_DESTINATARIO = "idDestinatario";
 	String PARAM_IDENTIFICADORES_PAPEL = "identificadoresPapel";
+	String PARAM_METADADO_DESTINATARIO = "metadadoDestinatario";
 	
 	String IS_EXPEDIDA = "ModeloComunicacao.isExpedida";
 	String IS_EXPEDIDA_QUERY = "select 1 from DestinatarioModeloComunicacao d where"
@@ -22,7 +22,7 @@ public interface ModeloComunicacaoQuery {
 	String GET_COMUNICACAO_DESTINATARIO = "ModeloComunicacao.getComunicacaoDestinatario";
 	String GET_COMUNICACAO_DESTINATARIO_QUERY = "select o from Processo o where "
 			+ "exists (select 1 from MetadadoProcesso m where m.processo = o and "
-			+ "m.metadadoType = '" + ComunicacaoService.DESTINATARIO + "' and "
+			+ "m.metadadoType = :" + PARAM_METADADO_DESTINATARIO + " and "
 			+ "m.valor = :" + PARAM_ID_DESTINATARIO + ")";
 	
 	String GET_DOCUMENTO_INCLUSO_POR_PAPEL = "ModeloComunicacao.getDocumentoInclusoPorPapel";

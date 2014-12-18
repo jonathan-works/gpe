@@ -9,6 +9,12 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 
 public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
+	
+	public ComunicacaoMetadadoProvider(){}
+
+	public ComunicacaoMetadadoProvider(Processo processo) {
+		super(processo);
+	}
 
 	public static final MetadadoProcessoDefinition MEIO_EXPEDICAO = 
 			new MetadadoProcessoDefinition("meioExpedicaoComunicacao", "Meio de Expedição", MeioExpedicao.class, true);

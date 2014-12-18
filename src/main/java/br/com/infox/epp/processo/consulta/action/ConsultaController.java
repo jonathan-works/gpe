@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.consulta.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.model.SelectItem;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -22,8 +24,6 @@ public class ConsultaController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaController";
-
-    private Processo processo;
     
     @In
     private ProcessoManager processoManager;
@@ -32,7 +32,9 @@ public class ConsultaController extends AbstractController {
     @In
     private SigiloProcessoService sigiloProcessoService;
 
+    private Processo processo;
     private boolean showAllDocuments = false;
+    private List<SelectItem> detalhesMetadados;
 
     public boolean isShowAllDocuments() {
         return showAllDocuments;
@@ -95,12 +97,16 @@ public class ConsultaController extends AbstractController {
         }
     }
     
-    public Object getMetadadoValue(String tipoMetadado) {
-		MetadadoProcesso metadado = getProcesso().getMetadado(tipoMetadado);
-		if (metadado == null) {
-			return null;
-		} else {
-			return metadado.getValue();
-		}
-	}
+    public List<SelectItem> getDetalhesMetadados() {
+    	List<MetadadoProcesso> metadados = getProcesso().getMetadadoProcessoList();
+    	for (MetadadoProcesso metadadoProcesso : metadados) {
+    		if (metadadoProcesso.getVisivel()) {
+    			SelectItem item = new SelectItem();
+    			item.setLabel("#{metadadoMessages['"+metadadoProcesso.getMetadadoType()+"']}");
+    			item.setValue(metadadoProcesso.getValue());
+    			detalhesMetadados.add(item);
+    		}
+    	}
+    	return detalhesMetadados;
+    }
 }

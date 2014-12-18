@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
@@ -34,7 +35,7 @@ public class ImpressaoComunicacaoService implements Serializable {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	
 	public MeioExpedicao getMeioExpedicao(Processo processo) {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoService.MEIO_EXPEDICAO);
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO);
 		if (metadadoProcesso != null) {
 			return metadadoProcesso.getValue();
 		}
@@ -42,7 +43,7 @@ public class ImpressaoComunicacaoService implements Serializable {
 	}
 	
 	public Date getDataAssinatura(Processo processo) {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoService.DESTINATARIO);
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		if (metadadoProcesso != null) {
 			DestinatarioModeloComunicacao destinatarioModelo = metadadoProcesso.getValue();
 			return destinatarioModelo.getComunicacao().getAssinaturas().get(0).getDataAssinatura();
@@ -51,7 +52,7 @@ public class ImpressaoComunicacaoService implements Serializable {
 	}
 	
 	public Boolean getImpresso(Processo processo) {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoService.IMPRESSA);
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.IMPRESSA);
 		if (metadadoProcesso != null) {
 			return metadadoProcesso.getValue();
 		}
@@ -59,7 +60,7 @@ public class ImpressaoComunicacaoService implements Serializable {
 	}
 	
 	public TipoComunicacao getTipoComunicacao(Processo processo) {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoService.DESTINATARIO);
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		if (metadadoProcesso != null) {
 			DestinatarioModeloComunicacao destinatarioModeloComunicacao = metadadoProcesso.getValue();
 			return destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao();
@@ -68,7 +69,7 @@ public class ImpressaoComunicacaoService implements Serializable {
 	}
 	
 	public void downloadComunicacao(Processo processo, boolean impressaoCompleta) throws DAOException {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoService.DESTINATARIO);
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		DestinatarioModeloComunicacao destinatarioModeloComunicacao = metadadoProcesso.getValue();
 		ModeloComunicacao modeloComunicacao = destinatarioModeloComunicacao.getModeloComunicacao();
 		byte[] pdf = null;
@@ -81,22 +82,19 @@ public class ImpressaoComunicacaoService implements Serializable {
 	}
 	
 	public void marcarComunicacaoComoImpressa(Processo processo) throws DAOException {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoService.IMPRESSA);
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.IMPRESSA);
 		if (metadadoProcesso == null ) {
-			metadadoProcesso = new MetadadoProcesso();
-			metadadoProcesso.setMetadadoType(ComunicacaoService.IMPRESSA);
-			metadadoProcesso.setProcesso(processo);
-			metadadoProcesso.setValor(Boolean.TRUE.toString());
-			metadadoProcesso.setClassType(Boolean.class);
+			ComunicacaoMetadadoProvider comunicacaoMetadadoProvider = new ComunicacaoMetadadoProvider(processo);
+			metadadoProcesso = comunicacaoMetadadoProvider.gerarMetadado(ComunicacaoMetadadoProvider.IMPRESSA, Boolean.TRUE.toString());
 			metadadoProcessoManager.persist(metadadoProcesso);
 		} else {
-			metadadoProcesso.setValor(Boolean.FALSE.toString());
+			metadadoProcesso.setValor(Boolean.TRUE.toString());
 			metadadoProcessoManager.update(metadadoProcesso);
 		}
 	}
 	
 	public void desmarcarComunicacaoComoImpressa(Processo processo) throws DAOException {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoService.IMPRESSA);
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.IMPRESSA);
 		metadadoProcesso.setValor(Boolean.FALSE.toString());
 		metadadoProcessoManager.update(metadadoProcesso);
 	}

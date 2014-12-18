@@ -13,6 +13,7 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -60,11 +61,9 @@ public class Contabilizador {
     public void darCiencia(String transition) {
     	Processo comunicacao = JbpmUtil.getProcesso();
     	Date ciencia = new Date();
-    	MetadadoProcesso metadado = new MetadadoProcesso();
-    	metadado.setProcesso(comunicacao);
-    	metadado.setMetadadoType(ComunicacaoService.DATA_CIENCIA);
-    	metadado.setClassType(Date.class);
-    	metadado.setValor(new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(ciencia));
+    	ComunicacaoMetadadoProvider comunicacaoMetadadoProvider = new ComunicacaoMetadadoProvider(comunicacao);
+    	MetadadoProcesso metadado = comunicacaoMetadadoProvider.gerarMetadado(
+    			ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(ciencia));
     	try {
 			metadadoProcessoManager.persist(metadado);
 		} catch (DAOException e) {

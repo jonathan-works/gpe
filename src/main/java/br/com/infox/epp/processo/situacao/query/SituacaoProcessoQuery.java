@@ -1,8 +1,6 @@
 package br.com.infox.epp.processo.situacao.query;
 
-import static br.com.infox.epp.processo.metadado.type.MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA;
-import static br.com.infox.epp.processo.metadado.type.MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 
 public interface SituacaoProcessoQuery {
 
@@ -24,17 +22,18 @@ public interface SituacaoProcessoQuery {
     String TAREFAS_TREE_QUERY_ROOTS_SUFIX = "group by s.nomeFluxo order by s.nomeFluxo";
     
     String TAREFAS_TREE_QUERY_ROOTS_BY_TIPO = " and exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '" 
-    		+ MetadadoProcessoType.TIPO_PROCESSO + "' and mp.valor = :" + PARAM_TIPO_PROCESSO + " and mp.processo.idProcesso = s.idProcesso) ";
+    		+ EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType() + "' and mp.valor = :" + PARAM_TIPO_PROCESSO + 
+    		" and mp.processo.idProcesso = s.idProcesso) ";
     
     String TAREFAS_TREE_QUERY_ROOTS_SEM_TIPO = " and not exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
-    		+ MetadadoProcessoType.TIPO_PROCESSO + "' and mp.processo.idProcesso = s.idProcesso)";
+    		+ EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType() + "' and mp.processo.idProcesso = s.idProcesso)";
     
     String FILTRO_LOCALIZACAO_DESTINO = " exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
-    		+ MetadadoProcessoType.LOCALIZACAO_DESTINO + "' and cast(mp.valor as integer) = :" + PARAM_ID_LOCALIZACAO
+    		+ EppMetadadoProvider.LOCALIZACAO_DESTINO.getMetadadoType() + "' and cast(mp.valor as integer) = :" + PARAM_ID_LOCALIZACAO
     		+ " and s.idProcesso = mp.processo.idProcesso) ";
     
     String FILTRO_PESSOA_DESTINATARIO = " exists (select 1 from MetadadoProcesso mp where mp.metadadoType = '"
-    		+ MetadadoProcessoType.PESSOA_DESTINATARIO + "' and cast(mp.valor as integer) = :" + PARAM_ID_PESSOA
+    		+ EppMetadadoProvider.PESSOA_DESTINATARIO.getMetadadoType() + "' and cast(mp.valor as integer) = :" + PARAM_ID_PESSOA
     		+ " and s.idProcesso = mp.processo.idProcesso )";
 
     String TAREFAS_TREE_CHILDREN = "tarefasTreeQueryChildren";
@@ -72,12 +71,12 @@ public interface SituacaoProcessoQuery {
     String AND = " and ";
     String OR = " or ";
 
-    String COM_COLEGIADA = " '" + UNIDADE_DECISORA_COLEGIADA + "' = any "
+    String COM_COLEGIADA = " '" + EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType() + "' = any "
             + "(select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe and mpl.valor = :" + PARAM_COLEGIADA_LOGADA +")";
-    String COM_MONOCRATICA = " '" + UNIDADE_DECISORA_MONOCRATICA + "' = any "
+    String COM_MONOCRATICA = " '" + EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA.getMetadadoType() + "' = any "
             + "(select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe and mpl.valor = :" + PARAM_MONOCRATICA_LOGADA + ")";
-    String SEM_COLEGIADA = " not ('" + UNIDADE_DECISORA_COLEGIADA + "' = all (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe))";
-    String SEM_MONOCRATICA = " not ('" + UNIDADE_DECISORA_MONOCRATICA + "' = all (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe))";
+    String SEM_COLEGIADA = " not ('" + EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType() + "' = all (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe))";
+    String SEM_MONOCRATICA = " not ('" + EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA.getMetadadoType() + "' = all (select mpl.metadadoType from MetadadoProcesso mpl where mpl.processo = pe))";
     
     String PROCESSOS_COM_COLEGIADA_COND = FILTRO_PREFIX + COM_COLEGIADA + FILTRO_SUFIX;
     String PROCESSOS_COM_MONOCRATICA_COND = FILTRO_PREFIX + COM_MONOCRATICA + FILTRO_SUFIX;

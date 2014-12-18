@@ -29,7 +29,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
 
@@ -117,7 +117,7 @@ public class RespostaComunicacaoService {
 	
 	public void inicializarFluxoDocumento(Processo processoResposta) throws DAOException {
 		iniciarProcessoService.iniciarProcesso(processoResposta);
-		MetadadoProcesso metadado = processoResposta.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL.getMetadadoType());
+		MetadadoProcesso metadado = processoResposta.getProcessoPai().getMetadado(RespostaComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL);
 		metadadoProcessoManager.remove(metadado);
 	}
 	
@@ -133,12 +133,8 @@ public class RespostaComunicacaoService {
 	}
 	
 	private void criarMetadadoTipo(Processo processoResposta) throws DAOException {
-		MetadadoProcesso metadado = new MetadadoProcesso();
-		metadado.setClassType(TipoProcesso.class);
-		metadado.setMetadadoType(MetadadoProcessoType.TIPO_PROCESSO);
-		metadado.setProcesso(processoResposta);
-		metadado.setValor(TipoProcesso.DOCUMENTO.name());
-		metadado.setVisivel(false);
+		EppMetadadoProvider eppMetadadoProvider = new EppMetadadoProvider(processoResposta);
+		MetadadoProcesso metadado = eppMetadadoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.DOCUMENTO.name());
 		metadadoProcessoManager.persist(metadado);
 	}
 }

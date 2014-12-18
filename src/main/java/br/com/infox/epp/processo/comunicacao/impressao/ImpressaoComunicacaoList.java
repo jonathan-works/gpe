@@ -13,10 +13,11 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -29,11 +30,11 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	
 	private static final String DEFAULT_EJBQL = "select o from Processo o " +
 												"where exists (select 1 from MetadadoProcesso mp " +
-												"				where mp.metadadoType = '" + MetadadoProcessoType.TIPO_PROCESSO + "' " +
+												"				where mp.metadadoType = '" + EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType() + "' " +
 												"				and mp.valor = '" + TipoProcesso.COMUNICACAO + "' " +
 												"				and mp.processo = o) " +
 												"and exists (select 1 from MetadadoProcesso mp " +
-												"			  where mp.metadadoType = '" + ComunicacaoService.MEIO_EXPEDICAO + "' " + 
+												"			  where mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' " + 
 												"			  and (mp.valor = '" + MeioExpedicao.DO + "' or mp.valor = '" + MeioExpedicao.IM + "' ) " +
 												"			  and mp.processo = o) ";
 	
@@ -48,7 +49,7 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 									 "		  inner join c.assinaturas a " +	
 									 " 	      where cast(a.dataAssinatura as date) = cast(#{impressaoComunicacaoList.dataAssinatura} as date) " +
 									 "		  and dmc.id = (select cast(mp.valor as integer) from MetadadoProcesso mp " + 
-									 "						where mp.metadadoType = '" + ComunicacaoService.DESTINATARIO + "' " +
+									 "						where mp.metadadoType = '" + ComunicacaoMetadadoProvider.DESTINATARIO.getMetadadoType() + "' " +
 									 "						and mp.processo = o ) )";	
 	
 	@In

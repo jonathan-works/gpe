@@ -33,10 +33,9 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
-import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(IniciarProcessoAction.NAME)
@@ -68,12 +67,8 @@ public class IniciarProcessoAction implements Serializable {
     }
     
     private void addItemDoProcesso(Processo processo) {
-		MetadadoProcesso metadadoProcesso = new MetadadoProcesso();
-		itemDoProcesso = (Item) HibernateUtil.removeProxy(itemDoProcesso);
-		metadadoProcesso.setMetadadoType(MetadadoProcessoType.ITEM_DO_PROCESSO);
-		metadadoProcesso.setClassType(itemDoProcesso.getClass());
-		metadadoProcesso.setValor(itemDoProcesso.getIdItem().toString());
-		metadadoProcesso.setProcesso(processo);
+    	EppMetadadoProvider metadadoProvider = new EppMetadadoProvider(processo);
+		MetadadoProcesso metadadoProcesso = metadadoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, itemDoProcesso.getIdItem().toString());
 		processo.getMetadadoProcessoList().add(metadadoProcesso);
 	}
 

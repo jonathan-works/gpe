@@ -87,6 +87,7 @@ import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -354,10 +355,20 @@ public class Processo implements Serializable {
     	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
 	
+//	@Transient
+//	public MetadadoProcesso getMetadado(String metadadoProcessoType) {
+//		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
+//			if (metadadoProcessoType.equals(metadadoProcesso.getMetadadoType())) {
+//				return metadadoProcesso;
+//			}
+//		}
+//		return null;
+//	}
+	
 	@Transient
-	public MetadadoProcesso getMetadado(String metadadoProcessoType) {
+	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {
 		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
-			if (metadadoProcessoType.equals(metadadoProcesso.getMetadadoType())) {
+			if (metadadoProcessoDefinition.getMetadadoType().equals(metadadoProcesso.getMetadadoType())) {
 				return metadadoProcesso;
 			}
 		}

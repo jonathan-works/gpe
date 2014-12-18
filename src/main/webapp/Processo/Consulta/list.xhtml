@@ -30,26 +30,11 @@
           id="usuarioCadastro"
           label="#{eppmessages['processo.usuarioCadastroProcesso']}"
           value="#{consultaController.processo.usuarioCadastro}" />
-        <wi:outputText
-            id="statusProcesso"
-            label="#{eppmessages['processo.statusProcesso']}"
-            rendered="#{not empty consultaController.getMetadadoValue('statusProcesso')}"
-            value="#{consultaController.getMetadadoValue('statusProcesso')}" />
-        <wi:outputText
-            id="unidadeDecisoraColegiada"
-            label="#{eppmessages['processo.unidadeDecisoraColegiada']}"
-            rendered="#{not empty consultaController.getMetadadoValue('unidadeDecisoraColegiada')}"
-            value="#{consultaController.getMetadadoValue('unidadeDecisoraColegiada')}" />
-        <wi:outputText
-            id="unidadeDecisoraMonocratica"
-            label="#{eppmessages['processo.unidadeDecisoraMonocratica']}"
-            rendered="#{not empty consultaController.getMetadadoValue('unidadeDecisoraMonocratica')}"
-            value="#{consultaController.getMetadadoValue('unidadeDecisoraMonocratica')}" />
-        <wi:outputText
-            id="relator"
-            label="#{eppmessages['processo.relator']}"
-            rendered="#{not empty consultaController.getMetadadoValue('relator')}"
-            value="#{consultaController.getMetadadoValue('relator')}" />
+       <ui:repeat var="metadado" value="#{consultaController.detalhesMetadados}" >
+       		<wi:outputText id="metadado#{metadado.label}"
+               	label="#{metadado.label}"
+               	value="#{metadado.value}" />
+       </ui:repeat>
     </h:panelGrid>
     </rich:collapsiblePanel>
     <infox:tabPanel

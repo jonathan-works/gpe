@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.home;
 
 import java.util.List;
 
+import javax.faces.model.SelectItem;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -76,6 +78,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     private Integer idDocumento;
     private boolean checkVisibilidade = true;
     private boolean possuiPermissaoVisibilidade = false;
+    private List<SelectItem> detalhesMetadados;
 
     private Long tarefaId;
 
@@ -95,6 +98,19 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
         } catch (DAOException e) {
             LOG.error("Erro ao vincular Usuario", e);
         }
+    }
+    
+    public List<SelectItem> getDetalhesMetadados() {
+    	List<MetadadoProcesso> metadados = getInstance().getMetadadoProcessoList();
+    	for (MetadadoProcesso metadadoProcesso : metadados) {
+    		if (metadadoProcesso.getVisivel()) {
+    			SelectItem item = new SelectItem();
+    			item.setLabel("#{metadadoMessages['"+metadadoProcesso.getMetadadoType()+"']}");
+    			item.setValue(metadadoProcesso.getValue());
+    			detalhesMetadados.add(item);
+    		}
+    	}
+    	return detalhesMetadados;
     }
 
     public void visualizarTarefaProcesso() {
@@ -427,13 +443,4 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
         return String.valueOf(idProcesso);
     }
 	
-	public Object getMetadadoValue(String tipoMetadado) {
-		MetadadoProcesso metadado = getInstance().getMetadado(tipoMetadado);
-		if (metadado == null) {
-			return null;
-		} else {
-			return metadado.getValue();
-		}
-	}
-
 }

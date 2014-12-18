@@ -28,7 +28,7 @@ import br.com.infox.epp.filter.ControleFiltros;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.seam.util.ComponentUtil;
@@ -64,13 +64,13 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
     private boolean isUsuarioLogadoEmUnidadesDecisorasDoProcesso(Processo processo) {
         UnidadeDecisoraMonocratica monocraticaLogada = getAuthenticator().getMonocraticaLogada();
         UnidadeDecisoraColegiada colegiadaLogada = getAuthenticator().getColegiadaLogada();
-        MetadadoProcesso metadado = processo.getMetadado(MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA);
+        MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA);
         UnidadeDecisoraMonocratica monocraticaDoProcesso = null;
         if (metadado != null) {
         	monocraticaDoProcesso = metadado.getValue();
         }
         UnidadeDecisoraColegiada colegiadaDoProcesso = null;
-        metadado = processo.getMetadado(MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA);
+        metadado = processo.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA);
         if (metadado != null) {
         	colegiadaDoProcesso = metadado.getValue();
         }

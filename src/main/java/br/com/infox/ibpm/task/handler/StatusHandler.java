@@ -17,7 +17,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -77,17 +77,14 @@ public class StatusHandler implements ActionHandler, CustomAction {
     }
     
     private void setStatusProcesso(Processo processo, StatusProcesso status) throws DAOException {
-        MetadadoProcesso statusMetadado = processo.getMetadado(MetadadoProcessoType.STATUS_PROCESSO);
+        MetadadoProcesso statusMetadado = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO);
         MetadadoProcessoManager metadadoManager = ComponentUtil.getComponent(MetadadoProcessoManager.NAME);
         if (statusMetadado != null) {
             statusMetadado.setValor(status.getIdStatusProcesso().toString());
             metadadoManager.update(statusMetadado);
         } else {
-            statusMetadado = new MetadadoProcesso();
-            statusMetadado.setClassType(StatusProcesso.class);
-            statusMetadado.setMetadadoType(MetadadoProcessoType.STATUS_PROCESSO);
-            statusMetadado.setProcesso(processo);
-            statusMetadado.setValor(status.getIdStatusProcesso().toString());
+        	EppMetadadoProvider metadadoProvider = new EppMetadadoProvider(processo);
+        	metadadoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, status.getIdStatusProcesso().toString());
             metadadoManager.persist(statusMetadado);
         }
     }

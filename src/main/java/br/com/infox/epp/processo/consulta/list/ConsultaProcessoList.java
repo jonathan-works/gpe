@@ -15,7 +15,7 @@ import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 
 @AutoCreate
 @Scope(ScopeType.PAGE)
@@ -72,7 +72,7 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     }
     
     public Item getItemDoProcesso(Processo processo){
-    	MetadadoProcesso metadado = processo.getMetadado(MetadadoProcessoType.ITEM_DO_PROCESSO);
+    	MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO);
     	return  metadado != null ? (Item) metadado.getValue() : null;
     }
 

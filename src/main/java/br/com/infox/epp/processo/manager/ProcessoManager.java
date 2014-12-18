@@ -35,7 +35,8 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
@@ -305,15 +306,14 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     private void setRelator(final Processo processo, final PessoaFisica relator) throws DAOException {
         if (relator != null) {
-            addMetadadoProcesso(processo, MetadadoProcessoType.RELATOR, relator.getClass(), relator.getIdPessoa()
-                    .toString());
+            addMetadadoProcesso(processo, EppMetadadoProvider.RELATOR, relator.getIdPessoa().toString());
         } else {
-            removeMetadadoIfExists(processo, MetadadoProcessoType.RELATOR);
+            removeMetadadoIfExists(processo, EppMetadadoProvider.RELATOR);
         }
     }
 
-    private void removeMetadadoIfExists(final Processo processo, final String metadadoProcessoType) throws DAOException {
-        final MetadadoProcesso metadado = processo.getMetadado(metadadoProcessoType);
+    private void removeMetadadoIfExists(final Processo processo, final MetadadoProcessoDefinition metadadoProcessoDefinition) throws DAOException {
+        final MetadadoProcesso metadado = processo.getMetadado(metadadoProcessoDefinition);
         if (metadado != null) {
             this.metadadoProcessoManager.remove(metadado);
         }
@@ -322,31 +322,29 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private void setUnidadeDecisoraMonocratica(final Processo processo,
             final UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
         if (unidadeDecisoraMonocratica != null) {
-            addMetadadoProcesso(processo, MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA,
-                    unidadeDecisoraMonocratica.getClass(), unidadeDecisoraMonocratica.getIdUnidadeDecisoraMonocratica()
+            addMetadadoProcesso(processo, EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, unidadeDecisoraMonocratica.getIdUnidadeDecisoraMonocratica()
                             .toString());
         } else {
-            removeMetadadoIfExists(processo, MetadadoProcessoType.UNIDADE_DECISORA_MONOCRATICA);
+            removeMetadadoIfExists(processo, EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA);
         }
     }
 
     private void setUnidadeDecisoraColegiada(final Processo processo,
             final UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
         if (unidadeDecisoraColegiada != null) {
-            addMetadadoProcesso(processo, MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA,
-                    unidadeDecisoraColegiada.getClass(), unidadeDecisoraColegiada.getIdUnidadeDecisoraColegiada()
+            addMetadadoProcesso(processo, EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, unidadeDecisoraColegiada.getIdUnidadeDecisoraColegiada()
                             .toString());
         } else {
-            removeMetadadoIfExists(processo, MetadadoProcessoType.UNIDADE_DECISORA_COLEGIADA);
+            removeMetadadoIfExists(processo, EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA);
         }
     }
 
-    private void addMetadadoProcesso(final Processo processo, final String type, final Class<?> classType,
+    private void addMetadadoProcesso(final Processo processo, MetadadoProcessoDefinition metadadoProcessoDefinition,
             final String valor) {
         final MetadadoProcesso metadadoProcesso = new MetadadoProcesso();
         metadadoProcesso.setProcesso(processo);
-        metadadoProcesso.setMetadadoType(type);
-        metadadoProcesso.setClassType(classType);
+        metadadoProcesso.setMetadadoType(metadadoProcessoDefinition.getMetadadoType());
+        metadadoProcesso.setClassType(metadadoProcessoDefinition.getClassType());
         metadadoProcesso.setValor(valor);
         processo.getMetadadoProcessoList().add(metadadoProcesso);
     }

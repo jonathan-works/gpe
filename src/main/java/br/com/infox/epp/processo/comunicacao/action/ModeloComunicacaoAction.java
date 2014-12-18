@@ -22,8 +22,6 @@ import org.jboss.seam.log.Logging;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.Token;
 
-import com.google.common.base.Strings;
-
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
@@ -65,12 +63,14 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.type.MetadadoProcessoType;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
+
+import com.google.common.base.Strings;
 
 @Name(ModeloComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -311,7 +311,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	}
 
 	private PessoaFisica getRelator() {
-		MetadadoProcesso metadadoProcesso = modeloComunicacao.getProcesso().getMetadado(MetadadoProcessoType.RELATOR);
+		MetadadoProcesso metadadoProcesso = modeloComunicacao.getProcesso().getMetadado(EppMetadadoProvider.RELATOR);
 		return (PessoaFisica) (metadadoProcesso != null ? metadadoProcesso.getValue() : null);
 	}
 	
