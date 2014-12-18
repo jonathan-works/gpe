@@ -54,9 +54,13 @@ public class MetadadoProcesso implements Serializable {
 	@JoinColumn(name = "id_processo", nullable = false)
 	private Processo processo;
 	
+	@NotNull
+	@Column(name = "in_visivel", nullable = true)
+	private Boolean visivel = Boolean.TRUE;
+	
 	@Transient
 	private Object value;
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -98,6 +102,14 @@ public class MetadadoProcesso implements Serializable {
 		this.processo = processo;
 	}
 	
+	public Boolean getVisivel() {
+		return visivel;
+	}
+
+	public void setVisivel(Boolean visivel) {
+		this.visivel = visivel;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <E> E getValue() {
 		if (value == null) {
