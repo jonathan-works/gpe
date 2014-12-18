@@ -81,6 +81,10 @@ public class DocumentoBin implements Serializable {
     @Type(type = UUIDGenericType.TYPE_NAME)
     private UUID uuid;
     
+    @Column(name = "in_minuta")
+    @NotNull
+    private boolean minuta = false;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList;
     
@@ -183,6 +187,14 @@ public class DocumentoBin implements Serializable {
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
+    
+    public boolean isMinuta() {
+		return minuta;
+	}
+    
+    public void setMinuta(boolean minuta) {
+		this.minuta = minuta;
+	}
     
     @Override
     public String toString() {
