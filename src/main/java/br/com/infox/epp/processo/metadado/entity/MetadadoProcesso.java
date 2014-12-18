@@ -78,6 +78,7 @@ public class MetadadoProcesso implements Serializable {
 	}
 
 	public void setValor(String valor) {
+		limparValue(valor);
 		this.valor = valor;
 	}
 
@@ -143,6 +144,12 @@ public class MetadadoProcesso implements Serializable {
 		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
+	}
+	
+	private void limparValue(String novoValor) {
+		if (novoValor != null && !novoValor.equals(getValor())) {		
+			this.value = null;
+		}
 	}
 	
 	public static final String DATE_PATTERN = "dd/MM/yyyy HH:mm:ss";
