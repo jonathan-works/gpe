@@ -94,5 +94,11 @@ public class ImpressaoComunicacaoService implements Serializable {
 			metadadoProcessoManager.update(metadadoProcesso);
 		}
 	}
+	
+	public void desmarcarComunicacaoComoImpressa(Processo processo) throws DAOException {
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoService.IMPRESSA);
+		metadadoProcesso.setValor(Boolean.FALSE.toString());
+		metadadoProcessoManager.update(metadadoProcesso);
+	}
 
 }

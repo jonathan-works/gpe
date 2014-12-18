@@ -7,6 +7,6 @@ login-required="true" >
 	
 	<begin-conversation join="true"/>
     <restrict>#{security.checkPage()}</restrict>
-    <action execute="#{impressaoComunicacaoAction.imprimirComunicacao()}" />
+    <action execute="#{impressaoComunicacaoAction.downloadComunicacao()}" />
 
 </page>

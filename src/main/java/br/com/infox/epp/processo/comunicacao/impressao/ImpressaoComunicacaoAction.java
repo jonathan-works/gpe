@@ -62,17 +62,29 @@ public class ImpressaoComunicacaoAction implements Serializable {
 			if (getMarcarImpresso()) {
 				impressaoComunicacaoService.marcarComunicacaoComoImpressa(processo);
 			}
-			impressaoComunicacaoService.downloadComunicacao(processo, getImpressaoCompleta());
 		} catch (DAOException e) {
-			FacesMessages.instance().add("Erro ao imprimir " + e.getMessage());
+			FacesMessages.instance().add("Erro ao Marcar Impresso " + e.getMessage());
 			LOG.error("imprimirComunicacao()", e);
-		} finally {
-			newInstance();
 		}
 	}
 	
-	public void teste()  {
-		System.out.println("Entrou");
+	public void downloadComunicacao() {
+		Processo processo = processoManager.find(getSelected());
+		try {
+			impressaoComunicacaoService.downloadComunicacao(processo, getImpressaoCompleta());
+		} catch (DAOException e) {
+			FacesMessages.instance().add("Erro ao imprimir " + e.getMessage());
+			LOG.error("downloadComunicacao()", e);
+			if (getMarcarImpresso()) {
+				try {
+					impressaoComunicacaoService.desmarcarComunicacaoComoImpressa(processo);
+				} catch (DAOException e1) {
+					LOG.error("desmarcarComunicacaoComoImpressa()", e);
+				}
+			}
+		} finally {
+			newInstance();
+		}
 	}
 	
 	public Boolean getImpressaoCompleta() {

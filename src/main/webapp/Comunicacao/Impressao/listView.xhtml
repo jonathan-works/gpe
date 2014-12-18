@@ -99,7 +99,7 @@
 	        		value="Imprimir"
 	        		onmouseup="#{rich:component('imprimirComunicacaoPopUp')}.hide();"
 	        		oncomplete="window.open('#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?cid=#{conversation.id}', '_blank');" 
-	        		actionListener="#{impressaoComunicacaoAction.teste()}"
+	        		action="#{impressaoComunicacaoAction.imprimirComunicacao()}"
 	        		render=":panelImpressaoComunicacoes">
 	        	</a:commandButton>
 	        		
