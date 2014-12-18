@@ -39,9 +39,9 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -138,7 +138,10 @@ public class ComunicacaoService {
 		DocumentoBin comunicacao = destinatario.getComunicacao();
 		Documento documentoComunicacao = documentoManager.createDocumento(processo, comunicacao.getNomeArquivo(), comunicacao, modeloComunicacao.getClassificacaoComunicacao());
 		processo.getDocumentoList().add(documentoComunicacao);
-		processo.getMetadadoProcessoList().add(criarMetadado(COMUNICACAO, Documento.class, documentoComunicacao.getId().toString(), processo));
+		
+		ComunicacaoMetadadoProvider comunicacaoMetadadoProvider = new ComunicacaoMetadadoProvider();
+		processo.getMetadadoProcessoList().add(comunicacaoMetadadoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.COMUNICACAO, processo, documentoComunicacao.getId().toString()));
 		
 		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
 			Documento documento = documentoModelo.getDocumento();
@@ -294,6 +297,8 @@ public class ComunicacaoService {
 	}
 	
 	private Collection<MetadadoProcesso> criarMetadados(DestinatarioModeloComunicacao destinatario, Processo processo) {
+		ComunicacaoMetadadoProvider comunicacaoMetadadoProvider = new ComunicacaoMetadadoProvider();
+		comunicacaoMetadadoProvider.setProcesso(processo);
 		Collection<MetadadoProcesso> metadados = new ArrayList<>();
 		
 		// Destinatário / Destino
@@ -315,18 +320,22 @@ public class ComunicacaoService {
 			metadados.add(criarMetadado(MetadadoProcessoType.LOCALIZACAO_DESTINO, Localizacao.class, destinatario.getDestino().getIdLocalizacao().toString(), processo));
 		}
 		
-		metadados.add(criarMetadado(MEIO_EXPEDICAO, MeioExpedicao.class, destinatario.getMeioExpedicao().name(), processo));
+		metadados.add(comunicacaoMetadadoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
 		
-		metadados.add(criarMetadado(DESTINATARIO, DestinatarioModeloComunicacao.class, destinatario.getId().toString(), processo));
+		metadados.add(comunicacaoMetadadoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.DESTINATARIO, destinatario.getId().toString()));
 		
 		if (destinatario.getPrazo() != null) {
-			metadados.add(criarMetadado(PRAZO_DESTINATARIO, Integer.class, destinatario.getPrazo().toString(), processo));
+			metadados.add(comunicacaoMetadadoProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO, destinatario.getPrazo().toString()));
 		}
 		
 		metadados.add(criarMetadado(MetadadoProcessoType.TIPO_PROCESSO, TipoProcesso.class, TipoProcesso.COMUNICACAO.name(), processo));
 		
 		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
-			metadados.add(criarMetadado(DATA_CIENCIA, Date.class, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(processo.getDataInicio()), processo));
+			metadados.add(comunicacaoMetadadoProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(processo.getDataInicio())));
 		}
 		
 		return metadados;
