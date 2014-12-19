@@ -215,7 +215,7 @@
 			<groupId>backport-util-concurrent</groupId>
 			<artifactId>backport-util-concurrent</artifactId>
 			<version>3.1</version>
-			<scope>runtime</scope>
+            <scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jdom</groupId>
@@ -328,7 +328,7 @@
 		</dependency>
 		<dependency>
 			<groupId>br.com.infox</groupId>
-			<artifactId>commons</artifactId>
+            <artifactId>infox-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
