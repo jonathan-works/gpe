@@ -31,9 +31,9 @@
           label="#{eppmessages['processo.usuarioCadastroProcesso']}"
           value="#{consultaController.processo.usuarioCadastro}" />
        <ui:repeat var="metadado" value="#{consultaController.detalhesMetadados}" >
-       		<wi:outputText id="metadado#{metadado.label}"
-               	label="#{metadado.label}"
-               	value="#{metadado.value}" />
+     		<wi:outputText id="metadado#{metadado.metadadoType}"
+               label="#{metadadoMessages[metadado.metadadoType]}"
+               value="#{metadado}" />
        </ui:repeat>
     </h:panelGrid>
     </rich:collapsiblePanel>
