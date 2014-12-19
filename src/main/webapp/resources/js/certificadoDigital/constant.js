@@ -13,7 +13,7 @@ Infox.CertDig.Constant = Infox.CertDig.Constant || {};
 Infox.CertDig.Constant.Connection = {
 	URL : "ws://localhost:8888/server/connectionhandler",
 	// The maximum number of connections attempt.
-	MAXIMUM_NUMBER_OF_ATTEMPTS : 10,
+	MAXIMUM_NUMBER_OF_ATTEMPTS : 20,
 	// The amount of time to wait until a new connection attempt is made.
 	WAITING_TIME : 3000
 };

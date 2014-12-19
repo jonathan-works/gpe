@@ -276,7 +276,7 @@ Infox.CertDig.Connection = function() {
 			functionToCall(Infox.CertDig.Constant.Parameter.FUNCTION_POS_SIGN_OK); // submitForm();
 			break;
 		case Infox.CertDig.Constant.JSAction.actionPosError:
-			functionToCall(Infox.CertDig.Constant.Parameter.FUNCTION_POS_SIGN_ERROR); // ...
+			functionToCall(Infox.CertDig.Constant.Parameter.FUNCTION_POS_SIGN_ERROR); // alert(...);
 			break;
 		default:
 			logInfo("runJavaScript: " + data);
