@@ -129,4 +129,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public List<Documento> getListDocumentoByProcesso(final Processo processo) {
         return getDao().getListDocumentoByProcesso(processo);
     }
+    
+    public int getTotalDocumentosProcesso(Processo processo) {
+    	return getDao().getTotalDocumentosProcesso(processo);
+    }
 }

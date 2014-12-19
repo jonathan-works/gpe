@@ -38,8 +38,8 @@
 		      		showLabelSelecione="true"
 		      		required="true"
 		      		value="#{respostaComunicacaoAction.documentoEdicao.classificacaoDocumento}"
-		      		readonly="#{respostaComunicacaoAction.classificacoesEditor.size eq 1 or not minuta}"
-   					disabled="#{respostaComunicacaoAction.classificacoesEditor.size eq 1 or not minuta}">
+		      		readonly="#{not minuta}"
+   					disabled="#{not minuta}">
    					<a:ajax event="change"
       					render="tooltipComunicacao"
       					execute="@this"
@@ -59,14 +59,14 @@
 					</div>
 		   		</s:div>
 			</s:div>
-			<wi:selectBooleanRadio id="minuta" value="#{respostaComunicacaoAction.minuta}" label="Minuta" 
+			<wi:selectBooleanRadio id="minuta" value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" label="Minuta" 
 				readonly="#{not minuta}" disabled="#{not minuta}"/>
 			<s:div id="respostaComunicacaoDiv">
 				<wi:editor id="respostaComunicacao" readonly="#{not minuta}" 
 					value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.modeloDocumento}" />
 			</s:div>
 			<wi:commandButton id="gravarResposta" action="respostaComunicacaoAction.gravarResposta" 
-				value="Gravar" reRender="pageBodyDialogMessage, @form, respostasPanel"
+				value="Gravar" reRender="pageBodyDialogMessage, @form, respostasPanel, taskButtonsForm"
 				rendered="#{minuta}"/>
 			<wi:commandButton id="newDocumento" action="respostaComunicacaoAction.newDocumentoEdicao" 
 				value="Novo" reRender="pageBodyDialogMessage, @form" execute="@this"/>
@@ -81,9 +81,7 @@
 			</wi:inputText>
 			<wi:selectOneMenuEntity id="classificacaoAnexo" label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
 		      	items="#{respostaComunicacaoAction.classificacoesAnexo}" showLabelSelecione="true"
-		      	showRequired="true"	value="#{respostaComunicacaoAction.classificacaoAnexo}"
-		      	readonly="#{respostaComunicacaoAction.classificacoesAnexo.size eq 1}"
-   				disabled="#{respostaComunicacaoAction.classificacoesAnexo.size eq 1}">
+		      	showRequired="true"	value="#{respostaComunicacaoAction.classificacaoAnexo}">
 				<a:ajax event="change" execute="@this" limitRender="true" render="uploadDiv"/>
 			</wi:selectOneMenuEntity>
 			<s:div id="tooltipClassificacaoAnexo">
@@ -110,7 +108,7 @@
 				<wi:commandButton id="gravarResposta"
 					action="respostaComunicacaoAction.gravarAnexoResposta"
 					value="Gravar"
-					reRender="pageBodyDialogMessage, @form, respostasPanel"
+					reRender="pageBodyDialogMessage, @form, respostasPanel, taskButtonsForm"
 					rendered="#{respostaComunicacaoAction.anexoValido}" />
 			</s:div>
 		</rich:collapsiblePanel>
@@ -138,7 +136,7 @@
 					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}"/>
 				</h:commandLink>
 				<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row)}"
-					render="respostasPanel, paineleditor, pageBodyDialogMessage"
+					render="respostasPanel, painelEditor, pageBodyDialogMessage, taskButtonsForm"
 					onclick="return confirm('#{eppmessages['crud.confirmRemove']}')">
 					<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['crud.remove']}" />
 				</a:commandLink>
@@ -147,10 +145,12 @@
 		<wi:columnOutputText columnHeader="Descrição" value="#{row.descricao}" />
 	</wi:dataTable>
 	
-	<h:form rendered="#{respostaComunicacaoAction.possuiProcessoResposta}">
-		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml">
-			<ui:param name="taskEndAction" value="respostaComunicacaoAction.endTask" />
-		</ui:include>
+	<h:form id="taskButtonsForm">
+		<s:div rendered="#{respostaComunicacaoAction.possuiResposta}">
+			<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml">
+				<ui:param name="taskEndAction" value="respostaComunicacaoAction.endTask" />
+			</ui:include>
+		</s:div>
 	</h:form>
 </h:body>
 </html>

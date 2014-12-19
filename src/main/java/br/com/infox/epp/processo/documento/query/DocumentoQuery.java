@@ -40,6 +40,7 @@ public interface DocumentoQuery {
     String LIST_DOCUMENTO_BY_TASKINSTANCE = "listDocumentoByTaskInstance";
     String lIST_DOCUMENTO_BY_TASKINSTANCE_QUERY = "select o from Documento o where idJbpmTask = :" + ID_JBPM_TASK_PARAM;
     
-    
+    String TOTAL_DOCUMENTOS_PROCESSO = "Documento.totalDocumentosProcesso";
+    String TOTAL_DOCUMENTOS_PROCESSO_QUERY = "select count(o) from Documento o where o.processo = :" + PARAM_PROCESSO;
     
 }

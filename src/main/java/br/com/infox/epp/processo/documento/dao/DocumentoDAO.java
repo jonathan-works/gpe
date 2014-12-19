@@ -9,6 +9,7 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCU
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_TIPO_NUMERACAO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.TOTAL_DOCUMENTOS_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.USUARIO_PARAM;
 
 import java.util.ArrayList;
@@ -124,5 +125,15 @@ public class DocumentoDAO extends DAO<Documento> {
             }
         }
         return ret;
+    }
+    
+    public int getTotalDocumentosProcesso(Processo processo) {
+    	Map<String, Object> params = new HashMap<>();
+    	params.put(PARAM_PROCESSO, processo);
+    	Number total = getNamedSingleResult(TOTAL_DOCUMENTOS_PROCESSO, params);
+    	if (total == null) {
+    		return 0;
+    	}
+    	return total.intValue();
     }
 }

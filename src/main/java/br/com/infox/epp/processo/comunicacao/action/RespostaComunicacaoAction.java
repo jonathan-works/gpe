@@ -21,6 +21,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -65,6 +66,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DestinatarioModeloComunicacao destinatario;
 	private Processo processoComunicacao;
 	private Processo processoResposta;
+	private int totalDocumentosResposta = 0;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
@@ -86,6 +88,9 @@ public class RespostaComunicacaoAction implements Serializable {
 		respostaComunicacaoList.setProcessoResposta(processoResposta);
 		newDocumentoEdicao();
 		initClassificacoes();
+		if (processoResposta != null) {
+			totalDocumentosResposta = documentoManager.getTotalDocumentosProcesso(processoResposta);
+		}
 	}
 
 	public void downloadComunicacao() {
@@ -114,6 +119,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		boolean hasId = documentoEdicao.getId() != null;
 		try {
 			documentoEdicao = respostaComunicacaoService.gravarDocumentoResposta(documentoEdicao, processoResposta);
+			++totalDocumentosResposta;
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -130,11 +136,13 @@ public class RespostaComunicacaoAction implements Serializable {
 		DocumentoBin bin = new DocumentoBin();
 		documentoEdicao.setDocumentoBin(bin);
 		documentoEdicao.setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
+		modeloDocumento = null;
 	}
 	
 	public void gravarAnexoResposta() {
 		documentoUploader.persist();
 		documentoUploader.clear();
+		++totalDocumentosResposta;
 	}
 	
 	public void removerDocumento(Documento documento) {
@@ -144,6 +152,7 @@ public class RespostaComunicacaoAction implements Serializable {
 			if (isDocumentoEdicao) {
 				newDocumentoEdicao();
 			}
+			--totalDocumentosResposta;
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -228,24 +237,21 @@ public class RespostaComunicacaoAction implements Serializable {
 		this.minuta = minuta;
 	}
 	
+	public boolean isPossuiResposta() {
+		return totalDocumentosResposta > 0;
+	}
+	
 	public boolean isPossuiProcessoResposta() {
 		return processoResposta != null;
 	}
 	
 	private void initClassificacoes() {
 		classificacoesEditor = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true);
-		if (classificacoesEditor != null && !classificacoesEditor.isEmpty() && classificacoesEditor.size() == 1) {
-			documentoEdicao.setClassificacaoDocumento(classificacoesEditor.get(0));
-		}
-		
 		classificacoesAnexo = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false);
-		if (classificacoesAnexo != null && !classificacoesAnexo.isEmpty() && classificacoesAnexo.size() == 1) {
-			setClassificacaoAnexo(classificacoesAnexo.get(0));
-		}
 	}
 
 	private void criarProcessoResposta() {
-		MetadadoProcesso metadado = processoComunicacao.getMetadado(RespostaComunicacaoService.RESPOSTA_COMUNICACAO_ATUAL);
+		MetadadoProcesso metadado = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL.getMetadadoType());
 		if (metadado != null) {
 			processoResposta = metadado.getValue();
 		} else {

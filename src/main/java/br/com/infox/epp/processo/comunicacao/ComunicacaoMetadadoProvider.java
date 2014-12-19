@@ -4,6 +4,7 @@ import java.util.Date;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 
@@ -35,4 +36,7 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 	
 	public static final MetadadoProcessoDefinition DOCUMENTO_COMPROVACAO_CIENCIA = 
 			new MetadadoProcessoDefinition("documentoComprovacaoCiencia", Documento.class);
+	
+	public static final MetadadoProcessoDefinition RESPOSTA_COMUNICACAO_ATUAL = 
+			new MetadadoProcessoDefinition("respostaComunicacaoAtual", Processo.class);
 }

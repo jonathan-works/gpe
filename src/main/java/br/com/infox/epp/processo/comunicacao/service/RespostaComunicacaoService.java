@@ -19,6 +19,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -85,7 +86,9 @@ public class RespostaComunicacaoService {
 		processoResposta.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
 		processoManager.persist(processoResposta);
 		
-		criarMetadadoResposta(processoComunicacao, processoResposta.getIdProcesso().toString());
+		MetadadoProcesso metadado = new ComunicacaoMetadadoProvider()
+			.gerarMetadado(ComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL, processoComunicacao, processoResposta.getIdProcesso().toString());
+		metadadoProcessoManager.persist(metadado);
 		criarMetadadoTipo(processoResposta);
 		
 		return processoResposta;
@@ -114,7 +117,7 @@ public class RespostaComunicacaoService {
 	
 	public void inicializarFluxoDocumento(Processo processoResposta) throws DAOException {
 		iniciarProcessoService.iniciarProcesso(processoResposta);
-		MetadadoProcesso metadado = processoResposta.getProcessoPai().getMetadado(RESPOSTA_COMUNICACAO_ATUAL);
+		MetadadoProcesso metadado = processoResposta.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL.getMetadadoType());
 		metadadoProcessoManager.remove(metadado);
 	}
 	
@@ -129,16 +132,6 @@ public class RespostaComunicacaoService {
 		return fluxo;
 	}
 	
-	private void criarMetadadoResposta(Processo processoComunicacao, String idProcesso) throws DAOException {
-		MetadadoProcesso metadado = new MetadadoProcesso();
-		metadado.setClassType(Processo.class);
-		metadado.setMetadadoType(RESPOSTA_COMUNICACAO_ATUAL);
-		metadado.setProcesso(processoComunicacao);
-		metadado.setValor(idProcesso);
-		metadado.setVisivel(false);
-		metadadoProcessoManager.persist(metadado);
-	}
-	
 	private void criarMetadadoTipo(Processo processoResposta) throws DAOException {
 		MetadadoProcesso metadado = new MetadadoProcesso();
 		metadado.setClassType(TipoProcesso.class);
@@ -148,6 +141,4 @@ public class RespostaComunicacaoService {
 		metadado.setVisivel(false);
 		metadadoProcessoManager.persist(metadado);
 	}
-	
-	public static final String RESPOSTA_COMUNICACAO_ATUAL = "respostaComunicacaoAtual";
 }
