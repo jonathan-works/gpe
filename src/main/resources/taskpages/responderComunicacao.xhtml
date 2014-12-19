@@ -10,8 +10,16 @@
 <h:head />
 <h:body>
 	<h:form>
-		<h:commandButton value="Visualizar Comunicação" action="#{respostaComunicacaoAction.downloadComunicacao}" 
-			styleClass="buttons" />
+		<rich:panel header="Comunicação" switchType="client">
+			<wi:outputText id="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.label}"
+				label="Meio de Expedição" />
+			<wi:outputText id="prazoResposta" label="Prazo de Resposta"
+				value="#{not empty respostaComunicacaoAction.prazoResposta ? respostaComunicacaoAction.prazoResposta : '-' }">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</wi:outputText>
+			<h:commandButton value="Visualizar Comunicação" action="#{respostaComunicacaoAction.downloadComunicacao}" 
+				styleClass="buttons" />
+		</rich:panel>
 	</h:form>
 	<h:form rendered="#{respostaComunicacaoAction.possuiProcessoResposta}">
 		<rich:collapsiblePanel header="Editor" switchType="client" id="painelEditor">

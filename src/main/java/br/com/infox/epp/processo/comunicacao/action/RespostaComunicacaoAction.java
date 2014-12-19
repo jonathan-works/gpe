@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -23,6 +24,7 @@ import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
@@ -67,13 +69,13 @@ public class RespostaComunicacaoAction implements Serializable {
 	private Processo processoComunicacao;
 	private Processo processoResposta;
 	private int totalDocumentosResposta = 0;
+	private Date prazoResposta;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
 	private List<ModeloDocumento> modelosDocumento;
 	
 	private ModeloDocumento modeloDocumento;
-	private boolean minuta = false;
 	
 	private Documento documentoEdicao;
 	
@@ -91,6 +93,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		if (processoResposta != null) {
 			totalDocumentosResposta = documentoManager.getTotalDocumentosProcesso(processoResposta);
 		}
+		prazoResposta = comunicacaoService.contabilizarPrazoCumprimento(processoComunicacao);
 	}
 
 	public void downloadComunicacao() {
@@ -222,19 +225,6 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void setDocumentoEdicao(Documento documentoEdicao) {
 		this.documentoEdicao = documentoEdicao;
-		if (documentoEdicao != null) {
-			minuta = documentoEdicao.getDocumentoBin().isMinuta();
-		} else {
-			minuta = false;
-		}
-	}
-	
-	public boolean isMinuta() {
-		return minuta;
-	}
-	
-	public void setMinuta(boolean minuta) {
-		this.minuta = minuta;
 	}
 	
 	public boolean isPossuiResposta() {
@@ -243,6 +233,14 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public boolean isPossuiProcessoResposta() {
 		return processoResposta != null;
+	}
+	
+	public MeioExpedicao getMeioExpedicao() {
+		return destinatario.getMeioExpedicao();
+	}
+
+	public Date getPrazoResposta() {
+		return prazoResposta;
 	}
 	
 	private void initClassificacoes() {
