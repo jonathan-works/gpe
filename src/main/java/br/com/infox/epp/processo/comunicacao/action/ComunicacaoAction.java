@@ -367,13 +367,9 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	private String getPrazoFinal(Processo comunicacao) {
-		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoService.DATA_CIENCIA);
-		if (metadado != null) {
-			Date dataCiencia = metadado.getValue();
-			Date prazo = comunicacaoService.contabilizarPrazoCumprimento(comunicacao, dataCiencia);
-			if (prazo != null) {
-				return dateFormat.format(prazo);
-			}
+		Date prazo = comunicacaoService.contabilizarPrazoCumprimento(comunicacao);
+		if (prazo != null) {
+			return dateFormat.format(prazo);
 		}
 		return "-";
 	}

@@ -278,13 +278,14 @@ public class ComunicacaoService {
         return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
     }
     
-	public Date contabilizarPrazoCumprimento(Processo comunicacao, Date dataCiencia) {
+	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = comunicacao.getMetadado(DESTINATARIO).getValue();
+		MetadadoProcesso metadadoCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA.getMetadadoType());
         Integer qtdDias = destinatario.getPrazo();
-        if (qtdDias == null || dataCiencia == null) {
+        if (qtdDias == null || metadadoCiencia == null) {
         	return null;
         }
-        return calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia, qtdDias);
+        return calendarioEventosManager.getPrimeiroDiaUtil((Date) metadadoCiencia.getValue(), qtdDias);
     }
 	
 	private MetadadoProcesso criarMetadado(String tipo, Class<?> classType, String valor, Processo processo) {
