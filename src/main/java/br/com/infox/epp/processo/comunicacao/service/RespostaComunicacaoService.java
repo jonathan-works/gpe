@@ -118,7 +118,7 @@ public class RespostaComunicacaoService {
 	
 	public void inicializarFluxoDocumento(Processo processoResposta) throws DAOException {
 		iniciarProcessoService.iniciarProcesso(processoResposta);
-		MetadadoProcesso metadado = processoResposta.getProcessoPai().getMetadado(RespostaComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL);
+		MetadadoProcesso metadado = processoResposta.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL);
 		metadadoProcessoManager.remove(metadado);
 	}
 	

@@ -27,7 +27,6 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
@@ -250,7 +249,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 
 	private void criarProcessoResposta() {
-		MetadadoProcesso metadado = processoComunicacao.getMetadado(RespostaComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL);
+		MetadadoProcesso metadado = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL);
 		if (metadado != null) {
 			processoResposta = metadado.getValue();
 		} else {
