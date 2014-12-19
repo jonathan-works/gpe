@@ -11,7 +11,7 @@ import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 
-public abstract class MetadadoProcessoProvider {
+public class MetadadoProcessoProvider {
 	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoMetadadoProvider.class);
 	
 	private Processo processo;
@@ -31,16 +31,6 @@ public abstract class MetadadoProcessoProvider {
 			}
 		}
 		return metadados;
-	}
-	
-	public MetadadoProcesso gerarMetadado(String metadadoType) {
-		try {
-			Field field = getClass().getField(metadadoType);
-			MetadadoProcessoDefinition definition = (MetadadoProcessoDefinition) field.get(this);
-			return gerarMetadado(definition);
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			throw new IllegalArgumentException("Metadado não encontrado: " + metadadoType, e);
-		}
 	}
 	
 	public MetadadoProcesso gerarMetadado(MetadadoProcessoDefinition definition) {
