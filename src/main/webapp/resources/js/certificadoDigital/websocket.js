@@ -15,7 +15,7 @@ Infox.CertDig.userClickedOnDownloadJNPLButton = function() {
 }
 
 function handleException(ex) {
-	console.error("Error: " + ex);
+	console.info("Error: " + ex);
 }
 
 Infox.CertDig.Connection = function() {
