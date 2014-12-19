@@ -281,7 +281,7 @@ public class ComunicacaoService {
     
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
-		MetadadoProcesso metadadoCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA.getMetadadoType());
+		MetadadoProcesso metadadoCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
         Integer qtdDias = destinatario.getPrazo();
         if (qtdDias == null || metadadoCiencia == null) {
         	return null;
