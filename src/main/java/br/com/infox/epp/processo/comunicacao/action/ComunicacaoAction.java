@@ -45,6 +45,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Name(ComunicacaoAction.NAME)
@@ -197,17 +198,17 @@ public class ComunicacaoAction implements Serializable {
 		
 		try {
 			documento.setProcesso(comunicacao);
-			ComunicacaoMetadadoProvider comunicacaoMetaProvider = new ComunicacaoMetadadoProvider(comunicacao);
+			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 			Processo processo = documentoUploader.getProcesso();
 			documentoUploader.setProcesso(comunicacao);
 			documentoUploader.persist();
 			documentoUploader.setProcesso(processo);
 			
-			MetadadoProcesso documentoCiencia = comunicacaoMetaProvider.gerarMetadado(
+			MetadadoProcesso documentoCiencia = metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documento.getId().toString());
-			MetadadoProcesso metadadoDataCiencia = comunicacaoMetaProvider.gerarMetadado(
+			MetadadoProcesso metadadoDataCiencia = metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCiencia));
-			MetadadoProcesso metadadoResponsavelCiencia = comunicacaoMetaProvider.gerarMetadado(
+			MetadadoProcesso metadadoResponsavelCiencia = metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA, Authenticator.getUsuarioLogado().getIdUsuarioLogin().toString());
 			
 			metadadoProcessoManager.persist(documentoCiencia);

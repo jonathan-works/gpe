@@ -28,7 +28,7 @@ public class MetadadoProcessoProvider {
 			if (field.getType().equals(MetadadoProcessoDefinition.class)) {
 				try {
 					MetadadoProcessoDefinition definition = (MetadadoProcessoDefinition) field.get(this);
-					if (definition.isVisivel()) {
+					if (definition.getLabel() != null) {
 						metadados.put(definition.getMetadadoType(), definition);
 					}
 				} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -41,13 +41,17 @@ public class MetadadoProcessoProvider {
 	
 	public MetadadoProcesso gerarMetadado(MetadadoProcessoDefinition definition) {
 		MetadadoProcesso metadado = new MetadadoProcesso();
+		metadado.setVisivel(definition.getLabel() != null);
 		metadado.setClassType(definition.getClassType());
-		metadado.setVisivel(definition.isVisivel());
 		metadado.setMetadadoType(definition.getMetadadoType());
 		return metadado;
 	}
 	
 	public MetadadoProcesso gerarMetadado(MetadadoProcessoDefinition definition, String valor) {
+		return gerarMetadado(definition, this.processo, valor);
+	}
+	
+	public MetadadoProcesso gerarMetadadoVisivel(MetadadoProcessoDefinition definition, String valor) {
 		return gerarMetadado(definition, this.processo, valor);
 	}
 	

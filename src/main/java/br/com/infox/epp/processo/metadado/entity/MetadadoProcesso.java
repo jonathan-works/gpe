@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -22,10 +24,15 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.query.MetadadoProcessoQuery;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
 @Table(name = MetadadoProcesso.TABLE_NAME)
+@NamedQueries(value = {
+		@NamedQuery(name = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_VISIVEL_BY_PROCESSO, 
+					 query = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_VISIVEL_BY_PROCESSO_QUERY)
+})
 public class MetadadoProcesso implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -131,6 +138,11 @@ public class MetadadoProcesso implements Serializable {
 			}
 		}
 		return (E) value;
+	}
+	
+	@Override
+	public String toString() {
+		return getValue().toString();
 	}
 	
 	@Override

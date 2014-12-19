@@ -17,6 +17,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
@@ -83,8 +84,8 @@ public class StatusHandler implements ActionHandler, CustomAction {
             statusMetadado.setValor(status.getIdStatusProcesso().toString());
             metadadoManager.update(statusMetadado);
         } else {
-        	EppMetadadoProvider metadadoProvider = new EppMetadadoProvider(processo);
-        	metadadoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, status.getIdStatusProcesso().toString());
+        	MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+        	metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, status.getIdStatusProcesso().toString());
             metadadoManager.persist(statusMetadado);
         }
     }

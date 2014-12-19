@@ -33,6 +33,7 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
@@ -67,8 +68,8 @@ public class IniciarProcessoAction implements Serializable {
     }
     
     private void addItemDoProcesso(Processo processo) {
-    	EppMetadadoProvider metadadoProvider = new EppMetadadoProvider(processo);
-		MetadadoProcesso metadadoProcesso = metadadoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, itemDoProcesso.getIdItem().toString());
+    	MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+		MetadadoProcesso metadadoProcesso = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, itemDoProcesso.getIdItem().toString());
 		processo.getMetadadoProcessoList().add(metadadoProcesso);
 	}
 

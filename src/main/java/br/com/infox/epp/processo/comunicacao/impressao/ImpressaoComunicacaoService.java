@@ -20,6 +20,7 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 
 @AutoCreate
 @Scope(ScopeType.STATELESS)
@@ -84,8 +85,8 @@ public class ImpressaoComunicacaoService implements Serializable {
 	public void marcarComunicacaoComoImpressa(Processo processo) throws DAOException {
 		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.IMPRESSA);
 		if (metadadoProcesso == null ) {
-			ComunicacaoMetadadoProvider comunicacaoMetadadoProvider = new ComunicacaoMetadadoProvider(processo);
-			metadadoProcesso = comunicacaoMetadadoProvider.gerarMetadado(ComunicacaoMetadadoProvider.IMPRESSA, Boolean.TRUE.toString());
+			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+			metadadoProcesso = metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.IMPRESSA, Boolean.TRUE.toString());
 			metadadoProcessoManager.persist(metadadoProcesso);
 		} else {
 			metadadoProcesso.setValor(Boolean.TRUE.toString());

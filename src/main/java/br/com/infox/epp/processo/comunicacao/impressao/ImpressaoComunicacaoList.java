@@ -35,7 +35,7 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 												"				and mp.processo = o) " +
 												"and exists (select 1 from MetadadoProcesso mp " +
 												"			  where mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' " + 
-												"			  and (mp.valor = '" + MeioExpedicao.DO + "' or mp.valor = '" + MeioExpedicao.IM + "' ) " +
+												"			  and (mp.valor = '" + MeioExpedicao.DO.name() + "' or mp.valor = '" + MeioExpedicao.IM.name() + "' ) " +
 												"			  and mp.processo = o) ";
 	
 	private static final String DEFAULT_ORDER = "idProcesso";

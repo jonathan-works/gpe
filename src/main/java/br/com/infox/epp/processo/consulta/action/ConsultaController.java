@@ -3,8 +3,6 @@ package br.com.infox.epp.processo.consulta.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.model.SelectItem;
-
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -17,6 +15,7 @@ import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermiss
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
 @Name(ConsultaController.NAME)
@@ -31,10 +30,12 @@ public class ConsultaController extends AbstractController {
     private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
     @In
     private SigiloProcessoService sigiloProcessoService;
+    @In
+    private MetadadoProcessoManager metadadoProcessoManager;
 
     private Processo processo;
     private boolean showAllDocuments = false;
-    private List<SelectItem> detalhesMetadados;
+    private List<MetadadoProcesso> detalhesMetadados;
 
     public boolean isShowAllDocuments() {
         return showAllDocuments;
@@ -97,15 +98,9 @@ public class ConsultaController extends AbstractController {
         }
     }
     
-    public List<SelectItem> getDetalhesMetadados() {
-    	List<MetadadoProcesso> metadados = getProcesso().getMetadadoProcessoList();
-    	for (MetadadoProcesso metadadoProcesso : metadados) {
-    		if (metadadoProcesso.getVisivel()) {
-    			SelectItem item = new SelectItem();
-    			item.setLabel("#{metadadoMessages['"+metadadoProcesso.getMetadadoType()+"']}");
-    			item.setValue(metadadoProcesso.getValue());
-    			detalhesMetadados.add(item);
-    		}
+    public List<MetadadoProcesso> getDetalhesMetadados() {
+    	if (detalhesMetadados == null) {
+    		detalhesMetadados = metadadoProcessoManager.getListMetadadoVisivelByProcesso(getProcesso());
     	}
     	return detalhesMetadados;
     }

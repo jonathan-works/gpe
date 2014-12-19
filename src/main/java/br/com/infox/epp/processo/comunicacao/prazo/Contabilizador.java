@@ -18,6 +18,7 @@ import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.timer.TaskExpirationInfo;
 import br.com.infox.epp.processo.timer.TaskExpirationProcessor;
 import br.com.infox.ibpm.process.definition.annotations.DefinitionAvaliable;
@@ -61,8 +62,8 @@ public class Contabilizador {
     public void darCiencia(String transition) {
     	Processo comunicacao = JbpmUtil.getProcesso();
     	Date ciencia = new Date();
-    	ComunicacaoMetadadoProvider comunicacaoMetadadoProvider = new ComunicacaoMetadadoProvider(comunicacao);
-    	MetadadoProcesso metadado = comunicacaoMetadadoProvider.gerarMetadado(
+    	MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+    	MetadadoProcesso metadado = metadadoProcessoProvider.gerarMetadado(
     			ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(ciencia));
     	try {
 			metadadoProcessoManager.persist(metadado);

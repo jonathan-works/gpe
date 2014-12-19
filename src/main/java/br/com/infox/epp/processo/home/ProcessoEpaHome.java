@@ -2,8 +2,6 @@ package br.com.infox.epp.processo.home;
 
 import java.util.List;
 
-import javax.faces.model.SelectItem;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -32,6 +30,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.seam.context.ContextFacade;
@@ -42,28 +41,25 @@ import br.com.itx.component.AbstractHome;
 /**
  * Deprecated : A superclasse AbstractHome está em processo de remoção, assim as
  * funções de ProcessoHome estão sendo repassadas a novos componentes
- * */
+ */
 @Deprecated
 @Name(ProcessoEpaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoEpaHome extends AbstractHome<Processo> {
-	
-    private static final LogProvider LOG = Logging.getLogProvider(Processo.class);
+
+    private static final LogProvider LOG = Logging
+            .getLogProvider(Processo.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoEpaHome";
 
     private static final int ERRO_AO_VERIFICAR_CERTIFICADO = 0;
 
-    @In
-    private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-    @In
-    private ProcessoManager processoManager;
-    @In
-    private AssinaturaDocumentoService assinaturaDocumentoService;
-    @In
-    private DocumentoManager documentoManager;
-    @In
-    private SigiloProcessoService sigiloProcessoService;
+    @In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
+    @In private ProcessoManager processoManager;
+    @In private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In private DocumentoManager documentoManager;
+    @In private SigiloProcessoService sigiloProcessoService;
+    @In private MetadadoProcessoManager metadadoProcessoManager;
 
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
@@ -78,7 +74,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     private Integer idDocumento;
     private boolean checkVisibilidade = true;
     private boolean possuiPermissaoVisibilidade = false;
-    private List<SelectItem> detalhesMetadados;
+    private List<MetadadoProcesso> detalhesMetadados;
 
     private Long tarefaId;
 
@@ -99,18 +95,13 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
             LOG.error("Erro ao vincular Usuario", e);
         }
     }
-    
-    public List<SelectItem> getDetalhesMetadados() {
-    	List<MetadadoProcesso> metadados = getInstance().getMetadadoProcessoList();
-    	for (MetadadoProcesso metadadoProcesso : metadados) {
-    		if (metadadoProcesso.getVisivel()) {
-    			SelectItem item = new SelectItem();
-    			item.setLabel("#{metadadoMessages['"+metadadoProcesso.getMetadadoType()+"']}");
-    			item.setValue(metadadoProcesso.getValue());
-    			detalhesMetadados.add(item);
-    		}
-    	}
-    	return detalhesMetadados;
+
+    public List<MetadadoProcesso> getDetalhesMetadados() {
+        if (detalhesMetadados == null) {
+            detalhesMetadados = metadadoProcessoManager
+                    .getListMetadadoVisivelByProcesso(getInstance());
+        }
+        return detalhesMetadados;
     }
 
     public void visualizarTarefaProcesso() {
@@ -151,8 +142,9 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
                         + getInstance().getNumeroProcesso());
     }
 
-    public Integer salvarProcessoDocumentoFluxo(Object value, Integer idDocumento,
-            Boolean assinado, String label) throws CertificadoException {
+    public Integer salvarProcessoDocumentoFluxo(Object value,
+            Integer idDocumento, Boolean assinado, String label)
+            throws CertificadoException {
         Documento documento = buscarProcessoDocumento(idDocumento);
         setIdDocumento(idDocumento);
         Integer result = idDocumento;
@@ -161,12 +153,12 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
             if (classificacaoDocumento != null) {
                 String msgKey = "Registro gravado com sucesso!";
                 if (documento != null) {
-                    if (assinaturaDocumentoService
-                            .isDocumentoAssinado(documento,
-                                    Authenticator.getUsuarioLogado())) {
+                    if (assinaturaDocumentoService.isDocumentoAssinado(
+                            documento, Authenticator.getUsuarioLogado())) {
                         return result;
                     }
-                    atualizarProcessoDocumentoFluxo(value, idDocumento, assinado);
+                    atualizarProcessoDocumentoFluxo(value, idDocumento,
+                            assinado);
                     msgKey = "ProcessoDocumento_updated";
                 } else {
                     result = inserirProcessoDocumentoFluxo(value, label,
@@ -174,7 +166,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
                     msgKey = "ProcessoDocumento_created";
                 }
                 messages.clear();
-                messages.add(StatusMessage.Severity.INFO, Messages.resolveMessage(msgKey));
+                messages.add(StatusMessage.Severity.INFO,
+                        Messages.resolveMessage(msgKey));
             }
         } catch (DAOException | AssinaturaException e) {
             LOG.error("Não foi possível salvar o Documento " + idDocumento, e);
@@ -216,8 +209,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
         return value.toString();
     }
 
-    private void gravarAlteracoes(Documento documento,
-            DocumentoBin documentoBin) {
+    private void gravarAlteracoes(Documento documento, DocumentoBin documentoBin) {
         documento.setClassificacaoDocumento(classificacaoDocumento);
         getEntityManager().merge(documento);
         setIdDocumento(documento.getId());
@@ -231,12 +223,12 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
             try {
                 Object newValue = processoManager.getAlteracaoModeloDocumento(
                         documentoBin, value);
-                DocumentoBin documentoBin = processoManager.createDocumentoBin(newValue);
+                DocumentoBin documentoBin = processoManager
+                        .createDocumentoBin(newValue);
                 label = label == null ? "-" : label;
                 Documento doc;
-                doc = documentoManager.createDocumento(
-                        getInstance(), label, documentoBin,
-                        getClassificacaoDocumento());
+                doc = documentoManager.createDocumento(getInstance(), label,
+                        documentoBin, getClassificacaoDocumento());
                 final int idDocumento = doc.getId();
                 setIdDocumento(idDocumento);
                 if (assinado && certChain != null && signature != null) {
@@ -300,7 +292,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
     @Override
     protected Processo createInstance() {
-    	Processo processo = super.createInstance();
+        Processo processo = super.createInstance();
         processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
         return processo;
     }
@@ -348,14 +340,15 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     }
 
     public ClassificacaoDocumento getClassificacaoDocumento() {
-		return classificacaoDocumento;
-	}
+        return classificacaoDocumento;
+    }
 
-	public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
-		this.classificacaoDocumento = classificacaoDocumento;
-	}
+    public void setClassificacaoDocumento(
+            ClassificacaoDocumento classificacaoDocumento) {
+        this.classificacaoDocumento = classificacaoDocumento;
+    }
 
-	public String getObservacaoMovimentacao() {
+    public String getObservacaoMovimentacao() {
         return observacaoMovimentacao;
     }
 
@@ -372,14 +365,15 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     }
 
     public ClassificacaoDocumento getClassificacaoDocumentoRO() {
-		return classificacaoDocumentoRO;
-	}
+        return classificacaoDocumentoRO;
+    }
 
-	public void setClassificacaoDocumentoRO(ClassificacaoDocumento classificacaoDocumentoRO) {
-		this.classificacaoDocumentoRO = classificacaoDocumentoRO;
-	}
+    public void setClassificacaoDocumentoRO(
+            ClassificacaoDocumento classificacaoDocumentoRO) {
+        this.classificacaoDocumentoRO = classificacaoDocumentoRO;
+    }
 
-	public void setTarefaId(Long tarefaId) {
+    public void setTarefaId(Long tarefaId) {
         this.tarefaId = tarefaId;
     }
 
@@ -412,35 +406,35 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     }
 
     public DocumentoBin getDocumentoBin() {
-		return documentoBin;
-	}
+        return documentoBin;
+    }
 
-	public void setDocumentoBin(DocumentoBin documentoBin) {
-		this.documentoBin = documentoBin;
-	}
+    public void setDocumentoBin(DocumentoBin documentoBin) {
+        this.documentoBin = documentoBin;
+    }
 
-	public void setPdFluxo(Documento pdFluxo) {
+    public void setPdFluxo(Documento pdFluxo) {
         this.pdFluxo = pdFluxo;
     }
 
     public Documento getPdFluxo() {
         return pdFluxo;
     }
-    
+
     public Integer getIdDocumento() {
-		return idDocumento;
-	}
+        return idDocumento;
+    }
 
-	public void setIdDocumento(Integer idDocumento) {
-		this.idDocumento = idDocumento;
-	}
+    public void setIdDocumento(Integer idDocumento) {
+        this.idDocumento = idDocumento;
+    }
 
-	public String getNumeroProcesso(int idProcesso) {
+    public String getNumeroProcesso(int idProcesso) {
         Processo processo = processoManager.find(idProcesso);
         if (processo != null) {
             return processo.getNumeroProcesso();
         }
         return String.valueOf(idProcesso);
     }
-	
+
 }

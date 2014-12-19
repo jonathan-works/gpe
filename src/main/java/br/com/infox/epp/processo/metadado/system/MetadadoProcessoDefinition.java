@@ -8,33 +8,24 @@ public final class MetadadoProcessoDefinition implements Serializable {
 	private String metadadoType;
 	private Class<?> classType;
 	private String label;
-	private boolean visivel = false;
 	private int prioridade = BUILT_IN;
 	
 	public MetadadoProcessoDefinition(String metadadoType, Class<?> classType) {
-		this(metadadoType, null, BUILT_IN, classType, false);
+		this(metadadoType, null, BUILT_IN, classType);
 	}
 	
 	public MetadadoProcessoDefinition(String metadadoType, String label, Class<?> classType) {
-		this(metadadoType, label, BUILT_IN, classType, false);
+		this(metadadoType, label, BUILT_IN, classType);
 	}
 	
-	public MetadadoProcessoDefinition(String metadadoType, String label, Class<?> classType, boolean visivel) {
-		this(metadadoType, label, BUILT_IN, classType, visivel);
-	}
-	
-	public MetadadoProcessoDefinition(String metadadoType, String label, int prioridade, Class<?> classType, boolean visivel) {
+	public MetadadoProcessoDefinition(String metadadoType, String label, int prioridade, Class<?> classType) {
 		if (prioridade != BUILT_IN && prioridade != APPLICATION && prioridade != FRAMEWORK && prioridade != DEPLOYMENT) {
 			throw new IllegalArgumentException("Prioridade inválida");
-		}
-		if (label == null && visivel) {
-			throw new IllegalArgumentException("O metadado visível deve possuir uma label");
 		}
 		this.prioridade = prioridade;
 		this.metadadoType = metadadoType;
 		this.label = label;
 		this.classType = classType;
-		this.visivel = visivel;
 	}
 	
 	public String getLabel() {
@@ -51,10 +42,6 @@ public final class MetadadoProcessoDefinition implements Serializable {
 	
 	public Class<?> getClassType() {
 		return classType;
-	}
-	
-	public boolean isVisivel() {
-		return visivel;
 	}
 	
 	public static final int BUILT_IN = 0;

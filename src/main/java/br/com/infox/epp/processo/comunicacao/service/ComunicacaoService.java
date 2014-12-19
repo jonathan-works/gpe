@@ -53,6 +53,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
@@ -139,8 +140,8 @@ public class ComunicacaoService {
 		Documento documentoComunicacao = documentoManager.createDocumento(processo, comunicacao.getNomeArquivo(), comunicacao, modeloComunicacao.getClassificacaoComunicacao());
 		processo.getDocumentoList().add(documentoComunicacao);
 		
-		ComunicacaoMetadadoProvider comunicacaoMetadadoProvider = new ComunicacaoMetadadoProvider(processo);
-		processo.getMetadadoProcessoList().add(comunicacaoMetadadoProvider
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+		processo.getMetadadoProcessoList().add(metadadoProcessoProvider
 				.gerarMetadado(ComunicacaoMetadadoProvider.COMUNICACAO, documentoComunicacao.getId().toString()));
 		
 		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
@@ -289,8 +290,7 @@ public class ComunicacaoService {
     }
 	
 	private Collection<MetadadoProcesso> criarMetadados(DestinatarioModeloComunicacao destinatario, Processo processo) {
-		ComunicacaoMetadadoProvider comunicacaoMetadadoProvider = new ComunicacaoMetadadoProvider(processo);
-		EppMetadadoProvider eppMetadadoProvider = new EppMetadadoProvider(processo);
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 		Collection<MetadadoProcesso> metadados = new ArrayList<>();
 		// Destinatário / Destino
 		if (destinatario.getDestinatario() != null) {
@@ -302,30 +302,30 @@ public class ComunicacaoService {
 				if (relator.equals(pessoaDestinatario)) {
 					MetadadoProcesso metadadoUdm = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA);
 					UnidadeDecisoraMonocratica udmRelator = metadadoUdm.getValue();
-					metadados.add(eppMetadadoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, udmRelator.getLocalizacao().getIdLocalizacao().toString()));
+					metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, udmRelator.getLocalizacao().getIdLocalizacao().toString()));
 				}
 			} else {
-				metadados.add(eppMetadadoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString()));
+				metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString()));
 			}
 		} else {
-			metadados.add(eppMetadadoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, destinatario.getDestino().getIdLocalizacao().toString()));
+			metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, destinatario.getDestino().getIdLocalizacao().toString()));
 		}
 		
-		metadados.add(comunicacaoMetadadoProvider.gerarMetadado(
+		metadados.add(metadadoProcessoProvider.gerarMetadado(
 				ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
 		
-		metadados.add(comunicacaoMetadadoProvider.gerarMetadado(
+		metadados.add(metadadoProcessoProvider.gerarMetadado(
 				ComunicacaoMetadadoProvider.DESTINATARIO, destinatario.getId().toString()));
 		
 		if (destinatario.getPrazo() != null) {
-			metadados.add(comunicacaoMetadadoProvider.gerarMetadado(
+			metadados.add(metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO, destinatario.getPrazo().toString()));
 		}
 		
-		metadados.add(eppMetadadoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO.name()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO.name()));
 		
 		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
-			metadados.add(comunicacaoMetadadoProvider.gerarMetadado(
+			metadados.add(metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(processo.getDataInicio())));
 		}
 		
