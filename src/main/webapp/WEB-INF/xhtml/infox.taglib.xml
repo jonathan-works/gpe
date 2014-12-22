@@ -247,6 +247,10 @@ version="2.0">
         <tag-name>commandLink</tag-name>
         <source>tags/generic/commandLink.xhtml</source>
     </tag>
+    <tag>
+        <tag-name>assinaturaPopup</tag-name>
+        <source>tags/generic/assinaturaPopup.xhtml</source>
+    </tag>
     <function>
         <function-name>get</function-name>
         <function-class>br.com.infox.jsf.function.JsfFunctions</function-class>
@@ -346,6 +350,10 @@ version="2.0">
     <tag>
         <tag-name>toolBarGraphicImage</tag-name>
         <source>tags/grid/tools/toolBarGraphicImage.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>toolBarAssinatura</tag-name>
+        <source>tags/grid/tools/toolBarAssinatura.xhtml</source>
     </tag>
     <tag>
         <tag-name>report</tag-name>

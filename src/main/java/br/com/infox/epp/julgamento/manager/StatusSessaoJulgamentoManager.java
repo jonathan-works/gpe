@@ -13,5 +13,9 @@ public class StatusSessaoJulgamentoManager extends Manager<StatusSessaoJulgament
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "statusSessaoJulgamentoManager";
+	
+	public StatusSessaoJulgamento getStatusSessaoJulgamentoByNome(String nome) {
+        return getDao().getStatusSessaoJulgamentoByNome(nome);
+    }
 
 }

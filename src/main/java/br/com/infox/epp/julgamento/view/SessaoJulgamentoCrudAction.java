@@ -10,17 +10,14 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.suggest.AbstractSuggestBean;
 import br.com.infox.core.type.Displayable;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.julgamento.entity.Sala;
 import br.com.infox.epp.julgamento.entity.SessaoJulgamento;
-import br.com.infox.epp.julgamento.entity.StatusSessaoJulgamento;
 import br.com.infox.epp.julgamento.manager.SalaManager;
 import br.com.infox.epp.julgamento.manager.SessaoJulgamentoManager;
 import br.com.infox.epp.julgamento.manager.StatusSessaoJulgamentoManager;
 import br.com.infox.epp.julgamento.type.Periodicidade;
-import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.seam.exception.BusinessException;
@@ -30,6 +27,7 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "sessaoJulgamentoCrudAction";
+	public static final String STATUS_SESSAO_PREVISTA = "prevista";
 	private static final LogProvider LOG = Logging.getLogProvider(SessaoJulgamentoCrudAction.class);
 	
 	@In
@@ -43,7 +41,6 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 	
 	private List<Sala> salas;
 	private List<UnidadeDecisoraColegiada> colegiadas;
-	private List<StatusSessaoJulgamento> statusSessaoJulgamentos;
 	private UnidadeDecisoraColegiada colegiada;
 	private Periodicidade periodicidade;
 	private TipoPeriodicidade tipoPeriodicidade;
@@ -58,6 +55,7 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 	@Override
 	public void newInstance() {
 		super.newInstance();
+		getInstance().setStatusSessao(statusSessaoJulgamentoManager.getStatusSessaoJulgamentoByNome(STATUS_SESSAO_PREVISTA));
 		this.salas = null;
 		this.periodicidade = null;
 		this.valorPeriodicidade = null;
@@ -119,13 +117,6 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 		return colegiadas;
 	}
 	
-	public List<StatusSessaoJulgamento> getStatusSessaoJulgamentos() {
-		if ( statusSessaoJulgamentos == null ) {
-			statusSessaoJulgamentos = statusSessaoJulgamentoManager.findAll();
-		}
-		return statusSessaoJulgamentos;
-	}
-
 	public UnidadeDecisoraColegiada getColegiada() {
 		return colegiada;
 	}
@@ -158,34 +149,6 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 		this.valorPeriodicidade = valorPeriodicidade;
 	}
 	
-	public AbstractSuggestBean<PessoaFisica> getSuggestPessoaFisicaBean() {
-		return suggestPessoaFisicaBean;
-	}
-
-	private AbstractSuggestBean<PessoaFisica> suggestPessoaFisicaBean = new AbstractSuggestBean<PessoaFisica>() {
-
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public PessoaFisica load(Object id) {
-			return entityManager.find(PessoaFisica.class, id);
-		}
-
-		@Override
-		public String getEjbql(String typed) {
-			StringBuilder sb = new StringBuilder();
-		    sb.append("select new br.com.infox.componentes.suggest.SuggestItem(o.idPessoa, (o.cpf || ' - ' ||o.nome)) ");
-		    sb.append("from PessoaFisica o where o.ativo = true ");
-		    if (typed.matches("\\d+")) {
-				sb.append(" o.cpf = :").append(INPUT_PARAMETER).append(" ");
-			} else {
-				sb.append("and lower(o.nome) like lower(concat('%', :").append(INPUT_PARAMETER).append(", '%')) ");
-			}
-		    sb.append("order by o.nome");
-		    return sb.toString();
-		}
-	};
-
 	enum TipoPeriodicidade implements Displayable {
 		
 		D("Data Até"), Q("Quantidade");
