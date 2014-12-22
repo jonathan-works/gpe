@@ -43,8 +43,7 @@ public class TermoAdesaoAction implements Serializable {
     private static final String METHOD_ASSINAR_TERMO_ADESAO = "termoAdesaoAction.assinarTermoAdesao(String,String)";
     private static final String PARAMETRO_TERMO_ADESAO = "termoAdesao";
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging
-            .getLogProvider(TermoAdesaoAction.class);
+    private static final LogProvider LOG = Logging.getLogProvider(TermoAdesaoAction.class);
     public static final String NAME = "termoAdesaoAction";
     public static final String PANEL_NAME = "termoAdesaoPanel";
     public static final String TERMO_ADESAO_REQ = "termoAdesaoRequired";
@@ -61,74 +60,55 @@ public class TermoAdesaoAction implements Serializable {
     @In private AssinaturaDocumentoService assinaturaDocumentoService;
     @In private PessoaFisicaManager pessoaFisicaManager;
 
-    public String assinarTermoAdesao(final String certChain,
-            final String signature) {
+    public String assinarTermoAdesao(String certChain, String signature) {
         try {
-            final UsuarioLogin usuarioLogin = this.authenticatorService
-                    .getUsuarioLoginFromCertChain(certChain);
-            this.authenticatorService.signatureAuthentication(usuarioLogin,
-                    signature, certChain, true);
-            final DocumentoBin bin = this.documentoBinManager
-                    .createProcessoDocumentoBin(this.tituloTermoAdesao,
-                            getTermoAdesao());
+            UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
+            authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
+            DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
 
-            final List<UsuarioPerfil> perfilAtivoList = usuarioLogin
-                    .getUsuarioPerfilAtivoList();
+            List<UsuarioPerfil> perfilAtivoList = usuarioLogin.getUsuarioPerfilAtivoList();
             if (perfilAtivoList != null) {
                 UsuarioPerfil perfil = null;
-                for (final UsuarioPerfil usuarioPerfil : perfilAtivoList) {
-                    if ((perfil = usuarioPerfil).getPerfilTemplate().getPapel()
-                            .getTermoAdesao()) {
+                for (UsuarioPerfil usuarioPerfil : perfilAtivoList) {
+                    if ((perfil = usuarioPerfil).getPerfilTemplate().getPapel().getTermoAdesao()) {
                         break;
                     }
                 }
-                this.assinaturaDocumentoService.assinarDocumento(bin, perfil,
-                        certChain, signature);
-                final PessoaFisica pessoaFisica = usuarioLogin
-                        .getPessoaFisica();
+                assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature);
+                PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
                 pessoaFisica.setTermoAdesao(bin);
             }
-            this.documentoBinManager.flush();
+            documentoBinManager.flush();
             FacesMessages.instance().add(Severity.INFO,
                     Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
             return "/Painel/list.seam";
-        } catch (final CertificateExpiredException e) {
-            TermoAdesaoAction.LOG.error(
-                    TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
-            throw new RedirectToLoginApplicationException(
-                    Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_EXPIRED),
-                    e);
-        } catch (final CertificateException e) {
-            TermoAdesaoAction.LOG.error(
-                    TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
-            throw new RedirectToLoginApplicationException(
-                    MessageFormat.format(
+        } catch (CertificateExpiredException e) {
+            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
+            throw new RedirectToLoginApplicationException(Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_EXPIRED), e);
+        } catch (CertificateException e) {
+            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
+            throw new RedirectToLoginApplicationException(MessageFormat.format(
                             Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN),
                             e.getMessage()), e);
         } catch (CertificadoException | LoginException | DAOException e) {
-            TermoAdesaoAction.LOG.error(
-                    TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
+            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e); 
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
-        } catch (final AssinaturaException e) {
-            TermoAdesaoAction.LOG.error(
-                    TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
+        } catch (AssinaturaException e) {
+            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
         }
         return null;
     }
 
     public String getTermoAdesao() {
-        if (this.termoAdesao == null) {
-            final Parametro parametro = this.parametroManager
-                    .getParametro(TermoAdesaoAction.PARAMETRO_TERMO_ADESAO);
+        if (termoAdesao == null) {
+            Parametro parametro = parametroManager.getParametro(PARAMETRO_TERMO_ADESAO);
             if (parametro != null) {
-                final ModeloDocumento modeloDocumento = this.modeloDocumentoManager
-                        .getModeloDocumentoByTitulo(this.tituloTermoAdesao = parametro
-                                .getValorVariavel());
-                this.termoAdesao = this.modeloDocumentoManager
-                        .evaluateModeloDocumento(modeloDocumento);
+                tituloTermoAdesao = parametro.getValorVariavel();
+                ModeloDocumento modeloDocumento = modeloDocumentoManager.getModeloDocumentoByTitulo(tituloTermoAdesao);
+                termoAdesao = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
             }
-            if (this.termoAdesao == null) {
-                this.termoAdesao = "<div><p>TERMO DE ADESÃO</p></div>";
+            if (termoAdesao == null) {
+                termoAdesao = "<div><p>TERMO DE ADESÃO</p></div>";
             }
         }
         return this.termoAdesao;

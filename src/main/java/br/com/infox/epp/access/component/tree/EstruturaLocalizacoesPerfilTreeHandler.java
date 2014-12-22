@@ -15,7 +15,7 @@ public class EstruturaLocalizacoesPerfilTreeHandler extends AbstractTreeHandler<
     
     @Override
     protected String getQueryRoots() {
-        return "select n from Estrutura n";
+        return "select n from Estrutura n order by n.nome ";
     }
 
     @Override

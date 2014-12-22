@@ -7,12 +7,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.julgamento.query.StatusSessaoJulgamentoQuery;
+
 @Entity
 @Table(name = "tb_status_sessao_julgamento")
+@NamedQueries(value = {
+        @NamedQuery(name = StatusSessaoJulgamentoQuery.GET_STATUS_SESSAO_JULGAMENTO_BY_NOME, 
+                query = StatusSessaoJulgamentoQuery.GET_STATUS_SESSAO_JULGAMENTO_BY_NOME_QUERY)
+})
 public class StatusSessaoJulgamento implements Serializable {
 
 	private static final long serialVersionUID = 1L;

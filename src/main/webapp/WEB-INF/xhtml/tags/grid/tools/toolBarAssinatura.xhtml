@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html" >
+    
+    <ui:param name="idDocumento" value="#{idDocumento}" />
+    <ui:param name="idAssinatura" value="#{idAssinatura}" />
+    <ui:param name="renderedLock" value="#{renderedLock}" />
+ 
+	<h:graphicImage title="#{eppmessages['assinaturas.assinar']}"
+				alt="#{eppmessages['assinaturas.assinar']}"
+				url="#{wiSkin.imageFolder}/lock_unlock.png" 
+				style="cursor: pointer"
+				rendered="#{not renderedLock}" 
+				onmouseup="selectDocumentoAssinar( #{idDocumento} ); #{rich:component(idAssinatura)}.show();" />
+				
+	<h:graphicImage title="#{eppmessages['assinaturas.validar']}"
+                 alt="#{eppmessages['assinaturas.validar']}"
+                 url="#{wiSkin.imageFolder}/lock.png" 
+                 style="cursor: pointer"
+                 rendered="#{renderedLock}" 
+                 onmouseup="selectDocumentoAssinar( #{idDocumento} ); #{rich:component(idAssinatura)}.show();" />
+ 
+
+</ui:composition>

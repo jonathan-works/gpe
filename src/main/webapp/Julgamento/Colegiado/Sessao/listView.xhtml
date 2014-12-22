@@ -153,17 +153,9 @@
            		required="true"
            		converterId="horaConverter" />
           	   
-          	<wi:suggest id="procurador" label="#{eppmessages['sessaoJulgamento.procurador']}"
-				value="#{sessaoJulgamentoCrudAction.instance.procurador}"
-				minChars="3" execute="@this" required="true" 
-				suggestProvider="#{sessaoJulgamentoCrudAction.suggestPessoaFisicaBean}"
-				render="procurador" ajax="true" />
-          	
-          	<wi:selectOneMenuEntity id="statusSessao" 
+          	<wi:outputText id="statusSessao" 
           		label="#{eppmessages['sessaoJulgamento.statusSessao']}" 
-          		items="#{sessaoJulgamentoCrudAction.statusSessaoJulgamentos}"
-          		value="#{sessaoJulgamentoCrudAction.instance.statusSessao}" 
-          		required="true" hideNoSelectionLabel="false" />
+          		value="#{sessaoJulgamentoCrudAction.instance.statusSessao}" />
           		
           	<wi:selectOneMenuEnum id="periodicidade" 
           		label="#{eppmessages['sessaoJulgamento.periodicidade']}"

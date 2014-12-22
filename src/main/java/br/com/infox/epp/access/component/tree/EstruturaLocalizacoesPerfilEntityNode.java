@@ -19,8 +19,8 @@ public class EstruturaLocalizacoesPerfilEntityNode extends EntityNode<Object> {
     public EstruturaLocalizacoesPerfilEntityNode(EntityNode<Object> parent,
             Object entity, String[] queryChildrenList) {
         super(parent, entity, queryChildrenList);
-        queryChildrenOfLocalizacaoList = queryChildrenList[0] + " and n.localizacaoPai = :" + EntityNode.PARENT_NODE;
-        queryRootsOfEstruturaList = queryChildrenList[0] + " and n.localizacaoPai is null and n.estruturaPai = :"+ EntityNode.PARENT_NODE;
+        queryChildrenOfLocalizacaoList = queryChildrenList[0] + " and n.localizacaoPai = :" + EntityNode.PARENT_NODE + " order by n.caminhoCompleto";
+        queryRootsOfEstruturaList = queryChildrenList[0] + " and n.localizacaoPai is null and n.estruturaPai = :"+ EntityNode.PARENT_NODE + " order by n.caminhoCompleto ";
     }
 
     public EstruturaLocalizacoesPerfilEntityNode(String queryChildren) {

@@ -70,24 +70,21 @@ public class ValidaDocumentoAction implements Serializable {
     /**
      * Valida a assinatura de um ProcessoDocumento. Quando o documento é do tipo
      * modelo as quebras de linha são retiradas.
-     * 
-     * @param id
+     * @param bin 
+     * @param certChain 
+     * @param signature 
      */
-    public void validaDocumento(DocumentoBin bin, String certChain,
-            String signature) {
+    public void validaDocumento(DocumentoBin bin, String certChain, String signature) {
         documentoBin = bin;
         setValido(false);
         setDadosCertificado(null);
         try {
-            ValidaDocumento validaDocumento = assinaturaDocumentoService
-                    .validaDocumento(bin, certChain, signature);
+            ValidaDocumento validaDocumento = assinaturaDocumentoService.validaDocumento(bin, certChain, signature);
             setValido(validaDocumento.verificaAssinaturaDocumento());
             setDadosCertificado(validaDocumento.getDadosCertificado());
-        } catch (ValidaDocumentoException | CertificadoException
-                | IllegalArgumentException e) {
+        } catch (ValidaDocumentoException | CertificadoException | IllegalArgumentException e) {
             LOG.error(".validaDocumento(bin, certChain, signature)", e);
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-                    e.getMessage());
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getMessage());
         }
     }
     

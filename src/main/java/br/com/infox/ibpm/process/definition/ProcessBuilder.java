@@ -254,7 +254,7 @@ public class ProcessBuilder implements Serializable {
             if (node instanceof InfoxMailNode) {
                 InfoxMailNode mailNode = (InfoxMailNode) node;
                 if (Strings.isNullOrEmpty(mailNode.getTo())) {
-                    throw new IllegalStateException("O nó de email deve possuir pelo menos um destinatário.");
+                    throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir pelo menos um destinatário.");
                 }
             }
         }

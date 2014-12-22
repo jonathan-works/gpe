@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf" >
+    
+    <ui:param name="idPopup" value="#{id}" />
+    <ui:param name="width" value="#{empty width ? '850' : width}" />
+    <ui:param name="width" value="#{empty width ? '160' : width}" />
+    
+   	<rich:popupPanel id="#{idPopup}" modal="false"  width="#{width}"  height="#{height}" >
+   	
+		<a:jsFunction name="selectDocumentoAssinar" render="assinaturaListCont, conteudoAssinatura" 
+					  limitRender="true" execute="@this" rendered="true" >
+			<a:param  name="idDocumento" converter="javax.faces.Integer"  
+					  assignTo="#{validaDocumentoAction.idDocumento}" />
+		</a:jsFunction>
+		
+		<f:facet name="header">
+			<h:outputText value="#{eppmessages['validacaoDocumentoList.assinaturas.header']}" />
+		</f:facet>
+		<f:facet name="controls">
+            <h:graphicImage styleClass="d-msg-h-close" value="#{wiSkin.imageFolder}/closeMP.gif" 
+            			    onmouseup="#{rich:component(idPopup)}.hide()"/>
+        </f:facet>
+		<s:div id="assinaturaListCont">
+        
+            <wi:outputText id="classificacao" 
+                label="#{eppmessages['documentoProcesso.classificacaoDocumento']}" 
+                value="#{validaDocumentoAction.documento.classificacaoDocumento}" />
+        
+			<wi:outputText id="descricao"
+				label="#{eppmessages['documentoProcesso.descricao']}"
+				value="#{validaDocumentoAction.documento.descricao}" />
+                
+			<rich:dataTable
+				value="#{validaDocumentoAction.listAssinaturaDocumento}"
+				id="assinaturaDocumentoList" rowKeyVar="row.idAssinatura"
+				rowClasses="zebra-row" styleClass="dtable rf-dt-crud" var="row">
+				<rich:column styleClass="dt-toolbar-col">
+					<f:facet name="header">
+						<h:outputText
+							value="#{eppmessages['assinaturaDocumento.nomeUsuario']}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{row.nomeUsuario}"></h:outputText>
+				</rich:column>
+				<rich:column styleClass="dt-toolbar-col">
+					<f:facet name="header">
+						<h:outputText
+							value="#{eppmessages['assinaturaDocumento.nomePerfil']}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{row.nomeUsuarioPerfil}"></h:outputText>
+				</rich:column>
+				<rich:column styleClass="dt-toolbar-col">
+					<f:facet name="header">
+						<h:outputText
+							value="#{eppmessages['assinaturadocumento.dtAssinatura']}"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{row.dataAssinatura}"></h:outputText>
+				</rich:column>
+			</rich:dataTable>
+		</s:div>
+		<s:div id="conteudoAssinatura">
+			<h:form id="assinaturaDocumento">
+				<s:div id="assinatura_pers">
+
+					<a:jsFunction name="assinar"
+						action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
+						execute="@this appletAssinaturaCertChain appletAssinaturaSignature"
+						render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, documentosPrestacao"
+						oncomplete="infox.hideLoading();" />
+
+					<wi:certificadoDigital id="appletAssinatura" debug="false"
+						loginMode="false"
+						formId="#{rich:clientId('assinaturaDocumento')}"
+						signButtonCaption="#{eppmessages['assinaturas.assinar']}"
+						certificationChainField="#{validaDocumentoAction.certChain}"
+						signatureField="#{validaDocumentoAction.signature}"
+						signableData="#{validaDocumentoAction.documentoBin.md5Documento}"
+						functionPreSign="infox.showLoading();"
+						functionPosSign="assinar();" useBase64Function="true"
+						useProviderDll="false"
+						urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+						rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado) 
+              				and validaDocumentoAction.documento.isDocumentoAssinavel(usuarioLogadoPerfilAtual.perfilTemplate.papel)}">
+                       </wi:certificadoDigital>
+
+				</s:div>
+			</h:form>
+		</s:div>
+	</rich:popupPanel>
+    
+</ui:composition>
