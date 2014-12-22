@@ -31,7 +31,9 @@ import br.com.infox.seam.util.ComponentUtil;
 @Table(name = MetadadoProcesso.TABLE_NAME)
 @NamedQueries(value = {
 		@NamedQuery(name = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_VISIVEL_BY_PROCESSO, 
-					 query = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_VISIVEL_BY_PROCESSO_QUERY)
+					 query = MetadadoProcessoQuery.LIST_METADADO_PROCESSO_VISIVEL_BY_PROCESSO_QUERY),
+		@NamedQuery(name = MetadadoProcessoQuery.GET_METADADO, query = MetadadoProcessoQuery.GET_METADADO_QUERY),
+		@NamedQuery(name = MetadadoProcessoQuery.REMOVER_METADADO, query = MetadadoProcessoQuery.REMOVER_METADADO_QUERY),
 })
 public class MetadadoProcesso implements Serializable {
 

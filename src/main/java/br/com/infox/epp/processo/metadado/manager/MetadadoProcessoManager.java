@@ -6,9 +6,11 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.dao.MetadadoProcessoDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 
 @AutoCreate
 @Name(MetadadoProcessoManager.NAME)
@@ -21,5 +23,11 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 		return getDao().getListMetadadoVisivelByProcesso(processo);
 	}
 	
+	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition definition, Processo processo) {
+		return getDao().getMetadado(definition, processo);
+	}
 	
+	public void removerMetadado(MetadadoProcessoDefinition definition, Processo processo) throws DAOException {
+		getDao().removerMetadado(definition, processo);
+	}
 }
