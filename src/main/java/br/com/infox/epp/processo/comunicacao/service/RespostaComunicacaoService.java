@@ -90,7 +90,7 @@ public class RespostaComunicacaoService {
 		MetadadoProcesso metadado = new ComunicacaoMetadadoProvider()
 			.gerarMetadado(ComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL, processoComunicacao, processoResposta.getIdProcesso().toString());
 		metadadoProcessoManager.persist(metadado);
-		criarMetadadoTipo(processoResposta);
+		criarMetadadosProcessoResposta(processoResposta);
 		
 		return processoResposta;
 	}
@@ -133,9 +133,12 @@ public class RespostaComunicacaoService {
 		return fluxo;
 	}
 	
-	private void criarMetadadoTipo(Processo processoResposta) throws DAOException {
+	private void criarMetadadosProcessoResposta(Processo processoResposta) throws DAOException {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoResposta);
 		MetadadoProcesso metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.DOCUMENTO.name());
+		metadadoProcessoManager.persist(metadado);
+		
+		metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, processoResposta.getProcessoPai().getLocalizacao().getIdLocalizacao().toString());
 		metadadoProcessoManager.persist(metadado);
 	}
 }
