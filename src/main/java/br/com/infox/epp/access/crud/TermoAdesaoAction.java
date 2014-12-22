@@ -54,20 +54,14 @@ public class TermoAdesaoAction implements Serializable {
     private String termoAdesao;
     private String tituloTermoAdesao;
 
-    @In
-    private ParametroManager parametroManager;
-    @In
-    private ModeloDocumentoManager modeloDocumentoManager;
-    @In
-    private AuthenticatorService authenticatorService;
-    @In
-    private DocumentoBinManager documentoBinManager;
-    @In
-    private AssinaturaDocumentoService assinaturaDocumentoService;
-    @In
-    private PessoaFisicaManager pessoaFisicaManager;
+    @In private ParametroManager parametroManager;
+    @In private ModeloDocumentoManager modeloDocumentoManager;
+    @In private AuthenticatorService authenticatorService;
+    @In private DocumentoBinManager documentoBinManager;
+    @In private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In private PessoaFisicaManager pessoaFisicaManager;
 
-    public void assinarTermoAdesao(final String certChain,
+    public String assinarTermoAdesao(final String certChain,
             final String signature) {
         try {
             final UsuarioLogin usuarioLogin = this.authenticatorService
@@ -95,7 +89,8 @@ public class TermoAdesaoAction implements Serializable {
                 pessoaFisica.setTermoAdesao(bin);
             }
             this.documentoBinManager.flush();
-            FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
+            FacesMessages.instance().add(Severity.INFO,
+                    Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
             return "/Painel/list.seam";
         } catch (final CertificateExpiredException e) {
             TermoAdesaoAction.LOG.error(
