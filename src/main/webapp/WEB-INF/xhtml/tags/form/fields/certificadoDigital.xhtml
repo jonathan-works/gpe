@@ -23,38 +23,40 @@
       </h:inputHidden>
       <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/constant.js" />
       <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/websocket.js" />
-      <a
-        href="#{pathResolver.contextPath}/certificado/certificado_digital.jnlp"
-        onclick="Infox.CertDig.userClickedOnDownloadJNPLButton();">#{empty signButtonCaption ? 'Assinar Digitalmente' :
-        signButtonCaption}</a>
-
+      
+      <h:commandButton type="button" styleClass="buttons" 
+      		onclick="location.href='#{pathResolver.contextPath}/certificado/certificado_digital.jnlp'"
+          	onmouseup="Infox.CertDig.userClickedOnDownloadJNPLButton();"
+      		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" />
+                  		
       <h:outputScript>
-      Infox.CertDig.Functions = {
-        getData : function getData() {
-          return "#{signableData}";
-        }
-      };
-			Infox.CertDig.Constant.Parameter = 
-			{
-				DEBUG                      : #{empty debug ? false : debug},
-
-				LOGIN_MODE                 : #{empty loginMode ? false : loginMode},
-
-				FORM_ID                    : "#{formId}",
-				CERTIFICATION_CHAIN_FIELD  : "#{rich:clientId(id.concat('CertChain'))}",
-				SIGNATURE_FIELD            : "#{rich:clientId(id.concat('Signature'))}",
-				GET_DATA_FUNCTION          : "Infox.CertDig.Functions.getData()",
-				
-				FUNCTION_PRE_SIGN          : "#{functionPreSign}",
-				FUNCTION_POS_SIGN          : "#{functionPosSign}",
-				FUNCTION_POS_SIGN_OK       : "#{functionPosSignOk}",
-				FUNCTION_POS_SIGN_ERROR    : "#{functionPosSignError}",
-				
-				DATA_ATUAL                 : "#{currentDatetime}",
-				USE_BASE64_FUNCTION        : #{empty useBase64Function ? true : useBase64Function},
-				USE_PROVIDER_DLL           : #{empty useProviderDll ? false : useProviderDll}
-			};
-			</h:outputScript>
+	      Infox.CertDig.Functions = {
+	        getData : function getData() {
+	          return "#{signableData}";
+	        }
+	      };
+	      
+		  Infox.CertDig.Constant.Parameter = 
+	 	  {
+			  DEBUG                      : #{empty debug ? false : debug},
+		
+			  LOGIN_MODE                 : #{empty loginMode ? false : loginMode},
+		
+			  FORM_ID                    : "#{formId}",
+			  CERTIFICATION_CHAIN_FIELD  : "#{rich:clientId(id.concat('CertChain'))}",
+			  SIGNATURE_FIELD            : "#{rich:clientId(id.concat('Signature'))}",
+			  GET_DATA_FUNCTION          : "Infox.CertDig.Functions.getData()",
+			
+			  FUNCTION_PRE_SIGN          : "#{functionPreSign}",
+			  FUNCTION_POS_SIGN          : "#{functionPosSign}",
+			  FUNCTION_POS_SIGN_OK       : "#{functionPosSignOk}",
+			  FUNCTION_POS_SIGN_ERROR    : "#{functionPosSignError}",
+			
+			  DATA_ATUAL                 : "#{currentDatetime}",
+			  USE_BASE64_FUNCTION        : #{empty useBase64Function ? true : useBase64Function},
+			  USE_PROVIDER_DLL           : #{empty useProviderDll ? false : useProviderDll}
+		  };
+	  </h:outputScript>
     </s:fragment>
   </h:panelGroup>
 </ui:composition>
