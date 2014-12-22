@@ -25,6 +25,12 @@
           location = '#{pathResolver.contextPath}/Painel/list.seam'; 
         }
       </h:outputScript>
+      
+      <wi:messages
+        formId="pageBody"
+        rendered="#{empty showMsg ? true : showMsg}"
+        globalOnly="true" />
+      
       <div class="p-caixas">
         <infox:tabPanel
           id="tabPainelUsuario"
