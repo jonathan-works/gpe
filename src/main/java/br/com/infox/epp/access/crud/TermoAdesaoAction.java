@@ -16,7 +16,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -70,7 +69,7 @@ public class TermoAdesaoAction implements Serializable {
     @In
     private PessoaFisicaManager pessoaFisicaManager;
 
-    public void assinarTermoAdesao(String certChain, String signature) {
+    public String assinarTermoAdesao(String certChain, String signature) {
         try {
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
@@ -89,12 +88,8 @@ public class TermoAdesaoAction implements Serializable {
                 pessoaFisica.setTermoAdesao(bin);
             }
             documentoBinManager.flush();
-            Redirect r = Redirect.instance();
-            r.setViewId("/Painel/list.seam");
-            r.setConversationPropagationEnabled(false);
-            r.setParameter("cid", null);
-            r.execute();
             FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
+            return "/Painel/list.seam";
         } catch (final CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(Messages.resolveMessage(CERTIFICATE_ERROR_EXPIRED), e);
@@ -107,6 +102,7 @@ public class TermoAdesaoAction implements Serializable {
         } catch (AssinaturaException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
         }
+        return null;
     }
 
     public String getTermoAdesao() {
