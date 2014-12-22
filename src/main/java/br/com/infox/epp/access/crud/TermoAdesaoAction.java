@@ -13,7 +13,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -96,15 +95,8 @@ public class TermoAdesaoAction implements Serializable {
                 pessoaFisica.setTermoAdesao(bin);
             }
             this.documentoBinManager.flush();
-            final Redirect r = Redirect.instance();
-            r.setViewId("/Painel/list.seam");
-            r.setConversationPropagationEnabled(false);
-            r.setParameter("cid", null);
-            r.execute();
-            FacesMessages
-            .instance()
-            .add(Severity.INFO,
-                    Messages.resolveMessage(TermoAdesaoAction.TERMS_CONDITIONS_SIGN_SUCCESS));
+            FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
+            return "/Painel/list.seam";
         } catch (final CertificateExpiredException e) {
             TermoAdesaoAction.LOG.error(
                     TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
@@ -126,6 +118,7 @@ public class TermoAdesaoAction implements Serializable {
             TermoAdesaoAction.LOG.error(
                     TermoAdesaoAction.METHOD_ASSINAR_TERMO_ADESAO, e);
         }
+        return null;
     }
 
     public String getTermoAdesao() {
