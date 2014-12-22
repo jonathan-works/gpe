@@ -15,7 +15,7 @@
      <rich:tree status="status" toggleType="client" execute="@this"
        selectionType="ajax"
        selectionChangeListener="#{tarefasTree.processTreeSelectionChange}"
-       render="painelProcessos, painelProcessosComunicacao, :pesquisaListForm" var="node">
+       render="painelProcessos, painelProcessosComunicacao, painelProcessosDocumento, :pesquisaListForm" var="node">
 
        <rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
          <rich:treeNode iconCollapsed="#{wiSkin.imageFolder}/globe16.png"
