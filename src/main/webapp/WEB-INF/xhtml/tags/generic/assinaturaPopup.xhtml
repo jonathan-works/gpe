@@ -29,11 +29,15 @@
             			    onmouseup="#{rich:component(idPopup)}.hide()"/>
         </f:facet>
 		<s:div id="assinaturaListCont">
-			<div>
-				<wi:outputText id="descricao"
-					label="#{eppmessages['documentoProcesso.descricao']}"
-					value="#{validaDocumentoAction.documento.descricao}" />
-			</div>
+        
+            <wi:outputText id="classificacao" 
+                label="#{eppmessages['documentoProcesso.classificacaoDocumento']}" 
+                value="#{validaDocumentoAction.documento.classificacaoDocumento}" />
+        
+			<wi:outputText id="descricao"
+				label="#{eppmessages['documentoProcesso.descricao']}"
+				value="#{validaDocumentoAction.documento.descricao}" />
+                
 			<rich:dataTable
 				value="#{validaDocumentoAction.listAssinaturaDocumento}"
 				id="assinaturaDocumentoList" rowKeyVar="row.idAssinatura"
