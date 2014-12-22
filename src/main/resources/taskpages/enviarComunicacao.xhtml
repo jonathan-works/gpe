@@ -20,8 +20,11 @@
 					<a:ajax event="change" />
 				</wi:selectOneMenuEntity>
 				<div />
-				<h:commandButton action="#{modeloComunicacaoAction.downloadComunicacaoCompleta()}" value="Visualizar Comunicação" immediate="true" 
-					rendered="#{(not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao or modeloComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno) and not modeloComunicacaoAction.modeloComunicacao.finalizada}" 
+				<h:commandButton action="#{modeloComunicacaoAction.downloadComunicacaoCompleta()}" 
+					value="#{eppmessages['comunicacao.visualizarComunicacao']}" immediate="true" 
+					rendered="#{(not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao 
+						or modeloComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno) 
+						and not modeloComunicacaoAction.modeloComunicacao.finalizada}" 
 					styleClass="buttons"/> 
 			</h:form>
 			<rich:panel header="#{eppmessages['comunicacao.destinatarios']}" id="destinatariosPanel">
@@ -41,7 +44,7 @@
 	   							</a:commandLink>
 	   							<h:commandLink action="#{modeloComunicacaoAction.downloadComunicacaoCompleta(row)}" 
 	   								rendered="#{row.expedido}">
-	   								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="Visualizar Comunicação"/>
+	   								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{eppmessages['comunicacao.visualizarComunicacao']}"/>
 	   							</h:commandLink>
 							</s:div>
 						</rich:column>
@@ -69,7 +72,8 @@
 							<h:outputText value="#{row.prazo}" rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada}" />
 						</rich:column>
 						<rich:column styleClass="dt-toolbar-col" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
-							<a:commandButton value="Replicar Prazo" render="destinatarios" action="#{modeloComunicacaoAction.replicarPrazo(row)}"
+							<a:commandButton value="#{eppmessages['comunicacao.replicarPrazo']}" 
+								render="destinatarios" action="#{modeloComunicacaoAction.replicarPrazo(row)}"
 								rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}" execute="@this, prazo"/>
 						</rich:column>
 					</rich:dataTable>
@@ -82,7 +86,7 @@
 							and empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}">
 							<wi:commandButton id="expedir" action="modeloComunicacaoAction.expedirComunicacao()" 
 								rendered="#{modeloComunicacaoAction.documentoComunicacao.documento.hasAssinatura()}"
-								value="Expedir Comunicações"
+								value="#{eppmessages['comunicacao.expedirComunicacoes']}"
 								oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
 								reRender="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"/>
 							<s:div id="assinatura_pers" rendered="#{not modeloComunicacaoAction.documentoComunicacao.documento.hasAssinatura()}">
@@ -105,14 +109,15 @@
 				                  loginMode="false"
 				                  useProviderDll="false"
 				                  rendered="#{modeloComunicacaoAction.podeRenderizarApplet()}"
-				                  signButtonCaption="Expedir Comunicação" />
+				                  signButtonCaption="#{eppmessages['comunicacao.expedirComunicacao']}" />
 				
 				              </s:div>
 		          		</s:div>
 					</h:form>
 				</div>
 				<h:form rendered="#{modeloComunicacaoAction.processoPossuiRelator}">
-					<wi:selectBooleanCheckbox id="relator" label="Relator" disabled="#{modeloComunicacaoAction.modeloComunicacao.finalizada}"
+					<wi:selectBooleanCheckbox id="relator" label="#{eppmessages['processo.relator']}" 
+						disabled="#{modeloComunicacaoAction.modeloComunicacao.finalizada}"
 						value="#{modeloComunicacaoAction.adicionarDestinatarioRelator}">
 						<a:ajax event="change" render="destinatariosPanel" limitRender="true" execute="@this"
 							listener="#{modeloComunicacaoAction.gerenciarRelator}"/>
@@ -158,7 +163,7 @@
 			</rich:panel>
 			<h:form id="comunicacaoDestinatarioForm">
 				<rich:collapsiblePanel switchType="client" rendered="#{not empty modeloComunicacaoAction.destinatario and not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}" 
-					header="Comunicação - #{modeloComunicacaoAction.destinatario.nome}">
+					header="#{eppmessages['comunicacao.comunicacao']} - #{modeloComunicacaoAction.destinatario.nome}">
 					<wi:editor id="comunicacao" readonly="true" value="#{modeloComunicacaoAction.destinatario.comunicacao.modeloDocumento}" />
 					<s:div id="assinatura_pers">
 						<a:jsFunction name="assinar" action="#{modeloComunicacaoAction.expedirComunicacao()}"
@@ -177,7 +182,7 @@
 								functionPosSign="assinar();" debug="false" loginMode="false"
 								useProviderDll="false"
 								rendered="#{not modeloComunicacaoAction.destinatario.expedido and modeloComunicacaoAction.podeRenderizarApplet()}"
-								signButtonCaption="Expedir Comunicação" />
+								signButtonCaption="#{eppmessages['comunicacao.expedirComunicacao']}" />
 	          		</s:div>
 				</rich:collapsiblePanel>
 			</h:form>
@@ -186,7 +191,7 @@
 				<wi:dataTable id="documentosProcesso" values="#{documentoComunicacaoList.list(15)}" 
 					bean="#{documentoComunicacaoList}" showSearchForm="false" rowId="#{row.id}"
 					showGrid="#{not modeloComunicacaoAction.modeloComunicacao.finalizada and documentoComunicacaoList.resultCount gt 0}"
-					tableTitle="Documentos do Processo">
+					tableTitle="#{eppmessages['comunicacao.documentosProcesso']}">
 					<ui:define name="headerToolBar" />
 					<ui:define name="toolBar">
 						<h:form>
@@ -201,10 +206,10 @@
 						<h:outputText value="#{row.descricao}" />
 					</rich:column>
 				</wi:dataTable>
-				<rich:panel header="Documentos da Comunicação">
+				<rich:panel header="#{eppmessages['comunicacao.documentosComunicacao']}">
 					<h:form>
 						<h:commandButton styleClass="buttons" action="#{modeloComunicacaoAction.downloadComunicacao}" 
-	    					value="Comunicação"
+	    					value="#{eppmessages['comunicacao.comunicacao']}"
 	    					rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada and empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}"/>
 	    			</h:form>
 					<rich:dataTable id="documentosSelecionados" value="#{modeloComunicacaoAction.modeloComunicacao.documentos}"

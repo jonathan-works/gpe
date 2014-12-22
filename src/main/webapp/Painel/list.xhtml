@@ -378,6 +378,10 @@
 		              columnHeader="#{eppmessages['prioridadeProcesso.tableTitle']}"
 		              value="#{row.prioridadeProcesso}"
 		            />
+		            <wi:columnOutputText
+		              columnId="numeroProcessoPai"
+		              columnHeader="#{eppmessages['consultaProcesso.numeroProcessoPai']}"
+		              value="#{row.processoPai.numeroProcesso}" />
 		            <infox:dynamicColumns
 		              columns="#{painelUsuarioController.dynamicColumns}"
 		            />
