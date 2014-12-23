@@ -10,13 +10,14 @@
     xmlns:wi="http://www.itx.com.br/jsf" >
     
     <ui:param name="idPopup" value="#{id}" />
-    <ui:param name="width" value="#{empty width ? '850' : width}" />
-    <ui:param name="width" value="#{empty width ? '160' : width}" />
+    <ui:param name="minWidth" value="#{empty minWidth ? '850' : minWidth}" />
+    <ui:param name="minHeight" value="#{empty minHeight ? '160' : minHeight}" />
     
-   	<rich:popupPanel id="#{idPopup}" modal="false"  width="#{width}"  height="#{height}" >
+   	<rich:popupPanel id="#{idPopup}" modal="false"  minWidth="#{minWidth}"  
+                     minHeight="#{minHeight}" shadowDepth="8" resizeable="true" >
    	
 		<a:jsFunction name="selectDocumentoAssinar" render="assinaturaListCont, conteudoAssinatura" 
-					  limitRender="true" execute="@this" rendered="true" >
+					  limitRender="true" execute="@this" rendered="true" oncomplete="#{rich:component(idPopup)}.show();" >
 			<a:param  name="idDocumento" converter="javax.faces.Integer"  
 					  assignTo="#{validaDocumentoAction.idDocumento}" />
 		</a:jsFunction>

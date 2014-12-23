@@ -5,7 +5,6 @@
     xmlns:h="http://java.sun.com/jsf/html" >
     
     <ui:param name="idDocumento" value="#{idDocumento}" />
-    <ui:param name="idAssinatura" value="#{idAssinatura}" />
     <ui:param name="renderedLock" value="#{renderedLock}" />
  
 	<h:graphicImage title="#{eppmessages['assinaturas.assinar']}"
@@ -13,14 +12,14 @@
 				url="#{wiSkin.imageFolder}/lock_unlock.png" 
 				style="cursor: pointer"
 				rendered="#{not renderedLock}" 
-				onmouseup="selectDocumentoAssinar( #{idDocumento} ); #{rich:component(idAssinatura)}.show();" />
+				onmouseup="selectDocumentoAssinar( #{idDocumento} );" />
 				
 	<h:graphicImage title="#{eppmessages['assinaturas.validar']}"
                  alt="#{eppmessages['assinaturas.validar']}"
                  url="#{wiSkin.imageFolder}/lock.png" 
                  style="cursor: pointer"
                  rendered="#{renderedLock}" 
-                 onmouseup="selectDocumentoAssinar( #{idDocumento} ); #{rich:component(idAssinatura)}.show();" />
+                 onmouseup="selectDocumentoAssinar( #{idDocumento} );" />
  
 
 </ui:composition>

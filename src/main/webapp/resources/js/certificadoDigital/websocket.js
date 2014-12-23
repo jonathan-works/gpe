@@ -90,9 +90,10 @@ Infox.CertDig.Connection = function() {
 				// For reasons I can't determine, onopen gets called twice
 				// and the first time event.data is undefined.
 				// Leave a comment if you know the answer.
-				if (undefined === event.data) {
-					return;
-				}
+				// Comentado pois estava entrando em loop
+				//if (undefined === event.data) {
+				//	return;
+				//}
 
 				// 01 - The connection has been successfully established, so
 				// stop the timer.
