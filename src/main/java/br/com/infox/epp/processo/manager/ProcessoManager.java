@@ -8,9 +8,11 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jboss.seam.util.Strings;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -104,19 +106,12 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public boolean iniciaTask(final Processo processo, final Long taskInstanceId) {
         boolean result = false;
         final BusinessProcess bp = BusinessProcess.instance();
-        if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            bp.setProcessId(processo.getIdJbpm());
-            bp.setTaskId(taskInstanceId);
-            try {
-                bp.startTask();
-                result = true;
-            } catch (final IllegalStateException e) {
-                // Caso já exista deve-se ignorar este trecho, outras
-                // illegalstate devem ser averiguadas
-                // TODO Ideal para processos já iniciados seria chamar o método
-                // resumeTask
-                ProcessoManager.LOG.warn(".iniciaTask()", e);
-            }
+        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(taskInstanceId);
+        bp.setProcessId(processo.getIdJbpm());
+        bp.setTaskId(taskInstanceId);
+        if (!processo.getIdJbpm().equals(bp.getProcessId()) && !taskInstance.isOpen()) {
+            bp.startTask();
+            result = true;
         }
         return result;
     }
