@@ -22,8 +22,8 @@ Infox.CertDig.Connection = function() {
 	// By convention, we create a private variable 'that'.
 	// This is used to make the object available to the private methods.
 	var that = this;
-	var setTimeoutId = null;
 	var webSocket = null;
+	var setTimeoutId = null;
 	var connectionHasBeenEstablished = false;
 
 	/**
@@ -55,6 +55,8 @@ Infox.CertDig.Connection = function() {
 	 * 
 	 */
 	function startConnectionToServer(nrAttempt) {
+		logInfo("Trying to connect, attempt: #" + nrAttempt);
+
 		// 01 - If the number of attempt has reached the MAXIMUM amount.
 		if (Infox.CertDig.Constant.Connection.MAXIMUM_NUMBER_OF_ATTEMPTS == nrAttempt) {
 			// 01.1 - Stop the loop.
@@ -73,7 +75,8 @@ Infox.CertDig.Connection = function() {
 			// 01 - It ensures only one connection is open at a time.
 			if ((null !== webSocket)
 					&& (WebSocket.CLOSED !== webSocket.readyState)) {
-				logInfo("WebSocket is already opened.");
+				logInfo("WebSocket is already opened with status: "
+						+ webSocket.readyState);
 				return;
 			}
 
@@ -84,6 +87,13 @@ Infox.CertDig.Connection = function() {
 			 * Binds functions to the listeners for the WebSocket.
 			 */
 			webSocket.onopen = function(event) {
+				// For reasons I can't determine, onopen gets called twice
+				// and the first time event.data is undefined.
+				// Leave a comment if you know the answer.
+				if (undefined === event.data) {
+					return;
+				}
+
 				// 01 - The connection has been successfully established, so
 				// stop the timer.
 				stopReconnectTimer(setTimeoutId);
@@ -92,18 +102,17 @@ Infox.CertDig.Connection = function() {
 				// change the flag.
 				setHasConnectionBeenEstablished(true);
 
-				// For reasons I can't determine, onopen gets called twice
-				// and the first time event.data is undefined.
-				// Leave a comment if you know the answer.
-				if (undefined === event.data) {
-					return;
-				}
-
+				// 03 - Handle the received response.
 				handleResponse(event);
 			};
 
-			webSocket.onmessage = function(event) {
+			webSocket.onclose = function(event) {
+				logInfo("The connection has been closed.");
 				handleResponse(event);
+
+				if (!hasConnectionBeenEstablished()) {
+					tryToReconnect(nrAttempt);
+				}
 			};
 
 			webSocket.onerror = function(event) {
@@ -114,13 +123,10 @@ Infox.CertDig.Connection = function() {
 				}
 			};
 
-			webSocket.onclose = function(event) {
+			webSocket.onmessage = function(event) {
 				handleResponse(event);
-
-				if (!hasConnectionBeenEstablished()) {
-					tryToReconnect(nrAttempt);
-				}
 			};
+
 		} catch (ex) {
 			handleException(ex);
 		}
@@ -169,31 +175,30 @@ Infox.CertDig.Connection = function() {
 		// type {text, image, ...}
 		// cmd {PING, PONG, ...}
 		// data { the content of the message }
+		if (undefined != message.cmd) {
+			switch (message.cmd) {
+			case Infox.CertDig.Constant.Command.CONNECTION_OPENED:
+				// 01 - This will inform which screen to open on the smart card
+				// reader.
+				var loginMode = Infox.CertDig.Constant.Parameter.LOGIN_MODE;
 
-		switch (message.cmd) {
-		case Infox.CertDig.Constant.Command.CONNECTION_OPENED:
-			// 01 - This will inform which screen to open on the smart card
-			// reader.
-			var loginMode = Infox.CertDig.Constant.Parameter.LOGIN_MODE;
-
-			if (loginMode) {
-				sendSignLogin();
-			} else {
-				sendAssignDocument();
+				if (loginMode) {
+					sendSignLogin();
+				} else {
+					sendAssignDocument();
+				}
+				break;
+			case Infox.CertDig.Constant.Command.JS_ACTION:
+				runJavaScript(message.data);
+				break;
+			case Infox.CertDig.Constant.Command.CREDENTIALS:
+				receivedCredentials(message.data);
+				break;
+			default:
+				logInfo("Default CMD: " + message.cmd);
+				break;
 			}
-			break;
-		case Infox.CertDig.Constant.Command.JS_ACTION:
-			runJavaScript(message.data);
-			break;
-		case Infox.CertDig.Constant.Command.CREDENTIALS:
-			receivedCredentials(message.data);
-			break;
-		default:
-			logInfo("Default CMD: " + message.cmd);
-			break;
 		}
-
-		logInfo(event.data);
 	}
 
 	/**
