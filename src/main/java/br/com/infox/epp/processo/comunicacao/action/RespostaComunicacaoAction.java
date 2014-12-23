@@ -10,6 +10,8 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -164,8 +166,13 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void endTask() {
 		try {
+			long taskProcessoComunicacaoId = TaskInstance.instance().getId();
 			respostaComunicacaoService.inicializarFluxoDocumento(processoResposta);
-			TaskInstanceHome.instance().end(TaskInstanceHome.instance().getName());
+			JbpmUtil.getJbpmSession().flush();
+			TaskInstanceHome taskInstanceHome = TaskInstanceHome.instance();
+			taskInstanceHome.setTaskId(taskProcessoComunicacaoId);
+			taskInstanceHome.setCurrentTaskInstance(ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskProcessoComunicacaoId));
+			taskInstanceHome.end(taskInstanceHome.getName());
 		} catch (Exception e) {
 			LOG.error("", e);
 			if (e instanceof DAOException) {

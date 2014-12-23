@@ -417,8 +417,12 @@ public class TaskInstanceHome implements Serializable {
 
     @Observer(Event.EVENTTYPE_TASK_CREATE)
     public void setCurrentTaskInstance(ExecutionContext context) {
+    	setCurrentTaskInstance(context.getTaskInstance());
+    }
+    
+    public void setCurrentTaskInstance(TaskInstance taskInstance) {
         try {
-            this.currentTaskInstance = context.getTaskInstance();
+            this.currentTaskInstance = taskInstance;
         } catch (Exception ex) {
             String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
             LOG.warn(action, ex);
