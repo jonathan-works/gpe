@@ -24,6 +24,7 @@ public class DocumentoComunicacaoList extends EntityList<Documento> {
 			+ "inner join o.documentoBin bin "
 			+ "left join bin.assinaturas a "
 			+ "where o.processo = #{documentoComunicacaoList.entity.processo} and o.excluido = false and "
+			+ "bin.minuta = false and "
 			+ "not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o)";
 	
 	private static final String DEFAULT_ORDER = "a.dataAssinatura, o.dataInclusao desc";

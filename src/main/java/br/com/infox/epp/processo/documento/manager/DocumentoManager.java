@@ -133,4 +133,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public int getTotalDocumentosProcesso(Processo processo) {
     	return getDao().getTotalDocumentosProcesso(processo);
     }
+    
+    public List<Documento> getDocumentosSessaoAnexar(Processo processo, List<Integer> idsDocumentos) {
+    	return getDao().getDocumentosSessaoAnexar(processo, idsDocumentos);
+    }
 }

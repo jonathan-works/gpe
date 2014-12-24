@@ -141,6 +141,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	private DestinatarioModeloComunicacao destinatario;
 	private boolean inTask = false;
 	private boolean possuiDocumentoInclusoPorUsuarioInterno = false;
+	private boolean validarMinuta = false;
 	
 	@Create
 	public void init() {
@@ -226,6 +227,9 @@ public class ModeloComunicacaoAction implements Serializable {
 			this.processInstanceId = this.modeloComunicacao.getProcesso().getIdJbpm();
 			this.possuiDocumentoInclusoPorUsuarioInterno = comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
 		}
+		if (!modeloComunicacao.isMinuta() && modeloComunicacao.getTextoComunicacao() != null && !modeloComunicacao.getTextoComunicacao().isEmpty()) {
+			validarMinuta = true;
+		}
 	}
 	
 	public void gravar() {
@@ -250,6 +254,9 @@ public class ModeloComunicacaoAction implements Serializable {
 			setIdModeloVariable(modeloComunicacao.getId());
 			if (isFinalizada()) {
 				comunicacaoService.finalizarComunicacao(modeloComunicacao);
+			}
+			if (modeloComunicacao.getTextoComunicacao() != null && !modeloComunicacao.getTextoComunicacao().isEmpty()) {
+				validarMinuta = true;
 			}
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (Exception e) {
@@ -610,5 +617,9 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public DocumentoModeloComunicacao getDocumentoComunicacao() {
 		return comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
+	}
+
+	public boolean isValidarMinuta() {
+		return validarMinuta;
 	}
 }

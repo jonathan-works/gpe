@@ -7,6 +7,7 @@ public class DadosDocumentoAssinavel {
     private Integer idDocumento;
     private String signature;
     private String certChain;
+    private boolean minuta = false;
     
     public ClassificacaoDocumento getClassificacao() {
         return classificacao;
@@ -40,4 +41,11 @@ public class DadosDocumentoAssinavel {
         this.certChain = certChain;
     }
     
+    public boolean isMinuta() {
+		return minuta;
+	}
+    
+    public void setMinuta(boolean minuta) {
+		this.minuta = minuta;
+	}
 }

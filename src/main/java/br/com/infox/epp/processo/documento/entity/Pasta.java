@@ -138,7 +138,14 @@ public class Pasta implements Serializable, Cloneable {
     }
     
     public String toString() {
-        return documentosList != null ? nome + " (" + documentosList.size() + ")" : nome + " (0)";
+    	getDocumentosList(); // Lazy
+    	int total = 0;
+    	for (Documento d : documentosList) {
+    		if (!d.getDocumentoBin().isMinuta()) {
+    			total++;
+    		}
+    	}
+        return documentosList != null ? nome + " (" + total + ")" : nome + " (0)";
     }
     
     public Pasta makeCopy() throws CloneNotSupportedException {

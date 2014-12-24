@@ -61,6 +61,10 @@ public class ModeloComunicacao implements Serializable {
 	private Boolean finalizada = false;
 	
 	@NotNull
+	@Column(name = "in_minuta", nullable = false)
+	private boolean minuta = false;
+	
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_processo", nullable = false)
 	private Processo processo;
@@ -169,5 +173,13 @@ public class ModeloComunicacao implements Serializable {
 	
 	public void setTextoComunicacao(String textoComunicacao) {
 		this.textoComunicacao = textoComunicacao;
+	}
+	
+	public boolean isMinuta() {
+		return minuta;
+	}
+	
+	public void setMinuta(boolean minuta) {
+		this.minuta = minuta;
 	}
 }

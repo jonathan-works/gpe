@@ -230,6 +230,9 @@ public class ComunicacaoService {
 	}
 	
 	public void finalizarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
+		if (modeloComunicacao.isMinuta()) {
+			throw new DAOException("Não é possível finalizar pois o texto no editor da comunicação é minuta");
+		}
 		String textoComunicacao = modeloComunicacao.getTextoComunicacao();
 		if (textoComunicacao != null) {
 			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {

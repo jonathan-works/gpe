@@ -255,11 +255,17 @@ public class AssinaturaDocumentoService implements Serializable {
     }
     
     public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, Integer idDocumento, UsuarioLogin usuario) {
-    	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 
-    			!isDocumentoAssinado(idDocumento, usuario);
+    	Documento documento = documentoManager.find(idDocumento);
+    	if (documento == null) {
+    		return false;
+    	}
+    	return podeRenderizarApplet(papel, classificacao, documento.getDocumentoBin(), usuario);
     }
     
     public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, DocumentoBin documentoBin, UsuarioLogin usuario) {
+    	if (documentoBin == null || documentoBin == null || documentoBin.isMinuta()) {
+    		return false;
+    	}
     	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 
     			!isDocumentoAssinado(documentoBin, usuario);
     }

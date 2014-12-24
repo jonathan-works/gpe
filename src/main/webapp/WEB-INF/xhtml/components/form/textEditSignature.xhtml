@@ -10,6 +10,7 @@
 	<ui:param name="editorId" value="#{id}Editor" />
 	<ui:param name="idSignature" value="#{id}Signature" />
 	<ui:param name="idCertChain" value="#{id}CertChain" />
+	<ui:param name="minuta" value="#{empty home.documentosAssinaveis[id].idDocumento or home.documentosAssinaveis[id].minuta}" />
 	<f:subview id="#{f.id}SubView">
 		<s:div id="#{f.id}TipoDocDiv">
 			<wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
@@ -17,8 +18,8 @@
 				items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
 				required="#{not readonly}" showLabelSelecione="true"
 				value="#{home.documentosAssinaveis[id].classificacao}"
-				readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}"
-				disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}">
+				readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id) or not minuta}"
+				disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id) or not minuta}">
 				<a:ajax event="change"
 					render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}ToolTipDivExterna"
 					execute="@this" limitRender="true" />
@@ -42,8 +43,13 @@
 					</div>
 				</s:div>
 			</s:div>
+			<s:div>
+				<wi:selectBooleanRadio id="#{f.id}minuta" value="#{home.documentosAssinaveis[id].minuta}"
+					label="#{eppmessages['processoDocumentoBin.minuta']}" readonly="#{readonly or not minuta}"
+					disabled="#{readonly or not minuta}"/>
+			</s:div>
 			<wi:editor id="#{editorId}" value="#{home.instance[id]}"
-				readonly="#{readonly or home.possuiAssinatura(id)}" />
+				readonly="#{readonly or home.possuiAssinatura(id) or not minuta}" />
 		</s:div>
 		<s:div id="#{editorId.replace('-','')}SignatureDiv"
 			rendered="#{not readonly}">
@@ -62,7 +68,7 @@
 		</s:div>
 		<s:div id="#{editorId.replace('-','')}AppletDiv"
 			styleClass="applet-div" rendered="#{not readonly}">
-			<wi:certificadoDigital id="#{id}"
+			<wi:certificadoDigital id="#{id}Assinatura"
 				urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
 				formId="#{rich:clientId('taskInstanceForm')}"
 				certificationChainField="#{home.documentosAssinaveis[id].certChain}"

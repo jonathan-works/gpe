@@ -29,14 +29,15 @@ import br.com.infox.epp.system.manager.ParametroManager;
 public class DocumentoList extends EntityList<Documento> implements ActionListener {
 	
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_EJBQL = "select o from Documento o where "
+    private static final String DEFAULT_EJBQL = "select o from Documento o inner join o.documentoBin bin where "
+    		+ "bin.minuta = false and "
             + "(not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true and "
             + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o)))";
     
     private static final String DOCUMENTO_EXCLUIDO_FILTER = " and o.excluido = false";
     
-    private static final String DEFAULT_ORDER = "dataInclusao desc";
+    private static final String DEFAULT_ORDER = "o.dataInclusao desc";
 
     public static final String NAME = "documentoList";
     

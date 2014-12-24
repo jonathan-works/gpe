@@ -234,9 +234,12 @@
 				</rich:panel>
 			</rich:panel>
 			<h:form id="documentoComunicacaoForm">
+				<ui:param name="minuta" value="#{not modeloComunicacaoAction.validarMinuta or modeloComunicacaoAction.modeloComunicacao.minuta}" />
 				<s:div style="display: inline-block; vertical-align: top" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
 					<wi:selectOneMenuEntity id="modeloDocumento" value="#{modeloComunicacaoAction.modeloComunicacao.modeloDocumento}" 
 						label="#{eppmessages['modeloDocumento.modeloDocumento']}"
+						readonly="#{not minuta}"
+						disabled="#{not minuta}"
 						noSelectionLabel="[Selecione o modelo]" items="#{modeloComunicacaoAction.modelosDocumento}">
 						<a:ajax event="change" render="comunicacaoEditorDiv" execute="@this" limitRender="true"
 							listener="#{modeloComunicacaoAction.assignModeloDocumento}"/>
@@ -248,8 +251,8 @@
 				      		items="#{modeloComunicacaoAction.classificacoes}"
 				      		showLabelSelecione="true"
 				      		value="#{modeloComunicacaoAction.modeloComunicacao.classificacaoComunicacao}"
-				      		readonly="#{modeloComunicacaoAction.classificacoes.size eq 1}"
-	      					disabled="#{modeloComunicacaoAction.classificacoes.size eq 1}">
+				      		readonly="#{modeloComunicacaoAction.classificacoes.size eq 1 or not minuta}"
+	      					disabled="#{modeloComunicacaoAction.classificacoes.size eq 1 or not minuta}">
 	      					
 	      					<a:ajax event="change"
 	        					render="tooltipComunicacao"
@@ -270,8 +273,15 @@
 							</div>
 				   		</s:div>
 					</s:div>
+					<s:div>
+						<wi:selectBooleanRadio id="minuta" value="#{modeloComunicacaoAction.modeloComunicacao.minuta}"
+							label="#{eppmessages['processoDocumentoBin.minuta']}" 
+							readonly="#{not minuta}" 
+							disabled="#{not minuta}" />
+					</s:div>
 					<s:div id="comunicacaoEditorDiv">
-						<wi:editor id="comunicacao" value="#{modeloComunicacaoAction.modeloComunicacao.textoComunicacao}" />
+						<wi:editor id="comunicacao" value="#{modeloComunicacaoAction.modeloComunicacao.textoComunicacao}" 
+							readonly="#{not minuta}"/>
 					</s:div>
 				</s:div>
 				<s:div id="responsaveisAssinatura">

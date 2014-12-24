@@ -122,6 +122,8 @@ public class TaskInstanceHome implements Serializable {
     private VariableTypeResolver variableTypeResolver;
     @In(create=true)
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
+    @In
+    private DocumentoManager documentoManager;
 
     private URL urlRetornoAcessoExterno;
     private String documentoAAssinar;
@@ -170,6 +172,7 @@ public class TaskInstanceHome implements Serializable {
                 if (pd != null) {
                     dados.setIdDocumento(id);
                     dados.setClassificacao(pd.getClassificacaoDocumento());
+                    dados.setMinuta(pd.getDocumentoBin().isMinuta());
                 }
             }
             List<ClassificacaoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true, getVariableName(variableRetriever.getName()), ((Processo)ProcessoEpaHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
@@ -286,8 +289,7 @@ public class TaskInstanceHome implements Serializable {
 
         if (variableAccess.isWritable()) {
             if (variableResolver.isEditor() && variableAccess.isReadable()) {
-                DadosDocumentoAssinavel dados = documentosAssinaveis
-                        .get(fieldName);
+            	DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
                 ProcessoEpaHome processoEpaHome = ProcessoEpaHome.instance();
                 processoEpaHome.setClassificacaoDocumento(dados.getClassificacao());
                 processoEpaHome.setSignature(dados.getSignature());
@@ -296,15 +298,20 @@ public class TaskInstanceHome implements Serializable {
             variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
             variableResolver.resolve();
             if (variableResolver.isEditor()) {
+            	DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
+            	Documento documento = documentoManager.find(variableResolver.getValue());
+            	documento.getDocumentoBin().setMinuta(dados.isMinuta());
+            	try {
+					documentoManager.update(documento);
+				} catch (DAOException e) {
+					throw new BusinessException("Erro ao atualizar documento", e);
+				}
                 if (documentoCorreto) {
                     if (!variableResolver.isEditorAssinado()) {
                         assinado = false;
                     } else {
                         assinado = assinado || documentoAAssinar != null;
-                        DadosDocumentoAssinavel dados = documentosAssinaveis
-                                .get(fieldName);
-                        dados.setIdDocumento((Integer) variableResolver
-                                .getValue());
+                        dados.setIdDocumento(documento.getId());
                     }
                     documentoAAssinar = null;
                 } else {

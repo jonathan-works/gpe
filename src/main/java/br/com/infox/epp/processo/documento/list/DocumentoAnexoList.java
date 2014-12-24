@@ -17,7 +17,9 @@ public class DocumentoAnexoList extends EntityList<Documento> {
 	
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_EJBQL = "select pd.* from tb_documento pd "
-            + "inner join tb_processo p on (p.id_processo = pd.id_processo) where "
+            + "inner join tb_processo p on (p.id_processo = pd.id_processo) "
+            + "inner join tb_documento_bin bin on (pdb.id_documento = pd.id_documento) "
+            + "where "
             + "pd.id_processo = #{documentoAnexoList.processo} and "
             + "not exists (select 1 from jbpm_variableinstance v where "
             + "v.longvalue_ = pd.id_documento and "
@@ -43,9 +45,9 @@ public class DocumentoAnexoList extends EntityList<Documento> {
     	String banco = EppProperties.getInstance().getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
     	String queryAppend = "";
     	if ("PostgreSQL".equals(banco)){
-    		queryAppend = " and pd.in_excluido = false ";
+    		queryAppend = " and pd.in_excluido = false and bin.in_minuta = false ";
     	} else if ("SQLServer".equals(banco)) {
-    		queryAppend = " and pd.in_excluido = 0 ";
+    		queryAppend = " and pd.in_excluido = 0 and bin.in_minuta = 0 ";
     	}
         return DEFAULT_EJBQL + queryAppend;
     }

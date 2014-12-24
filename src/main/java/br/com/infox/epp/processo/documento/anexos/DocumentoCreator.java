@@ -40,7 +40,7 @@ public abstract class DocumentoCreator {
         this.documentosDaSessao = documentosDaSessao;
     }
 
-    protected void newInstance() {
+    public void newInstance() {
         setDocumento(new Documento());
         getDocumento().setAnexo(true);
         getDocumento().setDocumentoBin(new DocumentoBin());
