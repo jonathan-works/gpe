@@ -40,31 +40,29 @@
             value="#{salaList.entity.ativo}" />
         </wi:searchForm>
       </ui:define>
-      <wi:columnOutputText
-        columnId="nome"
-        columnHeader="#{eppmessages['sala.nome']}"
-        value="#{row.nome}" />
-      <wi:columnOutputText
-        columnId="unidadeDecisoraColegiada"
-        columnHeader="#{eppmessages['sala.colegiado']}"
-        value="#{row.unidadeDecisoraColegiada}" />
-      <wi:columnOutputText
-        columnId="endereco"
-        columnHeader="#{eppmessages['sala.endereco']}"
-        value="#{row.endereco}" />
-      <wi:columnOutputText
-        columnId="turnosFormatado"
-        columnHeader="#{eppmessages['sala.turnos']}"
-        value="#{row.turnosFormatado}"
-        hideOrder="true"
-      />
-      <wi:columnBoolean
-        columnId="funcionaForaExpediente"
-        columnHeader="#{eppmessages['sala.foraExpediente']}"
-        value="#{row.foraExpediente}" />
-      <wi:columnSituacao
-        columnId="ativo"
-        value="#{row.ativo}" />
+      
+      <wi:columnOutputText columnId="nome"
+          columnHeader="#{eppmessages['sala.nome']}"
+          value="#{row.nome}" />
+        
+      <wi:columnOutputText columnId="unidadeDecisoraColegiada"
+          columnHeader="#{eppmessages['sala.colegiado']}"
+          value="#{row.unidadeDecisoraColegiada}" />
+        
+      <wi:columnOutputText columnId="endereco"
+          columnHeader="#{eppmessages['sala.endereco']}"
+          value="#{row.endereco}" />
+        
+      <wi:columnOutputText columnId="turnosFormatado"
+          columnHeader="#{eppmessages['sala.turnos']}"
+          value="#{row.turnosFormatado}"
+          hideOrder="true" />
+        
+      <wi:columnBoolean columnId="foraExpediente"
+          columnHeader="#{eppmessages['sala.foraExpediente']}"
+          value="#{row.foraExpediente}" />
+          
+      <wi:columnSituacao columnId="ativo" value="#{row.ativo}" />
     </wi:dataTable>
   </ui:define>
 
