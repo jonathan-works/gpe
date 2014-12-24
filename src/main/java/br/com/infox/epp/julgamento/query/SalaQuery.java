@@ -13,5 +13,5 @@ public interface SalaQuery {
 	String LIST_SALA_FILTER_BY_COLEGIADA = "listSalaFilterByColegiada";
 	String LIST_SALA_FILTER_BY_COLEGIADA_QUERY = "select o from Sala o " +
 			"where o.unidadeDecisoraColegiada = :" + PARAM_COLEGIADA + 
-			" order by o.nome";
+			" and o.ativo = true order by o.nome";
 }

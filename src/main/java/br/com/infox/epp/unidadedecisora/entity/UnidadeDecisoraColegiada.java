@@ -4,6 +4,8 @@ import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQ
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO_QUERY;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +35,8 @@ import br.com.infox.epp.access.entity.Localizacao;
 @Table(name = UnidadeDecisoraColegiada.TABLE_NAME)
 @NamedQueries(value={
 		@NamedQuery(name=SEARCH_UDC_BY_USUARIO, query=SEARCH_UDC_BY_USUARIO_QUERY),
-		@NamedQuery(name=SEARCH_EXISTE_UDC_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY)
+		@NamedQuery(name=SEARCH_EXISTE_UDC_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY),
+		@NamedQuery(name=FIND_ALL_ATIVO, query=FIND_ALL_ATIVO_QUERY)
 })
 public class UnidadeDecisoraColegiada implements Serializable {
 

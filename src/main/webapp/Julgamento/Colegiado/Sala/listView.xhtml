@@ -71,30 +71,33 @@
       formId="salaJulgamentoForm"
       formTitle="#{eppmessages['form.title']}">
       <wi:inputText
-        id="nome"
-        label="#{eppmessages['sala.nome']}"
-        value="#{salaCrudAction.instance.nome}"
-        required="true" />
+          id="nome"
+          label="#{eppmessages['sala.nome']}"
+          value="#{salaCrudAction.instance.nome}"
+          required="true" />
       <wi:selectOneMenuEntity
-        id="unidadeDecisoraColegiada"
-        label="#{eppmessages['sala.colegiado']}"
-        value="#{salaCrudAction.instance.unidadeDecisoraColegiada}"
-        items="#{salaCrudAction.unidadeDecisoraColegiadaList}"
-        inactiveCond="#{not item.ativo}"
-        required="true">
-      </wi:selectOneMenuEntity>
+          id="unidadeDecisoraColegiada"
+          label="#{eppmessages['sala.colegiado']}"
+          value="#{salaCrudAction.instance.unidadeDecisoraColegiada}"
+          items="#{salaCrudAction.unidadeDecisoraColegiadaList}"
+          required="true" 
+          rendered="#{empty authenticator.colegiadaLogada}" />
+      <wi:outputText id="unidadeDecisoraColegiada" 
+          label="#{eppmessages['sala.colegiado']}"
+          value="#{salaCrudAction.instance.unidadeDecisoraColegiada}" 
+          rendered="#{not empty authenticator.colegiadaLogada}" />
       <wi:inputText
-        id="endereco"
-        label="#{eppmessages['sala.endereco']}"
-        value="#{salaCrudAction.instance.endereco}"
-        required="true" />
+          id="endereco"
+          label="#{eppmessages['sala.endereco']}"
+          value="#{salaCrudAction.instance.endereco}"
+          required="true" />
       <wi:selectBooleanRadio
-        id="foraExpediente"
-        label="#{eppmessages['sala.foraExpediente']}"
-        value="#{salaCrudAction.instance.foraExpediente}" />
+          id="foraExpediente"
+          label="#{eppmessages['sala.foraExpediente']}"
+          value="#{salaCrudAction.instance.foraExpediente}" />
       <wi:selectSituacaoRadio
-        id="ativo"
-        value="#{salaCrudAction.instance.ativo}" />
+          id="ativo"
+          value="#{salaCrudAction.instance.ativo}" />
     </wi:dataForm>
   </ui:define>
 

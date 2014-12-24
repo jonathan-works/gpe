@@ -27,5 +27,9 @@ public class UnidadeDecisoraColegiadaManager extends Manager<UnidadeDecisoraCole
 	public boolean existeUnidadeColegiadaComLocalizacao(Integer idLocalizacao){
 		return getDao().existeUnidadeDecisoraComLocalizacao(idLocalizacao);
 	}
+	
+	public List<UnidadeDecisoraColegiada> findAllAtivo() {
+        return getDao().findAllAtivo();
+    }
 
 }

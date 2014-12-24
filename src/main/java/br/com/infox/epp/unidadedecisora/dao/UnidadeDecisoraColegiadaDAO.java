@@ -18,6 +18,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery;
 
 @AutoCreate
 @Name(UnidadeDecisoraColegiadaDAO.NAME)
@@ -45,6 +46,10 @@ public class UnidadeDecisoraColegiadaDAO extends DAO<UnidadeDecisoraColegiada> {
 		Root<UnidadeDecisoraColegiada> root = cq.from(UnidadeDecisoraColegiada.class);
 		cq.orderBy(cb.asc(root.get("nome")));
 		return getEntityManager().createQuery(cq).getResultList();
+	}
+	
+	public List<UnidadeDecisoraColegiada> findAllAtivo() {
+	    return getNamedResultList(UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO);
 	}
 
 }

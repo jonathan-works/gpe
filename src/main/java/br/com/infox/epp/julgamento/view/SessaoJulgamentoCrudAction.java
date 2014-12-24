@@ -104,7 +104,7 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 			if ( colegiada != null ) {
 				salas = salaManager.listSalaByColegiada(colegiada);
 			} else {
-				salas = salaManager.findAll();
+				salas = salaManager.findAllAtivo();
 			}
 		}
 		return salas;

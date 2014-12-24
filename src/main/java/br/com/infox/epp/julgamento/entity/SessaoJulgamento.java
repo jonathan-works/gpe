@@ -24,8 +24,6 @@ import javax.validation.constraints.NotNull;
 
 import org.joda.time.DateTime;
 
-import br.com.infox.epp.pessoa.entity.PessoaFisica;
-
 @Entity
 @Table(name = "tb_sessao_julgamento")
 @NamedQueries(value = {
@@ -60,11 +58,6 @@ public class SessaoJulgamento implements Serializable, Cloneable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_sala", nullable = false)
 	private Sala sala;
-	
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_pessoa_fisica", nullable = false)
-	private PessoaFisica procurador;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -113,14 +106,6 @@ public class SessaoJulgamento implements Serializable, Cloneable {
 
 	public void setSala(Sala sala) {
 		this.sala = sala;
-	}
-
-	public PessoaFisica getProcurador() {
-		return procurador;
-	}
-
-	public void setProcurador(PessoaFisica procurador) {
-		this.procurador = procurador;
 	}
 
 	public StatusSessaoJulgamento getStatusSessao() {

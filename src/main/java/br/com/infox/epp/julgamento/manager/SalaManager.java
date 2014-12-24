@@ -20,5 +20,9 @@ public class SalaManager extends Manager<SalaDAO, Sala> {
     public List<Sala> listSalaByColegiada(UnidadeDecisoraColegiada colegiada) {
     	return getDao().listSalaByColegiada(colegiada);
     }
+    
+    public List<Sala> findAllAtivo() {
+        return getDao().findAllAtivo();
+    }
 
 }
