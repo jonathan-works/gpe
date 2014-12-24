@@ -122,7 +122,7 @@
 		</rich:collapsiblePanel>
 	</h:form>
 	
-	<wi:assinaturaPopup id="assinaturaDocumentoPopup" />
+	<wi:assinaturaPopup id="assinaturaDocumentoPopup" afterRender="respostasPanel" />
 	
 	<wi:dataTable id="respostas" tableTitle="#{eppmessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
 		values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true"

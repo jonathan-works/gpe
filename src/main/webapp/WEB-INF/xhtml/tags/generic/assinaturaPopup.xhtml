@@ -73,7 +73,7 @@
 					<a:jsFunction name="assinar"
 						action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
 						execute="@this appletAssinaturaCertChain appletAssinaturaSignature"
-						render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, documentosPrestacao"
+						render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
 						oncomplete="infox.hideLoading();" />
 
 					<wi:certificadoDigital id="appletAssinatura" debug="false"
