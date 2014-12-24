@@ -82,7 +82,7 @@
           items="#{salaCrudAction.unidadeDecisoraColegiadaList}"
           required="true" 
           rendered="#{empty authenticator.colegiadaLogada}" />
-      <wi:outputText id="unidadeDecisoraColegiada" 
+      <wi:outputText id="unidadeDecisoraColegiadaOut" 
           label="#{eppmessages['sala.colegiado']}"
           value="#{salaCrudAction.instance.unidadeDecisoraColegiada}" 
           rendered="#{not empty authenticator.colegiadaLogada}" />

@@ -123,11 +123,11 @@
                	label="#{eppmessages['sala.colegiado']}"
                	value="#{sessaoJulgamentoCrudAction.colegiada}" 
                	rendered="#{s:hasRole('admin')}" >
-			 <a:ajax event="change" render="sala" execute="@this" immediate="true" limitRender="true" 
+			 <a:ajax event="change" render="salas" execute="@this" immediate="true" limitRender="true" 
           			listener="#{sessaoJulgamentoCrudAction.onChangeColegiada()}" />
            </wi:selectOneMenuEntity>
            
-           <wi:selectOneMenuEntity id="sala" 
+           <wi:selectOneMenuEntity id="salas" 
           	   items="#{sessaoJulgamentoCrudAction.salas}"
           	   label="#{eppmessages['sessaoJulgamento.sala']}"
           	   value="#{sessaoJulgamentoCrudAction.instance.sala}" 
