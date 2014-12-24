@@ -273,8 +273,8 @@ public class ComunicacaoAction implements Serializable {
 		return JbpmUtil.getProcesso().getIdJbpm();
 	}
 	
-	public void downloadComunicacaoCompleta(DestinatarioBean destinatario) {
-		DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
+	public void downloadComunicacaoCompleta(String idDestinatario) {
+		DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, Long.valueOf(idDestinatario));
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatarioModelo.getModeloComunicacao(), destinatarioModelo);
 			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");

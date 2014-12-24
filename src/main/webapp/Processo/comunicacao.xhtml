@@ -88,7 +88,7 @@
 										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 										<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{eppmessages['comunicacao.documentos']}"/>
 									</a:commandLink>
-									<h:commandLink action="#{comunicacaoAction.downloadComunicacaoCompleta(bean)}">
+									<h:commandLink onclick="infox.openPopUp('download#{bean.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?id=#{bean.idDestinatario}','1024'); return false;">
 										<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{eppmessages['comunicacao.baixarComunicacao']}"/>
 									</h:commandLink>
 							</rich:column>
