@@ -2,8 +2,8 @@ package br.com.infox.epp.estatistica.abstracts;
 
 import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 

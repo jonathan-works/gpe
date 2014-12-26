@@ -14,8 +14,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;

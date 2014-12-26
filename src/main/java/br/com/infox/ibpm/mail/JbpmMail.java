@@ -11,8 +11,8 @@ import java.util.Map;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.bpm.ProcessInstance;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import twitter4j.TwitterException;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;

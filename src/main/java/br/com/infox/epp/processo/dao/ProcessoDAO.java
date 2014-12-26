@@ -47,8 +47,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.TransactionPropagationType;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ProcessInstance;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;

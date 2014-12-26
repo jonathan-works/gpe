@@ -15,8 +15,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.log.Log;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.Log;
+import br.com.infox.log.Logging;
 
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.messages.Messages;

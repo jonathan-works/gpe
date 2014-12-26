@@ -7,8 +7,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public final class ReflectionsUtil {
 

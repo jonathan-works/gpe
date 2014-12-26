@@ -5,8 +5,8 @@ import static java.text.MessageFormat.format;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Renderer;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.seam.exception.BusinessException;
 

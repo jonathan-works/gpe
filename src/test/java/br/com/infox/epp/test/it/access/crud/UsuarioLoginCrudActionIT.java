@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
-import org.jboss.seam.log.LogProvider;
+import br.com.infox.log.LogProvider;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 

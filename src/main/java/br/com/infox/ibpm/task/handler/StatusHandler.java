@@ -5,8 +5,8 @@ import static java.text.MessageFormat.format;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.def.ActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;

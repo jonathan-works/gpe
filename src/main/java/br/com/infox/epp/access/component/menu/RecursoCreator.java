@@ -9,8 +9,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jboss.seam.security.Role;
 import org.jboss.seam.security.permission.Permission;
 import org.jboss.seam.security.permission.PermissionManager;

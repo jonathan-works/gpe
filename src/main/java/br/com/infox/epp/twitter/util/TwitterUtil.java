@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import twitter4j.DirectMessage;
 import twitter4j.Status;

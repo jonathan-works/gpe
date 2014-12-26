@@ -3,7 +3,7 @@ package br.com.infox.epp.processo.documento.anexos;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.seam.log.LogProvider;
+import br.com.infox.log.LogProvider;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;

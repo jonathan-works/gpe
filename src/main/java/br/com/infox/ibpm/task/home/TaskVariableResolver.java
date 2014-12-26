@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 

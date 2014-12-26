@@ -3,8 +3,8 @@ package br.com.infox.epp.fluxo.xpdl;
 import java.io.InputStream;
 import java.util.List;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;

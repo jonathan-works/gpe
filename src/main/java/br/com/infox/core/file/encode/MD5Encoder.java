@@ -3,8 +3,8 @@ package br.com.infox.core.file.encode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class MD5Encoder {
 
