@@ -11,10 +11,11 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.dao.MetadadoProcessoDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 
 @AutoCreate
 @Name(MetadadoProcessoManager.NAME)
-public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, MetadadoProcesso>{
+public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, MetadadoProcesso> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "metadadoProcessoManager";
@@ -26,8 +27,19 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition definition, Processo processo) {
 		return getDao().getMetadado(definition, processo);
 	}
+	public void addMetadadoProcesso(Processo processo, MetadadoProcessoDefinition definition, String valor) throws DAOException {
+		MetadadoProcessoProvider provider = new MetadadoProcessoProvider(processo);        
+		MetadadoProcesso metadadoProcesso = provider.gerarMetadado(definition, valor);
+        processo.getMetadadoProcessoList().add(metadadoProcesso);
+        persist(metadadoProcesso);
+    }
+	
+	public List<MetadadoProcesso> getMetadadoProcessoByType(Processo processo, String metadadoType) {
+		return getDao().getMetadadoProcessoByType(processo, metadadoType);
+	}
 	
 	public void removerMetadado(MetadadoProcessoDefinition definition, Processo processo) throws DAOException {
 		getDao().removerMetadado(definition, processo);
 	}
+	
 }

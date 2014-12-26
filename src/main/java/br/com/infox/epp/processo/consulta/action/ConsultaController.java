@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.consulta.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -19,6 +20,7 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
 @Name(ConsultaController.NAME)
+@AutoCreate
 public class ConsultaController extends AbstractController {
 
     private static final long serialVersionUID = 1L;

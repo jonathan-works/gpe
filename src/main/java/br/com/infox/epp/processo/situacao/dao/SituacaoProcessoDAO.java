@@ -81,11 +81,11 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	sb.append(GROUP_BY_PROCESSO_SUFIX);
     	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
         query.setParameter(ID_TAREFA_PARAM, idTarefa);
-        query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
+        query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso);
         return query.getResultList();
     }
 
-    private String getHqlQueryBaseProcessosAbertos(Map<String, Object> selected) {
+    protected String getHqlQueryBaseProcessosAbertos(Map<String, Object> selected) {
         String treeType = (String) selected.get("tree");
         String nodeType = (String) selected.get("type");
         if ("caixa".equals(treeType) && "Task".equals(nodeType)) {
@@ -118,7 +118,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	putFiltroLocalizacaoAndPessoa(sb);
     	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
     	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
+    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso);
         List<T> l = query.getResultList();
         return l;
     }
@@ -169,7 +169,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	putFiltroLocalizacaoAndPessoa(sb);
     	sb.append(TAREFAS_TREE_QUERY_CAIXAS_SUFIX);
     	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
+    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso);
         return query;
     }
     

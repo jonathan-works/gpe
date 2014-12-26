@@ -4,7 +4,7 @@ import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO_DOBRO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.DESCRICAO_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_FILHO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_PAI;
@@ -14,6 +14,8 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.IS_LOCALIZACAO_ANCE
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LIST_BY_NOME_ESTRUTURA_PAI_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_ATTRIBUTE;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_BY_CODIGO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_BY_CODIGO_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_BY_NOME;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_BY_NOME_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_DENTRO_ESTRUTURA;
@@ -71,6 +73,8 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
     @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY),
     @NamedQuery(name = LOCALIZACAO_DENTRO_ESTRUTURA, query = LOCALIZACAO_DENTRO_ESTRUTURA_QUERY),
     @NamedQuery(name = LOCALIZACAO_FORA_ESTRUTURA_BY_NOME, query = LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY),
+    @NamedQuery(name = LOCALIZACAO_BY_CODIGO, query = LOCALIZACAO_BY_CODIGO_QUERY),
+    @NamedQuery(name = LOCALIZACOES_BY_ESTRUTURA_FILHO, query = LOCALIZACOES_BY_ESTRUTURA_FILHO_QUERY),
     @NamedQuery(name = LOCALIZACAO_BY_NOME, query = LOCALIZACAO_BY_NOME_QUERY)
 })
 @NamedNativeQueries({

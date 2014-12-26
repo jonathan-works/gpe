@@ -5,16 +5,19 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 import br.com.infox.epp.processo.type.TipoProcesso;
 
-@AutoCreate
 @Name(SituacaoProcessoManager.NAME)
+@Scope(ScopeType.EVENT)
+@AutoCreate
 public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, SituacaoProcesso> {
 
     private static final long serialVersionUID = 1L;
@@ -25,7 +28,7 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
     }
 
     public List<Integer> getProcessosAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected, TipoProcesso tipoProcesso) {
-    	if (tipoProcesso == TipoProcesso.COMUNICACAO || tipoProcesso == TipoProcesso.DOCUMENTO){
+    	if (TipoProcesso.COMUNICACAO.equals(tipoProcesso) || TipoProcesso.DOCUMENTO.equals(tipoProcesso)){
     		return getDao().getProcessosAbertosByIdTarefaAndTipoProcesso(idTarefa, selected, tipoProcesso);
     	} else {
     		return getDao().getQueryProcessoAbertosByIdTarefa(idTarefa, selected);
@@ -37,7 +40,7 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
     }
     
     public <E> List<E> getChildrenTarefas(TipoProcesso tipoProcesso, Integer idFluxo) {
-    	if (tipoProcesso == TipoProcesso.COMUNICACAO || tipoProcesso == TipoProcesso.DOCUMENTO) {
+    	if (TipoProcesso.COMUNICACAO.equals(tipoProcesso) || TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
     		return getDao().getChildrenComunicacaoDocumentoList(idFluxo);
     	} else {
     		return getDao().getChildrenList(idFluxo);
@@ -45,7 +48,7 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
     }
     
 	public <E> List<E> getRootsFluxos(TipoProcesso tipoProcesso) {
-		if (tipoProcesso == TipoProcesso.COMUNICACAO || tipoProcesso == TipoProcesso.DOCUMENTO) {
+		if (TipoProcesso.COMUNICACAO.equals(tipoProcesso) || TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
 			return getDao().getRootList(tipoProcesso);
 		} else {
 			return getDao().getRootList();
@@ -53,7 +56,7 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
     }
 	
 	public Query createQueryCaixas(TipoProcesso tipoProcesso) {
-		if (tipoProcesso == TipoProcesso.DOCUMENTO || tipoProcesso == TipoProcesso.COMUNICACAO) {
+		if (TipoProcesso.COMUNICACAO.equals(tipoProcesso) || TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
 			return getDao().createQueryCaixas(tipoProcesso);
 		} else {
 			return getDao().createQueryCaixas();
