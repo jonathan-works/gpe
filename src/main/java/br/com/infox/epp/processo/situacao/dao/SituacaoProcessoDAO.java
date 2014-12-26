@@ -141,36 +141,81 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     private void addTipoProcessoFilter(CriteriaQuery<Tuple> criteriaQuery, TipoProcesso tipoProcesso) {
         switch (tipoProcesso) {
             case COMUNICACAO:
-                addProcessoComunicacaoFilter(criteriaQuery);
+                addFiltersProcessoComunicacao(criteriaQuery);
                 break;
             case DOCUMENTO:
-                addProcessoDocumentoFilter(criteriaQuery);
+                addFiltersProcessoDocumento(criteriaQuery);
                 break;
             default:
-                addProcessoSemTipoFilter(criteriaQuery);
+                addFiltersProcessoSemTipo(criteriaQuery);
                 break;
         }
     }
     
-    private void addProcessoComunicacaoFilter(CriteriaQuery<Tuple> criteriaQuery) {
+    public void addFiltersProcessoComunicacao(CriteriaQuery<?> criteriaQuery) {
+        addTipoProcessoComunicacaoFilter(criteriaQuery);
+        addLocalizacaoProcessoFilter(criteriaQuery);
+        addPessoaFisicaProcessoFilter(criteriaQuery);
+    }
+
+    public void addFiltersProcessoDocumento(CriteriaQuery<?> criteriaQuery) {
+        addTipoProcessoDocumentoFilter(criteriaQuery);
+    }
+    
+    public void addFiltersProcessoSemTipo(CriteriaQuery<?> criteriaQuery) {
+        addTipoProcessoSemTipoFilter(criteriaQuery);
+    }
+    
+    private void addLocalizacaoProcessoFilter(CriteriaQuery<?> criteriaQuery) {
+        
+    }
+    
+    private void addPessoaFisicaProcessoFilter(CriteriaQuery<?> criteriaQuery) {
+        
+    }
+    
+    private void addTipoProcessoComunicacaoFilter(CriteriaQuery<?> criteriaQuery) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Root<?> root = criteriaQuery.getRoots().iterator().next();
         Subquery<Integer> subquery = criteriaQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
         subquery.select(cb.literal(1));
+        Predicate predicateSubquery = cb.and();
+        cb.and(cb.equal(metadado.get("metaddoType"), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()), predicateSubquery);
+        cb.and(cb.equal(metadado.get("valor"), TipoProcesso.COMUNICACAO.name()));
+        cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
         Predicate predicate = criteriaQuery.getRestriction();
-        cb.and(cb.equal(metadado.get("metaddoType"), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()), predicate);
-        cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicate);
-        subquery.where(predicate);
-        
+        cb.and(cb.exists(subquery), predicate);
     }
     
-    private void addProcessoDocumentoFilter(CriteriaQuery<Tuple> criteriaQuery) {
-        
+    private void addTipoProcessoDocumentoFilter(CriteriaQuery<?> criteriaQuery) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<?> root = criteriaQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = criteriaQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        Predicate predicateSubquery = cb.and();
+        cb.and(cb.equal(metadado.get("metaddoType"), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()), predicateSubquery);
+        cb.and(cb.equal(metadado.get("valor"), TipoProcesso.DOCUMENTO.name()));
+        cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
+        Predicate predicate = criteriaQuery.getRestriction();
+        cb.and(cb.exists(subquery), predicate);
     }
     
-    private void addProcessoSemTipoFilter(CriteriaQuery<Tuple> criteriaQuery) {
-        
+    private void addTipoProcessoSemTipoFilter(CriteriaQuery<?> criteriaQuery) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<?> root = criteriaQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = criteriaQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        Predicate predicateSubquery = cb.and();
+        cb.and(cb.equal(metadado.get("metaddoType"), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()), predicateSubquery);
+        cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
+        Predicate predicate = criteriaQuery.getRestriction();
+        cb.and(cb.not(cb.exists(subquery)), predicate);
     }
     
 //    @SuppressWarnings("unchecked")
