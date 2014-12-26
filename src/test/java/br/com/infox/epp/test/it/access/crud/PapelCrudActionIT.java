@@ -18,9 +18,9 @@ import org.jboss.seam.security.permission.PermissionManager;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.RolesMap;
 import br.com.infox.epp.access.crud.PapelCrudAction;

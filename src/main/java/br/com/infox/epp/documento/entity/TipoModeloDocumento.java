@@ -1,8 +1,8 @@
 package br.com.infox.epp.documento.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_ABREVIADA;
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO_METADE;
-import static br.com.infox.core.constants.LengthConstants.FLAG;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_ABREVIADA;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO_METADE;
+import static br.com.infox.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ABREVIACAO;

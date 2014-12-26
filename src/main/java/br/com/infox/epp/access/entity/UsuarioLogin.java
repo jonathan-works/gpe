@@ -1,8 +1,8 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
-import static br.com.infox.core.constants.LengthConstants.FLAG;
-import static br.com.infox.core.constants.LengthConstants.NOME_ATRIBUTO;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.constants.LengthConstants.FLAG;
+import static br.com.infox.constants.LengthConstants.NOME_ATRIBUTO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO;

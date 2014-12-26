@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Type;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;

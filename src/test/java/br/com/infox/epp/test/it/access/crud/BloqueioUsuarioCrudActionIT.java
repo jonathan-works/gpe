@@ -13,8 +13,8 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.crud.BloqueioUsuarioCrudAction;
 import br.com.infox.epp.access.crud.UsuarioLoginCrudAction;
 import br.com.infox.epp.access.dao.BloqueioUsuarioDAO;

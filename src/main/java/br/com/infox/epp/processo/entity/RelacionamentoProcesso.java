@@ -1,7 +1,7 @@
 package br.com.infox.epp.processo.entity;
 
-import static br.com.infox.core.constants.LengthConstants.FLAG;
-import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
+import static br.com.infox.constants.LengthConstants.FLAG;
+import static br.com.infox.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
 import static br.com.infox.epp.processo.query.RelacionamentoProcessoQuery.ID_RELACIONAMENTO_PROCESSO;

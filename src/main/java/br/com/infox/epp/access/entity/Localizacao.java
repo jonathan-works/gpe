@@ -1,7 +1,7 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO_DOBRO;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO_DOBRO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;

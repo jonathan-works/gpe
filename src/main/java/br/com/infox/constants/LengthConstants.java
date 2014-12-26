@@ -1,4 +1,4 @@
-package br.com.infox.core.constants;
+package br.com.infox.constants;
 
 public interface LengthConstants {
 

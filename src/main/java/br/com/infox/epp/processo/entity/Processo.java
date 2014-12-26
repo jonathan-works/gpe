@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.entity;
 
-import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
+import static br.com.infox.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;

@@ -31,7 +31,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.constants.FloatFormatConstants;
+import br.com.infox.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.search.ProcessoSearcher;
 import br.com.infox.ibpm.process.definition.variable.VariableType;

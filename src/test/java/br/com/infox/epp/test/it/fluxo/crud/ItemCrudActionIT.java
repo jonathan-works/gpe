@@ -9,8 +9,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.fluxo.crud.ItemCrudAction;
 import br.com.infox.epp.fluxo.dao.ItemDAO;
 import br.com.infox.epp.fluxo.entity.Item;

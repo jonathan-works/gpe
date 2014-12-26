@@ -14,8 +14,8 @@ import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.crud.LocalizacaoCrudAction;

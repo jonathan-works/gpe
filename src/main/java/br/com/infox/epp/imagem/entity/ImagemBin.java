@@ -1,9 +1,9 @@
 package br.com.infox.epp.imagem.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_GRANDE;
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MD5;
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MINIMA;
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_NOME_ARQUIVO;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_GRANDE;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_MD5;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_MINIMA;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_NOME_ARQUIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.imagem.query.ImagemBinQuery.DATA_INCLUSAO;
 import static br.com.infox.epp.imagem.query.ImagemBinQuery.EXTENSAO;
