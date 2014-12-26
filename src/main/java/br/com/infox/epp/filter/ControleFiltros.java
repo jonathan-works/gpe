@@ -2,10 +2,6 @@
 
 package br.com.infox.epp.filter;
 
-import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO;
-import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO;
-import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL;
-
 import java.text.MessageFormat;
 
 import org.jboss.seam.ScopeType;
@@ -17,7 +13,6 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
@@ -43,11 +38,6 @@ public class ControleFiltros {
         }
         firstTime = false;
         UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
-
-        // Iniciar os filtros
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_PAPEL, usuarioPerfilAtual.getPerfilTemplate().getPapel().getIdPapel());
-        Localizacao localizacaoAtual = usuarioPerfilAtual.getPerfilTemplate().getLocalizacao();
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_LOCALIZACAO, localizacaoAtual == null ? 0 : localizacaoAtual.getIdLocalizacao());
 
         HibernateUtil.setFilterParameter(SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, SigiloProcessoFilter.PARAM_ID_USUARIO, usuarioPerfilAtual.getUsuarioLogin().getIdUsuarioLogin());
 

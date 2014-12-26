@@ -51,7 +51,8 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
 		if (TipoProcesso.COMUNICACAO.equals(tipoProcesso) || TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
 			return getDao().getRootList(tipoProcesso);
 		} else {
-			return getDao().getRootList();
+//			return getDao().getRootList();
+		    return null;
 		}
     }
 	

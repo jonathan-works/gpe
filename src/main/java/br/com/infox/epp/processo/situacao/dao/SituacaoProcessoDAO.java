@@ -35,6 +35,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Query;
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -44,6 +51,8 @@ import org.jboss.seam.core.Events;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
@@ -106,22 +115,75 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     }
     
     @SuppressWarnings("unchecked")
-	public <T> List<T> getRootList() {
+	public List<Tuple> getRootList(TipoProcesso tipoProcesso) {
+        CriteriaQuery<Tuple> criteriaQuery = createBaseQueryRoot();
+        addTipoProcessoFilter(criteriaQuery, tipoProcesso);
+        
+        
     	Query query = putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryRoots()));
         return query.getResultList();
     }
     
-    @SuppressWarnings("unchecked")
-	public <T> List<T> getRootList(TipoProcesso tipoProcesso) {
-    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_ROOTS_BASE);
-    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
-    	putFiltroLocalizacaoAndPessoa(sb);
-    	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
-    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.toString());
-        List<T> l = query.getResultList();
-        return l;
+    private CriteriaQuery<Tuple> createBaseQueryRoot() {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Tuple> criteriaQuery = cb.createTupleQuery();
+        Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
+        Selection<String> nomeFluxo = root.get("nomeFluxo").as(String.class).alias("nomeFluxo");
+        Selection<Integer> idFluxo = root.get("idFluxo").as(Integer.class).alias("idFluxo");
+        Selection<String> type = cb.literal("Fluxo").as(String.class).alias("type");
+        criteriaQuery.select(cb.tuple(nomeFluxo, idFluxo, type));
+        criteriaQuery.groupBy(root.get("nomeFluxo"));
+        criteriaQuery.orderBy(cb.asc(root.get("nomeFluxo")));
+        criteriaQuery.where(cb.and());
+        return criteriaQuery;
     }
+    
+    private void addTipoProcessoFilter(CriteriaQuery<Tuple> criteriaQuery, TipoProcesso tipoProcesso) {
+        switch (tipoProcesso) {
+            case COMUNICACAO:
+                addProcessoComunicacaoFilter(criteriaQuery);
+                break;
+            case DOCUMENTO:
+                addProcessoDocumentoFilter(criteriaQuery);
+                break;
+            default:
+                addProcessoSemTipoFilter(criteriaQuery);
+                break;
+        }
+    }
+    
+    private void addProcessoComunicacaoFilter(CriteriaQuery<Tuple> criteriaQuery) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<?> root = criteriaQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = criteriaQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        Predicate predicate = criteriaQuery.getRestriction();
+        cb.and(cb.equal(metadado.get("metaddoType"), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()), predicate);
+        cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicate);
+        subquery.where(predicate);
+        
+    }
+    
+    private void addProcessoDocumentoFilter(CriteriaQuery<Tuple> criteriaQuery) {
+        
+    }
+    
+    private void addProcessoSemTipoFilter(CriteriaQuery<Tuple> criteriaQuery) {
+        
+    }
+    
+//    @SuppressWarnings("unchecked")
+//	public <T> List<T> getRootList(TipoProcesso tipoProcesso) {
+//    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_ROOTS_BASE);
+//    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
+//    	putFiltroLocalizacaoAndPessoa(sb);
+//    	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
+//    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
+//    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.name());
+//        List<T> l = query.getResultList();
+//        return l;
+//    }
     
     @SuppressWarnings("unchecked")
 	public <E> List<E> getChildrenList(Integer idFluxo) {
