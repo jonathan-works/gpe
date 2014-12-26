@@ -48,12 +48,7 @@ public class SituacaoProcessoManager extends Manager<SituacaoProcessoDAO, Situac
     }
     
 	public <E> List<E> getRootsFluxos(TipoProcesso tipoProcesso) {
-		if (TipoProcesso.COMUNICACAO.equals(tipoProcesso) || TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
-			return getDao().getRootList(tipoProcesso);
-		} else {
-//			return getDao().getRootList();
-		    return null;
-		}
+	    return getDao().getRootList(tipoProcesso);
     }
 	
 	public Query createQueryCaixas(TipoProcesso tipoProcesso) {

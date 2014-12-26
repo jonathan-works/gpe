@@ -114,14 +114,14 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return count != null && count > 0;
     }
     
-    @SuppressWarnings("unchecked")
 	public List<Tuple> getRootList(TipoProcesso tipoProcesso) {
         CriteriaQuery<Tuple> criteriaQuery = createBaseQueryRoot();
-        addTipoProcessoFilter(criteriaQuery, tipoProcesso);
+        addTipoProcessoFilters(criteriaQuery, tipoProcesso);
         
         
-    	Query query = putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryRoots()));
-        return query.getResultList();
+//    	Query query = putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryRoots()));
+//        return query.getResultList();
+        return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
     
     private CriteriaQuery<Tuple> createBaseQueryRoot() {
@@ -138,12 +138,12 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return criteriaQuery;
     }
     
-    private void addTipoProcessoFilter(CriteriaQuery<Tuple> criteriaQuery, TipoProcesso tipoProcesso) {
-        switch (tipoProcesso) {
-            case COMUNICACAO:
+    private void addTipoProcessoFilters(CriteriaQuery<Tuple> criteriaQuery, TipoProcesso tipoProcesso) {
+        switch (tipoProcesso.toString()) {
+            case TipoProcesso.COMUNICACAO:
                 addFiltersProcessoComunicacao(criteriaQuery);
                 break;
-            case DOCUMENTO:
+            case TipoProcesso.DOCUMENTO:
                 addFiltersProcessoDocumento(criteriaQuery);
                 break;
             default:
@@ -160,6 +160,8 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 
     public void addFiltersProcessoDocumento(CriteriaQuery<?> criteriaQuery) {
         addTipoProcessoDocumentoFilter(criteriaQuery);
+        addLocalizacaoProcessoFilter(criteriaQuery);
+        addPessoaFisicaProcessoFilter(criteriaQuery);
     }
     
     public void addFiltersProcessoSemTipo(CriteriaQuery<?> criteriaQuery) {
@@ -182,7 +184,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         subquery.select(cb.literal(1));
         Predicate predicateSubquery = cb.and();
         cb.and(cb.equal(metadado.get("metaddoType"), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()), predicateSubquery);
-        cb.and(cb.equal(metadado.get("valor"), TipoProcesso.COMUNICACAO.name()));
+        cb.and(cb.equal(metadado.get("valor"), TipoProcesso.COMUNICACAO));
         cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
         subquery.where(predicateSubquery);
         Predicate predicate = criteriaQuery.getRestriction();
@@ -197,7 +199,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         subquery.select(cb.literal(1));
         Predicate predicateSubquery = cb.and();
         cb.and(cb.equal(metadado.get("metaddoType"), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()), predicateSubquery);
-        cb.and(cb.equal(metadado.get("valor"), TipoProcesso.DOCUMENTO.name()));
+        cb.and(cb.equal(metadado.get("valor"), TipoProcesso.DOCUMENTO));
         cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
         subquery.where(predicateSubquery);
         Predicate predicate = criteriaQuery.getRestriction();
