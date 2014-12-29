@@ -6,15 +6,15 @@ import java.util.Map;
 
 public class TipoProcesso {
 	
-	public static final String DOCUMENTO = "DOCUMENTO";
-	public static final String COMUNICACAO = "COMUNICACAO";
+	public static final TipoProcesso DOCUMENTO = new TipoProcesso("DOCUMENTO");
+	public static final TipoProcesso COMUNICACAO = new TipoProcesso("COMUNICACAO");
 	
 	protected static Map<String, TipoProcesso> values = new HashMap<>();
 	private String value;
 	
 	static {
-		values.put("DOCUMENTO", new TipoProcesso("DOCUMENTO"));
-		values.put("COMUNICACAO", new TipoProcesso("COMUNICACAO"));
+		values.put("DOCUMENTO", DOCUMENTO);
+		values.put("COMUNICACAO", COMUNICACAO);
 	}
 	
 	protected TipoProcesso(String value) {

@@ -81,7 +81,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	sb.append(GROUP_BY_PROCESSO_SUFIX);
     	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
         query.setParameter(ID_TAREFA_PARAM, idTarefa);
-        query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso);
+        query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.toString());
         return query.getResultList();
     }
 
@@ -118,7 +118,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	putFiltroLocalizacaoAndPessoa(sb);
     	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
     	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso);
+    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.toString());
         List<T> l = query.getResultList();
         return l;
     }
@@ -169,7 +169,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	putFiltroLocalizacaoAndPessoa(sb);
     	sb.append(TAREFAS_TREE_QUERY_CAIXAS_SUFIX);
     	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso);
+    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.toString());
         return query;
     }
     
