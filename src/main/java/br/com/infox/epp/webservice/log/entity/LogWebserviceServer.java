@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.system.annotation.Ignore;
 
 @Entity

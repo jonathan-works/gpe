@@ -2,7 +2,7 @@ package br.com.infox.epp.processo.query;
 
 public interface ProcessoQuery {
 
-    String TABLE_PROCESSO = "tb_processo";
+	String TABLE_PROCESSO = "tb_processo";
     String SEQUENCE_PROCESSO = "sq_tb_processo";
     String ID_PROCESSO = "id_processo";
     String ID_JBPM = "id_jbpm";
@@ -91,11 +91,11 @@ public interface ProcessoQuery {
 			"DELETE FROM tb_task_conteudo_index WHERE id_taskinstance in (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"UPDATE jbpm_processinstance SET roottoken_ = null, superprocesstoken_ = null where id_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM jbpm_variableinstance WHERE processinstance_ = :" + PARAM_ID_JBPM + " ;\n" +
-			"DELETE FROM tb_usuario_taskinstance WHERE id_taskinstance = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
+			"DELETE FROM tb_usuario_taskinstance WHERE id_taskinstance in (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"DELETE FROM tb_processo_localizacao_ibpm WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
 			"DELETE FROM tb_processo_tarefa WHERE id_processo = :" + PARAM_ID_PROCESSO + " ;\n" +
-			"DELETE FROM jbpm_taskactorpool WHERE taskinstance_ = (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" + 
-			"DELETE FROM jbpm_pooledactor WHERE swimlaneinstance_ = (select swimlaninstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
+			"DELETE FROM jbpm_taskactorpool WHERE taskinstance_ in (select id_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" + 
+			"DELETE FROM jbpm_pooledactor WHERE swimlaneinstance_ in (select swimlaninstance_ from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM + " );\n" +
 			"DELETE FROM jbpm_taskinstance WHERE procinst_ = :" + PARAM_ID_JBPM + " ;\n" +
 			"DELETE FROM jbpm_swimlaneinstance WHERE taskmgmtinstance_ = :" + PARAM_ID_TASKMGMINSTANCE + " ;\n" +
 			"DELETE FROM jbpm_tokenvariablemap WHERE token_ = :" + PARAM_ID_TOKEN + " ;\n" +
@@ -107,5 +107,12 @@ public interface ProcessoQuery {
 	String GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST = "getIdTaskMgmInstanceAndIdTokenByProcInst";
 	String GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY = "select taskmgmtinstance_ , token_ " +
 			"from jbpm_taskinstance where procinst_ = :" + PARAM_ID_JBPM;
+	
+	String NUMERO_PROCESSO_BY_ID_JBPM = "Processo.numeroProcessoByIdJbpm";
+	String NUMERO_PROCESSO_BY_ID_JBPM_QUERY = "select o.numeroProcesso from Processo o where o.idJbpm = :" + PARAM_ID_JBPM;
+	
+	String NUMERO_PROCESSO_PARAM = "numeroProcesso";
+	String PROCESSO_BY_NUMERO = "getProcessoByNumero";
+	String PROCESSO_BY_NUMERO_QUERY = "select o from Processo o where o.numeroProcesso = :" + NUMERO_PROCESSO_PARAM;
 
 }

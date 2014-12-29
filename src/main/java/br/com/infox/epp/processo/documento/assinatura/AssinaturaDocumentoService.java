@@ -21,7 +21,6 @@ import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -33,9 +32,9 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
@@ -52,6 +51,8 @@ public class AssinaturaDocumentoService implements Serializable {
     private DocumentoBinarioManager documentoBinarioManager;
     @In
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
+    @In
+    private DocumentoBinManager documentoBinManager;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
@@ -185,9 +186,8 @@ public class AssinaturaDocumentoService implements Serializable {
 
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
                 documentoBin, usuarioPerfilAtual, certChain, signature);
-        GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
-        genericManager.persist(assinaturaDocumento);
-        genericManager.flush();
+        documentoBin.getAssinaturas().add(assinaturaDocumento);
+        documentoBinManager.assignUUID(documentoBin);
     }
 
     public void assinarDocumento(final Documento documento,

@@ -13,6 +13,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.messages.Messages;
@@ -27,8 +28,15 @@ public class ActionMessagesService implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "actionMessagesService";
 
-    public String handleBeanViolationException(
-            final ConstraintViolationException e) {
+    public String handleException(final String msg, final Exception e){
+        final StatusMessages messages = getMessagesHandler();
+        messages.clearGlobalMessages();
+        messages.clear();
+        messages.add(Severity.ERROR, msg, e);
+        return null;
+    }
+    
+    public String handleBeanViolationException(final ConstraintViolationException e) {
         final StatusMessages messages = getMessagesHandler();
         messages.clearGlobalMessages();
         messages.clear();

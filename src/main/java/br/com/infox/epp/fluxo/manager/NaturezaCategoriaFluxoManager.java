@@ -38,7 +38,7 @@ public class NaturezaCategoriaFluxoManager extends Manager<NaturezaCategoriaFlux
         return naturezaCategoriaFluxoDAO.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
     }
     
-    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxoByLocAndCodFluxo(Integer idLocalizacao, String codFluxo){
-        return getDao().getNaturezaCategoriaFluxoByLocAndCodFluxo(idLocalizacao, codFluxo);
+    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxoByDsNatAndDsCat(String dsNatureza, String dsCategoria){
+        return getDao().getNaturezaCategoriaFluxoByDsNatAndDsCat(dsNatureza, dsCategoria);
     }
 }

@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  
+  <a:jsFunction
+    name="selectDocumento"
+    immediate="true"
+    execute="@this"
+    render="historicoDocumentoPanelDiv"
+    limitRender="true"
+    status=":status">
+    <a:param
+      name="idDocumento"
+      assignTo="#{documentoProcessoAction.idDocumento}"
+      converter="javax.faces.Integer" />
+  </a:jsFunction>
+  <wi:dataTable
+	  values="#{documentoList.list(15)}"
+	  bean="#{documentoList}"
+	  id="documentoList"
+	  tableTitle="#{empty documentoList.entity.pasta ? '' : documentoList.entity.pasta.nome}"
+	  rowId="#{row.id}"
+	  showSearchForm="true">
+	
+	<ui:define name="searchForm">
+		<rich:panel header="Pastas">
+			<rich:list
+				value="#{pastaAction.pastaList}"
+				styleClass="folder-ul"
+				rowClass="folder-li"
+				var="pasta">
+				<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pasta.visivelExterno}"
+					styleClass="rf-tr-nd">
+					<rich:dropTarget
+						acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
+						dropListener="#{pastaAction.associaDocumento}"
+						dropValue="#{pasta}"
+						render="documentoListPanel, documentoListSearchForm"
+						limitRender="true" />
+					<a:commandLink
+						render="documentoListPanel, documentoListSearchForm"
+						execute="@form"
+						styleClass="folder"
+						limitRender="true">
+  		              <h:graphicImage
+                          url="#{wiSkin.imageFolder}/folder.png"
+                          rendered="true"
+                          title="#{pasta}" />
+						<f:attribute name="pastaToSelect" value="#{pasta}" />
+						<f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
+						<f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
+						<h:outputText value="#{pasta.toString()}" class="folder" />
+					</a:commandLink>
+                    <a:commandLink
+                      render="documentoListSearchForm"
+                      execute="@form"
+                      rendered="#{s:hasPermission('/pages/Pasta/editarPasta', 'access') and pastaAction.canEdit(pasta)}"
+                      onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno});"
+                      limitRender="true">
+                      <h:graphicImage
+                        styleClass="opacityHover"
+                        url="#{wiSkin.imageFolder}/view.png"
+                        rendered="true"
+                        title="#{eppmessages['button.selecionar']}" />
+                    </a:commandLink>
+                    <a:commandLink
+                      render="documentoListPanel, documentoListSearchForm, pageBodyDialogMessage"
+                      execute="@form"
+                      rendered="#{s:hasPermission('/pages/Pasta/removerPasta', 'access') and pastaAction.canRemove(pasta)}"
+                      limitRender="true">
+                      <h:graphicImage
+                        styleClass="opacityHover"
+                        url="#{wiSkin.imageFolder}/remove.png"
+                        rendered="true"
+                        title="#{eppmessages['button.delete']}" />
+                      <f:attribute name="pastaToRemove" value="#{pasta}" />
+                      <f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
+                      <f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
+                    </a:commandLink>
+				</h:form>
+			</rich:list>
+		</rich:panel>
+		<wi:commandButton
+			id="addPastaBtn"
+			value="#{eppmessages['documentoProcesso.addFolder']}"
+			rendered="#{s:hasPermission('/pages/Pasta/adicionarPasta', 'access')}"
+			onclick="#{rich:component('addPastaPanel')}.show();" />
+	</ui:define>
+	
+	<ui:define name="toolBar">
+	    <rich:dragSource
+	      type="doc#{consultaController.processoEpa.idProcesso}"
+	      dragValue="#{row}"
+	      rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
+	      dragIndicator="indicator">
+	      <rich:dragIndicator
+	        id="indicator"
+	        acceptClass="caixa-acpt"
+	        draggingClass="caixa-drag"
+	        rejectClass="caixa-rejt">
+	        <span class="caixa-ind-lbl">#{row.descricao}</span>
+	      </rich:dragIndicator>
+	    </rich:dragSource>
+	    <h:graphicImage
+	      rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
+	      url="#{wiSkin.imageFolder}/anexo.png"
+	      title="#{eppmessages['documentoProcesso.moverDocumento']}" />
+	  <h:graphicImage
+	    styleClass="opacityHover"
+	    url="#{wiSkin.imageFolder}/view.png"
+	    title="#{eppmessages['button.historico']}"
+	    rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
+	    onmouseup="selectDocumento(#{rowId});" />
+	  <h:graphicImage
+	    styleClass="opacityHover"
+	    url="#{wiSkin.imageFolder}/remove.png"
+	    rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
+	    title="#{eppmessages['button.delete']}"
+	    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+	  <h:graphicImage
+	    styleClass="opacityHover"
+	    url="#{wiSkin.imageFolder}/stock_undelete.png"
+	    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
+	    title="#{eppmessages['button.restaurar']}"
+	    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+	      <h:form>
+	        <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+	          <ui:param name="bin" value="#{row.documentoBin}" />
+	          <ui:param name="header" value="#{row.descricao}" />
+	        </ui:include>
+	</h:form>
+    </ui:define>
+    
+    <ui:define name="headerToolBar" />
+    
+    <wi:columnOutputText
+      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+      columnId="usuarioInclusao"
+      columnHeader="#{eppmessages['assinaturas.usuario']}"
+      value="#{row.usuarioInclusao}" />
+    <wi:columnOutputText
+      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+      columnId="dataInclusao"
+      columnHeader="#{eppmessages['assinaturas.dataInclusao']}"
+      value="#{row.dataInclusao}" />
+    <wi:columnOutputText
+      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+      columnId="processoDocumento"
+      columnHeader="#{eppmessages['documentoProcesso.descricao']}"
+      value="#{row.descricao}" />
+    <wi:columnOutputText
+      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+      columnId="classificacaoDocumento"
+      columnHeader="#{eppmessages['documentoProcesso.classificacaoDocumento']}"
+      value="#{row.classificacaoDocumento}" />
+    <wi:columnOutputText
+      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+      columnId="processoDocumentoBin.sizeFormatado"
+      columnHeader="#{eppmessages['processoDocumento.tamanho']}"
+      value="#{row.documentoBin.sizeFormatado}" />
+  	</wi:dataTable>
+  
+  	<script type="text/javascript">
+		  function clearFieldsExcludeRestore() {
+		      var maxlength = 4000;
+		      #{rich:jQuery('motivoExclusaoRestauracao')}.val('');
+		      #{rich:jQuery('motivoExclusaoRestauracaocounterDiv')}.text('(0 / '+maxlength+')');
+		      $('.errorFields.errors').remove();
+		      $('.errors').removeClass('errors');
+		  }
+		  
+		  function setValuesToExcludeRestore(isExclusao, idDocumento, numeroDocumento, dsDocumento, classificacao) {
+		      #{rich:jQuery('hiddenIdDocumento')}.val(idDocumento);
+		      #{rich:jQuery('numeroDocumento')}.text(numeroDocumento);
+		      #{rich:jQuery('processoDocumento')}.text(dsDocumento);
+		      #{rich:jQuery('tipoProcessoDocumentoOutPanel')}.text(classificacao);
+		      if (isExclusao) {
+		          $('.rf-pp-hdr.motivo-header > div').text('Exclusão de Documento');
+		          #{rich:jQuery('excluirRestaurarDocButton')}.attr('value','Excluir');
+		          alterarMotivoDaExlusaoRestauracao('Motivo da Exclusão');
+		      } else {
+		          $('.rf-pp-hdr.motivo-header > div').text('Restauração de Documento');
+		          #{rich:jQuery('excluirRestaurarDocButton')}.attr('value', 'Restaurar');
+		          alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
+		      }
+		  }
+		
+		  function alterarMotivoDaExlusaoRestauracao(label){
+		      var labelTextArea = $('label[for=\''+#{rich:jQuery('motivoExclusaoRestauracao')}.attr('id')+'\']');
+		      labelTextArea.text(label);
+		      labelTextArea.append($("<span> * </span>").addClass("required"));
+		  }
+		
+		  function atualizarOnValidationFailed() {
+		      var teste = $('.rf-pp-hdr.motivo-header').children(0).text();
+		      if (teste === 'Exclusão de Documento') {
+		          #{rich:jQuery('excluirRestaurarDocButton')}.attr('value','Excluir');
+		          alterarMotivoDaExlusaoRestauracao('Motivo da Exclusão');
+		      } else {
+		          #{rich:jQuery('excluirRestaurarDocButton')}.attr('value', 'Restaurar');
+		          alterarMotivoDaExlusaoRestauracao('Motivo da Restauração');
+		      }
+		  }
+		
+		function clearAddPastaFields() {
+			#{rich:jQuery('addPastaInputName')}.val('');
+			$('.errorFields.errors').remove();
+		                   $('.errors').removeClass('errors');
+		}
+		
+		function setValuesToEditPasta(id, nome, visivelExterno) {
+			#{rich:component('editPastaPanel')}.show();
+			#{rich:jQuery('hiddenIdPasta')}.val(id);
+			#{rich:jQuery('editPastaInputName')}.val(nome);
+			#{rich:jQuery('editPastaInputVisivelExterno')}.prop('checked', visivelExterno);
+		}
+		
+		function clearEditPastaFields() {
+			#{rich:jQuery('hiddenIdPasta')}.val(null);
+			#{rich:jQuery('editPastaInputName')}.val('');
+			#{rich:jQuery('editPastaInputVisivelExterno')}.val(null);
+			$('.errorFields.errors').remove();
+		                   $('.errors').removeClass('errors');
+		}
+
+	</script>
+	
+	<rich:popupPanel
+		id="addPastaPanel"
+		moveable="true"
+		show="false"
+		resizeable="false"
+		minWidth="310"
+		minHeight="230"
+		header="Adicionar Pasta"
+		onbeforehide="clearAddPastaFields();">
+		<f:facet name="controls">
+		  <h:graphicImage
+		    id="pastaPanelCloseBtn"
+		    styleClass="mp-close"
+		    value="#{wiSkin.imageFolder}/closeMP.gif"
+		    onmouseup="#{rich:component('addPastaPanel')}.hide();" />
+		  </f:facet>
+		  <h:form id="addPastaForm">
+		    <wi:inputText
+		      id="addPastaInputName"
+		      value="#{pastaAction.nome}"
+		      required="true"
+		      maxLength="100"
+		      label="Nome da pasta">
+		    </wi:inputText>
+		    <wi:selectBooleanCheckbox
+		      id="addPastaInputVisivelExterno"
+		      value="#{pastaAction.visivelExterno}"
+		      required="true"
+		      label="Usuário externo pode ver?" />
+		    <wi:commandButton
+		      id="addPastaButton"
+		      action="#{pastaAction.persist()}"
+		      execute="@form"
+		      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{}"
+		      value="Adicionar"
+		      reRender="@form, documentoListSearchForm, pageBodyDialogMessage" />
+		  </h:form>
+	</rich:popupPanel>
+        
+	<rich:popupPanel
+	  id="editPastaPanel"
+	  moveable="true"
+	  show="false"
+	  resizeable="false"
+	  minWidth="310"
+	  minHeight="230"
+	  header="Editar Pasta"
+	  onbeforehide="clearEditPastaFields();">
+	  <f:facet name="controls">
+	    <h:graphicImage
+	      id="editPastaPanelCloseBtn"
+	      styleClass="mp-close"
+	      value="#{wiSkin.imageFolder}/closeMP.gif"
+	      onmouseup="#{rich:component('editPastaPanel')}.hide();" />
+	  </f:facet>
+	  <h:form id="editPastaForm">
+	    <h:inputHidden
+	        id="hiddenIdPasta"
+	        value="#{pastaAction.id}"
+	        converter="javax.faces.Integer" />
+	    <wi:inputText
+	      id="editPastaInputName"
+	      value="#{pastaAction.nome}"
+	      required="true"
+	      maxLength="100"
+	      label="Nome da pasta">
+	    </wi:inputText>
+	    <wi:selectBooleanCheckbox
+	      id="editPastaInputVisivelExterno"
+	      value="#{pastaAction.visivelExterno}"
+	      required="true"
+	      label="Usuário externo pode ver?" />
+	    <wi:commandButton
+	      id="editPastaButton"
+	      action="#{pastaAction.update()}"
+	      execute="@form"
+	      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editPastaPanel')}.hide();}else{}"
+	      value="Gravar"
+	      reRender="@form, documentoListSearchForm, pageBodyDialogMessage, documentoListPanel" />
+	  </h:form>
+	</rich:popupPanel>
+        
+	<rich:popupPanel
+	  id="requestMotivoPanel"
+	  header="teste"
+	  headerClass="motivo-header"
+	  moveable="true"
+	  show="false"
+	  resizeable="true"
+	  minWidth="690"
+	  minHeight="310"
+	  onbeforehide="clearFieldsExcludeRestore();">
+	  <f:facet name="controls">
+	    <h:graphicImage
+	      id="mp_taskNodeCloseBtn"
+	      styleClass="mp-close"
+	      value="#{wiSkin.imageFolder}/closeMP.gif"
+	      onmouseup="#{rich:component('requestMotivoPanel')}.hide();" />
+	  </f:facet>
+	  <wi:outputText
+	    id="numeroDocumento"
+	    label="#{eppmessages['processoDocumento.numeroDocumento']}" />
+	
+	  <wi:outputText
+	    id="tipoProcessoDocumentoOutPanel"
+	    label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
+	
+	  <wi:outputText
+	    id="processoDocumento"
+	    label="#{eppmessages['processoDocumentoBin.documento']}" />
+	  <h:form id="excluirRestaurarDocumentoForm">
+	    <div>
+	      <h:inputHidden
+	        id="hiddenIdDocumento"
+	        value="#{documentoProcessoAction.idDocumentoAlter}"
+	        converter="javax.faces.Integer" />
+	      <wi:inputTextarea
+	        id="motivoExclusaoRestauracao"
+	        maxlength="4000"
+	        required="true"
+	        cols="60"
+	        rows="5"
+	        label="Motivo"
+	        value="#{documentoProcessoAction.motivoExclusaoRestauracao}">
+	        <f:validator validatorId="emptyStringValidator" />
+	      </wi:inputTextarea>
+	    </div>
+	    <div>
+	      <a:commandButton
+	        id="excluirRestaurarDocButton"
+	        actionListener="#{documentoProcessoAction.exclusaoRestauracaoDocumento()}"
+	        limitRender="true"
+	        execute="@form"
+	        rendered="#{empty hiddenIdDocumento}"
+	        onclick="infox.showLoading();"
+	        oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
+	        value="Enviar"
+	        render="@form, documentoList, pageBodyDialogMessage"
+	        styleClass="buttons" />
+	    </div>
+	  </h:form>
+	</rich:popupPanel>
+        
+     <s:div
+       id="historicoDocumentoPanelDiv"
+       style="margin-top:20px; width:100%;">
+       <rich:panel
+         id="historicoDocumentoPanel"
+         headerClass=""
+         rendered="#{not empty documentoProcessoAction.processoDocumentoSelected}"
+         bodyClass="dtable-p-b"
+         styleClass="dtable-p"
+         style="width:100%;">
+
+         <f:facet name="header">
+           <h:outputText
+             value="#{eppmessages['historicoStatusDocumento.tableTile']}" />
+           <h:graphicImage
+             value="#{wiSkin.imageFolder}/closeMP.gif"
+             onmouseup="selectDocumento(0);"
+             style="float:right;" />
+         </f:facet>
+
+         <rich:dataTable
+           id="historicoDocumentoDataTable"
+           var="historicoDocumento"
+           style="width:100%"
+           value="#{documentoProcessoAction.listHistoricoStatusDocumento}">
+
+           <rich:column style="text-align:center;">
+             <f:facet name="header">#{eppmessages['historicoStatusDocumento.nomeUsuarioAlterou']}</f:facet>
+             <h:outputText
+               value="#{historicoDocumento.usuarioAlteracao.nomeUsuario}" />
+           </rich:column>
+
+           <rich:column style="text-align:center;">
+             <f:facet name="header">#{eppmessages['historicoStatusDocumento.dataAlteracao']}</f:facet>
+             <h:outputText
+               value="#{historicoDocumento.dataAlteracao}">
+               <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+             </h:outputText>
+           </rich:column>
+
+           <rich:column style="text-align:center;">
+             <f:facet name="header">Tipo Operação</f:facet>
+             <h:outputText
+               value="#{historicoDocumento.tipoAlteracaoDocumento.label}" />
+           </rich:column>
+
+           <rich:column>
+             <f:facet name="header">#{eppmessages['historicoStatusDocumento.motivo']}</f:facet>
+             <h:outputText value="#{historicoDocumento.motivo}" />
+           </rich:column>
+
+         </rich:dataTable>
+       </rich:panel>
+     </s:div>
+    
+</ui:composition>

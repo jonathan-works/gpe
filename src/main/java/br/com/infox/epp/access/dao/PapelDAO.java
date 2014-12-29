@@ -3,14 +3,14 @@ package br.com.infox.epp.access.dao;
 import static br.com.infox.epp.access.query.PapelQuery.ID_PAPEL_PARAM;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
-import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
+import static br.com.infox.epp.access.query.PapelQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_LISTA_IDENTIFICADORES;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_TIPO_MODELO_DOCUMENTO;
-import static br.com.infox.epp.access.query.PapelQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PERMISSOES_BY_PAPEL;
 
 import java.util.HashMap;
@@ -23,8 +23,8 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 
 @AutoCreate
 @Name(PapelDAO.NAME)

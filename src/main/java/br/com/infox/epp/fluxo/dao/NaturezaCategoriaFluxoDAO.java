@@ -3,11 +3,11 @@ package br.com.infox.epp.fluxo.dao;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.ATIVOS_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_BY_RELATIONSHIP;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.NATCATFLUXO_BY_DS_NATUREZA_DS_CATEGORIA;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_CATEGORIA;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_COD_FLUXO;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_DS_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_DS_NATUREZA;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_FLUXO;
-import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_LOCALIZACAO;
 import static br.com.infox.epp.fluxo.query.NaturezaCategoriaFluxoQuery.PARAM_NATUREZA;
 
 import java.util.HashMap;
@@ -65,10 +65,10 @@ public class NaturezaCategoriaFluxoDAO extends DAO<NaturezaCategoriaFluxo> {
         return getNamedResultList(ATIVOS_BY_FLUXO, parameters);
     }
     
-    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxoByLocAndCodFluxo(Integer idLocalizacao, String codFluxo){
+    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxoByDsNatAndDsCat(String dsNatureza, String dsCategoria){
     	Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(PARAM_COD_FLUXO, codFluxo);
-        parameters.put(PARAM_LOCALIZACAO, idLocalizacao);
-        return getNamedSingleResult(LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO, parameters);
+        parameters.put(PARAM_DS_NATUREZA, dsNatureza.toUpperCase());
+        parameters.put(PARAM_DS_CATEGORIA, dsCategoria.toUpperCase());
+        return getNamedSingleResult(NATCATFLUXO_BY_DS_NATUREZA_DS_CATEGORIA, parameters);
     }
 }

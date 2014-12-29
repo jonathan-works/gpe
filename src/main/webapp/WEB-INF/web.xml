@@ -42,8 +42,13 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
     </context-param>
     <!-- Ajax4jsf -->
     <context-param>
-        <param-name>org.richfaces.skin</param-name>
-        <param-value>#{wiSkin.skin}</param-value>
+      <param-name>org.richfaces.CONTROL_SKINNING</param-name>
+      <param-value>disable</param-value>
+    </context-param>
+
+    <context-param>
+      <param-name>org.richfaces.CONTROL_SKINNING_CLASSES</param-name>
+      <param-value>disable</param-value>
     </context-param>
     <context-param>
         <param-name>org.richfaces.fileUpload.maxRequestSize</param-name>
@@ -52,6 +57,14 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
     <context-param>
         <param-name>org.richfaces.fileUpload.createTempFiles</param-name>
         <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>COMPONENTES.recaptchaPrivateKey</param-name>
+        <param-value>#{recaptchaPrivateKey}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>COMPONENTES.recaptchaPublicKey</param-name>
+        <param-value>#{recaptchaPublicKey}</param-value>
     </context-param>
     <filter>
         <filter-name>Seam Filter</filter-name>

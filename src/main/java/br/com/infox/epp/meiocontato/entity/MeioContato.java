@@ -1,5 +1,7 @@
 package br.com.infox.epp.meiocontato.entity;
 
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR;
+import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR_QUERY;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO;
 import static br.com.infox.epp.meiocontato.query.MeioContatoQuery.MEIO_CONTATO_BY_PESSOA_AND_TIPO_QUERY;
@@ -25,11 +27,13 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
+
 @Entity
 @Table(name = MeioContato.TABLE_NAME)
 @NamedQueries(value = {
 		@NamedQuery(name = MEIO_CONTATO_BY_PESSOA, query = MEIO_CONTATO_BY_PESSOA_QUERY),
-		@NamedQuery(name = MEIO_CONTATO_BY_PESSOA_AND_TIPO, query = MEIO_CONTATO_BY_PESSOA_AND_TIPO_QUERY)
+		@NamedQuery(name = MEIO_CONTATO_BY_PESSOA_AND_TIPO, query = MEIO_CONTATO_BY_PESSOA_AND_TIPO_QUERY),
+		@NamedQuery(name = EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR, query = EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR_QUERY)
 })
 public class MeioContato implements Serializable {
 	

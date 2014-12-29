@@ -1,21 +1,34 @@
 package br.com.infox.epp.processo.documento.anexos;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.file.download.FileDownloader;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
+import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
+import br.com.infox.seam.exception.BusinessException;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
@@ -25,20 +38,45 @@ public class DocumentoDownloader implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private static final float BYTES_IN_A_KILOBYTE = 1024f;
+	public static final String NAME = "documentoDownloader";
+	private static final LogProvider LOG = Logging.getLogProvider(DocumentoValidator.class);
 
     @In
     private DocumentoBinarioManager documentoBinarioManager;
     @In
     private DocumentoManager documentoManager;
+    @In
+    private SigiloDocumentoManager sigiloDocumentoManager;
+    @In
+    private SigiloDocumentoService sigiloDocumentoService;
+    @In
+    private DocumentoBinManager documentoBinManager;
 
-    public static final String NAME = "documentoDownloader";
 
     public void downloadDocumento(Documento documento) {
+        UsuarioLogin usuario = Authenticator.getUsuarioLogado();
+        if (sigiloDocumentoManager.isSigiloso(documento.getId()) && (usuario == null || !sigiloDocumentoService.possuiPermissao(documento, usuario))) {
+            FacesMessages.instance().add("Este documento é sigiloso.");
+            LOG.warn("Tentativa não autorizada de acesso a documento sigiloso, id: " + documento.getId());
+            return;
+        }
         DocumentoBin pdBin = documento.getDocumentoBin();
         byte[] data = documentoBinarioManager.getData(pdBin.getId());
         String fileName = pdBin.getNomeArquivo();
         String contentType = "application/" + pdBin.getExtensao();
-        FileDownloader.download(data, contentType, fileName);
+        if (contentType.equals("application/pdf") && documento.hasAssinatura()) {
+            HttpServletResponse response = FileDownloader.prepareDownloadResponse(contentType, fileName);
+            try {
+                documentoBinManager.writeMargemDocumento(pdBin, data, response.getOutputStream());
+                FacesContext.getCurrentInstance().responseComplete();
+            } catch (IOException | BusinessException e) {
+                LOG.error("", e);
+                FacesMessages.instance().clear();
+                FacesMessages.instance().add("Erro ao gerar a margem do PDF: " + e.getMessage());
+            }
+        } else {
+            FileDownloader.download(data, contentType, fileName);
+        }
     }
 
     /**
@@ -62,6 +100,11 @@ public class DocumentoDownloader implements Serializable {
     }
 
     public void downloadDocumento(String idDocumento) {
-        downloadDocumento(documentoManager.find(Integer.valueOf(idDocumento)));
+        Documento documento = documentoManager.find(Integer.valueOf(idDocumento));
+        if (documento != null) {
+            downloadDocumento(documento);
+        } else {
+            LOG.warn("Documento não encontrado, id: " + idDocumento);
+        }
     }
 }

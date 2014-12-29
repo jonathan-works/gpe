@@ -62,18 +62,6 @@
           limitRender="true"
           listener="#{taskFitter.marcarTarefaAtual()}" />
       </wi:selectOneMenuEnum>
-      <wi:selectOneMenuEntity
-        id="statusProcesso"
-        label="#{eppmessages['process.status.nome']}"
-        value="#{taskFitter.currentTask.statusProcesso}"
-        items="#{taskFitter.statusProcessoList}"
-        showLabelSelecione="true">
-        <a:ajax
-          event="change"
-          execute="@this"
-          limitRender="true"
-          render="@this" />
-      </wi:selectOneMenuEntity>
     </h:form>
   </s:div>
   <rich:dataTable
@@ -93,7 +81,7 @@
             limitRender="true">
             <h:graphicImage
               title="#{eppmessages['process.task.addVariable']}"
-              url="#{a4jSkin.imgFolder}/add.gif" />
+              url="#{wiSkin.imageFolder}/add.gif" />
           </a:commandLink>
         </h:form>
       </f:facet>
@@ -108,7 +96,7 @@
             styleClass="opacityHover">
             <h:graphicImage
               title="#{eppmessages['process.task.removeVariable']}"
-              url="#{a4jSkin.imgFolder}/remove.png" />
+              url="#{wiSkin.imageFolder}/remove.png" />
           </a:commandLink>
           <a:commandLink
             id="setCurrentVariableLink"
@@ -123,12 +111,12 @@
             <h:graphicImage
               title="#{eppmessages['process.task.var.modelo']}"
               rendered="#{empty var.modeloList}"
-              url="#{a4jSkin.imgFolder}/newfile.gif" />
+              url="#{wiSkin.imageFolder}/newfile.gif" />
             <h:graphicImage
               title="#{var.modeloDocumentoList.toString()}"
               rendered="#{!empty var.modeloList}"
               status=":status"
-              url="#{a4jSkin.imgFolder}/file.gif" />
+              url="#{wiSkin.imageFolder}/file.gif" />
           </a:commandLink>
           <a:commandLink
             id="setVariableForVariavelClassificacaoDocumentoLink"
@@ -142,7 +130,7 @@
             <h:graphicImage
               title="#{eppmessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
               status=":status"
-              url="#{a4jSkin.imgFolder}/hamburger.png" />
+              url="#{wiSkin.imageFolder}/hamburger.png" />
             <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
             <f:setPropertyActionListener value="#{var.type}" target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
           </a:commandLink>

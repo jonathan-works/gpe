@@ -18,24 +18,24 @@
                 tableTitle=""
                 id="natCatProcessoList"
                 rowId="#{row.idNaturezaCategoriaFluxo}"
-                searchFormStyleClass="hidden">
+                showSearchForm="false" panelStyleClass="full-sized">
                 <ui:define name="headerToolBar" />
                 <ui:define name="toolBar">
                     <h:commandLink
                         rendered="#{row.hasItens()}"
                         action="#{action.onSelectNatCatFluxo(row)}">
                         <h:graphicImage
-                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif" />
+                            value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
                     </h:commandLink>
                     <a:commandLink
                         rendered="#{not row.hasItens() and row.necessitaPartes()}"
                         action="#{action.onSelectNatCatFluxo(row)}"
-                        oncomplete="#{partesController.setNatureza(action.natureza)}"
+                        oncomplete="#{participantesController.setNaturezaCategoriaFluxo(row)}"
                         execute="@this"
                         render="@all"
                         limitRender="true">
                         <h:graphicImage
-                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif" />
+                            value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
                     </a:commandLink>
                     <a:commandLink
                         rendered="#{not row.hasItens() and not row.necessitaPartes()}"
@@ -45,7 +45,7 @@
                         limitRender="true"
                         oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{pathResolver.contextPath}/Painel/list.seam';">
                         <h:graphicImage
-                            value="#{a4jSkin.imgFolder}/jbpm/StartState.gif" />
+                            value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
                     </a:commandLink>
                 </ui:define>
                 <wi:columnOutputText

@@ -15,10 +15,10 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
+import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.system.Parametros;
 

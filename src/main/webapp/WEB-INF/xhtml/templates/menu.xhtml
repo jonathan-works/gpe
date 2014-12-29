@@ -43,7 +43,7 @@
                 <h:commandLink
                   styleClass="menu-lnk"
                   action="#{drop.url}">
-                  <div class="menu-lbl">
+                  <div class="menu-itm-lbl">
                     <h:outputText value="#{drop.label}" />
                   </div>
                   <s:conversationPropagation type="end" />
@@ -52,13 +52,14 @@
           </c:forEach>
         </c:if>
         <li class="menu-itm">
-          <div class="menu-lbl">
-            <s:link
-              view="/login.xhtml"
-              value="#{eppmessages['menu.login']}"
-              styleClass="menu-lnk"
-              rendered="#{not identity.loggedIn}" />
-          </div>
+          <s:link
+            view="/login.xhtml"
+            styleClass="menu-lnk"
+            rendered="#{not identity.loggedIn}">
+            <div class="menu-lbl">
+              <h:outputText value="#{eppmessages['menu.login']}" />
+            </div>
+          </s:link>
         </li>
         <li class="menu-itm">
           <s:link

@@ -60,7 +60,7 @@
         <div class="status-ajuda">
             <a:status id="status">
                 <f:facet name="start">
-                    <h:graphicImage value="#{a4jSkin.imgFolder}/spinner.gif" />
+                    <h:graphicImage value="#{wiSkin.imageFolder}/spinner.gif" />
                 </f:facet>
             </a:status>
         </div>
@@ -79,7 +79,7 @@
                 <a:commandButton
                     render="resultado"
                     limitRender="true"
-                    image="#{a4jSkin.imgFolder}/grid/arrow-next-off.gif"
+                    image="#{wiSkin.imageFolder}/grid/arrow-next-off.gif"
                     oncomplete="if (#{rich:component('helpPanel')}.getItems().length &gt; 1) #{rich:component('helpPanel')}.switchToItem('search');"
                 />
             </h:panelGrid>
@@ -109,12 +109,12 @@
                             value="#{pathResolver.contextPath}/help/show.seam?viewId=#{ajudaView.viewId}"
                         >
                             <h:graphicImage
-                                url="#{a4jSkin.imgFolder}/link.gif"
+                                url="#{wiSkin.imageFolder}/link.gif"
                                 title="#{eppmessages['ajuda.link']}"
                             />
                         </h:outputLink>
                         <h:graphicImage
-                            url="#{a4jSkin.imgFolder}/mod/edit.gif"
+                            url="#{wiSkin.imageFolder}/mod/edit.gif"
                             title="#{eppmessages['ajuda.edit']}"
                             styleClass="cursor-pointer"
                             onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/help/edit.seam?cid=#{conversation.id}','1024');"

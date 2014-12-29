@@ -13,8 +13,8 @@ import br.com.infox.epp.access.api.RolesMap;
 import br.com.infox.epp.access.dao.PapelDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 
 @Name(PapelManager.NAME)
 @AutoCreate

@@ -20,15 +20,15 @@
         render="painelProcessos,:pesquisaListForm" var="node">
 
         <rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
-          <rich:treeNode iconCollapsed="#{a4jSkin.imgFolder}/globe16.png"
-            iconExpanded="#{a4jSkin.imgFolder}/globe16.png" iconLeaf="#{a4jSkin.imgFolder}/messages.gif">
+          <rich:treeNode iconCollapsed="#{wiSkin.imageFolder}/globe16.png"
+            iconExpanded="#{wiSkin.imageFolder}/globe16.png" iconLeaf="#{wiSkin.imageFolder}/messages.gif">
             <h:outputText value="#{node.entity.nomeFluxo}" />
           </rich:treeNode>
           <rich:treeModelAdaptor nodes="#{node.nodesTarefas}">
             <rich:treeNode id="taskNode"
-              iconCollapsed="#{a4jSkin.imgFolder}/messages.gif"
-              iconExpanded="#{a4jSkin.imgFolder}/messages.gif"
-              iconLeaf="#{a4jSkin.imgFolder}/messages.gif">
+              iconCollapsed="#{wiSkin.imageFolder}/messages.gif"
+              iconExpanded="#{wiSkin.imageFolder}/messages.gif"
+              iconLeaf="#{wiSkin.imageFolder}/messages.gif">
               <h:outputText value="#{node.entity.nomeTarefa}" />
               <h:outputText
                 rendered="#{node.entity.qtd - node.entity.qtdEmCaixa gt 0}"
@@ -43,7 +43,7 @@
 
                 <rich:menuItem
                   label="#{eppmessages['caixa.menu.novaCaixa']}"
-                  icon="#{a4jSkin.imgFolder}/add.gif"
+                  icon="#{wiSkin.imageFolder}/add.gif"
                   onclick="#{rich:component('novaCaixaPanel')}.show()" />
 
               </rich:contextMenu>
@@ -53,9 +53,9 @@
             <rich:treeModelAdaptor nodes="#{node.caixas}">
 
               <rich:treeNode id="caixaNode"
-                iconCollapsed="#{a4jSkin.imgFolder}/message.gif"
-                iconExpanded="#{a4jSkin.imgFolder}/message.gif"
-                iconLeaf="#{a4jSkin.imgFolder}/message.gif">
+                iconCollapsed="#{wiSkin.imageFolder}/message.gif"
+                iconExpanded="#{wiSkin.imageFolder}/message.gif"
+                iconLeaf="#{wiSkin.imageFolder}/message.gif">
 
                 <h:outputText value="#{node.entity.nomeCaixa}" />
 
@@ -66,11 +66,11 @@
                   rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
                   <rich:menuItem label="#{eppmessages['caixa.menu.editaCaixa']}"
-                    icon="#{a4jSkin.imgFolder}/mod/edit.gif"
+                    icon="#{wiSkin.imageFolder}/mod/edit.gif"
                     action="#{painelUsuarioHome.editaCaixa()}" />
 
                   <rich:menuItem label="#{eppmessages['caixa.menu.removerCaixa']}"
-                    icon="#{a4jSkin.imgFolder}/remove.png"
+                    icon="#{wiSkin.imageFolder}/remove.png"
                     onclick="return confirm(\'#{eppmessages['caixa.confirm.remove']}\');" render="tarefasDiv"
                     action="#{caixaCrudAction.remove}">
 

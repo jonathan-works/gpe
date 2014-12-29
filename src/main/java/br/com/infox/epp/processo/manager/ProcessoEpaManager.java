@@ -17,6 +17,8 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.util.time.DateRange;
 
 @Name(ProcessoEpaManager.NAME)
@@ -111,5 +113,28 @@ public class ProcessoEpaManager extends Manager<ProcessoEpaDAO, ProcessoEpa> {
     
     public ProcessoEpa persistProcessoComNumero(ProcessoEpa processoEpa) throws DAOException{
     	return getDao().persistProcessoComNumero(processoEpa);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+        distribuirProcesso(processoEpa, relator, unidadeDecisoraMonocratica, null);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+        distribuirProcesso(processoEpa, null, unidadeDecisoraMonocratica, null);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+        processoEpa.setDecisoraColegiada(unidadeDecisoraColegiada);
+        processoEpa.setDecisoraMonocratica(unidadeDecisoraMonocratica);
+        processoEpa.setRelator(relator);
+        getDao().update(processoEpa);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+        distribuirProcesso(processoEpa, null, null, unidadeDecisoraColegiada);
+    }
+
+    public void distribuirProcesso(ProcessoEpa processoEpa) throws DAOException {
+        distribuirProcesso(processoEpa,null,null,null);
     }
 }

@@ -13,8 +13,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 
 @Name(ExtensaoArquivoDAO.NAME)
 @Scope(ScopeType.EVENT)

@@ -6,7 +6,6 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.GENERA
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_DEFINICAO_VARIAVEL_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LABEL;
-import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO_QUERY;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.NOME_VARIAVEL;
@@ -14,6 +13,7 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.SEQUEN
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TABLE_DEFINICAO_VARIAVEL_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO_QUERY;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL;
 
 import java.io.Serializable;
 

@@ -15,6 +15,8 @@ public interface NaturezaCategoriaFluxoQuery {
     String PARAM_FLUXO = "fluxo";
     String PARAM_COD_FLUXO = "codFluxo";
     String PARAM_LOCALIZACAO = "localizacao";
+    String PARAM_DS_NATUREZA = "dsNatureza";
+    String PARAM_DS_CATEGORIA = "dsCategoria";
 
     String LIST_BY_NATUREZA = "listNaturezaCategoriaFluxoByNatureza";
     String LIST_BY_NATUREZA_QUERY = "select o from NaturezaCategoriaFluxo o "
@@ -35,9 +37,10 @@ public interface NaturezaCategoriaFluxoQuery {
             + "and c.ativo=true "
             + "and ncf.fluxo=:fluxo";
     
-    String LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO = "listNaturezaoCategoriaFluxoByLocAndCodFluxo";
-    String LIST_NAT_CAT_FLUXO_BY_LOC_FLUXO_QUERY = "select ncf from NatCatFluxoLocalizacao o " +
-    		"inner join o.naturezaCategoriaFluxo ncf " +
-    		"inner join ncf.fluxo f where f.codFluxo = :" + PARAM_COD_FLUXO + 
-    		" and o.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO;
+    String NATCATFLUXO_BY_DS_NATUREZA_DS_CATEGORIA = "listNaturezaCatFluxoByDsNaturezaDsCategoria";
+    String NATCATFLUXO_BY_DS_NATUREZA_DS_CATEGORIA_QUERY = "select o from NaturezaCategoriaFluxo o " +
+    		"inner join o.natureza n " +
+    		"inner join o.categoria c " +
+    		"where UPPER(n.natureza) = :" + PARAM_DS_NATUREZA + 
+    		" and UPPER(c.categoria) = :" + PARAM_DS_CATEGORIA;
 }

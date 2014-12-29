@@ -9,6 +9,6 @@
 
     <ui:param name="qnt" value="#{wi:splitLength(fullPath, '\\|')}" />
     <wi:columnOutputText
-        styleOutputText="#{qnt == 1 ? 'font-weight: bold' : ''}; padding-left:#{20*(qnt-1)}px;display:block; text-align:left" />
+        styleOutputText="#{qnt == 1 ? 'font-weight: bold' : ''}; padding-left:#{1.25*(qnt-1)}em;display:block; text-align:left; #{styleOutputText}" />
 
 </ui:composition>

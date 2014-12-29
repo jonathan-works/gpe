@@ -4,10 +4,16 @@ import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO;
 import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO_QUERY;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS_QUERY;
+import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_NOME;
+import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_NOME_QUERY;
+import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_VALOR;
+import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_VALOR_QUERY;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -33,9 +40,16 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 @Table(name = "tb_parametro")
 @NamedQueries({ 
     @NamedQuery(name = LIST_PARAMETROS_ATIVOS, query = LIST_PARAMETROS_ATIVOS_QUERY),
-    @NamedQuery(name = EXISTE_PARAMETRO, query = EXISTE_PARAMETRO_QUERY)
+    @NamedQuery(name = EXISTE_PARAMETRO, query = EXISTE_PARAMETRO_QUERY),
+    @NamedQuery(name = PARAMETRO_BY_NOME, query = PARAMETRO_BY_NOME_QUERY, 
+    			hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+    					 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")}),
+    @NamedQuery(name = PARAMETRO_BY_VALOR, query = PARAMETRO_BY_VALOR_QUERY,
+    			hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+			 			 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")})
 })
-public class Parametro implements java.io.Serializable {
+@Cacheable
+public class Parametro implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -47,7 +61,7 @@ public class Parametro implements java.io.Serializable {
     private Boolean sistema;
     private UsuarioLogin usuarioModificacao;
     private Boolean ativo;
-
+    
     public Parametro() {
     }
 

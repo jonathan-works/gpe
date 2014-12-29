@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:param
+      name="pageTitle"
+      value="#{eppmessages['automaticNodesInfo.titlePage']}"/>
+    <ui:define name="body">
+        <s:div id="pagina">
+            <wi:dataTable id="tokensTable" var="row"
+                panelWidth="99%" showToolbarColumn="false"
+                values="#{automaticNodesInfo.nodesNotEnded}"
+                showGridCount="false" tableTitle="#{eppmessages['automaticNodesInfo.titlePage']}"
+                panelStyleClass="full-sized short-margin-top">
+
+                <ui:define name="toolBar" />
+
+                <rich:column>
+                    <f:facet name="header">#{eppmessages['automaticNodesInfo.numeroProcesso']}</f:facet>
+                    <h:outputText value="#{row.numeroProcesso}" />
+                </rich:column>
+
+                <rich:column>
+                    <f:facet name="header">#{eppmessages['automaticNodesInfo.nodeName']}</f:facet>
+                    <h:outputText value="#{row.nodeName}" />
+                </rich:column>
+                
+                <rich:column>
+                    <f:facet name="header">#{eppmessages['automaticNodesInfo.nodeType']}</f:facet>
+                    <h:outputText value="#{row.nodeType}" />
+                </rich:column>
+
+                <rich:column>
+                    <h:form>
+                        <a:commandLink value="Executar" action="#{automaticNodesInfo.executeNode(row.tokenId)}" 
+                        render="pagina, pageBodyDialogMessage" limitRender="true"/>
+                    </h:form>
+                </rich:column>
+            </wi:dataTable>
+        </s:div>
+    </ui:define>
+</ui:composition>

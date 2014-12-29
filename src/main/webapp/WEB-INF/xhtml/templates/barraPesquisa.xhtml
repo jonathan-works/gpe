@@ -25,7 +25,7 @@
             required="true"/>					
         <h:commandButton
                  action="/Pesquisa/indexedSearch.xhtml"
-                 image="#{a4jSkin.imgFolder}/imgPes.png" 
+                 image="#{wiSkin.imageFolder}/imgPes.png" 
                  onclick="if (#{rich:element('searchText')}.value == '') { new infox.Messages({'timeout': 3000}).dialog('#{eppmessages['pesquisa.campoPesquisaVazio']}'); return false; }"/>
         <h:commandLink
           action="/help/show.xhtml"
@@ -33,7 +33,7 @@
           immediate="true"
           actionListener="#{ajudaView.setViewId('/Pesquisa/indexedSearch.seam', true)}">
           <h:graphicImage
-            url="#{a4jSkin.imgFolder}/question.png"
+            url="#{wiSkin.imageFolder}/question.png"
             title="#{eppmessages['ajuda.ajudaBtn']}"
             onclick="openPopUp('helpwnd', 'about:blank');" />
         </h:commandLink>

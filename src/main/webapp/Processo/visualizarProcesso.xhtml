@@ -61,7 +61,7 @@
             <infox:tab
                 id="tabEntrada"
                 name="tabEntrada"
-                rendered="#{!empty taskInstanceView.fields}"
+                rendered="#{!empty taskInstanceView.fields and s:hasPermission('/pages/Processo/abaEntrada', 'access')}"
                 status=":status"
                 title="#{eppmessages['movimentar.entrada.titleTab']}">
                 <ui:decorate
@@ -78,7 +78,7 @@
             <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
-                rendered="#{processoEpaHome.managed}"
+                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaMovimentacoes', 'access')}"
                 status=":status"
                 title="#{eppmessages['acaoProcesso.menuText']}">
                 <ui:decorate
@@ -90,98 +90,29 @@
                 </ui:decorate>
             </infox:tab>
             <infox:tab
+                id="tabAnexar"
+                name="tabAnexar"
+                rendered="#{s:hasPermission('/pages/Processo/abaAnexar', 'access')}"
+                status=":status"
+                title="#{eppmessages['movimentar.anexar.titleTab']}"
+                action="#{anexoController.onClickTabAnexar(processoEpaHome.instance)}">
+                <wi:dataForm
+                    formId="anexarDocumentosForm"
+                    formTitle="#{eppmessages['movimentar.anexar.titleForm']}"
+                    isUploadForm="true">
+                    <ui:include src="anexarDocumentos.xhtml" />
+                    <ui:define name="buttons" />
+                </wi:dataForm>
+            </infox:tab>
+            <infox:tab
                 id="tabAnexos"
                 name="tabAnexos"
-                rendered="#{processoEpaHome.managed}"
+                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaAnexos', 'access')}"
                 status=":status"
                 action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{eppmessages['processo.documentos']}">
-                <ui:decorate
-                    id="frameDecorate"
-                    template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{eppmessages['processo.documentos']}</ui:define>
-                    <a:jsFunction name="selectDocumento" immediate="true"
-						execute="@this" render="historicoDocumentoPanelDiv" limitRender="true" status=":status">
-						<a:param name="idDocumento" assignTo="#{documentoProcessoAction.idDocumento}" converter="javax.faces.Integer"/>
-					</a:jsFunction>
-                    <wi:dataTable
-                        values="#{documentoList.list(15)}"
-                        bean="#{documentoList}"
-                        tableTitle="#{eppmessages['processo.documentos']} #{home.instance}"
-                        id="documentoList"
-                        rowId="#{row.id}"
-                        searchFormStyleClass="hidden"
-                        panelStyleCss="full-sized">
-                        <ui:define name="headerToolBar" />
-                        <wi:columnOutputText
-                        	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                            columnId="numeroDocumento"
-                            columnHeader="#{eppmessages['processoDocumento.numeroDocumento']}"
-                            value="#{row.numeroDocumento}" />
-                        <wi:columnOutputText
-                        	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                            columnId="usuarioInclusao"
-                            columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
-                            value="#{row.usuarioInclusao}" />
-                        <wi:columnDateTime
-                        	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                            columnId="dataInclusao"
-                            columnHeader="#{eppmessages['processoDocumento.dataInclusao']}"
-                            value="#{row.dataInclusao}" />
-                        <wi:columnOutputText
-                        	styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                            columnId="descricao"
-                            columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
-                            value="#{row.descricao}" />
-                        <ui:define name="toolBar">
-                        	<h:graphicImage styleClass="opacityHover" url="#{a4jSkin.imgFolder}/view.png" 
-                       		            title="#{eppmessages['button.historico']}" 
-                       		            rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
-                       		            onmouseup="selectDocumento(#{rowId});"/>
-                        </ui:define>
-                    </wi:dataTable>
-                    
-                    <s:div id="historicoDocumentoPanelDiv" style="margin-top:20px; width:100%;">
-		                <rich:panel id="historicoDocumentoPanel" headerClass=""
-		                			rendered="#{not empty documentoProcessoAction.processoDocumentoSelected}"
-		                			bodyClass="dtable-p-b" styleClass="dtable-p" style="width:100%;" >
-		                			
-		                	<f:facet name="header">
-		                		<h:outputText value="#{eppmessages['historicoStatusDocumento.tableTile']}" />
-		                		<h:graphicImage value="#{a4jSkin.imgFolder}/closeMP.gif" onmouseup="selectDocumento(0);" style="float:right;"/>
-				        	</f:facet>
-				        	
-						  	<rich:dataTable id="historicoDocumentoDataTable"
-						  			var="historicoDocumento" style="width:100%"
-						  			value="#{documentoProcessoAction.listHistoricoStatusDocumento}">
-						  			
-						  		<rich:column style="text-align:center;">
-						  			<f:facet name="header">#{eppmessages['historicoStatusDocumento.nomeUsuarioAlterou']}</f:facet>
-						  			<h:outputText value="#{historicoDocumento.usuarioAlteracao.nomeUsuario}" />
-						  		</rich:column>
-						  		
-						  		<rich:column style="text-align:center;">
-						  			<f:facet name="header">#{eppmessages['historicoStatusDocumento.dataAlteracao']}</f:facet>
-						  			<h:outputText value="#{historicoDocumento.dataAlteracao}">
-						  				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
-						  			</h:outputText>
-						  		</rich:column>
-						  		
-						  		<rich:column style="text-align:center;">
-						  			<f:facet name="header">Tipo Operação</f:facet>
-						  			<h:outputText value="#{historicoDocumento.tipoAlteracaoDocumento.label}" />
-						  		</rich:column>
-						  		
-						  		<rich:column>
-						  			<f:facet name="header">#{eppmessages['historicoStatusDocumento.motivo']}</f:facet>
-						  			<h:outputText value="#{historicoDocumento.motivo}" />
-						  		</rich:column>
-						  		
-						  	</rich:dataTable>              
-		                </rich:panel>
-	                 </s:div>
-                </ui:decorate>
+                <ui:include src="pastaDocumento.xhtml" />
             </infox:tab>
             <ui:param
                 name="action"
@@ -189,7 +120,7 @@
             <infox:tab
                 id="documentoFisicoTab"
                 name="documentoFisicoTab"
-                rendered="#{home.isManaged()}"
+                rendered="#{home.isManaged() and s:hasPermission('/pages/Processo/abaDocumentoFisico', 'access')}"
                 action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
                 title="#{eppmessages['documentoFisico.titleTab']}">
                 <ui:decorate
@@ -202,7 +133,8 @@
                             values="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
                             var="row"
                             rows="10"
-                            searchFormStyleClass="hidden">
+                            showSearchForm="false"
+                            panelStyleClass="full-sized">
                             <ui:define name="toolBar" />
                             <ui:define name="headerToolBar" />
                             <wi:columnOutputText
@@ -223,13 +155,13 @@
                 id="tabPartesDoProcesso"
                 name="tabPartesDoProcesso"
                 status=":status"
-                rendered="#{home.hasPartes()}"
-                action="#{parteProcessoList.entity.setProcesso(home.instance)}"
-                title="#{eppmessages['parteProcesso.partes']}">
+                rendered="#{home.hasPartes() and s:hasPermission('/pages/Processo/abaPartesProcesso', 'access')}"
+                action="#{participanteProcessoList.entity.setProcesso(home.instance)}"
+                title="#{eppmessages['participanteProcesso.participantes']}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{eppmessages['parteProcesso.partes']}</ui:define>
+                    <ui:define name="title">#{eppmessages['participanteProcesso.partes']}</ui:define>
                     <ui:include src="parteProcessoGridRO.xhtml" />
                 </ui:decorate>
             </infox:tab>
@@ -239,12 +171,6 @@
                 status=":status"
                 title="#{eppmessages['sigiloProcesso.sigiloProcesso']}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
-                <f:setPropertyActionListener
-                    target="#{sigiloProcessoAction.processo}"
-                    value="#{processoEpaHome.instance}" />
-                <f:setPropertyActionListener
-                    target="#{sigiloProcessoList.processo}"
-                    value="#{processoEpaHome.instance}" />
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
@@ -258,12 +184,6 @@
                 status=":status"
                 title="#{eppmessages['sigiloDocumento.sigiloDocumento']}"
                 rendered="#{s:hasPermission('/pages/Processo/abaSigiloDocumento', 'access')}">
-                <f:setPropertyActionListener
-                    target="#{sigiloDocumentoAction.processo}"
-                    value="#{processoEpaHome.instance}" />
-                <f:setPropertyActionListener
-                    target="#{documentoAnexoList.processo}"
-                    value="#{processoEpaHome.instance}" />
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">

@@ -34,10 +34,7 @@ import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.partes.entity.ParteProcesso;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -62,31 +59,18 @@ public class IniciarProcessoAction implements Serializable {
     private String viewId;
 
     public void iniciarProcesso() {
-        newProcessoEpa();
+    	newProcessoEpa();
         enviarProcessoParaJbpm();
     }
-
-    public void iniciarProcesso(List<PessoaFisica> pessoasFisicas,
-            List<PessoaJuridica> pessoasJuridicas) {
-        newProcessoEpa();
-        inserirPartes(pessoasFisicas, pessoasJuridicas);
-        enviarProcessoParaJbpm();
+    
+    public void iniciarProcesso(ProcessoEpa processoEpa) {
+    	setProcessoEpa(processoEpa);
+    	getProcessoEpa().setItemDoProcesso(itemDoProcesso);
+    	enviarProcessoParaJbpm();
     }
-
-    private void inserirPartes(List<PessoaFisica> pessoasFisicas,
-            List<PessoaJuridica> pessoasJuridicas) {
-        if (necessitaPartes()) {
-            for (PessoaFisica p : pessoasFisicas) {
-                processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-            }
-            for (PessoaJuridica p : pessoasJuridicas) {
-                processoEpa.getPartes().add(new ParteProcesso(processoEpa, p));
-            }
-        }
-    }
-
-    private void newProcessoEpa() {
-        final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+    
+    public void newProcessoEpa() {
+		final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
         final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
         processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
     }

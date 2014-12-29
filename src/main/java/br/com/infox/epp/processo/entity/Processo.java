@@ -27,6 +27,10 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_
 import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NOME_ACTOR_ID;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
@@ -87,7 +91,9 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 })
 @NamedQueries(value = {
     @NamedQuery(name = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID, query = LIST_PROCESSOS_BY_ID_PROCESSO_AND_ACTOR_ID_QUERY),
-    @NamedQuery(name = MOVER_PROCESSOS_PARA_CAIXA, query = MOVER_PROCESSOS_PARA_CAIXA_QUERY) 
+    @NamedQuery(name = MOVER_PROCESSOS_PARA_CAIXA, query = MOVER_PROCESSOS_PARA_CAIXA_QUERY),
+    @NamedQuery(name = PROCESSO_BY_NUMERO, query = PROCESSO_BY_NUMERO_QUERY),
+    @NamedQuery(name = NUMERO_PROCESSO_BY_ID_JBPM, query = NUMERO_PROCESSO_BY_ID_JBPM_QUERY)
 })
 public abstract class Processo implements Serializable {
 
@@ -147,7 +153,7 @@ public abstract class Processo implements Serializable {
     }
     
     @Transient
-    public ProcessoDocumento processoDocumento(){
+    public ProcessoDocumento getProcessoDocumento(){
     	return (ProcessoDocumento) this;
     }
     

@@ -6,12 +6,17 @@ import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
+
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.messages.Messages;
 
 public final class CertificadoFactory {
 
+	private static final LogProvider LOG = Logging.getLogProvider(CertificadoFactory.class);
+	
     public static Certificado createCertificado(X509Certificate[] certChain, PrivateKey privateKey) throws CertificadoException {
         X509Certificate mainCertificate = certChain[0];
         Principal subjectDN = mainCertificate.getSubjectDN();
@@ -30,8 +35,10 @@ public final class CertificadoFactory {
                         return new CertJUSInstitucional(certChain, privateKey);
                     } else if (valor.startsWith("RFB e-CPF")) {
                         return new CertificadoECPF(certChain, privateKey);
+                    } else {
+                    	LOG.warn("Certificado " + valor + " não reconhecido, utilizando CertificadoGenerico");
+                    	return new CertificadoGenerico(certChain, privateKey);
                     }
-                    break;
                 }
             }
         }

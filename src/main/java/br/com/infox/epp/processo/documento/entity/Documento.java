@@ -7,9 +7,9 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEX
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.lIST_DOCUMENTO_BY_TASKINSTANCE_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL_QUERY;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.lIST_DOCUMENTO_BY_TASKINSTANCE_QUERY;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -134,6 +134,10 @@ public class Documento implements Serializable {
     @NotNull
     @Column(name="in_excluido", nullable = false)
     private Boolean excluido = Boolean.FALSE;
+    
+    @ManyToOne
+    @JoinColumn(name="id_pasta")
+    private Pasta pasta;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento", cascade = CascadeType.REMOVE)
     @OrderBy(value="dataAlteracao DESC")
@@ -283,6 +287,14 @@ public class Documento implements Serializable {
 		this.historicoStatusDocumentoList = historicoStatusDocumentoList;
 	}
 
+	public Pasta getPasta() {
+	    return pasta;
+	}
+	
+	public void setPasta(Pasta pasta) {
+	    this.pasta = pasta;
+	}
+	
 	public boolean isDocumentoAssinavel(Papel papel){
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
 		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){

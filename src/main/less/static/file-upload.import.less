@@ -1,0 +1,28 @@
+@file-upload-btns-bg-color:#c3d9e4;
+@file-upload-hdr-bg-color:#a0c991;
+
+.rf-fu{
+  &>.rf-fu-hdr {
+    background-image:none;
+    background-color:@file-upload-hdr-bg-color;
+  }
+}
+.fileUploadBtns {
+  background-image:none;
+  background-color:@file-upload-btns-bg-color;
+}
+.rf-fu-btns-lft {
+  &>.rf-fu-btn-add {
+    &:extend(.fileUploadBtns);
+  }
+  &>.rf-fu-btn-upl {
+    &:extend(.fileUploadBtns);
+  }
+  &>.rf-fu-btn-clr  {
+    &:extend(.fileUploadBtns);
+  }
+}
+
+.epp-fu {
+  width: 400px;
+}

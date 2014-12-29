@@ -2,7 +2,10 @@ package br.com.infox.epp.system.dao;
 
 import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS;
+import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_NOME;
+import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_VALOR;
 import static br.com.infox.epp.system.query.ParametroQuery.PARAM_NOME;
+import static br.com.infox.epp.system.query.ParametroQuery.PARAM_VALOR;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,25 +18,23 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.system.entity.Parametro;
 
-@Name(ParametroDAO.NAME)
 @AutoCreate
+@Name(ParametroDAO.NAME)
 public class ParametroDAO extends DAO<Parametro> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "parametroDAO";
 
     public Parametro getParametroByNomeVariavel(String nomeVariavel) {
-        final String hql = "select p from Parametro p where nomeVariavel = :nomeVariavel";
-        final HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("nomeVariavel", nomeVariavel);
-        return getSingleResult(hql, parameters);
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put(PARAM_NOME, nomeVariavel);
+        return getNamedSingleResult(PARAMETRO_BY_NOME, parameters);
     }
 
     public Parametro getParametroByValorVariavel(String valorVariavel) {
-        final String hql = "select p from Parametro p where valorVariavel = :valorVariavel";
-        final HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("valorVariavel", valorVariavel);
-        return getSingleResult(hql, parameters);
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put(PARAM_VALOR, valorVariavel);
+        return getNamedSingleResult(PARAMETRO_BY_VALOR, parameters);
     }
     
     public List<Parametro> listParametrosAtivos() {

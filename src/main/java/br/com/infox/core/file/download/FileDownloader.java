@@ -29,11 +29,8 @@ public class FileDownloader implements Serializable {
             return;
         }
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-        response.setContentType(contentType);
+        HttpServletResponse response = prepareDownloadResponse(contentType, fileName);
         response.setContentLength(data.length);
-        response.setHeader("Content-disposition", "attachment; filename=\""
-                + fileName + "\"");
         try {
             OutputStream out = response.getOutputStream();
             out.write(data);
@@ -44,6 +41,15 @@ public class FileDownloader implements Serializable {
             FacesMessages.instance().add("Erro ao descarregar o arquivo: "
                     + fileName);
         }
+    }
+    
+    public static HttpServletResponse prepareDownloadResponse(String contentType, String fileName) {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+        response.setContentType(contentType);
+        response.setHeader("Content-disposition", "attachment; filename=\""
+                + fileName + "\"");
+        return response;
     }
 
 }

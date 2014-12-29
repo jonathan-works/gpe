@@ -14,7 +14,7 @@
             <a:commandLink action="#{home.setInstance(row)}"
                 status=":status" render="#{reRender}" limitRender="true"
                 id="#{gridId}Edit">
-                <wi:toolBarGraphicImage url="#{a4jSkin.imgFolder}/view.png"
+                <wi:toolBarGraphicImage url="#{wiSkin.imageFolder}/view.png"
                     title="#{eppmessages['button.selecionar']}" />
             </a:commandLink>
             <a:commandLink
@@ -22,7 +22,7 @@
                 rendered="#{wi:get(canEdit,true)}" limitRender="true"
                 status=":status" render="#{reRender}"
                 onclick="if(!confirm('Confirma?')) return false;">
-                <wi:toolBarGraphicImage url="#{a4jSkin.imgFolder}/remove.png"
+                <wi:toolBarGraphicImage url="#{wiSkin.imageFolder}/remove.png"
                     title="#{eppmessages['button.delete']}" />
             </a:commandLink>
         </a:region>

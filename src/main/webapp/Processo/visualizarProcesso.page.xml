@@ -20,4 +20,13 @@
     <param name="tarefaId" value="#{processoEpaHome.tarefaId}" />    
     <action execute="#{processoEpaHome.visualizarTarefaProcesso()}"/>
  
+ 	<action execute="#{pastaAction.setProcesso(processoEpaHome.instance)}"
+      if="#{processoEpaHome.tab eq 'tabAnexos'}" />
+    <action execute="#{documentoList.setProcesso(processoEpaHome.instance)}"
+      if="#{processoEpaHome.tab eq 'tabAnexos'}" />
+    <action execute="#{sigiloProcessoAction.setProcesso(processoEpaHome.instance)}"/>
+    <action execute="#{sigiloProcessoList.setProcesso(processoEpaHome.instance)}" />
+    <action execute="#{sigiloDocumentoAction.setProcesso(processoEpaHome.instance)}"/>
+    <action execute="#{documentoAnexoList.setProcesso(processoEpaHome.instance)}" />
+
 </page>

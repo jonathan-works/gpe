@@ -1,27 +1,37 @@
 package br.com.infox.ibpm.node.handler;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.epp.processo.status.entity.StatusProcesso.STATUS_PROCESSO_ACTION_NAME;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.instantiation.Delegation;
 import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
+import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
+import br.com.infox.ibpm.task.handler.StatusHandler;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.jbpm.event.EventHandler;
+import br.com.infox.seam.util.ComponentUtil;
 
 public class NodeHandler implements Serializable {
 
@@ -53,11 +63,31 @@ public class NodeHandler implements Serializable {
     private String dueDateValue;
     private UnitsEnum dueDateUnit;
     private boolean dueDateBusiness;
+    private StatusProcesso statusProcesso;
 
     public NodeHandler(Node node) {
         this.node = node;
         if (node != null) {
             loadTimers(node);
+        
+            if (node.hasEvent(Event.EVENTTYPE_NODE_ENTER)) {
+                Event event = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
+                List<?> actions = event.getActions();
+                for (Object object : actions) {
+                    Action action = (Action) object;
+                    Delegation actionDelegation = action.getActionDelegation();
+                    if (actionDelegation != null && StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
+                        String configuration = actionDelegation.getConfiguration();
+                        Pattern pattern = Pattern.compile("<statusProcesso>(\\d+)</statusProcesso>");
+                        Matcher matcher = pattern.matcher(configuration);
+                        if (matcher.find()) {
+                            String status = matcher.group(1);
+                            StatusProcessoManager manager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
+                            this.statusProcesso = manager.find(Integer.parseInt(status, 10));
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -115,6 +145,13 @@ public class NodeHandler implements Serializable {
         }
         eventList.add(currentEvent);
         node.addEvent(event);
+        if (isSystemNode()) {
+            setEventType(Event.EVENTTYPE_NODE_LEAVE);
+        }
+    }
+
+    public boolean isSystemNode() {
+        return this.node.getNodeType().equals(NodeType.Node);
     }
 
     public String getEventType() {
@@ -134,19 +171,23 @@ public class NodeHandler implements Serializable {
     @SuppressWarnings(UNCHECKED)
     public List<String> getSupportedEventTypes() {
         List<String> list = new ArrayList<>();
-        List<String> nodeEvents = Arrays.asList(new Node().getSupportedEventTypes());
-        List<String> eventTypes = new ArrayList<>(nodeEvents);
-        List<String> taskEvents = Arrays.asList(new Task().getSupportedEventTypes());
-        eventTypes.addAll(new ArrayList<>(taskEvents));
-        List<String> currentEvents = new ArrayList<>();
-        Collection<Event> values = node.getEvents().values();
-        for (Event event : values) {
-            currentEvents.add(event.getEventType());
-        }
-        for (String type : eventTypes) {
-            if (!currentEvents.contains(type)) {
-                list.add(type);
+        if (!isSystemNode()) {
+            List<String> nodeEvents = Arrays.asList(new Node().getSupportedEventTypes());
+            List<String> eventTypes = new ArrayList<>(nodeEvents);
+            List<String> taskEvents = Arrays.asList(new Task().getSupportedEventTypes());
+            eventTypes.addAll(new ArrayList<>(taskEvents));
+            List<String> currentEvents = new ArrayList<>();
+            Collection<Event> values = node.getEvents().values();
+            for (Event event : values) {
+                currentEvents.add(event.getEventType());
             }
+            for (String type : eventTypes) {
+                if (!currentEvents.contains(type)) {
+                    list.add(type);
+                }
+            }
+        } else {
+            list.add(Event.EVENTTYPE_NODE_LEAVE);
         }
         return list;
     }
@@ -336,4 +377,66 @@ public class NodeHandler implements Serializable {
         return visitor.getVariables();
     }
     
+    public StatusProcesso getStatusProcesso() {
+        return statusProcesso;
+    }
+    
+    public void setStatusProcesso(StatusProcesso statusProcesso) {
+        Action action = null;
+        if (this.node.hasEvent(Event.EVENTTYPE_NODE_ENTER)) {
+            action = retrieveStatusProcessoEvent(this.node.getEvent(Event.EVENTTYPE_NODE_ENTER));
+        }
+        Event event = null;
+        if (action != null) {
+            Delegation actionDelegation = action.getActionDelegation();
+            if (actionDelegation != null && StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
+                event = this.node.getEvent(Event.EVENTTYPE_NODE_ENTER);
+                if (statusProcesso == null) {
+                    event.removeAction(action);
+                } else {
+                    actionDelegation.setConfigType("constructor");
+                    actionDelegation.setConfiguration(MessageFormat.format(
+                            "<statusProcesso>{0}</statusProcesso>",
+                            statusProcesso.getIdStatusProcesso()));
+                }
+            }
+        } else if (statusProcesso != null) {
+            event = createNewStatusProcessoEvent(statusProcesso);
+            this.node.addEvent(event);
+        }
+        
+        this.statusProcesso = statusProcesso;
+    }
+
+    private Action retrieveStatusProcessoEvent(Event event) {
+        List<?> actions = event.getActions();
+        Action result = null;
+        for (Object object : actions) {
+            Action action = (Action) object;
+            if (STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
+                result = action;
+                break;
+            }
+        }
+        return result;
+    }
+    
+    private Event createNewStatusProcessoEvent(StatusProcesso statusProcesso) {
+        Event event;
+        if (this.node.hasEvent(Event.EVENTTYPE_NODE_ENTER)) {
+            event = this.node.getEvent(Event.EVENTTYPE_NODE_ENTER);
+        } else {
+            event = new Event(Event.EVENTTYPE_NODE_ENTER);
+        }
+        Action action = new Action();
+        action.setName(STATUS_PROCESSO_ACTION_NAME);
+        Delegation delegation = new Delegation(StatusHandler.class.getName());
+        delegation.setConfigType("constructor");
+        delegation.setConfiguration(MessageFormat.format(
+                "<statusProcesso>{0}</statusProcesso>",
+                statusProcesso.getIdStatusProcesso()));
+        action.setActionDelegation(delegation);
+        event.addAction(action);
+        return event;
+    }
 }

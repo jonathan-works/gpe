@@ -55,6 +55,9 @@ public class PropertiesLoader {
 	private void init() {
 		loadPageProperties();
 		loadMessagesProperties();
+		// Para o reCAPTCHA
+		System.setProperty("networkaddress.cache.ttl", "30");
+		System.setProperty("sun.net.inetaddr.ttl", "30");
 	}
 	
 	private void loadPageProperties(){

@@ -1,5 +1,10 @@
 package br.com.infox.epp.processo.documento.entity;
 
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO_QUERY;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO_QUERY;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,11 +30,6 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
-
-import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO;
-import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO_QUERY;
-import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO;
-import static br.com.infox.epp.processo.documento.query.HistoricoStatusDocumentoQuery.LIST_HISTORICO_BY_DOCUMENTO_QUERY;
 
 @Entity
 @Table(name = HistoricoStatusDocumento.TABLE_NAME)
