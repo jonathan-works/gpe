@@ -215,7 +215,7 @@
 				                          title="#{pasta}" />
 										<f:attribute name="pastaToSelect" value="#{pasta}" />
 										<f:actionListener type="br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList" />
-										<h:outputText value="#{documentoComunicacaoList.getTextoPasta(pasta)}" class="folder" />
+										<h:outputText value="#{eventCache.get('documentoComunicacaoList.getTextoPasta(pasta)', pasta.id)}" class="folder" />
 									</a:commandLink>
 								</h:form>
 							</rich:list>
