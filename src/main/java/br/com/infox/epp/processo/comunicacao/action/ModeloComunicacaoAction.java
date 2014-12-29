@@ -50,7 +50,7 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
+import br.com.infox.epp.processo.comunicacao.list.DocumentoDisponivelComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.ParticipanteProcessoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -103,7 +103,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	@In
 	private UsuarioPerfilManager usuarioPerfilManager;
 	@In
-	private DocumentoComunicacaoList documentoComunicacaoList;
+	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList;
 	@In
 	private ParticipanteProcessoComunicacaoList participanteProcessoComunicacaoList;
 	@In
@@ -195,11 +195,11 @@ public class ModeloComunicacaoAction implements Serializable {
 	 * Inicialização dos entity lists
 	 */
 	private void initLists() {
-		documentoComunicacaoList.setProcesso(modeloComunicacao.getProcesso());
+		documentoDisponivelComunicacaoList.setProcesso(modeloComunicacao.getProcesso());
 		participanteProcessoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso());
 		
 		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
-			documentoComunicacaoList.adicionarIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
+			documentoDisponivelComunicacaoList.adicionarIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
 		}
 		
 		PessoaFisica relator = getRelator();
@@ -405,7 +405,7 @@ public class ModeloComunicacaoAction implements Serializable {
 		documentoModelo.setDocumento(documento);
 		documentoModelo.setModeloComunicacao(modeloComunicacao);
 		modeloComunicacao.getDocumentos().add(documentoModelo);
-		documentoComunicacaoList.adicionarIdDocumentoBin(documento.getDocumentoBin().getId());
+		documentoDisponivelComunicacaoList.adicionarIdDocumentoBin(documento.getDocumentoBin().getId());
 		if (!possuiDocumentoInclusoPorUsuarioInterno) {
 			List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisMembros("usuarioInterno");
 			possuiDocumentoInclusoPorUsuarioInterno = papeisUsuarioInterno.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
@@ -414,7 +414,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void removerDocumento(DocumentoModeloComunicacao documentoModelo) {
 		modeloComunicacao.getDocumentos().remove(documentoModelo);
-		documentoComunicacaoList.removerIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
+		documentoDisponivelComunicacaoList.removerIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
 		if (possuiDocumentoInclusoPorUsuarioInterno) {
 			if (modeloComunicacao.getId() != null) {
 				possuiDocumentoInclusoPorUsuarioInterno = comunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;

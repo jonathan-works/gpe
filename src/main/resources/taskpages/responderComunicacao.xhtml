@@ -9,18 +9,38 @@
       xmlns:s="http://jboss.org/schema/seam/taglib">
 <h:head />
 <h:body>
-	<h:form>
-		<rich:panel header="#{eppmessages['comunicacao.comunicacao']}" switchType="client">
-			<wi:outputText id="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.label}"
-				label="#{eppmessages['comunicacao.meioExpedicao']}" />
-			<wi:outputText id="prazoResposta" label="Prazo de Resposta"
-				value="#{not empty respostaComunicacaoAction.prazoResposta ? respostaComunicacaoAction.prazoResposta : '-' }">
-				<f:convertDateTime pattern="dd/MM/yyyy" />
-			</wi:outputText>
+	<rich:collapsiblePanel header="#{eppmessages['comunicacao.comunicacao']}" switchType="client">
+		<wi:outputText id="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.label}"
+			label="#{eppmessages['comunicacao.meioExpedicao']}" />
+		<wi:outputText id="prazoResposta" label="Prazo de Resposta"
+			value="#{not empty respostaComunicacaoAction.prazoResposta ? respostaComunicacaoAction.prazoResposta : '-' }">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</wi:outputText>
+		<h:form>
 			<h:commandButton value="#{eppmessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
 				action="#{respostaComunicacaoAction.downloadComunicacao}" />
-		</rich:panel>
-	</h:form>
+		</h:form>
+		<s:div />
+		<wi:dataTable id="documentosComunicacao" values="#{documentoComunicacaoList.list(10)}" bean="#{documentoComunicacaoList}"
+			tableTitle="#{eppmessages['comunicacao.documentosComunicacao']}" showSearchForm="false" rowId="#{row.id}" hideOrder="true">
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<h:form>
+					<h:commandLink action="#{respostaComunicacaoAction.downloadDocumento(row)}"
+  						rendered="#{not empty row.documentoBin.extensao}">
+						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{eppmessages['comunicacao.baixarDocumento']}"/>
+					</h:commandLink>
+					<a:commandLink rendered="#{empty row.documentoBin.extensao}"
+						onclick="infox.openPopUp('doc#{row.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{row.documentoBin.id}','1024'); return false;">
+						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{eppmessages['comunicacao.baixarDocumento']}"/>
+					</a:commandLink>
+				</h:form>
+			</ui:define>
+			<wi:columnOutputText columnHeader="#{eppmessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
+			<wi:columnOutputText columnHeader="#{eppmessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
+			<wi:columnOutputText columnHeader="#{eppmessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
+		</wi:dataTable>
+	</rich:collapsiblePanel>
 	<h:form rendered="#{respostaComunicacaoAction.possuiProcessoResposta}">
 		<rich:collapsiblePanel header="#{eppmessages['comunicacao.editor']}" switchType="client" id="painelEditor">
 			<ui:param name="minuta" 
@@ -155,6 +175,8 @@
 			</h:form>
 		</ui:define>
 		<wi:columnOutputText columnHeader="#{eppmessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
+		<wi:columnOutputText columnHeader="#{eppmessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
+		<wi:columnOutputText columnHeader="#{eppmessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
 	</wi:dataTable>
 	
 	<h:form id="taskButtonsForm">

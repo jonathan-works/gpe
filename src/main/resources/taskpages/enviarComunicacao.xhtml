@@ -188,8 +188,8 @@
 			</h:form>
 			<rich:panel id="documentos" header="Documentos" 
 				rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada or not empty modeloComunicacaoAction.modeloComunicacao.documentos}">
-				<wi:dataTable id="documentosProcesso" values="#{documentoComunicacaoList.list(15)}" 
-					bean="#{documentoComunicacaoList}" rowId="#{row.id}"
+				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(15)}" 
+					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"
 					showGrid="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
 					tableTitle="#{eppmessages['comunicacao.documentosDisponiveis']}">
 					<ui:define name="headerToolBar" />
@@ -214,8 +214,8 @@
 				                          rendered="true"
 				                          title="#{pasta}" />
 										<f:attribute name="pastaToSelect" value="#{pasta}" />
-										<f:actionListener type="br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList" />
-										<h:outputText value="#{eventCache.get('documentoComunicacaoList.getTextoPasta(pasta)', pasta.id)}" class="folder" />
+										<f:actionListener type="br.com.infox.epp.processo.comunicacao.list.DocumentoDisponivelComunicacaoList" />
+										<h:outputText value="#{eventCache.get('documentoDisponivelComunicacaoList.getTextoPasta(pasta)', pasta.id)}" class="folder" />
 									</a:commandLink>
 								</h:form>
 							</rich:list>

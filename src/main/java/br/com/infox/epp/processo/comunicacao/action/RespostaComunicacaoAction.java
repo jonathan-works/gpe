@@ -13,8 +13,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
@@ -27,6 +25,7 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
@@ -39,6 +38,8 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(RespostaComunicacaoAction.NAME)
 @AutoCreate
@@ -66,6 +67,8 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DocumentoDownloader documentoDownloader;
 	@In
 	private DocumentoManager documentoManager;
+	@In
+	private DocumentoComunicacaoList documentoComunicacaoList;
 	
 	private DestinatarioModeloComunicacao destinatario;
 	private Processo processoComunicacao;
@@ -90,6 +93,8 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoUploader.clear();
 		documentoUploader.setProcesso(processoResposta);
 		respostaComunicacaoList.setProcessoResposta(processoResposta);
+		documentoComunicacaoList.setProcessoComunicacao(processoComunicacao);
+		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 		newDocumentoEdicao();
 		initClassificacoes();
 		if (processoResposta != null) {
