@@ -190,7 +190,7 @@
 				rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada or not empty modeloComunicacaoAction.modeloComunicacao.documentos}">
 				<wi:dataTable id="documentosProcesso" values="#{documentoComunicacaoList.list(15)}" 
 					bean="#{documentoComunicacaoList}" showSearchForm="false" rowId="#{row.id}"
-					showGrid="#{not modeloComunicacaoAction.modeloComunicacao.finalizada and documentoComunicacaoList.resultCount gt 0}"
+					showGrid="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
 					tableTitle="#{eppmessages['comunicacao.documentosProcesso']}">
 					<ui:define name="headerToolBar" />
 					<ui:define name="toolBar">
