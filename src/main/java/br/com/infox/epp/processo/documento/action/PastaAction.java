@@ -263,4 +263,7 @@ public class PastaAction implements Serializable, ActionListener {
         getInstance().setSistema(sistema);
     }
 
+    public String getNomePasta(Pasta pasta) {
+    	return pastaManager.getNomePasta(pasta);
+    }
 }

@@ -17,8 +17,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.Token;
 
@@ -59,8 +61,10 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
@@ -122,6 +126,8 @@ public class ModeloComunicacaoAction implements Serializable {
 	private PapelManager papelManager;
 	@In
 	private DocumentoDownloader documentoDownloader;
+	@In
+	private PastaManager pastaManager;
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
@@ -129,6 +135,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	private List<TipoComunicacao> tiposComunicacao;
 	private List<ClassificacaoDocumento> classificacoes;
 	private List<ModeloDocumento> modelosDocumento;
+	private List<Pasta> pastas;
 	
 	private Localizacao localizacao;
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
@@ -188,7 +195,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	 * Inicialização dos entity lists
 	 */
 	private void initLists() {
-		documentoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso());
+		documentoComunicacaoList.setProcesso(modeloComunicacao.getProcesso());
 		participanteProcessoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso());
 		
 		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
@@ -621,5 +628,17 @@ public class ModeloComunicacaoAction implements Serializable {
 
 	public boolean isValidarMinuta() {
 		return validarMinuta;
+	}
+	
+	public List<Pasta> getPastas() {
+		if (pastas == null) {
+			try {
+				pastas = pastaManager.getByProcesso(modeloComunicacao.getProcesso());
+			} catch (DAOException e) {
+				LOG.error("", e);
+				actionMessagesService.handleDAOException(e);
+			}
+		}
+		return pastas;
 	}
 }

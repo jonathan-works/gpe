@@ -4,6 +4,8 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCES
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_BY_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA_QUERY;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.Processo;
@@ -30,7 +33,8 @@ import br.com.infox.epp.processo.entity.Processo;
 @Table(name = Pasta.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = GET_BY_PROCESSO, query = GET_BY_PROCESSO_QUERY),
-    @NamedQuery(name = GET_DEFAULT_BY_PROCESSO, query = GET_DEFAULT_BY_PROCESSO_QUERY)
+    @NamedQuery(name = GET_DEFAULT_BY_PROCESSO, query = GET_DEFAULT_BY_PROCESSO_QUERY),
+    @NamedQuery(name = TOTAL_DOCUMENTOS_PASTA, query = TOTAL_DOCUMENTOS_PASTA_QUERY)
 })
 public class Pasta implements Serializable, Cloneable {
 
@@ -138,14 +142,7 @@ public class Pasta implements Serializable, Cloneable {
     }
     
     public String toString() {
-    	getDocumentosList(); // Lazy
-    	int total = 0;
-    	for (Documento d : documentosList) {
-    		if (!d.getDocumentoBin().isMinuta()) {
-    			total++;
-    		}
-    	}
-        return documentosList != null ? nome + " (" + total + ")" : nome + " (0)";
+    	return nome;
     }
     
     public Pasta makeCopy() throws CloneNotSupportedException {
@@ -160,5 +157,10 @@ public class Pasta implements Serializable, Cloneable {
     	}
     	cPasta.setDocumentosList(cDocumentos);
     	return cPasta;
+    }
+    
+    @Transient
+    public String getTemplateNomePasta() {
+    	return getNome() + " ({0})";
     }
 }

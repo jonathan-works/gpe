@@ -1,7 +1,9 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -38,6 +40,22 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
             pastaList = createDefaultFolders(processo); 
         }
         return pastaList;
+    }
+    
+    public int getTotalDocumentosPasta(Pasta pasta) {
+    	return getDao().getTotalDocumentosPasta(pasta);
+    }
+    
+    public int getTotalDocumentosPasta(Pasta pasta, String customFilter, Map<String, Object> params) {
+    	return getDao().getTotalDocumentosPasta(pasta, customFilter, params);
+    }
+    
+    public String getNomePasta(Pasta pasta) {
+    	return getNomePasta(pasta, getTotalDocumentosPasta(pasta));
+    }
+    
+    public String getNomePasta(Pasta pasta, int totalDocumentos) {
+    	return MessageFormat.format(pasta.getTemplateNomePasta(), totalDocumentos);
     }
     
     private List<Pasta> createDefaultFolders(Processo processo) throws DAOException {

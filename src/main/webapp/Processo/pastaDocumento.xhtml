@@ -57,7 +57,7 @@
 						<f:attribute name="pastaToSelect" value="#{pasta}" />
 						<f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
 						<f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
-						<h:outputText value="#{pasta.toString()}" class="folder" />
+						<h:outputText value="#{pastaAction.getNomePasta(pasta)}" class="folder" />
 					</a:commandLink>
                     <a:commandLink
                       render="documentoListSearchForm"
