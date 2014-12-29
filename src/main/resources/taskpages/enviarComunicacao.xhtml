@@ -191,7 +191,7 @@
 				<wi:dataTable id="documentosProcesso" values="#{documentoComunicacaoList.list(15)}" 
 					bean="#{documentoComunicacaoList}" showSearchForm="false" rowId="#{row.id}"
 					showGrid="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
-					tableTitle="#{eppmessages['comunicacao.documentosProcesso']}">
+					tableTitle="#{eppmessages['comunicacao.documentosDisponiveis']}">
 					<ui:define name="headerToolBar" />
 					<ui:define name="toolBar">
 						<h:form>
@@ -202,11 +202,19 @@
 						</h:form>
 					</ui:define>
 					<rich:column>
-						<f:facet name="header">#{eppmessages['comunicacao.documentosDisponiveis']}</f:facet>
+						<f:facet name="header">#{eppmessages['documentoProcesso.processoDocumento']}</f:facet>
 						<h:outputText value="#{row.descricao}" />
 					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['processoDocumento.classificacaoDocumento']}</f:facet>
+						<h:outputText value="#{row.classificacaoDocumento.descricao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['processoDocumento.tamanho']}</f:facet>
+						<h:outputText value="#{row.documentoBin.sizeFormatado}" />
+					</rich:column>
 				</wi:dataTable>
-				<rich:panel header="#{eppmessages['comunicacao.documentosComunicacao']}">
+				<rich:panel header="#{eppmessages['comunicacao.documentosSelecionados']}" headerClass="text-center">
 					<h:form>
 						<h:commandButton styleClass="buttons" action="#{modeloComunicacaoAction.downloadComunicacao}" 
 	    					value="#{eppmessages['comunicacao.comunicacao']}"
@@ -227,9 +235,17 @@
 							</h:form> 
 						</rich:column>
 						<rich:column>
-							<f:facet name="header">#{eppmessages['comunicacao.documentosSelecionados']}</f:facet>
-							<h:outputText value="#{row.documento.descricao}" />
-						</rich:column>
+						<f:facet name="header">#{eppmessages['documentoProcesso.processoDocumento']}</f:facet>
+						<h:outputText value="#{row.documento.descricao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['processoDocumento.classificacaoDocumento']}</f:facet>
+						<h:outputText value="#{row.documento.classificacaoDocumento.descricao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['processoDocumento.tamanho']}</f:facet>
+						<h:outputText value="#{row.documento.documentoBin.sizeFormatado}" />
+					</rich:column>
 					</rich:dataTable>
 				</rich:panel>
 			</rich:panel>
