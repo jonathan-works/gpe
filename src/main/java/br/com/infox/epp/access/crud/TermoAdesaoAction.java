@@ -19,6 +19,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jboss.seam.security.Identity;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.Messages;
@@ -37,7 +38,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
-
+// TODO: Transformar este componente em um manager, despejar atributos persistentes na classe de fronteira responsável pelo login
 @Scope(ScopeType.CONVERSATION)
 @Name(value = TermoAdesaoAction.NAME)
 public class TermoAdesaoAction implements Serializable {
@@ -89,7 +90,12 @@ public class TermoAdesaoAction implements Serializable {
             }
             documentoBinManager.flush();
             FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
-            return "/Painel/list.seam";
+            // TODO: Deixar componente Authenticator gerenciar o redirect
+            if (Identity.instance().hasRole("usuarioExterno")) {
+                return "/PainelExterno/list.seam";
+            } else {
+                return "/Painel/list.seam";
+            }
         } catch (final CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(Messages.resolveMessage(CERTIFICATE_ERROR_EXPIRED), e);
