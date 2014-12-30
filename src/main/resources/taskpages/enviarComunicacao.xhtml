@@ -188,7 +188,7 @@
 			</h:form>
 			<rich:panel id="documentos" header="Documentos" 
 				rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada or not empty modeloComunicacaoAction.modeloComunicacao.documentos}">
-				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(15)}" 
+				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(10)}" 
 					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"
 					showGrid="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
 					tableTitle="#{eppmessages['comunicacao.documentosDisponiveis']}">

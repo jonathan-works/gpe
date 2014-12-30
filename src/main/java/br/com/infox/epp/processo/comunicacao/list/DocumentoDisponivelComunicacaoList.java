@@ -39,7 +39,7 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
 	private static final String DEFAULT_EJBQL = "select o from Documento o "
 			+ "inner join o.documentoBin bin "
 			+ "left join bin.assinaturas a "
-			+ "where o.processo = #{documentoComunicacaoList.processo} and o.excluido = false and "
+			+ "where o.processo = #{documentoDisponivelComunicacaoList.processo} and o.excluido = false and "
 			+ "bin.minuta = false and "
 			+ "not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o)";
 	
