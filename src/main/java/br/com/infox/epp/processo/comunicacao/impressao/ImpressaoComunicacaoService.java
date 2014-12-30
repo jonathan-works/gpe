@@ -88,6 +88,7 @@ public class ImpressaoComunicacaoService implements Serializable {
 			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 			metadadoProcesso = metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.IMPRESSA, Boolean.TRUE.toString());
 			metadadoProcessoManager.persist(metadadoProcesso);
+			processo.getMetadadoProcessoList().add(metadadoProcesso);
 		} else {
 			metadadoProcesso.setValor(Boolean.TRUE.toString());
 			metadadoProcessoManager.update(metadadoProcesso);
