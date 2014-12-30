@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.persistence.Tuple;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -28,7 +30,7 @@ import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
+import br.com.infox.epp.processo.situacao.service.SituacaoProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
@@ -49,7 +51,7 @@ public class PainelUsuarioController extends AbstractController {
     @In
     private ProcessoManager processoManager;
     @In
-    private SituacaoProcessoManager situacaoProcessoManager;
+    private SituacaoProcessoService situacaoProcessoService;
     @In
     private VariavelProcessoService variavelProcessoService;
     @In
@@ -59,14 +61,14 @@ public class PainelUsuarioController extends AbstractController {
     @In
     private ActionMessagesService actionMessagesService;
     
-    private Map<String, Object> selected;
+    private Tuple selected;
     private List<Integer> processoIdList;
     private List<DynamicColumnModel> dynamicColumns;
     private TipoProcesso tipoProcesso;
 
     @Observer("selectedTarefasTree")
     public void onSelected(Object obj) {
-        this.selected = (Map<String, Object>) obj;
+        setSelected((Tuple) obj);
         processoIdList = null;
         dynamicColumns = null;
         updateDatatable();
@@ -88,7 +90,7 @@ public class PainelUsuarioController extends AbstractController {
 
     public Integer getIdCaixa() {
         if (selected != null) {
-            return (Integer) selected.get("idCaixa");
+            return selected.get("idCaixa", Integer.class);
         }
         return null;
     }
@@ -96,7 +98,7 @@ public class PainelUsuarioController extends AbstractController {
     public List<Integer> getProcessoIdList() {
         if (selected != null) {
             if (processoIdList == null) {
-                processoIdList = situacaoProcessoManager.getProcessosAbertosByIdTarefa(getTarefaId(), selected, getTipoProcesso());
+                processoIdList = situacaoProcessoService.getQueryProcessoAbertosByIdTarefa(getTarefaId(), selected, getTipoProcesso());
             }
             if (processoIdList.size() == 0) {
                 processoIdList.add(-1);
@@ -153,11 +155,11 @@ public class PainelUsuarioController extends AbstractController {
         return null;
     }
 
-    public void setSelected(Map<String, Object> selected) {
+    public void setSelected(Tuple selected) {
         this.selected = selected;
     }
 
-    public Map<String, Object> getSelected() {
+    public Tuple getSelected() {
         return selected;
     }
 

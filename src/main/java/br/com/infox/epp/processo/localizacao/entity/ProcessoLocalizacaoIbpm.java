@@ -38,7 +38,8 @@ import br.com.infox.epp.system.annotation.Ignore;
     @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, query = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY),
     @NamedQuery(name = COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, query = COUNT_PROCESSO_LOC_IBPM_BY_IDP_LOC_AND_PAPEL_QUERY),
     @NamedQuery(name = DELETE_BY_PROCESS_ID_AND_TASK_ID, query = DELETE_BY_PROCESS_ID_AND_TASK_ID_QUERY),
-    @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, query = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY) })
+    @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, query = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY) 
+})
 public class ProcessoLocalizacaoIbpm implements java.io.Serializable {
 
     public static final String TABLE_NAME = "tb_processo_localizacao_ibpm";
