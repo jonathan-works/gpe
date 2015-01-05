@@ -3,11 +3,10 @@ package br.com.infox.epp.access.crud;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -15,9 +14,12 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraColegiadaManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(UsuarioLoginCrudAction.NAME)
+@AutoCreate
 public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, UsuarioLoginManager> {
     
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginCrudAction.class);
@@ -32,7 +34,7 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
     private List<Map<String, String>> unidadeDecisoraMonocraticaList;
     private List<Map<String, String>> unidadeDecisoraColegiadaList;
     
-    public void onClickVinculoUnidadeDecisoraTab(){
+    public void limparListasDeUnidadesDecisoras(){
     	unidadeDecisoraMonocraticaList = null;
     	unidadeDecisoraColegiadaList = null;
     }

@@ -5,6 +5,7 @@ import static br.com.infox.core.list.SearchCriteria.IGUAL;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -13,6 +14,7 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 
 @Name(UsuarioPerfilEntityList.NAME)
 @Scope(ScopeType.PAGE)
+@AutoCreate
 public class UsuarioPerfilEntityList extends EntityList<UsuarioPerfil> {
     
     private static final long serialVersionUID = 1L;
