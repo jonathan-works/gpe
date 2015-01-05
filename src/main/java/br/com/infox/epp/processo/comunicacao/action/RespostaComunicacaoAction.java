@@ -34,6 +34,7 @@ import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.service.DocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
@@ -69,6 +70,8 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DocumentoManager documentoManager;
 	@In
 	private DocumentoComunicacaoList documentoComunicacaoList;
+	@In
+	private DocumentoService documentoService;
 	
 	private DestinatarioModeloComunicacao destinatario;
 	private Processo processoComunicacao;
@@ -158,7 +161,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	public void removerDocumento(Documento documento) {
 		boolean isDocumentoEdicao = documentoEdicao != null && documentoEdicao.equals(documento);
 		try {
-			respostaComunicacaoService.removerDocumento(documento);
+			documentoService.removerDocumento(documento);
 			if (isDocumentoEdicao) {
 				newDocumentoEdicao();
 			}
