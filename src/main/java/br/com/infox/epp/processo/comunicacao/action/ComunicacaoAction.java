@@ -18,8 +18,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -42,11 +40,14 @@ import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(ComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -76,6 +77,8 @@ public class ComunicacaoAction implements Serializable {
 	private GenericManager genericManager;
 	@In
 	private DocumentoDownloader documentoDownloader;
+	@In
+	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private Map<Long, List<DestinatarioBean>> destinatarioBeans = new HashMap<>(); // Cache dos destinatários da comunicação
@@ -258,7 +261,18 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void pedirProrrogacaoPrazo() {
-		
+		try {
+			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo);
+			Processo comunicacao = documentoUploader.getProcesso();
+			documentoUploader.setProcesso(prorrogacao);
+			documentoUploader.persist();
+			documentoUploader.clear();
+			documentoUploader.setProcesso(comunicacao);
+			processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao);
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
+		}
 	}
 	
 	public ClassificacaoDocumento getClassificacaoDocumento() {
