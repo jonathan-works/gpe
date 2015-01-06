@@ -24,7 +24,6 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -117,20 +116,10 @@ public class ComunicacaoService {
 	
 	public void expedirComunicacao(DestinatarioModeloComunicacao destinatario) throws DAOException {
 		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
-		Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-		Fluxo fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoComunicacao);
-		if (fluxo == null) {
-			throw new DAOException("Fluxo de comunicação não encontrado");
-		}
-		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
-		if (ncfs.isEmpty()) {
-			throw new DAOException("Não existe natureza/categoria/fluxo configurada para o fluxo de comunicação");
-		}
-		NaturezaCategoriaFluxo ncf = ncfs.get(0);
 		
 		Processo processo = new Processo();
-		processo.setLocalizacao(localizacao);
-		processo.setNaturezaCategoriaFluxo(ncf);
+		processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
+		processo.setNaturezaCategoriaFluxo(getNaturezaCategoriaFluxo(destinatario));
 		processo.setNumeroProcesso("");
 		processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
 		processo.setProcessoPai(modeloComunicacao.getProcesso());
@@ -141,18 +130,7 @@ public class ComunicacaoService {
 			metadadoProcessoManager.persist(metadadoProcesso);
 		}
 		
-		DocumentoBin comunicacao = destinatario.getComunicacao();
-		Documento documentoComunicacao = documentoManager.createDocumento(processo, comunicacao.getNomeArquivo(), comunicacao, modeloComunicacao.getClassificacaoComunicacao());
-		processo.getDocumentoList().add(documentoComunicacao);
-		
-		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
-		processo.getMetadadoProcessoList().add(metadadoProcessoProvider
-				.gerarMetadado(ComunicacaoMetadadoProvider.COMUNICACAO, documentoComunicacao.getId().toString()));
-		
-		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
-			Documento documento = documentoModelo.getDocumento();
-			processo.getDocumentoList().add(documentoManager.createDocumento(processo, documento.getDescricao(), documento.getDocumentoBin(), documento.getClassificacaoDocumento()));
-		}
+		gravarDocumentos(destinatario, processo);
 		
 		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
 		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
@@ -308,24 +286,8 @@ public class ComunicacaoService {
 	private Collection<MetadadoProcesso> criarMetadados(DestinatarioModeloComunicacao destinatario, Processo processo) {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 		Collection<MetadadoProcesso> metadados = new ArrayList<>();
-		// Destinatário / Destino
-		if (destinatario.getDestinatario() != null) {
-			PessoaFisica pessoaDestinatario = destinatario.getDestinatario();
-			MetadadoProcesso metadadoRelator = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.RELATOR);
-			if (metadadoRelator != null) {
-				PessoaFisica relator = metadadoRelator.getValue();
-				// Vai pra UDM do relator
-				if (relator.equals(pessoaDestinatario)) {
-					MetadadoProcesso metadadoUdm = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA);
-					UnidadeDecisoraMonocratica udmRelator = metadadoUdm.getValue();
-					metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, udmRelator.getLocalizacao().getIdLocalizacao().toString()));
-				}
-			} else {
-				metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString()));
-			}
-		} else {
-			metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, destinatario.getDestino().getIdLocalizacao().toString()));
-		}
+
+		metadados.add(criarMetadadoDestinatario(destinatario, metadadoProcessoProvider));
 		
 		metadados.add(metadadoProcessoProvider.gerarMetadado(
 				ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
@@ -338,7 +300,8 @@ public class ComunicacaoService {
 					ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO, destinatario.getPrazo().toString()));
 		}
 		
-		metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO.toString()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(
+				EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO.toString()));
 		
 		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
 			metadados.add(metadadoProcessoProvider.gerarMetadado(
@@ -364,6 +327,57 @@ public class ComunicacaoService {
 		variaveis.put(NOME_DESTINATARIO, destinatario.getNome());
 		variaveis.put(PRAZO_DESTINATARIO, destinatario.getPrazo());
 		return variaveis;
+	}
+	
+	private NaturezaCategoriaFluxo getNaturezaCategoriaFluxo(DestinatarioModeloComunicacao destinatario) throws DAOException {
+		Fluxo fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoComunicacao);
+		if (fluxo == null) {
+			throw new DAOException("Fluxo de comunicação não encontrado");
+		}
+		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
+		if (ncfs.isEmpty()) {
+			throw new DAOException("Não existe natureza/categoria/fluxo configurada para o fluxo de comunicação");
+		}
+		return ncfs.get(0);
+	}
+	
+	private void gravarDocumentos(DestinatarioModeloComunicacao destinatario, Processo processoComunicacao) throws DAOException {
+		DocumentoBin comunicacao = destinatario.getComunicacao();
+		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
+		Documento documentoComunicacao = documentoManager.createDocumento(processoComunicacao, comunicacao.getNomeArquivo(), comunicacao, modeloComunicacao.getClassificacaoComunicacao());
+		processoComunicacao.getDocumentoList().add(documentoComunicacao);
+		
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoComunicacao);
+		processoComunicacao.getMetadadoProcessoList().add(metadadoProcessoProvider
+				.gerarMetadado(ComunicacaoMetadadoProvider.COMUNICACAO, documentoComunicacao.getId().toString()));
+		
+		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
+			Documento documento = documentoModelo.getDocumento();
+			if (!documento.getDocumentoBin().equals(comunicacao)) {
+				processoComunicacao.getDocumentoList().add(documentoManager.createDocumento(processoComunicacao, documento.getDescricao(), documento.getDocumentoBin(), documento.getClassificacaoDocumento()));
+			}
+		}
+	}
+	
+	private MetadadoProcesso criarMetadadoDestinatario(DestinatarioModeloComunicacao destinatario, MetadadoProcessoProvider metadadoProcessoProvider) {
+		if (destinatario.getDestinatario() != null) {
+			PessoaFisica pessoaDestinatario = destinatario.getDestinatario();
+			MetadadoProcesso metadadoRelator = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.RELATOR);
+			if (metadadoRelator != null) {
+				PessoaFisica relator = metadadoRelator.getValue();
+				// Vai pra UDM do relator
+				if (relator.equals(pessoaDestinatario)) {
+					MetadadoProcesso metadadoUdm = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA);
+					UnidadeDecisoraMonocratica udmRelator = metadadoUdm.getValue();
+					return metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, udmRelator.getLocalizacao().getIdLocalizacao().toString());
+				}
+			} else {
+				return metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString());
+			}
+		} else {
+			return metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, destinatario.getDestino().getIdLocalizacao().toString());
+		}
+		return null;
 	}
 	
 	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao"; 

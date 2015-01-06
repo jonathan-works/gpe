@@ -10,10 +10,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-
 import org.richfaces.component.UICollapsiblePanel;
 
 import br.com.infox.certificado.exception.CertificadoException;
@@ -35,6 +31,8 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(ExpedicaoComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -182,27 +180,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 			} else {
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 			}
-		} catch (DAOException e) {
-			String mensagem = "Erro ao expedir comunicação " + modeloComunicacao.getId();
-			if (destinatario != null) {
-				mensagem += " para o destinatário " + destinatario.getId();
-			}
-			LOG.error(mensagem, e);
-			actionMessagesService.handleDAOException(e);
-		} catch (CertificadoException e) {
-			String mensagem = "Erro ao expedir comunicação " + modeloComunicacao.getId();
-			if (destinatario != null) {
-				mensagem += " para o destinatário " + destinatario.getId();
-			}
-			LOG.error(mensagem, e);
-			actionMessagesService.handleException("Erro ao expedir comunicação", e);
-		} catch (AssinaturaException e) {
-			String mensagem = "Erro ao expedir comunicação " + modeloComunicacao.getId();
-			if (destinatario != null) {
-				mensagem += " para o destinatário " + destinatario.getId();
-			}
-			LOG.error(mensagem, e);
-			FacesMessages.instance().add(e.getMessage());
+		} catch (DAOException | CertificadoException | AssinaturaException e) {
+			handleException(e);
 		}
 	}
 	
@@ -225,5 +204,21 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	private DocumentoBin getDocumentoComunicacao() {
 		return getComunicacao() != null ? this.destinatario.getComunicacao() : modeloComunicacao.getDestinatarios().get(0).getComunicacao();
+	}
+	
+	private void handleException(Exception e) {
+		String mensagem = "Erro ao expedir comunicação " + modeloComunicacao.getId();
+		if (destinatario != null) {
+			mensagem += " para o destinatário " + destinatario.getId();
+		}
+		LOG.error(mensagem, e);
+		
+		if (e instanceof DAOException) {
+			actionMessagesService.handleDAOException((DAOException) e);
+		} else if (e instanceof CertificadoException) {
+			actionMessagesService.handleException("Erro ao expedir comunicação", e);
+		} else if (e instanceof AssinaturaException) {
+			FacesMessages.instance().add(e.getMessage());
+		}
 	}
 }
