@@ -234,18 +234,13 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioProrrogacaoPrazo(DestinatarioBean destinatario) {
-		ClassificacaoDocumento classificacaoProrrogacao = classificacaoDocumentoManager.findByDescricao("Pedido de Prorrogação de Prazo");
-		if (classificacaoProrrogacao == null) {
-			FacesMessages.instance().add("A classificação de documento Pedido de Prorrogação de Prazo não existe");
-			return;
-		}
 		this.destinatario = destinatario;
 		this.documentosDestinatario = null;
 		prorrogacaoPrazo = true;
 		ciencia = false;
 		documentos = false;
 		documentoUploader.clear();
-		documentoUploader.setClassificacaoDocumento(classificacaoProrrogacao);
+		documentoUploader.setClassificacaoDocumento(getClassificacaoProrrogacaoPrazo());
 	}
 	
 	public boolean isDocumentos() {
@@ -265,10 +260,16 @@ public class ComunicacaoAction implements Serializable {
 			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo);
 			Processo comunicacao = documentoUploader.getProcesso();
 			documentoUploader.setProcesso(prorrogacao);
+			Documento documento = documentoUploader.getDocumento();
+			documento.setDescricao(documentoUploader.getClassificacaoDocumento().getDescricao());
 			documentoUploader.persist();
 			documentoUploader.clear();
 			documentoUploader.setProcesso(comunicacao);
+			documentoUploader.setClassificacaoDocumento(getClassificacaoProrrogacaoPrazo());
+
+			prorrogacao.getDocumentoList().add(documento);
 			processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao);
+			FacesMessages.instance().add("Pedido de prorrogação de prazo efetuado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -378,6 +379,14 @@ public class ComunicacaoAction implements Serializable {
 			return dateFormat.format(prazo);
 		}
 		return "-";
+	}
+	
+	private ClassificacaoDocumento getClassificacaoProrrogacaoPrazo() {
+		ClassificacaoDocumento classificacaoProrrogacao = classificacaoDocumentoManager.findByDescricao("Pedido de Prorrogação de Prazo");
+		if (classificacaoProrrogacao == null) {
+			FacesMessages.instance().add("A classificação de documento Pedido de Prorrogação de Prazo não existe");
+		}
+		return classificacaoProrrogacao;
 	}
 
 	public static class DestinatarioBean {

@@ -202,7 +202,7 @@
 						</h:form>
 					</ui:define>
 					<ui:define name="searchForm">
-						<rich:panel header="Pastas">
+						<rich:panel header="Pastas" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
 							<rich:list value="#{modeloComunicacaoAction.pastas}" styleClass="folder-ul" rowClass="folder-li"
 								var="pasta">
 								<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access')}"

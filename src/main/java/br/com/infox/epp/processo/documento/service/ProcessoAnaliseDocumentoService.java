@@ -65,7 +65,10 @@ public class ProcessoAnaliseDocumentoService {
 	
 	public void inicializarFluxoDocumento(Processo processoAnalise) throws DAOException {
 		Map<String, Object> variaveisJbpm = new HashMap<>();
-		variaveisJbpm.put("tipoProcessoPai", processoAnalise.getProcessoPai().getMetadado(EppMetadadoProvider.TIPO_PROCESSO).getValue().toString());
+		MetadadoProcesso metadadoTipoProcesso = processoAnalise.getProcessoPai().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
+		if (metadadoTipoProcesso != null) {
+			variaveisJbpm.put("tipoProcessoPai", metadadoTipoProcesso.getValue().toString());
+		}
 		variaveisJbpm.put("classificacaoDocumento", processoAnalise.getDocumentoList().get(0).getClassificacaoDocumento().getDescricao());
 		iniciarProcessoService.iniciarProcesso(processoAnalise, variaveisJbpm);
 	}

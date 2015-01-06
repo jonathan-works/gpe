@@ -128,7 +128,11 @@
 	    		<h:form>
 	    			<wi:outputText id="classificacaoProrrogacao" label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
 	    				value="#{comunicacaoAction.classificacaoDocumento}"/>
-	    			<wi:fileUpload id="documentoProrrogacaoPrazo" />
+	    			<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
+	    					reRender="@form"/>
+	    			<wi:commandButton id="gravar" value="#{eppmessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 
+	    					reRender="pageBodyDialogMessage, comunicacoes, painelProrrogacaoPrazo"
+	    					rendered="#{documentoUploader.valido}"/>
 	    		</h:form>
 	    	</rich:panel>
 	    </s:div>

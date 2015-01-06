@@ -235,6 +235,9 @@ public class ComunicacaoService {
 		}
 		String textoComunicacao = modeloComunicacao.getTextoComunicacao();
 		if (textoComunicacao != null) {
+			if (modeloComunicacao.getClassificacaoComunicacao() == null) {
+				throw new DAOException("Escolha a classificação de documento do editor");
+			}
 			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 				DocumentoBin comunicacao = documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacao);
 				destinatario.setComunicacao(comunicacao);
@@ -247,8 +250,6 @@ public class ComunicacaoService {
 				for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 					destinatario.setComunicacao(comunicacao);
 				}
-				genericManager.removeWithoutFlush(documentoModeloComunicacao);
-				modeloComunicacao.getDocumentos().remove(documentoModeloComunicacao);
 			} else {
 				throw new DAOException("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
 			}

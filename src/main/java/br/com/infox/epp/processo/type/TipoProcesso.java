@@ -17,7 +17,10 @@ public class TipoProcesso {
 		values.put("COMUNICACAO", COMUNICACAO);
 	}
 	
-	protected TipoProcesso(String value) {
+	public TipoProcesso(String value) {
+		if (!isTipoProcessoValido(value)) {
+			throw new IllegalArgumentException("Tipo processo " + value + " inválido");
+		}
 		this.value = value;
 	}
 	
@@ -40,5 +43,9 @@ public class TipoProcesso {
 	
 	public String toString(){
 		return value;
+	}
+	
+	protected boolean isTipoProcessoValido(String tipoProcesso) {
+		return "DOCUMENTO".equals(tipoProcesso) || "COMUNICACAO".equals(tipoProcesso); 
 	}
 }
