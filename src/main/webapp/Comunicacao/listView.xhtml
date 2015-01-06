@@ -25,12 +25,23 @@
 				action="#{expedicaoComunicacaoAction.setModeloComunicacao(null)}">
 				<wi:dataTable id="comunicacoes" bean="#{expedicaoComunicacaoList}"
 					values="#{expedicaoComunicacaoList.list(15)}"
-					tableTitle="#{eppmessages['comunicacao.comunicacoes']}" rowId="#{row.id}" showSearchForm="false"
+					tableTitle="#{eppmessages['comunicacao.comunicacoes']}" rowId="#{row.id}"
 					hideOrder="true">
 					<ui:define name="toolBar">
 						<wi:toolBarEdit />
 					</ui:define>
 					<ui:define name="headerToolBar" />
+
+					<ui:define name="searchForm">
+						<wi:searchForm formId="comunicacoesSearch" formTitle="#{eppmessages['searchForm.title']}">
+							<wi:inputText id="numeroProcesso" label="#{eppmessages['consultaProcesso.numeroProcesso']}"
+								value="#{expedicaoComunicacaoList.numeroProcesso}"/>
+							<wi:selectOneMenuEntity id="tipoComunicacao" label="#{eppmessages['comunicacao.tipoComunicacao']}"
+								items="#{expedicaoComunicacaoAction.tiposComunicacao}" value="#{expedicaoComunicacaoList.tipoComunicacao}" />
+							<wi:selectBooleanMenu id="expedida" label="#{eppmessages['comunicacao.expedida']}" 
+								value="#{expedicaoComunicacaoList.expedida}"/>
+						</wi:searchForm>
+					</ui:define>
 
 					<wi:columnOutputText id="numeroProcesso"
 						columnHeader="#{eppmessages['consultaProcesso.numeroProcesso']}"
@@ -90,6 +101,10 @@
 					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao(null)}" 
 						value="#{eppmessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
 						rendered="#{empty expedicaoComunicacaoAction.comunicacao}"/>
+					<wi:commandButton id="expedir" action="expedicaoComunicacaoAction.expedirComunicacao()" 
+						rendered="#{expedicaoComunicacaoAction.documentoComunicacaoAssinado}"
+						value="#{eppmessages['comunicacao.expedirComunicacoes']}"
+						reRender="comunicacaoForm, pageBodyDialogMessage, destinatarios"/>
 					<a:jsFunction name="assinar"
 								action="#{expedicaoComunicacaoAction.expedirComunicacao()}"
 								execute="@form"

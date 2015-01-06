@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.faces.context.FacesContext;
 
@@ -9,8 +10,10 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
 import org.richfaces.component.UICollapsiblePanel;
 
 import br.com.infox.certificado.exception.CertificadoException;
@@ -27,6 +30,8 @@ import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DestinatarioModeloComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -51,6 +56,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	private ComunicacaoService comunicacaoService;
 	@In
 	private ActionMessagesService actionMessagesService;
+	@In
+	private TipoComunicacaoManager tipoComunicacaoManager;
 	
 	private String tab = "list";
 	private ModeloComunicacao modeloComunicacao;
@@ -58,6 +65,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	private String comunicacao;
 	private String certChain;
 	private String signature;
+	private List<TipoComunicacao> tiposComunicacao;
 	
 	public String getTab() {
 		return tab;
@@ -141,33 +149,59 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		this.signature = signature;
 	}
 	
+	public List<TipoComunicacao> getTiposComunicacao() {
+		if (tiposComunicacao == null) {
+			tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
+		}
+		return tiposComunicacao;
+	}
+	
+	public void setTiposComunicacao(List<TipoComunicacao> tiposComunicacao) {
+		this.tiposComunicacao = tiposComunicacao;
+	}
+	
 	public boolean podeRenderizarApplet() {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-		boolean expedida = (getComunicacao() == null && !isExpedida(modeloComunicacao)) || 
-			(getComunicacao() != null && destinatario != null && !destinatario.getExpedido());
-		return expedida && 
+		boolean expedida = (getComunicacao() == null && isExpedida(modeloComunicacao)) || 
+			(getComunicacao() != null && destinatario != null && destinatario.getExpedido());
+		return !expedida && 
 				assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), 
 						getDocumentoComunicacao(), usuario);
 	}
 	
 	public void expedirComunicacao() {
 		try {
-			assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+			DocumentoBin documentoComunicacao = getDocumentoComunicacao();
+			if (documentoComunicacao.getAssinaturas().isEmpty()) {
+				assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+			}
 			if (getComunicacao() != null) {
 				comunicacaoService.expedirComunicacao(destinatario);
 			} else {
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 			}
 		} catch (DAOException e) {
-			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			String mensagem = "Erro ao expedir comunicação " + modeloComunicacao.getId();
+			if (destinatario != null) {
+				mensagem += " para o destinatário " + destinatario.getId();
+			}
+			LOG.error(mensagem, e);
 			actionMessagesService.handleDAOException(e);
 		} catch (CertificadoException e) {
-			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			String mensagem = "Erro ao expedir comunicação " + modeloComunicacao.getId();
+			if (destinatario != null) {
+				mensagem += " para o destinatário " + destinatario.getId();
+			}
+			LOG.error(mensagem, e);
 			actionMessagesService.handleException("Erro ao expedir comunicação", e);
 		} catch (AssinaturaException e) {
-			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			String mensagem = "Erro ao expedir comunicação " + modeloComunicacao.getId();
+			if (destinatario != null) {
+				mensagem += " para o destinatário " + destinatario.getId();
+			}
+			LOG.error(mensagem, e);
 			FacesMessages.instance().add(e.getMessage());
 		}
 	}
@@ -183,6 +217,10 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public boolean isExpedida(ModeloComunicacao modeloComunicacao) {
 		return modeloComunicacaoManager.isExpedida(modeloComunicacao);
+	}
+	
+	public boolean isDocumentoComunicacaoAssinado() {
+		return getComunicacao() == null && !getDocumentoComunicacao().getAssinaturas().isEmpty() && !isExpedida(modeloComunicacao);
 	}
 	
 	private DocumentoBin getDocumentoComunicacao() {
