@@ -76,7 +76,6 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DestinatarioModeloComunicacao destinatario;
 	private Processo processoComunicacao;
 	private Processo processoResposta;
-	private int totalDocumentosResposta = 0;
 	private Date prazoResposta;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
@@ -100,9 +99,6 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 		newDocumentoEdicao();
 		initClassificacoes();
-		if (processoResposta != null) {
-			totalDocumentosResposta = documentoManager.getTotalDocumentosProcesso(processoResposta);
-		}
 		prazoResposta = comunicacaoService.contabilizarPrazoCumprimento(processoComunicacao);
 	}
 
@@ -132,7 +128,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		boolean hasId = documentoEdicao.getId() != null;
 		try {
 			documentoEdicao = respostaComunicacaoService.gravarDocumentoResposta(documentoEdicao, processoResposta);
-			++totalDocumentosResposta;
+			processoResposta.getDocumentoList().add(documentoEdicao);
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -153,19 +149,19 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void gravarAnexoResposta() {
+		processoResposta.getDocumentoList().add(documentoUploader.getDocumento());
 		documentoUploader.persist();
 		documentoUploader.clear();
-		++totalDocumentosResposta;
 	}
 	
 	public void removerDocumento(Documento documento) {
 		boolean isDocumentoEdicao = documentoEdicao != null && documentoEdicao.equals(documento);
 		try {
 			documentoService.removerDocumento(documento);
+			processoResposta.getDocumentoList().remove(documento);
 			if (isDocumentoEdicao) {
 				newDocumentoEdicao();
 			}
-			--totalDocumentosResposta;
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -243,7 +239,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public boolean isPossuiResposta() {
-		return totalDocumentosResposta > 0;
+		return !processoResposta.getDocumentoList().isEmpty();
 	}
 	
 	public boolean isPossuiProcessoResposta() {
