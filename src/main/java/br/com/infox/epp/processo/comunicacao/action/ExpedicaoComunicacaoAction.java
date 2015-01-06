@@ -162,9 +162,9 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-		boolean expedida = (getComunicacao() == null && isExpedida(modeloComunicacao)) || 
-			(getComunicacao() != null && destinatario != null && destinatario.getExpedido());
-		return !expedida && 
+		boolean expedicaoValida = (getComunicacao() == null && !isExpedida(modeloComunicacao)) || 
+			(getComunicacao() != null && destinatario != null && !destinatario.getExpedido());
+		return expedicaoValida && 
 				assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), 
 						getDocumentoComunicacao(), usuario);
 	}
