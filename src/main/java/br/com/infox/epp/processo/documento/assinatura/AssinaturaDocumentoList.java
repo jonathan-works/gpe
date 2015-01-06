@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.assinatura;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -11,6 +12,7 @@ import br.com.infox.core.list.SearchCriteria;
 
 @Name(AssinaturaDocumentoList.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class AssinaturaDocumentoList extends EntityList<AssinaturaDocumento> {
 
     private static final String DEFAULT_ORDER = "dataAssinatura desc";

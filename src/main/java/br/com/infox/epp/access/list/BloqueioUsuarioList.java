@@ -3,6 +3,7 @@ package br.com.infox.epp.access.list;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -12,6 +13,7 @@ import br.com.infox.epp.access.entity.BloqueioUsuario;
 
 @Name(BloqueioUsuarioList.NAME)
 @Scope(ScopeType.PAGE)
+@AutoCreate
 public class BloqueioUsuarioList extends EntityList<BloqueioUsuario> {
 
     public static final String NAME = "bloqueioUsuarioList";
