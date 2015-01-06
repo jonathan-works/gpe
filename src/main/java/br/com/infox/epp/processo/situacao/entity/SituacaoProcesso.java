@@ -1,21 +1,11 @@
-/* $Id: SituacaoProcesso.java 704 2010-08-12 23:21:10Z jplacerda $ */
-
 package br.com.infox.epp.processo.situacao.entity;
 
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.COUNT_TAREFAS_ATIVAS_BY_TASK_ID;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_CHILDREN;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_BASE;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BASE;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_ROOTS;
-
+import java.io.Serializable;
 import java.text.MessageFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Filter;
@@ -28,17 +18,13 @@ import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 
 @Entity
 @Table(name = SituacaoProcesso.TABLE_NAME)
-@NamedQueries({
-    @NamedQuery(name = TAREFAS_TREE_ROOTS, query = TAREFAS_TREE_QUERY_ROOTS_BASE),
-    @NamedQuery(name = TAREFAS_TREE_CHILDREN, query = TAREFAS_TREE_QUERY_CHILDREN_BASE),
-    @NamedQuery(name = COUNT_TAREFAS_ATIVAS_BY_TASK_ID, query = COUNT_TAREFAS_ATIVAS_BY_TASK_ID_QUERY) })
 @FilterDefs({
     @FilterDef(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, parameters = { 
         @ParamDef(type = SigiloProcessoFilter.TYPE_INT, name = SigiloProcessoFilter.PARAM_ID_USUARIO) }) })
 @Filters({
     @Filter(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, condition = SigiloProcessoFilter.CONDITION_FILTER_SIGILO_PROCESSO) 
 })
-public class SituacaoProcesso implements java.io.Serializable {
+public class SituacaoProcesso implements Serializable {
 
     public static final String TABLE_NAME = "vs_situacao_processo";
     private static final long serialVersionUID = 1L;

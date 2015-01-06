@@ -1,10 +1,8 @@
 package br.com.infox.epp.tarefa.component.tree;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Tuple;
-import javax.persistence.TypedQuery;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Install;
@@ -12,9 +10,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
-import br.com.infox.epp.processo.situacao.service.SituacaoProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
-import br.com.infox.seam.util.ComponentUtil;
 
 @BypassInterceptors
 @Name(TarefasTreeHandler.NAME)
@@ -23,6 +19,7 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Tuple> {
 
     public static final String NAME = "tarefasTree";
     private static final long serialVersionUID = 1L;
+    
     private List<PainelEntityNode> rootList;
     private TipoProcesso tipoProcesso;
 
@@ -56,14 +53,9 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Tuple> {
         ((TarefasTreeHandler) Component.getInstance(TarefasTreeHandler.NAME)).clearTree();
     }
 
-    @Override
-    protected PainelEntityNode createNode() {
-        return new PainelEntityNode(getQueryCaixasList(), getTipoProcesso());
-    }
-
     public List<PainelEntityNode> getTarefasRoots() {
         if (rootList == null || rootList.isEmpty()) {
-            PainelEntityNode entityNode = createNode();
+            PainelEntityNode entityNode = new PainelEntityNode(getTipoProcesso());
             rootList = entityNode.getRootsFluxos();
         }
         return rootList;
@@ -75,20 +67,10 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Tuple> {
         }
     }
 
-    private List<TypedQuery<Tuple>> getQueryCaixasList() {
-        List<TypedQuery<Tuple>> list = new ArrayList<>();
-        list.add(getSituacaoProcessoService().createQueryCaixas(getTipoProcesso()));
-        return list;
-    }
-
     @Override
     public void clearTree() {
         rootList = null;
         super.clearTree();
-    }
-
-    private SituacaoProcessoService getSituacaoProcessoService() {
-        return ComponentUtil.getComponent(SituacaoProcessoService.NAME);
     }
 
 	public TipoProcesso getTipoProcesso() {

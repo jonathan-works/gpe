@@ -25,8 +25,6 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Event;
@@ -60,7 +58,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -72,6 +70,8 @@ import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.jsf.function.ElFunctions;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
@@ -85,27 +85,12 @@ public class TaskInstanceHome implements Serializable {
     private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
             + "neste registro, verifique se ele não foi movimentado";
     private static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
-    private static final LogProvider LOG = Logging
-            .getLogProvider(TaskInstanceHome.class);
+    private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
     private static final long serialVersionUID = 1L;
-
     public static final String NAME = "taskInstanceHome";
 
-    private TaskInstance taskInstance;
-    private Map<String, Object> mapaDeVariaveis;
-    private String variavelDocumento;
-    private Long taskId;
-    private List<Transition> availableTransitions;
-    private List<Transition> leavingTransitions;
-    private ModeloDocumento modeloDocumento;
-    private String varName;
-    private String name;
-    private Boolean assinado = Boolean.FALSE;
-    private TaskInstance currentTaskInstance;
-    private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
-    private Map<String, ClassificacaoDocumento> classificacoesVariaveisUpload;
     @In
-    private SituacaoProcessoManager situacaoProcessoManager;
+    private SituacaoProcessoDAO situacaoProcessoDAO;
     @In
     private ProcessoManager processoManager;
     @In
@@ -124,6 +109,20 @@ public class TaskInstanceHome implements Serializable {
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
     @In
     private DocumentoManager documentoManager;
+    
+    private TaskInstance taskInstance;
+    private Map<String, Object> mapaDeVariaveis;
+    private String variavelDocumento;
+    private Long taskId;
+    private List<Transition> availableTransitions;
+    private List<Transition> leavingTransitions;
+    private ModeloDocumento modeloDocumento;
+    private String varName;
+    private String name;
+    private Boolean assinado = Boolean.FALSE;
+    private TaskInstance currentTaskInstance;
+    private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
+    private Map<String, ClassificacaoDocumento> classificacoesVariaveisUpload;
 
     private URL urlRetornoAcessoExterno;
     private String documentoAAssinar;
@@ -134,8 +133,7 @@ public class TaskInstanceHome implements Serializable {
     public void createInstance() {
         taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (mapaDeVariaveis == null && taskInstance != null) {
-            variableTypeResolver.setProcessInstance(taskInstance
-                    .getProcessInstance());
+            variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
             mapaDeVariaveis = new HashMap<String, Object>();
             documentosAssinaveis = new HashMap<>();
             classificacoesVariaveisUpload = new HashMap<>();
@@ -378,7 +376,7 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private boolean canOpenTask() {
-        return situacaoProcessoManager.canOpenTask(currentTaskInstance.getId());
+        return situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId());
     }
 
     private TaskInstance getCurrentTaskInstance() {
@@ -515,8 +513,7 @@ public class TaskInstanceHome implements Serializable {
         if (this.currentTaskInstance == null) {
             setCanClosePanelVal(true);
             return true;
-        } else if (situacaoProcessoManager.canOpenTask(this.currentTaskInstance
-                .getId())) {
+        } else if (situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId())) {
             setTaskId(currentTaskInstance.getId());
             FacesMessages.instance().clear();
             return false;
