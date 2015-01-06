@@ -16,6 +16,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
@@ -105,9 +106,13 @@ public class ComunicacaoService {
 	private PapelManager papelManager;
 	
 	public void expedirComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
+		Long processIdOriginal = BusinessProcess.instance().getProcessId();
+		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			expedirComunicacao(destinatario);
 		}
+		BusinessProcess.instance().setProcessId(processIdOriginal);
+		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
 	public void expedirComunicacao(DestinatarioModeloComunicacao destinatario) throws DAOException {
@@ -149,7 +154,14 @@ public class ComunicacaoService {
 			processo.getDocumentoList().add(documentoManager.createDocumento(processo, documento.getDescricao(), documento.getDocumentoBin(), documento.getClassificacaoDocumento()));
 		}
 		
+		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
+		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
+		BusinessProcess.instance().setProcessId(null);
+		BusinessProcess.instance().setTaskId(null);
 		iniciarProcessoService.iniciarProcesso(processo, createVariaveisJbpm(destinatario));
+		BusinessProcess.instance().setProcessId(processIdOriginal);
+		BusinessProcess.instance().setTaskId(taskIdOriginal);
+		
 		destinatario.setExpedido(true);
 		genericManager.update(destinatario);
 	}
