@@ -33,9 +33,6 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(BamAction.NAME)
 public class BamAction extends AbstractController {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "bamAction";
@@ -47,23 +44,18 @@ public class BamAction extends AbstractController {
     @In
     private ProcessoTarefaManager processoTarefaManager;
 
-    private List<Fluxo> fluxoList;
+    private List<Fluxo> fluxosAtivosList;
 
-    /**
-     * Retorna todos os fluxos ativos no sistema
-     * 
-     * @return lista com todos os fluxos ativos
-     */
-    public List<Fluxo> getFluxoList() {
-        if (fluxoList == null) {
-            fluxoList = fluxoManager.getFluxoList();
+    public List<Fluxo> getFluxosAtivosList() {
+        if (fluxosAtivosList == null) {
+            fluxosAtivosList = fluxoManager.getFluxosAtivosList();
         }
-        return fluxoList;
+        return fluxosAtivosList;
     }
 
     public List<Fluxo> getFluxoSuggest(Object suggest) {
         String prefix = (String) suggest;
-        List<Fluxo> fluxoList = getFluxoList();
+        List<Fluxo> fluxoList = getFluxosAtivosList();
         List<Fluxo> result = new ArrayList<Fluxo>();
         for (Fluxo fluxo : fluxoList) {
             if (fluxo.getFluxo().startsWith(prefix)) {
@@ -77,9 +69,6 @@ public class BamAction extends AbstractController {
         return fluxoManager.contemProcessoAtrasado(fluxo);
     }
 
-    /**
-     * Retorna os processo não finalizados de um determinado fluxo
-     */
     public List<Processo> getProcessosNaoFinalizados(Fluxo fluxo) {
         return processoManager.listNotEnded(fluxo);
     }

@@ -94,7 +94,7 @@ public class ProdutividadeAction implements Serializable {
 
     public List<Fluxo> getFluxoList() {
         if (fluxos == null) {
-            fluxos = fluxoManager.getFluxoList();
+            fluxos = fluxoManager.getFluxosAtivosList();
         }
         return fluxos;
     }

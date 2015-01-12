@@ -75,12 +75,7 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         }
     }
     
-    /**
-     * Retorna todos os Fluxos ativos
-     * 
-     * @return lista de fluxos ativos
-     */
-    public List<Fluxo> getFluxoList() {
+    public List<Fluxo> getFluxosAtivosList() {
         return getDao().getFluxosAtivosList();
     }
 
