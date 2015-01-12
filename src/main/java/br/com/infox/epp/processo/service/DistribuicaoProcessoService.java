@@ -11,7 +11,9 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
@@ -47,37 +49,28 @@ public class DistribuicaoProcessoService {
 
     @Transactional
     public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
-        setRelator(processo, relator);
-        setUnidadeDecisoraMonocratica(processo, unidadeDecisoraMonocratica);
-        setUnidadeDecisoraColegiada(processo, unidadeDecisoraColegiada);
+    	String idRelator = relator != null ? relator.getIdPessoa().toString() : null;
+    	String idUDM = unidadeDecisoraMonocratica != null ? unidadeDecisoraMonocratica.getIdUnidadeDecisoraMonocratica().toString() : null;
+    	String idUDC = unidadeDecisoraColegiada != null ? unidadeDecisoraColegiada.getIdUnidadeDecisoraColegiada().toString() : null;
+    	
+    	setMetadado(EppMetadadoProvider.RELATOR, processo, idRelator);
+    	setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, processo, idUDM);
+    	setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo, idUDC);
         processoDAO.update(processo);
     }
     
-    private void setRelator(Processo processo, PessoaFisica relator)
-            throws DAOException {
-        if (relator != null) {
-            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.RELATOR, relator.getIdPessoa().toString());
-        } else {
-            metadadoProcessoManager.remove(processo.getMetadado(EppMetadadoProvider.RELATOR));
+    private void setMetadado(MetadadoProcessoDefinition metadadoDefinition, Processo processo, String valor) throws DAOException {
+    	MetadadoProcesso metadadoExistente = processo.getMetadado(metadadoDefinition);
+        if (metadadoExistente != null) {
+        	if (valor != null) {
+        		metadadoExistente.setValor(valor);
+        		metadadoProcessoManager.update(metadadoExistente);
+        	} else {
+        		metadadoProcessoManager.remove(metadadoExistente);
+        		processo.getMetadadoProcessoList().remove(metadadoExistente);
+        	}
+        } else if (valor != null) {
+        	metadadoProcessoManager.addMetadadoProcesso(processo, metadadoDefinition, valor);
         }
     }
-
-    private void setUnidadeDecisoraMonocratica(Processo processo,
-            UnidadeDecisoraMonocratica unidadeDecisoraMonocratica)
-            throws DAOException {
-        if (unidadeDecisoraMonocratica != null) {
-            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, unidadeDecisoraMonocratica.getIdUnidadeDecisoraMonocratica().toString());
-        } else {
-            metadadoProcessoManager.remove(processo.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA));
-        }
-    }
-
-    private void setUnidadeDecisoraColegiada(Processo processo, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
-        if (unidadeDecisoraColegiada != null) {
-            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, unidadeDecisoraColegiada.getIdUnidadeDecisoraColegiada().toString());
-        } else {
-            metadadoProcessoManager.remove(processo.getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA));
-        }
-    }
-    
 }

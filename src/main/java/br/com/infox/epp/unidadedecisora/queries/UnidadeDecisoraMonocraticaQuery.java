@@ -5,6 +5,7 @@ public interface UnidadeDecisoraMonocraticaQuery {
 	String ID_UNIDADE_DEC_COLEGIADA = "idUnidadeDecisoraColegiada";
 	String ID_USUARIO_LOGIN = "idUsuarioLogin";
 	String ID_LOCALIZACAO = "idLocalizacao";
+	String CODIGO_LOCALIZACAO = "codigo";
 	
     String SEARCH_BY_UNIDADE_DECISORA_COLEGIADA = "searchByUnidadeDecisoraColegiada";
     String SEARCH_BY_UNIDADE_DECISORA_COLEGIADA_QUERY = "select udm " + 
@@ -27,6 +28,9 @@ public interface UnidadeDecisoraMonocraticaQuery {
     String SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY = "select count(udm) " +
     		 "from UnidadeDecisoraMonocratica udm " +
     		 "where udm.localizacao.idLocalizacao = :" + ID_LOCALIZACAO;
+    
+    String FIND_UDM_BY_CODIGO_LOCALIZACAO = "UnidadeDecisoraMonocratica.findUDMByCodigoLocalizacao";
+    String FIND_UDM_BY_CODIGO_LOCALIZACAO_QUERY = "select o from UnidadeDecisoraMonocratica o inner join o.localizacao l where l.codigo = :" + CODIGO_LOCALIZACAO;
     
 
 }
