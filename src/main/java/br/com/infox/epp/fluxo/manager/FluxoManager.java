@@ -81,7 +81,7 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
      * @return lista de fluxos ativos
      */
     public List<Fluxo> getFluxoList() {
-        return getDao().getFluxoList();
+        return getDao().getFluxosAtivosList();
     }
 
     public boolean contemProcessoAtrasado(final Fluxo fluxo) {

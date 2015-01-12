@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: tarefasTree.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:a="http://richfaces.org/a4j"
@@ -14,10 +13,10 @@
 
      <rich:tree status="status" toggleType="client" execute="@this"
        selectionType="ajax"
-       selectionChangeListener="#{tarefasTree.processTreeSelectionChange}"
+       selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
        render="painelProcessos, painelProcessosComunicacao, painelProcessosDocumento, :pesquisaListForm, #{painelCustomizado}" var="node" >
 
-       <rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
+       <rich:treeModelAdaptor nodes="#{painelTreeHandler.tarefasRoots}">
          <rich:treeNode iconCollapsed="#{wiSkin.imageFolder}/globe16.png"
            iconExpanded="#{wiSkin.imageFolder}/globe16.png" iconLeaf="#{wiSkin.imageFolder}/messages.gif">
            <h:outputText value="#{node.entity.get('nomeFluxo')}" />

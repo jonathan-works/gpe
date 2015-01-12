@@ -8,7 +8,7 @@
     xmlns:jsp="http://java.sun.com/JSP/Page"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
->
+	xmlns:wi="http://www.itx.com.br/jsf" >
     <ui:param
         name="bin"
         value="#{empty bin ? c.value : bin}"
@@ -40,31 +40,7 @@
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"
             />
         </h:commandLink>
-        <s:link
-            target="idJan#{row.id}"
-            rendered="#{not empty bin.assinaturas}"
-            view="/Processo/Consulta/validaDocumento.xhtml"
-            onclick="openPopUp('idJan#{row.id}', 'about:blank');"
-        >
-            <h:graphicImage
-                title="#{eppmessages['assinaturas.validar']}"
-                alt="#{eppmessages['assinaturas.validar']}"
-                url="#{wiSkin.imageFolder}/lock.png"
-            />
-            <f:param value="#{row.id}" name="idDocumento" />
-        </s:link>
-        <s:link
-            target="idJan#{row.id}"
-            rendered="#{empty bin.assinaturas}"
-            view="/Processo/Consulta/validaDocumento.xhtml"
-            onclick="infox.abrirPopUp('idJan#{row.id}');"
-        >
-            <h:graphicImage
-                title="#{eppmessages['assinaturas.assinar']}"
-                alt="#{eppmessages['assinaturas.assinar']}"
-                url="#{wiSkin.imageFolder}/lock_unlock.png"
-            />
-            <f:param value="#{row.id}" name="idDocumento" />
-        </s:link>
+        <wi:toolBarAssinatura idDocumento="#{row.id}" 
+						      renderedLock="#{not empty bin.assinaturas}" />
     </span>
 </ui:composition>

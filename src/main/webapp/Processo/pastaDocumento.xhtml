@@ -131,12 +131,12 @@
 	    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
 	    title="#{eppmessages['button.restaurar']}"
 	    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
-	      <h:form>
-	        <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
-	          <ui:param name="bin" value="#{row.documentoBin}" />
-	          <ui:param name="header" value="#{row.descricao}" />
-	        </ui:include>
-	</h:form>
+	  <h:form>
+	     <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+	       <ui:param name="bin" value="#{row.documentoBin}" />
+	       <ui:param name="header" value="#{row.descricao}" />
+	     </ui:include>
+	  </h:form>
     </ui:define>
     
     <ui:define name="headerToolBar" />

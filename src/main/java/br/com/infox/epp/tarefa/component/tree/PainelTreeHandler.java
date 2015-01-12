@@ -4,20 +4,17 @@ import java.util.List;
 
 import javax.persistence.Tuple;
 
-import org.jboss.seam.Component;
-import org.jboss.seam.annotations.Install;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.epp.processo.type.TipoProcesso;
 
-@BypassInterceptors
-@Name(TarefasTreeHandler.NAME)
-@Install(precedence = Install.FRAMEWORK)
-public class TarefasTreeHandler extends AbstractTreeHandler<Tuple> {
+@AutoCreate
+@Name(PainelTreeHandler.NAME)
+public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
 
-    public static final String NAME = "tarefasTree";
+    public static final String NAME = "painelTreeHandler"; 
     private static final long serialVersionUID = 1L;
     
     private List<PainelEntityNode> rootList;
@@ -43,14 +40,6 @@ public class TarefasTreeHandler extends AbstractTreeHandler<Tuple> {
             return getSelected().get("idTask", Integer.class);
         }
         return 0;
-    }
-
-    public static TarefasTreeHandler instance() {
-        return (TarefasTreeHandler) Component.getInstance(TarefasTreeHandler.NAME);
-    }
-
-    public static void clearActiveTree() {
-        ((TarefasTreeHandler) Component.getInstance(TarefasTreeHandler.NAME)).clearTree();
     }
 
     public List<PainelEntityNode> getTarefasRoots() {

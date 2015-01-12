@@ -58,7 +58,10 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -376,7 +379,9 @@ public class TaskInstanceHome implements Serializable {
     }
 
     private boolean canOpenTask() {
-        return situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId());
+    	MetadadoProcesso metadadoProcesso = ProcessoEpaHome.instance().getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
+    	TipoProcesso tipoProcesso = (metadadoProcesso != null ? metadadoProcesso.<TipoProcesso>getValue() : null);
+        return situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId(), tipoProcesso);
     }
 
     private TaskInstance getCurrentTaskInstance() {
@@ -513,7 +518,7 @@ public class TaskInstanceHome implements Serializable {
         if (this.currentTaskInstance == null) {
             setCanClosePanelVal(true);
             return true;
-        } else if (situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId())) {
+        } else if ( canOpenTask() ) {
             setTaskId(currentTaskInstance.getId());
             FacesMessages.instance().clear();
             return false;

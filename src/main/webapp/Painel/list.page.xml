@@ -8,7 +8,6 @@ xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/s
 login-required="true"
 >
     <restrict>#{security.checkPage()}</restrict>
-    <action if="#{!contextFacade.ajaxRequest}" execute="#{controleFiltros.iniciarFiltro()}" />
     <begin-conversation join="true" />
     <param name="tarefaId" value="#{processoEpaHome.tarefaId}" />
     <param name="id" value="#{processoEpaHome.id}" converterId="integerConverter"/>

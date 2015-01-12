@@ -10,32 +10,37 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
+import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 import br.com.infox.ibpm.event.JbpmEventsHandler;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(CaixaCrudAction.NAME)
 public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
+	
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging
-            .getLogProvider(CaixaCrudAction.class);
+    private static final LogProvider LOG = Logging.getLogProvider(CaixaCrudAction.class);
 
     public static final String NAME = "caixaCrudAction";
     public static final String ADD_CAIXA_EVENT = "addCaixaEvent";
 
-    @In private TarefaManager tarefaManager;
-    @In private CaixaManager caixaManager;
-    @In private ActionMessagesService actionMessagesService;
+    @In 
+    private TarefaManager tarefaManager;
+    @In 
+    private CaixaManager caixaManager;
+    @In 
+    private ActionMessagesService actionMessagesService;
+    @In
+    private PainelTreeHandler painelTreeHandler;
 
     public List<SelectItem> getPreviousNodes() {
         return tarefaManager.getPreviousNodes(getInstance().getTarefa());
@@ -66,7 +71,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            TarefasTreeHandler.clearActiveTree();
+            painelTreeHandler.clearTree();
         }
         super.afterSave(ret);
     }
@@ -98,7 +103,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
         try {
             caixaManager.removeCaixaByIdCaixa(getInstance().getIdCaixa());
             String ret = super.remove();
-            TarefasTreeHandler.clearActiveTree();
+            painelTreeHandler.clearTree();
             return ret;
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
@@ -122,11 +127,8 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
         if (getInstance() != null) {
             remove();
         } else {
-            getMessagesHandler().add(Severity.ERROR,
-                    Messages.resolveMessage("caixa.error.notSelected"));
+            getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage("caixa.error.notSelected"));
         }
-        final TarefasTreeHandler tree = ComponentUtil
-                .getComponent(TarefasTreeHandler.NAME);
-        tree.clearTree();
+        painelTreeHandler.clearTree();
     }
 }

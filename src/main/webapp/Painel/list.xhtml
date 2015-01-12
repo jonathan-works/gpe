@@ -50,7 +50,7 @@
         
         <infox:tab id="processo"
           	name="processo" render="painelProcessos"
-          	limitRender="true" action="#{tarefasTree.clearTree()}"
+          	limitRender="true" action="#{painelTreeHandler.clearTree()}"
           	title="#{eppmessages['caixa.tab']}" >
           <s:div rendered="#{painelUsuarioController.tab eq 'processo'}">
 	          <s:div id="tarefasDiv" styleClass="p-caixas" style="margin-right:10px;">
@@ -168,7 +168,7 @@
         
         <infox:tab id="comunicacoes"
           	name="comunicacao" render="painelProcessosComunicacao"
-          	limitRender="true" action="#{tarefasTree.clearTree()}"
+          	limitRender="true" action="#{painelTreeHandler.clearTree()}"
           	title="Fluxo/Comunicação" >
           <s:div rendered="#{painelUsuarioController.tab eq 'comunicacao'}">
 	          <s:div id="comunicacoesTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
@@ -286,7 +286,7 @@
         
         <infox:tab id="documentos"
           	name="documento" render="painelProcessosDocumento"
-          	limitRender="true" action="#{tarefasTree.clearTree()}"
+          	limitRender="true" action="#{painelTreeHandler.clearTree()}"
           	title="Fluxo/Documento" >
           <s:div rendered="#{painelUsuarioController.tab eq 'documento'}">
 	          <s:div id="documentosTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >

@@ -32,7 +32,7 @@ public class PainelEntityNode extends EntityNode<Tuple> {
         if (caixas == null) {
             caixas = new ArrayList<EntityNode<Tuple>>();
             if (!isLeaf()) {
-            	List<Tuple> children = getSituacaoProcessoDAO().getCaixaList(tipoProcesso, getTaskId());
+            	List<Tuple> children = getSituacaoProcessoDAO().getCaixaList(tipoProcesso, getTarefaId());
         		for (Tuple entity : children) {
         		    caixas.add(new PainelEntityNode(this, entity, tipoProcesso));
         		}
@@ -76,9 +76,9 @@ public class PainelEntityNode extends EntityNode<Tuple> {
         return idTarefa == null ? 0 : idTarefa;
     }
 
-    public Integer getTaskId() {
-    	Integer idTask = getEntity().get("idTask", Integer.class);
-        return idTask == null ? 0 : idTask;
+    public Long getTaskId() {
+    	Long idTask = getEntity().get("idTask", Long.class);
+        return idTask == null ? 0L : idTask;
     }
 
     private SituacaoProcessoDAO getSituacaoProcessoDAO() {

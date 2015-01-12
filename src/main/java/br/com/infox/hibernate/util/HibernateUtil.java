@@ -1,10 +1,15 @@
 package br.com.infox.hibernate.util;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import org.hibernate.Filter;
+import org.hibernate.dialect.Dialect;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.Component;
 
 import br.com.infox.hibernate.session.SessionAssistant;
+import br.com.infox.seam.util.ComponentUtil;
 
 public final class HibernateUtil {
 
@@ -35,6 +40,21 @@ public final class HibernateUtil {
 
     private static SessionAssistant sessionAssistant() {
         return (SessionAssistant) Component.getInstance(SessionAssistant.NAME);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public static Dialect getDialect() {
+    	EntityManager em = ComponentUtil.getComponent("entityManager");
+    	EntityManagerFactory emf = em.getEntityManagerFactory();
+    	String dialectClassName = (String) emf.getProperties().get("hibernate.dialect");
+    	Dialect dialect = null;
+    	try {
+			Class<? extends Dialect> clazz = (Class<? extends Dialect>) Class.forName(dialectClassName);
+			dialect = clazz.newInstance();
+    	} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+    	return dialect;
     }
 
 }

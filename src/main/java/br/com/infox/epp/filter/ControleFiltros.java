@@ -6,18 +6,16 @@ import java.text.MessageFormat;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
-import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ControleFiltros.NAME)
@@ -30,7 +28,6 @@ public class ControleFiltros {
     private static final LogProvider LOG = Logging.getLogProvider(ControleFiltros.class);
     private boolean firstTime = true;
 
-    @Observer({ INICIALIZAR_FILTROS, TarefasTreeHandler.FILTER_TAREFAS_TREE })
     public void iniciarFiltro() {
         if (!firstTime) {
             LOG.info("Ignorando execução duplicada. ");
