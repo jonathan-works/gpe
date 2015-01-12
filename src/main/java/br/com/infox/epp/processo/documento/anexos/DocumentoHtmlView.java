@@ -39,7 +39,7 @@ public class DocumentoHtmlView implements Serializable {
     }
     
     public void setIdDocumentoBin(Integer idDocumentoBin) {
-    	if (idDocumentoBin != null) {
+    	if (idDocumentoBin != null && idDocumentoBin != 0) {
     		setViewInstanceBin(documentoBinManager.find(idDocumentoBin));
     	}
     }
