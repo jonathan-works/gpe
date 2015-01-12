@@ -36,12 +36,7 @@ public class FluxoDAO extends DAO<Fluxo> {
     private static final long serialVersionUID = -4180114886888382915L;
     public static final String NAME = "fluxoDAO";
 
-    /**
-     * Retorna todos os Fluxos ativos
-     * 
-     * @return lista de fluxos ativos
-     */
-    public List<Fluxo> getFluxoList() {
+    public List<Fluxo> getFluxosAtivosList() {
         return getNamedResultList(LIST_ATIVOS, null);
     }
 
