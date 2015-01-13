@@ -644,5 +644,7 @@ public class ModeloComunicacaoAction implements Serializable {
 		classificacoes = null;
 		modelosDocumento = null;
 		initClassificacoes();
+		modeloComunicacao.setClassificacaoComunicacao(null);
+		modeloComunicacao.setModeloDocumento(null);
 	}
 }
