@@ -12,7 +12,6 @@
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
 	<ui:define name="title">Impressão de Comunicações / Diário Oficial</ui:define>
-
 	<ui:define name="body">
 		<a:jsFunction name="selectProcesso" immediate="true"
 		      execute="@this" render="@this"
@@ -25,9 +24,9 @@
 			<wi:dataTable id="comunicacoes" bean="#{impressaoComunicacaoList}"
 				values="#{impressaoComunicacaoList.list(15)}"
 				tableTitle="Comunicações" rowId="#{row.idProcesso}"
-				hideOrder="true" >
-				
-				<ui:define name="toolBar">
+				hideOrder="true" showGrid="#{impressaoComunicacaoList.showDataTable}">
+
+                <ui:define name="toolBar">
 					<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png"
 							title="Imprimir Comunicação" 
 							onclick="#{rich:component('imprimirComunicacaoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
@@ -39,16 +38,24 @@
 				
 				<ui:define name="searchForm">
 					<wi:searchForm formId="pesquisaImpressaoSearchForm" 
-								   formTitle="#{eppmessages['searchForm.title']}" >
+								   formTitle="#{eppmessages['searchForm.title']}"
+                                   searchAction="#{impressaoComunicacaoList.showDataTable()}"
+                                   clearAction="#{impressaoComunicacaoList.hideDataTable()}" >
 						<wi:selectOneMenuEnum id="meioExpedicao"
-							label="Meio de Expedição"
+							label="#{eppmessages['comunicacao.impressao.meioExpedicao']}"
 							value="#{impressaoComunicacaoList.meioExpedicao}" 
 							items="#{impressaoComunicacaoList.meiosExpedicao}" 
 							showLabelTodos="true" />
 							
-						<wi:inputDate id="dataAssinatura" 
-							label="Data da Assinatura" 
-							value="#{impressaoComunicacaoList.dataAssinatura}" />
+                        <wi:inputDataPeriodo id="dataAssinatura"
+                            label="#{eppmessages['comunicacao.impressao.dataAssinatura']}"
+                            valueDateFrom="#{impressaoComunicacaoList.dataInicio}"
+                            valueDateTo="#{impressaoComunicacaoList.dataFim}" />
+
+                        <wi:selectBooleanRadio id="impresso"
+                            label="#{eppmessages['comunciacao.impressao.impresso']}"
+                            value="#{impressaoComunicacaoList.impresso}"
+                            selected="false" />
 					</wi:searchForm>
 				</ui:define>
 	
