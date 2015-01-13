@@ -18,7 +18,6 @@ import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
-import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
@@ -54,8 +53,6 @@ public class PainelUsuarioController extends AbstractController {
     private ActionMessagesService actionMessagesService;
     @In
     private PainelTreeHandler painelTreeHandler;
-    @In
-    private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
     
     private Tuple selected;
     private List<Integer> processoIdList;
