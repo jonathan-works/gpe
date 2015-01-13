@@ -60,39 +60,27 @@
               <a:jsFunction
                 name="assinar"
                 action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
-                execute="@this certChain signature"
+                execute="@this appletAssinaturaCertChain appletAssinaturaSignature"
                 render="@all"
                 oncomplete="infox.hideLoading();if (opener != undefined &amp;&amp; typeof opener.reloadLock === 'function' ){ opener.reloadLock(); };" />
-              <h:inputHidden
-                id="certChain"
-                value="#{validaDocumentoAction.certChain}" />
-              <h:inputHidden
-                id="signature"
-                value="#{validaDocumentoAction.signature}" />
-              <wi:appletAssinatura
+              <wi:certificadoDigital
                 id="appletAssinatura"
                 urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
                 formId="#{rich:clientId('assinaturaDocumento')}"
-                certificationChainField="#{rich:clientId('certChain')}"
-                signatureField="#{rich:clientId('signature')}"
-                getDataFunction="documento.getData()"
-                useBase64Function="'true'"
+                certificationChainField="#{validaDocumentoAction.certChain}"
+                signatureField="#{validaDocumentoAction.signature}"
+                signableData="#{assinadorDocumento.documentoBin.isBinario() ? validaDocumentoAction.documentoBin.md5Documento : validaDocumentoAction.documentoBin.modeloDocumento}"
                 functionPreSign="infox.showLoading();"
                 functionPosSign="documento.reRenderExternal(); assinar();"
                 debug="false"
+                useBase64Function="true"
                 loginMode="false"
                 useProviderDll="false"
                 rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado) 
                 				and validaDocumentoAction.documento.isDocumentoAssinavel(usuarioLogadoPerfilAtual.perfilTemplate.papel)}">
-              </wi:appletAssinatura>
-              <h:inputHidden
-                id="dadosAssinaveis"
-                value="#{assinadorDocumento.documentoBin.isBinario() ? validaDocumentoAction.documentoBin.md5Documento : validaDocumentoAction.documentoBin.modeloDocumento}" />
+              </wi:certificadoDigital>
               <h:outputScript>
                 var documento={
-                  getData:function getData() {
-                    return #{rich:jQuery('dadosAssinaveis')}.val();
-                  },
                   reRenderExternal:function(){
                   	if (#{reRenderExternal}){
                   		opener.location=opener.location;

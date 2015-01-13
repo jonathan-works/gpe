@@ -76,13 +76,13 @@
       id="#{editorId.replace('-','')}AppletDiv"
       styleClass="applet-div"
       rendered="#{not readonly}">
-      <wi:appletAssinatura
+      <wi:certificadoDigital
         id="#{id}"
         urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
         formId="#{rich:clientId('taskInstanceForm')}"
-        certificationChainField="#{rich:clientId(idCertChain)}"
-        signatureField="#{rich:clientId(idSignature)}"
-        getDataFunction="infox.editor['#{editorId}'].instance.getData()"
+        certificationChainField="#{home.documentosAssinaveis[id].certChain}"
+        signatureField="#{home.documentosAssinaveis[id].signature}"
+        signableData="infox.editor['#{editorId}'].instance.getData()"
         useBase64Function="infox.editor['#{editorId}'].useBase64()"
         functionPreSign="infox.showLoading();"
         functionPosSign="#{editorId.replace('-', '')}submitForm();infox.showLoading();"
@@ -90,7 +90,7 @@
         loginMode="false"
         useProviderDll="false"
         rendered="#{home.podeRenderizarApplet(id)}">
-      </wi:appletAssinatura>
+      </wi:certificadoDigital>
     </s:div>
     <h:outputScript
       rendered="#{not readonly and home.podeRenderizarApplet(id)}">
