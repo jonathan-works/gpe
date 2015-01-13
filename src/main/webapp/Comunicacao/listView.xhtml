@@ -100,7 +100,7 @@
 					</rich:collapsiblePanel>
 					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao(null)}" 
 						value="#{eppmessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-						rendered="#{empty expedicaoComunicacaoAction.comunicacao}"/>
+						rendered="#{empty expedicaoComunicacaoAction.comunicacao and not expedicaoComunicacaoAction.isExpedida(expedicaoComunicacaoAction.modeloComunicacao)}"/>
 					<wi:commandButton id="expedir" action="expedicaoComunicacaoAction.expedirComunicacao()" 
 						rendered="#{expedicaoComunicacaoAction.documentoComunicacaoAssinado}"
 						value="#{eppmessages['comunicacao.expedirComunicacoes']}"
