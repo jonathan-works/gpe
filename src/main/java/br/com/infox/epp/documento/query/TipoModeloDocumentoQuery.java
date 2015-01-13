@@ -10,4 +10,6 @@ public interface TipoModeloDocumentoQuery {
     String ABREVIACAO = "ds_abreviacao";
     String TIPO_MODELO_DOCUMENTO_ATTRIBUTE = "tipoModeloDocumento";
 
+    String LIST_TIPOS_MODELO_DOCUMENTO_ATIVOS = "TipoModeloDocumento.listTiposModeloDocumentoAtivos";
+    String LIST_TIPOS_MODELO_DOCUMENTO_ATIVOS_QUERY = "select o from TipoModeloDocumento o where o.ativo = true";
 }

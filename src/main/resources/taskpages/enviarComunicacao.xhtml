@@ -15,9 +15,9 @@
 			<h:form id="comunicacaoForm">
 				<wi:selectOneMenuEntity id="tipoComunicacao" label="#{eppmessages['comunicacao.tipoComunicacao']}"
 					required="true" items="#{modeloComunicacaoAction.tiposComunicacao}" showLabelSelecione="true"
-					value="#{modeloComunicacaoAction.modeloComunicacao.tipoComunicacao}"
+					value="#{modeloComunicacaoAction.tipoComunicacao}"
 					disabled="#{modeloComunicacaoAction.modeloComunicacao.finalizada}">
-					<a:ajax event="change" />
+					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
 				</wi:selectOneMenuEntity>
 				<div />
 				<h:commandButton action="#{modeloComunicacaoAction.downloadComunicacaoCompleta()}" 
@@ -286,8 +286,8 @@
 				      		items="#{modeloComunicacaoAction.classificacoes}"
 				      		showLabelSelecione="true"
 				      		value="#{modeloComunicacaoAction.modeloComunicacao.classificacaoComunicacao}"
-				      		readonly="#{modeloComunicacaoAction.classificacoes.size eq 1 or not minuta}"
-	      					disabled="#{modeloComunicacaoAction.classificacoes.size eq 1 or not minuta}">
+				      		readonly="#{not minuta}"
+	      					disabled="#{not minuta}">
 	      					
 	      					<a:ajax event="change"
 	        					render="tooltipComunicacao"

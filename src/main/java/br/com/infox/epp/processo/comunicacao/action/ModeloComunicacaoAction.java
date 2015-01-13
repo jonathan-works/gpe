@@ -17,10 +17,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.faces.FacesMessages;
-
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.Token;
 
@@ -42,8 +38,6 @@ import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
-import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -72,6 +66,8 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 import com.google.common.base.Strings;
@@ -109,15 +105,11 @@ public class ModeloComunicacaoAction implements Serializable {
 	@In
 	private PessoaFisicaManager pessoaFisicaManager;
 	@In
-	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
-	@In
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@In
 	private DocumentoBinManager documentoBinManager;
 	@In
 	private GenericManager genericManager;
-	@In
-	private ModeloDocumentoManager modeloDocumentoManager;
 	@In
 	private ComunicacaoService comunicacaoService;
 	@In
@@ -167,7 +159,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	}
 
 	private void initClassificacoes() {
-		classificacoes = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true, null, null);
+		classificacoes = comunicacaoService.getClassificacoesDocumentoDisponiveisComunicacao(modeloComunicacao.getTipoComunicacao());
 		if (classificacoes.size() == 1 && modeloComunicacao.getClassificacaoComunicacao() == null) {
 			modeloComunicacao.setClassificacaoComunicacao(classificacoes.get(0));
 		}
@@ -558,7 +550,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public List<ModeloDocumento> getModelosDocumento() {
 		if (modelosDocumento == null) {
-			modelosDocumento = modeloDocumentoManager.getModeloDocumentoList();
+			modelosDocumento = comunicacaoService.getModelosDocumentoDisponiveisComunicacao(modeloComunicacao.getTipoComunicacao());
 		}
 		return modelosDocumento;
 	}
@@ -641,5 +633,16 @@ public class ModeloComunicacaoAction implements Serializable {
 			}
 		}
 		return pastas;
+	}
+	
+	public TipoComunicacao getTipoComunicacao() {
+		return modeloComunicacao.getTipoComunicacao();
+	}
+	
+	public void setTipoComunicacao(TipoComunicacao tipoComunicacao) {
+		modeloComunicacao.setTipoComunicacao(tipoComunicacao);
+		classificacoes = null;
+		modelosDocumento = null;
+		initClassificacoes();
 	}
 }

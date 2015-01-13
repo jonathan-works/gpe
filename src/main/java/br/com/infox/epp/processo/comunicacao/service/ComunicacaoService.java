@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +27,10 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ArbitraryExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
@@ -44,6 +48,7 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -103,6 +108,8 @@ public class ComunicacaoService {
 	private CalendarioEventosManager calendarioEventosManager;
 	@In
 	private PapelManager papelManager;
+	@In
+	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
 	
 	public void expedirComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
 		Long processIdOriginal = BusinessProcess.instance().getProcessId();
@@ -282,6 +289,23 @@ public class ComunicacaoService {
         }
         return calendarioEventosManager.getPrimeiroDiaUtil((Date) metadadoCiencia.getValue(), qtdDias);
     }
+	
+	public List<ModeloDocumento> getModelosDocumentoDisponiveisComunicacao(TipoComunicacao tipoComunicacao) {
+		if (tipoComunicacao == null || tipoComunicacao.getTipoModeloDocumento() == null) {
+			return modeloDocumentoManager.getModeloDocumentoList();
+		} else {
+			TipoModeloDocumento tipoModeloDocumento = tipoComunicacao.getTipoModeloDocumento();
+			return modeloDocumentoManager.getModeloDocumentoByGrupoAndTipo(tipoModeloDocumento.getGrupoModeloDocumento(), tipoModeloDocumento);
+		}
+	}
+	
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisComunicacao(TipoComunicacao tipoComunicacao) {
+		if (tipoComunicacao == null || tipoComunicacao.getClassificacaoDocumento() == null) {
+			return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true);
+		} else {
+			return Arrays.asList(tipoComunicacao.getClassificacaoDocumento());
+		}
+	}
 	
 	private Collection<MetadadoProcesso> criarMetadados(DestinatarioModeloComunicacao destinatario, Processo processo) {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
