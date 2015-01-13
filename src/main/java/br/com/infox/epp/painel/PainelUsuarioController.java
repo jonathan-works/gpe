@@ -1,18 +1,14 @@
 package br.com.infox.epp.painel;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-import org.jboss.seam.ScopeType;
+import javax.persistence.Tuple;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
@@ -21,22 +17,20 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
+import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
-import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
+import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 
 @Name(PainelUsuarioController.NAME)
-@Scope(ScopeType.CONVERSATION)
-@SuppressWarnings(UNCHECKED)
 public class PainelUsuarioController extends AbstractController {
 	
     private static final long serialVersionUID = 1L;
@@ -49,7 +43,7 @@ public class PainelUsuarioController extends AbstractController {
     @In
     private ProcessoManager processoManager;
     @In
-    private SituacaoProcessoManager situacaoProcessoManager;
+    private SituacaoProcessoDAO situacaoProcessoDAO;
     @In
     private VariavelProcessoService variavelProcessoService;
     @In
@@ -58,15 +52,19 @@ public class PainelUsuarioController extends AbstractController {
     private CaixaManager caixaManager;
     @In
     private ActionMessagesService actionMessagesService;
+    @In
+    private PainelTreeHandler painelTreeHandler;
+    @In
+    private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
     
-    private Map<String, Object> selected;
+    private Tuple selected;
     private List<Integer> processoIdList;
     private List<DynamicColumnModel> dynamicColumns;
     private TipoProcesso tipoProcesso;
 
     @Observer("selectedTarefasTree")
-    public void onSelected(Object obj) {
-        this.selected = (Map<String, Object>) obj;
+    public void onSelected(Tuple selected) {
+        setSelected(selected);
         processoIdList = null;
         dynamicColumns = null;
         updateDatatable();
@@ -76,7 +74,7 @@ public class PainelUsuarioController extends AbstractController {
     	processoIdList = null;
     	selected = null;
     	setTipoProcesso();
-		TarefasTreeHandler.instance().setTipoProcesso(getTipoProcesso());
+    	painelTreeHandler.setTipoProcesso(getTipoProcesso());
     }
 
     /**
@@ -87,22 +85,22 @@ public class PainelUsuarioController extends AbstractController {
 	}
 
     public Integer getIdCaixa() {
-        if (selected != null) {
-            return (Integer) selected.get("idCaixa");
+        if ("caixa".equalsIgnoreCase(getSelectedType())) {
+            return selected.get("idCaixa", Integer.class);
         }
         return null;
     }
+    
+    private String getSelectedType(){
+    	return selected != null ? selected.get("type", String.class) : null;
+    }
 
     public List<Integer> getProcessoIdList() {
-        if (selected != null) {
+        if (selected != null && !"fluxo".equalsIgnoreCase(getSelectedType())) {
             if (processoIdList == null) {
-                processoIdList = situacaoProcessoManager.getProcessosAbertosByIdTarefa(getTarefaId(), selected, getTipoProcesso());
-            }
-            if (processoIdList.size() == 0) {
-                processoIdList.add(-1);
+                processoIdList = situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(getSelected(), getTipoProcesso());
             }
             return processoIdList;
-
         }
         return null;
     }
@@ -122,7 +120,8 @@ public class PainelUsuarioController extends AbstractController {
         }
     }
 
-    private List<Integer> getProcessoIdList(Object o) {
+    @SuppressWarnings("unchecked")
+	private List<Integer> getProcessoIdList(Object o) {
         List<Integer> list = new ArrayList<Integer>();
         if (o instanceof Processo) {
             list.add(((Processo) o).getIdProcesso());
@@ -153,11 +152,11 @@ public class PainelUsuarioController extends AbstractController {
         return null;
     }
 
-    public void setSelected(Map<String, Object> selected) {
+    public void setSelected(Tuple selected) {
         this.selected = selected;
     }
 
-    public Map<String, Object> getSelected() {
+    public Tuple getSelected() {
         return selected;
     }
 
@@ -170,11 +169,7 @@ public class PainelUsuarioController extends AbstractController {
     }
 
     public void refresh() {
-        TarefasTreeHandler.instance().refresh();
-    }
-
-    public static PainelUsuarioController instance() {
-        return (PainelUsuarioController) Contexts.getConversationContext().get(NAME);
+        painelTreeHandler.refresh();
     }
 
     public void setProcessoCaixa(Caixa caixa) {
@@ -188,17 +183,13 @@ public class PainelUsuarioController extends AbstractController {
 
     private void updateDatatable() {
         List<Integer> idsProcesso = getProcessoIdList();
-
-        if (idsProcesso != null
-                && (idsProcesso.size() > 1 || (idsProcesso.size() == 1 && idsProcesso.get(0) != -1))) {
-            Processo processo = processoManager.find(idsProcesso.get(0));
-            Fluxo fluxo = processo.getNaturezaCategoriaFluxo().getFluxo();
-
-            List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo);
-            this.dynamicColumns = new ArrayList<>();
+        if (idsProcesso != null && !idsProcesso.isEmpty()) {
+            Integer idProcesso = idsProcesso.get(0);
+            List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByIdProcesso(idProcesso);
+            dynamicColumns = new ArrayList<>();
             for (DefinicaoVariavelProcesso definicao : definicoes) {
                 DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION, definicao.getNome()));
-                this.dynamicColumns.add(columnModel);
+                dynamicColumns.add(columnModel);
             }
         }
     }
@@ -208,10 +199,10 @@ public class PainelUsuarioController extends AbstractController {
     }
 
     public List<DynamicColumnModel> getDynamicColumns() {
-        if (this.dynamicColumns == null) {
+        if (dynamicColumns == null) {
             updateDatatable();
         }
-        return this.dynamicColumns;
+        return dynamicColumns;
     }
     
     @Override

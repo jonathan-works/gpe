@@ -2,27 +2,20 @@
 
 package br.com.infox.epp.filter;
 
-import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PAPEL_LOCALIZACAO;
-import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PARAM_ID_LOCALIZACAO;
-import static br.com.infox.epp.processo.situacao.filter.SituacaoProcessoFilter.FILTER_PARAM_ID_PAPEL;
-
 import java.text.MessageFormat;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
 import br.com.infox.epp.system.util.LogUtil;
-import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
 import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ControleFiltros.NAME)
@@ -35,7 +28,6 @@ public class ControleFiltros {
     private static final LogProvider LOG = Logging.getLogProvider(ControleFiltros.class);
     private boolean firstTime = true;
 
-    @Observer({ INICIALIZAR_FILTROS, TarefasTreeHandler.FILTER_TAREFAS_TREE })
     public void iniciarFiltro() {
         if (!firstTime) {
             LOG.info("Ignorando execução duplicada. ");
@@ -43,11 +35,6 @@ public class ControleFiltros {
         }
         firstTime = false;
         UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
-
-        // Iniciar os filtros
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_PAPEL, usuarioPerfilAtual.getPerfilTemplate().getPapel().getIdPapel());
-        Localizacao localizacaoAtual = usuarioPerfilAtual.getPerfilTemplate().getLocalizacao();
-        HibernateUtil.setFilterParameter(FILTER_PAPEL_LOCALIZACAO, FILTER_PARAM_ID_LOCALIZACAO, localizacaoAtual == null ? 0 : localizacaoAtual.getIdLocalizacao());
 
         HibernateUtil.setFilterParameter(SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, SigiloProcessoFilter.PARAM_ID_USUARIO, usuarioPerfilAtual.getUsuarioLogin().getIdUsuarioLogin());
 

@@ -13,6 +13,7 @@ public interface DefinicaoVariavelProcessoQuery {
 
     String PARAM_FLUXO = "fluxo";
     String PARAM_NOME = "nome";
+    String PARAM_ID_PROCESSO = "idProcesso";
 
     String LIST_BY_FLUXO = "listByFluxo";
     String LIST_BY_FLUXO_QUERY = "select o from DefinicaoVariavelProcesso o"
@@ -28,4 +29,10 @@ public interface DefinicaoVariavelProcessoQuery {
             + PARAM_FLUXO
             + " and o.nome = :"
             + PARAM_NOME;
+    
+    String DEFINICAO_BY_ID_PROCESSO = "definicaoByIdProcesso";
+    String DEFINICAO_BY_ID_PROCESSO_QUERY = "select o from DefinicaoVariavelProcesso o " +
+            "where exists (select 1 from NaturezaCategoriaFluxo ncf " +
+            "				inner join ncf.processoList p " + 
+            "				where ncf.fluxo = o.fluxo and p.idProcesso = :" + PARAM_ID_PROCESSO + " ) ";
 }

@@ -1,216 +1,368 @@
 package br.com.infox.epp.processo.situacao.dao;
 
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.AND;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.COM_CAIXA_COND;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.COUNT_TAREFAS_ATIVAS_BY_TASK_ID;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.FILTRO_LOCALIZACAO_DESTINO;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.FILTRO_PESSOA_DESTINATARIO;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.GROUP_BY_PROCESSO_SUFIX;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.ID_TAREFA_PARAM;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.OR;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_COLEGIADA_LOGADA;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_ID_LOCALIZACAO;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_ID_PESSOA;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_ID_TASKINSTANCE;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_MONOCRATICA_LOGADA;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PARAM_TIPO_PROCESSO;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_ABERTOS_BASE_QUERY;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_COM_COLEGIADA_COND;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_COM_MONOCRATICA_COND;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.SEM_CAIXA_COND;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_FILTER_POOLEDACTOR;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS_BASE;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CAIXAS_SUFIX;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_BASE;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BASE;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_BY_TIPO;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_SEM_TIPO;
-import static br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery.TAREFAS_TREE_QUERY_ROOTS_SUFIX;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
+import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.AbstractQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.core.Events;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
+import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 import br.com.infox.epp.processo.type.TipoProcesso;
-import br.com.infox.epp.tarefa.component.tree.TarefasTreeHandler;
-import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @AutoCreate
 @Name(SituacaoProcessoDAO.NAME)
 public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
-    
-    @In
-    private Authenticator authenticator;
-    
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "situacaoProcessoDAO";
 
-    public Long getQuantidadeTarefasAtivasByTaskId(long taskId) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_ID_TASKINSTANCE, taskId);
-        return getNamedSingleResult(COUNT_TAREFAS_ATIVAS_BY_TASK_ID, parameters);
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "situacaoProcessoDAO";
+	
+	@In
+	private Authenticator authenticator;
+	
+    public final List<Tuple> getRootList(TipoProcesso tipoProcesso) {
+        CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryRoot();
+        appendMandatoryFilters(criteriaQuery, tipoProcesso);
+        appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+        return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
 
-    @SuppressWarnings("unchecked")
-	public <T> List<T> getQueryProcessoAbertosByIdTarefa(Integer idTarefa, Map<String, Object> selected) {
-        String hql = putFiltrosDeUnidadesDecisoras(getHqlQueryBaseProcessosAbertos(selected)) + GROUP_BY_PROCESSO_SUFIX;
-        Query query = getEntityManager().createQuery(hql);
-        query.setParameter(ID_TAREFA_PARAM, idTarefa);
-        return putParametrosDosFiltrosDeUnidadesDecisoras(query).getResultList();
+	public final List<Tuple> getChildrenList(Integer idFluxo, TipoProcesso tipoProcesso) {
+		CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryChildren(idFluxo);
+		appendMandatoryFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+        return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
-    
-    @SuppressWarnings("unchecked")
-	public <T> List<T> getProcessosAbertosByIdTarefaAndTipoProcesso(Integer idTarefa, Map<String, Object> selected, TipoProcesso tipoProcesso) {
-    	StringBuilder sb = new StringBuilder(getHqlQueryBaseProcessosAbertos(selected));
-    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
-    	putFiltroLocalizacaoAndPessoa(sb);
-    	sb.append(GROUP_BY_PROCESSO_SUFIX);
-    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-        query.setParameter(ID_TAREFA_PARAM, idTarefa);
-        query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.toString());
-        return query.getResultList();
+	
+	public final List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa) {
+		TypedQuery<Long> typedCount = getEntityManager().createQuery(getCountSubqueryCaixas(tipoProcesso));
+		String countQueryCaixa = HibernateUtil.getQueryString(typedCount);
+		String queryCaixas = "select c.idCaixa as idCaixa, c.tarefa.idTarefa as idTarefa, " +
+							 "		 c.nomeCaixa as nomeCaixa, 'Caixa' as type, " +
+							 "( " +  countQueryCaixa +  " and idCaixa = c.idCaixa ) as qtd " +
+							 "from Caixa c " +
+							 "where c.tarefa.idTarefa = :taskId " +
+							 "order by c.nomeCaixa ";
+		TypedQuery<Tuple> typedQuery = getEntityManager().createQuery(queryCaixas, Tuple.class);
+		typedQuery.setParameter("taskId", idTarefa);
+		Map<String, Object> parametersCountSubquery = HibernateUtil.getQueryParams(typedCount);
+		for (String key : parametersCountSubquery.keySet()) {
+			typedQuery.setParameter(key, parametersCountSubquery.get(key));
+		}
+        return typedQuery.getResultList();
     }
-
-    protected String getHqlQueryBaseProcessosAbertos(Map<String, Object> selected) {
-        String treeType = (String) selected.get("tree");
-        String nodeType = (String) selected.get("type");
-        if ("caixa".equals(treeType) && "Task".equals(nodeType)) {
-            return PROCESSOS_ABERTOS_BASE_QUERY + SEM_CAIXA_COND;
+	
+	private CriteriaQuery<Long> getCountSubqueryCaixas(TipoProcesso tipoProcesso) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
+		Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
+		criteriaQuery.select(cb.count(root.<Integer>get("idProcesso"))).distinct(true);
+		criteriaQuery.where(cb.and());
+		appendMandatoryFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+		return criteriaQuery;
+	}
+	
+	public final List<Integer> getIdProcessosAbertosByIdTarefa(Tuple selected, TipoProcesso tipoProcesso) {
+		Integer idTarefa = selected.get("idTarefa", Integer.class);
+		CriteriaQuery<Integer> criteriaQuery = createBaseCriteriaQueryProcessosAbertos(idTarefa);
+        String nodeType = selected.get("type", String.class);
+		if ("Task".equals(nodeType)) {
+			appendProcessSemCaixaFilter(criteriaQuery);
+        } else if ("Caixa".equals(nodeType)) {
+        	Integer idCaixa = selected.get("idCaixa", Integer.class);
+            appendProcessoComCaixaFilter(criteriaQuery, idCaixa);
         }
-        if (treeType == null && "Caixa".equals(nodeType)) {
-            return PROCESSOS_ABERTOS_BASE_QUERY + COM_CAIXA_COND;
-        }
-        return PROCESSOS_ABERTOS_BASE_QUERY;
+        appendMandatoryFilters(criteriaQuery, tipoProcesso);
+        appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+        return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
-    
+	
+	private void appendMandatoryFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
+		appendSigiloProcessoFilter(abstractQuery);
+		appendTipoProcessoFilter(abstractQuery, tipoProcesso);
+	}
+	
+	protected void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
+		if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
+			appendDestinoOrDestinatarioFilter(abstractQuery);
+		} else if (TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
+			appendDestinoOrDestinatarioFilter(abstractQuery);
+		} else {
+			appendPapelLocalizacaoFilter(abstractQuery);
+			appendUnidadeDecisoraFilter(abstractQuery);
+			appendPerfilTemplateFilter(abstractQuery);
+		}
+	}
+	
+	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		Root<?> root = principalQuery.getRoots().iterator().next();
+		Subquery<Integer> existsSigiloProcesso = principalQuery.subquery(Integer.class);
+		Root<SigiloProcesso> sigiloProcesso = existsSigiloProcesso.from(SigiloProcesso.class);
+		existsSigiloProcesso.select(cb.literal(1));
+		Predicate whereSigiloProcesso = cb.equal(sigiloProcesso.get("processo").get("idProcesso"), root.get("idProcesso"));
+		whereSigiloProcesso = cb.and(cb.equal(sigiloProcesso.get("ativo"), true), whereSigiloProcesso);
+		existsSigiloProcesso.where(whereSigiloProcesso);
+		
+		Subquery<Integer> existsSigiloProcessoPermissao = principalQuery.subquery(Integer.class);
+		Root<SigiloProcessoPermissao> sigiloProcessoPermissao = existsSigiloProcessoPermissao.from(SigiloProcessoPermissao.class);
+		existsSigiloProcessoPermissao.select(cb.literal(1));
+		
+		Subquery<Integer> subquery3 = existsSigiloProcessoPermissao.subquery(Integer.class);
+		Root<SigiloProcesso> sigiloProcesso2 = subquery3.from(SigiloProcesso.class);
+		subquery3.select(sigiloProcesso2.get("id").as(Integer.class));
+		Predicate predicateSubquery3 = cb.equal(sigiloProcesso2.get("processo").get("idProcesso"), root.get("idProcesso"));
+		predicateSubquery3 = cb.and(cb.equal(sigiloProcesso2.get("ativo"), Boolean.TRUE) , predicateSubquery3);
+		subquery3.where(predicateSubquery3);
+		
+		Integer idUsuarioLogado = Authenticator.getUsuarioLogado().getIdUsuarioLogin();
+		Predicate whereSigiloProcessoPermissao = sigiloProcessoPermissao.get("sigiloProcesso").get("id").in(subquery3);
+		whereSigiloProcessoPermissao = cb.and(cb.equal(sigiloProcessoPermissao.get("ativo"), Boolean.TRUE), whereSigiloProcessoPermissao);
+		whereSigiloProcessoPermissao = cb.and(cb.equal(sigiloProcessoPermissao.get("usuario").get("idUsuarioLogin"), idUsuarioLogado), whereSigiloProcessoPermissao);
+		existsSigiloProcessoPermissao.where(whereSigiloProcessoPermissao);
+		
+		Predicate predicate = principalQuery.getRestriction();
+		predicate = cb.and(cb.or(cb.not(cb.exists(existsSigiloProcesso)), cb.exists(existsSigiloProcessoPermissao)), predicate);
+		principalQuery.where(predicate);
+	}
+	
+	private CriteriaQuery<Integer> createBaseCriteriaQueryProcessosAbertos(Integer idTarefa) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Integer> criteriaQuery = cb.createQuery(Integer.class);
+        Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
+        criteriaQuery.select(root.<Integer>get("idProcesso"));
+        criteriaQuery.groupBy(root.get("idProcesso"));
+        criteriaQuery.where(cb.equal(root.get("idTarefa"), idTarefa));
+        return criteriaQuery;
+    }
 
-    public boolean canOpenTask(long currentTaskId) {
-        JbpmUtil.getJbpmSession().flush();
-        Events.instance().raiseEvent(TarefasTreeHandler.FILTER_TAREFAS_TREE);
-        Long count = getQuantidadeTarefasAtivasByTaskId(currentTaskId);
-        return count != null && count > 0;
+    private CriteriaQuery<Tuple> createBaseCriteriaQueryRoot() {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Tuple> criteriaQuery = cb.createTupleQuery();
+        Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
+        Selection<String> nomeFluxo = root.<String>get("nomeFluxo").alias("nomeFluxo");
+        Selection<Integer> idFluxo = cb.max(root.<Integer>get("idFluxo")).alias("idFluxo");
+        Selection<String> type = cb.literal("Fluxo").alias("type");
+        criteriaQuery.select(cb.tuple(nomeFluxo, idFluxo, type));
+        criteriaQuery.groupBy(root.get("nomeFluxo"));
+        criteriaQuery.orderBy(cb.asc(root.get("nomeFluxo")));
+        criteriaQuery.where(cb.and());
+        return criteriaQuery;
     }
     
-    @SuppressWarnings("unchecked")
-	public <T> List<T> getRootList() {
-    	Query query = putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryRoots()));
-        return query.getResultList();
-    }
+	private CriteriaQuery<Tuple> createBaseCriteriaQueryChildren(Integer idFluxo) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+		Root<SituacaoProcesso> from = cq.from(SituacaoProcesso.class);
+		Selection<String> nomeTarefa = from.<String>get("nomeTarefa").alias("nomeTarefa");
+		Selection<Long> maxIdTask = cb.max(from.<Long>get("idTask")).alias("idTask");
+		Selection<Integer> maxIdTarefa = cb.max(from.<Integer>get("idTarefa")).alias("idTarefa");
+		Selection<Long> countCaixa = cb.count(from.get("nomeCaixa")).alias("qtdEmCaixa");
+		Selection<Long> countProcesso = cb.count(from.get("idProcesso")).alias("qtd");
+		Selection<String> type = cb.<String>literal("Task").alias("type");
+		cq.select(cb.tuple(nomeTarefa, maxIdTask, maxIdTarefa, countCaixa, countProcesso, type)).distinct(true);
+		cq.where(cb.equal(from.get("idFluxo"), idFluxo));
+		cq.groupBy(from.get("nomeTarefa"));
+		cq.orderBy(cb.asc(from.get("nomeTarefa")));
+		return cq;
+	}
     
-    @SuppressWarnings("unchecked")
-	public <T> List<T> getRootList(TipoProcesso tipoProcesso) {
-    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_ROOTS_BASE);
-    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
-    	putFiltroLocalizacaoAndPessoa(sb);
-    	sb.append(TAREFAS_TREE_QUERY_ROOTS_SUFIX);
-    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.toString());
-        List<T> l = query.getResultList();
-        return l;
+	private void appendDestinoOrDestinatarioFilter(AbstractQuery<?> abstractQuery) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Subquery<Integer> subqueryDestino = createSubqueryDestino(abstractQuery);
+        Subquery<Integer> subqueryDestinatario = createSubqueryDestinatario(abstractQuery);
+        Predicate predicateQuery = abstractQuery.getRestriction();
+        predicateQuery = cb.and(cb.or(cb.exists(subqueryDestino), cb.exists(subqueryDestinatario)), predicateQuery);
+        abstractQuery.where(predicateQuery);
     }
+
+	private Subquery<Integer> createSubqueryDestino(AbstractQuery<?> abstractQuery) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		Root<?> root = abstractQuery.getRoots().iterator().next();
+		Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        String metadadoDestino = EppMetadadoProvider.LOCALIZACAO_DESTINO.getMetadadoType();
+        Integer idLocalizacao = Authenticator.getLocalizacaoAtual().getIdLocalizacao();
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoDestino));
+        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idLocalizacao.toString()), predicateSubquery);
+        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
+		return subquery;
+	}
+	
+	private Subquery<Integer> createSubqueryDestinatario(AbstractQuery<?> abstractQuery) { 
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		Root<?> root = abstractQuery.getRoots().iterator().next();
+		Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+		Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+		subquery.select(cb.literal(1));
+		String metadadoDestinatario = EppMetadadoProvider.PESSOA_DESTINATARIO.getMetadadoType();
+		PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+		Integer idPessoaFisica = pessoaFisica == null ? -1 : pessoaFisica.getIdPessoa();
+		Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoDestinatario));
+		predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idPessoaFisica.toString()), predicateSubquery);
+		predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+		subquery.where(predicateSubquery);
+		return subquery;
+	}
     
-    @SuppressWarnings("unchecked")
-	public <E> List<E> getChildrenList(Integer idFluxo) {
-    	Query query = putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryChildren())));
-    	query.setParameter("idFluxo", idFluxo);
-        return query.getResultList();
-    }
-    
-    @SuppressWarnings("unchecked")
-	public <E> List<E> getChildrenComunicacaoDocumentoList(Integer idFluxo) {
-    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_CHILDREN_BASE);
-    	putFiltroLocalizacaoAndPessoa(sb);
-    	sb.append(TAREFAS_TREE_QUERY_CHILDREN_SUFIX);
-    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-    	query.setParameter("idFluxo", idFluxo);
-        return query.getResultList();
-    }
-    
-    private void putFiltroLocalizacaoAndPessoa(StringBuilder sb) {
-    	if ( Authenticator.getUsuarioLogado().getPessoaFisica() != null ) {
-    		sb.append(AND).append(" ( ");
-    		sb.append(FILTRO_LOCALIZACAO_DESTINO).append(OR);
-    		sb.append(FILTRO_PESSOA_DESTINATARIO).append(" ) ");
-    	} else {
-    		sb.append(AND).append(FILTRO_LOCALIZACAO_DESTINO);
-    	}
-    }
-    
-    private Query putParametersLocalizacaoAndPessoa(Query query){
-    	PessoaFisica pessoaLogada = Authenticator.getUsuarioLogado().getPessoaFisica();
-    	query.setParameter(PARAM_ID_LOCALIZACAO, Authenticator.getLocalizacaoAtual().getIdLocalizacao());
-    	if (pessoaLogada != null) {
-    		query.setParameter(PARAM_ID_PESSOA, pessoaLogada.getIdPessoa());
-    	}
-    	return query;
-    }
-    
-    public Query createQueryCaixas() {
-        return putParametroIdPerfilTemplate(putParametrosDosFiltrosDeUnidadesDecisoras(createQuery(createHqlQueryCaixa())));
-    }
-    
-    public Query createQueryCaixas(TipoProcesso tipoProcesso) {
-    	StringBuilder sb = new StringBuilder(TAREFAS_TREE_QUERY_CAIXAS_BASE);
-    	sb.append(TAREFAS_TREE_QUERY_ROOTS_BY_TIPO);
-    	putFiltroLocalizacaoAndPessoa(sb);
-    	sb.append(TAREFAS_TREE_QUERY_CAIXAS_SUFIX);
-    	Query query = putParametersLocalizacaoAndPessoa(createQuery(sb.toString()));
-    	query.setParameter(PARAM_TIPO_PROCESSO, tipoProcesso.toString());
-        return query;
-    }
-    
-    private String createHqlQueryRoots() {
-        String baseQuery = TAREFAS_TREE_QUERY_ROOTS_BASE + TAREFAS_TREE_QUERY_ROOTS_SEM_TIPO;
-        return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_ROOTS_SUFIX;
-    }
-    
-    private String createHqlQueryChildren() {
-        String baseQuery = TAREFAS_TREE_QUERY_CHILDREN_BASE + TAREFAS_TREE_FILTER_POOLEDACTOR;
-        return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CHILDREN_SUFIX;
-    }
-    
-    private String createHqlQueryCaixa() {
-        String baseQuery = TAREFAS_TREE_QUERY_CAIXAS_BASE + TAREFAS_TREE_FILTER_POOLEDACTOR;
-        return putFiltrosDeUnidadesDecisoras(baseQuery) + TAREFAS_TREE_QUERY_CAIXAS_SUFIX;
-    }
-    
-    private String putFiltrosDeUnidadesDecisoras(String baseQuery) {
-        if (authenticator.isUsuarioLogandoInMonocraticaAndColegiada()) {
-            return baseQuery + PROCESSOS_COM_COLEGIADA_E_MONOCRATICA_COND;
-        } else if (authenticator.isUsuarioLogadoInColegiada()) {
-            return baseQuery + PROCESSOS_COM_COLEGIADA_COND;
-        } else if (authenticator.isUsuarioLogadoInMonocratica()) {
-            return baseQuery + PROCESSOS_COM_MONOCRATICA_COND;
+    private void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<?> root = abstractQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        String metadadoTipoProcesso = EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType();
+        Predicate predicateSubquery = cb.equal(metadado.get("metadadoType"), metadadoTipoProcesso);
+        if (tipoProcesso != null) {
+        	predicateSubquery = cb.and(cb.equal(metadado.get("valor"), tipoProcesso.toString()), predicateSubquery);
+        }
+        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
+        Predicate predicate = abstractQuery.getRestriction();
+        if (tipoProcesso == null) {
+        	predicate = cb.and(cb.not(cb.exists(subquery)), predicate);
         } else {
-            return baseQuery + PROCESSOS_SEM_COLEGIADA_NEM_MONOCRATICA_COND;
+        	predicate = cb.and(cb.exists(subquery), predicate);
         }
-    }
-
-    private Query putParametrosDosFiltrosDeUnidadesDecisoras(Query query) {
-        if (authenticator.getColegiadaLogada() != null) {
-            query.setParameter(PARAM_COLEGIADA_LOGADA, authenticator.getColegiadaLogada().getIdUnidadeDecisoraColegiada().toString());
-        }
-        if (authenticator.isUsuarioLogadoInMonocratica()) {
-            query.setParameter(PARAM_MONOCRATICA_LOGADA, authenticator.getMonocraticaLogada().getIdUnidadeDecisoraMonocratica().toString());
-        }
-        return query;
+        abstractQuery.where(predicate);
     }
     
-    private Query putParametroIdPerfilTemplate(Query query) {
-        return query.setParameter("idPerfilTemplate", Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId().toString());
-    }
+    private void appendPapelLocalizacaoFilter(AbstractQuery<?> abstractQuery) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	Root<?> root = abstractQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<ProcessoLocalizacaoIbpm> subRoot = subquery.from(ProcessoLocalizacaoIbpm.class);
+        subquery.select(cb.literal(1));
+        Localizacao localizacao = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getLocalizacao();
+        Integer idLocalizacao = localizacao == null ? 0 : localizacao.getIdLocalizacao();
+        Integer idPapel = Authenticator.getPapelAtual().getIdPapel();
+        Predicate predicateSubquery = cb.and(cb.equal(subRoot.get("idTaskInstance"), root.get("idTaskInstance")));
+        predicateSubquery = cb.and(cb.equal(subRoot.get("localizacao").get("idLocalizacao"), idLocalizacao), predicateSubquery);
+        predicateSubquery = cb.and(cb.or(cb.equal(subRoot.get("papel").get("idPapel"), idPapel), cb.isNull(subRoot.get("papel"))), predicateSubquery);
+        predicateSubquery = cb.and(cb.equal(subRoot.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
+        Predicate predicate = abstractQuery.getRestriction();
+        predicate = cb.and(cb.exists(subquery), predicate);
+        abstractQuery.where(predicate);
+	}
+    
+    private void appendUnidadeDecisoraFilter(AbstractQuery<?> abstractQuery) {
+    	if (authenticator.isUsuarioLogandoInMonocraticaAndColegiada()) {
+    		appendUnidadeDecisoraColegiadaFilter(abstractQuery);
+    		appendUnidadeDecisoraMonocraticaFilter(abstractQuery);
+        } else if (authenticator.isUsuarioLogadoInColegiada()) {
+            appendUnidadeDecisoraColegiadaFilter(abstractQuery);
+        } else if (authenticator.isUsuarioLogadoInMonocratica()) {
+        	appendUnidadeDecisoraMonocraticaFilter(abstractQuery);
+        }
+	}
+    
+	private void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		Root<?> root = abstractQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType();
+        Integer idUnidadeDecisora = authenticator.getColegiadaLogada().getIdUnidadeDecisoraColegiada();
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
+        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()));
+        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
+        Predicate predicate = abstractQuery.getRestriction();
+    	predicate = cb.and(cb.exists(subquery), predicate);
+    	abstractQuery.where(predicate);
+	}
+	
+	private void appendUnidadeDecisoraMonocraticaFilter(AbstractQuery<?> abstractQuery) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		Root<?> root = abstractQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        
+        String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA.getMetadadoType();
+        Integer idUnidadeDecisora = authenticator.getMonocraticaLogada().getIdUnidadeDecisoraMonocratica();
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), cb.<String>literal(metadadoUnidadeDecisora)));
+        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()));
+        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
+        
+        Predicate predicate = abstractQuery.getRestriction();
+    	predicate = cb.and(cb.exists(subquery), predicate);
+    	abstractQuery.where(predicate);
+	}
+	
+	private void appendProcessoComCaixaFilter(AbstractQuery<?> abstractQuery, Integer idCaixa) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	Root<?> root = abstractQuery.getRoots().iterator().next();
+    	Predicate predicate = abstractQuery.getRestriction();
+    	predicate = cb.and(cb.equal(root.get("idCaixa"), idCaixa), predicate);
+    	abstractQuery.where(predicate);
+	}
+
+	private void appendProcessSemCaixaFilter(AbstractQuery<?> abstractQuery) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		Root<?> root = abstractQuery.getRoots().iterator().next();
+    	Predicate predicate = abstractQuery.getRestriction();
+    	predicate = cb.and(cb.isNull(root.get("idCaixa")), predicate);
+    	abstractQuery.where(predicate);
+	}
+
+    private void appendPerfilTemplateFilter(AbstractQuery<?> abstractQuery) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	Root<?> root = abstractQuery.getRoots().iterator().next();
+    	Integer idPerfilTemplate = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId();
+		Predicate predicate = abstractQuery.getRestriction();
+		predicate = cb.and(cb.equal(root.get("pooledActor"), idPerfilTemplate.toString()), predicate);
+		abstractQuery.where(predicate);
+	}
+
+	public boolean canOpenTask(long idTaskInstance, TipoProcesso tipoProcesso) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
+		Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
+		criteriaQuery.select(cb.count(root.get("idTaskInstance")));
+		criteriaQuery.where(cb.equal(root.get("idTaskInstance"), idTaskInstance));
+		appendMandatoryFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+		Long count = getEntityManager().createQuery(criteriaQuery).getSingleResult();
+		return count > 0;
+	}
+
+	public boolean canAccessProcesso(Integer idProcesso, TipoProcesso tipoProcesso) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
+		Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
+		criteriaQuery.select(cb.count(root.get("idProcesso")));
+		criteriaQuery.where(cb.equal(root.get("idProcesso"), idProcesso));
+		appendMandatoryFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+		Long count = getEntityManager().createQuery(criteriaQuery).getSingleResult(); 
+		return count > 0;
+	}
+	
 }

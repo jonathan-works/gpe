@@ -50,4 +50,8 @@ public class DefinicaoVariavelProcessoManager extends Manager<DefinicaoVariavelP
         String nome = nomeAmigavel.replace(' ', '_').replace('/', '_');
         variavelProcesso.setNome(nome);
     }
+    
+    public List<DefinicaoVariavelProcesso> listVariaveisByIdProcesso(Integer idProcesso) {
+    	return getDao().getDefinicaoVariavelProcessoListByIdProcesso(idProcesso);
+    }
 }

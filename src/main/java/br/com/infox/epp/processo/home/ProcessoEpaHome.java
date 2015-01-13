@@ -9,9 +9,9 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
@@ -31,7 +31,10 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
@@ -47,19 +50,28 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.CONVERSATION)
 public class ProcessoEpaHome extends AbstractHome<Processo> {
 
-    private static final LogProvider LOG = Logging
-            .getLogProvider(Processo.class);
+    private static final LogProvider LOG = Logging.getLogProvider(Processo.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoEpaHome";
 
     private static final int ERRO_AO_VERIFICAR_CERTIFICADO = 0;
 
-    @In private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-    @In private ProcessoManager processoManager;
-    @In private AssinaturaDocumentoService assinaturaDocumentoService;
-    @In private DocumentoManager documentoManager;
-    @In private SigiloProcessoService sigiloProcessoService;
-    @In private MetadadoProcessoManager metadadoProcessoManager;
+    @In 
+    private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
+    @In 
+    private ProcessoManager processoManager;
+    @In 
+    private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In 
+    private DocumentoManager documentoManager;
+    @In 
+    private SigiloProcessoService sigiloProcessoService;
+    @In 
+    private MetadadoProcessoManager metadadoProcessoManager;
+    @In
+    private SituacaoProcessoDAO situacaoProcessoDAO;
+    @In
+    private Authenticator authenticator;
 
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
@@ -72,8 +84,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     private String certChain;
     private Documento pdFluxo;
     private Integer idDocumento;
-    private boolean checkVisibilidade = true;
-    private boolean possuiPermissaoVisibilidade = false;
     private List<MetadadoProcesso> detalhesMetadados;
 
     private Long tarefaId;
@@ -87,8 +97,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
     public void iniciarTarefaProcesso() {
         try {
-            processoManager.iniciarTask(instance, tarefaId,
-                    Authenticator.getUsuarioPerfilAtual());
+            processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
         } catch (java.lang.NullPointerException e) {
             LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
         } catch (DAOException e) {
@@ -98,15 +107,13 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
     public List<MetadadoProcesso> getDetalhesMetadados() {
         if (detalhesMetadados == null) {
-            detalhesMetadados = metadadoProcessoManager
-                    .getListMetadadoVisivelByProcesso(getInstance());
+            detalhesMetadados = metadadoProcessoManager.getListMetadadoVisivelByProcesso(getInstance());
         }
         return detalhesMetadados;
     }
 
     public void visualizarTarefaProcesso() {
-        processoManager.visualizarTask(instance, tarefaId,
-                Authenticator.getUsuarioPerfilAtual());
+        processoManager.visualizarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
     }
 
     public static ProcessoEpaHome instance() {
@@ -118,28 +125,20 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
         signature = null;
     }
 
-    public Boolean checarVisibilidade() {
-        if (!sigiloProcessoService.usuarioPossuiPermissao(
-                Authenticator.getUsuarioLogado(),
-                processoManager.find(getInstance().getIdProcesso()))) {
-            possuiPermissaoVisibilidade = false;
-        } else if (checkVisibilidade) {
-            possuiPermissaoVisibilidade = processoLocalizacaoIbpmDAO
-                    .possuiPermissao(getInstance());
-            checkVisibilidade = false;
+    public boolean checarVisibilidade() {
+    	MetadadoProcesso metadadoProcesso = getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
+    	TipoProcesso tipoProcesso = metadadoProcesso != null ? metadadoProcesso.<TipoProcesso>getValue() : null;
+    	boolean visivel = situacaoProcessoDAO.canAccessProcesso(getInstance().getIdProcesso(), tipoProcesso);
+        if (!visivel) {
+        	avisarNaoHaPermissaoParaAcessarProcesso();
         }
-        if (!possuiPermissaoVisibilidade) {
-            avisarNaoHaPermissaoParaAcessarProcesso();
-        }
-        return possuiPermissaoVisibilidade;
+    	return visivel;
     }
 
     private void avisarNaoHaPermissaoParaAcessarProcesso() {
         ContextFacade.setToEventContext("canClosePanel", true);
         FacesMessages.instance().clear();
-        throw new ApplicationException(
-                "Sem permissão para acessar o processo: "
-                        + getInstance().getNumeroProcesso());
+        throw new ApplicationException("Sem permissão para acessar o processo: " + getInstance().getNumeroProcesso());
     }
 
     public Integer salvarProcessoDocumentoFluxo(Object value,

@@ -20,11 +20,6 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
 
-/**
- * Classe Manager para a entidade Fluxo
- * 
- * @author tassio
- */
 @Name(FluxoManager.NAME)
 @AutoCreate
 public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
@@ -46,11 +41,6 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         return date!=null && date.before(now);
     }
     
-    /**
-     * @param fluxo
-     * @param usuarioPerfil
-     * @return
-     */
     private boolean isValidUsuarioPerfil(Fluxo fluxo, UsuarioPerfil usuarioPerfil) {
         for (FluxoPapel fluxoPapel : fluxo.getFluxoPapelList()) {
             if (Objects.equals(fluxoPapel.getPapel(), usuarioPerfil.getPerfilTemplate().getPapel())){
@@ -75,13 +65,8 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         }
     }
     
-    /**
-     * Retorna todos os Fluxos ativos
-     * 
-     * @return lista de fluxos ativos
-     */
-    public List<Fluxo> getFluxoList() {
-        return getDao().getFluxoList();
+    public List<Fluxo> getFluxosAtivosList() {
+        return getDao().getFluxosAtivosList();
     }
 
     public boolean contemProcessoAtrasado(final Fluxo fluxo) {
@@ -117,18 +102,12 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         return idsLocalizacao;
     }
 
-    /* (non-Javadoc)
-     * @see br.com.infox.core.manager.Manager#persist(java.lang.Object)
-     */
     @Override
     public Fluxo persist(Fluxo o) throws DAOException {
         beforePersistOrUpdate(o);
         return super.persist(o);
     }
 
-    /* (non-Javadoc)
-     * @see br.com.infox.core.manager.Manager#update(java.lang.Object)
-     */
     @Override
     public Fluxo update(Fluxo o) throws DAOException {
         beforePersistOrUpdate(o);
