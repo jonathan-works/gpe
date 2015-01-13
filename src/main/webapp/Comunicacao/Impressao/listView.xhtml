@@ -11,7 +11,7 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-	<ui:define name="title">Impressão de Comunicações / Diário Oficial</ui:define>
+	<ui:define name="title">#{eppmessages['comunicacao.impressao.titlePage']}</ui:define>
 	<ui:define name="body">
 		<a:jsFunction name="selectProcesso" immediate="true"
 		      execute="@this" render="@this"
@@ -20,18 +20,24 @@
 				     converter="javax.faces.Integer" />
 		</a:jsFunction>
 		
-		<rich:panel id="panelImpressaoComunicacoes" header="Impressão Comunicações" >
+		<rich:panel id="panelImpressaoComunicacoes" header="#{eppmessages['comunicacao.impressao.panelHeader']}" >
 			<wi:dataTable id="comunicacoes" bean="#{impressaoComunicacaoList}"
 				values="#{impressaoComunicacaoList.list(15)}"
-				tableTitle="Comunicações" rowId="#{row.idProcesso}"
+				tableTitle="#{eppmessages['comunicacao.impressao.tableTitle']}" rowId="#{row.idProcesso}"
 				hideOrder="true" showGrid="#{impressaoComunicacaoList.showDataTable}">
 
                 <ui:define name="toolBar">
 					<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png"
-							title="Imprimir Comunicação" 
+							title="#{eppmessages['comunicacao.impressao.imprimirComunicacao']}" 
 							onclick="#{rich:component('imprimirComunicacaoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
 							styleClass="pointerRow opacityHover">
 					</h:graphicImage>
+                    <h:graphicImage url="#{wiSkin.imageFolder}/print.png"
+                            title="#{eppmessages['comunicacao.impressao.marcarImpresso']}" 
+                            onclick="#{rich:component('marcarImpressoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
+                            styleClass="pointerRow opacityHover"
+                            rendered="#{!impressaoComunicacaoList.impresso}">
+                    </h:graphicImage>
 				</ui:define>
 				
 				<ui:define name="headerToolBar" />
@@ -53,30 +59,30 @@
                             valueDateTo="#{impressaoComunicacaoList.dataFim}" />
 
                         <wi:selectBooleanRadio id="impresso"
-                            label="#{eppmessages['comunciacao.impressao.impresso']}"
+                            label="#{eppmessages['comunicacao.impressao.impresso']}"
                             value="#{impressaoComunicacaoList.impresso}"
                             selected="false" />
 					</wi:searchForm>
 				</ui:define>
 	
 				<wi:columnOutputText id="numeroProcesso"
-					columnHeader="Número do Processo"
+					columnHeader="#{eppmessages['comunicacao.impressao.numeroProcesso']}"
 					value="#{row.numeroProcesso}" />
 				
 				<wi:columnOutputText id="tipoComunicacao"
-					columnHeader="Tipo de Comunicação"
+					columnHeader="#{eppmessages['comunicacao.impressao.tipoComunicacao']}"
 					value="#{impressaoComunicacaoAction.getTipoComunicacao(row)}" />
 					
 				<wi:columnOutputText id="impresso"
-					columnHeader="Impresso"
+					columnHeader="#{eppmessages['comunicacao.impressao.impresso']}"
 					value="#{impressaoComunicacaoAction.getImpresso(row) ? 'Sim' : 'Não'}" />
 					
 				<wi:columnOutputText id="meioExpedicao"
-					columnHeader="Meio de Expedição"
+					columnHeader="#{eppmessages['comunicacao.impressao.meioExpedicao']}"
 					value="#{impressaoComunicacaoAction.getMeioExpedicao(row).label}" />
 					
 				<wi:columnDateTime id="dataAssinatura"
-					columnHeader="Data da Assinatura"
+					columnHeader="#{eppmessages['comunicacao.impressao.dataAssinatura']}"
 					value="#{impressaoComunicacaoAction.getDataAssinatura(row)}" 
 					showTime="true" />
 					
@@ -85,7 +91,7 @@
 		
 		<rich:popupPanel id="imprimirComunicacaoPopUp" shadowDepth="1" moveable="false" onshow="onShowPopUp();">
 			<f:facet name="header">
-            	<h:outputText value="Imprimir Comunicação" />
+            	<h:outputText value="#{eppmessages['comunicacao.impressao.imprimirComunicacao']}" />
 	        </f:facet>
 	        <f:facet name="controls">
 	            <h:graphicImage value="#{wiSkin.imageFolder}/closeMP.gif" 
@@ -93,30 +99,46 @@
 	        </f:facet>
 	        <h:form id="formImpressao">
 	        	<wi:selectBooleanCheckbox id="incluirAnexos"
-	        		label="Incluir Anexos de cada Comunicação?"
+	        		label="#{eppmessages['comunicacao.impressao.incluirAnexos']}"
 	        		value="#{impressaoComunicacaoAction.impressaoCompleta}" />
-	        		
-	        	<wi:selectBooleanCheckbox id="marcarImpresso"
-	        		label="Marcar como Impresso?"
-	        		value="#{impressaoComunicacaoAction.marcarImpresso}" />
 	        	
 	        	<div/>
 	        	<a:commandButton id="buttonImprimir" 
 	        		styleClass="buttons" 
-	        		value="Imprimir"
+	        		value="#{eppmessages['comunicacao.impressao.imprimirComunicacao']}"
 	        		onmouseup="#{rich:component('imprimirComunicacaoPopUp')}.hide();"
 	        		oncomplete="window.open('#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?cid=#{conversation.id}', '_blank');" 
-	        		action="#{impressaoComunicacaoAction.imprimirComunicacao()}"
 	        		render=":panelImpressaoComunicacoes">
 	        	</a:commandButton>
 	        		
 	        </h:form>
 		</rich:popupPanel>
 		
+        <rich:popupPanel id="marcarImpressoPopUp" shadowDepth="1" moveable="false">
+            <f:facet name="header">
+                <h:outputText value="#{eppmessages['comunicacao.impressao.marcarImpresso']}" />
+            </f:facet>
+            <f:facet name="controls">
+                <h:graphicImage value="#{wiSkin.imageFolder}/closeMP.gif" 
+                        onclick="#{rich:component('marcarImpressoPopUp')}.hide();"/>
+            </f:facet>
+            <wi:outputText id="marcarImpressoLabelConfirm"
+                label="#{eppmessages['comunicacao.impressao.marcarImpressoLabel']}"
+                value="#{eppmessages['comunicacao.impressao.marcarImpressoValue']}" />
+            <h:form id="formMarcarImpresso">
+	        	<a:commandButton id="buttonMarcarImpresso" 
+	        		styleClass="buttons" 
+	        		value="#{eppmessages['comunicacao.impressao.marcarImpressoConfirmar']}"
+	        		onmouseup="#{rich:component('marcarImpressoPopUp')}.hide();"
+	        		action="#{impressaoComunicacaoAction.marcarComoImpresso()}"
+	        		render=":panelImpressaoComunicacoes">
+	        	</a:commandButton>
+	        </h:form>
+        </rich:popupPanel>
+        
 		<script type="text/javascript">
 			function onShowPopUp() {
 				document.getElementById('formImpressao:incluirAnexosDecoration:incluirAnexos').checked=false;
-				document.getElementById('formImpressao:marcarImpressoDecoration:marcarImpresso').checked=false;
 			}
 		</script>
 	</ui:define>
