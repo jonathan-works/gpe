@@ -433,16 +433,16 @@
             styleClass="buttons"
             action="#{caixaCrudAction.addCaixa(painelUsuarioController.tarefaId)}"
             oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('novaCaixaPanel')}.hide()}"
-            render="tarefasDiv, painelProcessos, nomeCaixaDecoration, pageBodyDialogMessage"
+            render="tabPainelUsuario, nomeCaixaDecoration, pageBodyDialogMessage"
           />
         </h:form>
         
         <h:outputScript>
 	        namespace("infox.util.popupclear",function onpopupshow(){
-		        $("#modalForm .inputText").val(null);
-		      	if ($("#modalForm label.errors").length != 0) {
-					$("#modalForm span.errorFields.errors").remove();
-					$("#modalForm .errors").each(function(){$(this).removeClass("errors")});
+		        $("#modalForm .input.text.crud").val(null);
+		      	if ($("#modalForm .property-error.property-msg").length != 0) {
+					$("#modalForm span.property-error.property-msg").remove();
+					$("#modalForm .property-error").each(function(){$(this).removeClass("property-error")});
 				}
 		    });
         </h:outputScript>
