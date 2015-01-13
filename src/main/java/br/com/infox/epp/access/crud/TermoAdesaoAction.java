@@ -38,6 +38,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
+import br.com.infox.core.file.encode.MD5Encoder;
 // TODO: Transformar este componente em um manager, despejar atributos persistentes na classe de fronteira responsável pelo login
 @Scope(ScopeType.CONVERSATION)
 @Name(value = TermoAdesaoAction.NAME)
@@ -143,5 +144,9 @@ public class TermoAdesaoAction implements Serializable {
 
     public void setCertChain(String certChain) {
         this.certChain = certChain;
+    }
+
+    public String getMd5Sum() {
+        return MD5Encoder.encode(getTermoAdesao());
     }
 }
