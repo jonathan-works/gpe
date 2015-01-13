@@ -127,6 +127,11 @@ public class RespostaComunicacaoAction implements Serializable {
 	public void gravarResposta() {
 		boolean hasId = documentoEdicao.getId() != null;
 		try {
+			String textoEditor = documentoEdicao.getDocumentoBin().getModeloDocumento();
+			if (textoEditor == null || textoEditor.isEmpty()) {
+				FacesMessages.instance().add("Insira texto no editor");
+				return;
+			}
 			documentoEdicao = respostaComunicacaoService.gravarDocumentoResposta(documentoEdicao, processoResposta);
 			processoResposta.getDocumentoList().add(documentoEdicao);
 			FacesMessages.instance().add("Registro gravado com sucesso");
