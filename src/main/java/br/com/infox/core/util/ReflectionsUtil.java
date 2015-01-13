@@ -35,11 +35,12 @@ public final class ReflectionsUtil {
         return null;
     }
 
-    public static Object getValue(Object o, String fieldName) {
+    @SuppressWarnings("unchecked")
+	public static <E> E getValue(Object o, String fieldName) {
         try {
             Field field = getField(o, fieldName);
             if (field != null) {
-                return field.get(o);
+                return (E) field.get(o);
             }
         } catch (Exception e) {
             LOG.error(".getValue()", e);
@@ -48,7 +49,7 @@ public final class ReflectionsUtil {
     }
 
     public static String getStringValue(Object o, String fieldName) {
-        return (String) getValue(o, fieldName);
+        return getValue(o, fieldName);
     }
 
     public static void setValue(Object o, String fieldName, Object value) {

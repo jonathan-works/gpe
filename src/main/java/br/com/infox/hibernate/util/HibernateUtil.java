@@ -1,13 +1,20 @@
 package br.com.infox.hibernate.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 
 import org.hibernate.Filter;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.engine.spi.TypedValue;
+import org.hibernate.internal.QueryImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.Component;
 
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -55,6 +62,26 @@ public final class HibernateUtil {
 			e.printStackTrace();
 		}
     	return dialect;
+    }
+    
+    public static String getQueryString(Query query) {
+    	QueryImpl queryImpl = query.unwrap(org.hibernate.internal.QueryImpl.class);
+    	return queryImpl.getQueryString();
+    }
+    
+    public static Map<String, Object> getQueryParams(Query query) {
+    	QueryImpl queryImpl = unwrapQuery(query);
+    	Map<String,TypedValue> namedParameters = ReflectionsUtil.getValue(queryImpl, "namedParameters");
+    	Map<String, Object> parameters = new HashMap<>(namedParameters.size());
+    	for (String key : namedParameters.keySet()) {
+    		TypedValue typedValue = namedParameters.get(key);
+    		parameters.put(key, typedValue.getValue());
+    	}
+    	return parameters;
+    }
+    
+    private static final QueryImpl unwrapQuery(Query query) {
+    	return query.unwrap(org.hibernate.internal.QueryImpl.class);
     }
 
 }

@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.situacao.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
@@ -27,6 +28,7 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @AutoCreate
 @Name(SituacaoProcessoDAO.NAME)
@@ -52,20 +54,21 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
 	
-	public final List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer tarefaId) {
-//		CriteriaQuery<Long> cq  = getCountSubqueryCaixas(tipoProcesso);
-//		TypedQuery<Long> typedCount = getEntityManager().createQuery(getCountSubqueryCaixas(tipoProcesso));
-//		QueryImpl queryimpl = typedCount.unwrap(org.hibernate.internal.QueryImpl.class);
-//		String countQuery = queryimpl.getQueryString();
+	public final List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa) {
+		TypedQuery<Long> typedCount = getEntityManager().createQuery(getCountSubqueryCaixas(tipoProcesso));
+		String countQueryCaixa = HibernateUtil.getQueryString(typedCount);
+		Map<String, Object> parametersSubquery = HibernateUtil.getQueryParams(typedCount);
 		String queryCaixas = "select c.idCaixa as idCaixa, c.tarefa.idTarefa as idTarefa, " +
 							 "		 c.nomeCaixa as nomeCaixa, 'Caixa' as type, " +
-//							 "( " +  countQuery +  " and idCaixa = c.idCaixa ) as qtd " +
-							 "		 0 as qtd " +
+							 "( " +  countQueryCaixa +  " and idCaixa = c.idCaixa ) as qtd " +
 							 "from Caixa c " +
 							 "where c.tarefa.idTarefa = :taskId " +
 							 "order by c.nomeCaixa ";
 		TypedQuery<Tuple> typedQuery = getEntityManager().createQuery(queryCaixas, Tuple.class);
-		typedQuery.setParameter("taskId", tarefaId);
+		typedQuery.setParameter("taskId", idTarefa);
+		for (String key : parametersSubquery.keySet()) {
+			typedQuery.setParameter(key, parametersSubquery.get(key));
+		}
         return typedQuery.getResultList();
     }
 	
