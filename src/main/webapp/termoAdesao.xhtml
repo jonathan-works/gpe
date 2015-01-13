@@ -21,14 +21,6 @@
 	      execute="@this termoAdesaoSignature termoAdesaoCertChain"
 	      render="DialogMessage"
 	      limitRender="true" />
-	    <h:inputHidden
-	      id="termoAdesaoSignature"
-	      value="#{termoAdesaoAction.signature}">
-	    </h:inputHidden>
-	    <h:inputHidden
-	      id="termoAdesaoCertChain"
-	      value="#{termoAdesaoAction.certChain}">
-	    </h:inputHidden>
 	    <s:div>
 	      <div>
 	        <wi:editor
@@ -40,23 +32,19 @@
 	          height="#{600-157}" />
 	      </div>
 	      <div>
-	        <wi:appletAssinatura
-	          id="assinarTermoAdesao"
-	          urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-	          formId="#{rich:clientId('termoAdesaoForm')}"
-	          certificationChainField="#{rich:clientId('termoAdesaoCertChain')}"
-	          signatureField="#{rich:clientId('termoAdesaoSignature')}"
-	          getDataFunction="infox.editor.termoAdesao.instance.getData()"
-	          useBase64Function="'true'"
-	          functionPreSign="infox.showLoading();"
-	          functionPosSign="assinarTermo();infox.hideLoading();"
-	          debug="false"
-	          loginMode="false"
-	          useProviderDll="false"
-	          signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}">
-	        </wi:appletAssinatura>
+            <wi:certificadoDigital id="termoAdesao"
+                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+                formId="#{rich:clientId('termoAdesaoForm')}"
+                certificationChainField="#{termoAdesaoAction.certChain}"
+                signatureField="#{termoAdesaoAction.signature}"
+                signableData="#{termoAdesaoAction.md5Sum}"
+                useBase64Function="true" functionPreSign="infox.showLoading();"
+                functionPosSign="assinarTermo();infox.hideLoading();"
+                debug="false" loginMode="false" useProviderDll="false"
+                signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}">
+            </wi:certificadoDigital>
 	        <input
-	          class="input_button close-btn"
+	          class="input_button close-btn buttons"
 	          id="cancela"
 	          type="button"
 	          onclick="location.href='#{pathResolver.contextPath}/login.seam'"
