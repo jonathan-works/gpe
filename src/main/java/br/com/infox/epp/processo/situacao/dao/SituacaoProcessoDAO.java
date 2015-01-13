@@ -57,7 +57,6 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 	public final List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa) {
 		TypedQuery<Long> typedCount = getEntityManager().createQuery(getCountSubqueryCaixas(tipoProcesso));
 		String countQueryCaixa = HibernateUtil.getQueryString(typedCount);
-		Map<String, Object> parametersSubquery = HibernateUtil.getQueryParams(typedCount);
 		String queryCaixas = "select c.idCaixa as idCaixa, c.tarefa.idTarefa as idTarefa, " +
 							 "		 c.nomeCaixa as nomeCaixa, 'Caixa' as type, " +
 							 "( " +  countQueryCaixa +  " and idCaixa = c.idCaixa ) as qtd " +
@@ -66,8 +65,9 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 							 "order by c.nomeCaixa ";
 		TypedQuery<Tuple> typedQuery = getEntityManager().createQuery(queryCaixas, Tuple.class);
 		typedQuery.setParameter("taskId", idTarefa);
-		for (String key : parametersSubquery.keySet()) {
-			typedQuery.setParameter(key, parametersSubquery.get(key));
+		Map<String, Object> parametersCountSubquery = HibernateUtil.getQueryParams(typedCount);
+		for (String key : parametersCountSubquery.keySet()) {
+			typedQuery.setParameter(key, parametersCountSubquery.get(key));
 		}
         return typedQuery.getResultList();
     }
