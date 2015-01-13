@@ -51,7 +51,7 @@
         columnId="usuarioPerfilList"
         columnHeader="#{eppmessages['usuarioLogin.perfis']}"
         value="#{row.perfisFormatados}"
-      />
+        hideOrder="true" />
       <wi:columnBoolean
         columnId="bloqueio"
         columnHeader="#{eppmessages['usuarioLogin.bloqueio']}"
@@ -307,7 +307,7 @@
             columnHeader="#{eppmessages['usuarioPerfil.localizacao']}"
             value="#{row.localizacao}"/>
           <wi:columnOutputText
-            columnId="perfil.descricao"
+            columnId="perfilTemplate.descricao"
             columnHeader="#{eppmessages['usuarioPerfil.perfil']}"
             value="#{row.perfilTemplate.descricao}" />
           <wi:columnBoolean
