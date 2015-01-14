@@ -11,8 +11,12 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class PainelEntityNode extends EntityNode<Tuple> {
-
+	
     private static final long serialVersionUID = 1L;
+    public static final String FLUXO_TYPE = "Fluxo";
+    public static final String TASK_TYPE = "Task";
+    public static final String CAIXA_TYPE = "Caixa";
+    
     private List<PainelEntityNode> rootNodes;
     private List<PainelEntityNode> nodes;
     private List<EntityNode<Tuple>> caixas;

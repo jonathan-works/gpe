@@ -27,7 +27,10 @@ import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
+import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(PainelUsuarioController.NAME)
 public class PainelUsuarioController extends AbstractController {
@@ -36,6 +39,7 @@ public class PainelUsuarioController extends AbstractController {
 
     public static final String NAME = "painelUsuarioController";
     private static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s').valor}";
+    private static final LogProvider LOG = Logging.getLogProvider(PainelUsuarioController.class);
 
     @In
     private ConsultaProcessoList consultaProcessoList;
@@ -82,7 +86,7 @@ public class PainelUsuarioController extends AbstractController {
 	}
 
     public Integer getIdCaixa() {
-        if ("caixa".equalsIgnoreCase(getSelectedType())) {
+        if (PainelEntityNode.CAIXA_TYPE.equals(getSelectedType())) {
             return selected.get("idCaixa", Integer.class);
         }
         return null;
@@ -93,7 +97,7 @@ public class PainelUsuarioController extends AbstractController {
     }
 
     public List<Integer> getProcessoIdList() {
-        if (selected != null && !"fluxo".equalsIgnoreCase(getSelectedType())) {
+        if (selected != null && !PainelEntityNode.FLUXO_TYPE.equals(getSelectedType())) {
             if (processoIdList == null) {
                 processoIdList = situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(getSelected(), getTipoProcesso());
             }
@@ -102,49 +106,43 @@ public class PainelUsuarioController extends AbstractController {
         return null;
     }
 
-    public void processoCaixa(DropEvent evt) {
-        Caixa caixa = caixaManager.find((Integer) evt.getDropValue());
-        setProcessoCaixa(getProcessoIdList(evt.getDragValue()), caixa);
-        this.processoIdList = null;
-    }
-
-    public void setProcessoCaixa(List<Integer> idList, Caixa caixa) {
-        try {
-            processoManager.moverProcessosParaCaixa(idList, caixa);
-            refresh();
-        } catch (DAOException e) {
-            actionMessagesService.handleDAOException(e);
-        }
-    }
-
     @SuppressWarnings("unchecked")
-	private List<Integer> getProcessoIdList(Object o) {
-        List<Integer> list = new ArrayList<Integer>();
-        if (o instanceof Processo) {
-            list.add(((Processo) o).getIdProcesso());
-        } else if (o instanceof List) {
-            List<Processo> processoList = (List<Processo>) o;
-            for (Processo cpt : processoList) {
-                list.add(cpt.getIdProcesso());
+	public void moverProcessoParaCaixaDropEventListener(DropEvent evt) {
+        Caixa caixa = caixaManager.find((Integer) evt.getDropValue());
+        try {
+        	if (evt.getDragValue() instanceof Processo) {
+            	Processo processo = (Processo) evt.getDragValue();
+            	caixaManager.moverProcessoParaCaixa(processo, caixa);
+            } else if (evt.getDragValue() instanceof List<?>) {
+            	List<Processo> processos = (List<Processo>) evt.getDragValue();
+            	caixaManager.moverProcessosParaCaixa(processos, caixa);
             }
+        } catch (DAOException e) {
+        	LOG.error("moverProcessoParaCaixaDropEventListener", e);
+        	actionMessagesService.handleDAOException(e);
         }
-        return list;
+        painelTreeHandler.clearTree();
+        processoIdList = null;
     }
-
-    public void processoCaixaTarefa(DropEvent evt) {
-        setProcessoCaixa(getProcessoIdList(evt.getDragValue()), null);
+    
+    public void editarCaixa() {
+        Redirect r = new Redirect();
+        r.setViewId("/Caixa/listView.xhtml");
+        r.setParameter("tab", "form");
+        r.setParameter("id", selected.get("idCaixa"));
+        r.execute();
     }
-
+    
     public Long getTaskId() {
         if (selected != null) {
-            return (Long) selected.get("idTask");
+            return selected.get("idTask", Long.class);
         }
         return null;
     }
 
     public Integer getTarefaId() {
         if (selected != null) {
-            return (Integer) selected.get("idTarefa");
+            return selected.get("idTarefa", Integer.class);
         }
         return null;
     }
@@ -157,25 +155,8 @@ public class PainelUsuarioController extends AbstractController {
         return selected;
     }
 
-    public void editaCaixa() {
-        Redirect r = new Redirect();
-        r.setViewId("/Caixa/listView.xhtml");
-        r.setParameter("tab", "form");
-        r.setParameter("id", selected.get("idCaixa"));
-        r.execute();
-    }
-
     public void refresh() {
         painelTreeHandler.refresh();
-    }
-
-    public void setProcessoCaixa(Caixa caixa) {
-        if (consultaProcessoList.getResultCount() > 0) {
-            List<Integer> idList = getProcessoIdList(consultaProcessoList.getResultList());
-            setProcessoCaixa(idList, caixa);
-            refresh();
-            processoIdList = null;
-        }
     }
 
     private void updateDatatable() {

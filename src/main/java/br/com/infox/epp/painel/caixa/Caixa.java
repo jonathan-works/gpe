@@ -1,23 +1,12 @@
 package br.com.infox.epp.painel.caixa;
 
-import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.CAIXA_ATTRIBUTE;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.DESCRICAO_CAIXA;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.ID_CAIXA;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.ID_TAREFA;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.NODE_ANTERIOR;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.NOME_CAIXA;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.NOME_INDICE;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.REMOVE_BY_ID;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.REMOVE_BY_ID_QUERY;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.SEQUENCE_TABLE_CAIXA;
-import static br.com.infox.epp.painel.caixa.CaixaQuery.TABLE_CAIXA;
+import static java.text.MessageFormat.format;
 
+import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -40,28 +29,52 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Entity
-@Table(name = TABLE_CAIXA)
-@NamedQueries(value = { @NamedQuery(name = REMOVE_BY_ID, query = REMOVE_BY_ID_QUERY) })
-public class Caixa implements java.io.Serializable {
+@Table(name = "tb_caixa")
+@NamedQueries(value = {
+		@NamedQuery(name = CaixaQuery.CAIXA_BY_ID_TAREFA_AND_ID_NODE_ANTERIOR, 
+						query = CaixaQuery.CAIXA_BY_ID_TAREFA_AND_ID_NODE_ANTERIOR_QUERY)
+})
+public class Caixa implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idCaixa;
-    private String nomeCaixa;
-    private String dsCaixa;
-    private String nomeIndice;
-    private Tarefa tarefa;
-    private Integer idNodeAnterior;
-    private List<Processo> processoList = new ArrayList<Processo>(0);
-
-    public Caixa() {
-
-    }
-
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_TABLE_CAIXA)
     @Id
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = ID_CAIXA, unique = true, nullable = false)
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "CaixaGenerator", sequenceName = "sq_tb_caixa")
+    @GeneratedValue(generator = "CaixaGenerator", strategy = GenerationType.SEQUENCE)
+    @Column(name = "id_caixa", unique = true, nullable = false)
+    private int idCaixa;
+    
+    @Column(name = "nm_caixa", length = LengthConstants.NOME_PADRAO)
+    @Size(max = LengthConstants.NOME_PADRAO)
+    private String nomeCaixa;
+    
+    @Column(name = "ds_caixa", nullable = true)
+    private String dsCaixa;
+    
+    @Column(name = "nm_caixa_idx", length = LengthConstants.NOME_PADRAO, nullable = false)
+    @Size(max = LengthConstants.NOME_PADRAO)
+    private String nomeIndice;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_tarefa", nullable = true)
+    private Tarefa tarefa;
+    
+    @Column(name = "id_node_anterior", nullable = true)
+    private Integer idNodeAnterior;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "caixa")
+    private List<Processo> processoList = new ArrayList<Processo>(0);
+    
+    @PrePersist
+    private void prePersist() {
+    	normalizarNomeIndiceCaixa();
+    }
+    
+    @PreUpdate
+    private void preUpdate() {
+    	normalizarNomeIndiceCaixa();
+    }
+    
     public int getIdCaixa() {
         return idCaixa;
     }
@@ -70,8 +83,6 @@ public class Caixa implements java.io.Serializable {
         this.idCaixa = idCaixa;
     }
 
-    @Column(name = NOME_CAIXA, length = LengthConstants.NOME_PADRAO)
-    @Size(max = LengthConstants.NOME_PADRAO)
     public String getNomeCaixa() {
         return nomeCaixa;
     }
@@ -80,7 +91,6 @@ public class Caixa implements java.io.Serializable {
         this.nomeCaixa = nomeCaixa;
     }
 
-    @Column(name = DESCRICAO_CAIXA)
     public String getDsCaixa() {
         return dsCaixa;
     }
@@ -89,8 +99,6 @@ public class Caixa implements java.io.Serializable {
         this.dsCaixa = dsCaixa;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_TAREFA)
     public Tarefa getTarefa() {
         return tarefa;
     }
@@ -99,8 +107,6 @@ public class Caixa implements java.io.Serializable {
         this.tarefa = tarefa;
     }
 
-    @Column(name = NOME_INDICE, length = LengthConstants.NOME_PADRAO, nullable = false)
-    @Size(max = LengthConstants.NOME_PADRAO)
     public String getNomeIndice() {
         return nomeIndice;
     }
@@ -109,7 +115,6 @@ public class Caixa implements java.io.Serializable {
         this.nomeIndice = nomeIndice;
     }
 
-    @Column(name = NODE_ANTERIOR)
     public Integer getIdNodeAnterior() {
         return idNodeAnterior;
     }
@@ -118,8 +123,6 @@ public class Caixa implements java.io.Serializable {
         this.idNodeAnterior = idNodeAnterior;
     }
 
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = CAIXA_ATTRIBUTE)
     public List<Processo> getProcessoList() {
         return processoList;
     }
@@ -158,11 +161,11 @@ public class Caixa implements java.io.Serializable {
         result = prime * result + getIdCaixa();
         return result;
     }
-
-    @PreUpdate
-    @PrePersist
-    public void normalize() {
-        String normalized = Normalizer.normalize(getNomeCaixa(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toLowerCase();
+    
+    private void normalizarNomeIndiceCaixa() {
+    	String nomeIndiceCaixa = format("{0}-{1}", getNomeCaixa(), getTarefa().getIdTarefa());
+    	String normalized = Normalizer.normalize(nomeIndiceCaixa, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toLowerCase();
         setNomeIndice(normalized);
     }
+
 }

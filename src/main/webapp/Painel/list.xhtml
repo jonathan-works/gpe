@@ -431,7 +431,7 @@
           <a:commandButton
             value="#{eppmessages['crud.persist']}"
             styleClass="buttons"
-            action="#{caixaCrudAction.addCaixa(painelUsuarioController.tarefaId)}"
+            action="#{caixaCrudAction.adicionarCaixaNoPainel(painelUsuarioController.tarefaId)}"
             oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('novaCaixaPanel')}.hide()}"
             render="tabPainelUsuario, nomeCaixaDecoration, pageBodyDialogMessage"
           />

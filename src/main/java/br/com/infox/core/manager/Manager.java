@@ -4,6 +4,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,10 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
     
     public T find(Object id) {
         return dao.find(id);
+    }
+    
+    public List<T> findByIds(Collection<? extends Number> ids) {
+        return dao.findByIds(ids);
     }
     
     public void lock(T entity) {

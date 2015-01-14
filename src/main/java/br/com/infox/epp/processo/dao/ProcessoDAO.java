@@ -2,16 +2,11 @@ package br.com.infox.epp.processo.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.CAIXA_PARAM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ID_LIST_PROCESSO_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSOS_PARA_CAIXA;
-import static br.com.infox.epp.processo.query.ProcessoQuery.MOVER_PROCESSO_PARA_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_PARAM;
@@ -27,9 +22,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_PAI_PARAM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.QUERY_PARAM_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
-import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVE_PROCESSO_DA_CAIXA_ATUAL;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TIPO_PROCESSO_PARAM;
@@ -47,21 +40,21 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.TransactionPropagationType;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ProcessInstance;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.query.ProcessoQuery;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @AutoCreate
 @Name(ProcessoDAO.NAME)
@@ -70,29 +63,6 @@ public class ProcessoDAO extends DAO<Processo> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoDAO";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoDAO.class);
-
-	@Transactional(TransactionPropagationType.REQUIRED)
-	public void moverProcessosParaCaixa(List<Integer> idList, Caixa caixa) throws DAOException {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put(ID_LIST_PROCESSO_PARAM, idList);
-		parameters.put(CAIXA_PARAM, caixa);
-		executeNamedQueryUpdate(MOVER_PROCESSOS_PARA_CAIXA, parameters);
-	}
-
-	@Transactional(TransactionPropagationType.REQUIRED)
-	public void moverProcessoParaCaixa(Caixa caixa, Processo processo) throws DAOException {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put(PARAM_ID_PROCESSO, processo);
-		parameters.put(CAIXA_PARAM, caixa);
-		executeNamedQueryUpdate(MOVER_PROCESSO_PARA_CAIXA, parameters);
-	}
-
-	@Transactional(TransactionPropagationType.REQUIRED)
-	public void removerProcessoDaCaixaAtual(Processo processo) throws DAOException {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put(PARAM_ID_PROCESSO, processo.getIdProcesso());
-		executeNamedQueryUpdate(REMOVE_PROCESSO_DA_CAIXA_ATUAL, parameters);
-	}
 
 	public Processo findProcessosByIdProcessoAndIdUsuario(int idProcesso, Integer idUsuarioLogin, Long idTask) {
 		Map<String, Object> parameters = new HashMap<>(3);
@@ -181,24 +151,8 @@ public class ProcessoDAO extends DAO<Processo> {
 	}
 
 	public boolean hasPartes(Long idJbpm) {
-		Processo pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+		Processo pe = getProcessoEpaByIdJbpm(idJbpm);
 		return (pe != null) && (pe.hasPartes());
-	}
-
-	/**
-	 * Quando um processo necessita de partes, não é permitido inativar todas as
-	 * partes do processo de uma vez. Esse método retorna falso (não há
-	 * permissão de inativar) se o processo possuir uma única parte ativa no
-	 * momento.
-	 * @param processo 
-	 * 
-	 * @return boolean
-	 * */
-	public Boolean podeInativarPartes(Processo processo) {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put(QUERY_PARAM_PROCESSO, processo);
-		Long count = (Long) getNamedSingleResult(COUNT_PARTES_ATIVAS_DO_PROCESSO, parameters);
-		return count != null && count.compareTo(1L) > 0;
 	}
 
 	@SuppressWarnings(UNCHECKED)
@@ -247,4 +201,10 @@ public class ProcessoDAO extends DAO<Processo> {
 		parameters.put(TIPO_PROCESSO_PARAM, tipoProcesso);
 		return getNamedResultList(PROCESSOS_FILHO_NOT_ENDED_BY_TIPO, parameters);
     }
+	
+	public List<Processo> getProcessosByIdCaixa(Integer idCaixa) {
+		Map<String, Object> params = new HashMap<>(1);
+		params.put(ProcessoQuery.PARAM_ID_CAIXA, idCaixa);
+		return getNamedResultList(ProcessoQuery.PROCESSOS_BY_ID_CAIXA, params);
+	}
 }

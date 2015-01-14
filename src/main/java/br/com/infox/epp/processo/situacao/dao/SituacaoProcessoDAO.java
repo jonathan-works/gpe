@@ -28,6 +28,7 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @AutoCreate
@@ -57,12 +58,14 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 	public final List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa) {
 		TypedQuery<Long> typedCount = getEntityManager().createQuery(getCountSubqueryCaixas(tipoProcesso));
 		String countQueryCaixa = HibernateUtil.getQueryString(typedCount);
-		String queryCaixas = "select c.idCaixa as idCaixa, c.tarefa.idTarefa as idTarefa, " +
-							 "		 c.nomeCaixa as nomeCaixa, 'Caixa' as type, " +
-							 "( " +  countQueryCaixa +  " and idCaixa = c.idCaixa ) as qtd " +
-							 "from Caixa c " +
-							 "where c.tarefa.idTarefa = :taskId " +
-							 "order by c.nomeCaixa ";
+		String queryCaixas = "select c.idCaixa as idCaixa, "
+								  + "c.tarefa.idTarefa as idTarefa, "
+								  + "c.nomeCaixa as nomeCaixa, " 
+								  + "'" + PainelEntityNode.CAIXA_TYPE + "' as type, "
+								  + "( " +  countQueryCaixa +  " and idCaixa = c.idCaixa ) as qtd "
+							 + "from Caixa c "
+							 + "where c.tarefa.idTarefa = :taskId "
+							 + "order by c.nomeCaixa ";
 		TypedQuery<Tuple> typedQuery = getEntityManager().createQuery(queryCaixas, Tuple.class);
 		typedQuery.setParameter("taskId", idTarefa);
 		Map<String, Object> parametersCountSubquery = HibernateUtil.getQueryParams(typedCount);
@@ -87,9 +90,9 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		Integer idTarefa = selected.get("idTarefa", Integer.class);
 		CriteriaQuery<Integer> criteriaQuery = createBaseCriteriaQueryProcessosAbertos(idTarefa);
         String nodeType = selected.get("type", String.class);
-		if ("Task".equals(nodeType)) {
+		if (PainelEntityNode.TASK_TYPE.equals(nodeType)) {
 			appendProcessSemCaixaFilter(criteriaQuery);
-        } else if ("Caixa".equals(nodeType)) {
+        } else if (PainelEntityNode.CAIXA_TYPE.equals(nodeType)) {
         	Integer idCaixa = selected.get("idCaixa", Integer.class);
             appendProcessoComCaixaFilter(criteriaQuery, idCaixa);
         }
@@ -163,7 +166,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
         Selection<String> nomeFluxo = root.<String>get("nomeFluxo").alias("nomeFluxo");
         Selection<Integer> idFluxo = cb.max(root.<Integer>get("idFluxo")).alias("idFluxo");
-        Selection<String> type = cb.literal("Fluxo").alias("type");
+        Selection<String> type = cb.literal(PainelEntityNode.FLUXO_TYPE).alias("type");
         criteriaQuery.select(cb.tuple(nomeFluxo, idFluxo, type));
         criteriaQuery.groupBy(root.get("nomeFluxo"));
         criteriaQuery.orderBy(cb.asc(root.get("nomeFluxo")));
@@ -180,7 +183,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		Selection<Integer> maxIdTarefa = cb.max(from.<Integer>get("idTarefa")).alias("idTarefa");
 		Selection<Long> countCaixa = cb.count(from.get("nomeCaixa")).alias("qtdEmCaixa");
 		Selection<Long> countProcesso = cb.count(from.get("idProcesso")).alias("qtd");
-		Selection<String> type = cb.<String>literal("Task").alias("type");
+		Selection<String> type = cb.<String>literal(PainelEntityNode.TASK_TYPE).alias("type");
 		cq.select(cb.tuple(nomeTarefa, maxIdTask, maxIdTarefa, countCaixa, countProcesso, type)).distinct(true);
 		cq.where(cb.equal(from.get("idFluxo"), idFluxo));
 		cq.groupBy(from.get("nomeTarefa"));

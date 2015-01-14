@@ -5,24 +5,21 @@ import java.io.Serializable;
 import javax.persistence.TransactionRequiredException;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.End;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.manager.TarefaJbpmManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
-import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -53,24 +50,6 @@ public class JbpmEventsHandler implements Serializable {
     }
     
     /**
-     * Comentado pode ser removido no futuro 14-11-2014
-     */
-
-//    @Observer(Event.EVENTTYPE_TASK_END)
-//    @End(beforeRedirect = true)
-//    public void refreshPainel(ExecutionContext context) throws DAOException {
-//        context.getTaskInstance().setActorId(null);
-//        try {
-//            getProcessoManager().apagarActorIdDoProcesso(JbpmUtil.getProcesso());
-//        } catch (IllegalStateException | IllegalArgumentException | TransactionRequiredException exception) {
-//            String action = "Limpar as variáveis do painel para atualização: ";
-//            LOG.error(action, exception);
-//            throw new ApplicationException(ApplicationException.createMessage(action
-//                    + exception.getLocalizedMessage(), "refreshPainel()", JBPM_EVENTS_HANDLER, BPM), exception);
-//        }
-//    }
-
-    /**
      * Atualiza o dicionário de Tarefas (tb_tarefa) com seus respectivos id's de
      * todas as versões.
      * @throws DAOException 
@@ -86,25 +65,6 @@ public class JbpmEventsHandler implements Serializable {
             LOG.error(action, exception);
             throw new ApplicationException(ApplicationException.createMessage(action
                     + exception.getLocalizedMessage(), "updatePostDeploy()", JBPM_EVENTS_HANDLER, BPM), exception);
-        }
-    }
-
-    /**
-     * Antes de terminar a tarefa, remove a caixa do processo
-     * 
-     * @param transition
-     * @throws DAOException 
-     */
-    @Observer(Event.EVENTTYPE_TASK_END)
-    public void removeCaixaProcesso(ExecutionContext context) throws DAOException {
-        try {
-            Processo processo = JbpmUtil.getProcesso();
-            getProcessoManager().removerProcessoDaCaixaAtual(processo);
-        } catch (IllegalStateException | TransactionRequiredException exception) {
-            String action = "Remover o processo da caixa: ";
-            LOG.warn(action, exception);
-            throw new ApplicationException(ApplicationException.createMessage(action
-                    + exception.getLocalizedMessage(), "removeCaixaProcesso()", JBPM_EVENTS_HANDLER, BPM), exception);
         }
     }
 

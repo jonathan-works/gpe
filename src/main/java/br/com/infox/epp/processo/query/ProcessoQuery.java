@@ -21,6 +21,7 @@ public interface ProcessoQuery {
 	String PARAM_ID_USUARIO = "id_usuario";
 	String PARAM_ID_TASK = "idTask";
 	String PARAM_FLUXO = "fluxo";
+	String PARAM_ID_CAIXA = "idCaixa";
 	String QUERY_PARAM_PROCESSO = "processo";
 
 	String LIST_ALL_NOT_ENDED = "listAllProcessoEpaNotEnded";
@@ -56,9 +57,6 @@ public interface ProcessoQuery {
 
 	String PARAM_ACTOR_ID = "actorId";
 
-	String REMOVE_PROCESSO_DA_CAIXA_ATUAL = "removerProcessoDaCaixaAtual";
-	String REMOVE_PROCESSO_DA_CAIXA_ATUAL_QUERY = "update tb_processo set id_caixa = null where id_processo = :" + PARAM_ID_PROCESSO;
-
 	String GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO = "getProcessoByIdProcessoAndIdUsuario";
 	String GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY = "SELECT p.* " + "FROM tb_processo p "
 			+ "INNER JOIN tb_processo_tarefa pt on (p.id_processo = pt.id_processo) "
@@ -67,13 +65,6 @@ public interface ProcessoQuery {
 
 	String ID_LIST_PROCESSO_PARAM = "idList";
 	String CAIXA_PARAM = "caixa";
-	String MOVER_PROCESSOS_PARA_CAIXA = "moverProcessosParaCaixa";
-	String MOVER_PROCESSOS_PARA_CAIXA_QUERY = "update Processo set caixa = :" + CAIXA_PARAM + " where idProcesso in (:"
-			+ ID_LIST_PROCESSO_PARAM + ")";
-
-	String MOVER_PROCESSO_PARA_CAIXA = "moverProcessoParaCaixa";
-	String MOVER_PROCESSO_PARA_CAIXA_QUERY = "update tb_processo set id_caixa = :" + CAIXA_PARAM + " where id_processo = :"
-			+ PARAM_ID_PROCESSO;
 
 	String ATUALIZAR_PROCESSOS = "atualizarProcessos";
 	String ATUALIZAR_PROCESSOS_QUERY = "update jbpm_processinstance set processdefinition_ = "
@@ -163,5 +154,8 @@ public interface ProcessoQuery {
 	String PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY = "select o from Processo o inner join o.metadadoProcessoList m where"
 			+ " o.processoPai = :" + PROCESSO_PAI_PARAM + " and o.dataFim is null"
 			+ " and m.metadadoType like 'tipoProcesso' and m.valor = :" + TIPO_PROCESSO_PARAM;
+	
+	String PROCESSOS_BY_ID_CAIXA = "processosByIdCaixa";
+	String PROCESSOS_BY_ID_CAIXA_QUERY = "select o from Processo o where o.caixa.idCaixa = :" + PARAM_ID_CAIXA;
 	
 }

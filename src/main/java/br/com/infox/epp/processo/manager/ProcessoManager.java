@@ -10,8 +10,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.util.Strings;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -28,7 +26,6 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
@@ -47,7 +44,7 @@ import br.com.infox.util.time.DateRange;
 public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     private static final long serialVersionUID = 8095772422429350875L;
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
+//    private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
     public static final String NAME = "processoManager";
     private static final int PORCENTAGEM = 100;
 
@@ -152,30 +149,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void moverProcessosParaCaixa(final List<Integer> idList, final Caixa caixa) throws DAOException {
-        getDao().moverProcessosParaCaixa(idList, caixa);
-    }
-
-    public void moverProcessoParaCaixa(final Caixa caixa, final Processo processo) throws DAOException {
-        getDao().moverProcessoParaCaixa(caixa, processo);
-    }
-
-    public void moverProcessoParaCaixa(final List<Caixa> caixaList, final Processo processo) throws DAOException {
-        final Caixa caixaEscolhida = escolherCaixaParaAlocarProcesso(caixaList);
-        getDao().moverProcessoParaCaixa(caixaEscolhida, processo);
-    }
-
-    /*
-     * Atualmente a regra para escolher a caixa é simplesmente pegar a primeira
-     */
-    private Caixa escolherCaixaParaAlocarProcesso(final List<Caixa> caixaList) {
-        return caixaList.get(0);
-    }
-
-    public void removerProcessoDaCaixaAtual(final Processo processo) throws DAOException {
-        getDao().removerProcessoDaCaixaAtual(processo);
-    }
-
     public void atualizarProcessos() {
         getDao().atualizarProcessos();
     }
@@ -217,10 +190,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     public List<Processo> listNotEnded(final Fluxo fluxo) {
         return getDao().listNotEnded(fluxo);
-    }
-
-    public Boolean podeInativarPartesDoProcesso(final Processo processo) {
-        return getDao().podeInativarPartes(getDao().getProcessoEpaByProcesso(processo));
     }
 
     public void updateTempoGastoProcessoEpa() throws DAOException {
@@ -290,5 +259,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	public List<Processo> getProcessosFilhoNotEndedByTipo(Processo processo, String tipoProcesso) {
 		return getDao().getProcessosFilhoNotEndedByTipo(processo, tipoProcesso);
     }
+	
+	public List<Processo> getProcessosByIdCaixa(Integer idCaixa) {
+		return getDao().getProcessosByIdCaixa(idCaixa);
+	}
 
 }
