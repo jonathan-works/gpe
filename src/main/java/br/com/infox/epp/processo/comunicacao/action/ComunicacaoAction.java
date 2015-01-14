@@ -257,14 +257,15 @@ public class ComunicacaoAction implements Serializable {
 	
 	public void pedirProrrogacaoPrazo() {
 		try {
-			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo);
-			Processo comunicacao = documentoUploader.getProcesso();
+			Processo comunicacao = destinatario.getComunicacao();
+			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao);
+			Processo processoOriginalDocumentoUploader = documentoUploader.getProcesso();
 			documentoUploader.setProcesso(prorrogacao);
 			Documento documento = documentoUploader.getDocumento();
 			documento.setDescricao(documentoUploader.getClassificacaoDocumento().getDescricao());
 			documentoUploader.persist();
 			documentoUploader.clear();
-			documentoUploader.setProcesso(comunicacao);
+			documentoUploader.setProcesso(processoOriginalDocumentoUploader);
 			documentoUploader.setClassificacaoDocumento(getClassificacaoProrrogacaoPrazo());
 
 			prorrogacao.getDocumentoList().add(documento);
