@@ -53,7 +53,7 @@ public class ProcessoSearcher {
     	if (processo == null) {
     		processo = searchIdProcesso(searchText);
     	}
-        if (processo != null && processo.getIdJbpm() != null 
+        if (processo != null && processo.getIdJbpm() != null && processo.getProcessoPai() == null
         		&& sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoManager.find(processo.getIdProcesso()))) {
             visualizarProcesso(processo);
         }

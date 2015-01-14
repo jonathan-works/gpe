@@ -18,7 +18,7 @@ public class ConsultaProcessoExterno extends EntityList<Processo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoExterno";
 
-    private static final String DEFAULT_EJBQL = "select o from Processo o where "
+    private static final String DEFAULT_EJBQL = "select o from Processo o where o.processoPai is null and "
             + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     private static final String DEFAULT_ORDER = "dataInicio ASC";
 
