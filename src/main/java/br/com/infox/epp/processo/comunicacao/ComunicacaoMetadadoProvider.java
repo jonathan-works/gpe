@@ -34,6 +34,9 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 	public static final MetadadoProcessoDefinition RESPONSAVEL_CIENCIA = 
 			new MetadadoProcessoDefinition("responsavelCiencia", "Responsável Ciência", UsuarioLogin.class);
 	
+	public static final MetadadoProcessoDefinition RESPONSAVEL_CUMPRIMENTO = 
+			new MetadadoProcessoDefinition("responsavelCumprimento", "Responsável Cumprimento", UsuarioLogin.class);
+	
 	public static final MetadadoProcessoDefinition DOCUMENTO_COMPROVACAO_CIENCIA = 
 			new MetadadoProcessoDefinition("documentoComprovacaoCiencia", Documento.class);
 	

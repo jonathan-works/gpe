@@ -22,6 +22,10 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_ALL_NOT_ENDED_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FLUXO_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA;
+import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
@@ -110,7 +114,9 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
     @NamedQuery(name = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO, query = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY),
     @NamedQuery(name = GET_PROCESSO_BY_NUMERO_PROCESSO, query = GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY),
-    @NamedQuery(name = PROCESSOS_BY_ID_CAIXA, query = PROCESSOS_BY_ID_CAIXA_QUERY)
+    @NamedQuery(name = PROCESSOS_BY_ID_CAIXA, query = PROCESSOS_BY_ID_CAIXA_QUERY),
+    @NamedQuery(name = LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA, query = LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA_QUERY),
+    @NamedQuery(name = LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, query = LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY)
 })
 @Cacheable
 public class Processo implements Serializable {
@@ -342,16 +348,6 @@ public class Processo implements Serializable {
 	public boolean hasPartes(){
     	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
-	
-//	@Transient
-//	public MetadadoProcesso getMetadado(String metadadoProcessoType) {
-//		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
-//			if (metadadoProcessoType.equals(metadadoProcesso.getMetadadoType())) {
-//				return metadadoProcesso;
-//			}
-//		}
-//		return null;
-//	}
 	
 	@Transient
 	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {

@@ -221,14 +221,9 @@ public class ComunicacaoAction implements Serializable {
 			
 			MetadadoProcesso documentoCiencia = metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documento.getId().toString());
-			MetadadoProcesso metadadoDataCiencia = metadadoProcessoProvider.gerarMetadado(
-					ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCiencia));
-			MetadadoProcesso metadadoResponsavelCiencia = metadadoProcessoProvider.gerarMetadado(
-					ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA, Authenticator.getUsuarioLogado().getIdUsuarioLogin().toString());
-			
 			metadadoProcessoManager.persist(documentoCiencia);
-			metadadoProcessoManager.persist(metadadoDataCiencia);
-			metadadoProcessoManager.persist(metadadoResponsavelCiencia);
+			
+			comunicacaoService.darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
 			
 			FacesMessages.instance().add("Ciência informada com sucesso");
 			destinatarioBeans.remove(destinatario.getIdModeloComunicacao());

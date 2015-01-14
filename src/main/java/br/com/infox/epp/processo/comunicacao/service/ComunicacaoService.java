@@ -23,11 +23,13 @@ import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.transaction.Transaction;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.joda.time.DateTime;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -133,6 +135,8 @@ public class ComunicacaoService {
 		processo.setNumeroProcesso("");
 		processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
 		processo.setProcessoPai(modeloComunicacao.getProcesso());
+		processo.setDataInicio(DateTime.now().toDate());
+		processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
 		processoManager.persist(processo);
 
 		processo.getMetadadoProcessoList().addAll(criarMetadados(destinatario, processo));
@@ -422,6 +426,30 @@ public class ComunicacaoService {
 		} catch (IllegalStateException | SecurityException | SystemException e) {
 			throw new DAOException(e);
 		}
+	}
+	
+	public void darCiencia(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+		MetadadoProcesso metadadoDataCiencia = metadadoProcessoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCiencia));
+		MetadadoProcesso metadadoResponsavelCiencia = metadadoProcessoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA, usuarioCiencia.getIdUsuarioLogin().toString());
+		
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCiencia));
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCiencia));
+	}
+	
+	public void darCumprimento(Processo comunicacao, Date dataCumprimento, UsuarioLogin usuarioCumprimento) throws DAOException {
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+		String dateFormatted = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCumprimento);
+		String idUsuarioCumprimento = usuarioCumprimento.getIdUsuarioLogin().toString();
+		MetadadoProcesso metadadoDataCumprimento = 
+				metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO, dateFormatted);
+		MetadadoProcesso metadadoResponsavelCumprimento = 
+				metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.RESPONSAVEL_CUMPRIMENTO, idUsuarioCumprimento);
+		
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCumprimento));
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCumprimento));
 	}
 	
 	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao"; 
