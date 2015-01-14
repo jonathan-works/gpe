@@ -6,19 +6,20 @@
     
     <ui:param name="idDocumento" value="#{idDocumento}" />
     <ui:param name="renderedLock" value="#{renderedLock}" />
+    <ui:param name="hideSignature" value="#{not empty hideSignature ? hideSignature : false}" />
  
 	<h:graphicImage title="#{eppmessages['assinaturas.assinar']}"
 				alt="#{eppmessages['assinaturas.assinar']}"
 				url="#{wiSkin.imageFolder}/lock_unlock.png" 
 				style="cursor: pointer"
-				rendered="#{not renderedLock}" 
+				rendered="#{(not renderedLock) and (not hideSignature) }" 
 				onmouseup="selectDocumentoAssinar( #{idDocumento} );" />
 				
 	<h:graphicImage title="#{eppmessages['assinaturas.validar']}"
                  alt="#{eppmessages['assinaturas.validar']}"
                  url="#{wiSkin.imageFolder}/lock.png" 
                  style="cursor: pointer"
-                 rendered="#{renderedLock}" 
+                 rendered="#{renderedLock and (not hideSignature)}" 
                  onmouseup="selectDocumentoAssinar( #{idDocumento} );" />
  
 

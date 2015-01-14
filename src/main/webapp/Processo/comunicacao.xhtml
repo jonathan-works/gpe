@@ -102,7 +102,8 @@
 	    		rendered="#{comunicacaoAction.ciencia}">
 	    		<h:form>
 	    			<wi:inputDate past="true" id="dataCiencia" showRequired="true" label="#{eppmessages['comunicacao.dataCiencia']}" 
-	    				value="#{comunicacaoAction.dataCiencia}">
+	    				value="#{comunicacaoAction.dataCiencia}" startDate="#{comunicacaoAction.destinatario.comunicacao.dataInicio}"
+                        errorMessage="#{eppmessages['comunicacao.validator.dataCienciaIncorreta']}">
 	    				<a:ajax event="change" render="@form" execute="@form" limitRender="true" />
 	    			</wi:inputDate>
 	    			<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true" label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
@@ -114,10 +115,12 @@
 	    				and not empty comunicacaoAction.dataCiencia 
 	    				and not empty comunicacaoAction.classificacaoDocumento.extensaoArquivosList}">
 	    				<wi:fileUpload id="documentoComprovacaoCiencia" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
-	    					reRender="@form"/>
-	    				<wi:commandButton id="gravar" value="#{eppmessages['crud.update']}" action="comunicacaoAction.darCiencia()" 
-	    					reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"
-	    					rendered="#{documentoUploader.valido}"/>
+	    					reRender="buttonGravar"/>
+                        <s:div id="buttonGravar">
+    	    				<wi:commandButton id="gravar" value="#{eppmessages['crud.update']}" action="comunicacaoAction.darCiencia()" 
+    	    					reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"
+    	    					rendered="#{documentoUploader.valido}"/>
+                        </s:div>
 	    			</s:div>
 	    		</h:form>
 	    	</rich:panel>

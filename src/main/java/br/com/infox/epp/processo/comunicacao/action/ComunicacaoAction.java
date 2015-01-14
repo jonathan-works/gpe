@@ -223,6 +223,7 @@ public class ComunicacaoAction implements Serializable {
 			dadosCiencia.put(destinatario.getIdDestinatario(), true);
 			destinatario = null;
 			dataCiencia = null;
+			ciencia = false;
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
