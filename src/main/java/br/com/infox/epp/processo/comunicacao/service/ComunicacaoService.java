@@ -281,13 +281,13 @@ public class ComunicacaoService {
     }
     
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
-		DestinatarioModeloComunicacao destinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
 		MetadadoProcesso metadadoCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
-        Integer qtdDias = destinatario.getPrazo();
-        if (qtdDias == null || metadadoCiencia == null) {
+        MetadadoProcesso metadadoPrazoCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
+        if (metadadoPrazoCumprimento == null || metadadoCiencia == null) {
         	return null;
         }
-        return calendarioEventosManager.getPrimeiroDiaUtil((Date) metadadoCiencia.getValue(), qtdDias);
+        Integer diasPrazoCumprimento = metadadoPrazoCumprimento.getValue();
+        return calendarioEventosManager.getPrimeiroDiaUtil((Date) metadadoCiencia.getValue(), diasPrazoCumprimento);
     }
 	
 	public List<ModeloDocumento> getModelosDocumentoDisponiveisComunicacao(TipoComunicacao tipoComunicacao) {
