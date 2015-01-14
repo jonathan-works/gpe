@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?> 
-<jnlp spec="1.0+" codebase="http://epp.infox.com.br/epp/" href="certificado/certificado_digital.jnlp">
+<jnlp spec="1.0+" href="certificado_digital.jnlp">
 	<information>
 		<title>Certificado Digital</title>
 		<vendor>INFOX</vendor>
@@ -11,7 +11,7 @@
 	</security>
 	<resources>
 		<j2se version="1.6+" />
-		<jar href="certificado/certificado_digital.jar" main="true" />
+		<jar href="certificado_digital.jar" main="true" />
 	</resources>
 	<application-desc main-class="br.com.infox.server.Main" />
 </jnlp>
