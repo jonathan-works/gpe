@@ -40,7 +40,7 @@
 							<s:div rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada and not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}">
 	   							<a:commandLink action="#{modeloComunicacaoAction.setDestinatario(row)}" render="comunicacaoDestinatarioForm" execute="@this"
 	   								rendered="#{empty modeloComunicacaoAction.modeloComunicacao.localizacaoResponsavelAssinatura}">
-	   								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}" />
+	   								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{eppmessages['button.selecionar']}" />
 	   							</a:commandLink>
 	   							<h:commandLink action="#{modeloComunicacaoAction.downloadComunicacaoCompleta(row)}" 
 	   								rendered="#{row.expedido}">
@@ -146,6 +146,10 @@
 								<f:facet name="header">#{eppmessages['participanteProcesso.tipoParticipante']}</f:facet>
 								<h:outputText value="#{row.tipoParte.descricao}" />
 							</rich:column>
+                            <rich:column>
+                                <f:facet name="header">#{eppmessages['participanteProcesso.superior']}</f:facet>
+                                <h:outputText value="#{row.participantePai}"></h:outputText>
+                            </rich:column>
 						</wi:dataTable>
 					</rich:collapsiblePanel>
 				</h:form>
@@ -199,7 +203,12 @@
 								execute="@this" render="documentos">
 								<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{eppmessages['button.add']}" />
 							</a:commandLink>
-						</h:form>
+                            <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+                                <ui:param name="bin" value="#{row.documentoBin}" />
+                                <ui:param name="header" value="#{row.descricao}" />
+                                <ui:param name="hideSignature" value="true" />
+                            </ui:include>
+                        </h:form>
 					</ui:define>
 					<ui:define name="searchForm">
 						<rich:panel header="Pastas" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
@@ -252,12 +261,22 @@
 									onclick="infox.editor['comunicacao'].insertText('#{modeloComunicacaoAction.getLink(row.documento.documentoBin)}'); return false;">
 									<h:graphicImage url="#{wiSkin.imageFolder}/link.gif" title="#{eppmessages['button.copiarLink']}" />
 								</a:commandLink>
-							</h:form> 
+                                <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+                                    <ui:param name="bin" value="#{row.documento.documentoBin}" />
+                                    <ui:param name="header" value="#{row.documento.descricao}" />
+                                    <ui:param name="row" value="#{row.documento}" />
+                                    <ui:param name="hideSignature" value="true" />
+                                </ui:include>
+                            </h:form> 
 						</rich:column>
 						<rich:column>
 						<f:facet name="header">#{eppmessages['documentoProcesso.processoDocumento']}</f:facet>
 						<h:outputText value="#{row.documento.descricao}" />
 					</rich:column>
+                    <rich:column>
+                        <f:facet name="header">#{eppmessages['documentoProcesso.pastaDocumento']}</f:facet>
+                        <h:outputText value="#{row.documento.pasta}" />
+                    </rich:column>
 					<rich:column>
 						<f:facet name="header">#{eppmessages['processoDocumento.classificacaoDocumento']}</f:facet>
 						<h:outputText value="#{row.documento.classificacaoDocumento.descricao}" />
