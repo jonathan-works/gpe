@@ -34,9 +34,8 @@
 		<rich:collapsiblePanel header="#{eppmessages['comunicacao.comunicacoes']}" 
 			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 			<h:form>
-				<ui:repeat var="modeloComunicacao" value="#{comunicacaoAction.comunicacoesDoProcesso}">
 					<rich:panel header="#{eppmessages['comunicacao.comunicacao']} - #{modeloComunicacao.tipoComunicacao.descricao}">
-						<rich:dataTable value="#{comunicacaoAction.getDestinatarios(modeloComunicacao)}" 
+						<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
 							var="bean" styleClass="dtable rf-dt-crud">
 							<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
 									<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
@@ -56,6 +55,10 @@
 								<f:facet name="header">#{eppmessages['comunicacao.destinatario']}</f:facet>
 								<h:outputText value="#{bean.nome}" />
 							</rich:column>
+                            <rich:column>
+                                <f:facet name="header">#{eppmessages['comunicacao.tipoComunicacao']}</f:facet>
+                                <h:outputText value="#{bean.tipoComunicacao}" />
+                            </rich:column>
 							<rich:column>
 								<f:facet name="header">#{eppmessages['comunicacao.meioExpedicao']}</f:facet>
 								<h:outputText value="#{bean.meioExpedicao}" />
@@ -94,7 +97,6 @@
 							</rich:column>
 						</rich:dataTable>
 					</rich:panel>
-				</ui:repeat>
 			</h:form>
 		</rich:collapsiblePanel>
 	    <s:div id="painelCiencia">

@@ -113,6 +113,18 @@ public class ComunicacaoAction implements Serializable {
 		this.comunicacoes = null;
 	}
 	
+	public List<DestinatarioBean> getDestinatarios() {
+	    List<DestinatarioBean> destinatarios = new ArrayList<>();
+	    List<ModeloComunicacao> comunicacoesDoProcesso = getComunicacoesDoProcesso();
+	    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) {
+	        List<DestinatarioBean> destinatariosPorModelo = getDestinatarios(modeloComunicacao);
+	        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
+                destinatarios.add(destinatarioBean);
+            }
+        }
+	    return destinatarios;
+	}
+	
 	public List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
 		List<DestinatarioBean> destinatarios = destinatarioBeans.get(modeloComunicacao.getId());
 		if (destinatarios == null) {
