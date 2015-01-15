@@ -29,6 +29,7 @@ import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -254,14 +255,19 @@ public class RespostaComunicacaoAction implements Serializable {
 	public MeioExpedicao getMeioExpedicao() {
 		return destinatario.getMeioExpedicao();
 	}
+	
+	public TipoComunicacao getTipoComunicacao() {
+		return destinatario.getModeloComunicacao().getTipoComunicacao();
+	}
 
 	public Date getPrazoResposta() {
 		return prazoResposta;
 	}
 	
 	private void initClassificacoes() {
-		classificacoesEditor = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true);
-		classificacoesAnexo = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false);
+		TipoComunicacao tipoComunicacao = destinatario.getModeloComunicacao().getTipoComunicacao();
+		classificacoesEditor = comunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, true);
+		classificacoesAnexo = comunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, false);
 	}
 
 	private void criarProcessoResposta() {

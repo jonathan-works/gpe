@@ -41,19 +41,4 @@ public interface VariavelClassificacaoDocumentoQuery {
             + "o.fluxo.idFluxo = :" + PARAM_ID_FLUXO
             + " and (o.removerNaPublicacao = true";
     String REMOVER_CLASSIFICACOES_VARIAVEIS_OBSOLETAS_VARIAVEIS_EXISTENTES_PART = " or o.variavel not in (:" + PARAM_VARIAVEIS + "))";
-    
-    /**
-     * Classificações disponíveis para associação à variável
-     */
-    String CLASSIFICACOES_DISPONIVEIS_PARA_VARIAVEL_BASE_QUERY = "from ClassificacaoDocumento o where o.ativo = true and o.sistema = false and "
-            + "o.inTipoDocumento in ('T', :" + PARAM_TIPO_DOCUMENTO + ") and "
-            + "not exists (select 1 from VariavelClassificacaoDocumento v where v.classificacaoDocumento = o and "
-            + "v.removerNaPublicacao = false and "
-            + "v.variavel = :" + PARAM_VARIAVEL + " and v.fluxo.idFluxo = :" + PARAM_ID_FLUXO + ") ";
-    
-    String NOME_CLASSIFICACAO_FILTER = " and lower(o.descricao) like concat('%', lower(:" + PARAM_NOME_CLASSIFICACAO_DOCUMENTO + "), '%') ";
-    
-    String ORDER_BY_NOME_CLASSIFICACAO = " order by o.descricao";
-    
-    String TOTAL_CLASSIFICACOES_DISPONIVEIS_PARA_VARIAVEL_QUERY = "select count(o) " + CLASSIFICACOES_DISPONIVEIS_PARA_VARIAVEL_BASE_QUERY;
 }

@@ -307,6 +307,10 @@ public class ComunicacaoService {
 		}
 	}
 	
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo) {
+		return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo);
+	}
+	
 	private Collection<MetadadoProcesso> criarMetadados(DestinatarioModeloComunicacao destinatario, Processo processo) {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 		Collection<MetadadoProcesso> metadados = new ArrayList<>();

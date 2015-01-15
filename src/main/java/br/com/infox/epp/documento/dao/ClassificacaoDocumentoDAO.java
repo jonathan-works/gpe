@@ -5,12 +5,18 @@ import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.CLASS
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.CODIGO_DOCUMENTO_PARAM;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO;
-import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PARAM_DESCRICAO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PAPEL_PARAM;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PARAM_DESCRICAO;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -19,7 +25,6 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
-import br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 
@@ -31,11 +36,21 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     public static final String NAME = "classificacaoDocumentoDAO";
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, Papel papel) {
-        final HashMap<String, Object> parameters = new HashMap<>();
-        TipoDocumentoEnum tipoDocumento = isModelo ? TipoDocumentoEnum.P : TipoDocumentoEnum.D;
-        parameters.put(ClassificacaoDocumentoQuery.TIPO_DOCUMENTO_PARAM, tipoDocumento);
-        parameters.put(PAPEL_PARAM, papel);
-        return getNamedResultList(ClassificacaoDocumentoQuery.CLASSIFICACAO_DOCUMENTO_USEABLE, parameters);
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<ClassificacaoDocumento> query = cb.createQuery(ClassificacaoDocumento.class);
+    	Root<ClassificacaoDocumento> from = query.from(ClassificacaoDocumento.class);
+    	Join<ClassificacaoDocumento, ClassificacaoDocumentoPapel> join = from.join("classificacaoDocumentoPapelList");
+    	Predicate predicate = cb.and(cb.equal(from.get("sistema"), false),
+    			cb.equal(join.get("papel"), papel),
+    			cb.equal(from.get("ativo"), true));
+    	
+    	predicate = cb.and(cb.or(cb.equal(from.get("inTipoDocumento"), isModelo ? TipoDocumentoEnum.P : TipoDocumentoEnum.D), 
+    			cb.equal(from.get("inTipoDocumento"), TipoDocumentoEnum.T)));
+    	
+    	predicate = cb.and(predicate, createAdditionalRestrictions(cb, query, from));
+    	
+    	query.where(predicate).orderBy(cb.asc(from.get("descricao")));
+    	return getEntityManager().createQuery(query).getResultList();
     }
 
     public boolean isAssinaturaObrigatoria(ClassificacaoDocumento classificacaoDocumento, Papel papel) {
@@ -59,5 +74,9 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     	Map<String, Object> params = new HashMap<>(1);
     	params.put(PARAM_DESCRICAO, descricao);
     	return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, params);
+    }
+    
+    protected Predicate createAdditionalRestrictions(CriteriaBuilder cb, CriteriaQuery<?> query, Root<ClassificacaoDocumento> from) {
+    	return cb.and();
     }
 }

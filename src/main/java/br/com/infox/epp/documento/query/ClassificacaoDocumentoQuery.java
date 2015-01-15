@@ -7,15 +7,6 @@ public interface ClassificacaoDocumentoQuery {
     String TIPO_DOCUMENTO_PARAM = "tipoDocumento";
     String PARAM_DESCRICAO = "descricao";
 
-    String CLASSIFICACAO_DOCUMENTO_USEABLE = "useableTipoProcessoDocumento";
-    String CLASSIFICACAO_DOCUMENTO_USEABLE_QUERY = "select t from ClassificacaoDocumentoPapel o "
-            + " inner join o.classificacaoDocumento t "
-            + " where t.sistema = false and o.papel=:" + PAPEL_PARAM
-            + " and t.ativo = true "
-            + " and (t.inTipoDocumento = :" + TIPO_DOCUMENTO_PARAM
-            + " or t.inTipoDocumento = 'T') "
-            + "order by t.descricao";
-
     String ASSINATURA_OBRIGATORIA = "assinaturaObrigatoria";
     String ASSINATURA_OBRIGATORIA_QUERY = "select distinct tpdp "
             + "from ClassificacaoDocumentoPapel tpdp "

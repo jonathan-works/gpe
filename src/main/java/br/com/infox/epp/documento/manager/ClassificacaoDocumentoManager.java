@@ -18,8 +18,7 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
     public static final String NAME = "classificacaoDocumentoManager";
     public static final String CODIGO_CLASSIFICACAO_ACESSO_DIRETO = "acessoDireto";
 
-    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(
-            boolean isModelo, Papel papel) {
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, Papel papel) {
         return getDao().getUseableClassificacaoDocumento(isModelo, papel);
     }
     
@@ -34,4 +33,8 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
     public ClassificacaoDocumento findByDescricao(String descricao) {
     	return getDao().findByDescricao(descricao);
     }
+
+	public ClassificacaoDocumento findByCodigo(String codigo) {
+		return getDao().findByCodigo(codigo);
+	}
 }

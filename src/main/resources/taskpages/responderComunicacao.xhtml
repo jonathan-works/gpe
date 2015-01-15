@@ -12,6 +12,8 @@
 	<rich:collapsiblePanel header="#{eppmessages['comunicacao.comunicacao']}" switchType="client">
 		<wi:outputText id="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.label}"
 			label="#{eppmessages['comunicacao.meioExpedicao']}" />
+		<wi:outputText id="tipoComunicacao" value="#{respostaComunicacaoAction.tipoComunicacao.descricao}"
+			label="#{eppmessages['comunicacao.tipoComunicacao']}" />
 		<wi:outputText id="prazoResposta" label="Prazo de Resposta"
 			value="#{not empty respostaComunicacaoAction.prazoResposta ? respostaComunicacaoAction.prazoResposta : '-' }">
 			<f:convertDateTime pattern="dd/MM/yyyy" />
