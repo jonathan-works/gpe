@@ -5,7 +5,8 @@ import org.jboss.seam.contexts.Contexts;
 public enum Parametros {
 	
 	IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO("usuarioExternoPodeVerDocExcluido"),
-	SOMENTE_USUARIO_INTERNO_PODE_VER_HISTORICO("somenteUsuarioInternoVerMotivoExclusaoDoc");
+	SOMENTE_USUARIO_INTERNO_PODE_VER_HISTORICO("somenteUsuarioInternoVerMotivoExclusaoDoc"),
+	ID_USUARIO_PROCESSO_SISTEMA("idUsuarioProcessoSistema");
 	
 	private String label;
 	

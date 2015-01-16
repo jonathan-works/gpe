@@ -22,6 +22,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -36,6 +37,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.util.time.DateRange;
 
@@ -57,8 +59,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private DocumentoBinManager documentoBinManager;
     @In
     private MetadadoProcessoManager metadadoProcessoManager;
-    @In(required = false, create = true)
-    private Authenticator authenticator;
+    @In
+    private ParametroManager parametroManager;
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
 
     public DocumentoBin createDocumentoBin(final Object value) throws DAOException {
         final DocumentoBin bin = new DocumentoBin();
@@ -167,26 +171,26 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     }
 
     public Processo criarProcesso(NaturezaCategoriaFluxo natcf) throws DAOException {
-		Processo processo = new Processo();
-		processo.setLocalizacao(authenticator.getLocalizacaoAtual());
-		processo.setDataInicio(Calendar.getInstance().getTime());
-		processo.setNaturezaCategoriaFluxo(natcf);
-		processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-		processo.setNumeroProcesso("");
-		processo.setUsuarioCadastro(authenticator.getUsuarioLogado());
+		Processo processo = criarProcesso(natcf, Authenticator.getLocalizacaoAtual(), Authenticator.getUsuarioLogado());
 		return persistProcessoComNumero(processo);
 	}
     
-    public Processo criarProcesso(NaturezaCategoriaFluxo natcf, Processo processoPai) throws DAOException {
-		Processo processo = new Processo();
-		processo.setLocalizacao(processoPai.getLocalizacao());
-		processo.setDataInicio(Calendar.getInstance().getTime());
-		processo.setNaturezaCategoriaFluxo(natcf);
-		processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-		processo.setNumeroProcesso("");
-		processo.setUsuarioCadastro(processoPai.getUsuarioCadastro());
+    public Processo criarProcessoSistema(NaturezaCategoriaFluxo natcf, Processo processoPai) throws DAOException {
+		Processo processo = criarProcesso(natcf, processoPai.getLocalizacao(), usuarioLoginManager.getUsuarioDeProcessosDoSistema());
+		processo.setProcessoPai(processoPai);
 		return persistProcessoComNumero(processo);
 	}
+    
+    private Processo criarProcesso(NaturezaCategoriaFluxo natcf, Localizacao localizacao, UsuarioLogin usuario) throws DAOException {
+    	Processo processo = new Processo();
+    	processo.setDataInicio(Calendar.getInstance().getTime());
+    	processo.setNaturezaCategoriaFluxo(natcf);
+    	processo.setLocalizacao(localizacao);
+    	processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+    	processo.setNumeroProcesso("");
+    	processo.setUsuarioCadastro(usuario);
+    	return processo;
+    }
     
     public String getNumeroProcessoByIdJbpm(final Long processInstanceId) {
         return getDao().getNumeroProcessoByIdJbpm(processInstanceId);

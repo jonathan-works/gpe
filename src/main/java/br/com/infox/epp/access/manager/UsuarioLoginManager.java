@@ -17,6 +17,9 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.seam.exception.BusinessException;
 
 @Name(UsuarioLoginManager.NAME)
 @AutoCreate
@@ -115,6 +118,20 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new DAOException(e);
         }
+    }
+    
+    public UsuarioLogin getUsuarioDeProcessosDoSistema() {
+    	String idUsuarioSistema = ParametroUtil.getParametroOrFalse(Parametros.ID_USUARIO_PROCESSO_SISTEMA.getLabel());
+    	if ("false".equals(idUsuarioSistema)) {
+    		throw new BusinessException("Não foi configurado o usuário de processos do sistema");
+    	} else {
+    		UsuarioLogin usuario = find(Integer.parseInt(idUsuarioSistema));
+    		if (!usuario.isHumano()) {
+    			return usuario;
+    		} else {
+    			throw new BusinessException("Usuario " + usuario + "não é um usuário de sistema");
+    		}
+    	}
     }
 
 }
