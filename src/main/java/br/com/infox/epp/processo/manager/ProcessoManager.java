@@ -44,7 +44,6 @@ import br.com.infox.util.time.DateRange;
 public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     private static final long serialVersionUID = 8095772422429350875L;
-//    private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
     public static final String NAME = "processoManager";
     private static final int PORCENTAGEM = 100;
 
@@ -58,6 +57,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private DocumentoBinManager documentoBinManager;
     @In
     private MetadadoProcessoManager metadadoProcessoManager;
+    @In(required = false, create = true)
+    private Authenticator authenticator;
 
     public DocumentoBin createDocumentoBin(final Object value) throws DAOException {
         final DocumentoBin bin = new DocumentoBin();
@@ -167,12 +168,23 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     public Processo criarProcesso(NaturezaCategoriaFluxo natcf) throws DAOException {
 		Processo processo = new Processo();
-		processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
+		processo.setLocalizacao(authenticator.getLocalizacaoAtual());
 		processo.setDataInicio(Calendar.getInstance().getTime());
 		processo.setNaturezaCategoriaFluxo(natcf);
 		processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
 		processo.setNumeroProcesso("");
-		processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
+		processo.setUsuarioCadastro(authenticator.getUsuarioLogado());
+		return persistProcessoComNumero(processo);
+	}
+    
+    public Processo criarProcesso(NaturezaCategoriaFluxo natcf, Processo processoPai) throws DAOException {
+		Processo processo = new Processo();
+		processo.setLocalizacao(processoPai.getLocalizacao());
+		processo.setDataInicio(Calendar.getInstance().getTime());
+		processo.setNaturezaCategoriaFluxo(natcf);
+		processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+		processo.setNumeroProcesso("");
+		processo.setUsuarioCadastro(processoPai.getUsuarioCadastro());
 		return persistProcessoComNumero(processo);
 	}
     

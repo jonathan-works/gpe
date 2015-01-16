@@ -66,7 +66,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
 import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -76,7 +75,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
@@ -192,13 +190,6 @@ public class Processo implements Serializable {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<Pasta> pastaList = new ArrayList<>();
-    
-    @PrePersist
-    private void prePersist() {
-		setDataInicio(new Date());
-		setUsuarioCadastro(Authenticator.getUsuarioLogado());
-		setLocalizacao(Authenticator.getLocalizacaoAtual());
-    }
     
     public Integer getIdProcesso() {
 		return idProcesso;
