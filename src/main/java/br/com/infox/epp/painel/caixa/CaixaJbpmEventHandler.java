@@ -38,12 +38,14 @@ public class CaixaJbpmEventHandler implements Serializable {
     	String nomeTarefaDestino = transition.getTo().getName();
     	String nomeFluxo = transition.getTo().getProcessDefinition().getName();
         Tarefa tarefa = tarefaManager.getTarefa(nomeTarefaDestino, nomeFluxo);
-        Integer idNodeAnterior = (int) transition.getFrom().getId();
-        Caixa caixa = caixaManager.getCaixaByIdTarefaAndIdNodeAnterior(tarefa.getIdTarefa(), idNodeAnterior);
-        Processo processo = JbpmUtil.getProcesso();
-        if (caixa != null) {
-        	processo.setCaixa(caixa);
-        	processoManager.update(processo);
+        if (tarefa != null) {
+	        Integer idNodeAnterior = (int) transition.getFrom().getId();
+	        Caixa caixa = caixaManager.getCaixaByIdTarefaAndIdNodeAnterior(tarefa.getIdTarefa(), idNodeAnterior);
+	        Processo processo = JbpmUtil.getProcesso();
+	        if (caixa != null) {
+	        	processo.setCaixa(caixa);
+	        	processoManager.update(processo);
+	        }
         }
     }
     
