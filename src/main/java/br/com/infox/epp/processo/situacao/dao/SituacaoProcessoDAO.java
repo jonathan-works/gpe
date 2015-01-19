@@ -194,13 +194,48 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 	private void appendDestinoOrDestinatarioFilter(AbstractQuery<?> abstractQuery) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subqueryDestino = createSubqueryDestino(abstractQuery);
+        Subquery<Integer> subqueryPerfilDestino = createSubqueryPerfilDestino(abstractQuery);
         Subquery<Integer> subqueryDestinatario = createSubqueryDestinatario(abstractQuery);
         Predicate predicateQuery = abstractQuery.getRestriction();
-        predicateQuery = cb.and(cb.or(cb.exists(subqueryDestino), cb.exists(subqueryDestinatario)), predicateQuery);
+        predicateQuery = 
+                cb.and(
+                        cb.or(
+                                cb.and(
+                                    cb.exists(subqueryDestino), 
+                                    cb.exists(subqueryPerfilDestino)
+                                ),
+                                cb.exists(subqueryDestinatario)
+                        ),
+                        predicateQuery
+                );
         abstractQuery.where(predicateQuery);
     }
 
-	private Subquery<Integer> createSubqueryDestino(AbstractQuery<?> abstractQuery) {
+	private Subquery<Integer> createSubqueryPerfilDestino(AbstractQuery<?> abstractQuery) {
+	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<?> root = abstractQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        String metadadoDestino = EppMetadadoProvider.PERFIL_DESTINO.getMetadadoType();
+        
+        Subquery<Integer> subqueryExistsMetadado = abstractQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadadoExists = subqueryExistsMetadado.from(MetadadoProcesso.class);
+        subqueryExistsMetadado.select(cb.literal(1));
+        Predicate predicateSubqueryExists = cb.and(cb.equal(metadadoExists.get("metadadoType"), metadadoDestino));
+        predicateSubqueryExists = cb.and(cb.equal(metadadoExists.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubqueryExists);
+        subqueryExistsMetadado.where(predicateSubqueryExists);
+        
+        Integer idPerfilAtual = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId();
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoDestino));
+        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idPerfilAtual.toString()), predicateSubquery);
+        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        predicateSubquery = cb.or(cb.not(cb.exists(subqueryExistsMetadado)), predicateSubquery);
+        subquery.where(predicateSubquery);
+        return subquery;
+    }
+
+    private Subquery<Integer> createSubqueryDestino(AbstractQuery<?> abstractQuery) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		Root<?> root = abstractQuery.getRoots().iterator().next();
 		Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);

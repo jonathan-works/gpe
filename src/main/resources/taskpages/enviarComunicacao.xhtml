@@ -156,12 +156,24 @@
 				<div />
 				<h:form rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
 					<rich:collapsiblePanel header="#{eppmessages['comunicacao.localizacoes']}" switchType="client">
-						<wi:tree id="localizacao" assignTo="modeloComunicacaoAction.localizacao"
-				          tree="#{localizacaoSubTree}" icon="#{wiSkin.imageFolder}/nivelTree.gif"
-				          iconLeaf="#{wiSkin.imageFolder}/file.gif" label="#{eppmessages['localizacao.localizacao']}" 
-				          required="true"/>
-				        <wi:commandButton id="adicionarLocalizacao" reRender="destinatariosPanel, pageBodyDialogMessage" value="Adicionar"
-				        	action="#{modeloComunicacaoAction.adicionarDestino(modeloComunicacaoAction.localizacao)}" />
+                        <wi:tree
+                            id="localizacao"
+                            assignTo="modeloComunicacaoAction.localizacao"
+                            tree="#{localizacaoSubTree}"
+                            icon="#{wiSkin.imageFolder}/nivelTree.gif"
+                            iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                            label="#{eppmessages['localizacao.localizacao']}"
+                            required="true"
+                            render="perfisPermitidosDestino" />
+                        <wi:selectOneMenuEntity
+                            id="perfisPermitidosDestino"
+                            value="#{modeloComunicacaoAction.perfilDestino}"
+                            label="#{eppmessages['usuarioPerfil.perfil']}"
+                            items="#{modeloComunicacaoAction.perfisPermitidosDestino}"
+                            showLabelSelecione="true"
+                            disabled="#{empty modeloComunicacaoAction.localizacao}" />
+                        <wi:commandButton id="adicionarLocalizacao" reRender="destinatariosPanel, pageBodyDialogMessage" value="#{eppmessages['button.add']}"
+				        	action="#{modeloComunicacaoAction.adicionarDestino(modeloComunicacaoAction.localizacao, modeloComunicacaoAction.perfilDestino)}" />
 					</rich:collapsiblePanel>
 				</h:form>
 			</rich:panel>

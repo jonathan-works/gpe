@@ -3,8 +3,10 @@ package br.com.infox.epp.processo.comunicacao.action;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.persistence.NonUniqueResultException;
@@ -130,7 +132,9 @@ public class ModeloComunicacaoAction implements Serializable {
 	private List<Pasta> pastas;
 	
 	private Localizacao localizacao;
+	private PerfilTemplate perfilDestino;
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
+	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
 	private boolean finalizada;
 	private String certChain;
 	private String signature;
@@ -202,10 +206,47 @@ public class ModeloComunicacaoAction implements Serializable {
 				if (relator != null && !adicionarDestinatarioRelator && relator.equals(destinatario.getDestinatario())) {
 					adicionarDestinatarioRelator = true;
 				}
-			} else {
-				idsLocalizacoesSelecionadas.add(destinatario.getDestino().getIdLocalizacao());
+			} else if (destinatario.getPerfilDestino() != null) {
+				addPerfilSelecionado(destinatario);
+			} else if (destinatario.getDestino() != null) {
+			    idsLocalizacoesSelecionadas.add(destinatario.getDestino().getIdLocalizacao());
 			}
 		}
+	}
+	
+	/**
+	 * Adiciona um perfil na lista de perfis de determinada localização guardados no cache
+	 * perfisSelecionados
+	 */
+	private void addPerfilSelecionado(DestinatarioModeloComunicacao destinatario) {
+	    if (perfisSelecionados.containsKey(destinatario.getDestino())) {
+	        perfisSelecionados.get(destinatario.getDestino()).add(destinatario.getPerfilDestino());
+	    } else {
+	        List<PerfilTemplate> perfis = new ArrayList<>();
+	        perfis.add(destinatario.getPerfilDestino());
+	        perfisSelecionados.put(destinatario.getDestino(), perfis);
+	    }
+	}
+	
+	private void removePerfilSelecionado(DestinatarioModeloComunicacao destinatario) {
+	    if (perfisSelecionados.containsKey(destinatario.getDestino())) {
+	        perfisSelecionados.remove(destinatario.getPerfilDestino());
+	    }
+	}
+	
+	/**
+	 * @param localizacao
+	 * @param perfil
+	 * @return True, se o perfil já tiver sido escolhido para esta localização, False caso contrário 
+	 */
+	private Boolean hasPerfilSelecionado(Localizacao localizacao, PerfilTemplate perfil) {
+	    boolean resp = false;
+	    if (!perfisSelecionados.containsKey(localizacao)) {
+	        resp = false;
+	    } else {
+	        resp = perfisSelecionados.get(localizacao).contains(perfil);
+	    }
+	    return resp;
 	}
 
 	private void initModelo(Long idModelo) {
@@ -368,16 +409,29 @@ public class ModeloComunicacaoAction implements Serializable {
 		}
 	}
 	
-	public void adicionarDestino(Localizacao localizacao) {
-		if (idsLocalizacoesSelecionadas.contains(localizacao.getIdLocalizacao())) {
-			FacesMessages.instance().add("Localização já adicionada");
-			return;
-		}
-		DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
-		destinatario.setModeloComunicacao(modeloComunicacao);
-		destinatario.setDestino(localizacao);
-		modeloComunicacao.getDestinatarios().add(destinatario);
-		idsLocalizacoesSelecionadas.add(localizacao.getIdLocalizacao());
+	public void adicionarDestino(Localizacao localizacao, PerfilTemplate perfilDestino) {
+	    if (perfilDestino == null) {
+	        if (idsLocalizacoesSelecionadas.contains(localizacao.getIdLocalizacao())) {
+	            FacesMessages.instance().add("Localização já adicionada");
+	            return;
+	        }
+	        DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
+	        destinatario.setModeloComunicacao(modeloComunicacao);
+	        destinatario.setDestino(localizacao);
+	        modeloComunicacao.getDestinatarios().add(destinatario);
+	        idsLocalizacoesSelecionadas.add(localizacao.getIdLocalizacao());
+	    } else {
+	        if (hasPerfilSelecionado(localizacao, perfilDestino)) {
+	            FacesMessages.instance().add("Perfil já adicionado para esta localização");
+	            return;
+	        }
+	        DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
+            destinatario.setModeloComunicacao(modeloComunicacao);
+            destinatario.setDestino(localizacao);
+            destinatario.setPerfilDestino(perfilDestino);
+            modeloComunicacao.getDestinatarios().add(destinatario);
+            addPerfilSelecionado(destinatario);
+	    }
 	}
 	
 	public void removerDestinatario(DestinatarioModeloComunicacao destinatario) {
@@ -388,6 +442,8 @@ public class ModeloComunicacaoAction implements Serializable {
 			if (adicionarDestinatarioRelator && destinatario.getDestinatario().equals(relator)) {
 				adicionarDestinatarioRelator = false;
 			}
+		} else if (destinatario.getPerfilDestino() != null) {
+		    removePerfilSelecionado(destinatario);
 		} else {
 			idsLocalizacoesSelecionadas.remove(destinatario.getDestino().getIdLocalizacao());
 		}
@@ -492,6 +548,13 @@ public class ModeloComunicacaoAction implements Serializable {
 		return usuarioPerfilManager.getPerfisPermitidos(modeloComunicacao.getLocalizacaoResponsavelAssinatura());
 	}
 	
+	public List<PerfilTemplate> getPerfisPermitidosDestino() {
+	    if (localizacao == null) {
+	        return Collections.emptyList();
+	    }
+	    return usuarioPerfilManager.getPerfisPermitidos(localizacao);
+	}
+	
 	public List<TipoComunicacao> getTiposComunicacao() {
 		if (tiposComunicacao == null) {
 			tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
@@ -542,6 +605,14 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void setLocalizacao(Localizacao localizacao) {
 		this.localizacao = localizacao;
+	}
+	
+	public PerfilTemplate getPerfilDestino() {
+	    return perfilDestino;
+	}
+	
+	public void setPerfilDestino(PerfilTemplate perfilDestino) {
+	    this.perfilDestino = perfilDestino;
 	}
 	
 	public ModeloComunicacao getModeloComunicacao() {

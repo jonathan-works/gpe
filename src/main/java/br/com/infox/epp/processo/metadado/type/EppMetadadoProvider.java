@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.metadado.type;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
@@ -26,6 +27,9 @@ public class EppMetadadoProvider extends MetadadoProcessoProvider {
 	
 	public static final MetadadoProcessoDefinition PESSOA_DESTINATARIO = 
 			new MetadadoProcessoDefinition("pessoaDestinatario", "Destinatário", PessoaFisica.class);
+	
+	public static final MetadadoProcessoDefinition PERFIL_DESTINO = 
+	        new MetadadoProcessoDefinition("perfilTemplateDestino", "Perfil Destino", PerfilTemplate.class);
 	
 	public static final MetadadoProcessoDefinition ITEM_DO_PROCESSO = 
 			new MetadadoProcessoDefinition("itemProcesso", "Item do Processo", Item.class);

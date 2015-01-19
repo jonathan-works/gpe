@@ -315,7 +315,7 @@ public class ComunicacaoService {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 		Collection<MetadadoProcesso> metadados = new ArrayList<>();
 
-		metadados.add(criarMetadadoDestinatario(destinatario, metadadoProcessoProvider));
+		metadados.addAll(criarMetadadoDestinatario(destinatario, metadadoProcessoProvider));
 		
 		metadados.add(metadadoProcessoProvider.gerarMetadado(
 				ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
@@ -387,8 +387,9 @@ public class ComunicacaoService {
 		}
 	}
 	
-	private MetadadoProcesso criarMetadadoDestinatario(DestinatarioModeloComunicacao destinatario, MetadadoProcessoProvider metadadoProcessoProvider) {
-		if (destinatario.getDestinatario() != null) {
+	private List<MetadadoProcesso> criarMetadadoDestinatario(DestinatarioModeloComunicacao destinatario, MetadadoProcessoProvider metadadoProcessoProvider) {
+		List<MetadadoProcesso> metadadosCriados = new ArrayList<>();
+	    if (destinatario.getDestinatario() != null) {
 			PessoaFisica pessoaDestinatario = destinatario.getDestinatario();
 			MetadadoProcesso metadadoRelator = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.RELATOR);
 			if (metadadoRelator != null) {
@@ -397,15 +398,18 @@ public class ComunicacaoService {
 				if (relator.equals(pessoaDestinatario)) {
 					MetadadoProcesso metadadoUdm = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA);
 					UnidadeDecisoraMonocratica udmRelator = metadadoUdm.getValue();
-					return metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, udmRelator.getLocalizacao().getIdLocalizacao().toString());
+					metadadosCriados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, udmRelator.getLocalizacao().getIdLocalizacao().toString()));
 				}
 			} else {
-				return metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString());
+				metadadosCriados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString()));
 			}
 		} else {
-			return metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, destinatario.getDestino().getIdLocalizacao().toString());
+		    metadadosCriados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, destinatario.getDestino().getIdLocalizacao().toString()));
+		    if (destinatario.getPerfilDestino() != null) {
+		        metadadosCriados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PERFIL_DESTINO, destinatario.getPerfilDestino().getId().toString()));
+		    }
 		}
-		return null;
+		return metadadosCriados;
 	}
 	
 	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao"; 

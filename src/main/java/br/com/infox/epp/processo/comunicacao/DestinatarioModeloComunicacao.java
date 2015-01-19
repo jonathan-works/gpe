@@ -19,6 +19,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
@@ -43,6 +44,10 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_localizacao")
 	private Localizacao destino;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_perfil_destino")
+	private PerfilTemplate perfilDestino;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -133,9 +138,19 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	public String getNome() {
 		if (destinatario != null) {
 			return destinatario.getNome();
+		} else if (perfilDestino != null) {
+		    return (destino.getCaminhoCompletoFormatado() + " (" + perfilDestino.getPapel() + ")");
 		} else if (destino != null) {
-			return destino.getCaminhoCompletoFormatado();
+		    return destino.getCaminhoCompletoFormatado();
 		}
 		return null;
 	}
+
+    public PerfilTemplate getPerfilDestino() {
+        return perfilDestino;
+    }
+
+    public void setPerfilDestino(PerfilTemplate perfilDestino) {
+        this.perfilDestino = perfilDestino;
+    }
 }
