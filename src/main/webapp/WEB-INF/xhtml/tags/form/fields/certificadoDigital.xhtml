@@ -13,49 +13,29 @@
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <h:inputHidden
-        id="#{id}Signature"
-        value="#{signatureField}">
-      </h:inputHidden>
-      <h:inputHidden
-        id="#{id}CertChain"
-        value="#{certificationChainField}">
-      </h:inputHidden>
-      <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/constant.js" />
-      <script src="#{pathResolver.contextPath}/resources/js/certificadoDigital/websocket.js" />
-      
+      <h:inputHidden id="#{id}SignId" value="#{signIdField}" />  
       <h:commandButton type="button" styleClass="buttons" 
-      		onclick="location.href='#{pathResolver.contextPath}/certificado/certificado_digital.jnlp'"
-          	onmouseup="Infox.CertDig.userClickedOnDownloadJNPLButton();"
+      		onclick="infox.CertDig.#{id}.init();"
       		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" />
-                  		
+      <h:outputScript name="cookies.min.js" library="js" />  
       <h:outputScript>
-	      Infox.CertDig.Functions = {
-	        getData : function getData() {
-	          return "#{signableData}";
-	        }
-	      };
-	      
-		  Infox.CertDig.Constant.Parameter = 
-	 	  {
-			  DEBUG                      : #{empty debug ? false : debug},
-		
-			  LOGIN_MODE                 : #{empty loginMode ? false : loginMode},
-		
-			  FORM_ID                    : "#{formId}",
-			  CERTIFICATION_CHAIN_FIELD  : "#{rich:clientId(id.concat('CertChain'))}",
-			  SIGNATURE_FIELD            : "#{rich:clientId(id.concat('Signature'))}",
-			  GET_DATA_FUNCTION          : "Infox.CertDig.Functions.getData()",
-			
-			  FUNCTION_PRE_SIGN          : "#{functionPreSign}",
-			  FUNCTION_POS_SIGN          : "#{functionPosSign}",
-			  FUNCTION_POS_SIGN_OK       : "#{functionPosSignOk}",
-			  FUNCTION_POS_SIGN_ERROR    : "#{functionPosSignError}",
-			
-			  DATA_ATUAL                 : "#{currentDatetime}",
-			  USE_BASE64_FUNCTION        : #{empty useBase64Function ? true : useBase64Function},
-			  USE_PROVIDER_DLL           : #{empty useProviderDll ? false : useProviderDll}
-		  };
+          namespace('infox.CertDig.#{id}', {  
+  	          init: function() {  
+  	              #{functionPreSign};  
+  	        	  location.href='#{pathResolver.contextPath}/certificadodigital/jnlp?md5=#{signableData}';  
+  	        	  var intervalId = setInterval(function() {  
+  	        	  var signId = Cookies.get('br.com.infox.epp.sign.id');  
+  	        	  $.get('#{pathResolver.contextPath}/certificadodigital/checksign?id=' + signId, function(data) {  
+  	        		  if (data === 'true') {  
+	  	        		  clearInterval(intervalId);  
+	  	        		  #{rich:element(id.concat('SignId'))}.value = signId;  
+	  	        		  #{functionPosSign};  
+  	        	  	  }  
+  			  	  });  
+  		      }, 2000);  
+  		      setTimeout(function() { clearInterval(intervalId); #{functionPosSign}; }, 8000 * 60);  
+  		   }  
+  	   });  
 	  </h:outputScript>
     </s:fragment>
   </h:panelGroup>

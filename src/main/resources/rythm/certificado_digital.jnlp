@@ -1,0 +1,23 @@
+@args List<String> jarArgs, String urlEpp
+
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="@urlEpp/certificado">
+	<information>
+		<title>Certificado Digital</title>
+		<vendor>INFOX</vendor>
+		<homepage href="@urlEpp" />
+		<description>Certificado Digital</description>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+		<j2se version="1.7+" />
+		<jar href="certificado_digital.jar" main="true" />
+	</resources>
+	<application-desc main-class="br.com.infox.server.Main">
+		@for (arg : jarArgs) {
+			<argument>@arg</argument>
+		}
+	</application-desc>
+</jnlp>

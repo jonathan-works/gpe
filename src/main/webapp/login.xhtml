@@ -141,23 +141,16 @@
               rendered="#{useCertLogin}">
                <wi:certificadoDigital
 					id="certificacao"
-					urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-					formId="#{rich:clientId('login')}"
-					certificationChainField="#{certificateAuthenticator.certChain}"
-					signatureField="#{certificateAuthenticator.assinatura}"
+					signIdField="#{certificateAuthenticator.signId}"
 					signableData=""
-					useBase64Function="true"
 					functionPreSign="infox.showLoading();"
 					functionPosSign="submitForm();"
-					debug="false"
-					loginMode="true"
-					useProviderDll="false"
 					signButtonCaption="#{eppmessages['signature.loginBtn']}">
 				</wi:certificadoDigital>
                <a:jsFunction
 					name="submitForm"
 					action="#{certificateAuthenticator.authenticate()}"
-					execute="certificacaoSignature, certificacaoCertChain, certChainStringLog, @this"
+					execute="certificacaoSignId, @this"
 					render="DialogMessage"
 					limitRender="true" />
             </s:div>
