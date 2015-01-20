@@ -19,6 +19,8 @@ import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.certificado.CertificateSignatures;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
@@ -48,7 +50,8 @@ public class CertificateAuthenticator implements Serializable {
 
     public void authenticate() {
         try {
-        	String certChain = certificateSignatures.get(token).getSignatureBeanList().get(0).getCertChain();
+        	CertificateSignatureBundleBean bundle = getSignatureBundle();
+			String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, null, certChain, false);
             final Events events = Events.instance();
@@ -69,6 +72,14 @@ public class CertificateAuthenticator implements Serializable {
         }
 
     }
+
+	private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
+		CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
+		if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+			throw new CertificadoException("Erro ao efetuar login com assinatura");
+		}
+		return bundle;
+	}
     
     public String getToken() {
 		return token;

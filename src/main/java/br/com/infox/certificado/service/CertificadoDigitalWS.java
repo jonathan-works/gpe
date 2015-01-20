@@ -17,12 +17,10 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
-import br.com.infox.certificado.bean.CertificateSignatureInformation;
 
 @Path(CertificadoDigitalWS.PATH)
 @Name(CertificadoDigitalWS.NAME)
 @Scope(ScopeType.STATELESS)
-@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CertificadoDigitalWS {
 	public static final String NAME = "certificadoDigitalWS";
@@ -32,6 +30,7 @@ public class CertificadoDigitalWS {
 	private CertificateSignatures certificateSignatures;
 	
 	@POST
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addSignatureInformation(CertificateSignatureBundleBean bundle) {
 		certificateSignatures.put(bundle.getToken(), bundle);
 		return Response.ok().build();
@@ -39,15 +38,15 @@ public class CertificadoDigitalWS {
 	
 	@GET
 	@Path("{token}")
+	@Produces(MediaType.TEXT_PLAIN)
 	public Response getSignatureInformation(@PathParam("token") String token) {
-		CertificateSignatureInformation information = new CertificateSignatureInformation();
 		CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
+		CertificateSignatureBundleStatus status;
 		if (bundle != null) {
-			information.setMessage(bundle.getMessage());
-			information.setStatus(bundle.getStatus());
+			status = bundle.getStatus();
 		} else {
-			information.setStatus(CertificateSignatureBundleStatus.UNKNOWN);
+			status = CertificateSignatureBundleStatus.UNKNOWN;
 		}
-		return Response.ok(information).build();
+		return Response.ok(status).build();
 	}
 }

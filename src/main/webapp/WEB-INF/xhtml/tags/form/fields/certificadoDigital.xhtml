@@ -26,16 +26,10 @@
   	        	  var intervalId = setInterval(function() {  
   	        	      var token = Cookies.get('br.com.infox.epp.sign.token');
   	        	      #{rich:element(id.concat('Token'))}.value = token;  
-  	        	      $.get('#{certificadoDigitalPathResolver.certificadoWSBasePath}/' + token, function(info) {
-   	        		      if (info.status === 'SUCCESS') {  
+  	        	      $.get('#{certificadoDigitalPathResolver.certificadoWSBasePath}/' + token, function(status) {
+   	        		      if (status === 'SUCCESS' || status === 'ERROR') {  
 	  	        		      clearInterval(intervalId);
 	  	        		      #{functionPosSign};
-  	        	  	      } else if (info.status === 'CANCELED') {
-   	        	  	  	      clearInterval(intervalId);
-  	        	  	          alert('Assinatura cancelada pelo usuário');
-  	        	  	      } else if (info.status === 'ERROR') {
-  	        	  	          clearInterval(intervalId);
-  	        	  	          alert('Erro ao assinar: ' + info.message);
   	        	  	      }
   			  	      });  
   		          }, 2000);  
