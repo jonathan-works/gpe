@@ -17,8 +17,8 @@
 	  <h:form id="termoAdesaoForm">
 	    <a:jsFunction
 	      name="assinarTermo"
-	      action="#{termoAdesaoAction.assinarTermoAdesao(termoAdesaoAction.certChain,termoAdesaoAction.signature)}"
-	      execute="@this termoAdesaoSignature termoAdesaoCertChain"
+	      action="#{termoAdesaoAction.assinarTermoAdesao}"
+	      execute="@this termoAdesaoToken"
 	      render="DialogMessage"
 	      limitRender="true" />
 	    <s:div>
@@ -33,16 +33,11 @@
 	      </div>
 	      <div>
             <wi:certificadoDigital id="termoAdesao"
-                urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-                formId="#{rich:clientId('termoAdesaoForm')}"
-                certificationChainField="#{termoAdesaoAction.certChain}"
-                signatureField="#{termoAdesaoAction.signature}"
+                tokenField="#{termoAdesaoAction.token}"
                 signableData="#{termoAdesaoAction.md5Sum}"
-                useBase64Function="true" functionPreSign="infox.showLoading();"
+                functionPreSign="infox.showLoading();"
                 functionPosSign="assinarTermo();infox.hideLoading();"
-                debug="false" loginMode="false" useProviderDll="false"
-                signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}">
-            </wi:certificadoDigital>
+                signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}" />
 	        <input
 	          class="input_button close-btn buttons"
 	          id="cancela"
