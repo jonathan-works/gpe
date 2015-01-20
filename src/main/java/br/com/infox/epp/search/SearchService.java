@@ -22,10 +22,11 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(SearchService.NAME)
 @Scope(ScopeType.EVENT)
@@ -70,7 +71,9 @@ public class SearchService {
             highlighter.setTextFragmenter(new NullFragmenter());
         }
 
-        String auxiliarText = Entities.decode(text);
+        Document doc = Jsoup.parse(text);
+        String auxiliarText = doc.body().text();
+
         TokenStream ts = getAnalyzer().tokenStream("texto", new StringReader(auxiliarText));
 
         try {
