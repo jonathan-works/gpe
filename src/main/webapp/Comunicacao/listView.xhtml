@@ -38,8 +38,8 @@
 								value="#{expedicaoComunicacaoList.numeroProcesso}"/>
 							<wi:selectOneMenuEntity id="tipoComunicacao" label="#{eppmessages['comunicacao.tipoComunicacao']}"
 								items="#{expedicaoComunicacaoAction.tiposComunicacao}" value="#{expedicaoComunicacaoList.tipoComunicacao}" />
-							<wi:selectBooleanMenu id="expedida" label="#{eppmessages['comunicacao.expedida']}" 
-								value="#{expedicaoComunicacaoList.expedida}"/>
+							<wi:selectBooleanCheckbox id="expedida" label="#{eppmessages['comunicacao.expedida']}" 
+                                value="#{expedicaoComunicacaoList.expedida}"/>
 						</wi:searchForm>
 					</ui:define>
 

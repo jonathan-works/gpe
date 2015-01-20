@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.list;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -27,7 +28,7 @@ public class ExpedicaoComunicacaoList extends EntityList<ModeloComunicacao> {
 	private static final String R2 = " o.processo.numeroProcesso = #{expedicaoComunicacaoList.numeroProcesso} ";
 	private static final String R3 = " o.tipoComunicacao = #{expedicaoComunicacaoList.tipoComunicacao} ";
 
-	private Boolean expedida;
+	private Boolean expedida = false;
 	private String numeroProcesso;
 	private TipoComunicacao tipoComunicacao;
 	
@@ -51,21 +52,30 @@ public class ExpedicaoComunicacaoList extends EntityList<ModeloComunicacao> {
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
 	}
-	
+
+	private String getEjbqlRestrictedByExpedicao() {
+	    String ejbql;
+	    if (expedida) {
+	        ejbql = getDefaultEjbql() + " and not " + R1;
+	    } else {
+	        ejbql = getDefaultEjbql() + " and " + R1;
+	    }
+	    setRestrictions();
+	    return ejbql;
+	}
+
+	@Override
+	public List<ModeloComunicacao> getResultList() {
+	    setEjbql(getEjbqlRestrictedByExpedicao());
+	    return super.getResultList();
+	}
+
 	public Boolean getExpedida() {
 		return expedida;
 	}
-	
+
 	public void setExpedida(Boolean expedida) {
 		this.expedida = expedida;
-		if (expedida == null) {
-			setEjbql(getDefaultEjbql());
-		} else if (expedida) {
-			setEjbql(getDefaultEjbql() + " and not " + R1);
-		} else {
-			setEjbql(getDefaultEjbql() + " and " + R1);
-		}
-		setRestrictions();
 	}
 	
 	public String getNumeroProcesso() {
@@ -89,6 +99,6 @@ public class ExpedicaoComunicacaoList extends EntityList<ModeloComunicacao> {
 		super.newInstance();
 		setNumeroProcesso(null);
 		setTipoComunicacao(null);
-		setExpedida(null);
+		setExpedida(false);
 	}
 }
