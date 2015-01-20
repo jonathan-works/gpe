@@ -12,12 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.SystemException;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.transaction.Transaction;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
@@ -179,7 +182,7 @@ public class ComunicacaoService {
 				documentoBinManager.writeMargemDocumento(destinatario.getComunicacao(), generatedPdf, pdf);
 			}
 		} catch (DocumentException | IOException e) {
-			throw new DAOException(e);
+			rollbackAndThrow("", e);
 		}
 		return pdf.toByteArray();
 	}
@@ -217,7 +220,7 @@ public class ComunicacaoService {
 				pdfComunicacao.write(doc);
 			}
 		} catch (DocumentException | IOException e) {
-			throw new DAOException(e);
+			rollbackAndThrow("", e);
 		}
 		return pdfComunicacao;
 	}
@@ -228,12 +231,12 @@ public class ComunicacaoService {
 	
 	public void finalizarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
 		if (modeloComunicacao.isMinuta()) {
-			throw new DAOException("Não é possível finalizar pois o texto no editor da comunicação é minuta");
+			rollbackAndThrow("Não é possível finalizar pois o texto no editor da comunicação é minuta", null);
 		}
 		String textoComunicacao = modeloComunicacao.getTextoComunicacao();
 		if (textoComunicacao != null) {
 			if (modeloComunicacao.getClassificacaoComunicacao() == null) {
-				throw new DAOException("Escolha a classificação de documento do editor");
+				rollbackAndThrow("Escolha a classificação de documento do editor", null);
 			}
 			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 				DocumentoBin comunicacao = documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacao);
@@ -248,7 +251,7 @@ public class ComunicacaoService {
 					destinatario.setComunicacao(comunicacao);
 				}
 			} else {
-				throw new DAOException("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno");
+				rollbackAndThrow("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno", null);
 			}
 		}
 		modeloComunicacao.setFinalizada(true);
@@ -360,11 +363,11 @@ public class ComunicacaoService {
 	private NaturezaCategoriaFluxo getNaturezaCategoriaFluxo(DestinatarioModeloComunicacao destinatario) throws DAOException {
 		Fluxo fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoComunicacao);
 		if (fluxo == null) {
-			throw new DAOException("Fluxo de comunicação não encontrado");
+			rollbackAndThrow("Fluxo de comunicação não encontrado", null);
 		}
 		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
 		if (ncfs.isEmpty()) {
-			throw new DAOException("Não existe natureza/categoria/fluxo configurada para o fluxo de comunicação");
+			rollbackAndThrow("Não existe natureza/categoria/fluxo configurada para o fluxo de comunicação", null);
 		}
 		return ncfs.get(0);
 	}
@@ -410,6 +413,15 @@ public class ComunicacaoService {
 		    }
 		}
 		return metadadosCriados;
+	}
+	
+	private void rollbackAndThrow(String message, Exception cause) throws DAOException {
+		try {
+			Transaction.instance().rollback();
+			throw new DAOException(message, cause);
+		} catch (IllegalStateException | SecurityException | SystemException e) {
+			throw new DAOException(e);
+		}
 	}
 	
 	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao"; 
