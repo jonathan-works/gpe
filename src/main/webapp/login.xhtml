@@ -141,7 +141,7 @@
               rendered="#{useCertLogin}">
                <wi:certificadoDigital
 					id="certificacao"
-					signIdField="#{certificateAuthenticator.signId}"
+					tokenField="#{certificateAuthenticator.token}"
 					signableData=""
 					functionPreSign="infox.showLoading();"
 					functionPosSign="submitForm();"
@@ -150,7 +150,7 @@
                <a:jsFunction
 					name="submitForm"
 					action="#{certificateAuthenticator.authenticate()}"
-					execute="certificacaoSignId, @this"
+					execute="certificacaoToken, @this"
 					render="DialogMessage"
 					limitRender="true" />
             </s:div>

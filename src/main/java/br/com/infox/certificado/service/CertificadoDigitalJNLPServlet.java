@@ -1,9 +1,8 @@
-package br.com.infox.certificado.servlet;
+package br.com.infox.certificado.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -16,13 +15,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.rythmengine.RythmEngine;
 
+import br.com.infox.certificado.bean.CertificateSignatureConfigBean;
+import br.com.infox.seam.path.PathResolver;
 
-@WebServlet(urlPatterns = "/certificadodigital/jnlp")
+import com.google.gson.Gson;
+
+
+@WebServlet(urlPatterns = CertificadoDigitalJNLPServlet.SERVLET_PATH)
 public class CertificadoDigitalJNLPServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public static final int COOKIE_MAX_AGE = 8 * 60;
-	private static final String SIGN_COOKIE_NAME = "br.com.infox.epp.sign.id";
+	public static final String SERVLET_PATH = "/certificadodigital/jnlp";
+	private static final String SIGN_COOKIE_NAME = "br.com.infox.epp.sign.token";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -37,21 +42,23 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 		RythmEngine engine = new RythmEngine();
 		Map<String, Object> params = new HashMap<>();
 
-		String urlEpp = request.getRequestURL().toString().replace("/certificadodigital/jnlp", "");
+		String urlEpp = request.getRequestURL().toString().replace(SERVLET_PATH, "");
 		
-		List<String> jarArgs = new ArrayList<>();
-		jarArgs.add(urlEpp + CertificateServlet.SERVLET_PATH);
+		CertificateSignatureConfigBean config = new CertificateSignatureConfigBean();
+		config.setUrl(urlEpp + PathResolver.SEAM_REST_URL + CertificadoDigitalWS.PATH);
 		String uuid = UUID.randomUUID().toString();
-		jarArgs.add(uuid);
+		config.setToken(uuid);
+		config.setMd5s(new ArrayList<String>());
+		
 		String md5s = request.getParameter("md5");
 		if (md5s != null && !md5s.isEmpty()) {
 			for (String md5 : md5s.split(",")) {
-				jarArgs.add(md5);
+				config.getMd5s().add(md5);
 			}
 		}
 		
-		params.put("jarArgs", jarArgs);
 		params.put("urlEpp", urlEpp);
+		params.put("config", new Gson().toJson(config));
 		String jnlp = engine.render("certificado_digital.jnlp", params);
 		engine.shutdown();
 		

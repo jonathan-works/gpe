@@ -13,7 +13,7 @@
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <h:inputHidden id="#{id}SignId" value="#{signIdField}" />  
+      <h:inputHidden id="#{id}Token" value="#{tokenField}" />  
       <h:commandButton type="button" styleClass="buttons" 
       		onclick="infox.CertDig.#{id}.init();"
       		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" />
@@ -22,17 +22,23 @@
           namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
   	              #{functionPreSign};  
-  	        	  location.href='#{pathResolver.contextPath}/certificadodigital/jnlp?md5=#{signableData}';  
+  	        	  location.href='#{certificadoDigitalPathResolver.JNLPUrl}?md5=#{signableData}';  
   	        	  var intervalId = setInterval(function() {  
-  	        	  var signId = Cookies.get('br.com.infox.epp.sign.id');  
-  	        	  $.get('#{pathResolver.contextPath}/certificadodigital/checksign?id=' + signId, function(data) {  
-  	        		  if (data === 'true') {  
-	  	        		  clearInterval(intervalId);  
-	  	        		  #{rich:element(id.concat('SignId'))}.value = signId;  
-	  	        		  #{functionPosSign};  
-  	        	  	  }  
-  			  	  });  
-  		      }, 2000);  
+  	        	      var token = Cookies.get('br.com.infox.epp.sign.token');
+  	        	      #{rich:element(id.concat('Token'))}.value = token;  
+  	        	      $.get('#{certificadoDigitalPathResolver.certificadoWSBasePath}/' + token, function(info) {
+   	        		      if (info.status === 'SUCCESS') {  
+	  	        		      clearInterval(intervalId);
+	  	        		      #{functionPosSign};
+  	        	  	      } else if (info.status === 'CANCELED') {
+   	        	  	  	      clearInterval(intervalId);
+  	        	  	          alert('Assinatura cancelada pelo usuário');
+  	        	  	      } else if (info.status === 'ERROR') {
+  	        	  	          clearInterval(intervalId);
+  	        	  	          alert('Erro ao assinar: ' + info.message);
+  	        	  	      }
+  			  	      });  
+  		          }, 2000);  
   		      setTimeout(function() { clearInterval(intervalId); #{functionPosSign}; }, 8000 * 60);  
   		   }  
   	   });  

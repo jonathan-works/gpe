@@ -12,6 +12,7 @@
     xmlns:mail="http://jboss.org/schema/seam/mail"
     xmlns:web="http://jboss.org/schema/seam/web"
     xmlns:document="http://jboss.org/schema/seam/document"
+    xmlns:resteasy="http://jboss.org/schema/seam/resteasy"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://jboss.org/schema/seam/core http://jboss.org/schema/seam/core-2.3.xsd 
                  http://jboss.org/schema/seam/persistence http://jboss.org/schema/seam/persistence-2.3.xsd 
@@ -19,7 +20,8 @@
                  http://jboss.org/schema/seam/mail http://jboss.org/schema/seam/mail-2.3.xsd
                  http://jboss.org/schema/seam/web http://jboss.org/schema/seam/web-2.3.xsd
                  http://jboss.org/schema/seam/document http://jboss.org/schema/seam/document-2.3.xsd
-                 http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd">
+                 http://jboss.org/schema/seam/components http://jboss.org/schema/seam/components-2.3.xsd
+                 http://jboss.org/schema/seam/resteasy http://jboss.org/schema/seam/resteasy-2.3.xsd">
 
     <core:init
         debug="${desenvolvimento}"
@@ -49,7 +51,7 @@
         persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit" />
 
     <async:quartz-dispatcher />
-
+    
     <persistence:managed-persistence-context
         name="entityManagerBin"
         auto-create="true"
