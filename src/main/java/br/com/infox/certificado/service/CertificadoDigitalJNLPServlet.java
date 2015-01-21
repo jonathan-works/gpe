@@ -1,6 +1,8 @@
 package br.com.infox.certificado.service;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,12 +15,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.rythmengine.RythmEngine;
-
 import br.com.infox.certificado.bean.CertificateSignatureConfigBean;
 import br.com.infox.seam.path.PathResolver;
 
 import com.google.gson.Gson;
+import com.samskivert.mustache.Mustache;
 
 
 @WebServlet(urlPatterns = CertificadoDigitalJNLPServlet.SERVLET_PATH)
@@ -31,22 +32,23 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String jnlp = generateJnlp(req, resp);
 		resp.setContentType("application/x-java-jnlp-file");
-		resp.setContentLength(jnlp.length());
 		resp.setHeader("Content-disposition", "attachment; filename=\"certificado_digital.jnlp\"");
-		resp.getWriter().print(jnlp);
+		String uuid = UUID.randomUUID().toString();
+		Cookie cookie = new Cookie(SIGN_COOKIE_NAME, uuid);
+		cookie.setMaxAge(COOKIE_MAX_AGE);
+		cookie.setPath(req.getServletContext().getContextPath());
+		resp.addCookie(cookie);
+		generateJnlp(req, resp.getWriter(), uuid);
 	}
 	
-	private String generateJnlp(HttpServletRequest request, HttpServletResponse response) {
-		RythmEngine engine = new RythmEngine();
+	private void generateJnlp(HttpServletRequest request, Writer responseWriter, String uuid) {
 		Map<String, Object> params = new HashMap<>();
 
 		String urlEpp = request.getRequestURL().toString().replace(SERVLET_PATH, "");
 		
 		CertificateSignatureConfigBean config = new CertificateSignatureConfigBean();
 		config.setUrl(urlEpp + PathResolver.SEAM_REST_URL + CertificadoDigitalWS.PATH);
-		String uuid = UUID.randomUUID().toString();
 		config.setToken(uuid);
 		config.setMd5s(new ArrayList<String>());
 		
@@ -59,14 +61,8 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 		
 		params.put("urlEpp", urlEpp);
 		params.put("config", new Gson().toJson(config));
-		String jnlp = engine.render("certificado_digital.jnlp", params);
-		engine.shutdown();
 		
-		Cookie cookie = new Cookie(SIGN_COOKIE_NAME, uuid);
-		cookie.setMaxAge(COOKIE_MAX_AGE);
-		cookie.setPath(request.getServletContext().getContextPath());
-		response.addCookie(cookie);
-		
-		return jnlp;
+		InputStreamReader text = new InputStreamReader(getClass().getResourceAsStream("/templates/certificado_digital.jnlp"));
+		Mustache.compiler().escapeHTML(false).compile(text).execute(params, responseWriter);
 	}
 }

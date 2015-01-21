@@ -335,9 +335,9 @@
 			<version>1.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.rythmengine</groupId>
-			<artifactId>rythm-engine</artifactId>
-			<version>1.0.1</version>
+			<groupId>com.samskivert</groupId>
+			<artifactId>jmustache</artifactId>
+			<version>1.9</version>
 		</dependency>
 		<dependency>
 			<groupId>br.com.infox</groupId>
