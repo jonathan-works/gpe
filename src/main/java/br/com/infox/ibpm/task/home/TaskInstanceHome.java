@@ -407,9 +407,7 @@ public class TaskInstanceHome implements Serializable {
             try {
                 taskConteudoDAO.update(taskConteudo);
             } catch (DAOException e) {
-                LOG.error(
-                        "Não foi possível reindexar o conteúdo da TaskInstance "
-                                + getTaskId(), e);
+                LOG.error("Não foi possível reindexar o conteúdo da TaskInstance " + getTaskId(), e);
             }
         } else {
             taskConteudo = new TaskConteudo();

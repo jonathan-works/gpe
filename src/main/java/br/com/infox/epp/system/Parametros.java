@@ -6,7 +6,8 @@ public enum Parametros {
 	
 	IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO("usuarioExternoPodeVerDocExcluido"),
 	SOMENTE_USUARIO_INTERNO_PODE_VER_HISTORICO("somenteUsuarioInternoVerMotivoExclusaoDoc"),
-	ID_USUARIO_PROCESSO_SISTEMA("idUsuarioProcessoSistema");
+	ID_USUARIO_PROCESSO_SISTEMA("idUsuarioProcessoSistema"),
+	ID_USUARIO_SISTEMA("idUsuarioSistema");
 	
 	private String label;
 	
@@ -18,8 +19,8 @@ public enum Parametros {
 		return label;
 	}
 	
-	public Object getValue(){
-		return Contexts.getApplicationContext().get(this.label);
+	public String getValue(){
+		return (String) Contexts.getApplicationContext().get(this.label);
 	}
 
 }

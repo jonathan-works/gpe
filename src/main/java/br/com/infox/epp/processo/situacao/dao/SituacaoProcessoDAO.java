@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.situacao.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
+import br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.hibernate.util.HibernateUtil;
@@ -401,6 +403,12 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
 		Long count = getEntityManager().createQuery(criteriaQuery).getSingleResult(); 
 		return count > 0;
+	}
+	
+	public Long getIdTaskInstanceByIdProcesso(Integer idProcesso) {
+		Map<String, Object> params = new HashMap<>(1);
+		params.put(SituacaoProcessoQuery.PARAM_ID_PROCESSO, idProcesso);
+		return getNamedSingleResult(SituacaoProcessoQuery.GET_ID_TASK_INSTANCE_BY_ID_PROCESSO, params);
 	}
 	
 }

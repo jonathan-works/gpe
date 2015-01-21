@@ -6,23 +6,17 @@ import java.text.MessageFormat;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.FilterDefs;
-import org.hibernate.annotations.Filters;
-import org.hibernate.annotations.ParamDef;
-
-import br.com.infox.epp.processo.sigilo.filter.SigiloProcessoFilter;
+import br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery;
 
 @Entity
 @Table(name = SituacaoProcesso.TABLE_NAME)
-@FilterDefs({
-    @FilterDef(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, parameters = { 
-        @ParamDef(type = SigiloProcessoFilter.TYPE_INT, name = SigiloProcessoFilter.PARAM_ID_USUARIO) }) })
-@Filters({
-    @Filter(name = SigiloProcessoFilter.FILTER_SIGILO_PROCESSO, condition = SigiloProcessoFilter.CONDITION_FILTER_SIGILO_PROCESSO) 
+@NamedQueries(value = {
+		@NamedQuery(name = SituacaoProcessoQuery.GET_ID_TASK_INSTANCE_BY_ID_PROCESSO, 
+				query = SituacaoProcessoQuery.GET_ID_TASK_INSTANCE_BY_ID_PROCESSO_QUERY)
 })
 public class SituacaoProcesso implements Serializable {
 

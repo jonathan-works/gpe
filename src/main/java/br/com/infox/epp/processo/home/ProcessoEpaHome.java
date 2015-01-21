@@ -316,7 +316,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     }
 
     public boolean hasPartes() {
-        return processoManager.hasPartes(getInstance());
+        return getInstance() != null && getInstance().hasPartes();
     }
 
     // -----------------------------------------------------------------------------------------------------------------------

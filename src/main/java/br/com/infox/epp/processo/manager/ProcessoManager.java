@@ -235,10 +235,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public boolean hasPartes(final Processo processo) {
-        return getDao().hasPartes(processo);
-    }
-
     public boolean hasPartes(final Long idJbpm) {
         return getDao().hasPartes(idJbpm);
     }
@@ -283,6 +279,14 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	
 	public List<Processo> getProcessosByIdCaixa(Integer idCaixa) {
 		return getDao().getProcessosByIdCaixa(idCaixa);
+	}
+	
+	public List<Processo> listProcessosComunicacaoAguardandoCiencia() {
+		return getDao().listProcessosComunicacaoAguardandoCiencia();
+	}
+	
+	public List<Processo> listProcessosComunicacaoAguardandoCumprimento() {
+		return getDao().listProcessosComunicacaoAguardandoCumprimento();
 	}
 
 }

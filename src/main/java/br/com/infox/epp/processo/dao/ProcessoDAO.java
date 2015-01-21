@@ -48,9 +48,11 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
+import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.query.ProcessoQuery;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
@@ -145,11 +147,7 @@ public class ProcessoDAO extends DAO<Processo> {
 		}
 		return pessoaJuridicaList;
 	}
-
-	public boolean hasPartes(Processo processo) {
-		return hasPartes(processo.getIdJbpm());
-	}
-
+	
 	public boolean hasPartes(Long idJbpm) {
 		Processo pe = getProcessoEpaByIdJbpm(idJbpm);
 		return (pe != null) && (pe.hasPartes());
@@ -206,5 +204,19 @@ public class ProcessoDAO extends DAO<Processo> {
 		Map<String, Object> params = new HashMap<>(1);
 		params.put(ProcessoQuery.PARAM_ID_CAIXA, idCaixa);
 		return getNamedResultList(ProcessoQuery.PROCESSOS_BY_ID_CAIXA, params);
+	}
+	
+	public List<Processo> listProcessosComunicacaoAguardandoCiencia() {
+		Map<String, Object> params = new HashMap<>(2);
+		params.put(ProcessoQuery.TIPO_PROCESSO_PARAM, TipoProcesso.COMUNICACAO.toString());
+		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, MeioExpedicao.SI.name());
+		return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA, params);
+	}
+	
+	public List<Processo> listProcessosComunicacaoAguardandoCumprimento() {
+		Map<String, Object> params = new HashMap<>(2);
+		params.put(ProcessoQuery.TIPO_PROCESSO_PARAM, TipoProcesso.COMUNICACAO.toString());
+		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, MeioExpedicao.SI.name());
+		return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, params);
 	}
 }

@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.query;
 
+
 public interface ProcessoQuery {
 
 	String TABLE_PROCESSO = "tb_processo";
@@ -157,5 +158,34 @@ public interface ProcessoQuery {
 	
 	String PROCESSOS_BY_ID_CAIXA = "processosByIdCaixa";
 	String PROCESSOS_BY_ID_CAIXA_QUERY = "select o from Processo o where o.caixa.idCaixa = :" + PARAM_ID_CAIXA;
+	
+	String MEIO_EXPEDICAO_PARAM = "tipoExpedicao";
+	String LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA = "listProcessosComunicacaoSemCiencia";
+	String LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA_QUERY = "select p from Processo p " 
+			+ " where p.idJbpm is not null and p.dataFim is null " 
+			+ " and exists (select 1 from MetadadoProcesso mp "
+					+ " where p = mp.processo and mp.metadadoType = 'tipoProcesso' "
+					+ " and mp.valor = :" + TIPO_PROCESSO_PARAM + " ) " 
+			+ " and not exists (select 1 from MetadadoProcesso mp " 
+					+ " where p = mp.processo and mp.metadadoType = 'dataCiencia' ) "
+			+ " and exists (select 1 from MetadadoProcesso mp "
+					+ " where p = mp.processo and mp.metadadoType = 'meioExpedicaoComunicacao' "
+					+ " and mp.valor = :" + MEIO_EXPEDICAO_PARAM + " ) ";
+	
+	String LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO = "listProcessosComunicacaoSemCumprimento";
+	String LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY = "select p from Processo p " 
+			+ " where p.idJbpm is not null and p.dataFim is null " 
+			+ " and exists (select 1 from MetadadoProcesso mp "
+					+ " where p = mp.processo and mp.metadadoType = 'tipoProcesso' "
+					+ " and mp.valor = :" + TIPO_PROCESSO_PARAM + " ) " 
+			+ " and exists (select 1 from MetadadoProcesso mp " 
+					+ " where p = mp.processo and mp.metadadoType = 'dataCiencia' ) "
+			+ " and exists (select 1 from MetadadoProcesso mp "
+					+ " where p = mp.processo and mp.metadadoType = 'meioExpedicaoComunicacao' "
+					+ " and mp.valor = :" + MEIO_EXPEDICAO_PARAM + " ) "
+			+ " and exists (select 1 from MetadadoProcesso mp "
+					+ " where p = mp.processo and  mp.metadadoType = 'prazoDestinatarioComunicacao' ) "
+			+ " and not exists (select 1 from MetadadoProcesso mp "
+					+ " where p = mp.processo and mp.metadadoType = 'dataCumprimento' ) ";
 	
 }
