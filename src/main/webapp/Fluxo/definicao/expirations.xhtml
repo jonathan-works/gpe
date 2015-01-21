@@ -12,7 +12,7 @@
 
     <ui:param name="task" value="#{taskFitter.currentTask}" />
     
-    <rich:panel bodyClass="panel" header="Datas de Expiração" id="expirationPanel">
+    <rich:panel bodyClass="panel" header="#{eppmessages['process.expiration.expirationDates']}" id="expirationPanel">
         <rich:dataTable value="#{task.expirations}" var="row" styleClass="dtable-p rf-dt-crud" id="expirationTable" 
             rendered="#{not empty task.expirations}">
             <rich:column>

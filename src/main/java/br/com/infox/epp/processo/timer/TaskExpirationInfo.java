@@ -4,12 +4,15 @@ package br.com.infox.epp.processo.timer;
 import java.io.Serializable;
 import java.util.Date;
 
+import br.com.infox.epp.tarefa.entity.Tarefa;
+
 public class TaskExpirationInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long taskId;
     private String transition;
     private Date expiration;
+    private Tarefa tarefa;
     
     public Long getTaskId() {
         return taskId;

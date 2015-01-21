@@ -14,6 +14,7 @@ import br.com.infox.seam.util.ComponentUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+@Deprecated
 public class TaskExpirationHandler implements ActionHandler, CustomAction {
 
     private static final long serialVersionUID = 1L;
@@ -21,6 +22,7 @@ public class TaskExpirationHandler implements ActionHandler, CustomAction {
 
     private TaskExpirationInfo expirationInfo;
     
+    @Deprecated
     public static TaskExpirationInfo parseTaskExpirationInfo(String json) throws ParseException {
         Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
         Matcher matcher = CDATA_REGEX.matcher(json);
@@ -30,7 +32,8 @@ public class TaskExpirationHandler implements ActionHandler, CustomAction {
         TaskExpirationInfo info = gson.fromJson(json, TaskExpirationInfo.class);
         return info;
     }
-    
+
+    @Deprecated
     public TaskExpirationHandler(String json) throws ParseException {
         expirationInfo = parseTaskExpirationInfo(json);
     }
