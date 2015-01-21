@@ -22,6 +22,6 @@ public class CertificadoDigitalPathResolver {
 	}
 	
 	public String getCertificadoWSBasePath() {
-		return pathResolver.getUrlProject() + PathResolver.SEAM_REST_URL + CertificadoDigitalWS.PATH;
+		return pathResolver.getUrlProject() + "/rest" + CertificadoDigitalWS.PATH;
 	}
 }

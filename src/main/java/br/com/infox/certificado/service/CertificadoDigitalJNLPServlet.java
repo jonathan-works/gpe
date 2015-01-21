@@ -48,7 +48,7 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 		String urlEpp = request.getRequestURL().toString().replace(SERVLET_PATH, "");
 		
 		CertificateSignatureConfigBean config = new CertificateSignatureConfigBean();
-		config.setUrl(urlEpp + PathResolver.SEAM_REST_URL + CertificadoDigitalWS.PATH);
+		config.setUrl(urlEpp + "/rest" + CertificadoDigitalWS.PATH);
 		config.setToken(uuid);
 		config.setMd5s(new ArrayList<String>());
 		

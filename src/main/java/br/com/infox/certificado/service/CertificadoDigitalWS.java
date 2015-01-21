@@ -9,30 +9,25 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.Component;
+import org.jboss.seam.contexts.Lifecycle;
 
 import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 
 @Path(CertificadoDigitalWS.PATH)
-@Name(CertificadoDigitalWS.NAME)
-@Scope(ScopeType.STATELESS)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CertificadoDigitalWS {
 	public static final String NAME = "certificadoDigitalWS";
 	public static final String PATH = "/certificadodigital";
 
-	@In
-	private CertificateSignatures certificateSignatures;
-	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addSignatureInformation(CertificateSignatureBundleBean bundle) {
-		certificateSignatures.put(bundle.getToken(), bundle);
+	    Lifecycle.beginCall();
+		getCertificateSignatures().put(bundle.getToken(), bundle);
+		Lifecycle.endCall();
 		return Response.ok().build();
 	}
 	
@@ -40,13 +35,21 @@ public class CertificadoDigitalWS {
 	@Path("{token}")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getSignatureInformation(@PathParam("token") String token) {
-		CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
+	    Lifecycle.beginCall();
+		CertificateSignatureBundleBean bundle = getCertificateSignatures().get(token);
 		CertificateSignatureBundleStatus status;
 		if (bundle != null) {
 			status = bundle.getStatus();
 		} else {
 			status = CertificateSignatureBundleStatus.UNKNOWN;
 		}
+		Lifecycle.endCall();
 		return Response.ok(status).build();
 	}
+
+	
+    public CertificateSignatures getCertificateSignatures() {
+        return (CertificateSignatures) Component.getInstance(CertificateSignatures.NAME);
+    }
+    
 }
