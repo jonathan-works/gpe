@@ -40,7 +40,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "situacaoProcessoDAO";
 	
-	@In
+	@In(required = false)
 	private Authenticator authenticator;
 	
     public final List<Tuple> getRootList(TipoProcesso tipoProcesso) {

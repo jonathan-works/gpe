@@ -22,6 +22,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.transaction.Transaction;
 import org.jbpm.JbpmContext;
+import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.joda.time.DateTime;
 
@@ -67,6 +68,7 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 
@@ -437,6 +439,7 @@ public class ComunicacaoService {
 		
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCiencia));
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCiencia));
+		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia);
 	}
 	
 	public void darCumprimento(Processo comunicacao, Date dataCumprimento, UsuarioLogin usuarioCumprimento) throws DAOException {
@@ -450,6 +453,13 @@ public class ComunicacaoService {
 		
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCumprimento));
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCumprimento));
+	}
+	
+	private void adicionarVariavelCienciaAutomaticaAoProcesso(UsuarioLogin usuarioCiencia) {
+		Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());
+		boolean isUsuarioSistema = idUsuarioSistema.equals(usuarioCiencia.getIdUsuarioLogin());
+		ContextInstance contextInstance = org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance();
+        contextInstance.setVariable("cienciaAutomatica", isUsuarioSistema);
 	}
 	
 	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao"; 
