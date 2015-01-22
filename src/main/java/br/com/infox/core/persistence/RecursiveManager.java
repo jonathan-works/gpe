@@ -6,8 +6,8 @@ import javax.management.modelmbean.InvalidTargetObjectTypeException;
 import javax.persistence.Id;
 
 import org.hibernate.AnnotationException;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.core.exception.RecursiveException;
 import br.com.infox.seam.util.ComponentUtil;

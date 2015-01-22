@@ -34,13 +34,26 @@
             oninputblur="validarData(this); #{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}#{oninputblur}"
             onchanged="#{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}#{onchanged}"
             reRender="#{reRender}" dataModel="#{dataModel}"
-            showApplyButton="#{wi:get(showApplyButton, false)}">
+            showApplyButton="#{wi:get(showApplyButton, false)}"
+            popup="#{empty popup ? 'true' : popup}">
 
             <c:if test="#{wi:get(future, false)}">
                 <f:validator validatorId="futureDateOnlyValidator" />
             </c:if>
             <c:if test="#{wi:get(past, false)}">
                 <f:validator validatorId="pastDateValidator" />
+            </c:if>
+            <c:if test="#{(not empty startDate) or (not empty endDate) or (not empty errorMessage)}">
+                <f:validator validatorId="dateRangeValidator" />
+            </c:if>
+            <c:if test="#{not empty startDate}">
+                <f:attribute name="startDate" value="#{startDate}" />
+            </c:if>
+            <c:if test="#{not empty endDate}">
+                <f:attribute name="endDate" value="#{endDate}" />
+            </c:if>
+            <c:if test="#{not empty errorMessage}">
+                <f:attribute name="errorMessage" value="#{errorMessage}" />
             </c:if>
             <ui:insert />
         </rich:calendar>

@@ -8,9 +8,10 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 
 @AutoCreate
@@ -19,27 +20,28 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 public class PrioridadeProcessoChanger implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
 	public static final String NAME = "prioridadeProcessoChanger";
-
-    private ProcessoEpa processoEpa;
+	
+	@In
+    private ProcessoManager processoManager;
+	@In
+	private ActionMessagesService actionMessagesService;
+	
+    private Processo processo;
     private PrioridadeProcesso prioridadeProcesso;
 
-    @In
-    private ProcessoEpaManager processoEpaManager;
+    public Processo getProcesso() {
+		return processo;
+	}
 
-    public ProcessoEpa getProcessoEpa() {
-        return processoEpa;
-    }
-
-    public void setProcessoEpa(ProcessoEpa instance) {
-        this.processoEpa = instance;
-        if (instance.getPrioridadeProcesso() != null) {
-            this.prioridadeProcesso = instance.getPrioridadeProcesso();
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+        if (processo.getPrioridadeProcesso() != null) {
+            this.prioridadeProcesso = processo.getPrioridadeProcesso();
         } else {
             this.prioridadeProcesso = new PrioridadeProcesso();
         }
-    }
+	}
 
     public PrioridadeProcesso getPrioridadeProcesso() {
         return prioridadeProcesso;
@@ -50,12 +52,11 @@ public class PrioridadeProcessoChanger implements Serializable {
     }
     
     public void atualizarPrioridade() {
-        processoEpa.setPrioridadeProcesso(getPrioridadeProcesso());
+        processo.setPrioridadeProcesso(getPrioridadeProcesso());
         try {
-            processoEpaManager.update(processoEpa);
+        	processoManager.update(processo);
         } catch (DAOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        	actionMessagesService.handleDAOException(e);
         }
     }
 

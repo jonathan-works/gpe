@@ -11,8 +11,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
@@ -45,6 +45,7 @@ public class ValidaDocumentoAction implements Serializable {
     private Integer idDocumento;
     private String signature;
     private String certChain;
+    private String externalCallback;
     
     @In
     public DocumentoManager documentoManager;
@@ -69,24 +70,21 @@ public class ValidaDocumentoAction implements Serializable {
     /**
      * Valida a assinatura de um ProcessoDocumento. Quando o documento é do tipo
      * modelo as quebras de linha são retiradas.
-     * 
-     * @param id
+     * @param bin 
+     * @param certChain 
+     * @param signature 
      */
-    public void validaDocumento(DocumentoBin bin, String certChain,
-            String signature) {
+    public void validaDocumento(DocumentoBin bin, String certChain, String signature) {
         documentoBin = bin;
         setValido(false);
         setDadosCertificado(null);
         try {
-            ValidaDocumento validaDocumento = assinaturaDocumentoService
-                    .validaDocumento(bin, certChain, signature);
+            ValidaDocumento validaDocumento = assinaturaDocumentoService.validaDocumento(bin, certChain, signature);
             setValido(validaDocumento.verificaAssinaturaDocumento());
             setDadosCertificado(validaDocumento.getDadosCertificado());
-        } catch (ValidaDocumentoException | CertificadoException
-                | IllegalArgumentException e) {
+        } catch (ValidaDocumentoException | CertificadoException | IllegalArgumentException e) {
             LOG.error(".validaDocumento(bin, certChain, signature)", e);
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR,
-                    e.getMessage());
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getMessage());
         }
     }
     
@@ -206,4 +204,11 @@ public class ValidaDocumentoAction implements Serializable {
 	    this.idDocumento = idDocumento;
 	}
 
+	public String getExternalCallback() {
+		return externalCallback;
+	}
+	
+	public void setExternalCallback(String externalCallback) {
+		this.externalCallback = externalCallback;
+	}
 }

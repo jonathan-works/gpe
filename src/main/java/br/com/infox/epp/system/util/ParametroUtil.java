@@ -15,8 +15,8 @@ import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
@@ -63,7 +63,7 @@ public class ParametroUtil {
         try {
             return getParametroManager().getParametro(nome).getValorVariavel();
         } catch (Exception exception) {
-            LOG.info(".getParametroOrFalse(nome)", exception);
+            LOG.info(".getParametroOrFalse( "+ nome +" )", exception);
             return "false";
         }
     }

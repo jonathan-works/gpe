@@ -1,20 +1,12 @@
 package br.com.infox.epp.painel.caixa;
 
 public interface CaixaQuery {
+	
+	String PARAM_ID_TAREFA = "idTarefa";
+	String PARAM_ID_NODE_ANTERIOR = "idNodeAnterior";
 
-    String TABLE_CAIXA = "tb_caixa";
-    String SEQUENCE_TABLE_CAIXA = "sq_tb_caixa";
-    String ID_CAIXA = "id_caixa";
-    String NOME_CAIXA = "nm_caixa";
-    String DESCRICAO_CAIXA = "ds_caixa";
-    String ID_TAREFA = "id_tarefa";
-    String NOME_INDICE = "nm_caixa_idx";
-    String NODE_ANTERIOR = "id_node_anterior";
-    String CAIXA_ATTRIBUTE = "caixa";
-
-    String PARAM_ID_CAIXA = "idCaixa";
-    String REMOVE_BY_ID = "removeCaixaById";
-    String REMOVE_BY_ID_QUERY = "update Processo set caixa = null where caixa.idCaixa = :"
-            + PARAM_ID_CAIXA;
-
+	String CAIXA_BY_ID_TAREFA_AND_ID_NODE_ANTERIOR = "caixaByIdTarefaAndIdNodeAnterior";
+	String CAIXA_BY_ID_TAREFA_AND_ID_NODE_ANTERIOR_QUERY = "select c From Caixa c "
+			+ "where c.tarefa.idTarefa = :" + PARAM_ID_TAREFA
+			+ " and c.idNodeAnterior = :" + PARAM_ID_NODE_ANTERIOR; 
 }

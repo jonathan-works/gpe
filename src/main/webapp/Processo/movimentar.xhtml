@@ -64,7 +64,7 @@
         $(".mp-help").click(function show() {
           panelTeste.show();
         });
-        
+
         #{rich:jQuery('mp_taskNodeCloseBtn')}.click(function hide() {
           panelTeste.hide();
         });
@@ -92,22 +92,28 @@
     <ui:define name="body">
         <rich:collapsiblePanel
             switchType="client"
-            header="#{eppmessages['processo.titleView']} #{processoEpaHome.instance.numeroProcesso} - #{taskInstance.name} : #{processoEpaHome.instance.itemDoProcesso}"
+            header="#{eppmessages['processo.titleView']} #{processoEpaHome.instance.numeroProcesso} - #{taskInstance.processInstance.processDefinition.name} - #{taskInstance.name} "
             expanded="false">
-            <h:panelGrid
-                columns="2"
-                width="100%"
-                columnClasses="viewColumn">
-                <wi:outputText
+            <h:panelGrid columns="4"  width="100%"  columnClasses="viewColumn">
+            
+            	 <wi:outputText
                     id="dataInicio"
                     label="#{eppmessages['processo.dataInicio']}"
                     value="#{processoEpaHome.instance.dataInicio}">
                     <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
                 </wi:outputText>
+                
                 <wi:outputText
-                    id="usuarioCadastroProcesso"
+                    id="usuarioCadastro"
                     label="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                    value="#{processoEpaHome.instance.usuarioCadastroProcesso}" />
+                    value="#{processoEpaHome.instance.usuarioCadastro}" />
+            
+            	<ui:repeat var="metadado" value="#{processoEpaHome.detalhesMetadados}" >
+            		<wi:outputText id="metadado#{metadado.metadadoType}"
+                    label="#{metadadoMessages[metadado.metadadoType]}"
+                    value="#{metadado}" />
+            	</ui:repeat>
+            	
             </h:panelGrid>
         </rich:collapsiblePanel>
         <h:form>
@@ -201,7 +207,7 @@
                 title="#{eppmessages['movimentar.documentos.titleTab']}">
                 <ui:include src="pastaDocumento.xhtml" />
             </infox:tab>
-            
+
             <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
@@ -382,11 +388,21 @@
                 id="tabPartesDoProcesso"
                 name="tabPartesDoProcesso"
                 status=":status"
-                action="#{participantesProcessoController.setProcessoEpa(home.instance)}"
+                action="#{participantesProcessoController.setProcesso(home.instance)}"
                 rendered="#{home.hasPartes()}"
                 title="#{eppmessages['participanteProcesso.participantes']}">
                 <ui:include src="parteProcessoGrid.xhtml" />
             </infox:tab>
+            <infox:tab
+                id="tabComunicacao"
+                name="tabComunicacao"
+                status=":status"
+                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
+                title="Comunicação"
+                action="#{comunicacaoAction.clear}">
+                <ui:include src="comunicacao.xhtml" />
+            </infox:tab>
+            <ui:include src="abasCustomizadasDoMovimentar.xhtml" />
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">
             <wi:outputText
@@ -428,5 +444,6 @@
                 height="#{modalHeight-90}"
                 readonly="true" />
         </rich:popupPanel>
+        <wi:assinaturaPopup id="assinaturaDocumentoPopup" afterRender="documentoList" />
     </ui:define>
 </ui:composition>

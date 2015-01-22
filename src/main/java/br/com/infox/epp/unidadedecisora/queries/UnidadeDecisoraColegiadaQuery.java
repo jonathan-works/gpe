@@ -18,5 +18,9 @@ public interface UnidadeDecisoraColegiadaQuery {
     String SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY = "select count(udc) " +
     		 "from UnidadeDecisoraColegiada udc " +
     		 "where udc.localizacao.idLocalizacao = :" + ID_LOCALIZACAO;
+    
+    String FIND_ALL_ATIVO = "findAllAtivo";
+    String FIND_ALL_ATIVO_QUERY = "select o from UnidadeDecisoraColegiada o " +
+            "where o.ativo = true order by o.nome";
 
 }

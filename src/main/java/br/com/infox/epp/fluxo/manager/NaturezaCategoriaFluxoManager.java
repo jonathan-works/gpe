@@ -41,4 +41,8 @@ public class NaturezaCategoriaFluxoManager extends Manager<NaturezaCategoriaFlux
     public NaturezaCategoriaFluxo getNaturezaCategoriaFluxoByDsNatAndDsCat(String dsNatureza, String dsCategoria){
         return getDao().getNaturezaCategoriaFluxoByDsNatAndDsCat(dsNatureza, dsCategoria);
     }
+    
+    public NaturezaCategoriaFluxo getNaturezaCategoriaFluxoDisponiveis(String dsNatureza, String dsCategoria) {
+		return getDao().getNaturezaCategoriaFluxoDisponiveis(dsNatureza, dsCategoria);
+	}
 }

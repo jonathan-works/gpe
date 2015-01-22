@@ -1,18 +1,14 @@
 package br.com.infox.epp.test.it.access.crud;
 
-import static br.com.infox.epp.access.crud.UsuarioLoginCrudAction.NAME;
-
 import java.text.MessageFormat;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.log.LogProvider;
+import br.com.infox.log.LogProvider;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.crud.UsuarioLoginCrudAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -45,35 +41,38 @@ import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.seam.exception.BusinessException;
 
-@RunWith(Arquillian.class)
+//@RunWith(Arquillian.class)
 public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
 
     @Deployment
-    @OverProtocol(SERVLET_3_0)
+    @OverProtocol(AbstractCrudTest.SERVLET_3_0)
     public static WebArchive createDeployment() {
-        return new ArquillianSeamTestSetup()
-            .addClasses(UsuarioLoginCrudAction.class,PasswordService.class,AccessMailService.class,
-                UsuarioLoginManager.class,BusinessException.class,UsuarioLoginDAO.class,
-                ModeloDocumentoManager.class,EMailData.class,UsuarioLoginDAO.class,
-                ModeloDocumentoDAO.class,VariavelDAO.class,LogProvider.class,
-                ParametroManager.class,ParametroDAO.class,SendmailCommand.class,
-                DominioVariavelTarefaManager.class, DominioVariavelTarefaDAO.class,
-                DocumentoManager.class, DocumentoDAO.class, SessionAssistant.class,
-                SigiloDocumentoService.class, SigiloDocumentoManager.class, SigiloDocumentoDAO.class,
-                SigiloDocumentoPermissaoManager.class, SigiloDocumentoPermissaoDAO.class,
-                DocumentoBinDAO.class, DocumentoBinManager.class)
-            .createDeployment()
-        ;
+        return new ArquillianSeamTestSetup().addClasses(
+                UsuarioLoginCrudAction.class, PasswordService.class,
+                AccessMailService.class, UsuarioLoginManager.class,
+                BusinessException.class, UsuarioLoginDAO.class,
+                ModeloDocumentoManager.class, EMailData.class,
+                UsuarioLoginDAO.class, ModeloDocumentoDAO.class,
+                VariavelDAO.class, LogProvider.class, ParametroManager.class,
+                ParametroDAO.class, SendmailCommand.class,
+                DominioVariavelTarefaManager.class,
+                DominioVariavelTarefaDAO.class, DocumentoManager.class,
+                DocumentoDAO.class, SessionAssistant.class,
+                SigiloDocumentoService.class, SigiloDocumentoManager.class,
+                SigiloDocumentoDAO.class,
+                SigiloDocumentoPermissaoManager.class,
+                SigiloDocumentoPermissaoDAO.class, DocumentoBinDAO.class,
+                DocumentoBinManager.class).createDeployment();
     }
-    
+
     @Override
     protected String getComponentName() {
-        return NAME;
+        return UsuarioLoginCrudAction.NAME;
     }
-    
+
     public static final ActionContainer<UsuarioLogin> initEntityAction = new ActionContainer<UsuarioLogin>() {
         @Override
-        public void execute(CrudActions<UsuarioLogin> crudActions) {
+        public void execute(final CrudActions<UsuarioLogin> crudActions) {
             final UsuarioLogin entity = getEntity();
             crudActions.setEntityValue("nomeUsuario", entity.getNomeUsuario());
             crudActions.setEntityValue("email", entity.getEmail());
@@ -83,71 +82,122 @@ public class UsuarioLoginCrudActionIT extends AbstractCrudTest<UsuarioLogin> {
             crudActions.setEntityValue("provisorio", entity.getProvisorio());
         }
     };
-    
+
     @Override
     protected ActionContainer<UsuarioLogin> getInitEntityAction() {
-        return initEntityAction;
+        return UsuarioLoginCrudActionIT.initEntityAction;
     }
-    
-    @Test
+
+    //@Test
     public void getPersistSuccessList() throws Exception {
         for (int i = 0; i < 30; i++) {
-            persistSuccess.runTest(new UsuarioLogin("Usuario Login Persist"+i, MessageFormat.format("usr-login-pers{0}@infox.com.br", i), MessageFormat.format("usr-login-pers{0}", i)), servletContext, session);
+            this.persistSuccess.runTest(
+                    new UsuarioLogin("Usuario Login Persist" + i, MessageFormat
+                            .format("usr-login-pers{0}@infox.com.br", i),
+                            MessageFormat.format("usr-login-pers{0}", i)),
+                    this.servletContext, this.session);
         }
     }
 
-    @Test
+    //@Test
     public void getPersistFailList() throws Exception {
-        persistFail.runTest(new UsuarioLogin(null, "usr-login-pers-fail1@infox.com.br", "usr-login-pers-fail"), servletContext, session);
-        persistFail.runTest(new UsuarioLogin(fillStr("usr-login-pers-fail2@infox.com.br",LengthConstants.NOME_ATRIBUTO+1), "usr-login-pers-fail2@infox.com.br", "usr-login-pers-fail2"), servletContext, session);
-        
-        persistFail.runTest(new UsuarioLogin("Usuario Login", null, "usr-login-pers-fail3"), servletContext, session);
-        persistFail.runTest(new UsuarioLogin("Usuario Login", fillStr("usr-login-pers-fail4@infox.com.br",LengthConstants.DESCRICAO_PADRAO+1), "usr-login-pers-fail"), servletContext, session);
-        
-        persistFail.runTest(new UsuarioLogin("Usuario Login", "usr-login-pers-fail5@infox.com.br", null), servletContext, session);
-        persistFail.runTest(new UsuarioLogin("Usuario Login", "usr-login-pers-fail6@infox.com.br", fillStr("usr-login-pers-fail6",LengthConstants.DESCRICAO_PADRAO+1)), servletContext, session);
+        this.persistFail.runTest(new UsuarioLogin(null,
+                "usr-login-pers-fail1@infox.com.br", "usr-login-pers-fail"),
+                this.servletContext, this.session);
+        this.persistFail.runTest(
+                new UsuarioLogin(fillStr("usr-login-pers-fail2@infox.com.br",
+                        LengthConstants.NOME_ATRIBUTO + 1),
+                        "usr-login-pers-fail2@infox.com.br",
+                        "usr-login-pers-fail2"), this.servletContext,
+                this.session);
+
+        this.persistFail.runTest(new UsuarioLogin("Usuario Login", null,
+                "usr-login-pers-fail3"), this.servletContext, this.session);
+        this.persistFail.runTest(
+                new UsuarioLogin("Usuario Login", fillStr(
+                        "usr-login-pers-fail4@infox.com.br",
+                        LengthConstants.DESCRICAO_PADRAO + 1),
+                        "usr-login-pers-fail"), this.servletContext,
+                this.session);
+
+        this.persistFail.runTest(new UsuarioLogin("Usuario Login",
+                "usr-login-pers-fail5@infox.com.br", null),
+                this.servletContext, this.session);
+        this.persistFail.runTest(
+                new UsuarioLogin("Usuario Login",
+                        "usr-login-pers-fail6@infox.com.br", fillStr(
+                                "usr-login-pers-fail6",
+                                LengthConstants.DESCRICAO_PADRAO + 1)),
+                this.servletContext, this.session);
     }
 
-    @Test
+    //@Test
     public void getInactivateSuccessList() throws Exception {
         for (int i = 0; i < 32; i++) {
-            inactivateSuccess.runTest(new UsuarioLogin("Usuario Login Inactive", "usr-login-inac"+i+"@infox.com.br", "usr-login-inac"+i, UsuarioEnum.H, Boolean.TRUE), servletContext, session);
+            this.inactivateSuccess.runTest(new UsuarioLogin(
+                    "Usuario Login Inactive", "usr-login-inac" + i
+                            + "@infox.com.br", "usr-login-inac" + i,
+                    UsuarioEnum.H, Boolean.TRUE), this.servletContext,
+                    this.session);
         }
     }
 
-    @Test
+    //@Test
     public void getUpdateSuccessList() throws Exception {
         for (int i = 0; i < 30; i++) {
-            updateSuccess.runTest(new ActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update"+i, MessageFormat.format("usr-login-upd{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}", i))) {
-                @Override
-                public void execute(final CrudActions<UsuarioLogin> crudActions) {
-                    final String updatedNomeUsuario = getEntity().getNomeUsuario()+"(updated)";
-                    crudActions.setEntityValue("nomeUsuario", updatedNomeUsuario);
-                }
-            }, servletContext, session);
+            this.updateSuccess.runTest(
+                    new ActionContainer<UsuarioLogin>(new UsuarioLogin(
+                            "Usuario Login Update" + i, MessageFormat.format(
+                                    "usr-login-upd{0}@infox.com.br", i),
+                            MessageFormat.format("usr-login-upd{0}", i))) {
+                        @Override
+                        public void execute(
+                                final CrudActions<UsuarioLogin> crudActions) {
+                            final String updatedNomeUsuario = getEntity()
+                                    .getNomeUsuario() + "(updated)";
+                            crudActions.setEntityValue("nomeUsuario",
+                                    updatedNomeUsuario);
+                        }
+                    }, this.servletContext, this.session);
         }
     }
 
-    @Test
+    //@Test
     public void getUpdateFailList() throws Exception {
         for (int i = 0; i < 30; i++) {
-            updateFail.runTest(new ActionContainer<UsuarioLogin>(new UsuarioLogin("Usuario Login Update Fail "+i, MessageFormat.format("usr-login-upd-f{0}@infox.com.br", i), MessageFormat.format("usr-login-upd{0}-f", i))) {
-                @Override
-                public void execute(final CrudActions<UsuarioLogin> crudActions) {
-                  final String updatedNomeUsuario = fillStr(getEntity().getNomeUsuario()+"(updated)", LengthConstants.NOME_ATRIBUTO+1);
-                  crudActions.setEntityValue("nomeUsuario", updatedNomeUsuario);
-                }
-            }, servletContext, session);
+            this.updateFail.runTest(
+                    new ActionContainer<UsuarioLogin>(new UsuarioLogin(
+                            "Usuario Login Update Fail " + i, MessageFormat
+                                    .format("usr-login-upd-f{0}@infox.com.br",
+                                            i), MessageFormat.format(
+                                    "usr-login-upd{0}-f", i))) {
+                        @Override
+                        public void execute(
+                                final CrudActions<UsuarioLogin> crudActions) {
+                            final String updatedNomeUsuario = fillStr(
+                                    getEntity().getNomeUsuario() + "(updated)",
+                                    LengthConstants.NOME_ATRIBUTO + 1);
+                            crudActions.setEntityValue("nomeUsuario",
+                                    updatedNomeUsuario);
+                        }
+                    }, this.servletContext, this.session);
         }
     }
-    
+
     @Override
-    protected boolean compareEntityValues(final UsuarioLogin entity, final CrudActions<UsuarioLogin> crudActions) {
-        return compareValues(crudActions.getEntityValue("nomeUsuario"), entity.getNomeUsuario())
-                    && compareValues(crudActions.getEntityValue("email"), entity.getEmail())
-                    && compareValues(crudActions.getEntityValue("login"), entity.getLogin())
-                    && compareValues(crudActions.getEntityValue("tipoUsuario"), entity.getTipoUsuario())
-                    && compareValues(crudActions.getEntityValue("ativo"), entity.getAtivo())
-                    && compareValues(crudActions.getEntityValue("provisorio"), entity.getProvisorio());
+    protected boolean compareEntityValues(final UsuarioLogin entity,
+            final CrudActions<UsuarioLogin> crudActions) {
+        return compareValues(crudActions.getEntityValue("nomeUsuario"),
+                entity.getNomeUsuario())
+                && compareValues(crudActions.getEntityValue("email"),
+                        entity.getEmail())
+                && compareValues(crudActions.getEntityValue("login"),
+                        entity.getLogin())
+                && compareValues(crudActions.getEntityValue("tipoUsuario"),
+                        entity.getTipoUsuario())
+                && compareValues(crudActions.getEntityValue("ativo"),
+                        entity.getAtivo())
+                && compareValues(crudActions.getEntityValue("provisorio"),
+                        entity.getProvisorio());
     }
 }

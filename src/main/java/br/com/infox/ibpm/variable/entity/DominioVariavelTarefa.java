@@ -18,7 +18,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.constants.LengthConstants;
 
 @Entity
 @Table(name = TABLE_NAME)

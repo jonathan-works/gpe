@@ -1,7 +1,7 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO;
-import static br.com.infox.core.constants.LengthConstants.NOME_PADRAO;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO;
+import static br.com.infox.constants.LengthConstants.NOME_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.access.query.PapelQuery.COL_TERMO_ADESAO;
 import static br.com.infox.epp.access.query.PapelQuery.IDENTIFICADOR;

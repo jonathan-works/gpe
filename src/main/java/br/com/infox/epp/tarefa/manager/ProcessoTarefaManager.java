@@ -18,10 +18,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Categoria;
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.processo.dao.ProcessoEpaDAO;
+import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 import br.com.infox.epp.tarefa.dao.ProcessoTarefaDAO;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
@@ -42,7 +40,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     @In
     private LocalizacaoTurnoDAO localizacaoTurnoDAO;
     @In
-    private ProcessoEpaDAO processoEpaDAO;
+    private ProcessoDAO processoDAO;
 
     public ProcessoTarefa getByTaskInstance(Long taskInstance) {
         return getDao().getByTaskInstance(taskInstance);
@@ -115,42 +113,33 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
                 porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / (prazo * 60);
             }
 
-            ProcessoEpa processoEpa = processoTarefa.getProcesso().getProcessoEpa();
+            Processo processo = processoTarefa.getProcesso();
             if (porcentagem > PORCENTAGEM_MAXIMA) {
-                processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
+                processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }
 
-            processoTarefa.setPorcentagem(porcentagem);
             processoTarefa.setTempoGasto(tempoGasto);
             processoTarefa.setUltimoDisparo(fireTime);
             update(processoTarefa);
-            updateTempoGasto(processoEpa);
+            updateTempoGasto(processo);
         }
     }
 
-    public void updateTempoGasto(ProcessoEpa processoEpa) throws DAOException {
-        Map<String, Object> result = processoEpaDAO.getTempoGasto(processoEpa);
-
+    public void updateTempoGasto(Processo processo) throws DAOException {
+        Map<String, Object> result = processoDAO.getTempoGasto(processo);
         if (result != null) {
-            
-            Date dataFim = processoEpa.getDataFim();
+            Date dataFim = processo.getDataFim();
             DateRange dateRange;
             if (dataFim != null) {
-                 dateRange = new DateRange(processoEpa.getDataInicio(), dataFim);
+                 dateRange = new DateRange(processo.getDataInicio(), dataFim);
             } else {
-                dateRange = new DateRange(processoEpa.getDataInicio(), new Date());
+                dateRange = new DateRange(processo.getDataInicio(), new Date());
             }
-            processoEpa.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
-            Fluxo f = processoEpa.getNaturezaCategoriaFluxo().getFluxo();
-
-            if (f.getQtPrazo() != null && f.getQtPrazo() != 0) {
-                processoEpa.setPorcentagem((processoEpa.getTempoGasto() * PORCENTAGEM_MAXIMA)
-                        / f.getQtPrazo());
+            processo.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
+            if (processo.getPorcentagem() > PORCENTAGEM_MAXIMA) {
+            	processo.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
             }
-            if (processoEpa.getPorcentagem() > PORCENTAGEM_MAXIMA) {
-                processoEpa.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
-            }
-            processoEpaDAO.update(processoEpa);
+            processoDAO.update(processo);
         }
     }
 

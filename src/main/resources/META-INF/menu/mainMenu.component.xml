@@ -40,15 +40,18 @@
             <value>menu.administracao/tipoRelacionamentoProcesso.menuText:/TipoRelacionamentoProcesso/listView.seam</value>
             <value>menu.administracao/menu.unidadeDecisora/unidadeDecisoraMonocratica.menuText:/UnidadeDecisoraMonocratica/listView.seam</value>
             <value>menu.administracao/menu.unidadeDecisora/unidadeDecisoraColegiada.menuText:/UnidadeDecisoraColegiada/listView.seam</value>
+            <value>menu.administracao/menu.julgamentoColegiado/sala.menuText:/Julgamento/Colegiado/Sala/listView.seam</value>
+            <value>menu.administracao/menu.julgamentoColegiado/sessaoJulgamento.menuText:/Julgamento/Colegiado/Sessao/listView.seam</value>
             <value>menu.administracao/menu.usuario/contaTwitter.twitterMenuText:/ContaTwitter/listView.seam</value>
             <value>menu.administracao/automaticNodes.menuText:/automaticNodes.seam</value>
-            <value>menu.administracao/quartzJobsInfo.menuText:/quartzJobsInfo.seam</value>
+            <value>menu.administracao/quartzJobsInfo.menuText:/quartzJobsInfo.seam</value> 
             
             <value>menu.controle/bam.menuText:/BAM/listView.seam</value>
             <value>menu.controle/produtividade.menuText:/BAM/Produtividade/listView.seam</value>
             <value>menu.controle/relatorios.menuText/temposMedios.menuText:/Estatistica/listView.seam</value>
             
-
+			<value>menu.operacoes/comunicacao.menuText/comunicacoes.menuText:/Comunicacao/listView.seam</value>
+			<value>menu.operacoes/comunicacao.menuText/comunicacoes.impressao.menuText:/Comunicacao/Impressao/listView.seam</value>
         </property>
     </component>
 </components>

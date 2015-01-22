@@ -6,9 +6,12 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.P
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_TIPO_PARTE;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.LockModeType;
@@ -60,4 +63,15 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
     	}
     }
     
+    public List<ParticipanteProcesso> getParticipantesProcesso(Processo processo) {
+    	Map<String, Object> params = new HashMap<>();
+    	params.put(PARAM_PROCESSO, processo);
+    	return getNamedResultList(PARTICIPANTES_PROCESSO, params);
+    }
+    
+    public List<ParticipanteProcesso> getParticipantesProcessoRaiz(Processo processo) {
+    	Map<String, Object> params = new HashMap<>();
+    	params.put(PARAM_PROCESSO, processo);
+    	return getNamedResultList(PARTICIPANTES_PROCESSO_RAIZ, params);
+    }
 }

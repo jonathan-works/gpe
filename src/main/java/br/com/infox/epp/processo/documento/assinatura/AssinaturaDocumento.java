@@ -1,7 +1,7 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
-import static br.com.infox.core.constants.LengthConstants.NOME_ATRIBUTO;
-import static br.com.infox.core.constants.LengthConstants.NOME_PADRAO;
+import static br.com.infox.constants.LengthConstants.NOME_ATRIBUTO;
+import static br.com.infox.constants.LengthConstants.NOME_PADRAO;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_CERT_CHAIN;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_DATA_ASSINATURA;
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.COL_ID_ASSINATURA;

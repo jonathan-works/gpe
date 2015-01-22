@@ -9,8 +9,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
-import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 
@@ -23,12 +22,10 @@ public class VariavelProcessoAction implements Serializable {
 
     private Boolean possuiVariaveis;
     private List<VariavelProcesso> variaveis;
-    private ProcessoEpa processoEpa;
+    private Processo processo;
 
     @In
     private VariavelProcessoService variavelProcessoService;
-    @In
-    private ProcessoEpaManager processoEpaManager;
 
     public Boolean possuiVariaveis() {
         if (this.possuiVariaveis == null) {
@@ -39,13 +36,13 @@ public class VariavelProcessoAction implements Serializable {
 
     public List<VariavelProcesso> getVariaveis() {
         if (this.variaveis == null) {
-            this.variaveis = variavelProcessoService.getVariaveis(processoEpa);
+            this.variaveis = variavelProcessoService.getVariaveis(processo);
         }
         return this.variaveis;
     }
 
-    public void setProcessoEpa(ProcessoEpa processoEpa) {
-        this.processoEpa = processoEpa;
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
     }
 
     public void save() {

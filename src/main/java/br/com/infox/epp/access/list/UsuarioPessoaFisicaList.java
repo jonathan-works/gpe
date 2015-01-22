@@ -3,6 +3,7 @@ package br.com.infox.epp.access.list;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -13,6 +14,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(UsuarioPessoaFisicaList.NAME)
 @Scope(ScopeType.PAGE)
+@AutoCreate
 public class UsuarioPessoaFisicaList extends EntityList<PessoaFisica> {
 
     private static final long serialVersionUID = 1L;

@@ -22,7 +22,9 @@ import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
@@ -34,11 +36,11 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa o "
             + "inner join o.processo p "
             + "inner join p.naturezaCategoriaFluxo ncf "
-            + "where o.dataFim is null and p.tipoProcesso = 'PE'";
+            + "where o.dataFim is null";
     
     private static final String DEFAULT_ORDER = "p.idProcesso";
     private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
-    private static final String R2 = "p.situacaoPrazo = #{processoEpaNaoFinalizadoList.entity.processo.processoEpa.situacaoPrazo}";
+    private static final String R2 = "p.situacaoPrazo = #{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}";
     public static final String NAME = "processoEpaNaoFinalizadoList";
 
     private static final Map<String, String> CUSTOM_ORDER_MAP;
@@ -87,8 +89,8 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
             fluxo = fluxos.get(0);
         }
         super.newInstance();
-        getEntity().setProcesso(new ProcessoEpa());
-        getEntity().getProcesso().getProcessoEpa().setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+        getEntity().setProcesso(new Processo());
+        getEntity().getProcesso().setSituacaoPrazo(SituacaoPrazoEnum.PAT);
     }
 
     public Fluxo getFluxo() {
@@ -101,21 +103,21 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     public long getMediaTempoGastoDesdeInicioProcesso() {
         long media = 0;
-        StringBuilder hql = new StringBuilder("select p.dataInicio from ProcessoEpa p ");
+        StringBuilder hql = new StringBuilder("select p.dataInicio from Processo p ");
         hql.append("inner join p.naturezaCategoriaFluxo ncf ");
-        hql.append("where p.dataFim is null and p.contabilizar = true ");
+        hql.append("where p.dataFim is null ");
         if (getFluxo() != null) {
             hql.append("and ncf.fluxo = :fluxo ");
         }
-        if (getEntity().getProcesso().getProcessoEpa().getSituacaoPrazo() != null) {
+        if (getEntity().getProcesso().getSituacaoPrazo() != null) {
             hql.append("and p.situacaoPrazo = :situacaoPrazo ");
         }
         TypedQuery<Date> query = getEntityManager().createQuery(hql.toString(), Date.class);
         if (getFluxo() != null) {
             query.setParameter("fluxo", getFluxo());
         }
-        if (getEntity().getProcesso().getProcessoEpa().getSituacaoPrazo() != null) {
-            query.setParameter("situacaoPrazo", getEntity().getProcesso().getProcessoEpa().getSituacaoPrazo());
+        if (getEntity().getProcesso().getSituacaoPrazo() != null) {
+            query.setParameter("situacaoPrazo", getEntity().getProcesso().getSituacaoPrazo());
         }
 
         LocalDate now = LocalDate.now();
@@ -143,17 +145,18 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
         this.fluxoList = fluxoList;
     }
 
-    public String getNaturezaCategoriaItem(ProcessoEpa processoEpa) {
-        NaturezaCategoriaFluxo naturezaCategoriaFluxo = processoEpa.getNaturezaCategoriaFluxo();
-        Item item = processoEpa.getItemDoProcesso();
-        if (item == null) {
+    public String getNaturezaCategoriaItem(Processo processo) {
+        NaturezaCategoriaFluxo naturezaCategoriaFluxo = processo.getNaturezaCategoriaFluxo();
+        MetadadoProcesso metadadoProcesso = processo.getMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO);
+        if (metadadoProcesso == null) {
             return MessageFormat.format("{0}/{1}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria());
         } else {
+        	Item item = metadadoProcesso.getValue();
             return MessageFormat.format("{0}/{1}/{2}", naturezaCategoriaFluxo.getNatureza().getNatureza(), naturezaCategoriaFluxo.getCategoria().getCategoria(), item.getDescricaoItem());
         }
     }
 
-    public int getDiasDesdeInicioProcesso(ProcessoEpa processoEpa) {
-        return processoTarefaManager.getDiasDesdeInicioProcesso(processoEpa);
+    public int getDiasDesdeInicioProcesso(Processo processo) {
+        return processoTarefaManager.getDiasDesdeInicioProcesso(processo);
     }
 }

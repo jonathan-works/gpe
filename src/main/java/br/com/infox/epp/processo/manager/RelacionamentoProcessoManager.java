@@ -17,16 +17,16 @@ public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcess
     public static final String NAME = "relacionamentoProcessoManager";
 
     @In
-    private ProcessoEpaManager processoEpaManager;
+    private ProcessoManager processoManager;
 
     public boolean existeRelacionamento(String processo1, String processo2) {
         return getDao().existeRelacionamento(processo1, processo2);
     }
     
     @Override
-    public RelacionamentoProcesso persist(final RelacionamentoProcesso instance) throws DAOException {
+    public RelacionamentoProcesso persist(RelacionamentoProcesso instance) throws DAOException {
         if (instance.getProcesso() == null) {
-            instance.setProcesso(processoEpaManager.getProcessoEpaByNumeroProcesso(instance.getNumeroProcesso()));
+            instance.setProcesso(processoManager.getProcessoEpaByNumeroProcesso(instance.getNumeroProcesso()));
         }
         return super.persist(instance);
     }

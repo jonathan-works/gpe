@@ -8,15 +8,19 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:a="http://richfaces.org/a4j">
   <rich:collapsiblePanel
+  	id="editorPanel"
     switchType="client"
-    expanded="false"
+    expanded="#{documentoEditor.expanded}"
     header="#{eppmessages['documentoEditor.header']}">
     <s:div id="editorDiv">
+      <ui:param name="minuta" 
+      	value="#{empty documentoEditor.documento.id or documentoEditor.documento.documentoBin.minuta}" />
       <s:div>
         <wi:inputText
           id="#{f.id}inputProcessoDocumento"
           value="#{documentoEditor.documento.descricao}"
-          disabled="false"
+          disabled="#{not minuta}"
+          readonly="#{not minuta}"
           required="true"
           label="#{eppmessages['processo.anexarDocumentoDescricao']}">
         </wi:inputText>
@@ -26,6 +30,8 @@
           value="#{documentoEditor.documento.classificacaoDocumento}"
           items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
           required="true"
+          disabled="#{not minuta}"
+          readonly="#{not minuta}"
           showLabelSelecione="true">
           <a:ajax event="change" status=":status" limitRender="true" 
           		  render=":movimentarTabPanel:anexarDocumentosForm:editorToolTipDiv" execute="@this"/>
@@ -42,12 +48,17 @@
 				</div>
 			</div>
 	    </s:div>
+	    <s:div>
+	    	<wi:selectBooleanRadio id="minuta" value="#{documentoEditor.documento.documentoBin.minuta}" 
+				label="#{eppmessages['processoDocumentoBin.minuta']}" readonly="#{not minuta}" disabled="#{not minuta}"/>
+		</s:div>
         <wi:editor
           id="modeloDocumento"
           label="#{eppmessages['tipoProcessoDocumento.modelo']}"
           value="#{documentoEditor.documento.documentoBin.modeloDocumento}"
           requiredField="false"
           required="true"
+          readonly="#{not minuta}"
           showVariables="false">
         </wi:editor>
       </s:div>
@@ -57,6 +68,16 @@
           action="documentoEditor.persist()"
           value="#{eppmessages['processo.anexarDocumentoBtn']}"
           execute="editorDiv"
+          rendered="#{minuta}"
+          reRender="@form,pageBodyDialogMessage, buttonsDiv"
+          styleClass="buttons">
+        </wi:commandButton>
+        <wi:commandButton
+          id="botaoNovo"
+          action="documentoEditor.newInstance()"
+          value="#{eppmessages['crud.new']}"
+          execute="editorDiv"
+          rendered="#{minuta}"
           reRender="@form,pageBodyDialogMessage, buttonsDiv"
           styleClass="buttons">
         </wi:commandButton>
@@ -133,8 +154,7 @@
       id="processoDocumentoDaSessao"
       rowId="#{row.idDocumento}"
       showSearchForm="false"
-      panelStyleClass="full-sized"
-      showToolbarColumn="false">
+      panelStyleClass="full-sized">
       <wi:columnOutputText
         columnId="usuarioInclusao"
         columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
@@ -151,7 +171,13 @@
         hideOrder="true"
         value="#{row.descricao}" />
       <ui:define name="headerToolBar" />
-      <ui:define name="toolBar" />
+      <ui:define name="toolBar">
+      	<h:form rendered="#{row.documentoBin.minuta}">
+      		<a:commandLink action="#{documentoEditor.setDocumento(row)}" render="editorPanel" limitRender="true">
+      			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}" />
+      		</a:commandLink>
+      	</h:form>
+      </ui:define>
     </wi:dataTable>
   </s:div>
   <br />

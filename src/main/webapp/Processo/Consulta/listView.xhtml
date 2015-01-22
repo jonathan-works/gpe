@@ -32,7 +32,7 @@
                             <wi:selectOneMenuEntity
                                 id="usuarioAlteracao"
                                 label="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                                value="#{processoEpaList.entity.usuarioCadastroProcesso}"
+                                value="#{processoEpaList.entity.usuarioCadastro}"
                                 items="#{processoEpaList.listaUsuarios}"
                                 showLabelTodos="true" />
                             <wi:inputDataPeriodo id="periodo"
@@ -69,7 +69,7 @@
                         value="#{row.prioridadeProcesso}" />
                     <wi:columnOutputText columnId="usuarioCadastro"
                         columnHeader="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                        value="#{row.usuarioCadastroProcesso}" />
+                        value="#{row.usuarioCadastro}" />
                     <wi:columnDateTime columnId="dataInicioProcesso"
                         columnHeader="#{eppmessages['processo.dataInicio']}"
                         value="#{row.dataInicio}" />
@@ -83,7 +83,7 @@
                     <wi:columnOutputText
                     	columnId="statusProcesso"
                     	columnHeader="#{eppmessages['processoEpa.status']}"
-                    	value="#{row.statusProcesso}" />
+                    	value="#{processoEpaList.getStatusProcesso(row)}"/>
                 </wi:dataTable>
             </rich:panel>
         </h:form>

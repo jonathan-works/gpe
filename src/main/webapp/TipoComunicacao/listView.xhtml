@@ -24,6 +24,12 @@
                         id="ativo"
                         label="#{eppmessages['field.situacao']}"
                         value="#{tipoComunicacaoList.entity.ativo}" />
+                    <wi:selectOneMenuEntity id="classificacaoDocumento" label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}" 
+		            	value="#{tipoComunicacaoList.entity.classificacaoDocumento}"
+		            	items="#{tipoComunicacaoCrudAction.classificacoesDocumento}"/>
+            		<wi:selectOneMenuEntity id="tipoModeloDocumento" label="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}" 
+		            	value="#{tipoComunicacaoList.entity.tipoModeloDocumento}"
+		            	items="#{tipoComunicacaoCrudAction.tiposModeloDocumento}"/>
                 </wi:searchForm>
             </ui:define>
 
@@ -33,6 +39,12 @@
             <wi:columnOutputText columnId="quantidadeDiasCiencia"
                 columnHeader="#{eppmessages['tipoComunicacao.diasCiencia']}"
                 value="#{row.quantidadeDiasCiencia}" />
+            <wi:columnOutputText columnId="classificacaoDocumento"
+                columnHeader="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+                value="#{row.tipoModeloDocumento}" />
+            <wi:columnOutputText columnId="tipoModeloDocumento"
+                columnHeader="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}"
+                value="#{row.classificacaoDocumento}" />
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{eppmessages['field.situacao']}"
@@ -51,6 +63,12 @@
                 label="#{eppmessages['tipoComunicacao.diasCiencia']}"
                 value="#{tipoComunicacaoCrudAction.instance.quantidadeDiasCiencia}" 
                 required="true"/>
+            <wi:selectOneMenuEntity id="classificacaoDocumento" label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}" 
+            	value="#{tipoComunicacaoCrudAction.instance.classificacaoDocumento}"
+            	items="#{tipoComunicacaoCrudAction.classificacoesDocumento}"/>
+            <wi:selectOneMenuEntity id="tipoModeloDocumento" label="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}" 
+            	value="#{tipoComunicacaoCrudAction.instance.tipoModeloDocumento}"
+            	items="#{tipoComunicacaoCrudAction.tiposModeloDocumento}"/>
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{eppmessages['field.situacao']}"

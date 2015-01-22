@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:wi="http://www.itx.com.br/jsf"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a="http://richfaces.org/a4j"
+      xmlns:s="http://jboss.org/schema/seam/taglib">
+<h:head />
+<h:body>
+	<h:outputScript library="js" name="components.js" />
+	<s:div style="background-color: white; padding-top: 20px; margin-bottom: 20px; padding-left: 10px; padding-right: 10px;">
+		<s:div id="comunicacaoDiv">
+			<h:form id="comunicacaoForm">
+				<wi:selectOneMenuEntity id="tipoComunicacao" label="#{eppmessages['comunicacao.tipoComunicacao']}"
+					required="true" items="#{modeloComunicacaoAction.tiposComunicacao}" showLabelSelecione="true"
+					value="#{modeloComunicacaoAction.tipoComunicacao}"
+					disabled="#{modeloComunicacaoAction.modeloComunicacao.finalizada}">
+					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
+				</wi:selectOneMenuEntity>
+				<div />
+				<h:commandButton action="#{modeloComunicacaoAction.downloadComunicacaoCompleta()}" 
+					value="#{eppmessages['comunicacao.visualizarComunicacao']}" immediate="true" 
+					rendered="#{(not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao 
+						or modeloComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno) 
+						and not modeloComunicacaoAction.modeloComunicacao.finalizada}" 
+					styleClass="buttons"/> 
+			</h:form>
+			<rich:panel header="#{eppmessages['comunicacao.destinatarios']}" id="destinatariosPanel">
+				<h:form>
+					<rich:dataTable id="destinatarios" value="#{modeloComunicacaoAction.modeloComunicacao.destinatarios}"
+								styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty modeloComunicacaoAction.modeloComunicacao.destinatarios}">
+						<rich:column styleClass="dt-toolbar-col">
+							<a:commandLink execute="@this" render="destinatariosPanel"
+								action="#{modeloComunicacaoAction.removerDestinatario(row)}"
+								rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['button.delete']}" />
+							</a:commandLink>
+							<s:div rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada and not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}">
+	   							<a:commandLink action="#{modeloComunicacaoAction.setDestinatario(row)}" render="comunicacaoDestinatarioForm" execute="@this"
+	   								rendered="#{empty modeloComunicacaoAction.modeloComunicacao.localizacaoResponsavelAssinatura}">
+	   								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{eppmessages['button.selecionar']}" />
+	   							</a:commandLink>
+	   							<h:commandLink action="#{modeloComunicacaoAction.downloadComunicacaoCompleta(row)}" 
+	   								rendered="#{row.expedido}">
+	   								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{eppmessages['comunicacao.visualizarComunicacao']}"/>
+	   							</h:commandLink>
+							</s:div>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{eppmessages['participanteProcesso.nome']}</f:facet>
+							<h:outputText value="#{row.nome}" />
+						</rich:column>
+						<rich:column styleClass="dt-toolbar-col">
+							<f:facet name="header">#{eppmessages['comunicacao.meioExpedicao']}<span class="required">*</span></f:facet>
+							<h:selectOneMenu value="#{row.meioExpedicao}" 
+								rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+								<f:selectItem noSelectionOption="true" itemLabel="#{eppmessages['crud.select.select']}" />
+								<f:selectItems var="v" value="#{modeloComunicacaoAction.getMeiosExpedicao(row)}" 
+									itemLabel="#{v.label}" itemValue="#{v}"/>
+								<a:ajax event="change" />
+							</h:selectOneMenu>
+							<h:outputText value="#{row.meioExpedicao.label}" rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada}" />
+						</rich:column>
+						<rich:column styleClass="dt-toolbar-col">
+							<f:facet name="header">#{eppmessages['comunicacao.prazo']}</f:facet>
+							<h:inputText value="#{row.prazo}" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
+								onkeyup="onlyNumber(this)" converterId="integerConverter" id="prazo">
+								<a:ajax event="change" />
+							</h:inputText>
+							<h:outputText value="#{row.prazo}" rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada}" />
+						</rich:column>
+						<rich:column styleClass="dt-toolbar-col" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+							<a:commandButton value="#{eppmessages['comunicacao.replicarPrazo']}" 
+								render="destinatarios" action="#{modeloComunicacaoAction.replicarPrazo(row)}"
+								rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}" execute="@this, prazo"/>
+						</rich:column>
+					</rich:dataTable>
+				</h:form>
+				<div>
+					<h:form id="expedicaoForm">
+						<s:div rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada 
+							and empty modeloComunicacaoAction.modeloComunicacao.localizacaoResponsavelAssinatura 
+							and not modeloComunicacaoAction.expedida 
+							and empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}">
+							<wi:commandButton id="expedir" action="modeloComunicacaoAction.expedirComunicacao()" 
+								rendered="#{modeloComunicacaoAction.documentoComunicacao.documento.hasAssinatura()}"
+								value="#{eppmessages['comunicacao.expedirComunicacoes']}"
+								oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
+								reRender="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"/>
+							<s:div id="assinatura_pers" rendered="#{not modeloComunicacaoAction.documentoComunicacao.documento.hasAssinatura()}">
+								<a:jsFunction name="assinarBin" action="#{modeloComunicacaoAction.expedirComunicacao()}"
+									execute="@this appletAssinaturaCertChain appletAssinaturaSignature" 
+									render="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
+								  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
+
+				                <wi:certificadoDigital
+				                  id="appletAssinatura"
+				                  urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+				                  formId="#{rich:clientId('expedicaoForm')}"
+				                  certificationChainField="#{modeloComunicacaoAction.certChain}"
+				                  signatureField="#{modeloComunicacaoAction.signature}"
+				                  signableData="#{modeloComunicacaoAction.documentoComunicacao.documento.documentoBin.md5Documento}"
+				                  useBase64Function="true"
+				                  functionPreSign="infox.showLoading();"
+				                  functionPosSign="assinarBin();"
+				                  debug="false"
+				                  loginMode="false"
+				                  useProviderDll="false"
+				                  rendered="#{modeloComunicacaoAction.podeRenderizarApplet()}"
+				                  signButtonCaption="#{eppmessages['comunicacao.expedirComunicacao']}" />
+				
+				              </s:div>
+		          		</s:div>
+					</h:form>
+				</div>
+				<h:form rendered="#{modeloComunicacaoAction.processoPossuiRelator}">
+					<wi:selectBooleanCheckbox id="relator" label="#{eppmessages['processo.relator']}" 
+						disabled="#{modeloComunicacaoAction.modeloComunicacao.finalizada}"
+						value="#{modeloComunicacaoAction.adicionarDestinatarioRelator}">
+						<a:ajax event="change" render="destinatariosPanel" limitRender="true" execute="@this"
+							listener="#{modeloComunicacaoAction.gerenciarRelator}"/>
+					</wi:selectBooleanCheckbox>
+				</h:form>
+				<div />
+				<h:form rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+					<rich:collapsiblePanel header="#{eppmessages['comunicacao.participantesProcesso']}" switchType="client"
+						rendered="#{participanteProcessoComunicacaoList.resultCount gt 0}">
+						<wi:dataTable id="participantes" values="#{participanteProcessoComunicacaoList.list(15)}" 
+							bean="#{participanteProcessoComunicacaoList}" showSearchForm="false" rowId="#{row.id}">
+							<ui:define name="headerToolBar" />
+							<ui:define name="toolBar">
+								<h:form>
+									<a:commandLink render="destinatariosPanel"
+										action="#{modeloComunicacaoAction.adicionarDestinatario(row)}">
+										<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{eppmessages['button.add']}" />
+									</a:commandLink>
+								</h:form>
+							</ui:define>
+							<rich:column>
+								<f:facet name="header">#{eppmessages['participanteProcesso.nome']}</f:facet>
+								<h:outputText value="#{row.nome}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{eppmessages['participanteProcesso.tipoParticipante']}</f:facet>
+								<h:outputText value="#{row.tipoParte.descricao}" />
+							</rich:column>
+                            <rich:column>
+                                <f:facet name="header">#{eppmessages['participanteProcesso.superior']}</f:facet>
+                                <h:outputText value="#{row.participantePai}"></h:outputText>
+                            </rich:column>
+						</wi:dataTable>
+					</rich:collapsiblePanel>
+				</h:form>
+				<div />
+				<h:form rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+					<rich:collapsiblePanel header="#{eppmessages['comunicacao.localizacoes']}" switchType="client">
+                        <wi:tree
+                            id="localizacao"
+                            assignTo="modeloComunicacaoAction.localizacao"
+                            tree="#{localizacaoSubTree}"
+                            icon="#{wiSkin.imageFolder}/nivelTree.gif"
+                            iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                            label="#{eppmessages['localizacao.localizacao']}"
+                            required="true"
+                            render="perfisPermitidosDestino" />
+                        <wi:selectOneMenuEntity
+                            id="perfisPermitidosDestino"
+                            value="#{modeloComunicacaoAction.perfilDestino}"
+                            label="#{eppmessages['usuarioPerfil.perfil']}"
+                            items="#{modeloComunicacaoAction.perfisPermitidosDestino}"
+                            showLabelSelecione="true"
+                            disabled="#{empty modeloComunicacaoAction.localizacao}" />
+                        <wi:commandButton id="adicionarLocalizacao" reRender="destinatariosPanel, pageBodyDialogMessage" value="#{eppmessages['button.add']}"
+				        	action="#{modeloComunicacaoAction.adicionarDestino(modeloComunicacaoAction.localizacao, modeloComunicacaoAction.perfilDestino)}" />
+					</rich:collapsiblePanel>
+				</h:form>
+			</rich:panel>
+			<h:form id="comunicacaoDestinatarioForm">
+				<rich:collapsiblePanel switchType="client" rendered="#{not empty modeloComunicacaoAction.destinatario and not empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}" 
+					header="#{eppmessages['comunicacao.comunicacao']} - #{modeloComunicacaoAction.destinatario.nome}">
+					<wi:editor id="comunicacao" readonly="true" value="#{modeloComunicacaoAction.destinatario.comunicacao.modeloDocumento}" />
+					<s:div id="assinatura_pers">
+						<a:jsFunction name="assinar" action="#{modeloComunicacaoAction.expedirComunicacao()}"
+							execute="@this appletAssinaturaCertChain appletAssinaturaSignature" 
+							render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
+						  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
+	             
+						
+						<wi:certificadoDigital id="appletAssinatura"
+								urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+								formId="#{rich:clientId('comunicacaoDestinatarioForm')}"
+								certificationChainField="#{modeloComunicacaoAction.certChain}"
+								signatureField="#{modeloComunicacaoAction.signature}"
+								signableData="#{modeloComunicacaoAction.destinatario.comunicacao.md5Documento}" useBase64Function="true"
+								functionPreSign="infox.showLoading();"
+								functionPosSign="assinar();" debug="false" loginMode="false"
+								useProviderDll="false"
+								rendered="#{not modeloComunicacaoAction.destinatario.expedido and modeloComunicacaoAction.podeRenderizarApplet()}"
+								signButtonCaption="#{eppmessages['comunicacao.expedirComunicacao']}" />
+	          		</s:div>
+				</rich:collapsiblePanel>
+			</h:form>
+			<rich:panel id="documentos" header="Documentos" 
+				rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada or not empty modeloComunicacaoAction.modeloComunicacao.documentos}">
+				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(10)}" 
+					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"
+					showGrid="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
+					tableTitle="#{eppmessages['comunicacao.documentosDisponiveis']}">
+					<ui:define name="headerToolBar" />
+					<ui:define name="toolBar">
+						<h:form>
+							<a:commandLink action="#{modeloComunicacaoAction.adicionarDocumento(row)}" 
+								execute="@this" render="documentos">
+								<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{eppmessages['button.add']}" />
+							</a:commandLink>
+                            <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+                                <ui:param name="bin" value="#{row.documentoBin}" />
+                                <ui:param name="header" value="#{row.descricao}" />
+                                <ui:param name="hideSignature" value="true" />
+                            </ui:include>
+                        </h:form>
+					</ui:define>
+					<ui:define name="searchForm">
+						<rich:panel header="Pastas" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+							<rich:list value="#{modeloComunicacaoAction.pastas}" styleClass="folder-ul" rowClass="folder-li"
+								var="pasta">
+								<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access')}"
+									styleClass="rf-tr-nd">
+									<a:commandLink render="documentosProcessoPanel, documentosProcessoSearchForm"
+										execute="@form"	styleClass="folder" limitRender="true">
+				  		              <h:graphicImage
+				                          url="#{wiSkin.imageFolder}/folder.png"
+				                          rendered="true"
+				                          title="#{pasta}" />
+										<f:attribute name="pastaToSelect" value="#{pasta}" />
+										<f:actionListener type="br.com.infox.epp.processo.comunicacao.list.DocumentoDisponivelComunicacaoList" />
+										<h:outputText value="#{eventCache.get('documentoDisponivelComunicacaoList.getTextoPasta(pasta)', pasta.id)}" class="folder" />
+									</a:commandLink>
+								</h:form>
+							</rich:list>
+						</rich:panel>
+					</ui:define>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['documentoProcesso.processoDocumento']}</f:facet>
+						<h:outputText value="#{row.descricao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['processoDocumento.classificacaoDocumento']}</f:facet>
+						<h:outputText value="#{row.classificacaoDocumento.descricao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['processoDocumento.tamanho']}</f:facet>
+						<h:outputText value="#{row.documentoBin.sizeFormatado}" />
+					</rich:column>
+				</wi:dataTable>
+				<rich:panel header="#{eppmessages['comunicacao.documentosSelecionados']}" headerClass="text-center">
+					<h:form>
+						<h:commandButton styleClass="buttons" action="#{modeloComunicacaoAction.downloadComunicacao}" 
+	    					value="#{eppmessages['comunicacao.comunicacao']}"
+	    					rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada and empty modeloComunicacaoAction.modeloComunicacao.textoComunicacao}"/>
+	    			</h:form>
+					<rich:dataTable id="documentosSelecionados" value="#{modeloComunicacaoAction.modeloComunicacao.documentos}"
+						styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty modeloComunicacaoAction.modeloComunicacao.documentos}">
+						<rich:column styleClass="dt-toolbar-col" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+							<h:form>
+								<a:commandLink action="#{modeloComunicacaoAction.removerDocumento(row)}" 
+									execute="@this" render="documentos">
+									<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{eppmessages['button.delete']}" />
+								</a:commandLink>
+								<a:commandLink
+									onclick="infox.editor['comunicacao'].insertText('#{modeloComunicacaoAction.getLink(row.documento.documentoBin)}'); return false;">
+									<h:graphicImage url="#{wiSkin.imageFolder}/link.gif" title="#{eppmessages['button.copiarLink']}" />
+								</a:commandLink>
+                                <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+                                    <ui:param name="bin" value="#{row.documento.documentoBin}" />
+                                    <ui:param name="header" value="#{row.documento.descricao}" />
+                                    <ui:param name="row" value="#{row.documento}" />
+                                    <ui:param name="hideSignature" value="true" />
+                                </ui:include>
+                            </h:form> 
+						</rich:column>
+						<rich:column>
+						<f:facet name="header">#{eppmessages['documentoProcesso.processoDocumento']}</f:facet>
+						<h:outputText value="#{row.documento.descricao}" />
+					</rich:column>
+                    <rich:column>
+                        <f:facet name="header">#{eppmessages['documentoProcesso.pastaDocumento']}</f:facet>
+                        <h:outputText value="#{row.documento.pasta}" />
+                    </rich:column>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['processoDocumento.classificacaoDocumento']}</f:facet>
+						<h:outputText value="#{row.documento.classificacaoDocumento.descricao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{eppmessages['processoDocumento.tamanho']}</f:facet>
+						<h:outputText value="#{row.documento.documentoBin.sizeFormatado}" />
+					</rich:column>
+					</rich:dataTable>
+				</rich:panel>
+			</rich:panel>
+			<h:form id="documentoComunicacaoForm">
+				<ui:param name="minuta" value="#{not modeloComunicacaoAction.validarMinuta or modeloComunicacaoAction.modeloComunicacao.minuta}" />
+				<s:div style="display: inline-block; vertical-align: top" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+					<wi:selectOneMenuEntity id="modeloDocumento" value="#{modeloComunicacaoAction.modeloComunicacao.modeloDocumento}" 
+						label="#{eppmessages['modeloDocumento.modeloDocumento']}"
+						readonly="#{not minuta}"
+						disabled="#{not minuta}"
+						noSelectionLabel="[Selecione o modelo]" items="#{modeloComunicacaoAction.modelosDocumento}">
+						<a:ajax event="change" render="comunicacaoEditorDiv" execute="@this" limitRender="true"
+							listener="#{modeloComunicacaoAction.assignModeloDocumento}"/>
+					</wi:selectOneMenuEntity>
+					<s:div>
+	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
+	    					label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+				      		items="#{modeloComunicacaoAction.classificacoes}"
+				      		showLabelSelecione="true"
+				      		value="#{modeloComunicacaoAction.modeloComunicacao.classificacaoComunicacao}"
+				      		readonly="#{not minuta}"
+	      					disabled="#{not minuta}">
+	      					
+	      					<a:ajax event="change"
+	        					render="tooltipComunicacao"
+	        					execute="@this"
+	        					limitRender="true" />
+	    				</wi:selectOneMenuEntity>
+	  				</s:div>
+	  				
+					<s:div id="tooltipComunicacao">
+				   		<s:div styleClass="tooltip-parent" style="width: 10px" 
+				  			rendered="#{not empty modeloComunicacaoAction.modeloComunicacao.classificacaoComunicacao.observacao}">
+				  		<h:graphicImage url="#{wiSkin.imageFolder}/help.gif" />
+							<div class="epp-tooltip">
+								<div class="tooltip-panel">
+									<div><h:outputText value="Observação:"/></div>
+									<h:outputText value="#{modeloComunicacaoAction.modeloComunicacao.classificacaoComunicacao.observacao}"/>
+								</div>
+							</div>
+				   		</s:div>
+					</s:div>
+					<s:div>
+						<wi:selectBooleanRadio id="minuta" value="#{modeloComunicacaoAction.modeloComunicacao.minuta}"
+							label="#{eppmessages['processoDocumentoBin.minuta']}" 
+							readonly="#{not minuta}" 
+							disabled="#{not minuta}" />
+					</s:div>
+					<s:div id="comunicacaoEditorDiv">
+						<wi:editor id="comunicacao" value="#{modeloComunicacaoAction.modeloComunicacao.textoComunicacao}" 
+							readonly="#{not minuta}"/>
+					</s:div>
+				</s:div>
+				<s:div id="responsaveisAssinatura">
+					<wi:selectBooleanCheckbox id="finalizada" label="#{eppmessages['comunicacao.finalizada']}" 
+						value="#{modeloComunicacaoAction.finalizada}" disabled="#{modeloComunicacaoAction.modeloComunicacao.finalizada}">
+						<a:ajax event="change" execute="@this" render="responsaveisAssinatura" />
+					</wi:selectBooleanCheckbox>
+					<s:fragment rendered="#{modeloComunicacaoAction.finalizada and not modeloComunicacaoAction.modeloComunicacao.finalizada}">
+						<wi:tree
+				            id="localizacoesTree"
+				            assignTo="modeloComunicacaoAction.modeloComunicacao.localizacaoResponsavelAssinatura"
+				            tree="#{localizacaoTree}"
+				            icon="#{wiSkin.imageFolder}/nivelTree.gif"
+				            iconLeaf="#{wiSkin.imageFolder}/file.gif"
+				            clearRender="@this"
+				            label="#{eppmessages['perfilTemplate.localizacao']}" 
+				            render="perfisPermitidos" />
+			        	<wi:selectOneMenuEntity id="perfisPermitidos"
+				            value="#{modeloComunicacaoAction.modeloComunicacao.perfilResponsavelAssinatura}"
+				            label="#{eppmessages['usuarioPerfil.perfil']}"
+				            items="#{modeloComunicacaoAction.perfisPermitidos}"
+				            showLabelSelecione="true"
+				            disabled="#{empty modeloComunicacaoAction.modeloComunicacao.localizacaoResponsavelAssinatura}" />
+			        </s:fragment>
+			        <s:fragment rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada}">
+			        	<wi:outputText id="localizacaoRespAssinatura" label="#{eppmessages['comunicacao.localizacaoRespAssinatura']}" 
+			        		value="#{modeloComunicacaoAction.modeloComunicacao.localizacaoResponsavelAssinatura.caminhoCompletoFormatado}"/>
+			        	<wi:outputText id="perfilRespAssinatura" label="#{eppmessages['comunicacao.perfilRespAssinatura']}"
+			        		value="#{modeloComunicacaoAction.modeloComunicacao.perfilResponsavelAssinatura.descricao}"
+			        		rendered="#{not empty modeloComunicacaoAction.modeloComunicacao.perfilResponsavelAssinatura}" />
+			        </s:fragment>
+		        </s:div>
+				<wi:commandButton id="gravar" value="#{eppmessages['crud.update']}" 
+					action="modeloComunicacaoAction.gravar" reRender="comunicacaoDiv, pageBodyDialogMessage"
+					rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
+					oncomplete="if (opener &amp;&amp; opener['reloadRascunhos']) opener['reloadRascunhos']();"/>
+				<s:fragment rendered="#{modeloComunicacaoAction.expedida and modeloComunicacaoAction.inTask}">
+					<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
+					<ui:include src="#{modeloComunicacaoAction.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml' : ''}" />
+				</s:fragment>
+			</h:form>
+		</s:div>
+	</s:div>
+</h:body>
+</html>

@@ -11,27 +11,29 @@
 
     <ui:param name="template"
         value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
-
+	
+	<h:outputScript library="js" name="components.js" />
+	
     <s:decorate id="#{id}Decoration" template="#{template}"
-        rendered="#{wi:get(rendered, true)}">
+        rendered="#{wi:get(rendered, true)}" style="display: inline-block" >
+        
+        <wi:mask selector=".#{id}maskHour" mask="99:99" />
         <ui:define name="label">#{label}</ui:define>
 
         <h:outputText value="#{eppmessages['data.periodoInicio']}" />
-        <h:inputText id="#{id}De" value="#{home.instance[de]}"
-            required="#{required}" size="5"
-            styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+        <h:inputText id="#{id}De" value="#{valueHourFrom}"
+            required="#{required}" size="5" 
+            styleClass="#{readonly ? 'readOnly' : styleClass } inputText #{id}maskHour"
             readonly="#{readonly}" disabled="#{disabled}"
-            converter="horaConverter">
-            <wi:mask id="#{id}De" mask="99:99" />
+            converter="horaConverter" maxlength="5" >
         </h:inputText>
-
+		
         <h:outputText value=" #{eppmessages['data.periodoFim']} " />
-        <h:inputText id="#{id}Ate" value="#{home.instance[ate]}"
-            required="#{required}" size="5"
-            styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+        <h:inputText id="#{id}Ate" value="#{valueHourTo}"
+            required="#{required}" size="5" 
+            styleClass="#{readonly ? 'readOnly' : styleClass } inputText #{id}maskHour"
             readonly="#{readonly}" disabled="#{disabled}"
-            converter="horaConverter">
-            <wi:mask id="#{id}Ate" mask="99:99" />
+            converter="horaConverter" maxlength="5" >
         </h:inputText>
 
     </s:decorate>

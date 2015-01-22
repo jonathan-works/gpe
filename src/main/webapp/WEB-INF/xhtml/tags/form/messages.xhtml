@@ -11,9 +11,6 @@
     name="showDialogMessage"
     value="#{empty showDialogMessage ? true : showDialogMessage}" />
   <ui:param
-    name="timeCloseMSG"
-    value="#{empty timeCloseMSG ? '10000' : timeCloseMSG}" />
-  <ui:param
     name="showMsg"
     value="#{empty showMsg ? true : showMsg}" />
   <h:outputScript
@@ -42,8 +39,7 @@
                     Messages(
                         {
                           existsMessages : "#{showDialogMessage}",
-                          existsGlobalMessages : "#{!facesMessages.currentGlobalMessages.isEmpty()}",
-                          timeout : "#{timeCloseMSG}"
+                          existsGlobalMessages : "#{!facesMessages.currentGlobalMessages.isEmpty()}"
                         }).init();
                   });
             </script>

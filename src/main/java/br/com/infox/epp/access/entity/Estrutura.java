@@ -17,7 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.persistence.ORConstants;
 import br.com.infox.epp.access.query.EstruturaQuery;
 
@@ -32,7 +32,7 @@ public class Estrutura implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name = ORConstants.GENERATOR, sequenceName = EstruturaQuery.SEQUENCE_NAME)
+    @SequenceGenerator(name = ORConstants.GENERATOR, sequenceName = EstruturaQuery.SEQUENCE_NAME, allocationSize = 1, initialValue = 1)
     @GeneratedValue(generator = ORConstants.GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = EstruturaQuery.COLUMN_ID)
     private Integer id;

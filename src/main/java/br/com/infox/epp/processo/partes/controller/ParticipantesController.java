@@ -2,21 +2,17 @@ package br.com.infox.epp.processo.partes.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
-import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
@@ -37,14 +33,16 @@ public class ParticipantesController extends AbstractParticipantesController {
     private ParticipanteProcessoTreeHandler tree = ComponentUtil.getComponent(ParticipanteProcessoTreeHandler.NAME);
     
     private void createProcessoEpa() {
-    	if (getProcessoEpa() != null)  {
+    	if (getProcesso() != null)  {
     		return;
     	}
-    	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-        setProcessoEpa(new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, null));
+        Processo processo = new Processo();
+        processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
+        processo.setNumeroProcesso("");
+        setProcesso(processo);
     	try {
-			processoEpaManager.persist(getProcessoEpa());
+			processoManager.persist(getProcesso());
 		} catch (DAOException e) {
 			actionMessagesService.handleDAOException(e);
 		}
@@ -72,7 +70,7 @@ public class ParticipantesController extends AbstractParticipantesController {
 	}
 	
 	public List<ParticipanteProcesso> getParticipantesAtivos(){
-    	return getPartesAtivas(getProcessoEpa().getParticipantes());
+    	return getPartesAtivas(getProcesso().getParticipantes());
     }
 	
 	private List<ParticipanteProcesso> getPartesAtivas(List<ParticipanteProcesso> participantes) {
@@ -87,7 +85,7 @@ public class ParticipantesController extends AbstractParticipantesController {
 
 	@SuppressWarnings("unchecked")
 	public List<ParticipanteProcesso> getParticipantesProcesso() {
-		return getProcessoEpa() != null ? getProcessoEpa().getParticipantes() : Collections.EMPTY_LIST;
+		return getProcesso() != null ? getProcesso().getParticipantes() : Collections.EMPTY_LIST;
 	}
 
 	public List<TipoParte> getTipoPartes() {
@@ -99,7 +97,7 @@ public class ParticipantesController extends AbstractParticipantesController {
 
     public void removeParticipanteProcesso(ParticipanteProcesso participanteProcesso) {
     	try {
-    		getProcessoEpa().getParticipantes().remove(participanteProcesso);
+    		getProcesso().getParticipantes().remove(participanteProcesso);
 			participanteProcessoManager.remove(participanteProcesso);
 	    	tree.clearTree();
 		} catch (DAOException e) {
@@ -163,6 +161,10 @@ public class ParticipantesController extends AbstractParticipantesController {
         return getNaturezaCategoriaFluxo() != null 
         		&& getNaturezaCategoriaFluxo().getNatureza() != null 
         		&& getNaturezaCategoriaFluxo().getNatureza().getHasPartes();
+    }
+    
+    public static ParticipantesController instance() {
+    	return ComponentUtil.getComponent(ParticipantesController.NAME);
     }
 
 }

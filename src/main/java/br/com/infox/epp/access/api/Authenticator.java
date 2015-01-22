@@ -1,23 +1,8 @@
-/* $Id: Authenticator.java 1242 2011-01-28 14:44:46Z luizruiz $ */
-
-/*
- * IBPM - Ferramenta de produtividade Java Copyright (c) 1986-2009 Infox
- * Tecnologia da Informação Ltda.
- * 
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo sob
- * os termos da GNU GENERAL PUBLIC LICENSE (GPL) conforme publicada pela Free
- * Software Foundation; versão 2 da Licença. Este programa é distribuído na
- * expectativa de que seja útil, porém, SEM NENHUMA GARANTIA; nem mesmo a
- * garantia implícita de COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE
- * ESPECÍFICA.
- * 
- * Consulte a GNU GPL para mais detalhes. Você deve ter recebido uma cópia da
- * GNU GPL junto com este programa; se não, veja em http://www.gnu.org/licenses/
- */
 package br.com.infox.epp.access.api;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,10 +13,13 @@ import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
@@ -39,8 +27,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.faces.RedirectException;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
@@ -64,25 +50,31 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
+@AutoCreate
 @Name(Authenticator.NAME)
+@Scope(ScopeType.SESSION)
 @Install(precedence = Install.APPLICATION)
-public class Authenticator {
+public class Authenticator implements Serializable {
 
-    public static final String NAME = "authenticator";
-
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "authenticator";
     private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
+    
+    @In
+    private UsuarioPerfilManager usuarioPerfilManager;
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
 
     private String newPassword1;
     private String newPassword2;
     private String login;
-    
-    @In
-    private UsuarioPerfilManager usuarioPerfilManager;
 
-    // Variaveis de sessão
     public static final String PAPEIS_USUARIO_LOGADO = "papeisUsuarioLogado";
     public static final String USUARIO_LOGADO = "usuarioLogado";
     public static final String USUARIO_PERFIL_ATUAL = "usuarioLogadoPerfilAtual";
@@ -230,7 +222,7 @@ public class Authenticator {
 
     private boolean loginExists(final Credentials credentials) {
         final String login = credentials.getUsername();
-        final UsuarioLogin user = getUsuarioLoginManager().getUsuarioLoginByLogin(login);
+        final UsuarioLogin user = usuarioLoginManager.getUsuarioLoginByLogin(login);
         return user != null;
     }
 
@@ -239,7 +231,7 @@ public class Authenticator {
         try {
             final LDAPManager ldapManager = (LDAPManager) Component.getInstance(LDAPManager.NAME);
             UsuarioLogin user = ldapManager.autenticarLDAP(credentials.getUsername(), credentials.getPassword(), getProviderUrl(), getDomainName());
-            user = getUsuarioLoginManager().persist(user);
+            usuarioLoginManager.persist(user);
             ldapUserExists = user != null;
         } catch (NamingException | DAOException e) {
             LOG.warn("ldapException", e);
@@ -273,15 +265,11 @@ public class Authenticator {
 
     @Observer(Identity.EVENT_LOGIN_FAILED)
     public void loginFailed(Object obj) throws LoginException {
-        UsuarioLogin usuario = getUsuarioLoginManager().getUsuarioLoginByLogin(Identity.instance().getCredentials().getUsername());
+        UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Identity.instance().getCredentials().getUsername());
         if (usuario != null && !usuario.getAtivo()) {
             throw new LoginException("Este usuário não está ativo.");
         }
         throw new LoginException("Usuário ou senha inválidos.");
-    }
-
-    private UsuarioLoginManager getUsuarioLoginManager() {
-        return (UsuarioLoginManager) Component.getInstance(UsuarioLoginManager.NAME);
     }
 
     @Observer(Identity.EVENT_LOGGED_OUT)
@@ -332,30 +320,6 @@ public class Authenticator {
     public void unAuthenticate() throws DAOException {
         Identity.instance().unAuthenticate();
         limparContexto();
-        anulaActorId();
-    }
-
-    /**
-     * Ao encerrar uma sessao, limpa os processos que o servidor estava
-     * trabalhando
-     * @throws DAOException 
-     * 
-     */
-    @Observer("org.jboss.seam.preDestroyContext.SESSION")
-    public void anulaActorId() throws DAOException {
-        String actorId = Actor.instance().getId();
-        if (actorId != null) {
-            getAuthenticatorService().anulaActorId(actorId);
-        }
-    }
-
-    /**
-     * Ao ligar a aplicação, limpa todos os actorIds dos processos
-     * @throws DAOException 
-     */
-    @Observer("org.jboss.seam.postInitialization")
-    public void anulaTodosActorId() throws DAOException {
-        getAuthenticatorService().anularTodosActorId();
     }
 
     private boolean obterPerfilAtual(UsuarioLogin usuario) throws LoginException {
@@ -423,7 +387,7 @@ public class Authenticator {
         Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);
         Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, getLocalizacoesFilhas(usuarioPerfil.getLocalizacao()));
         Contexts.getSessionContext().remove("mainMenu");
-        Contexts.removeFromAllContexts("tarefasTree");
+        Contexts.removeFromAllContexts(PainelTreeHandler.NAME);
     }
 
     private Set<String> getRolesAtuais(UsuarioPerfil usuarioPerfil) {

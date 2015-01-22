@@ -1,24 +1,24 @@
 package br.com.infox.epp.turno.component;
 
-import java.sql.Time;
+import java.util.Date;
 
 public class HorarioBean {
-    private Time hora;
+    private Date hora;
     private boolean selected;
 
+    public Date getHora() {
+        return this.hora;
+    }
+
     public boolean getSelected() {
-        return selected;
+        return this.selected;
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    public Time getHora() {
-        return hora;
-    }
-
-    public void setHora(Time hora) {
+    public void setHora(final Date hora) {
         this.hora = hora;
+    }
+
+    public void setSelected(final boolean selected) {
+        this.selected = selected;
     }
 }

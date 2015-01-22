@@ -3,7 +3,6 @@ package br.com.infox.epp.processo.action;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.context.ExternalContext;
@@ -19,14 +18,12 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -34,7 +31,11 @@ import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -48,36 +49,49 @@ public class IniciarProcessoAction implements Serializable {
 
     @In
     private IniciarProcessoService iniciarProcessoService;
+    @In
+    private Authenticator authenticator;
 
     private boolean renderedByItem;
     private boolean renderizarCadastroPartes;
     private NaturezaCategoriaFluxo naturezaCategoriaFluxo;
     private Item itemDoProcesso;
-    private ProcessoEpa processoEpa;
+    private Processo processo;
     private List<ItemBean> itemList;
 
     private String viewId;
 
     public void iniciarProcesso() {
     	newProcessoEpa();
+    	if (itemDoProcesso != null) {
+    		addItemDoProcesso(processo);
+    	}
         enviarProcessoParaJbpm();
     }
     
-    public void iniciarProcesso(ProcessoEpa processoEpa) {
-    	setProcessoEpa(processoEpa);
-    	getProcessoEpa().setItemDoProcesso(itemDoProcesso);
+    private void addItemDoProcesso(Processo processo) {
+    	MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+		MetadadoProcesso metadadoProcesso = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, itemDoProcesso.getIdItem().toString());
+		processo.getMetadadoProcessoList().add(metadadoProcesso);
+	}
+
+	public void iniciarProcesso(Processo processo) {
+    	setProcesso(processo);
     	enviarProcessoParaJbpm();
     }
     
     public void newProcessoEpa() {
-		final UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        final Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-        processoEpa = new ProcessoEpa(SituacaoPrazoEnum.SAT, new Date(), "", usuarioLogado, naturezaCategoriaFluxo, localizacao, itemDoProcesso);
+        processo = new Processo();
+        processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        processo.setNumeroProcesso("");
+        processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
+        processo.setLocalizacao(authenticator.getLocalizacaoAtual());
+        processo.setUsuarioCadastro(authenticator.getUsuarioLogado());
     }
 
     private void enviarProcessoParaJbpm() {
         try {
-            iniciarProcessoService.iniciarProcesso(processoEpa);
+            iniciarProcessoService.iniciarProcesso(processo);
             getMessagesHandler().add("Processo inserido com sucesso!");
         } catch (TypeMismatchException tme) {
             sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);
@@ -99,8 +113,7 @@ public class IniciarProcessoAction implements Serializable {
         }
     }
 
-    private void sendIniciarProcessoErrorMessage(final String message,
-            final Exception exception) {
+    private void sendIniciarProcessoErrorMessage(String message, Exception exception) {
         LOG.error(".iniciarProcesso()", exception);
         getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage(message));
     }
@@ -120,6 +133,7 @@ public class IniciarProcessoAction implements Serializable {
                 } else {
                     renderizarCadastroPartes = Boolean.TRUE;
                     renderedByItem = Boolean.FALSE;
+                    ParticipantesController.instance().setNaturezaCategoriaFluxo(ncf);
                 }
             } else {
                 setRenderedByItem(Boolean.TRUE);
@@ -136,6 +150,7 @@ public class IniciarProcessoAction implements Serializable {
         } else {
             renderizarCadastroPartes = Boolean.TRUE;
             renderedByItem = Boolean.FALSE;
+            ParticipantesController.instance().setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
         }
     }
 
@@ -144,7 +159,7 @@ public class IniciarProcessoAction implements Serializable {
             final Redirect redirect = Redirect.instance();
             redirect.setViewId("/Processo/movimentar.seam");
             redirect.setParameter("cid", Conversation.instance().getId());
-            redirect.setParameter("idProcesso", getProcessoEpa().getIdProcesso());
+            redirect.setParameter("idProcesso", getProcesso().getIdProcesso());
             redirect.execute();
         }
     }
@@ -170,15 +185,15 @@ public class IniciarProcessoAction implements Serializable {
         this.renderedByItem = renderedByItem;
     }
 
-    public void setProcessoEpa(final ProcessoEpa processoEpa) {
-        this.processoEpa = processoEpa;
-    }
+    public Processo getProcesso() {
+		return processo;
+	}
 
-    public ProcessoEpa getProcessoEpa() {
-        return processoEpa;
-    }
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+	}
 
-    public List<ItemBean> getItemList() {
+	public List<ItemBean> getItemList() {
         return itemList;
     }
 
@@ -187,17 +202,11 @@ public class IniciarProcessoAction implements Serializable {
     }
 
     public Natureza getNatureza() {
-        if (naturezaCategoriaFluxo != null) {
-            return naturezaCategoriaFluxo.getNatureza();
-        }
-        return null;
+        return naturezaCategoriaFluxo != null ? naturezaCategoriaFluxo.getNatureza() : null;
     }
 
     public boolean necessitaPartes() {
-        if (getNatureza() != null) {
-            return getNatureza().getHasPartes();
-        }
-        return Boolean.FALSE;
+        return getNatureza() != null && getNatureza().getHasPartes();
     }
 
     public boolean isRenderizarCadastroPartes() {
@@ -211,5 +220,4 @@ public class IniciarProcessoAction implements Serializable {
     public void setViewId(String viewId) {
         this.viewId = viewId;
     }
-
 }

@@ -7,8 +7,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.log.Log;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.Log;
+import br.com.infox.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.list.Pageable;
@@ -41,7 +41,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     private List<VariavelClassificacaoDocumento> classificacoesDaVariavel;
     private int page = 1;
     private int pageCount;
-    private int total;
+    private Long total;
     private String nomeClassificacaoDocumento;
     
     public VariavelClassificacaoDocumento getVariavelClassificacaoDocumento() {
@@ -102,7 +102,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
         if (classificacoesDisponiveis == null) {
             Integer idFluxo = fluxo.getIdFluxo();
             this.total = variavelClassificacaoDocumentoManager.totalClassificacoesDisponiveisParaVariavel(idFluxo, currentVariable, tipoDocumento, nomeClassificacaoDocumento);
-            this.pageCount = total / MAX_RESULTS + (total % MAX_RESULTS != 0 ? 1 : 0);
+            this.pageCount = Long.valueOf(total / MAX_RESULTS + (total % MAX_RESULTS != 0 ? 1 : 0)).intValue();
             int start = (this.page - 1) * MAX_RESULTS;
             classificacoesDisponiveis = variavelClassificacaoDocumentoManager.listClassificacoesDisponiveisParaVariavel(idFluxo, currentVariable, tipoDocumento, nomeClassificacaoDocumento, start, MAX_RESULTS);
         }
@@ -154,7 +154,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
         return page < pageCount && pageCount > 1;
     }
     
-    public int getResultCount() {
+    public Long getResultCount() {
         return total;
     }
     

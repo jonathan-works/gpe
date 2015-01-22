@@ -22,7 +22,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoManager;
@@ -60,7 +60,7 @@ public class SigiloProcessoAction implements Serializable {
     private SigiloProcesso sigiloProcesso = new SigiloProcesso();
     private boolean modoInclusao = false;
     private String informacaoTelaSigilo;
-    private ProcessoEpa processo;
+    private Processo processo;
     private Map<Integer, Boolean> usuariosPermissao;
     private boolean sigiloso = false;
 
@@ -136,13 +136,13 @@ public class SigiloProcessoAction implements Serializable {
     public void resetPermissoes() {
         this.buildUsuariosPermissao();
     }
+    
+    public Processo getProcesso() {
+		return processo;
+	}
 
-    public ProcessoEpa getProcesso() {
-        return processo;
-    }
-
-    public void setProcesso(ProcessoEpa processo) {
-        this.processo = processo;
+	public void setProcesso(Processo processo) {
+    	this.processo = processo;
         this.sigiloso = sigiloProcessoManager.isSigiloso(processo);
         this.sigiloProcesso.setSigiloso(isSigiloso());
         buildUsuariosPermissao();

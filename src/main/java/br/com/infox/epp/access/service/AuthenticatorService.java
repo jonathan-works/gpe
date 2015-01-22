@@ -19,8 +19,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
@@ -41,6 +41,8 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
@@ -190,14 +192,6 @@ public class AuthenticatorService implements Serializable {
         throw new LoginException("O usuário " + usuario + " não possui Perfil");
     }
 
-    public void anulaActorId(String actorId) throws DAOException {
-        processoDAO.anulaActorId(actorId);
-    }
-
-    public void anularTodosActorId() throws DAOException {
-        processoDAO.anularTodosActorId();
-    }
-
     public void signatureAuthentication(UsuarioLogin usuario, String signature, String certChain,boolean termoAdesao) throws CertificadoException, LoginException,CertificateException, DAOException {
         final boolean loggedIn = login(usuario.getLogin());
         if (loggedIn) {
@@ -206,6 +200,11 @@ public class AuthenticatorService implements Serializable {
                 pessoaFisica.setCertChain(certChain);
                 pessoaFisicaManager.merge(pessoaFisica);
                 pessoaFisicaManager.flush();
+            } else {
+            	if (!pessoaFisica.getCertChain().equals(certChain)) {
+            		AssinaturaException ex = new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
+            		throw new RedirectToLoginApplicationException(ex.getMessage());
+            	}
             }
             if (signature == null && termoAdesao) {
                 throw new RedirectToLoginApplicationException(Messages.resolveMessage("login.termoAdesao.failed"));

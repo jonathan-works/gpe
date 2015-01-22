@@ -25,7 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import twitter4j.auth.AccessToken;
-import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.twitter.type.TipoTwitterEnum;

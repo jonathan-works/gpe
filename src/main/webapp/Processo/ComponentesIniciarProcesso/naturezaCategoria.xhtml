@@ -30,7 +30,6 @@
                     <a:commandLink
                         rendered="#{not row.hasItens() and row.necessitaPartes()}"
                         action="#{action.onSelectNatCatFluxo(row)}"
-                        oncomplete="#{participantesController.setNaturezaCategoriaFluxo(row)}"
                         execute="@this"
                         render="@all"
                         limitRender="true">
@@ -43,7 +42,7 @@
                         execute="@this"
                         render="@this"
                         limitRender="true"
-                        oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{pathResolver.contextPath}/Painel/list.seam';">
+                        oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processo.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{pathResolver.contextPath}/Painel/list.seam';">
                         <h:graphicImage
                             value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
                     </a:commandLink>

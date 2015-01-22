@@ -32,11 +32,7 @@ public class UnidadeDecisoraMonocraticaManager extends Manager<UnidadeDecisoraMo
 		return getDao().existeUnidadeDecisoraComLocalizacao(idLocalizacao);
 	}
 
-    public UnidadeDecisoraMonocratica findByCodigoLocalizacao(
-            String codigoLocalizacao) {
-        // TODO Auto-generated method stub
-        return null;
+    public UnidadeDecisoraMonocratica findByCodigoLocalizacao(String codigoLocalizacao) {
+    	return getDao().findByCodigoLocalizacao(codigoLocalizacao);
     }
-	
-	
 }

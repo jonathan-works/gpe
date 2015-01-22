@@ -26,8 +26,8 @@ import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
@@ -38,8 +38,8 @@ public class IniciarProcessoService implements Serializable {
 	
 	@In
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
-    @In
-    private ProcessoEpaManager processoEpaManager;
+	@In
+	private ProcessoManager processoManager;
     @In
     private NaturezaManager naturezaManager;
     @In
@@ -50,28 +50,30 @@ public class IniciarProcessoService implements Serializable {
     public static final String TYPE_MISMATCH_EXCEPTION = "Tipo informado não é uma instância de "
             + "br.com.infox.ibpm.entity.Processo";
 
-    public void iniciarProcesso(ProcessoEpa processoEpa) throws DAOException {
-        iniciarProcesso(processoEpa, null);
+    public void iniciarProcesso(Processo processo) throws DAOException {
+        iniciarProcesso(processo, null);
     }
     
-    public void iniciarProcesso(ProcessoEpa processoEpa, Map<String, Object> variaveis) throws DAOException {
-        processoEpaManager.persist(processoEpa);
-        processoEpa.setDataInicio(new Date());
-        Long idProcessoJbpm = iniciarProcessoJbpm(processoEpa, processoEpa.getNaturezaCategoriaFluxo().getFluxo().getFluxo(), variaveis);
-        processoEpa.setIdJbpm(idProcessoJbpm);
-        processoEpa.setNumeroProcesso(String.valueOf(processoEpa.getIdProcesso()));
-        naturezaManager.lockNatureza(processoEpa.getNaturezaCategoriaFluxo().getNatureza());
-        processoEpaManager.update(processoEpa);
-        pastaManager.getByProcesso(processoEpa);
+    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
+    	processo.setDataInicio(new Date());
+    	if (processo.getIdProcesso() == null) {
+    		processoManager.persist(processo);
+    	}
+        Long idProcessoJbpm = iniciarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo(), variaveis);
+        processo.setIdJbpm(idProcessoJbpm);
+        processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
+        naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
+        processoManager.update(processo);
+        pastaManager.getByProcesso(processo);
     }
 
-    private Long iniciarProcessoJbpm(ProcessoEpa processoEpa, String fluxo, Map<String, Object> variaveis) {
+    private Long iniciarProcessoJbpm(Processo processo, String fluxo, Map<String, Object> variaveis) {
         
         BusinessProcess businessProcess = BusinessProcess.instance();
         businessProcess.createProcess(fluxo, false);
         org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
         
-        iniciaVariaveisProcesso(processoEpa, variaveis, processInstance);
+        iniciaVariaveisProcesso(processo, variaveis, processInstance);
         
         processInstance.signal();
         
@@ -90,12 +92,12 @@ public class IniciarProcessoService implements Serializable {
         swimlaneInstance.setPooledActors(actorIds);
     }
 
-    private void iniciaVariaveisProcesso(ProcessoEpa processoEpa,
+    private void iniciaVariaveisProcesso(Processo processo,
             Map<String, Object> variaveis,
             org.jbpm.graph.exe.ProcessInstance processInstance) {
         ContextInstance contextInstance = processInstance.getContextInstance();
-        contextInstance.setVariable("processo", processoEpa.getIdProcesso());
-        createJbpmVariables(processoEpa, contextInstance);
+        contextInstance.setVariable("processo", processo.getIdProcesso());
+        createJbpmVariables(processo, contextInstance);
         if (variaveis != null) {
             for (String variavel : variaveis.keySet()) {
                 contextInstance.setVariable(variavel, variaveis.get(variavel));
@@ -115,9 +117,9 @@ public class IniciarProcessoService implements Serializable {
         }
     }
 
-    private void createJbpmVariables(ProcessoEpa processoEpa,
+    private void createJbpmVariables(Processo processo,
             ContextInstance contextInstance) {
-        List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processoEpa.getNaturezaCategoriaFluxo().getFluxo());
+        List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
             contextInstance.setVariable(variavelProcesso.getNome(), null);
         }

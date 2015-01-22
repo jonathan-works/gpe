@@ -6,12 +6,11 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
@@ -24,11 +23,9 @@ public class ProcessoSearcher {
     private static final LogProvider LOG = Logging.getLogProvider(ProcessoSearcher.class);
 
     @In
-    ProcessoManager processoManager;
+    private ProcessoManager processoManager;
     @In
-    private ProcessoEpaManager processoEpaManager;
-    @In
-    SigiloProcessoService sigiloProcessoService;
+    private SigiloProcessoService sigiloProcessoService;
 
     /**
      * Método redireciona para visualização do processo escolhido no paginador
@@ -56,8 +53,8 @@ public class ProcessoSearcher {
     	if (processo == null) {
     		processo = searchIdProcesso(searchText);
     	}
-        if (processo != null && processo.getIdJbpm() != null 
-        		&& sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoEpaManager.find(processo.getIdProcesso()))) {
+        if (processo != null && processo.getIdJbpm() != null && processo.getProcessoPai() == null
+        		&& sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoManager.find(processo.getIdProcesso()))) {
             visualizarProcesso(processo);
         }
         return false;

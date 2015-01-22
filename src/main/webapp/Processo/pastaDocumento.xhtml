@@ -37,10 +37,10 @@
 				styleClass="folder-ul"
 				rowClass="folder-li"
 				var="pasta">
-				<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pasta.visivelExterno}"
+				<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)}"
 					styleClass="rf-tr-nd">
 					<rich:dropTarget
-						acceptedTypes="doc#{consultaController.processoEpa.idProcesso}"
+						acceptedTypes="doc#{consultaController.processo.idProcesso}"
 						dropListener="#{pastaAction.associaDocumento}"
 						dropValue="#{pasta}"
 						render="documentoListPanel, documentoListSearchForm"
@@ -57,13 +57,13 @@
 						<f:attribute name="pastaToSelect" value="#{pasta}" />
 						<f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
 						<f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
-						<h:outputText value="#{pasta.toString()}" class="folder" />
+						<h:outputText value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}" class="folder" />
 					</a:commandLink>
                     <a:commandLink
                       render="documentoListSearchForm"
                       execute="@form"
                       rendered="#{s:hasPermission('/pages/Pasta/editarPasta', 'access') and pastaAction.canEdit(pasta)}"
-                      onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno});"
+                      onmouseup="setValuesToEditPasta(#{pasta.id}, '#{pasta.nome}', #{pasta.visivelExterno}, #{pasta.visivelNaoParticipante});"
                       limitRender="true">
                       <h:graphicImage
                         styleClass="opacityHover"
@@ -97,7 +97,7 @@
 	
 	<ui:define name="toolBar">
 	    <rich:dragSource
-	      type="doc#{consultaController.processoEpa.idProcesso}"
+	      type="doc#{consultaController.processo.idProcesso}"
 	      dragValue="#{row}"
 	      rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
 	      dragIndicator="indicator">
@@ -131,12 +131,12 @@
 	    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
 	    title="#{eppmessages['button.restaurar']}"
 	    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
-	      <h:form>
-	        <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
-	          <ui:param name="bin" value="#{row.documentoBin}" />
-	          <ui:param name="header" value="#{row.descricao}" />
-	        </ui:include>
-	</h:form>
+	  <h:form>
+	     <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+	       <ui:param name="bin" value="#{row.documentoBin}" />
+	       <ui:param name="header" value="#{row.descricao}" />
+	     </ui:include>
+	  </h:form>
     </ui:define>
     
     <ui:define name="headerToolBar" />
@@ -212,25 +212,31 @@
 		
 		function clearAddPastaFields() {
 			#{rich:jQuery('addPastaInputName')}.val('');
+			#{rich:jQuery('addPastaInputName')}.val('');
+			#{rich:jQuery('addPastaInputVisivelExterno')}.prop('checked', false);
+			#{rich:jQuery('addPastaInputVisivelNaoParticipante')}.prop('checked', false);
 			$('.errorFields.errors').remove();
-		                   $('.errors').removeClass('errors');
+		    $('.errors').removeClass('errors');
 		}
 		
-		function setValuesToEditPasta(id, nome, visivelExterno) {
+		function setValuesToEditPasta(id, nome, visivelExterno, visivelNaoParticipante) {
 			#{rich:component('editPastaPanel')}.show();
 			#{rich:jQuery('hiddenIdPasta')}.val(id);
 			#{rich:jQuery('editPastaInputName')}.val(nome);
 			#{rich:jQuery('editPastaInputVisivelExterno')}.prop('checked', visivelExterno);
+			#{rich:jQuery('editPastaInputVisivelNaoParticipante')}.prop('checked', visivelNaoParticipante);
+			visivelExterno ? #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.hide();
 		}
 		
 		function clearEditPastaFields() {
-			#{rich:jQuery('hiddenIdPasta')}.val(null);
+			#{rich:jQuery('hiddenIdPasta')}.val('');
 			#{rich:jQuery('editPastaInputName')}.val('');
-			#{rich:jQuery('editPastaInputVisivelExterno')}.val(null);
+			#{rich:jQuery('editPastaInputVisivelExterno')}.prop('checked', false);
+			#{rich:jQuery('editPastaInputVisivelNaoParticipante')}.prop('checked', false);
 			$('.errorFields.errors').remove();
-		                   $('.errors').removeClass('errors');
+		    $('.errors').removeClass('errors');
 		}
-
+		
 	</script>
 	
 	<rich:popupPanel
@@ -239,7 +245,7 @@
 		show="false"
 		resizeable="false"
 		minWidth="310"
-		minHeight="230"
+		minHeight="260"
 		header="Adicionar Pasta"
 		onbeforehide="clearAddPastaFields();">
 		<f:facet name="controls">
@@ -261,12 +267,20 @@
 		      id="addPastaInputVisivelExterno"
 		      value="#{pastaAction.visivelExterno}"
 		      required="true"
+              onclick="#{rich:jQuery('addPastaInputVisivelExterno')}.prop('checked') ? #{rich:jQuery('addPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('addPastaDivVisivelNaoParticipante')}.hide();"
 		      label="Usuário externo pode ver?" />
+            <s:div id="addPastaDivVisivelNaoParticipante" style="display: none">
+              <wi:selectBooleanCheckbox
+                id="addPastaInputVisivelNaoParticipante"
+                value="#{pastaAction.visivelNaoParticipante}"
+                required="true"
+                label="Usuário não participante pode ver?" />
+            </s:div>
 		    <wi:commandButton
 		      id="addPastaButton"
 		      action="#{pastaAction.persist()}"
 		      execute="@form"
-		      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{}"
+		      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{clearAddPastaFields()}"
 		      value="Adicionar"
 		      reRender="@form, documentoListSearchForm, pageBodyDialogMessage" />
 		  </h:form>
@@ -277,8 +291,8 @@
 	  moveable="true"
 	  show="false"
 	  resizeable="false"
-	  minWidth="310"
-	  minHeight="230"
+	  minWidth="290"
+	  minHeight="260"
 	  header="Editar Pasta"
 	  onbeforehide="clearEditPastaFields();">
 	  <f:facet name="controls">
@@ -304,12 +318,20 @@
 	      id="editPastaInputVisivelExterno"
 	      value="#{pastaAction.visivelExterno}"
 	      required="true"
+          onclick="#{rich:jQuery('editPastaInputVisivelExterno')}.prop('checked') ? #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.hide();"
 	      label="Usuário externo pode ver?" />
+        <s:div id="editPastaDivVisivelNaoParticipante" style="display: none">
+          <wi:selectBooleanCheckbox
+            id="editPastaInputVisivelNaoParticipante"
+            value="#{pastaAction.visivelNaoParticipante}"
+            required="true"
+            label="Usuário não participante pode ver?" />
+        </s:div>
 	    <wi:commandButton
 	      id="editPastaButton"
 	      action="#{pastaAction.update()}"
 	      execute="@form"
-	      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editPastaPanel')}.hide();}else{}"
+	      oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editPastaPanel')}.hide();}else{clearEditPastaFields()}"
 	      value="Gravar"
 	      reRender="@form, documentoListSearchForm, pageBodyDialogMessage, documentoListPanel" />
 	  </h:form>

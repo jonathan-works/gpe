@@ -15,7 +15,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.dao.SigiloDocumentoPermissaoDAO;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumentoPermissao;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Name(SigiloDocumentoPermissaoManager.NAME)
 @AutoCreate
@@ -39,8 +39,7 @@ public class SigiloDocumentoPermissaoManager extends Manager<SigiloDocumentoPerm
         getDao().inativarPermissoes(sigiloDocumento);
     }
 
-    public List<Documento> getDocumentosPermitidos(
-            ProcessoEpa processo, UsuarioLogin usuario) {
+    public List<Documento> getDocumentosPermitidos(Processo processo, UsuarioLogin usuario) {
         return getDao().getDocumentosPermitidos(processo, usuario);
     }
 }

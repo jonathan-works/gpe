@@ -3,8 +3,8 @@ package br.com.infox.core.util;
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public final class FileUtil {
 

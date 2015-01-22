@@ -1,6 +1,6 @@
 package br.com.infox.epp.unidadedecisora.entity;
 
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_BY_UNIDADE_DECISORA_COLEGIADA;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.*;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_BY_UNIDADE_DECISORA_COLEGIADA_QUERY;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_EXISTE_UDM_BY_LOCALIZACAO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY;
@@ -30,13 +30,13 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
 
 @Entity
 @Table(name = UnidadeDecisoraMonocratica.TABLE_NAME)
 @NamedQueries(value={ @NamedQuery(name=SEARCH_BY_UNIDADE_DECISORA_COLEGIADA, query=SEARCH_BY_UNIDADE_DECISORA_COLEGIADA_QUERY),
 					  @NamedQuery(name=SEARCH_UDM_BY_USUARIO, query=SEARCH_UDM_BY_USUARIO_QUERY),
-					  @NamedQuery(name=SEARCH_EXISTE_UDM_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY)})
+					  @NamedQuery(name=SEARCH_EXISTE_UDM_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY),
+					  @NamedQuery(name=FIND_UDM_BY_CODIGO_LOCALIZACAO, query=FIND_UDM_BY_CODIGO_LOCALIZACAO_QUERY)})
 public class UnidadeDecisoraMonocratica implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -64,9 +64,6 @@ public class UnidadeDecisoraMonocratica implements Serializable {
     @OrderBy("unidadeDecisoraColegiada ASC")
     private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 
-	@OneToMany(mappedBy="decisoraMonocratica", fetch=FetchType.LAZY)
-	private List<ProcessoEpa> processoEpaList;
-	
 	public Integer getIdUnidadeDecisoraMonocratica() {
 		return idUnidadeDecisoraMonocratica;
 	}
@@ -115,14 +112,6 @@ public class UnidadeDecisoraMonocratica implements Serializable {
             unidadeDecisoraColegiadaList.add(colegiadaMonocratica.getUnidadeDecisoraColegiada());
         }
         return unidadeDecisoraColegiadaList;
-    }
-
-    public List<ProcessoEpa> getProcessoEpaList() {
-        return processoEpaList;
-    }
-
-    public void setProcessoEpaList(List<ProcessoEpa> processoEpaList) {
-        this.processoEpaList = processoEpaList;
     }
 
     @Override

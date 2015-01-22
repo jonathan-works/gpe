@@ -12,6 +12,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -26,74 +27,87 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
 
     public static final String NAME = "documentoManager";
     private static final long serialVersionUID = 1L;
-    
+
     @In
     private DocumentoBinManager documentoBinManager;
     @In
     private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
     @In
     private PastaManager pastaManager;
+    @In
+    private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 
-    public String getModeloDocumentoByIdDocumento(Integer idDocumento) {
+    public String getModeloDocumentoByIdDocumento(final Integer idDocumento) {
         return getDao().getModeloDocumentoByIdDocumento(idDocumento);
     }
 
-    public String valorDocumento(Integer idDocumento) {
+    public String valorDocumento(final Integer idDocumento) {
         return find(idDocumento).getDocumentoBin().getModeloDocumento();
     }
-    
-    public void exclusaoRestauracaoLogicaDocumento(Documento documento, String motivo, 
-    		TipoAlteracaoDocumento tipoAlteracaoDocumento) throws DAOException{
-    	historicoStatusDocumentoManager.gravarHistoricoDocumento(motivo, tipoAlteracaoDocumento, documento);
-    	if (tipoAlteracaoDocumento == TipoAlteracaoDocumento.E) {
-    		documento.setExcluido(true);
-    	} else if (tipoAlteracaoDocumento == TipoAlteracaoDocumento.R) {
-    		documento.setExcluido(false);
-    	}
-		update(documento);
+
+    public void exclusaoRestauracaoLogicaDocumento(final Documento documento,
+            final String motivo,
+            final TipoAlteracaoDocumento tipoAlteracaoDocumento)
+            throws DAOException {
+        this.historicoStatusDocumentoManager.gravarHistoricoDocumento(motivo,
+                tipoAlteracaoDocumento, documento);
+        if (tipoAlteracaoDocumento == TipoAlteracaoDocumento.E) {
+            documento.setExcluido(true);
+        } else if (tipoAlteracaoDocumento == TipoAlteracaoDocumento.R) {
+            documento.setExcluido(false);
+        }
+        update(documento);
     }
-    
-    public Documento gravarDocumentoNoProcesso(Processo processo,
-            Documento documento) throws DAOException {
+
+    public Documento gravarDocumentoNoProcesso(final Processo processo,
+            final Documento documento) throws DAOException {
         documento.setProcesso(processo);
         documento.setNumeroDocumento(getNextNumeracao(documento));
-        documento.setDocumentoBin(documentoBinManager.createProcessoDocumentoBin(documento));
+        documento.setDocumentoBin(this.documentoBinManager
+                .createProcessoDocumentoBin(documento));
         documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         if (TaskInstance.instance() != null) {
-            long idJbpmTask = TaskInstance.instance().getId();
+            final long idJbpmTask = TaskInstance.instance().getId();
             documento.setIdJbpmTask(idJbpmTask);
         }
-        Pasta padrao = pastaManager.getDefaultFolder(processo);
+        final Pasta padrao = this.pastaManager.getDefaultFolder(processo);
         documento.setPasta(padrao);
 
         persist(documento);
         return documento;
     }
 
-    public Documento createDocumento(Processo processo,
-            String label, DocumentoBin bin,
-            ClassificacaoDocumento classificacaoDocumento) throws DAOException {
-        Documento doc = new Documento();
+    public Documento createDocumento(final Processo processo,
+            final String label, final DocumentoBin bin,
+            final ClassificacaoDocumento classificacaoDocumento)
+            throws DAOException {
+        final Documento doc = new Documento();
         doc.setDocumentoBin(bin);
         doc.setDataInclusao(new Date());
         doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         doc.setProcesso(processo);
         doc.setDescricao(label);
-        doc.setExcluido(false);
+        doc.setExcluido(Boolean.FALSE);
+        // TODO adicionar a classificação de documento na lista de classes
+        // gerenciadas antes de entrar aqui
+        this.classificacaoDocumentoManager.refresh(classificacaoDocumento);
         doc.setClassificacaoDocumento(classificacaoDocumento);
-        doc.setNumeroDocumento(getNextNumeracao(classificacaoDocumento, processo));
+        doc.setNumeroDocumento(getNextNumeracao(classificacaoDocumento,
+                processo));
         return getDao().persist(doc);
     }
-    
-    public List<Documento> getDocumentoByTask(org.jbpm.taskmgmt.exe.TaskInstance task) {
+
+    public List<Documento> getDocumentoByTask(
+            final org.jbpm.taskmgmt.exe.TaskInstance task) {
         return getDao().getDocumentoListByTask(task);
     }
 
-    public Integer getNextNumeracao(ClassificacaoDocumento tipoProcessoDoc,
-            Processo processo) {
+    public Integer getNextNumeracao(
+            final ClassificacaoDocumento tipoProcessoDoc,
+            final Processo processo) {
         Integer result = null;
-        if (tipoProcessoDoc.getTipoNumeracao().equals(TipoNumeracaoEnum.S)) {
-            Integer next = getDao().getNextSequencial(processo);
+        if (TipoNumeracaoEnum.S.equals(tipoProcessoDoc.getTipoNumeracao())) {
+            final Integer next = getDao().getNextSequencial(processo);
             if (next == null) {
                 result = 1;
             } else {
@@ -103,15 +117,28 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         return result;
     }
 
-    public Integer getNextNumeracao(Documento documento) {
-        return getNextNumeracao(documento.getClassificacaoDocumento(), documento.getProcesso());
+    public Integer getNextNumeracao(final Documento documento) {
+        return getNextNumeracao(documento.getClassificacaoDocumento(),
+                documento.getProcesso());
     }
 
-    public List<Documento> getAnexosPublicos(long idJbpmTask) {
+    public List<Documento> getAnexosPublicos(final long idJbpmTask) {
         return getDao().getAnexosPublicos(idJbpmTask);
     }
+
+    public List<Documento> getListDocumentoByProcesso(final Processo processo) {
+        return getDao().getListDocumentoByProcesso(processo);
+    }
     
-    public List<Documento> getListDocumentoByProcesso(Processo processo){
-    	return getDao().getListDocumentoByProcesso(processo);
+    public int getTotalDocumentosProcesso(Processo processo) {
+    	return getDao().getTotalDocumentosProcesso(processo);
+    }
+    
+    public List<Documento> getDocumentosSessaoAnexar(Processo processo, List<Integer> idsDocumentos) {
+    	return getDao().getDocumentosSessaoAnexar(processo, idsDocumentos);
+    }
+    
+    public List<Documento> getDocumentosProcessoComClassificacao(Processo processo, ClassificacaoDocumento classificacao) {
+    	return getDao().getDocumentosProcessoComClassificacao(processo, classificacao);
     }
 }

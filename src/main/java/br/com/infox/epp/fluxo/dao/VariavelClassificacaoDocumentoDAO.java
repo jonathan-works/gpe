@@ -5,7 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -64,35 +69,6 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
         }
     }
     
-    public List<ClassificacaoDocumento> listClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, int start, int max) {
-        String hql = VariavelClassificacaoDocumentoQuery.CLASSIFICACOES_DISPONIVEIS_PARA_VARIAVEL_BASE_QUERY;
-        if (nomeClassificacaoDocumento != null) {
-            hql += VariavelClassificacaoDocumentoQuery.NOME_CLASSIFICACAO_FILTER;
-        }
-        hql += VariavelClassificacaoDocumentoQuery.ORDER_BY_NOME_CLASSIFICACAO;
-        TypedQuery<ClassificacaoDocumento> query = getEntityManager().createQuery(hql, ClassificacaoDocumento.class);
-        query.setFirstResult(start).setMaxResults(max)
-            .setParameter(VariavelClassificacaoDocumentoQuery.PARAM_ID_FLUXO, idFluxo)
-            .setParameter(VariavelClassificacaoDocumentoQuery.PARAM_VARIAVEL, variavel)
-            .setParameter(VariavelClassificacaoDocumentoQuery.PARAM_TIPO_DOCUMENTO, tipoDocumento);
-        if (nomeClassificacaoDocumento != null) {
-            query.setParameter(VariavelClassificacaoDocumentoQuery.PARAM_NOME_CLASSIFICACAO_DOCUMENTO, nomeClassificacaoDocumento);
-        }
-        return query.getResultList();
-    }
-    
-    public int totalClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento) {
-        Map<String, Object> params = new HashMap<>();
-        params.put(VariavelClassificacaoDocumentoQuery.PARAM_ID_FLUXO, idFluxo);
-        params.put(VariavelClassificacaoDocumentoQuery.PARAM_VARIAVEL, variavel);
-        params.put(VariavelClassificacaoDocumentoQuery.PARAM_TIPO_DOCUMENTO, tipoDocumento);
-        String hql = VariavelClassificacaoDocumentoQuery.TOTAL_CLASSIFICACOES_DISPONIVEIS_PARA_VARIAVEL_QUERY;
-        if (nomeClassificacaoDocumento != null) {
-            hql += VariavelClassificacaoDocumentoQuery.NOME_CLASSIFICACAO_FILTER;
-            params.put(VariavelClassificacaoDocumentoQuery.PARAM_NOME_CLASSIFICACAO_DOCUMENTO, nomeClassificacaoDocumento);
-        }
-        return ((Number) getSingleResult(hql, params)).intValue();
-    }
     
     public VariavelClassificacaoDocumento findVariavelClassificacao(Integer idFluxo, String variavel, ClassificacaoDocumento classificacao) {
         Map<String, Object> params = new HashMap<>();
@@ -100,5 +76,55 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
         params.put(VariavelClassificacaoDocumentoQuery.PARAM_VARIAVEL, variavel);
         params.put(VariavelClassificacaoDocumentoQuery.PARAM_CLASSIFICACAO_DOCUMENTO, classificacao);
         return getNamedSingleResult(VariavelClassificacaoDocumentoQuery.FIND_VARIAVEL_CLASSIFICACAO, params);
+    }
+    
+    public List<ClassificacaoDocumento> listClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, int start, int max) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<ClassificacaoDocumento> query = cb.createQuery(ClassificacaoDocumento.class);
+    	Root<ClassificacaoDocumento> from = query.from(ClassificacaoDocumento.class);
+    	
+    	query.select(from);
+    	query.orderBy(cb.asc(from.get("descricao")));
+    	
+    	query.where(createRestrictions(cb, query, from, idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento));
+    	
+    	return getEntityManager().createQuery(query).getResultList();
+    }
+    
+    public Long totalClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Long> query = cb.createQuery(Long.class);
+    	Root<ClassificacaoDocumento> from = query.from(ClassificacaoDocumento.class);
+    	query.select(cb.count(from));
+    	
+    	query.where(createRestrictions(cb, query, from, idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento));
+    	
+    	return getEntityManager().createQuery(query).getSingleResult();
+    }
+    
+    private Predicate createRestrictions(CriteriaBuilder cb, CriteriaQuery<?> query, Root<ClassificacaoDocumento> from, 
+    		Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento) {
+		Predicate predicate = cb.and(cb.equal(from.get("ativo"), true),
+    			cb.equal(from.get("sistema"), false),
+    			from.get("inTipoDocumento").in(TipoDocumentoEnum.T, tipoDocumento));
+    	
+    	Subquery<VariavelClassificacaoDocumento> subquery = query.subquery(VariavelClassificacaoDocumento.class);
+    	Root<VariavelClassificacaoDocumento> subFrom = subquery.from(VariavelClassificacaoDocumento.class);
+    	subquery.select(subFrom);
+    	subquery.where(cb.equal(subFrom.get("classificacaoDocumento"), from),
+    			cb.equal(subFrom.get("removerNaPublicacao"), false),
+    			cb.equal(subFrom.get("variavel"), variavel),
+    			cb.equal(subFrom.get("fluxo"), idFluxo));
+    	
+    	predicate = cb.and(predicate, cb.not(cb.exists(subquery)), createAdditionalRestrictions(cb, query, from));
+    	if (nomeClassificacaoDocumento != null) {
+    		Path<String> descricao = from.get("descricao");
+    		predicate = cb.and(predicate, cb.like(cb.lower(descricao), nomeClassificacaoDocumento.toLowerCase()));
+    	}
+		return predicate;
+	}
+    
+    protected Predicate createAdditionalRestrictions(CriteriaBuilder cb, CriteriaQuery<?> query, Root<ClassificacaoDocumento> from) {
+    	return cb.and();
     }
 }

@@ -4,11 +4,13 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCES
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_DEFAULT_BY_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA_QUERY;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,6 +24,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.Processo;
@@ -30,9 +33,10 @@ import br.com.infox.epp.processo.entity.Processo;
 @Table(name = Pasta.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = GET_BY_PROCESSO, query = GET_BY_PROCESSO_QUERY),
-    @NamedQuery(name = GET_DEFAULT_BY_PROCESSO, query = GET_DEFAULT_BY_PROCESSO_QUERY)
+    @NamedQuery(name = GET_DEFAULT_BY_PROCESSO, query = GET_DEFAULT_BY_PROCESSO_QUERY),
+    @NamedQuery(name = TOTAL_DOCUMENTOS_PASTA, query = TOTAL_DOCUMENTOS_PASTA_QUERY)
 })
-public class Pasta implements Serializable {
+public class Pasta implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_pasta";
@@ -57,7 +61,11 @@ public class Pasta implements Serializable {
     @NotNull
     @Column(name = "in_visivel_externo", nullable = false)
     private Boolean visivelExterno = Boolean.FALSE;
-    
+
+    @NotNull
+    @Column(name = "in_visivel_nao_participante", nullable = false)
+    private Boolean visivelNaoParticipante = Boolean.FALSE;
+
     @NotNull
     @Column(name = "in_removivel", nullable = false)
     private Boolean removivel;
@@ -66,7 +74,7 @@ public class Pasta implements Serializable {
     @Column(name = "in_sistema", nullable = false)
     private Boolean sistema;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
     private List<Documento> documentosList; 
 
     public Integer getId() {
@@ -91,6 +99,14 @@ public class Pasta implements Serializable {
 
     public void setVisivelExterno(Boolean visivelExterno) {
         this.visivelExterno = visivelExterno;
+    }
+
+    public Boolean getVisivelNaoParticipante() {
+        return visivelNaoParticipante;
+    }
+
+    public void setVisivelNaoParticipante(Boolean visivelNaoParticipante) {
+        this.visivelNaoParticipante = visivelNaoParticipante;
     }
 
     public String getNome() {
@@ -126,6 +142,25 @@ public class Pasta implements Serializable {
     }
     
     public String toString() {
-        return documentosList != null ? nome + " (" + documentosList.size() + ")" : nome + " (0)";
+    	return nome;
+    }
+    
+    public Pasta makeCopy() throws CloneNotSupportedException {
+    	Pasta cPasta = (Pasta) super.clone();
+    	cPasta.setId(null);
+    	cPasta.setProcesso(null);
+    	List<Documento> cDocumentos = new ArrayList<>();
+    	for (Documento documento : getDocumentosList()) {
+    		Documento cDoc = documento.makeCopy();
+    		cDoc.setPasta(cPasta);
+    		cDocumentos.add(cDoc);
+    	}
+    	cPasta.setDocumentosList(cDocumentos);
+    	return cPasta;
+    }
+    
+    @Transient
+    public String getTemplateNomePasta() {
+    	return getNome() + " ({0})";
     }
 }

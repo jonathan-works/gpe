@@ -4,6 +4,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.component.UIComponent;
@@ -15,8 +16,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.richfaces.component.UICollapsiblePanel;
 import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
@@ -119,7 +120,11 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
     @Override
     public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
         // Considerando single selection
-        Object selectionKey = new ArrayList<Object>(ev.getNewSelection()).get(0);
+    	Iterator<Object> it = ev.getNewSelection().iterator();
+    	if (!it.hasNext()) {
+    		return;
+    	}
+        Object selectionKey = it.next();
         UITree tree = (UITree) ev.getSource();
         treeId = ":" + tree.getClientId();
 

@@ -5,15 +5,20 @@ import static java.text.MessageFormat.format;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.def.ActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 
-import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -23,7 +28,7 @@ public class StatusHandler implements ActionHandler, CustomAction {
 
 	private static final LogProvider LOG = Logging.getLogProvider(StatusHandler.class);
 	private static final long serialVersionUID = 1L;
-	private Integer statusProcesso;
+	private Integer idStatusProcesso;
 
 	public StatusHandler() {}
 	
@@ -32,21 +37,20 @@ public class StatusHandler implements ActionHandler, CustomAction {
 		Matcher matcher = pattern.matcher(s);
 		if (matcher.find()) {
 			String status = matcher.group(1);
-			this.statusProcesso = Integer.parseInt(status);
+			this.idStatusProcesso = Integer.parseInt(status);
 		}
 	}
 	
 	@Override
 	public void execute(ExecutionContext executionContext) throws Exception {
-		ProcessoEpaManager processoEpaManager = ComponentUtil.getComponent(ProcessoEpaManager.NAME);
+		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
 		StatusProcessoManager statusProcessoManager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
 		
 		try {
-			StatusProcesso status = statusProcessoManager.find(statusProcesso);
-			ProcessoEpa processoEpa = processoEpaManager.find(Integer.parseInt(executionContext.getContextInstance().getVariable("processo").toString(), 10));
-			processoEpa.setStatusProcesso(status);
+			StatusProcesso status = statusProcessoManager.find(idStatusProcesso);
+			Processo processo = processoManager.find(Integer.parseInt(executionContext.getContextInstance().getVariable("processo").toString(), 10));
+			setStatusProcesso(processo, status);
 			
-			processoEpaManager.update(processoEpa);
 			String varName = format("{0}:{1}", VariableType.STRING, "statusProcesso");
 			
 			ContextInstance contextInstance = executionContext.getProcessInstance().getContextInstance();
@@ -57,7 +61,7 @@ public class StatusHandler implements ActionHandler, CustomAction {
 			} else {
 				contextInstance.createVariable(varName, nome, token);
 			}
-			processoEpaManager.flush();
+			processoManager.flush();
 		} catch (Exception e) {
 			LOG.error("Falha na atribuição de status do processo", e);
 		}
@@ -72,4 +76,18 @@ public class StatusHandler implements ActionHandler, CustomAction {
         }
         return configuration;
     }
+    
+    private void setStatusProcesso(Processo processo, StatusProcesso status) throws DAOException {
+        MetadadoProcesso statusMetadado = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO);
+        MetadadoProcessoManager metadadoManager = ComponentUtil.getComponent(MetadadoProcessoManager.NAME);
+        if (statusMetadado != null) {
+            statusMetadado.setValor(status.getIdStatusProcesso().toString());
+            metadadoManager.update(statusMetadado);
+        } else {
+        	MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+        	metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, status.getIdStatusProcesso().toString());
+            metadadoManager.persist(statusMetadado);
+        }
+    }
+
 }

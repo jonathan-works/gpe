@@ -22,7 +22,8 @@
       header="#{tableTitle}"
       id="#{id}Panel"
       bodyClass="dtable-p-b"
-      styleClass="dtable-p #{panelStyleClass}"
+      style="#{panelStyle}"
+      styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}"
     >
       <rich:dataTable
         value="#{values}"

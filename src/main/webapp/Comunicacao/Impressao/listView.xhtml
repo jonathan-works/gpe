@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">#{eppmessages['comunicacao.impressao.titlePage']}</ui:define>
+	<ui:define name="body">
+		<a:jsFunction name="selectProcesso" immediate="true"
+		      execute="@this" render="@this"
+		      limitRender="true" status=":status" >
+			<a:param name="idProcesso" assignTo="#{impressaoComunicacaoAction.selected}"
+				     converter="javax.faces.Integer" />
+		</a:jsFunction>
+		
+		<rich:panel id="panelImpressaoComunicacoes" header="#{eppmessages['comunicacao.impressao.panelHeader']}" >
+			<wi:dataTable id="comunicacoes" bean="#{impressaoComunicacaoList}"
+				values="#{impressaoComunicacaoList.list(15)}"
+				tableTitle="#{eppmessages['comunicacao.impressao.tableTitle']}" rowId="#{row.idProcesso}"
+				hideOrder="true" showGrid="#{impressaoComunicacaoList.showDataTable}">
+
+                <ui:define name="toolBar">
+					<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png"
+							title="#{eppmessages['comunicacao.impressao.imprimirComunicacao']}" 
+							onclick="#{rich:component('imprimirComunicacaoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
+							styleClass="pointerRow opacityHover">
+					</h:graphicImage>
+                    <h:graphicImage url="#{wiSkin.imageFolder}/print.png"
+                            title="#{eppmessages['comunicacao.impressao.marcarImpresso']}" 
+                            onclick="#{rich:component('marcarImpressoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
+                            styleClass="pointerRow opacityHover"
+                            rendered="#{!impressaoComunicacaoList.impresso}">
+                    </h:graphicImage>
+				</ui:define>
+				
+				<ui:define name="headerToolBar" />
+				
+				<ui:define name="searchForm">
+					<wi:searchForm formId="pesquisaImpressaoSearchForm" 
+								   formTitle="#{eppmessages['searchForm.title']}"
+                                   searchAction="#{impressaoComunicacaoList.showDataTable()}"
+                                   clearAction="#{impressaoComunicacaoList.hideDataTable()}" >
+						<wi:selectOneMenuEnum id="meioExpedicao"
+							label="#{eppmessages['comunicacao.impressao.meioExpedicao']}"
+							value="#{impressaoComunicacaoList.meioExpedicao}" 
+							items="#{impressaoComunicacaoList.meiosExpedicao}" 
+							showLabelTodos="true" />
+							
+                        <wi:inputDataPeriodo id="dataAssinatura"
+                            label="#{eppmessages['comunicacao.impressao.dataAssinatura']}"
+                            valueDateFrom="#{impressaoComunicacaoList.dataInicio}"
+                            valueDateTo="#{impressaoComunicacaoList.dataFim}" />
+
+                        <wi:selectBooleanRadio id="impresso"
+                            label="#{eppmessages['comunicacao.impressao.impresso']}"
+                            value="#{impressaoComunicacaoList.impresso}"
+                            selected="false" />
+					</wi:searchForm>
+				</ui:define>
+	
+				<wi:columnOutputText id="numeroProcesso"
+					columnHeader="#{eppmessages['comunicacao.impressao.numeroProcesso']}"
+					value="#{row.numeroProcesso}" />
+				
+				<wi:columnOutputText id="tipoComunicacao"
+					columnHeader="#{eppmessages['comunicacao.impressao.tipoComunicacao']}"
+					value="#{impressaoComunicacaoAction.getTipoComunicacao(row)}" />
+					
+				<wi:columnOutputText id="impresso"
+					columnHeader="#{eppmessages['comunicacao.impressao.impresso']}"
+					value="#{impressaoComunicacaoAction.getImpresso(row) ? 'Sim' : 'Não'}" />
+					
+				<wi:columnOutputText id="meioExpedicao"
+					columnHeader="#{eppmessages['comunicacao.impressao.meioExpedicao']}"
+					value="#{impressaoComunicacaoAction.getMeioExpedicao(row).label}" />
+					
+				<wi:columnDateTime id="dataAssinatura"
+					columnHeader="#{eppmessages['comunicacao.impressao.dataAssinatura']}"
+					value="#{impressaoComunicacaoAction.getDataAssinatura(row)}" 
+					showTime="true" />
+					
+			</wi:dataTable>
+		</rich:panel>
+		
+		<rich:popupPanel id="imprimirComunicacaoPopUp" shadowDepth="1" moveable="false" onshow="onShowPopUp();">
+			<f:facet name="header">
+            	<h:outputText value="#{eppmessages['comunicacao.impressao.imprimirComunicacao']}" />
+	        </f:facet>
+	        <f:facet name="controls">
+	            <h:graphicImage value="#{wiSkin.imageFolder}/closeMP.gif" 
+	            		onclick="#{rich:component('imprimirComunicacaoPopUp')}.hide();"/>
+	        </f:facet>
+	        <h:form id="formImpressao">
+	        	<wi:selectBooleanCheckbox id="incluirAnexos"
+	        		label="#{eppmessages['comunicacao.impressao.incluirAnexos']}"
+	        		value="#{impressaoComunicacaoAction.impressaoCompleta}" />
+	        	
+	        	<div/>
+	        	<a:commandButton id="buttonImprimir" 
+	        		styleClass="buttons" 
+	        		value="#{eppmessages['comunicacao.impressao.imprimirComunicacao']}"
+	        		onmouseup="#{rich:component('imprimirComunicacaoPopUp')}.hide();"
+	        		oncomplete="window.open('#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?cid=#{conversation.id}', '_blank');" 
+	        		render=":panelImpressaoComunicacoes">
+	        	</a:commandButton>
+	        		
+	        </h:form>
+		</rich:popupPanel>
+		
+        <rich:popupPanel id="marcarImpressoPopUp" shadowDepth="1" moveable="false">
+            <f:facet name="header">
+                <h:outputText value="#{eppmessages['comunicacao.impressao.marcarImpresso']}" />
+            </f:facet>
+            <f:facet name="controls">
+                <h:graphicImage value="#{wiSkin.imageFolder}/closeMP.gif" 
+                        onclick="#{rich:component('marcarImpressoPopUp')}.hide();"/>
+            </f:facet>
+            <wi:outputText id="marcarImpressoLabelConfirm"
+                label="#{eppmessages['comunicacao.impressao.marcarImpressoLabel']}"
+                value="#{eppmessages['comunicacao.impressao.marcarImpressoValue']}" />
+            <h:form id="formMarcarImpresso">
+	        	<a:commandButton id="buttonMarcarImpresso" 
+	        		styleClass="buttons" 
+	        		value="#{eppmessages['comunicacao.impressao.marcarImpressoConfirmar']}"
+	        		onmouseup="#{rich:component('marcarImpressoPopUp')}.hide();"
+	        		action="#{impressaoComunicacaoAction.marcarComoImpresso()}"
+	        		render=":panelImpressaoComunicacoes">
+	        	</a:commandButton>
+	        </h:form>
+        </rich:popupPanel>
+        
+		<script type="text/javascript">
+			function onShowPopUp() {
+				document.getElementById('formImpressao:incluirAnexosDecoration:incluirAnexos').checked=false;
+			}
+		</script>
+	</ui:define>
+
+</ui:composition>

@@ -9,7 +9,7 @@
 
   <h:form>
     <ui:param name="idProcesso" value="#{row.idProcesso}" />
-    <ui:param name="tarefaId" value="#{painelUsuarioHome.tarefaId}" />
+    <ui:param name="tarefaId" value="#{painelUsuarioController.tarefaId}" />
     <ui:param name="owner"
       value="#{userHandler.getActorIdTarefaAtual(idProcesso)}" />
 
@@ -27,7 +27,7 @@
         </rich:dragIndicator>
       </rich:dragSource>
 
-      <h:graphicImage url="#{wiSkin.imageFolder}/annotate.gif" title="#{eppmessages['caixa.moverCaixa']}" />
+      <h:graphicImage url="#{wiSkin.imageFolder}/annotate.png" title="#{eppmessages['caixa.moverCaixa']}" />
 
     </a:outputPanel>
 

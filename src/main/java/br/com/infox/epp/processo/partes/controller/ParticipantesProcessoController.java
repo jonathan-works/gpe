@@ -10,7 +10,7 @@ import org.jboss.seam.security.Identity;
 import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
@@ -38,8 +38,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     }
     
     @Override
-    public void setProcessoEpa(ProcessoEpa processoEpa) {
-    	super.setProcessoEpa(processoEpa);
+    public void setProcesso(Processo processo) {
+    	super.setProcesso(processo);
     	clearParticipanteProcesso();
     	if (!podeAdicionarPartesFisicas() && podeAdicionarPartesJuridicas()) {
 			setTipoPessoa(TipoPessoaEnum.J);
@@ -47,15 +47,18 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     }
     
     private Natureza getNatureza() {
-        return getProcessoEpa().getNaturezaCategoriaFluxo().getNatureza();
+        return getProcesso().getNaturezaCategoriaFluxo().getNatureza();
     }
     
     public List<ParticipanteProcesso> getParticipantes() {
-    	return getProcessoEpa().getParticipantes();
+    	if (getProcesso() != null) {
+    		return getProcesso().getParticipantes();
+    	}
+    	return null;
     }
     
     public List<ParticipanteProcesso> getParticipantesAtivos() {
-    	return getPartesAtivas(getProcessoEpa().getParticipantes());
+    	return getPartesAtivas(getProcesso().getParticipantes());
     }
 
     private List<ParticipanteProcesso> filtrar(List<ParticipanteProcesso> participantes, 
@@ -91,12 +94,12 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     
     public boolean podeInativarPartesFisicas() {
         return Identity.instance().hasPermission(RECURSO_EXCLUIR, "access")
-        		&& getPartesAtivas(filtrar(getProcessoEpa().getParticipantes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
+        		&& getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
     }
 
     public boolean podeInativarPartesJuridicas() {
         return Identity.instance().hasPermission(RECURSO_EXCLUIR, "access")
-        		&& getPartesAtivas(filtrar(getProcessoEpa().getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
+        		&& getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
     }
     
     public List<TipoParte> getTipoPartes() {
@@ -121,7 +124,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         return getNatureza().getHasPartes()
                 && !apenasPessoaJuridica()
                 && Identity.instance().hasPermission(RECURSO_ADICIONAR, "access")
-                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcessoEpa().getParticipantes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
+                && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
     }
 
     @Override
@@ -129,7 +132,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         return getNatureza().getHasPartes()
                 && !apenasPessoaFisica()
                 && Identity.instance().hasPermission(RECURSO_ADICIONAR, "access")
-                && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcessoEpa().getParticipantes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
+                && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
     }
 
     @Override

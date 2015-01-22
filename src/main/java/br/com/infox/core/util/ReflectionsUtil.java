@@ -2,11 +2,13 @@ package br.com.infox.core.util;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public final class ReflectionsUtil {
 
@@ -33,11 +35,12 @@ public final class ReflectionsUtil {
         return null;
     }
 
-    public static Object getValue(Object o, String fieldName) {
+    @SuppressWarnings("unchecked")
+	public static <E> E getValue(Object o, String fieldName) {
         try {
             Field field = getField(o, fieldName);
             if (field != null) {
-                return field.get(o);
+                return (E) field.get(o);
             }
         } catch (Exception e) {
             LOG.error(".getValue()", e);
@@ -46,7 +49,7 @@ public final class ReflectionsUtil {
     }
 
     public static String getStringValue(Object o, String fieldName) {
-        return (String) getValue(o, fieldName);
+        return getValue(o, fieldName);
     }
 
     public static void setValue(Object o, String fieldName, Object value) {
@@ -79,6 +82,34 @@ public final class ReflectionsUtil {
 
         }
         return false;
+    }
+    
+    public static Object newInstance(Class<?> clazz, Class<?> parameterType, Object value) {
+    	return newInstance(clazz, new Class<?>[]{parameterType} , new Object[] {value});
+    }
+    
+    public static Object newInstance(Class<?> clazz, Class<?>[] parameterTypes, Object[] values) {
+    	Object ret = null;
+		try {
+			if (clazz.isEnum()) {
+				return newInstanceEnum(clazz, values[0]);
+			} else {
+				return newInstanceClass(clazz, parameterTypes, values);
+			}
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			LOG.debug(".newInstance", e);
+		}
+    	return ret;
+    }
+    
+    private static Object newInstanceEnum(Class<?> clazz, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    	Method method = clazz.getMethod("valueOf", String.class);
+		return method.invoke(null, value);
+    }
+    
+    private static Object newInstanceClass(Class<?> clazz, Class<?>[] parameterTypes, Object[] values) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
+    	Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+		return constructor.newInstance(values);
     }
 
 }

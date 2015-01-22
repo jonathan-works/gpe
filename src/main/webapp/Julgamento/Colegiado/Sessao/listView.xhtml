@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    
+    <ui:define name="head">
+    	<h:outputScript library="js" name="components.js" />
+    </ui:define>
+
+    <ui:define name="title">#{eppmessages['sessaoJulgamento.titlePage']}</ui:define>
+    <ui:param name="home" value="#{sessaoJulgamentoCrudAction}" />
+    
+    <ui:define name="searchGrid">
+    
+        <wi:dataTable values="#{sessaoJulgamentoList.list(15)}" 
+       	 	bean="#{sessaoJulgamentoList}"
+            tableTitle="#{eppmessages['sessaoJulgamento.tableTitle']}" 
+            id="sessaoJulgamentoList"
+            rowId="#{row.id}">
+            
+            <ui:define name="searchForm">
+            
+                <wi:searchForm formId="pesquisarSessaoJulgamentoForm"
+                    formTitle="#{eppmessages['searchForm.title']}" >
+                    
+                    <wi:selectOneMenuEntity id="colegiada" 
+                    	items="#{sessaoJulgamentoList.colegiadas}"
+                    	label="#{eppmessages['sala.colegiado']}"
+                    	value="#{sessaoJulgamentoList.colegiada}" 
+                    	rendered="#{s:hasRole('admin')}" >
+                    	<a:ajax event="change" render="sala" execute="@this" limitRender="true" 
+                    			listener="#{sessaoJulgamentoList.onChangeColegiada()}" />
+                    </wi:selectOneMenuEntity>
+                    
+                    <wi:selectOneMenuEntity id="sala" 
+                    	items="#{sessaoJulgamentoList.salas}"
+                    	label="#{eppmessages['sessaoJulgamento.sala']}"
+                    	value="#{sessaoJulgamentoList.entity.sala}" />
+                    	
+                    <wi:inputDate id="data" 
+		           		label="#{eppmessages['sessaoJulgamento.data']}" 
+		           		value="#{sessaoJulgamentoList.entity.data}" />
+		           		
+		           	<wi:mask selector=".maskHora" mask="99:99" />
+		           	<wi:inputText id="horaInicio" 
+		           		label="#{eppmessages['sessaoJulgamento.horaInicio']}" 
+		           		value="#{sessaoJulgamentoList.entity.horaInicio}" 
+		           		styleClass="maskHora short" 
+		           		converterId="horaConverter" />
+		           		
+		       		<wi:inputText id="horaFim" 
+		           		label="#{eppmessages['sessaoJulgamento.horaFim']}" 
+		           		value="#{sessaoJulgamentoList.entity.horaFim}"
+		           		styleClass="maskHora short" 
+		           		converterId="horaConverter" />
+                    
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{eppmessages['field.situacao']}"
+                        value="#{sessaoJulgamentoList.entity.ativo}" />
+                        
+                </wi:searchForm>
+                
+            </ui:define>
+            
+            <wi:columnOutputText columnId="colegiada"
+                columnHeader="#{eppmessages['sala.colegiado']}"
+                value="#{row.sala.unidadeDecisoraColegiada}" />
+                
+            <wi:columnOutputText columnId="data" 
+            	columnHeader="#{eppmessages['sessaoJulgamento.data']}" 
+            	value="#{row.data}" >
+            	<ui:define name="outputText">
+   	         		<f:convertDateTime pattern="dd/MM/yyyy" />
+            	</ui:define>
+            </wi:columnOutputText>
+                
+            <wi:columnOutputText columnId="horaInicio" 
+            	columnHeader="#{eppmessages['sessaoJulgamento.horaInicio']}" 
+            	value="#{row.horaInicio}" hideOrder="true" >
+            	<ui:define name="outputText">
+   	         		<f:convertDateTime pattern="kk:mm" />
+            	</ui:define>
+            </wi:columnOutputText>
+            
+            <wi:columnOutputText columnId="dataFim"
+                columnHeader="#{eppmessages['sessaoJulgamento.horaFim']}"
+                value="#{row.horaFim}" hideOrder="true" >
+                <ui:define name="outputText">
+            		<f:convertDateTime pattern="kk:mm" />
+            	</ui:define>
+            </wi:columnOutputText>
+                
+            <wi:columnOutputText columnId="sala"
+                columnHeader="#{eppmessages['sessaoJulgamento.sala']}"
+                value="#{row.sala}" />
+                            
+            <wi:columnOutputText columnId="statusSessao"
+                columnHeader="#{eppmessages['sessaoJulgamento.statusSessao']}"
+                value="#{row.statusSessao}" />
+                
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{eppmessages['field.situacao']}"
+                value="#{row.ativo}" />
+                
+        </wi:dataTable>
+        
+    </ui:define>
+
+    <ui:define name="form">
+    
+        <wi:dataForm formId="itemForm"
+            formTitle="#{eppmessages['form.title']}" >
+            
+            <wi:selectOneMenuEntity id="colegiada" 
+               	items="#{sessaoJulgamentoCrudAction.colegiadas}"
+               	label="#{eppmessages['sala.colegiado']}"
+               	value="#{sessaoJulgamentoCrudAction.colegiada}" 
+               	rendered="#{s:hasRole('admin')}" >
+			 <a:ajax event="change" render="salas" execute="@this" immediate="true" limitRender="true" 
+          			listener="#{sessaoJulgamentoCrudAction.onChangeColegiada()}" />
+           </wi:selectOneMenuEntity>
+           
+           <wi:selectOneMenuEntity id="salas" 
+          	   items="#{sessaoJulgamentoCrudAction.salas}"
+          	   label="#{eppmessages['sessaoJulgamento.sala']}"
+          	   value="#{sessaoJulgamentoCrudAction.instance.sala}" 
+          	   required="true" />
+          	   
+          	<wi:inputDate id="data" 
+           		label="Data" 
+           		value="#{sessaoJulgamentoCrudAction.instance.data}" 
+           		required="true" />
+           		
+           	<wi:mask selector=".maskHora" mask="99:99" />
+           	<wi:inputText id="horaInicio" 
+           		label="Hora Inicio" 
+           		value="#{sessaoJulgamentoCrudAction.instance.horaInicio}" 
+           		styleClass="maskHora short" 
+           		required="true" 
+           		converterId="horaConverter" />
+           		
+       		<wi:inputText id="horaFim" 
+           		label="Hora Fim" 
+           		value="#{sessaoJulgamentoCrudAction.instance.horaFim}"
+           		styleClass="maskHora short" 
+           		required="true"
+           		converterId="horaConverter" />
+          	   
+          	<wi:outputText id="statusSessao" 
+          		label="#{eppmessages['sessaoJulgamento.statusSessao']}" 
+          		value="#{sessaoJulgamentoCrudAction.instance.statusSessao}" />
+          		
+          	<wi:selectOneMenuEnum id="periodicidade" 
+          		label="#{eppmessages['sessaoJulgamento.periodicidade']}"
+          		items="#{sessaoJulgamentoCrudAction.periodicidades}" 
+          		value="#{sessaoJulgamentoCrudAction.periodicidade}"
+          		rendered="#{not home.managed}" 
+          		noSelectionLabel="#{eppmessages['sessaoJulgamento.semPeriodicidade']}" >
+          		<a:ajax event="change" execute="@this" render="periodo" limitRender="true" 
+          				listener="#{sessaoJulgamentoCrudAction.clearValorPeriodicidade()}" />
+          	</wi:selectOneMenuEnum>
+          		
+          	<s:div id="periodo" style="display: inline-block;" >
+          		<wi:selectOneRadioEnum id="tipoPeriodo" 
+          			label="#{eppmessages['sessaoJulgamento.tipoPeriodicidade']}"
+          			value="#{sessaoJulgamentoCrudAction.tipoPeriodicidade}" 
+          			rendered="#{not empty sessaoJulgamentoCrudAction.periodicidade}" 
+          			items="#{sessaoJulgamentoCrudAction.tiposPeriodicidade}" >
+          			<a:ajax event="change" execute="@this" render="periodo" limitRender="true" 
+          					listener="#{sessaoJulgamentoCrudAction.clearValorPeriodicidade()}" />
+          		</wi:selectOneRadioEnum>
+          		
+          		<wi:inputDate id="periodoAte" 
+          			label="#{eppmessages['sessaoJulgamento.periodoAte']}" 
+          			value="#{sessaoJulgamentoCrudAction.valorPeriodicidade}" 
+          			required="true"
+          			rendered="#{sessaoJulgamentoCrudAction.tipoPeriodicidade eq 'D' 
+          						and not empty sessaoJulgamentoCrudAction.periodicidade}" />
+          						
+          		<wi:inputNumber id="quantidadeRepeticoes"
+          			label="#{eppmessages['sessaoJulgamento.quantidadeRepeticoes']}"
+          			value="#{sessaoJulgamentoCrudAction.valorPeriodicidade}"
+          			required="true" styleClass="short"
+          			rendered="#{sessaoJulgamentoCrudAction.tipoPeriodicidade eq 'Q' 
+          						and not empty sessaoJulgamentoCrudAction.periodicidade}" />
+          	</s:div>
+            
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{eppmessages['field.situacao']}"
+                value="#{sessaoJulgamentoCrudAction.instance.ativo}" />
+                
+        </wi:dataForm>
+        
+    </ui:define>
+
+</ui:composition>

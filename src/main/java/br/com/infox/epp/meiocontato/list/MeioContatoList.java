@@ -3,6 +3,7 @@ package br.com.infox.epp.meiocontato.list;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -13,6 +14,7 @@ import br.com.infox.epp.pessoa.entity.Pessoa;
 
 @Name(MeioContatoList.NAME)
 @Scope(ScopeType.PAGE)
+@AutoCreate
 public class MeioContatoList extends EntityList<MeioContato> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "meioContatoList";

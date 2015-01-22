@@ -4,7 +4,9 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoPapelDAO;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 
 @AutoCreate
@@ -13,4 +15,8 @@ public class ClassificacaoDocumentoPapelManager extends Manager<ClassificacaoDoc
 	
     private static final long serialVersionUID = 4455754174682600299L;
     public static final String NAME = "classificacaoDocumentoPapelManager";
+    
+    public boolean papelPodeAssinarClassificacao(Papel papel, ClassificacaoDocumento classificacao) {
+    	return getDao().papelPodeAssinarClassificacao(papel, classificacao);
+    }
 }

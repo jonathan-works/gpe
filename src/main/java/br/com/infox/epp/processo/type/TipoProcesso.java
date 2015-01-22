@@ -1,20 +1,51 @@
 package br.com.infox.epp.processo.type;
 
-import br.com.infox.core.type.Displayable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-public enum TipoProcesso implements Displayable{
+public class TipoProcesso {
 	
-	PE("Processo EPA"), PD("Processo Documento");
+	public static final TipoProcesso DOCUMENTO = new TipoProcesso("DOCUMENTO");
+	public static final TipoProcesso COMUNICACAO = new TipoProcesso("COMUNICACAO");
 	
-	private String label;
+	protected static Map<String, TipoProcesso> values = new HashMap<>();
+	private String value;
 	
-	private TipoProcesso(String label){
-		this.label = label;
+	static {
+		values.put("DOCUMENTO", DOCUMENTO);
+		values.put("COMUNICACAO", COMUNICACAO);
 	}
-
+	
+	public TipoProcesso(String value) {
+		if (!isTipoProcessoValido(value)) {
+			throw new IllegalArgumentException("Tipo processo " + value + " inválido");
+		}
+		this.value = value;
+	}
+	
+	public static TipoProcesso getByName(String name) {
+		name = name.toUpperCase();
+		return values.get(name);
+	}
+	
 	@Override
-	public String getLabel() {
-		return label;
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof TipoProcesso)) {
+			return false;
+		}
+		return ((TipoProcesso) obj).value.equals(value);
 	}
-
+	
+	public static Collection<TipoProcesso> values() {
+		return values.values();
+	}
+	
+	public String toString(){
+		return value;
+	}
+	
+	protected boolean isTipoProcessoValido(String tipoProcesso) {
+		return "DOCUMENTO".equals(tipoProcesso) || "COMUNICACAO".equals(tipoProcesso); 
+	}
 }

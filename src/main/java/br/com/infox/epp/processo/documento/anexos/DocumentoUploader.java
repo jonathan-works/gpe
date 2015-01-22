@@ -14,13 +14,14 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -41,6 +42,7 @@ import com.lowagie.text.pdf.PdfReader;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(DocumentoUploader.NAME)
+@AutoCreate
 public class DocumentoUploader extends DocumentoCreator implements FileUploadListener, Serializable {
 
 	private static final long serialVersionUID = 1L;

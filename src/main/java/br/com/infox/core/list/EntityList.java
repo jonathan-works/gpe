@@ -20,8 +20,8 @@ import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.framework.EntityQuery;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.messages.Messages;

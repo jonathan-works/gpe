@@ -12,8 +12,8 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 

@@ -24,6 +24,10 @@ public interface LocalizacaoQuery {
     String LOCALIZACOES_BY_IDS_QUERY = "select o from Localizacao o where o.idLocalizacao in :"
             + QUERY_PARAM_ID_LOCALIZACAO;
     
+    String QUERY_PARAM_CODIGO = "codigo";
+    String LOCALIZACAO_BY_CODIGO = "Localizacao.localizacaoByCodigo";
+    String LOCALIZACAO_BY_CODIGO_QUERY = "select o from Localizacao o where o.codigo = :" + QUERY_PARAM_CODIGO;
+    
     String LIST_BY_NOME_ESTRUTURA_PAI = "listByNomeEstruturaPai";
     String LIST_BY_NOME_ESTRUTURA_PAI_QUERY = "select o from Localizacao o where o.estruturaPai.nome = :"
             + ESTRUTURA_PAI;
@@ -46,6 +50,13 @@ public interface LocalizacaoQuery {
     
     String LOCALIZACAO_FORA_ESTRUTURA_BY_NOME = "Localizacao.localizacaoForaEstrutura";
     String LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY = "select o from Localizacao o where o.estruturaFilho is null and o.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
+    
+    String ESTRUTURA_FILHO_PARAM = "estruturaFilho";
+    String LOCALIZACOES_BY_ESTRUTURA_FILHO = "Localizacao.localizacaoByEstrutura";
+    String LOCALIZACOES_BY_ESTRUTURA_FILHO_QUERY = "select o from Localizacao o where o.estruturaFilho = :" + ESTRUTURA_FILHO_PARAM;
+    
+    String LOCALIZACAO_BY_NOME = "Localizacao.localizacaoByNome";
+    String LOCALIZACAO_BY_NOME_QUERY = "select o from Localizacao o where o.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
     
     String USOS_DA_HIERARQUIA_LOCALIZACAO = "Localizacao.usosHierarquiaLocalizacao";
     String USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY = 

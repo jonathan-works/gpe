@@ -11,7 +11,10 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 @Name(DocumentoService.NAME)
@@ -24,6 +27,10 @@ public class DocumentoService implements Serializable {
 
     @In
     private DocumentoManager documentoManager;
+    @In
+    private DocumentoBinManager documentoBinManager;
+    @In
+    private DocumentoBinarioManager documentoBinarioManager;
     
     public void setDefaultFolder(Pasta pasta) throws DAOException {
         List<Documento> documentoList = documentoManager.getListDocumentoByProcesso(pasta.getProcesso());
@@ -33,5 +40,19 @@ public class DocumentoService implements Serializable {
                 documentoManager.update(documento);
             }
         }
+    }
+    
+    public void removerDocumento(Documento documento) throws DAOException {
+		DocumentoBin documentoBin = documento.getDocumentoBin();
+		documentoManager.remove(documento);
+		removerDocumentoBin(documentoBin);
+	}
+    
+    public void removerDocumentoBin(DocumentoBin documentoBin) throws DAOException {
+    	Integer idDocumentoBin = documentoBin.getId();
+		documentoBinManager.remove(documentoBin);
+		if (documentoBin.getExtensao() != null) {
+			documentoBinarioManager.remove(idDocumentoBin);
+		}
     }
 }

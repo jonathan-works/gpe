@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.core.messages.Messages;
 import br.com.infox.ibpm.process.definition.variable.VariableType;

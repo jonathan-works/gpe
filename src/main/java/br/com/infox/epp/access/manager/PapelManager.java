@@ -1,5 +1,6 @@
 package br.com.infox.epp.access.manager;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.seam.security.operation.PopulateRoleMembersListOperation;
 
 @Name(PapelManager.NAME)
 @AutoCreate
@@ -68,5 +70,15 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
         Papel papel = super.update(o);
         rolesMap.clear();
         return papel;
+    }
+    
+    public List<String> getIdentificadoresPapeisMembros(String identificadorPapelBase) {
+    	List<Principal> roles = new ArrayList<>();
+		new PopulateRoleMembersListOperation(identificadorPapelBase, roles).run();
+		List<String> papeisMembros = new ArrayList<>();
+		for (Principal role : roles) {
+			papeisMembros.add(role.getName());
+		}
+		return papeisMembros;
     }
 }

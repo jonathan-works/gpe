@@ -17,7 +17,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumentoPermissao;
 import br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoPermissaoQuery;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Name(SigiloDocumentoPermissaoDAO.NAME)
 @AutoCreate
@@ -49,8 +49,7 @@ public class SigiloDocumentoPermissaoDAO extends DAO<SigiloDocumentoPermissao> {
         executeNamedQueryUpdate(SigiloDocumentoPermissaoQuery.NAMED_QUERY_INATIVAR_PERMISSOES, params);
     }
 
-    public List<Documento> getDocumentosPermitidos(
-            ProcessoEpa processo, UsuarioLogin usuario) {
+    public List<Documento> getDocumentosPermitidos(Processo processo, UsuarioLogin usuario) {
         Map<String, Object> params = new HashMap<>();
         params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_PROCESSO, processo);
         params.put(SigiloDocumentoPermissaoQuery.QUERY_PARAM_USUARIO, usuario);

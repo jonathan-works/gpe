@@ -12,8 +12,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
@@ -26,7 +26,9 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -53,6 +55,8 @@ public class AssinaturaDocumentoService implements Serializable {
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
     @In
     private DocumentoBinManager documentoBinManager;
+    @In
+    private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
@@ -124,8 +128,15 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public boolean isDocumentoAssinado(Documento documento, UsuarioLogin usuarioLogin) {
-        boolean result = false;
-        for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
+    	return isDocumentoAssinado(documento.getDocumentoBin(), usuarioLogin);
+    }
+    
+    public boolean isDocumentoAssinado(DocumentoBin documentoBin, UsuarioLogin usuarioLogin) {
+    	if (documentoBin == null) {
+    		return false;
+    	}
+    	boolean result = false;
+        for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
             if (assinaturaDocumento.getUsuario().equals(usuarioLogin)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
@@ -187,7 +198,7 @@ public class AssinaturaDocumentoService implements Serializable {
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
                 documentoBin, usuarioPerfilAtual, certChain, signature);
         documentoBin.getAssinaturas().add(assinaturaDocumento);
-        documentoBinManager.assignUUID(documentoBin);
+        documentoBinManager.update(documentoBin);
     }
 
     public void assinarDocumento(final Documento documento,
@@ -241,5 +252,21 @@ public class AssinaturaDocumentoService implements Serializable {
     public boolean isDocumentoAssinado(Integer idDocumento, UsuarioLogin usuarioLogin) {
         Documento documento = documentoManager.find(idDocumento);
         return documento != null && isDocumentoAssinado(documento, usuarioLogin);
+    }
+    
+    public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, Integer idDocumento, UsuarioLogin usuario) {
+    	Documento documento = documentoManager.find(idDocumento);
+    	if (documento == null) {
+    		return false;
+    	}
+    	return podeRenderizarApplet(papel, classificacao, documento.getDocumentoBin(), usuario);
+    }
+    
+    public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, DocumentoBin documentoBin, UsuarioLogin usuario) {
+    	if (documentoBin == null || documentoBin == null || documentoBin.isMinuta()) {
+    		return false;
+    	}
+    	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 
+    			!isDocumentoAssinado(documentoBin, usuario);
     }
 }

@@ -3,8 +3,8 @@ package br.com.infox.core.file.reader;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.pdf.PdfReader;

@@ -60,7 +60,7 @@
                         value="#{row.numeroProcesso}" hideOrder="true" />
                     <wi:columnOutputText columnId="usuarioCadastro"
                         columnHeader="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                        value="#{row.usuarioCadastroProcesso}"
+                        value="#{row.usuarioCadastro}"
                         hideOrder="true" />
                     <wi:columnDateTime columnId="dataInicioProcesso"
                         columnHeader="#{eppmessages['processo.dataInicio']}"
@@ -114,7 +114,7 @@
                         value="#{row.numeroProcesso}" hideOrder="true" />
                     <wi:columnOutputText columnId="usuarioCadastro"
                         columnHeader="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                        value="#{row.usuarioCadastroProcesso}"
+                        value="#{row.usuarioCadastro}"
                         hideOrder="true" />
                     <wi:columnDateTime columnId="dataInicioProcesso"
                         columnHeader="#{eppmessages['processo.dataInicio']}"
@@ -133,7 +133,7 @@
             <infox:tab id="processoExternoView"
                 name="processoExternoView"
                 title="#{eppmessages['consultaProcesso.view']}"
-                status=":status" rendered="#{not empty controller.processoEpa}">
+                status=":status" rendered="#{not empty controller.processo}">
 
                 <h:messages globalOnly="true" styleClass="message"
                     id="globalMessages" />
@@ -145,13 +145,13 @@
                             columnClasses="viewColumn">
                             <wi:outputText id="dataInicio"
                                 label="#{eppmessages['processo.dataInicio']}"
-                                value="#{controller.processoEpa.dataInicio}">
+                                value="#{controller.processo.dataInicio}">
                                 <f:convertDateTime
                                     pattern="dd/MM/yyyy kk:mm" />
                             </wi:outputText>
-                            <wi:outputText id="usuarioCadastroProcesso"
+                            <wi:outputText id="usuarioCadastro"
                                 label="#{eppmessages['processo.usuarioCadastroProcesso']}"
-                                value="#{controller.processoEpa.usuarioCadastroProcesso.nomeUsuario}" />
+                                value="#{controller.processo.usuarioCadastro.nomeUsuario}" />
                         </h:panelGrid>
                     </rich:collapsiblePanel>
 
@@ -165,7 +165,7 @@
                             style="border-style: solid; border-width: 1px; border-color: lightgray">
 
                             <rich:dataTable
-                                value="#{controller.processoEpa.processoTarefaList}"
+                                value="#{controller.processo.processoTarefaList}"
                                 rowKeyVar="key" var="task" styleClass="rf-dt-crud">
                                 <rich:column styleClass="defaultCell">
                                     <f:facet name="header">#{eppmessages['tarefa.nome']}</f:facet>

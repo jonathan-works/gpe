@@ -8,17 +8,17 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 
 @Name(ConsultaProcessoExterno.NAME)
 @Scope(ScopeType.PAGE)
-public class ConsultaProcessoExterno extends EntityList<ProcessoEpa> {
+public class ConsultaProcessoExterno extends EntityList<Processo> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoExterno";
 
-    private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o where "
+    private static final String DEFAULT_EJBQL = "select o from Processo o where o.processoPai is null and "
             + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     private static final String DEFAULT_ORDER = "dataInicio ASC";
 

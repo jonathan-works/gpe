@@ -6,6 +6,10 @@ version="2.0">
 
     <namespace>http://www.itx.com.br/jsf</namespace>
     <tag>
+        <tag-name>certificadoDigital</tag-name>
+        <source>tags/form/fields/certificadoDigital.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>appletAssinatura</tag-name>
         <source>tags/form/fields/appletAssinatura.xhtml</source>
     </tag>
@@ -232,12 +236,20 @@ version="2.0">
         <source>tags/generic/quadro.xhtml</source>
     </tag>
     <tag>
+        <tag-name>panel</tag-name>
+        <source>tags/generic/panel.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>helpIcon</tag-name>
         <source>tags/generic/helpIcon.xhtml</source>
     </tag>
     <tag>
         <tag-name>commandLink</tag-name>
         <source>tags/generic/commandLink.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>assinaturaPopup</tag-name>
+        <source>tags/generic/assinaturaPopup.xhtml</source>
     </tag>
     <function>
         <function-name>get</function-name>
@@ -338,6 +350,10 @@ version="2.0">
     <tag>
         <tag-name>toolBarGraphicImage</tag-name>
         <source>tags/grid/tools/toolBarGraphicImage.xhtml</source>
+    </tag>
+    <tag>
+        <tag-name>toolBarAssinatura</tag-name>
+        <source>tags/grid/tools/toolBarAssinatura.xhtml</source>
     </tag>
     <tag>
         <tag-name>report</tag-name>

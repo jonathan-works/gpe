@@ -1,13 +1,15 @@
 package br.com.infox.epp.documento.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_ABREVIADA;
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PADRAO_METADE;
-import static br.com.infox.core.constants.LengthConstants.FLAG;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_ABREVIADA;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO_METADE;
+import static br.com.infox.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ABREVIACAO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ID_GRUPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.ID_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.LIST_TIPOS_MODELO_DOCUMENTO_ATIVOS;
+import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.LIST_TIPOS_MODELO_DOCUMENTO_ATIVOS_QUERY;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.SEQUENCE_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.TABLE_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.TipoModeloDocumentoQuery.TIPO_MODELO_DOCUMENTO;
@@ -26,6 +28,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -37,6 +41,9 @@ import javax.validation.constraints.Size;
 @Table(name = TABLE_TIPO_MODELO_DOCUMENTO, uniqueConstraints = {
     @UniqueConstraint(columnNames = { TIPO_MODELO_DOCUMENTO }),
     @UniqueConstraint(columnNames = { ABREVIACAO }) })
+@NamedQueries({
+	@NamedQuery(name = LIST_TIPOS_MODELO_DOCUMENTO_ATIVOS, query = LIST_TIPOS_MODELO_DOCUMENTO_ATIVOS_QUERY)
+})
 public class TipoModeloDocumento implements Serializable {
 
     private static final long serialVersionUID = 1L;

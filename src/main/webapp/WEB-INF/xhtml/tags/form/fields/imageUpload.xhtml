@@ -58,10 +58,11 @@
           <rich:dataScroller />
         </f:facet>
       </rich:dataGrid>
+      <ui:param name="useBase64" value="#{empty useBase64 ? true : useBase64}" />
       <h:outputScript id="initImageUploadScript">
         invoke(["infox.imageUpload"],function initImageUpload(imageUpload) {
           $(".grid-img").click(function gridImgOnClick() {
-            imageUpload.click(this, "#{wi:get(editorId, 'editorId')}");
+            imageUpload.click(this, "#{wi:get(editorId, 'editorId')}", '#{useBase64}');
           });
         });
       </h:outputScript>

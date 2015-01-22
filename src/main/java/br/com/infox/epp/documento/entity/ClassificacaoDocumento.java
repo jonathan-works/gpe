@@ -1,9 +1,9 @@
 package br.com.infox.epp.documento.entity;
 
-import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.CLASSIFICACAO_DOCUMENTO_USEABLE;
-import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.CLASSIFICACAO_DOCUMENTO_USEABLE_QUERY;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO_QUERY;
 import static javax.persistence.CascadeType.MERGE;
@@ -32,7 +32,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
@@ -43,7 +43,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 @NamedQueries({
     @NamedQuery(name = LIST_CLASSIFICACAO_DOCUMENTO, query = LIST_CLASSIFICACAO_DOCUMENTO_QUERY),
     @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY),
-    @NamedQuery(name = CLASSIFICACAO_DOCUMENTO_USEABLE, query = CLASSIFICACAO_DOCUMENTO_USEABLE_QUERY) 
+    @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY) 
 })
 public class ClassificacaoDocumento implements Serializable {
 	

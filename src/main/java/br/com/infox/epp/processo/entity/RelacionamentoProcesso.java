@@ -1,7 +1,7 @@
 package br.com.infox.epp.processo.entity;
 
-import static br.com.infox.core.constants.LengthConstants.FLAG;
-import static br.com.infox.core.constants.LengthConstants.NUMERACAO_PROCESSO;
+import static br.com.infox.constants.LengthConstants.FLAG;
+import static br.com.infox.constants.LengthConstants.NUMERACAO_PROCESSO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
 import static br.com.infox.epp.processo.query.RelacionamentoProcessoQuery.ID_RELACIONAMENTO_PROCESSO;
@@ -39,7 +39,7 @@ public class RelacionamentoProcesso implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer idRelacionamentoProcesso;
-	private ProcessoEpa processo;
+	private Processo processo;
 	private Relacionamento relacionamento;
 	private String numeroProcesso;
 
@@ -67,11 +67,11 @@ public class RelacionamentoProcesso implements Serializable {
 
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = ID_PROCESSO, nullable = true, unique = true)
-	public ProcessoEpa getProcesso() {
+	public Processo getProcesso() {
 		return processo;
 	}
 
-	public void setProcesso(final ProcessoEpa processo) {
+	public void setProcesso(Processo processo) {
 		this.processo = processo;
 	}
 

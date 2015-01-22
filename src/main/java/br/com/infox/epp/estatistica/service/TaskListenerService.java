@@ -6,15 +6,14 @@ import java.util.Date;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -38,8 +37,6 @@ public class TaskListenerService implements Serializable {
     @In
     TarefaManager tarefaManager;
     @In
-    private ProcessoEpaManager processoEpaManager;
-    @In
     private ProcessoManager processoManager;
 
     @Observer(IniciarProcessoService.ON_CREATE_PROCESS)
@@ -62,12 +59,11 @@ public class TaskListenerService implements Serializable {
         Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
 
         ProcessoTarefa pTarefa = new ProcessoTarefa();
-        pTarefa.setProcesso(processoEpaManager.find(processo.getIdProcesso()));
+        pTarefa.setProcesso(processoManager.find(processo.getIdProcesso()));
         pTarefa.setTarefa(tarefa);
         pTarefa.setDataInicio(taskInstance.getCreate());
         pTarefa.setUltimoDisparo(new Date());
         pTarefa.setTempoGasto(0);
-        pTarefa.setPorcentagem(0);
         pTarefa.setTempoPrevisto(tarefa.getPrazo());
         if (pTarefa.getTempoPrevisto() == null) {
             pTarefa.setTempoPrevisto(0);

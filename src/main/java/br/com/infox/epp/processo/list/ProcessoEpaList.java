@@ -13,18 +13,21 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
 
 @Name(ProcessoEpaList.NAME)
 @BypassInterceptors
 @Scope(ScopeType.PAGE)
-public class ProcessoEpaList extends EntityList<ProcessoEpa> {
+public class ProcessoEpaList extends EntityList<Processo> {
     public static final String NAME = "processoEpaList";
 
     private static final long serialVersionUID = 1L;
 
-    private static final String DEFAULT_EJBQL = "select o from ProcessoEpa o where o.idJbpm is not null and "
+    private static final String DEFAULT_EJBQL = "select o from Processo o where o.idJbpm is not null and o.processoPai is null and "
             + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     private static final String DEFAULT_ORDER = "dataInicio DESC";
     private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.entity.dataInicio}";
@@ -36,14 +39,14 @@ public class ProcessoEpaList extends EntityList<ProcessoEpa> {
     private void iniciaListaUsuarios() {
         StringBuilder sb = new StringBuilder();
         sb.append("select distinct user from Processo o ");
-        sb.append("join o.usuarioCadastroProcesso user");
+        sb.append("join o.usuarioCadastro user");
         listaUsuarios = getEntityManager().createQuery(sb.toString()).getResultList();
     }
 
     @Override
     protected void addSearchFields() {
         addSearchField("numeroProcesso", SearchCriteria.IGUAL);
-        addSearchField("usuarioCadastroProcesso", SearchCriteria.IGUAL);
+        addSearchField("usuarioCadastro", SearchCriteria.IGUAL);
         addSearchField("dataInicio", SearchCriteria.MAIOR_IGUAL, R1);
         addSearchField("dataFim", SearchCriteria.MENOR_IGUAL, R2);
         iniciaListaUsuarios();
@@ -71,5 +74,9 @@ public class ProcessoEpaList extends EntityList<ProcessoEpa> {
     public void setListaUsuarios(List<UsuarioLogin> listaUsuarios) {
         this.listaUsuarios = listaUsuarios;
     }
-
+    
+    public StatusProcesso getStatusProcesso(Processo processo) {
+        MetadadoProcesso mp = processo.getMetadado(EppMetadadoProvider.STATUS_PROCESSO);
+        return mp != null ? (StatusProcesso) mp.getValue() : null;
+    }
 }

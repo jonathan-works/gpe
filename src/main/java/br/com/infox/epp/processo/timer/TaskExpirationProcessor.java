@@ -23,7 +23,7 @@ public class TaskExpirationProcessor {
     public QuartzTriggerHandle endTask(@Expiration Date expiration, TaskExpirationInfo info) {
         JbpmContext context = ManagedJbpmContext.instance();
         TaskInstance task = context.getTaskInstanceForUpdate(info.getTaskId());
-        if (task != null) {
+        if (task != null && !task.hasEnded()) {
             task.end(info.getTransition());
         }
         return null;

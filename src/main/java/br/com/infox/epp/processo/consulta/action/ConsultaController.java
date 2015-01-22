@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.consulta.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
@@ -12,26 +13,31 @@ import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
-import br.com.infox.epp.processo.manager.ProcessoEpaManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
 @Name(ConsultaController.NAME)
+@AutoCreate
 public class ConsultaController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaController";
-
-    private ProcessoEpa processoEpa;
     
     @In
-    private ProcessoEpaManager processoEpaManager;
+    private ProcessoManager processoManager;
     @In
     private SigiloDocumentoPermissaoManager sigiloDocumentoPermissaoManager;
     @In
     private SigiloProcessoService sigiloProcessoService;
+    @In
+    private MetadadoProcessoManager metadadoProcessoManager;
 
+    private Processo processo;
     private boolean showAllDocuments = false;
+    private List<MetadadoProcesso> detalhesMetadados;
 
     public boolean isShowAllDocuments() {
         return showAllDocuments;
@@ -43,21 +49,26 @@ public class ConsultaController extends AbstractController {
 
     @Override
     public void setId(Object id) {
-        this.setProcessoEpa(processoEpaManager.find(Integer.valueOf((String) id)));
-        super.setId(id);
-
+    	Processo processo = processoManager.find(Integer.valueOf((String) id));
+    	if (processo == null || processo.getProcessoPai() == null) {
+    		this.setProcesso(processo);
+    		super.setId(id);
+    	} else {
+    		this.setProcesso(null);
+    		super.setId(null);
+    	}
     }
+    
+    public Processo getProcesso() {
+		return processo;
+	}
 
-    public ProcessoEpa getProcessoEpa() {
-        return processoEpa;
-    }
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+	}
 
-    public void setProcessoEpa(ProcessoEpa processoEpa) {
-        this.processoEpa = processoEpa;
-    }
-
-    public List<Documento> getProcessoDocumentoList(Long idTask) {
-        List<Documento> list = sigiloDocumentoPermissaoManager.getDocumentosPermitidos(processoEpa, Authenticator.getUsuarioLogado());
+	public List<Documento> getProcessoDocumentoList(Long idTask) {
+        List<Documento> list = sigiloDocumentoPermissaoManager.getDocumentosPermitidos(processo, Authenticator.getUsuarioLogado());
         list = filtrarPorTarefa(list, idTask);
         return filtrarAnexos(list);
     }
@@ -87,11 +98,18 @@ public class ConsultaController extends AbstractController {
     }
     
     public void checarVisibilidade() {
-        if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoEpa)) {
+        if (!sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processo)) {
             FacesMessages.instance().add("Usuário sem permissão");
             Redirect.instance().setViewId("/error.seam");
             Redirect.instance().setConversationPropagationEnabled(false);
             Redirect.instance().execute();
         }
+    }
+    
+    public List<MetadadoProcesso> getDetalhesMetadados() {
+    	if (detalhesMetadados == null) {
+    		detalhesMetadados = metadadoProcessoManager.getListMetadadoVisivelByProcesso(getProcesso());
+    	}
+    	return detalhesMetadados;
     }
 }

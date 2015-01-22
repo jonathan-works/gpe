@@ -92,7 +92,7 @@ public class VariavelClassificacaoDocumentoManager extends Manager<VariavelClass
         return getDao().listClassificacoesDisponiveisParaVariavel(idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento, start, max);
     }
     
-    public int totalClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento) {
+    public Long totalClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento) {
         return getDao().totalClassificacoesDisponiveisParaVariavel(idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento);
     }
     

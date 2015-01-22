@@ -1,7 +1,7 @@
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_PEQUENA;
-import static br.com.infox.core.constants.LengthConstants.FLAG;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_PEQUENA;
+import static br.com.infox.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.fluxo.query.NaturezaQuery.DESCRICAO_NATUREZA;

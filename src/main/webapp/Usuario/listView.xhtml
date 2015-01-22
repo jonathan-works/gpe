@@ -12,9 +12,7 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
   <ui:define name="title">#{eppmessages['usuario.titlePage']}</ui:define>
-  <ui:param
-    name="home"
-    value="#{usuarioLoginCrudAction}" />
+  <ui:param name="home" value="#{usuarioLoginController}" />
   <ui:define name="searchGrid">
     <wi:dataTable
       values="#{usuarioLoginList.list(15)}"
@@ -53,7 +51,7 @@
         columnId="usuarioPerfilList"
         columnHeader="#{eppmessages['usuarioLogin.perfis']}"
         value="#{row.perfisFormatados}"
-      />
+        hideOrder="true" />
       <wi:columnBoolean
         columnId="bloqueio"
         columnHeader="#{eppmessages['usuarioLogin.bloqueio']}"
@@ -71,7 +69,8 @@
   <ui:define name="form">
     <wi:dataForm
       formId="usuarioForm"
-      formTitle="#{eppmessages['form.title']}">
+      formTitle="#{eppmessages['form.title']}"
+      home="#{usuarioLoginCrudAction}">
       <wi:inputText
         id="nomeUsuario"
         label="#{eppmessages['usuario.nome']}"
@@ -113,10 +112,11 @@
   <ui:define name="tabs">
     <infox:tab
       id="usuarioPessoaFisica"
-      rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
+      rendered="#{usuarioLoginCrudAction.isManaged() and usuarioLoginCrudAction.instance.humano}"
       title="#{eppmessages['usuario.pessoaFisica']}"
       name="usuarioPessoaFisica"
-      action="#{usuarioPessoaFisicaCrudAction.newInstance()}">
+      action="#{usuarioLoginController.onClickPessoaFisicaTab()}">
+      <ui:param name="dataNascimentoObrigatoria" value="true"/>
       <wi:dataForm
         formId="usuarioPessoaFisicaForm"
         formTitle="#{eppmessages['form.title']}"
@@ -145,7 +145,7 @@
             id="dataNascimento"
             value="#{usuarioPessoaFisicaCrudAction.instance.dataNascimento}"
             label="#{eppmessages['pessoaFisica.dataNascimento']}"
-            required="true" />
+            required="#{dataNascimentoObrigatoria}" />
         </s:div>
         <ui:define name="buttons">
           <wi:commandButtonSave home="#{usuarioPessoaFisicaCrudAction}" />
@@ -242,12 +242,14 @@
           columnHeader="#{eppmessages['pessoaDocumento.dataEmissao']}"
           value="#{row.dataEmissao}" />
       </wi:dataTable>
+      <ui:include src="dadosPersonalizadosDaPessoa.xhtml"/>
     </infox:tab>
     <infox:tab
       id="usuarioPerfil"
-      rendered="#{home.isManaged()}"
+      rendered="#{usuarioLoginCrudAction.isManaged()}"
       title="#{eppmessages['usuario.perfilTitleTab']}"
-      name="usuarioPerfil">
+      name="usuarioPerfil"
+      action="#{usuarioLoginController.onClickPerfilTab()}">
       <wi:dataForm
         formId="usuarioPerfilForm"
         formTitle="#{eppmessages['form.title']}">
@@ -305,7 +307,7 @@
             columnHeader="#{eppmessages['usuarioPerfil.localizacao']}"
             value="#{row.localizacao}"/>
           <wi:columnOutputText
-            columnId="perfil.descricao"
+            columnId="perfilTemplate.descricao"
             columnHeader="#{eppmessages['usuarioPerfil.perfil']}"
             value="#{row.perfilTemplate.descricao}" />
           <wi:columnBoolean
@@ -318,9 +320,10 @@
     </infox:tab>
     <infox:tab
       id="historicoBloqueioUsuario"
-      rendered="#{home.isManaged()}"
+      rendered="#{usuarioLoginCrudAction.isManaged()}"
       title="#{eppmessages['bloqueioUsuario.historicoBloqueio']}"
-      name="historicoBloqueioUsuario">
+      name="historicoBloqueioUsuario"
+      action="#{usuarioLoginController.onClickBloqueioTab()}">
       <wi:dataForm
         formId="bloqueioUsuarioForm"
         formTitle="#{eppmessages['form.title']}"
@@ -391,9 +394,10 @@
     </infox:tab>
     <infox:tab
       id="usuarioAssinaturaDocumento"
-      rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
+      rendered="#{usuarioLoginCrudAction.isManaged() and usuarioLoginCrudAction.instance.humano}"
       title="#{eppmessages['usuario.assinaturaDocumento']}"
-      name="usuarioAssinaturaDocumento">
+      name="usuarioAssinaturaDocumento"
+      action="#{usuarioLoginController.onClickAssinaturaTab()}">
       <wi:dataTable
         values="#{assinaturaDocumentoList.list(15)}"
         bean="#{assinaturaDocumentoList}"
@@ -430,10 +434,10 @@
     </infox:tab>
     <infox:tab 
 	    id="vinculoUsuarioUnidadeDecisora"
-	    rendered="#{home.isManaged() and usuarioLoginCrudAction.instance.humano}"
+	    rendered="#{usuarioLoginCrudAction.isManaged() and usuarioLoginCrudAction.instance.humano}"
 	    title="#{eppmessages['usuario.vinculoUnidadeDescisora']}"
 	    name="vinculoUsuarioUnidadeDecisora"
-	    actionListener="#{usuarioLoginCrudAction.onClickVinculoUnidadeDecisoraTab()}">
+	    actionListener="#{usuarioLoginController.onClickVinculoUnidadeDecisoraTab()}">
 	   
 	    <rich:dataTable 
 	    	id="dataTableVinculoMonocraticas" 

@@ -10,16 +10,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.componentes.suggest.SuggestItem;
 import br.com.infox.componentes.suggest.SuggestProvider;
+import br.com.infox.seam.util.ComponentUtil;
 
-@Scope(ScopeType.STATELESS)
 public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Serializable {
 
     private static final int LIMIT_SUGGEST_DEFAULT = 15;
@@ -30,8 +27,7 @@ public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Seri
 
     protected static final String INPUT_PARAMETER = "input";
 
-    @In
-    protected EntityManager entityManager;
+    protected EntityManager entityManager = ComponentUtil.getComponent("entityManager");
 
     @SuppressWarnings(UNCHECKED)
     @Override

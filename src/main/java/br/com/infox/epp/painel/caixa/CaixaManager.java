@@ -8,37 +8,43 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 
-@Name(CaixaManager.NAME)
 @AutoCreate
+@Name(CaixaManager.NAME)
 public class CaixaManager extends Manager<CaixaDAO, Caixa> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "caixaManager";
-
+    
     @In
-    private ProcessoDAO processoDAO;
+    private ProcessoManager processoManager;
 
-    public void removeCaixaByIdCaixa(int idCaixa) throws DAOException {
-        getDao().removeCaixaByIdCaixa(idCaixa);
+    @Override
+    public Caixa remove(Caixa caixa) throws DAOException {
+    	List<Processo> processoList = processoManager.getProcessosByIdCaixa(caixa.getIdCaixa());
+    	for(Processo processo : processoList) {
+    		processo.setCaixa(null);
+    	}
+    	return super.remove(caixa);
     }
-
-    /**
-     * Adiciona o processo em uma caixa
-     * 
-     * @param caixaList - Lista da caixas nas quais o processo pode ser inserido
-     * @param processo - Processo em Movimentação
-     * @throws DAOException 
-     */
-    public void moverProcessoParaCaixa(List<Caixa> caixaList, Processo processo) throws DAOException {
-        Caixa caixa = escolherCaixa(caixaList);
-        processoDAO.moverProcessoParaCaixa(caixa, processo);
+    
+    public void moverProcessoParaCaixa(Processo processo, Caixa caixa) throws DAOException {
+    	processo.setCaixa(caixa);
+    	processoManager.update(processo);
     }
-
-    private Caixa escolherCaixa(List<Caixa> caixaList) {
-        return caixaList.get(0);
+    
+    public void moverProcessosParaCaixa(List<Processo> processos, Caixa caixa) throws DAOException {
+    	for (Processo processo : processos) {
+    		processo.setCaixa(caixa);
+    		processoManager.merge(processo);
+    	}
+    	flush();
+    }
+    
+    public Caixa getCaixaByIdTarefaAndIdNodeAnterior(Integer idTarefa, Integer idNodeAnterior) {
+    	return getDao().getCaixaByIdTarefaAndIdNodeAnterior(idTarefa, idNodeAnterior);
     }
 
 }

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: tarefasTree.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:a="http://richfaces.org/a4j"
@@ -10,97 +9,94 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf">
 
-  <h:form id="#{id}Form">
+   <s:div id="TarefasTree" styleClass="p-caixas-b">
 
-    <s:div id="TarefasTree" styleClass="p-caixas-b">
+     <rich:tree status="status" toggleType="client" execute="@this"
+       selectionType="ajax"
+       selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
+       render="painelProcessos, painelProcessosComunicacao, painelProcessosDocumento, :pesquisaListForm, #{painelCustomizado}" var="node" >
 
-      <rich:tree status="status" toggleType="client" execute="@this"
-        selectionType="ajax"
-        selectionChangeListener="#{tarefasTree.processTreeSelectionChange}"
-        render="painelProcessos,:pesquisaListForm" var="node">
+       <rich:treeModelAdaptor nodes="#{painelTreeHandler.tarefasRoots}">
+         <rich:treeNode iconCollapsed="#{wiSkin.imageFolder}/globe16.png"
+           iconExpanded="#{wiSkin.imageFolder}/globe16.png" iconLeaf="#{wiSkin.imageFolder}/messages.gif">
+           <h:outputText value="#{node.entity.get('nomeFluxo')}" />
+         </rich:treeNode>
+         <rich:treeModelAdaptor nodes="#{node.nodesTarefas}">
+           <rich:treeNode id="taskNode"
+             iconCollapsed="#{wiSkin.imageFolder}/messages.gif"
+             iconExpanded="#{wiSkin.imageFolder}/messages.gif"
+             iconLeaf="#{wiSkin.imageFolder}/messages.gif">
+             <h:outputText value="#{node.entity.get('nomeTarefa')}" />
+             <h:outputText
+               rendered="#{node.entity.get('qtd') - node.entity.get('qtdEmCaixa') gt 0}"
+               value="(#{node.entity.get('qtd') - node.entity.get('qtdEmCaixa')})" />
 
-        <rich:treeModelAdaptor nodes="#{tarefasTree.tarefasRoots}">
-          <rich:treeNode iconCollapsed="#{wiSkin.imageFolder}/globe16.png"
-            iconExpanded="#{wiSkin.imageFolder}/globe16.png" iconLeaf="#{wiSkin.imageFolder}/messages.gif">
-            <h:outputText value="#{node.entity.nomeFluxo}" />
-          </rich:treeNode>
-          <rich:treeModelAdaptor nodes="#{node.nodesTarefas}">
-            <rich:treeNode id="taskNode"
-              iconCollapsed="#{wiSkin.imageFolder}/messages.gif"
-              iconExpanded="#{wiSkin.imageFolder}/messages.gif"
-              iconLeaf="#{wiSkin.imageFolder}/messages.gif">
-              <h:outputText value="#{node.entity.nomeTarefa}" />
-              <h:outputText
-                rendered="#{node.entity.qtd - node.entity.qtdEmCaixa gt 0}"
-                value="(#{node.entity.qtd - node.entity.qtdEmCaixa})" />
+             <h:outputText rendered="#{node.entity.get('qtdEmCaixa') gt 0}"
+               value=" (Em caixas: #{node.entity.get('qtdEmCaixa')})" />
 
-              <h:outputText rendered="#{node.entity.qtdEmCaixa gt 0}"
-                value=" (Em caixas: #{node.entity.qtdEmCaixa})" />
+             <rich:contextMenu mode="ajax" target="taskNode"
+               id="menuTaskNode"
+               rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
-              <rich:contextMenu mode="ajax" target="taskNode"
-                id="menuTaskNode"
-                rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
+               <rich:menuItem
+                 label="#{eppmessages['caixa.menu.novaCaixa']}"
+                 icon="#{wiSkin.imageFolder}/add.gif"
+                 onclick="#{rich:component('novaCaixaPanel')}.show()" />
 
-                <rich:menuItem
-                  label="#{eppmessages['caixa.menu.novaCaixa']}"
-                  icon="#{wiSkin.imageFolder}/add.gif"
-                  onclick="#{rich:component('novaCaixaPanel')}.show()" />
+             </rich:contextMenu>
 
-              </rich:contextMenu>
+           </rich:treeNode>
 
-            </rich:treeNode>
+           <rich:treeModelAdaptor nodes="#{node.caixas}">
 
-            <rich:treeModelAdaptor nodes="#{node.caixas}">
+             <rich:treeNode id="caixaNode"
+               iconCollapsed="#{wiSkin.imageFolder}/message.gif"
+               iconExpanded="#{wiSkin.imageFolder}/message.gif"
+               iconLeaf="#{wiSkin.imageFolder}/message.gif">
 
-              <rich:treeNode id="caixaNode"
-                iconCollapsed="#{wiSkin.imageFolder}/message.gif"
-                iconExpanded="#{wiSkin.imageFolder}/message.gif"
-                iconLeaf="#{wiSkin.imageFolder}/message.gif">
+               <h:outputText value="#{node.entity.get('nomeCaixa')}" />
 
-                <h:outputText value="#{node.entity.nomeCaixa}" />
+               <h:outputText value="(#{node.entity.get('qtd')})" />
 
-                <h:outputText value="(#{node.entity.qtd})" />
+               <rich:contextMenu id="menuCaixa" mode="ajax"
+                 target="caixaNode"
+                 rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
-                <rich:contextMenu id="menuCaixa" mode="ajax"
-                  target="caixaNode"
-                  rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
+                 <rich:menuItem label="#{eppmessages['caixa.menu.editaCaixa']}"
+                   icon="#{wiSkin.imageFolder}/mod/edit.gif"
+                   action="#{painelUsuarioController.editarCaixa()}" />
 
-                  <rich:menuItem label="#{eppmessages['caixa.menu.editaCaixa']}"
-                    icon="#{wiSkin.imageFolder}/mod/edit.gif"
-                    action="#{painelUsuarioHome.editaCaixa()}" />
+                 <rich:menuItem label="#{eppmessages['caixa.menu.removerCaixa']}"
+                   icon="#{wiSkin.imageFolder}/remove.png"
+                   onclick="return confirm(\'#{eppmessages['caixa.confirm.remove']}\');" 
+                   render="tabPainelUsuario, pageBodyDialogMessage"
+                   action="#{caixaCrudAction.removerCaixaNoPainel()}">
 
-                  <rich:menuItem label="#{eppmessages['caixa.menu.removerCaixa']}"
-                    icon="#{wiSkin.imageFolder}/remove.png"
-                    onclick="return confirm(\'#{eppmessages['caixa.confirm.remove']}\');" render="tarefasDiv"
-                    action="#{caixaCrudAction.remove}">
+                   <f:setPropertyActionListener
+                     target="#{caixaCrudAction.id}"
+                     value="#{painelUsuarioController.selected.get('idCaixa')}" />
 
-                    <f:setPropertyActionListener
-                      target="#{caixaCrudAction.id}"
-                      value="#{painelUsuarioHome.selected.idCaixa}" />
+                 </rich:menuItem>
 
-                  </rich:menuItem>
+               </rich:contextMenu>
 
-                </rich:contextMenu>
+               <rich:dropTarget
+                 acceptedTypes="task#{node.entity.get('idTarefa')}"
+                 dropListener="#{painelUsuarioController.moverProcessoParaCaixaDropEventListener}"
+                 dropValue="#{node.entity.get('idCaixa')}"
+                 render="tabPainelUsuario"
+                 limitRender="true" />
 
-                <rich:dropTarget
-                  acceptedTypes="task#{node.entity.idTarefa}"
-                  dropListener="#{painelUsuarioHome.processoCaixa}"
-                  dropValue="#{node.entity.idCaixa}"
-                  render="painelProcessos, tarefasDiv"
-                  limitRender="true" />
+             </rich:treeNode>
 
-              </rich:treeNode>
+           </rich:treeModelAdaptor>
 
-            </rich:treeModelAdaptor>
+         </rich:treeModelAdaptor>
 
-          </rich:treeModelAdaptor>
+       </rich:treeModelAdaptor>
 
-        </rich:treeModelAdaptor>
+     </rich:tree>
 
-      </rich:tree>
-
-    </s:div>
-
-  </h:form>
+   </s:div>
 
 </ui:composition>

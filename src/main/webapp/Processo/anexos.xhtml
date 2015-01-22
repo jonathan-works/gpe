@@ -42,28 +42,8 @@
             columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
             value="#{row.descricao}" />
         <ui:define name="toolBar">
-            <s:link
-                target="idJan#{row.id}"
-                rendered="#{not empty row.documentoBin.assinaturas}"
-                view="/Processo/Consulta/validaDocumento.xhtml"
-                onclick="infox.openPopUp('idJan#{row.id}', '', 650, 160, 450, 450);">
-                <h:graphicImage
-                    title="#{eppmessages['assinaturas.validar']}"
-                    alt="#{eppmessages['assinaturas.validar']}"
-                    url="#{wiSkin.imageFolder}/lock.png" />
-                <f:param value="#{row.id}" name="idDocumento" />
-            </s:link>
-            <s:link
-                target="idJan#{row.id}"
-                rendered="#{empty row.documentoBin.assinaturas}"
-                view="/Processo/Consulta/validaDocumento.xhtml"
-                onclick="infox.openPopUp('idJan#{row.id}', '', 650, 200, 450, 450);">
-                <h:graphicImage
-                    title="#{eppmessages['assinaturas.assinar']}"
-                    alt="#{eppmessages['assinaturas.assinar']}"
-                    url="#{wiSkin.imageFolder}/lock_unlock.png" />
-                <f:param value="#{row.id}" name="idDocumento" />    
-            </s:link>
+        	<wi:toolBarAssinatura idDocumento="#{row.id}" 
+							      renderedLock="#{not empty row.documentoBin.assinaturas}" />
             <h:graphicImage styleClass="opacityHover" url="#{wiSkin.imageFolder}/view.png" 
                             title="#{eppmessages['button.historico']}" 
                             rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"

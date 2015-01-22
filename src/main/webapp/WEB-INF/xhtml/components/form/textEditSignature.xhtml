@@ -1,99 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:a="http://richfaces.org/a4j"
-  xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:rich="http://richfaces.org/rich"
-  xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:wi="http://www.itx.com.br/jsf">
-  <ui:param
-    name="editorId"
-    value="#{id}Editor" />
-  <ui:param
-    name="idSignature"
-    value="#{id}signature" />
-  <ui:param
-    name="idCertChain"
-    value="#{id}certChain" />
-  <f:subview id="#{f.id}SubView">
-    <s:div id="#{f.id}TipoDocDiv">
-      <wi:selectOneMenuEntity
-        id="#{f.id}tipoProcessoDocumento"
-        label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
-        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
-        required="#{not readonly}"
-        showLabelSelecione="true"
-        value="#{home.documentosAssinaveis[id].classificacao}"
-        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}"
-        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}">
-        <a:ajax
-          event="change"
-          render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}ToolTipDivExterna"
-          execute="@this"
-          limitRender="true" />
-      </wi:selectOneMenuEntity>
-    </s:div>
-    <s:div id="#{id}EditorDiv">
-    	<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
-		    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty home.documentosAssinaveis[id].classificacao.observacao and not (readonly or home.possuiAssinatura(id))}">
-			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif" />
-				<div class="epp-tooltip">
-					<div class="tooltip-panel">
-						<div><h:outputText value="Observação:"/></div>
-						<h:outputText value="#{home.documentosAssinaveis[id].classificacao.observacao}"/>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf">
+	<ui:param name="editorId" value="#{id}Editor" />
+	<ui:param name="idSignature" value="#{id}Signature" />
+	<ui:param name="idCertChain" value="#{id}CertChain" />
+	<ui:param name="minuta" value="#{empty home.documentosAssinaveis[id].idDocumento or home.documentosAssinaveis[id].minuta}" />
+	<f:subview id="#{f.id}SubView">
+		<s:div id="#{f.id}TipoDocDiv">
+			<wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
+				label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+				items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
+				required="#{not readonly}" showLabelSelecione="true"
+				value="#{home.documentosAssinaveis[id].classificacao}"
+				readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id) or not minuta}"
+				disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id) or not minuta}">
+				<a:ajax event="change"
+					render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}ToolTipDivExterna"
+					execute="@this" limitRender="true" />
+			</wi:selectOneMenuEntity>
+		</s:div>
+		<s:div id="#{id}EditorDiv">
+			<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
+				<s:div id="#{editorId.replace('-','')}ToolTipDiv"
+					styleClass="tooltip-parent" style="width: 10px"
+					rendered="#{not empty home.documentosAssinaveis[id].classificacao.observacao and not (readonly or home.possuiAssinatura(id))}">
+					<h:graphicImage id="#{id}helpEditTipImg"
+						url="#{wiSkin.imageFolder}/help.gif" />
+					<div class="epp-tooltip">
+						<div class="tooltip-panel">
+							<div>
+								<h:outputText value="Observação:" />
+							</div>
+							<h:outputText
+								value="#{home.documentosAssinaveis[id].classificacao.observacao}" />
+						</div>
 					</div>
-				</div>
-		    </s:div>
-	    </s:div>
-	    <wi:editor
-	      id="#{editorId}"
-	      value="#{home.instance[id]}"
-	      readonly="#{readonly or home.possuiAssinatura(id)}" />
-    </s:div>
-    <s:div
-      id="#{editorId.replace('-','')}SignatureDiv"
-      rendered="#{not readonly}">
-      <s:div rendered="#{home.podeRenderizarApplet(id)}">
-        <a:jsFunction
-          name="#{editorId.replace('-', '')}submitForm"
-          action="#{home.assinarDocumento(id)}"
-          execute="@this #{idCertChain} #{idSignature} #{editorId} #{f.id}tipoProcessoDocumento"
-          render="#{f.id}TipoDocDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}AppletDiv #{id}EditorDiv pageBodyDialogMessage"
-          oncomplete="infox.hideLoading();" />
-        <h:inputHidden
-          id="#{idCertChain}"
-          value="#{home.documentosAssinaveis[id].certChain}" />
-        <h:inputHidden
-          id="#{idSignature}"
-          value="#{home.documentosAssinaveis[id].signature}" />
-      </s:div>
-    </s:div>
-    <s:div
-      id="#{editorId.replace('-','')}AppletDiv"
-      styleClass="applet-div"
-      rendered="#{not readonly}">
-      <wi:appletAssinatura
-        id="#{id}"
-        urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-        formId="#{rich:clientId('taskInstanceForm')}"
-        certificationChainField="#{rich:clientId(idCertChain)}"
-        signatureField="#{rich:clientId(idSignature)}"
-        getDataFunction="infox.editor['#{editorId}'].instance.getData()"
-        useBase64Function="infox.editor['#{editorId}'].useBase64()"
-        functionPreSign="infox.showLoading();"
-        functionPosSign="#{editorId.replace('-', '')}submitForm();infox.showLoading();"
-        debug="false"
-        loginMode="false"
-        useProviderDll="false"
-        rendered="#{home.podeRenderizarApplet(id)}">
-      </wi:appletAssinatura>
-    </s:div>
-    <h:outputScript
-      rendered="#{not readonly and home.podeRenderizarApplet(id)}">
+				</s:div>
+			</s:div>
+			<s:div>
+				<wi:selectBooleanRadio id="#{f.id}minuta" value="#{home.documentosAssinaveis[id].minuta}"
+					label="#{eppmessages['processoDocumentoBin.minuta']}" readonly="#{readonly or not minuta}"
+					disabled="#{readonly or not minuta}"/>
+			</s:div>
+			<wi:editor id="#{editorId}" value="#{home.instance[id]}"
+				readonly="#{readonly or home.possuiAssinatura(id) or not minuta}" />
+		</s:div>
+		<s:div id="#{editorId.replace('-','')}SignatureDiv"
+			rendered="#{not readonly}">
+			<s:div rendered="#{home.podeRenderizarApplet(id)}">
+				<a:jsFunction name="#{editorId.replace('-', '')}submitForm"
+					action="#{home.assinarDocumento(id)}"
+					execute="@this #{idCertChain} #{idSignature} #{editorId} #{f.id}tipoProcessoDocumento"
+					render="#{f.id}TipoDocDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}AppletDiv #{id}EditorDiv pageBodyDialogMessage"
+					oncomplete="infox.hideLoading();" />
+
+				<h:inputHidden id="#{idCertChain}"
+					value="#{home.documentosAssinaveis[id].certChain}" />
+				<h:inputHidden id="#{idSignature}"
+					value="#{home.documentosAssinaveis[id].signature}" />
+			</s:div>
+		</s:div>
+		<s:div id="#{editorId.replace('-','')}AppletDiv"
+			styleClass="applet-div" rendered="#{not readonly}">
+			<wi:certificadoDigital id="#{id}Assinatura"
+				urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+				formId="#{rich:clientId('taskInstanceForm')}"
+				certificationChainField="#{home.documentosAssinaveis[id].certChain}"
+				signatureField="#{home.documentosAssinaveis[id].signature}"
+				signableData="infox.editor['#{editorId}'].instance.getData()"
+				useBase64Function="infox.editor['#{editorId}'].useBase64()"
+				functionPreSign="infox.showLoading();"
+				functionPosSign="#{editorId.replace('-', '')}submitForm();infox.showLoading();"
+				debug="false" loginMode="false" useProviderDll="false"
+				rendered="#{home.podeRenderizarApplet(id)}">
+			</wi:certificadoDigital>
+		</s:div>
+		<h:outputScript
+			rendered="#{not readonly and home.podeRenderizarApplet(id)}">
 			namespace("infox.editor.#{editorId}",{
 				useBase64:function useBase64() {
 					return "true";
@@ -124,5 +113,5 @@
 				}
 			});
 		</h:outputScript>
-  </f:subview>
+	</f:subview>
 </ui:composition>

@@ -60,11 +60,11 @@
                     execute="@this"
                     render="@form pageBodyDialogMessages"
                     limitRender="true"
-                    action="#{action.iniciarProcesso(participantesController.processoEpa)}"
+                    action="#{action.iniciarProcesso(participantesController.processo)}"
                     rendered="#{participantesController.podeIniciarProcesso()}"
                     value="#{eppmessages['processo.iniciarBtn']}"
                     styleClass="#{wi:get(styleClass, 'buttons')}"
-                    oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processoEpa.idProcesso}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); window.location='#{pathResolver.contextPath}/Painel/list.seam';" />
+                    oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processo.idProcesso}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); window.location='#{pathResolver.contextPath}/Painel/list.seam';" />
             </s:div>
         </h:form>
     </s:div>

@@ -1,12 +1,9 @@
 package br.com.infox.epp.access.crud;
 
-import static br.com.infox.epp.access.service.AuthenticatorService.CERTIFICATE_ERROR_EXPIRED;
-import static br.com.infox.epp.access.service.AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN;
-import static java.text.MessageFormat.format;
-
 import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
+import java.text.MessageFormat;
 import java.util.List;
 
 import javax.security.auth.login.LoginException;
@@ -17,10 +14,11 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -45,8 +43,7 @@ public class TermoAdesaoAction implements Serializable {
     private static final String METHOD_ASSINAR_TERMO_ADESAO = "termoAdesaoAction.assinarTermoAdesao(String,String)";
     private static final String PARAMETRO_TERMO_ADESAO = "termoAdesao";
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging
-            .getLogProvider(TermoAdesaoAction.class);
+    private static final LogProvider LOG = Logging.getLogProvider(TermoAdesaoAction.class);
     public static final String NAME = "termoAdesaoAction";
     public static final String PANEL_NAME = "termoAdesaoPanel";
     public static final String TERMO_ADESAO_REQ = "termoAdesaoRequired";
@@ -56,18 +53,12 @@ public class TermoAdesaoAction implements Serializable {
     private String termoAdesao;
     private String tituloTermoAdesao;
 
-    @In
-    private ParametroManager parametroManager;
-    @In
-    private ModeloDocumentoManager modeloDocumentoManager;
-    @In
-    private AuthenticatorService authenticatorService;
-    @In
-    private DocumentoBinManager documentoBinManager;
-    @In
-    private AssinaturaDocumentoService assinaturaDocumentoService;
-    @In
-    private PessoaFisicaManager pessoaFisicaManager;
+    @In private ParametroManager parametroManager;
+    @In private ModeloDocumentoManager modeloDocumentoManager;
+    @In private AuthenticatorService authenticatorService;
+    @In private DocumentoBinManager documentoBinManager;
+    @In private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In private PessoaFisicaManager pessoaFisicaManager;
 
     public String assinarTermoAdesao(String certChain, String signature) {
         try {
@@ -75,7 +66,7 @@ public class TermoAdesaoAction implements Serializable {
             authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
             DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
 
-            final List<UsuarioPerfil> perfilAtivoList = usuarioLogin.getUsuarioPerfilAtivoList();
+            List<UsuarioPerfil> perfilAtivoList = usuarioLogin.getUsuarioPerfilAtivoList();
             if (perfilAtivoList != null) {
                 UsuarioPerfil perfil = null;
                 for (UsuarioPerfil usuarioPerfil : perfilAtivoList) {
@@ -88,16 +79,19 @@ public class TermoAdesaoAction implements Serializable {
                 pessoaFisica.setTermoAdesao(bin);
             }
             documentoBinManager.flush();
-            FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
+            FacesMessages.instance().add(Severity.INFO,
+                    Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
             return "/Painel/list.seam";
-        } catch (final CertificateExpiredException e) {
+        } catch (CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
-            throw new RedirectToLoginApplicationException(Messages.resolveMessage(CERTIFICATE_ERROR_EXPIRED), e);
-        } catch (final CertificateException e) {
+            throw new RedirectToLoginApplicationException(Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_EXPIRED), e);
+        } catch (CertificateException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
-            throw new RedirectToLoginApplicationException(format(Messages.resolveMessage(CERTIFICATE_ERROR_UNKNOWN),e.getMessage()), e);
+            throw new RedirectToLoginApplicationException(MessageFormat.format(
+                            Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN),
+                            e.getMessage()), e);
         } catch (CertificadoException | LoginException | DAOException e) {
-            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
+            LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e); 
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
         } catch (AssinaturaException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
@@ -109,33 +103,39 @@ public class TermoAdesaoAction implements Serializable {
         if (termoAdesao == null) {
             Parametro parametro = parametroManager.getParametro(PARAMETRO_TERMO_ADESAO);
             if (parametro != null) {
-                ModeloDocumento modeloDocumento = modeloDocumentoManager.getModeloDocumentoByTitulo(tituloTermoAdesao=parametro.getValorVariavel());
+                tituloTermoAdesao = parametro.getValorVariavel();
+                ModeloDocumento modeloDocumento = modeloDocumentoManager.getModeloDocumentoByTitulo(tituloTermoAdesao);
                 termoAdesao = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento);
             }
             if (termoAdesao == null) {
                 termoAdesao = "<div><p>TERMO DE ADESÃO</p></div>";
             }
         }
-        return termoAdesao;
+        return this.termoAdesao;
     }
 
     public String getTermoAdesaoPanelName() {
-        return PANEL_NAME;
+        return TermoAdesaoAction.PANEL_NAME;
     }
 
     public String getSignature() {
-        return signature;
+        return this.signature;
     }
 
-    public void setSignature(String signature) {
+    public void setSignature(final String signature) {
         this.signature = signature;
     }
 
     public String getCertChain() {
-        return certChain;
+        return this.certChain;
     }
 
-    public void setCertChain(String certChain) {
+    public void setCertChain(final String certChain) {
         this.certChain = certChain;
     }
+
+    public String getMd5Sum() {
+        return MD5Encoder.encode(getTermoAdesao());
+    }
+
 }

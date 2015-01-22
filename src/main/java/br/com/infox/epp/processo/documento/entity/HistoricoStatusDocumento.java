@@ -37,7 +37,7 @@ import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 		@NamedQuery(name = EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO, query = EXISTE_ALGUM_HISTORICO_BY_ID_DOCUMENTO_QUERY),
 		@NamedQuery(name = LIST_HISTORICO_BY_DOCUMENTO, query = LIST_HISTORICO_BY_DOCUMENTO_QUERY)
 })
-public class HistoricoStatusDocumento implements Serializable {
+public class HistoricoStatusDocumento implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_historico_status_documento";
@@ -150,6 +150,13 @@ public class HistoricoStatusDocumento implements Serializable {
 		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
+	}
+	
+	public HistoricoStatusDocumento makeCopy() throws CloneNotSupportedException {
+		HistoricoStatusDocumento clone = (HistoricoStatusDocumento) clone();
+		clone.setId(null);
+		clone.setDocumento(null);
+		return clone;
 	}
 	
 }

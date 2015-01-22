@@ -14,23 +14,28 @@
   <ui:define name="body">
     <rich:collapsiblePanel
       switchType="client"
-      header="#{eppmessages['processo.titleView']} #{consultaController.processoEpa.numeroProcesso}"
+      header="#{eppmessages['processo.titleView']} #{consultaController.processo.numeroProcesso}"
       expanded="false">
       <h:panelGrid
-        columns="2"
+        columns="3"
         width="100%"
         columnClasses="viewColumn">
         <wi:outputText
           id="dataInicio"
           label="#{eppmessages['processo.dataInicio']}"
-          value="#{consultaController.processoEpa.dataInicio}">
+          value="#{consultaController.processo.dataInicio}">
           <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
         </wi:outputText>
         <wi:outputText
-          id="usuarioCadastroProcesso"
+          id="usuarioCadastro"
           label="#{eppmessages['processo.usuarioCadastroProcesso']}"
-          value="#{consultaController.processoEpa.usuarioCadastroProcesso}" />
-      </h:panelGrid>
+          value="#{consultaController.processo.usuarioCadastro}" />
+       <ui:repeat var="metadado" value="#{consultaController.detalhesMetadados}" >
+     		<wi:outputText id="metadado#{metadado.metadadoType}"
+               label="#{metadadoMessages[metadado.metadadoType]}"
+               value="#{metadado}" />
+       </ui:repeat>
+    </h:panelGrid>
     </rich:collapsiblePanel>
     <infox:tabPanel
       headerSpacing="2"
@@ -62,8 +67,8 @@
         immediate="true"
         status=":status"
         title="#{eppmessages['processoDocumento.anexarDocumento']}"
-        rendered="#{empty consultaController.processoEpa.dataFim}"
-        action="#{anexoController.onClickTabAnexar(consultaController.processoEpa)}">
+        rendered="#{empty consultaController.processo.dataFim}"
+        action="#{anexoController.onClickTabAnexar(consultaController.processo)}">
         <wi:ajaxDiv id="divAnexarDocumentos">
           <wi:dataForm
             formId="anexarDocumentosForm"
@@ -76,7 +81,7 @@
       <infox:tab
         id="documentoFisicoTab"
         name="documentoFisicoTab"
-        action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(consultaController.processoEpa)}"
+        action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(consultaController.processo)}"
         title="#{eppmessages['documentoFisico.titleTab']}">
         <ui:decorate
           id="frameDecorate"
@@ -112,9 +117,10 @@
         status=":status"
         rendered="#{processoHandler.hasPartes()}"
                 title="#{eppmessages['participanteProcesso.participantes']}"
-                action="#{participanteProcessoList.entity.setProcesso(consultaController.processoEpa)}">
+                action="#{participanteProcessoList.entity.setProcesso(consultaController.processo)}">
         <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
       </infox:tab>
+      <ui:include src="/Processo/Consulta/abasCustomizadasDoDetalheDoProcesso.xhtml"/>
       <div>
               <wi:commandButton
               	id="btnVoltar"

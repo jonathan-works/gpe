@@ -49,7 +49,7 @@ public final class DateUtil {
 
     /**
      * Metodo que recebe uma data e retorna essa data com as horas modificadas
-     * para '23:59:59'
+     * para '23:59:59.999'
      * 
      * @param date
      * @return
@@ -63,6 +63,7 @@ public final class DateUtil {
         dt.set(Calendar.HOUR_OF_DAY, 23);
         dt.set(Calendar.MINUTE, 59);
         dt.set(Calendar.SECOND, 59);
+        dt.set(Calendar.MILLISECOND, 999);
         return dt.getTime();
     }
 
@@ -82,7 +83,7 @@ public final class DateUtil {
 
     /**
      * Metodo que recebe uma data e retorna essa data com as horas modificadas
-     * para '00:00:00'
+     * para '00:00:00.000'
      * 
      * @param date
      * @return
@@ -96,6 +97,7 @@ public final class DateUtil {
         dt.set(Calendar.HOUR_OF_DAY, 0);
         dt.set(Calendar.MINUTE, 0);
         dt.set(Calendar.SECOND, 0);
+        dt.set(Calendar.MILLISECOND, 0);
         return dt.getTime();
     }
 

@@ -1,7 +1,7 @@
 package br.com.infox.epp.processo.entity;
 
-import static br.com.infox.core.constants.LengthConstants.DESCRICAO_MEDIA;
-import static br.com.infox.core.constants.LengthConstants.FLAG;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_MEDIA;
+import static br.com.infox.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.processo.query.RelacionamentoQuery.DATA_RELACIONAMENTO;

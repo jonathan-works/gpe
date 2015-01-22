@@ -2,7 +2,7 @@ package br.com.infox.certificado;
 
 import java.util.Date;
 
-public interface CertificadoDadosPessoaFisica {
+public interface CertificadoDadosPessoaFisica extends Certificado {
     String getCPF();
     Date getDataNascimento();
     /**

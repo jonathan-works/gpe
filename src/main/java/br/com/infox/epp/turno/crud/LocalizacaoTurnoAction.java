@@ -7,27 +7,27 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.log.Log;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.Log;
+import br.com.infox.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.turno.component.TurnoBean;
 import br.com.infox.epp.turno.component.TurnoHandler;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.turno.manager.LocalizacaoTurnoManager;
+import br.com.infox.util.time.DateRange;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(LocalizacaoTurnoAction.NAME)
 public class LocalizacaoTurnoAction implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "localizacaoTurnoAction";
-	private static final Log LOG = Logging.getLog(LocalizacaoTurnoAction.class);
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "localizacaoTurnoAction";
+    private static final Log LOG = Logging.getLog(LocalizacaoTurnoAction.class);
 
-	private static final int UMA_HORA_EM_MINUTOS = 60;
+    private static final int UMA_HORA_EM_MINUTOS = 60;
 
     @In
     private LocalizacaoTurnoManager localizacaoTurnoManager;
@@ -38,56 +38,65 @@ public class LocalizacaoTurnoAction implements Serializable {
 
     private TurnoHandler turnoHandler;
 
-    public void newInstance(Localizacao localizacao) {
-        this.localizacao = localizacao;
-        createTurnoHandler();
-    }
-
     private void createTurnoHandler() {
-        turnoHandler = new TurnoHandler(UMA_HORA_EM_MINUTOS);
-        for (LocalizacaoTurno localizacaoTurno : localizacaoTurnoManager.listByLocalizacao(localizacao)) {
-            turnoHandler.addIntervalo(localizacaoTurno.getDiaSemana(), localizacaoTurno.getHoraInicio(), localizacaoTurno.getHoraFim());
+        this.turnoHandler = new TurnoHandler(
+                LocalizacaoTurnoAction.UMA_HORA_EM_MINUTOS);
+        for (final LocalizacaoTurno localizacaoTurno : this.localizacaoTurnoManager
+                .listByLocalizacao(this.localizacao)) {
+            this.turnoHandler.addIntervalo(localizacaoTurno.getDiaSemana(),
+                    localizacaoTurno.getHoraInicio(),
+                    localizacaoTurno.getHoraFim());
         }
     }
 
     public TurnoHandler getTurnoHandler() {
-        return turnoHandler;
-    }
-
-    public void setTurnoHandler(TurnoHandler turnoHandler) {
-        this.turnoHandler = turnoHandler;
+        return this.turnoHandler;
     }
 
     public void gravarTurnos() {
         try {
-            localizacaoTurnoManager.removerTurnosAnteriores(localizacao);
+            this.localizacaoTurnoManager
+            .removerTurnosAnteriores(this.localizacao);
             inserirTurnosSelecionados();
-        } catch (DAOException e) {
-            actionMessagesService.handleDAOException(e);
+        } catch (final DAOException e) {
+            this.actionMessagesService.handleDAOException(e);
         }
     }
 
     private void inserirTurnosSelecionados() {
         boolean houveErro = false;
-        for (TurnoBean turno : turnoHandler.getTurnosSelecionados()) {
-            LocalizacaoTurno localizacaoTurno = new LocalizacaoTurno();
-            localizacaoTurno.setLocalizacao(localizacao);
+        for (final TurnoBean turno : this.turnoHandler.getTurnosSelecionados()) {
+            final LocalizacaoTurno localizacaoTurno = new LocalizacaoTurno();
+            localizacaoTurno.setLocalizacao(this.localizacao);
             localizacaoTurno.setDiaSemana(turno.getDiaSemana());
             localizacaoTurno.setHoraInicio(turno.getHoraInicial());
             localizacaoTurno.setHoraFim(turno.getHoraFinal());
-            localizacaoTurno.setTempoTurno(DateUtil.calculateMinutesBetweenTimes(turno.getHoraInicial(), turno.getHoraFinal()));
+
+            localizacaoTurno.setTempoTurno(new DateRange(turno.getHoraFinal(),
+                    turno.getHoraFinal()).get(DateRange.MINUTES).intValue());
 
             try {
-                localizacaoTurnoManager.persist(localizacaoTurno);
-            } catch (DAOException e) {
+                this.localizacaoTurnoManager.persist(localizacaoTurno);
+            } catch (final DAOException e) {
                 houveErro = true;
-                LOG.error(".inserirTurnosSelecionados()", e);
+                LocalizacaoTurnoAction.LOG.error(
+                        ".inserirTurnosSelecionados()", e);
             }
         }
         if (!houveErro) {
             FacesMessages.instance().add("#{eppmessages['entity_updated']}");
         } else {
-            FacesMessages.instance().add("#{eppmessages['localizacaoTurno.erroGravacaoTurno']}");
+            FacesMessages.instance().add(
+                    "#{eppmessages['localizacaoTurno.erroGravacaoTurno']}");
         }
+    }
+
+    public void newInstance(final Localizacao localizacao) {
+        this.localizacao = localizacao;
+        createTurnoHandler();
+    }
+
+    public void setTurnoHandler(final TurnoHandler turnoHandler) {
+        this.turnoHandler = turnoHandler;
     }
 }

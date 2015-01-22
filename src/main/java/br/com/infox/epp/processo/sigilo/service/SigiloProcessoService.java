@@ -13,7 +13,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.processo.entity.ProcessoEpa;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoManager;
@@ -32,8 +32,7 @@ public class SigiloProcessoService implements Serializable {
     @In
     private SigiloProcessoPermissaoManager sigiloProcessoPermissaoManager;
 
-    public boolean usuarioPossuiPermissao(UsuarioLogin usuario,
-            ProcessoEpa processo) {
+    public boolean usuarioPossuiPermissao(UsuarioLogin usuario, Processo processo) {
         if (sigiloProcessoManager.isSigiloso(processo)) {
             return sigiloProcessoPermissaoManager.usuarioPossuiPermissao(usuario, sigiloProcessoManager.getSigiloProcessoAtivo(processo));
         }
@@ -55,8 +54,7 @@ public class SigiloProcessoService implements Serializable {
         gravarPermissoes(sigiloProcesso.getProcesso(), Arrays.asList(permissaoPadrao));
     }
 
-    public void gravarPermissoes(ProcessoEpa processo,
-            List<SigiloProcessoPermissao> permissoes) throws DAOException {
+    public void gravarPermissoes(Processo processo, List<SigiloProcessoPermissao> permissoes) throws DAOException {
         SigiloProcesso sigiloProcesso = sigiloProcessoManager.getSigiloProcessoAtivo(processo);
         if (sigiloProcesso != null) {
             sigiloProcessoPermissaoManager.gravarPermissoes(permissoes, sigiloProcesso);

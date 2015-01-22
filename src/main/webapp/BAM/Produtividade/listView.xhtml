@@ -12,6 +12,7 @@
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="title">#{eppmessages['produtividade.pageTitle']}</ui:define>
     <ui:define name="body">
+      <wi:panel id="produtividadePanel" rendered="true">
         <wi:dataTable values="#{produtividadeAction.list(15)}"
             bean="#{produtividadeAction}"
             tableTitle="#{eppmessages['produtividade.tableTitle']}"
@@ -64,5 +65,6 @@
                 columnHeader="#{eppmessages['produtividade.tempoMaximo']}"
                 value="#{row.maximoTempoGasto}" />
         </wi:dataTable>
+      </wi:panel>
     </ui:define>
 </ui:composition>

@@ -27,8 +27,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.log.LogProvider;
-import org.jboss.seam.log.Logging;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -254,7 +254,7 @@ public class ProcessBuilder implements Serializable {
             if (node instanceof InfoxMailNode) {
                 InfoxMailNode mailNode = (InfoxMailNode) node;
                 if (Strings.isNullOrEmpty(mailNode.getTo())) {
-                    throw new IllegalStateException("O nó de email deve possuir pelo menos um destinatário.");
+                    throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir pelo menos um destinatário.");
                 }
             }
         }

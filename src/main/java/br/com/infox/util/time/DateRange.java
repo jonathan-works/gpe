@@ -18,9 +18,14 @@ public class DateRange {
     public static final int WEEKS = 5;
     public static final int YEARS = 5;
 
-    public DateRange(Date date1, Date date2) {
-        long _d1 = date1.getTime();
-        long _d2 = date2.getTime();
+    public DateRange() {
+        this.start = 0;
+        this.end = 0;
+    }
+
+    public DateRange(final Date date1, final Date date2) {
+        final long _d1 = date1.getTime();
+        final long _d2 = date2.getTime();
 
         if (_d1 > _d2) {
             this.start = _d2;
@@ -31,43 +36,16 @@ public class DateRange {
         }
     }
 
-    public Date getStart() {
-        return new Date(this.start);
+    public boolean contains(final Date date) {
+        final long _date = date.getTime();
+        return (_date >= this.start) && (_date <= this.end);
     }
 
-    public void setStart(Date date) {
-        long _start = date.getTime();
-        if (_start <= this.end) {
-            this.start = _start;
-        }
+    public boolean contains(final DateRange range) {
+        return (this.start <= range.start) && (this.end >= range.end);
     }
 
-    public Date getEnd() {
-        return new Date(this.end);
-    }
-
-    public void setEnd(Date date) {
-        long _end = date.getTime();
-        if (_end >= this.start) {
-            this.end = _end;
-        }
-    }
-
-    public boolean contains(Date date) {
-        long _date = date.getTime();
-        return _date >= this.start && _date <= this.end;
-    }
-
-    public boolean contains(DateRange range) {
-        return this.start <= range.start && this.end >= range.end;
-    }
-
-    public boolean intersects(DateRange range) {
-        return (range.start >= this.start && range.start <= this.end)
-                || (range.end >= this.start && range.end <= this.end);
-    }
-
-    public long get(int intervalFormat) {
+    public Long get(final int intervalFormat) {
         long divisor = 1;
         switch (intervalFormat) {
             case DAYS:
@@ -78,11 +56,38 @@ public class DateRange {
                 divisor *= 60;
             case SECONDS:
                 divisor *= 1000;
-            break;
+                break;
             default:
                 divisor = 1;
-            break;
+                break;
         }
-        return (this.end - this.start) / divisor;
+        return new Long((this.end - this.start) / divisor);
+    }
+
+    public Date getEnd() {
+        return new Date(this.end);
+    }
+
+    public Date getStart() {
+        return new Date(this.start);
+    }
+
+    public boolean intersects(final DateRange range) {
+        return ((range.start >= this.start) && (range.start <= this.end))
+                || ((range.end >= this.start) && (range.end <= this.end));
+    }
+
+    public void setEnd(final Date date) {
+        final long _end = date.getTime();
+        if (_end >= this.start) {
+            this.end = _end;
+        }
+    }
+
+    public void setStart(final Date date) {
+        final long _start = date.getTime();
+        if (_start <= this.end) {
+            this.start = _start;
+        }
     }
 }

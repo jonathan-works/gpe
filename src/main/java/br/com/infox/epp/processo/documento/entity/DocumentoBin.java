@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Type;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.constants.LengthConstants;
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
@@ -81,11 +81,15 @@ public class DocumentoBin implements Serializable {
     @Type(type = UUIDGenericType.TYPE_NAME)
     private UUID uuid;
     
+    @Column(name = "in_minuta")
+    @NotNull
+    private boolean minuta = false;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE})
-    private List<AssinaturaDocumento> assinaturas;
+    private List<AssinaturaDocumento> assinaturas = new ArrayList<>();
     
     @Transient
     private byte[] processoDocumento;
@@ -184,6 +188,14 @@ public class DocumentoBin implements Serializable {
         this.uuid = uuid;
     }
     
+    public boolean isMinuta() {
+		return minuta;
+	}
+    
+    public void setMinuta(boolean minuta) {
+		this.minuta = minuta;
+	}
+    
     @Override
     public String toString() {
         return isBinario() ? nomeArquivo : md5Documento;
@@ -191,7 +203,7 @@ public class DocumentoBin implements Serializable {
 
     @Transient
     public boolean isBinario() {
-        return !Strings.isEmpty(nomeArquivo);
+        return !Strings.isEmpty(getExtensao());
     }
 
     @Transient

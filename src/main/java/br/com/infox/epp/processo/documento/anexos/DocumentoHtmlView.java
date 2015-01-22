@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
 @AutoCreate
@@ -25,6 +26,8 @@ public class DocumentoHtmlView implements Serializable {
 
     @In
     private DocumentoManager documentoManager;
+    @In
+    private DocumentoBinManager documentoBinManager;
 
     private Documento viewInstance;
     private DocumentoBin documentoBin;
@@ -33,6 +36,12 @@ public class DocumentoHtmlView implements Serializable {
         if (idDocumento != null && idDocumento != 0) {
             setViewInstance(documentoManager.find(idDocumento));
         }
+    }
+    
+    public void setIdDocumentoBin(Integer idDocumentoBin) {
+    	if (idDocumentoBin != null && idDocumentoBin != 0) {
+    		setViewInstanceBin(documentoBinManager.find(idDocumentoBin));
+    	}
     }
 
     public String setViewInstanceBin(DocumentoBin documentoBin) {

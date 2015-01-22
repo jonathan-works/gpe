@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.partes.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -32,4 +34,11 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     	return existeParticipanteByPessoaProcessoPaiTipo(pessoa, processo, pai, tipo);
     }
     
+    public List<ParticipanteProcesso> getParticipantesProcesso(Processo processo) {
+    	return getDao().getParticipantesProcesso(processo);
+    }
+    
+    public List<ParticipanteProcesso> getParticipantesProcessoRaiz(Processo processo) {
+    	return getDao().getParticipantesProcessoRaiz(processo);
+    }
 }

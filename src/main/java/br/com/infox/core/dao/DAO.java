@@ -4,12 +4,17 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -19,6 +24,7 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.transaction.Transaction;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.seam.exception.ApplicationException;
 
 @Scope(ScopeType.EVENT)
@@ -38,12 +44,26 @@ public abstract class DAO<T> implements Serializable {
      * @param id do registro
      * @return objeto encontrado.
      */
-    public T find(final Object id) {
+    public T find(Object id) {
         if (id == null) {
             return null;
         }
         Class<T> entityClass = getEntityClass();
         return getEntityManager().find(entityClass, id);
+    }
+    
+    public List<T> findByIds(Collection<? extends Number> ids) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<T> criteriaQuery = cb.createQuery(getEntityClass());
+    	Root<T> root = criteriaQuery.from(getEntityClass());
+    	criteriaQuery.select(root);
+    	String idAttributeName = EntityUtil.getId(getEntityClass()).getName();
+    	criteriaQuery.where(root.get(idAttributeName).in(ids));
+    	return getEntityManager().createQuery(criteriaQuery).getResultList();
+    }
+    
+    public void lock(T entity) {
+    	entityManager.lock(entity, LockModeType.PESSIMISTIC_READ);
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -171,6 +191,12 @@ public abstract class DAO<T> implements Serializable {
         } finally {
             rollbackTransactionIfNeeded();
         }
+    }
+
+    @Transactional
+    public T removeWithoutFlush(final T object) {
+		getEntityManager().remove(object);
+		return object;
     }
 
     public T merge(final T object) throws DAOException {
