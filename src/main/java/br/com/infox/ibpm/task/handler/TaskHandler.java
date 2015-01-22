@@ -3,7 +3,6 @@ package br.com.infox.ibpm.task.handler;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
-import br.com.infox.epp.processo.timer.TaskExpirationInfo;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
@@ -33,8 +31,6 @@ public class TaskHandler implements Serializable {
     private List<VariableAccessHandler> variables;
     private Boolean hasTaskPage;
     private VariableAccessHandler currentVariable;
-    private List<TaskExpirationInfo> expirations;
-    private TaskExpirationInfo currentExpiration = new TaskExpirationInfo();
 
     public TaskHandler(Task task) {
         this.task = task;
@@ -218,28 +214,6 @@ public class TaskHandler implements Serializable {
         var.limparModelos();
     }
 
-	public List<TaskExpirationInfo> getExpirations() throws ParseException {
-	    // TODO reimplementar este método
-        return expirations;
-    }
-	
-    public TaskExpirationInfo getCurrentExpiration() {
-        return currentExpiration;
-    }
-	
-	public void setCurrentExpiration(TaskExpirationInfo currentExpiration) {
-        this.currentExpiration = currentExpiration;
-    }
-
-	public void addExpiration() throws ParseException {
-	    // TODO reimplementar este método
-	}
-	
-	@SuppressWarnings(UNCHECKED)
-    public void removeExpiration(TaskExpirationInfo expiration) throws ParseException {
-	    // TODO reimplementar este método
-	}
-	
 	@SuppressWarnings(UNCHECKED)
     public List<String> getTransitions() {
 	    List<String> transitions = new ArrayList<>();

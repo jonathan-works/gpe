@@ -12,8 +12,6 @@ import java.util.Set;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
@@ -21,12 +19,16 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.task.manager.JbpmTaskManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(TaskFitter.NAME)
 @AutoCreate
@@ -44,11 +46,14 @@ public class TaskFitter extends Fitter implements Serializable {
     private Set<Tarefa> tarefasModificadas = new HashSet<>();
     private boolean currentJbpmTaskPersisted;
     private List<VariableType> typeList;
+    private TaskExpiration taskExpiration = new TaskExpiration();
 
     @In
     private JbpmTaskManager jbpmTaskManager;
     @In
     private TarefaManager tarefaManager;
+    @In
+    private GenericManager genericManager;
 
     public void addTask() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
@@ -227,6 +232,14 @@ public class TaskFitter extends Fitter implements Serializable {
 
     public void setTypeList(List<VariableType> typeList) {
         this.typeList = typeList;
+    }
+
+    public TaskExpiration getTaskExpiration() {
+        return taskExpiration;
+    }
+
+    public void setTaskExpiration(TaskExpiration taskExpiration) {
+        this.taskExpiration = taskExpiration;
     }
     
 }
