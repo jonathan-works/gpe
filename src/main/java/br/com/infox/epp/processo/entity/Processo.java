@@ -359,6 +359,15 @@ public class Processo implements Serializable {
 		return null;
 	}
 	
+	@Transient 
+	public Processo getProcessoRoot() {
+		Processo processo = this;
+		while (processo.getProcessoPai() != null) {
+			processo = processo.getProcessoPai();
+		}
+		return processo;
+	}
+	
 	@Override
     public String toString() {
         return numeroProcesso;
