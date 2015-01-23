@@ -5,6 +5,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -16,7 +17,11 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import org.jboss.seam.security.Identity;
 
+import br.com.infox.certificado.CertificateSignatures;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.Messages;
@@ -32,10 +37,12 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
-
+import br.com.infox.seam.util.ComponentUtil;
+// TODO: Transformar este componente em um manager, despejar atributos persistentes na classe de fronteira responsável pelo login
 @Scope(ScopeType.CONVERSATION)
 @Name(value = TermoAdesaoAction.NAME)
 public class TermoAdesaoAction implements Serializable {
@@ -48,8 +55,7 @@ public class TermoAdesaoAction implements Serializable {
     public static final String PANEL_NAME = "termoAdesaoPanel";
     public static final String TERMO_ADESAO_REQ = "termoAdesaoRequired";
 
-    private String signature;
-    private String certChain;
+    private String token;
     private String termoAdesao;
     private String tituloTermoAdesao;
 
@@ -59,9 +65,14 @@ public class TermoAdesaoAction implements Serializable {
     @In private DocumentoBinManager documentoBinManager;
     @In private AssinaturaDocumentoService assinaturaDocumentoService;
     @In private PessoaFisicaManager pessoaFisicaManager;
+    @In
+    private CertificateSignatures certificateSignatures;
 
-    public String assinarTermoAdesao(String certChain, String signature) {
+    public String assinarTermoAdesao() {
         try {
+        	CertificateSignatureBundleBean bundle = getSignature();
+        	String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
+        	String signature = bundle.getSignatureBeanList().get(0).getSignature();
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
             DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
@@ -81,7 +92,10 @@ public class TermoAdesaoAction implements Serializable {
             documentoBinManager.flush();
             FacesMessages.instance().add(Severity.INFO,
                     Messages.resolveMessage(TERMS_CONDITIONS_SIGN_SUCCESS));
-            return "/Painel/list.seam";
+            if (Identity.instance().hasRole("usuarioExterno")) {
+                return "/PainelExterno/list.seam";
+            } else {
+                return "/Painel/list.seam";
         } catch (CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_EXPIRED), e);
@@ -118,20 +132,25 @@ public class TermoAdesaoAction implements Serializable {
         return TermoAdesaoAction.PANEL_NAME;
     }
 
-    public String getSignature() {
-        return this.signature;
+    public String getToken() {
+		return token;
+	}
+    
+    public void setToken(String token) {
+		this.token = token;
+	}
+    
+    public String getMd5Sum() {
+        return MD5Encoder.encode(getTermoAdesao());
     }
-
-    public void setSignature(final String signature) {
-        this.signature = signature;
-    }
-
-    public String getCertChain() {
-        return this.certChain;
-    }
-
-    public void setCertChain(final String certChain) {
-        this.certChain = certChain;
+    
+    private CertificateSignatureBundleBean getSignature() throws CertificadoException {
+    	CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
+    	if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+    		Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
+    		throw new CertificadoException(eppmessages.get("termoAdesao.sign.error"));
+    	}
+    	return bundle;
     }
 
     public String getMd5Sum() {

@@ -139,28 +139,20 @@
             <s:div
               styleClass="cert-div"
               rendered="#{useCertLogin}">
-              <a:jsFunction
-                  name="submitForm"
-                  action="#{certificateAuthenticator.authenticate()}"
-                  execute="certificacaoSignature, certificacaoCertChain, certChainStringLog, @this"
-                  render="DialogMessage"
-                  limitRender="true" />
-                  
-                <wi:certificadoDigital
-                  id="certificacao"
-                  urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-                  formId="#{rich:clientId('login')}"
-                  certificationChainField="#{certificateAuthenticator.certChain}"
-                  signatureField="#{certificateAuthenticator.assinatura}"
-                  signableData=""
-                  useBase64Function="true"
-                  functionPreSign="infox.showLoading();"
-                  functionPosSign="submitForm();"
-                  debug="false"
-                  loginMode="true"
-                  useProviderDll="false"
-                  signButtonCaption="#{eppmessages['signature.loginBtn']}">
-                </wi:certificadoDigital>
+               <wi:certificadoDigital
+					id="certificacao"
+					tokenField="#{certificateAuthenticator.token}"
+					signableData=""
+					functionPreSign="infox.showLoading();"
+					functionPosSign="submitForm();"
+					signButtonCaption="#{eppmessages['signature.loginBtn']}">
+				</wi:certificadoDigital>
+               <a:jsFunction
+					name="submitForm"
+					action="#{certificateAuthenticator.authenticate()}"
+					execute="certificacaoToken, @this"
+					render="DialogMessage"
+					limitRender="true" />
             </s:div>
           </div>
           <div

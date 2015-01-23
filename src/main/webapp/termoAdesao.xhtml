@@ -15,32 +15,30 @@
 			<f:facet name="header">#{eppmessages['login.termoAdesao']}</f:facet>
 			<h:form id="termoAdesaoForm">
 				<a:jsFunction name="assinarTermo"
-					action="#{termoAdesaoAction.assinarTermoAdesao(termoAdesaoAction.certChain,termoAdesaoAction.signature)}"
-					execute="@this termoAdesaoSignature termoAdesaoCertChain"
-					render="DialogMessage" limitRender="true" />
-
-				<s:div>
-					<div>
-						<wi:editor id="termoAdesao"
-							value="#{termoAdesaoAction.termoAdesao}" readonly="true"
-							showVariables="false" width="785" height="443" />
-					</div>
-
-					<div>
-						<wi:certificadoDigital id="termoAdesao"
-							urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-							formId="#{rich:clientId('termoAdesaoForm')}"
-							certificationChainField="#{termoAdesaoAction.certChain}"
-							signatureField="#{termoAdesaoAction.signature}"
-							signableData="#{termoAdesaoAction.md5Sum}"
-							useBase64Function="true" functionPreSign="infox.showLoading();"
-							functionPosSign="assinarTermo();infox.hideLoading();"
-							debug="false" loginMode="false" useProviderDll="false"
-							signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}">
-						</wi:certificadoDigital>
+	      action="#{termoAdesaoAction.assinarTermoAdesao}"
+	      execute="@this termoAdesaoToken"
+	      render="DialogMessage"
+	      limitRender="true" />
+	    <s:div>
+	      <div>
+	        <wi:editor
+	          id="termoAdesao"
+	          value="#{termoAdesaoAction.termoAdesao}"
+	          readonly="true"
+	          showVariables="false"
+	          width="#{800-15}"
+	          height="#{600-157}" />
+	      </div>
+	      <div>
+            <wi:certificadoDigital id="termoAdesao"
+                tokenField="#{termoAdesaoAction.token}"
+                signableData="#{termoAdesaoAction.md5Sum}"
+                functionPreSign="infox.showLoading();"
+                functionPosSign="assinarTermo();infox.hideLoading();"
+                signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}" />
             
 						<input
-							style="vertical-align: top; width: 140px !important; height: 25px;"
+	          class="input_button close-btn buttons"
 							id="cancela" type="button"
 							onclick="location.href='#{pathResolver.contextPath}/login.seam'"
 							value="#{eppmessages['login.cancelaTrocaSenhaBtn']}" />

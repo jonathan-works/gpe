@@ -18,6 +18,8 @@ public class PathResolver implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pathResolver";
+    public static final String SEAM_RESOURCE_SERVLET_URL = "/seam/resource";
+    public static final String SEAM_REST_URL = SEAM_RESOURCE_SERVLET_URL + "/rest";
 
     /**
      * @return o caminho do projeto.
