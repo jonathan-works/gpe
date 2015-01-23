@@ -53,7 +53,8 @@
             action="#{taskInstanceHome.persist(home)}" />
         <h:outputText
             styleClass="label-general"
-            value="#{eppmessages['movimentar.next']} " />
+            value="#{eppmessages['movimentar.next']} "
+            rendered="#{taskInstanceHome.transitions.size gt 0}" />
         <c:if test="#{taskInstanceHome.transitions.size gt 3}">
             <h:selectOneMenu value="#{taskInstanceHome.name}">
                 <f:selectItems
