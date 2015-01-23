@@ -96,6 +96,7 @@ public class TermoAdesaoAction implements Serializable {
                 return "/PainelExterno/list.seam";
             } else {
                 return "/Painel/list.seam";
+            }
         } catch (CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(Messages.resolveMessage(AuthenticatorService.CERTIFICATE_ERROR_EXPIRED), e);
@@ -151,10 +152,6 @@ public class TermoAdesaoAction implements Serializable {
     		throw new CertificadoException(eppmessages.get("termoAdesao.sign.error"));
     	}
     	return bundle;
-    }
-
-    public String getMd5Sum() {
-        return MD5Encoder.encode(getTermoAdesao());
     }
 
 }
