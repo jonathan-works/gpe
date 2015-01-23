@@ -3,6 +3,7 @@ package br.com.infox.certificado;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -11,9 +12,12 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
+import br.com.infox.certificado.bean.CertificateSignatureBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.core.persistence.DAOException;
@@ -27,6 +31,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Scope(ScopeType.CONVERSATION)
@@ -43,9 +48,8 @@ public class ValidaDocumentoAction implements Serializable {
     private Certificado dadosCertificado;
     private List<AssinaturaDocumento> listAssinaturaDocumento;
     private Integer idDocumento;
-    private String signature;
-    private String certChain;
     private String externalCallback;
+    private String token;
     
     @In
     public DocumentoManager documentoManager;
@@ -55,7 +59,9 @@ public class ValidaDocumentoAction implements Serializable {
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
-
+    @In
+    private CertificateSignatures certificateSignatures;
+    
     /**
      * @deprecated
      * */
@@ -104,7 +110,13 @@ public class ValidaDocumentoAction implements Serializable {
     public void assinaDocumento(UsuarioPerfil usuarioPerfil) {
         if (this.documentoBin != null && !isAssinadoPor(usuarioPerfil.getUsuarioLogin())) {
             try {
-                assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certChain, signature);
+                CertificateSignatureBundleBean bundle = getSignature();
+                for (CertificateSignatureBean certificateSignatureBean : bundle.getSignatureBeanList()) {
+                    if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())){
+                        assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(), certificateSignatureBean.getSignature());
+                        break;
+                    }
+                }
                 listAssinaturaDocumento=null;
             } catch (CertificadoException | AssinaturaException | DAOException e) {
                 LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
@@ -179,23 +191,23 @@ public class ValidaDocumentoAction implements Serializable {
         return ComponentUtil.getComponent(NAME);
     }
 
-    public String getCertChain() {
-        return certChain;
+	public String getToken() {
+        return token;
     }
 
-    public void setCertChain(String certChain) {
-        this.certChain = certChain;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public String getSignature() {
-        return signature;
+    private CertificateSignatureBundleBean getSignature() throws CertificadoException {
+        CertificateSignatureBundleBean bundle = certificateSignatures.get(getToken());
+        if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+            Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
+            throw new CertificadoException(eppmessages.get("termoAdesao.sign.error"));
+        }
+        return bundle;
     }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-	public Integer getIdDocumento() {
+    public Integer getIdDocumento() {
 		return idDocumento;
 	}
 

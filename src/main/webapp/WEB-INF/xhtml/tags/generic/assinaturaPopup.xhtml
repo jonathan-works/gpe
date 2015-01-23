@@ -72,24 +72,20 @@
 
 					<a:jsFunction name="assinar"
 						action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
-						execute="@this appletAssinaturaCertChain appletAssinaturaSignature"
+						execute="@this appletAssinaturaToken"
 						render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
 						oncomplete="infox.hideLoading();" />
 
-					<wi:certificadoDigital id="appletAssinatura" debug="false"
-						loginMode="false"
-						formId="#{rich:clientId('assinaturaDocumento')}"
+					<wi:certificadoDigital
+            id="appletAssinatura"
 						signButtonCaption="#{eppmessages['assinaturas.assinar']}"
-						certificationChainField="#{validaDocumentoAction.certChain}"
-						signatureField="#{validaDocumentoAction.signature}"
+						tokenField="#{validaDocumentoAction.token}"
 						signableData="#{validaDocumentoAction.documentoBin.md5Documento}"
 						functionPreSign="infox.showLoading();"
-						functionPosSign="assinar();" useBase64Function="true"
-						useProviderDll="false"
-						urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
+						functionPosSign="assinar();"
 						rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado) 
               				and validaDocumentoAction.documento.isDocumentoAssinavel(usuarioLogadoPerfilAtual.perfilTemplate.papel)}">
-                       </wi:certificadoDigital>
+          </wi:certificadoDigital>
 
 				</s:div>
 			</h:form>
