@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.action;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.context.ExternalContext;
@@ -18,8 +19,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.messages.Messages;
 import br.com.infox.core.persistence.DAOException;
@@ -37,6 +36,8 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(IniciarProcessoAction.NAME)
@@ -49,8 +50,6 @@ public class IniciarProcessoAction implements Serializable {
 
     @In
     private IniciarProcessoService iniciarProcessoService;
-    @In
-    private Authenticator authenticator;
 
     private boolean renderedByItem;
     private boolean renderizarCadastroPartes;
@@ -85,8 +84,9 @@ public class IniciarProcessoAction implements Serializable {
         processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
         processo.setNumeroProcesso("");
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
-        processo.setLocalizacao(authenticator.getLocalizacaoAtual());
-        processo.setUsuarioCadastro(authenticator.getUsuarioLogado());
+        processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
+        processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
+        processo.setDataInicio(new Date());
     }
 
     private void enviarProcessoParaJbpm() {

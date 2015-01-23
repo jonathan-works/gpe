@@ -2,12 +2,14 @@ package br.com.infox.epp.processo.partes.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -17,6 +19,8 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ParticipantesController.NAME)
@@ -24,6 +28,7 @@ public class ParticipantesController extends AbstractParticipantesController {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "participantesController";
+	private static final LogProvider LOG = Logging.getLogProvider(ParticipantesController.class);
     
     @In
     private TipoParteManager tipoParteManager;
@@ -33,19 +38,22 @@ public class ParticipantesController extends AbstractParticipantesController {
     private ParticipanteProcessoTreeHandler tree = ComponentUtil.getComponent(ParticipanteProcessoTreeHandler.NAME);
     
     private void createProcessoEpa() {
-    	if (getProcesso() != null)  {
-    		return;
+    	if (getProcesso() == null) {
+    		Processo processo = new Processo();
+            processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+            processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
+            processo.setNumeroProcesso("");
+            processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
+            processo.setDataInicio(new Date());
+            processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
+            setProcesso(processo);
+        	try {
+    			processoManager.persist(getProcesso());
+    		} catch (DAOException e) {
+    			actionMessagesService.handleDAOException(e);
+    			LOG.error("ParticipantesController.createProcessoEpa", e);
+    		}
     	}
-        Processo processo = new Processo();
-        processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-        processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo);
-        processo.setNumeroProcesso("");
-        setProcesso(processo);
-    	try {
-			processoManager.persist(getProcesso());
-		} catch (DAOException e) {
-			actionMessagesService.handleDAOException(e);
-		}
 	}
     
     @Override
