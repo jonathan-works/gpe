@@ -288,5 +288,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	public List<Processo> listProcessosComunicacaoAguardandoCumprimento() {
 		return getDao().listProcessosComunicacaoAguardandoCumprimento();
 	}
-
+	
+	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
+		return getDao().getProcessoEpaByIdJbpm(idJbpm);
+	}
 }

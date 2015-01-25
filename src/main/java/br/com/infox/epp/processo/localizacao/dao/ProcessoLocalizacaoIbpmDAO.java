@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.localizacao.dao;
 
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_PROCESS_ID_AND_TASK_ID;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_TASK_INSTANCE_ID;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL;
@@ -11,6 +12,7 @@ import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbp
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_PROCESS_ID;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_TASK_ID;
+import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_TASK_INSTANCE;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +63,12 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         parameters.put(PARAM_PROCESS_ID, processId);
         parameters.put(PARAM_TASK_ID, taskId);
         executeNamedQueryUpdate(DELETE_BY_PROCESS_ID_AND_TASK_ID, parameters);
+    }
+    
+    public void deleteProcessoLocalizacaoIbpmByTaskInstanceId(Long taskInstanceId) throws DAOException {
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put(PARAM_TASK_INSTANCE, taskInstanceId);
+        executeNamedQueryUpdate(DELETE_BY_TASK_INSTANCE_ID, parameters);
     }
     
 }
