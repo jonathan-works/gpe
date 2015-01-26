@@ -45,7 +45,7 @@
                 <a:ajax event="change"  execute="@this" render="transitionDecoration, pageBodyDialogMessage" limitRender="true" />
             </wi:selectOneMenu>
             <div />
-            <wi:commandButton id="gravarExpiration" action="#{taskFitter.addExpiration(tarefa)}" 
+            <wi:commandButton id="gravarExpiration" action="#{taskFitter.addExpiration()}" 
                 value="#{eppmessages['process.expiration.incluir']}" reRender="expirationPanel"/>
         </h:form>
     </rich:panel>

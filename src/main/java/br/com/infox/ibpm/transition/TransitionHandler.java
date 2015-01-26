@@ -8,11 +8,13 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.core.Events;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 
 import br.com.infox.ibpm.node.converter.NodeConverter;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 public class TransitionHandler implements Serializable {
@@ -20,6 +22,7 @@ public class TransitionHandler implements Serializable {
     private static final long serialVersionUID = 4373236937521654740L;
     
     public static final String OCCULT_TRANSITION = "OCCULT_TRANSITION";
+    public static final String EVENT_JBPM_TRANSITION_NAME_CHANGED = "jbpmTransitionNameChanged";
 
     private Transition transition;
 
@@ -41,6 +44,9 @@ public class TransitionHandler implements Serializable {
     public void setName(String name) {
         name = name.trim();
         if (name != null && !name.equals(transition.getName())) {
+            Events.instance().raiseEvent(EVENT_JBPM_TRANSITION_NAME_CHANGED,
+                    ProcessBuilder.instance().getFluxo(), transition.getFrom().getName(),
+                    transition.getName(), name);
             transition.setName(name);
         }
     }
