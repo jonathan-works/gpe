@@ -388,7 +388,7 @@ public class ProcessBuilder implements Serializable {
                 JbpmUtil.getJbpmSession().flush();
                 Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
                 taskFitter.checkCurrentTaskPersistenceState();
-                atualizarPooledActors();
+                atualizarRaiaPooledActors(instance.getId());
                 FacesMessages.instance().clear();
                 FacesMessages.instance().add("Fluxo publicado com sucesso!");
             } catch (Exception e) {
@@ -408,15 +408,14 @@ public class ProcessBuilder implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-	private void atualizarPooledActors() throws DAOException {
+	private void atualizarRaiaPooledActors(Long idProcessDefinition) throws DAOException {
 		Session session = JbpmUtil.getJbpmSession();
 		String hql = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti "
 						 + "inner join ti.processInstance pi "
 						 + "where ti.end is null and  ti.create is not null "
-						 + "and pi.processDefinition.id = (select max(pd.id) from org.jbpm.graph.def.ProcessDefinition pd "
-						 + 													"where name = :nameProcessDefinition ) ";
+						 + "and pi.processDefinition.id = :idProcessDefinition ";
 		Query query =  session.createQuery(hql);
-		query.setParameter("nameProcessDefinition", instance.getName());
+		query.setParameter("idProcessDefinition", idProcessDefinition);
 		List<TaskInstance> taskInstances = (List<TaskInstance>) query.list();
 		for (TaskInstance taskInstance : taskInstances) {
 			String[] actorIds = taskInstance.getTask().getSwimlane().getPooledActorsExpression().split(",");
