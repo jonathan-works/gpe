@@ -22,8 +22,10 @@ import org.jbpm.taskmgmt.def.Task;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.timer.TaskExpiration;
+import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.task.manager.JbpmTaskManager;
@@ -46,7 +48,7 @@ public class TaskFitter extends Fitter implements Serializable {
     private Set<Tarefa> tarefasModificadas = new HashSet<>();
     private boolean currentJbpmTaskPersisted;
     private List<VariableType> typeList;
-    private TaskExpiration taskExpiration = new TaskExpiration();
+    private TaskExpiration taskExpiration;
 
     @In
     private JbpmTaskManager jbpmTaskManager;
@@ -54,6 +56,8 @@ public class TaskFitter extends Fitter implements Serializable {
     private TarefaManager tarefaManager;
     @In
     private GenericManager genericManager;
+    @In
+    private TaskExpirationManager taskExpirationManager;
 
     public void addTask() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
@@ -95,6 +99,7 @@ public class TaskFitter extends Fitter implements Serializable {
     public void setCurrentTask(TaskHandler cTask) {
         this.currentTask = cTask;
         this.tarefaAtual = null;
+        this.taskExpiration = null;
         checkCurrentTaskPersistenceState();
     }
 
@@ -113,6 +118,14 @@ public class TaskFitter extends Fitter implements Serializable {
                 Number idTaskModificada = getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName());
                 if (idTaskModificada != null) {
                     modifiedTasks.put(idTaskModificada, taskName);
+                }
+            }
+            if (taskExpiration != null && taskExpiration.getId() != null) {
+                taskExpiration.setTarefa(taskName);
+                try {
+                    taskExpirationManager.update(taskExpiration);
+                } catch (DAOException e) {
+                    LOG.error("taskFitter.setTaskName", e);
                 }
             }
             this.taskName = taskName;
@@ -235,6 +248,9 @@ public class TaskFitter extends Fitter implements Serializable {
     }
 
     public TaskExpiration getTaskExpiration() {
+        if (taskExpiration == null) {
+            setTaskExpiration(new TaskExpiration());
+        }
         return taskExpiration;
     }
 
@@ -242,4 +258,33 @@ public class TaskFitter extends Fitter implements Serializable {
         this.taskExpiration = taskExpiration;
     }
     
+    public void addExpiration() {
+        ProcessBuilder processBuilder = ProcessBuilder.instance();
+        taskExpiration.setFluxo(processBuilder.getFluxo());
+        taskExpiration.setTarefa(getTaskName());
+        if (taskExpiration.getExpiration() != null && taskExpiration.getTransition() != null) {
+            try {
+                taskExpirationManager.persist(taskExpiration);
+            } catch (DAOException e) {
+                LOG.error("taskFitter.addExpiration()", e);
+            }
+        }
+    }
+    
+    public void removeExpiration(TaskExpiration te) {
+        try {
+            taskExpirationManager.remove(te);
+            setTaskExpiration(new TaskExpiration());
+        } catch (DAOException e) {
+            LOG.error("taskFitter.removeExpiration()", e);
+        }
+    }
+    
+    public boolean hasTaskExpiration() {
+        if (taskExpiration == null) {
+            TaskExpiration te = taskExpirationManager.getByFluxoAndTaskName(ProcessBuilder.instance().getFluxo(), taskName);
+            taskExpiration = te == null ? new TaskExpiration() : te;
+        }
+        return taskExpiration != null && taskExpiration.getId() != null;
+    }
 }
