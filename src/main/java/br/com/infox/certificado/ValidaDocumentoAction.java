@@ -38,10 +38,10 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(ValidaDocumentoAction.NAME)
 public class ValidaDocumentoAction implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	public static final String NAME = "validaDocumentoAction";
-	private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoAction.class);
-	
+    private static final long serialVersionUID = 1L;
+    public static final String NAME = "validaDocumentoAction";
+    private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoAction.class);
+
     private Documento documento;
     private DocumentoBin documentoBin;
     private Boolean valido;
@@ -50,7 +50,7 @@ public class ValidaDocumentoAction implements Serializable {
     private Integer idDocumento;
     private String externalCallback;
     private String token;
-    
+
     @In
     public DocumentoManager documentoManager;
     @In
@@ -61,7 +61,7 @@ public class ValidaDocumentoAction implements Serializable {
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
     @In
     private CertificateSignatures certificateSignatures;
-    
+
     /**
      * @deprecated
      * */
@@ -76,9 +76,10 @@ public class ValidaDocumentoAction implements Serializable {
     /**
      * Valida a assinatura de um ProcessoDocumento. Quando o documento é do tipo
      * modelo as quebras de linha são retiradas.
-     * @param bin 
-     * @param certChain 
-     * @param signature 
+     * 
+     * @param bin
+     * @param certChain
+     * @param signature
      */
     public void validaDocumento(DocumentoBin bin, String certChain, String signature) {
         documentoBin = bin;
@@ -93,7 +94,7 @@ public class ValidaDocumentoAction implements Serializable {
             FacesMessages.instance().add(StatusMessage.Severity.ERROR, e.getMessage());
         }
     }
-    
+
     public boolean isAssinadoPor(final UsuarioLogin usuarioLogin) {
         boolean result = false;
         final List<AssinaturaDocumento> assinaturas = getListAssinaturaDocumento();
@@ -106,25 +107,26 @@ public class ValidaDocumentoAction implements Serializable {
         }
         return result;
     }
-    
+
     public void assinaDocumento(UsuarioPerfil usuarioPerfil) {
         if (this.documentoBin != null && !isAssinadoPor(usuarioPerfil.getUsuarioLogin())) {
             try {
                 CertificateSignatureBundleBean bundle = getSignature();
                 for (CertificateSignatureBean certificateSignatureBean : bundle.getSignatureBeanList()) {
-                    if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())){
-                        assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(), certificateSignatureBean.getSignature());
+                    if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())) {
+                        assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil,
+                                certificateSignatureBean.getCertChain(), certificateSignatureBean.getSignature());
                         break;
                     }
                 }
-                listAssinaturaDocumento=null;
+                listAssinaturaDocumento = null;
             } catch (CertificadoException | AssinaturaException | DAOException e) {
                 LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
                 FacesMessages.instance().add(Severity.ERROR, e.getMessage());
             }
         }
     }
-    
+
     public void validaDocumentoId(Integer idDocumento) {
         try {
             this.documento = assinaturaDocumentoService.validaDocumentoId(idDocumento);
@@ -170,12 +172,11 @@ public class ValidaDocumentoAction implements Serializable {
         return dadosCertificado;
     }
 
-
     public DocumentoBin getDocumentoBin() {
-		return documentoBin;
-	}
+        return documentoBin;
+    }
 
-	public String getNomeCertificadora() {
+    public String getNomeCertificadora() {
         return dadosCertificado == null ? null : dadosCertificado.getAutoridadeCertificadora();
     }
 
@@ -191,7 +192,7 @@ public class ValidaDocumentoAction implements Serializable {
         return ComponentUtil.getComponent(NAME);
     }
 
-	public String getToken() {
+    public String getToken() {
         return token;
     }
 
@@ -201,26 +202,35 @@ public class ValidaDocumentoAction implements Serializable {
 
     private CertificateSignatureBundleBean getSignature() throws CertificadoException {
         CertificateSignatureBundleBean bundle = certificateSignatures.get(getToken());
-        if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-            Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
-            throw new CertificadoException(eppmessages.get("termoAdesao.sign.error"));
+        Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
+        if (bundle == null) {
+            throw new CertificadoException(eppmessages.get("assinatura.error.hashExpired"));
+        } else {
+            switch (bundle.getStatus()) {
+                case ERROR:
+                case UNKNOWN:
+                    throw new CertificadoException(eppmessages.get("assinatura.error.unknown"));
+                default:
+                    break;
+            }
         }
         return bundle;
     }
+
     public Integer getIdDocumento() {
-		return idDocumento;
-	}
+        return idDocumento;
+    }
 
-	public void setIdDocumento(Integer idDocumento) {
-	    validaDocumentoId(idDocumento);
-	    this.idDocumento = idDocumento;
-	}
+    public void setIdDocumento(Integer idDocumento) {
+        validaDocumentoId(idDocumento);
+        this.idDocumento = idDocumento;
+    }
 
-	public String getExternalCallback() {
-		return externalCallback;
-	}
-	
-	public void setExternalCallback(String externalCallback) {
-		this.externalCallback = externalCallback;
-	}
+    public String getExternalCallback() {
+        return externalCallback;
+    }
+
+    public void setExternalCallback(String externalCallback) {
+        this.externalCallback = externalCallback;
+    }
 }
