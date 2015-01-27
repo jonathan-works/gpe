@@ -37,7 +37,7 @@
     </exception>
     
     <exception class="org.jboss.seam.security.AuthorizationException">
-        <redirect view-id="/login.xhtml">
+        <redirect view-id="/home.xhtml">
             <message>Sem permissão para acessar a página.</message>
         </redirect>
     </exception>
