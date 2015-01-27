@@ -99,4 +99,9 @@ public class UsuarioLoginController extends AbstractController {
 		return usuarioLoginCrudAction.getInstance();
 	}
 	
+	public void onGravarPessoaFisica() {
+		meioContatoList.setPessoa(getInstance().getPessoaFisica());
+		pessoaDocumentoList.setPessoa(getInstance().getPessoaFisica());
+	}
+	
 }
