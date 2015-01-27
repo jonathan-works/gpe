@@ -14,14 +14,18 @@ import org.jboss.seam.async.QuartzTriggerHandle;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(BloqueioUsuarioProcessor.NAME)
 @AutoCreate
 public class BloqueioUsuarioProcessor {
 
     public static final String NAME = "bloqueioUsuarioProcessor";
+    private static final LogProvider LOG = Logging.getLogProvider(BloqueioUsuarioProcessor.class);
 
-    @In private BloqueioUsuarioManager bloqueioUsuarioManager;
+    @In
+    private BloqueioUsuarioManager bloqueioUsuarioManager;
 
     @Asynchronous
     @Transactional
@@ -37,8 +41,7 @@ public class BloqueioUsuarioProcessor {
                     bloqueioUsuarioManager.desfazerBloqueioUsuario(bloqueio
                             .getUsuario());
                 } catch (DAOException e) {
-                    // TODO logar este erro.
-                    e.printStackTrace();
+                    LOG.error("bloqueioUsuarioProcessor.processBloqueioUsuario()", e);
                 }
             }
         }

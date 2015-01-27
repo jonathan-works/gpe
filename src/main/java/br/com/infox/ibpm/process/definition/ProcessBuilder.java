@@ -57,6 +57,7 @@ import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
+import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.node.InfoxMailNode;
@@ -115,6 +116,8 @@ public class ProcessBuilder implements Serializable {
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
     @In
     private ActionMessagesService actionMessagesService;
+    @In
+    private TaskExpirationManager taskExpirationManager;
  
     private String id;
     private ProcessDefinition instance;
@@ -216,6 +219,7 @@ public class ProcessBuilder implements Serializable {
             validateMailNode();
             validateVariables();
             validateSubProcessNode();
+            validateTaskExpiration();
         } catch (IllegalStateException e) {
             FacesMessages.instance().clearGlobalMessages();
             FacesMessages.instance().add(e.getMessage());
@@ -225,6 +229,22 @@ public class ProcessBuilder implements Serializable {
 
         context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
         context.getRenderIds().add(messages.getClientId(facesContext));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void validateTaskExpiration() {
+        Set<String> taskNames = new HashSet<>();
+        List<Node> nodes = instance.getNodes();
+        for (Node node : nodes) {
+            if (node instanceof TaskNode) {
+                taskNames.add(node.getName());
+            }
+        }
+        try {
+            taskExpirationManager.clearUnusedTaskExpirations(fluxo, taskNames);
+        } catch (DAOException de) {
+            throw new IllegalStateException(de);
+        }
     }
 
     @SuppressWarnings(UNCHECKED)
