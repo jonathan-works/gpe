@@ -144,6 +144,11 @@
     <wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
       columnId="usuarioInclusao"
+      columnHeader="#{eppmessages['documentoProcesso.numeroDocumento']}"
+      value="#{row.numeroDocumento}" />
+    <wi:columnOutputText
+      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+      columnId="usuarioInclusao"
       columnHeader="#{eppmessages['assinaturas.usuario']}"
       value="#{row.usuarioInclusao}" />
     <wi:columnOutputText
