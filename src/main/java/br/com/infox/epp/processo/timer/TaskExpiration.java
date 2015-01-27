@@ -1,6 +1,10 @@
 
 package br.com.infox.epp.processo.timer;
 
+import static br.com.infox.epp.processo.timer.query.TaskExpirationQuery.CLEAR_UNUSED_TASK_EXPIRATIONS;
+import static br.com.infox.epp.processo.timer.query.TaskExpirationQuery.CLEAR_UNUSED_TASK_EXPIRATIONS_QUERY;
+import static br.com.infox.epp.processo.timer.query.TaskExpirationQuery.DELETE_BY_FLUXO;
+import static br.com.infox.epp.processo.timer.query.TaskExpirationQuery.DELETE_BY_FLUXO_QUERY;
 import static br.com.infox.epp.processo.timer.query.TaskExpirationQuery.GET_BY_FLUXO_AND_TASKNAME;
 import static br.com.infox.epp.processo.timer.query.TaskExpirationQuery.GET_BY_FLUXO_AND_TASKNAME_QUERY;
 
@@ -26,7 +30,9 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 @Entity
 @Table(name = TaskExpiration.NAME)
 @NamedQueries(value = {
-        @NamedQuery(name = GET_BY_FLUXO_AND_TASKNAME, query = GET_BY_FLUXO_AND_TASKNAME_QUERY)
+        @NamedQuery(name = GET_BY_FLUXO_AND_TASKNAME, query = GET_BY_FLUXO_AND_TASKNAME_QUERY),
+        @NamedQuery(name = CLEAR_UNUSED_TASK_EXPIRATIONS, query = CLEAR_UNUSED_TASK_EXPIRATIONS_QUERY),
+        @NamedQuery(name = DELETE_BY_FLUXO, query = DELETE_BY_FLUXO_QUERY)
 })
 public class TaskExpiration implements Serializable {
     private static final long serialVersionUID = 1L;

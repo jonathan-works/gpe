@@ -1,10 +1,13 @@
 package br.com.infox.epp.processo.timer.manager;
 
+import java.util.Set;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.processo.timer.dao.TaskExpirationDAO;
@@ -35,5 +38,9 @@ public class TaskExpirationManager extends Manager<TaskExpirationDAO, TaskExpira
             te.setTransition(newName);
         }
         flush();
+    }
+
+    public void clearUnusedTaskExpirations(Fluxo fluxo, Set<String> taskNames) throws DAOException {
+        getDao().clearUnusedTaskExpirations(fluxo, taskNames);
     }
 }
