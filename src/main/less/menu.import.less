@@ -8,7 +8,9 @@
 .menu-nav {
   color: @menu-txt-color;
   background-color: @menu-bg-color;
+  font-size:1rem;
 }
+
 .menu-itm {
   position:relative;
   list-style:none;
@@ -17,7 +19,7 @@
     & > .menu-itm {
       & > .menu-submenu {
         margin-left:100%;
-        margin-top:-(8em + @menu-itm-lbl-pad + @menu-itm-lbl-bord-width + @menu-itm-lbl-marg)/8;
+        margin-top:~"calc("-2*(@menu-itm-lbl-pad + @menu-itm-lbl-bord-width + @menu-itm-lbl-marg)~" + "-1rem~")";
       }
     }
   }
@@ -60,7 +62,7 @@ a.menu-lnk {
   border-style: solid;
   border-color: darken(@menu-bg-color,5%);
 
-  font-size:7em/8;
+  font-size:7rem/8;
   &:hover {
     cursor:pointer;
     color: @menu-bg-color;
@@ -71,7 +73,7 @@ a.menu-lnk {
     .image("arrow-right.png");
     background-repeat:no-repeat;
     background-position:center right;
-    padding-right:(6em+@menu-itm-lbl-pad)/16;
+    padding-right:6px+@menu-itm-lbl-pad;
   }
 }
 
