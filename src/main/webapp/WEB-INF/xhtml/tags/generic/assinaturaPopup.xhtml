@@ -83,8 +83,7 @@
 						signableData="#{validaDocumentoAction.documentoBin.md5Documento}"
 						functionPreSign="infox.showLoading();"
 						functionPosSign="assinar();"
-						rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado) 
-              				and validaDocumentoAction.documento.isDocumentoAssinavel(usuarioLogadoPerfilAtual.perfilTemplate.papel)}">
+						rendered="#{validaDocumentoAction.podeAssinar()}" >
           </wi:certificadoDigital>
 
 				</s:div>

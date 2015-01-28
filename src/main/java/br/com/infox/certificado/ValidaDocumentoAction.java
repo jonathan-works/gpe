@@ -13,14 +13,12 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
@@ -32,6 +30,8 @@ import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.system.EppMessagesContextLoader;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Scope(ScopeType.CONVERSATION)
@@ -95,6 +95,31 @@ public class ValidaDocumentoAction implements Serializable {
         }
     }
 
+    public boolean podeAssinar() {
+        UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+        if (documento == null) return false;
+        
+        boolean isAssinavel = documento.isDocumentoAssinavel(usuarioPerfil.getPerfilTemplate().getPapel());
+        if (!isAssinavel) return false;
+        
+        boolean assinadoPor = isAssinadoPor(usuarioPerfil);
+        
+        return isAssinavel && !assinadoPor;
+    }
+    
+    public boolean isAssinadoPor(UsuarioPerfil usuarioPerfil) {
+        boolean result = false;
+        final List<AssinaturaDocumento> assinaturas = getListAssinaturaDocumento();
+        if (assinaturas != null) {
+            for (AssinaturaDocumento assinatura : assinaturas) {
+                if (result = assinatura.getUsuarioPerfil().equals(usuarioPerfil)) {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+    
     public boolean isAssinadoPor(final UsuarioLogin usuarioLogin) {
         boolean result = false;
         final List<AssinaturaDocumento> assinaturas = getListAssinaturaDocumento();
@@ -109,7 +134,7 @@ public class ValidaDocumentoAction implements Serializable {
     }
 
     public void assinaDocumento(UsuarioPerfil usuarioPerfil) {
-        if (this.documentoBin != null && !isAssinadoPor(usuarioPerfil.getUsuarioLogin())) {
+        if (this.documentoBin != null && !isAssinadoPor(usuarioPerfil)) {
             try {
                 CertificateSignatureBundleBean bundle = getSignature();
                 for (CertificateSignatureBean certificateSignatureBean : bundle.getSignatureBeanList()) {
