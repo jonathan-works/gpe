@@ -38,5 +38,12 @@ public class NumeracaoDocumentoSequencialDAO extends DAO<NumeracaoDocumentoSeque
 			return result;
 		}
 	}
+
+    public NumeracaoDocumentoSequencial removeByProcesso(Processo processo) throws DAOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put(NumeracaoDocumentoSequencial.PARAM_PROCESSO, processo);
+        executeNamedQueryUpdate(NumeracaoDocumentoSequencial.DELETE_BY_PROCESSO, params);
+        return null;
+    }
 	
 }

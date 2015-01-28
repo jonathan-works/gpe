@@ -21,4 +21,7 @@ public class NumeracaoDocumentoSequencialManager extends Manager<NumeracaoDocume
 		return getDao().getNextNumeracaoDocumentoSequencial(processo);
 	}
 	
+	public NumeracaoDocumentoSequencial removeByProcesso(Processo processo) throws DAOException {
+	    return getDao().removeByProcesso(processo);
+	}
 }

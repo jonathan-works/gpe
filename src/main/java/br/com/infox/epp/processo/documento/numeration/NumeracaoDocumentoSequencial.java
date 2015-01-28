@@ -21,12 +21,14 @@ import br.com.infox.epp.processo.entity.Processo;
 @Entity
 @Table(name="tb_numeracao_doc_sequencial")
 @NamedQueries({
-	@NamedQuery(name=NumeracaoDocumentoSequencial.GET_NEXT_VALUE, query=NumeracaoDocumentoSequencial.GET_NEXT_VALUE_QUERY)
+	@NamedQuery(name=NumeracaoDocumentoSequencial.GET_NEXT_VALUE, query=NumeracaoDocumentoSequencial.GET_NEXT_VALUE_QUERY),
+	@NamedQuery(name=NumeracaoDocumentoSequencial.DELETE_BY_PROCESSO, query=NumeracaoDocumentoSequencial.DELETE_BY_PROCESSO_QUERY)
 })
 public class NumeracaoDocumentoSequencial implements Serializable {
 	
 
-	private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
 	@Id
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "NumeracaoDocumentoSequencialGenerator", 
@@ -64,7 +66,9 @@ public class NumeracaoDocumentoSequencial implements Serializable {
 		this.nextNumero = nextNumero;
 	}
 
+	public static final String PARAM_PROCESSO = "processo";
 	public static final String GET_NEXT_VALUE = "getNextValueForNumeracaoDocumentoSequencial";
 	public static final String GET_NEXT_VALUE_QUERY = "select o from NumeracaoDocumentoSequencial o where o.processoRaiz = :processo";
-
+	public static final String DELETE_BY_PROCESSO = "deleteByProcesso";
+	public static final String DELETE_BY_PROCESSO_QUERY = "delete from NumeracaoDocumentoSequencial nds where nds.processoRaiz = :" + PARAM_PROCESSO;
 }
