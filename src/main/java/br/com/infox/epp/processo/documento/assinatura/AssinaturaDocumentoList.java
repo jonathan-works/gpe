@@ -11,7 +11,7 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 
 @Name(AssinaturaDocumentoList.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.PAGE)
 @AutoCreate
 public class AssinaturaDocumentoList extends EntityList<AssinaturaDocumento> {
 

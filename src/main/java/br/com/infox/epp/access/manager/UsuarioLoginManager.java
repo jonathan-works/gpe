@@ -80,7 +80,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     }
 
     private void validarPermanencia(final UsuarioLogin usuario) {
-        if (!usuario.getProvisorio()) {
+        if (usuario.getProvisorio() == null || !usuario.getProvisorio()) {
             usuario.setDataExpiracao(null);
         }
         if (!usuario.isHumano()) {
