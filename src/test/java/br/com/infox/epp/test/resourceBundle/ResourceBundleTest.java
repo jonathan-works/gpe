@@ -24,22 +24,22 @@ public class ResourceBundleTest {
                 new Locale("en", "US"), new Locale("fr", "FR") };
     }
 
-    @Test
+//    @Test
     public void test_01() {
         testFile("entity_messages");
     }
 
-    @Test
+//    @Test
     public void test_02() {
         testFile("messages");
     }
 
-    @Test
+//    @Test
     public void test_03() {
         testFile("process_definition_messages");
     }
 
-    @Test
+//    @Test
     public void test_04() {
         testFile("standard_messages");
     }

@@ -1,19 +1,16 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
-import static br.com.infox.epp.documento.type.TipoAssinaturaEnum.F;
-import static br.com.infox.epp.documento.type.TipoAssinaturaEnum.O;
-import static br.com.infox.epp.documento.type.TipoAssinaturaEnum.S;
-
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
@@ -37,6 +34,8 @@ import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
@@ -92,20 +91,50 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public boolean isDocumentoTotalmenteAssinado(Documento documento) {
-        boolean result = true;
-        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = documento
-                .getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
+        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = documento.getClassificacaoDocumento()
+                .getClassificacaoDocumentoPapelList();
+        
+        Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = new HashMap<>();
+        for (TipoAssinaturaEnum tipoAssinatura : TipoAssinaturaEnum.values()) {
+            mapAssinaturas.put(tipoAssinatura, new ArrayList<Boolean>());
+        }
+        
         for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
-            final TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel
-                    .getTipoAssinatura();
-            if (F.equals(tipoAssinatura)) {
-                continue;
+            final TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel.getTipoAssinatura();
+            
+            final Papel papel = tipoProcessoDocumentoPapel.getPapel();
+            final List<Boolean> assinaturas = mapAssinaturas.get(tipoAssinatura);
+            assinaturas.add(isDocumentoAssinado(documento, papel));
+        }
+        
+        return isDocumentoTotalmenteAssinado(mapAssinaturas);
+    }
+    
+    boolean isDocumentoTotalmenteAssinado(Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas) {
+        List<Boolean> obrigatorias = mapAssinaturas.get(TipoAssinaturaEnum.O);
+        List<Boolean> suficientes = mapAssinaturas.get(TipoAssinaturaEnum.S);
+        
+        return (obrigatorias.isEmpty() && suficientes.isEmpty())
+                || (!obrigatorias.isEmpty() && areAllTrue(obrigatorias))
+                || (!suficientes.isEmpty() && isOneTrue(suficientes));
+    }
+
+    private boolean isOneTrue(List<Boolean> booleans){
+        boolean result = false;
+        for (boolean b : booleans) {
+            result = b || result;
+            if (result){
+                break;
             }
-            final boolean documentoAssinado = isDocumentoAssinado(
-                    documento, tipoProcessoDocumentoPapel.getPapel());
-            if (S.equals(tipoAssinatura) && (result = documentoAssinado)
-                    || O.equals(tipoAssinatura)
-                    && !(result = result && documentoAssinado)) {
+        }
+        return result;
+    }
+    
+    private boolean areAllTrue(List<Boolean> booleans){
+        boolean result = true;
+        for (boolean b : booleans) {
+            result = b && result;
+            if (!result){
                 break;
             }
         }
