@@ -128,12 +128,21 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     }
 
     public boolean checarVisibilidade() {
+    	boolean visivel = checarVisibilidadeSemException();
+    	if (!visivel) {
+    		avisarNaoHaPermissaoParaAcessarProcesso();
+    	}
+    	return visivel;
+    }
+    
+    public boolean checarVisibilidadeSemException() {
     	MetadadoProcesso metadadoProcesso = getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
     	TipoProcesso tipoProcesso = metadadoProcesso != null ? metadadoProcesso.<TipoProcesso>getValue() : null;
     	boolean visivel = situacaoProcessoDAO.canAccessProcesso(getInstance().getIdProcesso(), tipoProcesso);
-        if (!visivel) {
-        	avisarNaoHaPermissaoParaAcessarProcesso();
-        }
+    	if (!visivel) {
+    		ContextFacade.setToEventContext("canClosePanel", true);
+            FacesMessages.instance().clear();
+    	}
     	return visivel;
     }
 
