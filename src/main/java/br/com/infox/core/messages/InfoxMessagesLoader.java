@@ -50,8 +50,7 @@ public class InfoxMessagesLoader implements Serializable {
 				copyProperties(mensagens, entityMessagesEppStream, messagesEppStream, processDefinitionStream,
 						standardMessagesEppStream, validationMessagesStream, extendedMessagesStream);
 			} catch (IOException e) {
-				// TODO Logar essa exceção
-				e.printStackTrace();
+				throw new RuntimeException("Não foi possível carregar as mensagens do sistema", e);
 			}
 			infoxMessages.putInLocales(locale, mensagens);
 		}

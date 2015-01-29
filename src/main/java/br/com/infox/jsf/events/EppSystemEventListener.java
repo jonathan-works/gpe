@@ -22,8 +22,7 @@ public class EppSystemEventListener implements SystemEventListener {
 			MetadadoLabelLoader metadadoLabelLoader = (MetadadoLabelLoader) ic.lookup("java:module/MetadadoLabelLoader");
 			metadadoLabelLoader.loadMetadadosMessagesProperties();
 		} catch (NamingException | InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new AbortProcessingException(e);
 		}
 	}
 

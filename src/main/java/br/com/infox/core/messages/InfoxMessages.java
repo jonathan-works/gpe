@@ -2,7 +2,6 @@ package br.com.infox.core.messages;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -25,17 +24,20 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 	
 	private Map<Locale, Map<String, String>> locales = new HashMap<>();
 	
-	private Iterator<Locale> getSupportedLocales() {
-		return FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
-	}
-	
 	private Locale getDefaultLocale() {
 		return FacesContext.getCurrentInstance().getApplication().getDefaultLocale();
 	}
 	
 	private Locale getRequestLocale() {
 		Locale requestLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
-		return !locales.containsKey(requestLocale) ? getDefaultLocale() : requestLocale;
+		if (locales.containsKey(requestLocale)) {
+			return requestLocale;
+		}
+		Locale baseLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale().stripExtensions();
+		if (locales.containsKey(baseLocale)) {
+			return baseLocale;
+		}
+		return getDefaultLocale();
 	}
 	
 	public String get(Object key) {
@@ -60,9 +62,7 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 			InitialContext ic = new InitialContext();
 			return (InfoxMessages) ic.lookup("java:module/infoxMessages");
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 }
