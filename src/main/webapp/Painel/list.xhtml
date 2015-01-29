@@ -164,7 +164,7 @@
         <infox:tab id="comunicacoes"
           	name="comunicacao" render="painelProcessosComunicacao"
           	limitRender="true" action="#{painelTreeHandler.clearTree()}"
-          	title="Fluxo/Comunicação" >
+          	title="#{infoxMessages['painel.comunicacaoTab']}" >
           <s:div rendered="#{painelUsuarioController.tab eq 'comunicacao'}">
 	          <s:div id="comunicacoesTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
 	          	<h:form id="treeProcessoComunicacaoForm">
@@ -282,7 +282,7 @@
         <infox:tab id="documentos"
           	name="documento" render="painelProcessosDocumento"
           	limitRender="true" action="#{painelTreeHandler.clearTree()}"
-          	title="Fluxo/Documento" >
+          	title="#{infoxMessages['painel.documentoTab']}" >
           <s:div rendered="#{painelUsuarioController.tab eq 'documento'}">
 	          <s:div id="documentosTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
 	          	<h:form id="treeProcessoDocumentoForm">
