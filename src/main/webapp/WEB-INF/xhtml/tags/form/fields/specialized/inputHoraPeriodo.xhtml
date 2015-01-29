@@ -20,7 +20,7 @@
         <wi:mask selector=".#{id}maskHour" mask="99:99" />
         <ui:define name="label">#{label}</ui:define>
 
-        <h:outputText value="#{eppmessages['data.periodoInicio']}" />
+        <h:outputText value="#{infoxMessages['data.periodoInicio']}" />
         <h:inputText id="#{id}De" value="#{valueHourFrom}"
             required="#{required}" size="5" 
             styleClass="#{readonly ? 'readOnly' : styleClass } inputText #{id}maskHour"
@@ -28,7 +28,7 @@
             converter="horaConverter" maxlength="5" >
         </h:inputText>
 		
-        <h:outputText value=" #{eppmessages['data.periodoFim']} " />
+        <h:outputText value=" #{infoxMessages['data.periodoFim']} " />
         <h:inputText id="#{id}Ate" value="#{valueHourTo}"
             required="#{required}" size="5" 
             styleClass="#{readonly ? 'readOnly' : styleClass } inputText #{id}maskHour"

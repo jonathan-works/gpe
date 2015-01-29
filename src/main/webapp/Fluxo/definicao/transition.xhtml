@@ -40,7 +40,7 @@
                             render="transition#{type}Table,nodesDiv"
                             limitRender="true">
                             <h:graphicImage
-                                title="#{eppmessages['process.transition.add']}"
+                                title="#{infoxMessages['process.transition.add']}"
                                 url="#{wiSkin.imageFolder}/add.gif" />
                         </a:commandLink>
                     </h:form>
@@ -49,7 +49,7 @@
                     <div>
                         <h:form>
                             <h:graphicImage
-                                title="#{eppmessages['process.transition.remove']}"
+                                title="#{infoxMessages['process.transition.remove']}"
                                 url="#{wiSkin.imageFolder}/remove.png"
                                 styleClass="opacityHover"
                                 rendered="#{type eq 'to'}">
@@ -66,7 +66,7 @@
                 </div>
             </rich:column>
             <rich:column rendered="#{type=='from'}">
-                <f:facet name="header">#{eppmessages['process.transition.origin']}</f:facet>
+                <f:facet name="header">#{infoxMessages['process.transition.origin']}</f:facet>
                 <h:form>
                     <h:selectOneMenu
                         id="from"
@@ -89,7 +89,7 @@
                 </h:form>
             </rich:column>
             <rich:column rendered="#{type=='to'}">
-                <f:facet name="header">#{eppmessages['process.transition.destination']}</f:facet>
+                <f:facet name="header">#{infoxMessages['process.transition.destination']}</f:facet>
                 <h:form>
                     <h:selectOneMenu
                         id="to"
@@ -113,7 +113,7 @@
                 </h:form>
             </rich:column>
             <rich:column id="transitionName">
-                <f:facet name="header">#{eppmessages['process.transition.name']}</f:facet>
+                <f:facet name="header">#{infoxMessages['process.transition.name']}</f:facet>
                 <h:form>
                     <h:inputText
                         value="#{transition.name}"
@@ -126,7 +126,7 @@
                     </h:inputText>
                     <a:commandLink
                         render="nodesDiv"
-                        title="#{eppmessages['process.transition.goto']}"
+                        title="#{infoxMessages['process.transition.goto']}"
                         execute="@this"
                         action="#{nodeFitter.setCurrentNode(transition, type)}"
                         limitRender="true">
@@ -140,7 +140,7 @@
                 </h:form>
             </rich:column>
             <rich:column id="occulTransitionButtonColumn" rendered="#{type eq 'to'}">
-                <f:facet name="header">#{eppmessages['process.transition.ocultar']}</f:facet>
+                <f:facet name="header">#{infoxMessages['process.transition.ocultar']}</f:facet>
                 <h:form>
                     <center>
                         <h:selectBooleanCheckbox

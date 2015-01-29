@@ -22,7 +22,7 @@
     <s:div id="#{f.id}TipoDocDiv">
       <wi:selectOneMenuEntity
         id="#{f.id}tipoProcessoDocumento"
-        label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+        label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
         items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
         required="#{not readonly}"
         showLabelSelecione="true"

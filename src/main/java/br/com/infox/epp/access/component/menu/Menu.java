@@ -108,8 +108,8 @@ public class Menu implements Serializable {
         MenuItem parent = new MenuItem(null);
         for (int i = 0; i < groups.length; i++) {
             String label = groups[i];
-            if (!label.startsWith("#{eppmessages['")) {
-                label = "#{eppmessages['" + label + "']}";
+            if (!label.startsWith("#{infoxMessages['")) {
+                label = "#{infoxMessages['" + label + "']}";
             }
             MenuItem item = new MenuItem(label);
             if (i == 0) {

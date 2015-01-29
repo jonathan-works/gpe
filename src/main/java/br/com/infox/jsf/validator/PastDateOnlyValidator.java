@@ -12,7 +12,7 @@ import javax.faces.validator.ValidatorException;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 
 
 @org.jboss.seam.annotations.faces.Validator(id = PastDateOnlyValidator.NAME)
@@ -21,7 +21,7 @@ import br.com.infox.core.messages.Messages;
 public class PastDateOnlyValidator implements Validator {
 
     public static final String NAME = "pastDateOnlyValidator";
-
+    
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         if (value == null) {
@@ -35,7 +35,7 @@ public class PastDateOnlyValidator implements Validator {
         dataAtual.set(Calendar.SECOND, 0);
         dataAtual.set(Calendar.MILLISECOND, 0);
         if (data.equals(dataAtual) || data.after(dataAtual)) {
-            throw new ValidatorException(new FacesMessage(Messages.resolveMessage("validator.Date.PAST_ONLY")));
+            throw new ValidatorException(new FacesMessage(InfoxMessages.getInstance().get("validator.Date.PAST_ONLY")));
         }
     }
 

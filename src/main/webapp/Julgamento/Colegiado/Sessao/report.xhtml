@@ -4,24 +4,24 @@
      xmlns:wi="http://www.itx.com.br/jsf">
 
 	<wi:dataReport
-         title="#{eppmessages['sessaoJulgamento.reportTitle']}"
+         title="#{infoxMessages['sessaoJulgamento.reportTitle']}"
          columns="7"
          widths="1 1 1 1 1 1 1"
          headerText="#{sessaoJulgamentoList.criteria}">
 				   
-		<wi:reportColumnHeader title="#{eppmessages['sala.colegiado']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['sala.colegiado']}" />
 		
-		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.data']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['sessaoJulgamento.data']}" />
 		
-		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.horaInicio']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['sessaoJulgamento.horaInicio']}" />
 		
-		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.horaFim']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['sessaoJulgamento.horaFim']}" />
 		
-		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.sala']}" /> 
+		<wi:reportColumnHeader title="#{infoxMessages['sessaoJulgamento.sala']}" /> 
 		
-		<wi:reportColumnHeader title="#{eppmessages['sessaoJulgamento.statusSessao']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['sessaoJulgamento.statusSessao']}" />
 		
-		<wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
 				
 		<ui:repeat var="row" value="#{sessaoJulgamentoList.list()}">
 			

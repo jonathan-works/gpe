@@ -6,29 +6,28 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.transaction.TransactionService;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(LocalizacaoAssignment.NAME)
-@BypassInterceptors
 @Install(precedence = Install.FRAMEWORK)
 public class LocalizacaoAssignment implements Serializable {
 
@@ -41,6 +40,9 @@ public class LocalizacaoAssignment implements Serializable {
             + ":idLocalizacao, :idPapel, :contabilizar, :taskInstance)";
     public static final String NAME = "localizacaoAssignment";
     private org.jbpm.taskmgmt.exe.TaskInstance currentTaskInstance;
+    
+    @In
+    private InfoxMessages infoxMessages;
 
     @SuppressWarnings(UNCHECKED)
     public Set<String> getPooledActors(String... localPapel) {
@@ -59,7 +61,7 @@ public class LocalizacaoAssignment implements Serializable {
             currentTaskInstance = TaskInstance.instance();
         }
         if (localPapel == null || allNullElements(localPapel)) {
-            throw new BusinessException(Messages.resolveMessage("process.swimlane.notDefined"));
+            throw new BusinessException(infoxMessages.get("process.swimlane.notDefined"));
         }
         if (currentTaskInstance == null || processo == null) {
             return false;

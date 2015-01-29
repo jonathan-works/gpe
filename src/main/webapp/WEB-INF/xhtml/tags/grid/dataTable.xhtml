@@ -64,7 +64,7 @@
         <ui:insert />
       </rich:dataTable>
       <h:outputText
-        value="#{eppmessages['list.resultPrefix']} #{not empty bean ? bean.resultCount : values.size()} #{eppmessages['list.resultSufix']}"
+        value="#{infoxMessages['list.resultPrefix']} #{not empty bean ? bean.resultCount : values.size()} #{infoxMessages['list.resultSufix']}"
         styleClass="dt-res-count"
         rendered="#{wi:get(showGridCount, true)}"
       />

@@ -13,7 +13,7 @@
 		formTitle="Incluir Participante">
            
         <wi:selectOneRadioEnum id="radioTipoPessoa"
-           	label="#{eppmessages['pessoa.tipoPessoa']}" required="true" 
+           	label="#{infoxMessages['pessoa.tipoPessoa']}" required="true" 
            	items="#{participantesController.tipoPessoaValues}"
            	value="#{participantesController.tipoPessoa}" 
            	rendered="#{participantesController.podeAdicionarAmbosTiposDeParte()}">
@@ -25,7 +25,7 @@
           		
        		<wi:inputCpf id="cpf"
                 value="#{participantesController.participanteProcesso.pessoa.cpf}"
-                label="#{eppmessages['pessoaFisica.cpf']}"
+                label="#{infoxMessages['pessoaFisica.cpf']}"
                 assignTo="participantesController.participanteProcesso.pessoa.cpf"
                 required="true" rendered="#{participantesController.tipoPessoa eq 'F'}">
                 <a:ajax event="blur"
@@ -35,7 +35,7 @@
             
             <wi:inputCnpj id="cnpj"
                 value="#{participantesController.participanteProcesso.pessoa.cnpj}"
-                label="#{eppmessages['pessoaJuridica.cnpj']}"
+                label="#{infoxMessages['pessoaJuridica.cnpj']}"
                 assignTo="participantesController.participanteProcesso.pessoa.cnpj"
                 required="true" rendered="#{participantesController.tipoPessoa eq 'J'}">
                 <a:ajax event="blur" execute="@this" render="nome, razao"
@@ -49,40 +49,40 @@
              
             <wi:inputEmail id="email"
             	value="#{participantesController.email}"
-            	label="#{eppmessages['pessoaFisica.email']}" 
+            	label="#{infoxMessages['pessoaFisica.email']}" 
             	rendered="#{participantesController.tipoPessoa eq 'F'}" 
             	required="false"/>
             	
             <wi:inputText id="razao"
                 value="#{participantesController.participanteProcesso.pessoa.razaoSocial}"
-                label="#{eppmessages['pessoaJuridica.razaoSocial']}" required="true" 
+                label="#{infoxMessages['pessoaJuridica.razaoSocial']}" required="true" 
                 rendered="#{participantesController.tipoPessoa eq 'J'}" />
                 
             <wi:inputDate id="dataNascimento"
                 value="#{participantesController.participanteProcesso.pessoa.dataNascimento}"
-                label="#{eppmessages['pessoaFisica.dataNascimento']}" 
+                label="#{infoxMessages['pessoaFisica.dataNascimento']}" 
                 rendered="#{participantesController.tipoPessoa eq 'F'}"
                 required="false" />
                 
             <wi:selectOneMenuEntity id="tipoPartes"
 				items="#{participantesController.tipoPartes}"
 				value="#{participantesController.participanteProcesso.tipoParte}"
-				label="#{eppmessages['participanteProcesso.tipoParticipante']}"
+				label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
 				required="true" showLabelSelecione="true" />
 				
 			<wi:tree id="participanteSuperior"
-                label="#{eppmessages['participanteProcesso.superior']}"
+                label="#{infoxMessages['participanteProcesso.superior']}"
                 assignTo="participantesController.participanteProcesso.participantePai"
                 tree="#{participanteProcessoTree}" />
 				
 			<wi:inputDate id="dataInicio"
 				value="#{participantesController.participanteProcesso.dataInicio}"
-				label="#{eppmessages['participanteProcesso.dataInicioParticipacao']}"
+				label="#{infoxMessages['participanteProcesso.dataInicioParticipacao']}"
 				required="false" />
 					
 			<wi:inputDate id="dataFim"
 				value="#{participantesController.participanteProcesso.dataFim}"
-				label="#{eppmessages['participanteProcesso.dataFimParticipacao']}" 
+				label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}" 
 				required="false"/>
         </h:panelGroup>
         
@@ -90,7 +90,7 @@
 	        <wi:commandButton id="saveButton"
 	            action="#{participantesController.includeParticipanteProcesso()}"
 	            reRender="buscaDiv, pessoasListDiv, storeDiv, pageBodyDialogMessage"
-	            value="#{eppmessages['crud.persist']}" execute="@form"/>
+	            value="#{infoxMessages['crud.persist']}" execute="@form"/>
         </ui:define>
            
     </wi:dataForm>

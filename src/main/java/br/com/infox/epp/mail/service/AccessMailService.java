@@ -2,7 +2,6 @@ package br.com.infox.epp.mail.service;
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
-import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -18,7 +17,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.mail.Contact;
 import br.com.infox.core.mail.EMailBean;
 import br.com.infox.core.mail.MailSender;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -57,6 +56,8 @@ public class AccessMailService {
     private String nomeSistema;
     @In
     private String emailSistema;
+    @In
+    private InfoxMessages infoxMessages;
 
     private String resolveTipoDeEmail(final String parametro) {
         String nomeParam = null;
@@ -78,9 +79,6 @@ public class AccessMailService {
      *            o usuário que solicitou a mudança
      * @param password
      *            a senha gerada
-     * @throws MessagingException
-     * @throws UnsupportedEncodingException
-     *
      * @throws BusinessException
      *             caso não seja possível enviar o e-mail
      * */
@@ -102,13 +100,12 @@ public class AccessMailService {
         if (result == null) {
             result = new ModeloDocumento();
             final StringBuilder defaultEmail = new StringBuilder();
-            final Map<String, String> localeMsgs = Messages.getInstance().getMessages();
             defaultEmail
             .append(MessageFormat.format(AccessMailService.DEFAULT_EMAIL_LINE,
-                    localeMsgs.get(AccessMailService.USUARIO_MAIL_DEFAULT_FIELD_NOME),
+                    infoxMessages.get(AccessMailService.USUARIO_MAIL_DEFAULT_FIELD_NOME),
                     AccessMailService.CAMPO_USUARIO));
             defaultEmail.append(MessageFormat.format(AccessMailService.DEFAULT_EMAIL_LINE,
-                    localeMsgs.get(AccessMailService.USUARIO_MAIL_DEFAULT_FIELD_SENHA), AccessMailService.CAMPO_SENHA));
+                    infoxMessages.get(AccessMailService.USUARIO_MAIL_DEFAULT_FIELD_SENHA), AccessMailService.CAMPO_SENHA));
             result.setModeloDocumento(defaultEmail.toString());
         }
         return result;
@@ -133,12 +130,12 @@ public class AccessMailService {
         mail.setBody(conteudo);
         mail.getReceivers().clear();
         mail.getReceivers().add(new Contact(usuario.getNomeUsuario(), usuario.getEmail()));
-        mail.setSubject("[otherMail] " + Messages.resolveMessage("usuario.senha.generated.subject"));
+        mail.setSubject("[otherMail] " + infoxMessages.get("usuario.senha.generated.subject"));
         mail.setSender(new Contact(this.nomeSistema, this.emailSistema));
         try {
             MailSender.sendMail(mail, getEmailSession());
         } catch (UnsupportedEncodingException | MessagingException e) {
-            throw new ApplicationException(Messages.resolveMessage("mail.send.fail"), e);
+            throw new ApplicationException(infoxMessages.get("mail.send.fail"), e);
         }
     }
 

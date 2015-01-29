@@ -16,11 +16,11 @@
         <a:region renderRegionOnly="false">
             <a:commandButton id="saveH" eventsQueue="editQueue"
                 action="#{home.persist()}"
-                value="#{eppmessages['crud.persist']}" render=":pageBody"
+                value="#{infoxMessages['crud.persist']}" render=":pageBody"
                 limitRender="true" styleClass="buttons"
                 rendered="#{!home.managed}" />
             <a:commandButton id="new" eventsQueue="editQueue"
-                render=":pageBody" limitRender="true" value="#{eppmessages['crud.new']}"
+                render=":pageBody" limitRender="true" value="#{infoxMessages['crud.new']}"
                 styleClass="buttons" action="#{home.newInstance}"
                 rendered="#{home.managed}" />
         </a:region>

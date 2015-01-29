@@ -11,7 +11,7 @@
   xmlns:infox="http://www.infox.com.br/jsf"
   xmlns:wi="http://www.itx.com.br/jsf"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-  <ui:define name="title">#{eppmessages['localizacao.titlePage']}</ui:define>
+  <ui:define name="title">#{infoxMessages['localizacao.titlePage']}</ui:define>
   <ui:param
     name="home"
     value="#{localizacaoCrudAction}" />
@@ -19,27 +19,27 @@
     <wi:dataTable
       values="#{localizacaoList.list(15)}"
       bean="#{localizacaoList}"
-      tableTitle="#{eppmessages['localizacao.tableTitle']}"
+      tableTitle="#{infoxMessages['localizacao.tableTitle']}"
       id="localizacaoList"
       rowId="#{row.idLocalizacao}">
       <ui:define name="searchForm">
         <wi:searchForm
           formId="pesquisarLocalizacaoForm"
-          formTitle="#{eppmessages['searchForm.title']}">
+          formTitle="#{infoxMessages['searchForm.title']}">
           <wi:inputText
             id="codigoItem"
             value="#{localizacaoList.entity.localizacao}"
-            label="#{eppmessages['localizacao.localizacao']}" />
+            label="#{infoxMessages['localizacao.localizacao']}" />
           <wi:tree
             id="localizacaoPai"
             assignTo="localizacaoList.entity.localizacaoPai"
             tree="#{localizacaoTree}"
             icon="#{wiSkin.imageFolder}/nivelTree.gif"
             iconLeaf="#{wiSkin.imageFolder}/file.gif"
-            label="#{eppmessages['localizacao.localizacaoPai']}" />
+            label="#{infoxMessages['localizacao.localizacaoPai']}" />
           <wi:selectSituacaoOneMenu
             id="ativo"
-            label="#{eppmessages['field.situacao']}"
+            label="#{infoxMessages['field.situacao']}"
             value="#{localizacaoList.entity.ativo}" />
         </wi:searchForm>
       </ui:define>
@@ -47,18 +47,18 @@
         styleClass="rf-tr"
         hideOrder="true"
         columnId="codigo"
-        columnHeader="#{eppmessages['localizacao.codigo']}"
+        columnHeader="#{infoxMessages['localizacao.codigo']}"
         value="#{row.codigo}" />
       <wi:columnOutputText
         styleClass="rf-tr"
         hideOrder="true"
         columnId="caminhoCompleto"
-        columnHeader="#{eppmessages['localizacao.localizacao']}"
+        columnHeader="#{infoxMessages['localizacao.localizacao']}"
         value="#{localizacaoCrudAction.formatCaminhoCompleto(row)}" />
       <wi:columnSituacao
         hideOrder="true"
         columnId="ativo"
-        columnHeader="#{eppmessages['field.situacao']}"
+        columnHeader="#{infoxMessages['field.situacao']}"
         value="#{row.ativo}" />
     </wi:dataTable>
   </ui:define>
@@ -68,21 +68,21 @@
       value="#{not authenticator.getLocalizacaoAtual().equals(localizacaoCrudAction.instance)}" />
     <wi:dataForm
       formId="localizacaoForm"
-      formTitle="#{eppmessages['form.title']}">
+      formTitle="#{infoxMessages['form.title']}">
       <wi:inputText
         id="codigo"
-        label="#{eppmessages['localizacao.codigo']}"
+        label="#{infoxMessages['localizacao.codigo']}"
         value="#{localizacaoCrudAction.instance.codigo}" />
       <wi:inputText
         id="localizacao"
         required="true"
-        label="#{eppmessages['localizacao.localizacao']}"
+        label="#{infoxMessages['localizacao.localizacao']}"
         value="#{localizacaoCrudAction.instance.localizacao}"
         readonly="#{not isEditable}" />
       <wi:outputText
         id="localizacaoPaiOut"
         value="#{localizacaoCrudAction.instance.localizacaoPai}"
-        label="#{eppmessages['localizacao.localizacaoPai']}"
+        label="#{infoxMessages['localizacao.localizacaoPai']}"
         rendered="#{authenticator.getLocalizacaoAtual().equals(localizacaoCrudAction.instance)}" />
       <wi:tree
         id="localizacaoPai"
@@ -92,18 +92,18 @@
         iconLeaf="#{wiSkin.imageFolder}/file.gif"
         required="true"
         rendered="#{isEditable}"
-        label="#{eppmessages['localizacao.localizacaoPai']}" />
+        label="#{infoxMessages['localizacao.localizacaoPai']}" />
       <wi:selectOneMenuEntity
         id="estruturaFilho"
         value="#{localizacaoCrudAction.instance.estruturaFilho}"
-        label="#{eppmessages['localizacao.estruturaFilho']}"
+        label="#{infoxMessages['localizacao.estruturaFilho']}"
         items="#{localizacaoCrudAction.getEstruturasDisponiveis()}"
         readonly="#{not isEditable}"
         rendered="#{empty authenticator.getLocalizacaoAtual().getEstruturaPai()}"
         showLabelSelecione="true" />
       <wi:selectSituacaoRadio
         id="ativo"
-        label="#{eppmessages['field.situacao']}"
+        label="#{infoxMessages['field.situacao']}"
         value="#{localizacaoCrudAction.instance.ativo}"
         disabled="#{not isEditable}" />
       <ui:define name="buttons">

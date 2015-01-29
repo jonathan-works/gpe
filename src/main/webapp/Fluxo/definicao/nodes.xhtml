@@ -32,7 +32,7 @@
                                     render="nodesDiv"
                                     limitRender="true">
                                     <h:graphicImage
-                                        title="#{eppmessages['process.node.add']}"
+                                        title="#{infoxMessages['process.node.add']}"
                                         url="#{wiSkin.imageFolder}/add.gif" />
                                 </a:commandLink>
                             </h:form>
@@ -40,20 +40,20 @@
                         <ui:define name="toolBar">
                             <h:form>
                                 <h:graphicImage
-                                    title="#{eppmessages['process.node.remove']}"
+                                    title="#{infoxMessages['process.node.remove']}"
                                     url="#{wiSkin.imageFolder}/remove.png"
                                     styleClass="opacityHover"
                                     rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}">
                                     <a:ajax
                                         event="click"
                                         listener="#{nodeFitter.removeNode(row)}"
-                                        onbeforesubmit="return confirm(\'#{eppmessages['processBuilder.confirm']}\');"
+                                        onbeforesubmit="return confirm(\'#{infoxMessages['processBuilder.confirm']}\');"
                                         execute="@this"
                                         render="nodesDiv, pageBodyDialogMessage"
                                         limitRender="true" />
                                 </h:graphicImage>
                                 <h:graphicImage
-                                    title="#{eppmessages['process.node.up']}"
+                                    title="#{infoxMessages['process.node.up']}"
                                     rendered="#{key != 0}"
                                     url="#{wiSkin.imageFolder}/jbpm/up.gif"
                                     styleClass="opacityHover">
@@ -65,7 +65,7 @@
                                         limitRender="true" />
                                 </h:graphicImage>
                                 <h:graphicImage
-                                    title="#{eppmessages['process.node.down']}"
+                                    title="#{infoxMessages['process.node.down']}"
                                     rendered="#{key lt nodeFitter.nodes.size - 1}"
                                     url="#{wiSkin.imageFolder}/jbpm/down.gif"
                                     styleClass="opacityHover">
@@ -80,7 +80,7 @@
                         </ui:define>
                         <ui:define name="columns">
                             <rich:column>
-                                <f:facet name="header">#{eppmessages['process.nodes']}</f:facet>
+                                <f:facet name="header">#{infoxMessages['process.nodes']}</f:facet>
                                 <ui:param
                                     name="current"
                                     value="#{row == nodeFitter.currentNode}" />
@@ -170,10 +170,10 @@
 								switchType="ajax"
 								expanded="true"
 								rendered="#{nodeFitter.nodeType == 'Task' || nodeFitter.nodeType == 'Node'}"
-								header="#{eppmessages['process.status.nome']}">
+								header="#{infoxMessages['process.status.nome']}">
 								<wi:selectOneMenuEntity
 									id="statusProcesso"
-									label="#{eppmessages['process.status.nome']}"
+									label="#{infoxMessages['process.status.nome']}"
 									value="#{nodeFitter.nodeHandler.statusProcesso}"
 									items="#{nodeFitter.statusProcessoList}"
 									showLabelSelecione="true">
@@ -188,7 +188,7 @@
                             <rich:collapsiblePanel
                                 switchType="ajax"
                                 expanded="false"
-                                header="#{eppmessages['jbpm.taskNode.description']}">
+                                header="#{infoxMessages['jbpm.taskNode.description']}">
                                 <wi:editor
                                     id="nodeDescription"
                                     label=""
@@ -204,7 +204,7 @@
                             <rich:collapsiblePanel
                                 switchType="ajax"
                                 expanded="false"
-                                header="#{eppmessages['process.events']}">
+                                header="#{infoxMessages['process.events']}">
                                 <ui:include src="events.xhtml">
                                     <ui:param
                                         name="parent"
@@ -218,7 +218,7 @@
 					</rich:panel>
                     <br />
                     <rich:panel
-                        header="#{eppmessages['process.node.new']}"
+                        header="#{infoxMessages['process.node.new']}"
                         rendered="#{empty nodeFitter.currentNode}">
                         <rich:dataTable
                             id="nodeTypes"
@@ -226,7 +226,7 @@
                             var="node">
                             <f:facet name="header">
                                 <h:outputText
-                                    value="#{eppmessages['process.node.type']}" />
+                                    value="#{infoxMessages['process.node.type']}" />
                             </f:facet>
                             <rich:column
                                 filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
@@ -257,7 +257,7 @@
                                 <s:decorate
                                     template="/WEB-INF/xhtml/components/templates/edit.xhtml"
                                     id="newNodeNameDecoration">
-                                    <ui:define name="label">#{eppmessages['process.node.name']}</ui:define>
+                                    <ui:define name="label">#{infoxMessages['process.node.name']}</ui:define>
                                     <h:inputText
                                         id="newNodeName"
                                         styleClass="inputText"
@@ -278,7 +278,7 @@
                                 <s:decorate
                                     template="/WEB-INF/xhtml/components/templates/edit.xhtml"
                                     id="afterDecoration">
-                                    <ui:define name="label">#{eppmessages['process.node.after']}</ui:define>
+                                    <ui:define name="label">#{infoxMessages['process.node.after']}</ui:define>
                                     <h:selectOneMenu
                                         id="after"
                                         value="#{nodeFitter.newNodeAfter}"
@@ -292,7 +292,7 @@
                                         rendered="#{nodeFitter.newNodeType != 'EndState'}"
                                         template="/WEB-INF/xhtml/components/templates/edit.xhtml"
                                         id="inTransitionDecoration">
-                                        <ui:define name="label">#{eppmessages['process.node.at']}</ui:define>
+                                        <ui:define name="label">#{infoxMessages['process.node.at']}</ui:define>
                                         <h:selectOneMenu
                                             id="inTransition"
                                             value="#{transitionFitter.newNodeTransitionName}"
@@ -304,7 +304,7 @@
                                 </s:div>
                                 <a:commandButton
                                     styleClass="buttons"
-                                    value="#{eppmessages['process.node.insert']}"
+                                    value="#{infoxMessages['process.node.insert']}"
                                     render="nodesDiv"
                                     execute="@form"
                                     action="#{nodeFitter.addNewNode()}"

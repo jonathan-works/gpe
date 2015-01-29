@@ -23,8 +23,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -37,7 +35,7 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
@@ -51,6 +49,8 @@ import br.com.infox.ibpm.node.manager.JbpmNodeManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.transition.TransitionHandler;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(NodeFitter.NAME)
@@ -81,6 +81,8 @@ public class NodeFitter extends Fitter implements Serializable {
     private TransitionFitter transitionFitter;
     @In
     private StatusProcessoManager statusProcessoManager;
+    @In
+    private InfoxMessages infoxMessages;
     
     @SuppressWarnings(UNCHECKED)
     public void addNewNode() {
@@ -335,7 +337,7 @@ public class NodeFitter extends Fitter implements Serializable {
             List<Node> list = getProcessBuilder().getInstance().getNodes();
             if (list != null) {
                 nodesItems = new ArrayList<SelectItem>();
-                nodesItems.add(new SelectItem(null, Messages.resolveMessage("process.task.select")));
+                nodesItems.add(new SelectItem(null, infoxMessages.get("process.task.select")));
                 for (Node node : list) {
                     nodesItems.add(new SelectItem(node.toString(), node.getName()));
                 }
@@ -434,15 +436,15 @@ public class NodeFitter extends Fitter implements Serializable {
 
     public List<String[]> getNodeTypes() {
         List<String[]> list = new ArrayList<String[]>();
-        list.add(new String[] { NodeTypeConstants.START_STATE, Messages.resolveMessage("process.node.type.start") });
-        list.add(new String[] { NodeTypeConstants.TASK, Messages.resolveMessage("process.node.type.task") });
-        list.add(new String[] { NodeTypeConstants.DECISION, Messages.resolveMessage("process.node.type.decision") });
-        list.add(new String[] { NodeTypeConstants.MAIL_NODE, Messages.resolveMessage("process.node.type.mail") });
-        list.add(new String[] { NodeTypeConstants.FORK, Messages.resolveMessage("process.node.type.fork") });
-        list.add(new String[] { NodeTypeConstants.JOIN, Messages.resolveMessage("process.node.type.join") });
-        list.add(new String[] { NodeTypeConstants.PROCESS_STATE, Messages.resolveMessage("process.node.type.subprocess") });
-        list.add(new String[] { NodeTypeConstants.NODE, Messages.resolveMessage("process.node.type.system") });
-        list.add(new String[] { NodeTypeConstants.END_STATE, Messages.resolveMessage("process.node.type.end") });
+        list.add(new String[] { NodeTypeConstants.START_STATE, infoxMessages.get("process.node.type.start") });
+        list.add(new String[] { NodeTypeConstants.TASK, infoxMessages.get("process.node.type.task") });
+        list.add(new String[] { NodeTypeConstants.DECISION, infoxMessages.get("process.node.type.decision") });
+        list.add(new String[] { NodeTypeConstants.MAIL_NODE, infoxMessages.get("process.node.type.mail") });
+        list.add(new String[] { NodeTypeConstants.FORK, infoxMessages.get("process.node.type.fork") });
+        list.add(new String[] { NodeTypeConstants.JOIN, infoxMessages.get("process.node.type.join") });
+        list.add(new String[] { NodeTypeConstants.PROCESS_STATE, infoxMessages.get("process.node.type.subprocess") });
+        list.add(new String[] { NodeTypeConstants.NODE, infoxMessages.get("process.node.type.system") });
+        list.add(new String[] { NodeTypeConstants.END_STATE, infoxMessages.get("process.node.type.end") });
         return list;
     }
 

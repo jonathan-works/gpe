@@ -11,7 +11,7 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   template="/WEB-INF/xhtml/templates/minimal.xhtml"
 >
-  <ui:define name="title">#{eppmessages['importarXPDL.titlePage']}</ui:define>
+  <ui:define name="title">#{infoxMessages['importarXPDL.titlePage']}</ui:define>
   <ui:define name="body">
     <h:form id="uploadXPDL">
       <s:div id="script">
@@ -47,7 +47,7 @@
           limitRender="true"
           required="#{wi:get(required, false)}"
           acceptedTypes="xpdl"
-          tipMessage="#{eppmessages['fluxo.xpdl.tipMessage']}"
+          tipMessage="#{infoxMessages['fluxo.xpdl.tipMessage']}"
           maxFilesQuantity="1"
           fileUploadListener="#{xpdlUploader.processFileUpload}"
           immediateUpload="#{wi:get(immediateUpload, true)}"
@@ -55,16 +55,16 @@
           listHeight="#{wi:get(listHeight, '58px')}"
           noDuplicate="#{wi:get(noDuplicate, true)}"
           onuploadcomplete="importarXpdl()"
-          addLabel="#{eppmessages['button.add']}"
-          clearAllLabel="#{eppmessages['fileUpload.clearAll']}"
-          clearLabel="#{eppmessages['fileUpload.clear']}"
-          uploadLabel="#{eppmessages['fileUpload.upload']}"
-          doneLabel="#{eppmessages['fileUpload.done']}"
-          sizeExceededLabel="#{eppmessages['fileUpload.error.size']}"
-          validatorMessage="#{eppmessages['fileUpload.error.validator']}"
-          requiredMessage="#{eppmessages['fileUpload.error.required']}"
+          addLabel="#{infoxMessages['button.add']}"
+          clearAllLabel="#{infoxMessages['fileUpload.clearAll']}"
+          clearLabel="#{infoxMessages['fileUpload.clear']}"
+          uploadLabel="#{infoxMessages['fileUpload.upload']}"
+          doneLabel="#{infoxMessages['fileUpload.done']}"
+          sizeExceededLabel="#{infoxMessages['fileUpload.error.size']}"
+          validatorMessage="#{infoxMessages['fileUpload.error.validator']}"
+          requiredMessage="#{infoxMessages['fileUpload.error.required']}"
           disabled="#{disabled}"
-          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{eppmessages['fluxo.xpdl.error.fileExtension']}\')"
+          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['fluxo.xpdl.error.fileExtension']}\')"
         >
           <f:facet name="label">
             <h:outputText value="{_KB}KB de {KB}KB" />

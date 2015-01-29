@@ -66,17 +66,17 @@ public class NaturezaCategoriaFluxo implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_NATUREZA, nullable = false)
-    @NotNull(message = "#{eppmessages['beanValidation.notNull']}")
+    @NotNull(message = "#{infoxMessages['beanValidation.notNull']}")
     private Natureza natureza;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_CATEGORIA, nullable = false)
-    @NotNull(message = "#{eppmessages['beanValidation.notNull']}")
+    @NotNull(message = "#{infoxMessages['beanValidation.notNull']}")
     private Categoria categoria;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_FLUXO, nullable = false)
-    @NotNull(message = "#{eppmessages['beanValidation.notNull']}")
+    @NotNull(message = "#{infoxMessages['beanValidation.notNull']}")
     private Fluxo fluxo;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = NATUREZA_CATEGORIA_FLUXO_ATTRIBUTE)

@@ -9,30 +9,30 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-    <ui:define name="title">#{eppmessages['prioridadeProcesso.titlePage']}</ui:define>
+    <ui:define name="title">#{infoxMessages['prioridadeProcesso.titlePage']}</ui:define>
 
     <ui:param name="home" value="#{prioridadeProcessoCrudAction}" />
 
     <ui:define name="searchGrid">
         <wi:dataTable values="#{prioridadeProcessoList.list(15)}"
             bean="#{prioridadeProcessoList}"
-            tableTitle="#{eppmessages['prioridadeProcesso.tableTitle']}"
+            tableTitle="#{infoxMessages['prioridadeProcesso.tableTitle']}"
             id="prioridadeProcessoList" rowId="#{row.idPrioridade}">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarPrioridadeProcessoForm"
-                    formTitle="#{eppmessages['searchForm.title']}">
+                    formTitle="#{infoxMessages['searchForm.title']}">
                     
                     <wi:inputNumber id="peso"
                         value="#{prioridadeProcessoList.entity.peso}"
-                        label="#{eppmessages['prioridadeProcesso.peso']}" />
+                        label="#{infoxMessages['prioridadeProcesso.peso']}" />
                         
                     <wi:inputText id="descricaoPrioridadeProcesso"
-                        label="#{eppmessages['prioridadeProcesso.descricaoPrioridade']}"
+                        label="#{infoxMessages['prioridadeProcesso.descricaoPrioridade']}"
                         value="#{prioridadeProcessoList.entity.descricaoPrioridade}"
                         maxlength="150" />
 
                     <wi:selectSituacaoOneMenu id="ativo"
-                        label="#{eppmessages['field.situacao']}"
+                        label="#{infoxMessages['field.situacao']}"
                         value="#{prioridadeProcessoList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
@@ -40,31 +40,31 @@
             <ui:define name="headerToolBar"/>
 
             <wi:columnOutputText columnId="peso"
-                columnHeader="#{eppmessages['prioridadeProcesso.peso']}"
+                columnHeader="#{infoxMessages['prioridadeProcesso.peso']}"
                 value="#{row.peso}" />
             <wi:columnOutputText columnId="descricaoPrioridade"
-                columnHeader="#{eppmessages['prioridadeProcesso.descricaoPrioridade']}"
+                columnHeader="#{infoxMessages['prioridadeProcesso.descricaoPrioridade']}"
                 value="#{row.descricaoPrioridade}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{eppmessages['field.situacao']}"
+                columnHeader="#{infoxMessages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
 
     <ui:define name="form">
         <wi:dataForm formId="prioridadeProcessoForm"
-            formTitle="#{eppmessages['form.title']}">
+            formTitle="#{infoxMessages['form.title']}">
             <wi:inputNumber id="peso"
                 value="#{prioridadeProcessoCrudAction.instance.peso}"
                 required="true"
-                label="#{eppmessages['prioridadeProcesso.peso']}" />
+                label="#{infoxMessages['prioridadeProcesso.peso']}" />
             <wi:inputText id="descricaoPrioridade"
-                label="#{eppmessages['prioridadeProcesso.descricaoPrioridade']}"
+                label="#{infoxMessages['prioridadeProcesso.descricaoPrioridade']}"
                 required="true"
                 value="#{prioridadeProcessoCrudAction.instance.descricaoPrioridade}"
                 maxlength="150" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{eppmessages['field.situacao']}" required="true"
+                label="#{infoxMessages['field.situacao']}" required="true"
                 value="#{prioridadeProcessoCrudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>

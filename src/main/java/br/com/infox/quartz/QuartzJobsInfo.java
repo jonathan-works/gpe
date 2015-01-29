@@ -20,8 +20,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -31,9 +29,11 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.system.manager.ParametroManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(QuartzJobsInfo.NAME)
@@ -48,6 +48,8 @@ public class QuartzJobsInfo implements Serializable {
 
     @In
     private ParametroManager parametroManager;
+    @In
+    private InfoxMessages infoxMessages;
     
     private static Pattern patternExpr = Pattern
             .compile("^AsynchronousInvocation\\((.*)\\)$");
@@ -66,8 +68,7 @@ public class QuartzJobsInfo implements Serializable {
                 maps.addAll(mapInfoGroup);
             }
         } catch (SchedulerException e) {
-            FacesMessages.instance().add(Severity.ERROR,
-                    Messages.resolveMessage("quartz.error.retrieveData"), e);
+            FacesMessages.instance().add(Severity.ERROR, infoxMessages.get("quartz.error.retrieveData"), e);
         }
         return maps;
     }

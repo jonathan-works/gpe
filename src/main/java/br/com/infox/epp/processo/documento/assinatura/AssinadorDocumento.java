@@ -5,18 +5,18 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(AssinadorDocumento.NAME)
@@ -37,6 +37,8 @@ public class AssinadorDocumento extends AbstractController {
     private AssinaturaDocumentoService assinaturaDocumentoService;
     @In
     private GenericManager genericManager;
+    @In
+    private InfoxMessages infoxMessages;
 
     public String getCertChain() {
         return certChain;
@@ -79,7 +81,7 @@ public class AssinadorDocumento extends AbstractController {
                     perfilAtual, certChain, signature);
             genericManager.update(documento);
             messages.clear();
-            messages.add(Messages.resolveMessage("assinatura.assinadoSucesso"));
+            messages.add(infoxMessages.get("assinatura.assinadoSucesso"));
         } catch (DAOException e) {
             LOG.error("Não foi possível assinar o documento "
                     + documento, e);

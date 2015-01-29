@@ -9,7 +9,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-    <ui:define name="title">#{eppmessages['pessoaFisica.titlePage']}</ui:define>
+    <ui:define name="title">#{infoxMessages['pessoaFisica.titlePage']}</ui:define>
     <ui:param
         name="home"
         value="#{pessoaFisicaCrudAction}" />
@@ -17,19 +17,19 @@
         <wi:dataTable
             values="#{pessoaFisicaList.list(15)}"
             bean="#{pessoaFisicaList}"
-            tableTitle="#{eppmessages['pessoaFisica.tableTitle']}"
+            tableTitle="#{infoxMessages['pessoaFisica.tableTitle']}"
             id="pessoaFisicaList"
             rowId="#{row.idPessoa}">
             <ui:define name="searchForm">
                 <wi:searchForm
                     formId="pesquisarPessoaFisicaForm"
-                    formTitle="#{eppmessages['searchForm.title']}">
+                    formTitle="#{infoxMessages['searchForm.title']}">
                     <wi:inputText
                         id="cpf"
                         size="15"
                         maxlength="15"
                         value="#{pessoaFisicaList.entity.cpf}"
-                        label="#{eppmessages['pessoaFisica.cpf']}"
+                        label="#{infoxMessages['pessoaFisica.cpf']}"
                         styleClass="inputCpf">
                     </wi:inputText>
                     <wi:mask
@@ -38,20 +38,20 @@
                     <wi:inputText
                         id="nome"
                         value="#{pessoaFisicaList.entity.nome}"
-                        label="#{eppmessages['pessoaFisica.nome']}" />
+                        label="#{infoxMessages['pessoaFisica.nome']}" />
                     <wi:inputDate
                         id="dataNascimento"
                         value="#{pessoaFisicaList.entity.dataNascimento}"
-                        label="#{eppmessages['pessoaFisica.dataNascimento']}" />
+                        label="#{infoxMessages['pessoaFisica.dataNascimento']}" />
                     <wi:selectSituacaoOneMenu
                         id="ativo"
-                        label="#{eppmessages['field.situacao']}"
+                        label="#{infoxMessages['field.situacao']}"
                         value="#{pessoaFisicaList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
             <wi:columnOutputText
                 columnId="cpf"
-                columnHeader="#{eppmessages['pessoaFisica.cpf']}"
+                columnHeader="#{infoxMessages['pessoaFisica.cpf']}"
                 value="#{row.cpf}">
                 <ui:define name="outputText">
                     <f:converter converterId="cpfConverter"/>
@@ -59,11 +59,11 @@
             </wi:columnOutputText>
             <wi:columnOutputText
                 columnId="nome"
-                columnHeader="#{eppmessages['pessoaFisica.nome']}"
+                columnHeader="#{infoxMessages['pessoaFisica.nome']}"
                 value="#{row.nome}" />
             <wi:columnOutputText
                 columnId="dataNascimento"
-                columnHeader="#{eppmessages['pessoaFisica.dataNascimento']}"
+                columnHeader="#{infoxMessages['pessoaFisica.dataNascimento']}"
                 value="#{row.dataNascimento}">
                 <ui:define name="outputText">
                     <f:convertDateTime pattern="dd/MM/yyyy" />
@@ -71,32 +71,32 @@
             </wi:columnOutputText>
             <wi:columnSituacao
                 columnId="ativo"
-                columnHeader="#{eppmessages['field.situacao']}"
+                columnHeader="#{infoxMessages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
         <wi:dataForm
             formId="pessoaFisicaForm"
-            formTitle="#{eppmessages['form.title']}">
+            formTitle="#{infoxMessages['form.title']}">
             <wi:inputCpf
                 id="cpf"
                 value="#{pessoaFisicaCrudAction.instance.cpf}"
-                label="#{eppmessages['pessoaFisica.cpf']}"
+                label="#{infoxMessages['pessoaFisica.cpf']}"
                 required="true" />
             <wi:inputText
                 id="nome"
                 value="#{pessoaFisicaCrudAction.instance.nome}"
-                label="#{eppmessages['pessoaFisica.nome']}"
+                label="#{infoxMessages['pessoaFisica.nome']}"
                 required="true" />
             <wi:inputDate
                 id="dataNascimento"
                 value="#{pessoaFisicaCrudAction.instance.dataNascimento}"
-                label="#{eppmessages['pessoaFisica.dataNascimento']}"
+                label="#{infoxMessages['pessoaFisica.dataNascimento']}"
                 required="true" />
             <wi:selectSituacaoRadio
                 id="ativo"
-                label="#{eppmessages['field.situacao']}"
+                label="#{infoxMessages['field.situacao']}"
                 value="#{pessoaFisicaCrudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>

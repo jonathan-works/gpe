@@ -23,7 +23,7 @@
 
         <wi:mask selector=".#{id}maskDate" mask="99/99/9999" />
         <ui:define name="label">#{label}</ui:define>
-        <h:outputText value="#{eppmessages['data.periodoInicio']}" />
+        <h:outputText value="#{infoxMessages['data.periodoInicio']}" />
         <rich:calendar id="#{idFromForm}" value="#{valueDateFrom}"
             direction="auto" enableManualInput="true"
             inputStyle="width: 70px; display:inline; "
@@ -33,7 +33,7 @@
             datePattern="#{empty pattern ? 'dd/MM/yyyy' : pattern}"
             onchanged="validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', true);"
             oninputblur="validarData(this);                          validarPeriodo('#{rich:clientId(idFromForm)}InputDate', '#{rich:clientId(idToForm)}InputDate', true);" />
-        <h:outputText value=" #{eppmessages['data.periodoInicio']} " />
+        <h:outputText value=" #{infoxMessages['data.periodoInicio']} " />
         <rich:calendar id="#{idToForm}" value="#{valueDateTo}"
             direction="auto" enableManualInput="true"
             inputStyle="width: 70px" disabled="#{disabled}"

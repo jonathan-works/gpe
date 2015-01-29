@@ -18,7 +18,7 @@
             rendered="#{canEdit and listReRender == ':pagebody'}"
             limitRender="true" status=":status" render="#{listReRender}">
             <h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.gif"
-                title="#{eppmessages['button.selecionar']}" />
+                title="#{infoxMessages['button.selecionar']}" />
             <f:param name="firstResult" value="#{bean.firstResult}" />
             <f:param name="page" value="#{bean.page}" />
         </a:commandLink>
@@ -27,7 +27,7 @@
         rendered="#{canEdit and listReRender != ':pagebody'}"
         limitRender="true" status=":status" render="#{listReRender}">
         <h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.gif"
-            title="#{eppmessages['button.selecionar']}" />
+            title="#{infoxMessages['button.selecionar']}" />
         <f:param name="firstResult" value="#{bean.firstResult}" />
         <f:param name="page" value="#{bean.page}" />
     </a:commandLink>

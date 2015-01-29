@@ -11,7 +11,7 @@ import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.epp.tarefa.entity.Tarefa;
@@ -36,6 +36,8 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
     private ActionMessagesService actionMessagesService;
     @In
     private PainelTreeHandler painelTreeHandler;
+    @In
+    private InfoxMessages infoxMessages;
 
     public List<SelectItem> getPreviousNodes() {
         return tarefaManager.getPreviousNodes(getInstance().getTarefa());
@@ -77,7 +79,7 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
             if (PostgreSQLErrorCode.valueOf(ret) == PostgreSQLErrorCode.UNIQUE_VIOLATION) {
                 final StatusMessages messages = getMessagesHandler();
                 messages.clear();
-                messages.add(Severity.ERROR, Messages.resolveMessage("caixa.error.previousNodeExists"));
+                messages.add(Severity.ERROR, infoxMessages.get("caixa.error.previousNodeExists"));
             }
         } catch (IllegalArgumentException e) {
             LOG.warn(".update()", e);

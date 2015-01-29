@@ -9,21 +9,21 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-    <ui:define name="title">#{eppmessages['localizacaoFisica.titlePage']}</ui:define>
+    <ui:define name="title">#{infoxMessages['localizacaoFisica.titlePage']}</ui:define>
 
     <ui:param name="home" value="#{localizacaoFisicaCrudAction}" />
 
     <ui:define name="searchGrid">
         <wi:dataTable values="#{localizacaoFisicaList.list(15)}"
             bean="#{localizacaoFisicaList}"
-            tableTitle="#{eppmessages['localizacaoFisica.tableTitle']}"
+            tableTitle="#{infoxMessages['localizacaoFisica.tableTitle']}"
             id="localizacaoFisicaList"
             rowId="#{row.idLocalizacaoFisica}" hideOrder="true">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarlocalizacaoFisicaForm"
-                    formTitle="#{eppmessages['searchForm.title']}">
+                    formTitle="#{infoxMessages['searchForm.title']}">
                     <wi:inputText id="descricao"
-                        label="#{eppmessages['localizacaoFisica.descricao']}"
+                        label="#{infoxMessages['localizacaoFisica.descricao']}"
                         value="#{localizacaoFisicaList.entity.descricao}"
                         maxlength="150" />
                     <wi:tree id="localizacaoFisicaPai"
@@ -31,39 +31,39 @@
                         tree="#{localizacaoFisicaTree}"
                         icon="#{wiSkin.imageFolder}/nivelTree.gif"
                         iconLeaf="#{wiSkin.imageFolder}/file.gif"
-                        label="#{eppmessages['localizacaoFisica.localizacaoFisicaPai']}" />
+                        label="#{infoxMessages['localizacaoFisica.localizacaoFisicaPai']}" />
                     <wi:selectSituacaoOneMenu id="ativo"
-                        label="#{eppmessages['field.situacao']}"
+                        label="#{infoxMessages['field.situacao']}"
                         value="#{localizacaoFisicaList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
 
             <wi:columnOutputTextIdent columnId="descricao"
-                columnHeader="#{eppmessages['localizacaoFisica.descricao']}"
+                columnHeader="#{infoxMessages['localizacaoFisica.descricao']}"
                 value="#{row.descricao}"
                 fullPath="#{row.caminhoCompleto}" />
             <wi:columnOutputText columnId="localizacaoFisicaPai"
-                columnHeader="#{eppmessages['localizacaoFisica.localizacaoFisicaPai']}"
+                columnHeader="#{infoxMessages['localizacaoFisica.localizacaoFisicaPai']}"
                 value="#{row.localizacaoFisicaPai}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{eppmessages['field.situacao']}"
+                columnHeader="#{infoxMessages['field.situacao']}"
                 columnWidth="10%" value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
 
     <ui:define name="form">
         <wi:dataForm formId="localizacaoFisicaForm"
-            formTitle="#{eppmessages['form.title']}">
+            formTitle="#{infoxMessages['form.title']}">
             <wi:inputText id="descricao" required="true"
-                label="#{eppmessages['localizacaoFisica.descricao']}"
+                label="#{infoxMessages['localizacaoFisica.descricao']}"
                 value="#{localizacaoFisicaCrudAction.instance.descricao}" />
             <wi:tree id="localizacaoFisicaPai"
                 assignTo="localizacaoFisicaCrudAction.instance.localizacaoFisicaPai"
                 tree="#{localizacaoFisicaTree}"
                 icon="#{wiSkin.imageFolder}/nivelTree.gif" iconLeaf="#{wiSkin.imageFolder}/file.gif"
-                label="#{eppmessages['localizacaoFisica.pai']}" />
+                label="#{infoxMessages['localizacaoFisica.pai']}" />
             <wi:selectSituacaoRadio id="ativo"
-                label="#{eppmessages['field.situacao']}"
+                label="#{infoxMessages['field.situacao']}"
                 value="#{localizacaoFisicaCrudAction.instance.ativo}" />
         </wi:dataForm>
     </ui:define>

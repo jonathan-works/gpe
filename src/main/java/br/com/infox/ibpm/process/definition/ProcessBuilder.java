@@ -48,7 +48,7 @@ import org.xml.sax.InputSource;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
@@ -118,6 +118,8 @@ public class ProcessBuilder implements Serializable {
     private ActionMessagesService actionMessagesService;
     @In
     private TaskExpirationManager taskExpirationManager;
+    @In
+    private InfoxMessages infoxMessages;
  
     private String id;
     private ProcessDefinition instance;
@@ -150,9 +152,9 @@ public class ProcessBuilder implements Serializable {
         taskFitter.setStarTaskHandler(new TaskHandler(startTask));
         instance.getTaskMgmtDefinition().setStartTask(taskFitter.getStartTaskHandler().getTask());
 
-        StartState startState = new StartState(Messages.resolveMessage("process.node.first"));
+        StartState startState = new StartState(infoxMessages.get("process.node.first"));
         instance.addNode(startState);
-        EndState endState = new EndState(Messages.resolveMessage("process.node.last"));
+        EndState endState = new EndState(infoxMessages.get("process.node.last"));
         instance.addNode(endState);
         Transition t = new Transition();
         t.setName(endState.getName());

@@ -12,12 +12,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -28,12 +26,17 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.processo.action.IniciarProcessoAction;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(UsuarioExternoAction.NAME)
 @Scope(ScopeType.EVENT)
 public class UsuarioExternoAction {
     public static final String NAME = "usuarioExternoAction";
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioExternoAction.class);
+    
+    @In
+    private InfoxMessages infoxMessages;
 
     @In(create = true)
     private IniciarProcessoAction iniciarProcessoAction;
@@ -63,7 +66,7 @@ public class UsuarioExternoAction {
             iniciarProcessoAction.onSelectNatCatFluxo(naturezaCategoriaFluxo);
             iniciarProcessoAction.onSelectItem(new ItemBean(item));
         } else {
-            FacesMessages.instance().add(Messages.resolveMessage("acessoExterno.LoggedIn"));
+            FacesMessages.instance().add(infoxMessages.get("acessoExterno.LoggedIn"));
         }
     }
 

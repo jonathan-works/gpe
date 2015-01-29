@@ -9,7 +9,7 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/empty.xhtml"
 >
-    <ui:define name="title">#{eppmessages['processo.documentos']} #{consultaController.processo.numeroProcesso}</ui:define>
+    <ui:define name="title">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcesso}</ui:define>
     <ui:define name="body">
         <h:outputScript
             name="jquery.hotkeys.js"
@@ -33,7 +33,7 @@
                 styleClass="doc-pag-form"
             >
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['processo.documentos']} #{consultaController.processo.numeroProcesso}</f:facet>
+                    <f:facet name="header">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcesso}</f:facet>
                     <div id="areaPagina">
                         <div id="pagina">
                             <div class="post-it-cont">
@@ -60,7 +60,7 @@
                     </div>
                 </rich:column>
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['anexosProcesso.titleView']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['anexosProcesso.titleView']}</f:facet>
                     <ui:include
                         src="/WEB-INF/xhtml/components/grid/documentosAnexadosProcesso.xhtml"
                     />

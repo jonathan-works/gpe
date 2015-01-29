@@ -5,24 +5,24 @@
 
     <ui:param name="title" value="Localizações Físicas" />
 
-    <wi:dataReport title="#{eppmessages['parametro.reportTitle']}"
+    <wi:dataReport title="#{infoxMessages['parametro.reportTitle']}"
         columns="7" widths="4 4 4 4 4 2 2"
         headerText="#{parametroList.criteria}"
         marginLeft="40"
         marginRight="30">
 
         <wi:reportColumnHeader
-            title="#{eppmessages['parametro.nomeVariavel']}" />
+            title="#{infoxMessages['parametro.nomeVariavel']}" />
         <wi:reportColumnHeader
-            title="#{eppmessages['parametro.descricaoVariavel']}" />
+            title="#{infoxMessages['parametro.descricaoVariavel']}" />
         <wi:reportColumnHeader
-            title="#{eppmessages['parametro.valorVariavel']}" />
+            title="#{infoxMessages['parametro.valorVariavel']}" />
         <wi:reportColumnHeader
-            title="#{eppmessages['parametro.dataAtualizacao']}" />
+            title="#{infoxMessages['parametro.dataAtualizacao']}" />
         <wi:reportColumnHeader
-            title="#{eppmessages['parametro.usuarioModificacao']}" />
-        <wi:reportColumnHeader title="#{eppmessages['parametro.sistema']}" />
-        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
+            title="#{infoxMessages['parametro.usuarioModificacao']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['parametro.sistema']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{parametroList.list()}">
 

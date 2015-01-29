@@ -33,7 +33,7 @@ import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -122,7 +122,7 @@ public class JbpmLayout {
             } else {
                 name = processDefinition.getName() + ":" + mappedName[1];
             }
-            String component = Messages.resolveMessage(VariableType.valueOf(mappedName[0]).getLabel());
+            String component = InfoxMessages.getInstance().get(VariableType.valueOf(mappedName[0]).getLabel());
             sb.append(i).append(": {name:'").append(JbpmUtil.getJbpmMessages().get(name)).append("', type:'").append(component).append("', readonly:'").append(!v.isWritable()).append("'}");
             if (i < list.size() - 1) {
                 sb.append(",");

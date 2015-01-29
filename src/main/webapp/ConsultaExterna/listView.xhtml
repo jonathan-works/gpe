@@ -11,7 +11,7 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
-    <ui:define name="title">#{eppmessages['consultaExterna.titlePage']}</ui:define>
+    <ui:define name="title">#{infoxMessages['consultaExterna.titlePage']}</ui:define>
     <ui:param name="showMenu" value="false" />
     <ui:param name="controller" value="#{consultaExternaController}"/>
     <ui:define name="body">
@@ -25,12 +25,12 @@
 
             <infox:tab id="searchNumeroProcesso"
                 name="searchNumeroProcesso"
-                title="#{eppmessages['consultaProcesso.porNumeroProcesso']}"
+                title="#{infoxMessages['consultaProcesso.porNumeroProcesso']}"
                 status=":status" action="#{controller.onClickSearchNumeroTab()}">
                 <wi:dataTable
                     values="#{consultaProcessoExterno.list(15)}"
                     bean="#{consultaProcessoExterno}"
-                    tableTitle="#{eppmessages['consultaExterna.tableTitle']}"
+                    tableTitle="#{infoxMessages['consultaExterna.tableTitle']}"
                     id="consultaProcessoExterno"
                     rowId="#{row.idProcesso}"
                     showGrid="#{consultaProcessoExterno.exibirTable}">
@@ -39,11 +39,11 @@
 
                     <ui:define name="searchForm">
                         <wi:searchForm formId="pesquisarProcessoEpaForm"
-                            formTitle="#{eppmessages['searchForm.title']}"
+                            formTitle="#{infoxMessages['searchForm.title']}"
                             clearAction="consultaProcessoExterno.esconderTable()"
                             searchAction="consultaProcessoExterno.exibirTable()">
                             <wi:inputText id="numeroProcesso"
-                                label="#{eppmessages['processoEpp.numeroProcesso']}"
+                                label="#{infoxMessages['processoEpp.numeroProcesso']}"
                                 value="#{consultaProcessoExterno.entity.numeroProcesso}"
                                 minlength="1" maxlength="15"
                                 required="true" />
@@ -52,25 +52,25 @@
 
                     <ui:define name="toolBar">
                         <wi:toolBar url="#{wiSkin.imageFolder}/view.png"
-                            title="#{eppmessages['button.selecionar']}" action="#{consultaExternaController.selectProcesso(row)}"/>
+                            title="#{infoxMessages['button.selecionar']}" action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
                     <wi:columnOutputText columnId="numeroProcesso"
-                        columnHeader="#{eppmessages['processo.numeroProcesso']}"
+                        columnHeader="#{infoxMessages['processo.numeroProcesso']}"
                         value="#{row.numeroProcesso}" hideOrder="true" />
                     <wi:columnOutputText columnId="usuarioCadastro"
-                        columnHeader="#{eppmessages['processo.usuarioCadastroProcesso']}"
+                        columnHeader="#{infoxMessages['processo.usuarioCadastroProcesso']}"
                         value="#{row.usuarioCadastro}"
                         hideOrder="true" />
                     <wi:columnDateTime columnId="dataInicioProcesso"
-                        columnHeader="#{eppmessages['processo.dataInicio']}"
+                        columnHeader="#{infoxMessages['processo.dataInicio']}"
                         value="#{row.dataInicio}" hideOrder="true" />
                     <wi:columnDateTime columnId="dataFimProcesso"
-                        columnHeader="#{eppmessages['processo.dataFim']}"
+                        columnHeader="#{infoxMessages['processo.dataFim']}"
                         value="#{row.dataFim}" hideOrder="true" />
                     <wi:columnOutputText
                         columnId="naturezaCategoriaFluxo"
-                        columnHeader="#{eppmessages['processo.naturezaCategoriaFluxo']}"
+                        columnHeader="#{infoxMessages['processo.naturezaCategoriaFluxo']}"
                         value="#{row.naturezaCategoriaFluxo}"
                         hideOrder="true" />
                 </wi:dataTable>
@@ -78,12 +78,12 @@
 
             <infox:tab id="searchParteProcesso"
                 name="searchParteProcesso"
-                title="#{eppmessages['consultaProcesso.porParteProcesso']}"
+                title="#{infoxMessages['consultaProcesso.porParteProcesso']}"
                 status=":status" action="#{controller.onClickSearchParteTab()}">
                 <wi:dataTable
                     values="#{consultaProcessoExternoPorPartes.list(15)}"
                     bean="#{consultaProcessoExternoPorPartes}"
-                    tableTitle="#{eppmessages['consultaExternaPorPartes.tableTitle']}"
+                    tableTitle="#{infoxMessages['consultaExternaPorPartes.tableTitle']}"
                     id="consultaProcessoExternoPorPartes"
                     rowId="#{row.idProcesso}"
                     showGrid="#{consultaProcessoExternoPorPartes.exibirTable}">
@@ -93,11 +93,11 @@
                     <ui:define name="searchForm">
                         <wi:searchForm
                             formId="pesquisarProcessoEpaPorPartesForm"
-                            formTitle="#{eppmessages['searchForm.title']}"
+                            formTitle="#{infoxMessages['searchForm.title']}"
                             clearAction="consultaProcessoExternoPorPartes.esconderTable()"
                             searchAction="consultaProcessoExternoPorPartes.exibirTable()">
                             <wi:inputText id="nomeParte"
-                                label="#{eppmessages['processoEpp.nome']}"
+                                label="#{infoxMessages['processoEpp.nome']}"
                                 value="#{consultaProcessoExternoPorPartes.nomePartes}"
                                 minlength="1" maxlength="15"
                                 required="true" />
@@ -105,26 +105,26 @@
                     </ui:define>
 
                     <ui:define name="toolBar">
-                        <wi:toolBar url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}" 
+                        <wi:toolBar url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}" 
                             action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
                     <wi:columnOutputText columnId="numeroProcesso"
-                        columnHeader="#{eppmessages['processo.numeroProcesso']}"
+                        columnHeader="#{infoxMessages['processo.numeroProcesso']}"
                         value="#{row.numeroProcesso}" hideOrder="true" />
                     <wi:columnOutputText columnId="usuarioCadastro"
-                        columnHeader="#{eppmessages['processo.usuarioCadastroProcesso']}"
+                        columnHeader="#{infoxMessages['processo.usuarioCadastroProcesso']}"
                         value="#{row.usuarioCadastro}"
                         hideOrder="true" />
                     <wi:columnDateTime columnId="dataInicioProcesso"
-                        columnHeader="#{eppmessages['processo.dataInicio']}"
+                        columnHeader="#{infoxMessages['processo.dataInicio']}"
                         value="#{row.dataInicio}" hideOrder="true" />
                     <wi:columnDateTime columnId="dataFimProcesso"
-                        columnHeader="#{eppmessages['processo.dataFim']}"
+                        columnHeader="#{infoxMessages['processo.dataFim']}"
                         value="#{row.dataFim}" hideOrder="true" />
                     <wi:columnOutputText
                         columnId="naturezaCategoriaFluxo"
-                        columnHeader="#{eppmessages['processo.naturezaCategoriaFluxo']}"
+                        columnHeader="#{infoxMessages['processo.naturezaCategoriaFluxo']}"
                         value="#{row.naturezaCategoriaFluxo}"
                         hideOrder="true" />
                 </wi:dataTable>
@@ -132,7 +132,7 @@
 
             <infox:tab id="processoExternoView"
                 name="processoExternoView"
-                title="#{eppmessages['consultaProcesso.view']}"
+                title="#{infoxMessages['consultaProcesso.view']}"
                 status=":status" rendered="#{not empty controller.processo}">
 
                 <h:messages globalOnly="true" styleClass="message"
@@ -144,13 +144,13 @@
                         <h:panelGrid columns="2" width="100%"
                             columnClasses="viewColumn">
                             <wi:outputText id="dataInicio"
-                                label="#{eppmessages['processo.dataInicio']}"
+                                label="#{infoxMessages['processo.dataInicio']}"
                                 value="#{controller.processo.dataInicio}">
                                 <f:convertDateTime
                                     pattern="dd/MM/yyyy kk:mm" />
                             </wi:outputText>
                             <wi:outputText id="usuarioCadastro"
-                                label="#{eppmessages['processo.usuarioCadastroProcesso']}"
+                                label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
                                 value="#{controller.processo.usuarioCadastro.nomeUsuario}" />
                         </h:panelGrid>
                     </rich:collapsiblePanel>
@@ -160,7 +160,7 @@
                         <infox:tabHeaders />
 
                         <infox:tab id="form" name="form"
-                            title="#{eppmessages['acaoProcesso.menuText']}"
+                            title="#{infoxMessages['acaoProcesso.menuText']}"
                             immediate="true" status=":status"
                             style="border-style: solid; border-width: 1px; border-color: lightgray">
 
@@ -168,13 +168,13 @@
                                 value="#{controller.processo.processoTarefaList}"
                                 rowKeyVar="key" var="task" styleClass="rf-dt-crud">
                                 <rich:column styleClass="defaultCell">
-                                    <f:facet name="header">#{eppmessages['tarefa.nome']}</f:facet>
+                                    <f:facet name="header">#{infoxMessages['tarefa.nome']}</f:facet>
                                     <h:outputText value="#{task.tarefa}" />
                                 </rich:column>
 
                                 <rich:column style="text-align: center"
                                     styleClass="defaultCell">
-                                    <f:facet name="header">#{eppmessages['tarefa.inicio']}</f:facet>
+                                    <f:facet name="header">#{infoxMessages['tarefa.inicio']}</f:facet>
                                     <h:outputText value="#{task.dataInicio}">
                                         <s:convertDateTime
                                             pattern="dd/MM/yy kk:mm:ss" />
@@ -183,7 +183,7 @@
 
                                 <rich:column style="text-align: center"
                                     styleClass="defaultCell">
-                                    <f:facet name="header">#{eppmessages['tarefa.termino']}</f:facet>
+                                    <f:facet name="header">#{infoxMessages['tarefa.termino']}</f:facet>
                                     <h:outputText value="#{task.dataFim}">
                                         <s:convertDateTime
                                             pattern="dd/MM/yy kk:mm:ss" />
@@ -191,7 +191,7 @@
                                 </rich:column>
                                 <rich:column style="text-align:center"
                                     styleClass="defaultCell">
-                                    <f:facet name="header">#{eppmessages['tarefa.documentos']}</f:facet>
+                                    <f:facet name="header">#{infoxMessages['tarefa.documentos']}</f:facet>
                                     <rich:dataTable
                                         value="#{controller.getAnexosPublicos(task)}"
                                         rowKeyVar="key" var="doc">

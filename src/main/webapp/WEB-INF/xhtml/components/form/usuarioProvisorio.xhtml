@@ -15,14 +15,14 @@
 
         <wi:selectBooleanRadio id="#{id}Provisorio"
             value="#{usuarioLoginCrudAction.instance.provisorio}"
-            label="#{eppmessages['usuario.provisorio']}">
+            label="#{infoxMessages['usuario.provisorio']}">
             <a:ajax event="change" execute="@this"
                 render="provisorioDiv" />
         </wi:selectBooleanRadio>
 
         <s:div id="provisorioDiv">
             <wi:inputDate id="#{id}DataExpiracao"
-                label="#{eppmessages['usuario.dataExpiracao']}"
+                label="#{infoxMessages['usuario.dataExpiracao']}"
                 value="#{usuarioLoginCrudAction.instance.dataExpiracao}"
                 future="true" showRequired="true" required="true"
                 rendered="#{usuarioLoginCrudAction.instance.provisorio}" />

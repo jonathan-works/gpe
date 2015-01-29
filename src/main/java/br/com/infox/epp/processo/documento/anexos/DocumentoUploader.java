@@ -20,15 +20,13 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
@@ -37,6 +35,8 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import com.lowagie.text.pdf.PdfReader;
 
@@ -63,6 +63,8 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private DocumentoBinarioManager documentoBinarioManager;
     @In
     private ExtensaoArquivoManager extensaoArquivoManager;
+    @In
+    private InfoxMessages infoxMessages;
     
     private UploadedFile uploadedFile;
     private ClassificacaoDocumento classificacaoDocumento;
@@ -115,7 +117,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             bin().setSize(Long.valueOf(ui.getSize()).intValue());
             bin().setProcessoDocumento(ui.getData());
             bin().setModeloDocumento(null);
-            FacesMessages.instance().add(Messages.resolveMessage("processoDocumento.doneLabel"));
+            FacesMessages.instance().add(infoxMessages.get("processoDocumento.doneLabel"));
         } else {
             newInstance();
         }
@@ -160,23 +162,23 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     private boolean isDocumentoBinValido(final UploadedFile file) {
         if (file == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.resolveMessage("documentoUploader.error.noFile"));
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("documentoUploader.error.noFile"));
             return false;
         }
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, bin().getExtensao());
         if (extensaoArquivo == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.resolveMessage("documentoUploader.error.invalidExtension"));
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("documentoUploader.error.invalidExtension"));
             return false;
         }
         if ((file.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, format(Messages.resolveMessage("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
+            FacesMessages.instance().add(StatusMessage.Severity.ERROR, format(infoxMessages.get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
             return false;
         }
         if (extensaoArquivo.getPaginavel()) {
             if(validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina())){
                 return true;
             } else {
-                FacesMessages.instance().add(StatusMessage.Severity.ERROR, Messages.resolveMessage("documentoUploader.error.notPaginable"));
+                FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("documentoUploader.error.notPaginable"));
                 return false;
             }
         }

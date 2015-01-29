@@ -27,7 +27,7 @@
                     limitRender="true"
                 >
                     <h:graphicImage
-                        title="#{eppmessages['definicaoVariavelProcesso.addVariavel']}"
+                        title="#{infoxMessages['definicaoVariavelProcesso.addVariavel']}"
                         url="#{wiSkin.imageFolder}/add.gif"
                     />
                 </a:commandLink>
@@ -36,7 +36,7 @@
         <ui:define name="toolBar">
             <h:form>
                 <h:graphicImage
-                    title="#{eppmessages['definicaoVariavelProcesso.removeVariavel']}"
+                    title="#{infoxMessages['definicaoVariavelProcesso.removeVariavel']}"
                     url="#{wiSkin.imageFolder}/remove.png"
                     styleClass="opacityHover pointer"
                 >
@@ -44,7 +44,7 @@
                         event="click"
                         listener="#{definicaoVariavelProcessoAction.remove(row)}"
                         execute="@this"
-                        onbeforesubmit="return confirm('#{eppmessages['processBuilder.confirm']}')"
+                        onbeforesubmit="return confirm('#{infoxMessages['processBuilder.confirm']}')"
                         render="variavelTable, variavelForm, pageBodyDialogMessage, variavelPaginator"
                         limitRender="true"
                     />
@@ -54,7 +54,7 @@
         <ui:define name="columns">
             <rich:column>
                 <h:form>
-                    <f:facet name="header">#{eppmessages['processBuilder.definicaoVariavelProcesso']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['processBuilder.definicaoVariavelProcesso']}</f:facet>
                     <ui:param
                         name="current"
                         value="#{row == definicaoVariavelProcessoAction.instance}"
@@ -100,19 +100,19 @@
             <s:div>
                 <wi:inputText
                     id="nomeVariavel"
-                    label="#{eppmessages['definicaoVariavelProcesso.nome']}"
+                    label="#{infoxMessages['definicaoVariavelProcesso.nome']}"
                     required="true"
                     value="#{definicaoVariavelProcessoAction.nomeAmigavel}"
                 />
                 <wi:inputText
                     id="labelProcesso"
-                    label="#{eppmessages['definicaoVariavelProcesso.label']}"
+                    label="#{infoxMessages['definicaoVariavelProcesso.label']}"
                     required="true"
                     value="#{definicaoVariavelProcessoAction.variavel.label}"
                 />
                 <wi:selectBooleanCheckbox
                 	id="variavelVisivel"
-                	label="#{eppmessages['definicaoVariavelProcesso.visivel']}"
+                	label="#{infoxMessages['definicaoVariavelProcesso.visivel']}"
                 	value="#{definicaoVariavelProcessoAction.variavel.visivel}"
               	/>
             </s:div>

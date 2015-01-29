@@ -12,27 +12,27 @@
     
     <a:region id="papelForm">
         <wi:inputText
-            label="#{eppmessages['papel.identificador']}"
+            label="#{infoxMessages['papel.identificador']}"
             value="#{papelCrudAction.instance.identificador}"
             required="true"
             rendered="#{not identityManager.roleExists(papelCrudAction.instance.identificador) or not papelCrudAction.managed}"
             id="identificador"/>
         
         <wi:outputText
-            label="#{eppmessages['papel.identificador']}"
+            label="#{infoxMessages['papel.identificador']}"
             value="#{papelCrudAction.instance.identificador}"
             rendered="#{identityManager.roleExists(papelCrudAction.instance.identificador) and papelCrudAction.managed}"
             id="identificadorOutput"/>
             
         <wi:inputText
-            label="#{eppmessages['papel.nome']}"
+            label="#{infoxMessages['papel.nome']}"
             value="#{papelCrudAction.instance.nome}"
             required="true"
             id="nome"/>
             
         <wi:selectBooleanCheckbox
           id="termoAdesao"
-          label="#{eppmessages['papel.form.termoAdesao']}"
+          label="#{infoxMessages['papel.form.termoAdesao']}"
           value="#{papelCrudAction.instance.termoAdesao}"/>
           
         <ui:param name="targetListWidth" value="400"/>
@@ -51,7 +51,7 @@
                 name="papeisTab"
                 status=":status"
                 actionListener="#{papelCrudAction.onClickHerdeirosOrPapelTab()}"
-                title="#{eppmessages['papel.tableTitle']}"
+                title="#{infoxMessages['papel.tableTitle']}"
                 styleClass="papelTab">
                 
                 <a:region>
@@ -60,8 +60,8 @@
                         value="#{papelCrudAction.papeis}"
                         itemValues="#{papelCrudAction.getPapeisDisponiveis(true)}"
                         itemLabel="#{papelCrudAction.getNome(var)}"
-                        sourceCaption="#{eppmessages['papel.permission.source']}"
-                        targetCaption="#{eppmessages['papel.permission.target']}"/>
+                        sourceCaption="#{infoxMessages['papel.permission.source']}"
+                        targetCaption="#{infoxMessages['papel.permission.target']}"/>
                 </a:region>
                 
             </infox:tab>
@@ -71,14 +71,14 @@
                 id="herdeirosTab"
                 name="herdeirosTab"
                 actionListener="#{papelCrudAction.onClickHerdeirosOrPapelTab()}"
-                title="#{eppmessages['papel.heir']}"
+                title="#{infoxMessages['papel.heir']}"
                 styleClass="papelTab">
                 
                 <a:region>
                     <wi:pickList
                         id="herdeiros"
-                        targetCaption="#{eppmessages['papel.heir.target']}"
-                        sourceCaption="#{eppmessages['papel.heir.source']}"
+                        targetCaption="#{infoxMessages['papel.heir.target']}"
+                        sourceCaption="#{infoxMessages['papel.heir.source']}"
                         value="#{papelCrudAction.membros}"
                         itemValues="#{papelCrudAction.getPapeisDisponiveis(false)}"
                         itemLabel="#{papelCrudAction.getNome(var)}"/>
@@ -90,14 +90,14 @@
                 id="recursosTab"
                 name="recursosTab"
                 status=":status"
-                title="#{eppmessages['recurso.tableTitle']}"
+                title="#{infoxMessages['recurso.tableTitle']}"
                 actionListener="#{papelCrudAction.onClickRecursosTab()}"
                 style="border-style: solid; border-width: 1px; border-color: lightgray">
                 
                 <a:region>
                     <wi:pickList
                         id="recurso"
-                        targetCaption="#{eppmessages['papel.recurso.target']}"
+                        targetCaption="#{infoxMessages['papel.recurso.target']}"
                         value="#{papelCrudAction.recursos}"
                         itemValues="#{papelCrudAction.recursosDisponiveis}"
                         itemLabel="#{papelCrudAction.getNomeRecurso(var)}"/>

@@ -40,7 +40,7 @@ import br.com.infox.seam.util.ComponentUtil;
 public class PapelCrudAction extends AbstractCrudAction<Papel, PapelManager> {
     private static final long serialVersionUID = 1L;
     private static final String ROLE_ACTION = "org.jboss.seam.security.management.roleAction";
-    private static final String CONSTRAINT_VIOLATION_UNIQUE_VIOLATION = "#{eppmessages['constraintViolation.uniqueViolation']}";
+    private static final String CONSTRAINT_VIOLATION_UNIQUE_VIOLATION = "#{infoxMessages['constraintViolation.uniqueViolation']}";
     private static final String RECURSOS_TAB_ID = "recursosTab";
     private static final String PAPEIS_TAB_ID = "papeisTab";
     private static final String MEMBROS_TAB_ID = "herdeirosTab";
