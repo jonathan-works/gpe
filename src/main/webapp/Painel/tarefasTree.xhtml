@@ -39,7 +39,7 @@
                rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
                <rich:menuItem
-                 label="#{eppmessages['caixa.menu.novaCaixa']}"
+                 label="#{infoxMessages['caixa.menu.novaCaixa']}"
                  icon="#{wiSkin.imageFolder}/add.gif"
                  onclick="#{rich:component('novaCaixaPanel')}.show()" />
 
@@ -62,13 +62,13 @@
                  target="caixaNode"
                  rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
 
-                 <rich:menuItem label="#{eppmessages['caixa.menu.editaCaixa']}"
+                 <rich:menuItem label="#{infoxMessages['caixa.menu.editaCaixa']}"
                    icon="#{wiSkin.imageFolder}/mod/edit.gif"
                    action="#{painelUsuarioController.editarCaixa()}" />
 
-                 <rich:menuItem label="#{eppmessages['caixa.menu.removerCaixa']}"
+                 <rich:menuItem label="#{infoxMessages['caixa.menu.removerCaixa']}"
                    icon="#{wiSkin.imageFolder}/remove.png"
-                   onclick="return confirm(\'#{eppmessages['caixa.confirm.remove']}\');" 
+                   onclick="return confirm(\'#{infoxMessages['caixa.confirm.remove']}\');" 
                    render="tabPainelUsuario, pageBodyDialogMessage"
                    action="#{caixaCrudAction.removerCaixaNoPainel()}">
 

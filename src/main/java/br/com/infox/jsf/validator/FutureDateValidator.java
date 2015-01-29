@@ -12,8 +12,7 @@ import javax.faces.validator.ValidatorException;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.core.messages.Messages;
-
+import br.com.infox.core.messages.InfoxMessages;
 
 @org.jboss.seam.annotations.faces.Validator(id = FutureDateValidator.NAME)
 @Name(FutureDateValidator.NAME)
@@ -36,7 +35,7 @@ public class FutureDateValidator implements Validator {
         dataAtual.set(Calendar.SECOND, 0);
         dataAtual.set(Calendar.MILLISECOND, 0);
         if (data != null && data.before(dataAtual)) {
-            throw new ValidatorException(new FacesMessage(Messages.resolveMessage("validator.Date.FUTURE")));
+            throw new ValidatorException(new FacesMessage(InfoxMessages.getInstance().get("validator.Date.FUTURE")));
         }
 
     }

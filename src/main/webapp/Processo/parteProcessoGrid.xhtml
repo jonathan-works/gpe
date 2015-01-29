@@ -19,7 +19,7 @@
     <s:div id="parteProcessoListDiv" styleClass="padding-top-5">
         <wi:dataTable id="participantesTable" showSearchForm="false"
             values="#{participantesProcessoController.participantes}"
-            tableTitle="#{eppmessages['participanteProcesso.participantes']}">
+            tableTitle="#{infoxMessages['participanteProcesso.participantes']}">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
                 <wi:toolBar
@@ -41,27 +41,27 @@
             </ui:define>
             <wi:columnOutputTextIdent columnId="pessoa.nome"
             	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
-                columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
+                columnHeader="#{infoxMessages['participanteProcesso.nomeParticipante']}"
                 value="#{row.nome}"
                 hideOrder="true"
                 fullPath="#{row.caminhoAbsoluto}"/>
       		<wi:columnOutputText columnId="cpfCnpj"
        			styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
-                columnHeader="#{eppmessages['participanteProcesso.codigo']}"
+                columnHeader="#{infoxMessages['participanteProcesso.codigo']}"
                 value="#{row.pessoa.codigoFormatado}" hideOrder="true" >
             </wi:columnOutputText>
             <wi:columnOutputText columnId="tipoParticipante" 
             	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
             	value="#{row.tipoParte}"
-            	columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
+            	columnHeader="#{infoxMessages['participanteProcesso.tipoParticipante']}"
             	hideOrder="true"/>
            	<wi:columnDateTime columnId="dataInicio" value="#{row.dataInicio}"
            		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
-           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataInicio']}"
+           		showTime="false" columnHeader="#{infoxMessages['participanteProcesso.dataInicio']}"
            		hideOrder="true"/>
            	<wi:columnDateTime columnId="dataFim" value="#{row.dataFim}"
            		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
-           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataFim']}"
+           		showTime="false" columnHeader="#{infoxMessages['participanteProcesso.dataFim']}"
           		hideOrder="true"/>
 
         </wi:dataTable>
@@ -72,7 +72,7 @@
             <s:div id="backgroundBlock"></s:div>
             <br />
             <wi:dataForm formId="atividadeParte"
-                formTitle="#{eppmessages['participanteProcesso.alteracao']}">
+                formTitle="#{infoxMessages['participanteProcesso.alteracao']}">
                 <wi:inputText id="motivo" required="true"
                     label="Motivo da Modificação"
                     value="#{participanteProcessoCrudAction.motivoModificacao}" />
@@ -80,7 +80,7 @@
                     <wi:commandButton id="persistButton"
                         action="#{participanteProcessoCrudAction.inverterSituacao()}"
                         rendered="true" reRender="parteProcessoListDiv, buscaDiv"
-                        value="#{eppmessages['participanteProcesso.modificar']}" />
+                        value="#{infoxMessages['participanteProcesso.modificar']}" />
                     <wi:commandButton id="cancelarButton"
                         action="#{participanteProcessoCrudAction.newInstance()}"
                         rendered="true" execute="@this"
@@ -101,7 +101,7 @@
             style="width:100%;">
 
             <f:facet name="header">
-              <h:outputText value="#{eppmessages['historicoParticipanteProcesso.tableTile']}" />
+              <h:outputText value="#{infoxMessages['historicoParticipanteProcesso.tableTile']}" />
             </f:facet>
 
             <rich:dataTable id="historicoParticipanteDataTable"
@@ -109,22 +109,22 @@
               value="#{participanteProcessoCrudAction.getInstance().historicoParticipanteList}">
 
               <rich:column style="text-align:center;">
-                <f:facet name="header">#{eppmessages['historicoParticipanteProcesso.responsavelPorModificacao']}</f:facet>
+                <f:facet name="header">#{infoxMessages['historicoParticipanteProcesso.responsavelPorModificacao']}</f:facet>
                 <h:outputText
                   value="#{historicoParticipante.responsavelPorModificacao}" />
               </rich:column>
               <rich:column style="text-align:center;">
-                <f:facet name="header">#{eppmessages['historicoParticipanteProcesso.dataModificacao']}</f:facet>
+                <f:facet name="header">#{infoxMessages['historicoParticipanteProcesso.dataModificacao']}</f:facet>
                 <h:outputText
                   value="#{historicoParticipante.dataModificacao}" />
               </rich:column>
               <rich:column style="text-align:center;">
-                <f:facet name="header">#{eppmessages['historicoParticipanteProcesso.motivoModificacao']}</f:facet>
+                <f:facet name="header">#{infoxMessages['historicoParticipanteProcesso.motivoModificacao']}</f:facet>
                 <h:outputText
                   value="#{historicoParticipante.motivoModificacao}" />
               </rich:column>
               <rich:column style="text-align:center;">
-                <f:facet name="header">#{eppmessages['historicoParticipanteProcesso.ativo']}</f:facet>
+                <f:facet name="header">#{infoxMessages['historicoParticipanteProcesso.ativo']}</f:facet>
                 <h:outputText
                   value="#{historicoParticipante.ativo ? 'Excluído' : 'Restaurado'}" />
               </rich:column>

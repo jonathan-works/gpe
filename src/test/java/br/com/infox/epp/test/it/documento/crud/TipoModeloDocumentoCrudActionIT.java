@@ -93,16 +93,16 @@ public class TipoModeloDocumentoCrudActionIT extends
              * suggestProvider="#{grupoModeloDocumentoSuggest}" value=
              * "#{tipoModeloDocumentoCrudAction.instance.grupoModeloDocumento}"
              * label
-             * ="#{eppmessages['tipoModeloDocumento.grupoModeloDocumento']}"
+             * ="#{infoxMessages['tipoModeloDocumento.grupoModeloDocumento']}"
              * required="true" /> <wi:inputText id="tipoModeloDocumento"
-             * label="#{eppmessages['tipoModeloDocumento.tipoModeloDocumento']}"
+             * label="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}"
              * value
              * ="#{tipoModeloDocumentoCrudAction.instance.tipoModeloDocumento}"
              * maxlength="50" required="true" /> <wi:inputText id="abreviacao"
-             * label="#{eppmessages['tipoModeloDocumento.abreviacao']}"
+             * label="#{infoxMessages['tipoModeloDocumento.abreviacao']}"
              * value="#{tipoModeloDocumentoCrudAction.instance.abreviacao}"
              * required="true" maxlength="5" /> <wi:selectSituacaoRadio
-             * id="ativo" label="#{eppmessages['field.situacao']}"
+             * id="ativo" label="#{infoxMessages['field.situacao']}"
              * value="#{tipoModeloDocumentoCrudAction.instance.ativo}" />
              */
         }

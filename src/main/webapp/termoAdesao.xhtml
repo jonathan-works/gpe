@@ -12,7 +12,7 @@
 	<ui:define name="baseBody">
 		<rich:panel id="#{termoAdesaoAction.termoAdesaoPanelName}"
 			styleClass="painel-termo-adesao">
-			<f:facet name="header">#{eppmessages['login.termoAdesao']}</f:facet>
+			<f:facet name="header">#{infoxMessages['login.termoAdesao']}</f:facet>
 			<h:form id="termoAdesaoForm">
 				<a:jsFunction name="assinarTermo"
 	      action="#{termoAdesaoAction.assinarTermoAdesao}"
@@ -35,13 +35,13 @@
                 signableData="#{termoAdesaoAction.md5Sum}"
                 functionPreSign="infox.showLoading();"
                 functionPosSign="assinarTermo();infox.hideLoading();"
-                signButtonCaption="#{eppmessages['login.assinarTermoAdesao']}" />
+                signButtonCaption="#{infoxMessages['login.assinarTermoAdesao']}" />
             
 						<input
 	          class="input_button close-btn buttons"
 							id="cancela" type="button"
 							onclick="location.href='#{pathResolver.contextPath}/login.seam'"
-							value="#{eppmessages['login.cancelaTrocaSenhaBtn']}" />
+							value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" />
 					</div>
 				</s:div>
 			</h:form>

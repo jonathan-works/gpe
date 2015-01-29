@@ -33,7 +33,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
@@ -112,6 +112,8 @@ public class TaskInstanceHome implements Serializable {
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
     @In
     private DocumentoManager documentoManager;
+    @In
+    private InfoxMessages infoxMessages;
     
     private TaskInstance taskInstance;
     private Map<String, Object> mapaDeVariaveis;
@@ -619,8 +621,7 @@ public class TaskInstanceHome implements Serializable {
                 LOG.error(".removeUsuario() - ", e);
             }
         } else {
-            FacesMessages.instance().add(
-                    Messages.resolveMessage("org.jboss.seam.TaskNotFound"));
+            FacesMessages.instance().add(infoxMessages.get("org.jboss.seam.TaskNotFound"));
         }
     }
 

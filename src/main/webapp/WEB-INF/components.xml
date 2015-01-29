@@ -25,7 +25,7 @@
 
     <core:init
         debug="${desenvolvimento}"
-        jndi-pattern="java:app/${epp.name}/#{ejbName}" />
+        jndi-pattern="java:module/#{ejbName}" />
         
     <document:document-store use-extensions="true" />
 

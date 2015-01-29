@@ -55,14 +55,14 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         if (existeFluxoComCodigo) {
             final FacesMessage message = FacesMessages.createFacesMessage(
                     FacesMessage.SEVERITY_ERROR,
-                    "#{eppmessages['fluxo.codigoDuplicado']}");
+                    "#{infoxMessages['fluxo.codigoDuplicado']}");
             FacesContext.getCurrentInstance().addMessage(
                     FluxoCrudAction.COD_FLUXO_COMPONENT_ID, message);
         }
         if (existeFluxoComDescricao) {
             final FacesMessage message = FacesMessages.createFacesMessage(
                     FacesMessage.SEVERITY_ERROR,
-                    "#{eppmessages['fluxo.descricaoDuplicada']}");
+                    "#{infoxMessages['fluxo.descricaoDuplicada']}");
             FacesContext.getCurrentInstance().addMessage(
                     FluxoCrudAction.DESCRICAO_FLUXO_COMPONENT_ID, message);
         }
@@ -80,7 +80,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
                         .before(dataInicioPublicacao));
         if (!instanceValid) {
             getMessagesHandler().add(ERROR,
-                    "#{eppmessages['fluxo.dataPublicacaoErrada']}");
+                    "#{infoxMessages['fluxo.dataPublicacaoErrada']}");
         }
         return instanceValid;
     }
@@ -92,7 +92,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         if (!getManager().existemProcessosAssociadosAFluxo(fluxo)) {
             return super.inactive(fluxo);
         } else {
-            final String message = "#{eppmessages['fluxo.remocaoProibida']}";
+            final String message = "#{infoxMessages['fluxo.remocaoProibida']}";
             FluxoCrudAction.LOG.error(message);
             getMessagesHandler().add(ERROR, message);
         }

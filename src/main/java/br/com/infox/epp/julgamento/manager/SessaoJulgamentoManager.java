@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.manager.Manager;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
@@ -31,6 +31,8 @@ public class SessaoJulgamentoManager extends Manager<SessaoJulgamentoDAO, Sessao
 	private CalendarioEventosManager calendarioEventosManager;
 	@In
 	private SalaTurnoManager salaTurnoManager;
+	@In
+	private InfoxMessages infoxMessages;
 	
 	public void persistIgnorandoErro(SessaoJulgamento sessaoJulgamento) throws DAOException {
 		try {
@@ -56,7 +58,7 @@ public class SessaoJulgamentoManager extends Manager<SessaoJulgamentoDAO, Sessao
 		}
 		boolean isSalaOcupada = getDao().existeSessaoJulgamentoComSalaEHorario(sessaoJulgamento);
 		if (isSalaOcupada) {
-			throw new BusinessException(Messages.resolveMessage("sessaoJulgamento.salaOcupada"));
+			throw new BusinessException(infoxMessages.get("sessaoJulgamento.salaOcupada"));
 		}
 	}
 

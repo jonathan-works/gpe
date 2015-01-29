@@ -27,7 +27,7 @@
                  name="search"
                  immediate="true"
                  status=":status"
-                 title="#{eppmessages['template.abaPesquisaText']}"
+                 title="#{infoxMessages['template.abaPesquisaText']}"
                  action="#{home.onClickSearchTab}"
                  style="border-style: solid; border-width: 1px; border-color: lightgray">
                  <a:region>
@@ -36,12 +36,12 @@
                             values="#{dominioVariavelTarefaList.list(10)}"
                             bean="#{dominioVariavelTarefaList}"
                             rowId="#{row.id}"
-                            tableTitle="#{eppmessages['dominioVariavelTarefa.list']}">
+                            tableTitle="#{infoxMessages['dominioVariavelTarefa.list']}">
                             
                             <ui:define name="searchForm">
-                                <wi:searchForm formId="pesquisarDominioVariavelTarefaForm" formTitle="#{eppmessages['dominioVariavelTarefa.form']}"
+                                <wi:searchForm formId="pesquisarDominioVariavelTarefaForm" formTitle="#{infoxMessages['dominioVariavelTarefa.form']}"
                                     searchReRender="search" clearReRender="search">
-                                    <wi:inputText id="nome" label="#{eppmessages['dominioVariavelTarefa.nome']}"
+                                    <wi:inputText id="nome" label="#{infoxMessages['dominioVariavelTarefa.nome']}"
                                         value="#{dominioVariavelTarefaList.entity.nome}" />
                                 </wi:searchForm>
                             </ui:define>
@@ -60,12 +60,12 @@
                                         onbegin="showLoading()" execute="@this" limitRender="true" 
                                         oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()">
                                         <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.instance}" value="#{row}" />
-                                        <h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['dominioVariavelTarefa.select']}" />
+                                        <h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['dominioVariavelTarefa.select']}" />
                                     </a:commandLink>
                                 </h:form>
                             </ui:define>
                             
-                            <wi:columnOutputText columnId="nome" columnHeader="#{eppmessages['dominioVariavelTarefa.nome']}" value="#{row.nome}" />
+                            <wi:columnOutputText columnId="nome" columnHeader="#{infoxMessages['dominioVariavelTarefa.nome']}" value="#{row.nome}" />
                             
                         </wi:dataTable>
                     </s:div>
@@ -77,14 +77,14 @@
                  name="form"
                  immediate="true"
                  status=":status"
-                 title="#{eppmessages['template.abaFormularioText']}"
+                 title="#{infoxMessages['template.abaFormularioText']}"
                  action="#{home.onClickFormTab}"
                  style="border-style: solid; border-width: 1px; border-color: lightgray">
                 <a:region>
-                    <wi:dataForm formId="dominioVariavelTarefaForm" formTitle="#{eppmessages['dominioVariavelTarefa.form']}">
-                        <wi:inputText id="nome" label="#{eppmessages['dominioVariavelTarefa.nome']}"
+                    <wi:dataForm formId="dominioVariavelTarefaForm" formTitle="#{infoxMessages['dominioVariavelTarefa.form']}">
+                        <wi:inputText id="nome" label="#{infoxMessages['dominioVariavelTarefa.nome']}"
                                     value="#{dominioVariavelTarefaCrudAction.instance.nome}" required="true"/>
-                        <wi:inputTextarea id="dominio" label="#{eppmessages['dominioVariavelTarefa.dominio']}"
+                        <wi:inputTextarea id="dominio" label="#{infoxMessages['dominioVariavelTarefa.dominio']}"
                             required="true" value="#{dominioVariavelTarefaCrudAction.instance.dominio}" 
                             showCounter="false">
                             <f:validator validatorId="dominioVariavelTarefaValidator" />
@@ -96,7 +96,7 @@
                             <a:commandButton action="#{dominioVariavelTarefaCrudAction.selecionarDominio}"
 								onbegin="showLoading()" execute="@this" limitRender="true" 
 								oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()" 
-								value="#{eppmessages['dominioVariavelTarefa.select']}" 
+								value="#{infoxMessages['dominioVariavelTarefa.select']}" 
 								rendered="#{dominioVariavelTarefaCrudAction.managed}"
 								styleClass="buttons"/> 
                         </ui:define>

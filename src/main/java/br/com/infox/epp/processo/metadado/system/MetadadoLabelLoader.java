@@ -5,29 +5,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Startup;
-import org.jboss.seam.contexts.Contexts;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.faces.context.FacesContext;
+
 import org.reflections.Reflections;
 
-import br.com.infox.core.messages.Messages;
-import br.com.infox.epp.system.EppMessagesContextLoader;
+import br.com.infox.core.messages.InfoxMessages;
 
-@Name(MetadadoLabelLoader.NAME)
-@AutoCreate
-@Scope(ScopeType.APPLICATION)
-@Startup(depends = {EppMessagesContextLoader.NAME})
+@Stateless
 public class MetadadoLabelLoader implements Serializable {
 	public static final String NAME = "metadadoLabelLoader";
 	public static final String METADADO_MESSAGES = "metadadoMessages";
 	private static final long serialVersionUID = 1L;
+	
+	@EJB
+	private InfoxMessages infoxMessages;
 
-	@Create
-	public void init() throws InstantiationException, IllegalAccessException {
+	public void loadMetadadosMessagesProperties() throws InstantiationException, IllegalAccessException {
 		Map<String, MetadadoProcessoDefinition> mainMap = new HashMap<>();
 		Reflections reflections = new Reflections("br.com.infox");
 		Set<Class<? extends MetadadoProcessoProvider>> providers = reflections.getSubTypesOf(MetadadoProcessoProvider.class);
@@ -49,9 +44,8 @@ public class MetadadoLabelLoader implements Serializable {
 		
 		Map<String, String> messages = new HashMap<>();
 		for (String key : mainMap.keySet()) {
-			messages.put(key, Messages.resolveMessage(mainMap.get(key).getLabel()));
+			messages.put(key, infoxMessages.get(mainMap.get(key).getLabel()));
 		}
-		
-		Contexts.getApplicationContext().set(METADADO_MESSAGES, messages);
+		FacesContext.getCurrentInstance().getExternalContext().getApplicationMap().put(METADADO_MESSAGES, messages);
 	}
 }

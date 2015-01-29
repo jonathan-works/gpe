@@ -9,8 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Element;
 import org.jboss.el.parser.ParseException;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
@@ -24,12 +22,14 @@ import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.ibpm.process.definition.expressionWizard.ExpressionTokenizer;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.VariableCollector;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -52,7 +52,7 @@ public class DecisionNode extends Node {
         for (DefinicaoVariavelProcesso variable : processVariables) {
         	String name = variable.getNome();
 			if (name == null) {
-				throw new ApplicationException(Messages.resolveMessage("processDefinition.variable.invalid"));
+				throw new ApplicationException(InfoxMessages.getInstance().get("processDefinition.variable.invalid"));
 			}
 			variables.add(format("''{0}''", name));
 		}
@@ -83,7 +83,7 @@ public class DecisionNode extends Node {
         for (VariableAccess variableAccess : variablesOfTypes) {
 			String[] split = variableAccess.getMappedName().split(":");
 			if (split.length < 2) {
-				throw new ApplicationException(Messages.resolveMessage("processDefinition.variable.invalid"));
+				throw new ApplicationException(InfoxMessages.getInstance().get("processDefinition.variable.invalid"));
 			}
 			variables.add(format("''{0}''", split[1]));
 		}

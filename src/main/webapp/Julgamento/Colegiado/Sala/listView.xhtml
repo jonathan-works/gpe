@@ -9,7 +9,7 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-  <ui:define name="title">#{eppmessages['sala.titlePage']}</ui:define>
+  <ui:define name="title">#{infoxMessages['sala.titlePage']}</ui:define>
   <ui:param
     name="home"
     value="#{salaCrudAction}" />
@@ -18,20 +18,20 @@
     <wi:dataTable
       values="#{salaList.list(15)}"
       bean="#{salaList}"
-      tableTitle="#{eppmessages['sala.tableTitle']}"
+      tableTitle="#{infoxMessages['sala.tableTitle']}"
       id="salaList"
       rowId="#{row.idSala}">
       <ui:define name="searchForm">
         <wi:searchForm
           formId="pesquisarSalaForm"
-          formTitle="#{eppmessages['searchForm.title']}">
+          formTitle="#{infoxMessages['searchForm.title']}">
           <wi:inputText
             id="nome"
-            label="#{eppmessages['sala.nome']}"
+            label="#{infoxMessages['sala.nome']}"
             value="#{salaList.entity.nome}" />
           <wi:selectOneMenuEntity
             id="unidadeDecisoraColegiada"
-            label="#{eppmessages['sala.colegiado']}"
+            label="#{infoxMessages['sala.colegiado']}"
             value="#{salaList.entity.unidadeDecisoraColegiada}"
             items="#{salaCrudAction.unidadeDecisoraColegiadaList}">
           </wi:selectOneMenuEntity>
@@ -42,24 +42,24 @@
       </ui:define>
       
       <wi:columnOutputText columnId="nome"
-          columnHeader="#{eppmessages['sala.nome']}"
+          columnHeader="#{infoxMessages['sala.nome']}"
           value="#{row.nome}" />
         
       <wi:columnOutputText columnId="unidadeDecisoraColegiada"
-          columnHeader="#{eppmessages['sala.colegiado']}"
+          columnHeader="#{infoxMessages['sala.colegiado']}"
           value="#{row.unidadeDecisoraColegiada}" />
         
       <wi:columnOutputText columnId="endereco"
-          columnHeader="#{eppmessages['sala.endereco']}"
+          columnHeader="#{infoxMessages['sala.endereco']}"
           value="#{row.endereco}" />
         
       <wi:columnOutputText columnId="turnosFormatado"
-          columnHeader="#{eppmessages['sala.turnos']}"
+          columnHeader="#{infoxMessages['sala.turnos']}"
           value="#{row.turnosFormatado}"
           hideOrder="true" />
         
       <wi:columnBoolean columnId="foraExpediente"
-          columnHeader="#{eppmessages['sala.foraExpediente']}"
+          columnHeader="#{infoxMessages['sala.foraExpediente']}"
           value="#{row.foraExpediente}" />
           
       <wi:columnSituacao columnId="ativo" value="#{row.ativo}" />
@@ -69,31 +69,31 @@
   <ui:define name="form">
     <wi:dataForm
       formId="salaJulgamentoForm"
-      formTitle="#{eppmessages['form.title']}">
+      formTitle="#{infoxMessages['form.title']}">
       <wi:inputText
           id="nome"
-          label="#{eppmessages['sala.nome']}"
+          label="#{infoxMessages['sala.nome']}"
           value="#{salaCrudAction.instance.nome}"
           required="true" />
       <wi:selectOneMenuEntity
           id="unidadeDecisoraColegiada"
-          label="#{eppmessages['sala.colegiado']}"
+          label="#{infoxMessages['sala.colegiado']}"
           value="#{salaCrudAction.instance.unidadeDecisoraColegiada}"
           items="#{salaCrudAction.unidadeDecisoraColegiadaList}"
           required="true" 
           rendered="#{empty authenticator.colegiadaLogada}" />
       <wi:outputText id="unidadeDecisoraColegiadaOut" 
-          label="#{eppmessages['sala.colegiado']}"
+          label="#{infoxMessages['sala.colegiado']}"
           value="#{salaCrudAction.instance.unidadeDecisoraColegiada}" 
           rendered="#{not empty authenticator.colegiadaLogada}" />
       <wi:inputText
           id="endereco"
-          label="#{eppmessages['sala.endereco']}"
+          label="#{infoxMessages['sala.endereco']}"
           value="#{salaCrudAction.instance.endereco}"
           required="true" />
       <wi:selectBooleanRadio
           id="foraExpediente"
-          label="#{eppmessages['sala.foraExpediente']}"
+          label="#{infoxMessages['sala.foraExpediente']}"
           value="#{salaCrudAction.instance.foraExpediente}" />
       <wi:selectSituacaoRadio
           id="ativo"
@@ -107,7 +107,7 @@
       id="salaTurnoTab"
       action="#{salaTurnoAction.newInstance(salaCrudAction.getInstance())}"
       rendered="#{home.managed}"
-      title="#{eppmessages['sala.turnos']}"
+      title="#{infoxMessages['sala.turnos']}"
       name="salaTurnoTab">
       <h:form>
         <wi:turnoCalendar
@@ -118,7 +118,7 @@
           render="pageBodyDialogMessage"
           limitRender="true"
           execute="@form"
-          value="#{eppmessages['crud.update']}" />
+          value="#{infoxMessages['crud.update']}" />
       </h:form>
     </infox:tab>
   </ui:define>

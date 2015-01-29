@@ -20,7 +20,7 @@ import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
@@ -50,6 +50,8 @@ public class IniciarProcessoAction implements Serializable {
 
     @In
     private IniciarProcessoService iniciarProcessoService;
+    @In
+    private InfoxMessages infoxMessages;
 
     private boolean renderedByItem;
     private boolean renderizarCadastroPartes;
@@ -115,7 +117,7 @@ public class IniciarProcessoAction implements Serializable {
 
     private void sendIniciarProcessoErrorMessage(String message, Exception exception) {
         LOG.error(".iniciarProcesso()", exception);
-        getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage(message));
+        getMessagesHandler().add(Severity.ERROR, infoxMessages.get(message));
     }
 
     public void onSelectNatCatFluxo(final NaturezaCategoriaFluxo ncf) {

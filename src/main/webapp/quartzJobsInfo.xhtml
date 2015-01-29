@@ -10,7 +10,7 @@
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:param
       name="pageTitle"
-      value="#{eppmessages['quartz.titlePage']}"
+      value="#{infoxMessages['quartz.titlePage']}"
     />
     <ui:define name="body">
 
@@ -18,34 +18,34 @@
 
             <wi:dataTable rowKeyVar="key" id="collectionTable" var="row"
                 panelWidth="99%" showToolbarColumn="false"
-                showGridCount="false" tableTitle="#{eppmessages['quartz.titlePage']}"
+                showGridCount="false" tableTitle="#{infoxMessages['quartz.titlePage']}"
                 panelStyleClass="full-sized short-margin-top"
                 values="#{quartzJobsInfo.detailJobsInfo}">
 
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['quartz.triggerName']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['quartz.triggerName']}</f:facet>
                     <h:outputText value="#{row.triggerName}" />
                 </rich:column>
 
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['quartz.jobName']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['quartz.jobName']}</f:facet>
                     <h:outputText value="#{row.jobName}" />
                 </rich:column>
 
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['quartz.cronExpression']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['quartz.cronExpression']}</f:facet>
                     <h:outputText value="#{row.cronExpression}" />
                 </rich:column>
 
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['quartz.previousFireTime']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['quartz.previousFireTime']}</f:facet>
                     <h:outputText value="#{row.previousFireTime}">
                         <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
                     </h:outputText>
                 </rich:column>
 
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['quartz.nextFireTime']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['quartz.nextFireTime']}</f:facet>
                     <h:outputText value="#{row.nextFireTime}">
                         <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
                     </h:outputText>
@@ -53,25 +53,25 @@
 
 
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['quartz.jobExpression']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['quartz.jobExpression']}</f:facet>
                     <h:outputText value="#{row.jobExpression}" />
                 </rich:column>
 
                 <rich:column>
-                    <f:facet name="header">#{eppmessages['quartz.validJob']}</f:facet>
+                    <f:facet name="header">#{infoxMessages['quartz.validJob']}</f:facet>
                     <h:outputText value="#{row.jobValid ? 'Sim' : 'Não'}" />
                 </rich:column>
 
                 <rich:column
                     rendered="#{s:hasRole('admin') or s:hasRole('administrador')}">
                     <h:form>
-                        <h:commandLink value="#{eppmessages['button.execute']}"
+                        <h:commandLink value="#{infoxMessages['button.execute']}"
                             action="#{quartzJobsInfo.triggerJob(row.jobName, row.groupName)}"
                             rendered="#{row.jobValid}" />
                     </h:form>
                     <h:form>
                         <h:commandLink
-                            value="#{eppmessages['button.delete']}"
+                            value="#{infoxMessages['button.delete']}"
                             action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName, row.triggerName)}" />
                     </h:form>
                 </rich:column>
@@ -84,7 +84,7 @@
                     rendered="#{(s:hasRole('admin') or s:hasRole('administrador')) and not producao}"
                     id="btApagarJobs" reRender="pagina"
                     action="#{quartzJobsInfo.apagarJobs()}"
-                    value="#{eppmessages['quartz.deleteAllJobs']}" />
+                    value="#{infoxMessages['quartz.deleteAllJobs']}" />
 
             </h:form>
         </s:div>

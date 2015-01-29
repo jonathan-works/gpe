@@ -11,27 +11,27 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-    <ui:define name="title">#{eppmessages['processo.titlePage']}</ui:define>
+    <ui:define name="title">#{infoxMessages['processo.titlePage']}</ui:define>
 
     <ui:define name="body">
         <h:form>
             <rich:panel>
                 <wi:dataTable values="#{processoEpaList.list(15)}"
                     bean="#{processoEpaList}"
-                    tableTitle="#{eppmessages['processo.tableTitle']}"
+                    tableTitle="#{infoxMessages['processo.tableTitle']}"
                     id="processoEpaList" rowId="#{row.idProcesso}"
                     hideOrder="true">
 
                     <ui:define name="searchForm">
                         <wi:searchForm formId="pesquisarProcessoEpaForm"
-                            formTitle="#{eppmessages['searchForm.title']}">
+                            formTitle="#{infoxMessages['searchForm.title']}">
                             <wi:inputText id="numeroProcesso"
-                                label="#{eppmessages['processoEpa.numeroProcesso']}"
+                                label="#{infoxMessages['processoEpa.numeroProcesso']}"
                                 value="#{processoEpaList.entity.numeroProcesso}"
                                 minlength="1" maxlength="15" />
                             <wi:selectOneMenuEntity
                                 id="usuarioAlteracao"
-                                label="#{eppmessages['processo.usuarioCadastroProcesso']}"
+                                label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
                                 value="#{processoEpaList.entity.usuarioCadastro}"
                                 items="#{processoEpaList.listaUsuarios}"
                                 showLabelTodos="true" />
@@ -45,7 +45,7 @@
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBar url="#{wiSkin.imageFolder}/view.png"
-                            title="#{eppmessages['button.selecionar']}"
+                            title="#{infoxMessages['button.selecionar']}"
                             action="#{processoSearcher.visualizarProcesso(row)}">
                         </wi:toolBar>
                         <a:commandLink id="setPrioridadeLink"
@@ -56,39 +56,39 @@
                             action="#{prioridadeProcessoChanger.setProcessoEpa(row)}"
                             oncomplete="#{rich:component('prioridadeProcessoPanel')}.show()">
                             <h:graphicImage
-                                title="#{eppmessages['prioridadeProcesso.select']}"
+                                title="#{infoxMessages['prioridadeProcesso.select']}"
                                 url="#{wiSkin.imageFolder}/priority.gif" />
                         </a:commandLink>
                     </ui:define>
 
                     <wi:columnOutputText columnId="numeroProcesso"
-                        columnHeader="#{eppmessages['processo.numeroProcesso']}"
+                        columnHeader="#{infoxMessages['processo.numeroProcesso']}"
                         value="#{row.numeroProcesso}" />
                     <wi:columnOutputText columnId="prioridadeProcesso"
-                        columnHeader="#{eppmessages['processo.prioridadeProcesso']}"
+                        columnHeader="#{infoxMessages['processo.prioridadeProcesso']}"
                         value="#{row.prioridadeProcesso}" />
                     <wi:columnOutputText columnId="usuarioCadastro"
-                        columnHeader="#{eppmessages['processo.usuarioCadastroProcesso']}"
+                        columnHeader="#{infoxMessages['processo.usuarioCadastroProcesso']}"
                         value="#{row.usuarioCadastro}" />
                     <wi:columnDateTime columnId="dataInicioProcesso"
-                        columnHeader="#{eppmessages['processo.dataInicio']}"
+                        columnHeader="#{infoxMessages['processo.dataInicio']}"
                         value="#{row.dataInicio}" />
                     <wi:columnDateTime columnId="dataFimProcesso"
-                        columnHeader="#{eppmessages['processo.dataFim']}"
+                        columnHeader="#{infoxMessages['processo.dataFim']}"
                         value="#{row.dataFim}" />
                     <wi:columnOutputText
                         columnId="naturezaCategoriaFluxo"
-                        columnHeader="#{eppmessages['processo.naturezaCategoriaFluxo']}"
+                        columnHeader="#{infoxMessages['processo.naturezaCategoriaFluxo']}"
                         value="#{row.naturezaCategoriaFluxo}" />
                     <wi:columnOutputText
                     	columnId="statusProcesso"
-                    	columnHeader="#{eppmessages['processoEpa.status']}"
+                    	columnHeader="#{infoxMessages['processoEpa.status']}"
                     	value="#{processoEpaList.getStatusProcesso(row)}"/>
                 </wi:dataTable>
             </rich:panel>
         </h:form>
         <rich:popupPanel id="prioridadeProcessoPanel" height="170">
-            <f:facet name="header">#{eppmessages['prioridadeProcesso.title']}</f:facet>
+            <f:facet name="header">#{infoxMessages['prioridadeProcesso.title']}</f:facet>
             <f:facet name="controls">
                 <h:panelGroup>
                     <h:graphicImage
@@ -100,7 +100,7 @@
                 template="/WEB-INF/xhtml/components/templates/edit.xhtml">
                 <ui:define name="label">
                     <h:outputText
-                        value="#{eppmessages['prioridadeProcesso.choice']}"
+                        value="#{infoxMessages['prioridadeProcesso.choice']}"
                         styleClass="label" />
                 </ui:define>
                 <h:form>
@@ -112,7 +112,7 @@
                     <div />
                     <wi:commandButton id="saveButton"
                         action="prioridadeProcessoChanger.atualizarPrioridade()"
-                        value="#{eppmessages['crud.update']}" 
+                        value="#{infoxMessages['crud.update']}" 
                         oncomplete="#{rich:component('prioridadeProcessoPanel')}.hide();"
                         reRender="processoEpaListPanel" />
                 </h:form>

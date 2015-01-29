@@ -22,7 +22,7 @@
         <wi:mask selector=".#{id}maskDate" mask="#{empty maskDate ? '99/99/9999' : maskDate}" />
         <ui:define name="label">#{label}</ui:define>
         <div style="display: inline-block;">
-	        <h:outputText value="#{eppmessages['data.periodoInicio']}" />
+	        <h:outputText value="#{infoxMessages['data.periodoInicio']}" />
 	        <rich:calendar id="#{idFromForm}" value="#{valueDateFrom}"
 	            enableManualInput="#{wi:get(enableManualInput, true)}"
 	            inputStyle="#{empty maskDate ? 'width: 70px;' : 'width: 95px;'} display:inline-block; " direction="auto"
@@ -35,7 +35,7 @@
         </div>
         
         <div style="display: inline-block;" >
-	        <h:outputText value=" #{eppmessages['data.periodoFim']} " />
+	        <h:outputText value=" #{infoxMessages['data.periodoFim']} " />
 	        <rich:calendar id="#{idToForm}" value="#{valueDateTo}"
 	            enableManualInput="#{wi:get(enableManualInput, true)}"
 	            inputStyle="#{empty maskDate ? 'width: 70px;' : 'width: 95px;'} display:inline-block;" direction="auto"

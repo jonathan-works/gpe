@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -19,8 +18,6 @@ import javax.ejb.Startup;
 
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
-import br.com.infox.util.collection.DefaultMap;
 
 /**
  * Classe que carrega páginas customizadas pelo cliente e as insere no ePP
@@ -39,12 +36,12 @@ public class PropertiesLoader {
 
     private static final String PAGE_PROPERTIES = "/custom_pages.properties";
     private static final String MENU_PROPERTIES = "/menu.properties";
-    private static final String MESSAGES_PROPERTIES = "/extended_messages.properties";
-    private static final String ENTITY_MESSAGES_EPP_PATH = "/entity_messages_pt_BR.properties";
-    private static final String MESSAGES_EPP_PATH = "/messages_pt_BR.properties";
-    private static final String STANDARD_MESSAGES_EPP_PATH = "/standard_messages_pt_BR.properties";
-    private static final String PROCESS_DEFINITION_MESSAGES_EPP_PATH = "/process_definition_messages_pt_BR.properties";
-    private static final String VALIDATION_MESSAGES = "/ValidationMessages.properties";
+//    private static final String MESSAGES_PROPERTIES = "/extended_messages.properties";
+//    private static final String ENTITY_MESSAGES_EPP_PATH = "/entity_messages_pt_BR.properties";
+//    private static final String MESSAGES_EPP_PATH = "/messages_pt_BR.properties";
+//    private static final String STANDARD_MESSAGES_EPP_PATH = "/standard_messages_pt_BR.properties";
+//    private static final String PROCESS_DEFINITION_MESSAGES_EPP_PATH = "/process_definition_messages_pt_BR.properties";
+//    private static final String VALIDATION_MESSAGES = "/ValidationMessages.properties";
 
     private Properties pageProperties;
     private Properties menuProperties;
@@ -54,7 +51,7 @@ public class PropertiesLoader {
     @PostConstruct
     private void init() {
         loadPageProperties();
-        loadMessagesProperties();
+//        loadMessagesProperties();
         // Para o reCAPTCHA
         System.setProperty("networkaddress.cache.ttl", "30");
         System.setProperty("sun.net.inetaddr.ttl", "30");
@@ -107,64 +104,64 @@ public class PropertiesLoader {
         }
     }
 
-    private void loadMessagesProperties() {
-        InputStream isEntityMessagesEpp = getClass().getResourceAsStream(
-                ENTITY_MESSAGES_EPP_PATH);
-        InputStream isMessagesEpp = getClass().getResourceAsStream(
-                MESSAGES_EPP_PATH);
-        InputStream isProcessDefinitionMessagesEpp = getClass()
-                .getResourceAsStream(PROCESS_DEFINITION_MESSAGES_EPP_PATH);
-        InputStream isStandardMessagesEpp = getClass().getResourceAsStream(
-                STANDARD_MESSAGES_EPP_PATH);
-        InputStream isValidationMessages = getClass().getResourceAsStream(
-                VALIDATION_MESSAGES);
-        InputStream isMessagesExt = getClass().getResourceAsStream(
-                MESSAGES_PROPERTIES);
+//    private void loadMessagesProperties() {
+//        InputStream isEntityMessagesEpp = getClass().getResourceAsStream(
+//                ENTITY_MESSAGES_EPP_PATH);
+//        InputStream isMessagesEpp = getClass().getResourceAsStream(
+//                MESSAGES_EPP_PATH);
+//        InputStream isProcessDefinitionMessagesEpp = getClass()
+//                .getResourceAsStream(PROCESS_DEFINITION_MESSAGES_EPP_PATH);
+//        InputStream isStandardMessagesEpp = getClass().getResourceAsStream(
+//                STANDARD_MESSAGES_EPP_PATH);
+//        InputStream isValidationMessages = getClass().getResourceAsStream(
+//                VALIDATION_MESSAGES);
+//        InputStream isMessagesExt = getClass().getResourceAsStream(
+//                MESSAGES_PROPERTIES);
+//
+//        try {
+//            messages = new DefaultMap<>(new HashMap<String, String>());
+//
+//            Properties source = new Properties();
+//            source.load(isEntityMessagesEpp);
+//            copyProperties(source, messages);
+//
+//            source = new Properties();
+//            source.load(isMessagesEpp);
+//            copyProperties(source, messages);
+//
+//            source = new Properties();
+//            source.load(isProcessDefinitionMessagesEpp);
+//            copyProperties(source, messages);
+//
+//            source = new Properties();
+//            source.load(isStandardMessagesEpp);
+//            copyProperties(source, messages);
+//
+//            source = new Properties();
+//            source.load(isValidationMessages);
+//            copyProperties(source, messages);
+//
+//            if (isMessagesExt != null) {
+//                source = new Properties();
+//                source.load(isMessagesExt);
+//                copyProperties(source, messages);
+//            }
+//            this.messages = Collections.unmodifiableMap(messages);
+//        } catch (IOException e) {
+//            // TODO logar este erro.
+//            e.printStackTrace();
+//        }
+//    }
 
-        try {
-            messages = new DefaultMap<>(new HashMap<String, String>());
-
-            Properties source = new Properties();
-            source.load(isEntityMessagesEpp);
-            copyProperties(source, messages);
-
-            source = new Properties();
-            source.load(isMessagesEpp);
-            copyProperties(source, messages);
-
-            source = new Properties();
-            source.load(isProcessDefinitionMessagesEpp);
-            copyProperties(source, messages);
-
-            source = new Properties();
-            source.load(isStandardMessagesEpp);
-            copyProperties(source, messages);
-
-            source = new Properties();
-            source.load(isValidationMessages);
-            copyProperties(source, messages);
-
-            if (isMessagesExt != null) {
-                source = new Properties();
-                source.load(isMessagesExt);
-                copyProperties(source, messages);
-            }
-            this.messages = Collections.unmodifiableMap(messages);
-        } catch (IOException e) {
-            // TODO logar este erro.
-            e.printStackTrace();
-        }
-    }
-
-    private void copyProperties(Properties source,
-            Map<String, String> destination) {
-        Enumeration<Object> srcKeys = source.keys();
-        while (srcKeys.hasMoreElements()) {
-            String key = srcKeys.nextElement().toString();
-            String value = source.getProperty(key);
-            destination.put(key, value);
-        }
-    }
+//    private void copyProperties(Properties source,
+//            Map<String, String> destination) {
+//        Enumeration<Object> srcKeys = source.keys();
+//        while (srcKeys.hasMoreElements()) {
+//            String key = srcKeys.nextElement().toString();
+//            String value = source.getProperty(key);
+//            destination.put(key, value);
+//        }
+//    }
 
     private String getAppPath() {
         URL thisPackage = getClass().getResource("");

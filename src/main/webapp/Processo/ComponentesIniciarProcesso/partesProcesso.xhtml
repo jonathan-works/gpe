@@ -18,7 +18,7 @@
     	<wi:dataTable id="participantesTable"
     		showGrid="#{not participantesController.participantesProcesso.isEmpty()}"
             values="#{participantesController.participantesProcesso}"
-            tableTitle="#{eppmessages['participanteProcesso.participantes']}"
+            tableTitle="#{infoxMessages['participanteProcesso.participantes']}"
             showSearchForm="false" panelStyleClass="full-sized">
             <ui:define name="headerToolBar" />
             <ui:define name="toolBar">
@@ -29,27 +29,27 @@
             </ui:define>
             
             <wi:columnOutputTextIdent columnId="pessoa.nome"
-                columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
+                columnHeader="#{infoxMessages['participanteProcesso.nomeParticipante']}"
                 value="#{row.nome}" 
                 hideOrder="true"
                 fullPath="#{row.caminhoAbsoluto}"/>
                 
       		<wi:columnOutputText columnId="cpfCnpj"
-                columnHeader="#{eppmessages['participanteProcesso.codigo']}"
+                columnHeader="#{infoxMessages['participanteProcesso.codigo']}"
                 value="#{row.pessoa.codigoFormatado}" hideOrder="true" >
             </wi:columnOutputText>
             
             <wi:columnOutputText columnId="tipoParticipante" 
             	value="#{row.tipoParte}"
-            	columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
+            	columnHeader="#{infoxMessages['participanteProcesso.tipoParticipante']}"
             	hideOrder="true"/>
             	
            	<wi:columnDateTime columnId="dataInicio" value="#{row.dataInicio}"
-           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataInicio']}"
+           		showTime="false" columnHeader="#{infoxMessages['participanteProcesso.dataInicio']}"
            		hideOrder="true"/>
            		
            	<wi:columnDateTime columnId="dataFim" value="#{row.dataFim}"
-           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataFim']}"
+           		showTime="false" columnHeader="#{infoxMessages['participanteProcesso.dataFim']}"
           		hideOrder="true"/>
           		
         </wi:dataTable>
@@ -62,7 +62,7 @@
                     limitRender="true"
                     action="#{action.iniciarProcesso(participantesController.processo)}"
                     rendered="#{participantesController.podeIniciarProcesso()}"
-                    value="#{eppmessages['processo.iniciarBtn']}"
+                    value="#{infoxMessages['processo.iniciarBtn']}"
                     styleClass="#{wi:get(styleClass, 'buttons')}"
                     oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processo.idProcesso}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); window.location='#{pathResolver.contextPath}/Painel/list.seam';" />
             </s:div>

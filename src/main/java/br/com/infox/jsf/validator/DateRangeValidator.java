@@ -12,16 +12,15 @@ import javax.faces.validator.ValidatorException;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.DateUtil;
 
 @org.jboss.seam.annotations.faces.Validator(id = DateRangeValidator.NAME)
 @Name(DateRangeValidator.NAME)
 @BypassInterceptors
 public class DateRangeValidator implements Validator {
-
+	
     public static final String NAME = "dateRangeValidator";
-    private static final String DEFAULT_ERROR_MESSAGE = Messages.resolveMessage("validator.Date.Range");
 
     public void validate(FacesContext context, UIComponent component, Object value) {
         Date startDate = null, endDate = null;
@@ -32,7 +31,7 @@ public class DateRangeValidator implements Validator {
         endDate = (Date) attr.get("endDate");
         errorMessage = (String) attr.get("errorMessage");
         if (errorMessage == null) {
-            errorMessage = DEFAULT_ERROR_MESSAGE;
+            errorMessage = InfoxMessages.getInstance().get("validator.Date.Range");
         }
         
         if (value == null) {

@@ -15,7 +15,7 @@
                 status=":status" render="#{reRender}" limitRender="true"
                 id="#{gridId}Edit">
                 <wi:toolBarGraphicImage url="#{wiSkin.imageFolder}/view.png"
-                    title="#{eppmessages['button.selecionar']}" />
+                    title="#{infoxMessages['button.selecionar']}" />
             </a:commandLink>
             <a:commandLink
                 action="#{elFunctions.invokeMethod(removeAction)}"
@@ -23,7 +23,7 @@
                 status=":status" render="#{reRender}"
                 onclick="if(!confirm('Confirma?')) return false;">
                 <wi:toolBarGraphicImage url="#{wiSkin.imageFolder}/remove.png"
-                    title="#{eppmessages['button.delete']}" />
+                    title="#{infoxMessages['button.delete']}" />
             </a:commandLink>
         </a:region>
     </div>

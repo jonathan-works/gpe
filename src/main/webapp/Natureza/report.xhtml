@@ -5,12 +5,12 @@
 
     <ui:param name="title" value="Naturezas" />
 
-    <wi:dataReport title="#{eppmessages['natureza.reportTitle']}"
+    <wi:dataReport title="#{infoxMessages['natureza.reportTitle']}"
         columns="3" widths="4 2 2" headerText="#{naturezaList.criteria}">
 
-        <wi:reportColumnHeader title="#{eppmessages['natureza.natureza']}" />
-        <wi:reportColumnHeader title="#{eppmessages['natureza.hasPartes']}" />
-        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['natureza.natureza']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['natureza.hasPartes']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{naturezaList.list()}">
             <wi:reportColumn value="#{row.natureza}" />

@@ -84,10 +84,10 @@ public class LocalizacaoTurnoAction implements Serializable {
             }
         }
         if (!houveErro) {
-            FacesMessages.instance().add("#{eppmessages['entity_updated']}");
+            FacesMessages.instance().add("#{infoxMessages['entity_updated']}");
         } else {
             FacesMessages.instance().add(
-                    "#{eppmessages['localizacaoTurno.erroGravacaoTurno']}");
+                    "#{infoxMessages['localizacaoTurno.erroGravacaoTurno']}");
         }
     }
 

@@ -7,7 +7,7 @@
     xmlns:a="http://richfaces.org/a4j"
     xmlns:rich="http://richfaces.org/rich">
 
-	<wi:commandButton id="criarComunicacao" value="#{eppmessages['comunicacao.criarComunicacao']}"
+	<wi:commandButton id="criarComunicacao" value="#{infoxMessages['comunicacao.criarComunicacao']}"
 		onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{comunicacaoAction.jbpmProcessId}','1024'); hideLoading(); return false;" 
 		rendered="#{s:hasRole('usuarioInterno')}" />
 	<h:form>
@@ -16,7 +16,7 @@
 			action="#{comunicacaoAction.clearCacheModelos}"/>
 	</h:form>
 	<s:div id="comunicacoesDiv">
-		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{eppmessages['comunicacao.rascunhos']}">
+		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}">
 			<wi:dataTable id="rascunhosTable" bean="#{modeloComunicacaoRascunhoList}" showSearchForm="false"
 				values="#{modeloComunicacaoRascunhoList.list(5)}" rowId="#{row.id}">
 				<ui:define name="headerToolBar" />
@@ -24,17 +24,17 @@
 					<h:form>
 						<a:commandLink execute="@this"
 							onclick="infox.openPopUp('comunicacao#{row.id}', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?idModeloComunicacao=#{row.id}','1024'); return false;">
-							<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}" />
+							<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}" />
 						</a:commandLink>
 					</h:form>
 				</ui:define>
-				<wi:columnOutputText columnHeader="#{eppmessages['comunicacao.tipoComunicacao']}" value="#{row.tipoComunicacao.descricao}"/>
+				<wi:columnOutputText columnHeader="#{infoxMessages['comunicacao.tipoComunicacao']}" value="#{row.tipoComunicacao.descricao}"/>
 			</wi:dataTable>
 		</rich:collapsiblePanel>
-		<rich:collapsiblePanel header="#{eppmessages['comunicacao.comunicacoes']}" 
+		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
 			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 			<h:form>
-					<rich:panel header="#{eppmessages['comunicacao.comunicacao']} - #{modeloComunicacao.tipoComunicacao.descricao}">
+					<rich:panel header="#{infoxMessages['comunicacao.comunicacao']} - #{modeloComunicacao.tipoComunicacao.descricao}">
 						<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
 							var="bean" styleClass="dtable rf-dt-crud">
 							<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
@@ -42,57 +42,57 @@
 										execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
 										render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
 										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-										<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="#{eppmessages['comunicacao.confirmarCiencia']}" />
+										<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="#{infoxMessages['comunicacao.confirmarCiencia']}" />
 									</a:commandLink>
 									<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
 										render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage" 
 										execute="@this" limitRender="true"
 										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-										<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{eppmessages['comunicacao.pedirProrrogacaoPrazo']}" />
+										<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
 									</a:commandLink>
 							</rich:column>
 							<rich:column>
-								<f:facet name="header">#{eppmessages['comunicacao.destinatario']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.destinatario']}</f:facet>
 								<h:outputText value="#{bean.nome}" />
 							</rich:column>
                             <rich:column>
-                                <f:facet name="header">#{eppmessages['comunicacao.tipoComunicacao']}</f:facet>
+                                <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
                                 <h:outputText value="#{bean.tipoComunicacao}" />
                             </rich:column>
 							<rich:column>
-								<f:facet name="header">#{eppmessages['comunicacao.meioExpedicao']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.meioExpedicao']}</f:facet>
 								<h:outputText value="#{bean.meioExpedicao}" />
 							</rich:column>
 							<rich:column>
-								<f:facet name="header">#{eppmessages['comunicacao.dataEnvio']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.dataEnvio']}</f:facet>
 								<h:outputText value="#{bean.dataEnvio}" />
 							</rich:column>
 							<rich:column>
-								<f:facet name="header">#{eppmessages['comunicacao.dataConfirmacao']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.dataConfirmacao']}</f:facet>
 								<h:outputText value="#{bean.dataConfirmacao}" />
 							</rich:column>
 							<rich:column>
-								<f:facet name="header">#{eppmessages['comunicacao.responsavelConfirmacao']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.responsavelConfirmacao']}</f:facet>
 								<h:outputText value="#{bean.responsavelConfirmacao}" />
 							</rich:column>
 							<rich:column>
-								<f:facet name="header">#{eppmessages['comunicacao.prazoAtendimento']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.prazoAtendimento']}</f:facet>
 								<h:outputText value="#{bean.prazoAtendimento}" />
 							</rich:column>
 							<rich:column>
-								<f:facet name="header">#{eppmessages['comunicacao.prazoFinal']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.prazoFinal']}</f:facet>
 								<h:outputText value="#{bean.prazoFinal}" />
 							</rich:column>
 							<rich:column>
-								<f:facet name="header">#{eppmessages['comunicacao.documentos']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.documentos']}</f:facet>
 									<a:commandLink action="#{comunicacaoAction.setDestinatarioDocumentos(bean)}"
 										execute="@this" limitRender="true"
 										render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
 										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-										<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{eppmessages['comunicacao.documentos']}"/>
+										<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{infoxMessages['comunicacao.documentos']}"/>
 									</a:commandLink>
 									<h:commandLink onclick="infox.openPopUp('download#{bean.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?id=#{bean.idDestinatario}','1024'); return false;">
-										<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{eppmessages['comunicacao.baixarComunicacao']}"/>
+										<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarComunicacao']}"/>
 									</h:commandLink>
 							</rich:column>
 						</rich:dataTable>
@@ -100,15 +100,15 @@
 			</h:form>
 		</rich:collapsiblePanel>
 	    <s:div id="painelCiencia">
-	    	<rich:panel header="#{eppmessages['comunicacao.confirmarCiencia']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
+	    	<rich:panel header="#{infoxMessages['comunicacao.confirmarCiencia']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
 	    		rendered="#{comunicacaoAction.ciencia}">
 	    		<h:form>
-	    			<wi:inputDate past="true" id="dataCiencia" showRequired="true" label="#{eppmessages['comunicacao.dataCiencia']}" 
+	    			<wi:inputDate past="true" id="dataCiencia" showRequired="true" label="#{infoxMessages['comunicacao.dataCiencia']}" 
 	    				value="#{comunicacaoAction.dataCiencia}" startDate="#{comunicacaoAction.destinatario.comunicacao.dataInicio}"
-                        errorMessage="#{eppmessages['comunicacao.validator.dataCienciaIncorreta']}">
+                        errorMessage="#{infoxMessages['comunicacao.validator.dataCienciaIncorreta']}">
 	    				<a:ajax event="change" render="@form" execute="@form" limitRender="true" />
 	    			</wi:inputDate>
-	    			<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true" label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+	    			<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 	    				showLabelSelecione="true" value="#{comunicacaoAction.classificacaoDocumento}"
 	    				items="#{comunicacaoAction.classificacoesDocumento}">
 	    				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
@@ -119,7 +119,7 @@
 	    				<wi:fileUpload id="documentoComprovacaoCiencia" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
 	    					reRender="buttonGravar"/>
                         <s:div id="buttonGravar">
-    	    				<wi:commandButton id="gravar" value="#{eppmessages['crud.update']}" action="comunicacaoAction.darCiencia()" 
+    	    				<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.darCiencia()" 
     	    					reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"
     	    					rendered="#{documentoUploader.valido}"/>
                         </s:div>
@@ -128,25 +128,25 @@
 	    	</rich:panel>
 	    </s:div>
 	    <s:div id="painelProrrogacaoPrazo">
-	    	<rich:panel header="#{eppmessages['comunicacao.prorrogacaoPrazo']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
+	    	<rich:panel header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
 	    		rendered="#{comunicacaoAction.prorrogacaoPrazo}">
 	    		<h:form>
-	    			<wi:outputText id="classificacaoProrrogacao" label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+	    			<wi:outputText id="classificacaoProrrogacao" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 	    				value="#{comunicacaoAction.classificacaoDocumento}"/>
 	    			<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
 	    					reRender="@form"/>
-	    			<wi:commandButton id="gravar" value="#{eppmessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 
+	    			<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 
 	    					reRender="pageBodyDialogMessage, comunicacoes, painelProrrogacaoPrazo"
 	    					rendered="#{documentoUploader.valido}"/>
 	    		</h:form>
 	    	</rich:panel>
 	    </s:div>
 	    <s:div id="painelDocumentos">
-	    	<rich:panel header="#{eppmessages['comunicacao.documentos']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}"
+	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}"
 	    		rendered="#{comunicacaoAction.documentos}">
 	    		<h:form>
 	    			<h:commandButton styleClass="buttons" action="#{comunicacaoAction.downloadComunicacao}" 
-	    				value="#{eppmessages['comunicacao.comunicacao']}"
+	    				value="#{infoxMessages['comunicacao.comunicacao']}"
 	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.extensao}"/>
 	    		</h:form>
 	    		<rich:dataTable value="#{comunicacaoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
@@ -154,16 +154,16 @@
 	    				<h:form>
 	    					<h:commandLink action="#{comunicacaoAction.downloadDocumento(documento)}"
 	    						rendered="#{not empty documento.documentoBin.extensao}">
-								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{eppmessages['comunicacao.baixarDocumento']}"/>
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
 							</h:commandLink>
 							<a:commandLink rendered="#{empty documento.documentoBin.extensao}"
 								onclick="infox.openPopUp('doc#{documento.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{documento.documentoBin.id}','1024'); return false;">
-								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{eppmessages['comunicacao.baixarDocumento']}"/>
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
 							</a:commandLink>
 	    				</h:form>
 	    			</rich:column>
 	    			<rich:column>
-	    				<f:facet name="header">#{eppmessages['comunicacao.documento']}</f:facet>
+	    				<f:facet name="header">#{infoxMessages['comunicacao.documento']}</f:facet>
 	    				<h:outputText value="#{documento.descricao}" />
 	    			</rich:column>
 	    		</rich:dataTable>

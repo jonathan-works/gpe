@@ -24,30 +24,30 @@
 
         <h:commandButton id="saveH" eventsQueue="editQueue"
             action="#{home.persist()}"
-            value="#{eppmessages['crud.persist']}" styleClass="buttons"
+            value="#{infoxMessages['crud.persist']}" styleClass="buttons"
             rendered="#{!home.managed and !isUploadForm and persistSemNewInstance}">
         </h:commandButton>
         <a:commandButton id="save" status=":status"
             action="#{home.persist()}" eventsQueue="editQueue"
             oncomplete="#{oncomplete}" render="#{reRenderSave}"
-            limitRender="true" value="#{eppmessages['crud.persist']}"
+            limitRender="true" value="#{infoxMessages['crud.persist']}"
             styleClass="buttons"
             rendered="#{!home.managed and !isUploadForm and !persistSemNewInstance}">
         </a:commandButton>
         <h:commandButton id="saveUpload" eventsQueue="editQueue"
             action="#{home.persist()}"
-            value="#{eppmessages['crud.persist']}" styleClass="buttons"
+            value="#{infoxMessages['crud.persist']}" styleClass="buttons"
             rendered="#{!home.managed and isUploadForm}">
         </h:commandButton>
         <h:commandButton id="updateUpload" eventsQueue="editQueue"
-            value="#{eppmessages['crud.update']}" styleClass="buttons"
+            value="#{infoxMessages['crud.update']}" styleClass="buttons"
             action="#{home.update()}"
             rendered="#{home.managed and isUploadForm}">
         </h:commandButton>
         <a:commandButton id="update" status=":status"
             eventsQueue="editQueue" oncomplete="#{oncomplete}"
             render="#{reRenderSave}" limitRender="true"
-            value="#{eppmessages['crud.update']}" styleClass="buttons"
+            value="#{infoxMessages['crud.update']}" styleClass="buttons"
             action="#{home.update()}"
             rendered="#{home.managed and !isUploadForm}">
         </a:commandButton>
