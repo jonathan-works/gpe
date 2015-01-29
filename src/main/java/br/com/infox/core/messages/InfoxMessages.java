@@ -30,10 +30,13 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 	
 	private Locale getRequestLocale() {
 		Locale requestLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+		if (requestLocale == null) {
+			return getDefaultLocale();
+		}
 		if (locales.containsKey(requestLocale)) {
 			return requestLocale;
 		}
-		Locale baseLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale().stripExtensions();
+		Locale baseLocale = requestLocale.stripExtensions();
 		if (locales.containsKey(baseLocale)) {
 			return baseLocale;
 		}
