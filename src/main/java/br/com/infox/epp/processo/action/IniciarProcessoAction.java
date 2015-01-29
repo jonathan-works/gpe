@@ -160,7 +160,7 @@ public class IniciarProcessoAction implements Serializable {
         if (Authenticator.instance().isUsuarioExterno()) {
             final Redirect redirect = Redirect.instance();
             redirect.setViewId("/Processo/movimentar.seam");
-            redirect.setParameter("cid", Conversation.instance().getId());
+            redirect.setParameter("scid", Conversation.instance().getId());
             redirect.setParameter("idProcesso", getProcesso().getIdProcesso());
             redirect.execute();
         }

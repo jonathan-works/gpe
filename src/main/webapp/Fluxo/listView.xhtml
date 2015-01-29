@@ -125,12 +125,12 @@
                     action="#{processBuilder.load(fluxoCrudAction.instance)}"
                     value="#{infoxMessages['fluxo.definicao']}"
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);" />
+                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?scid=#{conversation.id}',1300,850);" />
                 <wi:commandButton
                     id="importarXPDL"
                     value="#{infoxMessages['importarXPDL.button']}"
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-                    onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);" />
+                    onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?scid=#{conversation.id}',1300,850);" />
             </ui:define>
         </wi:dataForm>
     </ui:define>

@@ -360,7 +360,7 @@ public class Authenticator implements Serializable {
         Redirect redirect = Redirect.instance();
         redirect.getParameters().clear();
         redirect.setViewId(getCaminhoPainel());
-        redirect.setParameter("cid", null);
+        redirect.setParameter("scid", null);
         redirect.execute();
     }
     
@@ -376,7 +376,7 @@ public class Authenticator implements Serializable {
         Redirect redirect = Redirect.instance();
         redirect.getParameters().clear();
         redirect.setViewId("/termoAdesao.seam");
-        redirect.setParameter("cid", null);
+        redirect.setParameter("scid", null);
         redirect.execute();
     }
     

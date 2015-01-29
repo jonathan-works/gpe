@@ -25,7 +25,8 @@
 
     <core:init
         debug="${desenvolvimento}"
-        jndi-pattern="java:module/#{ejbName}" />
+        jndi-pattern="java:module/#{ejbName}" 
+        transaction-management-enabled="false"/>
         
     <document:document-store use-extensions="true" />
 
@@ -36,7 +37,7 @@
     <core:manager
         concurrent-request-timeout="2000"
         conversation-timeout="300000"
-        conversation-id-parameter="cid"
+        conversation-id-parameter="scid"
         parent-conversation-id-parameter="pid"
         default-flush-mode="MANUAL" />
 

@@ -173,7 +173,7 @@ if(_2e!="#"&&((_28&&!id.match(/#/))||_2b[id])){
 var ref=id;
 if(id.charAt(0)!="#"){
 if(it.__clientId==id){
-ref="cid:"+id;
+ref="scid:"+id;
 }else{
 if(id.substring(0,_26.length)==_26){
 ref=id.substring(_26.length);

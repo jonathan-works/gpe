@@ -37,6 +37,7 @@ import br.com.infox.seam.util.ComponentUtil;
  * @param <K>
  * 
  */
+@Transactional
 public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> implements Serializable {
 
 	private static final long serialVersionUID = 1L;

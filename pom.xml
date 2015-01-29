@@ -133,6 +133,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<artifactId>dom4j</artifactId>
+			<groupId>dom4j</groupId>
+			<version>1.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.richfaces.ui</groupId>
 			<artifactId>richfaces-components-ui</artifactId>
 			<type>jar</type>
@@ -215,7 +221,7 @@
 			<groupId>backport-util-concurrent</groupId>
 			<artifactId>backport-util-concurrent</artifactId>
 			<version>3.1</version>
-            <scope>compile</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jdom</groupId>
@@ -340,7 +346,7 @@
 		</dependency>
 		<dependency>
 			<groupId>br.com.infox</groupId>
-	                <artifactId>infox-core</artifactId>
+			<artifactId>infox-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
@@ -350,7 +356,7 @@
 			<artifactId>reflections</artifactId>
 			<version>0.9.9</version>
 		</dependency>
-		
+
 	</dependencies>
 	<build>
 		<resources>
@@ -404,8 +410,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.17</version>
-                <configuration>
-				    <forkMode>never</forkMode>
+				<configuration>
+					<forkMode>never</forkMode>
 				</configuration>
 			</plugin>
 			<plugin>

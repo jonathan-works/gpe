@@ -107,7 +107,7 @@
 	        		styleClass="buttons" 
 	        		value="#{infoxMessages['comunicacao.impressao.imprimirComunicacao']}"
 	        		onmouseup="#{rich:component('imprimirComunicacaoPopUp')}.hide();"
-	        		oncomplete="window.open('#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?cid=#{conversation.id}', '_blank');" 
+	        		oncomplete="window.open('#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?scid=#{conversation.id}', '_blank');" 
 	        		render=":panelImpressaoComunicacoes">
 	        	</a:commandButton>
 	        		

@@ -83,7 +83,7 @@ for(var i in _21){
 var val=_21[i];
 id=val&&val.$ref;
 if(id){
-if(id.substring&&id.substring(0,4)=="cid:"){
+if(id.substring&&id.substring(0,4)=="scid:"){
 id=id.substring(4);
 }
 _21[i]=_1f(id,val);
