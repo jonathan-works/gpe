@@ -36,7 +36,8 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 		if (locales.containsKey(requestLocale)) {
 			return requestLocale;
 		}
-		Locale baseLocale = requestLocale.stripExtensions();
+		String base = requestLocale.toString().split("_")[0]; // TODO Mudar para stripExtensions quando puder usar Java 8
+		Locale baseLocale = new Locale(base);
 		if (locales.containsKey(baseLocale)) {
 			return baseLocale;
 		}
