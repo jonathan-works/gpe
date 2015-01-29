@@ -6,8 +6,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
@@ -20,6 +18,8 @@ import br.com.infox.epp.access.list.LocalizacaoComEstruturaList;
 import br.com.infox.epp.access.manager.EstruturaManager;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(EstruturaCrudAction.NAME)
 @ConversationScoped
@@ -60,6 +60,7 @@ public class EstruturaCrudAction extends AbstractCrudAction<Estrutura, Estrutura
     }
     
     public void setLocalizacaoFilho(Localizacao localizacaoFilho) {
+        localizacoesDaEstruturaTree.clearTree();
         this.localizacaoFilho = localizacaoFilho;
     }
     
