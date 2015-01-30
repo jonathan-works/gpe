@@ -9,13 +9,13 @@ import javax.faces.context.FacesContext;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(FluxoCrudAction.NAME)
 public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
@@ -86,7 +86,6 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     }
 
     @Override
-
     public String inactive(final Fluxo fluxo) {
         setInstanceId(fluxo.getIdFluxo());
         if (!getManager().existemProcessosAssociadosAFluxo(fluxo)) {
@@ -108,5 +107,6 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     public void newInstance() {
         super.newInstance();
         getInstance().setPublicado(false);
+        this.replica = false;
     }
 }
