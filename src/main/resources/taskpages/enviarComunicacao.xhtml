@@ -66,7 +66,7 @@
 						<rich:column styleClass="dt-toolbar-col">
 							<f:facet name="header">#{infoxMessages['comunicacao.prazo']}</f:facet>
 							<h:inputText value="#{row.prazo}" rendered="#{not modeloComunicacaoAction.modeloComunicacao.finalizada}"
-								onkeyup="onlyNumber(this)" converterId="integerConverter" id="prazo">
+								onkeyup="onlyPositiveNumber(this)" converterId="integerConverter" id="prazo">
 								<a:ajax event="change" />
 							</h:inputText>
 							<h:outputText value="#{row.prazo}" rendered="#{modeloComunicacaoAction.modeloComunicacao.finalizada}" />

@@ -14,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.constants.LengthConstants;
@@ -38,6 +39,7 @@ public class TipoComunicacao implements Serializable {
     @Column(name = "ds_tipo_comunicacao", nullable = false, length = LengthConstants.DESCRICAO_MEDIA, unique = true)
     private String descricao;
     
+    @Min(0)
     @NotNull
     @Column(name = "nr_dias_prazo_ciencia", nullable = false)
     private Integer quantidadeDiasCiencia;

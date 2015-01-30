@@ -16,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.Localizacao;
@@ -59,6 +60,7 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	@Column(name = "tp_meio_expedicao", nullable = false)
 	private MeioExpedicao meioExpedicao;
 	
+	@Min(0)
 	@Column(name = "nr_prazo")
 	private Integer prazo;
 	

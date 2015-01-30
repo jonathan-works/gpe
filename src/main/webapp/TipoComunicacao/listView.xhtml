@@ -61,7 +61,8 @@
                 required="true" />
             <wi:inputNumber id="diasCiencia"
                 label="#{infoxMessages['tipoComunicacao.diasCiencia']}"
-                value="#{tipoComunicacaoCrudAction.instance.quantidadeDiasCiencia}" 
+                value="#{tipoComunicacaoCrudAction.instance.quantidadeDiasCiencia}"
+                onkeyup="onlyPositiveNumber(this)" 
                 required="true"/>
             <wi:selectOneMenuEntity id="classificacaoDocumento" label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" 
             	value="#{tipoComunicacaoCrudAction.instance.classificacaoDocumento}"
