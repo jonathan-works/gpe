@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['item.titlePage']}</ui:define>
+
+    <ui:define name="body">
+        <wi:dataForm formId="itemForm"
+            formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="codigoItem" required="true"
+                label="#{infoxMessages['item.codigoItem']}"
+                value="#{itemAction.instance.codigoItem}" />
+            <wi:inputText id="descricao" required="true"
+                label="#{infoxMessages['item.descricaoItem']}"
+                value="#{itemAction.instance.descricaoItem}" />
+            <!-- <wi:tree id="itemPai"
+                assignTo="itemCrudAction.instance.itemPai"
+                tree="#{itemTree}" icon="#{wiSkin.imageFolder}/nivelTree.gif"
+                iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                label="#{infoxMessages['item.itemPai']}" />-->
+            <wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{itemAction.instance.ativo}" />
+            <ui:define name="buttons">
+            	<p:commandButton value="#{infoxMessages['crud.new']}" process="@this" update="@form, :pageBodyDialogMessage" 
+            		action="#{itemAction.newInstance}"/>
+           		<p:commandButton value="#{infoxMessages['crud.persist']}" update="@form, :pageBodyDialogMessage" 
+            		action="#{itemAction.create}"/>
+            	<p:commandButton value="#{infoxMessages['crud.update']}" update="@form, :pageBodyDialogMessage" 
+            		action="#{itemAction.update}"/>
+            </ui:define>
+        </wi:dataForm>
+    </ui:define>
+
+</ui:composition>
