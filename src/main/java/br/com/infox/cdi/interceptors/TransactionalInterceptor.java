@@ -50,20 +50,18 @@ public class TransactionalInterceptor implements Serializable {
 		return result;
 	}
 	
-	private static boolean isRollbackRequired(Exception e)
-	   {
-	      Class<? extends Exception> clazz = e.getClass();
-	      return ( isSystemException(e, clazz) ) || 
-	            ( clazz.isAnnotationPresent(APPLICATION_EXCEPTION) && rollback( clazz.getAnnotation(APPLICATION_EXCEPTION) ) ) ||
-	            ( clazz.isAnnotationPresent(ApplicationException.class) && clazz.getAnnotation(ApplicationException.class).rollback() );
-	   }
+	private static boolean isRollbackRequired(Exception e) {
+		Class<? extends Exception> clazz = e.getClass();
+		return ( isSystemException(e, clazz) ) || 
+				( clazz.isAnnotationPresent(APPLICATION_EXCEPTION) && rollback( clazz.getAnnotation(APPLICATION_EXCEPTION) ) ) ||
+				( clazz.isAnnotationPresent(ApplicationException.class) && clazz.getAnnotation(ApplicationException.class).rollback() );
+	}
 
-	   private static boolean isSystemException(Exception e, Class<? extends Exception> clazz)
-	   {
-	      return (e instanceof RuntimeException) && 
+	private static boolean isSystemException(Exception e, Class<? extends Exception> clazz) {
+		return (e instanceof RuntimeException) && 
 	            !clazz.isAnnotationPresent(APPLICATION_EXCEPTION) && 
 	            !clazz.isAnnotationPresent(ApplicationException.class) &&
 	            !Persistence.NO_RESULT_EXCEPTION.isInstance(e) && 
 	            !Persistence.NON_UNIQUE_RESULT_EXCEPTION.isInstance(e);
-	   }
+	}
 }
