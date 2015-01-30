@@ -78,7 +78,7 @@
             </wi:columnOutputText>
             
             <wi:columnSituacao
-                columnId="ativo"
+                columnId="inputAtivo"
                 columnHeader="#{infoxMessages['field.situacao']}"
                 value="#{row.ativo}"/>
              
@@ -176,7 +176,7 @@
 	         </rich:panel>
 	         
 	         <ui:define name="buttons">
-	         	<wi:commandButtonSave />
+	         	<wi:commandButtonSave execute="nome localizacaoUnidadeDecisoraTree inputAtivo" />
                 <wi:commandButtonNew />
 	         </ui:define>
 	         
