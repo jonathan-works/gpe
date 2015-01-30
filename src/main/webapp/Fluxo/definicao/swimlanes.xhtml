@@ -53,6 +53,7 @@
                         <a:commandLink
                             action="#{swimlaneFitter.setCurrentSwimlane(row)}"
                             execute="@this" render="swimlanesForm,"
+                            styleClass="link"
                             limitRender="true">
                             <h:outputText value="#{row.swimlane.name}" />
                         </a:commandLink>
