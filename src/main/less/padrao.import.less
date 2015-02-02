@@ -11,6 +11,7 @@
 @import "processDefinition.import.less";
 @import "termoAdesao.import.less";
 @import "empty.import.less";
+@import "help.import.less";
 @import "popup-panel.import.less";
 @import "calendar.import.less";
 @import "context-menu.import.less";
@@ -700,10 +701,6 @@ span.rf-ds-btn {
   width: 400px;
 }
 
-.resultado-pesquisa-ajuda.label-general {
-  margin: 1em;
-}
-
 .cursor-pointer {
   cursor: pointer;
 }
@@ -889,11 +886,6 @@ option {
   color:@bgColorRequired;
 }
 
-.label-general {
-  &.resultado-pesquisa-ajuda {
-    &:extend(.rf-dt-hdr-c);
-  }
-}
 .ipt-txt-area-select {
   border-color:@borderColorInputTextareaSelect;
   background:@bgColorInputTextareaSelect;
@@ -1030,4 +1022,19 @@ option {
 .folder-selected{
   color:@menu-bg-color;
   background-color:@menu-txt-color;
+}
+
+.halfBlock {
+  display:inline-block;
+  position:relative;
+  width:50%;
+  vertical-align:middle;
+}
+.left-aligned {
+  &:extend(.halfBlock);
+  text-align:left;
+}
+.right-aligned {
+  &:extend(.halfBlock);
+  text-align:right;
 }
