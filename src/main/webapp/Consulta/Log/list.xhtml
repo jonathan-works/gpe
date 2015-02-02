@@ -11,8 +11,7 @@
   <ui:define name="title">#{infoxMessages['consultaEntidadeLog.titulo']}</ui:define>
 
   <ui:define name="body">
-    <h:form>
-      <rich:panel>
+      <wi:panel id="logPanel" styleClass="content-block">
         <wi:dataTable values="#{entidadeLogList.list(15)}"
           bean="#{entidadeLogList}"
           tableTitle="#{infoxMessages['consultaEntidadeLogGrid.titulo']}"
@@ -96,7 +95,6 @@
             columnHeader="#{infoxMessages['entidadeLog.tipoOperacao']}"
             value="#{row.tipoOperacao}" />
         </wi:dataTable>
-      </rich:panel>
-    </h:form>
+      </wi:panel>
   </ui:define>
 </ui:composition>

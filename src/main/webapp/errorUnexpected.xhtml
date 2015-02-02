@@ -1,55 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- $Id: errorUnexpected.xhtml 516 2010-08-12 23:21:53Z jplacerda $ -->
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:rich="http://richfaces.org/rich"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="body">
-        <h:messages />
-        <rich:collapsiblePanel switchType="client" expanded="false"
-            header="Handled Exception">
-            <pre>Caused by #{org.jboss.seam.handledException.class.name} with message: #{org.jboss.seam.handledException.message}
+    
+        <wi:panel
+            id="unexpectedErrorPanel"
+            styleClass="content-block">
+            <h:messages />
+            
+            <rich:collapsiblePanel
+                switchType="client"
+                expanded="false"
+                header="Handled Exception">
+                <pre>Caused by #{org.jboss.seam.handledException.class.name} with message: #{org.jboss.seam.handledException.message}
                 <ui:repeat
-                    value="#{org.jboss.seam.handledException.stackTrace}"
-                    var="stackElement">
+                        value="#{org.jboss.seam.handledException.stackTrace}"
+                        var="stackElement">
                    #{stackElement}
                 </ui:repeat>
             </pre>
-        </rich:collapsiblePanel>
-        <rich:collapsiblePanel switchType="client" expanded="false"
-            header="Unhandled or Wrapper Exception">
-            <pre>Caused by #{org.jboss.seam.caughtException.class.name} with message: #{org.jboss.seam.caughtException.message}
+            </rich:collapsiblePanel>
+            <rich:collapsiblePanel
+                switchType="client"
+                expanded="false"
+                header="Unhandled or Wrapper Exception">
+                <pre>Caused by #{org.jboss.seam.caughtException.class.name} with message: #{org.jboss.seam.caughtException.message}
             <ui:repeat
-                    value="#{org.jboss.seam.caughtException.stackTrace}"
-                    var="stackElement">
+                        value="#{org.jboss.seam.caughtException.stackTrace}"
+                        var="stackElement">
     #{stackElement}
             </ui:repeat>
             </pre>
-        </rich:collapsiblePanel>
-        <rich:collapsiblePanel switchType="client" expanded="false"
-            header="Session Context">
-            <h:outputText
-                value="#{contextFacade.getSessionContextsAsString()}"
-                escape="false" />
-        </rich:collapsiblePanel>
-
-        <rich:collapsiblePanel switchType="client" expanded="false"
-            header="Conversations Context">
-            <h:outputText
-                value="#{contextFacade.getConversationContextsAsString()}"
-                escape="false" />
-        </rich:collapsiblePanel>
-
-        <rich:collapsiblePanel switchType="client" expanded="false"
-            header="Application Context">
-            <h:outputText
-                value="#{contextFacade.getApplicationContextsAsString()}"
-                escape="false" />
-        </rich:collapsiblePanel>
+            </rich:collapsiblePanel>
+            <rich:collapsiblePanel
+                switchType="client"
+                expanded="false"
+                header="Session Context">
+                <h:outputText
+                    value="#{contextFacade.getSessionContextsAsString()}"
+                    escape="false" />
+            </rich:collapsiblePanel>
+            <rich:collapsiblePanel
+                switchType="client"
+                expanded="false"
+                header="Conversations Context">
+                <h:outputText
+                    value="#{contextFacade.getConversationContextsAsString()}"
+                    escape="false" />
+            </rich:collapsiblePanel>
+            <rich:collapsiblePanel
+                switchType="client"
+                expanded="false"
+                header="Application Context">
+                <h:outputText
+                    value="#{contextFacade.getApplicationContextsAsString()}"
+                    escape="false" />
+            </rich:collapsiblePanel>
+        </wi:panel>
     </ui:define>
 </ui:composition>

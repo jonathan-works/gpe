@@ -14,7 +14,8 @@
     />
     <ui:define name="body">
 
-        <s:div id="pagina">
+        <wi:panel id="quartzPanel" styleClass="content-block">
+        
 
             <wi:dataTable rowKeyVar="key" id="collectionTable" var="row"
                 panelWidth="99%" showToolbarColumn="false"
@@ -87,7 +88,7 @@
                     value="#{infoxMessages['quartz.deleteAllJobs']}" />
 
             </h:form>
-        </s:div>
+        </wi:panel>
 
     </ui:define>
 </ui:composition>

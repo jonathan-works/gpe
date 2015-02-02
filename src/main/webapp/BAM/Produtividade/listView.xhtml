@@ -10,9 +10,11 @@
     xmlns:a="http://richfaces.org/a4j"
     xmlns:dojo="http://www.itx.com.br/dojo"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    
     <ui:define name="title">#{infoxMessages['produtividade.pageTitle']}</ui:define>
+    
     <ui:define name="body">
-      <wi:panel id="produtividadePanel" rendered="true">
+      <wi:panel id="produtividadePanel" rendered="true" styleClass="content-block">
         <wi:dataTable values="#{produtividadeAction.list(15)}"
             bean="#{produtividadeAction}"
             tableTitle="#{infoxMessages['produtividade.tableTitle']}"

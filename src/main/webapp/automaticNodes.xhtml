@@ -13,7 +13,9 @@
       name="pageTitle"
       value="#{infoxMessages['automaticNodesInfo.titlePage']}"/>
     <ui:define name="body">
-        <s:div id="pagina">
+        <wi:panel
+            id="tokensPanel"
+            styleClass="content-block">            
             <wi:dataTable id="tokensTable" var="row"
                 panelWidth="99%" showToolbarColumn="false"
                 values="#{automaticNodesInfo.nodesNotEnded}"
@@ -21,6 +23,7 @@
                 panelStyleClass="full-sized short-margin-top">
 
                 <ui:define name="toolBar" />
+                
 
                 <rich:column>
                     <f:facet name="header">#{infoxMessages['automaticNodesInfo.numeroProcesso']}</f:facet>
@@ -44,6 +47,6 @@
                     </h:form>
                 </rich:column>
             </wi:dataTable>
-        </s:div>
+        </wi:panel>
     </ui:define>
 </ui:composition>

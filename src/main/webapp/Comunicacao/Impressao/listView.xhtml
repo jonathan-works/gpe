@@ -19,8 +19,8 @@
 			<a:param name="idProcesso" assignTo="#{impressaoComunicacaoAction.selected}"
 				     converter="javax.faces.Integer" />
 		</a:jsFunction>
-		
-		<rich:panel id="panelImpressaoComunicacoes" header="#{infoxMessages['comunicacao.impressao.panelHeader']}" >
+        
+		<wi:panel id="panelImpressaoComunicacoes" styleClass="content-block">
 			<wi:dataTable id="comunicacoes" bean="#{impressaoComunicacaoList}"
 				values="#{impressaoComunicacaoList.list(15)}"
 				tableTitle="#{infoxMessages['comunicacao.impressao.tableTitle']}" rowId="#{row.idProcesso}"
@@ -87,7 +87,7 @@
 					showTime="true" />
 					
 			</wi:dataTable>
-		</rich:panel>
+		</wi:panel>
 		
 		<rich:popupPanel id="imprimirComunicacaoPopUp" shadowDepth="1" moveable="false" onshow="onShowPopUp();">
 			<f:facet name="header">
