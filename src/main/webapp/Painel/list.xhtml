@@ -48,7 +48,7 @@
           	limitRender="true" action="#{painelTreeHandler.clearTree()}"
           	title="#{infoxMessages['caixa.tab']}" >
           <s:div rendered="#{painelUsuarioController.tab eq 'processo'}">
-	          <s:div id="tarefasDiv" styleClass="p-caixas" style="margin-right:10px;">
+	          <s:div id="tarefasDiv" styleClass="p-caixas">
 	          	<h:form id="treeProcessoForm">
 	            	<ui:include src="tarefasTree.xhtml" />
 	            </h:form>
