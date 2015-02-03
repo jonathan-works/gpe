@@ -111,14 +111,10 @@
 								render="comunicacaoForm, pageBodyDialogMessage, destinatarios"
 								oncomplete="infox.hideLoading();" />
 					<wi:certificadoDigital id="appletAssinatura"
-							urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-							formId="#{rich:clientId('comunicacaoForm')}"
-							certificationChainField="#{expedicaoComunicacaoAction.certChain}"
-							signatureField="#{expedicaoComunicacaoAction.signature}"
-							signableData="#{expedicaoComunicacaoAction.md5Comunicacao}" useBase64Function="true"
+                            tokenField="#{expedicaoComunicacaoAction.token}"
+							signableData="#{expedicaoComunicacaoAction.md5Comunicacao}"
 							functionPreSign="infox.showLoading();"
-							functionPosSign="assinar();" debug="false" loginMode="false"
-							useProviderDll="false"
+							functionPosSign="assinar();"
 							rendered="#{expedicaoComunicacaoAction.podeRenderizarApplet()}"
 							signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}">
 					</wi:certificadoDigital>

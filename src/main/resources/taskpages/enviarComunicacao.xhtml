@@ -90,24 +90,18 @@
 								oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
 								reRender="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"/>
 							<s:div id="assinatura_pers" rendered="#{not modeloComunicacaoAction.documentoComunicacao.documento.hasAssinatura()}">
-								<a:jsFunction name="assinarBin" action="#{modeloComunicacaoAction.expedirComunicacao()}"
-									execute="@this appletAssinaturaCertChain appletAssinaturaSignature" 
+								
+                                <a:jsFunction name="assinarBin" action="#{modeloComunicacaoAction.expedirComunicacao()}"
+									execute="@this appletAssinaturaToken" 
 									render="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
 								  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
 
 				                <wi:certificadoDigital
 				                  id="appletAssinatura"
-				                  urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-				                  formId="#{rich:clientId('expedicaoForm')}"
-				                  certificationChainField="#{modeloComunicacaoAction.certChain}"
-				                  signatureField="#{modeloComunicacaoAction.signature}"
+                                  tokenField="#{modeloComunicacaoAction.token}"
 				                  signableData="#{modeloComunicacaoAction.documentoComunicacao.documento.documentoBin.md5Documento}"
-				                  useBase64Function="true"
 				                  functionPreSign="infox.showLoading();"
 				                  functionPosSign="assinarBin();"
-				                  debug="false"
-				                  loginMode="false"
-				                  useProviderDll="false"
 				                  rendered="#{modeloComunicacaoAction.podeRenderizarApplet()}"
 				                  signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
 				
@@ -183,20 +177,16 @@
 					<wi:editor id="comunicacao" readonly="true" value="#{modeloComunicacaoAction.destinatario.comunicacao.modeloDocumento}" />
 					<s:div id="assinatura_pers">
 						<a:jsFunction name="assinar" action="#{modeloComunicacaoAction.expedirComunicacao()}"
-							execute="@this appletAssinaturaCertChain appletAssinaturaSignature" 
+							execute="@this appletAssinaturaToken" 
 							render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
 						  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
 	             
 						
 						<wi:certificadoDigital id="appletAssinatura"
-								urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-								formId="#{rich:clientId('comunicacaoDestinatarioForm')}"
-								certificationChainField="#{modeloComunicacaoAction.certChain}"
-								signatureField="#{modeloComunicacaoAction.signature}"
-								signableData="#{modeloComunicacaoAction.destinatario.comunicacao.md5Documento}" useBase64Function="true"
+                                tokenField="#{modeloComunicacaoAction.token}"
+								signableData="#{modeloComunicacaoAction.destinatario.comunicacao.md5Documento}"
 								functionPreSign="infox.showLoading();"
-								functionPosSign="assinar();" debug="false" loginMode="false"
-								useProviderDll="false"
+								functionPosSign="assinar();"
 								rendered="#{not modeloComunicacaoAction.destinatario.expedido and modeloComunicacaoAction.podeRenderizarApplet()}"
 								signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
 	          		</s:div>
