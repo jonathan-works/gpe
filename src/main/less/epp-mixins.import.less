@@ -29,14 +29,29 @@
 }
 
 .bg-deg-color(@startColor,@endColor) when not (@startColor = @endColor){
+  background: @startColor; /* Old browsers */
+  background: -moz-linear-gradient(top, @startColor 0%, @endColor 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@startColor), color-stop(100%,@endColor)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, @startColor 0%,@endColor 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, @startColor 0%,@endColor 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, @startColor 0%,@endColor 100%); /* IE10+ */
+  background: linear-gradient(to bottom, @startColor 0%,@endColor 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@startColor', endColorstr='@endColor',GradientType=0 ); /* IE6-9 */
+}
+
+.btn-deg-color(@startColor,@endColor) when (@startColor = @endColor){
   background: @startColor;
-  background: -moz-linear-gradient(top, @startColor 0%, @endColor 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @startColor), color-stop(100%, @endColor));
-  background: -webkit-linear-gradient(top, @startColor 0%, @endColor 100%);
-  background: -o-linear-gradient(top, @startColor 0%, @endColor 100%);
-  background: -ms-linear-gradient(top, @startColor 0%, @endColor 100%);
-  background: linear-gradient(to bottom, @startColor 0%, @endColor 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@startColor', endColorstr='@endColor', GradientType=0);
+}
+
+.btn-deg-color(@startColor,@endColor) when not (@startColor = @endColor){
+  background: @startColor; /* Old browsers */
+  background: -moz-linear-gradient(top, @startColor 0%, @endColor 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@startColor), color-stop(100%,@endColor)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, @startColor 0%,@endColor 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, @startColor 0%,@endColor 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, @startColor 0%,@endColor 100%); /* IE10+ */
+  background: linear-gradient(to bottom, @startColor 0%,@endColor 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@startColor', endColorstr='@endColor',GradientType=0 ); /* IE6-9 */
 }
 
 .darken-color-percentage(@atrib,@color,@perc){
