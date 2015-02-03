@@ -1,6 +1,7 @@
 package br.com.infox.epp.fluxo.item.api;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
@@ -38,5 +39,14 @@ public class ItemJPARepository extends JPARepository<Item, Integer> implements I
 	@Override
 	protected Class<Item> getEntityClass() {
 		return Item.class;
+	}
+
+	@Override
+	public List<Item> getItens(int lowerBound, int maxResults) {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Item> query = cb.createQuery(Item.class);
+		Root<Item> from = query.from(Item.class);
+		query.orderBy(cb.asc(from.get(Item_.caminhoCompleto)));
+		return entityManager.createQuery(query).setFirstResult(lowerBound).setMaxResults(maxResults).getResultList();
 	}
 }

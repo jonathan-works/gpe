@@ -5,9 +5,10 @@ import javax.inject.Inject;
 
 import br.com.infox.cdi.annotations.Transactional;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.kernel.manager.CrudManager;
 
 @RequestScoped
-public class CategoriaManager {
+public class CategoriaManager implements CrudManager<Categoria> {
 
 	@Inject
 	private CategoriaRepository categoriaRepository;
@@ -25,5 +26,11 @@ public class CategoriaManager {
 	@Transactional
 	public Categoria delete(Categoria categoria) {
 		return categoriaRepository.delete(categoria);
+	}
+
+	@Override
+	public void inactive(Categoria entity) {
+		entity.setAtivo(false);
+		update(entity);
 	}
 }

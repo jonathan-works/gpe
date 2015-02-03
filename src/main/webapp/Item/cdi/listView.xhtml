@@ -4,11 +4,43 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:p="http://primefaces.org/ui"
-    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
     <ui:define name="title">#{infoxMessages['item.titlePage']}</ui:define>
+	<ui:param name="home" value="#{itemAction}" />
 
-    <ui:define name="body">
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{itemList.list(15)}" bean="#{itemList}"
+            tableTitle="#{infoxMessages['item.tableTitle']}" id="itemList"
+            rowId="#{row.idItem}">
+            <ui:define name="searchForm">
+                <wi:searchForm formId="pesquisarItemForm"
+                    formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigoItem"
+                        value="#{itemList.entity.codigoItem}"
+                        label="#{infoxMessages['item.codigoItem']}" />
+                    <wi:inputText id="descricaoItem"
+                        value="#{itemList.entity.descricaoItem}"
+                        label="#{infoxMessages['item.descricaoItem']}" />
+                    <wi:selectSituacaoOneMenu id="ativo"
+                        label="#{infoxMessages['field.situacao']}"
+                        value="#{itemList.entity.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            <wi:columnOutputText columnId="codigoItem"
+                columnHeader="#{infoxMessages['item.codigoItem']}"
+                columnWidth="20%" value="#{row.codigoItem}" />
+            <wi:columnOutputTextIdent columnId="caminhoCompleto"
+                columnHeader="#{infoxMessages['item.descricaoItem']}"
+                value="#{row.descricaoItem}"
+                fullPath="#{row.caminhoCompleto}" />
+            <wi:columnSituacao columnId="ativo"
+                columnHeader="#{infoxMessages['field.situacao']}"
+                columnWidth="15%" value="#{row.ativo}" />
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
         <wi:dataForm formId="itemForm"
             formTitle="#{infoxMessages['form.title']}">
             <wi:inputText id="codigoItem" required="true"
@@ -29,9 +61,9 @@
             	<p:commandButton value="#{infoxMessages['crud.new']}" process="@this" update="@form, :pageBodyDialogMessage" 
             		action="#{itemAction.newInstance}"/>
            		<p:commandButton value="#{infoxMessages['crud.persist']}" update="@form, :pageBodyDialogMessage" 
-            		action="#{itemAction.create}"/>
+            		action="#{itemAction.create}" rendered="#{empty itemAction.instance.idItem}"/>
             	<p:commandButton value="#{infoxMessages['crud.update']}" update="@form, :pageBodyDialogMessage" 
-            		action="#{itemAction.update}"/>
+            		action="#{itemAction.update}" rendered="#{not empty itemAction.instance.idItem}"/>
             </ui:define>
         </wi:dataForm>
     </ui:define>

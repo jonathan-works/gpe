@@ -7,52 +7,30 @@ import javax.inject.Inject;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.item.api.ItemManager;
 import br.com.infox.epp.fluxo.item.api.ItemRepository;
+import br.com.infox.kernel.manager.CrudManager;
+import br.com.infox.kernel.repository.Repository;
+import br.com.infox.kernel.view.AbstractAction;
 
 @ManagedBean
 @ViewScoped
-public class ItemAction {
+public class ItemAction extends AbstractAction<Item, Integer> {
 	@Inject
 	private ItemManager itemManager;
 	@Inject
 	private ItemRepository itemRepository;
 	
-	private Item instance;
-	
-	public Item getInstance() {
-		return instance;
-	}
-	
-	public void setInstance(Item instance) {
-		this.instance = instance;
-	}
-	
-	public void setId(Integer id) {
-		if (id == null) {
-			instance = null;
-		} else {
-			instance = itemRepository.getById(id);
-		}
-	}
-	
-	public void create() {
-		instance = itemManager.create(instance);
-	}
-	
-	public void update() {
-		instance = itemManager.update(instance);
-	}
-	
-	public void delete() {
-		itemManager.delete(instance);
-		setInstance(null);
-	}
-	
-	public void inactive(Item item) {
-		item.setAtivo(false);
-		itemManager.update(item);
-	}
-	
+	@Override
 	public void newInstance() {
-		this.instance = new Item();
+		setInstance(new Item());
+	}
+
+	@Override
+	protected CrudManager<Item> getCrudManager() {
+		return itemManager;
+	}
+
+	@Override
+	protected Repository<Item, Integer> getRepository() {
+		return itemRepository;
 	}
 }

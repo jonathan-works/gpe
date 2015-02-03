@@ -7,52 +7,30 @@ import javax.inject.Inject;
 import br.com.infox.epp.fluxo.categoria.api.CategoriaManager;
 import br.com.infox.epp.fluxo.categoria.api.CategoriaRepository;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.kernel.manager.CrudManager;
+import br.com.infox.kernel.repository.Repository;
+import br.com.infox.kernel.view.AbstractAction;
 
 @ManagedBean
 @ViewScoped
-public class CategoriaAction {
+public class CategoriaAction extends AbstractAction<Categoria, Integer> {
 	@Inject
 	private CategoriaRepository categoriaRepository;
 	@Inject
 	private CategoriaManager categoriaManager;
 	
-	private Categoria instance;
-	
-	public Categoria getInstance() {
-		return instance;
-	}
-	
-	public void setInstance(Categoria instance) {
-		this.instance = instance;
-	}
-	
-	public void setId(Integer id) {
-		if (id == null) {
-			instance = null;
-		} else {
-			instance = categoriaRepository.getById(id);
-		}
-	}
-	
-	public void create() {
-		instance = categoriaManager.create(instance);
-	}
-	
-	public void update() {
-		instance = categoriaManager.update(instance);
-	}
-	
-	public void delete() {
-		categoriaManager.delete(instance);
-		setInstance(null);
-	}
-	
-	public void inactive(Categoria categoria) {
-		categoria.setAtivo(false);
-		categoriaManager.update(categoria);
-	}
-	
+	@Override
 	public void newInstance() {
-		this.instance = new Categoria();
+		setInstance(new Categoria());
+	}
+
+	@Override
+	protected CrudManager<Categoria> getCrudManager() {
+		return categoriaManager;
+	}
+
+	@Override
+	protected Repository<Categoria, Integer> getRepository() {
+		return categoriaRepository;
 	}
 }
