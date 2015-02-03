@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jboss.seam.Component;
+import org.jboss.seam.servlet.ContextualHttpServletRequest;
+
 import br.com.infox.certificado.bean.CertificateSignatureConfigBean;
-import br.com.infox.seam.path.PathResolver;
+import br.com.infox.epp.certificado.manager.CertificateSignatureGroupManager;
 
 import com.google.gson.Gson;
 import com.samskivert.mustache.Mustache;
@@ -34,7 +37,14 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/x-java-jnlp-file");
 		resp.setHeader("Content-disposition", "attachment; filename=\"certificado_digital.jnlp\"");
-		String uuid = UUID.randomUUID().toString();
+		final String uuid = UUID.randomUUID().toString();
+		new ContextualHttpServletRequest(req) {
+            @Override
+            public void process() throws Exception {
+                CertificateSignatureGroupManager certificateSignatureGroupManager = (CertificateSignatureGroupManager) Component.getInstance(CertificateSignatureGroupManager.NAME);
+                certificateSignatureGroupManager.createForToken(uuid);
+            }
+        }.run();
 		Cookie cookie = new Cookie(SIGN_COOKIE_NAME, uuid);
 		cookie.setMaxAge(COOKIE_MAX_AGE);
 		cookie.setPath(req.getServletContext().getContextPath());
