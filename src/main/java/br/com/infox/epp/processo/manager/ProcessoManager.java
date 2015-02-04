@@ -113,7 +113,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(taskInstanceId);
         bp.setProcessId(processo.getIdJbpm());
         bp.setTaskId(taskInstanceId);
-        if (!processo.getIdJbpm().equals(bp.getProcessId()) && !taskInstance.isOpen()) {
+        if (!processo.getIdJbpm().equals(bp.getProcessId()) || taskInstance.getStart() == null) {
             bp.startTask();
         }
     }
