@@ -134,7 +134,7 @@
 	    			<wi:outputText id="classificacaoProrrogacao" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 	    				value="#{comunicacaoAction.classificacaoDocumento}"/>
 	    			<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
-	    					reRender="@form"/>
+	    					reRender="gravar"/>
 	    			<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 
 	    					reRender="pageBodyDialogMessage, comunicacoes, painelProrrogacaoPrazo"
 	    					rendered="#{documentoUploader.valido}"/>
