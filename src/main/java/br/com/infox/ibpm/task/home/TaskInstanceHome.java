@@ -456,6 +456,10 @@ public class TaskInstanceHome implements Serializable {
             }
             limparEstado(processoHome);
             finalizarTaskDoJbpm(transition);
+            // Flush para que a consulta do canOpenTask consiga ver o pooled actor que o jbpm criou
+            // no TaskInstance#create, caso contrário, o epp achará que o usuário não pode ver a tarefa seguinte,
+            // mesmo que possa
+            JbpmUtil.getJbpmSession().flush();
             atualizarPaginaDeMovimentacao();
         }
         return null;
