@@ -108,7 +108,6 @@ public class CertificateManager {
 
     public void verificaCertificado(X509Certificate[] certChain) throws CertificateException {
         X509Certificate certificate = certChain[0];
-        boolean valid = true;
 
         // primeiro valida se cada elemento da cadeia está validado pelo proximo
         if (certChain.length > 1) {
@@ -117,16 +116,12 @@ public class CertificateManager {
                 try {
                     certificate.verify(trustedCert.getPublicKey());
                 } catch (GeneralSecurityException ex) {
-                    valid = false;
+                    String msg = "A validade da cadeia não pode ser verificada.";
+                    LOG.info(msg);
+                    throw new CertificateException(msg);
                 }
                 certificate = trustedCert;
             }
-        }
-
-        if (!valid) {
-            String msg = "A validade da cadeia não pode ser verificada.";
-            LOG.info(msg);
-            throw new CertificateException(msg);
         }
 
         X509Certificate[] aTrustedCertificates = listCertificadosCA.toArray(new X509Certificate[listCertificadosCA.size()]);
