@@ -16,13 +16,16 @@ import br.com.infox.epp.julgamento.dao.SessaoJulgamentoDAO;
 import br.com.infox.epp.julgamento.entity.Sala;
 import br.com.infox.epp.julgamento.entity.SessaoJulgamento;
 import br.com.infox.epp.julgamento.type.Periodicidade;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @AutoCreate
 @Name(SessaoJulgamentoManager.NAME)
 public class SessaoJulgamentoManager extends Manager<SessaoJulgamentoDAO, SessaoJulgamento> {
 
-	private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(SessaoJulgamentoManager.class);
+    private static final long serialVersionUID = 1L;
 	public static final String NAME = "sessaoJulgamentoManager";
 
 	@In
@@ -39,6 +42,7 @@ public class SessaoJulgamentoManager extends Manager<SessaoJulgamentoDAO, Sessao
 			validate(sessaoJulgamento);
 			persist(sessaoJulgamento);
 		} catch (BusinessException e) {
+		    LOG.info("SessaoJulgamentoManagerRF001", e);
 		}
 	}
 
@@ -46,19 +50,17 @@ public class SessaoJulgamentoManager extends Manager<SessaoJulgamentoDAO, Sessao
 		salaManager.lock(sessaoJulgamento.getSala());
 		Date hoje = DateUtil.getBeginningOfDay(DateTime.now().toDate());
 		if (!DateUtil.getEndOfDay(sessaoJulgamento.getData()).after(hoje)) {
-			throw new BusinessException("Data da Sessão não pode ser anterior a data de Hoje");
+			throw new BusinessException("#{infoxMessages['sessaoJulgamento.invalidDate.before']}");
 		}
 		if (sessaoJulgamento.getHoraFim().before(sessaoJulgamento.getHoraInicio())) {
-			throw new BusinessException("Hora início posterior a hora de fim da sessão");
+			throw new BusinessException("#{infoxMessages['sessaoJulgamento.invalidTime.after']}");
 		}
-		if (!sessaoJulgamento.getSala().getForaExpediente()) {
-			if (!isDiaValido(sessaoJulgamento)) {
-				throw new BusinessException("Sala não possui turno disponível para esse horário e/ou dia");
-			}
-		}
+		if (!sessaoJulgamento.getSala().getForaExpediente() && !isDiaValido(sessaoJulgamento)) {
+        	throw new BusinessException("#{infoxMessages['sessaoJulgamento.invalidTimespan']}");
+        }
 		boolean isSalaOcupada = getDao().existeSessaoJulgamentoComSalaEHorario(sessaoJulgamento);
 		if (isSalaOcupada) {
-			throw new BusinessException(infoxMessages.get("sessaoJulgamento.salaOcupada"));
+			throw new BusinessException("#{infoxMessages['sessaoJulgamento.salaOcupada']}");
 		}
 	}
 
@@ -74,7 +76,7 @@ public class SessaoJulgamentoManager extends Manager<SessaoJulgamentoDAO, Sessao
 	private void gravarPeriodicidadeData(SessaoJulgamento sessaoJulgamento, 
 			Periodicidade periodicidade, Date dataAte) throws CloneNotSupportedException, DAOException {
 		if (dataAte.before(sessaoJulgamento.getData())) {
-			throw new BusinessException("Date até anterior a data");
+			throw new BusinessException("#{infoxMessages['sessaoJulgamento.invalidToDate.before']}");
 		}
 		DateTime dataAtual = new DateTime(sessaoJulgamento.getData());
 		while ( dataAte.after(dataAtual.toDate()) ) {
