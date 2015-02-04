@@ -58,6 +58,7 @@ final class TaskVariableResolver extends TaskVariable {
                         try {
                             value = NumberFormat.getNumberInstance().parse(value.toString()).doubleValue();
                         } catch (ParseException e) {
+                            LOG.info("TaskVariableResolverRF001",e);
                         }
                     }
                     atribuirValorDaVariavelNoContexto();
@@ -67,6 +68,7 @@ final class TaskVariableResolver extends TaskVariable {
                         try {
                             value = NumberFormat.getNumberInstance().parse(value.toString()).longValue();
                         } catch (ParseException e) {
+                            LOG.info("TaskVariableResolverRF002",e);
                         }
                     }
                     atribuirValorDaVariavelNoContexto();
@@ -76,6 +78,7 @@ final class TaskVariableResolver extends TaskVariable {
                         try {
                             value = new SimpleDateFormat("dd/MM/yyyy").parse(value.toString());
                         } catch (ParseException e) {
+                            LOG.info("TaskVariableResolverRF003",e);
                         }
                     }
                     atribuirValorDaVariavelNoContexto();
