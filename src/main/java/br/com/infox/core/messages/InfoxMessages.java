@@ -81,7 +81,7 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 	public static InfoxMessages getInstance() {
 		try {
 			InitialContext ic = new InitialContext();
-			return (InfoxMessages) ic.lookup("java:module/infoxMessages");
+			return (InfoxMessages) ic.lookup("java:global/epp/infoxMessages");
 		} catch (NamingException e) {
 			return new InfoxMessages();
 		}

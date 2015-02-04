@@ -17,9 +17,9 @@ public class EppSystemEventListener implements SystemEventListener {
 	public void processEvent(SystemEvent event) throws AbortProcessingException {
 		try {
 			InitialContext ic = new InitialContext();
-			InfoxMessagesLoader infoxMessagesLoader = (InfoxMessagesLoader) ic.lookup("java:module/InfoxMessagesLoader");
+			InfoxMessagesLoader infoxMessagesLoader = (InfoxMessagesLoader) ic.lookup("java:global/epp/InfoxMessagesLoader");
 			infoxMessagesLoader.loadMessagesProperties();
-			MetadadoLabelLoader metadadoLabelLoader = (MetadadoLabelLoader) ic.lookup("java:module/MetadadoLabelLoader");
+			MetadadoLabelLoader metadadoLabelLoader = (MetadadoLabelLoader) ic.lookup("java:global/epp/MetadadoLabelLoader");
 			metadadoLabelLoader.loadMetadadosMessagesProperties();
 		} catch (NamingException | InstantiationException | IllegalAccessException e) {
 			throw new AbortProcessingException(e);
