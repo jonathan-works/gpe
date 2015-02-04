@@ -366,7 +366,7 @@ public class Authenticator implements Serializable {
         redirect.execute();
     }
     
-    protected String getCaminhoPainel() {
+    public String getCaminhoPainel() {
         return "/Painel/list.seam";
     }
     

@@ -5,7 +5,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -15,7 +14,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jboss.seam.security.Identity;
 
 import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
@@ -24,6 +22,7 @@ import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.service.AuthenticatorService;
@@ -35,13 +34,11 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
-import br.com.infox.seam.util.ComponentUtil;
 // TODO: Transformar este componente em um manager, despejar atributos persistentes na classe de fronteira responsável pelo login
 @Scope(ScopeType.CONVERSATION)
 @Name(value = TermoAdesaoAction.NAME)
@@ -74,6 +71,8 @@ public class TermoAdesaoAction implements Serializable {
     @In
     private CertificateSignatures certificateSignatures;
     @In
+    private Authenticator authenticator;
+    @In
     private InfoxMessages infoxMessages;
 
     public String assinarTermoAdesao() {
@@ -98,13 +97,8 @@ public class TermoAdesaoAction implements Serializable {
                 pessoaFisica.setTermoAdesao(bin);
             }
             documentoBinManager.flush();
-            FacesMessages.instance().add(Severity.INFO,
-                    infoxMessages.get(TERMS_CONDITIONS_SIGN_SUCCESS));
-            if (Identity.instance().hasRole("usuarioExterno")) {
-                return "/PainelExterno/list.seam";
-            } else {
-                return "/Painel/list.seam";
-            }
+            FacesMessages.instance().add(Severity.INFO, infoxMessages.get(TERMS_CONDITIONS_SIGN_SUCCESS));
+            return authenticator.getCaminhoPainel();
         } catch (CertificateExpiredException e) {
             LOG.error(METHOD_ASSINAR_TERMO_ADESAO, e);
             throw new RedirectToLoginApplicationException(infoxMessages.get(AuthenticatorService.CERTIFICATE_ERROR_EXPIRED), e);
@@ -156,8 +150,8 @@ public class TermoAdesaoAction implements Serializable {
     private CertificateSignatureBundleBean getSignature() throws CertificadoException {
     	CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
     	if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-    		Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
-    		throw new CertificadoException(eppmessages.get("termoAdesao.sign.error"));
+    	    
+    		throw new CertificadoException("termoAdesao.sign.error");
     	}
     	return bundle;
     }

@@ -1,50 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf"
-	template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-
-	<ui:define name="baseBody">
-		<rich:panel id="#{termoAdesaoAction.termoAdesaoPanelName}"
-			styleClass="painel-termo-adesao">
-			<f:facet name="header">#{infoxMessages['login.termoAdesao']}</f:facet>
-			<h:form id="termoAdesaoForm">
-				<a:jsFunction name="assinarTermo"
-	      action="#{termoAdesaoAction.assinarTermoAdesao}"
-	      execute="@this termoAdesaoToken"
-	      render="DialogMessage"
-	      limitRender="true" />
-	    <s:div>
-	      <div>
-	        <wi:editor
-	          id="termoAdesao"
-	          value="#{termoAdesaoAction.termoAdesao}"
-	          readonly="true"
-	          showVariables="false"
-	          width="#{800-15}"
-	          height="#{600-157}" />
-	      </div>
-	      <div>
-            <wi:certificadoDigital id="termoAdesao"
-                tokenField="#{termoAdesaoAction.token}"
-                signableData="#{termoAdesaoAction.md5Sum}"
-                functionPreSign="infox.showLoading();"
-                functionPosSign="assinarTermo();infox.hideLoading();"
-                signButtonCaption="#{infoxMessages['login.assinarTermoAdesao']}" />
-            
-						<input
-	          class="input_button close-btn buttons"
-							id="cancela" type="button"
-							onclick="location.href='#{pathResolver.contextPath}/login.seam'"
-							value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" />
-					</div>
-				</s:div>
-			</h:form>
-		</rich:panel>
-	</ui:define>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+    <ui:define name="baseBody">
+        <wi:panel
+            id="content"
+            styleClass="painel-termo-adesao content-block">
+            <rich:panel id="#{termoAdesaoAction.termoAdesaoPanelName}" styleClass="v-aligned-top">
+                <f:facet name="header">#{infoxMessages['login.termoAdesao']}</f:facet>
+                <h:form id="termoAdesaoForm">
+                    <a:jsFunction
+                        name="assinarTermo"
+                        action="#{termoAdesaoAction.assinarTermoAdesao}"
+                        execute="@this termoAdesaoToken"
+                        render="DialogMessage"
+                        limitRender="true" />
+                    <div>
+                        <wi:editor
+                            id="termoAdesao"
+                            value="#{termoAdesaoAction.termoAdesao}"
+                            readonly="true"
+                            showVariables="false"
+                            width="#{800-15}"
+                            height="#{600-157}" />
+                    </div>
+                    <div>
+                        <wi:certificadoDigital
+                            id="termoAdesao"
+                            tokenField="#{termoAdesaoAction.token}"
+                            signableData="#{termoAdesaoAction.md5Sum}"
+                            functionPreSign="infox.showLoading();"
+                            functionPosSign="assinarTermo();infox.hideLoading();"
+                            signButtonCaption="#{infoxMessages['login.assinarTermoAdesao']}" />
+                        <input
+                            class="input_button close-btn buttons"
+                            id="cancela"
+                            type="button"
+                            onclick="location.href='#{pathResolver.contextPath}/login.seam'"
+                            value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" />
+                    </div>
+                </h:form>
+            </rich:panel>
+        </wi:panel>
+    </ui:define>
 </ui:composition>
