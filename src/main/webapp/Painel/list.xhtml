@@ -166,7 +166,7 @@
           	limitRender="true" action="#{painelTreeHandler.clearTree()}"
           	title="#{infoxMessages['painel.comunicacaoTab']}" >
           <s:div rendered="#{painelUsuarioController.tab eq 'comunicacao'}">
-	          <s:div id="comunicacoesTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
+	          <s:div id="comunicacoesTarefasDiv" styleClass="p-caixas" >
 	          	<h:form id="treeProcessoComunicacaoForm">
 	            	<ui:include src="tarefasTree.xhtml" />
 	            </h:form>
@@ -284,7 +284,7 @@
           	limitRender="true" action="#{painelTreeHandler.clearTree()}"
           	title="#{infoxMessages['painel.documentoTab']}" >
           <s:div rendered="#{painelUsuarioController.tab eq 'documento'}">
-	          <s:div id="documentosTarefasDiv" styleClass="p-caixas" style="margin-right:10px;" >
+	          <s:div id="documentosTarefasDiv" styleClass="p-caixas" >
 	          	<h:form id="treeProcessoDocumentoForm">
 	            	<ui:include src="tarefasTree.xhtml" />
 	            </h:form>
