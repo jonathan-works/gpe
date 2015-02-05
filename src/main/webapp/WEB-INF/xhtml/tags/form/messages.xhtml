@@ -31,18 +31,22 @@
         <h:messages
           id="#{formId}Message"
           globalOnly="true" />
+          
       </div>
       <script type="text/javascript">
-              invoke(
-                  [ "infox.Messages" ],
+              invoke([ "infox.Messages" ],
                   function(Messages) {
-                    Messages(
-                        {
+                    Messages({
                           existsMessages : "#{showDialogMessage}",
-                          existsGlobalMessages : "#{!facesMessages.currentGlobalMessages.isEmpty()}"
+                          existsGlobalMessages : "#{!facesMessages.currentGlobalMessages.isEmpty()}",
+                          icon:"#{pathResolver.contextPath}/#{wiSkin.imageFolder}/Help\ Desk.jpg",
+                          title:"#{infoxMessages['notification.msg.title']}",
+                          timeout:-1
                         }).init();
-                  });
+                  }
+              );
             </script>
+            
     </s:div>
   </s:div>
 </ui:composition>
