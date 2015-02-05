@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,8 @@ public class ProcessoAnaliseDocumentoService {
 		processoAnalise.setNumeroProcesso("");
 		processoAnalise.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
 		processoAnalise.setLocalizacao(Authenticator.getLocalizacaoAtual());
+		processoAnalise.setUsuarioCadastro(Authenticator.getUsuarioLogado());
+		processoAnalise.setDataInicio(new Date());
 		processoManager.persist(processoAnalise);
 		
 		criarMetadadosProcessoAnalise(processoAnalise);
