@@ -62,11 +62,13 @@ public abstract class DAO<T> implements Serializable {
     	return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
     
-    public void lock(T entity) {
-    	entityManager.merge(entity);
-    	entityManager.lock(entity, LockModeType.PESSIMISTIC_READ);
+    public void lock(T entity, LockModeType lockModeType) {
+    	if (!entityManager.contains(entity)) {
+    		entityManager.merge(entity);
+    	}
+    	entityManager.lock(entity, lockModeType);
     }
-
+    
     @SuppressWarnings(UNCHECKED)
     protected Class<T> getEntityClass() {
         ParameterizedType superType = (ParameterizedType) getClass().getGenericSuperclass();

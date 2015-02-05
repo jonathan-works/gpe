@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.documento.numeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.LockModeType;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -31,7 +33,7 @@ public class NumeracaoDocumentoSequencialDAO extends DAO<NumeracaoDocumentoSeque
 			persist(next);
 			return 1;
 		} else {
-			lock(next);
+			lock(next, LockModeType.PESSIMISTIC_READ);
 			Integer result = next.getNextNumero();
 			next.setNextNumero(next.getNextNumero() + 1);
 			update(next);
