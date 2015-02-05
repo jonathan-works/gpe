@@ -40,7 +40,7 @@ public class SigiloProcessoAction implements Serializable {
     private static final Logger LOG = Logger.getLogger(SigiloProcessoAction.class);
     public static final String GERENCIAR_PERMISSOES = "P";
     public static final String DETALHES_DO_SIGILO = "D";
-    private static final String MSG_REGISTRO_ALTERADO = "#{eppmessages['sigiloProcesso.registroAlterado']}";
+    private static final String MSG_REGISTRO_ALTERADO = "#{infoxMessages['sigiloProcesso.registroAlterado']}";
 
     @In
     private ActionMessagesService actionMessagesService;

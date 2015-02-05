@@ -5,17 +5,17 @@
      xmlns:p="http://jboss.org/schema/seam/pdf">
 
 	<wi:dataReport
-         title="#{eppmessages['unidadeDecisoraColegiada.reportTitle']}"
+         title="#{infoxMessages['unidadeDecisoraColegiada.reportTitle']}"
          columns="3"
          widths="1 1 1"
          headerText="#{unidadeDecisoraColegiadaList.criteria}">
 				   
 		<wi:reportColumnHeader
-             title="#{eppmessages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}" />
+             title="#{infoxMessages['unidadeDecisoraColegiada.nomeUnidadeDecisora']}" />
 		<wi:reportColumnHeader
-             title="#{eppmessages['unidadeDecisoraColegiada.unidadesMonocraticasAssociadas']}" />
+             title="#{infoxMessages['unidadeDecisoraColegiada.unidadesMonocraticasAssociadas']}" />
 		<wi:reportColumnHeader
-             title="#{eppmessages['field.situacao']}" />
+             title="#{infoxMessages['field.situacao']}" />
 				
 		<ui:repeat
              var="row"

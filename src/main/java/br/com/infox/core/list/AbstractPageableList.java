@@ -11,14 +11,15 @@ import java.util.Map;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 
 /**
@@ -28,7 +29,13 @@ import br.com.infox.seam.exception.ApplicationException;
  */
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractPageableList<E> implements PageableList<E>, Serializable {
-    private static final LogProvider LOG = Logging.getLogProvider(AbstractPageableList.class);
+
+	private static final long serialVersionUID = 1L;
+
+	private static final LogProvider LOG = Logging.getLogProvider(AbstractPageableList.class);
+    
+    @In
+    private InfoxMessages infoxMessages;
     
     private final class HashMapExtension<K, V> extends HashMap<K, V> {
         private static final long serialVersionUID = 932116907388087006L;
@@ -159,7 +166,7 @@ public abstract class AbstractPageableList<E> implements PageableList<E>, Serial
             truncList = truncList();
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             LOG.error("AbstractPageableList.list(int)", e);
-            FacesMessages.instance().add(Severity.ERROR, Messages.resolveMessage("list.resolveFilter.error"));
+            FacesMessages.instance().add(Severity.ERROR, infoxMessages.get("list.resolveFilter.error"));
         } catch (Exception e) {
             throw new ApplicationException("list.error", e);
         }

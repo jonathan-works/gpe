@@ -19,8 +19,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
@@ -30,7 +28,7 @@ import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -44,6 +42,8 @@ import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(AuthenticatorService.NAME)
@@ -73,6 +73,8 @@ public class AuthenticatorService implements Serializable {
     private UsuarioPerfilDAO usuarioPerfilDAO;
     @In
     private ProcessoDAO processoDAO;
+    @In
+    private InfoxMessages infoxMessages;
     
     public static final String CERTIFICATE_ERROR_UNKNOWN = "certificate.error.unknown";
 
@@ -207,7 +209,7 @@ public class AuthenticatorService implements Serializable {
             	}
             }
             if (signature == null && termoAdesao) {
-                throw new RedirectToLoginApplicationException(Messages.resolveMessage("login.termoAdesao.failed"));
+                throw new RedirectToLoginApplicationException(infoxMessages.get("login.termoAdesao.failed"));
             }
         }
     }
@@ -223,31 +225,31 @@ public class AuthenticatorService implements Serializable {
             throws LoginException {
         final PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(cpf);
         if (pessoaFisica == null) {
-            throw new LoginException(Messages.resolveMessage(
+            throw new LoginException(infoxMessages.get(
                     CERTIFICATE_ERROR_SEM_PESSOA_FISICA));
         }
         final UsuarioLogin usuarioLogin;
         usuarioLogin = usuarioLoginManager
                 .getUsuarioLoginByPessoaFisica(pessoaFisica);
         if (usuarioLogin == null) {
-            throw new LoginException(Messages.resolveMessage(
+            throw new LoginException(infoxMessages.get(
                     CERTIFICATE_ERROR_SEM_USUARIO_LOGIN));
         }
         if (!usuarioLogin.isHumano()) {
-            throw new LoginException(Messages.resolveMessage(
+            throw new LoginException(infoxMessages.get(
                     CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA));
         }
         if (!usuarioLogin.getAtivo()) {
-            throw new LoginException(Messages.resolveMessage(
+            throw new LoginException(infoxMessages.get(
                     CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO));
         }
         if (usuarioLogin.getBloqueio()) {
-            throw new LoginException(Messages.resolveMessage(
+            throw new LoginException(infoxMessages.get(
                     CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO));
         }
         if (usuarioLogin.getProvisorio()
                 && new Date().after(usuarioLogin.getDataExpiracao())) {
-            throw new LoginException(Messages.resolveMessage(
+            throw new LoginException(infoxMessages.get(
                     CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO));
         }
         return usuarioLogin;

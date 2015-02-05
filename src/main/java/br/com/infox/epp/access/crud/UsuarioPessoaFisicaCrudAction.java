@@ -22,7 +22,7 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
 
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioPessoaFisicaCrudAction.class);
 
-    private static final String PESSOA_JA_ASSOCIADA = "#{eppmessages['usuario.pessoaJaCadastrada']}";
+    private static final String PESSOA_JA_ASSOCIADA = "#{infoxMessages['usuario.pessoaJaCadastrada']}";
 
     public static final String NAME = "usuarioPessoaFisicaCrudAction";
 

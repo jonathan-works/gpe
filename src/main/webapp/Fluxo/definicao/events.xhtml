@@ -41,13 +41,13 @@
                         >
                             <h:graphicImage
                                 url="#{wiSkin.imageFolder}/add.gif"
-                                title="#{eppmessages['process.events.new']}"
+                                title="#{infoxMessages['process.events.new']}"
                             />
                         </a:commandLink>
                     </ui:define>
                     <ui:define name="toolBar">
                         <h:graphicImage
-                            title="#{eppmessages['process.events.remove']}"
+                            title="#{infoxMessages['process.events.remove']}"
                             url="#{wiSkin.imageFolder}/remove.png"
                         >
                             <a:ajax
@@ -62,11 +62,11 @@
                     </ui:define>
                     <ui:define name="columns">
                         <rich:column>
-                            <f:facet name="header">#{eppmessages['process.events']}</f:facet>
+                            <f:facet name="header">#{infoxMessages['process.events']}</f:facet>
                             <a:commandLink
                                 execute="@this"
                                 action="#{parent.setCurrentEvent(row)}"
-                                value="#{eppmessages['jbpm.'.concat(row.event.eventType)]}"
+                                value="#{infoxMessages['jbpm.'.concat(row.event.eventType)]}"
                                 rendered="#{row.event.eventType != 'new-event'}"
                                 render="#{parentId}Div"
                                 limitRender="true"
@@ -78,7 +78,7 @@
                                 widthDiv="150px"
                                 rendered="#{row.event.eventType == 'new-event' and not parent.systemNode}"
                                 items="#{parent.supportedEventTypes}"
-                                optionLabel="#{eppmessages['jbpm.'.concat(item)]}"
+                                optionLabel="#{infoxMessages['jbpm.'.concat(item)]}"
                                 value="#{parent.eventType}"
                             >
                                 <a:ajax
@@ -123,13 +123,13 @@
                             >
                                 <h:graphicImage
                                     url="#{wiSkin.imageFolder}/add.gif"
-                                    title="#{eppmessages['process.events.action.new']}"
+                                    title="#{infoxMessages['process.events.action.new']}"
                                 />
                             </a:commandLink>
                         </ui:define>
                         <ui:define name="toolBar">
                             <h:graphicImage
-                                title="#{eppmessages['process.events.action.remove']}"
+                                title="#{infoxMessages['process.events.action.remove']}"
                                 url="#{wiSkin.imageFolder}/remove.png"
                             >
                                 <a:ajax
@@ -144,7 +144,7 @@
                         </ui:define>
                         <ui:define name="columns">
                             <rich:column>
-                                <f:facet name="header">#{eppmessages['process.events.actions']}</f:facet>
+                                <f:facet name="header">#{infoxMessages['process.events.actions']}</f:facet>
                                 <a:commandLink
                                     execute="@this"
                                     action="#{event.setCurrentAction(row)}"
@@ -198,7 +198,7 @@
                     <wi:inputText
                         id="#{id}ActionName"
                         value="#{event.currentAction.name}"
-                        label="#{eppmessages['process.events.action.name']}"
+                        label="#{infoxMessages['process.events.action.name']}"
                     >
                         <a:ajax
                             execute="@this"

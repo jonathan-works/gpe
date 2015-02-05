@@ -88,21 +88,21 @@ public class BloqueioUsuarioCrudActionIT extends
      * 
      * 
      * <wi:dataForm formId="bloqueioUsuarioForm"
-     * formTitle="#{eppmessages['form.title']}"
+     * formTitle="#{infoxMessages['form.title']}"
      * home="#{bloqueioUsuarioCrudAction}"
      * requiredForm="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}">
      * <wi:outputText id="bloqueio"
      * value="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio ? 'Sim': 'Não'}"
-     * label="#{eppmessages['usuario.bloqueio']}" />
+     * label="#{infoxMessages['usuario.bloqueio']}" />
      * 
      * <ui:define name="buttons"> <wi:commandButton id="bloqueioButton"
      * rendered="#{not bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-     * value="#{eppmessages['usuario.bloquear']}"
+     * value="#{infoxMessages['usuario.bloquear']}"
      * action="bloqueioUsuarioCrudAction.bloquear"
      * reRender="historicoBloqueioUsuario, pageBodyDialogMessage"/>
      * <wi:commandButton id="desbloqueioButton"
      * rendered="#{bloqueioUsuarioCrudAction.usuarioAtual.bloqueio}"
-     * value="#{eppmessages['usuario.desbloquear']}"
+     * value="#{infoxMessages['usuario.desbloquear']}"
      * action="bloqueioUsuarioCrudAction.desbloquear"
      * reRender="historicoBloqueioUsuario, pageBodyDialogMessage"/> </ui:define>
      * </wi:dataForm>

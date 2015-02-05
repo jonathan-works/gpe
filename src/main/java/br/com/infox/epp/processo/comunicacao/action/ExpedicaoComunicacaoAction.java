@@ -12,9 +12,14 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.richfaces.component.UICollapsiblePanel;
 
+import br.com.infox.certificado.CertificateSignatures;
+import br.com.infox.certificado.bean.CertificateSignatureBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
@@ -56,13 +61,14 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	private ActionMessagesService actionMessagesService;
 	@In
 	private TipoComunicacaoManager tipoComunicacaoManager;
+	@In
+	private CertificateSignatures certificateSignatures;
 	
 	private String tab = "list";
 	private ModeloComunicacao modeloComunicacao;
 	private DestinatarioModeloComunicacao destinatario;
 	private String comunicacao;
-	private String certChain;
-	private String signature;
+	private String token;
 	private List<TipoComunicacao> tiposComunicacao;
 	
 	public String getTab() {
@@ -131,23 +137,15 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		return getDocumentoComunicacao().getMd5Documento();
 	}
 	
-	public String getCertChain() {
-		return certChain;
-	}
-	
-	public void setCertChain(String certChain) {
-		this.certChain = certChain;
-	}
-	
-	public String getSignature() {
-		return signature;
-	}
-	
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
-	
-	public List<TipoComunicacao> getTiposComunicacao() {
+	public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public List<TipoComunicacao> getTiposComunicacao() {
 		if (tiposComunicacao == null) {
 			tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
 		}
@@ -172,8 +170,13 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	public void expedirComunicacao() {
 		try {
 			DocumentoBin documentoComunicacao = getDocumentoComunicacao();
+			CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
+			if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+			    throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
+			}
+			CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
 			if (documentoComunicacao.getAssinaturas().isEmpty()) {
-				assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+				assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 			}
 			if (getComunicacao() != null) {
 				comunicacaoService.expedirComunicacao(destinatario);

@@ -8,15 +8,15 @@
   xmlns:a="http://richfaces.org/a4j"
   xmlns:rich="http://richfaces.org/rich"
   template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-  <ui:define name="title">#{eppmessages['ajuda.titlePage']}</ui:define>
+  <ui:define name="title">#{infoxMessages['ajuda.titlePage']}</ui:define>
   <ui:define name="baseBody">
     <s:div id="formAjuda">
       <wi:dataForm
         formId="ajudaForm"
-        formTitle="#{eppmessages['ajuda.text']}">
+        formTitle="#{infoxMessages['ajuda.text']}">
         <wi:editor
           id="texto"
-          label="#{eppmessages['ajuda.text']}"
+          label="#{infoxMessages['ajuda.text']}"
           width="660"
           height="450"
           value="#{ajudaCrudAction.instance.texto}">
@@ -26,7 +26,7 @@
         <wi:commandButton
           id="ajudaPersistButton"
           action="ajudaCrudAction.save"
-          value="#{eppmessages['crud.update']}"
+          value="#{infoxMessages['crud.update']}"
           reRender="gridAjuda, formAjudaDialogMessage"
           oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})">
         </wi:commandButton>
@@ -40,7 +40,7 @@
             <wi:dataTable
               values="#{historicoAjudaList.list(15)}"
               bean="#{historicoAjudaList}"
-              tableTitle="#{eppmessages['ajuda.historico']}"
+              tableTitle="#{infoxMessages['ajuda.historico']}"
               panelStyleClass="grid-lateral-editor-ajuda"
               id="historicoAjudaId"
               showGrid="#{historicoAjudaList.isExibGrid()}"
@@ -50,18 +50,18 @@
               <ui:define name="headerToolBar" />
               <wi:columnDateTime
                 columnId="dataRegistro"
-                columnHeader="#{eppmessages['ajuda.historico.data']}"
+                columnHeader="#{infoxMessages['ajuda.historico.data']}"
                 value="#{row.dataRegistro}"
                 showTime="true" />
               <wi:columnOutputText
                 columnId="usuario"
-                columnHeader="#{eppmessages['ajuda.historico.usuario']}"
+                columnHeader="#{infoxMessages['ajuda.historico.usuario']}"
                 value="#{row.usuario}" />
               <ui:define name="toolBar">
                 <wi:toolBar
                   id="recuperarRevisao"
                   url="#{wiSkin.imageFolder}/grid/copyLeft.gif"
-                  title="#{eppmessages['ajuda.historico.recuperar']}"
+                  title="#{infoxMessages['ajuda.historico.recuperar']}"
                   render="formAjuda, gridAjuda"
                   action="ajudaCrudAction.recuperar(row)"
                   limitToList="true"

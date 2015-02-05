@@ -9,6 +9,7 @@ import javax.validation.ConstraintViolationException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
@@ -16,7 +17,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 
@@ -27,6 +28,9 @@ public class ActionMessagesService implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "actionMessagesService";
+    
+    @In
+    private InfoxMessages infoxMessages;
 
     public String handleException(final String msg, final Exception e){
         final StatusMessages messages = getMessagesHandler();
@@ -56,7 +60,7 @@ public class ActionMessagesService implements Serializable {
             messages.add(daoException.getLocalizedMessage());
             return ret;
         } else {
-            String pattern = Messages.resolveMessage("entity.error.save");
+            String pattern = infoxMessages.get("entity.error.save");
             if (!pattern.contains("{")) {
             	pattern = "{0}";
             }

@@ -15,11 +15,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import br.com.infox.log.Log;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.exception.ExcelExportException;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
@@ -27,6 +25,8 @@ import br.com.infox.epp.estatistica.manager.ProdutividadeManager;
 import br.com.infox.epp.estatistica.query.ProdutividadeQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.log.Log;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
 
 @Name(ProdutividadeAction.NAME)
@@ -43,6 +43,8 @@ public class ProdutividadeAction implements Serializable {
 
     @In
     private FluxoManager fluxoManager;
+    @In
+    private InfoxMessages infoxMessages;
 
     private Fluxo fluxo;
     private UsuarioLogin usuario;
@@ -189,7 +191,7 @@ public class ProdutividadeAction implements Serializable {
         List<ProdutividadeBean> beanList = list(10000);
         try {
             if (beanList == null || beanList.isEmpty()) {
-                FacesMessages.instance().add(Severity.INFO, Messages.resolveMessage("entity.noDataAvailable"));
+                FacesMessages.instance().add(Severity.INFO, infoxMessages.get("entity.noDataAvailable"));
             } else {
                 exportarXLS(getTemplate(), beanList);
             }

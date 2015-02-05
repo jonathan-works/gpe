@@ -20,7 +20,7 @@
                         render="swimlanesForm, swimlanesTable"
                         limitRender="true">
                         <h:graphicImage
-                            title="#{eppmessages['processBuilder.addSwimlane']}"
+                            title="#{infoxMessages['processBuilder.addSwimlane']}"
                             url="#{wiSkin.imageFolder}/add.gif" />
                     </a:commandLink>
                 </h:form>
@@ -29,13 +29,13 @@
             <ui:define name="toolBar">
                 <h:form>
                     <h:graphicImage
-                        title="#{eppmessages['processBuilder.removeSwimlane']}"
+                        title="#{infoxMessages['processBuilder.removeSwimlane']}"
                         url="#{wiSkin.imageFolder}/remove.png"
                         styleClass="opacityHover pointer">
                         <a:ajax event="click"
                             listener="#{swimlaneFitter.removeSwimlane(row)}"
                             execute="@this"
-                            onbeforesubmit="return confirm('#{eppmessages['processBuilder.confirm']}')"
+                            onbeforesubmit="return confirm('#{infoxMessages['processBuilder.confirm']}')"
                             render="swimlanesForm, swimlanesTable"
                             limitRender="true" />
                     </h:graphicImage>
@@ -45,7 +45,7 @@
             <ui:define name="columns">
                 <rich:column>
                     <h:form>
-                        <f:facet name="header">#{eppmessages['processBuilder.swimlanes']}</f:facet>
+                        <f:facet name="header">#{infoxMessages['processBuilder.swimlanes']}</f:facet>
                         <ui:param name="current"
                             value="#{row == swimlaneFitter.currentSwimlane}" />
                         <ui:param name="styleNodeName"
@@ -53,6 +53,7 @@
                         <a:commandLink
                             action="#{swimlaneFitter.setCurrentSwimlane(row)}"
                             execute="@this" render="swimlanesForm,"
+                            styleClass="link"
                             limitRender="true">
                             <h:outputText value="#{row.swimlane.name}" />
                         </a:commandLink>
@@ -65,7 +66,7 @@
     <h:form id="swimlanesForm" styleClass="swimlane-form">
         <s:div rendered="#{!empty swimlaneFitter.currentSwimlane}">
             <wi:inputText id="swimlaneName"
-                label="#{eppmessages['processBuilder.swimlane.name']}"
+                label="#{infoxMessages['processBuilder.swimlane.name']}"
                 value="#{swimlaneFitter.currentSwimlane.name}">
                 <a:ajax event="change" execute="@this"
                     limitRender="true" />
@@ -77,26 +78,26 @@
                 <ui:param name="styleClass" value="PerfilSwimlane" />
                 <ui:define name="toolBar">
                     <h:graphicImage
-                        title="#{eppmessages['processBuilder.swimlane.removeUsuarioPerfil']}"
+                        title="#{infoxMessages['processBuilder.swimlane.removeUsuarioPerfil']}"
                         url="#{wiSkin.imageFolder}/remove.png">
                         <a:ajax event="click"
                             listener="#{swimlaneFitter.currentSwimlane.removePerfil(row)}"
                             execute="@this"
-                            onbeforesubmit="return confirm('#{eppmessages['processBuilder.confirm']}')"
+                            onbeforesubmit="return confirm('#{infoxMessages['processBuilder.confirm']}')"
                             render="swimlanesForm" limitRender="true" />
                     </h:graphicImage>
                 </ui:define>
 
                 <ui:define name="columns">
                     <rich:column>
-                        <f:facet name="header">#{eppmessages['perfil.titlePage']}</f:facet>
+                        <f:facet name="header">#{infoxMessages['perfil.titlePage']}</f:facet>
                         <h:outputText value="#{row.descricao}" />
                     </rich:column>
                     <f:facet name="footer">
                         <rich:columnGroup>
                             <rich:column>
                                 <h:graphicImage
-                                    title="#{eppmessages['processBuilder.swimlane.addUsuarioPerfil']}"
+                                    title="#{infoxMessages['processBuilder.swimlane.addUsuarioPerfil']}"
                                     styleClass="pointer"
                                     id="novoLocPapel" url="#{wiSkin.imageFolder}/add.gif">
                                     <a:ajax event="click"

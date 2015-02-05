@@ -213,6 +213,7 @@ public class ComunicacaoAction implements Serializable {
 		
 		try {
 			documento.setProcesso(comunicacao);
+			documento.setDescricao(documento.getDocumentoBin().getNomeArquivo());
 			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 			Processo processo = documentoUploader.getProcesso();
 			documentoUploader.setProcesso(comunicacao);

@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -18,6 +20,7 @@ import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
 import br.com.infox.seam.util.ComponentUtil;
 
+@Scope(ScopeType.PAGE)
 @Name(SwimlaneFitter.NAME)
 @AutoCreate
 public class SwimlaneFitter extends Fitter implements Serializable {

@@ -3,17 +3,17 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <ui:param name="title" value="#{eppmessages['tipoComunicacao.reportTitle']}" />
+    <ui:param name="title" value="#{infoxMessages['tipoComunicacao.reportTitle']}" />
 
-    <wi:dataReport title="#{eppmessages['tipoComunicacao.reportTitle']}"
+    <wi:dataReport title="#{infoxMessages['tipoComunicacao.reportTitle']}"
         columns="3" widths="10 2 2"
         headerText="#{tipoComunicacaoList.criteria}"
         marginLeft="40"
         marginRight="30">
 
-        <wi:reportColumnHeader title="#{eppmessages['tipoComunicacao.descricao']}" />
-        <wi:reportColumnHeader title="#{eppmessages['tipoComunicacao.diasCiencia']}" />
-        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['tipoComunicacao.descricao']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['tipoComunicacao.diasCiencia']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{tipoComunicacaoList.list()}">
             <wi:reportColumn value="#{row.descricao}" />

@@ -11,7 +11,7 @@
   	id="editorPanel"
     switchType="client"
     expanded="#{documentoEditor.expanded}"
-    header="#{eppmessages['documentoEditor.header']}">
+    header="#{infoxMessages['documentoEditor.header']}">
     <s:div id="editorDiv">
       <ui:param name="minuta" 
       	value="#{empty documentoEditor.documento.id or documentoEditor.documento.documentoBin.minuta}" />
@@ -22,11 +22,11 @@
           disabled="#{not minuta}"
           readonly="#{not minuta}"
           required="true"
-          label="#{eppmessages['processo.anexarDocumentoDescricao']}">
+          label="#{infoxMessages['processo.anexarDocumentoDescricao']}">
         </wi:inputText>
         <wi:selectOneMenuEntity
           id="#{f.id}tipoProcessoDocumento"
-          label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+          label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoEditor.documento.classificacaoDocumento}"
           items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
           required="true"
@@ -50,11 +50,11 @@
 	    </s:div>
 	    <s:div>
 	    	<wi:selectBooleanRadio id="minuta" value="#{documentoEditor.documento.documentoBin.minuta}" 
-				label="#{eppmessages['processoDocumentoBin.minuta']}" readonly="#{not minuta}" disabled="#{not minuta}"/>
+				label="#{infoxMessages['processoDocumentoBin.minuta']}" readonly="#{not minuta}" disabled="#{not minuta}"/>
 		</s:div>
         <wi:editor
           id="modeloDocumento"
-          label="#{eppmessages['tipoProcessoDocumento.modelo']}"
+          label="#{infoxMessages['tipoProcessoDocumento.modelo']}"
           value="#{documentoEditor.documento.documentoBin.modeloDocumento}"
           requiredField="false"
           required="true"
@@ -66,7 +66,7 @@
         <wi:commandButton
           id="botaoAnexarDocumento"
           action="documentoEditor.persist()"
-          value="#{eppmessages['processo.anexarDocumentoBtn']}"
+          value="#{infoxMessages['processo.anexarDocumentoBtn']}"
           execute="editorDiv"
           rendered="#{minuta}"
           reRender="@form,pageBodyDialogMessage, buttonsDiv"
@@ -75,7 +75,7 @@
         <wi:commandButton
           id="botaoNovo"
           action="documentoEditor.newInstance()"
-          value="#{eppmessages['crud.new']}"
+          value="#{infoxMessages['crud.new']}"
           execute="editorDiv"
           rendered="#{minuta}"
           reRender="@form,pageBodyDialogMessage, buttonsDiv"
@@ -88,7 +88,7 @@
   <rich:collapsiblePanel
     switchType="client"
     expanded="true"
-    header="#{eppmessages['fileUpload.header']}">
+    header="#{infoxMessages['fileUpload.header']}">
     <s:div id="uploaderDiv">
       <div>
         <wi:inputText
@@ -96,7 +96,7 @@
           value="#{documentoUploader.documento.descricao}"
           disabled="false"
           required="true"
-          label="#{eppmessages['processo.anexarDocumentoDescricao']}">
+          label="#{infoxMessages['processo.anexarDocumentoDescricao']}">
           <a:ajax
             event="change"
             limitRender="true"
@@ -108,7 +108,7 @@
         </wi:inputText>
         <wi:selectOneMenuEntity
           id="tipoProcessoDocumentoPdf"
-          label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
+          label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoUploader.classificacaoDocumento}"
           items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
           required="true"
@@ -127,7 +127,7 @@
       <s:div id="tipoDocumentoDivPdf">
         <wi:fileUpload
           id="uploadArquivo"
-          label="#{eppmessages['fileUpload.type.file']}"
+          label="#{infoxMessages['fileUpload.type.file']}"
           reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
           rendered="#{not empty documentoUploader.classificacaoDocumento and not empty documentoUploader.classificacaoDocumento.extensaoArquivosList and not empty documentoUploader.documento.descricao}"
           accept="#{documentoUploader.documento.classificacaoDocumento.acceptedTypes}">
@@ -137,7 +137,7 @@
         <wi:commandButton
           id="botaoAnexarDocumentoPdf"
           action="documentoUploader.persist()"
-          value="#{eppmessages['processo.anexarDocumentoBtn']}"
+          value="#{infoxMessages['processo.anexarDocumentoBtn']}"
           execute="#{f.id}inputProcessoDocumentoPdf, #{f.id}tipoProcessoDocumentoPdf"
           reRender="@form"
           styleClass="buttons"
@@ -150,31 +150,31 @@
   <s:div id="documentosRedigidosDaSessao">
     <wi:dataTable
       values="#{documentoEditor.documentosDaSessao}"
-      tableTitle="#{eppmessages['documentoEditor.titleView']}"
+      tableTitle="#{infoxMessages['documentoEditor.titleView']}"
       id="processoDocumentoDaSessao"
       rowId="#{row.idDocumento}"
       showSearchForm="false"
       panelStyleClass="full-sized">
       <wi:columnOutputText
         columnId="usuarioInclusao"
-        columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
+        columnHeader="#{infoxMessages['processoDocumento.usuarioInclusao']}"
         hideOrder="true"
         value="#{row.usuarioInclusao}" />
       <wi:columnDateTime
         columnId="dataInclusao"
-        columnHeader="#{eppmessages['processoDocumento.dataInclusao']}"
+        columnHeader="#{infoxMessages['processoDocumento.dataInclusao']}"
         hideOrder="true"
         value="#{row.dataInclusao}" />
       <wi:columnOutputText
         columnId="documento"
-        columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
+        columnHeader="#{infoxMessages['processoDocumentoBin.documento']}"
         hideOrder="true"
         value="#{row.descricao}" />
       <ui:define name="headerToolBar" />
       <ui:define name="toolBar">
       	<h:form rendered="#{row.documentoBin.minuta}">
       		<a:commandLink action="#{documentoEditor.setDocumento(row)}" render="editorPanel" limitRender="true">
-      			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{eppmessages['button.selecionar']}" />
+      			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}" />
       		</a:commandLink>
       	</h:form>
       </ui:define>
@@ -185,24 +185,24 @@
     <wi:dataTable
       showSearchForm="false"
       values="#{documentoUploader.documentosDaSessao}"
-      tableTitle="#{eppmessages['documentoUploader.titleView']}"
+      tableTitle="#{infoxMessages['documentoUploader.titleView']}"
       id="documentoDaSessao"
       rowId="#{row.id}"
       panelStyleClass="full-sized"
       showToolbarColumn="false">
       <wi:columnOutputText
         columnId="usuarioInclusao"
-        columnHeader="#{eppmessages['processoDocumento.usuarioInclusao']}"
+        columnHeader="#{infoxMessages['processoDocumento.usuarioInclusao']}"
         hideOrder="true"
         value="#{row.usuarioInclusao}" />
       <wi:columnDateTime
         columnId="dataInclusao"
-        columnHeader="#{eppmessages['processoDocumento.dataInclusao']}"
+        columnHeader="#{infoxMessages['processoDocumento.dataInclusao']}"
         hideOrder="true"
         value="#{row.dataInclusao}" />
       <wi:columnOutputText
         columnId="documento"
-        columnHeader="#{eppmessages['processoDocumentoBin.documento']}"
+        columnHeader="#{infoxMessages['processoDocumentoBin.documento']}"
         hideOrder="true"
         value="#{row.descricao}" />
       <ui:define name="headerToolBar" />

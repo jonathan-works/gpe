@@ -15,7 +15,7 @@
         id="taskName"
         value="#{taskFitter.taskName}"
         widthDiv="230px"
-        label="#{eppmessages['process.task.name']}"
+        label="#{infoxMessages['process.task.name']}"
         converterId="nodeNameConverter"
         required="true">
         <a:ajax
@@ -29,7 +29,7 @@
       <wi:selectOneMenu
         id="swimlaneTask"
         items="#{swimlaneFitter.swimlaneList}"
-        label="#{eppmessages['process.task.responsavel']}"
+        label="#{infoxMessages['process.task.responsavel']}"
         widthDiv="230px"
         showLabelSelecione="true"
         value="#{t.swimlaneName}">
@@ -40,7 +40,7 @@
       </wi:selectOneMenu>
       <wi:inputNumber
         id="prazo"
-        label="#{eppmessages['process.task.prazo']}"
+        label="#{infoxMessages['process.task.prazo']}"
         value="#{taskFitter.tarefaAtual.prazo}"
         rendered="#{taskFitter.currentJbpmTaskPersisted}">
         <a:ajax
@@ -51,7 +51,7 @@
       </wi:inputNumber>
       <wi:selectOneMenuEnum
         id="tipoPrazo"
-        label="#{eppmessages['process.task.prazo.unidade']}"
+        label="#{infoxMessages['process.task.prazo.unidade']}"
         value="#{taskFitter.tarefaAtual.tipoPrazo}"
         items="#{prazoCombo.tipoPrazoList}"
         showLabelSelecione="true"
@@ -78,7 +78,7 @@
             render="varTable pageBodyDialogMessage"
             limitRender="true">
             <h:graphicImage
-              title="#{eppmessages['process.task.addVariable']}"
+              title="#{infoxMessages['process.task.addVariable']}"
               url="#{wiSkin.imageFolder}/add.gif" />
           </a:commandLink>
         </h:form>
@@ -88,12 +88,12 @@
           <a:commandLink
             action="#{t.removeVar(var)}"
             execute="@this"
-            onclick="return confirm(\'#{eppmessages['processBuilder.confirm']}\');"
+            onclick="return confirm(\'#{infoxMessages['processBuilder.confirm']}\');"
             render="varTable"
             limitRender="true"
             styleClass="opacityHover">
             <h:graphicImage
-              title="#{eppmessages['process.task.removeVariable']}"
+              title="#{infoxMessages['process.task.removeVariable']}"
               url="#{wiSkin.imageFolder}/remove.png" />
           </a:commandLink>
           <a:commandLink
@@ -107,7 +107,7 @@
             oncomplete="#{rich:component('actionTemplatePanel')}.show()"
             rendered="#{var.type eq 'EDITOR'}">
             <h:graphicImage
-              title="#{eppmessages['process.task.var.modelo']}"
+              title="#{infoxMessages['process.task.var.modelo']}"
               rendered="#{empty var.modeloList}"
               url="#{wiSkin.imageFolder}/newfile.gif" />
             <h:graphicImage
@@ -126,7 +126,7 @@
             oncomplete="#{rich:component('classificacoesParaVariavelPanel')}.show()"
             rendered="#{var.type eq 'EDITOR' or var.type eq 'FILE'}">
             <h:graphicImage
-              title="#{eppmessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
+              title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
               status=":status"
               url="#{wiSkin.imageFolder}/hamburger.png" />
             <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
@@ -136,7 +136,7 @@
       </div>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{eppmessages['process.task.var']}</f:facet>
+      <f:facet name="header">#{infoxMessages['process.task.var']}</f:facet>
       <h:form>
         <s:div id="varDiv">
           <h:message for="varName" />
@@ -183,7 +183,7 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{eppmessages['process.task.var.label']}</f:facet>
+      <f:facet name="header">#{infoxMessages['process.task.var.label']}</f:facet>
       <h:form>
         <s:div id="varLabel">
           <h:inputText value="#{var.label}">
@@ -197,7 +197,7 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{eppmessages['process.task.var.modo']}</f:facet>
+      <f:facet name="header">#{infoxMessages['process.task.var.modo']}</f:facet>
       <h:form>
         <h:selectBooleanCheckbox
           id="writable"
@@ -212,7 +212,7 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{eppmessages['process.task.var.required']}</f:facet>
+      <f:facet name="header">#{infoxMessages['process.task.var.required']}</f:facet>
       <h:form>
         <h:selectBooleanCheckbox
           id="required"
@@ -227,7 +227,7 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{eppmessages['process.task.var.hidden']}</f:facet>
+      <f:facet name="header">#{infoxMessages['process.task.var.hidden']}</f:facet>
       <h:form>
         <h:selectBooleanCheckbox
           id="hidden"
@@ -242,13 +242,13 @@
       </h:form>
     </rich:column>
     <rich:column>
-      <f:facet name="header">#{eppmessages['process.task.var.type']}</f:facet>
+      <f:facet name="header">#{infoxMessages['process.task.var.type']}</f:facet>
       <h:form id="formVariableType">
         <wi:selectOneMenu
           id="type"
           value="#{var.type}"
           items="#{taskFitter.typeList}"
-          optionLabel="#{eppmessages[item.label]}"
+          optionLabel="#{infoxMessages[item.label]}"
           widthDiv="100%"
           required="true">
           <a:ajax
@@ -279,7 +279,7 @@
           rendered="#{var.data}">
           <wi:selectOneMenuEnum
             id="tipoDeData"
-            label="#{eppmessages['data.tipoData']}"
+            label="#{infoxMessages['data.tipoData']}"
             showLabelSelecione="true"
             items="#{var.getTypeDateValues()}"
             value="#{var.validacaoDataEnum}">

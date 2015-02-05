@@ -9,13 +9,13 @@ import javax.faces.context.FacesContext;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(FluxoCrudAction.NAME)
 public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
@@ -55,14 +55,14 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         if (existeFluxoComCodigo) {
             final FacesMessage message = FacesMessages.createFacesMessage(
                     FacesMessage.SEVERITY_ERROR,
-                    "#{eppmessages['fluxo.codigoDuplicado']}");
+                    "#{infoxMessages['fluxo.codigoDuplicado']}");
             FacesContext.getCurrentInstance().addMessage(
                     FluxoCrudAction.COD_FLUXO_COMPONENT_ID, message);
         }
         if (existeFluxoComDescricao) {
             final FacesMessage message = FacesMessages.createFacesMessage(
                     FacesMessage.SEVERITY_ERROR,
-                    "#{eppmessages['fluxo.descricaoDuplicada']}");
+                    "#{infoxMessages['fluxo.descricaoDuplicada']}");
             FacesContext.getCurrentInstance().addMessage(
                     FluxoCrudAction.DESCRICAO_FLUXO_COMPONENT_ID, message);
         }
@@ -80,19 +80,18 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
                         .before(dataInicioPublicacao));
         if (!instanceValid) {
             getMessagesHandler().add(ERROR,
-                    "#{eppmessages['fluxo.dataPublicacaoErrada']}");
+                    "#{infoxMessages['fluxo.dataPublicacaoErrada']}");
         }
         return instanceValid;
     }
 
     @Override
-
     public String inactive(final Fluxo fluxo) {
         setInstanceId(fluxo.getIdFluxo());
         if (!getManager().existemProcessosAssociadosAFluxo(fluxo)) {
             return super.inactive(fluxo);
         } else {
-            final String message = "#{eppmessages['fluxo.remocaoProibida']}";
+            final String message = "#{infoxMessages['fluxo.remocaoProibida']}";
             FluxoCrudAction.LOG.error(message);
             getMessagesHandler().add(ERROR, message);
         }
@@ -108,5 +107,6 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     public void newInstance() {
         super.newInstance();
         getInstance().setPublicado(false);
+        this.replica = false;
     }
 }

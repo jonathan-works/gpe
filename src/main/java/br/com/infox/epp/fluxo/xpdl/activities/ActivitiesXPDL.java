@@ -14,7 +14,7 @@ import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jdom2.Element;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.epp.fluxo.xpdl.XmlUtil;
@@ -160,7 +160,7 @@ public class ActivitiesXPDL implements Serializable {
             if (node instanceof EndState) {
                 if (endState == null) {
                     endState = node;
-                    endState.setName(Messages.resolveMessage("process.node.last"));
+                    endState.setName(InfoxMessages.getInstance().get("process.node.last"));
                 } else {
                     iter.remove();
 

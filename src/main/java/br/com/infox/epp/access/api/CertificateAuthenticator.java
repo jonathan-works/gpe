@@ -6,6 +6,7 @@ import static java.text.MessageFormat.format;
 import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
+import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -14,18 +15,23 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.security.Identity;
 
+import br.com.infox.certificado.CertificateSignatures;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(CertificateAuthenticator.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -35,17 +41,22 @@ public class CertificateAuthenticator implements Serializable {
     private static final LogProvider LOG = Logging
             .getLogProvider(CertificateAuthenticator.class);
     public static final String NAME = "certificateAuthenticator";
-    private String assinatura;
-    private String certChain;
     private boolean certificateLogin = false;
+    private String token;
 
     @In
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private AuthenticatorService authenticatorService;
+    @In
+    private CertificateSignatures certificateSignatures;
+    @In
+    private InfoxMessages infoxMessages;
 
     public void authenticate() {
         try {
+        	CertificateSignatureBundleBean bundle = getSignatureBundle();
+			String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, null, certChain, false);
             final Events events = Events.instance();
@@ -53,12 +64,11 @@ public class CertificateAuthenticator implements Serializable {
             events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
         } catch (final CertificateExpiredException e) {
             LOG.error(AUTHENTICATE, e);
-            throw new RedirectToLoginApplicationException(Messages.resolveMessage(CERTIFICATE_ERROR_EXPIRED), e);
+            throw new RedirectToLoginApplicationException(infoxMessages.get(CERTIFICATE_ERROR_EXPIRED), e);
         } catch (final CertificateException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(format(
-                    Messages.resolveMessage(
-                            AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN),
+                    infoxMessages.get(AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN),
                     e.getMessage()), e);
         } catch (CertificadoException | LoginException | DAOException e) {
             LOG.error(AUTHENTICATE, e);
@@ -67,22 +77,23 @@ public class CertificateAuthenticator implements Serializable {
 
     }
 
-    public String getAssinatura() {
-        return assinatura;
-    }
-
-    public void setAssinatura(final String assinatura) {
-        this.assinatura = assinatura;
-    }
-
-    public String getCertChain() {
-        return certChain;
-    }
-
-    public void setCertChain(final String certChain) {
-        this.certChain = certChain;
-    }
-
+	private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
+		CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
+		if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+			Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
+			throw new CertificadoException(eppmessages.get("login.sign.error"));
+		}
+		return bundle;
+	}
+    
+    public String getToken() {
+		return token;
+	}
+    
+    public void setToken(String token) {
+		this.token = token;
+	}
+    
     public boolean isCertificateLogin() {
         return certificateLogin || ParametroUtil.isLoginComAssinatura();
     }

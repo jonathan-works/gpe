@@ -13,7 +13,7 @@
     <s:div id="parteProcessoListDiv">
         <wi:dataTable values="#{participanteProcessoList.list()}"
             bean="#{participanteProcessoList}"
-            tableTitle="#{eppmessages['participanteProcesso.tableTitle']}"
+            tableTitle="#{infoxMessages['participanteProcesso.tableTitle']}"
             id="participanteProcessoList" showSearchForm="false" panelStyleClass="full-sized">
             
             <ui:define name="headerToolBar" />
@@ -21,30 +21,30 @@
             
             <wi:columnOutputTextIdent columnId="pessoa.nome"
             	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
-                columnHeader="#{eppmessages['participanteProcesso.nomeParticipante']}"
+                columnHeader="#{infoxMessages['participanteProcesso.nomeParticipante']}"
                 value="#{row.nome}" 
                 hideOrder="true"
                 fullPath="#{row.caminhoAbsoluto}"/>
                 
       		<wi:columnOutputText columnId="cpfCnpj"
        			styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
-                columnHeader="#{eppmessages['participanteProcesso.codigo']}"
+                columnHeader="#{infoxMessages['participanteProcesso.codigo']}"
                 value="#{row.pessoa.codigoFormatado}" hideOrder="true" />
             
             <wi:columnOutputText columnId="tipoParticipante" 
             	styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
             	value="#{row.tipoParte}"
-            	columnHeader="#{eppmessages['participanteProcesso.tipoParticipante']}"
+            	columnHeader="#{infoxMessages['participanteProcesso.tipoParticipante']}"
             	hideOrder="true"/>
             	
            	<wi:columnDateTime columnId="dataInicio" value="#{row.dataInicio}"
            		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
-           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataInicio']}"
+           		showTime="false" columnHeader="#{infoxMessages['participanteProcesso.dataInicio']}"
            		hideOrder="true"/>
            		
            	<wi:columnDateTime columnId="dataFim" value="#{row.dataFim}"
            		styleOutputText="#{not row.ativo ? 'text-decoration:line-through; color:red;' : ''}"
-           		showTime="false" columnHeader="#{eppmessages['participanteProcesso.dataFim']}"
+           		showTime="false" columnHeader="#{infoxMessages['participanteProcesso.dataFim']}"
           		hideOrder="true"/>
             
         </wi:dataTable>

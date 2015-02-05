@@ -19,6 +19,8 @@ import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(UsuarioLoginManager.NAME)
@@ -27,6 +29,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginManager";
+    private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginManager.class);
 
     @In
     private PasswordService passwordService;
@@ -77,7 +80,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     }
 
     private void validarPermanencia(final UsuarioLogin usuario) {
-        if (!usuario.getProvisorio()) {
+        if (usuario.getProvisorio() == null || !usuario.getProvisorio()) {
             usuario.setDataExpiracao(null);
         }
         if (!usuario.isHumano()) {
@@ -123,13 +126,17 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public UsuarioLogin getUsuarioDeProcessosDoSistema() {
     	String idUsuarioSistema = ParametroUtil.getParametroOrFalse(Parametros.ID_USUARIO_PROCESSO_SISTEMA.getLabel());
     	if ("false".equals(idUsuarioSistema)) {
-    		throw new BusinessException("Não foi configurado o usuário de processos do sistema");
+    		String mensagem = "Não foi configurado o usuário de processos do sistema";
+			LOG.error(mensagem);
+    		throw new BusinessException(mensagem);
     	} else {
     		UsuarioLogin usuario = find(Integer.parseInt(idUsuarioSistema));
     		if (!usuario.isHumano()) {
     			return usuario;
     		} else {
-    			throw new BusinessException("Usuario " + usuario + "não é um usuário de sistema");
+    			String mensagem = "Usuario " + usuario + "não é um usuário de sistema";
+				LOG.error(mensagem);
+    			throw new BusinessException(mensagem);
     		}
     	}
     }

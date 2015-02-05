@@ -49,7 +49,7 @@ public class DocumentoProcessoAction implements Serializable{
 			TipoAlteracaoDocumento tipoAlteracaoDocumento = documento.getExcluido() ? TipoAlteracaoDocumento.R : TipoAlteracaoDocumento.E;
 			try {
 				documentoManager.exclusaoRestauracaoLogicaDocumento(documento, getMotivoExclusaoRestauracao(), tipoAlteracaoDocumento);
-				FacesMessages.instance().add("#{eppmessages['ProcessoDocumento_updated']}");
+				FacesMessages.instance().add("#{infoxMessages['ProcessoDocumento_updated']}");
 				if (cache.containsKey(idDocumentoAlter.toString())){
 					cache.remove(idDocumentoAlter.toString());
 				}

@@ -69,7 +69,7 @@
                         styleClass="opacityHover"
                         url="#{wiSkin.imageFolder}/view.png"
                         rendered="true"
-                        title="#{eppmessages['button.selecionar']}" />
+                        title="#{infoxMessages['button.selecionar']}" />
                     </a:commandLink>
                     <a:commandLink
                       render="documentoListPanel, documentoListSearchForm, pageBodyDialogMessage"
@@ -80,7 +80,7 @@
                         styleClass="opacityHover"
                         url="#{wiSkin.imageFolder}/remove.png"
                         rendered="true"
-                        title="#{eppmessages['button.delete']}" />
+                        title="#{infoxMessages['button.delete']}" />
                       <f:attribute name="pastaToRemove" value="#{pasta}" />
                       <f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
                       <f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
@@ -90,7 +90,7 @@
 		</rich:panel>
 		<wi:commandButton
 			id="addPastaBtn"
-			value="#{eppmessages['documentoProcesso.addFolder']}"
+			value="#{infoxMessages['documentoProcesso.addFolder']}"
 			rendered="#{s:hasPermission('/pages/Pasta/adicionarPasta', 'access')}"
 			onclick="#{rich:component('addPastaPanel')}.show();" />
 	</ui:define>
@@ -112,24 +112,24 @@
 	    <h:graphicImage
 	      rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
 	      url="#{wiSkin.imageFolder}/anexo.png"
-	      title="#{eppmessages['documentoProcesso.moverDocumento']}" />
+	      title="#{infoxMessages['documentoProcesso.moverDocumento']}" />
 	  <h:graphicImage
 	    styleClass="opacityHover"
 	    url="#{wiSkin.imageFolder}/view.png"
-	    title="#{eppmessages['button.historico']}"
+	    title="#{infoxMessages['button.historico']}"
 	    rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
 	    onmouseup="selectDocumento(#{rowId});" />
 	  <h:graphicImage
 	    styleClass="opacityHover"
 	    url="#{wiSkin.imageFolder}/remove.png"
 	    rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
-	    title="#{eppmessages['button.delete']}"
+	    title="#{infoxMessages['button.delete']}"
 	    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
 	  <h:graphicImage
 	    styleClass="opacityHover"
 	    url="#{wiSkin.imageFolder}/stock_undelete.png"
 	    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
-	    title="#{eppmessages['button.restaurar']}"
+	    title="#{infoxMessages['button.restaurar']}"
 	    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
 	  <h:form>
 	     <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
@@ -143,28 +143,33 @@
     
     <wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+      columnId="numeroDocumento"
+      columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}"
+      value="#{row.numeroDocumento}" />
+    <wi:columnOutputText
+      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
       columnId="usuarioInclusao"
-      columnHeader="#{eppmessages['assinaturas.usuario']}"
+      columnHeader="#{infoxMessages['assinaturas.usuario']}"
       value="#{row.usuarioInclusao}" />
     <wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
       columnId="dataInclusao"
-      columnHeader="#{eppmessages['assinaturas.dataInclusao']}"
+      columnHeader="#{infoxMessages['assinaturas.dataInclusao']}"
       value="#{row.dataInclusao}" />
     <wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-      columnId="processoDocumento"
-      columnHeader="#{eppmessages['documentoProcesso.descricao']}"
+      columnId="descricao"
+      columnHeader="#{infoxMessages['documentoProcesso.descricao']}"
       value="#{row.descricao}" />
     <wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
       columnId="classificacaoDocumento"
-      columnHeader="#{eppmessages['documentoProcesso.classificacaoDocumento']}"
+      columnHeader="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
       value="#{row.classificacaoDocumento}" />
     <wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
       columnId="processoDocumentoBin.sizeFormatado"
-      columnHeader="#{eppmessages['processoDocumento.tamanho']}"
+      columnHeader="#{infoxMessages['processoDocumento.tamanho']}"
       value="#{row.documentoBin.sizeFormatado}" />
   	</wi:dataTable>
   
@@ -356,15 +361,15 @@
 	  </f:facet>
 	  <wi:outputText
 	    id="numeroDocumento"
-	    label="#{eppmessages['processoDocumento.numeroDocumento']}" />
+	    label="#{infoxMessages['processoDocumento.numeroDocumento']}" />
 	
 	  <wi:outputText
 	    id="tipoProcessoDocumentoOutPanel"
-	    label="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
+	    label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
 	
 	  <wi:outputText
 	    id="processoDocumento"
-	    label="#{eppmessages['processoDocumentoBin.documento']}" />
+	    label="#{infoxMessages['processoDocumentoBin.documento']}" />
 	  <h:form id="excluirRestaurarDocumentoForm">
 	    <div>
 	      <h:inputHidden
@@ -411,7 +416,7 @@
 
          <f:facet name="header">
            <h:outputText
-             value="#{eppmessages['historicoStatusDocumento.tableTile']}" />
+             value="#{infoxMessages['historicoStatusDocumento.tableTile']}" />
            <h:graphicImage
              value="#{wiSkin.imageFolder}/closeMP.gif"
              onmouseup="selectDocumento(0);"
@@ -425,13 +430,13 @@
            value="#{documentoProcessoAction.listHistoricoStatusDocumento}">
 
            <rich:column style="text-align:center;">
-             <f:facet name="header">#{eppmessages['historicoStatusDocumento.nomeUsuarioAlterou']}</f:facet>
+             <f:facet name="header">#{infoxMessages['historicoStatusDocumento.nomeUsuarioAlterou']}</f:facet>
              <h:outputText
                value="#{historicoDocumento.usuarioAlteracao.nomeUsuario}" />
            </rich:column>
 
            <rich:column style="text-align:center;">
-             <f:facet name="header">#{eppmessages['historicoStatusDocumento.dataAlteracao']}</f:facet>
+             <f:facet name="header">#{infoxMessages['historicoStatusDocumento.dataAlteracao']}</f:facet>
              <h:outputText
                value="#{historicoDocumento.dataAlteracao}">
                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
@@ -445,7 +450,7 @@
            </rich:column>
 
            <rich:column>
-             <f:facet name="header">#{eppmessages['historicoStatusDocumento.motivo']}</f:facet>
+             <f:facet name="header">#{infoxMessages['historicoStatusDocumento.motivo']}</f:facet>
              <h:outputText value="#{historicoDocumento.motivo}" />
            </rich:column>
 

@@ -9,9 +9,9 @@
 				   widths="4 4 1"
 				   headerText="#{historicoModeloDocumentoList.criteria}">
 				   
-		<wi:reportColumnHeader title="#{eppmessages['modeloDocumento.tituloModeloDocumento']}" />
-		<wi:reportColumnHeader title="#{eppmessages['historicoModeloDocumento.usuario']}" />
-		<wi:reportColumnHeader title="#{eppmessages['historicoModeloDocumento.dataAlteracao']}"/>
+		<wi:reportColumnHeader title="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['historicoModeloDocumento.usuario']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['historicoModeloDocumento.dataAlteracao']}"/>
 				
 		<ui:repeat var="row" value="#{historicoModeloDocumentoList.list()}">
 			<wi:reportColumn value="#{row.tituloModeloDocumento}" />

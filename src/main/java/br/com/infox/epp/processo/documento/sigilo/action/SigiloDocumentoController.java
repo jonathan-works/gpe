@@ -15,7 +15,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 public class SigiloDocumentoController implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "sigiloDocumentoController";
-    public static final String MSG_REGISTRO_ALTERADO = "#{eppmessages['sigiloDocumento.registroAlterado']}";
+    public static final String MSG_REGISTRO_ALTERADO = "#{infoxMessages['sigiloDocumento.registroAlterado']}";
 
     public static enum FragmentoSigilo {
         MOTIVO_SIGILO, DETALHE_SIGILO, PERMISSOES_SIGILO

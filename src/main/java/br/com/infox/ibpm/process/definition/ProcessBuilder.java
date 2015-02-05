@@ -18,6 +18,7 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -27,8 +28,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -43,12 +42,13 @@ import org.jbpm.jpdl.xml.Problem;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
@@ -56,6 +56,8 @@ import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
+import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
+import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.node.InfoxMailNode;
@@ -69,6 +71,8 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.jsf.validator.JsfComponentTreeValidator;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import com.google.common.base.Strings;
 
@@ -107,10 +111,16 @@ public class ProcessBuilder implements Serializable {
     @In
     private RaiaPerfilManager raiaPerfilManager;
     @In
+    private ProcessoLocalizacaoIbpmManager processoLocalizacaoIbpmManager;
+    @In
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
     @In
     private ActionMessagesService actionMessagesService;
-
+    @In
+    private TaskExpirationManager taskExpirationManager;
+    @In
+    private InfoxMessages infoxMessages;
+ 
     private String id;
     private ProcessDefinition instance;
     private Map<Node, List<TaskHandler>> taskNodeMap;
@@ -142,9 +152,9 @@ public class ProcessBuilder implements Serializable {
         taskFitter.setStarTaskHandler(new TaskHandler(startTask));
         instance.getTaskMgmtDefinition().setStartTask(taskFitter.getStartTaskHandler().getTask());
 
-        StartState startState = new StartState(Messages.resolveMessage("process.node.first"));
+        StartState startState = new StartState(infoxMessages.get("process.node.first"));
         instance.addNode(startState);
-        EndState endState = new EndState(Messages.resolveMessage("process.node.last"));
+        EndState endState = new EndState(infoxMessages.get("process.node.last"));
         instance.addNode(endState);
         Transition t = new Transition();
         t.setName(endState.getName());
@@ -211,6 +221,7 @@ public class ProcessBuilder implements Serializable {
             validateMailNode();
             validateVariables();
             validateSubProcessNode();
+            validateTaskExpiration();
         } catch (IllegalStateException e) {
             FacesMessages.instance().clearGlobalMessages();
             FacesMessages.instance().add(e.getMessage());
@@ -220,6 +231,22 @@ public class ProcessBuilder implements Serializable {
 
         context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
         context.getRenderIds().add(messages.getClientId(facesContext));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void validateTaskExpiration() {
+        Set<String> taskNames = new HashSet<>();
+        List<Node> nodes = instance.getNodes();
+        for (Node node : nodes) {
+            if (node instanceof TaskNode) {
+                taskNames.add(node.getName());
+            }
+        }
+        try {
+            taskExpirationManager.clearUnusedTaskExpirations(fluxo, taskNames);
+        } catch (DAOException de) {
+            throw new IllegalStateException(de);
+        }
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -383,6 +410,7 @@ public class ProcessBuilder implements Serializable {
                 JbpmUtil.getJbpmSession().flush();
                 Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
                 taskFitter.checkCurrentTaskPersistenceState();
+                atualizarRaiaPooledActors(instance.getId());
                 FacesMessages.instance().clear();
                 FacesMessages.instance().add("Fluxo publicado com sucesso!");
             } catch (Exception e) {
@@ -395,15 +423,32 @@ public class ProcessBuilder implements Serializable {
     @SuppressWarnings(UNCHECKED)
     private void deployActions() throws DAOException {
         raiaPerfilManager.atualizarRaias(fluxo, instance.getTaskMgmtDefinition().getSwimlanes());
-        
         Integer idFluxo = fluxo.getIdFluxo();
         List<String> variaveis = getVariaveisDocumento();
         variavelClassificacaoDocumentoManager.removerClassificacoesDeVariaveisObsoletas(idFluxo, variaveis);
-        
         variavelClassificacaoDocumentoManager.publicarClassificacoesDasVariaveis(idFluxo);
     }
 
-    @SuppressWarnings(UNCHECKED)
+    @SuppressWarnings("unchecked")
+	private void atualizarRaiaPooledActors(Long idProcessDefinition) throws DAOException {
+		Session session = JbpmUtil.getJbpmSession();
+		String hql = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti "
+						 + "inner join ti.processInstance pi "
+						 + "where ti.end is null and  ti.create is not null "
+						 + "and pi.processDefinition.id = :idProcessDefinition ";
+		Query query =  session.createQuery(hql);
+		query.setParameter("idProcessDefinition", idProcessDefinition);
+		List<TaskInstance> taskInstances = (List<TaskInstance>) query.list();
+		for (TaskInstance taskInstance : taskInstances) {
+			String[] actorIds = taskInstance.getTask().getSwimlane().getPooledActorsExpression().split(",");
+			taskInstance.setPooledActors(actorIds);
+			processoLocalizacaoIbpmManager.deleteProcessoLocalizacaoIbpmByTaskInstanceId(taskInstance.getId());
+			processoLocalizacaoIbpmManager.addProcessoLocalizacaoIbpmByTaskInstance(taskInstance);
+		}
+		session.flush();
+	}
+
+	@SuppressWarnings(UNCHECKED)
     private List<String> getVariaveisDocumento() {
         List<String> variaveis = new ArrayList<>();
         List<Node> nodes = instance.getNodes();

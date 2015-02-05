@@ -23,7 +23,7 @@
 		</a:jsFunction>
 		
 		<f:facet name="header">
-			<h:outputText value="#{eppmessages['validacaoDocumentoList.assinaturas.header']}" />
+			<h:outputText value="#{infoxMessages['validacaoDocumentoList.assinaturas.header']}" />
 		</f:facet>
 		<f:facet name="controls">
             <h:graphicImage styleClass="d-msg-h-close" value="#{wiSkin.imageFolder}/closeMP.gif" 
@@ -32,11 +32,11 @@
 		<s:div id="assinaturaListCont">
         
             <wi:outputText id="classificacao" 
-                label="#{eppmessages['documentoProcesso.classificacaoDocumento']}" 
+                label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}" 
                 value="#{validaDocumentoAction.documento.classificacaoDocumento}" />
         
 			<wi:outputText id="descricao"
-				label="#{eppmessages['documentoProcesso.descricao']}"
+				label="#{infoxMessages['documentoProcesso.descricao']}"
 				value="#{validaDocumentoAction.documento.descricao}" />
                 
 			<rich:dataTable
@@ -46,21 +46,21 @@
 				<rich:column styleClass="dt-toolbar-col">
 					<f:facet name="header">
 						<h:outputText
-							value="#{eppmessages['assinaturaDocumento.nomeUsuario']}"></h:outputText>
+							value="#{infoxMessages['assinaturaDocumento.nomeUsuario']}"></h:outputText>
 					</f:facet>
 					<h:outputText value="#{row.nomeUsuario}"></h:outputText>
 				</rich:column>
 				<rich:column styleClass="dt-toolbar-col">
 					<f:facet name="header">
 						<h:outputText
-							value="#{eppmessages['assinaturaDocumento.nomePerfil']}"></h:outputText>
+							value="#{infoxMessages['assinaturaDocumento.nomePerfil']}"></h:outputText>
 					</f:facet>
 					<h:outputText value="#{row.nomeUsuarioPerfil}"></h:outputText>
 				</rich:column>
 				<rich:column styleClass="dt-toolbar-col">
 					<f:facet name="header">
 						<h:outputText
-							value="#{eppmessages['assinaturadocumento.dtAssinatura']}"></h:outputText>
+							value="#{infoxMessages['assinaturadocumento.dtAssinatura']}"></h:outputText>
 					</f:facet>
 					<h:outputText value="#{row.dataAssinatura}"></h:outputText>
 				</rich:column>
@@ -72,24 +72,19 @@
 
 					<a:jsFunction name="assinar"
 						action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
-						execute="@this appletAssinaturaCertChain appletAssinaturaSignature"
+						execute="@this appletAssinaturaToken"
 						render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
 						oncomplete="infox.hideLoading();" />
 
-					<wi:certificadoDigital id="appletAssinatura" debug="false"
-						loginMode="false"
-						formId="#{rich:clientId('assinaturaDocumento')}"
-						signButtonCaption="#{eppmessages['assinaturas.assinar']}"
-						certificationChainField="#{validaDocumentoAction.certChain}"
-						signatureField="#{validaDocumentoAction.signature}"
+					<wi:certificadoDigital
+            id="appletAssinatura"
+						signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+						tokenField="#{validaDocumentoAction.token}"
 						signableData="#{validaDocumentoAction.documentoBin.md5Documento}"
 						functionPreSign="infox.showLoading();"
-						functionPosSign="assinar();" useBase64Function="true"
-						useProviderDll="false"
-						urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-						rendered="#{not validaDocumentoAction.isAssinadoPor(usuarioLogado) 
-              				and validaDocumentoAction.documento.isDocumentoAssinavel(usuarioLogadoPerfilAtual.perfilTemplate.papel)}">
-                       </wi:certificadoDigital>
+						functionPosSign="assinar();"
+						rendered="#{validaDocumentoAction.podeAssinar()}" >
+          </wi:certificadoDigital>
 
 				</s:div>
 			</h:form>

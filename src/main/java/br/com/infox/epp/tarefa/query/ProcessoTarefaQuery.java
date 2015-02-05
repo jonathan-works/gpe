@@ -56,5 +56,12 @@ public interface ProcessoTarefaQuery {
             + "where pt.processo = :" + QUERY_PARAM_PROCESSO
             + " and pt.dataInicio <= (select min(pt2.dataInicio) from ProcessoTarefa pt2 "
             + "where pt2.processo = pt.processo)";
+    
+    String TAREFA_COM_EXPIRACAO = "listTarefaComExpiracao";
+    String TAREFA_COM_EXPIRACAO_QUERY = "select pt from ProcessoTarefa pt "
+            + "where (pt.dataFim is null) and exists ("
+                + "select 1 from TaskExpiration te "
+                + "where te.tarefa = pt.tarefa.tarefa"
+            + ")";
 
 }

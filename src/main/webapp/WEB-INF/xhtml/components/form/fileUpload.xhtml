@@ -16,7 +16,7 @@
     <s:div id="#{f.id}TipoDocDiv" styleClass="padding-top-10">
       <wi:selectOneMenuEntity
         id="#{f.id}tipoProcessoDocumento"
-        label="#{eppmessages['processoDocumento.classificacaoDocumento']}"
+        label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
         value="#{home.classificacoesVariaveisUpload[id]}"
         items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
         required="true"
@@ -64,12 +64,12 @@
           limitRender="true"
           required="#{wi:get(required, false)}"
           fileUploadListener="#{fileUpload.processFileUpload}"
-          addLabel="#{eppmessages['processoDocumento.addLabel']}"
-          clearAllLabel="#{eppmessages['processoDocumento.clearAllLabel']}"
-          clearLabel="#{eppmessages['processoDocumento.clearLabel']}"
-          doneLabel="#{eppmessages['processoDocumento.doneLabel']}"
-          uploadLabel="#{eppmessages['processoDocumento.uploadLabel']}"
-          sizeExceededLabel="#{eppmessages['processoDocumento.sizeExceededLabel']}"
+          addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+          clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+          clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+          doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
+          uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+          sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
           maxFilesQuantity="1"
           listHeight="50px"
           immediateUpload="true"
@@ -77,14 +77,14 @@
           render="#{id}Decoration, #{id}, #{reRender}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente"
           acceptedTypes="#{home.classificacoesVariaveisUpload[id].acceptedTypes}"
           rendered="#{not empty home.classificacoesVariaveisUpload[id] and not readonly}"
-          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{eppmessages['processoDocumento.extensaoNaoPermitida']}\')">
+          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
         </rich:fileUpload>
     </s:decorate>
     <s:div id="#{f.id}documentoExistente">
         <s:fragment rendered="#{not empty taskInstanceHome.instance[id]}">    
             <fieldset>
                 <legend>Documento Anexado</legend>
-                <h:outputText value="#{eppmessages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].descricao : props.classificacaoDocumento}"/>
+                <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].descricao : props.classificacaoDocumento}"/>
                 <br />
                 <h:outputText id="file#{id}" value="Documento: #{not readonly ? taskInstanceHome.instance[id] : value}"/>
             </fieldset>

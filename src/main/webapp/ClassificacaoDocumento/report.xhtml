@@ -4,17 +4,17 @@
     xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <wi:dataReport
-        title="#{eppmessages['tipoProcessoDocumento.titlePage']}"
+        title="#{infoxMessages['tipoProcessoDocumento.titlePage']}"
         columns="4" widths="2 5 2 2"
         headerText="#{tipoProcessoDocumentoList.criteria}">
 
         <wi:reportColumnHeader
-            title="#{eppmessages['tipoProcessoDocumento.codigoDocumento']}" />
+            title="#{infoxMessages['tipoProcessoDocumento.codigoDocumento']}" />
         <wi:reportColumnHeader
-            title="#{eppmessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
+            title="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
         <wi:reportColumnHeader
-            title="#{eppmessages['tipoProcessoDocumento.uso']}" />
-        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
+            title="#{infoxMessages['tipoProcessoDocumento.uso']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{classificacaoDocumentoList.list()}">
             <wi:reportColumn value="#{row.codigoDocumento}" />

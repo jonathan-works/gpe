@@ -3,22 +3,26 @@
 <!-- $Id: faces-config.xml 516 2010-08-12 23:21:53Z jplacerda $ -->
 
 <faces-config version="2.1" xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
 
-    <application>
-        <message-bundle>messages</message-bundle>
-        <locale-config>
-            <default-locale>pt_BR</default-locale>
-            <supported-locale>pt_BR</supported-locale>
-            <supported-locale>fr</supported-locale>
-            <supported-locale>en</supported-locale>
-            <supported-locale>en_us</supported-locale>
-        </locale-config>
-    </application>
-    <component>
-        <component-type>org.richfaces.DataTable</component-type>
-        <component-class>br.com.infox.jsf.workaround.UIDataTableWorkaround</component-class>
-    </component>
+	<application>
+		<message-bundle>messages</message-bundle>
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+			<supported-locale>pt_BR</supported-locale>
+			<supported-locale>fr</supported-locale>
+			<supported-locale>en</supported-locale>
+			<supported-locale>en_us</supported-locale>
+		</locale-config>
+		<system-event-listener>
+			<system-event-listener-class>br.com.infox.jsf.events.EppSystemEventListener</system-event-listener-class>
+			<system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
+		</system-event-listener>
+	</application>
+	<component>
+		<component-type>org.richfaces.DataTable</component-type>
+		<component-class>br.com.infox.jsf.workaround.UIDataTableWorkaround</component-class>
+	</component>
 
 </faces-config>

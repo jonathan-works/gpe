@@ -10,11 +10,11 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:infox="http://www.infox.com.br/jsf"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-  <ui:define name="title">#{eppmessages['consultaProcesso.titlePage']}</ui:define>
+  <ui:define name="title">#{infoxMessages['consultaProcesso.titlePage']}</ui:define>
   <ui:define name="body">
     <rich:collapsiblePanel
       switchType="client"
-      header="#{eppmessages['processo.titleView']} #{consultaController.processo.numeroProcesso}"
+      header="#{infoxMessages['processo.titleView']} #{consultaController.processo.numeroProcesso}"
       expanded="false">
       <h:panelGrid
         columns="3"
@@ -22,13 +22,13 @@
         columnClasses="viewColumn">
         <wi:outputText
           id="dataInicio"
-          label="#{eppmessages['processo.dataInicio']}"
+          label="#{infoxMessages['processo.dataInicio']}"
           value="#{consultaController.processo.dataInicio}">
           <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
         </wi:outputText>
         <wi:outputText
           id="usuarioCadastro"
-          label="#{eppmessages['processo.usuarioCadastroProcesso']}"
+          label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
           value="#{consultaController.processo.usuarioCadastro}" />
        <ui:repeat var="metadado" value="#{consultaController.detalhesMetadados}" >
      		<wi:outputText id="metadado#{metadado.metadadoType}"
@@ -48,7 +48,7 @@
         name="form"
         immediate="true"
         status=":status"
-        title="#{eppmessages['acaoProcesso.menuText']}">
+        title="#{infoxMessages['acaoProcesso.menuText']}">
         <ui:include
           src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
       </infox:tab>
@@ -58,7 +58,7 @@
         immediate="true"
         actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
         status=":status"
-        title="#{eppmessages['processo.documentos']}">
+        title="#{infoxMessages['processo.documentos']}">
 		<ui:include src="/Processo/pastaDocumento.xhtml" />
       </infox:tab>
       <infox:tab
@@ -66,13 +66,13 @@
         name="tabAnexar"
         immediate="true"
         status=":status"
-        title="#{eppmessages['processoDocumento.anexarDocumento']}"
+        title="#{infoxMessages['processoDocumento.anexarDocumento']}"
         rendered="#{empty consultaController.processo.dataFim}"
         action="#{anexoController.onClickTabAnexar(consultaController.processo)}">
         <wi:ajaxDiv id="divAnexarDocumentos">
           <wi:dataForm
             formId="anexarDocumentosForm"
-            formTitle="#{eppmessages['processoDocumento.anexarDocumento']}">
+            formTitle="#{infoxMessages['processoDocumento.anexarDocumento']}">
             <ui:include src="/Processo/anexarDocumentos.xhtml" />
             <ui:define name="buttons" />
           </wi:dataForm>
@@ -82,11 +82,11 @@
         id="documentoFisicoTab"
         name="documentoFisicoTab"
         action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(consultaController.processo)}"
-        title="#{eppmessages['documentoFisico.titleTab']}">
+        title="#{infoxMessages['documentoFisico.titleTab']}">
         <ui:decorate
           id="frameDecorate"
           template="../../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-          <ui:define name="title">#{eppmessages['documentoFisico.titleTab']}</ui:define>
+          <ui:define name="title">#{infoxMessages['documentoFisico.titleTab']}</ui:define>
           <s:div id="documentoFisicoDiv">
             <wi:dataTable
               id="documentoFisicoTable"
@@ -98,12 +98,12 @@
               <ui:define name="headerToolBar" />
               <wi:columnOutputText
                 columnId="localizacaoFisica"
-                columnHeader="#{eppmessages['documentoFisico.localizacaoFisica']}"
+                columnHeader="#{infoxMessages['documentoFisico.localizacaoFisica']}"
                 value="#{row.localizacaoFisica.caminhoCompletoToString()}"
                 hideOrder="true" />
               <wi:columnOutputText
                 columnId="descricao"
-                columnHeader="#{eppmessages['documentoFisico.descricaoDocumentoFisico']}"
+                columnHeader="#{infoxMessages['documentoFisico.descricaoDocumentoFisico']}"
                 value="#{row.descricaoDocumentoFisico}"
                 hideOrder="true" />
             </wi:dataTable>
@@ -116,7 +116,7 @@
         immediate="true"
         status=":status"
         rendered="#{processoHandler.hasPartes()}"
-                title="#{eppmessages['participanteProcesso.participantes']}"
+                title="#{infoxMessages['participanteProcesso.participantes']}"
                 action="#{participanteProcessoList.entity.setProcesso(consultaController.processo)}">
         <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
       </infox:tab>
@@ -125,7 +125,7 @@
               <wi:commandButton
               	id="btnVoltar"
                 onclick="infox.redirect({url:'#{pathResolver.contextPath}/Processo/Consulta/listView.seam'})"
-                value="#{eppmessages['page.return']}" />
+                value="#{infoxMessages['page.return']}" />
       </div>
     </infox:tabPanel>
 

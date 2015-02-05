@@ -57,7 +57,7 @@
             styleClass="menu-lnk"
             rendered="#{not identity.loggedIn}">
             <div class="menu-lbl">
-              <h:outputText value="#{eppmessages['menu.login']}" />
+              <h:outputText value="#{infoxMessages['menu.login']}" />
             </div>
           </s:link>
         </li>
@@ -67,7 +67,7 @@
             action="#{identity.logout}"
             styleClass="menu-lnk">
             <div class="menu-itm-lbl">
-              <h:outputText value="#{messages['menu.logout']}" />
+              <h:outputText value="#{infoxMessages['menu.logout']}" />
             </div>
           </s:link>
         </li>

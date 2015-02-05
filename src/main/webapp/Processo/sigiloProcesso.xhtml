@@ -9,30 +9,30 @@
     
     <s:div id="sigiloProcessoDiv">
     
-	    <rich:panel header="#{eppmessages['sigiloProcesso.processo']}">
+	    <rich:panel header="#{infoxMessages['sigiloProcesso.processo']}">
 	        <h:form id="sigiloProcessoForm">
 	            <a:jsFunction name="prepararInclusaoSigilo" execute="@this, sigiloso" render="sigiloProcessoDiv" limitRender="true">
     	            <f:setPropertyActionListener value="#{true}" target="#{sigiloProcessoAction.modoInclusao}" />
                     <f:setPropertyActionListener value="#{null}" target="#{sigiloProcessoAction.informacaoTelaSigilo}" />
 	            </a:jsFunction>
 	            
-	            <wi:selectBooleanCheckbox id="sigiloso" value="#{sigiloProcessoAction.sigiloProcesso.sigiloso}" label="#{eppmessages['sigiloProcesso.sigiloso']}" disabled="#{sigiloProcessoAction.modoInclusao}"
+	            <wi:selectBooleanCheckbox id="sigiloso" value="#{sigiloProcessoAction.sigiloProcesso.sigiloso}" label="#{infoxMessages['sigiloProcesso.sigiloso']}" disabled="#{sigiloProcessoAction.modoInclusao}"
 	               onclick="prepararInclusaoSigilo()" />
 	               
-	            <wi:inputTextarea id="motivo" showCounter="false" value="#{sigiloProcessoAction.sigiloProcesso.motivo}" label="#{eppmessages['sigiloProcesso.motivo']}"
+	            <wi:inputTextarea id="motivo" showCounter="false" value="#{sigiloProcessoAction.sigiloProcesso.motivo}" label="#{infoxMessages['sigiloProcesso.motivo']}"
 	                required="true" rendered="#{sigiloProcessoAction.modoInclusao}"/>
 	                
 	            <s:div style="clear: both">
-	                <a:commandButton value="#{eppmessages['sigiloProcesso.gravar']}" action="#{sigiloProcessoAction.gravarSigiloProcesso}" render="sigiloProcessoDiv, pageBodyDialogMessage"
+	                <a:commandButton value="#{infoxMessages['sigiloProcesso.gravar']}" action="#{sigiloProcessoAction.gravarSigiloProcesso}" render="sigiloProcessoDiv, pageBodyDialogMessage"
 	                    limitRender="true" rendered="#{sigiloProcessoAction.modoInclusao}" styleClass="buttons"/>
-	                <a:commandButton value="#{eppmessages['sigiloProcesso.cancelar']}" action="#{sigiloProcessoAction.resetSigiloProcesso}" limitRender="true" 
+	                <a:commandButton value="#{infoxMessages['sigiloProcesso.cancelar']}" action="#{sigiloProcessoAction.resetSigiloProcesso}" limitRender="true" 
 	                    render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{sigiloProcessoAction.modoInclusao}"
 	                    styleClass="buttons"/>
-	                <a:commandButton value="#{eppmessages['sigiloProcesso.verDetalhes']}" limitRender="true" render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{not sigiloProcessoAction.modoInclusao}"
+	                <a:commandButton value="#{infoxMessages['sigiloProcesso.verDetalhes']}" limitRender="true" render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{not sigiloProcessoAction.modoInclusao}"
 	                   styleClass="buttons">
 	                    <f:setPropertyActionListener value="D" target="#{sigiloProcessoAction.informacaoTelaSigilo}" />
 	                </a:commandButton>
-	                <a:commandButton value="#{eppmessages['sigiloProcesso.gerenciarPermissoes']}" limitRender="true" render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{not sigiloProcessoAction.modoInclusao and sigiloProcessoAction.sigiloso}"
+	                <a:commandButton value="#{infoxMessages['sigiloProcesso.gerenciarPermissoes']}" limitRender="true" render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" rendered="#{not sigiloProcessoAction.modoInclusao and sigiloProcessoAction.sigiloso}"
 	                   styleClass="buttons">
 	                    <f:setPropertyActionListener value="P" target="#{sigiloProcessoAction.informacaoTelaSigilo}" />
 	                </a:commandButton>
@@ -44,28 +44,28 @@
 	    <s:div id="detalhesSigiloProcesso" rendered="#{sigiloProcessoAction.informacaoTelaSigilo eq 'D'}">
 	    
 	        <wi:dataTable id="sigiloProcessoTable" values="#{sigiloProcessoList.list(5)}" bean="#{sigiloProcessoList}" panelWidth="100%"
-	            tableTitle="#{eppmessages['sigiloProcesso.detalhes']}" hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud">
+	            tableTitle="#{infoxMessages['sigiloProcesso.detalhes']}" hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud">
 	            
 	            <ui:define name="toolBar" />
 	            <ui:define name="headerToolBar" />
 	            
 	            <rich:column width="18%">
 	                <f:facet name="header">
-	                    <h:outputText value="#{eppmessages['sigiloProcesso.usuario.nome']}" />
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.usuario.nome']}" />
 	                </f:facet>
 	                <center><h:outputText value="#{row.usuario}" /></center>
 	            </rich:column>
 	     
 	            <rich:column width="2%">
 	                <f:facet name="header">
-	                    <h:outputText value="#{eppmessages['sigiloProcesso.sigiloso']}" />
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.sigiloso']}" />
 	                </f:facet>
 	                <center><h:outputText value="#{row.sigiloso ? 'Sim' : 'Não'}" /></center>
 	            </rich:column>
 	               
 	            <rich:column width="10%">
 	                <f:facet name="header">
-	                    <h:outputText value="#{eppmessages['sigiloProcesso.dataInclusao']}" />
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.dataInclusao']}" />
 	                </f:facet>
 	                <center>
 	                    <h:outputText value="#{row.dataInclusao}">
@@ -76,7 +76,7 @@
 	            
 	            <rich:column>
 	                <f:facet name="header">
-	                    <h:outputText value="#{eppmessages['sigiloProcesso.motivo']}" />
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.motivo']}" />
 	                </f:facet>
 	                <h:outputText value="#{row.motivo}" />
 	            </rich:column>
@@ -87,7 +87,7 @@
 	    <s:div id="permissoesSigiloProcesso" rendered="#{sigiloProcessoAction.informacaoTelaSigilo eq 'P'}">
 	           
 	        <wi:dataTable id="permissoesProcessoTable" values="#{usuarioRaiaList.list(10)}" bean="#{usuarioRaiaList}"
-	            tableTitle="#{eppmessages['sigiloProcesso.usuarios']}" hideOrder="true" searchFormStyleDiv="padding-left: 10px" showMsg="false">
+	            tableTitle="#{infoxMessages['sigiloProcesso.usuarios']}" hideOrder="true" searchFormStyleDiv="padding-left: 10px" showMsg="false">
 	            
 	            <ui:define name="headerToolBar" />
 	            
@@ -101,32 +101,32 @@
 	            
 	            <ui:define name="searchForm">
 	                <wi:searchForm formId="permissoesProcessoSearchForm" formTitle="Usuários">
-	                    <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{eppmessages['sigiloProcesso.usuario.nome']}" />
+	                    <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{infoxMessages['sigiloProcesso.usuario.nome']}" />
 	                    <wi:selectOneMenuEntity id="perfilTemplate" value="#{usuarioRaiaList.perfil}" 
 	                        items="#{usuarioRaiaList.perfis}" showLabelSelecione="true"
-	                        label="#{eppmessages['perfil.titlePage']}"/>
+	                        label="#{infoxMessages['perfil.titlePage']}"/>
 	                </wi:searchForm>
 	            </ui:define>
 	            
 	            <rich:column>
 	                <f:facet name="header">
-	                    <h:outputText value="#{eppmessages['sigiloProcesso.usuario.nome']}" />
+	                    <h:outputText value="#{infoxMessages['sigiloProcesso.usuario.nome']}" />
 	                </f:facet>
 	                <h:outputText value="#{row.nomeUsuario}" />
 	            </rich:column>
 	            
 	            <rich:column>
 	                   <f:facet name="header">
-	                       <h:outputText value="#{eppmessages['sigiloProcesso.usuario.cpf']}" />
+	                       <h:outputText value="#{infoxMessages['sigiloProcesso.usuario.cpf']}" />
 	                   </f:facet>
 	                   <h:outputText value="#{row.pessoaFisica.cpf}" />
 	            </rich:column>
 	            
 	            <ui:define name="conteudoAdicional">
 	               <h:form rendered="#{usuarioRaiaList.resultCount gt 0}">
-		                <a:commandButton value="#{eppmessages['sigiloProcesso.gravar']}" action="#{sigiloProcessoAction.gravarPermissoes}" limitRender="true" 
+		                <a:commandButton value="#{infoxMessages['sigiloProcesso.gravar']}" action="#{sigiloProcessoAction.gravarPermissoes}" limitRender="true" 
 		                    render="sigiloProcessoDiv, pageBodyDialogMessage" execute="@this" styleClass="buttons"/>
-		                <a:commandButton value="#{eppmessages['sigiloProcesso.cancelar']}" action="#{sigiloProcessoAction.resetPermissoes}" execute="@this"
+		                <a:commandButton value="#{infoxMessages['sigiloProcesso.cancelar']}" action="#{sigiloProcessoAction.resetPermissoes}" execute="@this"
 		                    limitRender="true" render="sigiloProcessoDiv, pageBodyDialogMessage" styleClass="buttons"/>
 		           </h:form>
 	            </ui:define>

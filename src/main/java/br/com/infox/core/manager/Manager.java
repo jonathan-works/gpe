@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.LockModeType;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
@@ -51,9 +53,13 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
     }
     
     public void lock(T entity) {
-    	getDao().lock(entity);
+    	getDao().lock(entity, LockModeType.PESSIMISTIC_READ);
     }
-
+    
+    public void lock(T entity, LockModeType lockModeType) {
+    	getDao().lock(entity, lockModeType);
+    }
+    
     public List<T> findAll() {
         return dao.findAll();
     }

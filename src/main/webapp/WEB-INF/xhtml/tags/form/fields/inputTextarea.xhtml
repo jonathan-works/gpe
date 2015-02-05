@@ -32,7 +32,7 @@
     <ui:define name="label">#{label}</ui:define>
     <h:inputTextarea
       id="#{id}"
-      styleClass="#{styleClass} #{readonly ? 'readOnly' : ''}"
+      styleClass="#{styleClass} input #{readonly ? 'readOnly' : ''}"
       readonly="#{readonly}"
       cols="#{empty cols ? 80 : cols}"
       rows="#{rows}"

@@ -72,6 +72,11 @@ public class DocumentoList extends EntityList<Documento> implements ActionListen
     protected Map<String, String> getCustomColumnsOrder() {
     	Map<String, String> map = new HashMap<>();
     	map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
+    	map.put("numeroDocumento", "o.numeroDocumento");
+    	map.put("usuarioInclusao", "o.usuarioInclusao");
+    	map.put("dataInclusao", "o.dataInclusao");
+    	map.put("descricao", "o.descricao");
+    	map.put("classificacaoDocumento", "o.classificacaoDocumento");
         return map;
     }
     public Processo getProcesso() {

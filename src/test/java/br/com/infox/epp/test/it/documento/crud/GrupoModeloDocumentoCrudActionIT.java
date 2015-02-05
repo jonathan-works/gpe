@@ -52,12 +52,12 @@ public class GrupoModeloDocumentoCrudActionIT extends
         public void execute(final CrudActions<GrupoModeloDocumento> crudActions) {
             /*
              * <wi:inputText id="grupoModeloDocumento"
-             * label="#{eppmessages['grupoModeloDocumento.grupoModeloDocumento']}"
+             * label="#{infoxMessages['grupoModeloDocumento.grupoModeloDocumento']}"
              * value="#{home.instance.grupoModeloDocumento}" required="true"
              * maxlength="30" />
              * 
              * <wi:selectSituacaoRadio id="ativo"
-             * label="#{eppmessages['field.situacao']}"
+             * label="#{infoxMessages['field.situacao']}"
              * value="#{home.instance.ativo}" />
              */
             final GrupoModeloDocumento entity = getEntity();

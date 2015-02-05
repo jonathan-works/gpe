@@ -12,7 +12,7 @@
             header="Classificações de documento da variável #{variavelClassificacaoDocumentoAction.currentVariable}">
             <div class="picklist-div">
                 <rich:panel
-                    header="#{eppmessages['variavelClassificacaoDocumento.tableTitle']}"
+                    header="#{infoxMessages['variavelClassificacaoDocumento.tableTitle']}"
                     id="variavelClassificacaoDocumentoListPanel"
                     bodyClass="dtable-p-b"
                     styleClass="dtable-p picklist">
@@ -24,7 +24,7 @@
                         var="row">
                         <wi:columnOutputText hideOrder="true"
                             columnId="classificacaoDocumento"
-                            columnHeader="#{eppmessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
+                            columnHeader="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
                             value="#{row.classificacaoDocumento.descricao}" />
                         <rich:column styleClass="dt-toolbar-col">
                             <h:form>
@@ -33,7 +33,7 @@
                                     action="#{variavelClassificacaoDocumentoAction.removerClassificacao(row)}">
                                     <h:graphicImage
                                         url="#{wiSkin.imageFolder}/grid/copyRight.gif"
-                                        title="#{eppmessages['button.delete']}" />
+                                        title="#{infoxMessages['button.delete']}" />
                                 </a:commandLink>
                             </h:form>
                         </rich:column>
@@ -44,7 +44,7 @@
                 <wi:dataTable
                     values="#{variavelClassificacaoDocumentoAction.classificacoesDisponiveis}"
                     bean="#{variavelClassificacaoDocumentoAction}"
-                    tableTitle="#{eppmessages['variavelClassificacaoDocumento.classificacaoDocumento.tableTitle']}"
+                    tableTitle="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento.tableTitle']}"
                     id="classificacoesDisponiveisList"
                     rowId="#{row.id}" panelStyleClass="picklist"
                     styleClass="picklist-dt"
@@ -52,13 +52,13 @@
                     <ui:define name="searchForm">
                         <wi:searchForm
                             formId="pesquisarClassificacaoDocumentoForm"
-                            formTitle="#{eppmessages['searchForm.title']}"
+                            formTitle="#{infoxMessages['searchForm.title']}"
                             searchReRender="variavelClassificacaoDocumentoDiv"
                             clearReRender="variavelClassificacaoDocumentoDiv"
                             clearAction="variavelClassificacaoDocumentoAction.clearSearch"
                             searchAction="variavelClassificacaoDocumentoAction.resetSearch">
                             <wi:inputText id="tituloModeloDocumento"
-                                label="#{eppmessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
+                                label="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
                                 value="#{variavelClassificacaoDocumentoAction.nomeClassificacaoDocumento}"
                                 maxlength="150" />
                         </wi:searchForm>
@@ -71,13 +71,13 @@
                                 action="#{variavelClassificacaoDocumentoAction.adicionarClassificacao(row)}">
                                 <h:graphicImage
                                     url="#{wiSkin.imageFolder}/grid/copyLeft.gif"
-                                    title="#{eppmessages['button.add']}" />
+                                    title="#{infoxMessages['button.add']}" />
                             </a:commandLink>
                         </h:form>
                     </ui:define>
                     <wi:columnOutputText
                         columnId="classificacaoDocumento"
-                        columnHeader="#{eppmessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
+                        columnHeader="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
                         value="#{row.descricao}" />
                 </wi:dataTable>
             </div>

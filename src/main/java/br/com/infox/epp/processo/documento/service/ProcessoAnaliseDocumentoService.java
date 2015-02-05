@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -56,6 +58,9 @@ public class ProcessoAnaliseDocumentoService {
 		processoAnalise.setProcessoPai(processoPai);
 		processoAnalise.setNumeroProcesso("");
 		processoAnalise.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+		processoAnalise.setLocalizacao(Authenticator.getLocalizacaoAtual());
+		processoAnalise.setUsuarioCadastro(Authenticator.getUsuarioLogado());
+		processoAnalise.setDataInicio(new Date());
 		processoManager.persist(processoAnalise);
 		
 		criarMetadadosProcessoAnalise(processoAnalise);

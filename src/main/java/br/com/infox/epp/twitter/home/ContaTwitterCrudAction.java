@@ -8,15 +8,13 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -28,6 +26,8 @@ import br.com.infox.epp.twitter.entity.ContaTwitter;
 import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 import br.com.infox.epp.twitter.util.TwitterUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(ContaTwitterCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -53,6 +53,8 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private LocalizacaoManager localizacaoManager;
+    @In
+    private InfoxMessages infoxMessages;
 
     public boolean usuarioLogadoHasTwitter() {
         return Authenticator.getUsuarioLogado().getTemContaTwitter();
@@ -155,7 +157,7 @@ public class ContaTwitterCrudAction extends AbstractCrudAction<ContaTwitter, Con
                 save();
             } catch (TwitterException e) {
                 if (UNAUTHORIZED == e.getStatusCode()) {
-                    FacesMessages.instance().add(Severity.ERROR, Messages.resolveMessage("contaTwitter.error.tokenNotFound"));
+                    FacesMessages.instance().add(Severity.ERROR, infoxMessages.get("contaTwitter.error.tokenNotFound"));
                 } else {
                     LOG.error(".getAutorizacao()", e);
                 }

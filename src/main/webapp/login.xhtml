@@ -25,9 +25,9 @@
       invoke([ "infox.Modal" ], function(Modal) {
         var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
         function toggleButton() {
-          $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{eppmessages['login.trocarSenhaBtn']}" : "#{eppmessages['login.naoTrocarSenhaBtn']}");
+          $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{infoxMessages['login.trocarSenhaBtn']}" : "#{infoxMessages['login.naoTrocarSenhaBtn']}");
           $(".input-text-login.passwd").val("");
-          $("#login\\:btnEntrar").val($("#btnTrocar").val() === "#{eppmessages['login.naoTrocarSenhaBtn']}" ? "#{eppmessages['login.alterarBtn']}" : "#{eppmessages['login.entrarBtn']}");
+          $("#login\\:btnEntrar").val($("#btnTrocar").val() === "#{infoxMessages['login.naoTrocarSenhaBtn']}" ? "#{infoxMessages['login.alterarBtn']}" : "#{infoxMessages['login.entrarBtn']}");
         }
         function showPanel() {
           requestPasswordPanel.show();
@@ -58,7 +58,7 @@
         <button
           id="consultaExterna"
           class="input-button-login input_button"
-          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';">#{eppmessages['consultaExterna.titlePage']}</button>
+          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';">#{infoxMessages['consultaExterna.titlePage']}</button>
         <ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
           <ui:param
             name="id"
@@ -90,7 +90,7 @@
                   for="username"
                   rendered="#{not useCertLogin}"
                   class="login-lbl"
-                  value="#{eppmessages['login.nomeUsuario']}">
+                  value="#{infoxMessages['login.nomeUsuario']}">
                 </h:outputLabel>
                 <h:inputText
                   id="username"
@@ -103,7 +103,7 @@
                   for="password"
                   rendered="#{not useCertLogin}"
                   class="login-lbl"
-                  value="#{eppmessages['login.senha']}">
+                  value="#{infoxMessages['login.senha']}">
                 </h:outputLabel>
                 <h:inputSecret
                   id="password"
@@ -116,7 +116,7 @@
                   for="newPassword1"
                   rendered="#{not useCertLogin}"
                   class="login-lbl"
-                  value="#{eppmessages['login.novaSenha']}">
+                  value="#{infoxMessages['login.novaSenha']}">
                 </h:outputLabel>
                 <h:inputSecret
                   id="newPassword1"
@@ -128,7 +128,7 @@
                   for="newPassword2"
                   rendered="#{not useCertLogin}"
                   class="login-lbl"
-                  value="#{eppmessages['login.confirmacaoNovaSenha']}">
+                  value="#{infoxMessages['login.confirmacaoNovaSenha']}">
                 </h:outputLabel>
                 <h:inputSecret
                   id="newPassword2"
@@ -139,28 +139,20 @@
             <s:div
               styleClass="cert-div"
               rendered="#{useCertLogin}">
-              <a:jsFunction
-                  name="submitForm"
-                  action="#{certificateAuthenticator.authenticate()}"
-                  execute="certificacaoSignature, certificacaoCertChain, certChainStringLog, @this"
-                  render="DialogMessage"
-                  limitRender="true" />
-                  
-                <wi:certificadoDigital
-                  id="certificacao"
-                  urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-                  formId="#{rich:clientId('login')}"
-                  certificationChainField="#{certificateAuthenticator.certChain}"
-                  signatureField="#{certificateAuthenticator.assinatura}"
-                  signableData=""
-                  useBase64Function="true"
-                  functionPreSign="infox.showLoading();"
-                  functionPosSign="submitForm();"
-                  debug="false"
-                  loginMode="true"
-                  useProviderDll="false"
-                  signButtonCaption="#{eppmessages['signature.loginBtn']}">
-                </wi:certificadoDigital>
+               <wi:certificadoDigital
+					id="certificacao"
+					tokenField="#{certificateAuthenticator.token}"
+					signableData=""
+					functionPreSign="infox.showLoading();"
+					functionPosSign="submitForm();"
+					signButtonCaption="#{infoxMessages['signature.loginBtn']}">
+				</wi:certificadoDigital>
+               <a:jsFunction
+					name="submitForm"
+					action="#{certificateAuthenticator.authenticate()}"
+					execute="certificacaoToken, @this"
+					render="DialogMessage"
+					limitRender="true" />
             </s:div>
           </div>
           <div
@@ -169,19 +161,19 @@
             <h:panelGroup rendered="#{not useCertLogin}">
               <h:commandButton
                 id="btnEntrar"
-                value="#{eppmessages['login.entrarBtn']}"
+                value="#{infoxMessages['login.entrarBtn']}"
                 styleClass="input-button-login input_button"
                 action="#{authenticator.login()}" />
               <input
                 class="input-button-login input_button"
                 id="btnTrocar"
                 type="button"
-                value="#{eppmessages['login.trocarSenhaBtn']}" />
+                value="#{infoxMessages['login.trocarSenhaBtn']}" />
               <input
                 class="input-button-login input_button"
                 id="btnTrocarSenha"
                 type="button"
-                value="#{eppmessages['login.requisitarSenhaBtn']}" />
+                value="#{infoxMessages['login.requisitarSenhaBtn']}" />
             </h:panelGroup>
           </div>
         </div>
@@ -190,7 +182,7 @@
         id="requestPasswordPanel"
         width="370"
         height="255">
-        <f:facet name="header">#{eppmessages['login.requisitarSenha']}</f:facet>
+        <f:facet name="header">#{infoxMessages['login.requisitarSenha']}</f:facet>
         <f:facet name="controls">
           <h:panelGroup>
             <h:graphicImage
@@ -206,7 +198,7 @@
               <h:outputLabel
                 for="login"
                 class="login-lbl"
-                value="#{eppmessages['login.nomeUsuario']}">
+                value="#{infoxMessages['login.nomeUsuario']}">
               </h:outputLabel>
               <h:inputText
                 id="login"
@@ -217,7 +209,7 @@
               <h:outputLabel
                 for="email"
                 class="login-lbl"
-                value="#{eppmessages['login.emailUsuario']}">
+                value="#{infoxMessages['login.emailUsuario']}">
               </h:outputLabel>
               <h:inputText
                 id="email"
@@ -229,13 +221,13 @@
             <h:commandButton
               id="confirma"
               class="input-button-login input_button"
-              value="#{eppmessages['login.confirmaTrocaSenhaBtn']}"
+              value="#{infoxMessages['login.confirmaTrocaSenhaBtn']}"
               action="#{passwordRequester.requisitarNovaSenha()}" />
             <input
               class="input-button-login input_button"
               id="btnTrocarSenha2"
               type="button"
-              value="#{eppmessages['login.cancelaTrocaSenhaBtn']}" />
+              value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" />
           </div>
         </h:form>
       </rich:popupPanel>
@@ -246,7 +238,7 @@
         rendered="#{useCertLogin}"
         resizeable="false">
         <f:facet name="header">
-          <h:outputText value="#{eppmessages['certificate.waitInit']}" />
+          <h:outputText value="#{infoxMessages['certificate.waitInit']}" />
         </f:facet>
         <div>
           <h:graphicImage url="#{wiSkin.imageFolder}/ajax-loader.gif" />

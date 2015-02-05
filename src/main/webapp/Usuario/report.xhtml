@@ -3,15 +3,15 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:ui="http://java.sun.com/jsf/facelets">
     <wi:dataReport
-        title="#{eppmessages['usuario.titlePage']}"
+        title="#{infoxMessages['usuario.titlePage']}"
         columns="5"
         widths="3 5 2 2 2"
         headerText="#{usuarioLoginList.criteria}">
-        <wi:reportColumnHeader title="#{eppmessages['usuarioLogin.nome']}" />
-        <wi:reportColumnHeader title="#{eppmessages['usuarioLogin.perfis']}"/>
-        <wi:reportColumnHeader title="#{eppmessages['usuarioLogin.bloqueio']}" />
-        <wi:reportColumnHeader title="#{eppmessages['usuarioLogin.provisorio']}" />
-        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['usuarioLogin.nome']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['usuarioLogin.perfis']}"/>
+        <wi:reportColumnHeader title="#{infoxMessages['usuarioLogin.bloqueio']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['usuarioLogin.provisorio']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
         <ui:repeat
             var="row"
             value="#{usuarioLoginList.list()}">

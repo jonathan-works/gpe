@@ -20,15 +20,15 @@ import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.framework.EntityHome;
 import org.jboss.seam.international.StatusMessage;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.util.Strings;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -42,9 +42,9 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
 
     private static final String MSG_INACTIVE_SUCCESS = "entity_inactived";
     private static final String MSG_REMOVE_ERROR = "Não foi possível excluir.";
-    private static final String MSG_REGISTRO_CRIADO = "#{eppmessages['entity_created']}";
-    private static final String MSG_REGISTRO_ALTERADO = "#{eppmessages['entity_updated']}";
-    private static final String MSG_REGISTRO_CADASTRADO = "#{eppmessages['constraintViolation.uniqueViolation']}";
+    private static final String MSG_REGISTRO_CRIADO = "#{infoxMessages['entity_created']}";
+    private static final String MSG_REGISTRO_ALTERADO = "#{infoxMessages['entity_updated']}";
+    private static final String MSG_REGISTRO_CADASTRADO = "#{infoxMessages['constraintViolation.uniqueViolation']}";
 
     private static final LogProvider LOG = Logging.getLogProvider(AbstractHome.class);
 
@@ -69,7 +69,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
     }
 
     protected String getInactiveSuccess() {
-        return Messages.resolveMessage(MSG_INACTIVE_SUCCESS);
+        return InfoxMessages.getInstance().get(MSG_INACTIVE_SUCCESS);
     }
 
     protected String getRemoveError() {
@@ -186,7 +186,7 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
         if ("removed".equals(ret)) {
             FacesMessages fm = instance();
             fm.clear();
-            fm.add("#{eppmessages['entity_deleted']}");
+            fm.add("#{infoxMessages['entity_deleted']}");
         }
         return ret;
     }

@@ -45,6 +45,12 @@ public class UsuarioPessoaFisicaList extends EntityList<PessoaFisica> {
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
+    
+    @Override
+    public void newInstance() {
+    	super.newInstance();
+    	setUsuario(null);
+    }
 
     public UsuarioLogin getUsuario() {
         return usuario;

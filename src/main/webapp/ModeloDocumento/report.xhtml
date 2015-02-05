@@ -11,9 +11,9 @@
 				   widths="4 4 1"
 				   headerText="#{modeloDocumentoList.criteria}">
 				   
-		<wi:reportColumnHeader title="#{eppmessages['modeloDocumento.tituloModeloDocumento']}" />
-		<wi:reportColumnHeader title="#{eppmessages['modeloDocumento.tipoModeloDocumento']}" />
-		<wi:reportColumnHeader title="#{eppmessages['field.situacao']}"/>
+		<wi:reportColumnHeader title="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['modeloDocumento.tipoModeloDocumento']}" />
+		<wi:reportColumnHeader title="#{infoxMessages['field.situacao']}"/>
 				
 		<ui:repeat var="row" value="#{modeloDocumentoList.list()}">
 			<wi:reportColumn value="#{row.tituloModeloDocumento}" />

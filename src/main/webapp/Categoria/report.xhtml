@@ -3,14 +3,14 @@
 <ui:composition xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <ui:param name="title" value="#{eppmessages['categoria.titlePage']}" />
+    <ui:param name="title" value="#{infoxMessages['categoria.titlePage']}" />
 
-    <wi:dataReport title="#{eppmessages['categoria.reportTitle']}"
+    <wi:dataReport title="#{infoxMessages['categoria.reportTitle']}"
         columns="2" widths="4 2" headerText="#{categoriaList.criteria}">
 
         <wi:reportColumnHeader
-            title="#{eppmessages['categoria.categoria']}" />
-        <wi:reportColumnHeader title="#{eppmessages['field.situacao']}" />
+            title="#{infoxMessages['categoria.categoria']}" />
+        <wi:reportColumnHeader title="#{infoxMessages['field.situacao']}" />
 
         <ui:repeat var="row" value="#{categoriaList.list()}">
             <wi:reportColumn value="#{row.categoria}" />

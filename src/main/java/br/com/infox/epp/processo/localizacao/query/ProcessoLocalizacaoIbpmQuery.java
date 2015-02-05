@@ -7,6 +7,7 @@ public interface ProcessoLocalizacaoIbpmQuery {
     String PARAM_LOCALIZACAO = "localizacao";
     String PARAM_PAPEL = "papel";
     String PARAM_ID_TASK = "idTask";
+    String PARAM_TASK_INSTANCE = "taskInstance";
 
     String LIST_BY_TASK_INSTANCE = "listProcessoLocalizacaoIbpmByTaskInstance";
     String LIST_BY_TASK_INSTANCE_QUERY = "select o.localizacao from ProcessoLocalizacaoIbpm o where "
@@ -45,5 +46,9 @@ public interface ProcessoLocalizacaoIbpmQuery {
             + "where o.idProcessInstanceJbpm = :"
             + PARAM_PROCESS_ID
             + " and o.idTaskJbpm = :" + PARAM_TASK_ID;
+    
+    String DELETE_BY_TASK_INSTANCE_ID = "deleteProcessoLocalizacaoIbpmByTaskInstance";
+    String DELETE_BY_TASK_INSTANCE_ID_QUERY = "delete from ProcessoLocalizacaoIbpm o "
+            + "where o.idTaskInstance = :" + PARAM_TASK_INSTANCE;
 
 }

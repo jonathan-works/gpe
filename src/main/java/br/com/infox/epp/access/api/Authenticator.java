@@ -32,7 +32,7 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.crud.TermoAdesaoAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
@@ -70,6 +70,8 @@ public class Authenticator implements Serializable {
     private UsuarioPerfilManager usuarioPerfilManager;
     @In
     private UsuarioLoginManager usuarioLoginManager;
+    @In
+    private InfoxMessages infoxMessages;
 
     private String newPassword1;
     private String newPassword2;
@@ -216,7 +218,7 @@ public class Authenticator implements Serializable {
                     }
                 }
             } else {
-                getMessagesHandler().add(Severity.ERROR, Messages.resolveMessage("login.error.invalid"));
+                getMessagesHandler().add(Severity.ERROR, infoxMessages.get("login.error.invalid"));
             }
     }
 
@@ -364,7 +366,7 @@ public class Authenticator implements Serializable {
         redirect.execute();
     }
     
-    protected String getCaminhoPainel() {
+    public String getCaminhoPainel() {
         return "/Painel/list.seam";
     }
     

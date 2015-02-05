@@ -12,7 +12,7 @@
     <h:form id="itemProcessoForm">
         <s:div id="itemDiv"
             rendered="#{action.renderedByItem and !action.renderizarCadastroPartes}">
-            <wi:dataTable values="#{action.itemList}" tableTitle="#{eppmessages['item.reportTitle']}"
+            <wi:dataTable values="#{action.itemList}" tableTitle="#{infoxMessages['item.reportTitle']}"
                 id="itemTable" rowId="#{row.idItem}"
                 showSearchForm="false" panelStyleClass="full-sized">
                 <ui:define name="headerToolBar" />
@@ -33,7 +33,7 @@
                     </a:commandLink>
                 </ui:define>
                 <wi:columnOutputText columnId="item"
-                    columnHeader="#{eppmessages['item.descricaoItem']}"
+                    columnHeader="#{infoxMessages['item.descricaoItem']}"
                     value="#{row.item.caminhoCompletoToString()}" />
             </wi:dataTable>
         </s:div>

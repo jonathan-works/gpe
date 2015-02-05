@@ -62,10 +62,10 @@ public class SalaTurnoAction implements Serializable {
         } catch (final DAOException e) {
             this.actionMessagesService.handleDAOException(e);
         }
-        String resultMessage = "#{eppmessages['salaTurno.erroGravacaoTurno']}";
+        String resultMessage = "#{infoxMessages['salaTurno.erroGravacaoTurno']}";
         try {
             inserirTurnosSelecionados();
-            resultMessage = "#{eppmessages['entity_updated']}";
+            resultMessage = "#{infoxMessages['entity_updated']}";
         } catch (final DAOException e) {
             SalaTurnoAction.LOG.error(".inserirTurnosSelecionados()", e);
         }

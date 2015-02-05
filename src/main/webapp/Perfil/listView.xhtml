@@ -10,58 +10,58 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-    <ui:define name="title">#{eppmessages['perfil.titlePage']}</ui:define>
+    <ui:define name="title">#{infoxMessages['perfil.titlePage']}</ui:define>
     <ui:param 
         name="home" 
         value="#{perfilTemplateCrudAction}"/>
     <ui:define name="searchGrid">
         <wi:dataTable bean="#{perfilTemplateList}"
             values="#{perfilTemplateList.list(20)}"
-            tableTitle="#{eppmessages['perfil.tableName']}"
+            tableTitle="#{infoxMessages['perfil.tableName']}"
             id="perfilList" rowId="#{row.id}">
             <ui:define name="searchForm">
                 <wi:searchForm formId="perfilTemplateSearchForm"
-                    formTitle="#{eppmessages['searchForm.title']}">
+                    formTitle="#{infoxMessages['searchForm.title']}">
                     <wi:inputText id="perfil"
-                        label="#{eppmessages['perfil.descricao']}"
+                        label="#{infoxMessages['perfil.descricao']}"
                         value="#{perfilTemplateList.entity.descricao}"></wi:inputText>
                     <wi:tree id="localizacao"
                         assignTo="perfilTemplateList.entity.localizacao"
                         tree="#{estruturaLocalizacoesPerfilTree}"
                         icon="#{wiSkin.imageFolder}/nivelTree.gif"
                         iconLeaf="#{wiSkin.imageFolder}/file.gif"
-                        label="#{eppmessages['perfil.localizacao']}" 
+                        label="#{infoxMessages['perfil.localizacao']}" 
                         styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
                     <wi:tree id="papel"
                         assignTo="perfilTemplateList.entity.papel"
                         tree="#{papelTree}"
                         icon="#{wiSkin.imageFolder}/nivelTree.gif"
                         iconLeaf="#{wiSkin.imageFolder}/file.gif"
-                        label="#{eppmessages['perfil.papel']}" />
+                        label="#{infoxMessages['perfil.papel']}" />
                     <wi:selectSituacaoOneMenu id="ativo"
                         value="#{perfilTemplateList.entity.ativo}"
-                        label="#{eppmessages['field.situacao']}" />
+                        label="#{infoxMessages['field.situacao']}" />
                 </wi:searchForm>
             </ui:define>
             <wi:columnOutputText columnId="descricao"
-                columnHeader="#{eppmessages['perfil.descricao']}"
+                columnHeader="#{infoxMessages['perfil.descricao']}"
                 value="#{row.descricao}" />
             <wi:columnOutputText columnId="localizacao"
-                columnHeader="#{eppmessages['perfil.localizacao']}"
+                columnHeader="#{infoxMessages['perfil.localizacao']}"
                 value="#{row.localizacao.caminhoCompletoFormatado}" />
             <wi:columnOutputText columnId="papel"
-                columnHeader="#{eppmessages['perfil.papel']}"
+                columnHeader="#{infoxMessages['perfil.papel']}"
                 value="#{row.papel}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{eppmessages['field.situacao']}"
+                columnHeader="#{infoxMessages['field.situacao']}"
                 value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
         <wi:dataForm formId="perfilTemplateForm"
-            formTitle="#{eppmessages['form.title']}">
+            formTitle="#{infoxMessages['form.title']}">
             <wi:inputText id="perfil"
-                label="#{eppmessages['perfil.descricao']}"
+                label="#{infoxMessages['perfil.descricao']}"
                 value="#{perfilTemplateCrudAction.instance.descricao}"
                 required="true"/>
             <wi:tree id="localizacao"
@@ -69,17 +69,17 @@
                 tree="#{estruturaLocalizacoesPerfilTree}"
                 icon="#{wiSkin.imageFolder}/nivelTree.gif"
                 iconLeaf="#{wiSkin.imageFolder}/file.gif"
-                label="#{eppmessages['perfilTemplate.localizacao']}"
+                label="#{infoxMessages['perfilTemplate.localizacao']}"
                 styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
             <wi:tree id="papel"
                 assignTo="perfilTemplateCrudAction.instance.papel"
                 tree="#{papelTree}"
                 icon="#{wiSkin.imageFolder}/nivelTree.gif"
                 iconLeaf="#{wiSkin.imageFolder}/file.gif"
-                label="#{eppmessages['perfil.papel']}" required="true" />
+                label="#{infoxMessages['perfil.papel']}" required="true" />
             <wi:selectSituacaoRadio id="ativo"
                 value="#{perfilTemplateCrudAction.instance.ativo}"
-                label="#{eppmessages['field.situacao']}" />
+                label="#{infoxMessages['field.situacao']}" />
         </wi:dataForm>
     </ui:define>
     <ui:define name="tabs" />

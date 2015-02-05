@@ -11,7 +11,7 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
 
-    <ui:define name="title">#{eppmessages['natureza.titlePage']}</ui:define>
+    <ui:define name="title">#{infoxMessages['natureza.titlePage']}</ui:define>
 
     <ui:param name="home" value="#{naturezaCrudAction}" />
 
@@ -23,15 +23,15 @@
             actionInactive="naturezaCrudAction.inactive">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarNaturezaForm"
-                    formTitle="#{eppmessages['searchForm.title']}">
+                    formTitle="#{infoxMessages['searchForm.title']}">
                     <wi:inputText id="natureza"
                         value="#{naturezaList.entity.natureza}"
-                        label="#{eppmessages['natureza.natureza']}" />
+                        label="#{infoxMessages['natureza.natureza']}" />
                     <wi:selectBooleanMenu id="hasPartes"
-                        label="#{eppmessages['natureza.hasPartes']}"
+                        label="#{infoxMessages['natureza.hasPartes']}"
                         value="#{naturezaList.entity.hasPartes}" />
                     <wi:selectSituacaoOneMenu id="ativo"
-                        label="#{eppmessages['field.situacao']}"
+                        label="#{infoxMessages['field.situacao']}"
                         value="#{naturezaList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
@@ -41,38 +41,38 @@
                     actionInactive="naturezaCrudAction.inactive(row)" />
             </ui:define>
             <wi:columnOutputText columnId="natureza"
-                columnHeader="#{eppmessages['natureza.natureza']}"
+                columnHeader="#{infoxMessages['natureza.natureza']}"
                 value="#{row.natureza}" />
             <wi:columnBoolean columnId="hasPartes"
-                columnHeader="#{eppmessages['natureza.hasPartes']}"
+                columnHeader="#{infoxMessages['natureza.hasPartes']}"
                 columnWidth="15%" value="#{row.hasPartes}" />
             <wi:columnSituacao columnId="ativo"
-                columnHeader="#{eppmessages['field.situacao']}"
+                columnHeader="#{infoxMessages['field.situacao']}"
                 columnWidth="15%" value="#{row.ativo}" />
         </wi:dataTable>
     </ui:define>
 
     <ui:define name="form">
         <wi:dataForm formId="naturezaForm"
-            formTitle="#{eppmessages['form.title']}">
+            formTitle="#{infoxMessages['form.title']}">
             <wi:inputText id="natureza"
                 value="#{naturezaCrudAction.instance.natureza}"
-                required="true" label="#{eppmessages['natureza.natureza']}"
+                required="true" label="#{infoxMessages['natureza.natureza']}"
                 disabled="#{naturezaCrudAction.instance.locked}" />
             <wi:selectBooleanRadio id="hasPartes"
-                label="#{eppmessages['natureza.hasPartes']}"
+                label="#{infoxMessages['natureza.hasPartes']}"
                 value="#{naturezaCrudAction.instance.hasPartes}"
                 disabled="#{naturezaCrudAction.instance.locked}">
                 <a:ajax event="change" render="partesDiv, numeroPartesDiv"
                     limitRender="true" status=":status" execute="@this" />
             </wi:selectBooleanRadio>
             <wi:selectSituacaoRadio id="ativo"
-                label="#{eppmessages['field.situacao']}"
+                label="#{infoxMessages['field.situacao']}"
                 value="#{naturezaCrudAction.instance.ativo}" />
 
             <s:div id="partesDiv">
                 <wi:selectOneMenuEnum id="tipoDasPartes"
-                    label="#{eppmessages['natureza.tipoDasPartes']}"
+                    label="#{infoxMessages['natureza.tipoDasPartes']}"
                     items="#{naturezaCrudAction.getTiposDePartes()}"
                     value="#{naturezaCrudAction.instance.tipoPartes}"
                     required="true" showLabelSelecione="true"
@@ -86,13 +86,13 @@
             </s:div>
             <s:div id="numeroPartesDiv">
                 <wi:inputNumber id="numeroPartesFisicas"
-                    label="#{eppmessages['natureza.numeroPartesFisicas']}"
+                    label="#{infoxMessages['natureza.numeroPartesFisicas']}"
                     required="true"
                     value="#{naturezaCrudAction.instance.numeroPartesFisicas}"
                     disabled="#{naturezaCrudAction.instance.locked}"
                     rendered="#{naturezaCrudAction.instance.hasPartes and !naturezaCrudAction.instance.apenasPessoaJuridica()}" />
                 <wi:inputNumber id="numeroPartesJuridicas"
-                    label="#{eppmessages['natureza.numeroPartesJuridicas']}"
+                    label="#{infoxMessages['natureza.numeroPartesJuridicas']}"
                     required="true"
                     value="#{naturezaCrudAction.instance.numeroPartesJuridicas}"
                     disabled="#{naturezaCrudAction.instance.locked}"
@@ -104,21 +104,21 @@
     <ui:define name="tabs">
         <infox:tab id="naturezaCategoriaFluxoTab"
             rendered="#{naturezaCrudAction.isManaged()}"
-            title="#{eppmessages['naturezaCategoriaFluxo.titleTab']}"
+            title="#{infoxMessages['naturezaCategoriaFluxo.titleTab']}"
             name="naturezaCategoriaFluxoTab"
             action="#{naturezaCategoriaFluxoCrudAction.instance.setNatureza(naturezaCrudAction.instance)}">
             <s:div id="naturezaCategoriaFluxoFormDiv">
                 <wi:dataForm formId="naturezaCategoriaFluxoForm"
-                    formTitle="#{eppmessages['form.title']} - #{naturezaCrudAction.instance.natureza}">
+                    formTitle="#{infoxMessages['form.title']} - #{naturezaCrudAction.instance.natureza}">
                     <wi:selectOneMenuEntity id="categorias"
-                        label="#{eppmessages['naturezaCategoriaFluxo.categoria']}"
+                        label="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"
                         value="#{naturezaCategoriaFluxoCrudAction.instance.categoria}"
                         required="true"
                         items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}"
                         inactiveCond="#{not item.ativo}"
                         showLabelSelecione="true" />
                     <wi:selectOneMenuEntity id="fluxo"
-                        label="#{eppmessages['naturezaCategoriaFluxo.fluxo']}"
+                        label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
                         value="#{naturezaCategoriaFluxoCrudAction.instance.fluxo}"
                         required="true"
                         items="#{naturezaCategoriaFluxoFacade.getFluxoList()}"
@@ -128,7 +128,7 @@
                         <wi:commandButton id="saveButton"
                             action="naturezaCategoriaFluxoCrudAction.save()"
                             reRender="naturezaCategoriaFluxoFormDiv, naturezaCategoriaFluxoDiv, naturezaCategoriaFluxoTab, pageBodyDialogMessage"
-                            value="#{eppmessages['crud.persist']}" />
+                            value="#{infoxMessages['crud.persist']}" />
                     </ui:define>
                 </wi:dataForm>
             </s:div>
@@ -136,7 +136,7 @@
                 <wi:dataTable id="naturezaCategoriaFluxoTable"
                     values="#{naturezaCategoriaFluxoList.list(15)}"
                     bean="#{naturezaCategoriaFluxoList}"
-                    tableTitle="#{eppmessages['naturezaCategoriaFluxo.titleDataTable']} - #{naturezaCrudAction.instance.natureza}"
+                    tableTitle="#{infoxMessages['naturezaCategoriaFluxo.titleDataTable']} - #{naturezaCrudAction.instance.natureza}"
                     var="row" rows="10"
                     panelStyleClass="rf-dt-crud">
                     <ui:define name="headerToolBar" />
@@ -146,11 +146,11 @@
                             actionRemove="naturezaCategoriaFluxoCrudAction.remove(row)" />
                     </ui:define>
                     <wi:columnOutputText columnId="categoria"
-                        columnHeader="#{eppmessages['naturezaCategoriaFluxo.categoria']}"
+                        columnHeader="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"
                         value="#{row.categoria}" hideOrder="true"
                         styleClass="rf-dt-c-left" />
                     <wi:columnOutputText columnId="fluxo"
-                        columnHeader="#{eppmessages['naturezaCategoriaFluxo.fluxo']}"
+                        columnHeader="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
                         value="#{row.fluxo}" hideOrder="true"
                         styleClass="rf-dt-c-left" />
                 </wi:dataTable>

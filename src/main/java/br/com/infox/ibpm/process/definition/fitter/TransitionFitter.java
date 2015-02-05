@@ -12,16 +12,21 @@ import java.util.Map;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.processo.timer.TaskExpiration;
+import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.ibpm.transition.TransitionHandler;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(TransitionFitter.NAME)
 @AutoCreate
@@ -31,6 +36,11 @@ public class TransitionFitter extends Fitter implements Serializable {
     private static final LogProvider LOG = Logging.getLogProvider(TransitionFitter.class);
 
     public static final String NAME = "transitionFitter";
+    
+    @In
+    private TaskExpirationManager taskExpirationManager;
+    @In
+    private InfoxMessages infoxMessages;
 
     private List<SelectItem> transitionsItems;
     private String newNodeTransitionName;
@@ -122,6 +132,7 @@ public class TransitionFitter extends Fitter implements Serializable {
         clearArrivingAndLeavingTransitions();
         currentNode.removeArrivingTransition(t);
         currentNode.removeLeavingTransition(t);
+        removeTaskExpiration(currentNode.getName(), th.getName());
         checkTransitions();
     }
 
@@ -227,7 +238,7 @@ public class TransitionFitter extends Fitter implements Serializable {
     public List<SelectItem> getTransitionsItems(List<Node> nodes) {
         if (transitionsItems == null) {
             transitionsItems = new ArrayList<SelectItem>();
-            transitionsItems.add(new SelectItem(null, Messages.resolveMessage("process.transition.select")));
+            transitionsItems.add(new SelectItem(null, infoxMessages.get("process.transition.select")));
             for (Node n : nodes) {
                 if (n.getLeavingTransitions() != null) {
                     for (TransitionHandler t : TransitionHandler.getList((List<Transition>) n.getLeavingTransitions())) {
@@ -256,5 +267,17 @@ public class TransitionFitter extends Fitter implements Serializable {
     public void clearArrivingAndLeavingTransitions() {
         arrivingTransitions = null;
         leavingTransitions = null;
+    }
+    
+    private void removeTaskExpiration(String taskName, String transition) {
+        Fluxo fluxo = getProcessBuilder().getFluxo();
+        try {
+            TaskExpiration te = taskExpirationManager.getByFluxoAndTaskName(fluxo, taskName);
+            if (te != null && te.getTransition().equals(transition)) {
+                taskExpirationManager.remove(te);
+            }
+        } catch (DAOException e) {
+            LOG.error("transitionFitter.removeTaskExpiration()", e);
+        }
     }
 }

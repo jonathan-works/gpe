@@ -22,11 +22,16 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.Token;
 
+import br.com.infox.certificado.CertificateSignatures;
+import br.com.infox.certificado.bean.CertificateSignatureBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.component.tree.LocalizacaoSubTreeHandler;
@@ -122,6 +127,8 @@ public class ModeloComunicacaoAction implements Serializable {
 	private DocumentoDownloader documentoDownloader;
 	@In
 	private PastaManager pastaManager;
+	@In
+	private CertificateSignatures certificateSignatures;
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
@@ -136,8 +143,7 @@ public class ModeloComunicacaoAction implements Serializable {
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
 	private boolean finalizada;
-	private String certChain;
-	private String signature;
+	private String token;
 	private boolean adicionarDestinatarioRelator;
 	private boolean processoPossuiRelator;
 	private Boolean expedida;
@@ -364,13 +370,18 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void expedirComunicacao() {
 		try {
+		    CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
+		    if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+		        throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
+		    }
+            CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
 			if (destinatario != null) {
-				assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+				assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 				comunicacaoService.expedirComunicacao(destinatario);
 			} else if (possuiDocumentoInclusoPorUsuarioInterno) {
 				Documento documento = getDocumentoComunicacao().getDocumento();
 				if (!documento.hasAssinatura()) {
-					assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual(), certChain, signature);
+					assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 				}
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 			}
@@ -562,23 +573,15 @@ public class ModeloComunicacaoAction implements Serializable {
 		return tiposComunicacao;
 	}
 	
-	public String getCertChain() {
-		return certChain;
-	}
-	
-	public void setCertChain(String certChain) {
-		this.certChain = certChain;
-	}
-	
-	public String getSignature() {
-		return signature;
-	}
-	
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
-	
-	public boolean isFinalizada() {
+	public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public boolean isFinalizada() {
 		return finalizada;
 	}
 	

@@ -10,10 +10,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.messages.Messages;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -36,6 +34,8 @@ import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
@@ -72,6 +72,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     private SituacaoProcessoDAO situacaoProcessoDAO;
     @In
     private Authenticator authenticator;
+    @In
+    private InfoxMessages infoxMessages;
 
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
@@ -126,12 +128,21 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     }
 
     public boolean checarVisibilidade() {
+    	boolean visivel = checarVisibilidadeSemException();
+    	if (!visivel) {
+    		avisarNaoHaPermissaoParaAcessarProcesso();
+    	}
+    	return visivel;
+    }
+    
+    public boolean checarVisibilidadeSemException() {
     	MetadadoProcesso metadadoProcesso = getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
     	TipoProcesso tipoProcesso = metadadoProcesso != null ? metadadoProcesso.<TipoProcesso>getValue() : null;
     	boolean visivel = situacaoProcessoDAO.canAccessProcesso(getInstance().getIdProcesso(), tipoProcesso);
-        if (!visivel) {
-        	avisarNaoHaPermissaoParaAcessarProcesso();
-        }
+    	if (!visivel) {
+    		ContextFacade.setToEventContext("canClosePanel", true);
+            FacesMessages.instance().clear();
+    	}
     	return visivel;
     }
 
@@ -166,7 +177,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
                 }
                 messages.clear();
                 messages.add(StatusMessage.Severity.INFO,
-                        Messages.resolveMessage(msgKey));
+                        infoxMessages.get(msgKey));
             }
         } catch (DAOException | AssinaturaException e) {
             LOG.error("Não foi possível salvar o Documento " + idDocumento, e);

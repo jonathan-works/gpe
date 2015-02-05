@@ -10,59 +10,61 @@
     xmlns:a="http://richfaces.org/a4j"
     xmlns:dojo="http://www.itx.com.br/dojo"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
-    <ui:define name="title">#{eppmessages['produtividade.pageTitle']}</ui:define>
+    
+    <ui:define name="title">#{infoxMessages['produtividade.pageTitle']}</ui:define>
+    
     <ui:define name="body">
-      <wi:panel id="produtividadePanel" rendered="true">
+      <wi:panel id="produtividadePanel" rendered="true" styleClass="content-block">
         <wi:dataTable values="#{produtividadeAction.list(15)}"
             bean="#{produtividadeAction}"
-            tableTitle="#{eppmessages['produtividade.tableTitle']}"
+            tableTitle="#{infoxMessages['produtividade.tableTitle']}"
             id="produtividadeList" hideOrder="true">
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisaFluxoForm"
-                    formTitle="#{eppmessages['searchForm.title']}"
+                    formTitle="#{infoxMessages['searchForm.title']}"
                     clearAction="produtividadeAction.clear">
                     <wi:selectOneMenuEntity id="comboFluxo"
                         value="#{produtividadeAction.fluxo}"
-                        label="#{eppmessages['naturezaCategoriaFluxo.fluxo']}"
+                        label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
                         items="#{produtividadeAction.fluxoList}"
                         showLabelSelecione="true" />
                     <wi:suggest id="suggestUsuario"
                         suggestProvider="#{usuarioSuggestBean}"
                         value="#{produtividadeAction.usuario}"
-                        label="#{eppmessages['usuario.usuario']}" />
+                        label="#{infoxMessages['usuario.usuario']}" />
                     <wi:inputDataPeriodo id="periodo"
                         valueDateFrom="#{produtividadeAction.dataInicio}"
                         valueDateTo="#{produtividadeAction.dataFim}"
-                        label="#{eppmessages['data.inputPeriodo']}" />
+                        label="#{infoxMessages['data.inputPeriodo']}" />
                 </wi:searchForm>
             </ui:define>
             <ui:define name="toolBar" />
             <wi:columnOutputText columnId="usuario"
-                columnHeader="#{eppmessages['usuario.usuario']}"
+                columnHeader="#{infoxMessages['usuario.usuario']}"
                 value="#{row.usuario}" />
             <wi:columnOutputText columnId="localizacao"
-                columnHeader="#{eppmessages['produtividade.localizacao']}"
+                columnHeader="#{infoxMessages['produtividade.localizacao']}"
                 value="#{row.localizacao}" />
             <wi:columnOutputText columnId="papel"
-                columnHeader="#{eppmessages['produtividade.papel']}"
+                columnHeader="#{infoxMessages['produtividade.papel']}"
                 value="#{row.papel}" />
             <wi:columnOutputText columnId="tarefa"
-                columnHeader="#{eppmessages['produtividade.tarefa']}"
+                columnHeader="#{infoxMessages['produtividade.tarefa']}"
                 value="#{row.tarefa}" />
             <wi:columnOutputText columnId="quantidade"
-                columnHeader="#{eppmessages['produtividade.quantidade']}"
+                columnHeader="#{infoxMessages['produtividade.quantidade']}"
                 value="#{row.quantidadeTarefas}" />
             <wi:columnOutputText columnId="tempoMedio"
-                columnHeader="#{eppmessages['produtividade.tempoMedio']}"
+                columnHeader="#{infoxMessages['produtividade.tempoMedio']}"
                 value="#{row.mediaTempoGasto}" />
             <wi:columnOutputText columnId="tempoPrevisto"
-                columnHeader="#{eppmessages['produtividade.tempoPrevisto']}"
+                columnHeader="#{infoxMessages['produtividade.tempoPrevisto']}"
                 value="#{row.tempoPrevisto}" />
             <wi:columnOutputText columnId="tempoMinimo"
-                columnHeader="#{eppmessages['produtividade.tempoMinimo']}"
+                columnHeader="#{infoxMessages['produtividade.tempoMinimo']}"
                 value="#{row.minimoTempoGasto}" />
             <wi:columnOutputText columnId="tempoMaximo"
-                columnHeader="#{eppmessages['produtividade.tempoMaximo']}"
+                columnHeader="#{infoxMessages['produtividade.tempoMaximo']}"
                 value="#{row.maximoTempoGasto}" />
         </wi:dataTable>
       </wi:panel>

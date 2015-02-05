@@ -34,17 +34,9 @@ public class UsuarioLoginCrudAction extends AbstractCrudAction<UsuarioLogin, Usu
     private List<Map<String, String>> unidadeDecisoraMonocraticaList;
     private List<Map<String, String>> unidadeDecisoraColegiadaList;
     
-    public void limparListasDeUnidadesDecisoras(){
+    public void limparListasDeUnidadesDecisoras() {
     	unidadeDecisoraMonocraticaList = null;
     	unidadeDecisoraColegiadaList = null;
-    }
-
-    @Override
-    public void newInstance() {
-        super.newInstance();
-        final UsuarioLogin usuarioLogin = getInstance();
-        usuarioLogin.setBloqueio(Boolean.FALSE);
-        usuarioLogin.setProvisorio(Boolean.FALSE);
     }
 
     public UsuarioEnum[] getTiposDeUsuario() {

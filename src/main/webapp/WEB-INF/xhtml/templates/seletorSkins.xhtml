@@ -41,7 +41,7 @@
         id="#{id}-skinPanel"
         height="100"
     >
-        <f:facet name="header">#{eppmessages['skin.title']}</f:facet>
+        <f:facet name="header">#{infoxMessages['skin.title']}</f:facet>
         <f:facet name="controls">
             <h:panelGroup>
                 <h:graphicImage
@@ -55,14 +55,14 @@
         >
             <ui:define name="label">
                 <h:outputText
-                    value="#{eppmessages['skin.choice']}"
+                    value="#{infoxMessages['skin.choice']}"
                     styleClass="label"
                 />
             </ui:define>
             <h:form>
                 <h:selectOneMenu
                     value="#{wiSkin.skin}"
-                    styleClass="PaletteMenu"
+                    styleClass="PaletteMenu input select"
                     onchange="this.form.submit()"
                 >
                     <f:selectItems value="#{wiSkin.skinList}" />

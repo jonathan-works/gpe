@@ -16,7 +16,6 @@ import br.com.infox.epp.access.list.UsuarioPerfilEntityList;
 import br.com.infox.epp.access.list.UsuarioPessoaFisicaList;
 import br.com.infox.epp.meiocontato.list.MeioContatoList;
 import br.com.infox.epp.pessoa.documento.list.PessoaDocumentoList;
-import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoList;
 
 @Name(UsuarioLoginController.NAME)
@@ -24,7 +23,6 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoList;
 public class UsuarioLoginController extends AbstractController {
 	
 	private static final long serialVersionUID = 1L;
-
 	public static final String NAME = "usuarioLoginController";
 	
 	@In
@@ -57,6 +55,7 @@ public class UsuarioLoginController extends AbstractController {
 	@Override
 	public void onClickSearchTab() {
 		usuarioLoginCrudAction.onClickSearchTab();
+		newInstance();
 	}
 	
 	@Override
@@ -65,14 +64,12 @@ public class UsuarioLoginController extends AbstractController {
 	}
 	
 	public void onClickPessoaFisicaTab() {
-		UsuarioLogin usuarioLogin = getInstance();
 		usuarioPessoaFisicaCrudAction.newInstance();
-		usuarioPessoaFisicaCrudAction.setUsuarioAssociado(usuarioLogin);
-		usuarioPessoaFisicaList.setUsuario(usuarioLogin);
-		PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
-		if (pessoaFisica != null) {
-			meioContatoList.setPessoa(pessoaFisica);
-			pessoaDocumentoList.setPessoa(pessoaFisica);
+		usuarioPessoaFisicaCrudAction.setUsuarioAssociado(getInstance());
+		usuarioPessoaFisicaList.setUsuario(getInstance());
+		if (getInstance().getPessoaFisica() != null) {
+			meioContatoList.getEntity().setPessoa(getInstance().getPessoaFisica());
+			pessoaDocumentoList.getEntity().setPessoa(getInstance().getPessoaFisica());
 		}
 	}
 	
@@ -85,7 +82,6 @@ public class UsuarioLoginController extends AbstractController {
 		bloqueioUsuarioCrudAction.setUsuarioAtual(getInstance());
 		bloqueioUsuarioList.getEntity().setUsuario(getInstance());
 	}
-
 	
 	public void onClickAssinaturaTab() {
 		assinaturaDocumentoList.getEntity().setUsuario(getInstance());
@@ -97,6 +93,25 @@ public class UsuarioLoginController extends AbstractController {
 
 	public UsuarioLogin getInstance() {
 		return usuarioLoginCrudAction.getInstance();
+	}
+	
+	public void newInstance() {
+		setId(null);
+		usuarioLoginCrudAction.newInstance();
+		usuarioPessoaFisicaCrudAction.newInstance();
+		usuarioPessoaFisicaList.newInstance();
+		meioContatoList.newInstance();
+		pessoaDocumentoList.newInstance();
+		usuarioPerfilCrudAction.newInstance();
+		usuarioPerfilEntityList.newInstance();
+		bloqueioUsuarioCrudAction.newInstance();
+		bloqueioUsuarioList.newInstance();
+		assinaturaDocumentoList.newInstance();
+	}
+	
+	public void onGravarPessoaFisica() {
+		meioContatoList.newInstance();
+		pessoaDocumentoList.newInstance();
 	}
 	
 }

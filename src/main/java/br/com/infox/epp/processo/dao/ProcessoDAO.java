@@ -120,7 +120,7 @@ public class ProcessoDAO extends DAO<Processo> {
 		return find(processo.getIdProcesso());
 	}
 
-	private Processo getProcessoEpaByIdJbpm(Long idJbpm) {
+	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_ID_JBPM, idJbpm);
 		return getNamedSingleResult(PROCESSO_EPA_BY_ID_JBPM, parameters);
