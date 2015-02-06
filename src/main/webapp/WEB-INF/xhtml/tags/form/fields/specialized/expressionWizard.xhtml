@@ -69,7 +69,7 @@
       Node.addVariable(#{nodeFitter.currentNode.getStringVariables(definicaoVariavelProcessoAction.listVariaveis(100), variavelList.list(100))},VariableType.STRING);
       Node.addVariable(#{nodeFitter.currentNode.getLeavingTransitionList()},VariableType.TRANSITION);
       K.messages={
-          "pt-BR":{
+          "pt-br":{
             "BooleanOper.and":"E",
             "BooleanOper.or":"OU",
             "BooleanOper.not":"NEGAÇÃO",
@@ -141,6 +141,6 @@
   <script
     language="javascript"
     charset="utf-8">
-    _parser.TransitionNode.generateTree(#{value}, #{rich:jQuery(id.concat('Div'))}[0], #{rich:jQuery(id.concat("Text"))}[0]);
+    _parser.TransitionNode.generateTree('#{value}', #{rich:jQuery(id.concat('Div'))}[0], #{rich:jQuery(id.concat("Text"))}[0]);
     </script>
 </ui:composition>

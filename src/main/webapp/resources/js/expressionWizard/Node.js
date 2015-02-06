@@ -32,13 +32,13 @@
     get FUNC(){return "function";},
     get CLK(){return "click";},
   };
-  
+
   function Node(args){
     var _this=checkInit(this);
     var pvt = {
       dom:document.createElement(V.DIV)
     };
-    
+
     function setParent(itm) {
       if (itm !== window && typeof itm !== V.UNDEF) {
         if (itm instanceof K.Node) {
@@ -49,15 +49,15 @@
         pvt.parent=itm;
       }
     }
-    
+
     function getParent() {
       return pvt.parent;
     }
-    
+
     function getDOM() {
       return pvt.dom;
     }
-    
+
     function attachInput(input){
       if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement){
         pvt.dom[V.DT_INPT]=input;
@@ -65,7 +65,7 @@
         pvt.dom.addEventListener("selected",expressionChangedEvent);
       }
     }
-    
+
     function clear() {
       var dom = pvt.dom;
       for(var i=0,l=dom.classList.length; i<l;i++) {
@@ -106,26 +106,26 @@
       args = args || {};
     }
   }
-  
+
   function checkInit(obj) {
     if (obj === window) {
       throw "window";
     }
     return obj;
   }
-  
+
   var variables = {
     bool:[],
     str:[],
     numb:[]
   };
-  
+
   function getVariables(type) {
     type = type || VariableType.STRING;
     var result = getVarArrayByType(type);
     return cloneArray(result);
   }
-  
+
   function setVariables(array, type) {
     type = type || VariableType.STRING;
     switch(type) {
@@ -143,7 +143,7 @@
         break;
     }
   }
-  
+
   function getVarArrayByType(type) {
     var array;
     switch(type) {
@@ -165,22 +165,22 @@
     }
     return array;
   }
-  
+
   function cloneArray(arr) {
     return arr.slice(0, arr.length);
   }
-  
+
   function removeVariables(varName, array){
     var index = array.indexOf(varName);
     if (index>=0) {
       array.splice(index,1);
     }
   }
-  
+
   function addVariables(varName,array){
     array.push(varName);
   }
-  
+
   function executeVariableAction(varName,type,action){
     type = type || VariableType.STRING;
     var array = getVarArrayByType(type);
@@ -192,15 +192,15 @@
       }
     }
   }
-  
+
   function removeVariable(varName, type) {
     executeVariableAction(varName,type,removeVariables);
   }
-  
+
   function addVariable(varName, type) {
     executeVariableAction(varName,type,addVariables);
   }
-  
+
   function clearVariables(type){
     type = type || VariableType.STRING;
     switch(type) {
@@ -218,7 +218,7 @@
         break;
     }
   }
-  
+
   function createBooleanNode(current, cache) {
     var BNode = K.BooleanNode;
     var _type = BNode.getBooleanNodeType(current);
@@ -240,7 +240,7 @@
     }
     return result;
   }
-  
+
   function createArithmeticNode(current, cache) {
     var ANode = K.ArithNode;
     var result;
@@ -265,7 +265,7 @@
     }
     return result;
   }
-  
+
   function createStringNode(current, cache) {
     var SNode = K.StringNode;
     var _type = SNode.getStringNodeType(current);
@@ -281,8 +281,9 @@
     }
     return result;
   }
-  
-  function generateTree(stack, dom, input) {
+
+  function generateTree(json, dom, input) {
+    var stack=JSON.parse(json).reverse();
     var cache = [];
     var current;
     var result;
@@ -321,17 +322,17 @@
     cache[0].attachInput(input);
     return cache.pop();
   }
-  
+
   function expressionChangedEvent(evt){
     var input=this[V.DT_INPT];
     putStackToInput(this[V.DT_CLASS],input);
     input.dispatchEvent(new Event("change"));
   }
-  
+
   function putStackToInput(node,input){
-    input.value=["[",node.getStack().reverse().toString(),"]"].join("");
+    input.value=JSON.stringify(node.getStack().reverse());
   }
-  
+
   function calculateValueTypes(obj) {
     var type = 0x0;
     if (obj.value[0] instanceof Node && obj.value[1] instanceof Node) {
@@ -339,7 +340,7 @@
     }
     return type;
   }
-  
+
   function getStringOrNumberFromPlus(obj) {
     var result;
     switch(calculateValueTypes(obj)) {
@@ -357,10 +358,10 @@
       default:
         throw "Arithmetic combination of values not expected "+obj.value[0].toString()+" "+obj.value[1].toString();
     }
-    
+
     return result;
   }
-  
+
   function getCorrectExpression(obj) {
     var result;
     switch(calculateValueTypes(obj)) {
@@ -382,12 +383,12 @@
       default:
         throw "Conditional combination of values not expected";
     }
-    
+
     return result;
   }
-  
+
   Node.prototype = {};
-  
+
   var VariableType = {};
   Object.defineProperties(VariableType,{
     STRING:{
@@ -429,7 +430,7 @@
       value:generateTree
     }
   });
-  
+
   function clearToolbars() {
     var tbrlst=document.getElementsByClassName(V.TOOLBAR);
     for(var i=0,l=tbrlst.length;i<l;i++) {
@@ -439,7 +440,7 @@
       }
     }
   }
-  
+
   function mouseEnterDOM(evt) {
     var tbrlst = document.getElementsByClassName(V.CSS_SEL_ND);
     for(var i=0,l=tbrlst.length;i<l;i++) {
@@ -450,7 +451,7 @@
     var parent=item.parentNode;
     parent.classList.add(V.CSS_SEL_ND);
   }
-  
+
   function mouseClickDOM(evt) {
     clearToolbars();
     var item = evt.target;
@@ -492,16 +493,16 @@
     for(var i=0,l=classes.length;i<l;i++) {
       dom.classList.add(classes[i]);
     }
-    
+
     for(var key in data) {
       dom[["data",key].join("-")] = data[key] || "";
     }
-    
+
     if (params.hasToolbar !== V.UNDEF && params.hasToolbar) {
       dom.addEventListener(V.CLK, mouseClickDOM);
       dom.addEventListener(V.M_ENTER_EVT, mouseEnterDOM);
     }
-    
+
     if (typeof mouseenter === V.FUNC) {
       dom.addEventListener(V.M_ENTER_EVT, mouseenter);
     }
@@ -511,19 +512,19 @@
     if (typeof click === V.FUNC) {
       dom.addEventListener(V.CLK, click);
     }
-    
+
     if (typeof parent !== V.UNDEF && parent instanceof HTMLElement) {
       parent.appendChild(dom);
     }
-    
+
     return dom;
   }
-  
+
   function getMessage(label) {
-    
+
     return (((K.messages || {})[navigator.language] || {})[label] || label).replace(/\u2000/,"");
   }
-  
+
   var result= {
     Node:{
       value:Node,

@@ -1,11 +1,14 @@
 package br.com.infox.ibpm.process.definition.expressionWizard;
 
 import java.io.StringReader;
+import java.util.List;
 import java.util.Stack;
 
 import org.jboss.el.parser.AstCompositeExpression;
 import org.jboss.el.parser.ELParser;
 import org.jboss.el.parser.ParseException;
+
+import com.google.gson.Gson;
 
 public final class ExpressionTokenizer {
 
@@ -23,12 +26,11 @@ public final class ExpressionTokenizer {
         final AstCompositeExpression compositeExpression = parser.CompositeExpression();
         final WriteExpressionVisitor visitor = new WriteExpressionVisitor();
         compositeExpression.accept(visitor);
-        return visitor.toString();
+        return new Gson().toJson(visitor.getStack());
     }
     
     public static final String fromNodeJSON(String json){
-        final String result = json.substring(1, json.length()-1);
-        String[] split = result.split(",");
+        String[] split = new Gson().fromJson(json,String[].class);
         Stack<String> stack=new Stack<>();
         for(int i=0,l=split.length;i<l;i++){
             if (!"".equals(split[i])) {

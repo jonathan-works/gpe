@@ -492,7 +492,7 @@
   function generateTree(stack, dom, input){
     var root={};
     try {
-      root = processStack(stack);
+      root = processStack(JSON.parse(stack).reverse());
     } catch (e){
       console.error(e);
       root = new K.TransitionNode();
