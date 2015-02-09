@@ -77,9 +77,11 @@ public class IniciarProcessoService implements Serializable {
         
         processInstance.signal();
         
-        iniciaPrimeiraTarefa(businessProcess, processInstance);
+        boolean iniciouTarefa = iniciaPrimeiraTarefa(businessProcess, processInstance);
         
-        atribuiSwimlaneTarefa();
+        if (iniciouTarefa) {
+        	atribuiSwimlaneTarefa();
+        }
         
         return businessProcess.getProcessId();
     }
@@ -105,7 +107,7 @@ public class IniciarProcessoService implements Serializable {
         }
     }
 
-    private void iniciaPrimeiraTarefa(BusinessProcess businessProcess,
+    private boolean iniciaPrimeiraTarefa(BusinessProcess businessProcess,
             org.jbpm.graph.exe.ProcessInstance processInstance) {
         @SuppressWarnings(UNCHECKED) Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
@@ -114,7 +116,9 @@ public class IniciarProcessoService implements Serializable {
             long taskInstanceId = taskInstance.getId();
             businessProcess.setTaskId(taskInstanceId);
             businessProcess.startTask();
+            return true;
         }
+        return false;
     }
 
     private void createJbpmVariables(Processo processo,
