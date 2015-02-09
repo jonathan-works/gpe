@@ -112,6 +112,8 @@ public class UsuarioLoginController extends AbstractController {
 	public void onGravarPessoaFisica() {
 		meioContatoList.newInstance();
 		pessoaDocumentoList.newInstance();
+		meioContatoList.getEntity().setPessoa(getInstance().getPessoaFisica());
+		pessoaDocumentoList.getEntity().setPessoa(getInstance().getPessoaFisica());
 	}
 	
 }
