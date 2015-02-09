@@ -40,11 +40,16 @@ public class PastaAction implements Serializable, ActionListener {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pastaAction";
 
-    @In private ProcessoManager processoManager;
-    @In private PastaManager pastaManager;
-    @In private ActionMessagesService actionMessagesService;
-    @In private DocumentoManager documentoManager;
-    @In private ParticipanteProcessoManager participanteProcessoManager;
+    @In
+    private ProcessoManager processoManager;
+    @In
+    private PastaManager pastaManager;
+    @In
+    private ActionMessagesService actionMessagesService;
+    @In
+    private DocumentoManager documentoManager;
+    @In
+    private ParticipanteProcessoManager participanteProcessoManager;
 
     private Processo processo;
     private List<Pasta> pastaList;
@@ -116,10 +121,8 @@ public class PastaAction implements Serializable, ActionListener {
             newInstance();
             FacesMessages.instance().add(Severity.INFO,
                     "Pasta removida com sucesso.");
-        } catch (Exception e) {
-            // TODO logar este erro.
-            // actionMessagesService.handleDAOException(e);
-            e.printStackTrace();
+        } catch (DAOException e) {
+            actionMessagesService.handleDAOException(e);
         }
     }
 

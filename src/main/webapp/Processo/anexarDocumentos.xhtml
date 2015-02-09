@@ -2,6 +2,7 @@
 <ui:composition
   xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:f="http://java.sun.com/jsf/core"
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:h="http://java.sun.com/jsf/html"
@@ -35,6 +36,22 @@
           showLabelSelecione="true">
           <a:ajax event="change" status=":status" limitRender="true" 
           		  render=":movimentarTabPanel:anexarDocumentosForm:editorToolTipDiv" execute="@this"/>
+        </wi:selectOneMenuEntity>
+        <wi:selectOneMenuEntity
+            id="pastaDocumentoEditor"
+            label="#{infoxMessages['pasta.pasta']}"
+            value="#{documentoEditor.pasta}"
+            items="#{pastaAction.pastaList}"
+            required="false"
+            rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
+            showLabelSelecione="true">
+            <a:ajax
+                event="change"
+                limitRender="true"
+                status=":status"
+                onbeforesubmit="infox.showLoading();"
+                oncomplete="infox.hideLoading();"
+                execute="@this"/>
         </wi:selectOneMenuEntity>
       </s:div>
       <s:div id="tipoDocumentoDiv">
@@ -122,6 +139,23 @@
             listener="#{documentoUploader.onChangeClassificacaoDocumento}"
             status=":status"
             execute="@this" />
+        </wi:selectOneMenuEntity>
+        <wi:selectOneMenuEntity
+            id="pastaDocumentoUploader"
+            label="#{infoxMessages['pasta.pasta']}"
+            value="#{documentoUploader.pasta}"
+            items="#{pastaAction.pastaList}"
+            required="false"
+            rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
+            showLabelSelecione="true">
+            <a:ajax
+                event="change"
+                limitRender="true"
+                status=":status"
+                onbeforesubmit="infox.showLoading();"
+                oncomplete="infox.hideLoading();"
+                listener="#{documentoUploader.podeRenderizar}"
+                execute="@this"/>
         </wi:selectOneMenuEntity>
       </div>
       <s:div id="tipoDocumentoDivPdf">

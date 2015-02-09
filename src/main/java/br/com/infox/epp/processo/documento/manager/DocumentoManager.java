@@ -16,6 +16,7 @@ import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.numeration.NumeracaoDocumentoSequencialManager;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
@@ -76,6 +77,15 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         return documento;
     }
 
+    public Documento gravarDocumentoNoProcesso(Processo processo, Documento documento, Pasta pasta) throws DAOException {
+        gravarDocumentoNoProcesso(processo, documento);
+        if (pasta != null) {
+            documento.setPasta(pasta);
+            update(documento);
+        }
+        return documento;
+    }
+    
     public Documento createDocumento(Processo processo, String label, DocumentoBin bin, ClassificacaoDocumento classificacaoDocumento)
             throws DAOException {
         final Documento doc = new Documento();
