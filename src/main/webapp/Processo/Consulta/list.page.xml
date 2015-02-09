@@ -13,7 +13,7 @@ login-required="true"
     
     <action
       execute="#{pastaAction.setProcesso(consultaController.processo)}"
-      if="#{consultaController.tab eq 'tabAnexos'}" />
+      if="#{(consultaController.tab eq 'tabAnexos') || (consultaController.tab eq 'tabAnexar')}" />
     <action
       execute="#{documentoList.setProcesso(consultaController.processo)}"
       if="#{consultaController.tab eq 'tabAnexos'}" />

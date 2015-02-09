@@ -8,12 +8,13 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(DocumentoEditor.NAME)
@@ -26,6 +27,7 @@ public class DocumentoEditor extends DocumentoCreator implements Serializable {
     @In
     private DocumentoManager documentoManager;
     private List<Integer> idsDocumentosSessao;
+    private Pasta pasta;
     private boolean expanded = false;
 
     @Override
@@ -36,7 +38,7 @@ public class DocumentoEditor extends DocumentoCreator implements Serializable {
     @Override
     protected Documento gravarDocumento() throws DAOException {
     	if (getDocumento().getId() == null) {
-    		return documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento());
+    		return documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento(), getPasta());
     	} else {
     		return documentoManager.update(getDocumento());
     	}
@@ -57,6 +59,7 @@ public class DocumentoEditor extends DocumentoCreator implements Serializable {
     	super.clear();
     	idsDocumentosSessao = new ArrayList<>();
     	idsDocumentosSessao.add(-1);
+    	pasta = null;
     	reloadDocumentos();
     }
     
@@ -79,5 +82,13 @@ public class DocumentoEditor extends DocumentoCreator implements Serializable {
     private void reloadDocumentos() {
     	setDocumentosDaSessao(new ArrayList<Documento>());
     	getDocumentosDaSessao().addAll(documentoManager.getDocumentosSessaoAnexar(getProcesso(), idsDocumentosSessao));
+    }
+
+    public Pasta getPasta() {
+        return pasta;
+    }
+
+    public void setPasta(Pasta pasta) {
+        this.pasta = pasta;
     }
 }
