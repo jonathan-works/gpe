@@ -90,6 +90,11 @@ public class UsuarioPessoaFisicaCrudAction extends AbstractCrudAction<PessoaFisi
         }
         return ret;
     }
+    
+    public void gravarUsuarioPessoaFisica() {
+    	save();
+    	newInstance();
+    }
 
     @Override
     public String remove() {

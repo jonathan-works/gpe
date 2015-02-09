@@ -150,7 +150,7 @@
         <ui:define name="buttons">
      				<wi:commandButton id="gravarPessoaFisicaUsuario"
 				        action="#{usuarioLoginController.onGravarPessoaFisica()}"
-				        actionListener="#{usuarioPessoaFisicaCrudAction.save()}"
+				        actionListener="#{usuarioPessoaFisicaCrudAction.gravarUsuarioPessoaFisica()}"
 				        reRender="usuarioPessoaFisica pageBodyDialogMessage"
 				        value="#{usuarioPessoaFisicaCrudAction.managed ? messages['crud.update'] : messages['crud.persist']}" />
         </ui:define>
