@@ -370,17 +370,14 @@ public class ModeloComunicacaoAction implements Serializable {
 	
 	public void expedirComunicacao() {
 		try {
-		    CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
-		    if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-		        throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
-		    }
-            CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
 			if (destinatario != null) {
+				CertificateSignatureBean signatureBean = getCertificateSignatureBean();
 				assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 				comunicacaoService.expedirComunicacao(destinatario);
 			} else if (possuiDocumentoInclusoPorUsuarioInterno) {
 				Documento documento = getDocumentoComunicacao().getDocumento();
 				if (!documento.hasAssinatura()) {
+					CertificateSignatureBean signatureBean = getCertificateSignatureBean();
 					assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 				}
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
@@ -388,15 +385,24 @@ public class ModeloComunicacaoAction implements Serializable {
 			expedida = null;
 			FacesMessages.instance().add("Comunicação expedida com sucesso");
 		} catch (DAOException e) {
-			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			LOG.error("Erro ao expedir comunicação", e);
 			actionMessagesService.handleDAOException(e);
 		} catch (CertificadoException e) {
-			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			LOG.error("Erro ao expedir comunicação", e);
 			actionMessagesService.handleException("Erro ao expedir comunicação", e);
 		} catch (AssinaturaException e) {
-			LOG.error("Erro ao expedir comunicação " + modeloComunicacao.getId() + " para o destinatário " + destinatario.getId(), e);
+			LOG.error("Erro ao expedir comunicação", e);
 			FacesMessages.instance().add(e.getMessage());
 		}
+	}
+
+	private CertificateSignatureBean getCertificateSignatureBean() throws DAOException {
+		CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
+		if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+		    throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
+		}
+		CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
+		return signatureBean;
 	}
 
 	public void replicarPrazo(DestinatarioModeloComunicacao destinatario) {
