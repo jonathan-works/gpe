@@ -5,7 +5,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -35,13 +34,11 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
-import br.com.infox.seam.util.ComponentUtil;
 // TODO: Transformar este componente em um manager, despejar atributos persistentes na classe de fronteira responsável pelo login
 @Scope(ScopeType.CONVERSATION)
 @Name(value = TermoAdesaoAction.NAME)
@@ -156,8 +153,7 @@ public class TermoAdesaoAction implements Serializable {
     private CertificateSignatureBundleBean getSignature() throws CertificadoException {
     	CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
     	if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-    		Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
-    		throw new CertificadoException(eppmessages.get("termoAdesao.sign.error"));
+    		throw new CertificadoException(infoxMessages.get("termoAdesao.sign.error"));
     	}
     	return bundle;
     }
