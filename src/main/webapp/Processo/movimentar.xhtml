@@ -202,7 +202,7 @@
                 name="tabAnexos"
                 rendered="#{processoEpaHome.managed}"
                 status=":status"
-                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
+                action="#{documentoList.entity.setProcesso(processoEpaHome.instance.processoRoot)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{infoxMessages['movimentar.documentos.titleTab']}">
                 <ui:include src="pastaDocumento.xhtml" />

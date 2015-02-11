@@ -11,7 +11,6 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -27,7 +26,7 @@ public class DocumentoEditor extends DocumentoCreator implements Serializable {
     @In
     private DocumentoManager documentoManager;
     private List<Integer> idsDocumentosSessao;
-    private Pasta pasta;
+    
     private boolean expanded = false;
 
     @Override
@@ -59,7 +58,7 @@ public class DocumentoEditor extends DocumentoCreator implements Serializable {
     	super.clear();
     	idsDocumentosSessao = new ArrayList<>();
     	idsDocumentosSessao.add(-1);
-    	pasta = null;
+    	setPasta(null);
     	reloadDocumentos();
     }
     
@@ -84,11 +83,5 @@ public class DocumentoEditor extends DocumentoCreator implements Serializable {
     	getDocumentosDaSessao().addAll(documentoManager.getDocumentosSessaoAnexar(getProcesso(), idsDocumentosSessao));
     }
 
-    public Pasta getPasta() {
-        return pasta;
-    }
-
-    public void setPasta(Pasta pasta) {
-        this.pasta = pasta;
-    }
+    
 }
