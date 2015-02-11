@@ -39,7 +39,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     
     @Override
     public void setProcesso(Processo processo) {
-    	super.setProcesso(processo);
+    	super.setProcesso(processo.getProcessoRoot());
     	clearParticipanteProcesso();
     	if (!podeAdicionarPartesFisicas() && podeAdicionarPartesJuridicas()) {
 			setTipoPessoa(TipoPessoaEnum.J);
