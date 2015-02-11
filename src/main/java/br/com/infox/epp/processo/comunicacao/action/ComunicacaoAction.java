@@ -130,6 +130,10 @@ public class ComunicacaoAction implements Serializable {
 		if (destinatarios == null) {
 			destinatarios = new ArrayList<>();
 			for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
+				Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao);
+				if (comunicacao == null || comunicacao.getDataFim() != null) {
+					continue;
+				}
 				boolean cienciaConfirmada = isCienciaConfirmada(destinatarioModeloComunicacao);
 				dadosCiencia.put(destinatarioModeloComunicacao.getId(), cienciaConfirmada);
 				if (usuarioExterno && !cienciaConfirmada) {
