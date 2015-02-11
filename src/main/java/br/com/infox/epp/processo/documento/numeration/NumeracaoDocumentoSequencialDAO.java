@@ -33,7 +33,7 @@ public class NumeracaoDocumentoSequencialDAO extends DAO<NumeracaoDocumentoSeque
 			persist(next);
 			return 1;
 		} else {
-			lock(next, LockModeType.PESSIMISTIC_READ);
+			lock(next, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
 			Integer result = next.getNextNumero();
 			next.setNextNumero(next.getNextNumero() + 1);
 			update(next);
