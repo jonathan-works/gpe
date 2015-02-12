@@ -82,9 +82,9 @@
             value="#{wiSkin.imageFolder}/mod/balao.png"
             rendered="#{row.processo.situacaoPrazo ne 'SAT'}"
           />
-          <h:form id="#{row.processo.numeroProcesso}Form">
+          <h:form id="#{row.processo.numeroProcessoRoot}Form">
             <h:selectBooleanCheckbox
-              id="#{row.processo.numeroProcesso}Contab"
+              id="#{row.processo.numeroProcessoRoot}Contab"
               styleClass="checkbox"
               value="#{row.processo.processo.contabilizar}"
               required="false"
@@ -110,7 +110,7 @@
       <wi:columnOutputText
         columnId="numeroProcesso"
         columnHeader="#{infoxMessages['processo.menuText']}"
-        value="#{row.processo.numeroProcesso}"
+        value="#{row.processo.numeroProcessoRoot}"
         hideOrder="true"
       />
       <wi:columnOutputText
@@ -174,7 +174,7 @@
   </ui:define>
   <ui:define name="form">
     <dojo:defaultGauge
-      id="#{processoTarefaList.entity.processo.numeroProcesso}"
+      id="#{processoTarefaList.entity.processo.numeroProcessoRoot}"
       max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
       width="210"
       height="200"
@@ -188,7 +188,7 @@
     <wi:dataTable
       values="#{processoTarefaList.list(15)}"
       bean="#{processoTarefaList}"
-      tableTitle="Processo #{processoTarefaList.entity.processo.numeroProcesso} - Tarefas"
+      tableTitle="Processo #{processoTarefaList.entity.processo.numeroProcessoRoot} - Tarefas"
       showToolbarColumn="false"
       showSearchForm="false"
       panelStyleClass="bam-table"

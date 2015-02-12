@@ -232,6 +232,10 @@ public class Processo implements Serializable {
 	public String getNumeroProcesso() {
 		return numeroProcesso;
 	}
+	
+	public String getNumeroProcessoRoot() {
+		return getProcessoRoot().getNumeroProcesso();
+	}
 
 	public void setNumeroProcesso(String numeroProcesso) {
 		this.numeroProcesso = numeroProcesso;
