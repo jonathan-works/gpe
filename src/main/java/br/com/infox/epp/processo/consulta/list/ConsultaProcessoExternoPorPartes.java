@@ -25,7 +25,7 @@ public class ConsultaProcessoExternoPorPartes extends EntityList<Processo> {
 
     private String nomePartes;
 
-    private static final String R1 = "exists (select p from ParticipanteProcesso pp "
+    private static final String R1 = "exists (select pp from ParticipanteProcesso pp "
             + "where lower(pp.nome) like lower(concat('%', #{consultaProcessoExternoPorPartes.nomePartes}, '%'))"
             + " and pp.processo = o)";
 
