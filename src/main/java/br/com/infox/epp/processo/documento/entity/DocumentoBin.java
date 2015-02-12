@@ -85,10 +85,6 @@ public class DocumentoBin implements Serializable {
     @NotNull
     private boolean minuta = false;
     
-    @Column(name = "in_suficientemente_assinado")
-    @NotNull
-    private Boolean suficientementeAssinado = false;
-    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList;
     
