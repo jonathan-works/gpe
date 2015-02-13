@@ -34,7 +34,7 @@ public final class DateUtil {
     }
 
     /**
-     * Metodo retorna um calendar com o horario IGUAL a '23:59:59'
+     * Metodo retorna um calendar com o horario IGUAL a '23:59:59.999'
      * 
      * @param date
      * @return
@@ -43,7 +43,7 @@ public final class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.set(1970, 0, 1, 23, 59);
         calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 999);
         return calendar;
     }
 
