@@ -3,11 +3,16 @@ package br.com.infox.epp.processo.documento.anexos;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.seam.annotations.In;
+
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.log.LogProvider;
 
 public abstract class DocumentoCreator {
@@ -16,6 +21,11 @@ public abstract class DocumentoCreator {
     private Documento documento;
     private List<Documento> documentosDaSessao;
     private Pasta pasta;
+    
+    private Processo processoReal;
+    
+    @In
+    private MetadadoProcessoManager metadadoProcessoManager;
 
     public Processo getProcesso() {
         return processo;
@@ -23,6 +33,7 @@ public abstract class DocumentoCreator {
 
     public void setProcesso(Processo processo) {
         this.processo = processo.getProcessoRoot();
+        this.setProcessoReal(processo);
     }
 
     public Documento getDocumento() {
@@ -45,6 +56,10 @@ public abstract class DocumentoCreator {
         setDocumento(new Documento());
         getDocumento().setAnexo(true);
         getDocumento().setDocumentoBin(new DocumentoBin());
+        List<MetadadoProcesso> metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcessoReal(), EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
+        if (!metaPastas.isEmpty()) {
+        	setPasta((Pasta)metaPastas.get(0).getValue());
+        }
     }
 
     public void clear() {
@@ -71,7 +86,18 @@ public abstract class DocumentoCreator {
     }
 
     public void setPasta(Pasta pasta) {
+    	if (pasta == null) {
+    		return;
+    	}
         this.pasta = pasta;
     }
+
+	public Processo getProcessoReal() {
+		return processoReal;
+	}
+
+	public void setProcessoReal(Processo processoReal) {
+		this.processoReal = processoReal;
+	}
 
 }
