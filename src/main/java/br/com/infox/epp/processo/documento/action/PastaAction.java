@@ -233,9 +233,9 @@ public class PastaAction implements Serializable, ActionListener {
     }
 
     public void setProcesso(Processo processo) {
-        this.processo = processo;
+        this.processo = processo.getProcessoRoot();
         try {
-            this.pastaList = pastaManager.getByProcesso(processo);
+            this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }

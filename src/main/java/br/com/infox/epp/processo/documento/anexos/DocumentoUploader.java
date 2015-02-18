@@ -33,7 +33,6 @@ import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
@@ -69,7 +68,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     
     private UploadedFile uploadedFile;
     private ClassificacaoDocumento classificacaoDocumento;
-    private Pasta pasta;
     private byte[] pdf;
     
     public void onChangeClassificacaoDocumento(AjaxBehaviorEvent ajaxBehaviorEvent){
@@ -98,7 +96,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         uploadedFile = null;
         isValido = false;
         pdf = null;
-        pasta = null;
+        setPasta(null);
     }
 
     @Override
@@ -227,7 +225,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     public void clear() {
         super.clear();
         this.classificacaoDocumento = null;
-        this.pasta = null;
+        setPasta(null);
     }
     
     public void podeRenderizar(AjaxBehaviorEvent ajaxBehaviorEvent) {
@@ -251,11 +249,4 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         }
     }
 
-    public Pasta getPasta() {
-        return pasta;
-    }
-
-    public void setPasta(Pasta pasta) {
-        this.pasta = pasta;
-    }
 }

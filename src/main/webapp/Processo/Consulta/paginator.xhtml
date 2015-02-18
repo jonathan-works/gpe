@@ -9,7 +9,7 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/empty.xhtml"
 >
-    <ui:define name="title">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcesso}</ui:define>
+    <ui:define name="title">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcessoRoot}</ui:define>
     <ui:define name="body">
         <h:outputScript
             name="jquery.hotkeys.js"
@@ -33,7 +33,7 @@
                 styleClass="doc-pag-form"
             >
                 <rich:column>
-                    <f:facet name="header">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcesso}</f:facet>
+                    <f:facet name="header">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcessoRoot}</f:facet>
                     <div id="areaPagina">
                         <div id="pagina">
                             <div class="post-it-cont">

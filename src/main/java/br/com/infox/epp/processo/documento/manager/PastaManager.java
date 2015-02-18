@@ -15,6 +15,9 @@ import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 
 @AutoCreate
 @Name(PastaManager.NAME)
@@ -26,8 +29,11 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     @In
     private DocumentoService documentoService;
     
+    @In
+    private MetadadoProcessoManager metadadoProcessoManager;
+    
     public Pasta getDefaultFolder(Processo processo) throws DAOException {
-        Pasta pasta = getDao().getDefaultByProcesso(processo);
+        Pasta pasta = getDefault(processo);
         if (pasta == null) {
         	pasta = createDefaultFolders(processo).get(0); 
         }
@@ -82,6 +88,18 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         List<Pasta> pastas = new ArrayList<>();
         pastas.add(documentosProcesso);
         pastas.add(naoAceitos);
+
+        metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.PASTA_DEFAULT, documentosProcesso.getId().toString());
         return pastas;
+    }
+    
+    public Pasta getDefault(Processo processo) {
+    	List<MetadadoProcesso> metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(processo, EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
+        if (!metaPastas.isEmpty()) {
+        	return (Pasta)metaPastas.get(0).getValue();
+        } else {
+        	return null;
+        }
+        	
     }
 }
