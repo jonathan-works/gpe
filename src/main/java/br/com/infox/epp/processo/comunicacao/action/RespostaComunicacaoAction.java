@@ -28,6 +28,8 @@ import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
@@ -73,6 +75,10 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DocumentoComunicacaoList documentoComunicacaoList;
 	@In
 	private DocumentoService documentoService;
+	@In
+	private PrazoComunicacaoService prazoComunicacaoService;
+	@In
+	private DocumentoComunicacaoService documentoComunicacaoService;
 	
 	private DestinatarioModeloComunicacao destinatario;
 	private Processo processoComunicacao;
@@ -100,7 +106,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 		newDocumentoEdicao();
 		initClassificacoes();
-		prazoResposta = comunicacaoService.contabilizarPrazoCumprimento(processoComunicacao);
+		prazoResposta = prazoComunicacaoService.contabilizarPrazoCumprimento(processoComunicacao);
 	}
 
 	public void downloadComunicacao() {
@@ -266,8 +272,8 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	private void initClassificacoes() {
 		TipoComunicacao tipoComunicacao = destinatario.getModeloComunicacao().getTipoComunicacao();
-		classificacoesEditor = comunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, true);
-		classificacoesAnexo = comunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, false);
+		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, true);
+		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, false);
 	}
 
 	private void criarProcessoResposta() {

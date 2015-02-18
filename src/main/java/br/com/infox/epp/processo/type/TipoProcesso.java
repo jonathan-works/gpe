@@ -8,6 +8,7 @@ public class TipoProcesso {
 	
 	public static final TipoProcesso DOCUMENTO = new TipoProcesso("DOCUMENTO");
 	public static final TipoProcesso COMUNICACAO = new TipoProcesso("COMUNICACAO");
+	public static final TipoProcesso COMUNICACAO_NAO_ELETRONICA = new TipoProcesso("COMUNICACAO_NAO_ELETRONICA");
 	
 	protected static Map<String, TipoProcesso> values = new HashMap<>();
 	private String value;
@@ -15,6 +16,7 @@ public class TipoProcesso {
 	static {
 		values.put("DOCUMENTO", DOCUMENTO);
 		values.put("COMUNICACAO", COMUNICACAO);
+		values.put("COMUNICACAO_NAO_ELETRONICA", COMUNICACAO_NAO_ELETRONICA);
 	}
 	
 	public TipoProcesso(String value) {
@@ -46,6 +48,6 @@ public class TipoProcesso {
 	}
 	
 	protected boolean isTipoProcessoValido(String tipoProcesso) {
-		return "DOCUMENTO".equals(tipoProcesso) || "COMUNICACAO".equals(tipoProcesso); 
+		return "DOCUMENTO".equals(tipoProcesso) || "COMUNICACAO".equals(tipoProcesso) || "COMUNICACAO_NAO_ELETRONICA".equals(tipoProcesso); 
 	}
 }

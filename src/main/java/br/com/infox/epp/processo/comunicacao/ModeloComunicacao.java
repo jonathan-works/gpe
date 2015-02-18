@@ -62,7 +62,7 @@ public class ModeloComunicacao implements Serializable {
 	
 	@NotNull
 	@Column(name = "in_minuta", nullable = false)
-	private boolean minuta = false;
+	private boolean minuta = true;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)

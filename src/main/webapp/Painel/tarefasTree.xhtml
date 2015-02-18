@@ -19,7 +19,7 @@
             execute="@this"
             selectionType="ajax"
             selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
-            render="painelProcessos, painelProcessosComunicacao, painelProcessosDocumento, :pesquisaListForm, #{painelCustomizado}"
+            render="painelProcessos, painelProcessosDocumento, :pesquisaListForm, #{painelCustomizado}"
             var="node">
             <rich:treeModelAdaptor nodes="#{painelTreeHandler.tarefasRoots}">
                 <rich:treeNode
