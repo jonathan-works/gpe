@@ -37,7 +37,7 @@
       </h:outputScript>
    	  <button class="buttons" 
       	onclick="location.href = '#{pathResolver.contextPath}/Painel/Comunicacao/painel.seam';">
-      	Painel de Comunicações
+      	#{infoxMessages['painel.comunicacoes']}
       </button>
       <infox:tabPanel id="tabPainelUsuario" switchType="ajax"
         status=":status" activeTab="#{painelUsuarioController.tab}" >

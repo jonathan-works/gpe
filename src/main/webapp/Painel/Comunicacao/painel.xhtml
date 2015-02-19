@@ -23,13 +23,13 @@
     </c:if>
    	<h:outputScript>
         function atualizaPainelFluxo() { 
-          location = '#{pathResolver.contextPath}/Painel/list.seam'; 
+          location = '#{pathResolver.contextPath}/Painel/Comunicacao/painel.seam'; 
         }
     </h:outputScript>
       
     <button class="buttons" 
       	onclick="location.href = '#{pathResolver.contextPath}/Painel/list.seam';">
-      	Painel do Usuário
+      	#{infoxMessages['painel.titlePage']}
     </button>
     
     <ui:param name="painelCustomizado" value="painelProcessosComunicacao, painelProcessosComunicacaoNaoEletronica" />
