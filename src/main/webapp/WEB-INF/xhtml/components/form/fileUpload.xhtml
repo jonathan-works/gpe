@@ -74,7 +74,7 @@
           listHeight="50px"
           immediateUpload="true"
           noDuplicate="true"
-          render="#{id}Decoration, #{id}, #{reRender}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente"
+          render="#{id}Decoration, #{id}, #{reRender}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
           acceptedTypes="#{home.classificacoesVariaveisUpload[id].acceptedTypes}"
           rendered="#{not empty home.classificacoesVariaveisUpload[id] and not readonly}"
           ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
@@ -87,8 +87,31 @@
                 <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].descricao : props.classificacaoDocumento}"/>
                 <br />
                 <h:outputText id="file#{id}" value="Documento: #{not readonly ? taskInstanceHome.instance[id] : value}"/>
+               	 <h:graphicImage url="#{wiSkin.imageFolder}/show.gif" title="Visualizar" style="cursor: pointer"
+                				onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
             </fieldset>
         </s:fragment>
     </s:div>
+    <s:div id="assinaturaDocumentoDiv#{f.id}" >
+	    <s:div id="conteudoAssinatura#{f.id}" rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
+						<a:jsFunction name="assinar"
+							action="#{taskInstanceHome.assinarDocumento()}"
+							execute="@this, assinaturaDocumentoDiv#{f.id}"
+							render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage" 
+							oncomplete="infox.hideLoading();"/>
+							
+						<wi:certificadoDigital
+	            id="appletAssinatura"
+								signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+								reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
+								tokenField="#{taskInstanceHome.tokenToSign}"
+								propertyValue="#{f.id.split('-')[0]}"
+								propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
+								signableData="#{taskInstanceHome.documentoToSign.documentoBin.md5Documento}"
+								functionPreSign="infox.showLoading();"
+								functionPosSign="assinar();" >
+	       </wi:certificadoDigital>
+			</s:div>
+		</s:div>
   </f:subview>
 </ui:composition>

@@ -337,9 +337,38 @@ public class Documento implements Serializable, Cloneable {
     	return false;
     }
     
+    public boolean isDocumentoAssinado(UsuarioLogin usuarioLogin){
+    	for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
+    		if (assinaturaDocumento.getUsuarioPerfil().getUsuarioLogin().equals(usuarioLogin)){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public boolean hasAssinaturaSuficiente() {
+    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
+    	for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : papeis) {
+    		if (classificacaoDocumentoPapel.getTipoAssinatura() == TipoAssinaturaEnum.S
+    				&& isDocumentoAssinado(classificacaoDocumentoPapel.getPapel())) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     public boolean hasAssinatura(){
-    	return getDocumentoBin().getAssinaturas() != null && 
-    			getDocumentoBin().getAssinaturas().size() > 0;
+    	return getDocumentoBin().getAssinaturas() != null && getDocumentoBin().getAssinaturas().size() > 0;
+    }
+    
+    public boolean isAssinaturaObrigatoria(Papel papel) {
+    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
+    	for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : papeis){
+    		if (classificacaoDocumentoPapel.getPapel().equals(papel) ) {
+    			return  classificacaoDocumentoPapel.getTipoAssinatura() == TipoAssinaturaEnum.O;
+    		}
+    	}
+    	return false;
     }
     
     @Transient

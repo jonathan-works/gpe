@@ -55,7 +55,7 @@ public class FileUpload implements FileUploadListener {
                 Documento doc = documentoManager.find(idDocumentoExistente);
                 documentoManager.remove(doc);
                 documentoBinManager.remove(doc.getDocumentoBin());
-                documentoBinarioManager.remove(idDocumentoExistente);
+                documentoBinarioManager.remove(doc.getDocumentoBin().getId());
             } catch (DAOException e) {
                 LOG.error("Erro ao remover o documento existente, com id: " + idDocumentoExistente, e);
                 throw new AbortProcessingException(e);
@@ -64,7 +64,7 @@ public class FileUpload implements FileUploadListener {
         Documento documento = createDocumento(file, uploadFile.getId());
         try {
             documentoManager.gravarDocumentoNoProcesso(ProcessoEpaHome.instance().getInstance(), documento);
-            documentoBinarioManager.salvarBinario(documento.getId(), documento.getDocumentoBin().getProcessoDocumento());
+            documentoBinarioManager.salvarBinario(documento.getDocumentoBin().getId(), documento.getDocumentoBin().getProcessoDocumento());
             TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), documento.getId());
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + ProcessoEpaHome.instance().getInstance().getIdProcesso(), e);
