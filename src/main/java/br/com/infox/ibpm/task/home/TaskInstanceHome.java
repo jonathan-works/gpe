@@ -4,6 +4,7 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -27,12 +29,18 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
+import org.jbpm.context.exe.VariableInstance;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.certificado.CertificateSignatures;
+import br.com.infox.certificado.bean.CertificateSignatureBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
@@ -52,8 +60,10 @@ import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
@@ -78,6 +88,7 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
 
@@ -91,6 +102,8 @@ public class TaskInstanceHome implements Serializable {
     private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceHome";
+    private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
+    private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
 
     @In
     private SituacaoProcessoDAO situacaoProcessoDAO;
@@ -113,7 +126,13 @@ public class TaskInstanceHome implements Serializable {
     @In
     private DocumentoManager documentoManager;
     @In
+    private DocumentoBinManager documentoBinManager;
+    @In
     private InfoxMessages infoxMessages;
+    @In
+    private CertificateSignatures certificateSignatures;
+    @In
+    private PathResolver pathResolver;
     
     private TaskInstance taskInstance;
     private Map<String, Object> mapaDeVariaveis;
@@ -128,6 +147,8 @@ public class TaskInstanceHome implements Serializable {
     private TaskInstance currentTaskInstance;
     private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
     private Map<String, ClassificacaoDocumento> classificacoesVariaveisUpload;
+    private Documento documentoToSign;
+    private String tokenToSign;
 
     private URL urlRetornoAcessoExterno;
     private String documentoAAssinar;
@@ -424,7 +445,53 @@ public class TaskInstanceHome implements Serializable {
             }
         }
     }
-
+    
+    public boolean podeAssinarDocumento(String variableName) {
+    	Pair<String, VariableType> variableType = variableTypeResolver.getVariableTypeMap().get(variableName);
+    	Integer idDocumento = (Integer)  org.jboss.seam.bpm.TaskInstance.instance().getVariable(variableType.getLeft());
+    	if (idDocumento != null) {
+    		Documento documento = documentoManager.find(idDocumento);
+    		documentoBinManager.refresh(documento.getDocumentoBin());
+			return !documento.isDocumentoAssinado(Authenticator.getPapelAtual()) && !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado()) 
+						&& documento.isDocumentoAssinavel(Authenticator.getPapelAtual());
+    	}
+    	return false;
+    }
+    
+    public String getViewUrlDownload(String variableName) {
+    	Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:"+variableName);
+    	Documento documento = documentoManager.find(idDocumento);
+    	if (documento.getDocumentoBin().isBinario()) {
+            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
+        }
+        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());
+    }
+    
+    private void prepareDocumentToSign(String variavelToSign) {
+    	Pair<String, VariableType> variableType = variableTypeResolver.getVariableTypeMap().get(variavelToSign);
+    	Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable(variableType.getLeft());
+    	setDocumentoToSign(documentoManager.find(idDocumento));
+    }
+    
+    public void assinarDocumento() {
+    	CertificateSignatureBundleBean certificateSignatureBundle = certificateSignatures.get(tokenToSign);
+    	if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+    		FacesMessages.instance().add("Erro ao assinar"); 
+    	} else {
+    		CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
+    		try {
+				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(),  Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(),  signatureBean.getSignature());
+			} catch (CertificadoException | AssinaturaException | DAOException e) {
+				FacesMessages.instance().add(e.getMessage());
+				LOG.error("assinarDocumento()", e);
+			} finally {
+				setDocumentoToSign(null);
+				setVariavelDocumentoToSign(null);
+				setTokenToSign(null);
+			}
+    	}
+    }
+    
     @Observer(Event.EVENTTYPE_TASK_CREATE)
     public void setCurrentTaskInstance(ExecutionContext context) {
     	setCurrentTaskInstance(context.getTaskInstance());
@@ -445,23 +512,49 @@ public class TaskInstanceHome implements Serializable {
     public String end(String transition) {
         if (checkAccess()) {
             checkCurrentTask();
-            ProcessoEpaHome processoHome = ComponentUtil
-                    .getComponent(ProcessoEpaHome.NAME);
-
             if (!update()) {
                 return null;
+            }
+            if (!validarAssinaturaDocumentosAoMovimentar()) {
+            	return null;
             }
             if (!validFileUpload()) {
                 return null;
             }
-            limparEstado(processoHome);
+            limparEstado();
             finalizarTaskDoJbpm(transition);
             atualizarPaginaDeMovimentacao();
         }
         return null;
     }
 
-    private boolean validFileUpload() {
+    @SuppressWarnings("unchecked")
+    private boolean validarAssinaturaDocumentosAoMovimentar() {
+		Map<String, Object> variableMap = org.jboss.seam.bpm.TaskInstance.instance().getVariableInstances();
+		FacesMessages.instance().clear();
+		boolean isAssinaturaOk = true;
+		for (String key : variableMap.keySet()) {
+			if (key.startsWith("FILE") || key.startsWith("EDITOR")) {
+				VariableInstance variableInstance = (VariableInstance) variableMap.get(key);
+				Documento documento = documentoManager.find(variableInstance.getValue());
+				boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
+				if (!assinaturaVariavelOk) {
+					FacesMessages.instance().add(String.format(infoxMessages.get("assinaturaDocumento.faltaAssinatura"), key.split(":")[1]));
+				}
+				isAssinaturaOk = isAssinaturaOk && assinaturaVariavelOk;
+			}
+		}
+		return isAssinaturaOk;
+	}
+
+	private boolean validarAssinaturaDocumento(Documento documento) {
+		if (documento.isAssinaturaObrigatoria(Authenticator.getPapelAtual())) {
+			return  documento.hasAssinaturaSuficiente() || documento.isDocumentoAssinado(Authenticator.getPapelAtual());
+		}
+		return true;
+	}
+
+	private boolean validFileUpload() {
         // TODO verificar se é necessária a mesma validação do update para
         // quando não há taskPage
         if (possuiTask()) {
@@ -549,8 +642,9 @@ public class TaskInstanceHome implements Serializable {
         }
     }
 
-    private void limparEstado(ProcessoEpaHome processoEpaHome) {
+    private void limparEstado() {
         this.currentTaskInstance = null;
+        ProcessoEpaHome processoEpaHome = ComponentUtil.getComponent(ProcessoEpaHome.NAME);
         processoEpaHome.setIdDocumento(null);
         processoEpaHome.setCertChain(null);
         processoEpaHome.setSignature(null);
@@ -559,9 +653,7 @@ public class TaskInstanceHome implements Serializable {
 
     private void checkCurrentTask() {
         TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
-        if (currentTaskInstance != null
-                && (tempTask == null || tempTask.getId() != currentTaskInstance
-                        .getId())) {
+        if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
             acusarUsuarioSemAcesso();
         }
     }
@@ -806,12 +898,12 @@ public class TaskInstanceHome implements Serializable {
         return false;
     }
 
-    public boolean podeRenderizarApplet(String idEditor) {
-        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis.get(idEditor);
+    public boolean podeRenderizarApplet(String idDocumento) {
+        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis.get(idDocumento);
         if (documentoAssinavel != null) {
             UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
             Papel papel = usuarioPerfilAtual.getPerfilTemplate().getPapel();
-            ClassificacaoDocumento classificacao = documentosAssinaveis.get(idEditor).getClassificacao();
+            ClassificacaoDocumento classificacao = documentosAssinaveis.get(idDocumento).getClassificacao();
             if (classificacao != null) {
             	return assinaturaDocumentoService.podeRenderizarApplet(papel, classificacao, documentoAssinavel.getIdDocumento(), usuarioPerfilAtual.getUsuarioLogin());
             }
@@ -840,7 +932,7 @@ public class TaskInstanceHome implements Serializable {
         }
         return null;
     }
-
+    
     public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
         return classificacaoDocumentoFacade.getTipoDocumentoEnumValues();
     }
@@ -860,5 +952,27 @@ public class TaskInstanceHome implements Serializable {
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
         return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
     }
-    
+
+	public void setVariavelDocumentoToSign(String variavelDocumentoToSign) {
+		if (variavelDocumentoToSign != null) {
+			prepareDocumentToSign(variavelDocumentoToSign);
+		}
+	}
+
+	public Documento getDocumentoToSign() {
+		return documentoToSign;
+	}
+
+	public void setDocumentoToSign(Documento documentoToSign) {
+		this.documentoToSign = documentoToSign;
+	}
+
+	public String getTokenToSign() {
+		return tokenToSign;
+	}
+
+	public void setTokenToSign(String tokenToSign) {
+		this.tokenToSign = tokenToSign;
+	}
+	
 }
