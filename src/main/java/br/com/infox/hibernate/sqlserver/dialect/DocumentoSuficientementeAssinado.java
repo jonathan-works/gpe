@@ -29,6 +29,9 @@ public class DocumentoSuficientementeAssinado implements SQLFunction {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public String render(Type firstArgumentType, List arguments, SessionFactoryImplementor factory) throws QueryException {
-		return "dbo.DocumentoSuficientementeAssinado(" + arguments.get(0).toString() + ")";
+		if (arguments.isEmpty()) {
+			throw new QueryException("É necessário informar o id do documento");
+		}
+		return "dbo.DocumentoSuficientementeAssinado(" + arguments.get(0) + ")";
 	}
 }
