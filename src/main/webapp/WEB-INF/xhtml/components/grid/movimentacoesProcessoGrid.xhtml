@@ -16,37 +16,31 @@
     styleClass="dtable-p full-sized">
     <rich:dataTable
       id="movimentacoesProcessoTable"
-      value="#{processoHandler.taskInstanceList}"
+      value="#{processoHandler.taskBeanList}"
       rowKeyVar="key"
       rowClasses="zebra-row"
       styleClass="dtable rf-dt-crud"
-      var="task">
+      var="taskBean">
       <rich:column styleClass="defaultCell">
         <f:facet name="header">#{infoxMessages['fluxo.tarefa']}</f:facet>
-        <h:outputText value="#{task.name}" />
+        <h:outputText value="#{taskBean.taskInstance.name}" />
       </rich:column>
       <rich:column styleClass="defaultCell">
         <f:facet name="header">#{infoxMessages['localizacao.localizacao']} / #{infoxMessages['usuario.usuario']}</f:facet>
         <div>
-          <h:graphicImage
-            url="#{wiSkin.imageFolder}/localizacao.gif"
-            rendered="#{!empty jbpmUtil.getLocalizacao(task)}" />
-          <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
+          <h:outputText value="#{taskBean.usuarioTaskInstance.localizacaoExterna}" /> / <h:outputText value="#{taskBean.usuarioTaskInstance.localizacao}" />
         </div>
         <s:div id="usuarioTarefaDiv">
-          <h:graphicImage
-            url="#{wiSkin.imageFolder}/usuario.gif"
-            rendered="#{!empty userHandler.getNomeUsuarioByTarefa(task)}" />
           <h:outputText
-            value="#{userHandler.getNomeUsuarioByTarefa(task)} " />
+            value="#{taskBean.usuarioTaskInstance.usuario} " />
           <a:commandLink
-            action="#{taskInstanceHome.removeUsuario(task)}"
+            action="#{taskInstanceHome.removeUsuario(taskBean.taskInstance)}"
             execute="@this"
             render="usuarioTarefaDiv, pageBodyDialogMessage"
             onclick="return confirm(\'#{infoxMessages['movimentar.confirmLiberarTarefa']}\');"
             limitRender="true"
             oncomplete="close()"
-            rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty userHandler.getUsuarioByTarefa(task)) and key eq processoHandler.taskInstanceList.size() - 1}">
+            rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty taskBean.usuarioTaskInstance.usuario) and key eq processoHandler.taskBean.size() - 1}">
             <h:graphicImage
               url="#{wiSkin.imageFolder}/unlocked.gif"
               title="#{infoxMessages['movimentar.liberarTarefa']}" />
@@ -55,13 +49,13 @@
       </rich:column>
       <rich:column styleClass="defaultCell">
         <f:facet name="header">#{infoxMessages['processo.dataInicio']}</f:facet>
-        <h:outputText value="#{task.start}">
+        <h:outputText value="#{taskBean.taskInstance.start}">
           <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
         </h:outputText>
       </rich:column>
       <rich:column styleClass="defaultCell">
         <f:facet name="header">#{infoxMessages['processo.dataFim']}</f:facet>
-        <h:outputText value="#{task.end}">
+        <h:outputText value="#{taskBean.taskInstance.end}">
           <s:convertDateTime pattern="dd/MM/yy kk:mm:ss" />
         </h:outputText>
       </rich:column>
@@ -69,7 +63,7 @@
         <f:facet name="header"></f:facet>
         <s:link
           target="_blank"
-          rendered="#{processoHandler.taskDocumentList.contains(task)}"
+          rendered="#{processoHandler.taskDocumentList.contains(taskBean.taskInstance)}"
           view="/Processo/Consulta/paginator.seam">
           <h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
           <f:param
@@ -77,7 +71,7 @@
             value="#{key + 1}" />
         </s:link>
         <h:graphicImage
-          rendered="#{!empty processoHandler.getAnexos(task)}"
+          rendered="#{!empty processoHandler.getAnexos(taskBean.taskInstance)}"
           url="#{wiSkin.imageFolder}/anexo.png" />
       </rich:column>
     </rich:dataTable>

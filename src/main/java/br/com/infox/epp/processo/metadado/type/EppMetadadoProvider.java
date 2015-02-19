@@ -39,7 +39,7 @@ public class EppMetadadoProvider extends MetadadoProcessoProvider {
 			new MetadadoProcessoDefinition("tipoProcesso", TipoProcesso.class);
 
 	public static final MetadadoProcessoDefinition STATUS_PROCESSO = 
-			new MetadadoProcessoDefinition("statusProcesso", "Status do Processo", StatusProcesso.class);
+			new MetadadoProcessoDefinition("statusProcesso", "Estágio do Processo", StatusProcesso.class);
 
 	public static final MetadadoProcessoDefinition PASTA_DEFAULT = 
 	new MetadadoProcessoDefinition("pastaDefault", Pasta.class);

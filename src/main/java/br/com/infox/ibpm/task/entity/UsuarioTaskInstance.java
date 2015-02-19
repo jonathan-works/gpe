@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 
 @Entity
 @Table(name = UsuarioTaskInstance.TABLE_NAME)
@@ -37,25 +38,37 @@ public class UsuarioTaskInstance implements Serializable {
     public static final String TABLE_NAME = "tb_usuario_taskinstance";
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @Column(name = "id_taskinstance", unique = true, nullable = false)
     private Long idTaskInstance;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_usuario_login", nullable = false)
     private UsuarioLogin usuario;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_localizacao_externa", nullable = true, unique=false)
+    private Localizacao localizacaoExterna;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_localizacao", nullable = false)
     private Localizacao localizacao;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_papel", nullable = false)
     private Papel papel;
 
     public UsuarioTaskInstance() {
     }
 
-    public UsuarioTaskInstance(final Long idTaskinstance,
-            final UsuarioLogin usuario, final Localizacao localizacao,
-            final Papel papel) {
+    public UsuarioTaskInstance(Long idTaskinstance, UsuarioPerfil usuarioPerfil) {
         this.idTaskInstance = idTaskinstance;
-        this.usuario = usuario;
-        this.localizacao = localizacao;
-        this.papel = papel;
+        this.usuario = usuarioPerfil.getUsuarioLogin();
+        this.localizacaoExterna = usuarioPerfil.getLocalizacao();
+        this.localizacao = usuarioPerfil.getPerfilTemplate().getLocalizacao();
+        this.papel = usuarioPerfil.getPerfilTemplate().getPapel();
     }
-
-    @Id
-    @Column(name = "id_taskinstance", unique = true, nullable = false)
+    
     public Long getIdTaskInstance() {
         return idTaskInstance;
     }
@@ -64,8 +77,6 @@ public class UsuarioTaskInstance implements Serializable {
         this.idTaskInstance = idTaskInstance;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_usuario_login", nullable = false)
     public UsuarioLogin getUsuario() {
         return usuario;
     }
@@ -74,8 +85,6 @@ public class UsuarioTaskInstance implements Serializable {
         this.usuario = usuario;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_papel", nullable = false)
     public Papel getPapel() {
         return papel;
     }
@@ -84,8 +93,6 @@ public class UsuarioTaskInstance implements Serializable {
         this.papel = papel;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_localizacao", nullable = false)
     public Localizacao getLocalizacao() {
         return localizacao;
     }
@@ -93,4 +100,12 @@ public class UsuarioTaskInstance implements Serializable {
     public void setLocalizacao(Localizacao localizacao) {
         this.localizacao = localizacao;
     }
+
+	public Localizacao getLocalizacaoExterna() {
+		return localizacaoExterna;
+	}
+
+	public void setLocalizacaoExterna(Localizacao localizacaoExterna) {
+		this.localizacaoExterna = localizacaoExterna;
+	}
 }

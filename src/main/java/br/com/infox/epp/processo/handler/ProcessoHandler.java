@@ -27,6 +27,8 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.ibpm.task.bean.TaskBean;
+import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.ibpm.variable.VariableHandler;
 
 @Name(ProcessoHandler.NAME)
@@ -46,6 +48,8 @@ public class ProcessoHandler implements Serializable {
     private ProcessoManager processoManager;
     @In
     private DocumentoManager documentoManager;
+    @In
+    private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
 
     @SuppressWarnings(UNCHECKED)
     public List<TaskInstance> getTaskInstanceList() {
@@ -73,11 +77,20 @@ public class ProcessoHandler implements Serializable {
                     if (o2.getStart() != null) {
                         i2 = (int) o2.getStart().getTime();
                     }
-                    return i1 - i2;
+                    return i2 - i1;
                 }
             });
         }
         return taskInstanceList;
+    }
+    
+    public List<TaskBean> getTaskBeanList() {
+    	List<TaskInstance> list = getTaskInstanceList();
+    	List<TaskBean> beans = new ArrayList<TaskBean>();
+    	for (TaskInstance taskInstance : list) {
+    		beans.add(new TaskBean(taskInstance, usuarioTaskInstanceManager.find(taskInstance.getId())));
+    	}
+    	return beans;
     }
 
     public List<TaskInstance> getTaskDocumentList() {

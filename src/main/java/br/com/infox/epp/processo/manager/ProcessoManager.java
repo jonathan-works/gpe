@@ -19,7 +19,6 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
@@ -122,8 +121,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo, idTarefa);
         if (taskInstanceId != null) {
             iniciaTask(processo, taskInstanceId);
-            storeUsuario(taskInstanceId, usuarioPerfil.getUsuarioLogin(), usuarioPerfil.getPerfilTemplate()
-                    .getLocalizacao(), usuarioPerfil.getPerfilTemplate().getPapel());
+            storeUsuario(taskInstanceId, usuarioPerfil);
         }
     }
 
@@ -152,10 +150,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
      * @param actorId
      * @throws DAOException
      * */
-    private void storeUsuario(final Long idTaskInstance, final UsuarioLogin user, final Localizacao localizacao,
-            final Papel papel) throws DAOException {
+    private void storeUsuario(Long idTaskInstance, UsuarioPerfil usuarioPerfil) throws DAOException {
         if (this.genericDAO.find(UsuarioTaskInstance.class, idTaskInstance) == null) {
-            this.genericDAO.persist(new UsuarioTaskInstance(idTaskInstance, user, localizacao, papel));
+            this.genericDAO.persist(new UsuarioTaskInstance(idTaskInstance, usuarioPerfil));
         }
     }
 
