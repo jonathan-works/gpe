@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
-import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
-import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -19,12 +16,6 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.log.LogProvider;
 
 public abstract class DocumentoCreator {
-
-	@In
-	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
-	@In
-	private DocumentoManager documentoManager;
-	
     private Processo processo;
     private Documento documento;
     private List<Documento> documentosDaSessao;
@@ -79,12 +70,6 @@ public abstract class DocumentoCreator {
         try {
         	Documento documento = gravarDocumento();
             getDocumentosDaSessao().add(documento);
-            if (Identity.instance().hasRole("usuarioExterno")) {
-            	Processo processoDocumento = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo);
-                Documento documentoAnalise = documentoManager.createDocumento(processoDocumento, documento.getDescricao(), documento.getDocumentoBin(), documento.getClassificacaoDocumento());
-                processoDocumento.getDocumentoList().add(documentoAnalise);
-                processoAnaliseDocumentoService.inicializarFluxoDocumento(processoDocumento);
-            }
         } catch (DAOException e) {
             getLogger().error("Não foi possível gravar o documento "
                     + getDocumento() + " no processo " + getProcesso(), e);
