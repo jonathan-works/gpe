@@ -13,7 +13,9 @@ import java.util.Map;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
+import javax.transaction.SystemException;
 
+import org.hibernate.HibernateException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -25,6 +27,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+import org.jboss.seam.transaction.Transaction;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Event;
@@ -459,7 +462,13 @@ public class TaskInstanceHome implements Serializable {
             // Flush para que a consulta do canOpenTask consiga ver o pooled actor que o jbpm criou
             // no TaskInstance#create, caso contrário, o epp achará que o usuário não pode ver a tarefa seguinte,
             // mesmo que possa
-            JbpmUtil.getJbpmSession().flush();
+            try {
+				if (Transaction.instance().isActive()) {
+					JbpmUtil.getJbpmSession().flush();
+				}
+			} catch (HibernateException | SystemException e) {
+				LOG.error("", e);
+			}
             atualizarPaginaDeMovimentacao();
         }
         return null;

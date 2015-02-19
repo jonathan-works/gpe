@@ -37,5 +37,6 @@ public interface NaturezaCategoriaFluxoQuery {
 	String NATCATFLUXO_BY_DS_NATUREZA_DS_CATEGORIA_DISPONIVEIS = "listNaturezaCatFluxoByDsNaturezaDsCategoriaDisponiveis";
 	String NATCATFLUXO_BY_DS_NATUREZA_DS_CATEGORIA_DISPONIVEIS_QUERY = "select o from NaturezaCategoriaFluxo o "
 			+ "inner join o.natureza n inner join o.categoria c inner join o.fluxo f where UPPER(n.natureza) = :" + PARAM_DS_NATUREZA
-			+ " and UPPER(c.categoria) = :" + PARAM_DS_CATEGORIA + " and f.publicado = true";
+			+ " and UPPER(c.categoria) = :" + PARAM_DS_CATEGORIA + " and f.publicado = true and f.ativo = true and n.ativo = true "
+					+ "and c.ativo = true";
 }
