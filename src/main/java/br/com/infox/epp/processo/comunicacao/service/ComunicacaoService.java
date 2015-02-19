@@ -67,6 +67,8 @@ public class ComunicacaoService {
 	@In
 	private String codigoFluxoComunicacao;
 	@In
+	private String codigoFluxoComunicacaoNaoEletronico;
+	@In
 	private DocumentoBinarioManager documentoBinarioManager;
 	@In
 	private PdfManager pdfManager;
@@ -282,7 +284,12 @@ public class ComunicacaoService {
 	}
 	
 	private NaturezaCategoriaFluxo getNaturezaCategoriaFluxo(DestinatarioModeloComunicacao destinatario) throws DAOException {
-		Fluxo fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoComunicacao);
+		Fluxo fluxo;
+		if (destinatario.getMeioExpedicao() == MeioExpedicao.SI) {
+			fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoComunicacao);
+		} else {
+			fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoComunicacaoNaoEletronico);
+		}
 		if (fluxo == null) {
 			rollbackAndThrow("Fluxo de comunicação não encontrado", null);
 		}

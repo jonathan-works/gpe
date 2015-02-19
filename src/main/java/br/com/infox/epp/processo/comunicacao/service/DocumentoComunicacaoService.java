@@ -115,8 +115,10 @@ public class DocumentoComunicacaoService {
 		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
 		Processo processoRaiz = processoComunicacao.getProcessoRoot();
 		Documento documentoComunicacao = documentoManager.createDocumento(processoRaiz, comunicacao.getNomeArquivo(), comunicacao, modeloComunicacao.getClassificacaoComunicacao());
-		Pasta pasta = processoRaiz.getMetadado(EppMetadadoProvider.PASTA_DEFAULT).getValue(); 
 		processoRaiz.getDocumentoList().add(documentoComunicacao);
+		Pasta pastaDefault = processoRaiz.getMetadado(EppMetadadoProvider.PASTA_DEFAULT).getValue();
+		documentoComunicacao.setPasta(pastaDefault);
+		documentoManager.update(documentoComunicacao);
 		
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoComunicacao);
 		processoComunicacao.getMetadadoProcessoList().add(metadadoProcessoProvider
