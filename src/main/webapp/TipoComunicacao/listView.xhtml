@@ -24,6 +24,10 @@
                         id="ativo"
                         label="#{infoxMessages['field.situacao']}"
                         value="#{tipoComunicacaoList.entity.ativo}" />
+                    <wi:selectBooleanMenu
+                        id="prorrogacaoPrazo"
+                        label="#{infoxMessages['tipoComunicacao.prorrogacaoPrazo']}"
+                        value="#{tipoComunicacaoList.entity.prorrogacaoPrazo}" />
                     <wi:selectOneMenuEntity id="classificacaoDocumento" label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" 
 		            	value="#{tipoComunicacaoList.entity.classificacaoDocumento}"
 		            	items="#{tipoComunicacaoCrudAction.classificacoesDocumento}"/>
@@ -45,6 +49,8 @@
             <wi:columnOutputText columnId="tipoModeloDocumento"
                 columnHeader="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}"
                 value="#{row.tipoModeloDocumento}" />
+            <wi:columnBoolean columnId="prorrogacaoPrazo" 
+            	columnHeader="#{infoxMessages['tipoComunicacao.prorrogacaoPrazo']}" value="#{row.prorrogacaoPrazo}" />
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
@@ -70,8 +76,12 @@
             <wi:selectOneMenuEntity id="tipoModeloDocumento" label="#{infoxMessages['tipoModeloDocumento.tipoModeloDocumento']}" 
             	value="#{tipoComunicacaoCrudAction.instance.tipoModeloDocumento}"
             	items="#{tipoComunicacaoCrudAction.tiposModeloDocumento}"/>
+            <wi:selectBooleanCheckbox
+                id="prorrogacaoPrazo"
+                label="#{infoxMessages['tipoComunicacao.prorrogacaoPrazo']}"
+                value="#{tipoComunicacaoCrudAction.instance.prorrogacaoPrazo}" />
             <wi:selectSituacaoRadio
-                id="ativo"
+                columnId="ativo"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{tipoComunicacaoCrudAction.instance.ativo}" />
         </wi:dataForm>

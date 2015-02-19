@@ -24,7 +24,10 @@ public class ModeloComunicacaoRascunhoList extends EntityList<ModeloComunicacao>
 			+ "m.id_processo = #'{'modeloComunicacaoRascunhoList.processo.idProcesso'}' and "
 			+ "not exists (select 1 from jbpm_variableinstance v where v.name_ = '''idModeloComunicacao''' and "
 				+ "v.longvalue_ = m.id_modelo_comunicacao) "
-			+ " and (m.in_finalizada = {0} or m.id_localizacao_resp_assinat is null) "
+			+ " and (m.id_localizacao_resp_assinat is null or "
+			+ " 	(m.id_localizacao_resp_assinat = #'{'authenticator.getUsuarioPerfilAtual().localizacao.idLocalizacao'}' and "
+			+ "			(m.id_perfil_template_resp_assinat is null or "
+			+ "			 m.id_perfil_template_resp_assinat = #'{'authenticator.getUsuarioPerfilAtual().perfilTemplate.id'}'))) "
 			+ " and exists (select 1 from tb_destinatario_modelo_comunic d "
 					+ " where d.id_modelo_comunicacao = m.id_modelo_comunicacao and "
 					+ " d.in_expedido = {0})";

@@ -126,8 +126,4 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public List<Documento> getDocumentosSessaoAnexar(Processo processo, List<Integer> idsDocumentos) {
     	return getDao().getDocumentosSessaoAnexar(processo, idsDocumentos);
     }
-    
-    public List<Documento> getDocumentosProcessoComClassificacao(Processo processo, ClassificacaoDocumento classificacao) {
-    	return getDao().getDocumentosProcessoComClassificacao(processo, classificacao);
-    }
 }

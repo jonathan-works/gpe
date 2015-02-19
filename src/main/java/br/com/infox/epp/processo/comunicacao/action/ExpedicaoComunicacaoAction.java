@@ -31,6 +31,7 @@ import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DestinatarioModeloComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -63,6 +64,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	private TipoComunicacaoManager tipoComunicacaoManager;
 	@In
 	private CertificateSignatures certificateSignatures;
+	@In
+	private DocumentoComunicacaoService documentoComunicacaoService;
 	
 	private String tab = "list";
 	private ModeloComunicacao modeloComunicacao;
@@ -122,7 +125,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 				if (destinatario == null) {
 					comunicacao = modeloDocumento;
 				} else {
-					comunicacao = comunicacaoService.evaluateComunicacao(destinatario);
+					comunicacao = documentoComunicacaoService.evaluateComunicacao(destinatario);
 				}
 			}
 		}

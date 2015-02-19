@@ -36,10 +36,11 @@ import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.ModeloComunicacaoRascunhoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -62,6 +63,8 @@ public class ComunicacaoAction implements Serializable {
 	@In
 	private ComunicacaoService comunicacaoService;
 	@In
+	private PrazoComunicacaoService prazoComunicacaoService;
+	@In
 	private DocumentoUploader documentoUploader;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
@@ -79,10 +82,13 @@ public class ComunicacaoAction implements Serializable {
 	private DocumentoDownloader documentoDownloader;
 	@In
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
+	@In
+	private DocumentoComunicacaoService documentoComunicacaoService;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private Map<Long, List<DestinatarioBean>> destinatarioBeans = new HashMap<>(); // Cache dos destinatários da comunicação
 	private List<ClassificacaoDocumento> classificacoesDocumento;
+	private List<ClassificacaoDocumento> classificacoesDocumentoProrrogacaoPrazo;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private boolean usuarioExterno = Identity.instance().hasRole("usuarioExterno");
 	private Processo processo;
@@ -169,6 +175,16 @@ public class ComunicacaoAction implements Serializable {
 		return classificacoesDocumento;
 	}
 	
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo() {
+		if (classificacoesDocumentoProrrogacaoPrazo == null) {
+			if (isProrrogacaoPrazo()) {
+				ModeloComunicacao modeloComunicacao = modeloComunicacaoManager.find(destinatario.getIdModeloComunicacao());
+				classificacoesDocumentoProrrogacaoPrazo = documentoComunicacaoService.getClassificacoesProrrogacaoPrazo(modeloComunicacao.getTipoComunicacao());
+			}
+		}
+		return classificacoesDocumentoProrrogacaoPrazo;
+	}
+	
 	public DestinatarioBean getDestinatario() {
 		return destinatario;
 	}
@@ -228,7 +244,7 @@ public class ComunicacaoAction implements Serializable {
 					ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documento.getId().toString());
 			metadadoProcessoManager.persist(documentoCiencia);
 			
-			comunicacaoService.darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
+			prazoComunicacaoService.darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
 			
 			FacesMessages.instance().add("Ciência informada com sucesso");
 			destinatarioBeans.remove(destinatario.getIdModeloComunicacao());
@@ -253,7 +269,8 @@ public class ComunicacaoAction implements Serializable {
 		ciencia = false;
 		documentos = false;
 		documentoUploader.clear();
-		documentoUploader.setClassificacaoDocumento(getClassificacaoProrrogacaoPrazo());
+		documentoUploader.setClassificacaoDocumento(null);
+		classificacoesDocumentoProrrogacaoPrazo = null;
 	}
 	
 	public boolean isDocumentos() {
@@ -279,7 +296,6 @@ public class ComunicacaoAction implements Serializable {
 			documentoUploader.persist();
 			documentoUploader.clear();
 			documentoUploader.setProcesso(processoOriginalDocumentoUploader);
-			documentoUploader.setClassificacaoDocumento(getClassificacaoProrrogacaoPrazo());
 
 			prorrogacao.getDocumentoList().add(documento);
 			processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao);
@@ -356,6 +372,7 @@ public class ComunicacaoAction implements Serializable {
 		bean.setNome(destinatario.getNome());
 		bean.setPrazoAtendimento(destinatario.getPrazo() != null ? destinatario.getPrazo().toString() : "-");
 		bean.setDocumentoComunicacao(destinatario.getComunicacao());
+		bean.setIdModeloComunicacao(destinatario.getModeloComunicacao().getId());
 		
 		Processo comunicacao = bean.getComunicacao();
 		bean.setDataEnvio(dateFormat.format(comunicacao.getDataInicio()));
@@ -388,106 +405,10 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	private String getPrazoFinal(Processo comunicacao) {
-		Date prazo = comunicacaoService.contabilizarPrazoCumprimento(comunicacao);
+		Date prazo = prazoComunicacaoService.contabilizarPrazoCumprimento(comunicacao);
 		if (prazo != null) {
 			return dateFormat.format(prazo);
 		}
 		return "-";
-	}
-	
-	private ClassificacaoDocumento getClassificacaoProrrogacaoPrazo() {
-		ClassificacaoDocumento classificacaoProrrogacao = classificacaoDocumentoManager.findByDescricao("Pedido de Prorrogação de Prazo");
-		if (classificacaoProrrogacao == null) {
-			FacesMessages.instance().add("A classificação de documento Pedido de Prorrogação de Prazo não existe");
-		}
-		return classificacaoProrrogacao;
-	}
-
-	public static class DestinatarioBean {
-		private Long idDestinatario;
-		private String nome;
-		private String tipoComunicacao;
-		private String meioExpedicao;
-		private String dataEnvio;
-		private String dataConfirmacao;
-		private String responsavelConfirmacao;
-		private String prazoAtendimento;
-		private String prazoFinal;
-		private Processo comunicacao;
-		private Long idModeloComunicacao;
-		private DocumentoBin documentoComunicacao;
-		
-		public Long getIdDestinatario() {
-			return idDestinatario;
-		}
-		public void setIdDestinatario(Long idDestinatario) {
-			this.idDestinatario = idDestinatario;
-		}
-		public String getNome() {
-			return nome;
-		}
-		public void setNome(String nome) {
-			this.nome = nome;
-		}
-		public String getTipoComunicacao() {
-			return tipoComunicacao;
-		}
-		public void setTipoComunicacao(String tipoComunicacao) {
-			this.tipoComunicacao = tipoComunicacao;
-		}
-		public String getMeioExpedicao() {
-			return meioExpedicao;
-		}
-		public void setMeioExpedicao(String meioExpedicao) {
-			this.meioExpedicao = meioExpedicao;
-		}
-		public String getDataEnvio() {
-			return dataEnvio;
-		}
-		public void setDataEnvio(String dataEnvio) {
-			this.dataEnvio = dataEnvio;
-		}
-		public String getDataConfirmacao() {
-			return dataConfirmacao;
-		}
-		public void setDataConfirmacao(String dataConfirmacao) {
-			this.dataConfirmacao = dataConfirmacao;
-		}
-		public String getResponsavelConfirmacao() {
-			return responsavelConfirmacao;
-		}
-		public void setResponsavelConfirmacao(String responsavelConfirmacao) {
-			this.responsavelConfirmacao = responsavelConfirmacao;
-		}
-		public String getPrazoAtendimento() {
-			return prazoAtendimento;
-		}
-		public void setPrazoAtendimento(String prazoAtendimento) {
-			this.prazoAtendimento = prazoAtendimento;
-		}
-		public String getPrazoFinal() {
-			return prazoFinal;
-		}
-		public void setPrazoFinal(String prazoFinal) {
-			this.prazoFinal = prazoFinal;
-		}
-		public Processo getComunicacao() {
-			return comunicacao;
-		}
-		public void setComunicacao(Processo comunicacao) {
-			this.comunicacao = comunicacao;
-		}
-		public Long getIdModeloComunicacao() {
-			return idModeloComunicacao;
-		}
-		public void setIdModeloComunicacao(Long idModeloComunicacao) {
-			this.idModeloComunicacao = idModeloComunicacao;
-		}
-		public DocumentoBin getDocumentoComunicacao() {
-			return documentoComunicacao;
-		}
-		public void setDocumentoComunicacao(DocumentoBin documentoComunicacao) {
-			this.documentoComunicacao = documentoComunicacao;
-		}
 	}
 }

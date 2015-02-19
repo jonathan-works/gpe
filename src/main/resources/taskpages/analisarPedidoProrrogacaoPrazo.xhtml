@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:wi="http://www.itx.com.br/jsf"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a="http://richfaces.org/a4j"
+      xmlns:s="http://jboss.org/schema/seam/taglib">
+<h:head />
+<h:body>
+	<rich:collapsiblePanel header="#{eppmessages['comunicacao.comunicacao']}" switchType="client">
+		<wi:outputText id="meioExpedicao" value="#{analisarPedidoProrrogacaoPrazoAction.meioExpedicao}"
+			label="#{eppmessages['comunicacao.meioExpedicao']}" />
+		<wi:outputText id="prazoResposta" label="Prazo de Resposta"
+			value="#{not empty analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento 
+				? analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento : '-' }">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</wi:outputText>
+		<h:form>
+			<h:commandButton value="#{eppmessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
+				action="#{analisarPedidoProrrogacaoPrazoAction.downloadComunicacao}" />
+		</h:form>
+		<s:div />
+		<wi:dataTable id="documentosComunicacao" values="#{documentoComunicacaoList.list(10)}" bean="#{documentoComunicacaoList}"
+			tableTitle="#{eppmessages['comunicacao.documentosComunicacao']}" showSearchForm="false" rowId="#{row.id}" hideOrder="true">
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<h:form>
+					<h:commandLink action="#{analisarPedidoProrrogacaoPrazoAction.downloadDocumento(row)}"
+  						rendered="#{not empty row.documentoBin.extensao}">
+						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{eppmessages['comunicacao.baixarDocumento']}"/>
+					</h:commandLink>
+					<a:commandLink rendered="#{empty row.documentoBin.extensao}"
+						onclick="infox.openPopUp('doc#{row.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{row.documentoBin.id}','1024'); return false;">
+						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{eppmessages['comunicacao.baixarDocumento']}"/>
+					</a:commandLink>
+				</h:form>
+			</ui:define>
+			<wi:columnOutputText columnHeader="#{eppmessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
+			<wi:columnOutputText columnHeader="#{eppmessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
+			<wi:columnOutputText columnHeader="#{eppmessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
+		</wi:dataTable>
+	</rich:collapsiblePanel>
+	<rich:panel header="Prorrogação de Prazo">
+		<h:form>
+			<h:commandButton styleClass="buttons" value="Visualizar Solicitação de Prorrogação de Prazo" 
+				action="#{analisarPedidoProrrogacaoPrazoAction.downloadSolicitacaoProrrogacaoPrazo}"/>
+		</h:form>
+		<h:form>
+			<wi:inputNumber id="prorrogacao" value="#{analisarPedidoProrrogacaoPrazoAction.diasProrrogacao}"
+				onkeyup="onlyPositiveNumber(this)" label="Dias de Prorrogação">
+				<a:ajax event="change" />
+			</wi:inputNumber>
+		</h:form>
+	</rich:panel>
+	
+	<h:form id="taskButtonsForm">
+		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml">
+			<ui:param name="taskEndAction" value="analisarPedidoProrrogacaoPrazoAction.endTask" />
+		</ui:include>
+	</h:form>
+</h:body>
+</html>

@@ -14,7 +14,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
@@ -33,7 +33,7 @@ public class ContagemPrazoProcessor {
 	@In
 	private ProcessoManager processoManager;
 	@In
-	private ComunicacaoService comunicacaoService;
+	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private ProcessoTarefaManager processoTarefaManager;
 	@In
@@ -54,7 +54,7 @@ public class ContagemPrazoProcessor {
 	private void analisarProcessosAguardandoCumprimento() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCumprimento();
 		for (Processo processo : processos) {
-			DateTime dataParaCumprimento = new DateTime(comunicacaoService.contabilizarPrazoCumprimento(processo));
+			DateTime dataParaCumprimento = new DateTime(prazoComunicacaoService.contabilizarPrazoCumprimento(processo));
 			if (dataParaCumprimento.isBeforeNow()) {
 				movimentarProcessoJBPM(processo);
 			}
@@ -64,7 +64,7 @@ public class ContagemPrazoProcessor {
 	private void analisarProcessosAguardandoCiencia() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCiencia();
 		for (Processo processo : processos) {
-			DateTime dataParaCiencia = new DateTime(comunicacaoService.contabilizarPrazoCiencia(processo));
+			DateTime dataParaCiencia = new DateTime(prazoComunicacaoService.contabilizarPrazoCiencia(processo));
 			if (dataParaCiencia.isBeforeNow()) {
 				movimentarProcessoJBPM(processo);
 			}

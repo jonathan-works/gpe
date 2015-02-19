@@ -131,14 +131,20 @@
 	    	<rich:panel header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
 	    		rendered="#{comunicacaoAction.prorrogacaoPrazo}">
 	    		<h:form>
-	    			<wi:outputText id="classificacaoProrrogacao" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    				value="#{comunicacaoAction.classificacaoDocumento}"/>
-	    			<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
+	    			<wi:selectOneMenuEntity id="classificacaoProrrogacao" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+	    				value="#{comunicacaoAction.classificacaoDocumento}" items="#{comunicacaoAction.classificacoesDocumentoProrrogacaoPrazo}"
+	    				showLabelSelecione="true">
+	    				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
+	    			</wi:selectOneMenuEntity>
+	    			<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumento 
+	    				and not empty comunicacaoAction.classificacaoDocumento.extensaoArquivosList}">
+	    				<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
 	    					reRender="btnGravar"/>
-	    			<s:div id="btnGravar">
-                        <wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 
-    	    					reRender="pageBodyDialogMessage, comunicacoes, painelProrrogacaoPrazo"
-    	    					rendered="#{documentoUploader.valido}"/>
+	    				<s:div id="btnGravar">
+	                        <wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 
+    	    						reRender="pageBodyDialogMessage, comunicacoes, painelProrrogacaoPrazo"
+    	    						rendered="#{documentoUploader.valido}"/>
+                    	</s:div>
                     </s:div>
 	    		</h:form>
 	    	</rich:panel>

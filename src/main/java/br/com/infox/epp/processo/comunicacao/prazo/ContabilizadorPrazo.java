@@ -14,7 +14,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
-import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.system.Parametros;
@@ -33,7 +33,7 @@ public class ContabilizadorPrazo {
     public static final LogProvider LOG = Logging.getLogProvider(ContabilizadorPrazo.class);
     
     @In
-    private ComunicacaoService comunicacaoService;
+    private PrazoComunicacaoService prazoComunicacaoService;
     @In
     private UsuarioLoginManager usuarioLoginManager;
     
@@ -46,7 +46,7 @@ public class ContabilizadorPrazo {
     	}
     	try {
     		adicionarVariavelPossuiPrazoAoProcesso(comunicacao);
-			comunicacaoService.darCiencia(comunicacao, DateTime.now().toDate(), usuarioLogado);
+			prazoComunicacaoService.darCiencia(comunicacao, DateTime.now().toDate(), usuarioLogado);
 		} catch (DAOException e) {
 			LOG.error("atribuirCiencia", e);
 		}
@@ -67,7 +67,7 @@ public class ContabilizadorPrazo {
     		usuarioLogado = usuarioLoginManager.find(idUsuarioSistema);
     	}
     	try {
-			comunicacaoService.darCumprimento(comunicacao, DateTime.now().toDate(), usuarioLogado);
+			prazoComunicacaoService.darCumprimento(comunicacao, DateTime.now().toDate(), usuarioLogado);
 		} catch (DAOException e) {
 			LOG.error("atribuirCumprimento", e);
 		}

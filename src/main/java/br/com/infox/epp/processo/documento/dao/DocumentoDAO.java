@@ -1,7 +1,18 @@
 package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.*;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_SESSAO_ANEXAR;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JBPM_TASK_PARAM;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_IDS_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_TIPO_NUMERACAO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.TOTAL_DOCUMENTOS_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.USUARIO_PARAM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +39,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
@@ -134,12 +144,5 @@ public class DocumentoDAO extends DAO<Documento> {
     	params.put(PARAM_PROCESSO, processo);
     	params.put(PARAM_IDS_DOCUMENTO, idsDocumentos);
     	return getNamedResultList(DOCUMENTOS_SESSAO_ANEXAR, params);
-    }
-    
-    public List<Documento> getDocumentosProcessoComClassificacao(Processo processo, ClassificacaoDocumento classificacao) {
-    	Map<String, Object> params = new HashMap<>();
-    	params.put(PARAM_PROCESSO, processo);
-    	params.put(PARAM_CLASSIFICACAO, classificacao);
-    	return getNamedResultList(DOCUMENTOS_DO_PROCESSO_COM_CLASSIFICACAO, params);
     }
 }

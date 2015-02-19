@@ -5,7 +5,6 @@ public interface DocumentoQuery {
     String PARAM_PROCESSO = "processo";
     String PARAM_TIPO_NUMERACAO = "tipoNumeracao";
     String PARAM_IDS_DOCUMENTO = "idsDocumento";
-    String PARAM_CLASSIFICACAO = "classificacao";
 
     String NEXT_SEQUENCIAL = "getNextSequencial";
     String NEXT_SEQUENCIAL_QUERY = "select max(pd.numeroDocumento) from Documento pd "
@@ -51,8 +50,4 @@ public interface DocumentoQuery {
     String DOCUMENTOS_SESSAO_ANEXAR = "Documento.documentosSessaoAnexar";
     String DOCUMENTOS_SESSAO_ANEXAR_QUERY = "select o from Documento o where o.processo = :" + PARAM_PROCESSO
     		+ " and (o.documentoBin.minuta = true or o.id in (:" + PARAM_IDS_DOCUMENTO + "))";
-    
-    String DOCUMENTOS_DO_PROCESSO_COM_CLASSIFICACAO = "Documento.documentosDoProcessoComClassificacao";
-    String DOCUMENTOS_DO_PROCESSO_COM_CLASSIFICACAO_QUERY = "select o from Documento o where o.processo = :" + PARAM_PROCESSO
-    		+ " and o.classificacaoDocumento = :" + PARAM_CLASSIFICACAO + " and o.documentoBin.minuta = false";
 }

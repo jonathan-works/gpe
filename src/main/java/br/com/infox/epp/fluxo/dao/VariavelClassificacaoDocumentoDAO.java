@@ -86,7 +86,7 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
     	query.select(from);
     	query.orderBy(cb.asc(from.get("descricao")));
     	
-    	query.where(createRestrictions(cb, query, from, idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento));
+    	query.where(createRestrictions(cb, query, idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento));
     	
     	return getEntityManager().createQuery(query).getResultList();
     }
@@ -97,13 +97,13 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
     	Root<ClassificacaoDocumento> from = query.from(ClassificacaoDocumento.class);
     	query.select(cb.count(from));
     	
-    	query.where(createRestrictions(cb, query, from, idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento));
+    	query.where(createRestrictions(cb, query, idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento));
     	
     	return getEntityManager().createQuery(query).getSingleResult();
     }
     
-    private Predicate createRestrictions(CriteriaBuilder cb, CriteriaQuery<?> query, Root<ClassificacaoDocumento> from, 
-    		Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento) {
+    protected Predicate createRestrictions(CriteriaBuilder cb, CriteriaQuery<?> query, Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento) {
+    	Root<?> from = query.getRoots().iterator().next();
 		Predicate predicate = cb.and(cb.equal(from.get("ativo"), true),
     			cb.equal(from.get("sistema"), false),
     			from.get("inTipoDocumento").in(TipoDocumentoEnum.T, tipoDocumento));
@@ -116,15 +116,11 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
     			cb.equal(subFrom.get("variavel"), variavel),
     			cb.equal(subFrom.get("fluxo"), idFluxo));
     	
-    	predicate = cb.and(predicate, cb.not(cb.exists(subquery)), createAdditionalRestrictions(cb, query, from));
+    	predicate = cb.and(predicate, cb.not(cb.exists(subquery)));
     	if (nomeClassificacaoDocumento != null) {
     		Path<String> descricao = from.get("descricao");
     		predicate = cb.and(predicate, cb.like(cb.lower(descricao), nomeClassificacaoDocumento.toLowerCase()));
     	}
 		return predicate;
 	}
-    
-    protected Predicate createAdditionalRestrictions(CriteriaBuilder cb, CriteriaQuery<?> query, Root<ClassificacaoDocumento> from) {
-    	return cb.and();
-    }
 }

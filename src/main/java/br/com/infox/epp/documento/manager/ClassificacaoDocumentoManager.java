@@ -9,6 +9,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 
 @AutoCreate
 @Name(ClassificacaoDocumentoManager.NAME)
@@ -37,4 +38,12 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
 	public ClassificacaoDocumento findByCodigo(String codigo) {
 		return getDao().findByCodigo(codigo);
 	}
+	
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo, Papel papel) {
+		return getDao().getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, isModelo, papel);
+	}
+	
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo(TipoComunicacao tipoComunicacao) {
+    	return getDao().getClassificacoesDocumentoProrrogacaoPrazo(tipoComunicacao);
+    }
 }

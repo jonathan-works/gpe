@@ -1,7 +1,5 @@
 package br.com.infox.epp.processo.documento.entity;
 
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_DO_PROCESSO_COM_CLASSIFICACAO;
-import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_DO_PROCESSO_COM_CLASSIFICACAO_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_SESSAO_ANEXAR;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_SESSAO_ANEXAR_QUERY;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
@@ -70,8 +68,7 @@ import br.com.infox.epp.processo.entity.Processo;
     @NamedQuery(name = LIST_DOCUMENTO_BY_PROCESSO, query = LIST_DOCUMENTO_BY_PROCESSO_QUERY),
     @NamedQuery(name = LIST_DOCUMENTO_BY_TASKINSTANCE, query = lIST_DOCUMENTO_BY_TASKINSTANCE_QUERY),
     @NamedQuery(name = TOTAL_DOCUMENTOS_PROCESSO, query = TOTAL_DOCUMENTOS_PROCESSO_QUERY),
-    @NamedQuery(name = DOCUMENTOS_SESSAO_ANEXAR, query = DOCUMENTOS_SESSAO_ANEXAR_QUERY),
-    @NamedQuery(name = DOCUMENTOS_DO_PROCESSO_COM_CLASSIFICACAO, query = DOCUMENTOS_DO_PROCESSO_COM_CLASSIFICACAO_QUERY)
+    @NamedQuery(name = DOCUMENTOS_SESSAO_ANEXAR, query = DOCUMENTOS_SESSAO_ANEXAR_QUERY)
 })
 @Indexed(index="IndexProcessoDocumento")
 public class Documento implements Serializable, Cloneable {
