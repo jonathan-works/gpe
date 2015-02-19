@@ -17,6 +17,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.transaction.SystemException;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.hibernate.HibernateException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
