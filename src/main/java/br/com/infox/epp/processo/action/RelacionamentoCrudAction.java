@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -25,6 +26,7 @@ import br.com.infox.seam.exception.BusinessException;
 
 @Name(RelacionamentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class RelacionamentoCrudAction extends
         AbstractCrudAction<Relacionamento, RelacionamentoManager> {
 

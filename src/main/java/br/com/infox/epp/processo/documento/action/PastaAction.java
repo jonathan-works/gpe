@@ -9,6 +9,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -35,6 +36,7 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PastaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class PastaAction implements Serializable, ActionListener {
 
     private static final long serialVersionUID = 1L;

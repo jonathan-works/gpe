@@ -11,7 +11,9 @@ import org.jboss.seam.faces.Redirect;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -35,6 +37,11 @@ public class ConsultaController extends AbstractController {
     @In
     private MetadadoProcessoManager metadadoProcessoManager;
 
+    @In
+    private PastaAction pastaAction;
+    @In
+    private DocumentoList documentoList;
+    
     private Processo processo;
     private boolean showAllDocuments = false;
     private List<MetadadoProcesso> detalhesMetadados;
@@ -111,5 +118,16 @@ public class ConsultaController extends AbstractController {
     		detalhesMetadados = metadadoProcessoManager.getListMetadadoVisivelByProcesso(getProcesso());
     	}
     	return detalhesMetadados;
+    }
+    
+    @Override
+    public void setTab(String tab) {
+        super.setTab(tab);
+        if(tab.equals("tabAnexos") || tab.equals("tabAnexar")){
+        	pastaAction.setProcesso(this.getProcesso());
+        }
+        if(tab.equals("tabAnexos")){
+        	documentoList.setProcesso(this.getProcesso());
+        }
     }
 }

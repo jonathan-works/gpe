@@ -8,6 +8,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -26,6 +27,7 @@ import br.com.infox.epp.system.manager.ParametroManager;
 
 @Name(DocumentoList.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class DocumentoList extends EntityList<Documento> implements ActionListener {
 	
     private static final long serialVersionUID = 1L;

@@ -83,17 +83,27 @@
                 </ui:decorate>
             </infox:tab>
             <infox:tab
-                id="tabMovimentacoes"
-                name="tabMovimentacoes"
-                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaMovimentacoes', 'access')}"
+                id="tabAnexos"
+                name="tabAnexos"
+                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaAnexos', 'access')}"
                 status=":status"
-                title="#{infoxMessages['acaoProcesso.menuText']}">
+                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
+                actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
+                title="#{infoxMessages['processo.documentos']}">
+                <ui:include src="pastaDocumento.xhtml" />
+            </infox:tab>
+            <infox:tab
+                id="tabPartesDoProcesso"
+                name="tabPartesDoProcesso"
+                status=":status"
+                rendered="#{home.hasPartes() and s:hasPermission('/pages/Processo/abaPartesProcesso', 'access')}"
+                action="#{participanteProcessoList.entity.setProcesso(home.instance)}"
+                title="#{infoxMessages['participanteProcesso.participantes']}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{infoxMessages['acaoProcesso.menuText']}</ui:define>
-                    <ui:include
-                        src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+                    <ui:define name="title">#{infoxMessages['participanteProcesso.participantes']}</ui:define>
+                    <ui:include src="parteProcessoGridRO.xhtml" />
                 </ui:decorate>
             </infox:tab>
             <infox:tab
@@ -112,14 +122,53 @@
                 </wi:dataForm>
             </infox:tab>
             <infox:tab
-                id="tabAnexos"
-                name="tabAnexos"
-                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaAnexos', 'access')}"
+                id="tabComunicacao"
+                name="tabComunicacao"
                 status=":status"
-                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
-                actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
-                title="#{infoxMessages['processo.documentos']}">
-                <ui:include src="pastaDocumento.xhtml" />
+                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
+                title="Comunicação"
+                action="#{comunicacaoAction.clear}">
+                <ui:include src="comunicacao.xhtml" />
+            </infox:tab>
+            <infox:tab
+                id="tabMovimentacoes"
+                name="tabMovimentacoes"
+                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaMovimentacoes', 'access')}"
+                status=":status"
+                title="#{infoxMessages['acaoProcesso.menuText']}">
+                <ui:decorate
+                    id="frameDecorate"
+                    template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+                    <ui:define name="title">#{infoxMessages['acaoProcesso.menuText']}</ui:define>
+                    <ui:include
+                        src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
+                </ui:decorate>
+            </infox:tab>
+            <infox:tab
+                id="tabSigiloProcesso"
+                name="tabSigiloProcesso"
+                status=":status"
+                title="#{infoxMessages['sigiloProcesso.sigiloProcesso']}"
+                rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
+                <ui:decorate
+                    id="frameDecorate"
+                    template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+                    <ui:define name="title">#{infoxMessages['sigiloProcesso.sigiloProcesso']}</ui:define>
+                    <ui:include src="sigiloProcesso.xhtml" />
+                </ui:decorate>
+            </infox:tab>
+            <infox:tab
+                id="tabSigiloDocumento"
+                name="tabSigiloDocumento"
+                status=":status"
+                title="#{infoxMessages['sigiloDocumento.sigiloDocumento']}"
+                rendered="#{s:hasPermission('/pages/Processo/abaSigiloDocumento', 'access')}">
+                <ui:decorate
+                    id="frameDecorate"
+                    template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
+                    <ui:define name="title">#{infoxMessages['sigiloDocumento.sigiloDocumento']}</ui:define>
+                    <ui:include src="sigiloDocumento.xhtml" />
+                </ui:decorate>
             </infox:tab>
             <ui:param
                 name="action"
@@ -158,55 +207,7 @@
                     </s:div>
                 </ui:decorate>
             </infox:tab>
-            <infox:tab
-                id="tabPartesDoProcesso"
-                name="tabPartesDoProcesso"
-                status=":status"
-                rendered="#{home.hasPartes() and s:hasPermission('/pages/Processo/abaPartesProcesso', 'access')}"
-                action="#{participanteProcessoList.entity.setProcesso(home.instance)}"
-                title="#{infoxMessages['participanteProcesso.participantes']}">
-                <ui:decorate
-                    id="frameDecorate"
-                    template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{infoxMessages['participanteProcesso.participantes']}</ui:define>
-                    <ui:include src="parteProcessoGridRO.xhtml" />
-                </ui:decorate>
-            </infox:tab>
-            <infox:tab
-                id="tabSigiloProcesso"
-                name="tabSigiloProcesso"
-                status=":status"
-                title="#{infoxMessages['sigiloProcesso.sigiloProcesso']}"
-                rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
-                <ui:decorate
-                    id="frameDecorate"
-                    template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{infoxMessages['sigiloProcesso.sigiloProcesso']}</ui:define>
-                    <ui:include src="sigiloProcesso.xhtml" />
-                </ui:decorate>
-            </infox:tab>
-            <infox:tab
-                id="tabSigiloDocumento"
-                name="tabSigiloDocumento"
-                status=":status"
-                title="#{infoxMessages['sigiloDocumento.sigiloDocumento']}"
-                rendered="#{s:hasPermission('/pages/Processo/abaSigiloDocumento', 'access')}">
-                <ui:decorate
-                    id="frameDecorate"
-                    template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
-                    <ui:define name="title">#{infoxMessages['sigiloDocumento.sigiloDocumento']}</ui:define>
-                    <ui:include src="sigiloDocumento.xhtml" />
-                </ui:decorate>
-            </infox:tab>
-            <infox:tab
-                id="tabComunicacao"
-                name="tabComunicacao"
-                status=":status"
-                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
-                title="Comunicação"
-                action="#{comunicacaoAction.clear}">
-                <ui:include src="comunicacao.xhtml" />
-            </infox:tab>
+  
             <ui:include src="abasCustomizadasDoVisualizar.xhtml"/>
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">

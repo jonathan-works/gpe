@@ -18,11 +18,15 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.processo.action.RelacionamentoCrudAction;
+import br.com.infox.epp.processo.consulta.action.ConsultaController;
+import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
@@ -33,6 +37,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.processo.variavel.action.VariavelProcessoAction;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -74,6 +79,17 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     private Authenticator authenticator;
     @In
     private InfoxMessages infoxMessages;
+    
+    @In
+    private VariavelProcessoAction variavelProcessoAction;
+    @In
+    private RelacionamentoCrudAction relacionamentoCrudAction;
+    @In
+    private ConsultaController consultaController;
+    @In
+    private PastaAction pastaAction;
+    @In
+    private DocumentoList documentoList;
 
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
@@ -445,6 +461,24 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
             return processo.getNumeroProcesso();
         }
         return String.valueOf(idProcesso);
+    }
+    
+    @Override
+    public void setTab(String tab) {
+        super.setTab(tab);
+        variavelProcessoAction.setProcesso(this.getInstance());
+        if (tab.equals("relacionamentoProcessoTab")){
+        	relacionamentoCrudAction.setProcesso(this.getInstance().getNumeroProcessoRoot());
+        }
+        if (tab.equals("tabMovimentacoes")){
+        	consultaController.setProcesso(this.getInstance());
+        }
+        if (tab.equals("tabAnexos") || tab.equals("tabAnexar")){
+        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
+        }
+        if (tab.equals("tabAnexos")){
+        	documentoList.setProcesso(this.getInstance().getProcessoRoot());
+        }
     }
 
 }

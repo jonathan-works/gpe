@@ -125,6 +125,16 @@
                 <infox:tabHeaders />
             </h:form>
             <infox:tab
+                id="tabAnexos"
+                name="tabAnexos"
+                rendered="#{processoEpaHome.managed}"
+                status=":status"
+                action="#{documentoList.entity.setProcesso(processoEpaHome.instance.processoRoot)}"
+                actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
+                title="#{infoxMessages['movimentar.documentos.titleTab']}">
+                <ui:include src="pastaDocumento.xhtml" />
+            </infox:tab>
+            <infox:tab
                 id="tabVariaveisProcesso"
                 name="tabVariaveisProcesso"
                 rendered="#{variavelProcessoAction.possuiVariaveis()}"
@@ -177,6 +187,16 @@
                     <ui:include src="#{taskPageAction.taskPagePath}" />
                 </c:if>
             </infox:tab>
+            
+            <infox:tab
+                id="tabPartesDoProcesso"
+                name="tabPartesDoProcesso"
+                status=":status"
+                action="#{participantesProcessoController.setProcesso(home.instance)}"
+                rendered="#{home.hasPartes()}"
+                title="#{infoxMessages['participanteProcesso.participantes']}">
+                <ui:include src="parteProcessoGrid.xhtml" />
+            </infox:tab>
             <infox:tab
                 id="tabAnexar"
                 name="tabAnexar"
@@ -193,16 +213,14 @@
                 </wi:dataForm>
             </infox:tab>
             <infox:tab
-                id="tabAnexos"
-                name="tabAnexos"
-                rendered="#{processoEpaHome.managed}"
+                id="tabComunicacao"
+                name="tabComunicacao"
                 status=":status"
-                action="#{documentoList.entity.setProcesso(processoEpaHome.instance.processoRoot)}"
-                actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
-                title="#{infoxMessages['movimentar.documentos.titleTab']}">
-                <ui:include src="pastaDocumento.xhtml" />
+                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
+                title="Comunicação"
+                action="#{comunicacaoAction.clear}">
+                <ui:include src="comunicacao.xhtml" />
             </infox:tab>
-
             <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
@@ -212,6 +230,7 @@
                 <ui:include
                     src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
             </infox:tab>
+            
             <ui:param
                 name="action"
                 value="#{localizacaoDocumentoFisicoCrudAction}" />
@@ -379,24 +398,8 @@
                     </h:panelGroup>
                 </s:div>
             </infox:tab>
-            <infox:tab
-                id="tabPartesDoProcesso"
-                name="tabPartesDoProcesso"
-                status=":status"
-                action="#{participantesProcessoController.setProcesso(home.instance)}"
-                rendered="#{home.hasPartes()}"
-                title="#{infoxMessages['participanteProcesso.participantes']}">
-                <ui:include src="parteProcessoGrid.xhtml" />
-            </infox:tab>
-            <infox:tab
-                id="tabComunicacao"
-                name="tabComunicacao"
-                status=":status"
-                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
-                title="Comunicação"
-                action="#{comunicacaoAction.clear}">
-                <ui:include src="comunicacao.xhtml" />
-            </infox:tab>
+            
+            
             <ui:include src="abasCustomizadasDoMovimentar.xhtml" />
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">

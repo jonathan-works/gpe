@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -15,6 +16,7 @@ import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 
 @Name(VariavelProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class VariavelProcessoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -10,11 +10,5 @@ login-required="true"
     <param name="tab" value="#{consultaController.tab}"/>
     <param name="idJbpm" value="#{org.jboss.seam.bpm.businessProcess.processId}" />
     <restrict>#{sigiloProcessoService.usuarioPossuiPermissao(usuarioLogado, consultaController.processo)}</restrict>
-    
-    <action
-      execute="#{pastaAction.setProcesso(consultaController.processo)}"
-      if="#{(consultaController.tab eq 'tabAnexos') || (consultaController.tab eq 'tabAnexar')}" />
-    <action
-      execute="#{documentoList.setProcesso(consultaController.processo)}"
-      if="#{consultaController.tab eq 'tabAnexos'}" />
+  
 </page>
