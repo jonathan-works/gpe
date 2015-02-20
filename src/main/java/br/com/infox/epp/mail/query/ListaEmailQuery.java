@@ -23,11 +23,11 @@ public interface ListaEmailQuery {
             + "(select o from ListaEmail o where o.idGrupoEmail = :"
             + ID_GRUPO_EMAIL_PARAM
             + " and "
-            + "((ul.perfilTemplate.localizacao = o.localizacao and (ul.perfilTemplate.papel = o.papel or o.papel is null) and "
-            + "(ul.localizacao = o.estrutura or o.estrutura is null)) or (ul.perfilTemplate.papel = o.papel and "
-            + "(ul.perfilTemplate.localizacao = o.localizacao or o.localizacao is null) and "
-            + "(ul.localizacao = o.estrutura or o.estrutura is null)) or (ul.localizacao = o.estrutura and "
-            + "(ul.perfilTemplate.localizacao = o.localizacao or o.localizacao is null) and "
+            + "((ul.localizacao = o.localizacao and (ul.perfilTemplate.papel = o.papel or o.papel is null) and "
+            + "(ul.perfilTemplate.localizacao = o.estrutura or o.estrutura is null)) or (ul.perfilTemplate.papel = o.papel and "
+            + "(ul.localizacao = o.localizacao or o.localizacao is null) and "
+            + "(ul.perfilTemplate.localizacao = o.estrutura or o.estrutura is null)) or (ul.perfilTemplate.localizacao = o.estrutura and "
+            + "(ul.localizacao = o.localizacao or o.localizacao is null) and "
             + "(ul.perfilTemplate.papel = o.papel or o.papel is null))))";
 
 }

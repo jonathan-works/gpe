@@ -31,6 +31,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
     private static final long serialVersionUID = 1L;
     private Map<String, String> parameters = new HashMap<String, String>();
     private static final LogProvider LOG = Logging.getLogProvider(JbpmMail.class);
+    private List<String> mailListDest = new ArrayList<String>();
 
     /**
      * Método separa conteúdo de saída de um Map e interpreta seus atributos com
@@ -60,15 +61,14 @@ public class JbpmMail extends org.jbpm.mail.Mail {
     private void initRemetentes() {
         List recip = new ArrayList(getRecipients());
 
-        if (recip.size() == 1) {
+        if (recip.size() == 1 && recip.get(0).toString().startsWith("{")) {
             String value = recip.get(0).toString();
             Map<String, String> map = getStringToMap(value);
-
-            if (map.size() == 0 && value.contains("@")) {
-                parameters.put("mailList", value);
-            } else {
-                parameters.putAll(map);
-            }
+            parameters.putAll(map);
+        }else{
+        	for (int i = 0; i < recip.size(); i++) {
+        		mailListDest.add(recip.get(i).toString().trim());
+			}	
         }
     }
 
@@ -84,12 +84,10 @@ public class JbpmMail extends org.jbpm.mail.Mail {
             ListaEmailManager listaEmailManager = ComponentUtil.getComponent(ListaEmailManager.NAME);
             recipList = listaEmailManager.resolve(Integer.parseInt(parameters.get("idGrupo")));
         }
-        if (parameters.containsKey("mailList")) {
-            if (recipList == null) {
-                recipList = new ArrayList<String>();
-            }
-            recipList.add(parameters.get("mailList"));
+        if (!mailListDest.isEmpty()) {
+        	recipList = mailListDest;
         }
+
         data.setJbpmRecipientList(recipList);
         data.setSubject(getSubject());
         new SendmailCommand().execute("/WEB-INF/email/jbpmEmailTemplate.xhtml");
