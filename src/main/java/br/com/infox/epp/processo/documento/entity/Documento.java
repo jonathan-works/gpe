@@ -302,7 +302,7 @@ public class Documento implements Serializable, Cloneable {
 	}
 	
 	public boolean isDocumentoAssinavel(Papel papel){
-		if (getDocumentoBin() == null || getDocumentoBin().isMinuta()) {
+		if (getDocumentoBin() == null) {
 			return false;
 		}
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
