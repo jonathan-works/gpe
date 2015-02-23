@@ -3,7 +3,6 @@ package br.com.infox.certificado;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -17,6 +16,7 @@ import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -29,7 +29,6 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -61,6 +60,8 @@ public class ValidaDocumentoAction implements Serializable {
     private AssinaturaDocumentoManager assinaturaDocumentoManager;
     @In
     private CertificateSignatures certificateSignatures;
+    @In
+    private InfoxMessages infoxMessages;
 
     /**
      * @deprecated
@@ -227,14 +228,13 @@ public class ValidaDocumentoAction implements Serializable {
 
     private CertificateSignatureBundleBean getSignature() throws CertificadoException {
         CertificateSignatureBundleBean bundle = certificateSignatures.get(getToken());
-        Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
         if (bundle == null) {
-            throw new CertificadoException(eppmessages.get("assinatura.error.hashExpired"));
+            throw new CertificadoException(infoxMessages.get("assinatura.error.hashExpired"));
         } else {
             switch (bundle.getStatus()) {
                 case ERROR:
                 case UNKNOWN:
-                    throw new CertificadoException(eppmessages.get("assinatura.error.unknown"));
+                    throw new CertificadoException(infoxMessages.get("assinatura.error.unknown"));
                 default:
                     break;
             }
