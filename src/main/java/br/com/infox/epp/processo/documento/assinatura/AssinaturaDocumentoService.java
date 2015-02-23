@@ -227,6 +227,7 @@ public class AssinaturaDocumentoService implements Serializable {
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
                 documentoBin, usuarioPerfilAtual, certChain, signature);
         documentoBin.getAssinaturas().add(assinaturaDocumento);
+        documentoBin.setMinuta(false);
         documentoBinManager.update(documentoBin);
     }
 

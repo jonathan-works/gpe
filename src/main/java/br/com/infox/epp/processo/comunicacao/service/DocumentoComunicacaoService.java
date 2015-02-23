@@ -30,7 +30,9 @@ import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DocumentoRespostaComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -62,6 +64,8 @@ public class DocumentoComunicacaoService {
 	private VariableTypeResolver variableTypeResolver;
 	@In("org.jboss.seam.bpm.jbpmContext")
 	private JbpmContext jbpmContext;
+	@In
+	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO;
 	
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo) {
 		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, isModelo, Authenticator.getPapelAtual());
@@ -123,6 +127,17 @@ public class DocumentoComunicacaoService {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoComunicacao);
 		processoComunicacao.getMetadadoProcessoList().add(metadadoProcessoProvider
 				.gerarMetadado(ComunicacaoMetadadoProvider.COMUNICACAO, documentoComunicacao.getId().toString()));
+	}
+	
+	public void desvincularDocumentoRespostaComunicacao(Documento documento) throws DAOException {
+		documentoRespostaComunicacaoDAO.removerDocumentoResposta(documento);
+	}
+	
+	public void vincularDocumentoRespostaComunicacao(Documento documento, Processo comunicacao) throws DAOException {
+		DocumentoRespostaComunicacao documentoRespostaComunicacao = new DocumentoRespostaComunicacao();
+		documentoRespostaComunicacao.setDocumento(documento);
+		documentoRespostaComunicacao.setComunicacao(comunicacao);
+		documentoRespostaComunicacaoDAO.persist(documentoRespostaComunicacao);
 	}
 	
 	private Map<String, String> createVariaveis(DestinatarioModeloComunicacao destinatario) {

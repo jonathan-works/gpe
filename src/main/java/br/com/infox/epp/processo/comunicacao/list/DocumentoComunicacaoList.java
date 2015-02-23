@@ -20,14 +20,14 @@ public class DocumentoComunicacaoList extends EntityList<Documento> {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String DEFAULT_EJBQL = "select o from Documento o where "
-			+ " o.processo = #{documentoComunicacaoList.processoComunicacao} and "
+			+ " o.processo = #{documentoComunicacaoList.processo} and "
 			+ " o.documentoBin.id in "
 			+ "(select dm.documento.documentoBin.id from DocumentoModeloComunicacao dm "
 			+ " where dm.modeloComunicacao = #{documentoComunicacaoList.modeloComunicacao})";
 	
 	private static final String DEFAULT_ORDER = "dataInclusao desc";
 	
-	private Processo processoComunicacao;
+	private Processo processo;
 	private ModeloComunicacao modeloComunicacao;
 
 	@Override
@@ -49,12 +49,12 @@ public class DocumentoComunicacaoList extends EntityList<Documento> {
 		return null;
 	}
 
-	public Processo getProcessoComunicacao() {
-		return processoComunicacao;
+	public Processo getProcesso() {
+		return processo;
 	}
 	
-	public void setProcessoComunicacao(Processo processoComunicacao) {
-		this.processoComunicacao = processoComunicacao;
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
 	}
 	
 	public ModeloComunicacao getModeloComunicacao() {

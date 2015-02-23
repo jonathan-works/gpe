@@ -43,7 +43,7 @@
 			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
 		</wi:dataTable>
 	</rich:collapsiblePanel>
-	<h:form rendered="#{respostaComunicacaoAction.possuiProcessoResposta}">
+	<h:form>
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.editor']}" switchType="client" id="painelEditor">
 			<ui:param name="minuta" 
 				value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
@@ -103,7 +103,7 @@
 		</rich:collapsiblePanel>
 	</h:form>
 	
-	<h:form rendered="#{respostaComunicacaoAction.possuiProcessoResposta}">
+	<h:form>
 		<rich:collapsiblePanel header="#{infoxMessages['anexosProcesso.titleView']}" switchType="client">
 			<wi:inputText id="descricaoAnexo" value="#{respostaComunicacaoAction.descricaoAnexo}"
 				label="#{infoxMessages['documentoProcesso.descricao']}" showRequired="true">
@@ -147,9 +147,7 @@
 	<wi:assinaturaPopup id="assinaturaDocumentoPopup" afterRender="respostasPanel" />
 	
 	<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
-		values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true"
-		showGrid="#{respostaComunicacaoAction.possuiProcessoResposta}"
-		showSearchForm="#{respostaComunicacaoAction.possuiProcessoResposta}">
+		values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true">
 		<ui:define name="searchForm">
 			<wi:searchForm formId="respostasForm" searchReRender="respostasPanel, respostasSearchForm"
 				clearReRender="respostasPanel, respostasSearchForm" formTitle="#{infoxMessages['searchForm.title']}">
@@ -171,6 +169,7 @@
 				</h:commandLink>
 				<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row)}"
 					render="respostasPanel, painelEditor, pageBodyDialogMessage, taskButtonsForm"
+					rendered="#{respostaComunicacaoAction.podeRemoverDocumento(row)}"
 					onclick="return confirm('#{infoxMessages['crud.confirmRemove']}')">
 					<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['crud.remove']}" />
 				</a:commandLink>
@@ -182,11 +181,9 @@
 	</wi:dataTable>
 	
 	<h:form id="taskButtonsForm">
-		<s:div rendered="#{respostaComunicacaoAction.possuiResposta}">
-			<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml">
-				<ui:param name="taskEndAction" value="respostaComunicacaoAction.endTask" />
-			</ui:include>
-		</s:div>
+		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml">
+			<ui:param name="taskEndAction" value="respostaComunicacaoAction.endTask" />
+		</ui:include>
 	</h:form>
 </h:body>
 </html>

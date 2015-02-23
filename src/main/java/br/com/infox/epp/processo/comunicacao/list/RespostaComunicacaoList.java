@@ -20,11 +20,11 @@ public class RespostaComunicacaoList extends EntityList<Documento> {
 	private static final long serialVersionUID = 1L;
 
 	private static final String DEFAULT_EJBQL = "select o from Documento o where "
-			+ "o.processo = #{respostaComunicacaoList.processoResposta}";
+			+ "o.processo = #{respostaComunicacaoList.processo}";
 	
 	private static final String DEFAULT_ORDER = "dataInclusao desc";
 
-	private Processo processoResposta;		
+	private Processo processo;		
 	
 	@Override
 	protected void addSearchFields() {
@@ -46,11 +46,11 @@ public class RespostaComunicacaoList extends EntityList<Documento> {
 		return null;
 	}
 	
-	public Processo getProcessoResposta() {
-		return processoResposta;
+	public Processo getProcesso() {
+		return processo;
 	}
 	
-	public void setProcessoResposta(Processo processoResposta) {
-		this.processoResposta = processoResposta;
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
 	}
 }

@@ -10,8 +10,6 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -20,7 +18,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -30,17 +27,15 @@ import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -58,13 +53,9 @@ public class RespostaComunicacaoAction implements Serializable {
 	@In
 	private ActionMessagesService actionMessagesService;
 	@In
-	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
-	@In
 	private ModeloDocumentoManager modeloDocumentoManager;
 	@In
 	private DocumentoUploader documentoUploader;
-	@In
-	private RespostaComunicacaoService respostaComunicacaoService;
 	@In
 	private RespostaComunicacaoList respostaComunicacaoList;
 	@In
@@ -79,10 +70,12 @@ public class RespostaComunicacaoAction implements Serializable {
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private DocumentoComunicacaoService documentoComunicacaoService;
+	@In
+	private AssinaturaDocumentoService assinaturaDocumentoService;
 	
 	private DestinatarioModeloComunicacao destinatario;
 	private Processo processoComunicacao;
-	private Processo processoResposta;
+	private Processo processoRaiz;
 	private Date prazoResposta;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
@@ -96,13 +89,13 @@ public class RespostaComunicacaoAction implements Serializable {
 	@Create
 	public void init() {
 		this.processoComunicacao = JbpmUtil.getProcesso();
+		this.processoRaiz = processoComunicacao.getProcessoRoot();
 		this.destinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
-		criarProcessoResposta();
 		documentoUploader.newInstance();
 		documentoUploader.clear();
-		documentoUploader.setProcesso(processoResposta);
-		respostaComunicacaoList.setProcessoResposta(processoResposta);
-		documentoComunicacaoList.setProcessoComunicacao(processoComunicacao);
+		documentoUploader.setProcesso(processoRaiz);
+		respostaComunicacaoList.setProcesso(processoRaiz);
+		documentoComunicacaoList.setProcesso(processoRaiz);
 		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 		newDocumentoEdicao();
 		initClassificacoes();
@@ -132,23 +125,18 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void gravarResposta() {
-		boolean hasId = documentoEdicao.getId() != null;
+		String textoEditor = documentoEdicao.getDocumentoBin().getModeloDocumento();
+		if (textoEditor == null || textoEditor.isEmpty()) {
+			FacesMessages.instance().add("Insira texto no editor");
+			return;
+		}
 		try {
-			String textoEditor = documentoEdicao.getDocumentoBin().getModeloDocumento();
-			if (textoEditor == null || textoEditor.isEmpty()) {
-				FacesMessages.instance().add("Insira texto no editor");
-				return;
-			}
-			documentoEdicao = respostaComunicacaoService.gravarDocumentoResposta(documentoEdicao, processoResposta);
-			processoResposta.getDocumentoList().add(documentoEdicao);
+			documentoEdicao = documentoManager.gravarDocumentoNoProcesso(processoRaiz, documentoEdicao); 
+			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
-			if (!hasId) {
-				documentoEdicao.setId(null);
-				documentoEdicao.getDocumentoBin().setId(null);
-			}
 		}
 	}
 	
@@ -161,16 +149,23 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void gravarAnexoResposta() {
-		processoResposta.getDocumentoList().add(documentoUploader.getDocumento());
 		documentoUploader.persist();
+		Documento resposta = documentoUploader.getDocumentosDaSessao().get(documentoUploader.getDocumentosDaSessao().size() - 1);
+		try {
+			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(resposta, processoComunicacao);
+			FacesMessages.instance().add("Registro gravado com sucesso");
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
+		}
 		documentoUploader.clear();
 	}
 	
 	public void removerDocumento(Documento documento) {
 		boolean isDocumentoEdicao = documentoEdicao != null && documentoEdicao.equals(documento);
 		try {
-			documentoService.removerDocumento(documento);
-			processoResposta.getDocumentoList().remove(documento);
+			documentoComunicacaoService.desvincularDocumentoRespostaComunicacao(documento);
+			documentoManager.remove(documento);
 			if (isDocumentoEdicao) {
 				newDocumentoEdicao();
 			}
@@ -180,25 +175,10 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 	}
 	
-	public void endTask() {
-		try {
-			long taskProcessoComunicacaoId = TaskInstance.instance().getId();
-			respostaComunicacaoService.inicializarFluxoDocumento(processoResposta);
-			JbpmUtil.getJbpmSession().flush();
-			TaskInstanceHome taskInstanceHome = TaskInstanceHome.instance();
-			taskInstanceHome.setTaskId(taskProcessoComunicacaoId);
-			taskInstanceHome.setCurrentTaskInstance(ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskProcessoComunicacaoId));
-			taskInstanceHome.end(taskInstanceHome.getName());
-		} catch (Exception e) {
-			LOG.error("", e);
-			if (e instanceof DAOException) {
-				actionMessagesService.handleDAOException((DAOException) e);
-			} else {
-				actionMessagesService.handleException("Erro ao enviar resposta", e);
-			}
-		}
+	public boolean podeRemoverDocumento(Documento documento) {
+		return documento.getDocumentoBin().isMinuta() || !assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
 	}
-	
+
 	public List<ClassificacaoDocumento> getClassificacoesEditor() {
 		return classificacoesEditor;
 	}
@@ -250,14 +230,6 @@ public class RespostaComunicacaoAction implements Serializable {
 		this.documentoEdicao = documentoEdicao;
 	}
 	
-	public boolean isPossuiResposta() {
-		return !processoResposta.getDocumentoList().isEmpty();
-	}
-	
-	public boolean isPossuiProcessoResposta() {
-		return processoResposta != null;
-	}
-	
 	public MeioExpedicao getMeioExpedicao() {
 		return destinatario.getMeioExpedicao();
 	}
@@ -269,24 +241,10 @@ public class RespostaComunicacaoAction implements Serializable {
 	public Date getPrazoResposta() {
 		return prazoResposta;
 	}
-	
+
 	private void initClassificacoes() {
 		TipoComunicacao tipoComunicacao = destinatario.getModeloComunicacao().getTipoComunicacao();
 		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, true);
 		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, false);
-	}
-
-	private void criarProcessoResposta() {
-		MetadadoProcesso metadado = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.RESPOSTA_COMUNICACAO_ATUAL);
-		if (metadado != null) {
-			processoResposta = metadado.getValue();
-		} else {
-			try {
-				processoResposta = respostaComunicacaoService.criarProcessoResposta(processoComunicacao);
-			} catch (DAOException e) {
-				LOG.error("", e);
-				actionMessagesService.handleDAOException(e);
-			}
-		}
 	}
 }
