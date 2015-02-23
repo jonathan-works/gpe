@@ -83,7 +83,7 @@ public class DocumentoBin implements Serializable {
     
     @Column(name = "in_minuta")
     @NotNull
-    private boolean minuta = false;
+    private boolean minuta = true;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList;
