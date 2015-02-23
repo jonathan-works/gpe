@@ -219,4 +219,11 @@ public class ProcessoDAO extends DAO<Processo> {
 		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, MeioExpedicao.SI.name());
 		return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, params);
 	}
+	
+	public List<String> getLocalizacoesDoProcesso(Processo processo) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put(ProcessoQuery.PARAM_ID_JBPM, processo.getIdProcesso());
+	    return getNamedResultList(ProcessoQuery.LOCALIZACOES_DO_PROCESSO, params);
+	}
 }
+

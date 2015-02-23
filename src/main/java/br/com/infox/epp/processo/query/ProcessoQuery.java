@@ -187,5 +187,15 @@ public interface ProcessoQuery {
 					+ " where p = mp.processo and  mp.metadadoType = 'prazoDestinatarioComunicacao' ) "
 			+ " and not exists (select 1 from MetadadoProcesso mp "
 					+ " where p = mp.processo and mp.metadadoType = 'dataCumprimento' ) ";
+    
+	String LOCALIZACOES_DO_PROCESSO = "localizacoesDoProcesso";
+	String LOCALIZACOES_DO_PROCESSO_QUERY = "select distinct l.ds_localizacao from dbo.tb_usuario_taskinstance ut "
+	        + "inner join dbo.tb_localizacao l on ut.id_localizacao_externa = l.id_localizacao "
+	        + "where id_taskinstance in ("
+	        + "    select ID_ from dbo.JBPM_TASKINSTANCE where PROCINST_ in ("
+	        + "        select id_jbpm from dbo.tb_processo "
+	        + "        where id_processo_pai = :" + PARAM_ID_JBPM + " or id_processo = :" + PARAM_ID_JBPM
+	        + "    )  AND START_ is not null AND END_ is null"
+	        + ")";
 	
 }
