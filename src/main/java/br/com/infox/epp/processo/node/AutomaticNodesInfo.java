@@ -12,8 +12,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -24,11 +22,15 @@ import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.NodeType;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(AutomaticNodesInfo.NAME)
 @AutoCreate
 @Scope(ScopeType.PAGE)
+@Transactional
 public class AutomaticNodesInfo implements Serializable {
+	
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(AutomaticNodesInfo.class);
 
