@@ -289,8 +289,4 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
 		return getDao().getProcessoEpaByIdJbpm(idJbpm);
 	}
-	
-	public List<String> getLocalizacoesDoProcesso(Processo processo) {
-	    return getDao().getLocalizacoesDoProcesso(processo);
-	}
 }

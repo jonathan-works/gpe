@@ -26,8 +26,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUN
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LOCALIZACOES_DO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.LOCALIZACOES_DO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
@@ -101,8 +99,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedNativeQuery(name = REMOVER_PROCESSO_JBMP, query = REMOVER_PROCESSO_JBMP_QUERY),
     @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY),
     @NamedNativeQuery(name = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO, query = GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO_QUERY,
-    				  resultClass = Processo.class),
-    @NamedNativeQuery(name = LOCALIZACOES_DO_PROCESSO, query = LOCALIZACOES_DO_PROCESSO_QUERY)
+    				  resultClass = Processo.class)
 })
 @NamedQueries(value = {
     @NamedQuery(name = PROCESSO_BY_NUMERO, query = PROCESSO_BY_NUMERO_QUERY),
