@@ -41,7 +41,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 	public static final String NAME = "situacaoProcessoDAO";
 	
 	@In(required = false)
-	private Authenticator authenticator;
+	protected Authenticator authenticator;
 	
     public final List<Tuple> getRootList(TipoProcesso tipoProcesso) {
         CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryRoot();
@@ -183,8 +183,8 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		Selection<String> nomeTarefa = from.<String>get("nomeTarefa").alias("nomeTarefa");
 		Selection<Long> maxIdTask = cb.max(from.<Long>get("idTask")).alias("idTask");
 		Selection<Integer> maxIdTarefa = cb.max(from.<Integer>get("idTarefa")).alias("idTarefa");
-		Selection<Long> countCaixa = cb.count(from.get("nomeCaixa")).alias("qtdEmCaixa");
-		Selection<Long> countProcesso = cb.count(from.get("idProcesso")).alias("qtd");
+		Selection<Long> countCaixa = cb.countDistinct(from.get("nomeCaixa")).alias("qtdEmCaixa");
+		Selection<Long> countProcesso = cb.countDistinct(from.get("idProcesso")).alias("qtd");
 		Selection<String> type = cb.<String>literal(PainelEntityNode.TASK_TYPE).alias("type");
 		cq.select(cb.tuple(nomeTarefa, maxIdTask, maxIdTarefa, countCaixa, countProcesso, type)).distinct(true);
 		cq.where(cb.equal(from.get("idFluxo"), idFluxo));
@@ -346,8 +346,8 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         
         String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA.getMetadadoType();
         Integer idUnidadeDecisora = authenticator.getMonocraticaLogada().getIdUnidadeDecisoraMonocratica();
-        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), cb.<String>literal(metadadoUnidadeDecisora)));
-        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()));
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
+        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()), predicateSubquery);
         predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
         subquery.where(predicateSubquery);
         
