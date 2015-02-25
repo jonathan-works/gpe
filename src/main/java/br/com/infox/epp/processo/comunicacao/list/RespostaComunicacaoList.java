@@ -19,10 +19,10 @@ public class RespostaComunicacaoList extends EntityList<Documento> {
 	public static final String NAME = "respostaComunicacaoList";
 	private static final long serialVersionUID = 1L;
 
-	private static final String DEFAULT_EJBQL = "select o from Documento o where "
-			+ "o.processo = #{respostaComunicacaoList.processo}";
+	private static final String DEFAULT_EJBQL = "select o.documento from DocumentoRespostaComunicacao o "
+			+ "where o.comunicacao = #{respostaComunicacaoList.processo}";
 	
-	private static final String DEFAULT_ORDER = "dataInclusao desc";
+	private static final String DEFAULT_ORDER = "o.documento.dataInclusao desc";
 
 	private Processo processo;		
 	
