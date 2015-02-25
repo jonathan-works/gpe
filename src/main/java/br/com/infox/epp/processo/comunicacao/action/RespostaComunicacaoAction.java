@@ -94,7 +94,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoUploader.newInstance();
 		documentoUploader.clear();
 		documentoUploader.setProcesso(processoRaiz);
-		respostaComunicacaoList.setProcesso(processoRaiz);
+		respostaComunicacaoList.setProcesso(processoComunicacao);
 		documentoComunicacaoList.setProcesso(processoRaiz);
 		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 		newDocumentoEdicao();

@@ -212,7 +212,7 @@ public class DestinatarioComunicacaoAction {
 	}
 	
 	private void initEntityLists() {
-		participanteProcessoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso());
+		participanteProcessoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
 		
 		PessoaFisica relator = getRelator();
 		processoPossuiRelator = relator != null;
@@ -231,7 +231,7 @@ public class DestinatarioComunicacaoAction {
 	}
 
 	private PessoaFisica getRelator() {
-		MetadadoProcesso metadadoProcesso = modeloComunicacao.getProcesso().getMetadado(EppMetadadoProvider.RELATOR);
+		MetadadoProcesso metadadoProcesso = modeloComunicacao.getProcesso().getProcessoRoot().getMetadado(EppMetadadoProvider.RELATOR);
 		return (PessoaFisica) (metadadoProcesso != null ? metadadoProcesso.getValue() : null);
 	}
 	

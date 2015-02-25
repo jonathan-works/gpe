@@ -83,7 +83,7 @@ public class DocumentoComunicacaoAction {
 	}
 	
 	private void initEntityLists() {
-		documentoDisponivelComunicacaoList.setProcesso(modeloComunicacao.getProcesso());
+		documentoDisponivelComunicacaoList.setProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
 		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
 			documentoDisponivelComunicacaoList.adicionarIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
 		}
@@ -150,7 +150,7 @@ public class DocumentoComunicacaoAction {
 	public List<Pasta> getPastas() {
 		if (pastas == null) {
 			try {
-				pastas = pastaManager.getByProcesso(modeloComunicacao.getProcesso());
+				pastas = pastaManager.getByProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
 			} catch (DAOException e) {
 				LOG.error("", e);
 				actionMessagesService.handleDAOException(e);
