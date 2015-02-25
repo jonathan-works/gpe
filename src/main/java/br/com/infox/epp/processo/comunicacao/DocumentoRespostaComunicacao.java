@@ -14,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.comunicacao.query.DocumentoRespostaComunicacaoQuery;
@@ -21,9 +22,12 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
-@Table(name = "tb_doc_resposta_comunicacao")
+@Table(name = "tb_doc_resposta_comunicacao", uniqueConstraints = {
+	@UniqueConstraint(columnNames = {"id_processo", "id_documento"})
+})
 @NamedQueries({
-	@NamedQuery(name = DocumentoRespostaComunicacaoQuery.REMOVER_DOCUMENTO_RESPOSTA, query = DocumentoRespostaComunicacaoQuery.REMOVER_DOCUMENTO_RESPOSTA_QUERY)
+	@NamedQuery(name = DocumentoRespostaComunicacaoQuery.REMOVER_DOCUMENTO_RESPOSTA, query = DocumentoRespostaComunicacaoQuery.REMOVER_DOCUMENTO_RESPOSTA_QUERY),
+	@NamedQuery(name = DocumentoRespostaComunicacaoQuery.GET_COMUNICACAO_VINCULADA, query = DocumentoRespostaComunicacaoQuery.GET_COMUNICACAO_VINCULADA_QUERY)
 })
 public class DocumentoRespostaComunicacao implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -41,7 +45,7 @@ public class DocumentoRespostaComunicacao implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@NotNull
-	@JoinColumn(name = "id_documento", nullable = false, unique = true)
+	@JoinColumn(name = "id_documento", nullable = false)
 	private Documento documento;
 
 	public Long getId() {
