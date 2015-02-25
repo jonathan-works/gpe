@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.assinatura;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +57,8 @@ public class AssinaturaDocumentoService implements Serializable {
     private DocumentoBinManager documentoBinManager;
     @In
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
+    @In
+    private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
@@ -226,9 +229,31 @@ public class AssinaturaDocumentoService implements Serializable {
 
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
                 documentoBin, usuarioPerfilAtual, certChain, signature);
+        List<Documento> documentosNaoSuficientementeAssinados = getDocumentosNaoSuficientementeAssinados(documentoBin);
         documentoBin.getAssinaturas().add(assinaturaDocumento);
         documentoBin.setMinuta(false);
         documentoBinManager.update(documentoBin);
+        try {
+        	for (Documento documento : documentosNaoSuficientementeAssinados) {
+	        	if (isDocumentoTotalmenteAssinado(documento)) {
+	        		assinaturaDocumentoListenerService.dispatch(documento);
+	        	}
+        	}
+        } catch (Exception e) {
+        	throw new DAOException(e);
+        }
+    }
+    
+    private List<Documento> getDocumentosNaoSuficientementeAssinados(DocumentoBin documentoBin) {
+    	List<Documento> documentosAssociados = new ArrayList<>(documentoBin.getDocumentoList());
+    	Iterator<Documento> it = documentosAssociados.iterator();
+    	while (it.hasNext()) {
+    		Documento documento = it.next();
+    		if (isDocumentoTotalmenteAssinado(documento)) {
+    			it.remove();
+    		}
+    	}
+    	return documentosAssociados;
     }
 
     public void assinarDocumento(final Documento documento,
