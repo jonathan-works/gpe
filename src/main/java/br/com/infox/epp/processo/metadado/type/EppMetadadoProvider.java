@@ -4,6 +4,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
@@ -42,7 +43,8 @@ public class EppMetadadoProvider extends MetadadoProcessoProvider {
 			new MetadadoProcessoDefinition("statusProcesso", "Estágio do Processo", StatusProcesso.class);
 
 	public static final MetadadoProcessoDefinition PASTA_DEFAULT = 
-	new MetadadoProcessoDefinition("pastaDefault", Pasta.class);
+			new MetadadoProcessoDefinition("pastaDefault", Pasta.class);
 	
-	
+	public static final MetadadoProcessoDefinition DOCUMENTO_EM_ANALISE = 
+			new MetadadoProcessoDefinition("documentoEmAnalise", Documento.class);
 }
