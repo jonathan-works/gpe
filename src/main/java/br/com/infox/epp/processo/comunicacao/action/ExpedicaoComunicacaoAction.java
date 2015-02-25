@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.transaction.Transaction;
 import org.richfaces.component.UICollapsiblePanel;
 
 import br.com.infox.certificado.CertificateSignatures;
@@ -39,6 +40,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.transaction.TransactionService;
 
 @Name(ExpedicaoComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -172,6 +174,10 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public void expedirComunicacao() {
 		try {
+			if (getComunicacao() == null) {
+				comunicacaoService.expedirComunicacao(modeloComunicacao);
+				return;
+			}
 			DocumentoBin documentoComunicacao = getDocumentoComunicacao();
 			CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
 			if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
@@ -181,12 +187,9 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 			if (documentoComunicacao.getAssinaturas().isEmpty()) {
 				assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 			}
-			if (getComunicacao() != null) {
-				comunicacaoService.expedirComunicacao(destinatario);
-			} else {
-				comunicacaoService.expedirComunicacao(modeloComunicacao);
-			}
+			comunicacaoService.expedirComunicacao(destinatario);
 		} catch (DAOException | CertificadoException | AssinaturaException e) {
+			TransactionService.rollbackTransaction();
 			handleException(e);
 		}
 	}
