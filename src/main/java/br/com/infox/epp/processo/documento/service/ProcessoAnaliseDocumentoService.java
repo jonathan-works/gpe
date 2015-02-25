@@ -18,6 +18,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -46,7 +47,7 @@ public class ProcessoAnaliseDocumentoService {
 	@In
 	private IniciarProcessoService iniciarProcessoService;
 	
-	public Processo criarProcessoAnaliseDocumentos(Processo processoPai) throws DAOException {
+	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento documentoAnalise) throws DAOException {
 		Fluxo fluxoDocumento = getFluxoDocumento();
 		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoDocumento);
 		if (ncfs == null || ncfs.isEmpty()) {
@@ -63,18 +64,24 @@ public class ProcessoAnaliseDocumentoService {
 		processoAnalise.setDataInicio(new Date());
 		processoManager.persist(processoAnalise);
 		
-		criarMetadadosProcessoAnalise(processoAnalise);
+		criarMetadadosProcessoAnalise(processoAnalise, documentoAnalise);
 		
 		return processoAnalise;
 	}
 	
-	public void inicializarFluxoDocumento(Processo processoAnalise) throws DAOException {
-		Map<String, Object> variaveisJbpm = new HashMap<>();
+	public void inicializarFluxoDocumento(Processo processoAnalise, Map<String, Object> variaveisJbpm) throws DAOException {
+		if (variaveisJbpm == null) {
+			variaveisJbpm = new HashMap<>();
+		} else {
+			variaveisJbpm = new HashMap<>(variaveisJbpm);
+		}
 		MetadadoProcesso metadadoTipoProcesso = processoAnalise.getProcessoPai().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
 		if (metadadoTipoProcesso != null) {
 			variaveisJbpm.put("tipoProcessoPai", metadadoTipoProcesso.getValue().toString());
 		}
-		variaveisJbpm.put("classificacaoDocumento", processoAnalise.getDocumentoList().get(0).getClassificacaoDocumento().getDescricao());
+		MetadadoProcesso metadadoDocumentoAnalise = processoAnalise.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
+		Documento documentoAnalise = metadadoDocumentoAnalise.getValue();
+		variaveisJbpm.put("classificacaoDocumento", documentoAnalise.getClassificacaoDocumento().getDescricao());
 		iniciarProcessoService.iniciarProcesso(processoAnalise, variaveisJbpm);
 	}
 	
@@ -89,12 +96,15 @@ public class ProcessoAnaliseDocumentoService {
 		return fluxo;
 	}
 	
-	private void criarMetadadosProcessoAnalise(Processo processoAnalise) throws DAOException {
+	private void criarMetadadosProcessoAnalise(Processo processoAnalise, Documento documentoAnalise) throws DAOException {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoAnalise);
 		MetadadoProcesso metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.DOCUMENTO.toString());
 		metadadoProcessoManager.persist(metadado);
 		
 		metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, processoAnalise.getProcessoPai().getLocalizacao().getIdLocalizacao().toString());
+		metadadoProcessoManager.persist(metadado);
+		
+		metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE, documentoAnalise.getId().toString());
 		metadadoProcessoManager.persist(metadado);
 	}
 }
