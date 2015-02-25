@@ -144,7 +144,7 @@
 		</rich:collapsiblePanel>
 	</h:form>
 	
-	<wi:assinaturaPopup id="assinaturaDocumentoPopup" afterRender="respostasPanel" />
+	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" />
 	
 	<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
 		values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true">
@@ -157,7 +157,7 @@
 		<ui:define name="headerToolBar" />
 		<ui:define name="toolBar">
 			<h:form>
-				<wi:toolBarAssinatura idDocumento="#{row.id}" idAssinatura="assinaturaDocumentoPopup"
+				<wi:toolBarAssinatura idDocumento="#{row.id}" idAssinatura="respostaComunicacaoAssinaturaDocumentoPopup"
 			    	renderedLock="#{not empty row.documentoBin.assinaturas}" />
 				<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row)}"
 					render="painelEditor" rendered="#{empty row.documentoBin.extensao}">
