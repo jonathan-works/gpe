@@ -75,17 +75,22 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
             final byte[] qrcode = QRCode.from(getUrlValidacaoDocumento() + "?cod=" + documento.getUuid().toString())
                     .to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
-
             for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
-                final PdfContentByte content = stamper.getOverContent(page);
-                final Image image = Image.getInstance(qrcode);
-                image.setAbsolutePosition(pdfReader.getCropBox(page).getRight() - 60, pdfReader.getCropBox(page)
-                        .getTop() - 70);
+            	int rotation = pdfReader.getPageRotation(page);
+            	final PdfContentByte content = stamper.getOverContent(page);
+            	final Image image = Image.getInstance(qrcode);
+            	float right = pdfReader.getCropBox(page).getRight();
+            	float top =  pdfReader.getCropBox(page).getTop();
+                if (rotation == 90 || rotation == 270) {
+                	// Invertendo posições quando o PDF estiver em modo Paisagem
+                	float tempRight = right;
+                	right = top;
+                	top = tempRight;
+                }
+                image.setAbsolutePosition(right - 60, top - 70);
                 content.addImage(image);
-                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase,
-                        pdfReader.getCropBox(page).getRight() - 15, pdfReader.getCropBox(page).getTop() - 70, -90);
-                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, pdfReader.getCropBox(page)
-                        .getRight() - 25, pdfReader.getCropBox(page).getTop() - 70, -90);
+                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 15, top - 70, -90);
+                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 25, top - 70, -90);
             }
 
             stamper.close();
