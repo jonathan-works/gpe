@@ -14,7 +14,6 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
-import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.type.TipoProcesso;
@@ -41,7 +40,7 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	
 	private static final String CONDICAO_MEIO_IMPRESSAO =
 	        "and exists (select 1 from MetadadoProcesso mp where "
-	                + "mp.metadadoType = '" + ComunicacaoService.MEIO_EXPEDICAO + "' "
+	                + "mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' "
                     + "and mp.valor = #{impressaoComunicacaoList.meioExpedicao.name()} "
                     + "and mp.processo = o) ";
 	

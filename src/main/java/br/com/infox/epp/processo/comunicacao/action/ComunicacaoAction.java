@@ -17,14 +17,12 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -45,7 +43,6 @@ import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoServi
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -373,7 +370,7 @@ public class ComunicacaoAction implements Serializable {
 		bean.setTipoComunicacao(destinatario.getModeloComunicacao().getTipoComunicacao().getDescricao());
 		bean.setNome(destinatario.getNome());
 		bean.setPrazoAtendimento(destinatario.getPrazo() != null ? destinatario.getPrazo().toString() : "-");
-		bean.setDocumentoComunicacao(destinatario.getComunicacao());
+		bean.setDocumentoComunicacao(destinatario.getDocumentoComunicacao());
 		bean.setIdModeloComunicacao(destinatario.getModeloComunicacao().getId());
 		
 		Processo comunicacao = bean.getComunicacao();

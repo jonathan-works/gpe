@@ -10,7 +10,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.transaction.Transaction;
 import org.richfaces.component.UICollapsiblePanel;
 
 import br.com.infox.certificado.CertificateSignatures;
@@ -72,7 +71,6 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	private String tab = "list";
 	private ModeloComunicacao modeloComunicacao;
 	private DestinatarioModeloComunicacao destinatario;
-	private String comunicacao;
 	private String token;
 	private List<TipoComunicacao> tiposComunicacao;
 	
@@ -111,31 +109,12 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-		this.comunicacao = null;
 		UICollapsiblePanel panel = (UICollapsiblePanel) FacesContext.getCurrentInstance().getViewRoot().findComponent(PAINEL_COMUNICACAO_ID);
 		if (destinatario != null) {
 			panel.setExpanded(true);
 		} else {
 			panel.setExpanded(false);
 		}
-	}
-	
-	public String getComunicacao() {
-		if (comunicacao == null) {
-			String modeloDocumento = modeloComunicacao.getTextoComunicacao();
-			if (modeloDocumento != null) {
-				if (destinatario == null) {
-					comunicacao = modeloDocumento;
-				} else {
-					comunicacao = documentoComunicacaoService.evaluateComunicacao(destinatario);
-				}
-			}
-		}
-		return comunicacao;
-	}
-	
-	public void setComunicacao(String comunicacao) {
-		this.comunicacao = comunicacao;
 	}
 	
 	public String getMd5Comunicacao() {
@@ -165,8 +144,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-		boolean expedicaoValida = (getComunicacao() == null && !isExpedida(modeloComunicacao)) || 
-			(getComunicacao() != null && destinatario != null && !destinatario.getExpedido());
+		boolean expedicaoValida = (modeloComunicacao.isDocumentoBinario() && !isExpedida(modeloComunicacao)) || 
+			(!modeloComunicacao.isDocumentoBinario() && destinatario != null && !destinatario.getExpedido());
 		return expedicaoValida && 
 				assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), 
 						getDocumentoComunicacao(), usuario);
@@ -174,7 +153,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public void expedirComunicacao() {
 		try {
-			if (getComunicacao() == null) {
+			if (modeloComunicacao.isDocumentoBinario()) {
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 				return;
 			}
@@ -207,12 +186,12 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		return modeloComunicacaoManager.isExpedida(modeloComunicacao);
 	}
 	
-	public boolean isDocumentoComunicacaoAssinado() {
-		return getComunicacao() == null && !getDocumentoComunicacao().getAssinaturas().isEmpty() && !isExpedida(modeloComunicacao);
-	}
-	
 	private DocumentoBin getDocumentoComunicacao() {
-		return getComunicacao() != null ? this.destinatario.getComunicacao() : modeloComunicacao.getDestinatarios().get(0).getComunicacao();
+		if (destinatario != null) {
+			return destinatario.getDocumentoComunicacao().getDocumentoBin();
+		} else {
+			return modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao().getDocumentoBin();
+		}
 	}
 	
 	private void handleException(Exception e) {

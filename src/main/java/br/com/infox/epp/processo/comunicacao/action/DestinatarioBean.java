@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
 public class DestinatarioBean {
@@ -15,7 +15,7 @@ public class DestinatarioBean {
 	private String prazoFinal;
 	private Processo comunicacao;
 	private Long idModeloComunicacao;
-	private DocumentoBin documentoComunicacao;
+	private Documento documentoComunicacao;
 	
 	public Long getIdDestinatario() {
 		return idDestinatario;
@@ -83,10 +83,10 @@ public class DestinatarioBean {
 	public void setIdModeloComunicacao(Long idModeloComunicacao) {
 		this.idModeloComunicacao = idModeloComunicacao;
 	}
-	public DocumentoBin getDocumentoComunicacao() {
+	public Documento getDocumentoComunicacao() {
 		return documentoComunicacao;
 	}
-	public void setDocumentoComunicacao(DocumentoBin documentoComunicacao) {
+	public void setDocumentoComunicacao(Documento documentoComunicacao) {
 		this.documentoComunicacao = documentoComunicacao;
 	}
 }

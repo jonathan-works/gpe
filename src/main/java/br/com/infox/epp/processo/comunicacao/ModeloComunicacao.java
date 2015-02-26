@@ -18,7 +18,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import com.google.common.base.Strings;
 
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -181,6 +184,11 @@ public class ModeloComunicacao implements Serializable {
 	
 	public void setMinuta(boolean minuta) {
 		this.minuta = minuta;
+	}
+	
+	@Transient
+	public boolean isDocumentoBinario() {
+		return Strings.isNullOrEmpty(getTextoComunicacao());
 	}
 
 	@Override

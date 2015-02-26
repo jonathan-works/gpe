@@ -14,6 +14,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
@@ -27,7 +28,6 @@ import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.JbpmExpressionResolver;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
-import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoRespostaComunicacao;
@@ -37,11 +37,9 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 
 @Name(DocumentoComunicacaoService.NAME)
@@ -66,6 +64,10 @@ public class DocumentoComunicacaoService {
 	private JbpmContext jbpmContext;
 	@In
 	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO;
+	@In
+	private DocumentoBinManager documentoBinManager;
+	@In
+	private GenericManager genericManager;
 	
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo) {
 		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, isModelo, Authenticator.getPapelAtual());
@@ -88,45 +90,26 @@ public class DocumentoComunicacaoService {
 		}
 	}
 	
-	public DocumentoModeloComunicacao getDocumentoInclusoPorUsuarioInterno(ModeloComunicacao modeloComunicacao) {
-		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisMembros("usuarioInterno"), modeloComunicacao);
-	}
-	
 	public String evaluateComunicacao(DestinatarioModeloComunicacao destinatario) {
-		DocumentoBin comunicacao = destinatario.getComunicacao();
-		ModeloDocumento modeloDocumento = destinatario.getModeloComunicacao().getModeloDocumento();
+		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
+		String textoComunicacao = modeloComunicacao.getTextoComunicacao();
+		ModeloDocumento modeloDocumento = modeloComunicacao.getModeloDocumento();
 		if (modeloDocumento == null) {
-			return comunicacao.getModeloDocumento();
+			return textoComunicacao;
 		}
 
 		Map<String, String> variaveis = createVariaveis(destinatario);
-		ProcessInstance processInstance = jbpmContext.getProcessInstance(destinatario.getModeloComunicacao().getProcesso().getIdJbpm());
+		ProcessInstance processInstance = jbpmContext.getProcessInstance(modeloComunicacao.getProcesso().getIdJbpm());
 		variableTypeResolver.setProcessInstance(processInstance);
-
 		
 		ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new ArbitraryExpressionResolver(variaveis))
 				.and(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), processInstance.getContextInstance()))
 				.and(new SeamExpressionResolver()).build();
-		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, comunicacao.getModeloDocumento(), chain);
+		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, textoComunicacao, chain);
 	}
 	
 	public List<ClassificacaoDocumento> getClassificacoesProrrogacaoPrazo(TipoComunicacao tipoComunicacao) {
 		return classificacaoDocumentoManager.getClassificacoesDocumentoProrrogacaoPrazo(tipoComunicacao);
-	}
-	
-	void gravarDocumentos(DestinatarioModeloComunicacao destinatario, Processo processoComunicacao) throws DAOException {
-		DocumentoBin comunicacao = destinatario.getComunicacao();
-		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
-		Processo processoRaiz = processoComunicacao.getProcessoRoot();
-		Documento documentoComunicacao = documentoManager.createDocumento(processoRaiz, comunicacao.getNomeArquivo(), comunicacao, modeloComunicacao.getClassificacaoComunicacao());
-		processoRaiz.getDocumentoList().add(documentoComunicacao);
-		Pasta pastaDefault = processoRaiz.getMetadado(EppMetadadoProvider.PASTA_DEFAULT).getValue();
-		documentoComunicacao.setPasta(pastaDefault);
-		documentoManager.update(documentoComunicacao);
-		
-		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoComunicacao);
-		processoComunicacao.getMetadadoProcessoList().add(metadadoProcessoProvider
-				.gerarMetadado(ComunicacaoMetadadoProvider.COMUNICACAO, documentoComunicacao.getId().toString()));
 	}
 	
 	public void desvincularDocumentoRespostaComunicacao(Documento documento) throws DAOException {
@@ -144,9 +127,32 @@ public class DocumentoComunicacaoService {
 		Map<String, String> variaveis = new HashMap<>();
 		String format = "#'{'{0}'}'";
 		
-		variaveis.put(MessageFormat.format(format, ComunicacaoService.MEIO_EXPEDICAO), destinatario.getMeioExpedicao().getLabel());
-		variaveis.put(MessageFormat.format(format, ComunicacaoService.PRAZO_DESTINATARIO), destinatario.getPrazo() != null ? destinatario.getPrazo().toString() : null);
-		variaveis.put(MessageFormat.format(format, ComunicacaoService.NOME_DESTINATARIO), destinatario.getNome());
+		variaveis.put(MessageFormat.format(format, VariaveisJbpmComunicacao.MEIO_EXPEDICAO), destinatario.getMeioExpedicao().getLabel());
+		variaveis.put(MessageFormat.format(format, VariaveisJbpmComunicacao.PRAZO_DESTINATARIO), destinatario.getPrazo() != null ? destinatario.getPrazo().toString() : null);
+		variaveis.put(MessageFormat.format(format, VariaveisJbpmComunicacao.NOME_DESTINATARIO), destinatario.getNome());
 		return variaveis;
+	}
+
+	void gravarDocumentos(ModeloComunicacao modeloComunicacao) throws DAOException {
+		Processo processoRaiz = modeloComunicacao.getProcesso().getProcessoRoot();
+		if (!modeloComunicacao.isDocumentoBinario()) {
+			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+				String textoComunicacaoDestinatario = evaluateComunicacao(destinatario);
+				DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacaoDestinatario);
+				Documento documentoComunicacao = documentoManager.createDocumento(processoRaiz, "Comunicação", bin, modeloComunicacao.getClassificacaoComunicacao());
+				destinatario.setDocumentoComunicacao(documentoComunicacao);
+				genericManager.update(destinatario);
+			}
+		} else {
+			Documento documentoComunicacao = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento();
+			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+				destinatario.setDocumentoComunicacao(documentoComunicacao);
+				genericManager.update(destinatario);
+			}
+		}
+	}
+
+	public DocumentoModeloComunicacao getDocumentoInclusoPorUsuarioInterno(ModeloComunicacao modeloComunicacao) {
+		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisMembros("usuarioInterno"), modeloComunicacao);
 	}
 }

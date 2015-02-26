@@ -24,7 +24,7 @@
 				<div />
 				<h:commandButton action="#{envioComunicacaoController.downloadComunicacaoCompleta()}" 
 					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" immediate="true" 
-					rendered="#{(not empty envioComunicacaoController.modeloComunicacao.textoComunicacao 
+					rendered="#{(not envioComunicacaoController.modeloComunicacao.documentoBinario 
 						or documentoComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno) 
 						and not envioComunicacaoController.modeloComunicacao.finalizada}" 
 					styleClass="buttons"/> 
@@ -42,7 +42,7 @@
 								rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
 							</a:commandLink>
-							<s:div rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not empty envioComunicacaoController.modeloComunicacao.textoComunicacao}">
+							<s:div rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.modeloComunicacao.documentoBinario}">
 	   							<a:commandLink action="#{envioComunicacaoController.setDestinatario(row)}" render="comunicacaoDestinatarioForm" execute="@this"
 	   								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel}">
 	   								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{infoxMessages['button.selecionar']}" />
@@ -165,9 +165,9 @@
 			
 			<!-- Expedição individual de comunicações (o ofício da comunicação é o texto do editor) -->
 			<h:form id="comunicacaoDestinatarioForm">
-				<rich:collapsiblePanel switchType="client" rendered="#{not empty envioComunicacaoController.destinatario and not empty envioComunicacaoController.modeloComunicacao.textoComunicacao}" 
+				<rich:collapsiblePanel switchType="client" rendered="#{not empty envioComunicacaoController.destinatario and not envioComunicacaoController.modeloComunicacao.documentoBinario}" 
 					header="#{infoxMessages['comunicacao.comunicacao']} - #{envioComunicacaoController.destinatario.nome}">
-					<wi:editor id="comunicacao" readonly="true" value="#{envioComunicacaoController.destinatario.comunicacao.modeloDocumento}" />
+					<wi:editor id="comunicacao" readonly="true" value="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.modeloDocumento}" />
 					<s:div id="assinatura_pers">
 						<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
 							execute="@this appletAssinaturaToken" 
@@ -177,7 +177,7 @@
 						
 						<wi:certificadoDigital id="appletAssinatura"
                                 tokenField="#{envioComunicacaoController.token}"
-								signableData="#{envioComunicacaoController.destinatario.comunicacao.md5Documento}"
+								signableData="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.md5Documento}"
 								functionPreSign="infox.showLoading();"
 								functionPosSign="assinar();"
 								rendered="#{not envioComunicacaoController.destinatario.expedido and envioComunicacaoController.podeRenderizarApplet()}"
@@ -249,7 +249,7 @@
 					<h:form>
 						<h:commandButton styleClass="buttons" action="#{envioComunicacaoController.downloadComunicacao}" 
 	    					value="#{infoxMessages['comunicacao.comunicacao']}"
-	    					rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and empty envioComunicacaoController.modeloComunicacao.textoComunicacao}"/>
+	    					rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and envioComunicacaoController.modeloComunicacao.documentoBinario}"/>
 	    			</h:form>
 					<rich:dataTable id="documentosSelecionados" value="#{envioComunicacaoController.modeloComunicacao.documentos}"
 						styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty envioComunicacaoController.modeloComunicacao.documentos}">

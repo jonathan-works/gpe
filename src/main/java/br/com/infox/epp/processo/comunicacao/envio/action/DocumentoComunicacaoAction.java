@@ -62,7 +62,11 @@ public class DocumentoComunicacaoAction {
 		initClassificacoes();
 		initEntityLists();
 		if (modeloComunicacao.getId() != null) {
-			this.possuiDocumentoInclusoPorUsuarioInterno = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
+			if (!modeloComunicacao.getFinalizada()) {
+				this.possuiDocumentoInclusoPorUsuarioInterno = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
+			} else {
+				this.possuiDocumentoInclusoPorUsuarioInterno = modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao().getDocumentoBin().isBinario();
+			}
 		}
 	}
 	
@@ -98,10 +102,6 @@ public class DocumentoComunicacaoAction {
 	
 	void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
-	}
-	
-	DocumentoModeloComunicacao getDocumentoComunicacao() {
-		return documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
 	}
 	
 	public void adicionarDocumento(Documento documento) {
