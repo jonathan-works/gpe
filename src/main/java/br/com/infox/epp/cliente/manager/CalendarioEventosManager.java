@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 
@@ -31,24 +32,16 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
      * @return
      */
     public Date getPrimeiroDiaUtil(Date dia, int qtdDias) {
-        Date prazo = new Date();
-        prazo.setTime(dia.getTime() + getDiaInMilis(qtdDias));
-        if (isDiaUtil(prazo))
-            return prazo;
+    	Calendar prazo = Calendar.getInstance();
+    	prazo.setTime(DateUtil.getEndOfDay(dia));
+    	prazo.add(Calendar.DAY_OF_MONTH, qtdDias);
+    	Date dataPrazo = prazo.getTime();
+        if (isDiaUtil(dataPrazo))
+            return dataPrazo;
         else 
-            return getPrimeiroDiaUtil(prazo, 1);
+            return getPrimeiroDiaUtil(dataPrazo, 1);
     }
     
-    /**
-     * Transforma uma quantidade de dias em milisegundos.
-     * @param dias
-     * @return dias em milisegundos
-     */
-    public Integer getDiaInMilis(Integer dias) {
-        if (dias == null) dias = 10;
-        return dias * 24 * 60 * 60 * 1000;
-    }
-
     public Boolean isDiaUtil(Date dia) {
         return !(isWeekend(dia) || hasEventAt(dia));
     }
