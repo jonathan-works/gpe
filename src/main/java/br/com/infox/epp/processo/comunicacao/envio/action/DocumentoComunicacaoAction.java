@@ -89,7 +89,7 @@ public class DocumentoComunicacaoAction {
 	private void initEntityLists() {
 		documentoDisponivelComunicacaoList.setProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
 		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
-			documentoDisponivelComunicacaoList.adicionarIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
+			documentoDisponivelComunicacaoList.adicionarIdDocumento(documentoModelo.getDocumento().getDocumentoBin().getId());
 		}
 	}
 
@@ -109,7 +109,7 @@ public class DocumentoComunicacaoAction {
 		documentoModelo.setDocumento(documento);
 		documentoModelo.setModeloComunicacao(modeloComunicacao);
 		modeloComunicacao.getDocumentos().add(documentoModelo);
-		documentoDisponivelComunicacaoList.adicionarIdDocumentoBin(documento.getDocumentoBin().getId());
+		documentoDisponivelComunicacaoList.adicionarIdDocumento(documento.getId());
 		if (!possuiDocumentoInclusoPorUsuarioInterno) {
 			List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisMembros("usuarioInterno");
 			possuiDocumentoInclusoPorUsuarioInterno = papeisUsuarioInterno.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
@@ -118,7 +118,7 @@ public class DocumentoComunicacaoAction {
 	
 	public void removerDocumento(DocumentoModeloComunicacao documentoModelo) {
 		modeloComunicacao.getDocumentos().remove(documentoModelo);
-		documentoDisponivelComunicacaoList.removerIdDocumentoBin(documentoModelo.getDocumento().getDocumentoBin().getId());
+		documentoDisponivelComunicacaoList.removerIdDocumento(documentoModelo.getDocumento().getId());
 		if (possuiDocumentoInclusoPorUsuarioInterno) {
 			if (modeloComunicacao.getId() != null) {
 				possuiDocumentoInclusoPorUsuarioInterno = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;

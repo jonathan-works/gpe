@@ -44,7 +44,7 @@
 							</a:commandLink>
 							<s:div rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.modeloComunicacao.documentoBinario}">
 	   							<a:commandLink action="#{envioComunicacaoController.setDestinatario(row)}" render="comunicacaoDestinatarioForm" execute="@this"
-	   								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel}">
+	   								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
 	   								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{infoxMessages['button.selecionar']}" />
 	   							</a:commandLink>
 	   							<h:commandLink action="#{envioComunicacaoController.downloadComunicacaoCompleta(row)}" 
@@ -165,25 +165,25 @@
 			
 			<!-- Expedição individual de comunicações (o ofício da comunicação é o texto do editor) -->
 			<h:form id="comunicacaoDestinatarioForm">
-				<rich:collapsiblePanel switchType="client" rendered="#{not empty envioComunicacaoController.destinatario and not envioComunicacaoController.modeloComunicacao.documentoBinario}" 
-					header="#{infoxMessages['comunicacao.comunicacao']} - #{envioComunicacaoController.destinatario.nome}">
-					<wi:editor id="comunicacao" readonly="true" value="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.modeloDocumento}" />
-					<s:div id="assinatura_pers">
-						<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
-							execute="@this appletAssinaturaToken" 
-							render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
-						  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
-	             
-						
-						<wi:certificadoDigital id="appletAssinatura"
-                                tokenField="#{envioComunicacaoController.token}"
-								signableData="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.md5Documento}"
-								functionPreSign="infox.showLoading();"
-								functionPosSign="assinar();"
-								rendered="#{not envioComunicacaoController.destinatario.expedido and envioComunicacaoController.podeRenderizarApplet()}"
-								signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
-	          		</s:div>
-				</rich:collapsiblePanel>
+				<s:div id="assinatura_pers" rendered="#{not envioComunicacaoController.modeloComunicacao.documentoBinario 
+					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
+					
+					<h:commandButton id="visualizarComunicacao" action="#{envioComunicacaoController.downloadComunicacaoCompleta(envioComunicacaoController.destinatario)}" 
+						value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" />
+						 
+					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
+						execute="@this appletAssinaturaToken" 
+						render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
+					  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
+             
+					<wi:certificadoDigital id="appletAssinatura"
+                        tokenField="#{envioComunicacaoController.token}"
+						signableData="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.md5Documento}"
+						functionPreSign="infox.showLoading();"
+						functionPosSign="assinar();"
+						rendered="#{envioComunicacaoController.podeRenderizarApplet()}"
+						signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
+          		</s:div>
 			</h:form>
 			<!-- Documentos disponíveis para serem vinculados à comunicação -->
 			<rich:panel id="documentos" header="Documentos" 

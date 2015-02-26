@@ -149,6 +149,7 @@ public class DocumentoComunicacaoService {
 				destinatario.setDocumentoComunicacao(documentoComunicacao);
 				genericManager.update(destinatario);
 			}
+			desvincularDocumentoRespostaComunicacao(documentoComunicacao);
 		}
 	}
 

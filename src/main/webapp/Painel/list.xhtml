@@ -35,7 +35,7 @@
           location = '#{pathResolver.contextPath}/Painel/list.seam'; 
         }
       </h:outputScript>
-      <s:div rendered="#{s:hasPermission('/Painel/Comunicacao/painel.seam', 'access')}">
+      <s:div rendered="#{s:hasPermission('/pages/Painel/Comunicacao/painel.seam', 'access')}">
 	   	  <button class="buttons" 
 	      	onclick="location.href = '#{pathResolver.contextPath}/Painel/Comunicacao/painel.seam';">
 	      	#{infoxMessages['painel.comunicacoes']}

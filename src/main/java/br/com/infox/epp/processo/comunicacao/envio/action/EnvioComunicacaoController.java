@@ -273,10 +273,6 @@ public class EnvioComunicacaoController implements Serializable {
 		return signatureBean;
 	}
 
-	public void downloadComunicacaoCompleta() {
-		downloadComunicacaoCompleta(destinatario);
-	}
-	
 	public void downloadComunicacaoCompleta(DestinatarioModeloComunicacao destinatario) {
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
@@ -285,10 +281,6 @@ public class EnvioComunicacaoController implements Serializable {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
-	}
-	
-	public void downloadComunicacao() {
-		documentoDownloader.downloadDocumento(modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao());
 	}
 	
 	public List<TipoComunicacao> getTiposComunicacao() {

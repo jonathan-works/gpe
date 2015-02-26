@@ -31,7 +31,7 @@ public class PastaDAO extends DAO<Pasta> {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_PASTA, pasta);
 		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
-		return ((Number) getNamedSingleResult(TOTAL_DOCUMENTOS_PASTA, parameters)).intValue();
+		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_QUERY + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
 	}
 	
 	public int getTotalDocumentosPasta(Pasta pasta, String customFilter, Map<String, Object> params) {
@@ -40,7 +40,6 @@ public class PastaDAO extends DAO<Pasta> {
 			parameters.putAll(params);
 		}
 		parameters.put(PARAM_PASTA, pasta);
-		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
 		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_QUERY + customFilter, parameters)).intValue();
 	}
 }

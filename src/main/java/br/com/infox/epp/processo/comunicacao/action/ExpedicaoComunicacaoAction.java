@@ -3,14 +3,11 @@ package br.com.infox.epp.processo.comunicacao.action;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.context.FacesContext;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.richfaces.component.UICollapsiblePanel;
 
 import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBean;
@@ -46,7 +43,6 @@ import br.com.infox.seam.transaction.TransactionService;
 public class ExpedicaoComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "expedicaoComunicacaoAction";
-	private static final String PAINEL_COMUNICACAO_ID = ":comunicacaoTabPanel:comunicacaoForm:painelComunicacao";
 	private static final LogProvider LOG = Logging.getLogProvider(ExpedicaoComunicacaoAction.class);
 	
 	@In
@@ -89,6 +85,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
 		destinatarioModeloComunicacaoList.setModeloComunicacao(modeloComunicacao);
+		setDestinatario(null);
 	}
 	
 	public void setId(Long id) {
@@ -109,12 +106,6 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-		UICollapsiblePanel panel = (UICollapsiblePanel) FacesContext.getCurrentInstance().getViewRoot().findComponent(PAINEL_COMUNICACAO_ID);
-		if (destinatario != null) {
-			panel.setExpanded(true);
-		} else {
-			panel.setExpanded(false);
-		}
 	}
 	
 	public String getMd5Comunicacao() {
@@ -144,8 +135,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-		boolean expedicaoValida = (modeloComunicacao.isDocumentoBinario() && !isExpedida(modeloComunicacao)) || 
-			(!modeloComunicacao.isDocumentoBinario() && destinatario != null && !destinatario.getExpedido());
+		boolean expedicaoValida = !modeloComunicacao.isDocumentoBinario() && destinatario != null && !destinatario.getExpedido()
+				&& !destinatario.getDocumentoComunicacao().hasAssinatura();
 		return expedicaoValida && 
 				assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), 
 						getDocumentoComunicacao(), usuario);
@@ -173,7 +164,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		}
 	}
 	
-	public void downloadComunicacao(DestinatarioModeloComunicacao destinatario) {
+	public void downloadComunicacao() {
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
 			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");

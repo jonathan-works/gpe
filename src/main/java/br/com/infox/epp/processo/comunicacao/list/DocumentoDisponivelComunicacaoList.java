@@ -52,9 +52,9 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
 	private ActionMessagesService actionMessagesService;
 
 	private Processo processo;
-	private Set<Integer> idsDocumentosBin = new HashSet<>();
+	private Set<Integer> idsDocumentos = new HashSet<>();
 	private Map<String, Object> paramsPasta = new HashMap<>();
-	private String filterPasta = PastaQuery.FILTER_SIGILO + PastaQuery.FILTER_EXCLUIDO;
+	private String filterPasta = PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO + PastaQuery.FILTER_SIGILO + PastaQuery.FILTER_EXCLUIDO;
 	
 	@Override
 	protected void addSearchFields() {
@@ -76,29 +76,29 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
 		return null;
 	}
 	
-	public void adicionarIdDocumentoBin(Integer id) {
-		idsDocumentosBin.add(id);
+	public void adicionarIdDocumento(Integer id) {
+		idsDocumentos.add(id);
 		refreshQuery();
-		if (!paramsPasta.containsKey(PastaQuery.PARAM_IDS_DOCUMENTOS_BIN)) {
-			paramsPasta.put(PastaQuery.PARAM_IDS_DOCUMENTOS_BIN, idsDocumentosBin);
-			filterPasta += PastaQuery.FILTER_DOCUMENTOS_BIN;
+		if (!paramsPasta.containsKey(PastaQuery.PARAM_IDS_DOCUMENTOS)) {
+			paramsPasta.put(PastaQuery.PARAM_IDS_DOCUMENTOS, idsDocumentos);
+			filterPasta += PastaQuery.FILTER_DOCUMENTOS;
 		}
 	}
 	
-	public void removerIdDocumentoBin(Integer id) {
-		idsDocumentosBin.remove(id);
+	public void removerIdDocumento(Integer id) {
+		idsDocumentos.remove(id);
 		refreshQuery();
-		if (idsDocumentosBin.isEmpty()) {
-			paramsPasta.remove(PastaQuery.PARAM_IDS_DOCUMENTOS_BIN);
-			filterPasta = PastaQuery.FILTER_SIGILO + PastaQuery.FILTER_EXCLUIDO;
+		if (idsDocumentos.isEmpty()) {
+			paramsPasta.remove(PastaQuery.PARAM_IDS_DOCUMENTOS);
+			filterPasta = PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO + PastaQuery.FILTER_SIGILO + PastaQuery.FILTER_EXCLUIDO;
 		}
 	}
 	
 	private void refreshQuery() {
 		StringBuilder hql = new StringBuilder(DEFAULT_EJBQL);
-		if (!idsDocumentosBin.isEmpty()) {
-			hql.append(" and bin.id not in (");
-			Iterator<Integer> it = idsDocumentosBin.iterator();
+		if (!idsDocumentos.isEmpty()) {
+			hql.append(" and o.id not in (");
+			Iterator<Integer> it = idsDocumentos.iterator();
 			while (it.hasNext()) {
 				hql.append(it.next());
 				if (it.hasNext()) {
