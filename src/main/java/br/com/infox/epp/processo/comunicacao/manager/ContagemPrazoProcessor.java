@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.annotations.async.Asynchronous;
 import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
-import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.DateTime;
 
@@ -73,9 +73,11 @@ public class ContagemPrazoProcessor {
 	
 	private void movimentarProcessoJBPM(Processo processo) throws DAOException {
 		Long idTaskInstance = situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso());
-		BusinessProcess.instance().setProcessId(processo.getIdJbpm());
-		BusinessProcess.instance().setTaskId(idTaskInstance);
-		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+		if (idTaskInstance == null) {
+			LOG.warn("idTaskInstance para o processo " + processo.getNumeroProcesso() + " nulo");
+			return;
+		}
+		TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(idTaskInstance);
 		taskInstance.end();
 		atualizarProcessoTarefa(taskInstance);
 	}

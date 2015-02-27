@@ -179,11 +179,5 @@
 		<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
 		<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
 	</wi:dataTable>
-	
-	<h:form id="taskButtonsForm">
-		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml">
-			<ui:param name="taskEndAction" value="respostaComunicacaoAction.endTask" />
-		</ui:include>
-	</h:form>
 </h:body>
 </html>

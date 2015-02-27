@@ -10,6 +10,9 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
@@ -49,11 +52,16 @@ public class RespostaComunicacaoService implements AssinaturaDocumentoListener {
 		metadadoProcessoManager.persist(metadadoResposta);
 		
 		Map<String, Object> variaveisJbpm = new HashMap<>();
-		variaveisJbpm.put("respostaTempestiva", getRespostaTempestiva(resposta, comunicacao));
+		setRespostaTempestiva(resposta, comunicacao);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
 	}
 
-	private boolean getRespostaTempestiva(Documento resposta, Processo comunicacao) {
+	private void setRespostaTempestiva(Documento resposta, Processo comunicacao) {
+		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
+		ContextInstance contextInstance = processInstance.getContextInstance();
+		if (contextInstance.getVariable("respostaTempestiva") != null) {
+			return;
+		}
 		boolean respostaTempestiva = false;
 		MetadadoProcesso metadadoDataCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
 		MetadadoProcesso metadadoPrazoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
@@ -71,7 +79,7 @@ public class RespostaComunicacaoService implements AssinaturaDocumentoListener {
 				respostaTempestiva = true;
 			}
 		}
-		return respostaTempestiva;
+		contextInstance.setVariable("respostaTempestiva", respostaTempestiva);
 	}
 
 	@Override
