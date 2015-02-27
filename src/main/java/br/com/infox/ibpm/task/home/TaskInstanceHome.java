@@ -33,6 +33,7 @@ import org.jboss.seam.transaction.Transaction;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.VariableInstance;
+import org.jbpm.context.exe.variableinstance.NullInstance;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -549,6 +550,9 @@ public class TaskInstanceHome implements Serializable {
 		for (String key : variableMap.keySet()) {
 			if (key.startsWith("FILE") || key.startsWith("EDITOR")) {
 				VariableInstance variableInstance = (VariableInstance) variableMap.get(key);
+				if (variableInstance instanceof NullInstance) {
+					continue;
+				}
 				Documento documento = documentoManager.find(variableInstance.getValue());
 				boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
 				if (!assinaturaVariavelOk) {
