@@ -31,8 +31,13 @@ public abstract class DocumentoCreator {
     }
 
     public void setProcesso(Processo processo) {
-        this.processo = processo.getProcessoRoot();
-        this.setProcessoReal(processo);
+    	if (processo == null) {
+    		this.processo = null;
+    		setProcessoReal(null);
+    	} else {
+    		this.processo = processo.getProcessoRoot();
+    		this.setProcessoReal(processo);
+    	}
     }
 
     public Documento getDocumento() {

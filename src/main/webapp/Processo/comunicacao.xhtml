@@ -34,7 +34,7 @@
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
 			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 			<h:form>
-					<rich:panel header="#{infoxMessages['comunicacao.comunicacao']} - #{modeloComunicacao.tipoComunicacao.descricao}">
+					<rich:panel header="#{infoxMessages['comunicacao.comunicacao']}">
 						<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
 							var="bean" styleClass="dtable rf-dt-crud">
 							<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
@@ -155,7 +155,7 @@
 	    		<h:form>
 	    			<h:commandButton styleClass="buttons" action="#{comunicacaoAction.downloadComunicacao}" 
 	    				value="#{infoxMessages['comunicacao.comunicacao']}"
-	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.extensao}"/>
+	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
 	    		</h:form>
 	    		<rich:dataTable value="#{comunicacaoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
 	    			<rich:column styleClass="dt-toolbar-col">

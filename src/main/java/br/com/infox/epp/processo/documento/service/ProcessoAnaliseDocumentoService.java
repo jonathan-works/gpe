@@ -100,11 +100,14 @@ public class ProcessoAnaliseDocumentoService {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoAnalise);
 		MetadadoProcesso metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.DOCUMENTO.toString());
 		metadadoProcessoManager.persist(metadado);
+		processoAnalise.getMetadadoProcessoList().add(metadado);
 		
 		metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, processoAnalise.getProcessoPai().getLocalizacao().getIdLocalizacao().toString());
 		metadadoProcessoManager.persist(metadado);
+		processoAnalise.getMetadadoProcessoList().add(metadado);
 		
 		metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE, documentoAnalise.getId().toString());
 		metadadoProcessoManager.persist(metadado);
+		processoAnalise.getMetadadoProcessoList().add(metadado);
 	}
 }

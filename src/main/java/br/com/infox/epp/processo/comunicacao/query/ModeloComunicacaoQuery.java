@@ -16,8 +16,8 @@ public interface ModeloComunicacaoQuery {
 	String LIST_BY_PROCESSO = "ModeloComunicacao.listByProcesso";
 	String LIST_BY_PROCESSO_QUERY = "select o from ModeloComunicacao o where "
 			+ "o.processo = :" + PARAM_PROCESSO + " "
-			+ "and not exists (select 1 from DestinatarioModeloComunicacao d where "
-			+ "d.modeloComunicacao = o and d.expedido = false)";
+			+ "and exists (select 1 from DestinatarioModeloComunicacao d where "
+			+ "d.modeloComunicacao = o and d.expedido = true)";
 	
 	String GET_COMUNICACAO_DESTINATARIO = "ModeloComunicacao.getComunicacaoDestinatario";
 	String GET_COMUNICACAO_DESTINATARIO_QUERY = "select o from Processo o where "

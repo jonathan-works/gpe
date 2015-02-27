@@ -17,12 +17,14 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -43,6 +45,7 @@ import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoServi
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -133,6 +136,9 @@ public class ComunicacaoAction implements Serializable {
 		if (destinatarios == null) {
 			destinatarios = new ArrayList<>();
 			for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
+				if (!destinatarioModeloComunicacao.getExpedido()) {
+					continue;
+				}
 				Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao);
 				if (comunicacao == null || comunicacao.getDataFim() != null) {
 					continue;
@@ -209,51 +215,48 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void darCiencia() {
-		// TODO MUDAR PARA NOVA REGRA
-//		Documento documento = documentoUploader.getDocumento();
-//		Processo comunicacao = destinatario.getComunicacao();
-//
-//		StringBuilder msg = new StringBuilder();
-//		if (getClassificacaoDocumento() == null) {
-//			msg.append("Informe a classificação do documento\n");
-//		}
-//		if (getDataCiencia() == null) {
-//			msg.append("Informe a data de ciência\n");
-//		}
-//		if (documento == null) {
-//			msg.append("Informe o documento de comprovação de ciência");
-//		}
-//		
-//		if (msg.length() > 0) {
-//			FacesMessages.instance().add(msg.toString());
-//			return;
-//		}
-//		
-//		try {
-//			documento.setProcesso(comunicacao);
-//			documento.setDescricao(documento.getDocumentoBin().getNomeArquivo());
-//			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-//			Processo processo = documentoUploader.getProcesso();
-//			documentoUploader.setProcesso(comunicacao);
-//			documentoUploader.persist();
-//			documentoUploader.setProcesso(processo);
-//			
-//			MetadadoProcesso documentoCiencia = metadadoProcessoProvider.gerarMetadado(
-//					ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documento.getId().toString());
-//			metadadoProcessoManager.persist(documentoCiencia);
-//			
-//			prazoComunicacaoService.darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
-//			
-//			FacesMessages.instance().add("Ciência informada com sucesso");
-//			destinatarioBeans.remove(destinatario.getIdModeloComunicacao());
-//			dadosCiencia.put(destinatario.getIdDestinatario(), true);
-//			destinatario = null;
-//			dataCiencia = null;
-//			ciencia = false;
-//		} catch (DAOException e) {
-//			LOG.error("", e);
-//			actionMessagesService.handleDAOException(e);
-//		}
+		Documento documento = documentoUploader.getDocumento();
+		Processo comunicacao = destinatario.getComunicacao();
+
+		StringBuilder msg = new StringBuilder();
+		if (getClassificacaoDocumento() == null) {
+			msg.append("Informe a classificação do documento\n");
+		}
+		if (getDataCiencia() == null) {
+			msg.append("Informe a data de ciência\n");
+		}
+		if (documento == null) {
+			msg.append("Informe o documento de comprovação de ciência");
+		}
+		
+		if (msg.length() > 0) {
+			FacesMessages.instance().add(msg.toString());
+			return;
+		}
+		
+		try {
+			documento.setDescricao(documento.getDocumentoBin().getNomeArquivo());
+			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+			documentoUploader.setProcesso(comunicacao.getProcessoRoot());
+			documentoUploader.persist();
+			documentoUploader.setProcesso(null);
+			
+			MetadadoProcesso documentoCiencia = metadadoProcessoProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documento.getId().toString());
+			metadadoProcessoManager.persist(documentoCiencia);
+			
+			prazoComunicacaoService.darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
+			
+			FacesMessages.instance().add("Ciência informada com sucesso");
+			destinatarioBeans.remove(destinatario.getIdModeloComunicacao());
+			dadosCiencia.put(destinatario.getIdDestinatario(), true);
+			destinatario = null;
+			dataCiencia = null;
+			ciencia = false;
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
+		}
 	}
 	
 	public boolean isProrrogacaoPrazo() {
@@ -284,25 +287,22 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void pedirProrrogacaoPrazo() {
-//		try {
-			//TODO MUDAR PRA NOVA REGRA
-//			Processo comunicacao = destinatario.getComunicacao();
-//			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao);
-//			Processo processoOriginalDocumentoUploader = documentoUploader.getProcesso();
-//			documentoUploader.setProcesso(prorrogacao);
-//			Documento documento = documentoUploader.getDocumento();
-//			documento.setDescricao(documentoUploader.getClassificacaoDocumento().getDescricao());
-//			documentoUploader.persist();
-//			documentoUploader.clear();
-//			documentoUploader.setProcesso(processoOriginalDocumentoUploader);
-//
-//			prorrogacao.getDocumentoList().add(documento);
-//			processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao, null);
-//			FacesMessages.instance().add("Pedido de prorrogação de prazo efetuado com sucesso");
-//		} catch (DAOException e) {
-//			LOG.error("", e);
-//			actionMessagesService.handleDAOException(e);
-//		}
+		try {
+			Processo comunicacao = destinatario.getComunicacao();
+			documentoUploader.setProcesso(comunicacao.getProcessoRoot());
+			Documento documento = documentoUploader.getDocumento();
+			documento.setDescricao(documentoUploader.getClassificacaoDocumento().getDescricao());
+			documentoUploader.persist();
+			documentoUploader.clear();
+			documentoUploader.setProcesso(null);
+
+			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, documento);
+			processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao, null);
+			FacesMessages.instance().add("Pedido de prorrogação de prazo efetuado com sucesso");
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
+		}
 	}
 	
 	public ClassificacaoDocumento getClassificacaoDocumento() {

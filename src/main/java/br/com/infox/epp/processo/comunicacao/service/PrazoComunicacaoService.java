@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.context.exe.ContextInstance;
 
 import br.com.infox.core.persistence.DAOException;
@@ -59,6 +60,7 @@ public class PrazoComunicacaoService {
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCiencia));
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCiencia));
 		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia);
+		adicionarVariavelPossuiPrazoAoProcesso(comunicacao);
 	}
 	
 	public void darCumprimento(Processo comunicacao, Date dataCumprimento, UsuarioLogin usuarioCumprimento) throws DAOException {
@@ -80,4 +82,11 @@ public class PrazoComunicacaoService {
 		ContextInstance contextInstance = org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance();
         contextInstance.setVariable("cienciaAutomatica", isUsuarioSistema);
 	}
+	
+    private void adicionarVariavelPossuiPrazoAoProcesso(Processo comunicacao) {
+    	MetadadoProcesso metadadoProcesso = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
+    	boolean possuiPrazoParaCumprimento = metadadoProcesso != null;
+    	ContextInstance contextInstance = ProcessInstance.instance().getContextInstance();
+        contextInstance.setVariable("possuiPrazoParaCumprimento", possuiPrazoParaCumprimento);
+    }
 }

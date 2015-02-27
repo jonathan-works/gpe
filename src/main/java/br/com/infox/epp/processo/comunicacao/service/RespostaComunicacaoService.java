@@ -50,11 +50,12 @@ public class RespostaComunicacaoService implements AssinaturaDocumentoListener {
 		
 		Map<String, Object> variaveisJbpm = new HashMap<>();
 		variaveisJbpm.put("respostaTempestiva", getRespostaTempestiva(resposta, comunicacao));
+		variaveisJbpm.put("respostaComunicacao", true);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
 	}
 
-	private String getRespostaTempestiva(Documento resposta, Processo comunicacao) {
-		String respostaTempestiva = "false";
+	private boolean getRespostaTempestiva(Documento resposta, Processo comunicacao) {
+		boolean respostaTempestiva = false;
 		MetadadoProcesso metadadoDataCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
 		MetadadoProcesso metadadoPrazoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
 		if (metadadoDataCiencia != null && metadadoPrazoDestinatario != null) {
@@ -68,7 +69,7 @@ public class RespostaComunicacaoService implements AssinaturaDocumentoListener {
 			Date dataInclusaoResposta = resposta.getDataInclusao();
 			if (dataCiencia.equals(dataInclusaoResposta) || dataFimPrazoDestinatario.equals(dataInclusaoResposta) ||
 					(dataCiencia.before(dataInclusaoResposta) && dataFimPrazoDestinatario.after(dataInclusaoResposta))) {
-				respostaTempestiva = "true";
+				respostaTempestiva = true;
 			}
 		}
 		return respostaTempestiva;
