@@ -144,12 +144,14 @@ public class DocumentoComunicacaoService {
 				genericManager.update(destinatario);
 			}
 		} else {
-			Documento documentoComunicacao = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento();
+			DocumentoModeloComunicacao documentoModeloComunicacao = getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
+			Documento documentoComunicacao = documentoModeloComunicacao.getDocumento();
 			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 				destinatario.setDocumentoComunicacao(documentoComunicacao);
 				genericManager.update(destinatario);
 			}
-			desvincularDocumentoRespostaComunicacao(documentoComunicacao);
+			modeloComunicacao.getDocumentos().remove(documentoModeloComunicacao);
+			genericManager.remove(documentoModeloComunicacao);
 		}
 	}
 
