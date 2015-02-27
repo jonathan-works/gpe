@@ -144,6 +144,10 @@ public class ComunicacaoService {
 				if ("pdf".equals(documentoBin.getExtensao())) {
 					byte[] documento = documentoBinarioManager.getData(documentoBin.getId());
 					copy = pdfManager.copyPdf(copy, documento);
+				} else if (documentoBin.getExtensao() == null) {
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					pdfManager.convertHtmlToPdf(documentoBin.getModeloDocumento(), bos);
+					copy = pdfManager.copyPdf(copy, bos.toByteArray());
 				}
 			}
 			
