@@ -50,7 +50,6 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
-import com.google.common.base.Strings;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfCopy;
 
@@ -116,8 +115,6 @@ public class ComunicacaoService {
 
 		criarMetadados(destinatario, processo);
 		
-		documentoComunicacaoService.gravarDocumentos(destinatario, processo);
-		
 		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
 		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
 		BusinessProcess.instance().setProcessId(null);
@@ -147,6 +144,10 @@ public class ComunicacaoService {
 				if ("pdf".equals(documentoBin.getExtensao())) {
 					byte[] documento = documentoBinarioManager.getData(documentoBin.getId());
 					copy = pdfManager.copyPdf(copy, documento);
+				} else if (documentoBin.getExtensao() == null) {
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					pdfManager.convertHtmlToPdf(documentoBin.getModeloDocumento(), bos);
+					copy = pdfManager.copyPdf(copy, bos.toByteArray());
 				}
 			}
 			
@@ -155,7 +156,8 @@ public class ComunicacaoService {
 			if (destinatario != null && destinatario.getExpedido()) {
 				byte[] generatedPdf = pdf.toByteArray();
 				pdf = new ByteArrayOutputStream();
-				documentoBinManager.writeMargemDocumento(destinatario.getComunicacao(), generatedPdf, pdf);
+				
+				documentoBinManager.writeMargemDocumento(destinatario.getDocumentoComunicacao().getDocumentoBin(), generatedPdf, pdf);
 			}
 		} catch (DocumentException | IOException e) {
 			rollbackAndThrow("", e);
@@ -168,7 +170,7 @@ public class ComunicacaoService {
 		if (destinatario != null && destinatario.getExpedido()) {
 			byte[] generatedPdf = pdf.toByteArray();
 			pdf = new ByteArrayOutputStream();
-			documentoBinManager.writeMargemDocumento(destinatario.getComunicacao(), generatedPdf, pdf);
+			documentoBinManager.writeMargemDocumento(destinatario.getDocumentoComunicacao().getDocumentoBin(), generatedPdf, pdf);
 		}
 		return pdf.toByteArray();
 	}
@@ -180,6 +182,8 @@ public class ComunicacaoService {
 			if (textoComunicacao != null) {
 				if (destinatario == null) {
 					pdfManager.convertHtmlToPdf(modeloComunicacao.getTextoComunicacao(), pdfComunicacao);
+				} else if (modeloComunicacao.getFinalizada()) {
+					pdfManager.convertHtmlToPdf(destinatario.getDocumentoComunicacao().getDocumentoBin().getModeloDocumento(), pdfComunicacao);
 				} else {
 					pdfManager.convertHtmlToPdf(documentoComunicacaoService.evaluateComunicacao(destinatario), pdfComunicacao);
 				}
@@ -187,12 +191,18 @@ public class ComunicacaoService {
 				DocumentoBin documentoComunicacao;
 				if (!modeloComunicacao.getFinalizada()) {
 					documentoComunicacao = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento().getDocumentoBin();
-				} else if (destinatario != null) {
-					documentoComunicacao = destinatario.getComunicacao();
 				} else {
-					documentoComunicacao = modeloComunicacao.getDestinatarios().get(0).getComunicacao();
+					documentoComunicacao = modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao().getDocumentoBin();
 				}
-				byte[] doc = documentoBinarioManager.getData(documentoComunicacao.getId());
+				// TODO Analisar outros tipos de documento. Aqui só funciona com PDF e HTML. Mas provavelmente essa é a regra mesmo.
+				byte[] doc;
+				if (documentoComunicacao.isBinario()) {
+					doc = documentoBinarioManager.getData(documentoComunicacao.getId());
+				} else {
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					pdfManager.convertHtmlToPdf(documentoComunicacao.getModeloDocumento(), bos);
+					doc = bos.toByteArray();
+				}
 				pdfComunicacao.write(doc);
 			}
 		} catch (DocumentException | IOException e) {
@@ -202,45 +212,25 @@ public class ComunicacaoService {
 	}
 
 	public void finalizarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
-		String textoComunicacao = modeloComunicacao.getTextoComunicacao();
-		if (!Strings.isNullOrEmpty(textoComunicacao)) {
-			finalizarComunicacaoOficioEditor(modeloComunicacao, textoComunicacao);
-		} else {
-			finalizarComunicacaoOficioDocumento(modeloComunicacao);
+		if (!modeloComunicacao.isDocumentoBinario()) {
+			if (modeloComunicacao.isMinuta()) {
+				rollbackAndThrow("Não é possível finalizar pois o texto no editor da comunicação é minuta", null);
+			}
+			if (modeloComunicacao.getClassificacaoComunicacao() == null) {
+				rollbackAndThrow("Escolha a classificação de documento do editor", null);
+			}
+		} else if (documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) == null) {
+			rollbackAndThrow("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno", null);
 		}
+		
 		modeloComunicacao.setFinalizada(true);
 		if (modeloComunicacao.getLocalizacaoResponsavelAssinatura() == null) {
 			modeloComunicacao.setLocalizacaoResponsavelAssinatura(Authenticator.getLocalizacaoAtual());
 		}
 		modeloComunicacaoManager.update(modeloComunicacao);
+		documentoComunicacaoService.gravarDocumentos(modeloComunicacao);
 	}
 
-	private void finalizarComunicacaoOficioDocumento(ModeloComunicacao modeloComunicacao) throws DAOException {
-		DocumentoModeloComunicacao documentoModeloComunicacao = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
-		if (documentoModeloComunicacao != null) {
-			DocumentoBin comunicacao = documentoModeloComunicacao.getDocumento().getDocumentoBin();
-			modeloComunicacao.setClassificacaoComunicacao(documentoModeloComunicacao.getDocumento().getClassificacaoDocumento());
-			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
-				destinatario.setComunicacao(comunicacao);
-			}
-		} else {
-			rollbackAndThrow("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno", null);
-		}
-	}
-
-	private void finalizarComunicacaoOficioEditor(ModeloComunicacao modeloComunicacao, String textoComunicacao) throws DAOException {
-		if (modeloComunicacao.isMinuta()) {
-			rollbackAndThrow("Não é possível finalizar pois o texto no editor da comunicação é minuta", null);
-		}
-		if (modeloComunicacao.getClassificacaoComunicacao() == null) {
-			rollbackAndThrow("Escolha a classificação de documento do editor", null);
-		}
-		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
-			DocumentoBin comunicacao = documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacao);
-			destinatario.setComunicacao(comunicacao);
-		}
-	}
-	
 	private void criarMetadados(DestinatarioModeloComunicacao destinatario, Processo processo) throws DAOException {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 		List<MetadadoProcesso> metadados = new ArrayList<>();
@@ -275,11 +265,11 @@ public class ComunicacaoService {
 	
 	private Map<String, Object> createVariaveisJbpm(DestinatarioModeloComunicacao destinatario) {
 		Map<String, Object> variaveis = new HashMap<>();
-		variaveis.put(MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getLabel());
-		variaveis.put(CODIGO_MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name());
-		variaveis.put(NOME_DESTINATARIO, destinatario.getNome());
-		variaveis.put(PRAZO_DESTINATARIO, destinatario.getPrazo());
-		variaveis.put(TIPO_COMUNICACAO, destinatario.getModeloComunicacao().getTipoComunicacao().getDescricao());
+		variaveis.put(VariaveisJbpmComunicacao.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getLabel());
+		variaveis.put(VariaveisJbpmComunicacao.CODIGO_MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name());
+		variaveis.put(VariaveisJbpmComunicacao.NOME_DESTINATARIO, destinatario.getNome());
+		variaveis.put(VariaveisJbpmComunicacao.PRAZO_DESTINATARIO, destinatario.getPrazo());
+		variaveis.put(VariaveisJbpmComunicacao.TIPO_COMUNICACAO, destinatario.getModeloComunicacao().getTipoComunicacao().getDescricao());
 		return variaveis;
 	}
 	
@@ -334,10 +324,4 @@ public class ComunicacaoService {
 			throw new DAOException(e);
 		}
 	}
-	
-	public static final String MEIO_EXPEDICAO = "meioExpedicaoComunicacao";
-	public static final String CODIGO_MEIO_EXPEDICAO = "codigoMeioExpedicaoComunicacao";
-	public static final String PRAZO_DESTINATARIO = "prazoDestinatarioComunicacao";
-	public static final String NOME_DESTINATARIO = "nomeDestinatarioComunicacao";
-	public static final String TIPO_COMUNICACAO = "tipoComunicacao";
 }

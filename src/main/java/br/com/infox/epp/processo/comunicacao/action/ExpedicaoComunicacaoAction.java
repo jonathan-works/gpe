@@ -3,14 +3,11 @@ package br.com.infox.epp.processo.comunicacao.action;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.context.FacesContext;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.richfaces.component.UICollapsiblePanel;
 
 import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBean;
@@ -39,13 +36,13 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.transaction.TransactionService;
 
 @Name(ExpedicaoComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 public class ExpedicaoComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "expedicaoComunicacaoAction";
-	private static final String PAINEL_COMUNICACAO_ID = ":comunicacaoTabPanel:comunicacaoForm:painelComunicacao";
 	private static final LogProvider LOG = Logging.getLogProvider(ExpedicaoComunicacaoAction.class);
 	
 	@In
@@ -70,7 +67,6 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	private String tab = "list";
 	private ModeloComunicacao modeloComunicacao;
 	private DestinatarioModeloComunicacao destinatario;
-	private String comunicacao;
 	private String token;
 	private List<TipoComunicacao> tiposComunicacao;
 	
@@ -89,6 +85,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
 		destinatarioModeloComunicacaoList.setModeloComunicacao(modeloComunicacao);
+		setDestinatario(null);
 	}
 	
 	public void setId(Long id) {
@@ -109,31 +106,6 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-		this.comunicacao = null;
-		UICollapsiblePanel panel = (UICollapsiblePanel) FacesContext.getCurrentInstance().getViewRoot().findComponent(PAINEL_COMUNICACAO_ID);
-		if (destinatario != null) {
-			panel.setExpanded(true);
-		} else {
-			panel.setExpanded(false);
-		}
-	}
-	
-	public String getComunicacao() {
-		if (comunicacao == null) {
-			String modeloDocumento = modeloComunicacao.getTextoComunicacao();
-			if (modeloDocumento != null) {
-				if (destinatario == null) {
-					comunicacao = modeloDocumento;
-				} else {
-					comunicacao = documentoComunicacaoService.evaluateComunicacao(destinatario);
-				}
-			}
-		}
-		return comunicacao;
-	}
-	
-	public void setComunicacao(String comunicacao) {
-		this.comunicacao = comunicacao;
 	}
 	
 	public String getMd5Comunicacao() {
@@ -163,8 +135,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-		boolean expedicaoValida = (getComunicacao() == null && !isExpedida(modeloComunicacao)) || 
-			(getComunicacao() != null && destinatario != null && !destinatario.getExpedido());
+		boolean expedicaoValida = !modeloComunicacao.isDocumentoBinario() && destinatario != null && !destinatario.getExpedido()
+				&& !destinatario.getDocumentoComunicacao().hasAssinatura();
 		return expedicaoValida && 
 				assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), 
 						getDocumentoComunicacao(), usuario);
@@ -172,6 +144,10 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	public void expedirComunicacao() {
 		try {
+			if (modeloComunicacao.isDocumentoBinario()) {
+				comunicacaoService.expedirComunicacao(modeloComunicacao);
+				return;
+			}
 			DocumentoBin documentoComunicacao = getDocumentoComunicacao();
 			CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
 			if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
@@ -181,17 +157,14 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 			if (documentoComunicacao.getAssinaturas().isEmpty()) {
 				assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 			}
-			if (getComunicacao() != null) {
-				comunicacaoService.expedirComunicacao(destinatario);
-			} else {
-				comunicacaoService.expedirComunicacao(modeloComunicacao);
-			}
+			comunicacaoService.expedirComunicacao(destinatario);
 		} catch (DAOException | CertificadoException | AssinaturaException e) {
+			TransactionService.rollbackTransaction();
 			handleException(e);
 		}
 	}
 	
-	public void downloadComunicacao(DestinatarioModeloComunicacao destinatario) {
+	public void downloadComunicacao() {
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
 			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
@@ -204,12 +177,12 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		return modeloComunicacaoManager.isExpedida(modeloComunicacao);
 	}
 	
-	public boolean isDocumentoComunicacaoAssinado() {
-		return getComunicacao() == null && !getDocumentoComunicacao().getAssinaturas().isEmpty() && !isExpedida(modeloComunicacao);
-	}
-	
 	private DocumentoBin getDocumentoComunicacao() {
-		return getComunicacao() != null ? this.destinatario.getComunicacao() : modeloComunicacao.getDestinatarios().get(0).getComunicacao();
+		if (destinatario != null) {
+			return destinatario.getDocumentoComunicacao().getDocumentoBin();
+		} else {
+			return modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao().getDocumentoBin();
+		}
 	}
 	
 	private void handleException(Exception e) {

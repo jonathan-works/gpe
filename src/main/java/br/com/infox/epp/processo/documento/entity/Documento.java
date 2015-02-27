@@ -50,6 +50,7 @@ import org.hibernate.search.annotations.Store;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -145,6 +146,10 @@ public class Documento implements Serializable, Cloneable {
     @JoinColumn(name="id_pasta")
     private Pasta pasta;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_localizacao")
+    private Localizacao localizacao;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento", cascade = CascadeType.REMOVE)
     @OrderBy(value="dataAlteracao DESC")
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
@@ -153,6 +158,9 @@ public class Documento implements Serializable, Cloneable {
     private void prePersist(){
     	if (getPerfilTemplate() == null){
     		setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
+    	}
+    	if (getLocalizacao() == null) {
+    		setLocalizacao(Authenticator.getLocalizacaoAtual());
     	}
     	setDataInclusao(new Date());
     	setUsuarioInclusao(Authenticator.getUsuarioLogado());
@@ -299,6 +307,14 @@ public class Documento implements Serializable, Cloneable {
 	
 	public void setPasta(Pasta pasta) {
 	    this.pasta = pasta;
+	}
+	
+	public Localizacao getLocalizacao() {
+		return localizacao;
+	}
+	
+	public void setLocalizacao(Localizacao localizacao) {
+		this.localizacao = localizacao;
 	}
 	
 	public boolean isDocumentoAssinavel(Papel papel){

@@ -8,7 +8,6 @@ import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PAPEL_PARAM;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PARAM_DESCRICAO;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,8 +83,4 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo, Papel papel) {
 		return getUseableClassificacaoDocumento(isModelo, papel);
 	}
-    
-    public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo(TipoComunicacao tipoComunicacao) {
-    	return Collections.emptyList();
-    }
 }

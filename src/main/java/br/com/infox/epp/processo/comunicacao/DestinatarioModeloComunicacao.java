@@ -22,7 +22,7 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Documento;
 
 @Entity
 @Table(name = "tb_destinatario_modelo_comunic", uniqueConstraints = {
@@ -68,9 +68,9 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	@NotNull
 	private Boolean expedido = false;
 	
-	@JoinColumn(name = "id_documento_bin")
+	@JoinColumn(name = "id_documento")
 	@ManyToOne(fetch = FetchType.LAZY)
-	private DocumentoBin comunicacao;
+	private Documento documentoComunicacao;
 
 	public Long getId() {
 		return id;
@@ -127,13 +127,13 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	public void setExpedido(Boolean expedido) {
 		this.expedido = expedido;
 	}
-	
-	public DocumentoBin getComunicacao() {
-		return comunicacao;
+
+	public Documento getDocumentoComunicacao() {
+		return documentoComunicacao;
 	}
 	
-	public void setComunicacao(DocumentoBin comunicacao) {
-		this.comunicacao = comunicacao;
+	public void setDocumentoComunicacao(Documento documentoComunicacao) {
+		this.documentoComunicacao = documentoComunicacao;
 	}
 	
 	@Transient

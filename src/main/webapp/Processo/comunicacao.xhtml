@@ -34,7 +34,7 @@
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
 			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 			<h:form>
-					<rich:panel header="#{infoxMessages['comunicacao.comunicacao']} - #{modeloComunicacao.tipoComunicacao.descricao}">
+					<rich:panel header="#{infoxMessages['comunicacao.comunicacao']}">
 						<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
 							var="bean" styleClass="dtable rf-dt-crud">
 							<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
@@ -47,6 +47,7 @@
 									<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
 										render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage" 
 										execute="@this" limitRender="true"
+										rendered="#{comunicacaoAction.podePedirProrrogacaoPrazo(bean)}"
 										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 										<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
 									</a:commandLink>
@@ -57,7 +58,7 @@
 							</rich:column>
                             <rich:column>
                                 <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
-                                <h:outputText value="#{bean.tipoComunicacao}" />
+                                <h:outputText value="#{bean.tipoComunicacao.descricao}" />
                             </rich:column>
 							<rich:column>
 								<f:facet name="header">#{infoxMessages['comunicacao.meioExpedicao']}</f:facet>
@@ -150,12 +151,12 @@
 	    	</rich:panel>
 	    </s:div>
 	    <s:div id="painelDocumentos">
-	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}"
+	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao.descricao}"
 	    		rendered="#{comunicacaoAction.documentos}">
 	    		<h:form>
 	    			<h:commandButton styleClass="buttons" action="#{comunicacaoAction.downloadComunicacao}" 
 	    				value="#{infoxMessages['comunicacao.comunicacao']}"
-	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.extensao}"/>
+	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
 	    		</h:form>
 	    		<rich:dataTable value="#{comunicacaoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
 	    			<rich:column styleClass="dt-toolbar-col">

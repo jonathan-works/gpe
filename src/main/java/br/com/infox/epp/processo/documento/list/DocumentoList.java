@@ -35,7 +35,8 @@ public class DocumentoList extends EntityList<Documento> implements ActionListen
     		+ "bin.minuta = false and "
             + "(not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true and "
-            + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o)))";
+            + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o))) and "
+            + "(DocumentoSuficientementeAssinado(o.id) = true or o.localizacao = #{authenticator.getUsuarioPerfilAtual().getLocalizacao()})";
     
     private static final String DOCUMENTO_EXCLUIDO_FILTER = " and o.excluido = false";
     

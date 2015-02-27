@@ -39,7 +39,8 @@ import br.com.infox.hibernate.UUIDGenericType;
 @Entity
 @Table(name = DocumentoBin.TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name = DocumentoBinQuery.GET_BY_UUID, query = DocumentoBinQuery.GET_BY_UUID_QUERY)
+    @NamedQuery(name = DocumentoBinQuery.GET_BY_UUID, query = DocumentoBinQuery.GET_BY_UUID_QUERY),
+    @NamedQuery(name = DocumentoBinQuery.GET_DOCUMENTOS_NAO_SUFICIENTEMENTE_ASSINADOS, query = DocumentoBinQuery.GET_DOCUMENTOS_NAO_SUFICIENTEMENTE_ASSINADOS_QUERY),
 })
 public class DocumentoBin implements Serializable {
 

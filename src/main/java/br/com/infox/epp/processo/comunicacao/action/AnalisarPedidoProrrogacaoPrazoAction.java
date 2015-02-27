@@ -65,7 +65,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		comunicacao = processoDocumento.getProcessoPai();
 		destinatarioComunicacao = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
 		dataFimPrazoCumprimento = prazoComunicacaoService.contabilizarPrazoCumprimento(comunicacao);
-		documentoComunicacaoList.setProcessoComunicacao(comunicacao);
+		documentoComunicacaoList.setProcesso(comunicacao.getProcessoRoot());
 		documentoComunicacaoList.setModeloComunicacao(destinatarioComunicacao.getModeloComunicacao());
 	}
 	

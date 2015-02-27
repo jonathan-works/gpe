@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.comunicacao.service.api;
+package br.com.infox.epp.processo.comunicacao.service;
 
 import javax.ejb.Local;
 

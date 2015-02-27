@@ -48,10 +48,6 @@ public class TipoComunicacao implements Serializable {
     @Column(name = "in_ativo", nullable = false)
     private Boolean ativo;
     
-    @NotNull
-    @Column(name = "in_prorrogacao_prazo", nullable = false)
-    private Boolean prorrogacaoPrazo;
-    
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "id_tipo_modelo_documento")
     private TipoModeloDocumento tipoModeloDocumento;
@@ -91,14 +87,6 @@ public class TipoComunicacao implements Serializable {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
-    
-    public Boolean getProrrogacaoPrazo() {
-		return prorrogacaoPrazo;
-	}
-    
-    public void setProrrogacaoPrazo(Boolean prorrogacaoPrazo) {
-		this.prorrogacaoPrazo = prorrogacaoPrazo;
-	}
     
     public ClassificacaoDocumento getClassificacaoDocumento() {
 		return classificacaoDocumento;

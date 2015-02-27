@@ -25,7 +25,6 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
-import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -54,8 +53,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
-
-import com.google.common.base.Strings;
 
 @Name(EnvioComunicacaoController.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -243,10 +240,10 @@ public class EnvioComunicacaoController implements Serializable {
 		try {
 			if (destinatario != null) {
 				CertificateSignatureBean signatureBean = getCertificateSignatureBean();
-				assinaturaDocumentoService.assinarDocumento(destinatario.getComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
+				assinaturaDocumentoService.assinarDocumento(destinatario.getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 				comunicacaoService.expedirComunicacao(destinatario);
 			} else if (documentoComunicacaoAction.isPossuiDocumentoInclusoPorUsuarioInterno()) {
-				Documento documento = documentoComunicacaoAction.getDocumentoComunicacao().getDocumento();
+				Documento documento = modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao();
 				if (!documento.hasAssinatura()) {
 					CertificateSignatureBean signatureBean = getCertificateSignatureBean();
 					assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
@@ -276,10 +273,6 @@ public class EnvioComunicacaoController implements Serializable {
 		return signatureBean;
 	}
 
-	public void downloadComunicacaoCompleta() {
-		downloadComunicacaoCompleta(destinatario);
-	}
-	
 	public void downloadComunicacaoCompleta(DestinatarioModeloComunicacao destinatario) {
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
@@ -288,10 +281,6 @@ public class EnvioComunicacaoController implements Serializable {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
-	}
-	
-	public void downloadComunicacao() {
-		documentoDownloader.downloadDocumento(modeloComunicacao.getDestinatarios().get(0).getComunicacao());
 	}
 	
 	public List<TipoComunicacao> getTiposComunicacao() {
@@ -339,12 +328,12 @@ public class EnvioComunicacaoController implements Serializable {
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		DocumentoBin documento = null; 
 		ClassificacaoDocumento classificacao = null;
-		if (Strings.isNullOrEmpty(modeloComunicacao.getTextoComunicacao())) {
-			Documento documentoComunicacao = documentoComunicacaoAction.getDocumentoComunicacao().getDocumento();
+		if (modeloComunicacao.isDocumentoBinario()) {
+			Documento documentoComunicacao = modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao();
 			documento = documentoComunicacao.getDocumentoBin();
 			classificacao = documentoComunicacao.getClassificacaoDocumento();
 		} else {
-			documento = destinatario.getComunicacao();
+			documento = destinatario.getDocumentoComunicacao().getDocumentoBin();
 			classificacao = modeloComunicacao.getClassificacaoComunicacao();
 		}
 		return documento != null && assinaturaDocumentoService.podeRenderizarApplet(papel, classificacao, documento, usuario);
@@ -356,10 +345,6 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-		if (destinatario.getModeloComunicacao().getTextoComunicacao() != null) {
-			destinatario.getComunicacao().setModeloDocumento(documentoComunicacaoService.evaluateComunicacao(destinatario));
-			destinatario.getComunicacao().setMd5Documento(MD5Encoder.encode(destinatario.getComunicacao().getModeloDocumento()));
-		}
 	}
 	
 	public String getFaceletPath() {
@@ -384,8 +369,7 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	public boolean podeExibirBotaoExpedirComunicacoes() {
 		boolean finalizada = modeloComunicacao.getFinalizada();
-		boolean possuiTexto = !Strings.isNullOrEmpty(modeloComunicacao.getTextoComunicacao());
-		return finalizada && !isExpedida() && !possuiTexto && isUsuarioLogadoNaLocalizacaoPerfilResponsavel();
+		return finalizada && !isExpedida() && modeloComunicacao.isDocumentoBinario() && isUsuarioLogadoNaLocalizacaoPerfilResponsavel();
 	}
 	
 	public boolean isUsuarioLogadoNaLocalizacaoPerfilResponsavel() {

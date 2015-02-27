@@ -35,10 +35,12 @@
           location = '#{pathResolver.contextPath}/Painel/list.seam'; 
         }
       </h:outputScript>
-   	  <button class="buttons" 
-      	onclick="location.href = '#{pathResolver.contextPath}/Painel/Comunicacao/painel.seam';">
-      	#{infoxMessages['painel.comunicacoes']}
-      </button>
+      <s:div rendered="#{s:hasPermission('/pages/Painel/Comunicacao/painel.seam', 'access')}">
+	   	  <button class="buttons" 
+	      	onclick="location.href = '#{pathResolver.contextPath}/Painel/Comunicacao/painel.seam';">
+	      	#{infoxMessages['painel.comunicacoes']}
+	      </button>
+	  </s:div>
       <infox:tabPanel id="tabPainelUsuario" switchType="ajax"
         status=":status" activeTab="#{painelUsuarioController.tab}" >
         
@@ -232,7 +234,7 @@
 		            <wi:columnOutputText
 		              columnId="numeroProcesso"
 		              columnHeader="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-		              value="#{row.numeroProcessoRoot}"
+		              value="#{row.numeroProcesso}"
 		            />
 		            <wi:columnOutputText
 		              columnId="usuarioSolicitante"

@@ -68,7 +68,7 @@
 							<a:commandLink
 								action="#{expedicaoComunicacaoAction.setDestinatario(row)}"
 								render="comunicacaoForm" execute="@this"
-								rendered="#{not empty expedicaoComunicacaoAction.comunicacao}">
+								rendered="#{not expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}">
 								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png"
 									title="#{infoxMessages['button.selecionar']}" />
 							</a:commandLink>
@@ -91,18 +91,12 @@
 						value="#{row.prazo}" />
 				</wi:dataTable>
 				<h:form id="comunicacaoForm">
-					<rich:collapsiblePanel
-						header="#{infoxMessages['comunicacao.comunicacao']} #{not empty expedicaoComunicacaoAction.destinatario.nome ? '- '.concat(expedicaoComunicacaoAction.destinatario.nome) : ''}"
-						expanded="false" id="painelComunicacao" switchType="client"
-						rendered="#{not empty expedicaoComunicacaoAction.comunicacao}">
-						<wi:editor id="comunicacao" readonly="true"
-							value="#{expedicaoComunicacaoAction.comunicacao}" />
-					</rich:collapsiblePanel>
-					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao(null)}" 
+					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao()}" 
 						value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-						rendered="#{empty expedicaoComunicacaoAction.comunicacao and not expedicaoComunicacaoAction.isExpedida(expedicaoComunicacaoAction.modeloComunicacao)}"/>
+						rendered="#{(expedicaoComunicacaoAction.modeloComunicacao.documentoBinario or not empty expedicaoComunicacaoAction.destinatario)
+							and not expedicaoComunicacaoAction.isExpedida(expedicaoComunicacaoAction.modeloComunicacao)}"/>
 					<wi:commandButton id="expedir" action="expedicaoComunicacaoAction.expedirComunicacao()" 
-						rendered="#{expedicaoComunicacaoAction.documentoComunicacaoAssinado}"
+						rendered="#{expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}"
 						value="#{infoxMessages['comunicacao.expedirComunicacoes']}"
 						reRender="comunicacaoForm, pageBodyDialogMessage, destinatarios"/>
 					<a:jsFunction name="assinar"

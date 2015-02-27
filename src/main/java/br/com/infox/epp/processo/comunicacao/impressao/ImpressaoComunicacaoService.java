@@ -17,6 +17,7 @@ import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -44,10 +45,10 @@ public class ImpressaoComunicacaoService implements Serializable {
 	}
 	
 	public Date getDataAssinatura(Processo processo) {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.COMUNICACAO);
 		if (metadadoProcesso != null) {
-			DestinatarioModeloComunicacao destinatarioModelo = metadadoProcesso.getValue();
-			return destinatarioModelo.getComunicacao().getAssinaturas().get(0).getDataAssinatura();
+			Documento comunicacao = metadadoProcesso.getValue();
+			return comunicacao.getDocumentoBin().getAssinaturas().get(0).getDataAssinatura();
 		}
 		return null;
 	}

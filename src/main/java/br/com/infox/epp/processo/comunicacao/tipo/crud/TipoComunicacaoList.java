@@ -26,7 +26,6 @@ public class TipoComunicacaoList extends EntityList<TipoComunicacao> {
         addSearchField("ativo", SearchCriteria.IGUAL);
         addSearchField("classificacaoDocumento", SearchCriteria.IGUAL);
         addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
-        addSearchField("prorrogacaoPrazo", SearchCriteria.IGUAL);
     }
 
     @Override
