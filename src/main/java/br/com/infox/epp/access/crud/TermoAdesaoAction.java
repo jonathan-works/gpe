@@ -133,8 +133,12 @@ public class TermoAdesaoAction implements Serializable {
         }
         return this.termoAdesao;
     }
+    
+    public void setTermoAdesao(String termoAdesao) {
+		this.termoAdesao = termoAdesao;
+	}
 
-    public String getTermoAdesaoPanelName() {
+	public String getTermoAdesaoPanelName() {
         return TermoAdesaoAction.PANEL_NAME;
     }
 
