@@ -3,7 +3,6 @@ package br.com.infox.epp.processo.documento.assinatura;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -229,7 +228,7 @@ public class AssinaturaDocumentoService implements Serializable {
 
         final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
                 documentoBin, usuarioPerfilAtual, certChain, signature);
-        List<Documento> documentosNaoSuficientementeAssinados = getDocumentosNaoSuficientementeAssinados(documentoBin);
+        List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
         documentoBin.getAssinaturas().add(assinaturaDocumento);
         documentoBin.setMinuta(false);
         documentoBinManager.update(documentoBin);
@@ -244,18 +243,6 @@ public class AssinaturaDocumentoService implements Serializable {
         }
     }
     
-    private List<Documento> getDocumentosNaoSuficientementeAssinados(DocumentoBin documentoBin) {
-    	List<Documento> documentosAssociados = new ArrayList<>(documentoBin.getDocumentoList());
-    	Iterator<Documento> it = documentosAssociados.iterator();
-    	while (it.hasNext()) {
-    		Documento documento = it.next();
-    		if (isDocumentoTotalmenteAssinado(documento)) {
-    			it.remove();
-    		}
-    	}
-    	return documentosAssociados;
-    }
-
     public void assinarDocumento(final Documento documento,
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws CertificadoException,

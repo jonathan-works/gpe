@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.bpm.ProcessInstance;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 
 import br.com.infox.core.persistence.DAOException;
@@ -59,7 +59,7 @@ public class PrazoComunicacaoService {
 		
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCiencia));
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCiencia));
-		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia);
+		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia, comunicacao);
 		adicionarVariavelPossuiPrazoAoProcesso(comunicacao);
 	}
 	
@@ -76,17 +76,19 @@ public class PrazoComunicacaoService {
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCumprimento));
 	}
 	
-	private void adicionarVariavelCienciaAutomaticaAoProcesso(UsuarioLogin usuarioCiencia) {
+	private void adicionarVariavelCienciaAutomaticaAoProcesso(UsuarioLogin usuarioCiencia, Processo comunicacao) {
 		Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());
 		boolean isUsuarioSistema = idUsuarioSistema.equals(usuarioCiencia.getIdUsuarioLogin());
-		ContextInstance contextInstance = org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance();
+		org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
+		ContextInstance contextInstance = processInstance.getContextInstance();
         contextInstance.setVariable("cienciaAutomatica", isUsuarioSistema);
 	}
 	
     private void adicionarVariavelPossuiPrazoAoProcesso(Processo comunicacao) {
     	MetadadoProcesso metadadoProcesso = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
     	boolean possuiPrazoParaCumprimento = metadadoProcesso != null;
-    	ContextInstance contextInstance = ProcessInstance.instance().getContextInstance();
+    	org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
+		ContextInstance contextInstance = processInstance.getContextInstance();
         contextInstance.setVariable("possuiPrazoParaCumprimento", possuiPrazoParaCumprimento);
     }
 }

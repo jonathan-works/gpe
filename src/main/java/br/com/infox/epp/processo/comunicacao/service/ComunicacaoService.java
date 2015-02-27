@@ -194,7 +194,15 @@ public class ComunicacaoService {
 				} else {
 					documentoComunicacao = modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao().getDocumentoBin();
 				}
-				byte[] doc = documentoBinarioManager.getData(documentoComunicacao.getId());
+				// TODO Analisar outros tipos de documento. Aqui só funciona com PDF e HTML. Mas provavelmente essa é a regra mesmo.
+				byte[] doc;
+				if (documentoComunicacao.isBinario()) {
+					doc = documentoBinarioManager.getData(documentoComunicacao.getId());
+				} else {
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					pdfManager.convertHtmlToPdf(documentoComunicacao.getModeloDocumento(), bos);
+					doc = bos.toByteArray();
+				}
 				pdfComunicacao.write(doc);
 			}
 		} catch (DocumentException | IOException e) {

@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.documento.manager;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.UUID;
 
 import net.glxn.qrgen.QRCode;
@@ -135,6 +136,10 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
             }
         }
         return o;
+    }
+    
+    public List<Documento> getDocumentosNaoSuficientementeAssinados(DocumentoBin documentoBin) {
+    	return getDao().getDocumentosNaoSuficientementeAssinados(documentoBin);
     }
 
     private String getUrlValidacaoDocumento() {
