@@ -20,6 +20,7 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Synchronized;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
@@ -60,6 +61,7 @@ import br.com.infox.log.Logging;
 @Name(Authenticator.NAME)
 @Scope(ScopeType.SESSION)
 @Install(precedence = Install.APPLICATION)
+@Synchronized(timeout = 3000)
 public class Authenticator implements Serializable {
 
 	private static final long serialVersionUID = 1L;
