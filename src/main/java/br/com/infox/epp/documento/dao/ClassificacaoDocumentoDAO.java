@@ -45,7 +45,7 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     			cb.equal(from.get("ativo"), true));
     	
     	predicate = cb.and(cb.or(cb.equal(from.get("inTipoDocumento"), isModelo ? TipoDocumentoEnum.P : TipoDocumentoEnum.D), 
-    			cb.equal(from.get("inTipoDocumento"), TipoDocumentoEnum.T)));
+    			cb.equal(from.get("inTipoDocumento"), TipoDocumentoEnum.T)), predicate);
     	
     	predicate = cb.and(predicate, createAdditionalRestrictions(cb, query, from));
     	
