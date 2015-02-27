@@ -50,7 +50,6 @@ public class RespostaComunicacaoService implements AssinaturaDocumentoListener {
 		
 		Map<String, Object> variaveisJbpm = new HashMap<>();
 		variaveisJbpm.put("respostaTempestiva", getRespostaTempestiva(resposta, comunicacao));
-		variaveisJbpm.put("respostaComunicacao", true);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
 	}
 

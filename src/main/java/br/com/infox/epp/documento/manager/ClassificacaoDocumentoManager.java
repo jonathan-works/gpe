@@ -42,8 +42,4 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo, Papel papel) {
 		return getDao().getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, isModelo, papel);
 	}
-	
-	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo(TipoComunicacao tipoComunicacao) {
-    	return getDao().getClassificacoesDocumentoProrrogacaoPrazo(tipoComunicacao);
-    }
 }

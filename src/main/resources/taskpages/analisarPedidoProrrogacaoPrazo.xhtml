@@ -44,10 +44,6 @@
 	</rich:collapsiblePanel>
 	<rich:panel header="Prorrogação de Prazo">
 		<h:form>
-			<h:commandButton styleClass="buttons" value="Visualizar Solicitação de Prorrogação de Prazo" 
-				action="#{analisarPedidoProrrogacaoPrazoAction.downloadSolicitacaoProrrogacaoPrazo}"/>
-		</h:form>
-		<h:form>
 			<wi:inputNumber id="prorrogacao" value="#{analisarPedidoProrrogacaoPrazoAction.diasProrrogacao}"
 				onkeyup="onlyPositiveNumber(this)" label="Dias de Prorrogação">
 				<a:ajax event="change" />

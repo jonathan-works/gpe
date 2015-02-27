@@ -108,10 +108,6 @@ public class DocumentoComunicacaoService {
 		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, textoComunicacao, chain);
 	}
 	
-	public List<ClassificacaoDocumento> getClassificacoesProrrogacaoPrazo(TipoComunicacao tipoComunicacao) {
-		return classificacaoDocumentoManager.getClassificacoesDocumentoProrrogacaoPrazo(tipoComunicacao);
-	}
-	
 	public void desvincularDocumentoRespostaComunicacao(Documento documento) throws DAOException {
 		documentoRespostaComunicacaoDAO.removerDocumentoResposta(documento);
 	}

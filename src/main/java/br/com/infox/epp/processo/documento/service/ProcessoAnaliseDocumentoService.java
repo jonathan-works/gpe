@@ -18,6 +18,9 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
+import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -46,6 +49,8 @@ public class ProcessoAnaliseDocumentoService {
 	private FluxoManager fluxoManager;
 	@In
 	private IniciarProcessoService iniciarProcessoService;
+	@In
+	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	
 	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento documentoAnalise) throws DAOException {
 		Fluxo fluxoDocumento = getFluxoDocumento();
@@ -75,13 +80,22 @@ public class ProcessoAnaliseDocumentoService {
 		} else {
 			variaveisJbpm = new HashMap<>(variaveisJbpm);
 		}
+		variaveisJbpm.put("respostaComunicacao", false);
+		variaveisJbpm.put("pedidoProrrogacaoPrazo", false);
 		MetadadoProcesso metadadoTipoProcesso = processoAnalise.getProcessoPai().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
 		if (metadadoTipoProcesso != null) {
-			variaveisJbpm.put("tipoProcessoPai", metadadoTipoProcesso.getValue().toString());
+			TipoProcesso tipoProcessoPai = metadadoTipoProcesso.getValue();
+			if (tipoProcessoPai.equals(TipoProcesso.COMUNICACAO) || tipoProcessoPai.equals(TipoProcesso.COMUNICACAO_NAO_ELETRONICA)) {
+				variaveisJbpm.put("respostaComunicacao", true);
+				
+				MetadadoProcesso metadadoDocumentoAnalise = processoAnalise.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
+				Documento documentoAnalise = metadadoDocumentoAnalise.getValue();
+				MetadadoProcesso metadadoDestinatario = processoAnalise.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+				DestinatarioModeloComunicacao destinatarioComunicacao = metadadoDestinatario.getValue();
+				boolean pedidoProrrogacaoPrazo = prorrogacaoPrazoService.isClassificacaoProrrogacaoPrazo(documentoAnalise.getClassificacaoDocumento(), destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao());
+				variaveisJbpm.put("pedidoProrrogacaoPrazo", pedidoProrrogacaoPrazo);
+			}
 		}
-		MetadadoProcesso metadadoDocumentoAnalise = processoAnalise.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
-		Documento documentoAnalise = metadadoDocumentoAnalise.getValue();
-		variaveisJbpm.put("classificacaoDocumento", documentoAnalise.getClassificacaoDocumento().getDescricao());
 		iniciarProcessoService.iniciarProcesso(processoAnalise, variaveisJbpm);
 	}
 	

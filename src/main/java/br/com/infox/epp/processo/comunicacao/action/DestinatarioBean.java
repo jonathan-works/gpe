@@ -1,12 +1,13 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
 public class DestinatarioBean {
 	private Long idDestinatario;
 	private String nome;
-	private String tipoComunicacao;
+	private TipoComunicacao tipoComunicacao;
 	private String meioExpedicao;
 	private String dataEnvio;
 	private String dataConfirmacao;
@@ -29,10 +30,10 @@ public class DestinatarioBean {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getTipoComunicacao() {
+	public TipoComunicacao getTipoComunicacao() {
 		return tipoComunicacao;
 	}
-	public void setTipoComunicacao(String tipoComunicacao) {
+	public void setTipoComunicacao(TipoComunicacao tipoComunicacao) {
 		this.tipoComunicacao = tipoComunicacao;
 	}
 	public String getMeioExpedicao() {
