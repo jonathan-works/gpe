@@ -57,7 +57,8 @@ public class SessaoJulgamentoList extends EntityList<SessaoJulgamento> {
 	
 	@Override
 	protected void addSearchFields() {
-        addSearchField("data", SearchCriteria.DATA_IGUAL);
+		addSearchField("colegiado", SearchCriteria.IGUAL, "o.sala.unidadeDecisoraColegiada = #{sessaoJulgamentoList.colegiada}");
+		addSearchField("data", SearchCriteria.DATA_IGUAL);
         addSearchField("horaInicio", SearchCriteria.MAIOR_IGUAL);
         addSearchField("horaFim", SearchCriteria.MENOR_IGUAL);
         addSearchField("sala", SearchCriteria.IGUAL);

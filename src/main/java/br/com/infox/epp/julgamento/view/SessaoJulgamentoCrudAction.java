@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
@@ -52,6 +52,13 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 		this.colegiada = Authenticator.instance().getColegiadaLogada();
 	}
 	
+	public void setId(Object id, boolean switchTab) {
+		super.setId(id, switchTab);
+		if (switchTab) {
+			this.colegiada = getInstance().getSala().getUnidadeDecisoraColegiada();
+		}
+	}
+	
 	@Override
 	public void newInstance() {
 		super.newInstance();
@@ -59,6 +66,7 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 		this.salas = null;
 		this.periodicidade = null;
 		this.valorPeriodicidade = null;
+		this.colegiada = null;
 	}
 	
 	@Override
@@ -77,6 +85,8 @@ public class SessaoJulgamentoCrudAction extends AbstractCrudAction<SessaoJulgame
 		super.afterSave(ret);
 		try {
 			getManager().afterSave(getInstance(), getPeriodicidade(), valorPeriodicidade);
+			this.periodicidade = null;
+			this.valorPeriodicidade = null;
 		} catch (CloneNotSupportedException | DAOException e) {
 			LOG.error("afterSave(ret)", e);
 		}
