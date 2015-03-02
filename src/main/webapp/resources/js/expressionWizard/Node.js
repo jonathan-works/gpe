@@ -522,7 +522,7 @@
 
   function getMessage(label) {
 
-    return (((K.messages || {})[navigator.language] || {})[label] || label).replace(/\u2000/,"");
+    return (((K.messages || {})[navigator.language.toLowerCase()] || {})[label] || label).replace(/\u2000/,"");
   }
 
   var result= {

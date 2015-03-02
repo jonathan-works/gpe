@@ -14,22 +14,14 @@
     <f:facet name="header">
       <h:outputText value="#{infoxMessages['expressionWizard.title']}" />
     </f:facet>
-    <c:if test="#{s:hasPermission('wizard', 'access')}">
-      <ui:include
-        src="/WEB-INF/xhtml/tags/form/fields/specialized/expressionWizard.xhtml">
-        <ui:param
-          name="id"
-          value="expression" />
-        <ui:param
-          name="value"
-          value="#{nodeFitter.currentNode.tokenStack}" />
-      </ui:include>
-    </c:if>
+    <ui:include src="/WEB-INF/xhtml/tags/form/fields/specialized/expressionWizard.xhtml">
+        <ui:param name="id" value="expression" />
+        <ui:param name="value" value="#{nodeFitter.currentNode.tokenStack}" />
+    </ui:include>
     <wi:inputTextarea
       id="decisionExpression"
       value="#{nodeFitter.currentNode.decisionExpression}"
-      showCounter="false"
-    >
+      showCounter="false">
       <a:ajax
           event="change"
           render="decisionNodePanel pageBodyDialogMessage"
