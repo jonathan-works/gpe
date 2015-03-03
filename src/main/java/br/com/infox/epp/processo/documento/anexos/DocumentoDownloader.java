@@ -15,8 +15,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.epp.access.api.Authenticator;
@@ -28,6 +26,8 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @AutoCreate
@@ -103,11 +103,16 @@ public class DocumentoDownloader implements Serializable {
     }
 
     public void downloadDocumento(String idDocumento) {
-        Documento documento = documentoManager.find(Integer.valueOf(idDocumento));
+        Documento documento = documentoManager.find(Integer.valueOf(clearId(idDocumento)));
         if (documento != null) {
             downloadDocumento(documento);
         } else {
             LOG.warn("Documento não encontrado, id: " + idDocumento);
         }
+    }
+    
+    // TODO verificar solução melhor para isso
+    private String clearId(String id) {
+        return id.replaceAll("\\D+", "");
     }
 }
