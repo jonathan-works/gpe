@@ -10,12 +10,10 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:infox="http://www.infox.com.br/jsf"
-  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml"
->
+  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
   <ui:param
     name="pageTitle"
-    value="#{infoxMessages['painel.titlePage']}"
-  />
+    value="#{infoxMessages['painel.titlePage']}"/>
   <ui:define name="title">#{pageTitle}</ui:define>
   <ui:define name="baseBody">
   
@@ -47,125 +45,7 @@
         <h:form>
           <infox:tabHeaders />
         </h:form>
-        
-        <infox:tab id="processo"
-          	name="processo" render="painelProcessos"
-          	limitRender="true" action="#{painelTreeHandler.clearTree()}"
-          	title="#{infoxMessages['caixa.tab']}" >
-          <s:div rendered="#{painelUsuarioController.tab eq 'processo'}">
-	          <s:div id="tarefasDiv" styleClass="p-caixas">
-	          	<h:form id="treeProcessoForm">
-	            	<ui:include src="tarefasTree.xhtml" />
-	            </h:form>
-	          </s:div>
-	          
-	       	  <s:div id="painelProcessos" styleClass="p-list" >
-	            <s:div id="processos" 
-	        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
-	        					 and painelUsuarioController.tab eq 'processo'}" >
-	        
-		            <wi:dataTable
-		              values="#{consultaProcessoList.list(10)}"
-		              bean="#{consultaProcessoList}"
-		              styleClass="p-list-dtable"
-		              tableTitle="#{infoxMessages['consultaProcesso.processos']}"
-		              id="consultaProcessoList"
-		              rowId="#{row.idProcesso}"
-		              searchFormStyleClass="p-list-search"
-		              panelStyleClass="p-list-panel"
-		              hideOrder="true" >
-		            
-		            <ui:define name="searchForm">
-		              <wi:searchForm
-		                opened="false"
-		                formId="consultaProcessoForm"
-		                formTitle="#{infoxMessages['searchForm.title']}"
-		                searchReRender="painelProcessos"
-		                clearAction="consultaProcessoList.newInstance()"
-		                clearReRender="painelProcessos" >
-		                
-		                <wi:inputText
-		                  id="numeroProcesso"
-		                  label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-		                  value="#{consultaProcessoList.entity.numeroProcesso}" />
-		                  
-		                <wi:inputDataPeriodo
-		                  id="periodo"
-		                  label="#{infoxMessages['data.inputPeriodo']}"
-		                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
-		                  valueDateTo="#{consultaProcessoList.dataFim}" />
-		                  
-		                <wi:selectOneMenuEntity
-		                  id="natureza"
-		                  label="#{infoxMessages['natureza.tableTitle']}"
-		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
-		                  showLabelSelecione="true"
-		                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-		                  
-		                <wi:selectOneMenuEntity
-		                  id="categoria"
-		                  label="#{infoxMessages['categoria.tableTitle']}"
-		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
-		                  showLabelSelecione="true"
-		                  inNewLine="true"
-		                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-		                  
-		              </wi:searchForm>
-		            </ui:define>
-		            
-		            <wi:columnOutputText
-		              columnId="numeroProcesso"
-		              columnHeader="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-		              value="#{row.numeroProcessoRoot}"
-		            />
-		            <wi:columnOutputText
-		              columnId="usuarioSolicitante"
-		              columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
-		              value="#{row.usuarioCadastro}"
-		            />
-		            <wi:columnDateTime
-		              columnId="dataInicio"
-		              columnHeader="#{infoxMessages['consultaProcesso.dataInicio']}"
-		              value="#{row.dataInicio}"
-		            />
-		            <wi:columnOutputText
-		              columnId="natureza"
-		              columnHeader="#{infoxMessages['consultaProcesso.natureza']}"
-		              value="#{row.naturezaCategoriaFluxo.natureza}"
-		            />
-		            <wi:columnOutputText
-		              columnId="categoria"
-		              columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
-		              value="#{row.naturezaCategoriaFluxo.categoria}"
-		            />
-		            <wi:columnOutputText
-		              columnId="itemDoProcesso"
-		              columnHeader="#{infoxMessages['consultaProcesso.item']}"
-		              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
-		            <wi:columnOutputText
-		              columnId="prioridadeProcesso"
-		              columnHeader="#{infoxMessages['prioridadeProcesso.tableTitle']}"
-		              value="#{row.prioridadeProcesso}"
-		            />
-		            <infox:dynamicColumns
-		              columns="#{painelUsuarioController.dynamicColumns}"
-		            />
-		            <ui:define name="headerToolBar">
-		              <ui:include
-		                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml"
-		              />
-		            </ui:define>
-		            <ui:define name="toolBar">
-		              <ui:include
-		                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml"
-		              />
-		            </ui:define>
-	              </wi:dataTable>
-	            </s:div>
-	          </s:div>
-          </s:div>
-        </infox:tab>
-        
+        <ui:include src="/Painel/abaAtividades.xhtml" />
         <infox:tab id="documentos"
           	name="documento" render="painelProcessosDocumento"
           	limitRender="true" action="#{painelTreeHandler.clearTree()}"

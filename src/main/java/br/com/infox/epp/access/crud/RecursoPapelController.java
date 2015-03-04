@@ -7,7 +7,9 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
@@ -28,6 +30,8 @@ public class RecursoPapelController implements Serializable {
     private RecursoManager recursoManager;
     @In
     private PapelManager papelManager;
+    @In
+    private InfoxMessages infoxMessages;
 
     public Recurso getRecurso() {
         return recurso;
@@ -59,11 +63,11 @@ public class RecursoPapelController implements Serializable {
         return papeis = recursoManager.getPapeisAssociadosARecurso(recurso);
     }
 
-    public String save() {
+    public void save() {
         final UpdateResourcesOperation resourcesOperation = new UpdateResourcesOperation(recurso.getIdentificador(), getPapeis(), getPapeisDisponiveis());
         resourcesOperation.run();
         recursoManager.flush();
-        return "updated";
+        FacesMessages.instance().add(infoxMessages.get("entity_updated"));
     }
 
 }
