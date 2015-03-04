@@ -44,7 +44,7 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 @Name(value = TermoAdesaoAction.NAME)
 public class TermoAdesaoAction implements Serializable {
     private static final String TERMS_CONDITIONS_SIGN_SUCCESS = "termoAdesao.sign.success";
-    private static final String METHOD_ASSINAR_TERMO_ADESAO = "termoAdesaoAction.assinarTermoAdesao(String,String)";
+    private static final String METHOD_ASSINAR_TERMO_ADESAO = "termoAdesaoAction.assinarTermoAdesao()";
     private static final String PARAMETRO_TERMO_ADESAO = "termoAdesao";
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(TermoAdesaoAction.class);

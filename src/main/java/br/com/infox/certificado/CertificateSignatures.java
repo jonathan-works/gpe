@@ -1,6 +1,5 @@
 package br.com.infox.certificado;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,9 +15,9 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
-import com.google.gson.Gson;
-
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+
+import com.google.gson.Gson;
 
 @Name(CertificateSignatures.NAME)
 @Scope(ScopeType.EVENT)
