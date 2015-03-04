@@ -1,8 +1,9 @@
-package br.com.infox.hibernate.sqlserver.dialect;
+package br.com.infox.hibernate.function;
 
 import java.util.List;
 
 import org.hibernate.QueryException;
+import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.dialect.function.SQLFunction;
 import org.hibernate.engine.spi.Mapping;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -32,6 +33,10 @@ public class DocumentoSuficientementeAssinado implements SQLFunction {
 		if (arguments.isEmpty()) {
 			throw new QueryException("É necessário informar o id do documento");
 		}
-		return "dbo.DocumentoSuficientementeAssinado(" + arguments.get(0) + ")";
+		String schema = "";
+		if (factory.getDialect() instanceof SQLServerDialect) {
+			schema = "dbo.";
+		}
+		return schema + "DocumentoSuficientementeAssinado(" + arguments.get(0) + ")";
 	}
 }
