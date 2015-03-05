@@ -113,7 +113,6 @@ public class ComunicacaoService {
 		processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
 		processoManager.persist(processo);
 
-		criarMetadados(destinatario, processo);
 		
 		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
 		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
@@ -122,6 +121,8 @@ public class ComunicacaoService {
 		iniciarProcessoService.iniciarProcesso(processo, createVariaveisJbpm(destinatario));
 		BusinessProcess.instance().setProcessId(processIdOriginal);
 		BusinessProcess.instance().setTaskId(taskIdOriginal);
+
+		criarMetadados(destinatario, processo);
 		
 		destinatario.setExpedido(true);
 		genericManager.update(destinatario);
@@ -270,6 +271,7 @@ public class ComunicacaoService {
 		variaveis.put(VariaveisJbpmComunicacao.NOME_DESTINATARIO, destinatario.getNome());
 		variaveis.put(VariaveisJbpmComunicacao.PRAZO_DESTINATARIO, destinatario.getPrazo());
 		variaveis.put(VariaveisJbpmComunicacao.TIPO_COMUNICACAO, destinatario.getModeloComunicacao().getTipoComunicacao().getDescricao());
+		variaveis.put("cienciaAutomatica", destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0);
 		return variaveis;
 	}
 	
