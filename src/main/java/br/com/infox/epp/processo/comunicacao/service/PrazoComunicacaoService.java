@@ -56,7 +56,14 @@ public class PrazoComunicacaoService {
 				ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCiencia));
 		MetadadoProcesso metadadoResponsavelCiencia = metadadoProcessoProvider.gerarMetadado(
 				ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA, usuarioCiencia.getIdUsuarioLogin().toString());
-		
+		MetadadoProcesso metadadoPrazoCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
+		Integer diasPrazoCumprimento = metadadoPrazoCumprimento.getValue();
+		if (diasPrazoCumprimento > 0) {
+    		Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
+    		MetadadoProcesso metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
+    		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento));
+    		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoLimiteDataCumprimento));
+		}
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCiencia));
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCiencia));
 		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia, comunicacao);

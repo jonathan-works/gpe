@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.comunicacao.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -247,6 +248,7 @@ public class ComunicacaoService {
 		if (destinatario.getPrazo() != null) {
 			metadados.add(metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO, destinatario.getPrazo().toString()));
+			
 		}
 		
 		if (destinatario.getMeioExpedicao() == MeioExpedicao.SI) {
@@ -259,6 +261,10 @@ public class ComunicacaoService {
 		
 		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
 			prazoComunicacaoService.darCiencia(processo, new Date(), usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue())));
+		} else {
+		    Date dataLimiteCiencia = prazoComunicacaoService.contabilizarPrazoCiencia(processo);
+            metadados.add(metadadoProcessoProvider.gerarMetadado(
+		            ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataLimiteCiencia)));
 		}
 		
 		metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);

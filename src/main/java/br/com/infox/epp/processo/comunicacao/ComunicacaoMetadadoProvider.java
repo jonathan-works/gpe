@@ -38,4 +38,10 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 	
 	public static final MetadadoProcessoDefinition DOCUMENTO_COMPROVACAO_CIENCIA = 
 			new MetadadoProcessoDefinition("documentoComprovacaoCiencia", Documento.class);
+	
+	public static final MetadadoProcessoDefinition LIMITE_DATA_CIENCIA = 
+            new MetadadoProcessoDefinition("limiteDataCiencia", "Limite para Ciência", Date.class);
+	
+	public static final MetadadoProcessoDefinition LIMITE_DATA_CUMPRIMENTO = 
+            new MetadadoProcessoDefinition("limiteDataCumprimento", "Limite para Cumprimento", Date.class);
 }
