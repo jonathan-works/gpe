@@ -69,5 +69,4 @@ public class RecursoPapelController implements Serializable {
         recursoManager.flush();
         FacesMessages.instance().add(infoxMessages.get("entity_updated"));
     }
-
 }

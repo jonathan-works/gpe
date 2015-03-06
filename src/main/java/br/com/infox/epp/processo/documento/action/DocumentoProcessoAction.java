@@ -1,10 +1,13 @@
 package br.com.infox.epp.processo.documento.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.model.SelectItem;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -15,8 +18,11 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
+import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
@@ -24,7 +30,7 @@ import br.com.infox.epp.system.Parametros;
 
 @Name(DocumentoProcessoAction.NAME)
 @Scope(ScopeType.PAGE)
-public class DocumentoProcessoAction implements Serializable{
+public class DocumentoProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "documentoProcessoAction";
@@ -33,6 +39,8 @@ public class DocumentoProcessoAction implements Serializable{
 	private Documento processoDocumentoSelected;
 	private Integer idDocumentoAlter;
 	private Map<String, Boolean> cache = new HashMap<String, Boolean>();
+	private List<SelectItem> listClassificacaoDocumento;
+	private Integer classificacaoDocumentoItem;
 	
 	@In
 	private DocumentoManager documentoManager;
@@ -40,6 +48,11 @@ public class DocumentoProcessoAction implements Serializable{
 	private ActionMessagesService actionMessagesService;
 	@In
 	private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
+	@In
+	private ClassificacaoDocumentoManager classificacaoDocumentoManager;
+	@In
+	private DocumentoList documentoList;
+	
 	
 	public void exclusaoRestauracaoDocumento(){
 		if (idDocumentoAlter == null){
@@ -120,5 +133,33 @@ public class DocumentoProcessoAction implements Serializable{
 	public boolean podeUsuarioVerHistorico(){
 		return !("true".equals(Parametros.SOMENTE_USUARIO_INTERNO_PODE_VER_HISTORICO.getValue()) && !Identity.instance().hasRole("usuarioInterno"));
 	}
-	
+
+	public List<SelectItem> getListClassificacaoDocumento() {
+		if (listClassificacaoDocumento == null) {
+			listClassificacaoDocumento = new ArrayList<SelectItem>();
+			List<ClassificacaoDocumento> classificacaoDocumentoLista = classificacaoDocumentoManager.findAll();
+			
+			for (ClassificacaoDocumento classificacaoDocumento : classificacaoDocumentoLista) {
+				listClassificacaoDocumento.add(new SelectItem(classificacaoDocumento.getId(), classificacaoDocumento.getDescricao()));
+			}
+		}
+			
+		return listClassificacaoDocumento;
+	}
+
+	public Integer getClassificacaoDocumentoItem() {
+		return classificacaoDocumentoItem;
+	}
+
+	public void setClassificacaoDocumentoItem(Integer classificacaoDocumentoItem) {
+		if (classificacaoDocumentoItem != null) {
+			documentoList.getEntity().setClassificacaoDocumento(classificacaoDocumentoManager.find(classificacaoDocumentoItem));
+		}
+		else {
+			documentoList.getEntity().setClassificacaoDocumento(null);
+		}
+		
+		this.classificacaoDocumentoItem = classificacaoDocumentoItem;
+	}
 }
+

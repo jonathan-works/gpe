@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.entity.Processo;
 
@@ -32,6 +33,14 @@ public class PastaDAO extends DAO<Pasta> {
 		parameters.put(PARAM_PASTA, pasta);
 		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
 		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_QUERY + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
+	}
+	
+	public int getTotalDocumentosPastaClassificacaoDocumento(Pasta pasta, ClassificacaoDocumento classificacaoDocumento) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(PARAM_PASTA, pasta);
+		parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, classificacaoDocumento);
+		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
+		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_CLASSIFICACAO_DOCUMENTO_QUERY + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
 	}
 	
 	public int getTotalDocumentosPasta(Pasta pasta, String customFilter, Map<String, Object> params) {

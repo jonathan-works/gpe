@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.component.UIOutput;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ActionListener;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -23,9 +25,11 @@ import org.richfaces.event.DropEvent;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -52,6 +56,8 @@ public class PastaAction implements Serializable, ActionListener {
     private DocumentoManager documentoManager;
     @In
     private ParticipanteProcessoManager participanteProcessoManager;
+    @In
+    private DocumentoList documentoList;
 
     private Processo processo;
     private List<Pasta> pastaList;
@@ -269,6 +275,10 @@ public class PastaAction implements Serializable, ActionListener {
     }
 
     public String getNomePasta(Pasta pasta) {
+    	if (documentoList.getEntity().getClassificacaoDocumento() != null) {
+    		return pastaManager.getNomePasta(pasta, documentoList.getEntity().getClassificacaoDocumento());
+    	}
     	return pastaManager.getNomePasta(pasta);
     }
 }
+

@@ -35,6 +35,12 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "classificacaoDocumentoDAO";
+    
+    @Override
+    public List<ClassificacaoDocumento> findAll() {
+    	String hql = "select o from ClassificacaoDocumento o order by o.descricao";
+    	return getResultList(hql, null);
+    }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, Papel papel) {
     	CriteriaQuery<ClassificacaoDocumento> query = createQueryUseableClassificacaoDocumento(isModelo, papel);

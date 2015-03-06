@@ -54,6 +54,7 @@ public class DocumentoList extends EntityList<Documento> implements ActionListen
     @Override
     protected void addSearchFields() {
         addSearchField("pasta", SearchCriteria.IGUAL);
+        addSearchField("classificacaoDocumento", SearchCriteria.IGUAL);
     }
 
     @Override

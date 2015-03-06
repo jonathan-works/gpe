@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
@@ -28,7 +29,6 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     
     @In
     private DocumentoService documentoService;
-    
     @In
     private MetadadoProcessoManager metadadoProcessoManager;
     
@@ -52,6 +52,10 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	return getDao().getTotalDocumentosPasta(pasta);
     }
     
+    public int getTotalDocumentosPastaClassificacaoDocumento(Pasta pasta, ClassificacaoDocumento classificacaoDocumento) {
+    	return getDao().getTotalDocumentosPastaClassificacaoDocumento(pasta, classificacaoDocumento);
+    }
+    
     public int getTotalDocumentosPasta(Pasta pasta, String customFilter, Map<String, Object> params) {
     	return getDao().getTotalDocumentosPasta(pasta, customFilter, params);
     }
@@ -62,6 +66,10 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     
     public String getNomePasta(Pasta pasta, int totalDocumentos) {
     	return MessageFormat.format(pasta.getTemplateNomePasta(), totalDocumentos);
+    }
+    
+    public String getNomePasta(Pasta pasta, ClassificacaoDocumento classificacaoDocumento) {
+    	return getNomePasta(pasta, getTotalDocumentosPastaClassificacaoDocumento(pasta, classificacaoDocumento));
     }
     
     private List<Pasta> createDefaultFolders(Processo processo) throws DAOException {

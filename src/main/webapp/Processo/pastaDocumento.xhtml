@@ -22,6 +22,19 @@
       assignTo="#{documentoProcessoAction.idDocumento}"
       converter="javax.faces.Integer" />
   </a:jsFunction>
+  
+  <rich:collapsiblePanel expanded="true" header="#{infoxMessages['searchForm.title']}" switchType="client">
+  	<h:form>
+  		<wi:selectOneMenu id="classificacaoDocumento"
+			value="#{documentoProcessoAction.classificacaoDocumentoItem}"
+			label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
+			valueItems="#{documentoProcessoAction.listClassificacaoDocumento}"
+			showLabelTodos="true">
+			<f:ajax event="valueChange" execute="@form" render=":movimentarTabPanel:documentoListSearchForm :movimentarTabPanel:documentoListPanel @form"/>		
+		</wi:selectOneMenu>
+  	</h:form>
+  </rich:collapsiblePanel>
+  <div style="margin-top:5px;"/>
   <wi:dataTable
 	  values="#{documentoList.list(15)}"
 	  bean="#{documentoList}"
@@ -37,7 +50,7 @@
 				styleClass="folder-ul"
 				rowClass="folder-li"
 				var="pasta">
-				<h:form rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)}"
+				<s:div rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)}"
 					styleClass="rf-tr-nd">
 					<rich:dropTarget
 						acceptedTypes="doc#{consultaController.processo.idProcesso}"
@@ -85,7 +98,7 @@
                       <f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
                       <f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
                     </a:commandLink>
-				</h:form>
+				</s:div>
 			</rich:list>
 		</rich:panel>
 		<wi:commandButton
@@ -95,7 +108,7 @@
 			onclick="#{rich:component('addPastaPanel')}.show();" />
 	</ui:define>
 	
-	<ui:define name="toolBar">
+		<ui:define name="toolBar">
 	    <rich:dragSource
 	      type="doc#{consultaController.processo.idProcesso}"
 	      dragValue="#{row}"
@@ -140,8 +153,8 @@
     </ui:define>
     
     <ui:define name="headerToolBar" />
-    
-    <wi:columnOutputText
+
+	<wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
       columnId="numeroDocumento"
       columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}"
@@ -158,14 +171,14 @@
       value="#{row.dataInclusao}" />
     <wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-      columnId="descricao"
-      columnHeader="#{infoxMessages['documentoProcesso.descricao']}"
-      value="#{row.descricao}" />
-    <wi:columnOutputText
-      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
       columnId="classificacaoDocumento"
       columnHeader="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
       value="#{row.classificacaoDocumento}" />
+    <wi:columnOutputText
+      styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+      columnId="descricao"
+      columnHeader="#{infoxMessages['documentoProcesso.descricao']}"
+      value="#{row.descricao}" />
     <wi:columnOutputText
       styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
       columnId="processoDocumentoBin.sizeFormatado"
