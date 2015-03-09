@@ -52,7 +52,7 @@ public class ProcessoAnaliseDocumentoService {
 	@In
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	
-	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento documentoAnalise) throws DAOException {
+	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento... documentoAnalise) throws DAOException {
 		Fluxo fluxoDocumento = getFluxoDocumento();
 		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoDocumento);
 		if (ncfs == null || ncfs.isEmpty()) {
@@ -110,7 +110,7 @@ public class ProcessoAnaliseDocumentoService {
 		return fluxo;
 	}
 	
-	private void criarMetadadosProcessoAnalise(Processo processoAnalise, Documento documentoAnalise) throws DAOException {
+	private void criarMetadadosProcessoAnalise(Processo processoAnalise, Documento... documentoAnalise) throws DAOException {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoAnalise);
 		MetadadoProcesso metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.DOCUMENTO.toString());
 		metadadoProcessoManager.persist(metadado);
@@ -120,8 +120,11 @@ public class ProcessoAnaliseDocumentoService {
 		metadadoProcessoManager.persist(metadado);
 		processoAnalise.getMetadadoProcessoList().add(metadado);
 		
-		metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE, documentoAnalise.getId().toString());
-		metadadoProcessoManager.persist(metadado);
-		processoAnalise.getMetadadoProcessoList().add(metadado);
+		for(Documento documento : documentoAnalise){
+			metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE, documento.getId().toString());
+			metadadoProcessoManager.persist(metadado);
+			processoAnalise.getMetadadoProcessoList().add(metadado);
+		}
+		
 	}
 }
