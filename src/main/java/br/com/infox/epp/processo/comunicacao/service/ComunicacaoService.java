@@ -259,15 +259,17 @@ public class ComunicacaoService {
 					EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO_NAO_ELETRONICA.toString()));
 		}
 		
+		metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
+		metadados = new ArrayList<>();
 		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
 			prazoComunicacaoService.darCiencia(processo, new Date(), usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue())));
 		} else {
 		    Date dataLimiteCiencia = prazoComunicacaoService.contabilizarPrazoCiencia(processo);
             metadados.add(metadadoProcessoProvider.gerarMetadado(
 		            ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataLimiteCiencia)));
+            metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
 		}
 		
-		metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
 	}
 	
 	private Map<String, Object> createVariaveisJbpm(DestinatarioModeloComunicacao destinatario) {
