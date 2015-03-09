@@ -39,7 +39,8 @@
     </rich:collapsiblePanel>
     <infox:tabPanel
       headerSpacing="2"
-      activeTab="#{consultaController.tab}">
+      activeTab="#{consultaController.tab}"
+      id="consultaProcessoTabPanel">
       <h:form>
         <infox:tabHeaders />
       </h:form>
@@ -50,7 +51,9 @@
         actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
         status=":status"
         title="#{infoxMessages['processo.documentos']}">
-		<ui:include src="/Processo/pastaDocumento.xhtml" />
+		<ui:include src="/Processo/pastaDocumento.xhtml">
+			<ui:param name="pastaDocumentoRenderId" value="consultaProcessoTabPanel" />
+		</ui:include>	
       </infox:tab>
       <infox:tab
         id="tabPartesDoProcesso"
