@@ -297,7 +297,7 @@ public class ComunicacaoService {
 	    if (destinatario.getDestinatario() != null) {
 			PessoaFisica pessoaDestinatario = destinatario.getDestinatario();
 			MetadadoProcesso metadadoRelator = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.RELATOR);
-			if (metadadoRelator != null) {
+			if (metadadoRelator != null && destinatario.getModeloComunicacao().getEnviarRelatoria()) {
 				PessoaFisica relator = metadadoRelator.getValue();
 				// Vai pra UDM do relator
 				if (relator.equals(pessoaDestinatario)) {

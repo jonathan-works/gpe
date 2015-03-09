@@ -53,7 +53,6 @@ public class DestinatarioComunicacaoAction {
 	
 	private ModeloComunicacao modeloComunicacao;
 	private boolean processoPossuiRelator;
-	private boolean adicionarDestinatarioRelator;
 	private Localizacao localizacao;
 	private PerfilTemplate perfilDestino;
 	
@@ -122,8 +121,8 @@ public class DestinatarioComunicacaoAction {
 		if (destinatario.getDestinatario() != null) {
 			participanteProcessoComunicacaoList.removerIdPessoa(destinatario.getDestinatario().getIdPessoa());
 			PessoaFisica relator = getRelator();
-			if (adicionarDestinatarioRelator && destinatario.getDestinatario().equals(relator)) {
-				adicionarDestinatarioRelator = false;
+			if (modeloComunicacao.getEnviarRelatoria() && destinatario.getDestinatario().equals(relator)) {
+				modeloComunicacao.setEnviarRelatoria(false);
 			}
 		} else if (destinatario.getPerfilDestino() != null) {
 		    removePerfilSelecionado(destinatario);
@@ -140,12 +139,14 @@ public class DestinatarioComunicacaoAction {
 	
 	public void gerenciarRelator() {
 		PessoaFisica relator = getRelator();
-		if (adicionarDestinatarioRelator) {
-			DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
-			destinatario.setDestinatario(relator);
-			destinatario.setModeloComunicacao(modeloComunicacao);
-			modeloComunicacao.getDestinatarios().add(destinatario);
-			participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
+		if (modeloComunicacao.getEnviarRelatoria()) {
+			if (!isPessoaFisicaNaListaDestinatarios(relator)) {
+				DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
+				destinatario.setDestinatario(relator);
+				destinatario.setModeloComunicacao(modeloComunicacao);
+				modeloComunicacao.getDestinatarios().add(destinatario);
+				participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
+			}
 		} else {
 			Iterator<DestinatarioModeloComunicacao> it = modeloComunicacao.getDestinatarios().iterator();
 			while (it.hasNext()) {
@@ -159,6 +160,15 @@ public class DestinatarioComunicacaoAction {
 		}
 	}
 	
+	private boolean isPessoaFisicaNaListaDestinatarios(PessoaFisica relator) {
+		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+			if (destinatario.getDestinatario().equals(relator)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public MeioExpedicao[] getMeiosExpedicao(DestinatarioModeloComunicacao destinatario) {
 		if (destinatario.getDestinatario() != null) {
 			PessoaFisica pessoa = destinatario.getDestinatario();
@@ -167,14 +177,6 @@ public class DestinatarioComunicacaoAction {
 			}
 		}
 		return MeioExpedicao.getValues(false);
-	}
-	
-	public boolean isAdicionarDestinatarioRelator() {
-		return adicionarDestinatarioRelator;
-	}
-	
-	public void setAdicionarDestinatarioRelator(boolean adicionarDestinatarioRelator) {
-		this.adicionarDestinatarioRelator = adicionarDestinatarioRelator;
 	}
 	
 	public boolean isProcessoPossuiRelator() {
@@ -219,8 +221,8 @@ public class DestinatarioComunicacaoAction {
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getDestinatario() != null) {
 				participanteProcessoComunicacaoList.adicionarIdPessoa(destinatario.getDestinatario().getIdPessoa());
-				if (relator != null && !adicionarDestinatarioRelator && relator.equals(destinatario.getDestinatario())) {
-					adicionarDestinatarioRelator = true;
+				if (relator != null && !modeloComunicacao.getEnviarRelatoria() && relator.equals(destinatario.getDestinatario())) {
+					modeloComunicacao.setEnviarRelatoria(false);
 				}
 			} else if (destinatario.getPerfilDestino() != null) {
 				addPerfilSelecionado(destinatario);
@@ -273,4 +275,9 @@ public class DestinatarioComunicacaoAction {
 	void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
 	}
+
+	public ModeloComunicacao getModeloComunicacao() {
+		return modeloComunicacao;
+	}
+	
 }
