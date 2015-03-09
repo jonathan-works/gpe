@@ -49,6 +49,14 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 		return (String) (map.containsKey(key) ? map.get(key) : key);
 	}
 	
+	public String get(Object key, Locale locale) {
+		Map<String, String> map = locales.get(locale);
+		if (map == null) {
+			throw new IllegalStateException("Não existe locale" + locale);
+		}
+		return (String) (map.containsKey(key) ? map.get(key) : key);
+	}
+	
 	private Map<String, String> getMessages() {
 		return locales.get(getRequestLocale());
 	}
