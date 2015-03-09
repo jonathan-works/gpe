@@ -158,7 +158,7 @@
 		<ui:define name="toolBar">
 			<h:form>
 				<wi:toolBarAssinatura idDocumento="#{row.id}" idAssinatura="respostaComunicacaoAssinaturaDocumentoPopup"
-			    	renderedLock="#{not empty row.documentoBin.assinaturas}" />
+			    	renderedLock="#{not empty row.documentoBin.assinaturas}" /> <!-- nao aparecer se doc não precisa de assinatura -->
 				<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row)}"
 					render="painelEditor" rendered="#{empty row.documentoBin.extensao}">
 					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
@@ -178,6 +178,12 @@
 		<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
 		<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
 		<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
+		<ui:define name="conteudoAdicional">
+			<h:form style="text-align:left">
+				<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
+					action="#{respostaComunicacaoAction.enviarRespostaComunicacao()}" reRender="pageBodyDialogMessage" rendered="#{respostaComunicacaoList.getResultCount() ge 1}"/>
+			</h:form>
+		</ui:define>
 	</wi:dataTable>
 </h:body>
 </html>

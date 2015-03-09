@@ -27,6 +27,7 @@ import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
@@ -72,6 +73,8 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	@In
 	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@In
+	private RespostaComunicacaoService respostaComunicacaoService;
 	
 	private DestinatarioModeloComunicacao destinatario;
 	private Processo processoComunicacao;
@@ -159,6 +162,17 @@ public class RespostaComunicacaoAction implements Serializable {
 			actionMessagesService.handleDAOException(e);
 		}
 		documentoUploader.clear();
+	}
+	
+	public void enviarRespostaComunicacao(){
+		List<Documento> documentosResposta = respostaComunicacaoList.list();
+		try {
+			respostaComunicacaoService.enviarResposta(documentosResposta);
+			FacesMessages.instance().add("Resposta enviada com sucesso");
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
+		}
 	}
 	
 	public void removerDocumento(Documento documento) {

@@ -98,10 +98,9 @@
 				</div>
 				
 				<!-- Controle do Relator -->
-				<h:form rendered="#{destinatarioComunicacaoAction.processoPossuiRelator}">
+				<h:form rendered="#{destinatarioComunicacaoAction.processoPossuiRelator and not envioComunicacaoController.modeloComunicacao.finalizada}">
 					<wi:selectBooleanCheckbox id="relator" label="#{infoxMessages['processo.relator']}" 
-						disabled="#{envioComunicacaoController.modeloComunicacao.finalizada}"
-						value="#{destinatarioComunicacaoAction.adicionarDestinatarioRelator}">
+						value="#{destinatarioComunicacaoAction.modeloComunicacao.enviarRelatoria}">
 						<a:ajax event="change" render="destinatariosPanel" limitRender="true" execute="@this"
 							listener="#{destinatarioComunicacaoAction.gerenciarRelator}"/>
 					</wi:selectBooleanCheckbox>

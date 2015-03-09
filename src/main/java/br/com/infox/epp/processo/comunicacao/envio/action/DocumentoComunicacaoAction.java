@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -30,7 +31,9 @@ import br.com.infox.epp.processo.documento.manager.PastaManager;
 @Name(DocumentoComunicacaoAction.NAME)
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
-public class DocumentoComunicacaoAction {
+public class DocumentoComunicacaoAction implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	public static final String NAME = "documentoComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(DocumentoComunicacaoAction.class);
 	

@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.comunicacao.service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -18,7 +19,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoListener;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
@@ -30,7 +30,7 @@ import br.com.infox.seam.exception.BusinessException;
 @Name(RespostaComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class RespostaComunicacaoService implements AssinaturaDocumentoListener {
+public class RespostaComunicacaoService {
 	public static final String NAME = "respostaComunicacaoService";
 	
 	@In
@@ -52,11 +52,23 @@ public class RespostaComunicacaoService implements AssinaturaDocumentoListener {
 		metadadoProcessoManager.persist(metadadoResposta);
 		
 		Map<String, Object> variaveisJbpm = new HashMap<>();
-		setRespostaTempestiva(resposta, comunicacao);
+		setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
 	}
 
-	private void setRespostaTempestiva(Documento resposta, Processo comunicacao) {
+	public void enviarResposta(List<Documento> respostas) throws DAOException {
+		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(respostas.get(0));
+		if (comunicacao == null) {
+			return;
+		}
+		Processo processoResposta = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, respostas.toArray(new Documento[respostas.size()]));
+				
+		Map<String, Object> variaveisJbpm = new HashMap<>();
+		setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
+		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
+	}
+	
+	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
 		ContextInstance contextInstance = processInstance.getContextInstance();
 		if (contextInstance.getVariable("respostaTempestiva") != null) {
@@ -73,16 +85,15 @@ public class RespostaComunicacaoService implements AssinaturaDocumentoListener {
 			c.add(Calendar.DAY_OF_MONTH, prazoDestinatario);
 			Date dataFimPrazoDestinatario = DateUtil.getEndOfDay(c.getTime());
 			
-			Date dataInclusaoResposta = resposta.getDataInclusao();
-			if (dataCiencia.equals(dataInclusaoResposta) || dataFimPrazoDestinatario.equals(dataInclusaoResposta) ||
-					(dataCiencia.before(dataInclusaoResposta) && dataFimPrazoDestinatario.after(dataInclusaoResposta))) {
+			if (dataCiencia.equals(dataResposta) || dataFimPrazoDestinatario.equals(dataResposta) ||
+					(dataCiencia.before(dataResposta) && dataFimPrazoDestinatario.after(dataResposta))) {
 				respostaTempestiva = true;
 			}
 		}
 		contextInstance.setVariable("respostaTempestiva", respostaTempestiva);
 	}
 
-	@Override
+//	@Override
 	public void postSignDocument(Documento documento) {
 		try {
 			enviarResposta(documento);

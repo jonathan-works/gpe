@@ -84,6 +84,10 @@ public class ModeloComunicacao implements Serializable {
 	@JoinColumn(name = "id_modelo_documento")
 	private ModeloDocumento modeloDocumento;
 	
+	@NotNull
+	@Column(name = "in_enviar_relatoria", nullable = false)
+	private Boolean enviarRelatoria = Boolean.FALSE;
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao", cascade = CascadeType.REMOVE)
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
 	
@@ -186,6 +190,14 @@ public class ModeloComunicacao implements Serializable {
 		this.minuta = minuta;
 	}
 	
+	public Boolean getEnviarRelatoria() {
+		return enviarRelatoria;
+	}
+
+	public void setEnviarRelatoria(Boolean enviarRelatoria) {
+		this.enviarRelatoria = enviarRelatoria;
+	}
+
 	@Transient
 	public boolean isDocumentoBinario() {
 		return Strings.isNullOrEmpty(getTextoComunicacao());
