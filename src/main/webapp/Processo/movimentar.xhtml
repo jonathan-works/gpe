@@ -137,7 +137,9 @@
                 action="#{documentoList.entity.setProcesso(processoEpaHome.instance.processoRoot)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{infoxMessages['movimentar.documentos.titleTab']}">
-                <ui:include src="pastaDocumento.xhtml" />
+                <ui:include src="pastaDocumento.xhtml">
+                	<ui:param name="pastaDocumentoRenderId" value="movimentarTabPanel" />
+                </ui:include>	
             </infox:tab>
             <infox:tab
                 id="tabVariaveisProcesso"

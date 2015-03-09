@@ -10,6 +10,7 @@
   xmlns:rich="http://richfaces.org/rich"
   xmlns:wi="http://www.itx.com.br/jsf">
   
+  <ui:param name="pastaDocumentoRenderId" value="#{empty pastaDocumentoRenderId ? '' : pastaDocumentoRenderId}" />
   <a:jsFunction
     name="selectDocumento"
     immediate="true"
@@ -30,7 +31,7 @@
 			label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
 			valueItems="#{documentoProcessoAction.listClassificacaoDocumento}"
 			showLabelTodos="true">
-			<f:ajax event="valueChange" execute="@form" render=":movimentarTabPanel:documentoListSearchForm :movimentarTabPanel:documentoListPanel @form"/>		
+			<f:ajax event="valueChange" execute="@form" render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form"/>
 		</wi:selectOneMenu>
   	</h:form>
   </rich:collapsiblePanel>
