@@ -26,13 +26,17 @@
   
   <rich:collapsiblePanel expanded="true" header="#{infoxMessages['searchForm.title']}" switchType="client">
   	<h:form>
-  		<wi:selectOneMenu id="classificacaoDocumento"
-			value="#{documentoProcessoAction.classificacaoDocumentoItem}"
-			label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
-			valueItems="#{documentoProcessoAction.listClassificacaoDocumento}"
-			showLabelTodos="true">
-			<f:ajax event="valueChange" execute="@form" render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form"/>
-		</wi:selectOneMenu>
+		<h:outputText value="#{infoxMessages['documentoProcesso.classificacaoDocumento']}" styleClass="name"/>
+		<h:selectOneMenu
+		      id="classificacaoDocumento"
+		      value="#{documentoProcessoAction.classificacaoDocumentoItem}"
+		      styleClass="input select">
+		      <f:ajax immediate="true" event="valueChange" execute="@form" render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form"/>
+		      <f:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="#{infoxMessages['crud.select.all']}" />
+		      <f:selectItems value="#{documentoProcessoAction.listClassificacaoDocumento}" var="item" itemLabel="#{item.descricao}" itemValue="#{item.id}" />
+		      <f:converter converterId="javax.faces.Integer"/>
+		</h:selectOneMenu>
+		
   	</h:form>
   </rich:collapsiblePanel>
   <div style="margin-top:5px;"/>

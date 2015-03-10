@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -26,8 +27,10 @@ import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 
+@AutoCreate
 @Name(DocumentoProcessoAction.NAME)
 @Scope(ScopeType.PAGE)
 public class DocumentoProcessoAction implements Serializable {
@@ -39,8 +42,9 @@ public class DocumentoProcessoAction implements Serializable {
 	private Documento processoDocumentoSelected;
 	private Integer idDocumentoAlter;
 	private Map<String, Boolean> cache = new HashMap<String, Boolean>();
-	private List<SelectItem> listClassificacaoDocumento;
-	private Integer classificacaoDocumentoItem;
+	private List<ClassificacaoDocumento> listClassificacaoDocumento;
+	private ClassificacaoDocumento classificacaoDocumentoItem;
+	private Processo processo;
 	
 	@In
 	private DocumentoManager documentoManager;
@@ -52,7 +56,6 @@ public class DocumentoProcessoAction implements Serializable {
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	@In
 	private DocumentoList documentoList;
-	
 	
 	public void exclusaoRestauracaoDocumento(){
 		if (idDocumentoAlter == null){
@@ -134,32 +137,43 @@ public class DocumentoProcessoAction implements Serializable {
 		return !("true".equals(Parametros.SOMENTE_USUARIO_INTERNO_PODE_VER_HISTORICO.getValue()) && !Identity.instance().hasRole("usuarioInterno"));
 	}
 
-	public List<SelectItem> getListClassificacaoDocumento() {
+	public List<ClassificacaoDocumento> getListClassificacaoDocumento() {
 		if (listClassificacaoDocumento == null) {
-			listClassificacaoDocumento = new ArrayList<SelectItem>();
-			List<ClassificacaoDocumento> classificacaoDocumentoLista = classificacaoDocumentoManager.findAll();
-			
-			for (ClassificacaoDocumento classificacaoDocumento : classificacaoDocumentoLista) {
-				listClassificacaoDocumento.add(new SelectItem(classificacaoDocumento.getId(), classificacaoDocumento.getDescricao()));
-			}
+			listClassificacaoDocumento = classificacaoDocumentoManager.getClassificacaoDocumentoListByProcesso(processo);
 		}
 			
 		return listClassificacaoDocumento;
 	}
+	
+	public void setListClassificacaoDocumento(List<ClassificacaoDocumento> listClassificacaoDocumento) {
+		this.listClassificacaoDocumento = listClassificacaoDocumento;
+	}
 
 	public Integer getClassificacaoDocumentoItem() {
-		return classificacaoDocumentoItem;
+		return classificacaoDocumentoItem != null ? classificacaoDocumentoItem.getId() : null;
 	}
 
 	public void setClassificacaoDocumentoItem(Integer classificacaoDocumentoItem) {
 		if (classificacaoDocumentoItem != null) {
-			documentoList.getEntity().setClassificacaoDocumento(classificacaoDocumentoManager.find(classificacaoDocumentoItem));
+			for (ClassificacaoDocumento classificacaoDocumento : listClassificacaoDocumento) {
+				if (classificacaoDocumento.getId().equals(classificacaoDocumentoItem)) {
+					this.classificacaoDocumentoItem = classificacaoDocumento;
+					break;
+				}
+			}
 		}
 		else {
-			documentoList.getEntity().setClassificacaoDocumento(null);
+			this.classificacaoDocumentoItem = null;
 		}
-		
-		this.classificacaoDocumentoItem = classificacaoDocumentoItem;
+		documentoList.getEntity().setClassificacaoDocumento(this.classificacaoDocumentoItem);		
+	}
+	
+	public Processo getProcesso() {
+		return processo;
+	}
+
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
 	}
 }
 

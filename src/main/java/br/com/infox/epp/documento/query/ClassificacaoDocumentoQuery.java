@@ -6,6 +6,7 @@ public interface ClassificacaoDocumentoQuery {
     String PAPEL_PARAM = "papel";
     String TIPO_DOCUMENTO_PARAM = "tipoDocumento";
     String PARAM_DESCRICAO = "descricao";
+    String PARAM_PROCESSO = "processo";
 
     String ASSINATURA_OBRIGATORIA = "assinaturaObrigatoria";
     String ASSINATURA_OBRIGATORIA_QUERY = "select distinct tpdp "
@@ -23,4 +24,7 @@ public interface ClassificacaoDocumentoQuery {
     
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO = "findClassificacaoDocumentoByDescricao";
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY = "select o from ClassificacaoDocumento o where o.descricao like :" + PARAM_DESCRICAO;
+    String LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO = "listClassificacaoDocumentoByProcesso";
+    String LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO_QUERY = "select o from ClassificacaoDocumento o inner join o.documentoList dl"
+    		+ " where dl.processo = :" + PARAM_PROCESSO + " order by o.descricao";
 }
