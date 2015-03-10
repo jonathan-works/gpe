@@ -3,10 +3,6 @@ package br.com.infox.epp.processo.documento.list;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -28,7 +24,7 @@ import br.com.infox.epp.system.manager.ParametroManager;
 @Name(DocumentoList.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class DocumentoList extends EntityList<Documento> implements ActionListener {
+public class DocumentoList extends EntityList<Documento> {
 	
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_EJBQL = "select o from Documento o inner join o.documentoBin bin where "
@@ -100,22 +96,14 @@ public class DocumentoList extends EntityList<Documento> implements ActionListen
         }
     }
 
-    @Override
-    public void processAction(ActionEvent event)
-            throws AbortProcessingException {
-        Map<String, Object> attributes = event.getComponent().getAttributes();
-        Object o = attributes.get("pastaToSelect");
-        if (o instanceof Pasta) {
-            getEntity().setPasta((Pasta) o);
-            return;
+    public void checkPastaToRemove(Pasta toRemove) {
+        Pasta selected = getEntity().getPasta();
+        if (selected == toRemove) {
+            getEntity().setPasta(pastaManager.getDefault(getProcesso()));
         }
-        o = attributes.get("pastaToRemove");
-        if (o instanceof Pasta) {
-            Pasta selected = getEntity().getPasta();
-            Pasta toRemove = (Pasta) o;
-            if (selected == toRemove) {
-                getEntity().setPasta(null);
-            }
-        }
+    }
+
+    public void selectPasta(Pasta pasta) {
+        getEntity().setPasta(pasta);
     }
 }
