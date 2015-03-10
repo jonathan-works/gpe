@@ -68,7 +68,7 @@
 							<a:commandLink
 								action="#{expedicaoComunicacaoAction.setDestinatario(row)}"
 								render="comunicacaoForm" execute="@this"
-								rendered="#{not expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}">
+								rendered="#{not row.expedido}">
 								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png"
 									title="#{infoxMessages['button.selecionar']}" />
 							</a:commandLink>
@@ -93,10 +93,10 @@
 				<h:form id="comunicacaoForm">
 					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao()}" 
 						value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-						rendered="#{(expedicaoComunicacaoAction.modeloComunicacao.documentoBinario or not empty expedicaoComunicacaoAction.destinatario)
-							and not expedicaoComunicacaoAction.isExpedida(expedicaoComunicacaoAction.modeloComunicacao)}"/>
+						rendered="#{not empty expedicaoComunicacaoAction.destinatario}"/>
 					<wi:commandButton id="expedir" action="expedicaoComunicacaoAction.expedirComunicacao()" 
-						rendered="#{expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}"
+						rendered="#{not empty expedicaoComunicacaoAction.destinatario 
+								and expedicaoComunicacaoAction.modeloComunicacao.documentoBinario }"
 						value="#{infoxMessages['comunicacao.expedirComunicacoes']}"
 						reRender="comunicacaoForm, pageBodyDialogMessage, destinatarios"/>
 					<a:jsFunction name="assinar"
