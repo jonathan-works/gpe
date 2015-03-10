@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.ejb.Singleton;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -29,7 +30,15 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 	}
 	
 	private Locale getRequestLocale() {
-		Locale requestLocale = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		if (facesContext == null){
+			return Locale.getDefault();
+		}
+		ExternalContext externalContext = facesContext.getExternalContext();
+		if (externalContext == null) {
+			return Locale.getDefault();
+		}
+		Locale requestLocale = externalContext.getRequestLocale();
 		if (requestLocale == null) {
 			return getDefaultLocale();
 		}
@@ -46,7 +55,7 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 	
 	public String get(Object key) {
 		Map<String, String> map = locales.get(getRequestLocale());
-		return (String) (map.containsKey(key) ? map.get(key) : key);
+		return (String) (map != null && map.containsKey(key) ? map.get(key) : key);
 	}
 	
 	public String get(Object key, Locale locale) {
@@ -74,7 +83,7 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 			InitialContext ic = new InitialContext();
 			return (InfoxMessages) ic.lookup("java:module/infoxMessages");
 		} catch (NamingException e) {
-			throw new RuntimeException(e);
+			return new InfoxMessages();
 		}
 	}
 }
