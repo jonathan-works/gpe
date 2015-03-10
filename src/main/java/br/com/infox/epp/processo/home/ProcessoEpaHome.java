@@ -20,6 +20,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.action.RelacionamentoCrudAction;
 import br.com.infox.epp.processo.consulta.action.ConsultaController;
+import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -90,6 +91,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     private PastaAction pastaAction;
     @In
     private DocumentoList documentoList;
+    @In
+    private DocumentoProcessoAction documentoProcessoAction;
 
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
@@ -116,6 +119,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     public void iniciarTarefaProcesso() {
         try {
             processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
+            documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
         } catch (java.lang.NullPointerException e) {
             LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
         } catch (DAOException e) {
@@ -325,8 +329,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
     @Override
     public String remove() {
-        Authenticator.getUsuarioLogado()
-                .getProcessoListForIdUsuarioCadastroProcesso().remove(instance);
+        Authenticator.getUsuarioLogado().getProcessoListForIdUsuarioCadastroProcesso().remove(instance);
         return super.remove();
     }
 
@@ -478,6 +481,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
         }
         if (tab.equals("tabAnexos")){
         	documentoList.setProcesso(this.getInstance().getProcessoRoot());
+        	documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
+        	documentoProcessoAction.setListClassificacaoDocumento(null);
         }
     }
 

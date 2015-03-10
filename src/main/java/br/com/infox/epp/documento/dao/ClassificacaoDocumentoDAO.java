@@ -5,8 +5,10 @@ import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.CLASS
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.CODIGO_DOCUMENTO_PARAM;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PAPEL_PARAM;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PARAM_DESCRICAO;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PARAM_PROCESSO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
 @Name(ClassificacaoDocumentoDAO.NAME)
@@ -40,6 +43,12 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     public List<ClassificacaoDocumento> findAll() {
     	String hql = "select o from ClassificacaoDocumento o order by o.descricao";
     	return getResultList(hql, null);
+    }
+    
+    public List<ClassificacaoDocumento> getClassificacaoDocumentoListByProcesso(Processo processo) {
+    	Map<String, Object> params = new HashMap<>(1);
+    	params.put(PARAM_PROCESSO, processo);
+    	return getNamedResultList(LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO, params);
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, Papel papel) {

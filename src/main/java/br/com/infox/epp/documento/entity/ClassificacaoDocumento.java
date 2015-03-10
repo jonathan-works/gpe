@@ -5,6 +5,8 @@ import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.LIST_CLASSIFICACAO_DOCUMENTO_QUERY;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
@@ -43,7 +45,8 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 @NamedQueries({
     @NamedQuery(name = LIST_CLASSIFICACAO_DOCUMENTO, query = LIST_CLASSIFICACAO_DOCUMENTO_QUERY),
     @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO_QUERY),
-    @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY) 
+    @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY),
+    @NamedQuery(name = LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO, query = LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO_QUERY)
 })
 public class ClassificacaoDocumento implements Serializable {
 	

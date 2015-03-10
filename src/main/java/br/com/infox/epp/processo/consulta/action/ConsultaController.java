@@ -11,6 +11,7 @@ import org.jboss.seam.faces.Redirect;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
@@ -41,6 +42,8 @@ public class ConsultaController extends AbstractController {
     private PastaAction pastaAction;
     @In
     private DocumentoList documentoList;
+    @In
+    private DocumentoProcessoAction documentoProcessoAction;
     
     private Processo processo;
     private boolean showAllDocuments = false;
@@ -128,6 +131,8 @@ public class ConsultaController extends AbstractController {
         }
         if(tab.equals("tabAnexos")){
         	documentoList.setProcesso(this.getProcesso());
+        	documentoProcessoAction.setProcesso(getProcesso());
+        	documentoProcessoAction.setListClassificacaoDocumento(null);
         }
     }
 }
