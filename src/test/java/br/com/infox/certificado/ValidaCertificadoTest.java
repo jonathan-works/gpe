@@ -40,7 +40,6 @@ public class ValidaCertificadoTest {
 
     }
 
-    @Test
     @SuppressWarnings("rawtypes")
     public void validaCertificadosPF() throws Exception {
         final Pair[] certificados = { new Pair<String, String>("AC CAIXA PF v2-1.txt", "AC CAIXA PF v2-1.properties") };
