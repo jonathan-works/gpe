@@ -62,15 +62,13 @@
 					<a:commandLink
 						render="documentoListPanel, documentoListSearchForm"
 						execute="@form"
+                        action="#{pastaAction.selectPasta(pasta)}"
 						styleClass="folder"
 						limitRender="true">
   		              <h:graphicImage
                           url="#{wiSkin.imageFolder}/folder.png"
                           rendered="true"
                           title="#{pasta}" />
-						<f:attribute name="pastaToSelect" value="#{pasta}" />
-						<f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
-						<f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
 						<h:outputText value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}" class="folder" />
 					</a:commandLink>
                     <a:commandLink
@@ -86,8 +84,9 @@
                         title="#{infoxMessages['button.selecionar']}" />
                     </a:commandLink>
                     <a:commandLink
-                      render="documentoListPanel, documentoListSearchForm, pageBodyDialogMessage"
+                      render="documentoListSearchForm, pageBodyDialogMessage, documentoListPanel"
                       execute="@form"
+                      action="#{pastaAction.remove(pasta)}"
                       rendered="#{s:hasPermission('/pages/Pasta/removerPasta', 'access') and pastaAction.canRemove(pasta)}"
                       limitRender="true">
                       <h:graphicImage
@@ -95,9 +94,6 @@
                         url="#{wiSkin.imageFolder}/remove.png"
                         rendered="true"
                         title="#{infoxMessages['button.delete']}" />
-                      <f:attribute name="pastaToRemove" value="#{pasta}" />
-                      <f:actionListener type="br.com.infox.epp.processo.documento.action.PastaAction" />
-                      <f:actionListener type="br.com.infox.epp.processo.documento.list.DocumentoList" />
                     </a:commandLink>
 				</s:div>
 			</rich:list>
@@ -283,16 +279,15 @@
             <wi:selectBooleanCheckbox
               id="addPastaInputVisivelExterno"
               value="#{pastaAction.visivelExterno}"
-              required="true"
               onclick="#{rich:jQuery('addPastaInputVisivelExterno')}.prop('checked') ? #{rich:jQuery('addPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('addPastaDivVisivelNaoParticipante')}.hide();"
               label="#{infoxMessages['pasta.usuarioExterno']}" />
             <s:div id="addPastaDivVisivelNaoParticipante" style="display: none">
               <wi:selectBooleanCheckbox
                 id="addPastaInputVisivelNaoParticipante"
                 value="#{pastaAction.visivelNaoParticipante}"
-                required="true"
                 label="#{infoxMessages['pasta.usuarioParticipante']}" />
             </s:div>
+            <br />
             <wi:commandButton
               id="addPastaButton"
               action="#{pastaAction.persist()}"
@@ -334,16 +329,15 @@
         <wi:selectBooleanCheckbox
           id="editPastaInputVisivelExterno"
           value="#{pastaAction.visivelExterno}"
-          required="true"
           onclick="#{rich:jQuery('editPastaInputVisivelExterno')}.prop('checked') ? #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('editPastaDivVisivelNaoParticipante')}.hide();"
           label="#{infoxMessages['pasta.usuarioExterno']}" />
         <s:div id="editPastaDivVisivelNaoParticipante" style="display: none">
           <wi:selectBooleanCheckbox
             id="editPastaInputVisivelNaoParticipante"
             value="#{pastaAction.visivelNaoParticipante}"
-            required="true"
             label="#{infoxMessages['pasta.usuarioParticipante']}" />
         </s:div>
+        <br />
         <wi:commandButton
           id="editPastaButton"
           action="#{pastaAction.update()}"
