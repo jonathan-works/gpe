@@ -157,6 +157,10 @@
 	    			<h:commandButton styleClass="buttons" action="#{comunicacaoAction.downloadComunicacao}" 
 	    				value="#{infoxMessages['comunicacao.comunicacao']}"
 	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
+                    <h:commandButton styleClass="buttons"
+                        onclick="infox.openPopUp('doc#{comunicacaoAction.destinatario.documentoComunicacao.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{comunicacaoAction.destinatario.documentoComunicacao.documentoBin.id}','1024'); return false;" 
+                        value="#{infoxMessages['comunicacao.comunicacao']}"
+                        rendered="#{empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
 	    		</h:form>
 	    		<rich:dataTable value="#{comunicacaoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
 	    			<rich:column styleClass="dt-toolbar-col">
