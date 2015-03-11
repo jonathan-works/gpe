@@ -7,13 +7,11 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:wi="http://www.itx.com.br/jsf"
->
+  xmlns:wi="http://www.itx.com.br/jsf">
   <s:div
     id="#{id}SearchForm"
     styleClass="dtable-search-form #{searchFormStyleClass}"
-    rendered="#{empty showSearchForm ? true : showSearchForm}"
-  >
+    rendered="#{empty showSearchForm ? true : showSearchForm}">
     <ui:insert name="searchForm" />
   </s:div>
   <a:region>
@@ -23,36 +21,20 @@
       id="#{id}Panel"
       bodyClass="dtable-p-b"
       style="#{panelStyle}"
-      styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}"
-    >
-      <rich:dataTable
-        value="#{values}"
-        id="#{id}"
-        rowKeyVar="key"
-        rowClasses="#{rowClasses} zebra-row"
-        styleClass="dtable rf-dt-crud #{styleClass}"
-        onrowmouseup="#{onrowmouseup}"
-        var="row"
-      >
-        <rich:column
-          styleClass="dt-toolbar-col"
-          rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
-          rowspan="#{empty columnRowspan ? '1':columnRowspan}"
-        >
+      styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}">
+      <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key" rowClasses="#{rowClasses} zebra-row"
+        styleClass="dtable rf-dt-crud #{styleClass}" onrowmouseup="#{onrowmouseup}" var="row">
+        <rich:column styleClass="dt-toolbar-col" rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
+          			 rowspan="#{empty columnRowspan ? '1':columnRowspan}">
           <f:facet name="header">
             <s:div>
               <ui:insert name="headerToolBar">
-                <ui:param
-                  name="home"
-                  value="#{wi:get(home, '')}"
-                />
+                <ui:param name="home" value="#{wi:get(home, '')}"/>
                 <wi:toolBarReport
-                  rendered="#{systemFacade.exportarPDF()}"
-                />
+                  rendered="#{systemFacade.exportarPDF()}"/>
                 <wi:toolBarReportExcel
                   rendered="#{systemFacade.exportarXLS() and not empty bean.template}"
-                  action="#{bean.exportarXLS()}"
-                />
+                  action="#{bean.exportarXLS()}"/>
               </ui:insert>
             </s:div>
           </f:facet>
@@ -65,9 +47,7 @@
       </rich:dataTable>
       <h:outputText
         value="#{infoxMessages['list.resultPrefix']} #{not empty bean ? bean.resultCount : values.size()} #{infoxMessages['list.resultSufix']}"
-        styleClass="dt-res-count"
-        rendered="#{wi:get(showGridCount, true)}"
-      />
+        styleClass="dt-res-count" rendered="#{wi:get(showGridCount, true)}"/>
       <s:div rendered="#{bean.previousExists or bean.nextExists}">
         <ui:fragment rendered="#{!empty inForm ? false : inForm}">
           <ui:include src="inputNumberSlider.xhtml" />

@@ -7,31 +7,21 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:wi="http://www.itx.com.br/jsf"
-    template="/WEB-INF/xhtml/templates/empty.xhtml"
->
+    template="/WEB-INF/xhtml/templates/empty.xhtml">
     <ui:define name="title">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcessoRoot}</ui:define>
     <ui:define name="body">
         <h:outputScript
             name="jquery.hotkeys.js"
-            library="js"
-        />
+            library="js"/>
         <h:outputScript
             name="paginator.js"
-            library="js"
-        />
-        <h:form
-            id="documento"
-            styleClass="doc-pag-form"
-        >
-            <rich:dataTable
-                id="documentosGrid"
-                columnsWidth="70%,30%"
-                value="#{processoHandler.taskDocumentList}"
+            library="js"/>
+        <h:form id="documento" styleClass="doc-pag-form">
+            <rich:dataTable id="documentosGrid" columnsWidth="70%,30%" value="#{processoHandler.taskDocumentList}"
                 var="task"
                 first="#{processoHandler.inicio}"
                 rows="1"
-                styleClass="doc-pag-form"
-            >
+                styleClass="doc-pag-form">
                 <rich:column>
                     <f:facet name="header">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcessoRoot}</f:facet>
                     <div id="areaPagina">
@@ -42,18 +32,12 @@
                             <rich:dataTable
                                 value="#{variableHandler.getTaskVariables(task.id)}"
                                 var="v"
-                            >
+                                style="width: 100%;">
                                 <rich:column>
                                     <div>
-                                        <h:outputText
-                                            value="#{v.label}"
-                                            styleClass="bold"
-                                        />
+                                        <h:outputText value="#{v.label}" styleClass="bold"/>
                                     </div>
-                                    <h:outputText
-                                        value="#{search.getTextoDestacado(v)}"
-                                        escape="false"
-                                    />
+                                    <h:outputText value="#{search.getTextoDestacado(v)}" escape="false"/>
                                 </rich:column>
                             </rich:dataTable>
                         </div>
@@ -61,20 +45,12 @@
                 </rich:column>
                 <rich:column>
                     <f:facet name="header">#{infoxMessages['anexosProcesso.titleView']}</f:facet>
-                    <ui:include
-                        src="/WEB-INF/xhtml/components/grid/documentosAnexadosProcesso.xhtml"
-                    />
+                    <ui:include src="/WEB-INF/xhtml/components/grid/documentosAnexadosProcesso.xhtml"/>
                 </rich:column>
             </rich:dataTable>
-            <rich:dataScroller
-                maxPages="10"
-                fastStep="1"
-                stepControls="hide"
-                id="docScroller"
-                execute="@this"
+            <rich:dataScroller maxPages="10" fastStep="1" stepControls="hide" id="docScroller" execute="@this"
                 for="documentosGrid"
-                page="#{processoHandler.inicio}"
-            />
+                page="#{processoHandler.inicio}"/>
         </h:form>
     </ui:define>
 </ui:composition>
