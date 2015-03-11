@@ -2,14 +2,13 @@ package br.com.infox.ibpm.variable.file;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -19,6 +18,7 @@ import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -27,6 +27,8 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(FileUpload.NAME)
 public class FileUpload implements FileUploadListener {
@@ -44,6 +46,8 @@ public class FileUpload implements FileUploadListener {
     private DocumentoBinarioManager documentoBinarioManager;
     @In
     private ClassificacaoDocumentoManager classificacaoDocumentoManager;
+    @In
+    private ProcessoEpaHome processoEpaHome;
     
     @Override
     public void processFileUpload(FileUploadEvent event) {
@@ -63,11 +67,11 @@ public class FileUpload implements FileUploadListener {
         }
         Documento documento = createDocumento(file, uploadFile.getId());
         try {
-            documentoManager.gravarDocumentoNoProcesso(ProcessoEpaHome.instance().getInstance(), documento);
+            documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance(), documento);
             documentoBinarioManager.salvarBinario(documento.getDocumentoBin().getId(), documento.getDocumentoBin().getProcessoDocumento());
             TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), documento.getId());
         } catch (DAOException e) {
-            LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + ProcessoEpaHome.instance().getInstance().getIdProcesso(), e);
+            LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + processoEpaHome.getInstance().getIdProcesso(), e);
         }
         TaskInstanceHome.instance().update();
     }
@@ -77,7 +81,9 @@ public class FileUpload implements FileUploadListener {
         pd.setDescricao(file.getName());
         pd.setAnexo(true);
         pd.setDocumentoBin(createDocumentoBin(file));
-        pd.setClassificacaoDocumento(TaskInstanceHome.instance().getClassificacoesVariaveisUpload().get(id));
+        pd.setClassificacaoDocumento(TaskInstanceHome.instance().getVariaveisDocumento().get(id).getClassificacaoDocumento());
+        pd.setUsuarioInclusao(Authenticator.getUsuarioLogado());
+        pd.setLocalizacao(Authenticator.getLocalizacaoAtual());
         return pd;
     }
 
@@ -89,6 +95,7 @@ public class FileUpload implements FileUploadListener {
         pdb.setSize(Long.valueOf(file.getSize()).intValue());
         pdb.setProcessoDocumento(file.getData());
         pdb.setModeloDocumento(getTextoIndexavel(file));
+        pdb.setDataInclusao(new Date());
         return pdb;
     }
     

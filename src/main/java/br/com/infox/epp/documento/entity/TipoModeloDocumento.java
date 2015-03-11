@@ -158,7 +158,7 @@ public class TipoModeloDocumento implements Serializable {
         int result = 1;
         result = prime
                 * result
-                + ((idTipoModeloDocumento == null) ? 0 : idTipoModeloDocumento.hashCode());
+                + ((getIdTipoModeloDocumento() == null) ? 0 : getIdTipoModeloDocumento().hashCode());
         return result;
     }
 
@@ -174,11 +174,11 @@ public class TipoModeloDocumento implements Serializable {
             return false;
         }
         TipoModeloDocumento other = (TipoModeloDocumento) obj;
-        if (idTipoModeloDocumento == null) {
-            if (other.idTipoModeloDocumento != null) {
+        if (getIdTipoModeloDocumento() == null) {
+            if (other.getIdTipoModeloDocumento() != null) {
                 return false;
             }
-        } else if (!idTipoModeloDocumento.equals(other.idTipoModeloDocumento)) {
+        } else if (!getIdTipoModeloDocumento().equals(other.getIdTipoModeloDocumento())) {
             return false;
         }
         return true;

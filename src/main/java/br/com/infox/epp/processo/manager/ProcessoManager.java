@@ -22,14 +22,12 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
-import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -74,11 +72,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         bin.setMd5Documento(MD5Encoder.encode(String.valueOf(value)));
         this.documentoBinManager.persist(bin);
         return bin;
-    }
-
-    public Documento createDocumento(final Processo processo, final String label, final DocumentoBin bin,
-            final ClassificacaoDocumento classificacaoDocumento) throws DAOException {
-        return this.documentoManager.createDocumento(processo, label, bin, classificacaoDocumento);
     }
 
     private String getDescricaoModeloDocumentoByValue(final Object value) {

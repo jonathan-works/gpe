@@ -17,7 +17,7 @@
       <wi:selectOneMenuEntity
         id="#{f.id}tipoProcessoDocumento"
         label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-        value="#{home.classificacoesVariaveisUpload[id]}"
+        value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
         items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
         required="true"
         showLabelSelecione="true"
@@ -30,23 +30,24 @@
       </wi:selectOneMenuEntity>
     </s:div>
     <s:div id="#{f.id}ToolTipDivExterna">
-	    <s:div id="#{f.id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" rendered="#{not empty home.classificacoesVariaveisUpload[id] and not readonly}">
+	    <s:div id="#{f.id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+	    	rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}">
 			<h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif" />
 			<div class="epp-tooltip">
 				<div class="tooltip-panel">
-					<s:div rendered="#{empty taskInstanceHome.classificacoesVariaveisUpload[id]}">
+					<s:div rendered="#{empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}">
 						<h:outputText value="Selecione uma classificação de documento" />
 					</s:div>
-					<s:div rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id]}">
+					<s:div rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}">
 						<div><h:outputText value="Extensões Aceitas:"/></div>
-						<ui:repeat var="documento" value="#{taskInstanceHome.classificacoesVariaveisUpload[id].acceptedTypesList}">
+						<ui:repeat var="documento" value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypesList}">
 							<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
 						</ui:repeat>
-						<s:div styleClass="tooltip-panel-top" rendered="#{not empty taskInstanceHome.classificacoesVariaveisUpload[id].observacao}">
+						<s:div styleClass="tooltip-panel-top" rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}">
 							<div>
 								<h:outputText value="Observação:"/>
 							</div>
-							<h:outputText value="#{taskInstanceHome.classificacoesVariaveisUpload[id].observacao}" />
+							<h:outputText value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}" />
 						</s:div>
 					</s:div>
 				</div>
@@ -74,9 +75,9 @@
           listHeight="50px"
           immediateUpload="true"
           noDuplicate="true"
-          render="#{id}Decoration, #{id}, #{reRender}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
-          acceptedTypes="#{home.classificacoesVariaveisUpload[id].acceptedTypes}"
-          rendered="#{not empty home.classificacoesVariaveisUpload[id] and not readonly}"
+          render="#{id}Decoration, #{id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
+          acceptedTypes="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypes}"
+          rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}"
           ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
         </rich:fileUpload>
     </s:decorate>
@@ -84,34 +85,34 @@
         <s:fragment rendered="#{not empty taskInstanceHome.instance[id]}">    
             <fieldset>
                 <legend>Documento Anexado</legend>
-                <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.classificacoesVariaveisUpload[id].descricao : props.classificacaoDocumento}"/>
+                <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly ? taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.descricao : props.classificacaoDocumento}"/>
                 <br />
-                <h:outputText id="file#{id}" value="Documento: #{not readonly ? taskInstanceHome.instance[id] : value}"/>
-               	 <h:graphicImage url="#{wiSkin.imageFolder}/show.gif" title="Visualizar" style="cursor: pointer"
+                <h:outputText id="file#{id}" value="Documento: #{not readonly ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}"/>
+               	<h:graphicImage url="#{wiSkin.imageFolder}/show.gif" title="Visualizar" style="cursor: pointer" rendered="#{not readonly}"
                 				onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
             </fieldset>
         </s:fragment>
     </s:div>
     <s:div id="assinaturaDocumentoDiv#{f.id}" >
 	    <s:div id="conteudoAssinatura#{f.id}" rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
-						<a:jsFunction name="assinar"
-							action="#{taskInstanceHome.assinarDocumento()}"
-							execute="@this, assinaturaDocumentoDiv#{f.id}"
-							render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage" 
-							oncomplete="infox.hideLoading();"/>
-							
-						<wi:certificadoDigital
+			<a:jsFunction name="assinar"
+				action="#{taskInstanceHome.assinarDocumento()}"
+				execute="@this, assinaturaDocumentoDiv#{f.id}"
+				render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage" 
+				oncomplete="infox.hideLoading();"/>
+				
+			<wi:certificadoDigital
 	            id="appletAssinatura"
-								signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-								reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
-								tokenField="#{taskInstanceHome.tokenToSign}"
-								propertyValue="#{f.id.split('-')[0]}"
-								propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
-								signableData="#{taskInstanceHome.documentoToSign.documentoBin.md5Documento}"
-								functionPreSign="infox.showLoading();"
-								functionPosSign="assinar();" >
+				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+				reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
+				tokenField="#{taskInstanceHome.tokenToSign}"
+				propertyValue="#{f.id}"
+				propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
+				signableData="#{taskInstanceHome.documentoToSign.documentoBin.md5Documento}"
+				functionPreSign="infox.showLoading();"
+				functionPosSign="assinar();" >
 	       </wi:certificadoDigital>
-			</s:div>
 		</s:div>
+	</s:div>
   </f:subview>
 </ui:composition>

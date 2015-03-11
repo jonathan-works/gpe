@@ -65,11 +65,10 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public Documento gravarDocumentoNoProcesso(Processo processo, Documento documento) throws DAOException {
         documento.setProcesso(processo);
         documento.setNumeroDocumento(getNextNumeracao(documento));
-        documento.setDocumentoBin(this.documentoBinManager
-                .createProcessoDocumentoBin(documento));
+        documento.setDocumentoBin(this.documentoBinManager.createProcessoDocumentoBin(documento));
         documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         if (TaskInstance.instance() != null) {
-            final long idJbpmTask = TaskInstance.instance().getId();
+            long idJbpmTask = TaskInstance.instance().getId();
             documento.setIdJbpmTask(idJbpmTask);
         }
         documento.setPasta(pastaManager.getDefaultFolder(processo));
