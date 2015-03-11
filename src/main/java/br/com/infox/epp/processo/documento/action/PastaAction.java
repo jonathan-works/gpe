@@ -2,13 +2,6 @@ package br.com.infox.epp.processo.documento.action;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-
-import javax.faces.component.UIOutput;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
-import javax.faces.event.AjaxBehaviorEvent;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -25,7 +18,6 @@ import org.richfaces.event.DropEvent;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
@@ -41,7 +33,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(PastaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
-public class PastaAction implements Serializable, ActionListener {
+public class PastaAction implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pastaAction";
@@ -125,8 +117,10 @@ public class PastaAction implements Serializable, ActionListener {
             if (pastaManager == null) {
                 pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
             }
+            documentoList.checkPastaToRemove(pasta);
             pastaManager.remove(pasta);
             newInstance();
+            setPastaList(pastaManager.getByProcesso(processo.getProcessoRoot()));
             FacesMessages.instance().add(Severity.INFO,
                     "Pasta removida com sucesso.");
         } catch (DAOException e) {
@@ -134,6 +128,11 @@ public class PastaAction implements Serializable, ActionListener {
         }
     }
 
+    public void selectPasta(Pasta pasta) {
+        documentoList.selectPasta(pasta);
+        setInstance(pasta);
+    }
+    
     public void associaDocumento(DropEvent evt) {
         Object od = evt.getDragValue();
         Object op = evt.getDropValue();
@@ -179,21 +178,6 @@ public class PastaAction implements Serializable, ActionListener {
                         pasta.getProcesso());
         return participante != null && participante.getAtivo()
                 && pessoaFisica.equals(participante.getPessoa());
-    }
-
-    @Override
-    public void processAction(ActionEvent event)
-            throws AbortProcessingException {
-        Map<String, Object> attributes = event.getComponent().getAttributes();
-        Object o = attributes.get("pastaToSelect");
-        if (o instanceof Pasta) {
-            setInstance((Pasta) o);
-            return;
-        }
-        o = attributes.get("pastaToRemove");
-        if (o instanceof Pasta) {
-            remove((Pasta) o);
-        }
     }
 
     public Pasta getInstance() {
