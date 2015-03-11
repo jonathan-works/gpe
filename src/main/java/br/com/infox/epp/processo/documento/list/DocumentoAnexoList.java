@@ -18,7 +18,7 @@ public class DocumentoAnexoList extends EntityList<Documento> {
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_EJBQL = "select pd.* from tb_documento pd "
             + "inner join tb_processo p on (p.id_processo = pd.id_processo) "
-            + "inner join tb_documento_bin bin on (pdb.id_documento = pd.id_documento) "
+            + "inner join tb_documento_bin bin on (bin.id_documento_bin = pd.id_documento_bin) "
             + "where "
             + "pd.id_processo = #{documentoAnexoList.processo} and "
             + "not exists (select 1 from jbpm_variableinstance v where "
