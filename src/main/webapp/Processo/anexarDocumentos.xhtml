@@ -272,6 +272,7 @@
     		#{rich:jQuery('anexarPastaInputName')}.val('');
     		#{rich:jQuery('anexarPastaInputVisivelExterno')}.prop('checked', false);
     		#{rich:jQuery('anexarPastaInputVisivelNaoParticipante')}.prop('checked', false);
+    		#{rich:jQuery('anexarPastaDivVisivelNaoParticipante')}.hide();
     		$('.errorFields.errors').remove();
     	    $('.errors').removeClass('errors');
       }
@@ -314,6 +315,7 @@
             required="true"
             label="#{infoxMessages['usuarioParticipante']}" />
         </s:div>
+        <br />
         <wi:commandButton
           id="addPastaButton"
           action="#{pastaAction.persist()}"
