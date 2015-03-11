@@ -141,8 +141,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
         sb.append("Classificado por: ");
         String column = getOrder();
         String[] s = column.split(" ");
-        Map<String, String> eppMessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
-        sb.append(eppMessages.get(MessageFormat.format("{0}.{1}", getEntityName(), s[0])));
+        sb.append(InfoxMessages.getInstance().get(MessageFormat.format("{0}.{1}", getEntityName(), s[0])));
         sb.append(" ");
         sb.append(s.length > 1 && "desc".equals(s[1]) ? "decrescente" : "crescente");
 
