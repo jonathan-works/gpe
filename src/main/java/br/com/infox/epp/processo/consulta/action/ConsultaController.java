@@ -83,8 +83,7 @@ public class ConsultaController extends AbstractController {
         return filtrarAnexos(list);
     }
 
-    private List<Documento> filtrarPorTarefa(
-            List<Documento> list, Long taskId) {
+    private List<Documento> filtrarPorTarefa(List<Documento> list, Long taskId) {
         if (!showAllDocuments && taskId != null) {
             List<Documento> ret = new ArrayList<Documento>();
             for (Documento documento : list) {

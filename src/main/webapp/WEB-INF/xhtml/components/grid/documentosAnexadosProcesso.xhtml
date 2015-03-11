@@ -42,8 +42,7 @@
         <wi:selectBooleanRadio id="sistema"
             label="#{infoxMessages['anexosProcesso.showAllDocuments']}"
             value="#{consultaController.showAllDocuments}">
-            <a:ajax execute="@this" event="change"
-                render="documentosAnexadosList"></a:ajax>
+            <a:ajax execute="@this" event="change" render="documentosAnexadosListPanel"/>
         </wi:selectBooleanRadio>
     </s:div>
     <wi:assinaturaPopup id="assinaturaDocumentoPopup" afterRender="documentosAnexadosList" />
