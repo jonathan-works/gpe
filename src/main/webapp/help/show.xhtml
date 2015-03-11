@@ -43,7 +43,7 @@
         <s:div id="resultado">
             <h:outputText
                 value="#{infoxMessages['ajuda.noResult']}"
-                rendered="#{empty ajudaView.resultadoPesquisa and !empty ajudaView.textoPesquisa}"
+                rendered="#{empty ajudaView.resultadoPesquisa and not empty ajudaView.textoPesquisa}"
                 styleClass="sem-resultado-ajuda" />
         </s:div>
         <infox:tabPanel
@@ -71,11 +71,11 @@
             <infox:tab
                 id="search"
                 name="search"
-                rendered="#{!empty ajudaView.resultadoPesquisa and !empty ajudaView.textoPesquisa}"
+                rendered="#{!empty ajudaView.resultadoPesquisa and not empty ajudaView.textoPesquisa}"
                 title="#{infoxMessages['ajuda.result']}">
                 <h:dataTable
                     id="helpResult"
-                    rendered="#{! empty ajudaView.textoPesquisa}"
+                    rendered="#{not empty ajudaView.textoPesquisa}"
                     value="#{ajudaView.resultadoPesquisa}"
                     var="v">
                     <h:column>

@@ -40,7 +40,7 @@
             onclick="return confirm(\'#{infoxMessages['movimentar.confirmLiberarTarefa']}\');"
             limitRender="true"
             oncomplete="close()"
-            rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty taskBean.usuarioTaskInstance.usuario) and key eq processoHandler.taskBean.size() - 1}">
+            rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty taskBean.usuarioTaskInstance.usuario) and key eq processoHandler.taskBeanList.size() - 1}">
             <h:graphicImage
               url="#{wiSkin.imageFolder}/unlocked.gif"
               title="#{infoxMessages['movimentar.liberarTarefa']}" />

@@ -12,6 +12,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
@@ -111,7 +113,7 @@ public class AjudaView implements Serializable {
 
     @SuppressWarnings({ RAWTYPES })
     public List getResultadoPesquisa() throws ParseException {
-        if (getTextoPesquisa() == null) {
+        if (Strings.isNullOrEmpty(getTextoPesquisa())) {
             return new ArrayList<>();
         }
         if (resultado == null) {
