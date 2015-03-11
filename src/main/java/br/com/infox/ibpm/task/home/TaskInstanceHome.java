@@ -7,13 +7,16 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -45,12 +48,11 @@ import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -65,11 +67,10 @@ import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
-import br.com.infox.epp.processo.documento.assinatura.DadosDocumentoAssinavel;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -100,391 +101,394 @@ import br.com.itx.component.AbstractHome;
 @Scope(ScopeType.CONVERSATION)
 public class TaskInstanceHome implements Serializable {
 
-    private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
-            + "neste registro, verifique se ele não foi movimentado";
-    private static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
-    private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "taskInstanceHome";
-    private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
-    private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
+	private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
+			+ "neste registro, verifique se ele não foi movimentado";
+	private static final String UPDATED_VAR_NAME = "isTaskHomeUpdated";
+	private static final LogProvider LOG = Logging.getLogProvider(TaskInstanceHome.class);
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "taskInstanceHome";
+	private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
+	private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
 
-    @In
-    private SituacaoProcessoDAO situacaoProcessoDAO;
-    @In
-    private ProcessoManager processoManager;
-    @In
-    private ProcessoTarefaManager processoTarefaManager;
-    @In
-    private TaskInstanceManager taskInstanceManager;
-    @In
-    private ModeloDocumentoManager modeloDocumentoManager;
-    @In
-    private UserHandler userHandler;
-    @In
-    private AssinaturaDocumentoService assinaturaDocumentoService;
-    @In
-    private VariableTypeResolver variableTypeResolver;
-    @In(create=true)
-    private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
-    @In
-    private DocumentoManager documentoManager;
-    @In
-    private DocumentoBinManager documentoBinManager;
-    @In
-    private InfoxMessages infoxMessages;
-    @In
-    private CertificateSignatures certificateSignatures;
-    @In
-    private PathResolver pathResolver;
-    
-    private TaskInstance taskInstance;
-    private Map<String, Object> mapaDeVariaveis;
-    private String variavelDocumento;
-    private Long taskId;
-    private List<Transition> availableTransitions;
-    private List<Transition> leavingTransitions;
-    private ModeloDocumento modeloDocumento;
-    private String varName;
-    private String name;
-    private Boolean assinado = Boolean.FALSE;
-    private TaskInstance currentTaskInstance;
-    private Map<String, DadosDocumentoAssinavel> documentosAssinaveis;
-    private Map<String, ClassificacaoDocumento> classificacoesVariaveisUpload;
-    private Documento documentoToSign;
-    private String tokenToSign;
+	@In
+	private SituacaoProcessoDAO situacaoProcessoDAO;
+	@In
+	private ProcessoManager processoManager;
+	@In
+	private ProcessoTarefaManager processoTarefaManager;
+	@In
+	private TaskInstanceManager taskInstanceManager;
+	@In
+	private ModeloDocumentoManager modeloDocumentoManager;
+	@In
+	private UserHandler userHandler;
+	@In
+	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@In
+	private VariableTypeResolver variableTypeResolver;
+	@In(create = true)
+	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
+	@In
+	private DocumentoManager documentoManager;
+	@In
+	private DocumentoBinManager documentoBinManager;
+	@In
+	private InfoxMessages infoxMessages;
+	@In
+	private CertificateSignatures certificateSignatures;
+	@In
+	private PathResolver pathResolver;
+	@In
+	private ProcessoEpaHome processoEpaHome;
 
-    private URL urlRetornoAcessoExterno;
-    private String documentoAAssinar;
+	private TaskInstance taskInstance;
+	private Map<String, Object> mapaDeVariaveis;
+	private String variavelDocumento;
+	private Long taskId;
+	private List<Transition> availableTransitions;
+	private List<Transition> leavingTransitions;
+	private ModeloDocumento modeloDocumento;
+	private String varName;
+	private String name;
+	private TaskInstance currentTaskInstance;
+	private Map<String, Documento> variaveisDocumento;
+	private Documento documentoToSign;
+	private String tokenToSign;
 
-    private boolean canClosePanelVal;
-    private boolean taskCompleted;
+	private URL urlRetornoAcessoExterno;
 
-    public void createInstance() {
-        taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        if (mapaDeVariaveis == null && taskInstance != null) {
-            variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
-            mapaDeVariaveis = new HashMap<String, Object>();
-            documentosAssinaveis = new HashMap<>();
-            classificacoesVariaveisUpload = new HashMap<>();
-            retrieveVariables();
-        }
-    }
+	private boolean canClosePanelVal;
+	private boolean taskCompleted;
 
-    @SuppressWarnings(UNCHECKED)
-    private void retrieveVariables() {
-        TaskController taskController = taskInstance.getTask()
-                .getTaskController();
-        if (taskController != null) {
-            List<VariableAccess> list = taskController.getVariableAccesses();
-            for (VariableAccess variableAccess : list) {
-                retrieveVariable(variableAccess);
-            }
-            // Atualizar as transições possiveis. Isso é preciso, pois as
-            // condições das transições são avaliadas antes deste metodo ser
-            // executado.
-            updateTransitions();
-        }
-    }
+	public void createInstance() {
+		taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+		if (mapaDeVariaveis == null && taskInstance != null) {
+			variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
+			mapaDeVariaveis = new HashMap<String, Object>();
+			variaveisDocumento = new HashMap<>();
+			retrieveVariables();
+		}
+	}
 
-    private void retrieveVariable(VariableAccess variableAccess) {
-        final TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
-        variableRetriever.retrieveVariableContent();
-        mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
-        if (variableRetriever.isEditor()) {
-            DadosDocumentoAssinavel dados = new DadosDocumentoAssinavel();
-            Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
-            if (id != null) {
-                DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
-                Documento pd = documentoManager.find(id);
-                if (pd != null) {
-                    dados.setIdDocumento(id);
-                    dados.setClassificacao(pd.getClassificacaoDocumento());
-                    dados.setMinuta(pd.getDocumentoBin().isMinuta());
-                }
-            }
-            List<ClassificacaoDocumento> useableTipoProcessoDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true, getVariableName(variableRetriever.getName()), ((Processo)ProcessoEpaHome.instance().getInstance()).getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
-            if (useableTipoProcessoDocumento != null && useableTipoProcessoDocumento.size()>0 && dados.getClassificacao() == null){
-                dados.setClassificacao(useableTipoProcessoDocumento.get(0));
-            }
-            documentosAssinaveis.put(getFieldName(variableRetriever.getName()), dados);
-        } else if (variableRetriever.isVariableType(VariableType.FILE)) {
-            Integer id = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
-            if (id != null) {
-                DocumentoManager documentoManger = ComponentUtil.getComponent(DocumentoManager.NAME);
-                Documento pd = documentoManger.find(id);
-                classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), pd.getClassificacaoDocumento());
-            } else {
-                classificacoesVariaveisUpload.put(getFieldName(variableRetriever.getName()), null);
-            }
-        }
-        setModeloWhenExists(variableRetriever);
-    }
+	@SuppressWarnings(UNCHECKED)
+	private void retrieveVariables() {
+		TaskController taskController = taskInstance.getTask().getTaskController();
+		if (taskController != null) {
+			List<VariableAccess> list = taskController.getVariableAccesses();
+			for (VariableAccess variableAccess : list) {
+				retrieveVariable(variableAccess);
+			}
+			// Atualizar as transições possiveis. Isso é preciso, pois as
+			// condições das transições são avaliadas antes deste metodo ser
+			// executado.
+			updateTransitions();
+		}
+	}
 
-    private void setModeloWhenExists(TaskVariableRetriever variableRetriever) {
-        String modelo = getModeloFromProcessInstance(variableRetriever.getName());
-        if (modelo != null) {
-            variavelDocumento = variableRetriever.getName();
-            if (!variableRetriever.hasVariable()) {
-                setModeloDocumento(getModeloDocumentoFromModelo(modelo));
-            }
-        }
-    }
-
-    private String getModeloFromProcessInstance(String variableName) {
-        return (String) ProcessInstance.instance().getContextInstance()
-                .getVariable(variableName + "Modelo");
-    }
-
-    private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
-        String s = modelo.split(",")[0].trim();
-        return modeloDocumentoManager.find(Integer.parseInt(s));
-    }
-
-    public Map<String, Object> getInstance() {
-        createInstance();
-        return mapaDeVariaveis;
-    }
-
-    // Método que será chamado pelo botão "Assinar Digitalmente"
-    public void assinarDocumento(String idEditor) {
-        documentoAAssinar = idEditor;
-        this.update();
-    }
-
-    public boolean update() {
-        prepareForUpdate();
-        if (possuiTask()) {
-            TaskController taskController = taskInstance.getTask()
-                    .getTaskController();
-            TaskPageAction taskPageAction = ComponentUtil
-                    .getComponent(TaskPageAction.NAME);
-            if (taskController != null) {
-                if (!taskPageAction.getHasTaskPage()) {
-                    try {
-                        updateVariables(taskController);
-                    } catch (BusinessException e) {
-                        LOG.error("", e);
-                        FacesMessages.instance().clear();
-                        FacesMessages.instance().add(e.getMessage());
-                        return false;
-                    }
-                }
-                completeUpdate();
-            }
-        }
-        return true;
-    }
-
-    private void prepareForUpdate() {
-        modeloDocumento = null;
-        taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-    }
-
-    private void completeUpdate() {
-        Contexts.getBusinessProcessContext().flush();
-        ContextFacade.setToEventContext(UPDATED_VAR_NAME, true);
-        updateIndex();
-        updateTransitions();
-        // Necessário para gravar a prioridade do processo ao clicar no botão
-        // Gravar
-        // Não pode usar ProcessoEpaHome.instance().update() porque por algum
-        // motivo dá um NullPointerException
-        // ao finalizar a tarefa, algo relacionado às mensagens do Seam
-        taskInstanceManager.flush();
-    }
-
-    private boolean possuiTask() {
-        return (taskInstance != null) && (taskInstance.getTask() != null);
-    }
-
-    @SuppressWarnings(UNCHECKED)
-    private void updateVariables(TaskController taskController) {
-        List<VariableAccess> list = taskController.getVariableAccesses();
-        for (VariableAccess variableAccess : list) {
-            updateVariable(variableAccess);
-        }
-    }
-
-    private void updateVariable(VariableAccess variableAccess) {
-        boolean documentoCorreto = false;
-        String fieldName = getFieldName(variableAccess.getMappedName().split(":")[1]);
-        if (documentoAAssinar != null && fieldName.equals(documentoAAssinar)) {
-            documentoCorreto = true;
-        }
-        TaskVariableResolver variableResolver = new TaskVariableResolver(
-                variableAccess, taskInstance, documentoCorreto);
-
-        if (variableAccess.isWritable()) {
-            if (variableResolver.isEditor() && variableAccess.isReadable()) {
-            	DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
-                ProcessoEpaHome processoEpaHome = ProcessoEpaHome.instance();
-                processoEpaHome.setClassificacaoDocumento(dados.getClassificacao());
-                processoEpaHome.setSignature(dados.getSignature());
-                processoEpaHome.setCertChain(dados.getCertChain());
-            }
-            variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
-            variableResolver.resolve();
-            if (variableResolver.isEditor()) {
-            	DadosDocumentoAssinavel dados = documentosAssinaveis.get(fieldName);
-            	Documento documento = documentoManager.find(variableResolver.getValue());
-            	documento.getDocumentoBin().setMinuta(dados.isMinuta());
-            	try {
-					documentoManager.update(documento);
-				} catch (DAOException e) {
-					throw new BusinessException("Erro ao atualizar documento", e);
+	private void retrieveVariable(VariableAccess variableAccess) {
+		TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
+		variableRetriever.retrieveVariableContent();
+		mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
+		if (variableRetriever.isEditor() || variableRetriever.isFile()) {
+			Integer idDocumento = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
+			Documento documento = null;
+			if (idDocumento != null) {
+				documento = documentoManager.find(idDocumento);
+			} else {
+				documento = new Documento();
+				loadClassificacaoDocumentoDefault(variableRetriever, documento);
+				if (variableRetriever.isEditor()) {
+					documento.setDocumentoBin(new DocumentoBin());
 				}
-                if (documentoCorreto) {
-                    if (!variableResolver.isEditorAssinado()) {
-                        assinado = false;
-                    } else {
-                        assinado = assinado || documentoAAssinar != null;
-                        dados.setIdDocumento(documento.getId());
-                    }
-                    documentoAAssinar = null;
-                } else {
-                    assinado = assinado || documentoAAssinar != null;
-                }
-            } else if (variableResolver.getType() == VariableType.FILE) {
-                Contexts.getBusinessProcessContext().flush();
-                retrieveVariable(variableAccess);
-            }
-        }
-    }
+			}
+			variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
+			if (variableRetriever.isEditor() && documento.getId() == null) {
+				setModeloWhenExists(variableRetriever, documento);
+			}
+		}
+	}
 
-    private Boolean checkAccess() {
-        int idProcesso = ProcessoEpaHome.instance().getInstance().getIdProcesso();
-        Integer idUsuarioLogin = Authenticator.getUsuarioLogado().getIdUsuarioLogin();
-        if (processoManager.checkAccess(idProcesso, idUsuarioLogin, taskId)) {
-            return Boolean.TRUE;
-        } else {
-            acusarUsuarioSemAcesso();
-            return Boolean.FALSE;
-        }
-    }
+	private void loadClassificacaoDocumentoDefault(TaskVariableRetriever variableRetriever, Documento documento) {
+		Integer idFluxo = processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
+		List<ClassificacaoDocumento> classificacoes = getUseableClassificacaoDocumento(false, variableRetriever.getName(), idFluxo);
+		if (classificacoes != null && classificacoes.size() == 1) {
+			documento.setClassificacaoDocumento(classificacoes.get(0));
+		}
+	}
 
-    public void update(Object homeObject) {
-        if (checkAccess()) {
-            canDoOperation();
-            if (homeObject instanceof AbstractHome<?>) {
-                AbstractHome<?> home = (AbstractHome<?>) homeObject;
-                home.update();
-            }
-            update();
-        }
-    }
+	private void setModeloWhenExists(TaskVariableRetriever variableRetriever, Documento documentoEditor) {
+		String modelo = getModeloFromProcessInstance(variableRetriever.getName());
+		if (modelo != null) {
+			variavelDocumento = variableRetriever.getName();
+			if (!variableRetriever.hasVariable()) {
+				setModeloDocumento(getModeloDocumentoFromModelo(modelo));
+			}
+		}
+	}
 
-    public void persist(Object homeObject) {
-        if (checkAccess()) {
-            canDoOperation();
-            if (homeObject instanceof AbstractHome<?>) {
-                AbstractHome<?> home = (AbstractHome<?>) homeObject;
-                Object entity = home.getInstance();
-                home.persist();
-                Object idObject = EntityUtil.getEntityIdObject(entity);
-                home.setId(idObject);
-                if (varName != null) {
-                    mapaDeVariaveis.put(getFieldName(varName), idObject);
-                }
-                update();
-            }
-        }
-    }
+	private String getModeloFromProcessInstance(String variableName) {
+		return (String) ProcessInstance.instance().getContextInstance().getVariable(variableName + "Modelo");
+	}
 
-    private void canDoOperation() {
-        if (getCurrentTaskInstance() != null) {
-            if (canOpenTask()) {
-                return;
-            }
-            acusarUsuarioSemAcesso();
-        }
-    }
+	private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
+		String s = modelo.split(",")[0].trim();
+		return modeloDocumentoManager.find(Integer.parseInt(s));
+	}
 
-    private void acusarUsuarioSemAcesso() {
-        FacesMessages.instance().clear();
-        throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
-    }
+	public Map<String, Object> getInstance() {
+		createInstance();
+		return mapaDeVariaveis;
+	}
 
-    private boolean canOpenTask() {
-    	MetadadoProcesso metadadoProcesso = ProcessoEpaHome.instance().getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
-    	TipoProcesso tipoProcesso = (metadadoProcesso != null ? metadadoProcesso.<TipoProcesso>getValue() : null);
-        return situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId(), tipoProcesso);
-    }
+	public boolean update() {
+		prepareForUpdate();
+		if (possuiTask()) {
+			TaskController taskController = taskInstance.getTask().getTaskController();
+			TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
+			if (taskController != null) {
+				if (!taskPageAction.getHasTaskPage()) {
+					try {
+						updateVariables(taskController);
+					} catch (BusinessException e) {
+						LOG.error("", e);
+						FacesMessages.instance().clear();
+						FacesMessages.instance().add(e.getMessage());
+						return false;
+					}
+				}
+				completeUpdate();
+			}
+		}
+		return true;
+	}
 
-    private TaskInstance getCurrentTaskInstance() {
-        if (currentTaskInstance == null) {
-            currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        }
-        return currentTaskInstance;
-    }
+	private void prepareForUpdate() {
+		modeloDocumento = null;
+		taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+	}
 
-    public String getTaskNodeDescription() {
-        if (currentTaskInstance == null) {
-            currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        }
-        return currentTaskInstance.getTask().getTaskNode().getDescription();
-    }
+	private void completeUpdate() {
+		Contexts.getBusinessProcessContext().flush();
+		ContextFacade.setToEventContext(UPDATED_VAR_NAME, true);
+		updateIndex();
+		updateTransitions();
+		// Necessário para gravar a prioridade do processo ao clicar no botão
+		// Gravar
+		// Não pode usar ProcessoEpaHome.instance().update() porque por algum
+		// motivo dá um NullPointerException
+		// ao finalizar a tarefa, algo relacionado às mensagens do Seam
+		taskInstanceManager.flush();
+	}
 
-    public void updateIndex() {
-        TaskConteudoDAO taskConteudoDAO = ComponentUtil
-                .getComponent(TaskConteudoDAO.NAME);
-        TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
-        int idProcesso = ProcessoEpaHome.instance().getInstance().getIdProcesso();
-        if (taskConteudo != null) {
-            try {
-                taskConteudoDAO.update(taskConteudo);
-            } catch (DAOException e) {
-                LOG.error("Não foi possível reindexar o conteúdo da TaskInstance " + getTaskId(), e);
-            }
-        } else {
-            taskConteudo = new TaskConteudo();
-            taskConteudo.setNumeroProcesso(idProcesso);
-            taskConteudo.setIdTaskInstance(getTaskId());
-            try {
-                taskConteudoDAO.persist(taskConteudo);
-            } catch (DAOException e) {
-                LOG.error(
-                        "Não foi possível indexar o conteúdo da TaskInstance "
-                                + getTaskId(), e);
-            }
-        }
-    }
-    
-    public boolean podeAssinarDocumento(String variableName) {
-    	Pair<String, VariableType> variableType = variableTypeResolver.getVariableTypeMap().get(variableName);
-    	Integer idDocumento = (Integer)  org.jboss.seam.bpm.TaskInstance.instance().getVariable(variableType.getLeft());
-    	if (idDocumento != null) {
-    		Documento documento = documentoManager.find(idDocumento);
-    		documentoBinManager.refresh(documento.getDocumentoBin());
-			return !documento.isDocumentoAssinado(Authenticator.getPapelAtual()) && !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado()) 
-						&& documento.isDocumentoAssinavel(Authenticator.getPapelAtual());
-    	}
-    	return false;
-    }
-    
-    public String getViewUrlDownload(String variableName) {
-    	Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:"+variableName);
-    	Documento documento = documentoManager.find(idDocumento);
-    	if (documento.getDocumentoBin().isBinario()) {
-            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
-        }
-        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());
-    }
-    
-    private void prepareDocumentToSign(String variavelToSign) {
-    	Pair<String, VariableType> variableType = variableTypeResolver.getVariableTypeMap().get(variavelToSign);
-    	Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable(variableType.getLeft());
-    	setDocumentoToSign(documentoManager.find(idDocumento));
-    }
-    
-    public void assinarDocumento() {
-    	CertificateSignatureBundleBean certificateSignatureBundle = certificateSignatures.get(tokenToSign);
-    	if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-    		FacesMessages.instance().add("Erro ao assinar"); 
-    	} else {
-    		CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
-    		try {
-				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(),  Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(),  signatureBean.getSignature());
+	private boolean possuiTask() {
+		return (taskInstance != null) && (taskInstance.getTask() != null);
+	}
+
+	@SuppressWarnings(UNCHECKED)
+	private void updateVariables(TaskController taskController) {
+		updateVariablesEditorContent();
+		List<VariableAccess> list = taskController.getVariableAccesses();
+		for (VariableAccess variableAccess : list) {
+			updateVariable(variableAccess);
+		}
+	}
+
+	private void updateVariablesEditorContent() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		Enumeration<String> requestParamNames = request.getParameterNames();
+		while (requestParamNames.hasMoreElements()) {
+			String paramName = requestParamNames.nextElement();
+			if (paramName.endsWith("Editor")){
+				String paramValue = request.getParameter(paramName);
+				int lastIndexNamedContainer = paramName.lastIndexOf(":") + 1;
+				int lastIndexOfEditor = paramName.lastIndexOf("Editor");
+				String variableFieldName = paramName.substring(lastIndexNamedContainer, lastIndexOfEditor);
+				Documento documento = variaveisDocumento.get(variableFieldName);
+				documento.getDocumentoBin().setModeloDocumento(paramValue);
+			}
+		}
+	}
+
+	private void updateVariable(VariableAccess variableAccess) {
+		TaskVariableResolver variableResolver = new TaskVariableResolver(variableAccess, taskInstance);
+		if (variableAccess.isWritable()) {
+			variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
+			variableResolver.resolve();
+			if (variableResolver.isEditor()) {
+				Documento documento = variaveisDocumento.get(getFieldName(variableResolver.getName()));
+				try {
+					updateVariableEditor(documento, variableAccess);
+					variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
+					variableResolver.resolve();
+				} catch (DAOException e) {
+					LOG.error("updateVariable(variableAccess)", e);
+				}
+			} else if (variableResolver.isFile()) {
+				Contexts.getBusinessProcessContext().flush();
+				retrieveVariable(variableAccess);
+			}
+		}
+	}
+
+	private void updateVariableEditor(Documento documento, VariableAccess variableAccess) throws DAOException {
+		if (documento.getId() != null) {
+			documentoBinManager.update(documento.getDocumentoBin());
+			documentoManager.update(documento);
+		} else {
+			if (documento.getClassificacaoDocumento() != null) {
+				createVariableEditor(documento, variableAccess);
+			}
+		}
+		taskInstance.setVariable(variableAccess.getMappedName(), documento.getId());
+		mapaDeVariaveis.put(getFieldName(variableAccess.getVariableName()), documento.getDocumentoBin().getModeloDocumento());
+		variaveisDocumento.put(getFieldName(variableAccess.getVariableName()), documento);
+	}
+
+	private void createVariableEditor(Documento documento, VariableAccess variableAccess) throws DAOException {
+		DocumentoBin documentoBin = documento.getDocumentoBin();
+		documentoBin.setDataInclusao(new Date());
+		documentoBin.setMinuta(false);
+		if (documentoBin.getModeloDocumento() == null) {
+			documentoBin.setModeloDocumento("");
+		}
+		documentoBin.setMd5Documento(MD5Encoder.encode(documentoBin.getModeloDocumento()));
+		documentoBinManager.persist(documentoBin);
+		documento.setProcesso(processoEpaHome.getInstance());
+		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
+		String descricao = JbpmUtil.instance().getMessages().get(variableAccess.getMappedName().split(":")[1]);
+		documento.setDescricao(descricao == null ? "-" : descricao);
+		documentoManager.persist(documento);
+	}
+
+	private Boolean checkAccess() {
+		int idProcesso = processoEpaHome.getInstance().getIdProcesso();
+		Integer idUsuarioLogin = Authenticator.getUsuarioLogado().getIdUsuarioLogin();
+		if (processoManager.checkAccess(idProcesso, idUsuarioLogin, taskId)) {
+			return Boolean.TRUE;
+		} else {
+			acusarUsuarioSemAcesso();
+			return Boolean.FALSE;
+		}
+	}
+
+	public void update(Object homeObject) {
+		if (checkAccess()) {
+			canDoOperation();
+			if (homeObject instanceof AbstractHome<?>) {
+				AbstractHome<?> home = (AbstractHome<?>) homeObject;
+				home.update();
+			}
+			update();
+		}
+	}
+
+	public void persist(Object homeObject) {
+		if (checkAccess()) {
+			canDoOperation();
+			if (homeObject instanceof AbstractHome<?>) {
+				AbstractHome<?> home = (AbstractHome<?>) homeObject;
+				Object entity = home.getInstance();
+				home.persist();
+				Object idObject = EntityUtil.getEntityIdObject(entity);
+				home.setId(idObject);
+				if (varName != null) {
+					mapaDeVariaveis.put(getFieldName(varName), idObject);
+				}
+				update();
+			}
+		}
+	}
+
+	private void canDoOperation() {
+		if (getCurrentTaskInstance() != null) {
+			if (canOpenTask()) {
+				return;
+			}
+			acusarUsuarioSemAcesso();
+		}
+	}
+
+	private void acusarUsuarioSemAcesso() {
+		FacesMessages.instance().clear();
+		throw new ApplicationException(MSG_USUARIO_SEM_ACESSO);
+	}
+
+	private boolean canOpenTask() {
+		MetadadoProcesso metadadoProcesso = processoEpaHome.getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
+		TipoProcesso tipoProcesso = (metadadoProcesso != null ? metadadoProcesso.<TipoProcesso> getValue() : null);
+		return situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId(), tipoProcesso);
+	}
+
+	private TaskInstance getCurrentTaskInstance() {
+		if (currentTaskInstance == null) {
+			currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+		}
+		return currentTaskInstance;
+	}
+
+	public String getTaskNodeDescription() {
+		if (currentTaskInstance == null) {
+			currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+		}
+		return currentTaskInstance.getTask().getTaskNode().getDescription();
+	}
+
+	public void updateIndex() {
+		TaskConteudoDAO taskConteudoDAO = ComponentUtil.getComponent(TaskConteudoDAO.NAME);
+		TaskConteudo taskConteudo = taskConteudoDAO.find(getTaskId());
+		int idProcesso = processoEpaHome.getInstance().getIdProcesso();
+		if (taskConteudo != null) {
+			try {
+				taskConteudoDAO.update(taskConteudo);
+			} catch (DAOException e) {
+				LOG.error("Não foi possível reindexar o conteúdo da TaskInstance " + getTaskId(), e);
+			}
+		} else {
+			taskConteudo = new TaskConteudo();
+			taskConteudo.setNumeroProcesso(idProcesso);
+			taskConteudo.setIdTaskInstance(getTaskId());
+			try {
+				taskConteudoDAO.persist(taskConteudo);
+			} catch (DAOException e) {
+				LOG.error("Não foi possível indexar o conteúdo da TaskInstance " + getTaskId(), e);
+			}
+		}
+	}
+
+	public boolean podeAssinarDocumento(String variableName) {
+		Pair<String, VariableType> variableType = variableTypeResolver.getVariableTypeMap().get(variableName);
+		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable(variableType.getLeft());
+		if (idDocumento != null) {
+			Documento documento = documentoManager.find(idDocumento);
+			documentoBinManager.refresh(documento.getDocumentoBin());
+			return !documento.isDocumentoAssinado(Authenticator.getPapelAtual())
+					&& !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())
+					&& documento.isDocumentoAssinavel(Authenticator.getPapelAtual());
+		}
+		return false;
+	}
+
+	public String getViewUrlDownload(String variableName) {
+		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:" + variableName);
+		Documento documento = documentoManager.find(idDocumento);
+		if (documento.getDocumentoBin().isBinario()) {
+			return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
+		}
+		return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());
+	}
+
+	public void assinarDocumento() {
+		if (documentoToSign == null) {
+			FacesMessages.instance().add("Sem documento para assinar");
+		}
+		CertificateSignatureBundleBean certificateSignatureBundle = certificateSignatures.get(tokenToSign);
+		if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+			FacesMessages.instance().add("Erro ao assinar");
+		} else {
+			CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
+			try {
+				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(), Authenticator.getUsuarioPerfilAtual(),
+						signatureBean.getCertChain(), signatureBean.getSignature());
 			} catch (CertificadoException | AssinaturaException | DAOException e) {
 				FacesMessages.instance().add(e.getMessage());
 				LOG.error("assinarDocumento()", e);
@@ -493,57 +497,58 @@ public class TaskInstanceHome implements Serializable {
 				setVariavelDocumentoToSign(null);
 				setTokenToSign(null);
 			}
-    	}
-    }
-    
-    @Observer(Event.EVENTTYPE_TASK_CREATE)
-    public void setCurrentTaskInstance(ExecutionContext context) {
-    	setCurrentTaskInstance(context.getTaskInstance());
-    }
-    
-    public void setCurrentTaskInstance(TaskInstance taskInstance) {
-        try {
-            this.currentTaskInstance = taskInstance;
-        } catch (Exception ex) {
-            String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
-            LOG.warn(action, ex);
-            throw new ApplicationException(ApplicationException.createMessage(
-                    action + ex.getLocalizedMessage(),
-                    "setCurrentTaskInstance()", "TaskInstanceHome", "BPM"), ex);
-        }
-    }
+		}
+	}
 
-    public String end(String transition) {
-        if (checkAccess()) {
-            checkCurrentTask();
-            if (!update()) {
-                return null;
-            }
-            if (!validarAssinaturaDocumentosAoMovimentar()) {
-            	return null;
-            }
-            if (!validFileUpload()) {
-                return null;
-            }
-            limparEstado();
-            finalizarTaskDoJbpm(transition);
-            // Flush para que a consulta do canOpenTask consiga ver o pooled actor que o jbpm criou
-            // no TaskInstance#create, caso contrário, o epp achará que o usuário não pode ver a tarefa seguinte,
-            // mesmo que possa
-            try {
+	@Observer(Event.EVENTTYPE_TASK_CREATE)
+	public void setCurrentTaskInstance(ExecutionContext context) {
+		setCurrentTaskInstance(context.getTaskInstance());
+	}
+
+	public void setCurrentTaskInstance(TaskInstance taskInstance) {
+		try {
+			this.currentTaskInstance = taskInstance;
+		} catch (Exception ex) {
+			String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
+			LOG.warn(action, ex);
+			throw new ApplicationException(ApplicationException.createMessage(action + ex.getLocalizedMessage(),
+					"setCurrentTaskInstance()", "TaskInstanceHome", "BPM"), ex);
+		}
+	}
+
+	public String end(String transition) {
+		if (checkAccess()) {
+			checkCurrentTask();
+			if (!update()) {
+				return null;
+			}
+			if (!validarAssinaturaDocumentosAoMovimentar()) {
+				return null;
+			}
+			if (!validFileUpload()) {
+				return null;
+			}
+			this.currentTaskInstance = null;
+			finalizarTaskDoJbpm(transition);
+			// Flush para que a consulta do canOpenTask consiga ver o pooled
+			// actor que o jbpm criou
+			// no TaskInstance#create, caso contrário, o epp achará que o
+			// usuário não pode ver a tarefa seguinte,
+			// mesmo que possa
+			try {
 				if (Transaction.instance().isActive()) {
 					JbpmUtil.getJbpmSession().flush();
 				}
 			} catch (HibernateException | SystemException e) {
 				LOG.error("", e);
 			}
-            atualizarPaginaDeMovimentacao();
-        }
-        return null;
-    }
+			atualizarPaginaDeMovimentacao();
+		}
+		return null;
+	}
 
-    @SuppressWarnings("unchecked")
-    private boolean validarAssinaturaDocumentosAoMovimentar() {
+	@SuppressWarnings("unchecked")
+	private boolean validarAssinaturaDocumentosAoMovimentar() {
 		Map<String, Object> variableMap = org.jboss.seam.bpm.TaskInstance.instance().getVariableInstances();
 		FacesMessages.instance().clear();
 		boolean isAssinaturaOk = true;
@@ -566,413 +571,354 @@ public class TaskInstanceHome implements Serializable {
 
 	private boolean validarAssinaturaDocumento(Documento documento) {
 		if (documento.isAssinaturaObrigatoria(Authenticator.getPapelAtual())) {
-			return  documento.hasAssinaturaSuficiente() || documento.isDocumentoAssinado(Authenticator.getPapelAtual());
+			return documento.hasAssinaturaSuficiente() || documento.isDocumentoAssinado(Authenticator.getPapelAtual());
 		}
 		return true;
 	}
 
 	private boolean validFileUpload() {
-        // TODO verificar se é necessária a mesma validação do update para
-        // quando não há taskPage
-        if (possuiTask()) {
-            TaskController taskController = taskInstance.getTask()
-                    .getTaskController();
-            if (taskController == null) {
-                return true;
-            }
-            List<?> list = taskController.getVariableAccesses();
-            for (Object object : list) {
-                VariableAccess var = (VariableAccess) object;
-                if (var.isRequired()
-                        && var.getMappedName().split(":")[0].equals("FILE")
-                        && getInstance().get(
-                                getFieldName(var.getVariableName())) == null) {
-                    String label = JbpmUtil
-                            .instance()
-                            .getMessages()
-                            .get(taskInstance.getProcessInstance()
-                                    .getProcessDefinition().getName()
-                                    + ":" + var.getVariableName());
-                    FacesMessages.instance().add(
-                            "O arquivo do campo " + label + " é obrigatório");
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+		// TODO verificar se é necessária a mesma validação do update para
+		// quando não há taskPage
+		if (possuiTask()) {
+			TaskController taskController = taskInstance.getTask().getTaskController();
+			if (taskController == null) {
+				return true;
+			}
+			List<?> list = taskController.getVariableAccesses();
+			for (Object object : list) {
+				VariableAccess var = (VariableAccess) object;
+				if (var.isRequired() && var.getMappedName().split(":")[0].equals("FILE")
+						&& getInstance().get(getFieldName(var.getVariableName())) == null) {
+					String label = JbpmUtil.instance().getMessages()
+							.get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + var.getVariableName());
+					FacesMessages.instance().add("O arquivo do campo " + label + " é obrigatório");
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
-    private void atualizarPaginaDeMovimentacao() {
-        setTaskCompleted(true);
-        // TODO: remover os efeitos colaterais do canClosePanel()
-        if (canClosePanel() && isUsuarioExterno()) {
-            redirectToAcessoExterno();
-        }
-    }
+	private void atualizarPaginaDeMovimentacao() {
+		setTaskCompleted(true);
+		// TODO: remover os efeitos colaterais do canClosePanel()
+		if (canClosePanel() && isUsuarioExterno()) {
+			redirectToAcessoExterno();
+		}
+	}
 
-    private boolean isUsuarioExterno() {
-        Authenticator authenticator = ComponentUtil
-                .getComponent("authenticator");
-        return authenticator.isUsuarioExterno();
-    }
+	private boolean isUsuarioExterno() {
+		Authenticator authenticator = ComponentUtil.getComponent("authenticator");
+		return authenticator.isUsuarioExterno();
+	}
 
-    private void redirectToAcessoExterno() {
-        Redirect red = Redirect.instance();
-        red.setViewId("/AcessoExterno/externo.seam?urlRetorno="
-                + urlRetornoAcessoExterno.toString());
-        red.setConversationPropagationEnabled(false);
-        red.execute();
-    }
+	private void redirectToAcessoExterno() {
+		Redirect red = Redirect.instance();
+		red.setViewId("/AcessoExterno/externo.seam?urlRetorno=" + urlRetornoAcessoExterno.toString());
+		red.setConversationPropagationEnabled(false);
+		red.execute();
+	}
 
-    private boolean canClosePanel() {
-        if (this.currentTaskInstance == null) {
-            setCanClosePanelVal(true);
-            return true;
-        } else if ( canOpenTask() ) {
-            setTaskId(currentTaskInstance.getId());
-            FacesMessages.instance().clear();
-            return false;
-        } else {
-            setCanClosePanelVal(true);
-            return true;
-        }
-    }
+	private boolean canClosePanel() {
+		if (this.currentTaskInstance == null) {
+			setCanClosePanelVal(true);
+			return true;
+		} else if (canOpenTask()) {
+			setTaskId(currentTaskInstance.getId());
+			FacesMessages.instance().clear();
+			return false;
+		} else {
+			setCanClosePanelVal(true);
+			return true;
+		}
+	}
 
-    private void finalizarTaskDoJbpm(String transition) {
-        try {
-            BusinessProcess.instance().endTask(transition);
-            atualizarBam();
-        } catch (JbpmException e) {
-            LOG.error(".end()", e);
-        }
-    }
+	private void finalizarTaskDoJbpm(String transition) {
+		try {
+			BusinessProcess.instance().endTask(transition);
+			atualizarBam();
+		} catch (JbpmException e) {
+			LOG.error(".end()", e);
+		}
+	}
 
-    private void atualizarBam() {
-        ProcessoTarefa pt = processoTarefaManager.getByTaskInstance(taskInstance.getId());
-        Date dtFinalizacao = taskInstance.getEnd();
-        pt.setDataFim(dtFinalizacao);
-        try {
-        	processoTarefaManager.update(pt);
-        	processoTarefaManager.updateTempoGasto(dtFinalizacao, pt);
-        } catch (DAOException e) {
-            LOG.error(".atualizarBam()", e);
-        }
-    }
+	private void atualizarBam() {
+		ProcessoTarefa pt = processoTarefaManager.getByTaskInstance(taskInstance.getId());
+		Date dtFinalizacao = taskInstance.getEnd();
+		pt.setDataFim(dtFinalizacao);
+		try {
+			processoTarefaManager.update(pt);
+			processoTarefaManager.updateTempoGasto(dtFinalizacao, pt);
+		} catch (DAOException e) {
+			LOG.error(".atualizarBam()", e);
+		}
+	}
 
-    private void limparEstado() {
-        this.currentTaskInstance = null;
-        ProcessoEpaHome processoEpaHome = ComponentUtil.getComponent(ProcessoEpaHome.NAME);
-        processoEpaHome.setIdDocumento(null);
-        processoEpaHome.setCertChain(null);
-        processoEpaHome.setSignature(null);
-        processoEpaHome.setClassificacaoDocumento(null);
-    }
+	private void checkCurrentTask() {
+		TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
+		if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
+			acusarUsuarioSemAcesso();
+		}
+	}
 
-    private void checkCurrentTask() {
-        TaskInstance tempTask = org.jboss.seam.bpm.TaskInstance.instance();
-        if (currentTaskInstance != null && (tempTask == null || tempTask.getId() != currentTaskInstance.getId())) {
-            acusarUsuarioSemAcesso();
-        }
-    }
+	public void removeUsuario(final TaskInstance taskInstance) {
+		if (taskInstance != null) {
+			try {
+				taskInstanceManager.removeUsuario(taskInstance.getId());
+				afterLiberarTarefa();
+			} catch (DAOException e) {
+				LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
+			}
+		}
+	}
 
-    public void removeUsuario(final TaskInstance taskInstance) {
-        if (taskInstance != null) {
-            try {
-                taskInstanceManager.removeUsuario(taskInstance.getId());
-                afterLiberarTarefa();
-            } catch (DAOException e) {
-                LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
-            }
-        }
-    }
+	public void removeUsuario(final Long idTaskInstance) {
+		try {
+			taskInstanceManager.removeUsuario(idTaskInstance);
+			afterLiberarTarefa();
+		} catch (Exception e) {
+			LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
+		}
+	}
 
-    public void removeUsuario(final Long idTaskInstance) {
-        try {
-            taskInstanceManager.removeUsuario(idTaskInstance);
-            afterLiberarTarefa();
-        } catch (Exception e) {
-            LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
-        }
-    }
+	public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
+		try {
+			final Map<String, Object> result = processoTarefaManager.findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
+			taskInstanceManager.removeUsuario((Long) result.get("idTaskInstance"));
+			afterLiberarTarefa();
+		} catch (NoResultException e) {
+			LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
+		} catch (NonUniqueResultException e) {
+			LOG.error(".removeUsuario(idProcesso, idTarefa) - Mais de um resultado", e);
+		} catch (IllegalStateException e) {
+			LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
+		} catch (DAOException e) {
+			LOG.error(".removeUsuario(idProcesso, idTarefa) - ", e);
+		}
+	}
 
-    public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
-        try {
-            final Map<String, Object> result = processoTarefaManager
-                    .findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
-            taskInstanceManager.removeUsuario((Long) result.get("idTaskInstance"));
-            afterLiberarTarefa();
-        } catch (NoResultException e) {
-            LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
-        } catch (NonUniqueResultException e) {
-            LOG.error(
-                    ".removeUsuario(idProcesso, idTarefa) - Mais de um resultado",
-                    e);
-        } catch (IllegalStateException e) {
-            LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
-        } catch (DAOException e) {
-            LOG.error(".removeUsuario(idProcesso, idTarefa) - ", e);
-        }
-    }
+	private void afterLiberarTarefa() {
+		userHandler.clear();
+		FacesMessages.instance().clear();
+		FacesMessages.instance().add("Tarefa liberada com sucesso.");
+	}
 
-    private void afterLiberarTarefa() {
-        userHandler.clear();
-        FacesMessages.instance().clear();
-        FacesMessages.instance().add("Tarefa liberada com sucesso.");
-    }
+	public void removeUsuario() {
+		if (BusinessProcess.instance().hasCurrentTask()) {
+			try {
+				taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
+				afterLiberarTarefa();
+			} catch (DAOException e) {
+				LOG.error(".removeUsuario() - ", e);
+			}
+		} else {
+			FacesMessages.instance().add(infoxMessages.get("org.jboss.seam.TaskNotFound"));
+		}
+	}
 
-    public void removeUsuario() {
-        if (BusinessProcess.instance().hasCurrentTask()) {
-            try {
-                taskInstanceManager.removeUsuario(BusinessProcess.instance()
-                        .getTaskId());
-                afterLiberarTarefa();
-            } catch (DAOException e) {
-                LOG.error(".removeUsuario() - ", e);
-            }
-        } else {
-            FacesMessages.instance().add(infoxMessages.get("org.jboss.seam.TaskNotFound"));
-        }
-    }
+	public void start(long taskId) {
+		setTaskId(taskId);
+		BusinessProcess.instance().startTask();
+	}
 
-    public void start(long taskId) {
-        setTaskId(taskId);
-        BusinessProcess.instance().startTask();
-    }
+	public Long getTaskId() {
+		return taskId;
+	}
 
-    public Long getTaskId() {
-        return taskId;
-    }
+	public void setTaskId(Long taskId) {
+		this.taskId = taskId;
+		BusinessProcess bp = BusinessProcess.instance();
+		bp.setTaskId(taskId);
+		taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+		if (taskInstance != null) {
+			long processId = taskInstance.getProcessInstance().getId();
+			bp.setProcessId(processId);
+			updateTransitions();
+			createInstance();
+		}
+	}
 
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
-        BusinessProcess bp = BusinessProcess.instance();
-        bp.setTaskId(taskId);
-        taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        if (taskInstance != null) {
-            long processId = taskInstance.getProcessInstance().getId();
-            bp.setProcessId(processId);
-            updateTransitions();
-            createInstance();
-        }
-    }
+	public List<Transition> getTransitions() {
+		validateAndUpdateTransitions();
+		return getAvailableTransitionsFromDefinicaoDoFluxo();
+	}
 
-    public List<Transition> getTransitions() {
-        validateAndUpdateTransitions();
-        return getAvailableTransitionsFromDefinicaoDoFluxo();
-    }
+	private List<Transition> getAvailableTransitionsFromDefinicaoDoFluxo() {
+		List<Transition> list = new ArrayList<Transition>();
+		if (availableTransitions != null) {
+			for (Transition transition : leavingTransitions) {
+				// POG temporario devido a falha no JBPM de avaliar as
+				// avaliablesTransitions
+				if (availableTransitions.contains(transition) && !hasOcculTransition(transition)) {
+					list.add(transition);
+				}
+			}
+		}
+		return list;
+	}
 
-    private List<Transition> getAvailableTransitionsFromDefinicaoDoFluxo() {
-        List<Transition> list = new ArrayList<Transition>();
-        if (availableTransitions != null) {
-            for (Transition transition : leavingTransitions) {
-                // POG temporario devido a falha no JBPM de avaliar as
-                // avaliablesTransitions
-                if (availableTransitions.contains(transition)
-                        && !hasOcculTransition(transition)) {
-                    list.add(transition);
-                }
-            }
-        }
-        return list;
-    }
+	private void validateAndUpdateTransitions() {
+		validateTaskId();
+		if (hasAvailableTransitions()) {
+			updateTransitions();
+		}
+	}
 
-    private void validateAndUpdateTransitions() {
-        validateTaskId();
-        if (hasAvailableTransitions()) {
-            updateTransitions();
-        }
-    }
+	private boolean hasAvailableTransitions() {
+		return availableTransitions != null && availableTransitions.isEmpty() && taskInstance != null;
+	}
 
-    private boolean hasAvailableTransitions() {
-        return availableTransitions != null && availableTransitions.isEmpty()
-                && taskInstance != null;
-    }
+	private void validateTaskId() {
+		if (taskId == null) {
+			setTaskId(org.jboss.seam.bpm.TaskInstance.instance().getId());
+		}
+	}
 
-    private void validateTaskId() {
-        if (taskId == null) {
-            setTaskId(org.jboss.seam.bpm.TaskInstance.instance().getId());
-        }
-    }
+	public List<ModeloDocumento> getModeloItems(String variavel) {
+		ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
+		String listaModelos = elFunctions.evaluateExpression(variavel);
+		return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
+	}
 
-    public List<ModeloDocumento> getModeloItems(String variavel) {
-        ElFunctions elFunctions = (ElFunctions) Component
-                .getInstance(ElFunctions.NAME);
-        String listaModelos = elFunctions.evaluateExpression(variavel);
-        return modeloDocumentoManager
-                .getModelosDocumentoInListaModelo(listaModelos);
-    }
+	public void assignModeloDocumento(String id) {
+		String modelo = "";
+		if (modeloDocumento != null) {
+			ExpressionResolverChain chain = ExpressionResolverChainBuilder
+					.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance()
+							.getContextInstance())).and(new SeamExpressionResolver()).build();
+			modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
+		}
+		variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
+		mapaDeVariaveis.put(id.split("-")[0], modeloDocumento.getIdModeloDocumento());
+	}
 
-    public void assignModeloDocumento(final String id) {
-        String modelo = "";
-        if (modeloDocumento != null) {
-        	ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()))
-                	.and(new SeamExpressionResolver()).build();
-            modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
-        }
-        mapaDeVariaveis.put(id, modelo);
-    }
+	public static boolean hasOcculTransition(Transition transition) {
+		return transition.getDescription() != null && transition.getDescription().contains(TransitionHandler.OCCULT_TRANSITION);
+		// return OCCULT_TRANSITION.equals(transition.getCondition());
+	}
 
-    public static boolean hasOcculTransition(Transition transition) {
-        return transition.getDescription() != null
-                && transition.getDescription().contains(
-                        TransitionHandler.OCCULT_TRANSITION);
-        // return OCCULT_TRANSITION.equals(transition.getCondition());
-    }
+	@SuppressWarnings(UNCHECKED)
+	public void updateTransitions() {
+		availableTransitions = taskInstance.getAvailableTransitions();
+		leavingTransitions = taskInstance.getTask().getTaskNode().getLeavingTransitions();
+	}
 
-    @SuppressWarnings(UNCHECKED)
-    public void updateTransitions() {
-        availableTransitions = taskInstance.getAvailableTransitions();
-        leavingTransitions = taskInstance.getTask().getTaskNode()
-                .getLeavingTransitions();
-    }
+	/**
+	 * Refeita a combobox com as transições utilizando um f:selectItem pois o
+	 * componente do Seam (s:convertEntity) estava dando problemas com as
+	 * entidades do JBPM.
+	 * 
+	 * @return Lista das transições.
+	 */
+	public List<SelectItem> getTranstionsSelectItems() {
+		List<SelectItem> selectList = new ArrayList<SelectItem>();
+		for (Transition t : getTransitions()) {
+			selectList.add(new SelectItem(t.getName(), t.getName()));
+		}
+		return selectList;
+	}
 
-    /**
-     * Refeita a combobox com as transições utilizando um f:selectItem pois o
-     * componente do Seam (s:convertEntity) estava dando problemas com as
-     * entidades do JBPM.
-     * 
-     * @return Lista das transições.
-     */
-    public List<SelectItem> getTranstionsSelectItems() {
-        List<SelectItem> selectList = new ArrayList<SelectItem>();
-        for (Transition t : getTransitions()) {
-            selectList.add(new SelectItem(t.getName(), t.getName()));
-        }
-        return selectList;
-    }
+	public void clear() {
+		this.mapaDeVariaveis = null;
+		this.taskInstance = null;
+	}
 
-    public void clear() {
-        this.mapaDeVariaveis = null;
-        this.taskInstance = null;
-        this.documentoAAssinar = null;
-        this.documentosAssinaveis = null;
-    }
+	public ModeloDocumento getModeloDocumento() {
+		createInstance();
+		return modeloDocumento;
+	}
 
-    public ModeloDocumento getModeloDocumento() {
-        createInstance();
-        return modeloDocumento;
-    }
+	public void setModeloDocumento(ModeloDocumento modelo) {
+		this.modeloDocumento = modelo;
+		ExpressionResolverChain chain = ExpressionResolverChainBuilder
+				.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()))
+				.and(new SeamExpressionResolver()).build();
+		variaveisDocumento.get(getFieldName(variavelDocumento)).getDocumentoBin().setModeloDocumento(modeloDocumentoManager.evaluateModeloDocumento(modelo, chain));
+		mapaDeVariaveis.put(variavelDocumento + "Modelo", modelo.getIdModeloDocumento());
+	}
 
-    public void setModeloDocumento(ModeloDocumento modelo) {
-        this.modeloDocumento = modelo;
-        ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()))
-        	.and(new SeamExpressionResolver()).build();
-        mapaDeVariaveis.put(getFieldName(variavelDocumento),
-                modeloDocumentoManager.evaluateModeloDocumento(modelo, chain));
-    }
+	public String getHomeName() {
+		return NAME;
+	}
 
-    public String getHomeName() {
-        return NAME;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setName(String transition) {
+		this.name = transition;
+	}
 
-    public void setName(String transition) {
-        this.name = transition;
-    }
+	public static TaskInstanceHome instance() {
+		return (TaskInstanceHome) Component.getInstance(TaskInstanceHome.NAME);
+	}
 
-    public static TaskInstanceHome instance() {
-        return (TaskInstanceHome) Component.getInstance(TaskInstanceHome.NAME);
-    }
+	private String getFieldName(String name) {
+		return name + "-" + taskInstance.getId();
+	}
 
-    private String getFieldName(String name) {
-        return name + "-" + taskInstance.getId();
-    }
-    
-    public String getVariableName(String fieldName) {
-        return fieldName.split("-")[0];
-    }
+	public String getVariableName(String fieldName) {
+		return fieldName.split("-")[0];
+	}
 
-    public void setUrlRetornoAcessoExterno(URL urlRetornoAcessoExterno) {
-        this.urlRetornoAcessoExterno = urlRetornoAcessoExterno;
-    }
+	public void setUrlRetornoAcessoExterno(URL urlRetornoAcessoExterno) {
+		this.urlRetornoAcessoExterno = urlRetornoAcessoExterno;
+	}
 
-    public boolean isCanClosePanelVal() {
-        return canClosePanelVal;
-    }
+	public boolean isCanClosePanelVal() {
+		return canClosePanelVal;
+	}
 
-    public void setCanClosePanelVal(boolean canClosePanelVal) {
-        this.canClosePanelVal = canClosePanelVal;
-    }
+	public void setCanClosePanelVal(boolean canClosePanelVal) {
+		this.canClosePanelVal = canClosePanelVal;
+	}
 
-    public boolean isTaskCompleted() {
-        return taskCompleted;
-    }
+	public boolean isTaskCompleted() {
+		return taskCompleted;
+	}
 
-    public void setTaskCompleted(boolean taskCompleted) {
-        this.taskCompleted = taskCompleted;
-    }
+	public void setTaskCompleted(boolean taskCompleted) {
+		this.taskCompleted = taskCompleted;
+	}
 
-    public boolean possuiAssinatura(String idEditor) {
-        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis
-                .get(idEditor);
-        if (documentoAssinavel != null) {
-            return assinaturaDocumentoService
-                    .isDocumentoAssinado(documentoAssinavel.getIdDocumento());
-        }
-        return false;
-    }
+	@SuppressWarnings(UNCHECKED)
+	public Object getValueOfVariableFromTaskInstance(String variableName) {
+		TaskController taskController = taskInstance.getTask().getTaskController();
+		if (taskController != null) {
+			List<VariableAccess> variables = taskController.getVariableAccesses();
+			for (VariableAccess variable : variables) {
+				if (variable.getVariableName().equals(variableName)) {
+					return taskInstance.getVariable(variable.getMappedName());
+				}
+			}
+		}
+		return null;
+	}
 
-    public boolean podeRenderizarApplet(String idDocumento) {
-        DadosDocumentoAssinavel documentoAssinavel = documentosAssinaveis.get(idDocumento);
-        if (documentoAssinavel != null) {
-            UsuarioPerfil usuarioPerfilAtual = Authenticator.getUsuarioPerfilAtual();
-            Papel papel = usuarioPerfilAtual.getPerfilTemplate().getPapel();
-            ClassificacaoDocumento classificacao = documentosAssinaveis.get(idDocumento).getClassificacao();
-            if (classificacao != null) {
-            	return assinaturaDocumentoService.podeRenderizarApplet(papel, classificacao, documentoAssinavel.getIdDocumento(), usuarioPerfilAtual.getUsuarioLogin());
-            }
-        }
-        return false;
-    }
+	public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
+		return classificacaoDocumentoFacade.getTipoDocumentoEnumValues();
+	}
 
-    public Map<String, DadosDocumentoAssinavel> getDocumentosAssinaveis() {
-        return documentosAssinaveis;
-    }
-    
-    public Map<String, ClassificacaoDocumento> getClassificacoesVariaveisUpload() {
-        return classificacoesVariaveisUpload;
-    }
-    
-    @SuppressWarnings(UNCHECKED)
-    public Object getValueOfVariableFromTaskInstance(String variableName) {
-        TaskController taskController = taskInstance.getTask().getTaskController();
-        if (taskController != null) {
-            List<VariableAccess> variables = taskController.getVariableAccesses();
-            for (VariableAccess variable : variables) {
-                if (variable.getVariableName().equals(variableName)) {
-                    return taskInstance.getVariable(variable.getMappedName());
-                }
-            }
-        }
-        return null;
-    }
-    
-    public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
-        return classificacaoDocumentoFacade.getTipoDocumentoEnumValues();
-    }
+	public TipoNumeracaoEnum[] getTipoNumeracaoEnumValues() {
+		return classificacaoDocumentoFacade.getTipoNumeracaoEnumValues();
+	}
 
-    public TipoNumeracaoEnum[] getTipoNumeracaoEnumValues() {
-        return classificacaoDocumentoFacade.getTipoNumeracaoEnumValues();
-    }
+	public VisibilidadeEnum[] getVisibilidadeEnumValues() {
+		return classificacaoDocumentoFacade.getVisibilidadeEnumValues();
+	}
 
-    public VisibilidadeEnum[] getVisibilidadeEnumValues() {
-        return classificacaoDocumentoFacade.getVisibilidadeEnumValues();
-    }
+	public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
+		return classificacaoDocumentoFacade.getTipoAssinaturaEnumValues();
+	}
 
-    public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
-        return classificacaoDocumentoFacade.getTipoAssinaturaEnumValues();
-    }
-    
-    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
-        return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
-    }
+	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
+		return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
+	}
 
 	public void setVariavelDocumentoToSign(String variavelDocumentoToSign) {
 		if (variavelDocumentoToSign != null) {
-			prepareDocumentToSign(variavelDocumentoToSign);
+			updateVariablesEditorContent();
+			setDocumentoToSign(variaveisDocumento.get(variavelDocumentoToSign));
 		}
 	}
 
@@ -991,5 +937,13 @@ public class TaskInstanceHome implements Serializable {
 	public void setTokenToSign(String tokenToSign) {
 		this.tokenToSign = tokenToSign;
 	}
-	
+
+	public Map<String, Documento> getVariaveisDocumento() {
+		return variaveisDocumento;
+	}
+
+	public void setVariaveisDocumento(Map<String, Documento> variaveisDocumento) {
+		this.variaveisDocumento = variaveisDocumento;
+	}
+
 }

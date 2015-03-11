@@ -187,11 +187,6 @@ public class AssinaturaDocumentoService implements Serializable {
         return result;
     }
 
-    public Boolean isDocumentoAssinado(Integer idDoc) {
-        Documento documento = documentoManager.find(idDoc);
-        return documento != null && isDocumentoAssinado(documento);
-    }
-
     public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded,
             UsuarioLogin usuarioLogado) throws CertificadoException, AssinaturaException {
         if (Strings.isEmpty(certChainBase64Encoded)) {

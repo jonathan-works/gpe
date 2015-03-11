@@ -19,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -31,6 +32,7 @@ import org.hibernate.annotations.Type;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.constants.LengthConstants;
+import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
@@ -106,6 +108,13 @@ public class DocumentoBin implements Serializable {
     private void prePersist() {
     	if (getExtensao() != null) {
     		setMinuta(false);
+    	}
+    }
+    
+    @PreUpdate
+    private void preUpdate() {
+    	if (getModeloDocumento() != null){
+    		setMd5Documento(MD5Encoder.encode(getModeloDocumento()));
     	}
     }
     

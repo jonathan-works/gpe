@@ -37,116 +37,116 @@ import com.lowagie.text.pdf.PdfStamper;
 @Name(DocumentoBinManager.NAME)
 public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> {
 
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "documentoBinManager";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "documentoBinManager";
 
-    @In
-    private PathResolver pathResolver;
+	@In
+	private PathResolver pathResolver;
 
-    public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
-        final DocumentoBin bin = documento.getDocumentoBin();
-        if (bin.getMd5Documento() == null) {
-            bin.setMd5Documento(MD5Encoder.encode(documento.getDocumentoBin().getModeloDocumento()));
-        }
-        return persist(bin);
-    }
+	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
+		final DocumentoBin bin = documento.getDocumentoBin();
+		if (bin.getMd5Documento() == null) {
+			bin.setMd5Documento(MD5Encoder.encode(documento.getDocumentoBin().getModeloDocumento()));
+		}
+		return persist(bin);
+	}
 
-    public DocumentoBin createProcessoDocumentoBin(final String tituloDocumento, final String conteudo)
-            throws DAOException {
-        final DocumentoBin bin = new DocumentoBin();
-        bin.setNomeArquivo(tituloDocumento);
-        bin.setModeloDocumento(conteudo);
-        bin.setMd5Documento(MD5Encoder.encode(conteudo));
-        bin.setMinuta(false);
-        return persist(bin);
-    }
+	public DocumentoBin createProcessoDocumentoBin(final String tituloDocumento, final String conteudo)
+			throws DAOException {
+		final DocumentoBin bin = new DocumentoBin();
+		bin.setNomeArquivo(tituloDocumento);
+		bin.setModeloDocumento(conteudo);
+		bin.setMd5Documento(MD5Encoder.encode(conteudo));
+		bin.setMinuta(false);
+		return persist(bin);
+	}
 
-    public DocumentoBin getByUUID(final UUID uuid) {
-        return getDao().getByUUID(uuid);
-    }
+	public DocumentoBin getByUUID(final UUID uuid) {
+		return getDao().getByUUID(uuid);
+	}
 
-    public void writeMargemDocumento(final DocumentoBin documento, final byte[] pdf, final OutputStream outStream) {
-        try {
-            final PdfReader pdfReader = new PdfReader(pdf);
-            final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
-            final Font font = new Font(Font.TIMES_ROMAN, 8);
+	public void writeMargemDocumento(final DocumentoBin documento, final byte[] pdf, final OutputStream outStream) {
+		try {
+			final PdfReader pdfReader = new PdfReader(pdf);
+			final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
+			final Font font = new Font(Font.TIMES_ROMAN, 8);
 
-            final Phrase phrase = createPhraseAssinatura(documento, font);
-            final Phrase codPhrase = createPhraseCodigo(font, documento.getUuid().toString());
+			final Phrase phrase = createPhraseAssinatura(documento, font);
+			final Phrase codPhrase = createPhraseCodigo(font, documento.getUuid().toString());
 
-            final byte[] qrcode = QRCode.from(getUrlValidacaoDocumento() + "?cod=" + documento.getUuid().toString())
-                    .to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
-            for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
-            	int rotation = pdfReader.getPageRotation(page);
-            	final PdfContentByte content = stamper.getOverContent(page);
-            	final Image image = Image.getInstance(qrcode);
-            	float right = pdfReader.getCropBox(page).getRight();
-            	float top =  pdfReader.getCropBox(page).getTop();
-                if (rotation == 90 || rotation == 270) {
-                	// Invertendo posições quando o PDF estiver em modo Paisagem
-                	float tempRight = right;
-                	right = top;
-                	top = tempRight;
-                }
-                image.setAbsolutePosition(right - 60, top - 70);
-                content.addImage(image);
-                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 15, top - 70, -90);
-                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 25, top - 70, -90);
-            }
+			final byte[] qrcode = QRCode.from(getUrlValidacaoDocumento() + "?cod=" + documento.getUuid().toString())
+					.to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
+			for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
+				int rotation = pdfReader.getPageRotation(page);
+				final PdfContentByte content = stamper.getOverContent(page);
+				final Image image = Image.getInstance(qrcode);
+				float right = pdfReader.getCropBox(page).getRight();
+				float top = pdfReader.getCropBox(page).getTop();
+				if (rotation == 90 || rotation == 270) {
+					// Invertendo posições quando o PDF estiver em modo Paisagem
+					float tempRight = right;
+					right = top;
+					top = tempRight;
+				}
+				image.setAbsolutePosition(right - 60, top - 70);
+				content.addImage(image);
+				ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 15, top - 70, -90);
+				ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 25, top - 70, -90);
+			}
 
-            stamper.close();
-            outStream.flush();
-        } catch (IOException | DocumentException e) {
-            throw new BusinessException("Erro ao gravar a margem do PDF", e);
-        }
-    }
+			stamper.close();
+			outStream.flush();
+		} catch (IOException | DocumentException e) {
+			throw new BusinessException("Erro ao gravar a margem do PDF", e);
+		}
+	}
 
-    private Phrase createPhraseCodigo(final Font font, final String uuid) {
-        final StringBuilder sb = new StringBuilder("Acesse em: ");
-        sb.append(getUrlValidacaoDocumento());
-        sb.append(" Código do documento: ");
-        sb.append(uuid);
-        final Phrase codPhrase = new Phrase(sb.toString(), font);
-        return codPhrase;
-    }
+	private Phrase createPhraseCodigo(final Font font, final String uuid) {
+		final StringBuilder sb = new StringBuilder("Acesse em: ");
+		sb.append(getUrlValidacaoDocumento());
+		sb.append(" Código do documento: ");
+		sb.append(uuid);
+		final Phrase codPhrase = new Phrase(sb.toString(), font);
+		return codPhrase;
+	}
 
-    private Phrase createPhraseAssinatura(final DocumentoBin documento, final Font font) {
-        final StringBuilder sb = new StringBuilder("Documento Assinado Digitalmente por: ");
-        for (final AssinaturaDocumento assinatura : documento.getAssinaturas()) {
-            sb.append(assinatura.getNomeUsuario());
-            sb.append(", ");
-        }
-        sb.delete(sb.length() - 2, sb.length());
-        final Phrase phrase = new Phrase(sb.toString(), font);
-        return phrase;
-    }
+	private Phrase createPhraseAssinatura(final DocumentoBin documento, final Font font) {
+		final StringBuilder sb = new StringBuilder("Documento Assinado Digitalmente por: ");
+		for (final AssinaturaDocumento assinatura : documento.getAssinaturas()) {
+			sb.append(assinatura.getNomeUsuario());
+			sb.append(", ");
+		}
+		sb.delete(sb.length() - 2, sb.length());
+		final Phrase phrase = new Phrase(sb.toString(), font);
+		return phrase;
+	}
 
-    @Override
-    public DocumentoBin persist(DocumentoBin o) throws DAOException {
-        try {
-            o.setUuid(UUID.randomUUID());
-            o = super.persist(o);
-        } catch (final DAOException e) {
-            final GenericDatabaseErrorCode error = e.getDatabaseErrorCode();
-            if ((error != null) && (error == GenericDatabaseErrorCode.UNIQUE_VIOLATION)
-                    && (getByUUID(o.getUuid()) != null)) {
-                o = persist(o);
-            } else {
-                throw e;
-            }
-        }
-        return o;
-    }
-    
-    public List<Documento> getDocumentosNaoSuficientementeAssinados(DocumentoBin documentoBin) {
-    	return getDao().getDocumentosNaoSuficientementeAssinados(documentoBin);
-    }
+	@Override
+	public DocumentoBin persist(DocumentoBin o) throws DAOException {
+		try {
+			o.setUuid(UUID.randomUUID());
+			o = super.persist(o);
+		} catch (final DAOException e) {
+			final GenericDatabaseErrorCode error = e.getDatabaseErrorCode();
+			if ((error != null) && (error == GenericDatabaseErrorCode.UNIQUE_VIOLATION)
+					&& (getByUUID(o.getUuid()) != null)) {
+				o = persist(o);
+			} else {
+				throw e;
+			}
+		}
+		return o;
+	}
 
-    private String getUrlValidacaoDocumento() {
-        return this.pathResolver.getUrlProject() + "/validaDoc.seam";
-    }
+	public List<Documento> getDocumentosNaoSuficientementeAssinados(DocumentoBin documentoBin) {
+		return getDao().getDocumentosNaoSuficientementeAssinados(documentoBin);
+	}
 
-    public String getUrlValidacaoDocumento(final DocumentoBin documento) {
-        return getUrlValidacaoDocumento() + "?cod=" + documento.getUuid();
-    }
+	private String getUrlValidacaoDocumento() {
+		return this.pathResolver.getUrlProject() + "/validaDoc.seam";
+	}
+
+	public String getUrlValidacaoDocumento(final DocumentoBin documento) {
+		return getUrlValidacaoDocumento() + "?cod=" + documento.getUuid();
+	}
 }

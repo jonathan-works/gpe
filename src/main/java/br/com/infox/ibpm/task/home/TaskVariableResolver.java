@@ -8,159 +8,117 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.jboss.seam.contexts.Contexts;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.epp.processo.home.ProcessoEpaHome;
-import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 final class TaskVariableResolver extends TaskVariable {
 
-    private static final LogProvider LOG = Logging.getLogProvider(TaskVariableResolver.class);
-    public static final int SUCCESS = 0x1;
-    public static final int FAIL = 0x2;
-    public static final int SIGNED = 0x8;
+	private static final LogProvider LOG = Logging.getLogProvider(TaskVariableResolver.class);
 
-    private Object value;
-    private boolean assinarDocumento;
-    private int resolve;
+	private Object value;
 
-    public TaskVariableResolver(VariableAccess variableAccess,
-            TaskInstance taskInstance) {
-        super(variableAccess, taskInstance);
-        this.assinarDocumento = false;
-    }
+	public TaskVariableResolver(VariableAccess variableAccess, TaskInstance taskInstance) {
+		super(variableAccess, taskInstance);
+	}
 
-    public TaskVariableResolver(VariableAccess variableAccess,
-            TaskInstance taskInstance, boolean assinar) {
-        super(variableAccess, taskInstance);
-        this.assinarDocumento = assinar;
-    }
+	public Object getValue() {
+		return value;
+	}
 
-    public Object getValue() {
-        return value;
-    }
+	public void setValue(Object value) {
+		this.value = value;
+	}
 
-    public void setValue(Object value) {
-        this.value = value;
-    }
+	public void resolve() {
+		if (value != null) {
+			switch (type) {
+			case MONETARY:
+				if (value instanceof String) {
+					try {
+						value = NumberFormat.getNumberInstance().parse(value.toString()).doubleValue();
+					} catch (ParseException e) {
+						LOG.info("TaskVariableResolverRF001", e);
+					}
+				}
+				atribuirValorDaVariavelNoContexto();
+				break;
+			case INTEGER:
+				if (value instanceof String) {
+					try {
+						value = NumberFormat.getNumberInstance().parse(value.toString()).longValue();
+					} catch (ParseException e) {
+						LOG.info("TaskVariableResolverRF002", e);
+					}
+				}
+				atribuirValorDaVariavelNoContexto();
+				break;
+			case DATE:
+				if (value instanceof String) {
+					try {
+						value = new SimpleDateFormat("dd/MM/yyyy").parse(value.toString());
+					} catch (ParseException e) {
+						LOG.info("TaskVariableResolverRF003", e);
+					}
+				}
+				atribuirValorDaVariavelNoContexto();
+				break;
+			case EDITOR:
+				if (!(this.value instanceof Integer)) {
+					this.value = getIdDocumento();
+				}
+				atribuirValorDaVariavelNoContexto();
+				break;
+			case TEXT:
+				if (((String) value).length() > 4000) {
+					throw new BusinessException("O tamanho do texto excede 4000 caracteres");
+				}
+				atribuirValorDaVariavelNoContexto();
+				break;
+			case FILE:
+				if (!(this.value instanceof Integer)) {
+					this.value = getIdDocumento();
+				}
+				atribuirValorDaVariavelNoContexto();
+				break;
+			default:
+				atribuirValorDaVariavelNoContexto();
+				break;
+			}
+		}
+	}
 
-    public void resolve() {
-        resolve = 0;
-        if (value != null) {
-            switch (type) {
-                case MONETARY:
-                    if (value instanceof String) {
-                        try {
-                            value = NumberFormat.getNumberInstance().parse(value.toString()).doubleValue();
-                        } catch (ParseException e) {
-                            LOG.info("TaskVariableResolverRF001",e);
-                        }
-                    }
-                    atribuirValorDaVariavelNoContexto();
-                break;
-                case INTEGER:
-                    if (value instanceof String) {
-                        try {
-                            value = NumberFormat.getNumberInstance().parse(value.toString()).longValue();
-                        } catch (ParseException e) {
-                            LOG.info("TaskVariableResolverRF002",e);
-                        }
-                    }
-                    atribuirValorDaVariavelNoContexto();
-                break;
-                case DATE:
-                    if (value instanceof String) {
-                        try {
-                            value = new SimpleDateFormat("dd/MM/yyyy").parse(value.toString());
-                        } catch (ParseException e) {
-                            LOG.info("TaskVariableResolverRF003",e);
-                        }
-                    }
-                    atribuirValorDaVariavelNoContexto();
-                break;
-                case EDITOR:
-                    resolveEditor();
-                break;
-                case TEXT:
-                    if (((String) value).length() > 4000) {
-                        throw new BusinessException("O tamanho do texto excede 4000 caracteres");
-                    }
-                    atribuirValorDaVariavelNoContexto();
-                break;
-                case FILE:
-                    if (!(this.value instanceof Integer)) {
-                        this.value = getIdDocumento();
-                    }
-                    atribuirValorDaVariavelNoContexto();
+	private Integer getIdDocumento() {
+		Object variable = taskInstance.getVariable(variableAccess.getMappedName());
+		if (variable != null) {
+			return (Integer) variable;
+		} else {
+			return null;
+		}
+	}
 
-                break;
-                default:
-                    atribuirValorDaVariavelNoContexto();
-                break;
-            }
-        }
-    }
+	public void atribuirValorDaVariavelNoContexto() {
+		Contexts.getBusinessProcessContext().set(variableAccess.getMappedName(), value);
+	}
 
-    private void resolveEditor() {
-        try {
-            ProcessoEpaHome processoEpaHome = ProcessoEpaHome.instance();
-            Integer valueInt = processoEpaHome.salvarProcessoDocumentoFluxo(value, getIdDocumento(), assinarDocumento, getLabel());
-            if (valueInt != null && valueInt != 0) {
-                this.value = valueInt;
-                resolve = resolve | SIGNED;
-                atribuirValorDaVariavelNoContexto();
-            } else {
-                resolve = FAIL;
-            }
-        } catch (CertificadoException e) {
-            LOG.error("Falha na assinatura", e);
-        }
-    }
+	private Object getValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis) {
+		if (mapaDeVariaveis == null) {
+			return null;
+		}
+		Set<Entry<String, Object>> entrySet = mapaDeVariaveis.entrySet();
+		for (Entry<String, Object> entry : entrySet) {
+			if (entry.getKey().split("-")[0].equals(name) && entry.getValue() != null) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
 
-    public boolean isEditorAssinado() {
-        return (resolve & TaskVariableResolver.SIGNED) == TaskVariableResolver.SIGNED;
-    }
+	public void assignValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis) {
+		value = getValueFromMapaDeVariaveis(mapaDeVariaveis);
+	}
 
-    private String getLabel() {
-        return JbpmUtil.instance().getMessages().get(name);
-    }
-
-    private Integer getIdDocumento() {
-        Object variable = taskInstance.getVariable(variableAccess.getMappedName());
-        if (variable != null) {
-            return (Integer) variable;
-        } else {
-            return null;
-        }
-    }
-
-    public void atribuirValorDaVariavelNoContexto() {
-        Contexts.getBusinessProcessContext().set(variableAccess.getMappedName(), value);
-        resolve = resolve | SUCCESS;
-    }
-
-    private Object getValueFromMapaDeVariaveis(
-            Map<String, Object> mapaDeVariaveis) {
-        if (mapaDeVariaveis == null) {
-            return null;
-        }
-        Set<Entry<String, Object>> entrySet = mapaDeVariaveis.entrySet();
-        for (Entry<String, Object> entry : entrySet) {
-            if (entry.getKey().split("-")[0].equals(name)
-                    && entry.getValue() != null) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
-
-    public void assignValueFromMapaDeVariaveis(
-            Map<String, Object> mapaDeVariaveis) {
-        value = getValueFromMapaDeVariaveis(mapaDeVariaveis);
-    }
 }

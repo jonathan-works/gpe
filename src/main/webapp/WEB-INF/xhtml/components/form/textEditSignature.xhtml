@@ -26,12 +26,14 @@
         items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
         required="#{not readonly}"
         showLabelSelecione="true"
-        value="#{home.documentosAssinaveis[id].classificacao}"
-        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}"
-        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 or home.possuiAssinatura(id)}">
+        value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
+        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
+        			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}"
+        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
+        			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
         <a:ajax
           event="change"
-          render="#{editorId.replace('-','')}AppletDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}ToolTipDivExterna"
+          render="assinaturaDocumentoDiv#{f.id} #{id}EditorDiv"
           execute="@this"
           limitRender="true" />
       </wi:selectOneMenuEntity>
@@ -39,90 +41,43 @@
     <s:div id="#{id}EditorDiv">
     	<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
 		    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty home.documentosAssinaveis[id].classificacao.observacao and not (readonly or home.possuiAssinatura(id))}">
+			  	rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao and not (readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura())}">
 			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif" />
 				<div class="epp-tooltip">
 					<div class="tooltip-panel">
 						<div><h:outputText value="Observação:"/></div>
-						<h:outputText value="#{home.documentosAssinaveis[id].classificacao.observacao}"/>
+						<h:outputText value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}"/>
 					</div>
 				</div>
 		    </s:div>
 	    </s:div>
 	    <wi:editor
-	      id="#{editorId}"
-	      value="#{home.instance[id]}"
-	      readonly="#{readonly or home.possuiAssinatura(id)}" />
+	      id="${editorId}"
+	      value="#{taskInstanceHome.variaveisDocumento[id].documentoBin.modeloDocumento}"
+	      readonly="${readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}" />
     </s:div>
-    <s:div
-      id="#{editorId.replace('-','')}SignatureDiv"
-      rendered="#{not readonly}">
-      <s:div rendered="#{home.podeRenderizarApplet(id)}">
-        <a:jsFunction
-          name="#{editorId.replace('-', '')}submitForm"
-          action="#{home.assinarDocumento(id)}"
-          execute="@this #{idCertChain} #{idSignature} #{editorId} #{f.id}tipoProcessoDocumento"
-          render="#{f.id}TipoDocDiv #{editorId.replace('-','')}SignatureDiv #{editorId.replace('-','')}AppletDiv #{id}EditorDiv pageBodyDialogMessage"
-          oncomplete="infox.hideLoading();" />
-        <h:inputHidden
-          id="#{idCertChain}"
-          value="#{home.documentosAssinaveis[id].certChain}" />
-        <h:inputHidden
-          id="#{idSignature}"
-          value="#{home.documentosAssinaveis[id].signature}" />
-      </s:div>
-    </s:div>
-    <s:div
-      id="#{editorId.replace('-','')}AppletDiv"
-      styleClass="applet-div"
-      rendered="#{not readonly}">
-      <wi:certificadoDigital
-        id="#{id}"
-        urlDownloadFile="#{pathResolver.urlProject}/downloadCaList.seam"
-        formId="#{rich:clientId('taskInstanceForm')}"
-        certificationChainField="#{home.documentosAssinaveis[id].certChain}"
-        signatureField="#{home.documentosAssinaveis[id].signature}"
-        signableData="infox.editor['#{editorId}'].instance.getData()"
-        useBase64Function="infox.editor['#{editorId}'].useBase64()"
-        functionPreSign="infox.showLoading();"
-        functionPosSign="#{editorId.replace('-', '')}submitForm();infox.showLoading();"
-        debug="false"
-        loginMode="false"
-        useProviderDll="false"
-        rendered="#{home.podeRenderizarApplet(id)}">
-      </wi:certificadoDigital>
-    </s:div>
-    <h:outputScript
-      rendered="#{not readonly and home.podeRenderizarApplet(id)}">
-			namespace("infox.editor.#{editorId}",{
-				useBase64:function useBase64() {
-					return "true";
-				},
-				get isSigned() {
-					return ((#{rich:jQuery(idSignature)}.val().trim() != "") 
-							&amp;&amp; (#{rich:jQuery(idCertChain)}.val().trim() != "")) 
-				},
-				addSignature:function addSignature() {
-					infox.showLoading();
-						#{editorId.replace('-', '')}submitForm();
-				},
-				postSign:function postSign() {
-					infox.hideLoading();
-				},
-				sign:function sign() {
-					#{rich:jQuery(idSignature)}.val("signature");
-					#{rich:jQuery(idCertChain)}.val("certChain");
-					this.addSignature();
-				}
-			},{
-				callback:function callback(Editor) {
-					Editor.instance.on("saveSnapshot", function onSaveSnapshot(ev) {
-						#{rich:jQuery(idSignature)}.val("");
-						#{rich:jQuery(idCertChain)}.val("");
-						#{rich:jQuery(editorId.replace('-','').concat('AppletDiv'))}.removeClass("hidden");
-					});
-				}
-			});
-		</h:outputScript>
+    <s:div id="assinaturaDocumentoDiv#{f.id}" >
+	    <s:div id="conteudoAssinatura#{f.id}" rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
+			
+			<a:jsFunction name="assinar"
+				action="#{taskInstanceHome.assinarDocumento()}"
+				execute="@this, assinaturaDocumentoDiv#{f.id}"
+				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage" 
+				oncomplete="infox.hideLoading();"/>
+				
+			<wi:certificadoDigital
+	            id="appletAssinatura"
+				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+				reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
+				tokenField="#{taskInstanceHome.tokenToSign}"
+				propertyValue="#{f.id}"
+				propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
+				signableData="#{taskInstanceHome.documentoToSign.documentoBin.md5Documento}"
+				functionPreSign="infox.showLoading();"
+				functionPosSign="assinar();" >
+	       </wi:certificadoDigital>
+	       
+		</s:div>
+	</s:div>
   </f:subview>
 </ui:composition>
