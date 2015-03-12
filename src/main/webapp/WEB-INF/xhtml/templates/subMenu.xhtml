@@ -16,12 +16,12 @@
         <h:commandLink
             styleClass="menu-lnk"
             action="#{conversationFacade.endBeforeRedirect(sub.url)}">
-          <div class="menu-itm-lbl">
+          <div class="menu-itm-lbl" id="#{sub.label}">
             <h:outputText value="#{sub.label}" />
           </div>
         </h:commandLink>
       </h:panelGroup> <h:panelGroup rendered="#{not empty sub.children}">
-        <div class="menu-itm-lbl sub-menu-lbl">
+        <div class="menu-itm-lbl sub-menu-lbl" id="#{sub.label}">
           <h:outputText value="#{sub.label}" />
         </div>
         <ul class="menu-submenu">
