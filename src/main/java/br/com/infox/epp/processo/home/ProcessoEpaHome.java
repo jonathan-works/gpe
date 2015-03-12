@@ -81,6 +81,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private PastaAction pastaAction;
 	@In
 	private DocumentoList documentoList;
+	@In
+    private DocumentoProcessoAction documentoProcessoAction;
 
 	private DocumentoBin documentoBin = new DocumentoBin();
 	private String observacaoMovimentacao;
@@ -97,6 +99,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	public void iniciarTarefaProcesso() {
 		try {
 			processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
+			documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 		} catch (java.lang.NullPointerException e) {
 			LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
 		} catch (DAOException e) {
@@ -232,115 +235,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		return String.valueOf(idProcesso);
 	}
 
-    public Integer getProcessoIdProcesso() {
-        return (Integer) getId();
-    }
-
-    @Observer("processoHomeSetId")
-    @Override
-    public void setId(Object id) {
-        super.setId(id);
-    }
-
-    public ClassificacaoDocumento getClassificacaoDocumento() {
-        return classificacaoDocumento;
-    }
-
-    public void setClassificacaoDocumento(
-            ClassificacaoDocumento classificacaoDocumento) {
-        this.classificacaoDocumento = classificacaoDocumento;
-    }
-
-    public String getObservacaoMovimentacao() {
-        return observacaoMovimentacao;
-    }
-
-    public void setObservacaoMovimentacao(String observacaoMovimentacao) {
-        this.observacaoMovimentacao = observacaoMovimentacao;
-    }
-
-    public void setModeloDocumentoRO(String modeloDocumentoRO) {
-        this.modeloDocumentoRO = modeloDocumentoRO;
-    }
-
-    public String getModeloDocumentoRO() {
-        return modeloDocumentoRO;
-    }
-
-    public ClassificacaoDocumento getClassificacaoDocumentoRO() {
-        return classificacaoDocumentoRO;
-    }
-
-    public void setClassificacaoDocumentoRO(
-            ClassificacaoDocumento classificacaoDocumentoRO) {
-        this.classificacaoDocumentoRO = classificacaoDocumentoRO;
-    }
-
-    public void setTarefaId(Long tarefaId) {
-        this.tarefaId = tarefaId;
-    }
-
-    public Long getTarefaId() {
-        return tarefaId;
-    }
-
-    public boolean isIniciaExterno() {
-        return iniciaExterno;
-    }
-
-    public void setIniciaExterno(boolean iniciaExterno) {
-        this.iniciaExterno = iniciaExterno;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setCertChain(String certChain) {
-        this.certChain = certChain;
-    }
-
-    public String getCertChain() {
-        return certChain;
-    }
-
-    public DocumentoBin getDocumentoBin() {
-        return documentoBin;
-    }
-
-    public void setDocumentoBin(DocumentoBin documentoBin) {
-        this.documentoBin = documentoBin;
-    }
-
-    public void setPdFluxo(Documento pdFluxo) {
-        this.pdFluxo = pdFluxo;
-    }
-
-    public Documento getPdFluxo() {
-        return pdFluxo;
-    }
-
-    public Integer getIdDocumento() {
-        return idDocumento;
-    }
-
-    public void setIdDocumento(Integer idDocumento) {
-        this.idDocumento = idDocumento;
-    }
-
-    public String getNumeroProcesso(int idProcesso) {
-        Processo processo = processoManager.find(idProcesso);
-        if (processo != null) {
-            return processo.getNumeroProcesso();
-        }
-        return String.valueOf(idProcesso);
-    }
-    
-    @Override
+	@Override
     public void setTab(String tab) {
         super.setTab(tab);
         variavelProcessoAction.setProcesso(this.getInstance());
