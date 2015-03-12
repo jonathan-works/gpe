@@ -32,15 +32,21 @@ public class DocumentoHtmlView implements Serializable {
     private Documento viewInstance;
     private DocumentoBin documentoBin;
 
-    public void setIdDocumento(Integer idDocumento) {
-        if (idDocumento != null && idDocumento != 0) {
-            setViewInstance(documentoManager.find(idDocumento));
+    public void setIdDocumento(String idDocumento) {
+        if (idDocumento != null && !"".equals(idDocumento)) {
+            Integer idInteger = Integer.parseInt(clearId(idDocumento));
+            if (idInteger != null && idInteger != 0) {
+                setViewInstance(documentoManager.find(idInteger));
+            }
         }
     }
     
-    public void setIdDocumentoBin(Integer idDocumentoBin) {
-    	if (idDocumentoBin != null && idDocumentoBin != 0) {
-    		setViewInstanceBin(documentoBinManager.find(idDocumentoBin));
+    public void setIdDocumentoBin(String idDocumentoBin) {
+    	if (idDocumentoBin != null && !"".equals(idDocumentoBin)) {
+    	    Integer idInteger = Integer.parseInt(clearId(idDocumentoBin));
+    	    if (idInteger != null && idInteger != 0) {
+    	        setViewInstanceBin(documentoBinManager.find(idInteger));
+    	    }
     	}
     }
 
@@ -59,4 +65,8 @@ public class DocumentoHtmlView implements Serializable {
         return this.documentoBin.getModeloDocumento();
     }
 
+    // TODO verificar solução melhor para isso
+    private String clearId(String id) {
+        return id.replaceAll("\\D+", "");
+    }
 }
