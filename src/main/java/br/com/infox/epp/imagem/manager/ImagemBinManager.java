@@ -10,8 +10,6 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -19,6 +17,8 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.imagem.dao.ImagemBinDAO;
 import br.com.infox.epp.imagem.entity.ImagemBin;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
 
 @Name(ImagemBinManager.NAME)
@@ -108,7 +108,10 @@ public class ImagemBinManager extends Manager<ImagemBinDAO, ImagemBin> {
 
                 @Override
                 public boolean accept(File dir, String name) {
-                    return (name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".gif"));
+                    return (name.toLowerCase().endsWith(".jpg") 
+                            || name.toLowerCase().endsWith(".png")
+                            || name.toLowerCase().endsWith(".gif")
+                            || name.toLowerCase().endsWith(".jpeg") );
                 }
 
             });
