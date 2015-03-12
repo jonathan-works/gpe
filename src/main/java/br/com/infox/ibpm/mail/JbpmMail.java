@@ -11,12 +11,13 @@ import java.util.Map;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.bpm.ProcessInstance;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import twitter4j.TwitterException;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.type.ExpressionResolverChain;
+import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.JbpmExpressionResolver;
+import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
@@ -25,6 +26,8 @@ import br.com.infox.epp.twitter.manager.ContaTwitterManager;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
 import br.com.infox.epp.twitter.util.TwitterUtil;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class JbpmMail extends org.jbpm.mail.Mail {
@@ -77,7 +80,9 @@ public class JbpmMail extends org.jbpm.mail.Mail {
         data.setUseHtmlBody(true);
         ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
         VariableTypeResolver variableTypeResolver = (VariableTypeResolver) Component.getInstance(VariableTypeResolver.NAME);
-        data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance())));
+        ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()))
+                .and(new SeamExpressionResolver()).build();
+        data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), chain));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;
         if (idGrupo != null) {
