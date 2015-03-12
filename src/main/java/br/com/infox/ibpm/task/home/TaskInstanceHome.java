@@ -143,7 +143,6 @@ public class TaskInstanceHome implements Serializable {
 
 	private TaskInstance taskInstance;
 	private Map<String, Object> mapaDeVariaveis;
-	private String variavelDocumento;
 	private Long taskId;
 	private List<Transition> availableTransitions;
 	private List<Transition> leavingTransitions;
@@ -219,9 +218,9 @@ public class TaskInstanceHome implements Serializable {
 	private void setModeloWhenExists(TaskVariableRetriever variableRetriever, Documento documentoEditor) {
 		String modelo = getModeloFromProcessInstance(variableRetriever.getName());
 		if (modelo != null) {
-			variavelDocumento = variableRetriever.getName();
 			if (!variableRetriever.hasVariable()) {
 				setModeloDocumento(getModeloDocumentoFromModelo(modelo));
+				assignModeloDocumento(getFieldName(variableRetriever.getName()));
 			}
 		}
 	}
@@ -460,8 +459,7 @@ public class TaskInstanceHome implements Serializable {
 		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable(variableType.getLeft());
 		if (idDocumento != null) {
 			Documento documento = documentoManager.find(idDocumento);
-			documentoBinManager.refresh(documento.getDocumentoBin());
-			return !documento.isDocumentoAssinado(Authenticator.getPapelAtual())
+			return documento != null && !documento.isDocumentoAssinado(Authenticator.getPapelAtual())
 					&& !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())
 					&& documento.isDocumentoAssinavel(Authenticator.getPapelAtual());
 		}
@@ -775,21 +773,27 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public List<ModeloDocumento> getModeloItems(String variavel) {
+		if (!variavel.endsWith("Modelo")) {
+			return null;
+		}
+		if (variavel.contains("-")) {
+			variavel = variavel.split("-")[0];
+		}
 		ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
 		String listaModelos = elFunctions.evaluateExpression(variavel);
 		return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
 	}
 
 	public void assignModeloDocumento(String id) {
-		String modelo = "";
 		if (modeloDocumento != null) {
 			ExpressionResolverChain chain = ExpressionResolverChainBuilder
 					.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance()
 							.getContextInstance())).and(new SeamExpressionResolver()).build();
-			modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
+			String modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
+			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
+		} else {
+			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento("");
 		}
-		variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
-		mapaDeVariaveis.put(id.split("-")[0], modeloDocumento.getIdModeloDocumento());
 	}
 
 	public static boolean hasOcculTransition(Transition transition) {
@@ -830,11 +834,6 @@ public class TaskInstanceHome implements Serializable {
 
 	public void setModeloDocumento(ModeloDocumento modelo) {
 		this.modeloDocumento = modelo;
-		ExpressionResolverChain chain = ExpressionResolverChainBuilder
-				.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()))
-				.and(new SeamExpressionResolver()).build();
-		variaveisDocumento.get(getFieldName(variavelDocumento)).getDocumentoBin().setModeloDocumento(modeloDocumentoManager.evaluateModeloDocumento(modelo, chain));
-		mapaDeVariaveis.put(variavelDocumento + "Modelo", modelo.getIdModeloDocumento());
 	}
 
 	public String getHomeName() {
