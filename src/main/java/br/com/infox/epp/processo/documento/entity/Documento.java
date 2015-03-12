@@ -374,7 +374,9 @@ public class Documento implements Serializable, Cloneable {
     }
     
     public boolean hasAssinatura(){
-    	return getDocumentoBin().getAssinaturas() != null && getDocumentoBin().getAssinaturas().size() > 0;
+    	return getDocumentoBin() != null 
+    				&& getDocumentoBin().getAssinaturas() != null 
+    				&& getDocumentoBin().getAssinaturas().size() > 0;
     }
     
     public boolean isAssinaturaObrigatoria(Papel papel) {

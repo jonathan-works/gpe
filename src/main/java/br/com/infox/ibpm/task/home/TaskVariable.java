@@ -40,6 +40,10 @@ abstract class TaskVariable {
     public boolean isEditor() {
         return VariableType.EDITOR.equals(type);
     }
+    
+    public boolean isFile() {
+        return VariableType.FILE.equals(type);
+    }
 
     public boolean isVariableType(VariableType varType) {
         return varType.equals(type);

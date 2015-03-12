@@ -95,8 +95,7 @@ public class TaskInstanceForm implements Serializable {
                     String[] tokens = var.getMappedName().split(":");
                     VariableType type = VariableType.valueOf(tokens[0]);
                     String name = tokens[1];
-                    Object variable = JbpmUtil.getProcessVariable(name
-                            + "Modelo");
+                    Object variable = JbpmUtil.getProcessVariable(name + "Modelo");
                     if (variable != null) {
                         FormField ff = new FormField();
                         ff.setFormId(form.getFormId());
