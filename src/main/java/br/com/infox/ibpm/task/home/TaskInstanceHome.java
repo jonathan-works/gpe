@@ -354,6 +354,7 @@ public class TaskInstanceHome implements Serializable {
 		documentoBinManager.persist(documentoBin);
 		documento.setProcesso(processoEpaHome.getInstance());
 		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
+		documento.setIdJbpmTask(getCurrentTaskInstance().getId());
 		String descricao = JbpmUtil.instance().getMessages().get(variableAccess.getMappedName().split(":")[1]);
 		documento.setDescricao(descricao == null ? "-" : descricao);
 		documentoManager.persist(documento);
