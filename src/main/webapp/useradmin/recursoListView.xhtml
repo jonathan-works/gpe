@@ -86,19 +86,20 @@
       <wi:dataForm
         formId="papel"
         formTitle="#{infoxMessages['recurso.papelTitleForm']} - #{recursoCrudAction.instance.nome}">
-        <a:region>
           <wi:pickList
             id="recurso"
             targetCaption="#{infoxMessages['recurso.papeis']}"
             value="#{recursoPapelController.papeis}"
             itemValues="#{recursoPapelController.papeisDisponiveis}"
             itemLabel="#{var}" />
-        </a:region>
         <ui:define name="buttons">
-          <wi:commandButton
+          <a:commandButton
             id="papeisButton"
-            action="recursoPapelController.save()"
-            reRender="pageBodyDialogMessage"
+            actionListener="#{recursoPapelController.save()}"
+            render="pageBodyDialogMessage, papeisTab, @this"
+            execute="@form"
+            styleClass="buttons"
+            limitRender="true"
             value="#{infoxMessages['crud.update']}" />
         </ui:define>
       </wi:dataForm>
