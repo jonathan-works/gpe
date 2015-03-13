@@ -306,4 +306,18 @@ public class AssinaturaDocumentoService implements Serializable {
     	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 
     			!isDocumentoAssinado(documentoBin, usuario);
     }
+    
+    public boolean precisaAssinatura(ClassificacaoDocumento classificacaoDocumento){
+    	if(classificacaoDocumento != null){
+	    	List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapelList = classificacaoDocumento.getClassificacaoDocumentoPapelList();
+	    	for (ClassificacaoDocumentoPapel cdp : classificacaoDocumentoPapelList) {
+				if (cdp.getTipoAssinatura().equals(TipoAssinaturaEnum.O)
+					|| cdp.getTipoAssinatura().equals(TipoAssinaturaEnum.S)){
+					return true;
+				}
+	    	}
+	    	return false;
+    	}
+    	return true;
+    }
 }

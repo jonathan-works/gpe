@@ -52,7 +52,7 @@
 		      		readonly="#{not minuta}"
    					disabled="#{not minuta}">
    					<a:ajax event="change"
-      					render="tooltipComunicacao"
+      					render="tooltipComunicacao minutaDiv"
       					execute="@this"
       					limitRender="true" />
   				</wi:selectOneMenuEntity>
@@ -70,8 +70,11 @@
 					</div>
 		   		</s:div>
 			</s:div>
+			<s:div id ="minutaDiv">
 			<wi:selectBooleanRadio id="minuta" value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" 
-				label="#{infoxMessages['processoDocumentoBin.minuta']}" readonly="#{not minuta}" disabled="#{not minuta}"/>
+				label="#{infoxMessages['processoDocumentoBin.minuta']}" disabled="#{not minuta}"
+				rendered="#{not assinaturaDocumentoService.precisaAssinatura(respostaComunicacaoAction.documentoEdicao.classificacaoDocumento)}" />
+			</s:div>
 			<s:div id="respostaComunicacaoDiv">
 				<wi:editor id="respostaComunicacao" readonly="#{not minuta}" 
 					value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.modeloDocumento}" />
