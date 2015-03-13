@@ -28,7 +28,7 @@
             var="drop">
             <li class="menu-itm"><h:panelGroup
                 rendered="#{empty drop.url}">
-                <div class="menu-itm-lbl">
+                <div class="menu-itm-lbl" id="#{drop.label}" >
                   <h:outputText value="#{drop.label}" />
                 </div>
                 <ul class="menu-submenu">
@@ -43,7 +43,7 @@
                 <h:commandLink
                   styleClass="menu-lnk"
                   action="#{drop.url}">
-                  <div class="menu-itm-lbl">
+                  <div class="menu-itm-lbl" id="#{drop.label}">
                     <h:outputText value="#{drop.label}" />
                   </div>
                   <s:conversationPropagation type="end" />

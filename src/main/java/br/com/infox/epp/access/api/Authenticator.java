@@ -159,7 +159,7 @@ public class Authenticator implements Serializable {
                 Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
                 if (papel != null && papel.getTermoAdesao()) {
                     if (pessoaFisica == null) {
-                        throw new LoginException("Usuário sem pessoa física associada");
+                        throw new LoginException(infoxMessages.get("login.error.semPessoaFisica"));
                     }
                     hasToSign = pessoaFisica.getTermoAdesao() == null;
                     break;
@@ -183,8 +183,7 @@ public class Authenticator implements Serializable {
 
     private void validaCadastroDeUsuario(String id, UsuarioLogin usuario) throws LoginException {
         if (usuario == null) {
-            throw new LoginException("O usuário '" + id
-                    + "' não está corretamente cadastrado no sistema.");
+            throw new LoginException(String.format(infoxMessages.get("login.error.usuarioProblemaCadastro"), id));
         }
     }
 
@@ -196,9 +195,9 @@ public class Authenticator implements Serializable {
         if (newPassword1.equals(newPassword2)) {
             PasswordService passwordService = (PasswordService) Component.getInstance(PasswordService.NAME);
             passwordService.changePassword(usuario, newPassword1);
-            getMessagesHandler().add("Senha alterada com sucesso.");
+            getMessagesHandler().add(infoxMessages.get("login.error.senhaAlteradaSucesso"));
         } else {
-            throw new LoginException("Nova senha não confere com a confirmação!");
+            throw new LoginException(infoxMessages.get("login.error.novaSenhaNaoConfere"));
         }
     }
 
@@ -271,9 +270,9 @@ public class Authenticator implements Serializable {
     public void loginFailed(Object obj) throws LoginException {
         UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Identity.instance().getCredentials().getUsername());
         if (usuario != null && !usuario.getAtivo()) {
-            throw new LoginException("Este usuário não está ativo.");
+            throw new LoginException(infoxMessages.get("login.error.usuarioNaoAtivo"));
         }
-        throw new LoginException("Usuário ou senha inválidos.");
+        throw new LoginException(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
     }
 
     @Observer(Identity.EVENT_LOGGED_OUT)
@@ -332,8 +331,7 @@ public class Authenticator implements Serializable {
             setUsuarioPerfilAtual(usuarioPerfil);
             return true;
         }
-        throw new LoginException("O usuário " + usuario
-                + " não possui Localização");
+        throw new LoginException(String.format(infoxMessages.get("login.error.usuarioProblemaCadastro"), usuario));
     }
 
     /**
