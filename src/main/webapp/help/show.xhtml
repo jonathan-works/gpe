@@ -82,16 +82,14 @@
                         <wi:panel id="helpResultContent">
                             <div class="resultado-pesquisa-ajuda label-general">
                                 <h:form>
-                                    <a:commandLink
+                                    <h:commandLink
                                         value="#{v[0].pagina.descricao}"
-                                        render="helpText, helpLink"
-                                        limitRender="true"
                                         oncomplete="#{rich:component('helpPanel')}.switchToItem('help');"
                                         action="#{ajudaView.setViewId(v[0].pagina.url, false)}">
-                                        <f:param
-                                            name="queryString"
-                                            value="#{ajudaView.textoPesquisa}" />
-                                    </a:commandLink>
+                                        <f:param name="queryString" value="#{ajudaView.textoPesquisa}" />
+                                        <f:setPropertyActionListener value="help" target="#{ajudaView.tab}" />
+                                        <f:ajax render=":showHelp" />
+                                    </h:commandLink>
                                 </h:form>
                                 <div>
                                     <h:outputText
