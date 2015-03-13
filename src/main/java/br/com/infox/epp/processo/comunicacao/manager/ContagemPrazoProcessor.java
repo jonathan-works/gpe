@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.manager;
 
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -55,7 +56,8 @@ public class ContagemPrazoProcessor {
 	private void analisarProcessosAguardandoCumprimento() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCumprimento();
 		for (Processo processo : processos) {
-		    DateTime dataParaCumprimento = new DateTime(processo.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO));
+		    Date dataLimite = processo.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO).getValue();
+            DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
 			if (dataParaCumprimento.isBeforeNow()) {
 				movimentarProcessoJBPM(processo);
 			}
@@ -65,7 +67,8 @@ public class ContagemPrazoProcessor {
 	private void analisarProcessosAguardandoCiencia() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCiencia();
 		for (Processo processo : processos) {
-		    DateTime dataParaCiencia = new DateTime(processo.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA));
+		    Date dataLimite = processo.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA).getValue();
+            DateTime dataParaCiencia = new DateTime(dataLimite.getTime());
 			if (dataParaCiencia.isBeforeNow()) {
 				movimentarProcessoJBPM(processo);
 			}

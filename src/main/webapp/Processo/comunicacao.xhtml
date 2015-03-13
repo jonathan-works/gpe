@@ -61,7 +61,7 @@
                                 <h:outputText value="#{bean.tipoComunicacao.descricao}" />
                             </rich:column>
 							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.meioExpedicao']}</f:facet>
+								<f:facet name="header">#{infoxMessages['comunicacao.meioComunicacao']}</f:facet>
 								<h:outputText value="#{bean.meioExpedicao}" />
 							</rich:column>
 							<rich:column>
@@ -157,6 +157,10 @@
 	    			<h:commandButton styleClass="buttons" action="#{comunicacaoAction.downloadComunicacao}" 
 	    				value="#{infoxMessages['comunicacao.comunicacao']}"
 	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
+                    <h:commandButton styleClass="buttons"
+                        onclick="infox.openPopUp('doc#{comunicacaoAction.destinatario.documentoComunicacao.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{comunicacaoAction.destinatario.documentoComunicacao.documentoBin.id}','1024'); return false;" 
+                        value="#{infoxMessages['comunicacao.comunicacao']}"
+                        rendered="#{empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
 	    		</h:form>
 	    		<rich:dataTable value="#{comunicacaoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
 	    			<rich:column styleClass="dt-toolbar-col">
