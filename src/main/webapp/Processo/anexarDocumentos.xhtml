@@ -305,14 +305,12 @@
         <wi:selectBooleanCheckbox
           id="anexarPastaInputVisivelExterno"
           value="#{pastaAction.visivelExterno}"
-          required="true"
           onclick="#{rich:jQuery('anexarPastaInputVisivelExterno')}.prop('checked') ? #{rich:jQuery('anexarPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('anexarPastaDivVisivelNaoParticipante')}.hide();"
           label="#{infoxMessages['pasta.usuarioExterno']}" />
         <s:div id="anexarPastaDivVisivelNaoParticipante" style="display: none">
           <wi:selectBooleanCheckbox
             id="anexarPastaInputVisivelNaoParticipante"
             value="#{pastaAction.visivelNaoParticipante}"
-            required="true"
             label="#{infoxMessages['pasta.usuarioParticipante']}" />
         </s:div>
         <br />
