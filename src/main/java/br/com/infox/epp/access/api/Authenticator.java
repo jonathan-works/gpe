@@ -217,7 +217,10 @@ public class Authenticator implements Serializable {
                     } else {
                         LOG.error(e);
                     }
-                }
+                } finally {
+    				setNewPassword1(null);
+    				setNewPassword2(null);
+    			}
             } else {
                 getMessagesHandler().add(Severity.ERROR, infoxMessages.get("login.error.invalid"));
             }
