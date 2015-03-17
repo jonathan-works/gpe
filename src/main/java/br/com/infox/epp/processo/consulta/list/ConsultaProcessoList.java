@@ -26,7 +26,7 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     public static final String NAME = "consultaProcessoList";
 
     private static final String DEFAULT_EJBQL = "select o from Processo o";
-    private static final String DEFAULT_ORDER = "o.prioridadeProcesso, o.dataInicio";
+    private static final String DEFAULT_ORDER = "coalesce(o.prioridadeProcesso, -1) DESC, o.dataInicio ASC";
 
     private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
