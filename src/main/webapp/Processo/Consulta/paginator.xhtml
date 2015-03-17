@@ -21,7 +21,7 @@
                 var="task"
                 first="#{processoHandler.inicio}"
                 rows="1"
-                styleClass="doc-pag-form">
+                styleClass="doc-pag-form" >
                 <rich:column>
                     <f:facet name="header">#{infoxMessages['processo.documentos']} #{consultaController.processo.numeroProcessoRoot}</f:facet>
                     <div id="areaPagina">
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                 </rich:column>
-                <rich:column>
+                <rich:column styleClass="col-doc-anexos">
                     <f:facet name="header">#{infoxMessages['anexosProcesso.titleView']}</f:facet>
                     <ui:include src="/WEB-INF/xhtml/components/grid/documentosAnexadosProcesso.xhtml"/>
                 </rich:column>
