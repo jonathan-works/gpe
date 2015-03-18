@@ -71,6 +71,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -130,6 +131,8 @@ public class TaskInstanceHome implements Serializable {
 	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
 	@In
 	private DocumentoManager documentoManager;
+	@In
+	private PastaManager pastaManager; 
 	@In
 	private DocumentoBinManager documentoBinManager;
 	@In
@@ -355,6 +358,7 @@ public class TaskInstanceHome implements Serializable {
 		documento.setProcesso(processoEpaHome.getInstance());
 		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
 		documento.setIdJbpmTask(getCurrentTaskInstance().getId());
+		documento.setPasta(pastaManager.getDefaultFolder(processoEpaHome.getInstance()));
 		String descricao = JbpmUtil.instance().getMessages().get(variableAccess.getMappedName().split(":")[1]);
 		documento.setDescricao(descricao == null ? "-" : descricao);
 		documentoManager.persist(documento);
