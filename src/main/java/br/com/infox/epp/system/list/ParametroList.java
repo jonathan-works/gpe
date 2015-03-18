@@ -26,7 +26,7 @@ public class ParametroList extends EntityList<Parametro> {
     private static final String DEFAULT_EJBQL = "select o from Parametro o left "
             + "join o.usuarioModificacao u";
 
-    private static final String DEFAULT_ORDER = "nomeVariavel asc";
+    private static final String DEFAULT_ORDER = "o.nomeVariavel asc";
 
     protected String getDefaultEjbql() {
         return DEFAULT_EJBQL;
