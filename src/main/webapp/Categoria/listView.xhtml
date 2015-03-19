@@ -49,7 +49,8 @@
             formTitle="#{infoxMessages['form.title']}">
             <wi:inputText id="categoria"
                 value="#{crudAction.instance.categoria}" required="true"
-                label="#{infoxMessages['categoria.categoria']}" />
+                label="#{infoxMessages['categoria.categoria']}" 
+                maxlength="30" />
             <wi:selectSituacaoRadio id="ativo" required="false"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{crudAction.instance.ativo}" />

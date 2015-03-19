@@ -79,6 +79,7 @@ import org.jboss.seam.annotations.security.management.UserPassword;
 import org.jboss.seam.annotations.security.management.UserPrincipal;
 import org.jboss.seam.annotations.security.management.UserRoles;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -98,9 +99,9 @@ import br.com.infox.epp.system.entity.EntityLog;
         @NamedQuery(name = USUARIO_BY_PESSOA, query = USUARIO_BY_PESSOA_QUERY),
         @NamedQuery(name = USUARIO_FETCH_PF_BY_NUMERO_CPF, query = USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY) })
 @NamedNativeQueries({
-        @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE, query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
-        @NamedNativeQuery(name = ACTORID_TAREFA_ATUAL_BY_PROCESSO, query = ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY),
-        @NamedNativeQuery(name = NOME_USUARIO_BY_ID_TASK_INSTANCE, query = NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY) })
+    @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE, query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
+    @NamedNativeQuery(name = ACTORID_TAREFA_ATUAL_BY_PROCESSO, query = ACTORID_TAREFA_ATUAL_BY_PROCESSO_QUERY),
+    @NamedNativeQuery(name = NOME_USUARIO_BY_ID_TASK_INSTANCE, query = NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY) })
 public class UsuarioLogin implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -110,54 +111,54 @@ public class UsuarioLogin implements Serializable {
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_USUARIO, unique = true, nullable = false)
     private Integer idUsuarioLogin;
-    
+
     @NotNull
     @Column(name = EMAIL, length = DESCRICAO_PADRAO, unique = true, nullable = false)
-    @Size(max = DESCRICAO_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO)
     private String email;
-    
+
     @Column(name = SENHA, length = DESCRICAO_PADRAO)
     @Size(max = DESCRICAO_PADRAO)
     @UserPassword(hash = "SHA")
     private String senha;
-    
+
     @UserPrincipal
     @NotNull
     @Column(name = LOGIN, unique = true, nullable = false, length = DESCRICAO_PADRAO)
-    @Size(max = DESCRICAO_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO)
     private String login;
-    
+
     @PasswordSalt
     @NotNull
     @Column(name = "ds_salt", length = 16, nullable = false)
     private String salt;
-    
+
     @NotNull
-    @Size(max = NOME_ATRIBUTO)
+    @Size(min = LengthConstants.FLAG, max = NOME_ATRIBUTO)
     @Column(name = NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
     private String nomeUsuario;
-    
+
     @Column(name = ATIVO, nullable = false)
     private Boolean ativo;
-    
+
     @NotNull
     @Column(name = BLOQUEIO, nullable = false)
     private Boolean bloqueio;
-    
+
     @Column(name = PROVISORIO)
     private Boolean provisorio;
-    
+
     @Temporal(TIMESTAMP)
     @Column(name = DATA_EXPIRACAO, nullable = true)
     private Date dataExpiracao;
-    
+
     @Column(name = "in_twitter", nullable = false)
     private Boolean temContaTwitter;
 
     @Enumerated(EnumType.STRING)
     @Column(name = TIPO_USUARIO, length = FLAG, nullable = false)
     private UsuarioEnum tipoUsuario;
-    
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "id_pessoa_fisica")
     private PessoaFisica pessoaFisica;
@@ -170,36 +171,36 @@ public class UsuarioLogin implements Serializable {
 
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioPublicacao")
     private List<Fluxo> fluxoList;
-    
+
     @OneToMany(fetch = LAZY, mappedBy = "usuarioLogin", orphanRemoval = true)
     @OrderBy("idUsuarioPerfil")
     private List<UsuarioPerfil> usuarioPerfilList;
-    
+
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioCadastro")
     private List<Processo> processoListForIdUsuarioCadastroProcesso;
-    
+
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuario")
     private List<BloqueioUsuario> bloqueioUsuarioList;
-    
+
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuarioInclusao")
     private List<Documento> processoDocumentoListForIdUsuarioInclusao;
-    
+
     @OneToMany(cascade = { PERSIST, MERGE, REFRESH }, fetch = LAZY, mappedBy = "usuario")
     private List<EntityLog> entityLogList;
-    
+
     @PrePersist
     private void prePersist() {
-    	if (provisorio == null) {
-    		setProvisorio(false);
-    	}
-    	if (bloqueio == null) {
-    		setBloqueio(false);
-    	}
-    	if (temContaTwitter == null) {
-    		setTemContaTwitter(false);
-    	}
+        if (provisorio == null) {
+            setProvisorio(false);
+        }
+        if (bloqueio == null) {
+            setBloqueio(false);
+        }
+        if (temContaTwitter == null) {
+            setTemContaTwitter(false);
+        }
     }
-    
+
     public UsuarioLogin() {
         papelSet = new TreeSet<>();
         fluxoList = new ArrayList<>(0);
@@ -395,34 +396,39 @@ public class UsuarioLogin implements Serializable {
     public void setSalt(String salt) {
         this.salt = salt;
     }
-    
+
     @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin().hashCode());
-		return result;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = (prime * result)
+                + ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin().hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UsuarioLogin other = (UsuarioLogin) obj;
-		if (getIdUsuarioLogin() == null) {
-			if (other.getIdUsuarioLogin() != null)
-				return false;
-		} else if (!getIdUsuarioLogin().equals(other.getIdUsuarioLogin()))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        UsuarioLogin other = (UsuarioLogin) obj;
+        if (getIdUsuarioLogin() == null) {
+            if (other.getIdUsuarioLogin() != null) {
+                return false;
+            }
+        } else if (!getIdUsuarioLogin().equals(other.getIdUsuarioLogin())) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return getNomeUsuario();
     }

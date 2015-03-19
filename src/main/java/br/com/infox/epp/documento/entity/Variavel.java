@@ -69,7 +69,7 @@ public class Variavel implements java.io.Serializable {
 
     public void setVariavel(String variavel) {
         String var = "";
-        if (variavel != null && variavel.trim().length() > 0) {
+        if ((variavel != null) && (variavel.trim().length() > 0)) {
             var = variavel.replace(" ", "_");
         }
         this.variavel = var;
@@ -77,7 +77,7 @@ public class Variavel implements java.io.Serializable {
 
     @Column(name = VALOR_VARIAVEL, nullable = false, length = LengthConstants.DESCRICAO_PADRAO_DOBRO)
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
+    @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_PADRAO_DOBRO)
     public String getValorVariavel() {
         return this.valorVariavel;
     }
@@ -97,7 +97,7 @@ public class Variavel implements java.io.Serializable {
     }
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = VARIAVEL_ATTRIBUTE)
+            CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = VARIAVEL_ATTRIBUTE)
     public List<VariavelTipoModelo> getVariavelTipoModeloList() {
         return variavelTipoModeloList;
     }
@@ -131,7 +131,7 @@ public class Variavel implements java.io.Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + getIdVariavel();
+        result = (prime * result) + getIdVariavel();
         return result;
     }
 }

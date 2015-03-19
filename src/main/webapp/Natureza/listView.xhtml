@@ -58,7 +58,8 @@
             <wi:inputText id="natureza"
                 value="#{naturezaCrudAction.instance.natureza}"
                 required="true" label="#{infoxMessages['natureza.natureza']}"
-                disabled="#{naturezaCrudAction.instance.locked}" />
+                disabled="#{naturezaCrudAction.instance.locked}" 
+                maxlength="30" />
             <wi:selectBooleanRadio id="hasPartes"
                 label="#{infoxMessages['natureza.hasPartes']}"
                 value="#{naturezaCrudAction.instance.hasPartes}"

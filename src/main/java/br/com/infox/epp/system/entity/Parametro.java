@@ -38,15 +38,15 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
 @Table(name = "tb_parametro")
-@NamedQueries({ 
+@NamedQueries({
     @NamedQuery(name = LIST_PARAMETROS_ATIVOS, query = LIST_PARAMETROS_ATIVOS_QUERY),
     @NamedQuery(name = EXISTE_PARAMETRO, query = EXISTE_PARAMETRO_QUERY),
-    @NamedQuery(name = PARAMETRO_BY_NOME, query = PARAMETRO_BY_NOME_QUERY, 
-    			hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
-    					 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")}),
-    @NamedQuery(name = PARAMETRO_BY_VALOR, query = PARAMETRO_BY_VALOR_QUERY,
-    			hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
-			 			 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")})
+    @NamedQuery(name = PARAMETRO_BY_NOME, query = PARAMETRO_BY_NOME_QUERY,
+    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+            @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")}),
+            @NamedQuery(name = PARAMETRO_BY_VALOR, query = PARAMETRO_BY_VALOR_QUERY,
+            hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+                    @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")})
 })
 @Cacheable
 public class Parametro implements Serializable {
@@ -61,7 +61,7 @@ public class Parametro implements Serializable {
     private Boolean sistema;
     private UsuarioLogin usuarioModificacao;
     private Boolean ativo;
-    
+
     public Parametro() {
     }
 
@@ -89,7 +89,7 @@ public class Parametro implements Serializable {
 
     @Column(name = "nm_variavel", nullable = false, length = LengthConstants.NOME_PADRAO, unique = true)
     @NotNull
-    @Size(max = LengthConstants.NOME_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = LengthConstants.NOME_PADRAO)
     public String getNomeVariavel() {
         return this.nomeVariavel;
     }
@@ -100,7 +100,7 @@ public class Parametro implements Serializable {
 
     @Column(name = "ds_variavel", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_PADRAO)
     public String getDescricaoVariavel() {
         return this.descricaoVariavel;
     }
@@ -163,7 +163,7 @@ public class Parametro implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
+        result = (prime * result)
                 + ((idParametro == null) ? 0 : idParametro.hashCode());
         return result;
     }

@@ -16,7 +16,8 @@
             value="#{papelCrudAction.instance.identificador}"
             required="true"
             rendered="#{not identityManager.roleExists(papelCrudAction.instance.identificador) or not papelCrudAction.managed}"
-            id="identificador"/>
+            id="identificador"
+            maxlength="100" />
         
         <wi:outputText
             label="#{infoxMessages['papel.identificador']}"
@@ -28,7 +29,8 @@
             label="#{infoxMessages['papel.nome']}"
             value="#{papelCrudAction.instance.nome}"
             required="true"
-            id="nome"/>
+            id="nome"
+            maxlength="100" />
             
         <wi:selectBooleanCheckbox
           id="termoAdesao"
