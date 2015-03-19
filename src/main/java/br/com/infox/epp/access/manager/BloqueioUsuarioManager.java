@@ -36,7 +36,12 @@ public class BloqueioUsuarioManager extends Manager<BloqueioUsuarioDAO, Bloqueio
     }
 
     public boolean liberarUsuarioBloqueado(UsuarioLogin usuarioLogin) {
-        return getDataParaDesbloqueio(usuarioLogin).before(new Date());
+        Date dataParaDesbloqueio = getDataParaDesbloqueio(usuarioLogin);
+        if (dataParaDesbloqueio != null) {
+            return dataParaDesbloqueio.before(new Date());
+        } else {
+            return false;
+        }
     }
 
     public BloqueioUsuario getUltimoBloqueio(UsuarioLogin usuarioLogin) {
