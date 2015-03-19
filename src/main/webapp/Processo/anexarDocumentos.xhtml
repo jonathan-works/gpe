@@ -17,11 +17,13 @@
       styleClass="folder-ul"
       rowClass="folder-li"
       var="pasta">
-      <h:graphicImage
-        url="#{wiSkin.imageFolder}/folder.png"
-        rendered="true"
-        title="#{pasta}" />
-      <h:outputText value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}" class="folder" />
+      <s:div rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)">
+	      <h:graphicImage
+	        url="#{wiSkin.imageFolder}/folder.png"
+	        rendered="true"
+	        title="#{pasta}" />
+	      <h:outputText value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}" class="folder" />
+   	  </s:div>
     </rich:list>
     <wi:commandButton
       id="addPastaBtn"
