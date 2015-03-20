@@ -2,8 +2,10 @@ package br.com.infox.core.controller;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public abstract class AbstractController implements Controller {
 
     /**

@@ -7,6 +7,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.certificado.CertificateSignatures;
@@ -40,6 +41,7 @@ import br.com.infox.seam.transaction.TransactionService;
 
 @Name(ExpedicaoComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class ExpedicaoComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "expedicaoComunicacaoAction";
