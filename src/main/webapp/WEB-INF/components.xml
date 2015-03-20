@@ -24,7 +24,7 @@
 
     <core:init
         debug="${desenvolvimento}"
-        jndi-pattern="java:global/${epp.name}/#{ejbName}" 
+        jndi-pattern="java:module/#{ejbName}" 
         transaction-management-enabled="false" />
         
     <document:document-store use-extensions="true" />
