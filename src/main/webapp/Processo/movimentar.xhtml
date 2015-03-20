@@ -11,65 +11,70 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/minimal.xhtml">
-    <ui:param
-        name="pageTitle"
-        value="#{infoxMessages['processo.titlePage']}" />
+    <ui:param name="pageTitle" value="#{infoxMessages['processo.titlePage']}" />
     <ui:define name="title">#{pageTitle}</ui:define>
     <ui:define name="contentTitle">
     </ui:define>
+    <ui:define name="head">
+	    <script type="text/javascript">
+			if (#{!processoEpaHome.checarVisibilidadeSemException()}) {
+				window.close();
+			}
+	    </script>
+    </ui:define>
     <ui:define name="scripts">
-        <h:outputScript
-            library="js/components"
-            name="Modal.js" />
-        <h:inputHidden
-            id="taskCompleted"
-            value="#{taskInstanceHome.taskCompleted}"></h:inputHidden>
-        <h:inputHidden
-            id="canClosePanel"
-            value="#{taskInstanceHome.canClosePanelVal}"></h:inputHidden>
+	    <h:outputScript
+	        library="js/components"
+	        name="Modal.js" />
+	    <h:inputHidden
+	        id="taskCompleted"
+	        value="#{taskInstanceHome.taskCompleted}"></h:inputHidden>
+	    <h:inputHidden
+	        id="canClosePanel"
+	        value="#{taskInstanceHome.canClosePanelVal}"></h:inputHidden>
+	    <h:outputScript>
+	      function verifyFields() {
+	        try {
+	            opener.atualizaPainelFluxo();
+	          } catch (e) {
+	          }
+	        if ($('#taskCompleted').val() === 'true') {
+	          try {
+	            opener.atualizaPainelFluxo();
+	          } catch (e) {
+	          }
+	          if ($('#canClosePanel').val() === 'true') {
+	            close();
+	          } else {
+	            location = location.href.replace(/&amp;tarefaId=\d+/g,"");
+	          }
+	        } else {
+	          infox.hideLoading();
+	        }
+	      }
+	    </h:outputScript>
         <h:outputScript>
-      function verifyFields() {
-        try {
-            opener.atualizaPainelFluxo();
-          } catch (e) {
-          }
-        if ($('#taskCompleted').val() === 'true') {
-          try {
-            opener.atualizaPainelFluxo();
-          } catch (e) {
-          }
-          if ($('#canClosePanel').val() === 'true') {
-            close();
-          } else {
-            location = location.href.replace(/&amp;tarefaId=\d+/g,"");
-          }
-        } else {
-          infox.hideLoading();
-        }
-      }
-    </h:outputScript>
-        <h:outputScript>
-      function reloadPanel() {
-          try {
-            opener.atualizaPainelFluxo();
-          } catch (e) {
-          }
-      }
-    </h:outputScript>
-    <h:outputScript rendered="#{processoEpaHome.tab=='tabSaida'}">
-      invoke([ "infox.Modal" ], function(Modal) {
-        var panelTeste = new Modal({
-          id : "#{rich:clientId('mp_taskNodeDescription')}"
-        });
-        $(".mp-help").click(function show() {
-          panelTeste.show();
-        });
-
-        #{rich:jQuery('mp_taskNodeCloseBtn')}.click(function hide() {
-          panelTeste.hide();
-        });
-      });
-    </h:outputScript>
+	      function reloadPanel() {
+	          try {
+	            opener.atualizaPainelFluxo();
+	          } catch (e) {
+	          }
+	      }
+	    </h:outputScript>
+	    <h:outputScript rendered="#{processoEpaHome.tab == 'tabSaida'}">
+	      invoke([ "infox.Modal" ], function(Modal) {
+	        var panelTeste = new Modal({
+	          id : "#{rich:clientId('mp_taskNodeDescription')}"
+	        });
+	        $(".mp-help").click(function show() {
+	          panelTeste.show();
+	        });
+	
+	        #{rich:jQuery('mp_taskNodeCloseBtn')}.click(function hide() {
+	          panelTeste.hide();
+	        });
+	      });
+	    </h:outputScript>
     </ui:define>
     <ui:param
         name="home"
@@ -91,7 +96,7 @@
         value="rf-dt-crud" />
     <ui:define name="body">
         <rich:collapsiblePanel
-            switchType="client"
+            switchType="client" rendered="#{checkPermission}"
             header="#{infoxMessages['processo.titleView']} #{processoEpaHome.instance.numeroProcessoRoot} - #{taskInstance.processInstance.processDefinition.name} - #{taskInstance.name} "
             expanded="false">
             <h:panelGrid columns="2"  width="100%"  columnClasses="viewColumn">
@@ -123,7 +128,6 @@
         </h:form>
         <infox:tabPanel
             switchType="ajax"
-            rendered="#{checkPermission}"
             activeTab="#{home.tab}"
             id="movimentarTabPanel">
             <h:form rendered="#{!isUsuarioExterno}">
@@ -278,7 +282,7 @@
                         var="row"
                         rows="10"
                         showSearchForm="false"
-                        panelStyleCss="full-sized">
+                        panelStyleCss="rf-dt-crud">
                         <ui:define name="toolBar">
                             <wi:toolBarRemove
                                 id="toolBarInactivate"
@@ -424,6 +428,7 @@
             id="mp_taskNodeDescription"
             height="#{modalHeight}"
             width="#{modalWidth}"
+            rendered="#{checkPermission}"
             show="false"
             modal="true"
             moveable="true"

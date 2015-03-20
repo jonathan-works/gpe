@@ -29,7 +29,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 
     private static final String DEFAULT_EJBQL = "select o from Processo o where o.idJbpm is not null and o.processoPai is null and "
             + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
-    private static final String DEFAULT_ORDER = "dataInicio DESC";
+    private static final String DEFAULT_ORDER = "coalesce(o.prioridadeProcesso, -1) DESC, o.dataInicio ASC";
     private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.entity.dataInicio}";
     private static final String R2 = "cast(dataFim as date)<= #{processoEpaList.entity.dataFim}";
 

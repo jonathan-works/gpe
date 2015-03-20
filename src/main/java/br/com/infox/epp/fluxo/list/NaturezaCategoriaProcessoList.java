@@ -29,7 +29,7 @@ public class NaturezaCategoriaProcessoList extends EntityList<NaturezaCategoriaF
             + "and (f.dataFimPublicacao is null or current_date() <= f.dataFimPublicacao) "
             + "and fpL.papel = #{usuarioLogadoPerfilAtual.getPerfilTemplate().getPapel()} ";
     
-    private static final String DEFAULT_ORDER = "natureza";
+    private static final String DEFAULT_ORDER = "ncf.natureza";
     
     @Override
     protected void addSearchFields() {

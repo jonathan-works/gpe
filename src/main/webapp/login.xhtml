@@ -18,43 +18,17 @@
       value="#{certificateAuthenticator.certificateLogin}" />
   </ui:define>
   <ui:define name="scripts">
-    <h:outputScript
-      library="js/components"
-      name="Modal.js" />
-    <h:outputScript>
-      invoke([ "infox.Modal" ], function(Modal) {
-        var requestPasswordPanel = new Modal({id:"requestPasswordPanel"});
-        function toggleButton() {
-          $("#btnTrocar").val($(".novaSenha").toggleClass("visible").is(":hidden") ? "#{infoxMessages['login.trocarSenhaBtn']}" : "#{infoxMessages['login.naoTrocarSenhaBtn']}");
-          $(".input-text-login.passwd").val("");
-          $("#login\\:btnEntrar").val($("#btnTrocar").val() === "#{infoxMessages['login.naoTrocarSenhaBtn']}" ? "#{infoxMessages['login.alterarBtn']}" : "#{infoxMessages['login.entrarBtn']}");
-        }
-        function showPanel() {
-          requestPasswordPanel.show();
-        }
-        function hidePanel() {
-          requestPasswordPanel.hide();
-        }
-        $("#btnTrocar").click(toggleButton);
-        $("#btnTrocarSenha").click(showPanel);
-        $("#btnTrocarSenha2").click(hidePanel);
-        $("##{rich:clientId('closeBtn')}").click(hidePanel);
-      });
-	</h:outputScript>
+    <h:outputScript library="js/components" name="Modal.js" />
   </ui:define>
   <ui:define name="baseBody">
-    <s:div
-      id="pageBody"
-      styleClass="loginPageBody">
+    <s:div id="pageBody" styleClass="loginPageBody">
       <div class="corpoSuperior" />
       <div class="corpoInferior">
         <h:outputText
           styleClass="versao"
           value="VERSÃO: #{gitRepository.describe} / #{gitRepository.buildTime}" />
       </div>
-      <div
-        id="seletorSkinLogin"
-        class="seletorSkinsLogin">
+      <div id="seletorSkinLogin" class="seletorSkinsLogin">
         <button
           id="consultaExterna"
           class="input-button-login input_button"
@@ -72,18 +46,11 @@
         <div
           id="blocoCentralLogin"
           class="blocoCentralLogin">
-          <div
-            id="logo"
-            class="logo">
-            <h:graphicImage
-              title="Logo"
-              styleClass="logo-img"
-              url="#{wiSkin.imageFolder}/logo_epp_login.png" />
+          <div id="logo" class="logo">
+            <h:graphicImage title="Logo" styleClass="logo-img" url="#{wiSkin.imageFolder}/logo_epp_login.png" />
           </div>
           <div class="logo_inferior"></div>
-          <div
-            id="bg_login"
-            class="bg_login login">
+          <div id="bg_login" class="bg_login login">
             <s:div rendered="#{not useCertLogin}">
               <div>
                 <h:outputLabel
@@ -111,30 +78,6 @@
                   rendered="#{not useCertLogin}"
                   class="input-text-login" />
               </div>
-              <div class="novaSenha">
-                <h:outputLabel
-                  for="newPassword1"
-                  rendered="#{not useCertLogin}"
-                  class="login-lbl"
-                  value="#{infoxMessages['login.novaSenha']}">
-                </h:outputLabel>
-                <h:inputSecret
-                  id="newPassword1"
-                  class="input-text-login  passwd"
-                  value="#{authenticator.newPassword1}" />
-              </div>
-              <div class="novaSenha">
-                <h:outputLabel
-                  for="newPassword2"
-                  rendered="#{not useCertLogin}"
-                  class="login-lbl"
-                  value="#{infoxMessages['login.confirmacaoNovaSenha']}">
-                </h:outputLabel>
-                <h:inputSecret
-                  id="newPassword2"
-                  class="input-text-login  passwd"
-                  value="#{authenticator.newPassword2}" />
-              </div>
             </s:div>
             <s:div
               styleClass="cert-div"
@@ -155,79 +98,103 @@
 					limitRender="true" />
             </s:div>
           </div>
-          <div
-            id="bg_login_inferior"
-            class="bg_login_inferior login">
+          <div id="bg_login_inferior" class="bg_login_inferior login">
             <h:panelGroup rendered="#{not useCertLogin}">
               <h:commandButton
                 id="btnEntrar"
                 value="#{infoxMessages['login.entrarBtn']}"
                 styleClass="input-button-login input_button"
                 action="#{authenticator.login()}" />
-              <input
-                class="input-button-login input_button"
+              <h:commandButton
+                styleClass="input-button-login input_button"
                 id="btnTrocar"
                 type="button"
-                value="#{infoxMessages['login.trocarSenhaBtn']}" />
-              <input
-                class="input-button-login input_button"
+                value="#{infoxMessages['login.trocarSenhaBtn']}" 
+                onclick="#{rich:component('alterPasswordModal')}.show();" />
+              <h:commandButton
+                styleClass="input-button-login input_button"
                 id="btnTrocarSenha"
                 type="button"
-                value="#{infoxMessages['login.requisitarSenhaBtn']}" />
+                value="#{infoxMessages['login.requisitarSenhaBtn']}" 
+                onclick="#{rich:component('requestPasswordPanel')}.show();" />
             </h:panelGroup>
           </div>
         </div>
       </h:form>
-      <rich:popupPanel
-        id="requestPasswordPanel"
-        width="370"
-        height="255">
-        <f:facet name="header">#{infoxMessages['login.requisitarSenha']}</f:facet>
-        <f:facet name="controls">
-          <h:panelGroup>
-            <h:graphicImage
-              id="closeBtn"
-              value="#{wiSkin.imageFolder}/closeMP.gif" />
-          </h:panelGroup>
+      <rich:popupPanel id="requestPasswordPanel" width="370" height="182" headerClass="login-header-modal"
+      				   style="background: linear-gradient(to bottom, #A2B9B5 0%, #B8D1CF 100%) repeat scroll 0% 0% transparent;">
+        <f:facet name="controls">	
+          <div style="cursor: pointer;">
+            <h:graphicImage id="requestPasswordPanelCloseBtn" value="#{wiSkin.imageFolder}/closeMP.gif" 
+            				onclick="#{rich:component('requestPasswordPanel')}.hide();" />
+          </div>
         </f:facet>
-        <h:form
-          id="gerarSenha"
-          rendered="#{not useCertLogin}">
-          <div class="bg_login">
+        <h:form id="requestPasswordPanelGerarSenhaForm" >
+          <div>
             <div>
-              <h:outputLabel
-                for="login"
-                class="login-lbl"
-                value="#{infoxMessages['login.nomeUsuario']}">
-              </h:outputLabel>
-              <h:inputText
-                id="login"
-                class="input-text-login"
-                value="#{passwordRequester.login}" />
+              <h:outputLabel for="login" class="login-lbl" value="#{infoxMessages['login.nomeUsuario']}" />
+              <h:inputText id="login" class="input-text-login" value="#{passwordRequester.login}" />
             </div>
             <div>
-              <h:outputLabel
-                for="email"
-                class="login-lbl"
-                value="#{infoxMessages['login.emailUsuario']}">
-              </h:outputLabel>
-              <h:inputText
-                id="email"
-                class="input-text-login"
-                value="#{passwordRequester.email}" />
+              <h:outputLabel for="email" class="login-lbl" value="#{infoxMessages['login.emailUsuario']}" />
+              <h:inputText id="email" styleClass="input-text-login" value="#{passwordRequester.email}" />
             </div>
           </div>
-          <div class="bg_login_inferior">
+          <div style="margin-top:3px; text-align: center;" >
             <h:commandButton
               id="confirma"
-              class="input-button-login input_button"
-              value="#{infoxMessages['login.confirmaTrocaSenhaBtn']}"
+              styleClass="input-button-login input_button"
+              value="#{infoxMessages['login.requisitarSenhaBtn']}"
               action="#{passwordRequester.requisitarNovaSenha()}" />
-            <input
-              class="input-button-login input_button"
-              id="btnTrocarSenha2"
+            <h:commandButton
+              styleClass="input-button-login input_button"
+              id="cancelar"
               type="button"
-              value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" />
+              value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" 
+              onclick="#{rich:component('requestPasswordPanel')}.hide();" />
+          </div>
+        </h:form>
+      </rich:popupPanel>
+      
+      <rich:popupPanel id="alterPasswordModal" width="370" height="301" headerClass="login-header-modal"
+      				   style="background: linear-gradient(to bottom, #A2B9B5 0%, #B8D1CF 100%) repeat scroll 0% 0% transparent;">
+        <f:facet name="controls">
+          <div style="cursor: pointer;" > 
+            <h:graphicImage id="alterPasswordCloseBtn" value="#{wiSkin.imageFolder}/closeMP.gif" 
+            				onclick="#{rich:component('alterPasswordModal')}.hide();" />
+          </div>
+        </f:facet>	
+        <h:form id="alterPasswordGerarSenhaForm" rendered="#{not useCertLogin}">
+          <div>
+            <div>
+               <h:outputLabel for="username" styleClass="login-lbl" value="#{infoxMessages['login.nomeUsuario']}" />
+               <h:inputText id="username" value="#{credentials.username}" styleClass="input-text-login" />
+            </div>
+            <div>
+               <h:outputLabel for="password" styleClass="login-lbl" value="#{infoxMessages['login.senha']}" />
+               <h:inputSecret id="password" value="#{credentials.password}" styleClass="input-text-login" />
+            </div>
+	        <div>
+	           <h:outputLabel for="newPassword1" styleClass="login-lbl" value="#{infoxMessages['login.novaSenha']}" />
+	           <h:inputSecret id="newPassword1" styleClass="input-text-login passwd" value="#{authenticator.newPassword1}" />
+	        </div>
+	        <div>
+	           <h:outputLabel for="newPassword2" styleClass="login-lbl" value="#{infoxMessages['login.confirmacaoNovaSenha']}" />
+               <h:inputSecret id="newPassword2" styleClass="input-text-login passwd" value="#{authenticator.newPassword2}" />
+	        </div>
+          </div>
+          <div style="margin-top:3px; text-align: center;" >
+            <h:commandButton
+              id="confirma"
+              styleClass="input-button-login input_button"
+              value="#{infoxMessages['login.trocarSenhaBtn']}"
+              action="#{authenticator.login()}" />
+            <h:commandButton
+              styleClass="input-button-login input_button"
+              id="cancelar"
+              type="button"
+              value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" 
+              onclick="#{rich:component('alterPasswordModal')}.hide();" />
           </div>
         </h:form>
       </rich:popupPanel>
@@ -244,7 +211,7 @@
           <h:graphicImage url="#{wiSkin.imageFolder}/ajax-loader.gif" />
         </div>
       </rich:popupPanel>
-      <wi:messages></wi:messages>
+      <wi:messages />
     </s:div>
   </ui:define>
 </ui:composition>

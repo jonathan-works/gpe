@@ -60,11 +60,12 @@ public class RecursoPapelController implements Serializable {
     }
 
     private List<String> getPapeisAssociadosARecurso() {
-        return papeis = recursoManager.getPapeisAssociadosARecurso(recurso);
+        return recursoManager.getPapeisAssociadosARecurso(recurso);
     }
 
     public void save() {
-        final UpdateResourcesOperation resourcesOperation = new UpdateResourcesOperation(recurso.getIdentificador(), getPapeis(), getPapeisDisponiveis());
+    	List<String> papeisTotais = papelManager.getListaDeNomesDosPapeis();
+        UpdateResourcesOperation resourcesOperation = new UpdateResourcesOperation(recurso.getIdentificador(), getPapeis(), papeisTotais);
         resourcesOperation.run();
         recursoManager.flush();
         FacesMessages.instance().add(infoxMessages.get("entity_updated"));

@@ -62,7 +62,7 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
             customColumnsOrder.putAll(map);
         }
         setEjbql(getDefaultEjbql());
-        setOrderedColumn(getDefaultOrder());
+        setOrder(getDefaultOrder());
         setRestrictions();
     }
 
