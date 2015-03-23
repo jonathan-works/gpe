@@ -73,7 +73,7 @@
 
     <a:commandLink
       action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}"
-      execute="@this" render="painelProcessos, pageBodyDialogMessage"
+      execute="@this" render="body pageBodyDialogMessage"
       onclick="return confirm(\'#{infoxMessages['movimentar.confirmLiberarTarefa']}\');"
       limitRender="true"
       rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and authenticator.isUsuarioAtualResponsavel())}">
