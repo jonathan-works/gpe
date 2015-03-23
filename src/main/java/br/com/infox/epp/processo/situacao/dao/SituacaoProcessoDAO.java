@@ -41,7 +41,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 	public static final String NAME = "situacaoProcessoDAO";
 	
 	@In(required = false)
-	protected Authenticator authenticator;
+	private Authenticator authenticator;
 	
     public final List<Tuple> getRootList(TipoProcesso tipoProcesso) {
         CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryRoot();
@@ -290,7 +290,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         abstractQuery.where(predicate);
     }
     
-    private void appendPapelLocalizacaoFilter(AbstractQuery<?> abstractQuery) {
+    protected void appendPapelLocalizacaoFilter(AbstractQuery<?> abstractQuery) {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	Root<?> root = abstractQuery.getRoots().iterator().next();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
@@ -337,7 +337,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
     	abstractQuery.where(predicate);
 	}
 	
-	private void appendUnidadeDecisoraMonocraticaFilter(AbstractQuery<?> abstractQuery) {
+	protected void appendUnidadeDecisoraMonocraticaFilter(AbstractQuery<?> abstractQuery) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		Root<?> root = abstractQuery.getRoots().iterator().next();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
