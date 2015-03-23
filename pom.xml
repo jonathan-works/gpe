@@ -4,7 +4,7 @@
 	<groupId>br.com.infox.epp</groupId>
 	<artifactId>epp</artifactId>
 	<packaging>war</packaging>
-    <version>2.6.2-SNAPSHOT</version>
+	<version>2.6.2-SNAPSHOT</version>
 	<name>epp</name>
 	<url>http://www.infox.com.br</url>
 	<dependencyManagement>
@@ -108,6 +108,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-jpamodelgen</artifactId>
+			<version>4.3.8.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<type>jar</type>
 			<version>4.2.14.Final</version><!--$NO-MVN-MAN-VER$ -->
@@ -144,6 +149,11 @@
 			<type>jar</type>
 			<scope>compile</scope>
 			<version>4.3.8-infox-SNAPSHOT</version><!--$NO-MVN-MAN-VER$ -->
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
@@ -277,7 +287,7 @@
 		<dependency>
 			<groupId>br.com.infox</groupId>
 			<artifactId>componentes</artifactId>
-			<version>1.1.11</version>
+			<version>1.1.12</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -398,7 +408,34 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<compilerArgument>-proc:none</compilerArgument>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.bsc.maven</groupId>
+				<artifactId>maven-processor-plugin</artifactId>
+				<version>2.2.4</version>
+				<executions>
+					<execution>
+						<id>process</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<phase>generate-sources</phase>
+						<configuration>
+							<processors>
+								<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+							</processors>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate-jpamodelgen</artifactId>
+						<version>WORKING</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -508,6 +545,40 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.bsc.maven</groupId>
+										<artifactId>
+											maven-processor-plugin
+										</artifactId>
+										<versionRange>
+											[2.0.5,)
+										</versionRange>
+										<goals>
+											<goal>process</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -520,7 +591,7 @@
 		<epp.transaction.class>org.hibernate.transaction.JBossTransactionManagerLookup</epp.transaction.class>
 		<hibernate.cache.region.class>org.jboss.as.jpa.hibernate4.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
 		<epp.mail.session>java:jboss/mail/${epp.name}</epp.mail.session>
-				
+
 		<desenvolvimento>false</desenvolvimento>
 		<producao>true</producao>
 		<log.jbpm>WARNING</log.jbpm>
@@ -570,12 +641,6 @@
 				<epp.mail.session>mail/${epp.name}</epp.mail.session>
 			</properties>
 			<dependencies>
-				<dependency>
-					<groupId>br.com.infox</groupId>
-					<artifactId>componentes</artifactId>
-					<version>[1.1.10,)</version>
-					<scope>provided</scope>
-				</dependency>
 				<dependency>
 					<groupId>org.javassist</groupId>
 					<artifactId>javassist</artifactId>
