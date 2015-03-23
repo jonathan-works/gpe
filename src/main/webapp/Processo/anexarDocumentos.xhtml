@@ -17,7 +17,7 @@
       styleClass="folder-ul"
       rowClass="folder-li"
       var="pasta">
-      <s:div rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)">
+      <s:div rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)}">
 	      <h:graphicImage
 	        url="#{wiSkin.imageFolder}/folder.png"
 	        rendered="true"
