@@ -13,17 +13,18 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.processo.prioridade.query.PrioridadeProcessoQuery;
 
 @Entity
-@Table(name = PrioridadeProcesso.TABLE_NAME)
+@Table(name = PrioridadeProcessoQuery.TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = PrioridadeProcessoQuery.COLUMN_DESCRICAO))
 @NamedQueries({ @NamedQuery(name = PrioridadeProcessoQuery.NAMED_QUERY_PRIORIDADES_ATIVAS, query = PrioridadeProcessoQuery.QUERY_PRIORIDADES_ATIVAS) })
 public class PrioridadeProcesso implements Serializable, Comparable<PrioridadeProcesso> {
 
-    public static final String TABLE_NAME = "tb_prioridade_processo";
+
     private static final long serialVersionUID = 1L;
 
     private Integer idPrioridade;
@@ -34,7 +35,7 @@ public class PrioridadeProcesso implements Serializable, Comparable<PrioridadePr
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "generator", sequenceName = "sq_tb_prioridade_processo")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_prioridade_processo")
+    @Column(name = PrioridadeProcessoQuery.COLUMN_ID)
     public Integer getIdPrioridade() {
         return idPrioridade;
     }
@@ -43,7 +44,7 @@ public class PrioridadeProcesso implements Serializable, Comparable<PrioridadePr
         this.idPrioridade = idPrioridade;
     }
 
-    @Column(name = "ds_prioridade_processo", nullable = false)
+    @Column(name = PrioridadeProcessoQuery.COLUMN_DESCRICAO, nullable = false)
     @Size(min = LengthConstants.FLAG, max = DESCRICAO_MEDIA)
     public String getDescricaoPrioridade() {
         return descricaoPrioridade;
@@ -53,7 +54,7 @@ public class PrioridadeProcesso implements Serializable, Comparable<PrioridadePr
         this.descricaoPrioridade = descricaoPrioridade;
     }
 
-    @Column(name = "nr_peso", nullable = false)
+    @Column(name = PrioridadeProcessoQuery.COLUMN_NR_PESO, nullable = false)
     public Integer getPeso() {
         return peso;
     }
