@@ -5,6 +5,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.DAOException;
@@ -24,6 +25,7 @@ import br.com.infox.log.Logging;
 @Name(ContabilizadorPrazo.NAME)
 @Scope(ScopeType.STATELESS)
 @DefinitionAvaliable
+@Transactional
 public class ContabilizadorPrazo {
 	
     public static final String NAME = "contabilizadorPrazo";

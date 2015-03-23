@@ -18,6 +18,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
@@ -57,6 +58,7 @@ import br.com.infox.log.Logging;
 @AutoCreate
 @Name(Authenticator.NAME)
 @Install(precedence = Install.APPLICATION)
+@Transactional
 public class Authenticator implements Serializable {
 
 	private static final long serialVersionUID = 1L;
