@@ -91,15 +91,17 @@
                     required="true"
                     value="#{naturezaCrudAction.instance.numeroPartesFisicas}"
                     disabled="#{naturezaCrudAction.instance.locked}"
-                    rendered="#{naturezaCrudAction.instance.hasPartes and !naturezaCrudAction.instance.apenasPessoaJuridica()}" />
+                    rendered="#{naturezaCrudAction.instance.hasPartes and not empty naturezaCrudAction.instance.tipoPartes and !naturezaCrudAction.instance.apenasPessoaJuridica()}" 
+                    maxlength="10" />
                 <wi:inputNumber id="numeroPartesJuridicas"
                     label="#{infoxMessages['natureza.numeroPartesJuridicas']}"
                     required="true"
                     value="#{naturezaCrudAction.instance.numeroPartesJuridicas}"
                     disabled="#{naturezaCrudAction.instance.locked}"
-                    rendered="#{naturezaCrudAction.instance.hasPartes and !naturezaCrudAction.instance.apenasPessoaFisica()}" />
+                    rendered="#{naturezaCrudAction.instance.hasPartes and not empty naturezaCrudAction.instance.tipoPartes and !naturezaCrudAction.instance.apenasPessoaFisica()}" 
+                    maxlength="10" />
             </s:div>
-        </wi:dataForm>
+        </wi:dataForm> 
     </ui:define>
 
     <ui:define name="tabs">
