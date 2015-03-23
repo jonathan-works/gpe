@@ -26,13 +26,14 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 
 @Entity
-@Table(name = TABLE_VARIAVEL)
+@Table(name = TABLE_VARIAVEL, uniqueConstraints = @UniqueConstraint(columnNames = DESCRICAO_VARIAVEL) )
 @NamedQueries(value = { @NamedQuery(name = VARIAVEL_BY_TIPO_MODELO_DOCUMENTO, query = VARIAVEL_BY_TIPO_MODELO_QUERY) })
 public class Variavel implements java.io.Serializable {
 
