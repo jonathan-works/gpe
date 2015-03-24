@@ -29,7 +29,7 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	private static final String DEFAULT_EJBQL = "select o from Processo o " +
 												"where exists (select 1 from MetadadoProcesso mp " +
 												"				where mp.metadadoType = '" + EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType() + "' " +
-												"				and mp.valor = '" + TipoProcesso.COMUNICACAO + "' " +
+												"				and mp.valor = '" + TipoProcesso.COMUNICACAO_NAO_ELETRONICA + "' " +
 												"				and mp.processo = o) " +
 												"and exists (select 1 from MetadadoProcesso mp " +
 												"			  where mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' " + 
