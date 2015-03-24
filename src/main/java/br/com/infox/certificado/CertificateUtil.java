@@ -40,7 +40,7 @@ class CertificateUtil {
             dadosPessoaFisica.nis = info.substring(19, 30);
             dadosPessoaFisica.rg = info.substring(30, 45);
             if (!dadosPessoaFisica.rg.replace("0", "").isEmpty()) {
-                dadosPessoaFisica.orgaoExpedidor = info.substring(45, 50);
+                dadosPessoaFisica.orgaoExpedidor = info.substring(45, info.length());
             }
         } else if (oid.equals(OID_DADOS_ELEITORAIS)) {
             dadosPessoaFisica.tituloEleitor = info.substring(0, 12);
