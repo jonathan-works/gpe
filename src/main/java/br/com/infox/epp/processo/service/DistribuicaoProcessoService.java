@@ -21,6 +21,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 @Name(DistribuicaoProcessoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class DistribuicaoProcessoService {
 	
 	@In

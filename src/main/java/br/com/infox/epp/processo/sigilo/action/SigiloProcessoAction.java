@@ -16,6 +16,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -32,6 +33,7 @@ import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 @Name(SigiloProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Transactional
 public class SigiloProcessoAction implements Serializable {
 
     private static final String MOTIVO_COMPONENT_ID = ":visualizarProcessoTabPanel:sigiloProcessoForm:motivoDecoration:motivo";

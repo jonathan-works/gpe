@@ -11,6 +11,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 
 import com.google.common.base.Strings;
 
@@ -22,6 +23,7 @@ import br.com.infox.epp.search.SearchService;
 
 @Name(AjudaView.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class AjudaView implements Serializable {
 
 	private static final long serialVersionUID = 1L;

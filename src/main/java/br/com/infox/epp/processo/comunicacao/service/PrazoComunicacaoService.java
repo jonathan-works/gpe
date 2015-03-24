@@ -28,6 +28,7 @@ import br.com.infox.epp.system.Parametros;
 @AutoCreate
 @Transactional
 public class PrazoComunicacaoService {
+	
 	public static final String NAME = "prazoComunicacaoService";
 	
 	@In

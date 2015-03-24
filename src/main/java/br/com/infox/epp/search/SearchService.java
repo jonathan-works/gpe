@@ -22,6 +22,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -31,6 +32,7 @@ import br.com.infox.log.Logging;
 @Name(SearchService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class SearchService {
 
     public static final String NAME = "searchService";

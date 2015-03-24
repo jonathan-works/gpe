@@ -43,6 +43,7 @@ import br.com.infox.seam.transaction.TransactionService;
 @Scope(ScopeType.CONVERSATION)
 @Transactional
 public class ExpedicaoComunicacaoAction implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "expedicaoComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ExpedicaoComunicacaoAction.class);

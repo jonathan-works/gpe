@@ -18,6 +18,7 @@ import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
@@ -48,6 +49,7 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(AuthenticatorService.NAME)
 @AutoCreate
+@Transactional
 public class AuthenticatorService implements Serializable {
     public static final String CERTIFICATE_ERROR_EXPIRED = "certificate.error.expired";
     private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO = "certificate.error.usuarioLoginProvisorioExpirado";

@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.util.RandomStringUtils;
 import org.richfaces.component.util.Strings;
 
@@ -21,6 +22,7 @@ import br.com.infox.seam.security.operation.ChangePasswordOperation;
 @Name(PasswordService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class PasswordService {
     public static final String NAME = "passwordService";
 
