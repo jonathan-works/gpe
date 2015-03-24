@@ -10,9 +10,12 @@ import java.util.Map;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
 import org.jboss.seam.util.Strings;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
@@ -23,7 +26,9 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(VariableHandler.NAME)
+@Transactional
 public class VariableHandler implements Serializable {
+	
     private static final long serialVersionUID = -6777955765635127593L;
 
     public static final String NAME = "variableHandler";

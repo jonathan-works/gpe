@@ -14,6 +14,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
@@ -32,6 +33,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
 @Name(IniciarProcessoService.NAME)
+@Transactional
 public class IniciarProcessoService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
