@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.reflections.Reflections;
@@ -21,6 +22,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.APPLICATION)
 @AutoCreate
 @Startup
+@Transactional
 public class AssinaturaDocumentoListenerService {
 	public static final String NAME = "assinaturaDocumentoListenerService";
 	private static final LogProvider LOG = Logging.getLogProvider(AssinaturaDocumentoListenerService.class);
