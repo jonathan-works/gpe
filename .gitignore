@@ -17,6 +17,7 @@ derby.log
 /src/main/resources/git.properties
 /.classpath
 /.externalToolBuilders
+/.factorypath
 /.metadata
 /.project
 /.settings
