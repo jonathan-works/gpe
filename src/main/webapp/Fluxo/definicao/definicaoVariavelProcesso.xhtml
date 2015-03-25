@@ -113,8 +113,11 @@
                 <wi:selectBooleanCheckbox
                 	id="variavelVisivel"
                 	label="#{infoxMessages['definicaoVariavelProcesso.visivel']}"
-                	value="#{definicaoVariavelProcessoAction.variavel.visivel}"
-              	/>
+                	value="#{definicaoVariavelProcessoAction.variavel.visivel}" />
+                <wi:selectBooleanCheckbox
+                    id="variavelVisivelPainel"
+                    label="#{infoxMessages['definicaoVariavelProcesso.visivelPainel']}"
+                    value="#{definicaoVariavelProcessoAction.variavel.visivelPainel}" />
             </s:div>
             <wi:commandButton
             	id="buttonDefinicaoVariavelPersist"
