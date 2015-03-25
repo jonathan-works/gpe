@@ -15,6 +15,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
@@ -22,7 +23,7 @@ import br.com.infox.core.persistence.ORConstants;
 import br.com.infox.epp.access.query.EstruturaQuery;
 
 @Entity
-@Table(name = EstruturaQuery.TABLE_NAME)
+@Table(name = EstruturaQuery.TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = EstruturaQuery.COLUMN_NOME))
 @NamedQueries({
     @NamedQuery(name = EstruturaQuery.ESTRUTURAS_DISPONIVEIS, query = EstruturaQuery.ESTRUTURAS_DISPONIVEIS_QUERY),
     @NamedQuery(name = EstruturaQuery.ESTRUTURA_BY_NOME, query = EstruturaQuery.ESTRUTURA_BY_NOME_QUERY)
@@ -36,14 +37,14 @@ public class Estrutura implements Serializable {
     @GeneratedValue(generator = ORConstants.GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = EstruturaQuery.COLUMN_ID)
     private Integer id;
-    
+
     @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_ENTIDADE)
     @Column(name = EstruturaQuery.COLUMN_NOME, length = LengthConstants.DESCRICAO_ENTIDADE, nullable = false, unique = true)
     private String nome;
-    
+
     @Column(name = ORConstants.ATIVO, nullable = false)
     private Boolean ativo;
-    
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "estruturaPai")
     private List<Localizacao> localizacoes = new ArrayList<>();
 
@@ -62,11 +63,11 @@ public class Estrutura implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
+
     public Boolean getAtivo() {
         return ativo;
     }
-    
+
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
@@ -78,7 +79,7 @@ public class Estrutura implements Serializable {
     public void setLocalizacoes(List<Localizacao> localizacoes) {
         this.localizacoes = localizacoes;
     }
-    
+
     @Override
     public String toString() {
         return nome;
@@ -88,24 +89,29 @@ public class Estrutura implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        result = (prime * result) + ((getId() == null) ? 0 : getId().hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (!(obj instanceof Estrutura))
+        }
+        if (!(obj instanceof Estrutura)) {
             return false;
+        }
         Estrutura other = (Estrutura) obj;
         if (getId() == null) {
-            if (other.getId() != null)
+            if (other.getId() != null) {
                 return false;
-        } else if (!getId().equals(other.getId()))
+            }
+        } else if (!getId().equals(other.getId())) {
             return false;
+        }
         return true;
     }
 }

@@ -76,12 +76,14 @@
         id="nomeUsuario"
         label="#{infoxMessages['usuario.nome']}"
         value="#{usuarioLoginCrudAction.instance.nomeUsuario}"
-        required="true" />
+        required="true"
+        maxlength="150" />
       <wi:inputText
         id="email"
         label="#{infoxMessages['usuarioLogin.email']}"
         value="#{usuarioLoginCrudAction.instance.email}"
-        required="true">
+        required="true"
+        maxlength="100" >
         <f:validator validatorId="emailValidator" />
       </wi:inputText>
       <wi:inputText

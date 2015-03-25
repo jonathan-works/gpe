@@ -66,7 +66,7 @@ public class Categoria implements Serializable {
     }
 
     @Column(name = DESCRICAO_CATEGORIA, length = LengthConstants.DESCRICAO_PEQUENA, nullable = false)
-    @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA)
+    @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_PEQUENA)
     @NotNull
     public String getCategoria() {
         return categoria;
@@ -114,7 +114,7 @@ public class Categoria implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
+        result = (prime * result)
                 + ((idCategoria == null) ? 0 : idCategoria.hashCode());
         return result;
     }

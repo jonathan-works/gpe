@@ -74,7 +74,8 @@
           id="nome"
           label="#{infoxMessages['sala.nome']}"
           value="#{salaCrudAction.instance.nome}"
-          required="true" />
+          required="true" 
+          maxlength="150" />
       <wi:selectOneMenuEntity
           id="unidadeDecisoraColegiada"
           label="#{infoxMessages['sala.colegiado']}"
@@ -90,7 +91,8 @@
           id="endereco"
           label="#{infoxMessages['sala.endereco']}"
           value="#{salaCrudAction.instance.endereco}"
-          required="true" />
+          required="true" 
+          maxlength="150" />
       <wi:selectBooleanRadio
           id="foraExpediente"
           label="#{infoxMessages['sala.foraExpediente']}"

@@ -4,6 +4,8 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINI
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_FLUXO_NOME_QUERY;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_ID_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_ID_PROCESSO_QUERY;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO_QUERY;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.GENERATOR_DEFINICAO_VARIAVEL_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_DEFINICAO_VARIAVEL_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_FLUXO;
@@ -16,6 +18,7 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TABLE_
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO_QUERY;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL_PAINEL;
 
 import java.io.Serializable;
 
@@ -44,7 +47,8 @@ import br.com.infox.constants.LengthConstants;
     @NamedQuery(name = DEFINICAO_BY_FLUXO, query = DEFINICAO_BY_FLUXO_NOME_QUERY),
     @NamedQuery(name = LIST_BY_FLUXO, query = LIST_BY_FLUXO_QUERY),
     @NamedQuery(name = TOTAL_BY_FLUXO, query = TOTAL_BY_FLUXO_QUERY),
-    @NamedQuery(name = DEFINICAO_BY_ID_PROCESSO, query = DEFINICAO_BY_ID_PROCESSO_QUERY)
+    @NamedQuery(name = DEFINICAO_BY_ID_PROCESSO, query = DEFINICAO_BY_ID_PROCESSO_QUERY),
+    @NamedQuery(name = DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, query = DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO_QUERY)
 })
 public class DefinicaoVariavelProcesso implements Serializable {
 
@@ -72,6 +76,10 @@ public class DefinicaoVariavelProcesso implements Serializable {
 
     @Column(name = VISIVEL)
     private Boolean visivel;
+    
+    @NotNull
+    @Column(name = VISIVEL_PAINEL)
+    private Boolean visivelPainel;
     
     public DefinicaoVariavelProcesso() {
     	setVisivel(Boolean.TRUE);
@@ -117,6 +125,14 @@ public class DefinicaoVariavelProcesso implements Serializable {
 		this.visivel = visivel;
 	}
 	
+	public Boolean getVisivelPainel() {
+        return visivelPainel;
+    }
+
+    public void setVisivelPainel(Boolean visivelPainel) {
+        this.visivelPainel = visivelPainel;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -162,5 +178,4 @@ public class DefinicaoVariavelProcesso implements Serializable {
         }
         return true;
     }
-
 }

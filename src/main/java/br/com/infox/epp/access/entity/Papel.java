@@ -48,6 +48,7 @@ import org.hibernate.annotations.ForeignKey;
 import org.jboss.seam.annotations.security.management.RoleGroups;
 import org.jboss.seam.annotations.security.management.RoleName;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.dao.PapelDAO;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -93,7 +94,7 @@ public class Papel implements java.io.Serializable {
     }
 
     @Column(name = NOME_PAPEL, length = NOME_PADRAO)
-    @Size(max = NOME_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = NOME_PADRAO)
     public String getNome() {
         return this.nome;
     }
@@ -103,7 +104,7 @@ public class Papel implements java.io.Serializable {
     }
 
     @Column(name = IDENTIFICADOR, length = DESCRICAO_PADRAO)
-    @Size(max = DESCRICAO_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO)
     @NotNull
     @RoleName
     public String getIdentificador() {
@@ -162,7 +163,7 @@ public class Papel implements java.io.Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + getIdPapel();
+        result = (prime * result) + getIdPapel();
         return result;
     }
 
@@ -171,7 +172,7 @@ public class Papel implements java.io.Serializable {
         PapelDAO pd = ComponentUtil.getComponent(PapelDAO.NAME);
         return pd.getListaPermissoes(this);
     }
-    
+
     @NotNull
     @Column(name=COL_TERMO_ADESAO, nullable=false)
     public Boolean getTermoAdesao() {
@@ -180,5 +181,5 @@ public class Papel implements java.io.Serializable {
     public void setTermoAdesao(Boolean termoAdesao) {
         this.termoAdesao=termoAdesao;
     }
-    
+
 }

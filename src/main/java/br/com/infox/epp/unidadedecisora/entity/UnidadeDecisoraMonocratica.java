@@ -1,6 +1,9 @@
 package br.com.infox.epp.unidadedecisora.entity;
 
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.*;
+import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO_DOBRO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.FIND_UDM_BY_CODIGO_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.FIND_UDM_BY_CODIGO_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_BY_UNIDADE_DECISORA_COLEGIADA;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_BY_UNIDADE_DECISORA_COLEGIADA_QUERY;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_EXISTE_UDM_BY_LOCALIZACAO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraMonocraticaQuery.SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY;
@@ -28,75 +31,78 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 
 @Entity
 @Table(name = UnidadeDecisoraMonocratica.TABLE_NAME)
 @NamedQueries(value={ @NamedQuery(name=SEARCH_BY_UNIDADE_DECISORA_COLEGIADA, query=SEARCH_BY_UNIDADE_DECISORA_COLEGIADA_QUERY),
-					  @NamedQuery(name=SEARCH_UDM_BY_USUARIO, query=SEARCH_UDM_BY_USUARIO_QUERY),
-					  @NamedQuery(name=SEARCH_EXISTE_UDM_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY),
-					  @NamedQuery(name=FIND_UDM_BY_CODIGO_LOCALIZACAO, query=FIND_UDM_BY_CODIGO_LOCALIZACAO_QUERY)})
+        @NamedQuery(name=SEARCH_UDM_BY_USUARIO, query=SEARCH_UDM_BY_USUARIO_QUERY),
+        @NamedQuery(name=SEARCH_EXISTE_UDM_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY),
+        @NamedQuery(name=FIND_UDM_BY_CODIGO_LOCALIZACAO, query=FIND_UDM_BY_CODIGO_LOCALIZACAO_QUERY)})
 public class UnidadeDecisoraMonocratica implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "tb_uni_decisora_monocratica";
-	
-	@Id
-	@SequenceGenerator(allocationSize=1, initialValue=1, name = "UnidadeDecisoraMonocraticaGenerator", sequenceName="sq_uni_decisora_monocratica")
-	@GeneratedValue(generator="UnidadeDecisoraMonocraticaGenerator", strategy=GenerationType.SEQUENCE)
-	@Column(name = "id_uni_decisora_monocratica", unique=true, nullable=false)
-	private Integer idUnidadeDecisoraMonocratica;
-	
-	@NotNull
-	@Column(name="ds_uni_decisora_monocratica", nullable=false, unique=true)
-	private String nome;
+    private static final long serialVersionUID = 1L;
+    public static final String TABLE_NAME = "tb_uni_decisora_monocratica";
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "id_localizacao", nullable=false)
-	private Localizacao localizacao;
-	
-	@NotNull
-	@Column(name="in_ativo", nullable = false)
-	private Boolean ativo;
-	
-	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH, mappedBy="unidadeDecisoraMonocratica")
+    @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "UnidadeDecisoraMonocraticaGenerator", sequenceName="sq_uni_decisora_monocratica")
+    @GeneratedValue(generator="UnidadeDecisoraMonocraticaGenerator", strategy=GenerationType.SEQUENCE)
+    @Column(name = "id_uni_decisora_monocratica", unique=true, nullable=false)
+    private Integer idUnidadeDecisoraMonocratica;
+
+    @NotNull
+    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO_DOBRO)
+    @Column(name="ds_uni_decisora_monocratica", nullable=false, unique=true)
+    private String nome;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "id_localizacao", nullable=false)
+    private Localizacao localizacao;
+
+    @NotNull
+    @Column(name="in_ativo", nullable = false)
+    private Boolean ativo;
+
+    @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH, mappedBy="unidadeDecisoraMonocratica")
     @OrderBy("unidadeDecisoraColegiada ASC")
     private List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList = new ArrayList<>();
 
-	public Integer getIdUnidadeDecisoraMonocratica() {
-		return idUnidadeDecisoraMonocratica;
-	}
+    public Integer getIdUnidadeDecisoraMonocratica() {
+        return idUnidadeDecisoraMonocratica;
+    }
 
-	public void setIdUnidadeDecisoraMonocratica(Integer idUnidadeDecisoraMonocratica) {
-		this.idUnidadeDecisoraMonocratica = idUnidadeDecisoraMonocratica;
-	}
+    public void setIdUnidadeDecisoraMonocratica(Integer idUnidadeDecisoraMonocratica) {
+        this.idUnidadeDecisoraMonocratica = idUnidadeDecisoraMonocratica;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public Localizacao getLocalizacao() {
-		return localizacao;
-	}
+    public Localizacao getLocalizacao() {
+        return localizacao;
+    }
 
-	public void setLocalizacao(Localizacao localizacao) {
-		this.localizacao = localizacao;
-	}
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
+    }
 
-	public Boolean getAtivo() {
-		return ativo;
-	}
+    public Boolean getAtivo() {
+        return ativo;
+    }
 
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
 
-	public List<UnidadeDecisoraColegiadaMonocratica> getUnidadeDecisoraColegiadaMonocraticaList() {
+    public List<UnidadeDecisoraColegiadaMonocratica> getUnidadeDecisoraColegiadaMonocraticaList() {
         return unidadeDecisoraColegiadaMonocraticaList;
     }
 
@@ -104,7 +110,7 @@ public class UnidadeDecisoraMonocratica implements Serializable {
             List<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocraticaList) {
         this.unidadeDecisoraColegiadaMonocraticaList = unidadeDecisoraColegiadaMonocraticaList;
     }
-    
+
     @Transient
     public List<UnidadeDecisoraColegiada> getUnidadeDecisoraColegiadaList(){
         List<UnidadeDecisoraColegiada> unidadeDecisoraColegiadaList = new ArrayList<>();
@@ -115,37 +121,42 @@ public class UnidadeDecisoraMonocratica implements Serializable {
     }
 
     @Override
-	public String toString() {
-		return nome;
-	}
+    public String toString() {
+        return nome;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime
-				* result
-				+ ((getIdUnidadeDecisoraMonocratica() == null) ? 0
-						: getIdUnidadeDecisoraMonocratica().hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = (prime
+                * result)
+                + ((getIdUnidadeDecisoraMonocratica() == null) ? 0
+                        : getIdUnidadeDecisoraMonocratica().hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof UnidadeDecisoraMonocratica))
-			return false;
-		UnidadeDecisoraMonocratica other = (UnidadeDecisoraMonocratica) obj;
-		if (getIdUnidadeDecisoraMonocratica() == null) {
-			if (other.getIdUnidadeDecisoraMonocratica() != null)
-				return false;
-		} else if (!getIdUnidadeDecisoraMonocratica()
-				.equals(other.getIdUnidadeDecisoraMonocratica()))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof UnidadeDecisoraMonocratica)) {
+            return false;
+        }
+        UnidadeDecisoraMonocratica other = (UnidadeDecisoraMonocratica) obj;
+        if (getIdUnidadeDecisoraMonocratica() == null) {
+            if (other.getIdUnidadeDecisoraMonocratica() != null) {
+                return false;
+            }
+        } else if (!getIdUnidadeDecisoraMonocratica()
+                .equals(other.getIdUnidadeDecisoraMonocratica())) {
+            return false;
+        }
+        return true;
+    }
 
 }

@@ -1,5 +1,12 @@
 package br.com.infox.epp.system.entity;
 
+import static br.com.infox.epp.system.query.ParametroQuery.COLUMN_DATA_ATUALIZACAO;
+import static br.com.infox.epp.system.query.ParametroQuery.COLUMN_DESCRICAO;
+import static br.com.infox.epp.system.query.ParametroQuery.COLUMN_ID;
+import static br.com.infox.epp.system.query.ParametroQuery.COLUMN_IN_ATIVO;
+import static br.com.infox.epp.system.query.ParametroQuery.COLUMN_IN_SISTEMA;
+import static br.com.infox.epp.system.query.ParametroQuery.COLUMN_NOME;
+import static br.com.infox.epp.system.query.ParametroQuery.COLUMN_VALOR;
 import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO;
 import static br.com.infox.epp.system.query.ParametroQuery.EXISTE_PARAMETRO_QUERY;
 import static br.com.infox.epp.system.query.ParametroQuery.LIST_PARAMETROS_ATIVOS;
@@ -8,6 +15,7 @@ import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_NOME;
 import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_NOME_QUERY;
 import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_VALOR;
 import static br.com.infox.epp.system.query.ParametroQuery.PARAMETRO_BY_VALOR_QUERY;
+import static br.com.infox.epp.system.query.ParametroQuery.TABLE_NAME;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -30,6 +38,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -37,16 +46,16 @@ import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
-@Table(name = "tb_parametro")
-@NamedQueries({ 
+@Table(name = TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = COLUMN_NOME))
+@NamedQueries({
     @NamedQuery(name = LIST_PARAMETROS_ATIVOS, query = LIST_PARAMETROS_ATIVOS_QUERY),
     @NamedQuery(name = EXISTE_PARAMETRO, query = EXISTE_PARAMETRO_QUERY),
-    @NamedQuery(name = PARAMETRO_BY_NOME, query = PARAMETRO_BY_NOME_QUERY, 
-    			hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
-    					 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")}),
-    @NamedQuery(name = PARAMETRO_BY_VALOR, query = PARAMETRO_BY_VALOR_QUERY,
-    			hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
-			 			 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")})
+    @NamedQuery(name = PARAMETRO_BY_NOME, query = PARAMETRO_BY_NOME_QUERY,
+    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+            @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")}),
+            @NamedQuery(name = PARAMETRO_BY_VALOR, query = PARAMETRO_BY_VALOR_QUERY,
+            hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
+                    @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.system.entity.Parametro")})
 })
 @Cacheable
 public class Parametro implements Serializable {
@@ -61,14 +70,14 @@ public class Parametro implements Serializable {
     private Boolean sistema;
     private UsuarioLogin usuarioModificacao;
     private Boolean ativo;
-    
+
     public Parametro() {
     }
 
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_parametro")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_parametro", unique = true, nullable = false)
+    @Column(name = COLUMN_ID, unique = true, nullable = false)
     public Integer getIdParametro() {
         return this.idParametro;
     }
@@ -87,9 +96,9 @@ public class Parametro implements Serializable {
         this.usuarioModificacao = usuarioModificacao;
     }
 
-    @Column(name = "nm_variavel", nullable = false, length = LengthConstants.NOME_PADRAO, unique = true)
+    @Column(name = COLUMN_NOME, nullable = false, length = LengthConstants.NOME_PADRAO, unique = true)
     @NotNull
-    @Size(max = LengthConstants.NOME_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = LengthConstants.NOME_PADRAO)
     public String getNomeVariavel() {
         return this.nomeVariavel;
     }
@@ -98,9 +107,9 @@ public class Parametro implements Serializable {
         this.nomeVariavel = nomeVariavel;
     }
 
-    @Column(name = "ds_variavel", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
+    @Column(name = COLUMN_DESCRICAO, nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_PADRAO)
     public String getDescricaoVariavel() {
         return this.descricaoVariavel;
     }
@@ -109,7 +118,7 @@ public class Parametro implements Serializable {
         this.descricaoVariavel = descricaoVariavel;
     }
 
-    @Column(name = "vl_variavel", nullable = false)
+    @Column(name = COLUMN_VALOR, nullable = false)
     @NotNull
     public String getValorVariavel() {
         return this.valorVariavel;
@@ -120,7 +129,7 @@ public class Parametro implements Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "dt_atualizacao")
+    @Column(name = COLUMN_DATA_ATUALIZACAO)
     public Date getDataAtualizacao() {
         return this.dataAtualizacao;
     }
@@ -134,7 +143,7 @@ public class Parametro implements Serializable {
         this.dataAtualizacao = dataAtualizacao;
     }
 
-    @Column(name = "in_sistema", nullable = false)
+    @Column(name = COLUMN_IN_SISTEMA, nullable = false)
     @NotNull
     public Boolean getSistema() {
         return this.sistema;
@@ -144,7 +153,7 @@ public class Parametro implements Serializable {
         this.sistema = sistema;
     }
 
-    @Column(name = "in_ativo", nullable = false)
+    @Column(name = COLUMN_IN_ATIVO, nullable = false)
     @NotNull
     public Boolean getAtivo() {
         return this.ativo;
@@ -163,7 +172,7 @@ public class Parametro implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
+        result = (prime * result)
                 + ((idParametro == null) ? 0 : idParametro.hashCode());
         return result;
     }

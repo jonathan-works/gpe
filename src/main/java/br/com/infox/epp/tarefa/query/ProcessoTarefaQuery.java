@@ -49,7 +49,8 @@ public interface ProcessoTarefaQuery {
             + "where pet.tarefa.idTarefa = :"
             + PARAM_ID_TAREFA
             + " and pet.processo.idProcesso = :"
-            + PARAM_ID_PROCESSO;
+            + PARAM_ID_PROCESSO
+            + " and pet.dataFim = null";
     
     String DATA_INICIO_PRIMEIRA_TAREFA = "getDataInicioDaPrimeiraTarefa";
     String DATA_INICIO_PRIMEIRA_TAREFA_QUERY = "select pt.dataInicio from ProcessoTarefa pt "
@@ -63,5 +64,9 @@ public interface ProcessoTarefaQuery {
                 + "select 1 from TaskExpiration te "
                 + "where te.tarefa = pt.tarefa.tarefa"
             + ")";
-
+    
+    String ULTIMO_PROCESSO_TAREFA_BY_PROCESSO = "ultimoProcessoTarefaByProcesso";
+    String ULTIMO_PROCESSO_TAREFA_BY_PROCESSO_QUERY = "select pt from ProcessoTarefa pt "
+            + "where pt.processo = :" + QUERY_PARAM_PROCESSO + " "
+            + "order by pt.idProcessoTarefa desc";
 }
