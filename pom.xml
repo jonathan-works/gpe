@@ -591,6 +591,7 @@
 		<epp.transaction.class>org.hibernate.transaction.JBossTransactionManagerLookup</epp.transaction.class>
 		<hibernate.cache.region.class>org.jboss.as.jpa.hibernate4.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
 		<epp.mail.session>java:jboss/mail/${epp.name}</epp.mail.session>
+		<epp.transactionManager.jndi>java:jboss/TransactionManager</epp.transactionManager.jndi>
 
 		<desenvolvimento>false</desenvolvimento>
 		<producao>true</producao>
@@ -639,6 +640,7 @@
 				<epp.transaction.class>org.apache.openejb.hibernate.TransactionManagerLookup</epp.transaction.class>
 				<hibernate.cache.region.class>org.hibernate.cache.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
 				<epp.mail.session>mail/${epp.name}</epp.mail.session>
+				<epp.transactionManager.jndi>java:comp/TransactionManager</epp.transactionManager.jndi>
 			</properties>
 			<dependencies>
 				<dependency>

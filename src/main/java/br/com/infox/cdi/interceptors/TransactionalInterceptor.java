@@ -4,10 +4,11 @@ import static org.jboss.seam.util.EJB.APPLICATION_EXCEPTION;
 
 import java.io.Serializable;
 
-import javax.annotation.Resource;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -18,6 +19,7 @@ import org.jboss.seam.util.EJB;
 import org.jboss.seam.util.Persistence;
 
 import br.com.infox.cdi.annotations.Transactional;
+import br.com.infox.epp.system.EppProperties;
 
 @Transactional
 @Interceptor
@@ -25,11 +27,11 @@ public class TransactionalInterceptor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Resource(lookup="java:jboss/TransactionManager")
 	private TransactionManager transactionManager;
 	
 	@AroundInvoke
 	public Object openIfNoTransaction(InvocationContext invocationContext) throws Exception {
+		transactionManager = lookupTransactionManager();
 		boolean startedTransaction = false;
 		Transaction transactionSuspended = null;
 		Transactional transactional = invocationContext.getMethod().getAnnotation(Transactional.class);
@@ -115,5 +117,11 @@ public class TransactionalInterceptor implements Serializable {
 			}
 		}
 		return false;
+	}
+	
+	private TransactionManager lookupTransactionManager() throws NamingException {
+		String jndi = EppProperties.getInstance().getProperty(EppProperties.PROPERTY_TRANSACTION_MANAGER_JNDI);
+		InitialContext initialContext = new InitialContext();
+		return (TransactionManager) initialContext.lookup(jndi);
 	}
 }
