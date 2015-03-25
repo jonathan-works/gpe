@@ -14,6 +14,7 @@ import br.com.infox.kernel.view.AbstractAction;
 @ManagedBean
 @ViewScoped
 public class ItemAction extends AbstractAction<Item, Integer> {
+	
 	@Inject
 	private ItemManager itemManager;
 	@Inject
