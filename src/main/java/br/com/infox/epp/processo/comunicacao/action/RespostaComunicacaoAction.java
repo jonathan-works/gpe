@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -44,7 +45,9 @@ import br.com.infox.log.Logging;
 @Name(RespostaComunicacaoAction.NAME)
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class RespostaComunicacaoAction implements Serializable {
+	
 	public static final String NAME = "respostaComunicacaoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(RespostaComunicacaoAction.class);

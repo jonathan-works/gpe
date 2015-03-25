@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
@@ -17,6 +18,7 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
 @Name(PrioridadeProcessoChanger.NAME)
+@Transactional
 public class PrioridadeProcessoChanger implements Serializable {
 
 	private static final long serialVersionUID = 1L;

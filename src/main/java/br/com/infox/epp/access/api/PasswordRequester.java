@@ -4,15 +4,17 @@ import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(PasswordRequester.NAME)
+@Transactional
 public class PasswordRequester {
 
     private static final LogProvider LOG = Logging.getLogProvider(PasswordRequester.class);

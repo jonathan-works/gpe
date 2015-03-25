@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
@@ -40,6 +41,7 @@ import br.com.infox.log.Logging;
 @AutoCreate
 @Scope(ScopeType.EVENT)
 @Name(AssinaturaDocumentoService.NAME)
+@Transactional
 public class AssinaturaDocumentoService implements Serializable {
 
     private static final long serialVersionUID = 1L;

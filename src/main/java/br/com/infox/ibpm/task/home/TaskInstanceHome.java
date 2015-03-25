@@ -27,6 +27,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.contexts.Contexts;
@@ -100,6 +101,7 @@ import br.com.itx.component.AbstractHome;
 
 @Name(TaskInstanceHome.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class TaskInstanceHome implements Serializable {
 
 	private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "

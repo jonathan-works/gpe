@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
@@ -30,7 +31,9 @@ import br.com.infox.seam.exception.BusinessException;
 @Name(RespostaComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class RespostaComunicacaoService {
+	
 	public static final String NAME = "respostaComunicacaoService";
 	
 	@In

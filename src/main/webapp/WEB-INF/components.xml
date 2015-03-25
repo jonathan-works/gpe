@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: components.xml 704 2010-08-12 23:21:10Z jplacerda $ -->
 
 <components
     xmlns="http://jboss.org/schema/seam/components"
@@ -25,7 +24,8 @@
 
     <core:init
         debug="${desenvolvimento}"
-        jndi-pattern="java:module/#{ejbName}" />
+        jndi-pattern="java:module/#{ejbName}" 
+        transaction-management-enabled="false" />
         
     <document:document-store use-extensions="true" />
 
@@ -36,26 +36,26 @@
     <core:manager
         concurrent-request-timeout="2000"
         conversation-timeout="300000"
-        conversation-id-parameter="cid"
+        conversation-id-parameter="scid"
         parent-conversation-id-parameter="pid"
         default-flush-mode="MANUAL" />
-
+        
     <persistence:managed-persistence-context
         name="entityManagerLog"
         auto-create="true"
-        persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit" />
+        persistence-unit-jndi-name="java:comp/env/EPAPersistenceUnit" />
 
     <persistence:managed-persistence-context
         name="entityManager"
         auto-create="true"
-        persistence-unit-jndi-name="java:jboss/EPAPersistenceUnit" />
+        persistence-unit-jndi-name="java:comp/env/EPAPersistenceUnit" />
 
     <async:quartz-dispatcher />
     
     <persistence:managed-persistence-context
         name="entityManagerBin"
         auto-create="true"
-        persistence-unit-jndi-name="java:jboss/EPABinPersistenceUnit" />
+        persistence-unit-jndi-name="java:comp/env/EPABinPersistenceUnit" />
 
     <event type="org.jboss.seam.security.notLoggedIn">
         <action execute="#{redirect.captureCurrentView}" />
@@ -75,7 +75,7 @@
         enabled="false"
         mode="disabled" />
 
-    <mail:mail-session session-jndi-name="java:jboss/mail/${epp.name}" />
+    <mail:mail-session session-jndi-name="${epp.mail.session}" />
 
     <bpm:jbpm>
         <bpm:process-definitions></bpm:process-definitions>

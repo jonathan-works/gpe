@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.persistence.DAOException;
@@ -26,6 +27,7 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 @AutoCreate
 @Scope(ScopeType.STATELESS)
 @Name(ImpressaoComunicacaoService.NAME)
+@Transactional
 public class ImpressaoComunicacaoService implements Serializable {
 
 	private static final long serialVersionUID = 1L;

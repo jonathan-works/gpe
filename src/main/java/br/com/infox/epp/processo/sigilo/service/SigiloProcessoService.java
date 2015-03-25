@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -22,7 +23,9 @@ import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 @Name(SigiloProcessoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class SigiloProcessoService implements Serializable {
+	
     private static final long serialVersionUID = 1L;
     public static final String NAME = "sigiloProcessoService";
 

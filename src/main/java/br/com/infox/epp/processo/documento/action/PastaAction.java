@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -33,6 +34,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(PastaAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Transactional
 public class PastaAction implements Serializable {
 
     private static final long serialVersionUID = 1L;

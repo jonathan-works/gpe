@@ -12,6 +12,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
@@ -42,7 +43,9 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 // TODO: Transformar este componente em um manager, despejar atributos persistentes na classe de fronteira responsável pelo login
 @Scope(ScopeType.CONVERSATION)
 @Name(value = TermoAdesaoAction.NAME)
+@Transactional
 public class TermoAdesaoAction implements Serializable {
+	
     private static final String TERMS_CONDITIONS_SIGN_SUCCESS = "termoAdesao.sign.success";
     private static final String METHOD_ASSINAR_TERMO_ADESAO = "termoAdesaoAction.assinarTermoAdesao()";
     private static final String PARAMETRO_TERMO_ADESAO = "termoAdesao";

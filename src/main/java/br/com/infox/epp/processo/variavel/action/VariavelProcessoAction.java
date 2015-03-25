@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.processo.entity.Processo;
@@ -17,6 +18,7 @@ import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 @Name(VariavelProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Transactional
 public class VariavelProcessoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;

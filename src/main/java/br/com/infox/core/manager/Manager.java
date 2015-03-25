@@ -13,10 +13,12 @@ import javax.persistence.LockModeType;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 
+@Transactional
 public abstract class Manager<D extends DAO<T>, T> implements Serializable {
 
     private static final long serialVersionUID = 1L;

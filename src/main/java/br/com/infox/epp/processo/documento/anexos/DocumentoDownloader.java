@@ -14,6 +14,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.file.download.FileDownloader;
@@ -33,6 +34,7 @@ import br.com.infox.seam.exception.BusinessException;
 @AutoCreate
 @Scope(ScopeType.EVENT)
 @Name(DocumentoDownloader.NAME)
+@Transactional
 public class DocumentoDownloader implements Serializable {
 
 	private static final long serialVersionUID = 1L;

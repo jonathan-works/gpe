@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -34,7 +35,9 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 @Name(ProcessoAnaliseDocumentoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class ProcessoAnaliseDocumentoService {
+	
 	public static final String NAME = "processoAnaliseDocumentoService";
 	
 	@In

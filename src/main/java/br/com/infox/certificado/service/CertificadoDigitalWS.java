@@ -17,13 +17,13 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 
 @Path(CertificadoDigitalWS.PATH)
-@Consumes(MediaType.APPLICATION_JSON)
 public class CertificadoDigitalWS {
 	public static final String NAME = "certificadoDigitalWS";
 	public static final String PATH = "/certificadodigital";
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addSignatureInformation(CertificateSignatureBundleBean bundle) {
 	    Lifecycle.beginCall();
 		getCertificateSignatures().put(bundle.getToken(), bundle);
@@ -44,7 +44,7 @@ public class CertificadoDigitalWS {
 			status = CertificateSignatureBundleStatus.UNKNOWN;
 		}
 		Lifecycle.endCall();
-		return Response.ok(status).build();
+		return Response.ok(status.name()).build();
 	}
 
 	
