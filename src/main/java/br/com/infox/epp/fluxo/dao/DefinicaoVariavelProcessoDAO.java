@@ -2,11 +2,12 @@ package br.com.infox.epp.fluxo.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_FLUXO;
-import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_ID_PROCESSO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_FLUXO;
-import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_NOME;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_ID_PROCESSO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_NOME;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO;
 
 import java.util.HashMap;
@@ -64,5 +65,11 @@ public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso>
     	Map<String, Object> parameters = new HashMap<>(1);
         parameters.put(PARAM_ID_PROCESSO, idProcesso);
         return getNamedResultList(DEFINICAO_BY_ID_PROCESSO, parameters);
+    }
+    
+    public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idProcesso) {
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put(PARAM_ID_PROCESSO, idProcesso);
+        return getNamedResultList(DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, parameters);
     }
 }
