@@ -163,7 +163,7 @@ public class PainelUsuarioController extends AbstractController {
         List<Integer> idsProcesso = getProcessoIdList();
         if (idsProcesso != null && !idsProcesso.isEmpty()) {
             Integer idProcesso = idsProcesso.get(0);
-            List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.listVariaveisByIdProcesso(idProcesso);
+            List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
             dynamicColumns = new ArrayList<>();
             for (DefinicaoVariavelProcesso definicao : definicoes) {
                 DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION, definicao.getNome()));
