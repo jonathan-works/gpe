@@ -10,8 +10,11 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
 import org.jboss.seam.util.Base64;
 
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
@@ -22,6 +25,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(ProcessBuilderGraph.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Transactional
 public class ProcessBuilderGraph implements Serializable {
 
     private static final long serialVersionUID = 1L;
