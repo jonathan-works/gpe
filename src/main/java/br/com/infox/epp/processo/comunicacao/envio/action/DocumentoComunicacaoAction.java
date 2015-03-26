@@ -20,6 +20,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoDisponivelComunicacaoList;
+import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -121,10 +122,26 @@ public class DocumentoComunicacaoAction implements Serializable {
 	
 	public void removerDocumento(DocumentoModeloComunicacao documentoModelo) {
 		modeloComunicacao.getDocumentos().remove(documentoModelo);
+		if(documentoModelo.getId() != null){
+			try {
+				genericManager.remove(documentoModelo);
+			} catch (DAOException e) {
+				LOG.error("", e);
+				e.printStackTrace();
+				actionMessagesService.handleDAOException(e);
+			}
+		}
+		
 		documentoDisponivelComunicacaoList.removerIdDocumento(documentoModelo.getDocumento().getId());
 		if (possuiDocumentoInclusoPorUsuarioInterno) {
 			if (modeloComunicacao.getId() != null) {
-				possuiDocumentoInclusoPorUsuarioInterno = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
+				if (modeloComunicacao.getDocumentos().isEmpty())
+				{
+					possuiDocumentoInclusoPorUsuarioInterno = false;
+				}else {
+					possuiDocumentoInclusoPorUsuarioInterno = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) != null;
+				}
+				
 			} else {
 				List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisMembros("usuarioInterno");
 				possuiDocumentoInclusoPorUsuarioInterno = false;
