@@ -255,7 +255,7 @@ public class AuthenticatorService implements Serializable {
         return usuarioLogin;
     }
 
-    private boolean login(final String login) {
+    protected boolean login(final String login) {
         final IdentityManager identityManager = IdentityManager.instance();
         final boolean userExists = identityManager.getIdentityStore()
                 .userExists(login);
