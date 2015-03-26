@@ -6,7 +6,6 @@ import static java.text.MessageFormat.format;
 import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
-import java.util.Map;
 
 import javax.security.auth.login.LoginException;
 
@@ -26,12 +25,10 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
-import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(CertificateAuthenticator.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -80,8 +77,7 @@ public class CertificateAuthenticator implements Serializable {
 	private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
 		CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
 		if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-			Map<String, String> eppmessages = ComponentUtil.getComponent(EppMessagesContextLoader.EPP_MESSAGES);
-			throw new CertificadoException(eppmessages.get("login.sign.error"));
+			throw new CertificadoException(infoxMessages.get("login.sign.error") + bundle);
 		}
 		return bundle;
 	}
