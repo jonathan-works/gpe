@@ -32,4 +32,15 @@ public class ParametroManager extends Manager<ParametroDAO, Parametro> {
     public boolean existeParametro(String nome) {
         return getDao().existeParametro(nome);
     }
+
+	public String getValorParametro(String nome) {
+		final Parametro parametro = getParametro(nome);
+		String result = null;
+		if (parametro != null) {
+			result = parametro.getValorVariavel();
+		} else {
+			result = "";
+		}
+		return result;
+	}
 }

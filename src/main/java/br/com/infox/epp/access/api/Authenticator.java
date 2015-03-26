@@ -240,28 +240,14 @@ public class Authenticator implements Serializable {
         return ldapUserExists;
     }
 
-    private String getDomainName() {
+    protected String getDomainName() {
         final ParametroManager parametroManager = (ParametroManager) Component.getInstance(ParametroManager.NAME);
-        final Parametro parametro = parametroManager.getParametro("ldapDomainName");
-        String result = null;
-        if (parametro != null) {
-            result = parametro.getValorVariavel();
-        } else {
-            result = "infoxad.com.br";
-        }
-        return result;
+        return parametroManager.getValorParametro("ldapDomainName");
     }
 
-    private String getProviderUrl() {
+    protected String getProviderUrl() {
         final ParametroManager parametroManager = (ParametroManager) Component.getInstance(ParametroManager.NAME);
-        final Parametro parametro = parametroManager.getParametro("ldapProviderUrl");
-        String result = null;
-        if (parametro != null) {
-            result = parametro.getValorVariavel();
-        } else {
-            result = "ldap://172.20.1.241:389";
-        }
-        return result;
+        return parametroManager.getValorParametro("ldapProviderUrl");
     }
 
     @Observer(Identity.EVENT_LOGIN_FAILED)

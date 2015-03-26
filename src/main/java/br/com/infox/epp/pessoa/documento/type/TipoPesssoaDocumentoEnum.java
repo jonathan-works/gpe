@@ -6,7 +6,8 @@ public enum TipoPesssoaDocumentoEnum {
 	CM("Carteira de Motorista"), CN("Certidão de Nascimento"),
 	CC("Certidão de Casamento"), AM("Alistamento Militar"),
 	CP("Carteira Profissional"), TE("Título de Eleitor"),
-	OD("Outros Documentos");
+	OD("Outros Documentos"),
+	DM("Documento de Matrícula");
 	
 	private String label;
 	

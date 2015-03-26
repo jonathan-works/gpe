@@ -87,13 +87,12 @@ public class LDAPManager implements Serializable {
         final NamingEnumeration<SearchResult> results = ctx.search(searchBase, searchFilter, controls);
         UsuarioLogin usuarioLogin = null;
         while (results.hasMoreElements()) {
-            if (usuarioLogin != null) {
-                usuarioLogin = null;
-                break;
-            }
             final SearchResult el = results.nextElement();
             final Attributes attributes = el.getAttributes();
             usuarioLogin = createUsuario(usuario, senha, attributes);
+            if (usuarioLogin != null) {
+            	break;
+            }
         }
         return usuarioLogin;
     }
