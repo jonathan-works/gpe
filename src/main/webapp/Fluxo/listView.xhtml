@@ -82,19 +82,22 @@
                 id="codFluxo"
                 value="#{fluxoCrudAction.instance.codFluxo}"
                 required="true"
-                label="#{infoxMessages['fluxo.codFluxo']}">
+                label="#{infoxMessages['fluxo.codFluxo']}"
+                maxlength="30" >
                 <f:validator validatorId="jsfComponentIdValidator" />
             </wi:inputText>
             <wi:inputText
                 id="descricaoFluxo"
                 required="true"
                 label="#{infoxMessages['fluxo.descricao']}"
-                value="#{fluxoCrudAction.instance.fluxo}" />
+                value="#{fluxoCrudAction.instance.fluxo}" 
+                maxlength="100" />
             <wi:inputNumber
                 id="prazoDias"
                 label="#{infoxMessages['fluxo.qtPrazo']}"
                 required="true"
-                value="#{fluxoCrudAction.instance.qtPrazo}" />
+                value="#{fluxoCrudAction.instance.qtPrazo}"
+                maxlength="10" />
             <wi:inputDate
                 id="dataInicio"
                 label="#{infoxMessages['fluxo.dataInicioPublicacao']}"
@@ -155,7 +158,7 @@
                     required="true" />
                 <ui:define name="buttons">
                     <wi:commandButton
-                        id="savePapelButton"
+                        id="saveButton"
                         action="fluxoPapelAction.save"
                         reRender="fluxoPapelForm, fluxoPapelDiv, pageBodyDialogMessage"
                         value="#{infoxMessages['crud.persist']}" />

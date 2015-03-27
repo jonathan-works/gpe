@@ -72,13 +72,15 @@
       <wi:inputText
         id="codigo"
         label="#{infoxMessages['localizacao.codigo']}"
-        value="#{localizacaoCrudAction.instance.codigo}" />
+        value="#{localizacaoCrudAction.instance.codigo}"
+        maxlength="50" />
       <wi:inputText
         id="localizacao"
         required="true"
         label="#{infoxMessages['localizacao.localizacao']}"
         value="#{localizacaoCrudAction.instance.localizacao}"
-        readonly="#{not isEditable}" />
+        readonly="#{not isEditable}"
+        maxlength="100" />
       <wi:outputText
         id="localizacaoPaiOut"
         value="#{localizacaoCrudAction.instance.localizacaoPai}"
