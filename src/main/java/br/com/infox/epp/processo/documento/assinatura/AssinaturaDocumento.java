@@ -11,6 +11,7 @@ import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery
 import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery.TABLE_NAME;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -177,6 +178,11 @@ public class AssinaturaDocumento implements Serializable {
         this.nomeUsuarioPerfil = nomePerfil;
     }
 
+    @Override
+    public String toString() {
+    	return MessageFormat.format("{0}: {1}", nomeUsuarioPerfil, nomeUsuario);
+    }
+    
 	@Override
 	public int hashCode() {
 		final int prime = 31;
