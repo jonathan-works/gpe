@@ -29,7 +29,7 @@ import br.com.infox.epp.system.Parametros;
 
 @AutoCreate
 @Name(DocumentoProcessoAction.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class DocumentoProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
