@@ -23,7 +23,7 @@ import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.system.Parametros;
 
 @Name(DocumentoProcessoAction.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 public class DocumentoProcessoAction implements Serializable{
 
 	private static final long serialVersionUID = 1L;

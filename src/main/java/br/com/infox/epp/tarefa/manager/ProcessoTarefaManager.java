@@ -278,7 +278,9 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     }
 
     public void finalizarInstanciaTarefa(TaskInstance taskInstance, String transicao) throws DAOException {
-        taskInstance.end(transicao);
+        if (!taskInstance.hasEnded()) {
+            taskInstance.end(transicao);
+        }
         ProcessoTarefa pt = getByTaskInstance(taskInstance.getId());
         Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
