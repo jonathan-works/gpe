@@ -182,6 +182,10 @@ public class EnvioComunicacaoController implements Serializable {
 			setIdModeloVariable(modeloComunicacao.getId());
 			if (isFinalizada()) {
 				comunicacaoService.finalizarComunicacao(modeloComunicacao);
+				if ((!modeloComunicacao.isDocumentoBinario() && !modeloComunicacao.isClassificacaoAssinavel()) 
+						|| documentoComunicacaoAction.isPossuiDocumentoInclusoPorUsuarioInterno()) {
+					expedirComunicacao();
+				}
 			}
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (Exception e) {
@@ -242,12 +246,8 @@ public class EnvioComunicacaoController implements Serializable {
 				CertificateSignatureBean signatureBean = getCertificateSignatureBean();
 				assinaturaDocumentoService.assinarDocumento(destinatario.getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
 				comunicacaoService.expedirComunicacao(destinatario);
-			} else if (documentoComunicacaoAction.isPossuiDocumentoInclusoPorUsuarioInterno()) {
-				Documento documento = modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao();
-				if (!documento.hasAssinatura()) {
-					CertificateSignatureBean signatureBean = getCertificateSignatureBean();
-					assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
-				}
+			} else if ((!modeloComunicacao.isDocumentoBinario() && !modeloComunicacao.isClassificacaoAssinavel()) 
+					|| documentoComunicacaoAction.isPossuiDocumentoInclusoPorUsuarioInterno()) {
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 			}
 			expedida = null;

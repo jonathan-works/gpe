@@ -83,15 +83,11 @@
 					</rich:dataTable>
 				</h:form>
 				<div>
-					<!-- Botão Expedir Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
+					<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
 					<h:form id="expedicaoForm">
 						<s:div rendered="#{envioComunicacaoController.podeExibirBotaoExpedirComunicacoes()}">
 							<h:commandButton id="visualizarComunicacao" action="#{envioComunicacaoController.downloadComunicacaoCompleta(null)}" 
 								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" />
-							<wi:commandButton id="expedir" action="envioComunicacaoController.expedirComunicacao()" 
-								value="#{infoxMessages['comunicacao.expedirComunicacoes']}"
-								oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
-								reRender="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"/>
 		          		</s:div>
 					</h:form>
 				</div>
@@ -165,7 +161,7 @@
 			
 			<!-- Expedição individual de comunicações (o ofício da comunicação é o texto do editor) -->
 			<h:form id="comunicacaoDestinatarioForm">
-				<s:div id="assinatura_pers" rendered="#{not envioComunicacaoController.modeloComunicacao.documentoBinario 
+				<s:div id="assinatura_pers" rendered="#{not envioComunicacaoController.modeloComunicacao.documentoBinario
 					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
 					
 					<h:commandButton id="visualizarComunicacao" action="#{envioComunicacaoController.downloadComunicacaoCompleta(envioComunicacaoController.destinatario)}" 
