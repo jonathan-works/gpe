@@ -125,7 +125,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     
     public UsuarioLogin getUsuarioDeProcessosDoSistema() {
     	String idUsuarioSistema = ParametroUtil.getParametroOrFalse(Parametros.ID_USUARIO_PROCESSO_SISTEMA.getLabel());
-    	if ("false".equals(idUsuarioSistema)) {
+    	if (idUsuarioSistema == null || "false".equals(idUsuarioSistema)) {
     		String mensagem = "Não foi configurado o usuário de processos do sistema";
 			LOG.error(mensagem);
     		throw new BusinessException(mensagem);
