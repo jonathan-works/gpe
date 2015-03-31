@@ -31,6 +31,7 @@
 				<wi:columnOutputText columnHeader="#{infoxMessages['comunicacao.tipoComunicacao']}" value="#{row.tipoComunicacao.descricao}"/>
 			</wi:dataTable>
 		</rich:collapsiblePanel>
+		<br />
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
 			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 			<h:form>
