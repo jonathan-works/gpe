@@ -59,7 +59,12 @@ public class PrazoComunicacaoService {
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCiencia));
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCiencia));
 		MetadadoProcesso metadadoPrazoCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
-		Integer diasPrazoCumprimento = metadadoPrazoCumprimento.getValue();
+		Integer diasPrazoCumprimento;
+		if (metadadoPrazoCumprimento == null){
+			diasPrazoCumprimento = 0;
+		}else{
+			diasPrazoCumprimento = metadadoPrazoCumprimento.getValue();
+		}
 		if (diasPrazoCumprimento > 0) {
     		Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
     		MetadadoProcesso metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
