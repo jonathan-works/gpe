@@ -367,9 +367,12 @@ public class EnvioComunicacaoController implements Serializable {
 		modeloComunicacao.setModeloDocumento(null);
 	}
 	
-	public boolean podeExibirBotaoExpedirComunicacoes() {
-		boolean finalizada = modeloComunicacao.getFinalizada();
-		return finalizada && !isExpedida() && modeloComunicacao.isDocumentoBinario() && isUsuarioLogadoNaLocalizacaoPerfilResponsavel();
+	public boolean podeExibirBotaoVisualizarComunicacoes() {
+		return modeloComunicacao.getFinalizada() && isExpedida() && modeloComunicacao.isDocumentoBinario();
+	}
+	
+	public boolean podeVisualizarComunicacaoNaoFinalizada(){
+		return modeloComunicacao.isDocumentoBinario() && documentoComunicacaoAction.isPossuiDocumentoInclusoPorUsuarioInterno() && !modeloComunicacao.getFinalizada();
 	}
 	
 	public boolean isUsuarioLogadoNaLocalizacaoPerfilResponsavel() {

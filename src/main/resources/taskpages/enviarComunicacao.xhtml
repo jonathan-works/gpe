@@ -16,7 +16,7 @@
 			<!-- Combo de tipo de comunicação e botão de visualizar comunicação -->
 			<h:form id="comunicacaoForm">
 				<wi:selectOneMenuEntity id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
-					required="true" items="#{envioComunicacaoController.tiposComunicacao}" showLabelSelecione="true"
+					showRequired="true" items="#{envioComunicacaoController.tiposComunicacao}"
 					value="#{envioComunicacaoController.tipoComunicacao}"
 					disabled="#{envioComunicacaoController.modeloComunicacao.finalizada}">
 					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
@@ -24,8 +24,7 @@
 				<div />
 				<h:commandButton action="#{envioComunicacaoController.downloadComunicacaoCompleta(null)}" 
 					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" immediate="true" 
-					rendered="#{envioComunicacaoController.modeloComunicacao.documentoBinario and documentoComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno 
-						and not envioComunicacaoController.modeloComunicacao.finalizada}" 
+					rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
 					styleClass="buttons"/> 
 			</h:form>
 			
@@ -85,7 +84,7 @@
 				<div>
 					<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
 					<h:form id="expedicaoForm">
-						<s:div rendered="#{envioComunicacaoController.podeExibirBotaoExpedirComunicacoes()}">
+						<s:div rendered="#{envioComunicacaoController.podeExibirBotaoVisualizarComunicacoes()}">
 							<h:commandButton id="visualizarComunicacao" action="#{envioComunicacaoController.downloadComunicacaoCompleta(null)}" 
 								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" />
 		          		</s:div>
@@ -247,7 +246,7 @@
 						<rich:column styleClass="dt-toolbar-col" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 							<h:form>
 								<a:commandLink action="#{documentoComunicacaoAction.removerDocumento(row)}" 
-									execute="@this" render="documentos comunicacaoForm">
+									execute="@this" render="documentos">
 									<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
 								</a:commandLink>
 								<a:commandLink
