@@ -232,7 +232,7 @@ public class EnvioComunicacaoController implements Serializable {
 		modeloComunicacao.setFinalizada(false);
 		this.minuta = true;
 		modeloComunicacao.setMinuta(true);
-		if (!modeloComunicacaoManager.contains(modeloComunicacao)) {
+		if (!modeloComunicacaoManager.contains(modeloComunicacao) && modeloComunicacaoManager.find(modeloComunicacao.getId()) == null) {
 			modeloComunicacao.setId(null);
 			setIdModeloVariable(null);
 			documentoComunicacaoAction.resetEntityState();
