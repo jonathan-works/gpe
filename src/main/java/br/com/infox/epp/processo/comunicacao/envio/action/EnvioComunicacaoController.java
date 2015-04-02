@@ -183,7 +183,7 @@ public class EnvioComunicacaoController implements Serializable {
 			if (isFinalizada()) {
 				comunicacaoService.finalizarComunicacao(modeloComunicacao);
 				if ((!modeloComunicacao.isDocumentoBinario() && !modeloComunicacao.isClassificacaoAssinavel()) 
-						|| documentoComunicacaoAction.isPossuiDocumentoInclusoPorUsuarioInterno()) {
+					|| (modeloComunicacao.isDocumentoBinario() && documentoComunicacaoAction.isPossuiDocumentoInclusoPorUsuarioInterno())) {
 					expedirComunicacao();
 				}
 			}
