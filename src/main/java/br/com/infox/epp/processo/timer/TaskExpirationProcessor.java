@@ -14,6 +14,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
@@ -39,7 +40,7 @@ public class TaskExpirationProcessor {
         for (ProcessoTarefa processoTarefa : processoTarefaList) {
             TaskExpiration taskExpiration = taskExpirationManager.getByFluxoAndTaskName(processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(), processoTarefa.getTarefa().getTarefa());
             if (taskExpiration != null) {
-                DateTime expirationDate = new DateTime(taskExpiration.getExpiration());
+                DateTime expirationDate = new DateTime(DateUtil.getEndOfDay(taskExpiration.getExpiration()));
                 if (expirationDate.isBeforeNow()) {
                     BusinessProcess.instance().setProcessId(processoTarefa.getProcesso().getIdJbpm());
                     BusinessProcess.instance().setTaskId(processoTarefa.getTaskInstance());
