@@ -34,13 +34,16 @@
 					<!-- Grid dos destinatários selecionados -->
 					<rich:dataTable id="destinatarios" value="#{envioComunicacaoController.modeloComunicacao.destinatarios}"
 								styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty envioComunicacaoController.modeloComunicacao.destinatarios}">
-						<rich:column styleClass="dt-toolbar-col">
+						<ui:param name="showToolbarNaoFinalizada" value="#{not envioComunicacaoController.modeloComunicacao.finalizada}" />
+						<ui:param name="showToolbarFinalizada" value="#{envioComunicacaoController.modeloComunicacao.finalizada and
+																 not envioComunicacaoController.modeloComunicacao.documentoBinario}" />
+						<rich:column styleClass="dt-toolbar-col" rendered="#{showToolbarNaoFinalizada or showToolbarFinalizada}">
 							<a:commandLink execute="@this" render="destinatariosPanel"
 								action="#{destinatarioComunicacaoAction.removerDestinatario(row)}"
-								rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+								rendered="#{showToolbarNaoFinalizada}">
 								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
 							</a:commandLink>
-							<s:div rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.modeloComunicacao.documentoBinario}">
+							<s:div rendered="#{showToolbarFinalizada}">
 	   							<a:commandLink action="#{envioComunicacaoController.setDestinatario(row)}" render="comunicacaoDestinatarioForm" execute="@this"
 	   								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
 	   								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{infoxMessages['button.selecionar']}" />
@@ -180,6 +183,7 @@
 						signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
           		</s:div>
 			</h:form>
+			<br />
 			<!-- Documentos disponíveis para serem vinculados à comunicação -->
 			<rich:panel id="documentos" header="Documentos" 
 				rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada or not empty envioComunicacaoController.modeloComunicacao.documentos}">
