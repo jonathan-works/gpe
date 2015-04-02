@@ -22,10 +22,9 @@
 					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
 				</wi:selectOneMenuEntity>
 				<div />
-				<h:commandButton action="#{envioComunicacaoController.downloadComunicacaoCompleta()}" 
+				<h:commandButton action="#{envioComunicacaoController.downloadComunicacaoCompleta(null)}" 
 					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" immediate="true" 
-					rendered="#{(not envioComunicacaoController.modeloComunicacao.documentoBinario 
-						or documentoComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno) 
+					rendered="#{envioComunicacaoController.modeloComunicacao.documentoBinario and documentoComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno 
 						and not envioComunicacaoController.modeloComunicacao.finalizada}" 
 					styleClass="buttons"/> 
 			</h:form>
@@ -252,7 +251,7 @@
 						<rich:column styleClass="dt-toolbar-col" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 							<h:form>
 								<a:commandLink action="#{documentoComunicacaoAction.removerDocumento(row)}" 
-									execute="@this" render="documentos">
+									execute="@this" render="documentos comunicacaoForm">
 									<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
 								</a:commandLink>
 								<a:commandLink
