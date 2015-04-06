@@ -128,15 +128,15 @@ public class TipoComunicacao implements Serializable {
 		if (!(obj instanceof TipoComunicacao))
 			return false;
 		TipoComunicacao other = (TipoComunicacao) obj;
-		if (descricao == null) {
-			if (other.descricao != null)
+		if (getDescricao() == null) {
+			if (other.getDescricao() != null)
 				return false;
-		} else if (!descricao.equals(other.descricao))
+		} else if (!getDescricao().equals(other.getDescricao()))
 			return false;
-		if (id == null) {
-			if (other.id != null)
+		if (getId() == null) {
+			if (other.getId() != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
 	}
