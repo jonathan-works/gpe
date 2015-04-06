@@ -61,11 +61,11 @@ public class PrazoComunicacaoService {
 		MetadadoProcesso metadadoPrazoCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
 		Integer diasPrazoCumprimento;
 		if (metadadoPrazoCumprimento == null){
-			diasPrazoCumprimento = 0;
+			diasPrazoCumprimento = -1;
 		}else{
 			diasPrazoCumprimento = metadadoPrazoCumprimento.getValue();
 		}
-		if (diasPrazoCumprimento > 0) {
+		if (diasPrazoCumprimento >= 0) {
     		Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
     		MetadadoProcesso metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
     		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento));
