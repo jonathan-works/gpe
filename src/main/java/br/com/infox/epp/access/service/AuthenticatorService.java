@@ -5,7 +5,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.io.Serializable;
 import java.security.Principal;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -277,7 +276,7 @@ public class AuthenticatorService implements Serializable {
             throws LoginException, CertificateException {
         try {
             certificateManager.verificaCertificado(c.getCertChain());
-        } catch (final CertificateExpiredException e) {
+        } catch (final CertificateException e) {
             LOG.error(CHECK_VALIDADE_CERTIFICADO, e);
             if (ParametroUtil.isProducao()) {
                 throw e;
