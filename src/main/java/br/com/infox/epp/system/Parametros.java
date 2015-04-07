@@ -7,7 +7,9 @@ public enum Parametros {
 	IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO("usuarioExternoPodeVerDocExcluido"),
 	SOMENTE_USUARIO_INTERNO_PODE_VER_HISTORICO("somenteUsuarioInternoVerMotivoExclusaoDoc"),
 	ID_USUARIO_PROCESSO_SISTEMA("idUsuarioProcessoSistema"),
-	ID_USUARIO_SISTEMA("idUsuarioSistema");
+	ID_USUARIO_SISTEMA("idUsuarioSistema"),
+	PAPEL_USUARIO_INTERNO("usuarioInterno"),
+	PAPEL_USUARIO_EXTERNO("usuarioExterno");
 	
 	private String label;
 	
