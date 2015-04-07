@@ -13,8 +13,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.international.Messages;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import org.richfaces.model.UploadedFile;
 
@@ -29,6 +27,8 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 import com.lowagie.text.pdf.PdfReader;
 
@@ -101,11 +101,11 @@ public class DocumentoUploaderService implements Serializable {
 	private void validaLimitePorPagina(Integer limitePorPagina, byte[] dataStream) throws Exception {
         try {
         	PdfReader reader = new PdfReader(dataStream);
-            int qtdPaginas = reader.getNumberOfPages();
-            for (int i = 1; i <= qtdPaginas; i++) {
-                if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {
-                    throw new Exception("Arquivo excede o limite por página");
-                }
+        	int qtdPaginas = reader.getNumberOfPages();
+        	float fileLength = reader.getFileLength() / 1024F;
+            float averagePage = fileLength / qtdPaginas;
+            if (averagePage > limitePorPagina) {
+                throw new Exception("Arquivo excede o limite por página");
             }
         } catch (IOException e) {
             LOG.error("Não foi possível recuperar as páginas do arquivo", e);

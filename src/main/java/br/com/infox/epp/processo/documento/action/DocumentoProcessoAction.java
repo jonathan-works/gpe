@@ -30,7 +30,7 @@ import br.com.infox.epp.system.Parametros;
 
 @AutoCreate
 @Name(DocumentoProcessoAction.NAME)
-@Scope(ScopeType.PAGE)
+@Scope(ScopeType.CONVERSATION)
 @Transactional
 public class DocumentoProcessoAction implements Serializable {
 
