@@ -24,15 +24,8 @@ public enum MeioExpedicao implements Displayable {
         return label;
     }
 
-    /**
-     * A comunicação só pode ser feita pelo meio "Via Sistema (eletrônica)",
-     * constante SI, caso haja Termo de Adesão vinculado ao cadastro
-     * 
-     * @param hasTermoAdesao
-     * @return
-     */
-    public static MeioExpedicao[] getValues(boolean hasTermoAdesao) {
-        if (hasTermoAdesao) {
+    public static MeioExpedicao[] getValues(boolean podeEnviarEletronico) {
+        if (podeEnviarEletronico) {
             return order(values());
         }
         return order(new MeioExpedicao[] { EM, DO, IM });
