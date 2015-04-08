@@ -102,6 +102,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private DestinatarioModeloComunicacao destinatario;
 	private boolean inTask = false;
 	private boolean minuta = true;
+	private String idModeloComunicacaoVariableName;
 	
 	@Create
 	public void init() {
@@ -112,6 +113,10 @@ public class EnvioComunicacaoController implements Serializable {
 		} else if (idModelo == null) { // Nova comunicação dentro da aba de saída
 			processInstanceId = Long.valueOf(JbpmUtil.getProcesso().getIdJbpm());
 			inTask = true;
+		}
+		org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
+		if (taskInstance != null) {
+			idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
 		}
 		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
 		initLocalizacaoRaiz();
@@ -153,10 +158,10 @@ public class EnvioComunicacaoController implements Serializable {
 			if (taskInstance != null) { // Nova comunicação na aba de saída
 				ContextInstance context = taskInstance.getContextInstance();
 				Token taskToken = taskInstance.getToken();
-				idModelo = (Long) context.getVariable("idModeloComunicacao", taskToken);
+				idModelo = (Long) context.getVariable(idModeloComunicacaoVariableName, taskToken);
 			}
 		}
-		if (idModelo == null) { // Nova Comunicação fora da aba de saída
+		if (idModelo == null) { // Nova Comunicação fora da aba de saída, pois o idModelo continua nulo
 			this.modeloComunicacao = new ModeloComunicacao();
 			this.modeloComunicacao.setProcesso(processoManager.getProcessoByNumero(processoManager.getNumeroProcessoByIdJbpm(processInstanceId)));
 		} else { // Comunicação existente
@@ -204,7 +209,7 @@ public class EnvioComunicacaoController implements Serializable {
 		if (taskInstance != null) {
 			ContextInstance context = taskInstance.getContextInstance();
 			Token taskToken = taskInstance.getToken();
-			context.setVariable("idModeloComunicacao", id, taskToken);
+			context.setVariable(idModeloComunicacaoVariableName, id, taskToken);
 		}
 	}
 
