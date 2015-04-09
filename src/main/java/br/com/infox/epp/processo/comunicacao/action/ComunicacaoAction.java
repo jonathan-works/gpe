@@ -155,27 +155,7 @@ public class ComunicacaoAction implements Serializable {
                 destinatarios.add(destinatarioBean);
             }
         }
-	    return destinatarios;
-	}
-	
-	public List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
-		List<DestinatarioBean> destinatarios = new ArrayList<>();
-		for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
-			if (!destinatarioModeloComunicacao.getExpedido()) {
-				continue;
-			}
-			Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao);
-			if (comunicacao == null) {
-				continue;
-			}
-			boolean cienciaConfirmada = isCienciaConfirmada(destinatarioModeloComunicacao);
-			dadosCiencia.put(destinatarioModeloComunicacao.getId(), cienciaConfirmada);
-			if (!usuarioInterno && !cienciaConfirmada) {
-				continue;
-			}
-			destinatarios.add(createDestinatarioBean(destinatarioModeloComunicacao));
-		}
-		Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
+	    Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
 			@Override
 			public int compare(DestinatarioBean o1, DestinatarioBean o2) {
 				try {
@@ -187,6 +167,27 @@ public class ComunicacaoAction implements Serializable {
 				}
 			}
 		});
+	    return destinatarios;
+	}
+	
+	public List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
+		List<DestinatarioBean> destinatarios = new ArrayList<>();
+		for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
+			if (!destinatarioModeloComunicacao.getExpedido()) {
+				continue;
+			}
+
+			Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao);
+			if (comunicacao == null) {
+				continue;
+			}
+			boolean cienciaConfirmada = isCienciaConfirmada(destinatarioModeloComunicacao);
+			dadosCiencia.put(destinatarioModeloComunicacao.getId(), cienciaConfirmada);
+			if (!usuarioInterno && !cienciaConfirmada) {
+				continue;
+			}
+			destinatarios.add(createDestinatarioBean(destinatarioModeloComunicacao));
+		}
 		return destinatarios;
 	}
 	
