@@ -9,6 +9,7 @@ import java.util.Map;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -42,7 +43,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     @In
     private ProcessoDAO processoDAO;
 
-    public ProcessoTarefa getByTaskInstance(Long taskInstance) {
+    public ProcessoTarefa getByTaskInstance(final Long taskInstance) {
         return getDao().getByTaskInstance(taskInstance);
     }
 
@@ -50,15 +51,15 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         return getDao().getTarefaEnded();
     }
 
-    public List<ProcessoTarefa> getTarefaNotEnded(PrazoEnum tipoPrazo) {
+    public List<ProcessoTarefa> getTarefaNotEnded(final PrazoEnum tipoPrazo) {
         return getDao().getTarefaNotEnded(tipoPrazo);
     }
 
-    public List<Object[]> listForaPrazoFluxo(Categoria c) {
+    public List<Object[]> listForaPrazoFluxo(final Categoria c) {
         return getDao().listForaPrazoFluxo(c);
     }
 
-    public List<Object[]> listForaPrazoTarefa(Categoria c) {
+    public List<Object[]> listForaPrazoTarefa(final Categoria c) {
         return getDao().listForaPrazoTarefa(c);
     }
 
@@ -74,46 +75,46 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
     /**
      * Verifica se existe algum turno da localizacao da tarefa em que no dia
      * informado
-     * 
+     *
      * @param pt
      * @param horario
      * @return turno da localização da tarefa
      */
-    public boolean contemTurnoTarefaDia(ProcessoTarefa pt, Date data) {
-        Calendar horarioCalendar = Calendar.getInstance();
-        int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
-        return localizacaoTurnoDAO.countTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana - 1]) > 0;
+    public boolean contemTurnoTarefaDia(final ProcessoTarefa pt, final Date data) {
+        final Calendar horarioCalendar = Calendar.getInstance();
+        final int diaSemana = horarioCalendar.get(Calendar.DAY_OF_WEEK);
+        return this.localizacaoTurnoDAO.countTurnoTarefaDia(pt, data, DiaSemanaEnum.values()[diaSemana - 1]) > 0;
     }
 
     /**
      * Atualiza os atributos referentes ao tempo gasto em uma tarefa caso exista
      * incremento.
-     * 
+     *
      * @param fireTime
      * @param tipoPrazo
      * @throws DAOException
      */
-    public void updateTarefasNaoFinalizadas(Date fireTime, PrazoEnum tipoPrazo) throws DAOException {
-        for (ProcessoTarefa pt : getTarefaNotEnded(tipoPrazo)) {
+    public void updateTarefasNaoFinalizadas(final Date fireTime, final PrazoEnum tipoPrazo) throws DAOException {
+        for (final ProcessoTarefa pt : getTarefaNotEnded(tipoPrazo)) {
             updateTempoGasto(fireTime, pt);
         }
     }
 
-    public void updateTempoGasto(Date fireTime,
-            ProcessoTarefa processoTarefa) throws DAOException {
+    public void updateTempoGasto(final Date fireTime,
+            final ProcessoTarefa processoTarefa) throws DAOException {
         if (processoTarefa.getTarefa().getTipoPrazo() == null) {
             return;
         }
         if (processoTarefa.getUltimoDisparo().before(fireTime)) {
-            float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoTarefa);
-            Integer prazo = processoTarefa.getTarefa().getPrazo();
+            final float incrementoTempoGasto = getIncrementoTempoGasto(fireTime, processoTarefa);
+            final Integer prazo = processoTarefa.getTarefa().getPrazo();
             int porcentagem = 0;
-            int tempoGasto = (int) (processoTarefa.getTempoGasto() + incrementoTempoGasto);
+            final int tempoGasto = (int) (processoTarefa.getTempoGasto() + incrementoTempoGasto);
             if (prazo != null && prazo.compareTo(Integer.valueOf(0)) > 0) {
                 porcentagem = (tempoGasto * PORCENTAGEM_MAXIMA) / (prazo * 60);
             }
 
-            Processo processo = processoTarefa.getProcesso();
+            final Processo processo = processoTarefa.getProcesso();
             if (porcentagem > PORCENTAGEM_MAXIMA) {
                 processo.setSituacaoPrazo(SituacaoPrazoEnum.TAT);
             }
@@ -125,57 +126,57 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         }
     }
 
-    public void updateTempoGasto(Processo processo) throws DAOException {
-        Map<String, Object> result = processoDAO.getTempoGasto(processo);
+    public void updateTempoGasto(final Processo processo) throws DAOException {
+        final Map<String, Object> result = this.processoDAO.getTempoGasto(processo);
         if (result != null) {
-            Date dataFim = processo.getDataFim();
+            final Date dataFim = processo.getDataFim();
             DateRange dateRange;
             if (dataFim != null) {
-                 dateRange = new DateRange(processo.getDataInicio(), dataFim);
+                dateRange = new DateRange(processo.getDataInicio(), dataFim);
             } else {
                 dateRange = new DateRange(processo.getDataInicio(), new Date());
             }
             processo.setTempoGasto(new Long(dateRange.get(DateRange.DAYS)).intValue());
             if (processo.getPorcentagem() > PORCENTAGEM_MAXIMA) {
-            	processo.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
+                processo.setSituacaoPrazo(SituacaoPrazoEnum.PAT);
             }
-            processoDAO.update(processo);
+            this.processoDAO.update(processo);
         }
     }
 
     /**
      * Calcula o tempo a incrementar no {@link ProcessoTarefa} de acordo com
      * a data em que ocorreu o disparo.
-     * 
+     *
      * @param horaDisparo
      * @param processoTarefa
      * @return Incremento a ser adicionado ao tempo gasto de um
      *         {@link ProcessoTarefa}
      */
-    private float getIncrementoTempoGasto(Date horaDisparo,
-            ProcessoTarefa processoTarefa) {
-        PrazoEnum tipoPrazo = processoTarefa.getTarefa().getTipoPrazo();
+    private float getIncrementoTempoGasto(final Date horaDisparo,
+            final ProcessoTarefa processoTarefa) {
+        final PrazoEnum tipoPrazo = processoTarefa.getTarefa().getTipoPrazo();
         float result = 0;
         if (tipoPrazo == null) {
             return 0;
         }
         switch (tipoPrazo) {
-            case H:
-                result = calcularTempoGastoMinutos(horaDisparo, processoTarefa.getTaskInstance(), processoTarefa.getUltimoDisparo());
+        case H:
+            result = calcularTempoGastoMinutos(horaDisparo, processoTarefa.getTaskInstance(), processoTarefa.getUltimoDisparo());
             break;
-            case D:
-                result = calcularTempoGastoDias(horaDisparo, processoTarefa);
+        case D:
+            result = calcularTempoGastoDias(horaDisparo, processoTarefa);
             break;
         }
         return result;
     }
 
-    private Date getDisparoIncrementado(Date ultimoDisparo, Date disparoAtual,
-            int tipoIncremento, int incremento) {
-        Calendar calendar = Calendar.getInstance();
+    private Date getDisparoIncrementado(final Date ultimoDisparo, final Date disparoAtual,
+            final int tipoIncremento, final int incremento) {
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTime(ultimoDisparo);
         calendar.add(tipoIncremento, incremento);
-        Date proxDisparo = calendar.getTime();
+        final Date proxDisparo = calendar.getTime();
 
         if (proxDisparo.before(disparoAtual)) {
             return proxDisparo;
@@ -184,9 +185,9 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         }
     }
 
-    private void adjustCalendar(Calendar toGet, Calendar toSet1,
-            Calendar toSet2, int field) {
-        int value = toGet.get(field);
+    private void adjustCalendar(final Calendar toGet, final Calendar toSet1,
+            final Calendar toSet2, final int field) {
+        final int value = toGet.get(field);
         toSet1.set(field, value);
         toSet2.set(field, value);
     }
@@ -201,9 +202,9 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         ultimaAtualizacao.setTime(ultimoDisparo);
         while (ultimaAtualizacao.before(disparoAtual)) {
 
-            final List<LocalizacaoTurno> localizacoes = localizacaoTurnoDAO.getTurnosTarefa(idTaskInstance, DiaSemanaEnum.values()[ultimaAtualizacao.get(Calendar.DAY_OF_WEEK) - 1], ultimaAtualizacao.getTime());
+            final List<LocalizacaoTurno> localizacoes = this.localizacaoTurnoDAO.getTurnosTarefa(idTaskInstance, DiaSemanaEnum.values()[ultimaAtualizacao.get(Calendar.DAY_OF_WEEK) - 1], ultimaAtualizacao.getTime());
             for (int i = 0, l = localizacoes.size(); i < l; i++) {
-                LocalizacaoTurno localizacaoTurno = localizacoes.get(i);
+                final LocalizacaoTurno localizacaoTurno = localizacoes.get(i);
                 final Calendar inicioTurno = new GregorianCalendar();
                 inicioTurno.setTime(localizacaoTurno.getHoraInicio());
 
@@ -213,7 +214,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
                 adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.DAY_OF_MONTH);
                 adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.MONTH);
                 adjustCalendar(ultimaAtualizacao, inicioTurno, fimTurno, Calendar.YEAR);
-                DateRange range = getIncrementoLocalizacaoTurno(disparoAtual, ultimaAtualizacao, inicioTurno, fimTurno);
+                final DateRange range = getIncrementoLocalizacaoTurno(disparoAtual, ultimaAtualizacao, inicioTurno, fimTurno);
                 result = result + range.get(DateRange.MINUTES);
 
                 ultimaAtualizacao.setTime(range.getEnd());
@@ -246,13 +247,13 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         return dateRange;
     }
 
-    private int calcularTempoGastoDias(Date dataDisparo,
-            ProcessoTarefa processoTarefa) {
+    private int calcularTempoGastoDias(final Date dataDisparo,
+            final ProcessoTarefa processoTarefa) {
         int result = 0;
         Date ultimaAtualizacao = processoTarefa.getUltimoDisparo();
 
         while (ultimaAtualizacao.before(dataDisparo)) {
-            Date disparoAtual = getDisparoIncrementado(ultimaAtualizacao, dataDisparo, Calendar.DAY_OF_MONTH, 1);
+            final Date disparoAtual = getDisparoIncrementado(ultimaAtualizacao, dataDisparo, Calendar.DAY_OF_MONTH, 1);
             if (contemTurnoTarefaDia(processoTarefa, disparoAtual)) {
                 result += DateUtil.diferencaDias(disparoAtual, ultimaAtualizacao);
             }
@@ -261,28 +262,29 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
 
         return result;
     }
-    
-    public int getDiasDesdeInicioProcesso(Processo processo) {
-        LocalDate dataInicio = LocalDate.fromDateFields(getDao().getDataInicioPrimeiraTarefa(processo));
-        LocalDate now = LocalDate.now();
+
+    public int getDiasDesdeInicioProcesso(final Processo processo) {
+        final LocalDate dataInicio = LocalDate.fromDateFields(getDao().getDataInicioPrimeiraTarefa(processo));
+        final LocalDate now = LocalDate.now();
         return Days.daysBetween(dataInicio, now).getDays();
     }
 
-    public void finalizarInstanciaTarefa(TaskInstance taskInstance) throws DAOException {
+    public void finalizarInstanciaTarefa(final TaskInstance taskInstance) throws DAOException {
         taskInstance.end();
-        ProcessoTarefa pt = getByTaskInstance(taskInstance.getId());
-        Date dtFinalizacao = taskInstance.getEnd();
+        final ProcessoTarefa pt = getByTaskInstance(taskInstance.getId());
+        final Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
         update(pt);
         updateTempoGasto(dtFinalizacao, pt);
     }
 
-    public void finalizarInstanciaTarefa(TaskInstance taskInstance, String transicao) throws DAOException {
+    @Transactional
+    public void finalizarInstanciaTarefa(final TaskInstance taskInstance, final String transicao) throws DAOException {
         if (!taskInstance.hasEnded()) {
             taskInstance.end(transicao);
         }
-        ProcessoTarefa pt = getByTaskInstance(taskInstance.getId());
-        Date dtFinalizacao = taskInstance.getEnd();
+        final ProcessoTarefa pt = getByTaskInstance(taskInstance.getId());
+        final Date dtFinalizacao = taskInstance.getEnd();
         pt.setDataFim(dtFinalizacao);
         update(pt);
         updateTempoGasto(dtFinalizacao, pt);
