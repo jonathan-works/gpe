@@ -17,8 +17,10 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.security.Identity;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
@@ -42,19 +44,29 @@ import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
+import com.google.common.base.Strings;
 
 @Name(ComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class ComunicacaoAction implements Serializable {
+	private static final String COMPROVANTE_DE_CIÊNCIA = "Comprovante de Ciência";
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);
@@ -82,18 +94,25 @@ public class ComunicacaoAction implements Serializable {
 	@In
 	private DocumentoDownloader documentoDownloader;
 	@In
+	private SituacaoProcessoDAO situacaoProcessoDAO;
+	@In
+	private ProcessoTarefaManager processoTarefaManager;
+	@In
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
 	@In
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	@In
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	@In
+	private DocumentoManager documentoManager;
+	@In
+	private DocumentoBinManager documentoBinManager;
 	
 	private List<ModeloComunicacao> comunicacoes;
-	private Map<Long, List<DestinatarioBean>> destinatarioBeans = new HashMap<>(); // Cache dos destinatários da comunicação
 	private List<ClassificacaoDocumento> classificacoesDocumento;
 	private List<ClassificacaoDocumento> classificacoesDocumentoProrrogacaoPrazo;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	private boolean usuarioExterno = Identity.instance().hasRole("usuarioExterno");
+	private boolean usuarioInterno = Identity.instance().hasRole(Parametros.PAPEL_USUARIO_INTERNO.getValue());
 	private Processo processo;
 	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
 	private Map<Long, Boolean> dadosCiencia = new HashMap<>(); // Cache das confirmações de ciência dos destinatários
@@ -101,9 +120,14 @@ public class ComunicacaoAction implements Serializable {
 	private DestinatarioBean destinatario;
 	private Date dataCiencia;
 	private boolean ciencia;
+	private String textoCiencia;
+	private boolean editorCiencia; 
+	private ClassificacaoDocumento classificacaoDocumentoCiencia;
 	
 	private boolean prorrogacaoPrazo;
 	private boolean documentos;
+	
+	
 	
 	@Create
 	public void init() {
@@ -135,48 +159,41 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
-		List<DestinatarioBean> destinatarios = destinatarioBeans.get(modeloComunicacao.getId());
-		if (destinatarios == null) {
-			destinatarios = new ArrayList<>();
-			for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
-				if (!destinatarioModeloComunicacao.getExpedido()) {
-					continue;
-				}
-				Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao);
-				if (comunicacao == null || comunicacao.getDataFim() != null) {
-					continue;
-				}
-				boolean cienciaConfirmada = isCienciaConfirmada(destinatarioModeloComunicacao);
-				dadosCiencia.put(destinatarioModeloComunicacao.getId(), cienciaConfirmada);
-				if (usuarioExterno && !cienciaConfirmada) {
-					continue;
-				}
-				destinatarios.add(createDestinatarioBean(destinatarioModeloComunicacao));
+		List<DestinatarioBean> destinatarios = new ArrayList<>();
+		for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
+			if (!destinatarioModeloComunicacao.getExpedido()) {
+				continue;
 			}
-			Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
-				@Override
-				public int compare(DestinatarioBean o1, DestinatarioBean o2) {
-					try {
-						Date d1 = dateFormat.parse(o1.getDataEnvio());
-						Date d2 = dateFormat.parse(o2.getDataEnvio());
-						return d2.compareTo(d1);
-					} catch (ParseException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			});
+			Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao);
+			if (comunicacao == null) {
+				continue;
+			}
+			boolean cienciaConfirmada = isCienciaConfirmada(destinatarioModeloComunicacao);
+			dadosCiencia.put(destinatarioModeloComunicacao.getId(), cienciaConfirmada);
+			if (!usuarioInterno && !cienciaConfirmada) {
+				continue;
+			}
+			destinatarios.add(createDestinatarioBean(destinatarioModeloComunicacao));
 		}
+		Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
+			@Override
+			public int compare(DestinatarioBean o1, DestinatarioBean o2) {
+				try {
+					Date d1 = dateFormat.parse(o1.getDataEnvio());
+					Date d2 = dateFormat.parse(o2.getDataEnvio());
+					return d2.compareTo(d1);
+				} catch (ParseException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 		return destinatarios;
 	}
 	
 	public List<ClassificacaoDocumento> getClassificacoesDocumento() {
-		if (classificacoesDocumento == null) {
-			if (isCiencia()) {
-				classificacoesDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false);
-				if (classificacoesDocumento.size() == 1) {
-					documentoUploader.setClassificacaoDocumento(classificacoesDocumento.get(0));
-				}
-			}
+		if (isCiencia()) {
+			boolean isModelo = isEditorCiencia();
+			classificacoesDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo);
 		}
 		return classificacoesDocumento;
 	}
@@ -219,17 +236,66 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void darCiencia() {
-		Documento documento = documentoUploader.getDocumento();
-		Processo comunicacao = destinatario.getComunicacao();
 
+		try {
+			validarCiencia();
+			
+			Documento documento = gravarDocumentoCiencia();
+
+			Processo comunicacao = destinatario.getComunicacao();
+			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+			MetadadoProcesso documentoCiencia = metadadoProcessoProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documento.getId().toString());
+			metadadoProcessoManager.persist(documentoCiencia);
+			prazoComunicacaoService.darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
+			movimentarProcessoJBPM(comunicacao);
+
+			dadosCiencia.put(destinatario.getIdDestinatario(), true);
+			destinatario = null;
+			dataCiencia = null;
+			ciencia = false;
+			setEditorCiencia(false);
+			setClassificacaoDocumentoCiencia(null);
+			
+			FacesMessages.instance().add("Ciência informada com sucesso");
+			
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
+		}
+	}
+	    
+	private Documento gravarDocumentoCiencia() {
+		
+		Documento documento = null;
+
+		if (isEditorCiencia()) {	
+			try {
+				DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(COMPROVANTE_DE_CIÊNCIA, textoCiencia);
+				documento = documentoManager.createDocumento(destinatario.getComunicacao().getProcessoRoot(), COMPROVANTE_DE_CIÊNCIA, bin, getClassificacaoDocumentoCiencia());
+			} catch (DAOException e) {
+				LOG.error("", e);
+				actionMessagesService.handleDAOException(e);
+			}
+		} else {
+			documento = documentoUploader.getDocumento();
+			documento.setDescricao(documento.getDocumentoBin().getNomeArquivo());
+			documentoUploader.setProcesso(destinatario.getComunicacao().getProcessoRoot());
+			documentoUploader.persist();
+			documentoUploader.setProcesso(null);
+		}
+		return documento;
+	}
+
+	private void validarCiencia() {
 		StringBuilder msg = new StringBuilder();
-		if (getClassificacaoDocumento() == null) {
+		if (getClassificacaoDocumentoCiencia() == null) {
 			msg.append("Informe a classificação do documento\n");
 		}
 		if (getDataCiencia() == null) {
 			msg.append("Informe a data de ciência\n");
 		}
-		if (documento == null) {
+		if (documentoUploader.getDocumento() == null && Strings.isNullOrEmpty(getTextoCiencia())) {
 			msg.append("Informe o documento de comprovação de ciência");
 		}
 		
@@ -237,30 +303,33 @@ public class ComunicacaoAction implements Serializable {
 			FacesMessages.instance().add(msg.toString());
 			return;
 		}
-		
-		try {
-			documento.setDescricao(documento.getDocumentoBin().getNomeArquivo());
-			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-			documentoUploader.setProcesso(comunicacao.getProcessoRoot());
-			documentoUploader.persist();
-			documentoUploader.setProcesso(null);
-			
-			MetadadoProcesso documentoCiencia = metadadoProcessoProvider.gerarMetadado(
-					ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documento.getId().toString());
-			metadadoProcessoManager.persist(documentoCiencia);
-			
-			prazoComunicacaoService.darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
-			
-			FacesMessages.instance().add("Ciência informada com sucesso");
-			destinatarioBeans.remove(destinatario.getIdModeloComunicacao());
-			dadosCiencia.put(destinatario.getIdDestinatario(), true);
-			destinatario = null;
-			dataCiencia = null;
-			ciencia = false;
-		} catch (DAOException e) {
-			LOG.error("", e);
-			actionMessagesService.handleDAOException(e);
+	}
+	
+	private void movimentarProcessoJBPM(Processo processo) throws DAOException {
+		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
+		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
+		BusinessProcess.instance().setProcessId(null);
+		BusinessProcess.instance().setTaskId(null);
+		Long idTaskInstance = situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso());
+		if (idTaskInstance == null) {
+			LOG.warn("idTaskInstance para o processo " + processo.getNumeroProcesso() + " nulo");
+			return;
 		}
+		BusinessProcess.instance().setProcessId(processo.getIdJbpm());
+		BusinessProcess.instance().setTaskId(idTaskInstance);
+		
+		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+		taskInstance.end();
+		atualizarProcessoTarefa(taskInstance);
+		
+		BusinessProcess.instance().setProcessId(processIdOriginal);
+		BusinessProcess.instance().setTaskId(taskIdOriginal);
+	}
+	
+	private void atualizarProcessoTarefa(TaskInstance taskInstance) throws DAOException {
+		ProcessoTarefa processoTarefa = processoTarefaManager.getByTaskInstance(taskInstance.getId());
+		processoTarefa.setDataFim(taskInstance.getEnd());
+		processoTarefaManager.update(processoTarefa);
 	}
 	
 	public boolean isProrrogacaoPrazo() {
@@ -307,14 +376,6 @@ public class ComunicacaoAction implements Serializable {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
-	}
-	
-	public ClassificacaoDocumento getClassificacaoDocumento() {
-		return documentoUploader.getClassificacaoDocumento();
-	}
-	
-	public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
-		documentoUploader.setClassificacaoDocumento(classificacaoDocumento);
 	}
 	
 	public Long getJbpmProcessId() {
@@ -367,6 +428,7 @@ public class ComunicacaoAction implements Serializable {
 		documentosDestinatario = null;
 		destinatario = null;
 		dataCiencia = null;
+		editorCiencia = false;
 		documentoUploader.clear();
 	}
 	
@@ -422,5 +484,36 @@ public class ComunicacaoAction implements Serializable {
 			return dateFormat.format(metadado.getValue());
 		}
 		return "-";
+	}
+
+	public String getTextoCiencia() {
+		return textoCiencia;
+	}
+
+	public void setTextoCiencia(String textoCiencia) {
+		this.textoCiencia = textoCiencia;
+	}
+
+	public boolean isEditorCiencia() {
+		return editorCiencia;
+	}
+
+	public void setEditorCiencia(boolean editorCiencia) {
+		this.editorCiencia = editorCiencia;
+		if (!isEditorCiencia()){
+			setClassificacaoDocumentoCiencia(null);
+		}
+	}
+
+	public ClassificacaoDocumento getClassificacaoDocumentoCiencia() {
+		return classificacaoDocumentoCiencia;
+	}
+
+	public void setClassificacaoDocumentoCiencia(
+			ClassificacaoDocumento classificacaoDocumentoCiencia) {
+		this.classificacaoDocumentoCiencia = classificacaoDocumentoCiencia;
+		if (!isEditorCiencia()){ 
+			documentoUploader.setClassificacaoDocumento(classificacaoDocumentoCiencia);
+		}
 	}
 }
