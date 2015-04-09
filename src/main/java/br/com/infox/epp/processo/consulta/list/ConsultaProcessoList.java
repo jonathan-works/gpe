@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -16,6 +17,8 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
 @AutoCreate
 @Scope(ScopeType.PAGE)
@@ -30,6 +33,9 @@ public class ConsultaProcessoList extends EntityList<Processo> {
 
     private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
+    
+    @In
+    private ProcessoTarefaManager processoTarefaManager;
     
     @Override
     public void newInstance() {
@@ -76,4 +82,8 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     	return  metadado != null ? (Item) metadado.getValue() : null;
     }
 
+    public Date getDataEntradaUltimaTarefa(Processo processo) {
+        ProcessoTarefa pt = processoTarefaManager.getUltimoProcessoTarefa(processo);
+        return pt.getDataInicio();
+    }
 }

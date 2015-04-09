@@ -64,5 +64,9 @@ public interface ProcessoTarefaQuery {
                 + "select 1 from TaskExpiration te "
                 + "where te.tarefa = pt.tarefa.tarefa"
             + ")";
-
+    
+    String ULTIMO_PROCESSO_TAREFA_BY_PROCESSO = "ultimoProcessoTarefaByProcesso";
+    String ULTIMO_PROCESSO_TAREFA_BY_PROCESSO_QUERY = "select pt from ProcessoTarefa pt "
+            + "where pt.processo = :" + QUERY_PARAM_PROCESSO + " "
+            + "order by pt.idProcessoTarefa desc";
 }

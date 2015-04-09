@@ -20,8 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = { TIPO_RELACIONAMENTO }))
@@ -45,7 +44,7 @@ public class TipoRelacionamentoProcesso implements Serializable {
     }
 
     @NotNull
-    @Length(min = FLAG, max = DESCRICAO_PADRAO)
+    @Size(min = FLAG, max = DESCRICAO_PADRAO)
     @Column(name = TIPO_RELACIONAMENTO, nullable = false, length = DESCRICAO_PADRAO, unique = true)
     public String getTipoRelacionamento() {
         return tipoRelacionamento;
@@ -69,8 +68,8 @@ public class TipoRelacionamentoProcesso implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime
-                * result
+        result = (prime
+                * result)
                 + ((idTipoRelacionamento == null) ? 0 : idTipoRelacionamento
                         .hashCode());
         return result;

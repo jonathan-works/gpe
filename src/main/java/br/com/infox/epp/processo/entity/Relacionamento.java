@@ -28,8 +28,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = TABLE_NAME)
@@ -66,7 +65,7 @@ public class Relacionamento implements Serializable {
     }
 
     @NotNull
-    @Length(min = FLAG)
+    @Size(min = FLAG)
     @Column(name = MOTIVO, nullable = false)
     public String getMotivo() {
         return motivo;
@@ -77,7 +76,7 @@ public class Relacionamento implements Serializable {
     }
 
     @NotNull
-    @Length(min = FLAG, max = DESCRICAO_MEDIA)
+    @Size(min = FLAG, max = DESCRICAO_MEDIA)
     @Column(name = NOME_USUARIO, length = DESCRICAO_MEDIA, nullable = false)
     public String getNomeUsuario() {
         return nomeUsuario;
@@ -113,8 +112,8 @@ public class Relacionamento implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime
-                * result
+        result = (prime
+                * result)
                 + ((idRelacionamento == null) ? 0 : idRelacionamento.hashCode());
         return result;
     }

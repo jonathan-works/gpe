@@ -54,7 +54,8 @@
         id="nome"
         required="true"
         label="#{infoxMessages['estrutura.nome']}"
-        value="#{estruturaCrudAction.instance.nome}" />
+        value="#{estruturaCrudAction.instance.nome}" 
+        maxlength="50" />
       <wi:selectSituacaoRadio
         id="ativo"
         label="#{infoxMessages['field.situacao']}"

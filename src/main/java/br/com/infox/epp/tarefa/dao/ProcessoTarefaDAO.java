@@ -15,6 +15,7 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_COM_EXPIR
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_ENDED;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_PROXIMA_LIMITE;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_BY_PROCESSO;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -85,5 +86,11 @@ public class ProcessoTarefaDAO extends DAO<ProcessoTarefa> {
 
     public List<ProcessoTarefa> getWithTaskExpiration() {
         return getNamedResultList(TAREFA_COM_EXPIRACAO);
+    }
+
+    public ProcessoTarefa getUltimoProcessoTarefa(Processo processo) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(QUERY_PARAM_PROCESSO, processo);
+        return getNamedSingleResult(ULTIMO_PROCESSO_TAREFA_BY_PROCESSO, parameters);
     }
 }

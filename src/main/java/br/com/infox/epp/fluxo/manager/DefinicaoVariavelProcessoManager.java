@@ -54,4 +54,8 @@ public class DefinicaoVariavelProcessoManager extends Manager<DefinicaoVariavelP
     public List<DefinicaoVariavelProcesso> listVariaveisByIdProcesso(Integer idProcesso) {
     	return getDao().getDefinicaoVariavelProcessoListByIdProcesso(idProcesso);
     }
+    
+    public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idProcesso) {
+        return getDao().getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
+    }
 }
