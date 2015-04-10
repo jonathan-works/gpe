@@ -5,7 +5,6 @@ import java.util.List;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.annotations.async.Asynchronous;
 import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
@@ -24,7 +23,7 @@ import br.com.infox.log.Logging;
 @Name(TaskExpirationProcessor.NAME)
 @AutoCreate
 public class TaskExpirationProcessor {
-    
+
     public static final String NAME = "taskExpirationProcessor";
     private static final LogProvider LOG = Logging.getLogProvider(TaskExpirationProcessor.class);
 
@@ -32,22 +31,21 @@ public class TaskExpirationProcessor {
     private ProcessoTarefaManager processoTarefaManager;
     @In
     private TaskExpirationManager taskExpirationManager;
-    
+
     @Asynchronous
-    @Transactional
-    public QuartzTriggerHandle processTaskExpiration(@IntervalCron String cron) {
-        List<ProcessoTarefa> processoTarefaList = processoTarefaManager.getWithTaskExpiration();
-        for (ProcessoTarefa processoTarefa : processoTarefaList) {
-            TaskExpiration taskExpiration = taskExpirationManager.getByFluxoAndTaskName(processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(), processoTarefa.getTarefa().getTarefa());
+    public QuartzTriggerHandle processTaskExpiration(@IntervalCron final String cron) {
+        final List<ProcessoTarefa> processoTarefaList = this.processoTarefaManager.getWithTaskExpiration();
+        for (final ProcessoTarefa processoTarefa : processoTarefaList) {
+            final TaskExpiration taskExpiration = this.taskExpirationManager.getByFluxoAndTaskName(processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(), processoTarefa.getTarefa().getTarefa());
             if (taskExpiration != null) {
-                DateTime expirationDate = new DateTime(DateUtil.getEndOfDay(taskExpiration.getExpiration()));
+                final DateTime expirationDate = new DateTime(DateUtil.getEndOfDay(taskExpiration.getExpiration()));
                 if (expirationDate.isBeforeNow()) {
                     BusinessProcess.instance().setProcessId(processoTarefa.getProcesso().getIdJbpm());
                     BusinessProcess.instance().setTaskId(processoTarefa.getTaskInstance());
-                    TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+                    final TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
                     try {
-                        processoTarefaManager.finalizarInstanciaTarefa(taskInstance, taskExpiration.getTransition());
-                    } catch (DAOException e) {
+                        this.processoTarefaManager.finalizarInstanciaTarefa(taskInstance, taskExpiration.getTransition());
+                    } catch (final DAOException e) {
                         LOG.error("taskExpirationProcessor.processTaskExpiration()", e);
                     }
                 }
