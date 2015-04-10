@@ -17,7 +17,7 @@
 	<s:div id="comunicacoesDiv">
 		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}" rendered="#{s:hasRole('usuarioInterno')}">
 			<wi:dataTable id="rascunhosTable" bean="#{modeloComunicacaoRascunhoList}" showSearchForm="false"
-				values="#{modeloComunicacaoRascunhoList.list(5)}" rowId="#{row.id}">
+				values="#{modeloComunicacaoRascunhoList.list(5)}" rowId="#{row.id}" hideOrder="true">
 				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar">
 					<h:form>
