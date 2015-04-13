@@ -22,6 +22,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
@@ -43,22 +44,24 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 	@In(required = false)
 	private Authenticator authenticator;
 	
-    public final List<Tuple> getRootList(TipoProcesso tipoProcesso) {
+    public final List<Tuple> getRootList(TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
         CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryRoot();
         appendMandatoryFilters(criteriaQuery, tipoProcesso);
-        appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
-        return getEntityManager().createQuery(criteriaQuery).getResultList();
+        appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
+        TypedQuery<Tuple> createQuery = getEntityManager().createQuery(criteriaQuery);
+        HibernateUtil.getQueryString(createQuery);
+        return createQuery.getResultList();
     }
 
-	public final List<Tuple> getChildrenList(Integer idFluxo, TipoProcesso tipoProcesso) {
+	public final List<Tuple> getChildrenList(Integer idFluxo, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
 		CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryChildren(idFluxo);
 		appendMandatoryFilters(criteriaQuery, tipoProcesso);
-		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
         return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
 	
-	public final List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa) {
-		TypedQuery<Long> typedCount = getEntityManager().createQuery(getCountSubqueryCaixas(tipoProcesso));
+	public final List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa, Boolean comunicacoesExpedidas) {
+		TypedQuery<Long> typedCount = getEntityManager().createQuery(getCountSubqueryCaixas(tipoProcesso, comunicacoesExpedidas));
 		String countQueryCaixa = HibernateUtil.getQueryString(typedCount);
 		String queryCaixas = "select c.idCaixa as idCaixa, "
 								  + "c.tarefa.idTarefa as idTarefa, "
@@ -77,18 +80,18 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return typedQuery.getResultList();
     }
 	
-	private CriteriaQuery<Long> getCountSubqueryCaixas(TipoProcesso tipoProcesso) {
+	private CriteriaQuery<Long> getCountSubqueryCaixas(TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
 		Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
 		criteriaQuery.select(cb.count(root.<Integer>get("idProcesso"))).distinct(true);
 		criteriaQuery.where(cb.and());
 		appendMandatoryFilters(criteriaQuery, tipoProcesso);
-		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
 		return criteriaQuery;
 	}
 	
-	public final List<Integer> getIdProcessosAbertosByIdTarefa(Tuple selected, TipoProcesso tipoProcesso) {
+	public final List<Integer> getIdProcessosAbertosByIdTarefa(Tuple selected, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
 		Integer idTarefa = selected.get("idTarefa", Integer.class);
 		CriteriaQuery<Integer> criteriaQuery = createBaseCriteriaQueryProcessosAbertos(idTarefa);
         String nodeType = selected.get("type", String.class);
@@ -99,7 +102,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
             appendProcessoComCaixaFilter(criteriaQuery, idCaixa);
         }
         appendMandatoryFilters(criteriaQuery, tipoProcesso);
-        appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+        appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
         return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
 	
@@ -108,9 +111,13 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		appendTipoProcessoFilter(abstractQuery, tipoProcesso);
 	}
 	
-	protected void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
+	protected void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
 		if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
-			appendDestinoOrDestinatarioFilter(abstractQuery);
+		    if (comunicacoesExpedidas != null && comunicacoesExpedidas) {
+		        appendLocalizacaoExpedidoraFilter(abstractQuery);
+		    } else {
+		        appendDestinoOrDestinatarioFilter(abstractQuery);
+		    }
 		} else if (TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
 			appendDestinoOrDestinatarioFilter(abstractQuery);
 		} else {
@@ -213,6 +220,14 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         abstractQuery.where(predicateQuery);
     }
 
+	private void appendLocalizacaoExpedidoraFilter(AbstractQuery<?> abstractQuery) {
+	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+	    Subquery<Integer> subqueryLocalizacaoExpediu = createSubqueryLocalizacaoExpediu(abstractQuery);
+	    Predicate predicateQuery = abstractQuery.getRestriction();
+	    predicateQuery = cb.and(cb.exists(subqueryLocalizacaoExpediu), predicateQuery);
+	    abstractQuery.where(predicateQuery);
+	}
+	
 	private Subquery<Integer> createSubqueryPerfilDestino(AbstractQuery<?> abstractQuery) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Root<?> root = abstractQuery.getRoots().iterator().next();
@@ -251,6 +266,19 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         subquery.where(predicateSubquery);
 		return subquery;
 	}
+    
+    private Subquery<Integer> createSubqueryLocalizacaoExpediu(AbstractQuery<?> abstractQuery) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<?> root = abstractQuery.getRoots().iterator().next();
+        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<Processo> processo = subquery.from(Processo.class);
+        subquery.select(cb.literal(1));
+        Integer idLocalizacao = Authenticator.getLocalizacaoAtual().getIdLocalizacao();
+        Predicate predicateSubQuery = cb.and(cb.equal(root.get("idProcesso"), processo.get("idProcesso")));
+        predicateSubQuery = cb.and(cb.equal(processo.get("localizacao"), idLocalizacao), predicateSubQuery);
+        subquery.where(predicateSubQuery);
+        return subquery;
+    }
 	
 	private Subquery<Integer> createSubqueryDestinatario(AbstractQuery<?> abstractQuery) { 
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -381,26 +409,26 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		abstractQuery.where(predicate);
 	}
 
-	public boolean canOpenTask(long idTaskInstance, TipoProcesso tipoProcesso) {
+	public boolean canOpenTask(long idTaskInstance, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
 		Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
 		criteriaQuery.select(cb.count(root.get("idTaskInstance")));
 		criteriaQuery.where(cb.equal(root.get("idTaskInstance"), idTaskInstance));
 		appendMandatoryFilters(criteriaQuery, tipoProcesso);
-		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
 		Long count = getEntityManager().createQuery(criteriaQuery).getSingleResult();
 		return count > 0;
 	}
 
-	public boolean canAccessProcesso(Integer idProcesso, TipoProcesso tipoProcesso) {
+	public boolean canAccessProcesso(Integer idProcesso, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
 		Root<SituacaoProcesso> root = criteriaQuery.from(SituacaoProcesso.class);
 		criteriaQuery.select(cb.count(root.get("idProcesso")));
 		criteriaQuery.where(cb.equal(root.get("idProcesso"), idProcesso));
 		appendMandatoryFilters(criteriaQuery, tipoProcesso);
-		appendTipoProcessoFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
 		Long count = getEntityManager().createQuery(criteriaQuery).getSingleResult(); 
 		return count > 0;
 	}
