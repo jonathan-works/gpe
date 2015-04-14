@@ -61,7 +61,7 @@
 	       	  <s:div id="painelProcessosDocumento" styleClass="p-list" >
 	            <s:div id="processosDocumento" 
 	        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
-	        					 and painelUsuarioController.tab eq 'documento'}" >
+	        					 and painelUsuarioController.tab eq 'documento' and s:hasPermission('/pages/Painel/fluxoDocumento.seam', 'access')}" >
 	        
 		            <wi:dataTable
 		              values="#{consultaProcessoList.list(10)}"
