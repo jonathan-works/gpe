@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -169,6 +170,13 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void enviarRespostaComunicacao(){
 		List<Documento> documentosResposta = respostaComunicacaoList.list();
+		Iterator<Documento> iteratorResposta = respostaComunicacaoList.list().iterator();
+		while (iteratorResposta.hasNext()){
+			Documento documento = iteratorResposta.next();
+			if(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento)){
+				iteratorResposta.remove();
+			}
+		}
 		try {
 			respostaComunicacaoService.enviarResposta(documentosResposta);
 			FacesMessages.instance().add("Resposta enviada com sucesso");

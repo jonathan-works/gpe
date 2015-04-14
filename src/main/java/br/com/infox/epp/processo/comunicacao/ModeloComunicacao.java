@@ -26,7 +26,9 @@ import com.google.common.base.Strings;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.comunicacao.query.ModeloComunicacaoQuery;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
@@ -202,7 +204,17 @@ public class ModeloComunicacao implements Serializable {
 	public boolean isDocumentoBinario() {
 		return Strings.isNullOrEmpty(getTextoComunicacao());
 	}
-
+	
+	public boolean isClassificacaoAssinavel(){
+    	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoComunicacao().getClassificacaoDocumentoPapelList();
+		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
+			if (tipoProcessoDocumentoPapel.getTipoAssinatura() == TipoAssinaturaEnum.S || tipoProcessoDocumentoPapel.getTipoAssinatura() == TipoAssinaturaEnum.O ){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

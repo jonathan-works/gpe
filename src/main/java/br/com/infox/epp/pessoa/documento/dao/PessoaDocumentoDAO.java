@@ -1,8 +1,10 @@
 package br.com.infox.epp.pessoa.documento.dao;
 
+import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PARAM_MATRICULA;
 import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PARAM_PESSOA;
 import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PARAM_TPDOCUMENTO;
 import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO;
+import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.USUARIO_POR_DOCUMENTO_E_TIPO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
 import br.com.infox.epp.pessoa.documento.type.TipoPesssoaDocumentoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -29,5 +32,12 @@ public class PessoaDocumentoDAO extends DAO<PessoaDocumento> {
 		parameters.put(PARAM_TPDOCUMENTO, tipoDocumento);
 		return getNamedSingleResult(PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO, parameters);
 	}
-	
+
+	public UsuarioLogin getUsuarioPorValorDocumentoETipo(String valorDocumento, TipoPesssoaDocumentoEnum dm) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(PARAM_MATRICULA, valorDocumento);
+		parameters.put(PARAM_TPDOCUMENTO, dm);
+		return getNamedSingleResult(USUARIO_POR_DOCUMENTO_E_TIPO, parameters);
+	}
+
 }

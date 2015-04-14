@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
+import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.jsf.converter.CnpjConverter;
 import br.com.infox.jsf.converter.CpfConverter;
@@ -55,6 +56,9 @@ public abstract class Pessoa implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pessoa") 
     private List<MeioContato> meioContatoList = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pessoa")
+    private List<PessoaDocumento> pessoaDocumentoList = new ArrayList<>();
     
     public Integer getIdPessoa() {
         return idPessoa;
@@ -166,5 +170,13 @@ public abstract class Pessoa implements Serializable {
     public MeioContato getTelefoneMovel() {
         return getMeioContatoListByTipoMeioContato(TipoMeioContatoEnum.TM);
     }
+
+	public List<PessoaDocumento> getPessoaDocumentoList() {
+		return pessoaDocumentoList;
+	}
+
+	public void setPessoaDocumentoList(List<PessoaDocumento> pessoaDocumentoList) {
+		this.pessoaDocumentoList = pessoaDocumentoList;
+	}
 
 }

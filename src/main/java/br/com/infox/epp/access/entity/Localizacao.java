@@ -1,10 +1,9 @@
 package br.com.infox.epp.access.entity;
 
-import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO_DOBRO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.access.query.LocalizacaoQuery.*;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.CAMINHO_COMPLETO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.DESCRICAO_LOCALIZACAO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_FILHO;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.ESTRUTURA_PAI;
@@ -24,6 +23,8 @@ import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ES
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACAO_PAI_ATTRIBUTE;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_ESTRUTURA_FILHO;
+import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_ESTRUTURA_FILHO_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.LOCALIZACOES_BY_IDS_QUERY;
 import static br.com.infox.epp.access.query.LocalizacaoQuery.SEQUENCE_LOCALIZACAO;
@@ -60,6 +61,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.persistence.Recursive;
 import br.com.infox.epp.turno.entity.LocalizacaoTurno;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
@@ -68,14 +70,14 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 @Entity
 @Table(name = TABLE_LOCALIZACAO)
 @NamedQueries(value = {
-    @NamedQuery(name = LIST_BY_NOME_ESTRUTURA_PAI, query = LIST_BY_NOME_ESTRUTURA_PAI_QUERY),
-    @NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY),
-    @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY),
-    @NamedQuery(name = LOCALIZACAO_DENTRO_ESTRUTURA, query = LOCALIZACAO_DENTRO_ESTRUTURA_QUERY),
-    @NamedQuery(name = LOCALIZACAO_FORA_ESTRUTURA_BY_NOME, query = LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY),
-    @NamedQuery(name = LOCALIZACAO_BY_CODIGO, query = LOCALIZACAO_BY_CODIGO_QUERY),
-    @NamedQuery(name = LOCALIZACOES_BY_ESTRUTURA_FILHO, query = LOCALIZACOES_BY_ESTRUTURA_FILHO_QUERY),
-    @NamedQuery(name = LOCALIZACAO_BY_NOME, query = LOCALIZACAO_BY_NOME_QUERY)
+        @NamedQuery(name = LIST_BY_NOME_ESTRUTURA_PAI, query = LIST_BY_NOME_ESTRUTURA_PAI_QUERY),
+        @NamedQuery(name = LOCALIZACOES_BY_IDS, query = LOCALIZACOES_BY_IDS_QUERY),
+        @NamedQuery(name = IS_LOCALIZACAO_ANCESTOR, query = IS_LOCALIZACAO_ANCESTOR_QUERY),
+        @NamedQuery(name = LOCALIZACAO_DENTRO_ESTRUTURA, query = LOCALIZACAO_DENTRO_ESTRUTURA_QUERY),
+        @NamedQuery(name = LOCALIZACAO_FORA_ESTRUTURA_BY_NOME, query = LOCALIZACAO_FORA_ESTRUTURA_BY_NOME_QUERY),
+        @NamedQuery(name = LOCALIZACAO_BY_CODIGO, query = LOCALIZACAO_BY_CODIGO_QUERY),
+        @NamedQuery(name = LOCALIZACOES_BY_ESTRUTURA_FILHO, query = LOCALIZACOES_BY_ESTRUTURA_FILHO_QUERY),
+        @NamedQuery(name = LOCALIZACAO_BY_NOME, query = LOCALIZACAO_BY_NOME_QUERY)
 })
 @NamedNativeQueries({
     @NamedNativeQuery(name = USOS_DA_HIERARQUIA_LOCALIZACAO, query = USOS_DA_HIERARQUIA_LOCALIZACAO_QUERY)
@@ -91,17 +93,17 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     private Localizacao localizacaoPai;
     private Estrutura estruturaFilho;
     private Estrutura estruturaPai;
-    
+
     private List<LocalizacaoTurno> localizacaoTurnoList = new ArrayList<>(0);
     private List<Localizacao> localizacaoList = new ArrayList<>(0);
-    
+
     private List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocratica = new ArrayList<>(1);
-    
+
     private List<UnidadeDecisoraColegiada> unidadeDecisoraColegiada = new ArrayList<>(1);
 
     private String caminhoCompleto;
     private Boolean temContaTwitter;
-    
+
     private String caminhoCompletoFormatado;
 
     public Localizacao() {
@@ -135,8 +137,8 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.idLocalizacao = idLocalizacao;
     }
 
-    @Column(name = "cd_localizacao", nullable=true, length=50)
-    @Size(max=50)
+    @Column(name = "cd_localizacao", nullable=true, length=LengthConstants.DESCRICAO_ENTIDADE)
+    @Size(max=LengthConstants.DESCRICAO_ENTIDADE)
     public String getCodigo() {
         return codigo;
     }
@@ -145,8 +147,8 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.codigo = codigo;
     }
 
-    @Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO)
-    @Size(max = DESCRICAO_PADRAO_DOBRO)
+    @Column(name = DESCRICAO_LOCALIZACAO, nullable = false, length = DESCRICAO_PADRAO_DOBRO)
+    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO_DOBRO)
     @NotNull
     public String getLocalizacao() {
         return this.localizacao;
@@ -196,13 +198,13 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.estruturaFilho = estruturaFilho;
         this.caminhoCompletoFormatado = null;
     }
-    
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = ESTRUTURA_PAI)
     public Estrutura getEstruturaPai() {
         return estruturaPai;
     }
-    
+
     public void setEstruturaPai(Estrutura estruturaPai) {
         this.estruturaPai = estruturaPai;
     }
@@ -240,26 +242,26 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     public List<LocalizacaoTurno> getLocalizacaoTurnoList() {
         return localizacaoTurnoList;
     }
-    
+
     @OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
-	public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocratica() {
-		return unidadeDecisoraMonocratica;
-	}
+    public List<UnidadeDecisoraMonocratica> getUnidadeDecisoraMonocratica() {
+        return unidadeDecisoraMonocratica;
+    }
 
-	public void setUnidadeDecisoraMonocratica(List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocratica) {
-		this.unidadeDecisoraMonocratica = unidadeDecisoraMonocratica;
-	}
+    public void setUnidadeDecisoraMonocratica(List<UnidadeDecisoraMonocratica> unidadeDecisoraMonocratica) {
+        this.unidadeDecisoraMonocratica = unidadeDecisoraMonocratica;
+    }
 
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
-	public List<UnidadeDecisoraColegiada> getUnidadeDecisoraColegiada() {
-		return unidadeDecisoraColegiada;
-	}
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="localizacao")
+    public List<UnidadeDecisoraColegiada> getUnidadeDecisoraColegiada() {
+        return unidadeDecisoraColegiada;
+    }
 
-	public void setUnidadeDecisoraColegiada(List<UnidadeDecisoraColegiada> unidadeDecisoraColegiada) {
-		this.unidadeDecisoraColegiada = unidadeDecisoraColegiada;
-	}
+    public void setUnidadeDecisoraColegiada(List<UnidadeDecisoraColegiada> unidadeDecisoraColegiada) {
+        this.unidadeDecisoraColegiada = unidadeDecisoraColegiada;
+    }
 
-	@Override
+    @Override
     @Transient
     public Localizacao getParent() {
         return this.getLocalizacaoPai();
@@ -304,86 +306,116 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     }
 
     @Transient
-	public String getCaminhoCompletoFormatado() {
-		if (caminhoCompletoFormatado == null) {
-			StringBuilder sb = new StringBuilder();
-			if (this.getEstruturaPai() != null) {
-			    sb.append(this.getEstruturaPai().getNome());
-			    sb.append('|');
-			}
-			sb.append(this.getCaminhoCompleto());
-	        if (sb.charAt(sb.length() -1) == '|') {
-	            sb.deleteCharAt(sb.length() - 1);
-	        }
-	        int index = sb.indexOf("|", 0);
-	        while (index != -1) {
-	            sb.replace(index, index + 1, " / ");
-	            index = sb.indexOf("|", index);
-	        }
-	        if (this.getEstruturaFilho() != null) {
-	            sb.append(": ");
-	            sb.append(this.getEstruturaFilho().getNome());
-	        }
-	        caminhoCompletoFormatado = sb.toString();
-		}
-    	return caminhoCompletoFormatado;
-	}
+    public String getCaminhoCompletoFormatado() {
+        if (caminhoCompletoFormatado == null) {
+            StringBuilder sb = new StringBuilder();
+            if (this.getEstruturaPai() != null) {
+                sb.append(this.getEstruturaPai().getNome());
+                sb.append('|');
+            }
+            sb.append(this.getCaminhoCompleto());
+            if (sb.charAt(sb.length() -1) == '|') {
+                sb.deleteCharAt(sb.length() - 1);
+            }
+            int index = sb.indexOf("|", 0);
+            while (index != -1) {
+                sb.replace(index, index + 1, " / ");
+                index = sb.indexOf("|", index);
+            }
+            if (this.getEstruturaFilho() != null) {
+                sb.append(": ");
+                sb.append(this.getEstruturaFilho().getNome());
+            }
+            caminhoCompletoFormatado = sb.toString();
+        }
+        return caminhoCompletoFormatado;
+    }
 
-	public void setCaminhoCompletoFormatado(String caminhoCompletoFormatado) {
-		this.caminhoCompletoFormatado = caminhoCompletoFormatado;
-	}
+    public void setCaminhoCompletoFormatado(String caminhoCompletoFormatado) {
+        this.caminhoCompletoFormatado = caminhoCompletoFormatado;
+    }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result
+        result = (prime * result)
                 + ((getCaminhoCompleto() == null) ? 0 : getCaminhoCompleto().hashCode());
-        result = prime * result
+        result = (prime * result)
                 + ((getEstruturaFilho() == null) ? 0 : getEstruturaFilho().hashCode());
-        result = prime * result
+        result = (prime * result)
                 + ((getEstruturaPai() == null) ? 0 : getEstruturaPai().hashCode());
-        result = prime * result
+        result = (prime * result)
                 + ((getIdLocalizacao() == null) ? 0 : getIdLocalizacao().hashCode());
-        result = prime * result
+        result = (prime * result)
                 + ((getLocalizacao() == null) ? 0 : getLocalizacao().hashCode());
-        result = prime * result
+        result = (prime * result)
                 + ((getLocalizacaoPai() == null) ? 0 : getLocalizacaoPai().hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof Localizacao)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Localizacao)) {
+            return false;
+        }
         Localizacao other = (Localizacao) obj;
         if (getCaminhoCompleto() == null) {
-            if (other.getCaminhoCompleto() != null) return false;
-        } else if (!getCaminhoCompleto().equals(other.getCaminhoCompleto())) return false;
+            if (other.getCaminhoCompleto() != null) {
+                return false;
+            }
+        } else if (!getCaminhoCompleto().equals(other.getCaminhoCompleto())) {
+            return false;
+        }
         if (getEstruturaFilho() == null) {
-            if (other.getEstruturaFilho() != null) return false;
-        } else if (!getEstruturaFilho().equals(other.getEstruturaFilho())) return false;
+            if (other.getEstruturaFilho() != null) {
+                return false;
+            }
+        } else if (!getEstruturaFilho().equals(other.getEstruturaFilho())) {
+            return false;
+        }
         if (getEstruturaPai() == null) {
-            if (other.getEstruturaPai() != null) return false;
-        } else if (!getEstruturaPai().equals(other.getEstruturaPai())) return false;
+            if (other.getEstruturaPai() != null) {
+                return false;
+            }
+        } else if (!getEstruturaPai().equals(other.getEstruturaPai())) {
+            return false;
+        }
         if (getIdLocalizacao() == null) {
-            if (other.getIdLocalizacao() != null) return false;
-        } else if (!getIdLocalizacao().equals(other.getIdLocalizacao())) return false;
+            if (other.getIdLocalizacao() != null) {
+                return false;
+            }
+        } else if (!getIdLocalizacao().equals(other.getIdLocalizacao())) {
+            return false;
+        }
         if (getLocalizacao() == null) {
-            if (other.getLocalizacao() != null) return false;
-        } else if (!getLocalizacao().equals(other.getLocalizacao())) return false;
+            if (other.getLocalizacao() != null) {
+                return false;
+            }
+        } else if (!getLocalizacao().equals(other.getLocalizacao())) {
+            return false;
+        }
         if (getLocalizacaoPai() == null) {
-            if (other.getLocalizacaoPai() != null) return false;
-        } else if (!getLocalizacaoPai().equals(other.getLocalizacaoPai())) return false;
+            if (other.getLocalizacaoPai() != null) {
+                return false;
+            }
+        } else if (!getLocalizacaoPai().equals(other.getLocalizacaoPai())) {
+            return false;
+        }
         return true;
     }
-	
+
     @Transient
     public boolean isDecisoraMonocratica() {
         return !getUnidadeDecisoraMonocratica().isEmpty();
     }
-    
+
     @Transient
     public List<UnidadeDecisoraColegiada> getColegiadaDaMonocraticaList() {
         if (!getUnidadeDecisoraMonocratica().isEmpty()) {

@@ -44,10 +44,12 @@
             formTitle="#{infoxMessages['form.title']}">
             <wi:inputText id="codigoItem" required="true"
                 label="#{infoxMessages['item.codigoItem']}"
-                value="#{itemCrudAction.instance.codigoItem}" />
+                value="#{itemCrudAction.instance.codigoItem}"
+                maxlength="30" />
             <wi:inputText id="descricao" required="true"
                 label="#{infoxMessages['item.descricaoItem']}"
-                value="#{itemCrudAction.instance.descricaoItem}" />
+                value="#{itemCrudAction.instance.descricaoItem}" 
+                maxlength="100" />
             <wi:tree id="itemPai"
                 assignTo="itemCrudAction.instance.itemPai"
                 tree="#{itemTree}" icon="#{wiSkin.imageFolder}/nivelTree.gif"

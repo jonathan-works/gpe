@@ -16,17 +16,15 @@
 			<!-- Combo de tipo de comunicação e botão de visualizar comunicação -->
 			<h:form id="comunicacaoForm">
 				<wi:selectOneMenuEntity id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
-					required="true" items="#{envioComunicacaoController.tiposComunicacao}" showLabelSelecione="true"
+					showRequired="true" items="#{envioComunicacaoController.tiposComunicacao}"
 					value="#{envioComunicacaoController.tipoComunicacao}"
 					disabled="#{envioComunicacaoController.modeloComunicacao.finalizada}">
 					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
 				</wi:selectOneMenuEntity>
 				<div />
-				<h:commandButton action="#{envioComunicacaoController.downloadComunicacaoCompleta()}" 
+				<h:commandButton action="#{envioComunicacaoController.downloadComunicacaoCompleta(null)}" 
 					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" immediate="true" 
-					rendered="#{(not envioComunicacaoController.modeloComunicacao.documentoBinario 
-						or documentoComunicacaoAction.possuiDocumentoInclusoPorUsuarioInterno) 
-						and not envioComunicacaoController.modeloComunicacao.finalizada}" 
+					rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
 					styleClass="buttons"/> 
 			</h:form>
 			
@@ -36,13 +34,16 @@
 					<!-- Grid dos destinatários selecionados -->
 					<rich:dataTable id="destinatarios" value="#{envioComunicacaoController.modeloComunicacao.destinatarios}"
 								styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty envioComunicacaoController.modeloComunicacao.destinatarios}">
-						<rich:column styleClass="dt-toolbar-col">
+						<ui:param name="showToolbarNaoFinalizada" value="#{not envioComunicacaoController.modeloComunicacao.finalizada}" />
+						<ui:param name="showToolbarFinalizada" value="#{envioComunicacaoController.modeloComunicacao.finalizada and
+																 not envioComunicacaoController.modeloComunicacao.documentoBinario}" />
+						<rich:column styleClass="dt-toolbar-col" rendered="#{showToolbarNaoFinalizada or showToolbarFinalizada}">
 							<a:commandLink execute="@this" render="destinatariosPanel"
 								action="#{destinatarioComunicacaoAction.removerDestinatario(row)}"
-								rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+								rendered="#{showToolbarNaoFinalizada}">
 								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
 							</a:commandLink>
-							<s:div rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.modeloComunicacao.documentoBinario}">
+							<s:div rendered="#{showToolbarFinalizada}">
 	   							<a:commandLink action="#{envioComunicacaoController.setDestinatario(row)}" render="comunicacaoDestinatarioForm" execute="@this"
 	   								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
 	   								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{infoxMessages['button.selecionar']}" />
@@ -84,15 +85,11 @@
 					</rich:dataTable>
 				</h:form>
 				<div>
-					<!-- Botão Expedir Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
+					<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
 					<h:form id="expedicaoForm">
-						<s:div rendered="#{envioComunicacaoController.podeExibirBotaoExpedirComunicacoes()}">
+						<s:div rendered="#{envioComunicacaoController.podeExibirBotaoVisualizarComunicacoes()}">
 							<h:commandButton id="visualizarComunicacao" action="#{envioComunicacaoController.downloadComunicacaoCompleta(null)}" 
 								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" />
-							<wi:commandButton id="expedir" action="envioComunicacaoController.expedirComunicacao()" 
-								value="#{infoxMessages['comunicacao.expedirComunicacoes']}"
-								oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
-								reRender="expedicaoForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"/>
 		          		</s:div>
 					</h:form>
 				</div>
@@ -166,7 +163,7 @@
 			
 			<!-- Expedição individual de comunicações (o ofício da comunicação é o texto do editor) -->
 			<h:form id="comunicacaoDestinatarioForm">
-				<s:div id="assinatura_pers" rendered="#{not envioComunicacaoController.modeloComunicacao.documentoBinario 
+				<s:div id="assinatura_pers" rendered="#{not envioComunicacaoController.modeloComunicacao.documentoBinario
 					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
 					
 					<h:commandButton id="visualizarComunicacao" action="#{envioComunicacaoController.downloadComunicacaoCompleta(envioComunicacaoController.destinatario)}" 
@@ -186,6 +183,7 @@
 						signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
           		</s:div>
 			</h:form>
+			<br />
 			<!-- Documentos disponíveis para serem vinculados à comunicação -->
 			<rich:panel id="documentos" header="Documentos" 
 				rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada or not empty envioComunicacaoController.modeloComunicacao.documentos}">
@@ -374,7 +372,7 @@
 				<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
 					action="envioComunicacaoController.gravar" reRender="comunicacaoDiv, pageBodyDialogMessage"
 					rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
-					oncomplete="if (opener &amp;&amp; opener['reloadRascunhos']) opener['reloadRascunhos']();"/>
+					oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
 				<s:fragment rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}">
 					<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
 					<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml' : ''}" />

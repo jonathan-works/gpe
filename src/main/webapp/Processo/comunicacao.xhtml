@@ -11,7 +11,6 @@
 		onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{comunicacaoAction.jbpmProcessId}','1024'); hideLoading(); return false;" 
 		rendered="#{s:hasRole('usuarioInterno')}" />
 	<h:form>
-		<a:jsFunction name="reloadRascunhos" render="rascunhos" limitRender="true" execute="@this" />
 		<a:jsFunction name="reloadAll" render="comunicacoesDiv" limitRender="true" execute="@this" 
 			action="#{comunicacaoAction.clearCacheModelos}"/>
 	</h:form>
@@ -31,6 +30,7 @@
 				<wi:columnOutputText columnHeader="#{infoxMessages['comunicacao.tipoComunicacao']}" value="#{row.tipoComunicacao.descricao}"/>
 			</wi:dataTable>
 		</rich:collapsiblePanel>
+		<br />
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
 			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 			<h:form>

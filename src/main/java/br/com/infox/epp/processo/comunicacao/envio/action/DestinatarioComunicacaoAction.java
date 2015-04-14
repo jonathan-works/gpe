@@ -19,7 +19,11 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
@@ -30,6 +34,7 @@ import br.com.infox.epp.processo.comunicacao.list.ParticipanteProcessoComunicaca
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Name(DestinatarioComunicacaoAction.NAME)
@@ -47,6 +52,8 @@ public class DestinatarioComunicacaoAction {
 	private UsuarioPerfilManager usuarioPerfilManager;
 	@In
 	private GenericManager genericManager;
+	@In
+	private PapelManager papelManager;
 	
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
@@ -172,8 +179,20 @@ public class DestinatarioComunicacaoAction {
 	public MeioExpedicao[] getMeiosExpedicao(DestinatarioModeloComunicacao destinatario) {
 		if (destinatario.getDestinatario() != null) {
 			PessoaFisica pessoa = destinatario.getDestinatario();
+			UsuarioLogin usuario = pessoa.getUsuarioLogin();
 			if (pessoa.getTermoAdesao() != null) {
 				return MeioExpedicao.getValues(true);
+			}	
+			if (usuario != null) {
+				List<UsuarioPerfil> usuarioPerfilList = usuario.getUsuarioPerfilList();
+				List<String> papeisHerdeirosUsuarioInterno = papelManager.getIdentificadoresPapeisMembros(Parametros.PAPEL_USUARIO_INTERNO.getValue());
+				papeisHerdeirosUsuarioInterno.add(Parametros.PAPEL_USUARIO_INTERNO.getValue());
+				for (UsuarioPerfil usuarioPerfil : usuarioPerfilList) {
+					Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
+					if (papeisHerdeirosUsuarioInterno.contains(papel.getIdentificador())) {
+						return MeioExpedicao.getValues(true);
+					}
+				}
 			}
 		}
 		return MeioExpedicao.getValues(false);

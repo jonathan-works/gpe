@@ -302,7 +302,7 @@ public class AssinaturaDocumentoService implements Serializable {
     }
     
     public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, DocumentoBin documentoBin, UsuarioLogin usuario) {
-    	if (documentoBin == null || documentoBin == null || documentoBin.isMinuta()) {
+    	if (documentoBin == null || (documentoBin != null && documentoBin.isMinuta())) {
     		return false;
     	}
     	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 

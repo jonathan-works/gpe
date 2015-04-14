@@ -38,6 +38,7 @@ import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
@@ -143,16 +144,18 @@ public class ComunicacaoService {
 			
 			copy = pdfManager.copyPdf(copy, pdfComunicacao.toByteArray());
 			pdfComunicacao = null;
-			
+			Integer documentoComunicacaoId = getDocumentoComunicacao(modeloComunicacao).getId();			
 			for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
-				DocumentoBin documentoBin = documentoModelo.getDocumento().getDocumentoBin();
-				if ("pdf".equals(documentoBin.getExtensao())) {
-					byte[] documento = documentoBinarioManager.getData(documentoBin.getId());
-					copy = pdfManager.copyPdf(copy, documento);
-				} else if (documentoBin.getExtensao() == null) {
-					ByteArrayOutputStream bos = new ByteArrayOutputStream();
-					pdfManager.convertHtmlToPdf(documentoBin.getModeloDocumento(), bos);
-					copy = pdfManager.copyPdf(copy, bos.toByteArray());
+				if (documentoModelo.getDocumento().getId() != documentoComunicacaoId){
+					DocumentoBin documentoBin = documentoModelo.getDocumento().getDocumentoBin();
+					if ("pdf".equals(documentoBin.getExtensao())) {
+						byte[] documento = documentoBinarioManager.getData(documentoBin.getId());
+						copy = pdfManager.copyPdf(copy, documento);
+					} else if (documentoBin.getExtensao() == null) {
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						pdfManager.convertHtmlToPdf(documentoBin.getModeloDocumento(), bos);
+						copy = pdfManager.copyPdf(copy, bos.toByteArray());
+					}
 				}
 			}
 			
@@ -193,12 +196,7 @@ public class ComunicacaoService {
 					pdfManager.convertHtmlToPdf(documentoComunicacaoService.evaluateComunicacao(destinatario), pdfComunicacao);
 				}
 			} else {
-				DocumentoBin documentoComunicacao;
-				if (!modeloComunicacao.getFinalizada()) {
-					documentoComunicacao = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento().getDocumentoBin();
-				} else {
-					documentoComunicacao = modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao().getDocumentoBin();
-				}
+				DocumentoBin documentoComunicacao = getDocumentoComunicacao(modeloComunicacao).getDocumentoBin();	
 				// TODO Analisar outros tipos de documento. Aqui só funciona com PDF e HTML. Mas provavelmente essa é a regra mesmo.
 				byte[] doc;
 				if (documentoComunicacao.isBinario()) {
@@ -216,6 +214,14 @@ public class ComunicacaoService {
 		return pdfComunicacao;
 	}
 
+	private Documento getDocumentoComunicacao(ModeloComunicacao modeloComunicacao){
+		if (!modeloComunicacao.getFinalizada()) {
+			return documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao).getDocumento();
+		} else {
+			return modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao();
+		}
+	}
+	
 	public void finalizarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
 		if (!modeloComunicacao.isDocumentoBinario()) {
 			if (modeloComunicacao.isMinuta()) {

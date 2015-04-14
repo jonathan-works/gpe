@@ -38,8 +38,8 @@ public class TipoComunicacao implements Serializable {
     @NotNull
     @Column(name = "ds_tipo_comunicacao", nullable = false, length = LengthConstants.DESCRICAO_MEDIA, unique = true)
     private String descricao;
-    
-    @Min(0)
+
+	@Min(0)
     @NotNull
     @Column(name = "nr_dias_prazo_ciencia", nullable = false)
     private Integer quantidadeDiasCiencia;
@@ -108,4 +108,36 @@ public class TipoComunicacao implements Serializable {
     public String toString() {
     	return descricao;
     }
+    
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof TipoComunicacao))
+			return false;
+		TipoComunicacao other = (TipoComunicacao) obj;
+		if (getDescricao() == null) {
+			if (other.getDescricao() != null)
+				return false;
+		} else if (!getDescricao().equals(other.getDescricao()))
+			return false;
+		if (getId() == null) {
+			if (other.getId() != null)
+				return false;
+		} else if (!getId().equals(other.getId()))
+			return false;
+		return true;
+	}
 }

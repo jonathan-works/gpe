@@ -2,6 +2,8 @@ package br.com.infox.epp.pessoa.documento.entity;
 
 import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO;
 import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO_QUERY;
+import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.USUARIO_POR_DOCUMENTO_E_TIPO;
+import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.USUARIO_POR_DOCUMENTO_E_TIPO_QUERY;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -28,7 +30,8 @@ import br.com.infox.epp.pessoa.entity.Pessoa;
 @Entity
 @Table(name = PessoaDocumento.TABLE_NAME)
 @NamedQueries(value = {
-		@NamedQuery(name = PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO, query = PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO_QUERY)
+		@NamedQuery(name = PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO, query = PESSOA_DOCUMENTO_BY_PESSOA_TPDOCUMENTO_QUERY),
+		@NamedQuery(name = USUARIO_POR_DOCUMENTO_E_TIPO, query = USUARIO_POR_DOCUMENTO_E_TIPO_QUERY)
 })
 public class PessoaDocumento implements Serializable {
 	

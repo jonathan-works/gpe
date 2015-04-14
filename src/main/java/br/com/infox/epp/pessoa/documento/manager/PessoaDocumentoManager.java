@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.pessoa.documento.dao.PessoaDocumentoDAO;
 import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
 import br.com.infox.epp.pessoa.documento.type.TipoPesssoaDocumentoEnum;
@@ -22,6 +23,10 @@ public class PessoaDocumentoManager extends Manager<PessoaDocumentoDAO, PessoaDo
 	public PessoaDocumento getPessoaDocumentoByPessoaTipoDocumento(Pessoa pessoa, 
 			TipoPesssoaDocumentoEnum tipoDocumento){
 		return getDao().searchPessoaDocumentoByPessoaTipoDocumento(pessoa, tipoDocumento);
+	}
+
+	public UsuarioLogin getUsuarioByMatricula(String valorMatricula) {
+		return getDao().getUsuarioPorValorDocumentoETipo(valorMatricula, TipoPesssoaDocumentoEnum.DM);
 	}
 	
 	
