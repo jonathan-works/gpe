@@ -420,7 +420,7 @@ public class TaskInstanceHome implements Serializable {
 	private boolean canOpenTask() {
 		MetadadoProcesso metadadoProcesso = processoEpaHome.getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
 		TipoProcesso tipoProcesso = (metadadoProcesso != null ? metadadoProcesso.<TipoProcesso> getValue() : null);
-		return situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId(), tipoProcesso);
+		return situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId(), tipoProcesso, false);
 	}
 
 	private TaskInstance getCurrentTaskInstance() {

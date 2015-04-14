@@ -88,6 +88,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private String observacaoMovimentacao;
 	private boolean iniciaExterno;
 	private List<MetadadoProcesso> detalhesMetadados;
+	private Boolean inTabExpedidas;
 
 	private Long tarefaId;
 
@@ -133,7 +134,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	public boolean checarVisibilidadeSemException() {
 		MetadadoProcesso metadadoProcesso = getInstance().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
 		TipoProcesso tipoProcesso = metadadoProcesso != null ? metadadoProcesso.<TipoProcesso> getValue() : null;
-		boolean visivel = situacaoProcessoDAO.canAccessProcesso(getInstance().getIdProcesso(), tipoProcesso);
+        boolean visivel = situacaoProcessoDAO.canAccessProcesso(getInstance().getIdProcesso(), tipoProcesso, getInTabExpedidas());
 		if (!visivel) {
 			ContextFacade.setToEventContext("canClosePanel", true);
 			FacesMessages.instance().clear();
@@ -253,6 +254,14 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
         	documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
         	documentoProcessoAction.setListClassificacaoDocumento(null);
         }
+    }
+
+    public Boolean getInTabExpedidas() {
+        return inTabExpedidas != null ? inTabExpedidas : false;
+    }
+
+    public void setInTabExpedidas(Boolean inTabExpedidas) {
+        this.inTabExpedidas = inTabExpedidas;
     }
 
 }

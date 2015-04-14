@@ -54,6 +54,8 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
+import com.google.common.base.Strings;
+
 @Name(EnvioComunicacaoController.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
@@ -220,6 +222,9 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
 			msg.append("Nenhum destinatário foi selecionado\n");
+		}
+		if (!modeloComunicacao.isMinuta() && Strings.isNullOrEmpty(modeloComunicacao.getTextoComunicacao())){
+			msg.append("O documento do editor não é minuta mas não existe texto no editor\n");
 		}
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getMeioExpedicao() == null) {

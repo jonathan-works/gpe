@@ -21,24 +21,27 @@ public class PainelEntityNode extends EntityNode<Tuple> {
     private List<PainelEntityNode> nodes;
     private List<EntityNode<Tuple>> caixas;
     private TipoProcesso tipoProcesso;
+    private Boolean comunicacoesExpedidas;
 
-    public PainelEntityNode(TipoProcesso tipoProcesso) {
+    public PainelEntityNode(TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
         super("");
         this.tipoProcesso = tipoProcesso;
+        this.comunicacoesExpedidas = comunicacoesExpedidas;
     }
-
-    public PainelEntityNode(EntityNode<Tuple> parent, Tuple entity, TipoProcesso tipoProcesso) {
+    
+    public PainelEntityNode(EntityNode<Tuple> parent, Tuple entity, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
         super(parent, entity, new String[0]);
         this.tipoProcesso = tipoProcesso;
+        this.comunicacoesExpedidas = comunicacoesExpedidas;
     }
 
     public List<EntityNode<Tuple>> getCaixas() {
         if (caixas == null) {
             caixas = new ArrayList<EntityNode<Tuple>>();
             if (!isLeaf()) {
-            	List<Tuple> children = getSituacaoProcessoDAO().getCaixaList(tipoProcesso, getTarefaId());
+            	List<Tuple> children = getSituacaoProcessoDAO().getCaixaList(tipoProcesso, getTarefaId(), comunicacoesExpedidas);
         		for (Tuple entity : children) {
-        		    caixas.add(new PainelEntityNode(this, entity, tipoProcesso));
+        		    caixas.add(new PainelEntityNode(this, entity, tipoProcesso, comunicacoesExpedidas));
         		}
             }
         }
@@ -48,9 +51,9 @@ public class PainelEntityNode extends EntityNode<Tuple> {
 	public List<PainelEntityNode> getRootsFluxos() {
         if (rootNodes == null) {
             rootNodes = new ArrayList<>();
-            List<Tuple> roots = getSituacaoProcessoDAO().getRootList(tipoProcesso);
+            List<Tuple> roots = getSituacaoProcessoDAO().getRootList(tipoProcesso, comunicacoesExpedidas);
             for (Tuple entity : roots) {
-            	rootNodes.add(new PainelEntityNode(null, entity, tipoProcesso));
+            	rootNodes.add(new PainelEntityNode(null, entity, tipoProcesso, comunicacoesExpedidas));
             }
         }
         return rootNodes;
@@ -61,9 +64,9 @@ public class PainelEntityNode extends EntityNode<Tuple> {
             nodes = new ArrayList<>();
             if (!isLeaf()) {
             	Integer idFluxo = getEntity().get("idFluxo", Integer.class);
-        		List<Tuple> children = getSituacaoProcessoDAO().getChildrenList(idFluxo, tipoProcesso);
+        		List<Tuple> children = getSituacaoProcessoDAO().getChildrenList(idFluxo, tipoProcesso, comunicacoesExpedidas);
         		for (Tuple entity : children) {
-        		    nodes.add(new PainelEntityNode(this, entity, tipoProcesso));
+        		    nodes.add(new PainelEntityNode(this, entity, tipoProcesso, comunicacoesExpedidas));
         		}
             }
         }

@@ -152,6 +152,6 @@ public class DocumentoComunicacaoService {
 	}
 
 	public DocumentoModeloComunicacao getDocumentoInclusoPorUsuarioInterno(ModeloComunicacao modeloComunicacao) {
-		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisMembros("usuarioInterno"), modeloComunicacao);
+		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(modeloComunicacaoManager.getIdentificadoresPapeisHerdeirosDeUsuarioInterno(), modeloComunicacao);
 	}
 }

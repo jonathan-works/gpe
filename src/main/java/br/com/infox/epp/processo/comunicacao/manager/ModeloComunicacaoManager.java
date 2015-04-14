@@ -4,20 +4,26 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.ModeloComunicacaoDAO;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.system.Parametros;
 
 @Name(ModeloComunicacaoManager.NAME)
 @AutoCreate
 public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, ModeloComunicacao> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "modeloComunicacaoManager";
+	
+	@In
+	private PapelManager papelManager;
 	
 	public boolean isExpedida(ModeloComunicacao modeloComunicacao) {
 		return getDao().isExpedida(modeloComunicacao);
@@ -34,4 +40,10 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 	public DocumentoModeloComunicacao getDocumentoInclusoPorPapel(Collection<String> identificadoresPapel, ModeloComunicacao modeloComunicacao) {
 		return getDao().getDocumentoInclusoPorPapel(identificadoresPapel, modeloComunicacao);
 	}
+	
+	public List<String> getIdentificadoresPapeisHerdeirosDeUsuarioInterno() {
+    	List<String> roles = papelManager.getIdentificadoresPapeisMembros(Parametros.PAPEL_USUARIO_INTERNO.getValue());
+    	roles.add(Parametros.PAPEL_USUARIO_INTERNO.getValue());
+    	return roles;
+    }
 }
