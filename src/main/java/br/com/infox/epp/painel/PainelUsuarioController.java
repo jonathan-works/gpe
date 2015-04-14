@@ -62,6 +62,7 @@ public class PainelUsuarioController extends AbstractController {
     private List<Integer> processoIdList;
     private List<DynamicColumnModel> dynamicColumns;
     private TipoProcesso tipoProcesso;
+    private String tabComunicacaoEletronica;
 
     @Observer("selectedTarefasTree")
     public void onSelected(Tuple selected) {
@@ -75,7 +76,9 @@ public class PainelUsuarioController extends AbstractController {
     	processoIdList = null;
     	selected = null;
     	setTipoProcesso();
+    	painelTreeHandler.clearTree();
     	painelTreeHandler.setTipoProcesso(getTipoProcesso());
+    	painelTreeHandler.setTabComunicacoesExpedidas(isTabComunicacoesExpedidas());
     }
 
     /**
@@ -99,7 +102,7 @@ public class PainelUsuarioController extends AbstractController {
     public List<Integer> getProcessoIdList() {
         if (selected != null && !PainelEntityNode.FLUXO_TYPE.equals(getSelectedType())) {
             if (processoIdList == null) {
-                processoIdList = situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(getSelected(), getTipoProcesso());
+                processoIdList = situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(getSelected(), getTipoProcesso(), isTabComunicacoesExpedidas());
             }
             return processoIdList;
         }
@@ -197,4 +200,18 @@ public class PainelUsuarioController extends AbstractController {
 	protected void setTipoProcesso(TipoProcesso tipoProcesso) {
 		this.tipoProcesso = tipoProcesso;
 	}
+
+    public String getTabComunicacaoEletronica() {
+        return tabComunicacaoEletronica;
+    }
+
+    public void setTabComunicacaoEletronica(String tabComunicacaoEletronica) {
+        boolean changed = !Objects.equals(tabComunicacaoEletronica, getTabComunicacaoEletronica());
+        this.tabComunicacaoEletronica = tabComunicacaoEletronica;
+        if (changed) onTabChange();
+    }
+    
+    public Boolean isTabComunicacoesExpedidas() {
+        return (getTabComunicacaoEletronica() != null && "tabExpedidas".equals(getTabComunicacaoEletronica())) ? true : false;
+    }
 }
