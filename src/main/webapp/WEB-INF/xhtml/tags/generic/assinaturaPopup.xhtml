@@ -83,10 +83,18 @@
 							functionPreSign="infox.showLoading();"
 							functionPosSign="assinar();"
 							rendered="#{validaDocumentoAction.podeAssinar()}" >
-	          </wi:certificadoDigital>
+	          			</wi:certificadoDigital>
 	
 					</s:div>
 				</h:form>
+				<s:div rendered="#{validaDocumentoAction.documentoTotalmenteAssinado}">
+					<h:form id="inicioAnaliseDocumentoForm">
+						<h:commandButton  
+						action="#{validaDocumentoAction.inicarAnaliseDocumento}"
+						value="#{infoxMessages['comunicacao.iniciarAnaliseDocumento']}" immediate="true" styleClass="buttons" /> 
+					</h:form>
+				</s:div>
+				
 			</s:div>
 		</f:subview>
 	</rich:popupPanel>
