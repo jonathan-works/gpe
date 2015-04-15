@@ -124,6 +124,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		    }
 		} else if (TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
 			appendDestinoOrDestinatarioFilter(abstractQuery);
+			appendPapelLocalizacaoFilter(abstractQuery);
 		} else {
 			appendPapelLocalizacaoFilter(abstractQuery);
 			appendUnidadeDecisoraFilter(abstractQuery);
