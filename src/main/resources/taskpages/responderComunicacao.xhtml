@@ -112,7 +112,7 @@
 			</s:div>
 			<s:div id="uploadDiv">
 				<wi:fileUpload id="documentoResposta"
-					reRender="pageBodyDialogMessage"
+					reRender="pageBodyDialogMessage uploadButton"
 					accept="#{respostaComunicacaoAction.classificacaoAnexo.acceptedTypes}"
 					rendered="#{not empty respostaComunicacaoAction.classificacaoAnexo 
 						and not empty respostaComunicacaoAction.descricaoAnexo
@@ -128,7 +128,7 @@
 		</rich:collapsiblePanel>
 	</h:form>
 	
-	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" />
+	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" showIniciarAnaliseDocumentos="false" />
 	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.documentosResposta']}" switchType="client">
 		<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
 			values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true">
