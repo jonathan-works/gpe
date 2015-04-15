@@ -17,6 +17,7 @@ import br.com.infox.epp.processo.action.RelacionamentoCrudAction;
 import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
+import br.com.infox.epp.processo.documento.anexos.AnexoController;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -83,6 +84,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private DocumentoList documentoList;
 	@In
     private DocumentoProcessoAction documentoProcessoAction;
+	@In
+	private AnexoController anexoController;
 
 	private DocumentoBin documentoBin = new DocumentoBin();
 	private String observacaoMovimentacao;
@@ -238,22 +241,26 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
 	@Override
     public void setTab(String tab) {
-        super.setTab(tab);
-        variavelProcessoAction.setProcesso(this.getInstance());
-        if (tab.equals("relacionamentoProcessoTab")){
-        	relacionamentoCrudAction.setProcesso(this.getInstance().getNumeroProcessoRoot());
-        }
-        if (tab.equals("tabMovimentacoes")){
-        	consultaController.setProcesso(this.getInstance());
-        }
-        if (tab.equals("tabAnexos") || tab.equals("tabAnexar")){
-        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
-        }
-        if (tab.equals("tabAnexos")){
-        	documentoList.setProcesso(this.getInstance().getProcessoRoot());
-        	documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
-        	documentoProcessoAction.setListClassificacaoDocumento(null);
-        }
+		if((tab == null && getTab() != null) || (tab != null && getTab() == null) || !tab.equals(getTab())){
+			super.setTab(tab);
+	        variavelProcessoAction.setProcesso(this.getInstance());
+	        if (tab.equals("relacionamentoProcessoTab")){
+	        	relacionamentoCrudAction.setProcesso(this.getInstance().getNumeroProcessoRoot());
+	        }
+	        if (tab.equals("tabMovimentacoes")){
+	        	consultaController.setProcesso(this.getInstance());
+	        }
+	        if (tab.equals("tabAnexos")){
+	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
+	        	documentoList.setProcesso(this.getInstance().getProcessoRoot());
+	        	documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
+	        	documentoProcessoAction.setListClassificacaoDocumento(null);
+	        }
+	        if(tab.equals("tabAnexar")){
+	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
+	        	anexoController.onClickTabAnexar(this.getInstance());
+	        }
+		}
     }
 
     public Boolean getInTabExpedidas() {
