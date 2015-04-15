@@ -93,8 +93,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioPerfil usuarioPerfil) {
         final BusinessProcess bp = BusinessProcess.instance();
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            final Long taskInstanceId = this.processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo,
-                    idTarefa);
+            final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo, idTarefa);
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
         }

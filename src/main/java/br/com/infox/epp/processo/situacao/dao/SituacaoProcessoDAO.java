@@ -106,11 +106,15 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
 	
-	private void appendMandatoryFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
+    protected void appendMandatoryFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
 		appendSigiloProcessoFilter(abstractQuery);
 		appendTipoProcessoFilter(abstractQuery, tipoProcesso);
 	}
 	
+    protected void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
+        appendTipoProcessoFilters(abstractQuery, tipoProcesso, Boolean.FALSE);
+    }
+
 	protected void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
 		if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
 		    if (comunicacoesExpedidas != null && comunicacoesExpedidas) {
