@@ -20,6 +20,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
@@ -45,6 +46,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(ValidaDocumentoAction.NAME)
 public class ValidaDocumentoAction implements Serializable {
 
+	private static final String RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE = "anexarDocumentoSemAnalise";
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "validaDocumentoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ValidaDocumentoAction.class);
@@ -79,7 +81,7 @@ public class ValidaDocumentoAction implements Serializable {
 	@In
 	private ActionMessagesService actionMessagesService;
 
-	private Boolean isDocumentoTotalmenteAssinado;
+	private Boolean podeIniciarFluxoAnaliseDocumentos;
 
 	/**
 	 * @deprecated
@@ -162,7 +164,7 @@ public class ValidaDocumentoAction implements Serializable {
 					if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())) {
 						assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(),
 								certificateSignatureBean.getSignature());
-						this.isDocumentoTotalmenteAssinado = assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento());
+						this.podeIniciarFluxoAnaliseDocumentos = assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento());
 						break;
 					}
 				}
@@ -294,26 +296,30 @@ public class ValidaDocumentoAction implements Serializable {
 		}
 	}
 
-	public boolean isDocumentoTotalmenteAssinado() {
+	public boolean isPodeIniciarFluxoAnaliseDocumentos() {
 		Documento documento = getDocumento();
 		if (documento == null) {
-			this.isDocumentoTotalmenteAssinado = false;
+			this.podeIniciarFluxoAnaliseDocumentos = false;
 		} else {
-			this.isDocumentoTotalmenteAssinado = assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
-			List<Processo> listProcesso = processoDAO.getProcessosFilhoNotEndedByTipo(documento.getProcesso(),
-					TipoProcesso.DOCUMENTO.toString());
-			for (Processo processo : listProcesso) {
-				MetadadoProcesso metadadoProcesso = processo.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
-				if (metadadoProcesso.getValor().equals(documento.getId().toString())) {
-					this.isDocumentoTotalmenteAssinado = false;
-					break;
+			Papel papelInclusao = documento.getPerfilTemplate().getPapel();
+			this.podeIniciarFluxoAnaliseDocumentos = !papelInclusao.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE) 
+					&& assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
+			if (this.podeIniciarFluxoAnaliseDocumentos){
+				List<Processo> listProcesso = processoDAO.getProcessosFilhoNotEndedByTipo(documento.getProcesso(),
+						TipoProcesso.DOCUMENTO.toString());
+				for (Processo processo : listProcesso) {
+					MetadadoProcesso metadadoProcesso = processo.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
+					if (metadadoProcesso.getValor().equals(documento.getId().toString())) {
+						this.podeIniciarFluxoAnaliseDocumentos = false;
+						break;
+					}
 				}
-			}
+			}			
 		}
-		return this.isDocumentoTotalmenteAssinado;
+		return this.podeIniciarFluxoAnaliseDocumentos;
 	}
 
-	public void setDocumentoTotalmenteAssinado(boolean isDocumentoTotalmenteAssinado) {
-		this.isDocumentoTotalmenteAssinado = isDocumentoTotalmenteAssinado;
+	public void setPodeIniciarFluxoAnaliseDocumentos(boolean isDocumentoTotalmenteAssinado) {
+		this.podeIniciarFluxoAnaliseDocumentos = isDocumentoTotalmenteAssinado;
 	}
 }
