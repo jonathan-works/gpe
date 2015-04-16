@@ -12,6 +12,7 @@
     <ui:param name="idPopup" value="#{id}" />
     <ui:param name="minWidth" value="#{empty minWidth ? '850' : minWidth}" />
     <ui:param name="minHeight" value="#{empty minHeight ? '160' : minHeight}" />
+    <ui:param name="showIniciarAnaliseDocumentos" value="#{empty showIniciarAnaliseDocumentos ? true : showIniciarAnaliseDocumentos}" />
     
    	<rich:popupPanel id="#{idPopup}" modal="false"  minWidth="#{minWidth}"  
                      minHeight="#{minHeight}" shadowDepth="8" resizeable="true" >
@@ -87,7 +88,7 @@
 	
 					</s:div>
 				</h:form>
-				<s:div rendered="#{validaDocumentoAction.documentoTotalmenteAssinado}">
+				<s:div rendered="#{showIniciarAnaliseDocumentos and validaDocumentoAction.podeIniciarFluxoAnaliseDocumentos }">
 					<h:form id="inicioAnaliseDocumentoForm">
 						<h:commandButton  
 						action="#{validaDocumentoAction.inicarAnaliseDocumento}"
