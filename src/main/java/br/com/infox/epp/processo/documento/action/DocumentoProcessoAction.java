@@ -21,6 +21,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
+import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
@@ -42,19 +43,23 @@ public class DocumentoProcessoAction implements Serializable {
 	private Integer idDocumentoAlter;
 	private Map<String, Boolean> cache = new HashMap<String, Boolean>();
 	private List<ClassificacaoDocumento> listClassificacaoDocumento;
-	private ClassificacaoDocumento classificacaoDocumentoItem;
 	private Processo processo;
+	private DocumentoFilter documentoFilter = new DocumentoFilter();
 	
 	@In
 	private DocumentoManager documentoManager;
 	@In
 	private ActionMessagesService actionMessagesService;
+	
+	
+
 	@In
 	private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
 	@In
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	@In
 	private DocumentoList documentoList;
+	
 	
 	public void exclusaoRestauracaoDocumento(){
 		if (idDocumentoAlter == null){
@@ -147,24 +152,21 @@ public class DocumentoProcessoAction implements Serializable {
 	public void setListClassificacaoDocumento(List<ClassificacaoDocumento> listClassificacaoDocumento) {
 		this.listClassificacaoDocumento = listClassificacaoDocumento;
 	}
-
-	public Integer getClassificacaoDocumentoItem() {
-		return classificacaoDocumentoItem != null ? classificacaoDocumentoItem.getId() : null;
-	}
-
-	public void setClassificacaoDocumentoItem(Integer classificacaoDocumentoItem) {
-		if (classificacaoDocumentoItem != null) {
-			for (ClassificacaoDocumento classificacaoDocumento : listClassificacaoDocumento) {
-				if (classificacaoDocumento.getId().equals(classificacaoDocumentoItem)) {
-					this.classificacaoDocumentoItem = classificacaoDocumento;
-					break;
-				}
-			}
+	
+	public void filtrarDocumentos() {
+		if (documentoFilter.getIdClassificacaoDocumento() != null) {
+			documentoList.getEntity().setClassificacaoDocumento(classificacaoDocumentoManager
+					.find(documentoFilter.getIdClassificacaoDocumento()));
 		}
 		else {
-			this.classificacaoDocumentoItem = null;
+			documentoList.getEntity().setClassificacaoDocumento(null);
 		}
-		documentoList.getEntity().setClassificacaoDocumento(this.classificacaoDocumentoItem);		
+		if (documentoFilter.getNumeroDocumento() != null) {
+			documentoList.getEntity().setNumeroDocumento(documentoFilter.getNumeroDocumento());
+		}
+		else {
+			documentoList.getEntity().setNumeroDocumento(null);
+		}
 	}
 	
 	public Processo getProcesso() {
@@ -173,6 +175,10 @@ public class DocumentoProcessoAction implements Serializable {
 
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
+	}
+	
+	public DocumentoFilter getDocumentoFilter() {
+		return documentoFilter;
 	}
 }
 
