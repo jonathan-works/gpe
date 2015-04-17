@@ -118,11 +118,7 @@ public class RespostaComunicacaoAction implements Serializable {
 			actionMessagesService.handleDAOException(e);
 		}
 	}
-	
-	public void downloadDocumento(Documento documento) {
-		documentoDownloader.downloadDocumento(documento);
-	}
-	
+		
 	public void assignModeloDocumento() {
 		if (modeloDocumento == null) {
 			documentoEdicao.getDocumentoBin().setModeloDocumento("");
@@ -140,6 +136,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		try {
 			documentoEdicao = documentoManager.gravarDocumentoNoProcesso(processoRaiz, documentoEdicao); 
 			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
+			newDocumentoEdicao();
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -170,10 +167,10 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void enviarRespostaComunicacao(){
 		List<Documento> documentosResposta = respostaComunicacaoList.list();
-		Iterator<Documento> iteratorResposta = respostaComunicacaoList.list().iterator();
+		Iterator<Documento> iteratorResposta = documentosResposta.iterator();
 		while (iteratorResposta.hasNext()){
 			Documento documento = iteratorResposta.next();
-			if(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento)){
+			if(!assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento)){
 				iteratorResposta.remove();
 			}
 		}
