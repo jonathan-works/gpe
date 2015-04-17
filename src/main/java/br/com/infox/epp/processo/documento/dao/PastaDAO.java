@@ -1,6 +1,17 @@
 package br.com.infox.epp.processo.documento.dao;
 
-import static br.com.infox.epp.processo.documento.query.PastaQuery.*;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_EXCLUIDO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_NUMERO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SIGILO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_LOCALIZACAO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NUMERO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PASTA;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA_QUERY;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +22,8 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
@@ -35,12 +46,20 @@ public class PastaDAO extends DAO<Pasta> {
 		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_QUERY + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
 	}
 	
-	public int getTotalDocumentosPastaClassificacaoDocumento(Pasta pasta, ClassificacaoDocumento classificacaoDocumento) {
+	public int getTotalDocumentosPastaPorFiltros(Pasta pasta, DocumentoFilter documentoFilter) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_PASTA, pasta);
-		parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, classificacaoDocumento);
+		String baseQuery = TOTAL_DOCUMENTOS_PASTA_QUERY;
+		if (documentoFilter.getIdClassificacaoDocumento() != null) {
+			baseQuery = baseQuery + FILTER_CLASSIFICACAO_DOCUMENTO;
+			parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, documentoFilter.getIdClassificacaoDocumento());
+		}
+		if (documentoFilter.getNumeroDocumento() != null) {
+			baseQuery = baseQuery + FILTER_NUMERO_DOCUMENTO;
+			parameters.put(PARAM_NUMERO_DOCUMENTO, documentoFilter.getNumeroDocumento());
+		}
 		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
-		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_CLASSIFICACAO_DOCUMENTO_QUERY + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
+		return ((Number) getSingleResult(baseQuery + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
 	}
 	
 	public int getTotalDocumentosPasta(Pasta pasta, String customFilter, Map<String, Object> params) {
