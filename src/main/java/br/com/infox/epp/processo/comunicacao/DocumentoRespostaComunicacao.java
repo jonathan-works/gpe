@@ -27,7 +27,8 @@ import br.com.infox.epp.processo.entity.Processo;
 })
 @NamedQueries({
 	@NamedQuery(name = DocumentoRespostaComunicacaoQuery.REMOVER_DOCUMENTO_RESPOSTA, query = DocumentoRespostaComunicacaoQuery.REMOVER_DOCUMENTO_RESPOSTA_QUERY),
-	@NamedQuery(name = DocumentoRespostaComunicacaoQuery.GET_COMUNICACAO_VINCULADA, query = DocumentoRespostaComunicacaoQuery.GET_COMUNICACAO_VINCULADA_QUERY)
+	@NamedQuery(name = DocumentoRespostaComunicacaoQuery.GET_COMUNICACAO_VINCULADA, query = DocumentoRespostaComunicacaoQuery.GET_COMUNICACAO_VINCULADA_QUERY),
+	@NamedQuery(name = DocumentoRespostaComunicacaoQuery.UPDATE_DOCUMENTO_COMO_ENVIADO, query = DocumentoRespostaComunicacaoQuery.UPDATE_DOCUMENTO_COMO_ENVIADO_QUERY)
 })
 public class DocumentoRespostaComunicacao implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -47,6 +48,10 @@ public class DocumentoRespostaComunicacao implements Serializable {
 	@NotNull
 	@JoinColumn(name = "id_documento", nullable = false)
 	private Documento documento;
+	
+	@NotNull
+	@Column(name = "in_doc_enviado", nullable = false)
+	private Boolean enviado = Boolean.FALSE;
 
 	public Long getId() {
 		return id;
@@ -111,5 +116,13 @@ public class DocumentoRespostaComunicacao implements Serializable {
 		} else if (!comunicacao.equals(other.comunicacao))
 			return false;
 		return true;
+	}
+
+	public Boolean getEnviado() {
+		return enviado;
+	}
+
+	public void setEnviado(Boolean enviado) {
+		this.enviado = enviado;
 	}
 }

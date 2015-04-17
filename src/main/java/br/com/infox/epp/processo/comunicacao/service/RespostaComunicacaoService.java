@@ -69,6 +69,7 @@ public class RespostaComunicacaoService {
 		Map<String, Object> variaveisJbpm = new HashMap<>();
 		setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
+		documentoRespostaComunicacaoDAO.updateDocumentoComoEnviado(respostas);
 	}
 	
 	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {
