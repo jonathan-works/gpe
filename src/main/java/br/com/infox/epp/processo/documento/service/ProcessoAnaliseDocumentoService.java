@@ -91,12 +91,18 @@ public class ProcessoAnaliseDocumentoService {
 			if (tipoProcessoPai.equals(TipoProcesso.COMUNICACAO) || tipoProcessoPai.equals(TipoProcesso.COMUNICACAO_NAO_ELETRONICA)) {
 				variaveisJbpm.put("respostaComunicacao", true);
 				
-				MetadadoProcesso metadadoDocumentoAnalise = processoAnalise.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
-				Documento documentoAnalise = metadadoDocumentoAnalise.getValue();
+				List<MetadadoProcesso> metadadoDocumentoList = processoAnalise.getMetadadoList(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
 				MetadadoProcesso metadadoDestinatario = processoAnalise.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 				DestinatarioModeloComunicacao destinatarioComunicacao = metadadoDestinatario.getValue();
-				boolean pedidoProrrogacaoPrazo = prorrogacaoPrazoService.isClassificacaoProrrogacaoPrazo(documentoAnalise.getClassificacaoDocumento(), destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao());
-				variaveisJbpm.put("pedidoProrrogacaoPrazo", pedidoProrrogacaoPrazo);
+				for(MetadadoProcesso metadadoDocumentoAnalise : metadadoDocumentoList){
+					Documento documentoAnalise = metadadoDocumentoAnalise.getValue();
+					if (prorrogacaoPrazoService.isClassificacaoProrrogacaoPrazo(documentoAnalise.getClassificacaoDocumento(), 
+							destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao())){
+						variaveisJbpm.put("pedidoProrrogacaoPrazo", true);
+						//TODO esse é o momento de adicionar o metadado de congelamento de prazo, mas como é do TCE ver onde colocar
+						break;
+					}
+				}
 			}
 		}
 		iniciarProcessoService.iniciarProcesso(processoAnalise, variaveisJbpm);

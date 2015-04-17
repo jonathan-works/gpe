@@ -387,6 +387,17 @@ public class Processo implements Serializable {
 		return null;
 	}
 	
+	@Transient
+	public List<MetadadoProcesso> getMetadadoList(MetadadoProcessoDefinition metadadoProcessoDefinition){
+		List<MetadadoProcesso> metadadoList = new ArrayList<MetadadoProcesso>();
+		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
+			if (metadadoProcessoDefinition.getMetadadoType().equals(metadadoProcesso.getMetadadoType())){
+				metadadoList.add(metadadoProcesso);
+			}
+		}
+		return metadadoList;
+	}
+	
 	@Transient 
 	public Processo getProcessoRoot() {
 		Processo processo = this;
