@@ -40,6 +40,7 @@ public class DocumentoList extends EntityList<Documento> {
 
     public static final String NAME = "documentoList";
     
+    
     @In
     private ParametroManager parametroManager;
     @In
@@ -51,6 +52,7 @@ public class DocumentoList extends EntityList<Documento> {
     protected void addSearchFields() {
         addSearchField("pasta", SearchCriteria.IGUAL);
         addSearchField("classificacaoDocumento", SearchCriteria.IGUAL);
+        addSearchField("numeroDocumento", SearchCriteria.IGUAL);
     }
 
     @Override
