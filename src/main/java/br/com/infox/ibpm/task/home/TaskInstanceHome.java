@@ -364,6 +364,16 @@ public class TaskInstanceHome implements Serializable {
 		documentoManager.persist(documento);
 	}
 
+	public Boolean checkAccessSemException() {
+        Boolean hasAccess = false;
+	    try {
+            hasAccess = checkAccess();
+        } catch (ApplicationException e) {
+            FacesMessages.instance().add(e.getMessage());
+        }
+        return hasAccess;
+	}
+	
 	private Boolean checkAccess() {
 		int idProcesso = processoEpaHome.getInstance().getIdProcesso();
 		Integer idUsuarioLogin = Authenticator.getUsuarioLogado().getIdUsuarioLogin();
