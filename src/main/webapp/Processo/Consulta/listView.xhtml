@@ -41,11 +41,19 @@
                                 items="#{processoEpaList.listaUsuarios}"
                                 showLabelTodos="true" />
                             <wi:inputDataPeriodo
-                                id="periodo"
-                                valueDateFrom="#{processoEpaList.entity.dataInicio}"
-                                valueDateTo="#{processoEpaList.entity.dataFim}"
+                            	label="#{infoxMessages['processo.dataInicio']}"
+                                id="periodoInicio"
+                                valueDateFrom="#{processoEpaList.dataInicio.from}"
+                                valueDateTo="#{processoEpaList.dataInicio.to}"
                                 validatePastDateFrom="true"
                                 validatePastDateTo="true" />
+                            <wi:inputDataPeriodo
+                            	label="#{infoxMessages['processo.dataFim']}"
+                                id="periodoFim"
+                                valueDateFrom="#{processoEpaList.dataFim.from}"
+                                valueDateTo="#{processoEpaList.dataFim.to}"
+                                validatePastDateFrom="true"
+                                validatePastDateTo="true" />    
                         </wi:searchForm>
                     </ui:define>
                     <ui:define name="headerToolBar" />
