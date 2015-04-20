@@ -1,5 +1,6 @@
 package br.com.infox.hibernate.util;
 
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.hibernate.Filter;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.spi.TypedValue;
 import org.hibernate.internal.QueryImpl;
+import org.hibernate.internal.SessionImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.Component;
 
@@ -82,6 +84,10 @@ public final class HibernateUtil {
     
     private static final QueryImpl unwrapQuery(Query query) {
     	return query.unwrap(org.hibernate.internal.QueryImpl.class);
+    }
+    
+    public static Connection getConnection(EntityManager em) {
+    	return em.unwrap(SessionImpl.class).connection();
     }
 
 }

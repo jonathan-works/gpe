@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -18,6 +19,7 @@ import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermiss
 @Name(SigiloDocumentoService.NAME)
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class SigiloDocumentoService implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -18,6 +18,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.security.Identity;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -65,6 +66,7 @@ import com.google.common.base.Strings;
 @Name(ComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Transactional
 public class ComunicacaoAction implements Serializable {
 	private static final String COMPROVANTE_DE_CIÊNCIA = "Comprovante de Ciência";
 	private static final long serialVersionUID = 1L;

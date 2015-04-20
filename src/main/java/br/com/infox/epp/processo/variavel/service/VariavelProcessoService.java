@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
@@ -23,6 +24,7 @@ import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 @Name(VariavelProcessoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class VariavelProcessoService {
 
     public static final String NAME = "variavelProcessoService";

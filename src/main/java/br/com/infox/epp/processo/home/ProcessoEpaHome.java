@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.messages.InfoxMessages;
@@ -48,6 +49,7 @@ import br.com.itx.component.AbstractHome;
 @AutoCreate
 @Name(ProcessoEpaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class ProcessoEpaHome extends AbstractHome<Processo> {
 
 	private static final LogProvider LOG = Logging.getLogProvider(Processo.class);

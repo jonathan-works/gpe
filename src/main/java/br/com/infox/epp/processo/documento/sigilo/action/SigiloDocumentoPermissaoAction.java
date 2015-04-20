@@ -12,10 +12,11 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -30,6 +31,7 @@ import br.com.infox.util.collection.LazyMap;
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
 @Name(SigiloDocumentoPermissaoAction.NAME)
+@Transactional
 public class SigiloDocumentoPermissaoAction implements Serializable {
 
     private static final long serialVersionUID = 1L;

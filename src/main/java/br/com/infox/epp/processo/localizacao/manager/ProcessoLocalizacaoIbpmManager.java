@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.persistence.DAOException;
@@ -21,6 +22,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 @Name(ProcessoLocalizacaoIbpmManager.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class ProcessoLocalizacaoIbpmManager implements Serializable {
 	
     private static final long serialVersionUID = 1L;

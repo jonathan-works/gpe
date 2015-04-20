@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.entity;
 
 import static br.com.infox.constants.LengthConstants.NUMERACAO_PROCESSO;
-import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
@@ -40,7 +39,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_J
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.SEQUENCE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TABLE_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_GASTO_PROCESSO_EPP;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
@@ -59,8 +57,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -70,8 +66,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.PrePersist;
 import javax.persistence.QueryHint;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -79,6 +75,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.core.persistence.generator.CustomIdGenerator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
@@ -90,6 +87,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
+import br.com.infox.epp.processo.query.ProcessoQuery;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 
 @Entity
@@ -124,8 +122,7 @@ public class Processo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_PROCESSO)
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @NotNull
     @Column(name = ID_PROCESSO, unique = true, nullable = false)
     private Integer idProcesso;
     
@@ -196,6 +193,15 @@ public class Processo implements Serializable {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<Pasta> pastaList = new ArrayList<>();
+    
+    @PrePersist
+    private void prePersist() {
+    	if (idProcesso == null) {
+    		Integer generatedId = CustomIdGenerator.create(ProcessoQuery.SEQUENCE_PROCESSO).nextValue().intValue();
+    		setIdProcesso(generatedId);
+    		setNumeroProcesso(getIdProcesso().toString());
+    	}
+    }
     
     public Integer getIdProcesso() {
 		return idProcesso;

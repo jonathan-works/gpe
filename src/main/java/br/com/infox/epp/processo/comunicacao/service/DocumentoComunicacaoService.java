@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
@@ -45,7 +46,9 @@ import br.com.infox.ibpm.task.home.VariableTypeResolver;
 @Name(DocumentoComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class DocumentoComunicacaoService {
+	
 	public static final String NAME = "documentoComunicacaoService";
 	
 	@In

@@ -6,8 +6,11 @@ import java.util.Date;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.annotations.Transactional;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -24,6 +27,7 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.ApplicationException;
 
 @Name(TaskListenerService.NAME)
+@Transactional
 public class TaskListenerService implements Serializable {
 
     private static final LogProvider LOG = Logging.getLogProvider(TaskListenerService.class);

@@ -13,6 +13,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.security.Identity;
 
@@ -32,6 +33,7 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(CertificateAuthenticator.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class CertificateAuthenticator implements Serializable {
     private static final long serialVersionUID = 6825659622529568148L;
     private static final String AUTHENTICATE = "certificateAuthenticator.authenticate()";

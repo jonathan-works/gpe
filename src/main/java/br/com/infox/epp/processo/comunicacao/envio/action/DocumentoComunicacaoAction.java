@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -31,6 +32,7 @@ import br.com.infox.epp.processo.documento.manager.PastaManager;
 @Name(DocumentoComunicacaoAction.NAME)
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class DocumentoComunicacaoAction implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

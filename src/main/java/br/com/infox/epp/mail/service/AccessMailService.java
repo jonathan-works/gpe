@@ -13,6 +13,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.mail.Contact;
 import br.com.infox.core.mail.EMailBean;
@@ -30,6 +31,7 @@ import br.com.infox.seam.exception.BusinessException;
 @Name(AccessMailService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class AccessMailService {
 
     private static final String EXPRESSION_PATTERN = "<{0}>";

@@ -8,6 +8,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -44,6 +45,7 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(ValidaDocumentoAction.NAME)
+@Transactional
 public class ValidaDocumentoAction implements Serializable {
 
 	private static final String RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE = "anexarDocumentoSemAnalise";

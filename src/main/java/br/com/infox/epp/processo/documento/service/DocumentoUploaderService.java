@@ -10,7 +10,10 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.international.Messages;
+
+
 import org.richfaces.model.UploadedFile;
 
 import br.com.infox.core.file.encode.MD5Encoder;
@@ -32,6 +35,7 @@ import com.lowagie.text.pdf.PdfReader;
 @AutoCreate
 @Scope(ScopeType.STATELESS)
 @Name(DocumentoUploaderService.NAME)
+@Transactional
 public class DocumentoUploaderService implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

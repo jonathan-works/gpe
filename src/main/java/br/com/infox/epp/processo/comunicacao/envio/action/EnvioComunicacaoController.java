@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.faces.FacesMessages;
@@ -59,7 +60,9 @@ import com.google.common.base.Strings;
 @Name(EnvioComunicacaoController.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Transactional
 public class EnvioComunicacaoController implements Serializable {
+	
 	public static final String NAME = "envioComunicacaoController";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);

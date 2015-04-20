@@ -14,6 +14,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
@@ -42,6 +43,7 @@ import br.com.infox.seam.exception.BusinessException;
 
 @Name(IniciarProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class IniciarProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -160,7 +162,7 @@ public class IniciarProcessoAction implements Serializable {
         if (Authenticator.instance().isUsuarioExterno()) {
             final Redirect redirect = Redirect.instance();
             redirect.setViewId("/Processo/movimentar.seam");
-            redirect.setParameter("cid", Conversation.instance().getId());
+            redirect.setParameter("scid", Conversation.instance().getId());
             redirect.setParameter("idProcesso", getProcesso().getIdProcesso());
             redirect.execute();
         }

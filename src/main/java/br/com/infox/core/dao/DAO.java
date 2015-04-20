@@ -29,6 +29,7 @@ import br.com.infox.seam.exception.ApplicationException;
 
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public abstract class DAO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -5,7 +5,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.io.Serializable;
 import java.security.Principal;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +17,7 @@ import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
@@ -48,6 +48,7 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(AuthenticatorService.NAME)
 @AutoCreate
+@Transactional
 public class AuthenticatorService implements Serializable {
     public static final String CERTIFICATE_ERROR_EXPIRED = "certificate.error.expired";
     private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO = "certificate.error.usuarioLoginProvisorioExpirado";
@@ -275,7 +276,7 @@ public class AuthenticatorService implements Serializable {
             throws LoginException, CertificateException {
         try {
             certificateManager.verificaCertificado(c.getCertChain());
-        } catch (final CertificateExpiredException e) {
+        } catch (final CertificateException e) {
             LOG.error(CHECK_VALIDADE_CERTIFICADO, e);
             if (ParametroUtil.isProducao()) {
                 throw e;

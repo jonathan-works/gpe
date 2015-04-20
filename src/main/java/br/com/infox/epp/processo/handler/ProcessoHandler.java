@@ -17,6 +17,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
@@ -33,6 +34,7 @@ import br.com.infox.ibpm.variable.VariableHandler;
 
 @Name(ProcessoHandler.NAME)
 @Scope(ScopeType.CONVERSATION)
+@Transactional
 public class ProcessoHandler implements Serializable {
 
     private static final long serialVersionUID = 1L;

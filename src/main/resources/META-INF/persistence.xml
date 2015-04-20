@@ -4,71 +4,64 @@
 
 <!-- Persistence deployment descriptor for dev profile -->
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-    version="2.0">
-    
-    <persistence-unit name="EPAPersistenceUnit"
-        transaction-type="JTA">
-        <mapping-file>META-INF/extended-mappings.xml</mapping-file>
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <jta-data-source>java:jboss/datasources/${epp.datasource.name}</jta-data-source>
-        <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
-        <properties>
-            <property name="hibernate.show_sql" value="${desenvolvimento}" />
-            <property name="hibernate.format_sql" value="false" />
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
 
-            <property name="hibernate.default_batch_fetch_size" value="16" />
-            <property name="hibernate.max_fetch_depth" value="2" />
-            
-            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
-            
-            <property name="hibernate.ejb.event.post-insert" value="br.com.infox.epp.system.log.LogEventListener" />
-            <property name="hibernate.ejb.event.post-update" value="br.com.infox.epp.system.log.LogEventListener" />
-            <property name="hibernate.ejb.event.post-delete" value="br.com.infox.epp.system.log.LogEventListener" />
-            <property name="hibernate.id.new_generator_mappings" value="false" />
+	<persistence-unit name="EPAPersistenceUnit" transaction-type="JTA">
+		<mapping-file>META-INF/extended-mappings.xml</mapping-file>
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>${epp.datasource.jndi.prefix}${epp.datasource.name}</jta-data-source>
+		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+		<properties>
+			<property name="hibernate.show_sql" value="${desenvolvimento}" />
+			<property name="hibernate.format_sql" value="false" />
 
-            <property name="hibernate.search.default.directory_provider" value="filesystem" />
-            <property name="hibernate.search.lucene_version" value="LUCENE_36" />
-            <property name="hibernate.search.analyzer" value="org.apache.lucene.analysis.br.BrazilianAnalyzer" />
+			<property name="hibernate.default_batch_fetch_size" value="16" />
+			<property name="hibernate.max_fetch_depth" value="2" />
 
-            <property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/EPAPersistenceUnit" />
-                       
-            <property name="hibernate.cache.region_prefix" value="" /> 
-            <property name="hibernate.cache.use_second_level_cache" value="true" />
-			<property name="hibernate.cache.use_query_cache" value="true" />
-			<property name="hibernate.cache.infinispan.br.com.infox.epp.system.entity.Parametro.expiration.lifespan" value="5000"/>
-			<property name="hibernate.cache.infinispan.br.com.infox.epp.access.entity.Permissao.expiration.lifespan" value="5000"/>
-			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.entity.Processo.expiration.lifespan" value="5000"/>
-			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.sigilo.entity.SigiloProcesso.expiration.lifespan" value="5000"/>
+			<property name="hibernate.dialect" value="${hibernate.dialect}" />
+
+			<property name="hibernate.ejb.event.post-insert" value="br.com.infox.epp.system.log.LogEventListener" />
+			<property name="hibernate.ejb.event.post-update" value="br.com.infox.epp.system.log.LogEventListener" />
+			<property name="hibernate.ejb.event.post-delete" value="br.com.infox.epp.system.log.LogEventListener" />
+			<property name="hibernate.id.new_generator_mappings" value="false" />
+
+			<property name="hibernate.search.default.directory_provider" value="filesystem" />
+			<property name="hibernate.search.lucene_version" value="LUCENE_36" />
+			<property name="hibernate.search.analyzer"	value="org.apache.lucene.analysis.br.BrazilianAnalyzer" />
 			
-        </properties>
-    </persistence-unit>
+			<property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/EPAPersistenceUnit" />
 
-    <persistence-unit name="EPABinPersistenceUnit"
-        transaction-type="JTA">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <jta-data-source>java:jboss/datasources/${epp.datasourcebin.name}</jta-data-source>
-        <properties>
-            <property name="hibernate.show_sql" value="${desenvolvimento}" />
-            <property name="hibernate.format_sql" value="false" />
-            <property name="hibernate.id.new_generator_mappings"
-                value="false" />
+			<property name="hibernate.cache.region_prefix" value="" />
+			<property name="hibernate.cache.use_second_level_cache" value="true" /> 
+			<property name="hibernate.cache.use_query_cache" value="true" /> 
+			<property name="hibernate.cache.region.factory_class" value="${hibernate.cache.region.class}" />
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.system.entity.Parametro.expiration.lifespan" value="5000"/> 
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.access.entity.Permissao.expiration.lifespan" value="5000"/> 
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.entity.Processo.expiration.lifespan" value="5000"/> 
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.sigilo.entity.SigiloProcesso.expiration.lifespan" value="5000"/>
+		</properties>
+	</persistence-unit>
 
-            <property name="hibernate.default_batch_fetch_size"
-                value="16" />
-                
-            <property name="hibernate.dialect" value="${hibernate.dialect}"/>
+	<persistence-unit name="EPABinPersistenceUnit" transaction-type="JTA">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>${epp.datasource.jndi.prefix}${epp.datasourcebin.name}</jta-data-source>
+		<properties>
+			<property name="hibernate.show_sql" value="${desenvolvimento}" />
+			<property name="hibernate.format_sql" value="false" />
+			<property name="hibernate.id.new_generator_mappings" value="false" />
 
-            <property name="hibernate.search.default.directory_provider"
-                value="filesystem" />
-            <property name="hibernate.search.lucene_version"
-                value="LUCENE_36" />
+			<property name="hibernate.default_batch_fetch_size" value="16" />
 
-            <property name="jboss.entity.manager.factory.jndi.name"
-                value="java:jboss/EPABinPersistenceUnit" />
-                
-        </properties>
-    </persistence-unit>
+			<property name="hibernate.dialect" value="${hibernate.dialect}" />
+
+			<property name="hibernate.search.default.directory_provider" value="filesystem" />
+			<property name="hibernate.search.lucene_version" value="LUCENE_36" />
+			
+			<property name="jboss.entity.manager.factory.jndi.name" value="java:jboss/EPABinPersistenceUnit" />
+
+		</properties>
+	</persistence-unit>
 
 </persistence>

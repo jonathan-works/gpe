@@ -31,14 +31,14 @@
             action="#{processBuilder.load(fluxoCrudAction.instance)}"
             value="Definição"
             rendered="#{fluxoCrudAction.managed}"
-            oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{conversation.id}',1300,850);"
+            oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?scid=#{conversation.id}',1300,850);"
         >
         </wi:commandButton>
         <wi:commandButton
             id="importarXPDL"
             value="#{infoxMessages['importarXPDL.button']}"
             rendered="#{fluxoCrudAction.managed}"
-            onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?cid=#{conversation.id}',1300,850);"
+            onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?scid=#{conversation.id}',1300,850);"
         >
         </wi:commandButton>
     </ui:define>

@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jbpm.graph.def.Event;
@@ -29,6 +30,7 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Name(LocalizacaoAssignment.NAME)
 @Install(precedence = Install.FRAMEWORK)
+@Transactional
 public class LocalizacaoAssignment implements Serializable {
 
     private static final long serialVersionUID = 1L;

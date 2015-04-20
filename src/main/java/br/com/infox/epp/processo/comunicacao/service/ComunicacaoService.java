@@ -16,6 +16,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.transaction.Transaction;
 import org.joda.time.DateTime;
@@ -58,7 +59,9 @@ import com.lowagie.text.pdf.PdfCopy;
 @Name(ComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Transactional
 public class ComunicacaoService {
+	
 	public static final String NAME = "comunicacaoService";
 	
 	@In
