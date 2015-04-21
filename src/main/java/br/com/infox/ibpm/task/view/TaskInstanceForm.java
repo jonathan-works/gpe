@@ -25,6 +25,8 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.process.definition.variable.constants.VariableConstants;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.FragmentConfiguration;
+import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -103,13 +105,13 @@ public class TaskInstanceForm implements Serializable {
                         ff.setLabel("Modelo");
                         ff.setType("comboModelos");
                         Map<String, Object> props = getInNewLineMap();
-                        props.put("editorId", var.getVariableName() + "-"
-                                + taskInstance.getId());
+                        props.put("editorId", var.getVariableName() + "-" + taskInstance.getId());
                         props.put("pagePath", MessageFormat.format(VariableConstants.DEFAULT_PATH, "comboModelos"));
                         ff.setProperties(props);
                         form.getFields().add(ff);
                     }
-                    String label = JbpmUtil.instance().getMessages().get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
+                    String label = JbpmUtil.instance().getMessages()
+                            .get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
                     ff.setId(var.getVariableName() + "-" + taskInstance.getId());
@@ -119,38 +121,51 @@ public class TaskInstanceForm implements Serializable {
                     form.getFields().add(ff);
                     ff.getProperties().put("pagePath", type.getPath());
                     switch (type) {
-                        case PAGE:
-                            setPageProperties(name, ff, "seam", "url");
-                            break;
-                        case FRAME:
-                            setPageProperties(name, ff, "xhtml", "urlFrame");
-                            break;
-                        case ENUMERATION:{
-                            DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                            Integer id = Integer.valueOf(tokens[2]);
-                            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
-                            List<SelectItem> selectItens = new ArrayList<>();
-                            if (dominio.isDominioSqlQuery()){
-                            	ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
-                            	selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
-                            } else {
-                            	String[] itens = dominio.getDominio().split(";");
-                            	for (String item : itens) {
-                            		String[] pair = item.split("=");
-                            		selectItens.add(new SelectItem(pair[1], pair[0]));
-                            	}
-                            }
-                            ff.getProperties().put("items", selectItens);
-                        }
-                        case DATE:{
-                            if (tokens.length < 3) {
-                                ff.getProperties().put("tipoValidacao", ValidacaoDataEnum.L.name());
-                            } else {
-                                ff.getProperties().put("tipoValidacao", tokens[2]);
+                    case PAGE:
+                        setPageProperties(name, ff, "seam", "url");
+                        break;
+                    case FRAME:
+                        setPageProperties(name, ff, "xhtml", "urlFrame");
+                        break;
+                    case ENUMERATION: {
+                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component
+                                .getInstance(DominioVariavelTarefaManager.NAME);
+                        Integer id = Integer.valueOf(tokens[2]);
+                        DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
+                        List<SelectItem> selectItens = new ArrayList<>();
+                        if (dominio.isDominioSqlQuery()) {
+                            ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
+                            selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
+                        } else {
+                            String[] itens = dominio.getDominio().split(";");
+                            for (String item : itens) {
+                                String[] pair = item.split("=");
+                                selectItens.add(new SelectItem(pair[1], pair[0]));
                             }
                         }
-                        default:
-                            break;
+                        ff.getProperties().put("items", selectItens);
+                    }
+                        break;
+                    case DATE: {
+                        if (tokens.length < 3) {
+                            ff.getProperties().put("tipoValidacao", ValidacaoDataEnum.L.name());
+                        } else {
+                            ff.getProperties().put("tipoValidacao", tokens[2]);
+                        }
+                    }
+                        break;
+                    case FRAGMENT: {
+                        if (tokens.length >= 3) {
+                            FragmentConfiguration fragmentConfiguration = ComponentUtil
+                                    .<FragmentConfigurationCollector> getComponent(FragmentConfigurationCollector.NAME)
+                                    .getByCode(tokens[2]);
+                            ff.getProperties().put("fragmentPath", fragmentConfiguration.getPath());
+                            ff.getProperties().put("config", fragmentConfiguration);
+                        }
+                    }
+                        break;
+                    default:
+                        break;
                     }
                 }
             }
@@ -163,8 +178,9 @@ public class TaskInstanceForm implements Serializable {
         ff.getProperties().put(propType, url);
     }
 
-    private void getTaskInstance() {
         TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
+
+    private void getTaskInstance() {
         if (newInstance == null || !newInstance.equals(taskInstance)) {
             form = null;
         }
