@@ -157,7 +157,7 @@ public class VariableAccessHandler implements Serializable {
     public void setDominioVariavelTarefa(DominioVariavelTarefa dominioVariavelTarefa) {
         this.dominioVariavelTarefa = dominioVariavelTarefa;
         String mappedName;
-        if (this.dominioVariavelTarefa != null) {
+        if (this.dominioVariavelTarefa != null && name != null) {
             mappedName = format("{0}:{1}:{2}", type.name(), name, this.dominioVariavelTarefa.getId());
         } else {
             mappedName = format("{0}:{1}", type.name(), name);
@@ -557,7 +557,7 @@ public class VariableAccessHandler implements Serializable {
     public void setValidacaoDataEnum(ValidacaoDataEnum validacaoDataEnum) {
         this.validacaoDataEnum = validacaoDataEnum;
         String mappedName;
-        if (this.validacaoDataEnum != null) {
+        if (this.validacaoDataEnum != null && name != null) {
             mappedName = format("{0}:{1}:{2}", type.name(), name, this.validacaoDataEnum.toString());
         } else {
             mappedName = format("{0}:{1}", type.name(), name);
@@ -586,7 +586,7 @@ public class VariableAccessHandler implements Serializable {
     public void setFragmentConfiguration(FragmentConfiguration fragmentConfiguration) {
         this.fragmentConfiguration = fragmentConfiguration;
         String mappedName;
-        if (this.fragmentConfiguration != null) {
+        if (this.fragmentConfiguration != null && name != null) {
             mappedName = format("{0}:{1}:{2}", type.name(), name, fragmentConfiguration.getCode());
         } else {
             mappedName = format("{0}:{1}", type.name(), name);
