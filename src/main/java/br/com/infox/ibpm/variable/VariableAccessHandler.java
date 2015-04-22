@@ -137,8 +137,13 @@ public class VariableAccessHandler implements Serializable {
             Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getFluxo().getIdFluxo(), this.name, auxiliarName);
             this.name = auxiliarName;
             ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
+            
             if (isData || type == VariableType.DATE) {
                 setValidacaoDataEnum(validacaoDataEnum);
+            } else if (isFragment()){
+                setFragmentConfiguration(fragmentConfiguration);
+            } else if (isPossuiDominio()) {
+                setDominioVariavelTarefa(dominioVariavelTarefa);
             } else {
                 setMappedName(format("{0}:{1}", type.name(), auxiliarName));
             }
