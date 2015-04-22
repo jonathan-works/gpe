@@ -165,6 +165,19 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	}
 	
 	public void downloadComunicacao() {
+		ModeloComunicacao modeloComunicacao = getModeloComunicacao();
+		DestinatarioModeloComunicacao destinatario = getDestinatario();
+		if (isExpedida(modeloComunicacao)){
+			destinatario = modeloComunicacao.getDestinatarios().get(0);
+		}
+		downloadComunicacao(modeloComunicacao, destinatario);
+	}
+	
+	public void downloadComunicacao(DestinatarioModeloComunicacao destinatario) {
+		downloadComunicacao(destinatario.getModeloComunicacao(), destinatario);
+	}
+	
+	private void downloadComunicacao(ModeloComunicacao modeloComunicacao, DestinatarioModeloComunicacao destinatario){
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
 			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
