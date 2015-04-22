@@ -124,6 +124,7 @@ public class ComunicacaoAction implements Serializable {
 	private boolean editorCiencia; 
 	private ClassificacaoDocumento classificacaoDocumentoCiencia;
 	
+	private ClassificacaoDocumento classificacaoDocumentoProrrogPrazo;
 	private boolean prorrogacaoPrazo;
 	private boolean documentos;
 	
@@ -210,6 +211,15 @@ public class ComunicacaoAction implements Serializable {
 		return classificacoesDocumentoProrrogacaoPrazo;
 	}
 	
+	public ClassificacaoDocumento getClassificacaoDocumentoProrrogPrazo() {
+		return classificacaoDocumentoProrrogPrazo;
+	}
+
+	public void setClassificacaoDocumentoProrrogPrazo(ClassificacaoDocumento classificacaoDocumentoProrrogPrazo) {
+		this.classificacaoDocumentoProrrogPrazo = classificacaoDocumentoProrrogPrazo;
+		documentoUploader.setClassificacaoDocumento(classificacaoDocumentoProrrogPrazo);
+	}
+
 	public DestinatarioBean getDestinatario() {
 		return destinatario;
 	}
