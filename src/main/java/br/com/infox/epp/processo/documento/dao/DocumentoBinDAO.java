@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
@@ -30,5 +31,18 @@ public class DocumentoBinDAO extends DAO<DocumentoBin> {
 		Map<String, Object> params = new HashMap<>();
         params.put(DocumentoBinQuery.QUERY_PARAM_DOCUMENTO_BIN, documentoBin);
         return getNamedResultList(DocumentoBinQuery.GET_DOCUMENTOS_NAO_SUFICIENTEMENTE_ASSINADOS, params);
+	}
+	
+	public DocumentoBin getDocumentoBinMaisRecentePorClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento){
+	   Map<String,Object> parameters = new HashMap<>();
+	   parameters.put("classificacaoDocumento", classificacaoDocumento);
+	   StringBuilder sb = new StringBuilder();
+	   sb.append("select bin");
+	   sb.append(" from ClassificacaoDocumento cd");
+	   sb.append(" inner join cd.documentoList d");
+	   sb.append(" inner join d.documentoBin bin");
+	   sb.append(" where cd = :").append("classificacaoDocumento");
+	   sb.append(" order by d.dataInclusao desc");
+	   return getSingleResult(sb.toString(), parameters); 
 	}
 }
