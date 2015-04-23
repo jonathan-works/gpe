@@ -89,7 +89,10 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 		        }
 		    }
 		    break;
-		    
+		case FRAGMENT:
+		    String string = value.toString();
+            expression.setValue(string);
+		    break;
 		default:
 			expression.setResolved(false);
 		    break;
