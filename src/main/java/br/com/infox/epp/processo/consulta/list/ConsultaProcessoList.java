@@ -33,14 +33,18 @@ public class ConsultaProcessoList extends EntityList<Processo> {
 
     private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
+    private static final String R3 = "NumeroProcessoRoot(o.idProcesso) = #{consultaProcessoList.numeroProcessoRoot}";
     
     @In
     private ProcessoTarefaManager processoTarefaManager;
+    
+    private String numeroProcessoRoot;
     
     @Override
     public void newInstance() {
         super.newInstance();
         getEntity().setNaturezaCategoriaFluxo(new NaturezaCategoriaFluxo());
+        setNumeroProcessoRoot(null);
     }
 
     @Override
@@ -48,12 +52,14 @@ public class ConsultaProcessoList extends EntityList<Processo> {
         addSearchField("idProcesso", SearchCriteria.IGUAL, R1);
         addSearchField("caixa.idCaixa", SearchCriteria.IGUAL, R2);
         addSearchField("numeroProcesso", SearchCriteria.IGUAL);
+        addSearchField("numeroProcessoRoot", SearchCriteria.IGUAL, R3);
         addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL);
         addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL);
         addSearchField("dataInicio", SearchCriteria.DATA_MAIOR_IGUAL);
         addSearchField("dataFim", SearchCriteria.DATA_MENOR_IGUAL);
     }
 
+    
     @Override
     protected String getDefaultEjbql() {
         return DEFAULT_EJBQL;
@@ -85,5 +91,13 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     public Date getDataEntradaUltimaTarefa(Processo processo) {
         ProcessoTarefa pt = processoTarefaManager.getUltimoProcessoTarefa(processo);
         return pt.getDataInicio();
+    }
+
+    public String getNumeroProcessoRoot() {
+        return numeroProcessoRoot;
+    }
+
+    public void setNumeroProcessoRoot(String numeroProcessoRoot) {
+        this.numeroProcessoRoot = numeroProcessoRoot;
     }
 }

@@ -20,6 +20,8 @@ import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
+import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -213,5 +215,10 @@ public class PainelUsuarioController extends AbstractController {
     
     public Boolean isTabComunicacoesExpedidas() {
         return (getTabComunicacaoEletronica() != null && "tabExpedidas".equals(getTabComunicacaoEletronica())) ? true : false;
+    }
+    
+    public String getDestinatarioComunicacao(Processo processo) {
+        DestinatarioModeloComunicacao destinatario = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
+        return destinatario.getNome();
     }
 }

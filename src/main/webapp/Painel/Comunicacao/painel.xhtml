@@ -80,9 +80,9 @@
                                                 formTitle="#{infoxMessages['searchForm.title']}" searchReRender="painelProcessosComunicacaoRecebidas"
                                                 clearAction="consultaProcessoList.newInstance()" clearReRender="painelProcessosComunicacaoRecebidas">
                                                 <wi:inputText
-                                                  id="numeroProcesso"
+                                                  id="numeroProcessoRoot"
                                                   label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-                                                  value="#{consultaProcessoList.entity.numeroProcesso}" />
+                                                  value="#{consultaProcessoList.numeroProcessoRoot}" />
                                                   
                                                 <wi:inputDataPeriodo
                                                   id="periodo"
@@ -127,6 +127,10 @@
                                           columnId="categoria"
                                           columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
                                           value="#{row.naturezaCategoriaFluxo.categoria}" />
+                                        <wi:columnOutputText
+                                          columnId="destinatario"
+                                          columnHeader="#{infoxMessages['consultaProcesso.destinatario']}"
+                                          value="#{painelUsuarioController.getDestinatarioComunicacao(row)}" />
                                         <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
                                         <ui:define name="headerToolBar">
                                             <ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
@@ -173,9 +177,9 @@
                                                 formTitle="#{infoxMessages['searchForm.title']}" searchReRender="processosComunicacaoExpedidas"
                                                 clearAction="consultaProcessoList.newInstance()" clearReRender="processosComunicacaoExpedidas">
                                                 <wi:inputText
-                                                  id="numeroProcesso"
+                                                  id="numeroProcessoRoot"
                                                   label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-                                                  value="#{consultaProcessoList.entity.numeroProcesso}" />
+                                                  value="#{consultaProcessoList.numeroProcessoRoot}" />
                                                   
                                                 <wi:inputDataPeriodo
                                                   id="periodo"
@@ -220,6 +224,10 @@
                                           columnId="categoria"
                                           columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
                                           value="#{row.naturezaCategoriaFluxo.categoria}" />
+                                        <wi:columnOutputText
+                                          columnId="destinatario"
+                                          columnHeader="#{infoxMessages['consultaProcesso.destinatario']}"
+                                          value="#{painelUsuarioController.getDestinatarioComunicacao(row)}" />
                                         <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
                                         <ui:define name="headerToolBar">
                                             <ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
@@ -266,9 +274,9 @@
 			                		formTitle="#{infoxMessages['searchForm.title']}" searchReRender="painelProcessos"
 			                		clearAction="consultaProcessoList.newInstance()" clearReRender="painelProcessos">
 					                <wi:inputText
-					                  id="numeroProcesso"
+					                  id="numeroProcessoRoot"
 					                  label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-					                  value="#{consultaProcessoList.entity.numeroProcesso}" />
+					                  value="#{consultaProcessoList.numeroProcessoRoot}" />
 					                  
 					                <wi:inputDataPeriodo
 					                  id="periodo"
@@ -321,6 +329,10 @@
 				              columnId="prioridadeProcesso"
 				              columnHeader="#{infoxMessages['prioridadeProcesso.tableTitle']}"
 				              value="#{row.prioridadeProcesso}" />
+                            <wi:columnOutputText
+                              columnId="destinatario"
+                              columnHeader="#{infoxMessages['consultaProcesso.destinatario']}"
+                              value="#{painelUsuarioController.getDestinatarioComunicacao(row)}" />
 				            <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
 			            	<ui:define name="headerToolBar">
 			              		<ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
