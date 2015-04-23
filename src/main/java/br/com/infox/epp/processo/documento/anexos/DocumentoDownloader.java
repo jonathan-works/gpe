@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.anexos;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -29,6 +30,7 @@ import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.path.PathResolver;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
@@ -41,6 +43,11 @@ public class DocumentoDownloader implements Serializable {
 	public static final String NAME = "documentoDownloader";
 	private static final LogProvider LOG = Logging.getLogProvider(DocumentoValidator.class);
 
+    private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
+    private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
+
+    @In
+    private PathResolver pathResolver;
     @In
     private DocumentoBinarioManager documentoBinarioManager;
     @In
@@ -110,7 +117,14 @@ public class DocumentoDownloader implements Serializable {
             LOG.warn("Documento não encontrado, id: " + idDocumento);
         }
     }
-    
+
+    public String getViewUrl(Documento documento) {
+        if (documento.getDocumentoBin().isBinario()) {
+            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
+        }
+        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());
+    }
+
     // TODO verificar solução melhor para isso
     private String clearId(String id) {
         return id.replaceAll("\\D+", "");
