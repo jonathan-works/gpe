@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_SESSAO_ANEXAR;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JBPM_TASK_PARAM;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
@@ -8,6 +9,7 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEX
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_IDS_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_TIPO_NUMERACAO;
@@ -150,13 +152,7 @@ public class DocumentoDAO extends DAO<Documento> {
 
     public Documento getDocumentoMaisRecentePorClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("classificacaoDocumento", classificacaoDocumento);
-        StringBuilder sb = new StringBuilder();
-        sb.append("select d");
-        sb.append(" from ClassificacaoDocumento cd");
-        sb.append(" inner join cd.documentoList d");
-        sb.append(" where cd = :").append("classificacaoDocumento");
-        sb.append(" order by d.dataInclusao desc");
-        return getSingleResult(sb.toString(), parameters);
+        parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, classificacaoDocumento);
+        return getNamedSingleResult(DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO, parameters);
     }
 }
