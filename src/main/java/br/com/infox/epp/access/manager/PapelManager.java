@@ -14,6 +14,8 @@ import br.com.infox.epp.access.api.RolesMap;
 import br.com.infox.epp.access.dao.PapelDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.seam.security.operation.PopulateRoleMembersListOperation;
@@ -80,5 +82,13 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
 			papeisMembros.add(role.getName());
 		}
 		return papeisMembros;
+    }
+    
+    public boolean hasToSignTermoAdesao(UsuarioLogin usuario){
+    	return getDao().hasToSignTermoAdesao(usuario);
+    }
+    
+    public UsuarioPerfil getPerfilTermoAdesao(UsuarioLogin usuario){
+    	return getDao().getPerfilTermoAdesao(usuario);
     }
 }

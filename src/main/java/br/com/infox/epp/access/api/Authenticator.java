@@ -39,13 +39,13 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
@@ -69,7 +69,9 @@ public class Authenticator implements Serializable {
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private InfoxMessages infoxMessages;
-
+    @In
+    private PapelManager papelManager;
+    
     private String newPassword1;
     private String newPassword2;
     private String login;
@@ -146,21 +148,16 @@ public class Authenticator implements Serializable {
     }
     
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) throws LoginException {
-        final List<UsuarioPerfil> perfilAtivoList = usuario.getUsuarioPerfilAtivoList();
+        
         PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-        boolean hasToSign = false;
-        if (perfilAtivoList != null) {
-            for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()) {
-                Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
-                if (papel != null && papel.getTermoAdesao()) {
-                    if (pessoaFisica == null) {
-                        throw new LoginException(infoxMessages.get("login.error.semPessoaFisica"));
-                    }
-                    hasToSign = pessoaFisica.getTermoAdesao() == null;
-                    break;
-                }
+        boolean hasToSign = papelManager.hasToSignTermoAdesao(usuario);
+        if(hasToSign){
+        	if (pessoaFisica == null) {
+            	throw new LoginException(infoxMessages.get("login.error.semPessoaFisica"));
             }
+            hasToSign = pessoaFisica.getTermoAdesao() == null;
         }
+        
         Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, hasToSign);
         return hasToSign;
     }
