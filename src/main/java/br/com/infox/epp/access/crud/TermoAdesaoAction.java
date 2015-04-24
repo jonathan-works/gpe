@@ -82,7 +82,10 @@ public class TermoAdesaoAction implements Serializable {
         	CertificateSignatureBundleBean bundle = getSignature();
         	String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
         	String signature = bundle.getSignatureBeanList().get(0).getSignature();
-            UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
+        	UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
+        	if(usuarioLogin == null){
+        		usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
+        	}
             authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
             DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
             
