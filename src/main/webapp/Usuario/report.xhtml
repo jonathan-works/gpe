@@ -16,7 +16,7 @@
             var="row"
             value="#{usuarioLoginList.list()}">
             <wi:reportColumn value="#{row.nomeUsuario}" />
-            <wi:reportColumnList value="#{row.usuarioPerfilList}" />
+            <wi:reportColumnList value="#{row.perfisFormatados.split(', ')}" />
             <wi:reportColumnBoolean value="#{row.bloqueio}" />
             <wi:reportColumnBoolean value="#{row.provisorio}" />
             <wi:reportColumnSituacao
