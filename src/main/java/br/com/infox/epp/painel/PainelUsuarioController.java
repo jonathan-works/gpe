@@ -40,7 +40,7 @@ public class PainelUsuarioController extends AbstractController {
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "painelUsuarioController";
-    private static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s').valor}";
+    protected static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s').valor}";
     private static final LogProvider LOG = Logging.getLogProvider(PainelUsuarioController.class);
 
     @In
