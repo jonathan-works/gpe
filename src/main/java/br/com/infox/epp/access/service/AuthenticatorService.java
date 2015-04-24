@@ -110,9 +110,9 @@ public class AuthenticatorService implements Serializable {
      * @param usuario
      */
     public void setUsuarioLogadoSessao(UsuarioLogin usuario) {
-        Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);
+        Contexts.getSessionContext().set(USUARIO_LOGADO, usuario);       
         List<SelectItem> usuarioPerfilList = new ArrayList<>();
-        for (UsuarioPerfil usuarioPerfil : usuario.getUsuarioPerfilAtivoList()){
+        for (UsuarioPerfil usuarioPerfil : usuarioPerfilDAO.listByUsuarioLogin(usuario)){
         	usuarioPerfilList.add(new SelectItem(usuarioPerfil.getIdUsuarioPerfil(), usuarioPerfil.toString()));
         }
         Contexts.getSessionContext().set(USUARIO_PERFIL_LIST, usuarioPerfilList);
@@ -185,7 +185,7 @@ public class AuthenticatorService implements Serializable {
     public UsuarioPerfil obterPerfilAtual(UsuarioLogin usuario)
             throws LoginException {
         List<UsuarioPerfil> usuarioPerfilList = new ArrayList<>(
-                usuario.getUsuarioPerfilList());
+                usuarioPerfilDAO.listByUsuarioLogin(usuario));
         if (usuarioPerfilList.size() > 0) {
             UsuarioPerfil usuarioPerfil = usuarioPerfilList.get(0);
             return usuarioPerfilDAO.getReference(usuarioPerfil
