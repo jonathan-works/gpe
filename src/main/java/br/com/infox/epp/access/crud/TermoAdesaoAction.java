@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.text.MessageFormat;
-import java.util.List;
 
 import javax.security.auth.login.LoginException;
 
@@ -25,6 +24,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -74,6 +74,8 @@ public class TermoAdesaoAction implements Serializable {
     private Authenticator authenticator;
     @In
     private InfoxMessages infoxMessages;
+    @In
+    private PapelManager papelManager;
 
     public String assinarTermoAdesao() {
         try {
@@ -83,15 +85,9 @@ public class TermoAdesaoAction implements Serializable {
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, signature, certChain, true);
             DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin(tituloTermoAdesao, getTermoAdesao());
-
-            List<UsuarioPerfil> perfilAtivoList = usuarioLogin.getUsuarioPerfilAtivoList();
-            if (perfilAtivoList != null) {
-                UsuarioPerfil perfil = null;
-                for (UsuarioPerfil usuarioPerfil : perfilAtivoList) {
-                    if ((perfil = usuarioPerfil).getPerfilTemplate().getPapel().getTermoAdesao()) {
-                        break;
-                    }
-                }
+            
+            UsuarioPerfil perfil = papelManager.getPerfilTermoAdesao(usuarioLogin);
+            if (perfil != null) {
                 assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature);
                 PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
                 pessoaFisica.setTermoAdesao(bin);
