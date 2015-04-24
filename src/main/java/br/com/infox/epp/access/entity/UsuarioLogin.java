@@ -451,11 +451,20 @@ public class UsuarioLogin implements Serializable {
 
     @Transient
     public String getPerfisFormatados() {
-        if (getUsuarioPerfilList().isEmpty()) {
-            return "";
-        } else {
-            return getUsuarioPerfilList().toString();
-        }
+    	StringBuilder sb = new StringBuilder();
+    	List<UsuarioPerfil> perfis = getUsuarioPerfilList();
+    	if (!perfis.isEmpty()) {
+	    	for (UsuarioPerfil perfil : perfis) {
+	    		if (perfil.getAtivo()){
+		    		sb.append(perfil.toString());
+		    		sb.append(", ");
+	    		}
+	    	}
+	    }
+    	if (sb.length() > 0) {
+    		sb.delete(sb.length() - 2, sb.length());
+    	}
+    	return sb.toString();
     }
 
 }
