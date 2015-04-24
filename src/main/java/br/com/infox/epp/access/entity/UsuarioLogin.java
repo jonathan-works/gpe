@@ -439,17 +439,6 @@ public class UsuarioLogin implements Serializable {
     }
 
     @Transient
-    public List<UsuarioPerfil> getUsuarioPerfilAtivoList() {
-        List<UsuarioPerfil> result = new ArrayList<>();
-        for (UsuarioPerfil usuarioPerfil : getUsuarioPerfilList()) {
-            if (usuarioPerfil.getPerfilTemplate().getAtivo()) {
-                result.add(usuarioPerfil);
-            }
-        }
-        return result;
-    }
-
-    @Transient
     public String getPerfisFormatados() {
     	StringBuilder sb = new StringBuilder();
     	List<UsuarioPerfil> perfis = getUsuarioPerfilList();
