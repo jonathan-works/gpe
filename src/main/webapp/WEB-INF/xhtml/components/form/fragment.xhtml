@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    <ui:param name="template" value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
+    <s:decorate id="#{id}Decoration" template="#{template}" rendered="#{empty rendered or rendered}">
+        <ui:define name="label">#{label}</ui:define>
+        <ui:include src="#{props.fragmentPath}" />
+    </s:decorate>
+</ui:composition>

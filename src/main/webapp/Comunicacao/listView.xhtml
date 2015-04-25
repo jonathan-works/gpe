@@ -62,7 +62,7 @@
 					bean="#{destinatarioModeloComunicacaoList}"
 					values="#{destinatarioModeloComunicacaoList.list(15)}"
 					tableTitle="#{infoxMessages['comunicacao.destinatarios']}" rowId="#{row.id}" showSearchForm="false"
-					hideOrder="true">
+					hideOrder="true" showToolbarColumn="#{!expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}">
 					<ui:define name="toolBar">
 						<h:form>
 							<a:commandLink
@@ -93,12 +93,8 @@
 				<h:form id="comunicacaoForm">
 					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao()}" 
 						value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-						rendered="#{not empty expedicaoComunicacaoAction.destinatario}"/>
-					<wi:commandButton id="expedir" action="expedicaoComunicacaoAction.expedirComunicacao()" 
-						rendered="#{not empty expedicaoComunicacaoAction.destinatario 
-								and expedicaoComunicacaoAction.modeloComunicacao.documentoBinario }"
-						value="#{infoxMessages['comunicacao.expedirComunicacoes']}"
-						reRender="comunicacaoForm, pageBodyDialogMessage, destinatarios"/>
+						rendered="#{(not empty expedicaoComunicacaoAction.destinatario and not expedicaoComunicacaoAction.destinatario.expedido) 
+								or expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}"/>
 					<a:jsFunction name="assinar"
 								action="#{expedicaoComunicacaoAction.expedirComunicacao()}"
 								execute="@form"

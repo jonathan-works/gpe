@@ -17,7 +17,8 @@ public enum VariableType {
     TASK_PAGE(format(DEFAULT_LOCALE,"taskPage"), format(DEFAULT_PATH,"taskPage")),
     MONETARY(format(DEFAULT_LOCALE,"monetary"), format(DEFAULT_PATH,"numberMoney")),
     FILE(format(DEFAULT_LOCALE, "file"), format(DEFAULT_PATH, "fileUpload")),
-    ENUMERATION(format(DEFAULT_LOCALE,"enum"), format(DEFAULT_PATH,"enumeracao"));
+    ENUMERATION(format(DEFAULT_LOCALE,"enum"), format(DEFAULT_PATH,"enumeracao")),
+    FRAGMENT(format(DEFAULT_LOCALE, "fragment"), format(DEFAULT_PATH, "fragment"));
     
     private String label;
     private String path;
