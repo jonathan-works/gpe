@@ -22,10 +22,12 @@
 					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
 				</wi:selectOneMenuEntity>
 				<div />
-				<h:commandButton action="#{envioComunicacaoController.downloadComunicacaoCompleta(null)}" 
-					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" immediate="true" 
-					rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
-					styleClass="buttons"/> 
+			<h:commandButton id="visualizarComunicacao" 
+				type="button" 
+				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+				styleClass="buttons"
+				rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
+				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idModelo=#{envioComunicacaoController.modeloComunicacao.id}','1024'); return false;" />
 			</h:form>
 			
 			<!-- Painel dos Destinatários -->
@@ -48,10 +50,10 @@
 	   								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
 	   								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{infoxMessages['button.selecionar']}" />
 	   							</a:commandLink>
-	   							<h:commandLink action="#{envioComunicacaoController.downloadComunicacaoCompleta(row)}" 
+	   							<h:commandLink onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{row.id}','1024'); return false;"
 	   								rendered="#{row.expedido}">
-	   								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{infoxMessages['comunicacao.visualizarComunicacao']}"/>
-	   							</h:commandLink>
+									<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{infoxMessages['comunicacao.visualizarComunicacao']}"/>
+								</h:commandLink>
 							</s:div>
 						</rich:column>
 						<rich:column>
@@ -88,8 +90,11 @@
 					<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
 					<h:form id="expedicaoForm">
 						<s:div rendered="#{envioComunicacaoController.podeExibirBotaoVisualizarComunicacoes()}">
-							<h:commandButton id="visualizarComunicacao" action="#{envioComunicacaoController.downloadComunicacaoCompleta(null)}" 
-								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" />
+							<h:commandButton id="visualizarComunicacao" 
+									type="button" 
+									value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+									styleClass="buttons"
+									onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idModelo=#{envioComunicacaoController.modeloComunicacao.id}','1024'); return false;" />
 		          		</s:div>
 					</h:form>
 				</div>
@@ -166,9 +171,12 @@
 				<s:div id="assinatura_pers" rendered="#{not envioComunicacaoController.modeloComunicacao.documentoBinario
 					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
 					
-					<h:commandButton id="visualizarComunicacao" action="#{envioComunicacaoController.downloadComunicacaoCompleta(envioComunicacaoController.destinatario)}" 
-						value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" />
-						 
+					<h:commandButton id="visualizarComunicacao" 
+								type="button" 
+								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+								styleClass="buttons"
+								onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{envioComunicacaoController.destinatario.id}','1024'); return false;" />
+											 
 					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
 						execute="@this appletAssinaturaToken" 
 						render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
