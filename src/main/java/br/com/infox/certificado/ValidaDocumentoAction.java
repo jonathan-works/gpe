@@ -120,7 +120,7 @@ public class ValidaDocumentoAction implements Serializable {
 
 	public boolean podeAssinar() {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-		if (documento == null)
+		if (documento == null || !usuarioPerfil.getAtivo())
 			return false;
 
 		boolean isAssinavel = documento.isDocumentoAssinavel(usuarioPerfil.getPerfilTemplate().getPapel());
@@ -159,7 +159,7 @@ public class ValidaDocumentoAction implements Serializable {
 	}
 
 	public void assinaDocumento(UsuarioPerfil usuarioPerfil) {
-		if (this.documentoBin != null && !isAssinadoPor(usuarioPerfil)) {
+		if (this.documentoBin != null && usuarioPerfil.getAtivo() && !isAssinadoPor(usuarioPerfil)) {
 			try {
 				CertificateSignatureBundleBean bundle = getSignature();
 				for (CertificateSignatureBean certificateSignatureBean : bundle.getSignatureBeanList()) {

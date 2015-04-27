@@ -10,6 +10,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.tree.TreeHandler;
@@ -63,5 +64,16 @@ public class UsuarioPerfilCrudAction extends AbstractCrudAction<UsuarioPerfil, U
     private void clearTrees() {
         ((TreeHandler<Localizacao>) Component.getInstance(LocalizacaoTreeHandler.NAME)).clearTree();
     }
+    
+    @Override
+	public String inactive(UsuarioPerfil t) {
+		String result = super.inactive(t);
+		if (UPDATED.equals(result)){
+			final StatusMessages messages = getMessagesHandler();
+			messages.clear();
+			messages.add(infoxMessages.get("entity_deleted"));
+		}
+		return result; 
+	}
 
 }
