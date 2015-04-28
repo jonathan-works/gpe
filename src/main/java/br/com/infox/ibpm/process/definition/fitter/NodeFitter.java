@@ -142,11 +142,6 @@ public class NodeFitter extends Fitter implements Serializable {
                 node.addArrivingTransition(oldT);
                 to.addArrivingTransition(t);
                 // FIM BLOCO //
-
-                if (oldT.getFrom().getNodeType().equals(NodeType.Fork)
-                        && to.getNodeType().equals(NodeType.Join)) {
-                    getProcessBuilder().getTransitionFitter().connectNodes(oldT.getFrom(), to);
-                }
             }
 
             if (nodeType.equals(Fork.class)) {
@@ -180,7 +175,10 @@ public class NodeFitter extends Fitter implements Serializable {
             processo.addNode(join);
             List<Node> nodes = processo.getNodes();
             processo.reorderNode(nodes.indexOf(join), nodes.indexOf(fork) + 1);
-            getProcessBuilder().getTransitionFitter().connectNodes(fork, join);
+            
+            Transition t = (Transition) fork.getLeavingTransitions().get(0);
+            fork.removeLeavingTransition(t);
+            join.addLeavingTransition(t);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
