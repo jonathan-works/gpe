@@ -109,9 +109,11 @@ public class ActivitiesXPDL implements Serializable {
             if (trans.getFrom().equals(parallel.getId())) {
                 transition = trans.toTransition();
                 transition.setFrom(node.toNode());
+                node.toNode().addLeavingTransition(transition);
             } else if (trans.getTo().equals(parallel.getId())) {
                 transition = trans.toTransition();
                 transition.setTo(node.toNode());
+                node.toNode().addArrivingTransition(transition);
             }
         }
         node.setArrives(parallel.getArrives());
@@ -128,9 +130,11 @@ public class ActivitiesXPDL implements Serializable {
             if (trans.getFrom().equals(parallel.getId())) {
                 transition = trans.toTransition();
                 transition.setFrom(node.toNode());
+                node.toNode().addLeavingTransition(transition);
             } else if (trans.getTo().equals(parallel.getId())) {
                 transition = trans.toTransition();
                 transition.setTo(node.toNode());
+                node.toNode().addArrivingTransition(transition);
             }
         }
         node.setArrives(parallel.getArrives());
