@@ -39,20 +39,39 @@ public class UsuarioPerfilManager extends
     public UsuarioPerfil getByUsuarioLoginPerfilTemplateLocalizacao(
             UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate,
             Localizacao localizacao) {
-        return getDao().getByUsuarioLoginPerfilTemplateLocalizacao(
-                usuarioLogin, perfilTemplate, localizacao);
+        return getByUsuarioLoginPerfilTemplateLocalizacaoAtivo(usuarioLogin, perfilTemplate, localizacao, true);
+    }
+    
+    public UsuarioPerfil getByUsuarioLoginPerfilTemplateLocalizacaoAtivo(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate,
+            Localizacao localizacao, boolean ativo){
+    	return getDao().getByUsuarioLoginPerfilTemplateLocalizacao(usuarioLogin, perfilTemplate, localizacao, ativo);
     }
 
     public void removeByUsuarioPerfilTemplateLocalizacao(
             UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate,
             Localizacao localizacao) throws DAOException {
-        UsuarioPerfil usuarioPerfil = getDao().getByUsuarioLoginPerfilTemplateLocalizacao(
-                usuarioLogin, perfilTemplate, localizacao);
-        remove(usuarioPerfil);
+        UsuarioPerfil usuarioPerfil = getByUsuarioLoginPerfilTemplateLocalizacaoAtivo(
+                usuarioLogin, perfilTemplate, localizacao, true);
+        if(usuarioPerfil != null){
+        	usuarioPerfil.setAtivo(Boolean.FALSE);
+        	update(usuarioPerfil);
+        }
         if (listByUsuarioLogin(usuarioLogin).isEmpty()) {
             usuarioLogin.setAtivo(Boolean.FALSE);
             usuarioLoginManager.update(usuarioLogin);
         }
     }
+
+	@Override
+	public UsuarioPerfil persist(UsuarioPerfil o) throws DAOException {
+		UsuarioPerfil perfilExistente  = getByUsuarioLoginPerfilTemplateLocalizacaoAtivo(o.getUsuarioLogin(), o.getPerfilTemplate(), o.getLocalizacao(), false);
+		if (perfilExistente != null){
+			perfilExistente.setAtivo(Boolean.TRUE);
+			return super.update(perfilExistente);
+		}
+		return super.persist(o);
+	}
+    
+    
 
 }

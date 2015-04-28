@@ -39,6 +39,7 @@ public class UsuarioPerfil implements Serializable {
     private PerfilTemplate perfilTemplate;
     private Localizacao localizacao;
     private Boolean responsavelLocalizacao;
+    private Boolean ativo = Boolean.TRUE;
     
     public UsuarioPerfil() {
     }
@@ -109,7 +110,17 @@ public class UsuarioPerfil implements Serializable {
         this.responsavelLocalizacao = responsavelLocalizacao;
     }
     
-    @Override
+    @Column(name="in_ativo", nullable=false)
+    @NotNull
+    public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	@Override
     public String toString() {
         return format("{0} / {1}", getPerfilTemplate(), getLocalizacao());
     }

@@ -11,6 +11,7 @@
     <begin-conversation join="true"/>
 
 <!-- Parametros para RESTFull -->
+	<param name="inTabExpedidas" value="#{processoEpaHome.inTabExpedidas}" />
     <param name="tab" value="#{processoEpaHome.tab}"/>
     <param name="goBackUrl" value="#{processoEpaHome.goBackUrl}"/>
     <param name="goBackId" value="#{processoEpaHome.goBackId}"/>

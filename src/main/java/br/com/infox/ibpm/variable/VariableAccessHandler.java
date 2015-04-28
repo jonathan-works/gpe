@@ -2,6 +2,7 @@ package br.com.infox.ibpm.variable;
 
 import static br.com.infox.constants.WarningConstants.RAWTYPES;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static java.text.MessageFormat.format;
 
 import java.io.File;
 import java.io.Serializable;
@@ -17,8 +18,6 @@ import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.context.def.Access;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Action;
@@ -41,6 +40,8 @@ import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
@@ -64,6 +65,8 @@ public class VariableAccessHandler implements Serializable {
     private ValidacaoDataEnum validacaoDataEnum;
     private boolean isData = false;
     private boolean isFile;
+    private boolean fragment;
+    private FragmentConfiguration fragmentConfiguration;
 
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -85,6 +88,12 @@ public class VariableAccessHandler implements Serializable {
                         DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
                         this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
                     }
+                break;
+            case FRAGMENT:
+                if (tokens.length >= 3) {
+                    setFragmentConfiguration(ComponentUtil.<FragmentConfigurationCollector> getComponent(
+                            FragmentConfigurationCollector.NAME).getByCode(tokens[2]));
+                }
                 break;
                 default:
                 break;
@@ -128,10 +137,15 @@ public class VariableAccessHandler implements Serializable {
             Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getFluxo().getIdFluxo(), this.name, auxiliarName);
             this.name = auxiliarName;
             ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
+            
             if (isData || type == VariableType.DATE) {
                 setValidacaoDataEnum(validacaoDataEnum);
+            } else if (isFragment()){
+                setFragmentConfiguration(fragmentConfiguration);
+            } else if (isPossuiDominio()) {
+                setDominioVariavelTarefa(dominioVariavelTarefa);
             } else {
-                ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":" + auxiliarName);
+                setMappedName(format("{0}:{1}", type.name(), auxiliarName));
             }
         }
     }
@@ -140,24 +154,22 @@ public class VariableAccessHandler implements Serializable {
         return dominioVariavelTarefa;
     }
 
-    public void setDominioVariavelTarefa(
-            DominioVariavelTarefa dominioVariavelTarefa) {
+    public void setDominioVariavelTarefa(DominioVariavelTarefa dominioVariavelTarefa) {
         this.dominioVariavelTarefa = dominioVariavelTarefa;
-        if (this.dominioVariavelTarefa != null) {
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
-                    + name + ":" + this.dominioVariavelTarefa.getId());
+        String mappedName;
+        if (this.dominioVariavelTarefa != null && name != null) {
+            mappedName = format("{0}:{1}:{2}", type.name(), name, this.dominioVariavelTarefa.getId());
         } else {
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
-                    + name);
+            mappedName = format("{0}:{1}", type.name(), name);
         }
+        setMappedName(mappedName);
     }
 
     public VariableAccess update() {
         if (modeloList != null && mudouModelo) {
             updateModelo();
         }
-        variableAccess = new VariableAccess(name, getAccess(), type.name() + ":"
-                + name);
+        variableAccess = new VariableAccess(name, getAccess(), format("{0}:{1}", type.name(), name));
         return variableAccess;
     }
 
@@ -222,12 +234,11 @@ public class VariableAccessHandler implements Serializable {
     }
 
     private boolean pageExists(String name) {
-        String page = "/" + name.replaceAll("_", "/") + ".xhtml";
+        String page = format("/{0}.xhtml", name.replaceAll("_", "/"));
         String realPath = ServletLifecycle.getServletContext().getRealPath(page);
         final boolean fileExists = new File(realPath).exists();
         if (!fileExists) {
-            FacesMessages.instance().add(Severity.INFO, "A página '" + page
-                    + "' não foi encontrada.");
+            FacesMessages.instance().add(Severity.INFO, format("A página ''{0}'' não foi encontrada.", page));
         }
         return fileExists;
     }
@@ -247,11 +258,15 @@ public class VariableAccessHandler implements Serializable {
             default:
                 break;
         }
-        ReflectionsUtil.setValue(variableAccess, "mappedName", type.name()
-                + ":" + name);
+        setMappedName(format("{0}:{1}", type.name(), name));
         this.possuiDominio = tipoPossuiDominio(type);
         this.isData = isTipoData(type);
         this.isFile = isTipoFile(type);
+        this.fragment = isTipoFragment(type);
+    }
+
+    private boolean isTipoFragment(VariableType type) {
+        return VariableType.FRAGMENT.equals(type);
     }
 
     public boolean isReadable() {
@@ -405,6 +420,12 @@ public class VariableAccessHandler implements Serializable {
                 setType(VariableType.valueOf(tokens[0]));
                 setWritable(false);
                 switch (type) {
+                case FRAGMENT:
+                    if (tokens.length >= 3) {
+                        setFragmentConfiguration(ComponentUtil.<FragmentConfigurationCollector> getComponent(
+                                FragmentConfigurationCollector.NAME).getByCode(tokens[2]));
+                    }
+                    break;
                     case DATE:
                         if (tokens.length < 3) {
                             setValidacaoDataEnum(ValidacaoDataEnum.L);
@@ -483,33 +504,34 @@ public class VariableAccessHandler implements Serializable {
     // TODO verificar por que tem registro duplicado na base
     private void storeLabel(String name, String label) {
         Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
-        final String mappedVariableName = task.getProcessDefinition().getName()
-                + ":" + name;
-        String old = map.get(mappedVariableName);
+        final String mappedVariableName = format("{0}:{1}", task.getProcessDefinition().getName(), name);
+        final String old = map.get(mappedVariableName);
         if (!label.equals(old)) {
-            map.put(task.getProcessDefinition().getName() + ":" + name, label);
+            map.put(mappedVariableName, label);
             JbpmVariavelLabel j = new JbpmVariavelLabel();
-            j.setNomeVariavel(task.getProcessDefinition().getName() + ":"
-                    + name);
+            j.setNomeVariavel(mappedVariableName);
             j.setLabelVariavel(label);
             try {
                 genericManager().persist(j);
             } catch (DAOException e) {
-                LOG.error("Não foi possível gravar a JbpmVariavelLabel: " + j, e);
+                LOG.error(format("Não foi possível gravar a JbpmVariavelLabel: {0}", j), e);
             }
         }
     }
 
     public String getLabel() {
         if (!"".equals(name)) {
-            setLabel(VariableHandler.getLabel(task.getProcessDefinition().getName()
-                    + ":" + name));
+            setLabel(VariableHandler.getLabel(format("{0}:{1}", task.getProcessDefinition().getName(), name)));
         }
         return this.label;
     }
 
     public GenericManager genericManager() {
         return ComponentUtil.getComponent(GenericManager.NAME);
+    }
+
+    public boolean isFragment() {
+        return isTipoFragment(type);
     }
 
     public boolean isPossuiDominio() {
@@ -534,13 +556,17 @@ public class VariableAccessHandler implements Serializable {
 
     public void setValidacaoDataEnum(ValidacaoDataEnum validacaoDataEnum) {
         this.validacaoDataEnum = validacaoDataEnum;
-        if (this.validacaoDataEnum != null) {
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
-                    + name + ":" + this.validacaoDataEnum.toString());
+        String mappedName;
+        if (this.validacaoDataEnum != null && name != null) {
+            mappedName = format("{0}:{1}:{2}", type.name(), name, this.validacaoDataEnum.toString());
         } else {
-            ReflectionsUtil.setValue(variableAccess, "mappedName", type.name() + ":"
-                    + name);
+            mappedName = format("{0}:{1}", type.name(), name);
         }
+        setMappedName(mappedName);
+    }
+
+    private void setMappedName(String mappedName) {
+        ReflectionsUtil.setValue(variableAccess, "mappedName", mappedName);
     }
 
     public void limparModelos() {
@@ -552,4 +578,20 @@ public class VariableAccessHandler implements Serializable {
             }
         }
     }
+
+    public FragmentConfiguration getFragmentConfiguration() {
+        return fragmentConfiguration;
+    }
+
+    public void setFragmentConfiguration(FragmentConfiguration fragmentConfiguration) {
+        this.fragmentConfiguration = fragmentConfiguration;
+        String mappedName;
+        if (this.fragmentConfiguration != null && name != null) {
+            mappedName = format("{0}:{1}:{2}", type.name(), name, fragmentConfiguration.getCode());
+        } else {
+            mappedName = format("{0}:{1}", type.name(), name);
+        }
+        setMappedName(mappedName);
+    }
+
 }

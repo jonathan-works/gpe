@@ -19,6 +19,7 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
     
     private List<PainelEntityNode> rootList;
     private TipoProcesso tipoProcesso;
+    private Boolean tabComunicacoesExpedidas;
 
     @Override
     protected String getQueryRoots() {
@@ -44,8 +45,13 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
 
     public List<PainelEntityNode> getTarefasRoots() {
         if (rootList == null || rootList.isEmpty()) {
-            PainelEntityNode entityNode = new PainelEntityNode(getTipoProcesso());
-            rootList = entityNode.getRootsFluxos();
+            if (tabComunicacoesExpedidas == null || tabComunicacoesExpedidas == false) {
+                PainelEntityNode entityNode = new PainelEntityNode(getTipoProcesso(), false);
+                rootList = entityNode.getRootsFluxos();
+            } else {
+                PainelEntityNode entityNode = new PainelEntityNode(tipoProcesso, tabComunicacoesExpedidas);
+                rootList = entityNode.getRootsFluxos();
+            }
         }
         return rootList;
     }
@@ -70,4 +76,11 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
 		this.tipoProcesso = tipoProcesso;
 	}
 
+    public Boolean getTabComunicacoesExpedidas() {
+        return tabComunicacoesExpedidas;
+    }
+
+    public void setTabComunicacoesExpedidas(Boolean tabComunicacoesExpedidas) {
+        this.tabComunicacoesExpedidas = tabComunicacoesExpedidas;
+    }
 }

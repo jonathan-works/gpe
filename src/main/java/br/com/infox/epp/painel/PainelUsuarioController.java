@@ -20,6 +20,8 @@ import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
+import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -38,7 +40,7 @@ public class PainelUsuarioController extends AbstractController {
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "painelUsuarioController";
-    private static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s').valor}";
+    protected static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s').valor}";
     private static final LogProvider LOG = Logging.getLogProvider(PainelUsuarioController.class);
 
     @In
@@ -62,6 +64,7 @@ public class PainelUsuarioController extends AbstractController {
     private List<Integer> processoIdList;
     private List<DynamicColumnModel> dynamicColumns;
     private TipoProcesso tipoProcesso;
+    private String tabComunicacaoEletronica;
 
     @Observer("selectedTarefasTree")
     public void onSelected(Tuple selected) {
@@ -75,7 +78,9 @@ public class PainelUsuarioController extends AbstractController {
     	processoIdList = null;
     	selected = null;
     	setTipoProcesso();
+    	painelTreeHandler.clearTree();
     	painelTreeHandler.setTipoProcesso(getTipoProcesso());
+    	painelTreeHandler.setTabComunicacoesExpedidas(isTabComunicacoesExpedidas());
     }
 
     /**
@@ -99,7 +104,7 @@ public class PainelUsuarioController extends AbstractController {
     public List<Integer> getProcessoIdList() {
         if (selected != null && !PainelEntityNode.FLUXO_TYPE.equals(getSelectedType())) {
             if (processoIdList == null) {
-                processoIdList = situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(getSelected(), getTipoProcesso());
+                processoIdList = situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(getSelected(), getTipoProcesso(), isTabComunicacoesExpedidas());
             }
             return processoIdList;
         }
@@ -197,4 +202,23 @@ public class PainelUsuarioController extends AbstractController {
 	protected void setTipoProcesso(TipoProcesso tipoProcesso) {
 		this.tipoProcesso = tipoProcesso;
 	}
+
+    public String getTabComunicacaoEletronica() {
+        return tabComunicacaoEletronica;
+    }
+
+    public void setTabComunicacaoEletronica(String tabComunicacaoEletronica) {
+        boolean changed = !Objects.equals(tabComunicacaoEletronica, getTabComunicacaoEletronica());
+        this.tabComunicacaoEletronica = tabComunicacaoEletronica;
+        if (changed) onTabChange();
+    }
+    
+    public Boolean isTabComunicacoesExpedidas() {
+        return (getTabComunicacaoEletronica() != null && "tabExpedidas".equals(getTabComunicacaoEletronica())) ? true : false;
+    }
+    
+    public String getDestinatarioComunicacao(Processo processo) {
+        DestinatarioModeloComunicacao destinatario = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
+        return destinatario.getNome();
+    }
 }

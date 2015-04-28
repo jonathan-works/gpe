@@ -15,9 +15,9 @@
 			action="#{comunicacaoAction.clearCacheModelos}"/>
 	</h:form>
 	<s:div id="comunicacoesDiv">
-		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}">
+		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}" rendered="#{s:hasRole('usuarioInterno')}">
 			<wi:dataTable id="rascunhosTable" bean="#{modeloComunicacaoRascunhoList}" showSearchForm="false"
-				values="#{modeloComunicacaoRascunhoList.list(5)}" rowId="#{row.id}">
+				values="#{modeloComunicacaoRascunhoList.list(5)}" rowId="#{row.id}" hideOrder="true">
 				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar">
 					<h:form>
@@ -34,70 +34,68 @@
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
 			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 			<h:form>
-					<rich:panel header="#{infoxMessages['comunicacao.comunicacao']}">
-						<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
-							var="bean" styleClass="dtable rf-dt-crud">
-							<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
-									<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
-										execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
-										render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
-										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-										<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="#{infoxMessages['comunicacao.confirmarCiencia']}" />
-									</a:commandLink>
-									<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
-										render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage" 
-										execute="@this" limitRender="true"
-										rendered="#{comunicacaoAction.podePedirProrrogacaoPrazo(bean)}"
-										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-										<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
-									</a:commandLink>
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.destinatario']}</f:facet>
-								<h:outputText value="#{bean.nome}" />
-							</rich:column>
-                            <rich:column>
-                                <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
-                                <h:outputText value="#{bean.tipoComunicacao.descricao}" />
-                            </rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.meioComunicacao']}</f:facet>
-								<h:outputText value="#{bean.meioExpedicao}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.dataEnvio']}</f:facet>
-								<h:outputText value="#{bean.dataEnvio}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.dataConfirmacao']}</f:facet>
-								<h:outputText value="#{bean.dataConfirmacao}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.responsavelConfirmacao']}</f:facet>
-								<h:outputText value="#{bean.responsavelConfirmacao}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.prazoAtendimento']}</f:facet>
-								<h:outputText value="#{bean.prazoAtendimento}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.prazoFinal']}</f:facet>
-								<h:outputText value="#{bean.prazoFinal}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['comunicacao.documentos']}</f:facet>
-									<a:commandLink action="#{comunicacaoAction.setDestinatarioDocumentos(bean)}"
-										execute="@this" limitRender="true"
-										render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
-										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-										<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{infoxMessages['comunicacao.documentos']}"/>
-									</a:commandLink>
-									<h:commandLink onclick="infox.openPopUp('download#{bean.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?id=#{bean.idDestinatario}','1024'); return false;">
-										<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarComunicacao']}"/>
-									</h:commandLink>
-							</rich:column>
-						</rich:dataTable>
-					</rich:panel>
+				<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
+					var="bean" styleClass="dtable rf-dt-crud">
+					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
+							<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
+								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
+								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+								<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="#{infoxMessages['comunicacao.confirmarCiencia']}" />
+							</a:commandLink>
+							<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage" 
+								execute="@this" limitRender="true"
+								rendered="#{comunicacaoAction.podePedirProrrogacaoPrazo(bean)}"
+								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+								<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
+							</a:commandLink>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.destinatario']}</f:facet>
+						<h:outputText value="#{bean.nome}" />
+					</rich:column>
+                          <rich:column>
+                              <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
+                              <h:outputText value="#{bean.tipoComunicacao.descricao}" />
+                          </rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.meioComunicacao']}</f:facet>
+						<h:outputText value="#{bean.meioExpedicao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.dataEnvio']}</f:facet>
+						<h:outputText value="#{bean.dataEnvio}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.dataConfirmacao']}</f:facet>
+						<h:outputText value="#{bean.dataConfirmacao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.responsavelConfirmacao']}</f:facet>
+						<h:outputText value="#{bean.responsavelConfirmacao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.prazoAtendimento']}</f:facet>
+						<h:outputText value="#{bean.prazoAtendimento}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.prazoFinal']}</f:facet>
+						<h:outputText value="#{bean.prazoFinal}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.documentos']}</f:facet>
+							<a:commandLink action="#{comunicacaoAction.setDestinatarioDocumentos(bean)}"
+								execute="@this" limitRender="true"
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
+								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+								<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{infoxMessages['comunicacao.documentos']}"/>
+							</a:commandLink>
+							<h:commandLink onclick="infox.openPopUp('download#{bean.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{bean.idDestinatario}','1024'); return false;">
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarComunicacao']}"/>
+							</h:commandLink>
+					</rich:column>
+				</rich:dataTable>
 			</h:form>
 		</rich:collapsiblePanel>
 	    <s:div id="painelCiencia">
@@ -109,22 +107,41 @@
                         errorMessage="#{infoxMessages['comunicacao.validator.dataCienciaIncorreta']}">
 	    				<a:ajax event="change" render="@form" execute="@form" limitRender="true" />
 	    			</wi:inputDate>
+	    			
+	    			<wi:selectBooleanCheckbox id="editorCiencia" label="#{infoxMessages['comunicacao.adicionarDocumentoEditorCiencia']}" 
+							value="#{comunicacaoAction.editorCiencia}" >
+						<a:ajax event="change" render="@form" limitRender="true" execute="@this" />
+					</wi:selectBooleanCheckbox>
+	    			
 	    			<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    				showLabelSelecione="true" value="#{comunicacaoAction.classificacaoDocumento}"
+	    				showLabelSelecione="true" value="#{comunicacaoAction.classificacaoDocumentoCiencia}"
 	    				items="#{comunicacaoAction.classificacoesDocumento}">
 	    				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
 	    			</wi:selectOneMenuEntity>
-	    			<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumento 
+
+					<s:div id="editorArquivoDiv" rendered="#{not empty comunicacaoAction.classificacaoDocumentoCiencia 
 	    				and not empty comunicacaoAction.dataCiencia 
-	    				and not empty comunicacaoAction.classificacaoDocumento.extensaoArquivosList}">
-	    				<wi:fileUpload id="documentoComprovacaoCiencia" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
+	    				and comunicacaoAction.editorCiencia}">
+						<wi:editor id="documentoCienciaTexto" readonly="false"
+							 value="#{comunicacaoAction.textoCiencia}" required="true" />
+					</s:div>
+
+					<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumentoCiencia 
+	    				and not empty comunicacaoAction.dataCiencia 
+	    				and not empty comunicacaoAction.classificacaoDocumentoCiencia.extensaoArquivosList
+	    				and not comunicacaoAction.editorCiencia}">
+	    				<wi:fileUpload id="documentoComprovacaoCiencia" accept="#{comunicacaoAction.classificacaoDocumentoCiencia.acceptedTypes}"
 	    					reRender="buttonGravar"/>
-                        <s:div id="buttonGravar">
-    	    				<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.darCiencia()" 
-    	    					reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"
-    	    					rendered="#{documentoUploader.valido}"/>
-                        </s:div>
-	    			</s:div>
+					</s:div>
+					
+					<s:div id="buttonGravar">
+						<wi:commandButton id="gravar"
+							value="#{infoxMessages['crud.update']}"
+							action="comunicacaoAction.darCiencia()"
+							reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"
+							rendered="#{documentoUploader.valido or (not empty comunicacaoAction.classificacaoDocumentoCiencia 
+	    					and not empty comunicacaoAction.dataCiencia and comunicacaoAction.editorCiencia)}" />
+					</s:div>
 	    		</h:form>
 	    	</rich:panel>
 	    </s:div>
@@ -133,13 +150,13 @@
 	    		rendered="#{comunicacaoAction.prorrogacaoPrazo}">
 	    		<h:form>
 	    			<wi:selectOneMenuEntity id="classificacaoProrrogacao" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    				value="#{comunicacaoAction.classificacaoDocumento}" items="#{comunicacaoAction.classificacoesDocumentoProrrogacaoPrazo}"
+	    				value="#{comunicacaoAction.classificacaoDocumentoProrrogPrazo}" items="#{comunicacaoAction.classificacoesDocumentoProrrogacaoPrazo}"
 	    				showLabelSelecione="true">
 	    				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
 	    			</wi:selectOneMenuEntity>
-	    			<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumento 
-	    				and not empty comunicacaoAction.classificacaoDocumento.extensaoArquivosList}">
-	    				<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
+	    			<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumentoProrrogPrazo 
+	    				and not empty comunicacaoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}">
+	    				<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumentoProrrogPrazo.acceptedTypes}"
 	    					reRender="btnGravar"/>
 	    				<s:div id="btnGravar">
 	                        <wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 

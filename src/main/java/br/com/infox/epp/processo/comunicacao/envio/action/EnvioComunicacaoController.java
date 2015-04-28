@@ -25,7 +25,6 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -54,6 +53,8 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
+
+import com.google.common.base.Strings;
 
 @Name(EnvioComunicacaoController.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -224,6 +225,9 @@ public class EnvioComunicacaoController implements Serializable {
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
 			msg.append("Nenhum destinatário foi selecionado\n");
 		}
+		if (!modeloComunicacao.isMinuta() && Strings.isNullOrEmpty(modeloComunicacao.getTextoComunicacao())){
+			msg.append("O documento do editor não é minuta mas não existe texto no editor\n");
+		}
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getMeioExpedicao() == null) {
 				msg.append("Existe destinatário sem meio de expedição selecionado");
@@ -281,16 +285,6 @@ public class EnvioComunicacaoController implements Serializable {
 		return signatureBean;
 	}
 
-	public void downloadComunicacaoCompleta(DestinatarioModeloComunicacao destinatario) {
-		try {
-			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
-		} catch (DAOException e) {
-			LOG.error("", e);
-			actionMessagesService.handleDAOException(e);
-		}
-	}
-	
 	public List<TipoComunicacao> getTiposComunicacao() {
 		if (tiposComunicacao == null) {
 			tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();

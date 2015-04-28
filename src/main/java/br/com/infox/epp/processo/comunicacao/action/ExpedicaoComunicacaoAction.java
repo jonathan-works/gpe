@@ -16,7 +16,6 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -164,15 +163,6 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		} catch (DAOException | CertificadoException | AssinaturaException e) {
 			TransactionService.rollbackTransaction();
 			handleException(e);
-		}
-	}
-	
-	public void downloadComunicacao() {
-		try {
-			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
-		} catch (DAOException e) {
-			LOG.error("", e);
 		}
 	}
 	

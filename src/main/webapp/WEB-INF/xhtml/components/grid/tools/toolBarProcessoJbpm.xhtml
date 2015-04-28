@@ -12,6 +12,8 @@
     <ui:param name="tarefaId" value="#{painelUsuarioController.tarefaId}" />
     <ui:param name="owner"
       value="#{userHandler.getActorIdTarefaAtual(idProcesso)}" />
+    <ui:param name="inTabExpedidas" value="#{painelUsuarioController.isTabComunicacoesExpedidas()}" />
+    <ui:param name="showMovimentarToolBar" value="#{wi:get(showMovimentarToolBar, true)}" />
 
     <a:outputPanel>
 
@@ -42,7 +44,7 @@
 
     </a:commandLink>
 
-    <a:commandLink execute="@this" rendered="#{empty owner}"
+    <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar}"
       target="#{idProcesso}popUpFluxo"
       onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 
@@ -55,7 +57,7 @@
     </a:commandLink>
 
     <a:commandLink execute="@this"
-      rendered="#{owner == authenticator.getUsuarioLogado()}"
+      rendered="#{owner == authenticator.getUsuarioLogado() and showMovimentarToolBar}"
       target="#{idProcesso}popUpFluxo"
       onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 
@@ -68,7 +70,7 @@
     </a:commandLink>
 
     <h:graphicImage url="#{wiSkin.imageFolder}/role.gif"
-      rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and !authenticator.isUsuarioAtualResponsavel())}"
+      rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and !authenticator.isUsuarioAtualResponsavel()) and showMovimentarToolBar}"
       title="Processo bloqueado pelo servidor #{owner}" />
 
     <a:commandLink

@@ -20,6 +20,10 @@
 			if (#{!processoEpaHome.checarVisibilidadeSemException()}) {
 				window.close();
 			}
+			if (#{!taskInstanceHome.checkAccessSemException()}) {
+				opener.atualizaPainelFluxo();
+				close();
+          	}
 	    </script>
     </ui:define>
     <ui:define name="scripts">

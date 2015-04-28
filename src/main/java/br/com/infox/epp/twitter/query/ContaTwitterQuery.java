@@ -20,7 +20,7 @@ public interface ContaTwitterQuery {
     String ID_GRUPO_EMAIL_PARAM = "idGrupoEmail";
     String LIST_TWITTER_BY_ID_GRUPO_EMAIL = "listContaTwitterByIdGrupoEmail";
     String LIST_TWITTER_BY_ID_GRUPO_EMAIL_QUERY = "select distinct c from ContaTwitter c join c.usuario u join u.usuarioPerfilList ul "
-            + "where exists (select o from ListaEmail o where o.idGrupoEmail = :"
+            + "where ul.ativo = true and exists (select o from ListaEmail o where o.idGrupoEmail = :"
             + ID_GRUPO_EMAIL_PARAM
             + " and "
             + "((ul.perfilTemplate.localizacao = o.localizacao and (ul.perfilTemplate.papel = o.papel or o.papel is null) and "

@@ -4,6 +4,10 @@ import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.constants.LengthConstants.NOME_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.access.query.PapelQuery.COL_TERMO_ADESAO;
+import static br.com.infox.epp.access.query.PapelQuery.GET_PERFIL_TERMO_ADESAO;
+import static br.com.infox.epp.access.query.PapelQuery.GET_PERFIL_TERMO_ADESAO_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.HAS_TO_SIGN_TERMO_ADESAO;
+import static br.com.infox.epp.access.query.PapelQuery.HAS_TO_SIGN_TERMO_ADESAO_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.ID_PAPEL;
 import static br.com.infox.epp.access.query.PapelQuery.NOME_PAPEL;
@@ -59,6 +63,8 @@ import br.com.infox.seam.util.ComponentUtil;
     @NamedQuery(name = PAPEL_BY_IDENTIFICADOR, query = PAPEL_BY_IDENTIFICADOR_QUERY),
     @NamedQuery(name = PAPEIS_BY_IDENTIFICADORES, query = PAPEIS_BY_IDENTIFICADORES_QUERY),
     @NamedQuery(name = PAPEIS_BY_LOCALIZACAO, query = PAPEIS_BY_LOCALIZACAO_QUERY),
+    @NamedQuery(name = HAS_TO_SIGN_TERMO_ADESAO, query = HAS_TO_SIGN_TERMO_ADESAO_QUERY),
+    @NamedQuery(name = GET_PERFIL_TERMO_ADESAO, query = GET_PERFIL_TERMO_ADESAO_QUERY),
     @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY) })
 @NamedNativeQueries({ @NamedNativeQuery(name = PERMISSOES_BY_PAPEL, query = PERMISSOES_BY_PAPEL_QUERY) })
 public class Papel implements java.io.Serializable {

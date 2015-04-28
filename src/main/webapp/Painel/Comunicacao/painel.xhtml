@@ -32,106 +32,225 @@
       	#{infoxMessages['painel.titlePage']}
     </button>
     
-    <ui:param name="painelCustomizado" value="painelProcessosComunicacao, painelProcessosComunicacaoNaoEletronica" />
+    <ui:param name="painelCustomizado" value="painelProcessosComunicacaoExpedidas, painelProcessosComunicacaoRecebidas, painelProcessosComunicacaoNaoEletronica" />
     
     <infox:tabPanel id="tabPainelUsuario" switchType="ajax" status=":status" activeTab="#{painelUsuarioController.tab}" >  
-    	<h:form><infox:tabHeaders /></h:form>
-  
-		<infox:tab id="comunicacoes" name="comunicacao" render="painelProcessosComunicacao"
+    	<h:form>
+            <infox:tabHeaders />
+        </h:form>
+            
+		<infox:tab id="comunicacoes" name="comunicacao" render="painelProcessosComunicacaoExpedidas"
         	limitRender="true" action="#{painelTreeHandler.clearTree()}"
           	title="#{infoxMessages['painel.comunicacaoTab']}">
         	<s:div rendered="#{painelUsuarioController.tab eq 'comunicacao'}">
-	        	<s:div id="comunicacoesTarefasDiv" styleClass="p-caixas" >
-	          		<h:form id="treeProcessoComunicacaoForm">
-	            		<ui:include src="/Painel/tarefasTree.xhtml" />
-	            	</h:form>
-	          	</s:div>
-	          
-	       	 	<s:div id="painelProcessosComunicacao" styleClass="p-list" >
-	            	<s:div id="processosComunicacao" 
-	            		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
-	        					and painelUsuarioController.tab eq 'comunicacao'}" >
-	        
-			            <wi:dataTable values="#{consultaProcessoList.list(10)}" bean="#{consultaProcessoList}"
-			            	styleClass="p-list-dtable" tableTitle="#{infoxMessages['consultaProcesso.processos']}"
-			              	id="consultaProcessoComunicacaoList" rowId="#{row.idProcesso}"
-			              	searchFormStyleClass="p-list-search" panelStyleClass="p-list-panel" hideOrder="true">
-		            
-	            			<ui:define name="searchForm">
-			              		<wi:searchForm opened="false" formId="consultaProcessoComunicacaoForm"
-			                		formTitle="#{infoxMessages['searchForm.title']}" searchReRender="painelProcessos"
-			                		clearAction="consultaProcessoList.newInstance()" clearReRender="painelProcessos">
-					                <wi:inputText
-					                  id="numeroProcesso"
-					                  label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-					                  value="#{consultaProcessoList.entity.numeroProcesso}" />
-					                  
-					                <wi:inputDataPeriodo
-					                  id="periodo"
-					                  label="#{infoxMessages['data.inputPeriodo']}"
-					                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
-					                  valueDateTo="#{consultaProcessoList.dataFim}" />
-					                  
-					                <wi:selectOneMenuEntity
-					                  id="natureza"
-					                  label="#{infoxMessages['natureza.tableTitle']}"
-					                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
-					                  showLabelSelecione="true"
-					                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-					                  
-					                <wi:selectOneMenuEntity
-					                  id="categoria"
-					                  label="#{infoxMessages['categoria.tableTitle']}"
-					                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
-					                  showLabelSelecione="true"
-					                  inNewLine="true"
-					                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-					              </wi:searchForm>
-			            	</ui:define>
-	            
-				            <wi:columnOutputText
-				              columnId="numeroProcesso"
-				              columnHeader="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-				              value="#{row.numeroProcesso}" />
-				            <wi:columnOutputText
-				              columnId="usuarioSolicitante"
-				              columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
-				              value="#{row.usuarioCadastro}" />
-				            <wi:columnDateTime
-				              columnId="dataInicio"
-				              columnHeader="#{infoxMessages['consultaProcesso.dataInicio']}"
-				              value="#{row.dataInicio}" />
-				            <wi:columnOutputText
-				              columnId="natureza"
-				              columnHeader="#{infoxMessages['consultaProcesso.natureza']}"
-				              value="#{row.naturezaCategoriaFluxo.natureza}" />
-				            <wi:columnOutputText
-				              columnId="categoria"
-				              columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
-				              value="#{row.naturezaCategoriaFluxo.categoria}" />
-				            <wi:columnOutputText
-				              columnId="itemDoProcesso"
-				              columnHeader="#{infoxMessages['consultaProcesso.item']}"
-				              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
-				            <wi:columnOutputText
-				              columnId="prioridadeProcesso"
-				              columnHeader="#{infoxMessages['prioridadeProcesso.tableTitle']}"
-				              value="#{row.prioridadeProcesso}" />
-				            <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
-			            	<ui:define name="headerToolBar">
-			              		<ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
-			            	</ui:define>
-			            	<ui:define name="toolBar">
-			              		<ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml" />
-			            	</ui:define>
-              			</wi:dataTable>
-            		</s:div>
-            	</s:div>
+                
+                <infox:tabPanel id="tabPanelComunicaoEletronicas"
+                    activeItem="tabRecebidas"
+                    style="background-color:#DDD; border: 2px solid #C4C0B9"
+                    activeTab="#{painelUsuarioController.tabComunicacaoEletronica}">
+                    <h:form>
+                        <infox:tabHeaders />
+                    </h:form>
+                    <infox:tab id="tabRecebidas"
+                        name="tabRecebidas"
+                        title="#{infoxMessages['painel.comunicacao.tabRecebidas']}"
+                        render="tabPanelComunicaoEletronicas"
+                        rendered="#{s:hasPermission('/pages/Painel/comunicacoesRecebidas.seam', 'access')}"
+                        action="#{painelUsuarioController.refresh()}">
+                        <s:div id="tabRecebidasDiv"
+                            rendered="#{painelUsuarioController.tab eq 'comunicacao' and painelUsuarioController.tabComunicacaoEletronica eq 'tabRecebidas'}">
+                            <s:div id="comunicacoesRecebidasTarefasDiv" styleClass="p-caixas">
+                                <h:form id="treeProcessoComunicacaoRecebidaForm">
+                                    <ui:include src="/Painel/tarefasTree.xhtml" />
+                                </h:form>
+                            </s:div>
+                            
+                            <s:div id="painelProcessosComunicacaoRecebidas" styleClass="p-list" >
+                                <s:div id="processosComunicacaoRecebidas" 
+                                    rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
+                                            and painelUsuarioController.tab eq 'comunicacao'}" >
+                        
+                                    <wi:dataTable values="#{consultaProcessoList.list(10)}" bean="#{consultaProcessoList}"
+                                        styleClass="p-list-dtable" tableTitle="#{infoxMessages['consultaProcesso.processos']}"
+                                        id="consultaProcessoComunicacaoRecebidasList" rowId="#{row.idProcesso}"
+                                        searchFormStyleClass="p-list-search" panelStyleClass="p-list-panel" hideOrder="true">
+                                
+                                        <ui:define name="searchForm">
+                                            <wi:searchForm opened="false" formId="consultaProcessoComunicacaoRecebidasForm"
+                                                formTitle="#{infoxMessages['searchForm.title']}" searchReRender="painelProcessosComunicacaoRecebidas"
+                                                clearAction="consultaProcessoList.newInstance()" clearReRender="painelProcessosComunicacaoRecebidas">
+                                                <wi:inputText
+                                                  id="numeroProcessoRoot"
+                                                  label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
+                                                  value="#{consultaProcessoList.numeroProcessoRoot}" />
+                                                  
+                                                <wi:inputDataPeriodo
+                                                  id="periodo"
+                                                  label="#{infoxMessages['data.inputPeriodo']}"
+                                                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
+                                                  valueDateTo="#{consultaProcessoList.dataFim}" />
+                                                  
+                                                <wi:selectOneMenuEntity
+                                                  id="natureza"
+                                                  label="#{infoxMessages['natureza.tableTitle']}"
+                                                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
+                                                  showLabelSelecione="true"
+                                                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
+                                                  
+                                                <wi:selectOneMenuEntity
+                                                  id="categoria"
+                                                  label="#{infoxMessages['categoria.tableTitle']}"
+                                                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
+                                                  showLabelSelecione="true"
+                                                  inNewLine="true"
+                                                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+                                              </wi:searchForm>
+                                        </ui:define>
+                            
+                                        <wi:columnOutputText
+                                          columnId="numeroProcesso"
+                                          columnHeader="#{infoxMessages['consultaProcesso.numeroProcesso']}"
+                                          value="#{row.numeroProcessoRoot}" />
+                                        <wi:columnOutputText
+                                          columnId="usuarioSolicitante"
+                                          columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
+                                          value="#{row.usuarioCadastro}" />
+                                        <wi:columnDateTime
+                                          columnId="dataInicio"
+                                          columnHeader="#{infoxMessages['consultaProcesso.dataInicio']}"
+                                          value="#{row.dataInicio}" />
+                                        <wi:columnOutputText
+                                          columnId="natureza"
+                                          columnHeader="#{infoxMessages['consultaProcesso.natureza']}"
+                                          value="#{row.naturezaCategoriaFluxo.natureza}" />
+                                        <wi:columnOutputText
+                                          columnId="categoria"
+                                          columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
+                                          value="#{row.naturezaCategoriaFluxo.categoria}" />
+                                        <wi:columnOutputText
+                                          columnId="destinatario"
+                                          columnHeader="#{infoxMessages['consultaProcesso.destinatario']}"
+                                          value="#{painelUsuarioController.getDestinatarioComunicacao(row)}" />
+                                        <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
+                                        <ui:define name="headerToolBar">
+                                            <ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
+                                        </ui:define>
+                                        <ui:define name="toolBar">
+                                            <ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml">
+                                                <ui:param
+                                                    name="showMovimentarToolBar"
+                                                    value="#{not (painelUsuarioController.tabComunicacaoEletronica eq 'tabExpedidas')}" />
+                                            </ui:include>
+                                        </ui:define>
+                                    </wi:dataTable>
+                                </s:div>
+                            </s:div>
+                        </s:div>
+                    </infox:tab>
+                    
+                    <infox:tab id="tabExpedidas"
+                        name="tabExpedidas"
+                        title="#{infoxMessages['painel.comunicacao.tabExpedidas']}"
+                        render="tabPanelComunicaoEletronicas"
+                        rendered="#{s:hasPermission('/pages/Painel/comunicacoesExpedidas.seam', 'access')}"
+                        action="#{painelUsuarioController.refresh()}">
+                        <s:div id="tabExpedidasDiv"
+                            rendered="#{painelUsuarioController.tab eq 'comunicacao' and painelUsuarioController.tabComunicacaoEletronica eq 'tabExpedidas'}">
+                            <s:div id="comunicacoesExpedidasTarefasDiv" styleClass="p-caixas">
+                                <h:form id="treeProcessoComunicacaoExpedidaForm">
+                                    <ui:include src="/Painel/tarefasTree.xhtml" />
+                                </h:form>
+                            </s:div>
+                            
+                            <s:div id="painelProcessosComunicacaoExpedidas" styleClass="p-list" >
+                                <s:div id="processosComunicacaoExpedidas" 
+                                    rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
+                                            and painelUsuarioController.tab eq 'comunicacao'}" >
+                        
+                                    <wi:dataTable values="#{consultaProcessoList.list(10)}" bean="#{consultaProcessoList}"
+                                        styleClass="p-list-dtable" tableTitle="#{infoxMessages['consultaProcesso.processos']}"
+                                        id="consultaProcessoComunicacaoExpedidasList" rowId="#{row.idProcesso}"
+                                        searchFormStyleClass="p-list-search" panelStyleClass="p-list-panel" hideOrder="true">
+                                
+                                        <ui:define name="searchForm">
+                                            <wi:searchForm opened="false" formId="consultaProcessoComunicacaoExpedidasForm"
+                                                formTitle="#{infoxMessages['searchForm.title']}" searchReRender="processosComunicacaoExpedidas"
+                                                clearAction="consultaProcessoList.newInstance()" clearReRender="processosComunicacaoExpedidas">
+                                                <wi:inputText
+                                                  id="numeroProcessoRoot"
+                                                  label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
+                                                  value="#{consultaProcessoList.numeroProcessoRoot}" />
+                                                  
+                                                <wi:inputDataPeriodo
+                                                  id="periodo"
+                                                  label="#{infoxMessages['data.inputPeriodo']}"
+                                                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
+                                                  valueDateTo="#{consultaProcessoList.dataFim}" />
+                                                  
+                                                <wi:selectOneMenuEntity
+                                                  id="natureza"
+                                                  label="#{infoxMessages['natureza.tableTitle']}"
+                                                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
+                                                  showLabelSelecione="true"
+                                                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
+                                                  
+                                                <wi:selectOneMenuEntity
+                                                  id="categoria"
+                                                  label="#{infoxMessages['categoria.tableTitle']}"
+                                                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
+                                                  showLabelSelecione="true"
+                                                  inNewLine="true"
+                                                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+                                              </wi:searchForm>
+                                        </ui:define>
+                            
+                                        <wi:columnOutputText
+                                          columnId="numeroProcesso"
+                                          columnHeader="#{infoxMessages['consultaProcesso.numeroProcesso']}"
+                                          value="#{row.numeroProcessoRoot}" />
+                                        <wi:columnOutputText
+                                          columnId="usuarioSolicitante"
+                                          columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
+                                          value="#{row.usuarioCadastro}" />
+                                        <wi:columnDateTime
+                                          columnId="dataInicio"
+                                          columnHeader="#{infoxMessages['consultaProcesso.dataInicio']}"
+                                          value="#{row.dataInicio}" />
+                                        <wi:columnOutputText
+                                          columnId="natureza"
+                                          columnHeader="#{infoxMessages['consultaProcesso.natureza']}"
+                                          value="#{row.naturezaCategoriaFluxo.natureza}" />
+                                        <wi:columnOutputText
+                                          columnId="categoria"
+                                          columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
+                                          value="#{row.naturezaCategoriaFluxo.categoria}" />
+                                        <wi:columnOutputText
+                                          columnId="destinatario"
+                                          columnHeader="#{infoxMessages['consultaProcesso.destinatario']}"
+                                          value="#{painelUsuarioController.getDestinatarioComunicacao(row)}" />
+                                        <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
+                                        <ui:define name="headerToolBar">
+                                            <ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
+                                        </ui:define>
+                                        <ui:define name="toolBar">
+                                            <ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml">
+                                                <ui:param
+                                                    name="showMovimentarToolBar"
+                                                    value="#{not (painelUsuarioController.tabComunicacaoEletronica eq 'tabExpedidas')}" />
+                                            </ui:include>
+                                        </ui:define>
+                                    </wi:dataTable>
+                                </s:div>
+                            </s:div>
+                        </s:div>
+                    </infox:tab>
+                </infox:tabPanel>
        		</s:div>
 		</infox:tab>
 		
 		<infox:tab id="comunicacoesNaoEletronicas" name="comunicacao_nao_eletronica" render="painelProcessosComunicacaoNaoEletronica"
         	limitRender="true" action="#{painelTreeHandler.clearTree()}"
+            rendered="#{s:hasPermission('/pages/Painel/comunicacoesRecebidas.seam', 'access')}"
           	title="#{infoxMessages['painel.comunicacaoNaoEletronicaTab']}" >
         	<s:div rendered="#{painelUsuarioController.tab eq 'comunicacao_nao_eletronica'}">
 	        	<s:div id="comunicacoesNaoEletronicasTarefasDiv" styleClass="p-caixas" >
@@ -155,9 +274,9 @@
 			                		formTitle="#{infoxMessages['searchForm.title']}" searchReRender="painelProcessos"
 			                		clearAction="consultaProcessoList.newInstance()" clearReRender="painelProcessos">
 					                <wi:inputText
-					                  id="numeroProcesso"
+					                  id="numeroProcessoRoot"
 					                  label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-					                  value="#{consultaProcessoList.entity.numeroProcesso}" />
+					                  value="#{consultaProcessoList.numeroProcessoRoot}" />
 					                  
 					                <wi:inputDataPeriodo
 					                  id="periodo"
@@ -185,7 +304,7 @@
 				            <wi:columnOutputText
 				              columnId="numeroProcesso"
 				              columnHeader="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-				              value="#{row.numeroProcesso}" />
+				              value="#{row.numeroProcessoRoot}" />
 				            <wi:columnOutputText
 				              columnId="usuarioSolicitante"
 				              columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
@@ -210,6 +329,10 @@
 				              columnId="prioridadeProcesso"
 				              columnHeader="#{infoxMessages['prioridadeProcesso.tableTitle']}"
 				              value="#{row.prioridadeProcesso}" />
+                            <wi:columnOutputText
+                              columnId="destinatario"
+                              columnHeader="#{infoxMessages['consultaProcesso.destinatario']}"
+                              value="#{painelUsuarioController.getDestinatarioComunicacao(row)}" />
 				            <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
 			            	<ui:define name="headerToolBar">
 			              		<ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
