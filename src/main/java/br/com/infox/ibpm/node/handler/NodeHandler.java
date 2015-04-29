@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
@@ -26,17 +28,28 @@ import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
+import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
+import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
+import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
 import br.com.infox.ibpm.task.handler.StatusHandler;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.jbpm.event.EventHandler;
 import br.com.infox.seam.util.ComponentUtil;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 public class NodeHandler implements Serializable {
 
     private static final String BASE_DUE_DATE = "1 business hour";
     private static final long serialVersionUID = -236376783694756255L;
+    public static final String GENERATE_DOCUMENTO_ACTION_NAME = "generateDocumentoAction";
+    private static final LogProvider LOG = Logging.getLogProvider(NodeHandler.class);
 
     public enum UnitsEnum {
 
@@ -64,19 +77,27 @@ public class NodeHandler implements Serializable {
     private UnitsEnum dueDateUnit;
     private boolean dueDateBusiness;
     private StatusProcesso statusProcesso;
+    private ModeloDocumento modeloDocumento;
+    private ClassificacaoDocumento classificacaoDocumento;
 
     public NodeHandler(Node node) {
         this.node = node;
         if (node != null) {
             loadTimers(node);
-        
-            if (node.hasEvent(Event.EVENTTYPE_NODE_ENTER)) {
-                Event event = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
-                List<?> actions = event.getActions();
-                for (Object object : actions) {
-                    Action action = (Action) object;
-                    Delegation actionDelegation = action.getActionDelegation();
-                    if (actionDelegation != null && StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
+            loadEvents(node, Event.EVENTTYPE_NODE_ENTER);
+            loadEvents(node, Event.EVENTTYPE_NODE_LEAVE);
+        }
+    }
+    
+    private void loadEvents(Node node, String eventType) {
+    	if (node.hasEvent(eventType)) {
+            Event event = node.getEvent(eventType);
+            List<?> actions = event.getActions();
+            for (Object object : actions) {
+                Action action = (Action) object;
+                Delegation actionDelegation = action.getActionDelegation();
+                if (actionDelegation != null) {
+                	if (StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
                         String configuration = actionDelegation.getConfiguration();
                         Pattern pattern = Pattern.compile("<statusProcesso>(\\d+)</statusProcesso>");
                         Matcher matcher = pattern.matcher(configuration);
@@ -84,6 +105,17 @@ public class NodeHandler implements Serializable {
                             String status = matcher.group(1);
                             StatusProcessoManager manager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
                             this.statusProcesso = manager.find(Integer.parseInt(status, 10));
+                        }
+                    } else if (GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
+                    	String configuration = actionDelegation.getConfiguration();
+                    	try {
+                    		GenerateDocumentoConfiguration generateDocumentoConfiguration = new Gson().fromJson(configuration, GenerateDocumentoConfiguration.class);
+                            ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+                            ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
+                            this.modeloDocumento = modeloDocumentoManager.find(generateDocumentoConfiguration.getIdModeloDocumento());
+                            this.classificacaoDocumento = classificacaoDocumentoManager.find(generateDocumentoConfiguration.getIdClassificacaoDocumento());
+                        } catch (JsonSyntaxException e) {
+                        	LOG.warn("Erro ao ler configuração da action GenerateDocumento no nó " + this.node.getName(), e);
                         }
                     }
                 }
@@ -407,6 +439,48 @@ public class NodeHandler implements Serializable {
         
         this.statusProcesso = statusProcesso;
     }
+    
+    public ModeloDocumento getModeloDocumento() {
+		return modeloDocumento;
+	}
+    
+    public void setModeloDocumento(ModeloDocumento modeloDocumento) {
+    	Action action = null;
+        if (this.node.hasEvent(Event.EVENTTYPE_NODE_LEAVE)) {
+            action = retrieveGenerateDocumentoEvent(this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE));
+        }
+        Event event = null;
+        if (action != null) {
+            Delegation actionDelegation = action.getActionDelegation();
+            if (actionDelegation != null && GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
+                event = this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
+                if (modeloDocumento == null) {
+                    event.removeAction(action);
+                } else {
+                    actionDelegation.setConfigType("constructor");
+                    GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
+                    configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
+                    configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+                    actionDelegation.setConfiguration(new Gson().toJson(configuration));
+                }
+            }
+        } else if (modeloDocumento != null) {
+            event = createNewGenerateDocumentoEvent(modeloDocumento);
+            this.node.addEvent(event);
+        }
+		this.modeloDocumento = modeloDocumento;
+	}
+    
+    public ClassificacaoDocumento getClassificacaoDocumento() {
+		return classificacaoDocumento;
+	}
+    
+    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+		this.classificacaoDocumento = classificacaoDocumento;
+		if (this.classificacaoDocumento == null) {
+			setModeloDocumento(null);
+		}
+	}
 
     private Action retrieveStatusProcessoEvent(Event event) {
         List<?> actions = event.getActions();
@@ -414,6 +488,19 @@ public class NodeHandler implements Serializable {
         for (Object object : actions) {
             Action action = (Action) object;
             if (STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
+                result = action;
+                break;
+            }
+        }
+        return result;
+    }
+    
+    private Action retrieveGenerateDocumentoEvent(Event event) {
+        List<?> actions = event.getActions();
+        Action result = null;
+        for (Object object : actions) {
+            Action action = (Action) object;
+            if (GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
                 result = action;
                 break;
             }
@@ -435,6 +522,26 @@ public class NodeHandler implements Serializable {
         delegation.setConfiguration(MessageFormat.format(
                 "<statusProcesso>{0}</statusProcesso>",
                 statusProcesso.getIdStatusProcesso()));
+        action.setActionDelegation(delegation);
+        event.addAction(action);
+        return event;
+    }
+    
+    private Event createNewGenerateDocumentoEvent(ModeloDocumento modeloDocumento) {
+        Event event;
+        if (this.node.hasEvent(Event.EVENTTYPE_NODE_LEAVE)) {
+            event = this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
+        } else {
+            event = new Event(Event.EVENTTYPE_NODE_LEAVE);
+        }
+        Action action = new Action();
+        action.setName(GENERATE_DOCUMENTO_ACTION_NAME);
+        Delegation delegation = new Delegation(GenerateDocumentoHandler.class.getName());
+        delegation.setConfigType("constructor");
+        GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
+        configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
+        configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+        delegation.setConfiguration(new Gson().toJson(configuration));
         action.setActionDelegation(delegation);
         event.addAction(action);
         return event;

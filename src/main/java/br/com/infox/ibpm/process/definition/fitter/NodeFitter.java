@@ -36,7 +36,9 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
@@ -74,6 +76,7 @@ public class NodeFitter extends Fitter implements Serializable {
     private NodeHandler nodeHandler;
     private String nodeName;
     private Map<Number, String> modifiedNodes = new HashMap<Number, String>();
+    private List<ClassificacaoDocumento> classificacoesDocumento;
 
     @In
     private JbpmNodeManager jbpmNodeManager;
@@ -83,6 +86,8 @@ public class NodeFitter extends Fitter implements Serializable {
     private StatusProcessoManager statusProcessoManager;
     @In
     private InfoxMessages infoxMessages;
+    @In
+    private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
     
     @SuppressWarnings(UNCHECKED)
     public void addNewNode() {
@@ -573,4 +578,11 @@ public class NodeFitter extends Fitter implements Serializable {
     public List<StatusProcesso> getStatusProcessoList() {
         return statusProcessoManager.findAll();
     }
+    
+    public List<ClassificacaoDocumento> getClassificacoesDocumento() {
+    	if (classificacoesDocumento == null) {
+    		classificacoesDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true);
+    	}
+		return classificacoesDocumento;
+	}
 }
