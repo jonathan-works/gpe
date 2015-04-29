@@ -106,7 +106,7 @@ public class ProcessoTarefa implements Serializable {
     
     @Transient
     public String getTempoGastoFormatado() {
-        return PrazoEnum.formatTempo(tempoGasto, tarefa.getTipoPrazo());
+        return PrazoEnum.formatTempo(getTempoGasto(), getTarefa().getTipoPrazo());
     }
 
 	public Integer getIdProcessoTarefa() {
@@ -158,7 +158,15 @@ public class ProcessoTarefa implements Serializable {
 	}
 
 	public Float getPorcentagem() {
-		return getTempoGasto().floatValue()/getTempoPrevisto().floatValue();
+		Integer tempoPrevisto = getTempoPrevisto();
+		if (tempoPrevisto == 0) {
+			return 0f;
+		}
+		PrazoEnum tipoPrazo = getTarefa().getTipoPrazo();
+		if (tipoPrazo == PrazoEnum.H) {
+			tempoPrevisto = tempoPrevisto * 60;
+		}
+		return (getTempoGasto().floatValue()/tempoPrevisto.floatValue()) * 100;
 	}
 
 	public Integer getTempoGasto() {
