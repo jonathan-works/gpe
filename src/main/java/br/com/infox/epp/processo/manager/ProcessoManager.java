@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.manager;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
@@ -65,6 +67,24 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private ProcessoTarefaManager processoTarefaManager;
+    
+    
+	public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
+		Iterator<Processo> it = p.getFilhos().iterator();
+		while (it.hasNext()) {
+			Processo filho = (Processo) it.next();
+			Iterator<MetadadoProcesso> iterator = filho.getMetadadoProcessoList().iterator();
+			while (iterator.hasNext()) {
+				MetadadoProcesso metadado = (MetadadoProcesso) iterator.next();
+				if (metadado.getValue() != null && metadado.getValue() instanceof TipoProcesso) {
+					if (metadado.getValue().equals(tipo)) {
+						return filho;
+					}
+				}
+			}
+		}		
+		return null;
+	}
 
     public DocumentoBin createDocumentoBin(final Object value) throws DAOException {
         final DocumentoBin bin = new DocumentoBin();
