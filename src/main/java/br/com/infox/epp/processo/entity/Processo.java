@@ -5,7 +5,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
+import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM; 
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY;
@@ -137,6 +137,9 @@ public class Processo implements Serializable {
     @JoinColumn(name = "id_processo_pai", nullable = true)
     private Processo processoPai;
     
+    @OneToMany(mappedBy = "processoPai", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
+    private ArrayList<Processo> processosFilhos;
+    
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_localizacao", nullable = false)
@@ -174,7 +177,7 @@ public class Processo implements Serializable {
 
     @Column(name = ID_JBPM)
     private Long idJbpm;
-
+    
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_natureza_categoria_fluxo", nullable = false)
@@ -197,6 +200,7 @@ public class Processo implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<Pasta> pastaList = new ArrayList<>();
     
+    
     @PrePersist
     private void prePersist() {
     	if (idProcesso == null) {
@@ -205,8 +209,19 @@ public class Processo implements Serializable {
     		setNumeroProcesso(getIdProcesso().toString());
     	}
     }
+        
     
-    public Integer getIdProcesso() {
+    public ArrayList<Processo> getFilhos() {
+		return processosFilhos;
+	}
+
+
+	public void setFilhos(ArrayList<Processo> filhos) {
+		this.processosFilhos = filhos;
+	}
+
+
+	public Integer getIdProcesso() {
 		return idProcesso;
 	}
 
