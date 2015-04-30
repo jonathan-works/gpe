@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.list;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -20,8 +21,25 @@ public class PastaList extends EntityList<Pasta> {
     private final String DEFAULT_ORDER = "nome"; 
     
     @Override
+    public List<Pasta> getResultList() {
+        if (getEntity().getProcesso() == null) {
+            return null;
+        }
+        return super.getResultList();
+    }
+    
+    @Override
+    public Long getResultCount() {
+        if (getEntity().getProcesso() == null) {
+            return 0L;
+        }
+        return super.getResultCount();
+    }
+    
+    @Override
     protected void addSearchFields() {
         addSearchField("processo", SearchCriteria.IGUAL);
+        addSearchField("nome", SearchCriteria.CONTENDO);
     }
 
     @Override

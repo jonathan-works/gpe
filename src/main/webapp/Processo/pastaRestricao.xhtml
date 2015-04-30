@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+
+    <wi:dataTable id="pastaTable"
+        bean="#{pastaList}"
+        values="#{pastaList.list(15)}"
+        rowId="#{row.id}" >
+
+        <ui:define name="searchForm">
+            <wi:searchForm formId="pastaSearchForm"
+                formTitle="#{infoxMessages['searchForm.title']}">
+                <wi:inputText id="nome" value="#{pastaList.entity.nome}"
+                    label="#{infoxMessages['pasta.nome']}" />
+            </wi:searchForm>
+        </ui:define>
+
+        <ui:define name="headerToolBar" />
+        <ui:define name="toolBar">
+            <wi:toolBar id="viewPasta" rendered="true"
+                reRender="pastaRestricaoDiv"
+                url="#{wiSkin.imageFolder}/view.png" />
+        </ui:define>
+
+        <wi:columnOutputText columnId="nomePasta"
+            columnHeader="#{infoxMessages['pasta.nome']}"
+            value="#{row.nome}" />
+        <wi:columnOutputText columnId="tipoPasta"
+            columnHeader="Descrição"
+            value="descrição" />
+
+    </wi:dataTable>
+
+    <br />
+
+    <s:div id="pastaRestricaoDiv">
+        <wi:outputText id="pastaNomeInput" label="Nome da Pasta" value="asdf" />
+        <wi:dataTable id="pastaRestricaoTable" bean="#{pastaList}"
+            values="#{pastaList.list(15)}" rowId="#{row.id}"
+            showSearchForm="false"
+            tableTitle="Restrições da Pasta - Pasta Qualquer">
+
+            <ui:define name="headerToolBar" />
+            <ui:define name="toolBar">
+                <wi:toolBar id="viewPastaRestricao" rendered="true"
+                    reRender="pastaRestricaoDiv"
+                    url="#{wiSkin.imageFolder}/view.png" />
+                <wi:toolBar id="removePastaRestricao" rendered="true"
+                    reRender="pastaRestricaoDiv"
+                    url="#{wiSkin.imageFolder}/remove.png" />
+            </ui:define>
+            
+            <wi:columnOutputText columnHeader="Tipo de Restricao"
+                value="Papel" />
+            <wi:columnOutputText columnHeader="Alvo"
+                value="Usuário Interno" />
+            <wi:columnOutputText columnHeader="Pode visualizar?"
+                value="Sim" />
+            <wi:columnOutputText columnHeader="Pode inserir documentos?"
+                value="Não" />
+            <wi:columnOutputText columnHeader="Pode retirar documentos?"
+                value="Não" />
+
+        </wi:dataTable>
+        
+        <wi:commandButton
+            id="addRestricaoButton"
+            value="Adicionar Restrição"/>
+    </s:div>
+
+
+</ui:composition>
