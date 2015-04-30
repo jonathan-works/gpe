@@ -2,7 +2,6 @@ package br.com.infox.epp.processo.manager;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -69,22 +68,24 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private ProcessoTarefaManager processoTarefaManager;
     
     
-	public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
-		Iterator<Processo> it = p.getFilhos().iterator();
-		while (it.hasNext()) {
-			Processo filho = (Processo) it.next();
-			Iterator<MetadadoProcesso> iterator = filho.getMetadadoProcessoList().iterator();
-			while (iterator.hasNext()) {
-				MetadadoProcesso metadado = (MetadadoProcesso) iterator.next();
-				if (metadado.getValue() != null && metadado.getValue() instanceof TipoProcesso) {
-					if (metadado.getValue().equals(tipo)) {
-						return filho;
-					}
-				}
-			}
-		}		
-		return null;
-	}
+    public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
+        for (Processo filho : p.getFilhos()) {
+            if (filho.getDataFim() != null) {
+                continue;
+            }
+            for (MetadadoProcesso metadado : filho.getMetadadoProcessoList()) {
+                final Object value = metadado.getValue();
+                if (value != null && value instanceof TipoProcesso && value.equals(tipo)) {
+                    return filho;
+                }
+            }
+            Processo neto = buscarPrimeiroProcesso(filho, tipo);
+            if (neto != null) {
+                return neto;
+            }
+        }
+        return null;
+    }
 
     public DocumentoBin createDocumentoBin(final Object value) throws DAOException {
         final DocumentoBin bin = new DocumentoBin();
