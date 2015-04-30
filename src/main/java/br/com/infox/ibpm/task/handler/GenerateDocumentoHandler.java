@@ -1,6 +1,8 @@
 package br.com.infox.ibpm.task.handler;
 
 import java.text.MessageFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
@@ -42,11 +44,16 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 	}
 	
 	public GenerateDocumentoHandler(String configuration) {
-		this.configuration = new Gson().fromJson(configuration, GenerateDocumentoConfiguration.class);
+		this.configuration = new Gson().fromJson(parseJbpmConfiguration(configuration), GenerateDocumentoConfiguration.class);
 	}
 	
 	@Override
 	public String parseJbpmConfiguration(String configuration) {
+		Pattern pattern = Pattern.compile("<!\\[CDATA\\[(.+?)\\]\\]>");
+		Matcher matcher = pattern.matcher(configuration);
+		if (matcher.find()) {
+			configuration = matcher.group(1);
+		}
 		return configuration;
 	}
 

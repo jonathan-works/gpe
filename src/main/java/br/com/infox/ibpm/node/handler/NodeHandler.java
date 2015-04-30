@@ -107,7 +107,7 @@ public class NodeHandler implements Serializable {
                             this.statusProcesso = manager.find(Integer.parseInt(status, 10));
                         }
                     } else if (GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
-                    	String configuration = actionDelegation.getConfiguration();
+                    	String configuration = new GenerateDocumentoHandler().parseJbpmConfiguration(actionDelegation.getConfiguration());
                     	try {
                     		GenerateDocumentoConfiguration generateDocumentoConfiguration = new Gson().fromJson(configuration, GenerateDocumentoConfiguration.class);
                             ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
