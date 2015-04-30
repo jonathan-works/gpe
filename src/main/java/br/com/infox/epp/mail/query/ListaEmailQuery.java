@@ -19,7 +19,7 @@ public interface ListaEmailQuery {
             + ID_GRUPO_EMAIL_PARAM;
 
     String RESOLVE_LISTA_EMAIL_BY_ID_GRUPO = "resolveListaEmailByIdGrupoEmail";
-    String RESOLVE_LISTA_EMAIL_BY_ID_GRUPO_QUERY = "select distinct u.email from UsuarioLogin u join u.usuarioPerfilList ul where exists "
+    String RESOLVE_LISTA_EMAIL_BY_ID_GRUPO_QUERY = "select distinct u.email from UsuarioLogin u join u.usuarioPerfilList ul where ul.ativo = true and exists "
             + "(select o from ListaEmail o where o.idGrupoEmail = :"
             + ID_GRUPO_EMAIL_PARAM
             + " and "

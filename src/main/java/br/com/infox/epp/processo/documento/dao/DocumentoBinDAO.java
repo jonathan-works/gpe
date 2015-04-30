@@ -31,4 +31,5 @@ public class DocumentoBinDAO extends DAO<DocumentoBin> {
         params.put(DocumentoBinQuery.QUERY_PARAM_DOCUMENTO_BIN, documentoBin);
         return getNamedResultList(DocumentoBinQuery.GET_DOCUMENTOS_NAO_SUFICIENTEMENTE_ASSINADOS, params);
 	}
+	
 }

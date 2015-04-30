@@ -20,7 +20,7 @@ public class UsuarioPerfilEntityList extends EntityList<UsuarioPerfil> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioPerfilEntityList";
     
-    private static final String DEFAULT_EJBQL = "select o from UsuarioPerfil o";
+    private static final String DEFAULT_EJBQL = "select o from UsuarioPerfil o where o.ativo = true ";
     private static final String DEFAULT_ORDER = "perfilTemplate.descricao";
 
     @Override

@@ -24,7 +24,6 @@ import org.jboss.seam.security.Identity;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -126,6 +125,7 @@ public class ComunicacaoAction implements Serializable {
 	private boolean editorCiencia; 
 	private ClassificacaoDocumento classificacaoDocumentoCiencia;
 	
+	private ClassificacaoDocumento classificacaoDocumentoProrrogPrazo;
 	private boolean prorrogacaoPrazo;
 	private boolean documentos;
 	
@@ -212,6 +212,15 @@ public class ComunicacaoAction implements Serializable {
 		return classificacoesDocumentoProrrogacaoPrazo;
 	}
 	
+	public ClassificacaoDocumento getClassificacaoDocumentoProrrogPrazo() {
+		return classificacaoDocumentoProrrogPrazo;
+	}
+
+	public void setClassificacaoDocumentoProrrogPrazo(ClassificacaoDocumento classificacaoDocumentoProrrogPrazo) {
+		this.classificacaoDocumentoProrrogPrazo = classificacaoDocumentoProrrogPrazo;
+		documentoUploader.setClassificacaoDocumento(classificacaoDocumentoProrrogPrazo);
+	}
+
 	public DestinatarioBean getDestinatario() {
 		return destinatario;
 	}
@@ -383,17 +392,6 @@ public class ComunicacaoAction implements Serializable {
 	
 	public Long getJbpmProcessId() {
 		return JbpmUtil.getProcesso().getIdJbpm();
-	}
-	
-	public void downloadComunicacaoCompleta(String idDestinatario) {
-		DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, Long.valueOf(idDestinatario));
-		try {
-			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatarioModelo.getModeloComunicacao(), destinatarioModelo);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
-		} catch (DAOException e) {
-			LOG.error("", e);
-			actionMessagesService.handleDAOException(e);
-		}
 	}
 	
 	public List<Documento> getDocumentosDestinatario() {

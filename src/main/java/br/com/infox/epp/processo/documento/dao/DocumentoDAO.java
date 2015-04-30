@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.DOCUMENTOS_SESSAO_ANEXAR;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JBPM_TASK_PARAM;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
@@ -8,6 +9,7 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEX
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_IDS_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_TIPO_NUMERACAO;
@@ -39,6 +41,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
@@ -87,17 +90,17 @@ public class DocumentoDAO extends DAO<Documento> {
     protected FullTextEntityManager getFullTextEntityManager() {
         return (FullTextEntityManager) super.getEntityManager();
     }
-    
-    public List<Documento> getListDocumentoByProcesso(Processo processo){
-    	Map<String, Object> params = new HashMap<>(1);
-    	params.put(PARAM_PROCESSO, processo);
-    	return getNamedResultList(LIST_DOCUMENTO_BY_PROCESSO, params);
+
+    public List<Documento> getListDocumentoByProcesso(Processo processo) {
+        Map<String, Object> params = new HashMap<>(1);
+        params.put(PARAM_PROCESSO, processo);
+        return getNamedResultList(LIST_DOCUMENTO_BY_PROCESSO, params);
     }
-    
+
     public List<Documento> getDocumentoListByTask(TaskInstance task) {
-    	Map<String, Object> params = new HashMap<>(1);
-    	params.put(ID_JBPM_TASK_PARAM, task.getId());
-    	return getNamedResultList(LIST_DOCUMENTO_BY_TASKINSTANCE, params);
+        Map<String, Object> params = new HashMap<>(1);
+        params.put(ID_JBPM_TASK_PARAM, task.getId());
+        return getNamedResultList(LIST_DOCUMENTO_BY_TASKINSTANCE, params);
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -105,7 +108,8 @@ public class DocumentoDAO extends DAO<Documento> {
         Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         List<Documento> ret = new ArrayList<Documento>();
-        QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, new String[] {"nome", "texto"}, new BrazilianAnalyzer(Version.LUCENE_36));
+        QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, new String[] { "nome", "texto" },
+                new BrazilianAnalyzer(Version.LUCENE_36));
         Query luceneQuery;
         try {
             luceneQuery = parser.parse(searchPattern);
@@ -121,28 +125,34 @@ public class DocumentoDAO extends DAO<Documento> {
         }
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
         for (Documento documento : ret) {
-            
-            if (!sigiloDocumentoService.possuiPermissao(documento, usuarioLogado)){
+
+            if (!sigiloDocumentoService.possuiPermissao(documento, usuarioLogado)) {
                 ret.remove(documento);
             }
         }
         return ret;
     }
-    
+
     public int getTotalDocumentosProcesso(Processo processo) {
-    	Map<String, Object> params = new HashMap<>();
-    	params.put(PARAM_PROCESSO, processo);
-    	Number total = getNamedSingleResult(TOTAL_DOCUMENTOS_PROCESSO, params);
-    	if (total == null) {
-    		return 0;
-    	}
-    	return total.intValue();
+        Map<String, Object> params = new HashMap<>();
+        params.put(PARAM_PROCESSO, processo);
+        Number total = getNamedSingleResult(TOTAL_DOCUMENTOS_PROCESSO, params);
+        if (total == null) {
+            return 0;
+        }
+        return total.intValue();
     }
-    
+
     public List<Documento> getDocumentosSessaoAnexar(Processo processo, List<Integer> idsDocumentos) {
-    	Map<String, Object> params = new HashMap<>();
-    	params.put(PARAM_PROCESSO, processo);
-    	params.put(PARAM_IDS_DOCUMENTO, idsDocumentos);
-    	return getNamedResultList(DOCUMENTOS_SESSAO_ANEXAR, params);
+        Map<String, Object> params = new HashMap<>();
+        params.put(PARAM_PROCESSO, processo);
+        params.put(PARAM_IDS_DOCUMENTO, idsDocumentos);
+        return getNamedResultList(DOCUMENTOS_SESSAO_ANEXAR, params);
+    }
+
+    public Documento getDocumentoMaisRecentePorClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, classificacaoDocumento);
+        return getNamedSingleResult(DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO, parameters);
     }
 }

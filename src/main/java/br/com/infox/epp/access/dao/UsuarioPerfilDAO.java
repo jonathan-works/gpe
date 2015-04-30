@@ -37,11 +37,12 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
     }
 
     public UsuarioPerfil getByUsuarioLoginPerfilTemplateLocalizacao(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate,
-            Localizacao localizacao) {
+            Localizacao localizacao, boolean ativo) {
         final Map<String,Object> params = new HashMap<>();
         params.put(UsuarioPerfilQuery.PARAM_USUARIO_LOGIN, usuarioLogin);
         params.put(UsuarioPerfilQuery.PARAM_PERFIL_TEMPLATE, perfilTemplate);
         params.put(UsuarioPerfilQuery.PARAM_LOCALIZACAO, localizacao);
+        params.put(UsuarioPerfilQuery.PARAM_ATIVO, ativo);
         return getNamedSingleResult(UsuarioPerfilQuery.GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO, params);
     }
     

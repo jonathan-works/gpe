@@ -17,8 +17,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Unwrap;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -28,6 +30,8 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.FragmentConfiguration;
+import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -150,6 +154,17 @@ public class TaskInstanceView implements Serializable {
                             } else {
                                 ff.setValue("(sem anexo)");
                                 ff.getProperties().put("classificacaoDocumento", "(sem anexo)");
+                            }
+                        }
+                        break;
+                        case FRAGMENT:{
+                            ff.setType(type.name());
+                        ff.setValue(value);
+                            if (tokens.length >=3){
+                                FragmentConfiguration fragmentConfiguration = ComponentUtil.<FragmentConfigurationCollector>getComponent(FragmentConfigurationCollector.NAME).getByCode(tokens[2]);
+                                Map<String, Object> map = ff.getProperties();
+                                map.put("fragmentConfig", fragmentConfiguration);
+                                map.put("fragmentPath", fragmentConfiguration.getPath());
                             }
                         }
                         break;

@@ -62,7 +62,7 @@
 					bean="#{destinatarioModeloComunicacaoList}"
 					values="#{destinatarioModeloComunicacaoList.list(15)}"
 					tableTitle="#{infoxMessages['comunicacao.destinatarios']}" rowId="#{row.id}" showSearchForm="false"
-					hideOrder="true">
+					hideOrder="true" showToolbarColumn="#{!expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}">
 					<ui:define name="toolBar">
 						<h:form>
 							<a:commandLink
@@ -72,8 +72,8 @@
 								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png"
 									title="#{infoxMessages['button.selecionar']}" />
 							</a:commandLink>
-							<h:commandLink
-								action="#{expedicaoComunicacaoAction.downloadComunicacao(row)}"
+							
+							<h:commandLink onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{row.id}','1024'); return false;"
 								rendered="#{row.expedido}">
 								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png"
 									title="#{infoxMessages['comunicacao.imprimirComunicacao']}" />
@@ -91,14 +91,19 @@
 						value="#{row.prazo}" />
 				</wi:dataTable>
 				<h:form id="comunicacaoForm">
-					<h:commandButton id="visualizarComunicacao" action="#{expedicaoComunicacaoAction.downloadComunicacao()}" 
-						value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-						rendered="#{not empty expedicaoComunicacaoAction.destinatario}"/>
-					<wi:commandButton id="expedir" action="expedicaoComunicacaoAction.expedirComunicacao()" 
-						rendered="#{not empty expedicaoComunicacaoAction.destinatario 
-								and expedicaoComunicacaoAction.modeloComunicacao.documentoBinario }"
-						value="#{infoxMessages['comunicacao.expedirComunicacoes']}"
-						reRender="comunicacaoForm, pageBodyDialogMessage, destinatarios"/>
+					<h:commandButton id="visualizarComunicacaoIndividual" 
+									type="button" 
+									value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+									styleClass="buttons"
+									rendered="#{not empty expedicaoComunicacaoAction.destinatario}"
+									onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{expedicaoComunicacaoAction.destinatario.id}','1024'); return false;" />
+					<h:commandButton id="visualizarComunicacaoGeral" 
+									type="button" 
+									value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+									styleClass="buttons"
+									rendered="#{expedicaoComunicacaoAction.modeloComunicacao.documentoBinario}"
+									onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idModelo=#{expedicaoComunicacaoAction.modeloComunicacao.id}&amp;idDestinatario=#{expedicaoComunicacaoAction.modeloComunicacao.destinatarios.get(0).id}','1024'); return false;" />
+					
 					<a:jsFunction name="assinar"
 								action="#{expedicaoComunicacaoAction.expedirComunicacao()}"
 								execute="@form"

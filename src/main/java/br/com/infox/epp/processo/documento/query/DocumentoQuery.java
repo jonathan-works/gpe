@@ -1,7 +1,7 @@
 package br.com.infox.epp.processo.documento.query;
 
 public interface DocumentoQuery {
-
+    String PARAM_CLASSIFICACAO_DOCUMENTO = "classificacaoDocumento";
     String PARAM_PROCESSO = "processo";
     String PARAM_TIPO_NUMERACAO = "tipoNumeracao";
     String PARAM_IDS_DOCUMENTO = "idsDocumento";
@@ -50,4 +50,8 @@ public interface DocumentoQuery {
     String DOCUMENTOS_SESSAO_ANEXAR = "Documento.documentosSessaoAnexar";
     String DOCUMENTOS_SESSAO_ANEXAR_QUERY = "select o from Documento o where o.processo = :" + PARAM_PROCESSO
     		+ " and (o.documentoBin.minuta = true or o.id in (:" + PARAM_IDS_DOCUMENTO + "))";
+
+    String DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO = "Documento.porClassificacaoDocumentoOrdenadosPorDataInclusao";
+    String DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO_QUERY = "select d from ClassificacaoDocumento cd inner join cd.documentoList d"
+            + " where cd = :" + PARAM_CLASSIFICACAO_DOCUMENTO + " order by d.dataInclusao desc";
 }

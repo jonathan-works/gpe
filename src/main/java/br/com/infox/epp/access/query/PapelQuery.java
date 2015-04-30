@@ -45,4 +45,13 @@ public interface PapelQuery {
             + "where pa.id_papel = :" + ID_PAPEL_PARAM;
     String COL_TERMO_ADESAO = "in_termo_adesao";
 
+    String PARAM_USUARIO = "usuario";
+    
+    String HAS_TO_SIGN_TERMO_ADESAO = "hasToSignTermoAdesao";
+    String HAS_TO_SIGN_TERMO_ADESAO_QUERY = "select 1 from UsuarioPerfil up inner join up.perfilTemplate pt inner join pt.papel p "
+    		+ "where p.termoAdesao = true and up.ativo = true and pt.ativo = true and up.usuarioLogin = :" + PARAM_USUARIO;
+    
+    String GET_PERFIL_TERMO_ADESAO = "getPerfilTermoAdesao";
+    String GET_PERFIL_TERMO_ADESAO_QUERY = "select up from UsuarioPerfil up inner join up.perfilTemplate pt inner join pt.papel p "
+    		+ "where p.termoAdesao = true and up.ativo = true and pt.ativo = true and up.usuarioLogin = :" + PARAM_USUARIO;
 }

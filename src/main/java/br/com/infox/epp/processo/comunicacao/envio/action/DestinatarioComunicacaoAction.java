@@ -183,7 +183,7 @@ public class DestinatarioComunicacaoAction {
 				return MeioExpedicao.getValues(true);
 			}	
 			if (usuario != null) {
-				List<UsuarioPerfil> usuarioPerfilList = usuario.getUsuarioPerfilList();
+				List<UsuarioPerfil> usuarioPerfilList = usuarioPerfilManager.listByUsuarioLogin(usuario);
 				List<String> papeisHerdeirosUsuarioInterno = modeloComunicacaoManager.getIdentificadoresPapeisHerdeirosDeUsuarioInterno();
 				for (UsuarioPerfil usuarioPerfil : usuarioPerfilList) {
 					Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();

@@ -91,7 +91,7 @@
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{infoxMessages['comunicacao.documentos']}"/>
 							</a:commandLink>
-							<h:commandLink onclick="infox.openPopUp('download#{bean.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?id=#{bean.idDestinatario}','1024'); return false;">
+							<h:commandLink onclick="infox.openPopUp('download#{bean.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{bean.idDestinatario}','1024'); return false;">
 								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarComunicacao']}"/>
 							</h:commandLink>
 					</rich:column>
@@ -150,13 +150,13 @@
 	    		rendered="#{comunicacaoAction.prorrogacaoPrazo}">
 	    		<h:form>
 	    			<wi:selectOneMenuEntity id="classificacaoProrrogacao" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    				value="#{comunicacaoAction.classificacaoDocumento}" items="#{comunicacaoAction.classificacoesDocumentoProrrogacaoPrazo}"
+	    				value="#{comunicacaoAction.classificacaoDocumentoProrrogPrazo}" items="#{comunicacaoAction.classificacoesDocumentoProrrogacaoPrazo}"
 	    				showLabelSelecione="true">
 	    				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
 	    			</wi:selectOneMenuEntity>
-	    			<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumento 
-	    				and not empty comunicacaoAction.classificacaoDocumento.extensaoArquivosList}">
-	    				<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumento.acceptedTypes}"
+	    			<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumentoProrrogPrazo 
+	    				and not empty comunicacaoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}">
+	    				<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumentoProrrogPrazo.acceptedTypes}"
 	    					reRender="btnGravar"/>
 	    				<s:div id="btnGravar">
 	                        <wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 

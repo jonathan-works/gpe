@@ -89,6 +89,8 @@ import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
+import br.com.infox.ibpm.variable.FragmentConfiguration;
+import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -192,6 +194,12 @@ public class TaskInstanceHome implements Serializable {
 	private void retrieveVariable(VariableAccess variableAccess) {
 		TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
 		variableRetriever.retrieveVariableContent();
+        if (variableRetriever.getVariable() == null && VariableType.FRAGMENT.equals(variableRetriever.getType())) {
+            FragmentConfigurationCollector collector = ComponentUtil.getComponent(FragmentConfigurationCollector.NAME);
+            String code = variableAccess.getMappedName().split(":")[2];
+            FragmentConfiguration fragmentConfiguration = collector.getByCode(code);
+            variableRetriever.setVariable(fragmentConfiguration.init(taskInstance));
+        }
 		mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
 		if (variableRetriever.isEditor() || variableRetriever.isFile()) {
 			Integer idDocumento = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
