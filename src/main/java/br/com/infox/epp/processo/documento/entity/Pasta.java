@@ -57,10 +57,12 @@ public class Pasta implements Serializable, Cloneable {
     @JoinColumn(name = "id_processo", nullable = false)
     private Processo processo;
     
+    @Deprecated
     @NotNull
     @Column(name = "in_visivel_externo", nullable = false)
     private Boolean visivelExterno = Boolean.FALSE;
 
+    @Deprecated
     @NotNull
     @Column(name = "in_visivel_nao_participante", nullable = false)
     private Boolean visivelNaoParticipante = Boolean.FALSE;
@@ -72,6 +74,12 @@ public class Pasta implements Serializable, Cloneable {
     @NotNull
     @Column(name = "in_sistema", nullable = false)
     private Boolean sistema;
+    
+    @NotNull
+    @Column(name = "in_editavel", nullable = false)
+    private Boolean editavel;
+    
+    // TODO adicionar FK para pastaDefinition
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
     private List<Documento> documentosList; 
@@ -92,18 +100,22 @@ public class Pasta implements Serializable, Cloneable {
         this.processo = processo;
     }
 
+    @Deprecated
     public Boolean getVisivelExterno() {
         return visivelExterno;
     }
 
+    @Deprecated
     public void setVisivelExterno(Boolean visivelExterno) {
         this.visivelExterno = visivelExterno;
     }
 
+    @Deprecated
     public Boolean getVisivelNaoParticipante() {
         return visivelNaoParticipante;
     }
 
+    @Deprecated
     public void setVisivelNaoParticipante(Boolean visivelNaoParticipante) {
         this.visivelNaoParticipante = visivelNaoParticipante;
     }
@@ -161,5 +173,13 @@ public class Pasta implements Serializable, Cloneable {
     @Transient
     public String getTemplateNomePasta() {
     	return getNome() + " ({0})";
+    }
+
+    public Boolean getEditavel() {
+        return editavel;
+    }
+
+    public void setEditavel(Boolean editavel) {
+        this.editavel = editavel;
     }
 }
