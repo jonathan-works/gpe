@@ -24,12 +24,7 @@
 	        title="#{pasta}" />
 	      <h:outputText value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}" class="folder" />
    	  </s:div>
-    </rich:list>
-    <wi:commandButton
-      id="addPastaBtn"
-      value="#{infoxMessages['documentoProcesso.addFolder']}"
-      rendered="#{s:hasPermission('/pages/Pasta/adicionarPasta', 'access')}"
-      onclick="#{rich:component('anexarPastaPanel')}.show();" />
+    </rich:list>    
   </rich:collapsiblePanel>
   <br />
   <rich:collapsiblePanel
@@ -267,62 +262,5 @@
       <ui:define name="toolBar" />
     </wi:dataTable>
   </s:div>
-  
-  <script type="text/javascript">
-      function clearAnexarPastaFields() {
-    		#{rich:jQuery('anexarPastaInputName')}.val('');
-    		#{rich:jQuery('anexarPastaInputName')}.val('');
-    		#{rich:jQuery('anexarPastaInputVisivelExterno')}.prop('checked', false);
-    		#{rich:jQuery('anexarPastaInputVisivelNaoParticipante')}.prop('checked', false);
-    		#{rich:jQuery('anexarPastaDivVisivelNaoParticipante')}.hide();
-    		$('.errorFields.errors').remove();
-    	    $('.errors').removeClass('errors');
-      }
-  </script>
-  
-  <rich:popupPanel
-    id="anexarPastaPanel"
-    moveable="true"
-    show="false"
-    resizeable="false"
-    minWidth="310"
-    minHeight="260"
-    header="#{infoxMessages['pasta.add']}"
-    onbeforehide="clearAnexarPastaFields();">
-    <f:facet name="controls">
-      <h:graphicImage
-        id="pastaPanelCloseBtn"
-        styleClass="mp-close"
-        value="#{wiSkin.imageFolder}/closeMP.gif"
-        onmouseup="#{rich:component('anexarPastaPanel')}.hide();" />
-      </f:facet>
-      <h:form id="anexarPastaForm">
-        <wi:inputText
-          id="anexarPastaInputName"
-          value="#{pastaAction.nome}"
-          required="true"
-          maxlength="250"
-          label="#{infoxMessages['pasta.nome']}">
-        </wi:inputText>
-        <wi:selectBooleanCheckbox
-          id="anexarPastaInputVisivelExterno"
-          value="#{pastaAction.visivelExterno}"
-          onclick="#{rich:jQuery('anexarPastaInputVisivelExterno')}.prop('checked') ? #{rich:jQuery('anexarPastaDivVisivelNaoParticipante')}.show() : #{rich:jQuery('anexarPastaDivVisivelNaoParticipante')}.hide();"
-          label="#{infoxMessages['pasta.usuarioExterno']}" />
-        <s:div id="anexarPastaDivVisivelNaoParticipante" style="display: none">
-          <wi:selectBooleanCheckbox
-            id="anexarPastaInputVisivelNaoParticipante"
-            value="#{pastaAction.visivelNaoParticipante}"
-            label="#{infoxMessages['pasta.usuarioParticipante']}" />
-        </s:div>
-        <br />
-        <wi:commandButton
-          id="addPastaButton"
-          action="#{pastaAction.persist()}"
-          execute="@form"
-          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('anexarPastaPanel')}.hide();}else{clearAnexarPastaFields()}"
-          value="Adicionar"
-          reRender="@form, pastaPanel, pageBodyDialogMessage, pastaDocumentoUploader, pastaDocumentoEditor" />
-      </h:form>
-    </rich:popupPanel>
+    
 </ui:composition>
