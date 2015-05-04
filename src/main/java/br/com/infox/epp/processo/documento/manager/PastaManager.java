@@ -11,10 +11,13 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
+import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
+import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -88,8 +91,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         naoAceitos.setProcesso(processo);
         naoAceitos.setSistema(Boolean.TRUE);
         
-        persist(documentosProcesso);
-        persist(naoAceitos);
+        persistWithDefault(documentosProcesso);
+        persistWithDefault(naoAceitos);
         
         documentoService.setDefaultFolder(documentosProcesso);
         List<Pasta> pastas = new ArrayList<>();
@@ -108,5 +111,18 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         	return null;
         }
         	
+    }
+    
+    //TODO Persist a restrição
+    public Pasta persistWithDefault(Pasta o) throws DAOException {
+    	Pasta pasta = super.persist(o);
+    	PastaRestricao restricao =  new PastaRestricao();
+    	restricao.setPasta(pasta);
+    	restricao.setTipoPastaRestricao(PastaRestricaoEnum.D);
+    	restricao.setAlvo(null);
+    	restricao.setRead(Boolean.FALSE);
+    	restricao.setWrite(Boolean.FALSE);
+    	restricao.setDelete(Boolean.FALSE);    	
+    	return pasta;
     }
 }
