@@ -1,7 +1,9 @@
 package br.com.infox.epp.processo.documento.action;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -10,7 +12,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -18,16 +19,16 @@ import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -54,11 +55,14 @@ public class PastaAction implements Serializable {
     private DocumentoList documentoList;
     @In
     private DocumentoProcessoAction documentoProcessoAction;
+    @In
+    private PastaRestricaoManager pastaRestricaoManager;
 
     private Processo processo;
     private List<Pasta> pastaList;
     private Pasta instance;
     private Integer id;
+    private Map<Integer, PastaRestricaoBean> restricoes;
 
     @Create
     public void create() {
@@ -71,6 +75,7 @@ public class PastaAction implements Serializable {
         setVisivelNaoParticipante(false);
         setRemovivel(true);
         setSistema(false);
+        setRestricoes(new HashMap<Integer, PastaRestricaoBean>());
     }
 
     public void persist() {
@@ -118,6 +123,7 @@ public class PastaAction implements Serializable {
         }
     }
 
+    // TODO mais um método que precisa migrar de action
     public void remove(Pasta pasta) {
         try {
             if (pastaManager == null) {
@@ -157,6 +163,8 @@ public class PastaAction implements Serializable {
         }
     }
 
+    // TODO marcado como Deprecated pois esta tela não mais remove pastas
+    @Deprecated
     public Boolean canRemove(Pasta pasta) {
         if (!pasta.getRemovivel() || !canEdit(pasta)) {
             return false;
@@ -165,25 +173,32 @@ public class PastaAction implements Serializable {
         return (documentoList == null || documentoList.isEmpty());
     }
 
+    // TODO marcado como Deprecated pois esta tela não mais edita pastas
+    @Deprecated
     public Boolean canEdit(Pasta pasta) {
+        // TODO mudar para ver o campo editável
         return pasta != null && !pasta.getSistema();
     }
 
+    // TODO esse método inteiro precisa mudar
     public Boolean canSee(Pasta pasta) {
-        if (!pasta.getVisivelExterno())
-            return false;
-        if (pasta.getVisivelExterno() && pasta.getVisivelNaoParticipante())
-            return true;
-        UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get(
-                "usuarioLogado");
-        if (usuario == null || usuario.getPessoaFisica() == null)
-            return false;
-        PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-        ParticipanteProcesso participante = participanteProcessoManager
-                .getParticipanteProcessoByPessoaProcesso(pessoaFisica,
-                        pasta.getProcesso());
-        return participante != null && participante.getAtivo()
-                && pessoaFisica.equals(participante.getPessoa());
+//        if (!pasta.getVisivelExterno())
+//            return false;
+//        if (pasta.getVisivelExterno() && pasta.getVisivelNaoParticipante())
+//            return true;
+//        UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get(
+//                "usuarioLogado");
+//        if (usuario == null || usuario.getPessoaFisica() == null)
+//            return false;
+//        PessoaFisica pessoaFisica = usuario.getPessoaFisica();
+//        ParticipanteProcesso participante = participanteProcessoManager
+//                .getParticipanteProcessoByPessoaProcesso(pessoaFisica,
+//                        pasta.getProcesso());
+//        return participante != null && participante.getAtivo()
+//                && pessoaFisica.equals(participante.getPessoa());
+        Boolean canSee = false;
+        
+        return canSee;
     }
 
     public Pasta getInstance() {
@@ -226,10 +241,12 @@ public class PastaAction implements Serializable {
         getInstance().setVisivelNaoParticipante(visivelNaoParticipante);
     }
 
+    @Deprecated
     public Boolean getRemovivel() {
         return getInstance().getRemovivel();
     }
 
+    @Deprecated
     public void setRemovivel(Boolean removivel) {
         this.getInstance().setRemovivel(removivel);
     }
@@ -238,10 +255,15 @@ public class PastaAction implements Serializable {
         return processo;
     }
 
+    // TODO verificar essa listagem de pastas, se já deve listar com restrições
     public void setProcesso(Processo processo) {
         this.processo = processo.getProcessoRoot();
         try {
             this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
+            this.restricoes = pastaRestricaoManager.loadRestricoes(processo,
+                    Authenticator.getUsuarioLogado(),
+                    Authenticator.getLocalizacaoAtual(),
+                    Authenticator.getPapelAtual());
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }
@@ -275,5 +297,14 @@ public class PastaAction implements Serializable {
     public String getNomePasta(Pasta pasta) {
 		return pastaManager.getNomePasta(pasta, documentoProcessoAction.getDocumentoFilter());
     }
+
+    public Map<Integer, PastaRestricaoBean> getRestricoes() {
+        return restricoes;
+    }
+
+    public void setRestricoes(Map<Integer, PastaRestricaoBean> restricoes) {
+        this.restricoes = restricoes;
+    }
+
 }
 

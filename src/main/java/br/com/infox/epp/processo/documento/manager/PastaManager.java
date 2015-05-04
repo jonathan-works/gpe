@@ -74,6 +74,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	return getNomePasta(pasta, getTotalDocumentosPastaPorFiltros(pasta, documentoFilter));
     }
     
+    // esse método tem que mudar para utilizar o modelo de pasta
     private List<Pasta> createDefaultFolders(Processo processo) throws DAOException {
         Pasta documentosProcesso = new Pasta();
         documentosProcesso.setRemovivel(Boolean.FALSE);
