@@ -16,10 +16,32 @@
         rowId="#{row.id}" >
 
         <ui:define name="searchForm">
-            <wi:searchForm formId="pastaSearchForm"
+            <wi:searchForm formId="pastaSearchForm" 
                 formTitle="#{infoxMessages['searchForm.title']}">
-                <wi:inputText id="nome" value="#{pastaList.entity.nome}"
+                
+            <wi:inputText id="nome" value="#{pastaList.entity.nome}"
                     label="#{infoxMessages['pasta.nome']}" />
+                   
+                <ui:define name="buttons">
+					<wi:commandButton id="searchButton"
+						value="#{infoxMessages['button.pesquisar']}"
+						action="#{searchAction}" styleClass="buttons"
+						reRender="#{wi:get(searchReRender, 'pageBody')}">
+						<a:param assignTo="#{bean.page}" value="1" />
+					</wi:commandButton>
+						<a:commandButton id="clearButton"
+							onclick="$('##{formId}').clearForm();showLoading();"
+							oncomplete="hideLoading();"
+							action="#{elFunctions.invokeMethod(clearAction)}"
+							value="#{infoxMessages['button.limpar']}" execute="@this"
+							render="#{wi:get(clearReRender, 'pageBody')}"
+							styleClass="buttons" />
+					<wi:commandButton id="addPastaBtn"
+						value="#{infoxMessages['documentoProcesso.addFolder']}"
+						rendered="#{s:hasPermission('/pages/Pasta/adicionarPasta', 'access')}"
+						onclick="#{rich:component('anexarPastaPanel')}.show();" />
+				</ui:define>
+                     
             </wi:searchForm>
         </ui:define>
 
@@ -34,47 +56,102 @@
             columnHeader="#{infoxMessages['pasta.nome']}"
             value="#{row.nome}" />
         <wi:columnOutputText columnId="tipoPasta"
-            columnHeader="Descrição"
-            value="descrição" />
+            columnHeader="#{infoxMessages['pasta.descricao']}"
+            value="#{row.descricao}" />
+        <wi:columnBoolean
+	       	columnId="pastaEditavel"
+	        columnHeader="#{infoxMessages['pasta.editavel']}"
+      		value="#{row.editavel}" />
 
     </wi:dataTable>
 
     <br />
+	<ui:remove>
+		<s:div id="pastaRestricaoDiv">
+			<wi:dataTable id="pastaRestricaoTable" bean="#{pastaList}"
+				values="#{pastaList.list(15)}" rowId="#{row.id}"
+				showSearchForm="false"
+				tableTitle="Restrições da Pasta - Pasta Qualquer">
 
-    <s:div id="pastaRestricaoDiv">
-        <wi:outputText id="pastaNomeInput" label="Nome da Pasta" value="asdf" />
-        <wi:dataTable id="pastaRestricaoTable" bean="#{pastaList}"
-            values="#{pastaList.list(15)}" rowId="#{row.id}"
-            showSearchForm="false"
-            tableTitle="Restrições da Pasta - Pasta Qualquer">
+				<ui:define name="headerToolBar" />
+				<ui:define name="toolBar">
+					<wi:toolBar id="viewPastaRestricao" rendered="true"
+						reRender="pastaRestricaoDiv" url="#{wiSkin.imageFolder}/view.png" />
+					<wi:toolBar id="removePastaRestricao" rendered="true"
+						reRender="pastaRestricaoDiv"
+						url="#{wiSkin.imageFolder}/remove.png" />
+				</ui:define>
 
-            <ui:define name="headerToolBar" />
-            <ui:define name="toolBar">
-                <wi:toolBar id="viewPastaRestricao" rendered="true"
-                    reRender="pastaRestricaoDiv"
-                    url="#{wiSkin.imageFolder}/view.png" />
-                <wi:toolBar id="removePastaRestricao" rendered="true"
-                    reRender="pastaRestricaoDiv"
-                    url="#{wiSkin.imageFolder}/remove.png" />
-            </ui:define>
-            
-            <wi:columnOutputText columnHeader="Tipo de Restricao"
-                value="Papel" />
-            <wi:columnOutputText columnHeader="Alvo"
-                value="Usuário Interno" />
-            <wi:columnOutputText columnHeader="Pode visualizar?"
-                value="Sim" />
-            <wi:columnOutputText columnHeader="Pode inserir documentos?"
-                value="Não" />
-            <wi:columnOutputText columnHeader="Pode retirar documentos?"
-                value="Não" />
+				<wi:columnOutputText columnHeader="Tipo de Restricao" value="Papel" />
+				<wi:columnEnum columnId="restricaoTipo"
+					columnHeader="#{infoxMessages['restricao.tipo']}"
+					value="#{row.tipoPastaRestricao}" />
+				<wi:columnOutputText columnId="restricaoAlvo"
+					columnHeader="infoxMessages['restricao.alvo']" value="#{row.alvo}" />
+				<wi:columnBoolean columnId="restricaoVisualizar"
+					columnHeader="#{infoxMessages['restricao.visualizar']}"
+					value="#{row.read}" />
+				<wi:columnBoolean columnId="restricaoInserir"
+					columnHeader="#{infoxMessages['restricao.inserir']}"
+					value="#{row.write}" />
+				<wi:columnBoolean columnId="restricaoRetirar"
+					columnHeader="#{infoxMessages['restricao.retirar']}"
+					value="#{row.delete}" />
+			</wi:dataTable>
 
-        </wi:dataTable>
-        
+			<wi:commandButton id="addRestricaoButton" value="Adicionar Restrição" />
+		</s:div>
+	</ui:remove>
+	
+	<script type="text/javascript">
+      function clearAnexarPastaFields() {
+    		#{rich:jQuery('anexarPastaInputName')}.val('');
+    		#{rich:jQuery('anexarPastaInputDescricao')}
+    		$('.errorFields.errors').remove();
+    	    $('.errors').removeClass('errors');
+      }
+  </script>
+
+	<rich:popupPanel
+    id="anexarPastaPanel"
+    moveable="true"
+    show="false"
+    resizeable="false"
+    maxWidth="290"
+    maxHeight="190"
+    header="#{infoxMessages['pasta.add']}"
+    onbeforehide="clearAnexarPastaFields();">
+    <f:facet name="controls">
+      <h:graphicImage
+        id="pastaPanelCloseBtn"
+        styleClass="mp-close"
+        value="#{wiSkin.imageFolder}/closeMP.gif"
+        onmouseup="#{rich:component('anexarPastaPanel')}.hide();" />
+      </f:facet>
+      <h:form id="anexarPastaForm">
+        <wi:inputText
+          	id="anexarPastaInputName"
+          	value="#{pastaAction.nome}"
+          	required="true"
+          	maxlength="250"
+        	label="#{infoxMessages['pasta.nome']}">
+        </wi:inputText>
+		<wi:inputText
+        	id="anexarPastaInputDescricao"
+        	value="#{pastaAction.descricao}"
+        	required="false"
+        	maxlength="250"
+        	label="#{infoxMessages['pasta.descricao']}">
+	    </wi:inputText>
+        <br />
         <wi:commandButton
-            id="addRestricaoButton"
-            value="Adicionar Restrição"/>
-    </s:div>
-
-
+          id="addPastaButton"
+          action="#{pastaAction.persist()}"
+          execute="@form"
+          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('anexarPastaPanel')}.hide();}else{clearAnexarPastaFields()}"
+          value="Adicionar"
+          reRender="@form, pastaTable, pastaTablePanel" />
+      </h:form>
+    </rich:popupPanel>
+    
 </ui:composition>
