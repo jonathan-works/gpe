@@ -19,6 +19,7 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO_QUERY;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL_PAINEL;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VALOR_PADRAO;
 
 import java.io.Serializable;
 
@@ -81,6 +82,10 @@ public class DefinicaoVariavelProcesso implements Serializable {
     @Column(name = VISIVEL_PAINEL)
     private Boolean visivelPainel;
     
+    @Size(min = 0, max = LengthConstants.DESCRICAO_GRANDE, message = "{beanValidation.size}")
+    @Column(name=VALOR_PADRAO, length = LengthConstants.DESCRICAO_GRANDE)
+    private String valorPadrao;
+    
     public DefinicaoVariavelProcesso() {
     	setVisivel(Boolean.TRUE);
     }
@@ -133,7 +138,15 @@ public class DefinicaoVariavelProcesso implements Serializable {
         this.visivelPainel = visivelPainel;
     }
     
-    @Override
+    public String getValorPadrao() {
+		return valorPadrao;
+	}
+
+	public void setValorPadrao(String valorPadrao) {
+		this.valorPadrao = valorPadrao;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
