@@ -88,7 +88,9 @@ public class PastaAction implements Serializable {
             }
             getInstance().setProcesso(processo);
             setSistema(false);
-            pastaManager.persist(getInstance());
+            getInstance().setEditavel(Boolean.TRUE);
+            getInstance().setRemovivel(Boolean.TRUE);
+            pastaManager.persistWithDefault(getInstance());
             setPastaList(pastaManager.getByProcesso(processo));
             newInstance();
             FacesMessages.instance().add(StatusMessage.Severity.ERROR,
