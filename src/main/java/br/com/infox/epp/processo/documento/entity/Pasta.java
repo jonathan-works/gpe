@@ -80,6 +80,7 @@ public class Pasta implements Serializable, Cloneable {
     private Boolean editavel;
     
     // TODO adicionar FK para pastaDefinition
+    // TODO adicionar ordenação conforme sugerido por Nuno
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
     private List<Documento> documentosList; 

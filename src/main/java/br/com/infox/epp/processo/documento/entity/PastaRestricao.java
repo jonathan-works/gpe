@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.documento.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,6 +38,7 @@ public class PastaRestricao {
     private Integer alvo;
     
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "tp_pasta_restricao", nullable = false)
     private PastaRestricaoEnum tipoPastaRestricao;
     
@@ -50,7 +53,7 @@ public class PastaRestricao {
     @NotNull
     @Column(name = "in_delete", nullable = false)
     private Boolean delete;
-
+    
     public Integer getId() {
         return id;
     }
@@ -97,5 +100,13 @@ public class PastaRestricao {
 
     public void setDelete(Boolean delete) {
         this.delete = delete;
+    }
+
+    public PastaRestricaoEnum getTipoPastaRestricao() {
+        return tipoPastaRestricao;
+    }
+
+    public void setTipoPastaRestricao(PastaRestricaoEnum tipoPastaRestricao) {
+        this.tipoPastaRestricao = tipoPastaRestricao;
     }
 }
