@@ -1,5 +1,8 @@
 package br.com.infox.epp.processo.documento.entity;
 
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA;
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA_QUERY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -18,6 +23,9 @@ import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 
 @Entity
 @Table(name = PastaRestricao.TABLE_NAME)
+@NamedQueries({
+    @NamedQuery(name = GET_BY_PASTA, query = GET_BY_PASTA_QUERY)
+})
 public class PastaRestricao {
     protected static final String TABLE_NAME = "tb_pasta_restricao";
     private static final String GENERATOR_NAME = "PastaRestricaoGenerator";
