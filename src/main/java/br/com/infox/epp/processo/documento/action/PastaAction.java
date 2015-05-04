@@ -202,6 +202,14 @@ public class PastaAction implements Serializable {
         this.getInstance().setNome(nome);
     }
 
+    public String getDescricao(){
+    	return getInstance().getDescricao();
+    }
+    
+    public void setDescricao(String descricao){
+    	this.getInstance().setDescricao(descricao);
+    }
+    
     public Boolean getVisivelExterno() {
         return getInstance().getVisivelExterno();
     }
