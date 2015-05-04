@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.documento.entity;
+package br.com.infox.epp.fluxo.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,30 +17,30 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 
 @Entity
-@Table(name = PastaRestricao.TABLE_NAME)
-public class PastaRestricao {
-    protected static final String TABLE_NAME = "tb_pasta_restricao";
-    private static final String GENERATOR_NAME = "PastaRestricaoGenerator";
-    private static final String SEQUENCE_NAME = "sq_pasta_restricao";
-
+@Table(name = ModeloPastaRestricao.TABLE_NAME)
+public class ModeloPastaRestricao {
+    protected static final String TABLE_NAME = "tb_modelo_pasta_restricao";
+    private static final String GENERATOR_NAME = "ModeloPastaRestricaoGenerator";
+    private static final String SEQUENCE_NAME = "sq_modelo_pasta_restricao";
+    
     @Id
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR_NAME, sequenceName = SEQUENCE_NAME)
     @GeneratedValue(generator = GENERATOR_NAME, strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_pasta_restricao", nullable = false, unique = true)
+    @Column(name = "id_modelo_pasta_restricao", nullable = false, unique = true)
     private Integer id;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_pasta", nullable = false)
-    private Pasta pasta;
-    
-    @Column(name = "id_alvo", nullable = true)
-    private Integer alvo;
+    @JoinColumn(name = "id_modelo_pasta", nullable = false)
+    private ModeloPasta modeloPasta;
     
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "tp_pasta_restricao", nullable = false)
     private PastaRestricaoEnum tipoPastaRestricao;
+    
+    @Column(name = "id_alvo", nullable = true)
+    private Integer alvo;
     
     @NotNull
     @Column(name = "in_read", nullable = false)
@@ -53,10 +53,7 @@ public class PastaRestricao {
     @NotNull
     @Column(name = "in_delete", nullable = false)
     private Boolean delete;
-    
-    @Column(name = "nr_ordem")
-    private Integer ordem;
-    
+
     public Integer getId() {
         return id;
     }
@@ -65,12 +62,20 @@ public class PastaRestricao {
         this.id = id;
     }
 
-    public Pasta getPasta() {
-        return pasta;
+    public ModeloPasta getModeloPasta() {
+        return modeloPasta;
     }
 
-    public void setPasta(Pasta pasta) {
-        this.pasta = pasta;
+    public void setModeloPasta(ModeloPasta modeloPasta) {
+        this.modeloPasta = modeloPasta;
+    }
+
+    public PastaRestricaoEnum getTipoPastaRestricao() {
+        return tipoPastaRestricao;
+    }
+
+    public void setTipoPastaRestricao(PastaRestricaoEnum tipoPastaRestricao) {
+        this.tipoPastaRestricao = tipoPastaRestricao;
     }
 
     public Integer getAlvo() {
@@ -103,21 +108,5 @@ public class PastaRestricao {
 
     public void setDelete(Boolean delete) {
         this.delete = delete;
-    }
-
-    public PastaRestricaoEnum getTipoPastaRestricao() {
-        return tipoPastaRestricao;
-    }
-
-    public void setTipoPastaRestricao(PastaRestricaoEnum tipoPastaRestricao) {
-        this.tipoPastaRestricao = tipoPastaRestricao;
-    }
-
-    public Integer getOrdem() {
-        return ordem;
-    }
-
-    public void setOrdem(Integer ordem) {
-        this.ordem = ordem;
     }
 }

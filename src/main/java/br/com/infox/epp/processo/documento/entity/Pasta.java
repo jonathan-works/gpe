@@ -52,6 +52,10 @@ public class Pasta implements Serializable, Cloneable {
     @Size(max=250)
     private String nome;
     
+    @Column(name="ds_pasta")
+    @Size(max=250)
+    private String descricao;
+    
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_processo", nullable = false)
@@ -182,5 +186,13 @@ public class Pasta implements Serializable, Cloneable {
 
     public void setEditavel(Boolean editavel) {
         this.editavel = editavel;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }
