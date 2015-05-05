@@ -62,9 +62,6 @@ public class PastaRestricao {
     @Column(name = "in_delete", nullable = false)
     private Boolean delete;
     
-    @Column(name = "nr_ordem")
-    private Integer ordem;
-    
     public Integer getId() {
         return id;
     }
@@ -119,13 +116,5 @@ public class PastaRestricao {
 
     public void setTipoPastaRestricao(PastaRestricaoEnum tipoPastaRestricao) {
         this.tipoPastaRestricao = tipoPastaRestricao;
-    }
-
-    public Integer getOrdem() {
-        return ordem;
-    }
-
-    public void setOrdem(Integer ordem) {
-        this.ordem = ordem;
     }
 }

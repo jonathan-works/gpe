@@ -83,8 +83,10 @@ public class Pasta implements Serializable, Cloneable {
     @Column(name = "in_editavel", nullable = false)
     private Boolean editavel;
     
+    @Column(name = "nr_ordem")
+    private Integer ordem;
+    
     // TODO adicionar FK para pastaDefinition
-    // TODO adicionar ordenação conforme sugerido por Nuno
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
     private List<Documento> documentosList; 
@@ -194,5 +196,13 @@ public class Pasta implements Serializable, Cloneable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Integer getOrdem() {
+        return ordem;
+    }
+
+    public void setOrdem(Integer ordem) {
+        this.ordem = ordem;
     }
 }
