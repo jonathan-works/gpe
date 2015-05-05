@@ -26,8 +26,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.system.entity.Parametro;
-import br.com.infox.epp.system.manager.ParametroManager;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -36,7 +35,6 @@ import com.google.gson.Gson;
 public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(GenerateDocumentoHandler.class);
-	private static final String PARAMETRO_PASTA_DOCUMENTO_GERADO = "pastaDocumentoGerado";
 
 	private GenerateDocumentoConfiguration configuration;
 
@@ -66,11 +64,9 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
 		VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
-		ParametroManager parametroManager = ComponentUtil.getComponent(ParametroManager.NAME);
 		ContextInstance contextInstance = executionContext.getContextInstance();
 		Processo processo = processoManager.getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
 		ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.find(configuration.idClassificacaoDocumento);
-		Parametro parametroNomePastaDocumentoGerado = parametroManager.getParametro(PARAMETRO_PASTA_DOCUMENTO_GERADO);
 		try {
 			ModeloDocumento modeloDocumento = modeloDocumentoManager.find(configuration.idModeloDocumento);
 			ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), contextInstance))
@@ -78,9 +74,10 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 			String texto = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(modeloDocumento.getTituloModeloDocumento(), texto);
 			Documento documento = documentoManager.createDocumento(processo, modeloDocumento.getTituloModeloDocumento(), documentoBin, classificacaoDocumento);
-			 
+			
+			String parametroNomePastaDocumentoGerado = Parametros.PASTA_DOCUMENTO_GERADO.getValue();
 			if (parametroNomePastaDocumentoGerado != null) {
-				Pasta pasta = pastaManager.getPastaByNome(parametroNomePastaDocumentoGerado.getValorVariavel(), processo);
+				Pasta pasta = pastaManager.getPastaByNome(parametroNomePastaDocumentoGerado, processo);
 				if (pasta != null) {
 					documento.setPasta(pasta);
 					documentoManager.update(documento);
