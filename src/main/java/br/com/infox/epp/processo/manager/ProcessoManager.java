@@ -266,6 +266,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		return getDao().getProcessosFilhoNotEndedByTipo(processo, tipoProcesso);
     }
 	
+	public List<Processo> getProcessosFilhoByTipo(Processo processo, String tipoProcesso) {
+		return getDao().getProcessosFilhosByTipo(processo, tipoProcesso);
+    }
+	
 	public List<Processo> getProcessosByIdCaixa(Integer idCaixa) {
 		return getDao().getProcessosByIdCaixa(idCaixa);
 	}
