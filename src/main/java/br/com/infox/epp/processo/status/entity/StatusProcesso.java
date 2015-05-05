@@ -63,7 +63,7 @@ public class StatusProcesso implements Serializable {
 	}
 
 	public String toString() {
-		return this.nome;
+		return this.descricao;
 	}
 
 	@Override
