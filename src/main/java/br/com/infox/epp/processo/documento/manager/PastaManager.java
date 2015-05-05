@@ -42,7 +42,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     
     public List<Pasta> getByProcesso(Processo processo) throws DAOException {
         List<Pasta> pastaList = getDao().getByProcesso(processo);
-        if (pastaList == null || pastaList.isEmpty()) {
+        if (getDefault(processo) == null && (pastaList == null || pastaList.isEmpty())) {
             pastaList = createDefaultFolders(processo); 
         }
         return pastaList;
