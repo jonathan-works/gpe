@@ -2,7 +2,9 @@ package br.com.infox.certificado;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -272,6 +274,7 @@ public class ValidaDocumentoAction implements Serializable {
 	public void setIdDocumento(Integer idDocumento) {
 		validaDocumentoId(idDocumento);
 		this.idDocumento = idDocumento;
+		this.podeIniciarFluxoAnaliseDocumentos = validaPodeIniciarFluxoAnalise();
 	}
 
 	public String getExternalCallback() {
@@ -296,30 +299,54 @@ public class ValidaDocumentoAction implements Serializable {
 		}
 	}
 
-	public boolean isPodeIniciarFluxoAnaliseDocumentos() {
+	public Boolean getpodeIniciarFluxoAnaliseDocumentos() {
+		return this.podeIniciarFluxoAnaliseDocumentos;
+	}
+
+	private Boolean validaPodeIniciarFluxoAnalise() {
 		Documento documento = getDocumento();
 		if (documento == null) {
 			this.podeIniciarFluxoAnaliseDocumentos = false;
 		} else {
-			Papel papelInclusao = documento.getPerfilTemplate().getPapel();
-			this.podeIniciarFluxoAnaliseDocumentos = !papelInclusao.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE) 
-					&& assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
+			this.podeIniciarFluxoAnaliseDocumentos = !papelInclusaoPossuiRecursoAnexar(documento) && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
 			if (this.podeIniciarFluxoAnaliseDocumentos){
-				List<Processo> listProcesso = processoDAO.getProcessosFilhoNotEndedByTipo(documento.getProcesso(),
-						TipoProcesso.DOCUMENTO.toString());
-				for (Processo processo : listProcesso) {
-					MetadadoProcesso metadadoProcesso = processo.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
-					if (metadadoProcesso.getValor().equals(documento.getId().toString())) {
-						this.podeIniciarFluxoAnaliseDocumentos = false;
-						break;
-					}
-				}
+				this.podeIniciarFluxoAnaliseDocumentos = !existeProcessoAnaliseByDocumento(documento);
 			}			
 		}
 		return this.podeIniciarFluxoAnaliseDocumentos;
 	}
 
-	public void setPodeIniciarFluxoAnaliseDocumentos(boolean isDocumentoTotalmenteAssinado) {
+	private boolean existeProcessoAnaliseByDocumento(Documento documento) {
+		List<Processo> listProcesso = processoDAO.getProcessosFilhosByTipo(documento.getProcesso(),
+				TipoProcesso.DOCUMENTO.toString());
+		for (Processo processo : listProcesso) {
+			MetadadoProcesso metadadoProcesso = processo.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
+			if (metadadoProcesso.getValor().equals(documento.getId().toString())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean papelInclusaoPossuiRecursoAnexar(Documento documento) {
+		Papel papelInclusao = documento.getPerfilTemplate().getPapel();
+		if(papelInclusao.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE))
+			return true;
+		
+		Queue<Papel> papeisPais = new LinkedList<Papel>(papelInclusao.getGrupos());
+		while(papeisPais.peek() != null){
+			Papel papelPai = papeisPais.element();
+			papeisPais.remove();
+			if(papelPai.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE))
+				return true;
+			for(Papel papel : papelPai.getGrupos()){
+				papeisPais.add(papel);
+			}
+		}
+		return false;
+	}
+
+	public void setPodeIniciarFluxoAnaliseDocumentos(Boolean isDocumentoTotalmenteAssinado) {
 		this.podeIniciarFluxoAnaliseDocumentos = isDocumentoTotalmenteAssinado;
 	}
 }
