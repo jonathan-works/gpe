@@ -15,6 +15,7 @@ import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
+import br.com.infox.epp.processo.documento.manager.PastaRestricaoAction;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -40,6 +41,8 @@ public class ConsultaController extends AbstractController {
 
     @In
     private PastaAction pastaAction;
+    @In
+    private PastaRestricaoAction pastaRestricaoAction;
     @In
     private DocumentoList documentoList;
     @In
@@ -127,6 +130,8 @@ public class ConsultaController extends AbstractController {
         super.setTab(tab);
         if(tab.equals("tabAnexos") || tab.equals("tabAnexar")){
         	pastaAction.setProcesso(this.getProcesso());
+        	pastaRestricaoAction.setProcesso(this.getProcesso());
+        	
         }
         if(tab.equals("tabAnexos")){
         	documentoList.setProcesso(this.getProcesso());
