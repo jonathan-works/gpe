@@ -6,6 +6,12 @@ public class PastaRestricaoBean {
     private Boolean write;
     private Boolean delete;
 
+    public PastaRestricaoBean() {
+        this.read = false;
+        this.write = false;
+        this.delete = false;
+    }
+    
     public Boolean getRead() {
         return read;
     }

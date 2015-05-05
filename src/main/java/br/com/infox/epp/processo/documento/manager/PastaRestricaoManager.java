@@ -13,6 +13,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.dao.PastaRestricaoDAO;
@@ -31,9 +33,13 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
     public static final String NAME = "pastaRestricaoManager";
     
     @In
-    ParticipanteProcessoManager participanteProcessoManager;
+    private ParticipanteProcessoManager participanteProcessoManager;
     @In
-    PastaManager pastaManager;
+    private PastaManager pastaManager;
+    @In
+    private PapelManager papelManager;
+    @In
+    private LocalizacaoManager localizacaoManager;
 
     public Map<Integer, PastaRestricaoBean> loadRestricoes(Processo processo, UsuarioLogin usuario, Localizacao localizacao, Papel papel) throws DAOException {
         Map<Integer, PastaRestricaoBean> restricoes = new HashMap<>();
@@ -43,26 +49,26 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
             PastaRestricaoBean restricaoBean = new PastaRestricaoBean();
             List<PastaRestricao> restricoesDaPasta = getByPasta(pasta);
             PastaRestricao restricaoDefault = null;
-            Boolean olharRestricaoDefault = true;
+            Boolean usuarioComRestricao = false;
             
             for (PastaRestricao restricao : restricoesDaPasta) {
                 PastaRestricaoEnum tipoRestricao = restricao.getTipoPastaRestricao();
                 
                 if (PastaRestricaoEnum.P.equals(tipoRestricao)) {
-                    populateBeanPapel(restricaoBean, restricao, papel);
-                    olharRestricaoDefault = false;
+                    Boolean temRestricaoPapel = populateBeanPapel(restricaoBean, restricao, papel);
+                    usuarioComRestricao = usuarioComRestricao || temRestricaoPapel;
                 } else if (PastaRestricaoEnum.R.equals(tipoRestricao)) {
-                    populateBeanParticipante(restricaoBean, restricao);
-                    olharRestricaoDefault = false;
+                    Boolean temRestricaoParticipante = populateBeanParticipante(restricaoBean, restricao, usuario);
+                    usuarioComRestricao = usuarioComRestricao || temRestricaoParticipante;
                 } else if (PastaRestricaoEnum.L.equals(tipoRestricao)) {
-                    populateBeanLocalizacao(restricaoBean, restricao, localizacao);
-                    olharRestricaoDefault = false;
+                    Boolean temRestricaoLocalizacao = populateBeanLocalizacao(restricaoBean, restricao, localizacao);
+                    usuarioComRestricao = usuarioComRestricao || temRestricaoLocalizacao;
                 } else if (PastaRestricaoEnum.D.equals(tipoRestricao)) {
                     restricaoDefault = restricao;
                 }
             }
-            if (olharRestricaoDefault) {
-                // TODO tratar o caso da restricaoDefault
+            if (!usuarioComRestricao) {
+                populateBeanDefault(restricaoBean, restricaoDefault);
             }
             
             restricoes.put(pasta.getId(), restricaoBean);
@@ -71,35 +77,95 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
         return restricoes;
     }
     
-    private void populateBeanPapel(PastaRestricaoBean restricaoBean, PastaRestricao restricao, Papel papel) {
-        // TODO implementar
+    /**
+     * Método chamado quando é encontrada uma restrição do tipo Papel.
+     * 
+     * Considera o alvo como o id de um papel.
+     * Verifica se o papel passado por parâmetro está dentro dos papeis membros do alvo.
+     * 
+     * @param restricaoBean bean que está sendo populado
+     * @param restricao restrição a ser analizada
+     * @param papelUsuario papel a ser verificado
+     * @return true se esta restrição afeta o papel informado, false caso contrário
+     */
+    private boolean populateBeanPapel(PastaRestricaoBean restricaoBean, PastaRestricao restricao, Papel papelUsuario) {
+        Papel papelAlvo = papelManager.find(restricao.getAlvo());
+        if (papelManager.getIdentificadoresPapeisMembros(papelAlvo.getIdentificador()).contains(papelUsuario.getIdentificador())) {
+            restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
+            restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
+            restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());
+            return true;
+        }
+        return false;
     }
 
-    private void populateBeanParticipante(PastaRestricaoBean restricaoBean, PastaRestricao restricao) {
-        // TODO implementar
-    }
-    
-    private void populateBeanLocalizacao(PastaRestricaoBean restricaoBean, PastaRestricao restricao, Localizacao localizacao) {
-        // TODO implementar
-    }
-    
-    private List<PastaRestricao> getByPasta(Pasta pasta) {
-        return getDao().getByPasta(pasta);
-    }
-    
-    private Boolean checkAcessParticipante(UsuarioLogin user, PastaRestricao restricao) {
-        Boolean resp = false;
-        PessoaFisica pessoaFisica = user.getPessoaFisica();
+    /**
+     * Método chamado quando é encontrada uma restrição do tipo Participante
+     * 
+     * Caso o alvo seja 1, a restrição especificada se refere aos participantes,
+     * Caso o alvo seja 0, a restrição especificada se refere aos não participantes
+     * 
+     * @param restricaoBean bean que está sendo populado
+     * @param restricao restrição a ser analizada
+     * @param usuarioLogin usuário a ser verificado
+     * @return true se esta restrição afeta o usuário informado, false caso contrário
+     */
+    private boolean populateBeanParticipante(PastaRestricaoBean restricaoBean, PastaRestricao restricao, UsuarioLogin usuarioLogin) {
+        PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
         if (pessoaFisica != null) {
-            Processo processo = restricao.getPasta().getProcesso();
-            ParticipanteProcesso participante = participanteProcessoManager.getParticipanteProcessoByPessoaProcesso(pessoaFisica, processo);
-            if (1 == restricao.getAlvo()) {
-                resp = participante != null && participante.getAtivo() && restricao.getRead();
-            } else if (0 == restricao.getAlvo()) {
-                resp = restricao.getRead() && (participante == null || !participante.getAtivo());
+            ParticipanteProcesso pp = participanteProcessoManager.getParticipanteProcessoByPessoaProcesso(pessoaFisica, restricao.getPasta().getProcesso());
+            Boolean ppAtivo = pp != null && pp.getAtivo();
+            if (1 == restricao.getAlvo() && ppAtivo) {
+                restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
+                restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
+                restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());
+                return true;
+            } else if (0 == restricao.getAlvo() && !ppAtivo) {
+                restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
+                restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
+                restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());
+                return true;
             }
         }
-        return resp;
+        return false;
+    }
+    
+    /**
+     * Método chamado quando é encontrada uma restrição do tipo Localização
+     * 
+     * Considera o alvo como o id de uma Localização
+     * Verifica se a localização passada por parâmetro está abaixo da localização alvo considerando
+     * a estrutura de árvore de localizações.
+     * 
+     * @param restricaoBean bean que está sendo populado
+     * @param restricao restrição a ser analizada
+     * @param localizacao localização a ser verificada
+     * @return true, se a restrição afeta esta localização, falso caso contrário
+     */
+    private boolean populateBeanLocalizacao(PastaRestricaoBean restricaoBean, PastaRestricao restricao, Localizacao localizacao) {
+        Localizacao localizacaoAlvo = localizacaoManager.find(restricao.getAlvo());
+        if (localizacaoManager.isLocalizacaoAncestor(localizacaoAlvo, localizacao)) {
+            restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
+            restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
+            restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());
+            return true;
+        }
+        return false;
     }
 
+    /**
+     * Método chamado quando o usuário não foi afetado por nenhuma restrição específica
+     * 
+     * @param restricaoBean
+     * @param restricaoDefault
+     */
+    private void populateBeanDefault(PastaRestricaoBean restricaoBean, PastaRestricao restricaoDefault) {
+        restricaoBean.setRead(restricaoDefault.getRead());
+        restricaoBean.setWrite(restricaoDefault.getWrite());
+        restricaoBean.setDelete(restricaoDefault.getDelete());
+    }
+
+    public List<PastaRestricao> getByPasta(Pasta pasta) {
+        return getDao().getByPasta(pasta);
+    }
 }

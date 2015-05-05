@@ -47,7 +47,7 @@ public class PastaRestricao {
     
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "tp_pasta_restricao", nullable = false)
+    @Column(name = "tp_restricao", nullable = false)
     private PastaRestricaoEnum tipoPastaRestricao;
     
     @NotNull

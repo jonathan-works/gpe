@@ -180,25 +180,8 @@ public class PastaAction implements Serializable {
         return pasta != null && !pasta.getSistema();
     }
 
-    // TODO esse método inteiro precisa mudar
     public Boolean canSee(Pasta pasta) {
-//        if (!pasta.getVisivelExterno())
-//            return false;
-//        if (pasta.getVisivelExterno() && pasta.getVisivelNaoParticipante())
-//            return true;
-//        UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get(
-//                "usuarioLogado");
-//        if (usuario == null || usuario.getPessoaFisica() == null)
-//            return false;
-//        PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-//        ParticipanteProcesso participante = participanteProcessoManager
-//                .getParticipanteProcessoByPessoaProcesso(pessoaFisica,
-//                        pasta.getProcesso());
-//        return participante != null && participante.getAtivo()
-//                && pessoaFisica.equals(participante.getPessoa());
-        Boolean canSee = false;
-        
-        return canSee;
+        return restricoes.get(pasta.getId()).getRead();
     }
 
     public Pasta getInstance() {
