@@ -123,7 +123,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	restricao.setAlvo(null);
     	restricao.setRead(Boolean.FALSE);
     	restricao.setWrite(Boolean.FALSE);
-    	restricao.setDelete(Boolean.FALSE);    	
+    	restricao.setDelete(Boolean.FALSE); 
+    	new PastaRestricaoManager().persist(restricao); 
     	return pasta;
     }
 }
