@@ -24,6 +24,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.PastaRestricaoAction;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -82,6 +83,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private ConsultaController consultaController;
 	@In
 	private PastaAction pastaAction;
+	@In
+	private PastaRestricaoAction pastaRestricaoAction;
 	@In
 	private DocumentoList documentoList;
 	@In
@@ -254,12 +257,14 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	        }
 	        if (tab.equals("tabAnexos")){
 	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
+	        	pastaRestricaoAction.setProcesso(this.getInstance().getProcessoRoot());
 	        	documentoList.setProcesso(this.getInstance().getProcessoRoot());
 	        	documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 	        	documentoProcessoAction.setListClassificacaoDocumento(null);
 	        }
 	        if(tab.equals("tabAnexar")){
 	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
+	        	pastaRestricaoAction.setProcesso(this.getInstance().getProcessoRoot());
 	        	anexoController.onClickTabAnexar(this.getInstance());
 	        }
 		}
