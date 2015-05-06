@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,11 +134,18 @@ public class PastaAction implements Serializable {
         }
     }
 
-    /* TODO a aba de anexar documentos está pegando esta lista para mostrar as pastas
-     * verificar se deve retornar com as restrições
-     */
     public List<Pasta> getPastaList() {
         return pastaList;
+    }
+    
+    public List<Pasta> getPastaListComRestricaoEscrita() {
+        List<Pasta> pastasRestritas= new ArrayList<>();
+        for (Pasta pasta : pastaList) {
+            if (canWrite(pasta)) {
+                pastasRestritas.add(pasta);
+            }
+        }
+        return pastasRestritas;
     }
 
     public void setPastaList(List<Pasta> pastaList) {

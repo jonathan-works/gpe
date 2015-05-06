@@ -1,8 +1,10 @@
 package br.com.infox.epp.processo.documento.manager;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
@@ -13,15 +15,24 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
+import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PastaRestricaoAction.NAME)
@@ -43,80 +54,156 @@ public class PastaRestricaoAction implements Serializable {
 	private DocumentoList documentoList;
 	@In
 	private PastaRestricaoManager pastaRestricaoManager;
-
+	@In
+	private PapelManager papelManager;
+	@In
+	private LocalizacaoManager localizacaoManager;
+	@In(StatusMessages.COMPONENT_NAME)
+    private StatusMessages statusMessage;
+	@In
+	private InfoxMessages infoxMessages;
+	
+	private static final LogProvider LOG = Logging.getLogProvider(PastaRestricaoAction.class);
+	
 	private Pasta instance;
 	private List<Pasta> pastaList;
 	private Processo processo;
 	private Integer id;
 	private List<PastaRestricao> restricoes;
 	private Boolean pastaSelecionada = false;
-
+	private PastaRestricao restricaoInstance;
+	private Papel alvoRestricaoPapel;
+	private Localizacao alvoRestricaoLocalizacao;
+	private Boolean alvoRestricaoParticipante;
+	
 	@Create
 	public void create() {
-		newInstance();
+	    clearInstances();
 	}
+	
+	private void clearInstances() {
+	    newInstance();
+	    newRestricaoInstance();
+	}
+	
+    public void setProcesso(Processo processo) {
+        this.processo = processo.getProcessoRoot();
+        try {
+            this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
+            clearInstances();
+        } catch (DAOException e) {
+            LOG.error(e);
+            actionMessagesService.handleDAOException(e);
+        }
+    }
+
+	public void selectPasta(Pasta pasta){
+        try {
+            setInstance((Pasta) BeanUtils.cloneBean(pasta));
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+            LOG.error(e);
+            statusMessage.add(Severity.INFO, "Erro ao selecionar pasta.");
+        }
+        setRestricoes(pasta);
+        setPastaSelecionada(true);
+    }
 
 	public void newInstance() {
 		setInstance(new Pasta());
-		setRemovivel(true);
-		setSistema(false);
+		getInstance().setRemovivel(true);
+		getInstance().setSistema(false);
+		setPastaSelecionada(false);
+	}
+	
+	public void newRestricaoInstance() {
+	    setRestricaoInstance(new PastaRestricao());
+	    setAlvoRestricaoPapel(new Papel());
+	    setAlvoRestricaoLocalizacao(new Localizacao());
+	    setAlvoRestricaoParticipante(true);
 	}
 
-	public void persist() {
+	public boolean validateNomePasta() {
+	    String nome = getInstance().getNome();
+	    Integer id = getInstance().getId();
+	    for (Pasta pasta : getPastaList()) {
+            if (nome.equals(pasta.getNome()) && !(id == pasta.getId())) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	
+	public boolean validateOrdem() {
+	    Integer ordem = getInstance().getOrdem();
+	    Integer id = getInstance().getId();
+	    for (Pasta pasta : getPastaList()) {
+	        if (ordem == pasta.getOrdem() && !(id == pasta.getId())) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	
+	private boolean prePersist() throws DAOException{
+		if (!validateNomePasta()) {
+		    statusMessage.add(Severity.INFO, "Já existe uma pasta com este nome.");
+		    return false;
+		}
+		if (!validateOrdem()) {
+		    statusMessage.add(Severity.INFO, "Já existe uma pasta com este número de ordem.");
+		    return false;
+		}
+	    getInstance().setProcesso(processo);
+		getInstance().setSistema(false);
+		pastaManager.persistWithDefault(getInstance());
+		setPastaList(pastaManager.getByProcesso(processo));
+		setPastaSelecionada(false);
+		return true;
+	}
+	
+	public void persistPasta() {
 		try {
-			String nome = getNome();
-			setPastaList(processo.getPastaList());
-			for (Pasta pasta : getPastaList()) {
-				if (nome.equals(pasta.getNome())) {
-					FacesMessages.instance().add(Severity.INFO, "Já existe uma pasta com este nome.");
-					return;
-				}
+			if (prePersist()) {
+				statusMessage.add(StatusMessage.Severity.ERROR, "Pasta adicionada com sucesso.");
 			}
-			getInstance().setProcesso(processo);
-			setSistema(false);
-			Boolean editavel = (getEditavel() == null) ? Boolean.TRUE : getEditavel();
-			setEditavel(editavel);
-			Boolean removivel = (getRemovivel() == null) ? Boolean.TRUE : getRemovivel();
-			setRemovivel(removivel);
-			pastaManager.persistWithDefault(getInstance());
-			setPastaList(pastaManager.getByProcesso(processo));
-			newInstance();
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Pasta adicionada com sucesso.");
 		} catch (DAOException e) {
-			e.printStackTrace();
+		    LOG.error(e);
 			actionMessagesService.handleDAOException(e);
 		}
 	}
 
-	public void update() {
+	public void updatePasta() {
 		try {
-			Pasta pasta = pastaManager.find(getId());
-			pasta.setNome(getNome());
-			pasta.setDescricao(getDescricao());
-			pastaManager.update(pasta);
-			newInstance();
-			FacesMessages.instance().add(Severity.INFO, "Pasta atualizada com sucesso.");
+		    if (!validateNomePasta()) {
+		        statusMessage.add(Severity.INFO, "Já existe uma pasta com este nome.");
+		    } else  if (!validateOrdem()) {
+		        statusMessage.add(Severity.INFO, "Já existe uma pasta com este número de ordem.");
+		    } else {
+    			pastaManager.update(getInstance());
+    			statusMessage.add(Severity.INFO, "Pasta atualizada com sucesso.");
+		    }
 		} catch (DAOException e) {
+		    LOG.error(e);
 			actionMessagesService.handleDAOException(e);
 		}
 	}
 
-	public void remove(Pasta pasta) {
+	public void removePasta(Pasta pasta) {
 		try {
 			if (pastaManager == null) {
 				pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
 			}
 			documentoList.checkPastaToRemove(pasta);
-			pastaManager.remove(pasta);
-			newInstance();
+			pastaManager.deleteComRestricoes(pasta);
 			setPastaList(pastaManager.getByProcesso(processo.getProcessoRoot()));
 			FacesMessages.instance().add(Severity.INFO, "Pasta removida com sucesso.");
 		} catch (DAOException e) {
+		    LOG.error(e);
 			actionMessagesService.handleDAOException(e);
 		}
 	}
 
-	public Boolean canRemove(Pasta pasta) {
+	public Boolean canRemovePasta(Pasta pasta) {
 		if (pasta.getRemovivel()) {
 			List<Documento> documentoList = pasta.getDocumentosList();
 			return (documentoList == null || documentoList.isEmpty());
@@ -124,32 +211,148 @@ public class PastaRestricaoAction implements Serializable {
 		return false;
 	}
 
-	public Boolean canEdit(Pasta pasta) {
-		return pasta.getEditavel();
+	public Boolean canEditRestricao(PastaRestricao restricao) {
+	    return restricao.getPasta().getEditavel();
+	}
+	/**
+	 * Mesmo que uma pasta seja editável, não se pode remover a restrição do tipo 'DEFAULT'
+	 * 
+	 * @param restricao
+	 * @return true caso possa remover, falso caso contrário
+	 */
+	public Boolean canRemoveRestricao(PastaRestricao restricao) {
+	    if (restricao.getPasta().getEditavel()) {
+	        return !restricao.getTipoPastaRestricao().equals(PastaRestricaoEnum.D);
+	    }
+	    return false;
 	}
 
+	/**
+	 * O usuário só pode editar as restrições daquelas pastas que foram marcadas como editáveis
+	 * no modelo da pasta, dentro da configuração do fluxo
+	 * 
+	 * @return true caso possa editar, falso caso contrário.
+	 */
+	public Boolean canEditRestricoes() {
+	    return getPastaSelecionada() && getInstance().getEditavel();
+	}
+	
+	public List<PastaRestricaoEnum> getTiposRestricao() {
+	    return PastaRestricaoEnum.getValuesSemDefault();
+	}
+	
+	public Boolean isRestricaoDefault() {
+	    return PastaRestricaoEnum.D.equals(getRestricaoInstance().getTipoPastaRestricao());
+	}
+	
+	public Boolean isRestricaoLocalizacao() {
+        return PastaRestricaoEnum.L.equals(getRestricaoInstance().getTipoPastaRestricao());
+    }
+	
+	public Boolean isRestricaoPapel() {
+        return PastaRestricaoEnum.P.equals(getRestricaoInstance().getTipoPastaRestricao());
+    }
+	
+	public Boolean isRestricaoParticipante() {
+        return PastaRestricaoEnum.R.equals(getRestricaoInstance().getTipoPastaRestricao());
+    }
+	
+	public Object getAlvoRestricaoPapel() {
+	    return alvoRestricaoPapel; 
+	}
+	
+	public void setAlvoRestricaoPapel(Papel papel) {
+	    if (isRestricaoPapel()) {
+	        getRestricaoInstance().setAlvo(papel.getIdPapel());
+	    } else {
+	        return;
+	    }
+	    this.alvoRestricaoPapel = papel;
+	}
+	
+	public Localizacao getAlvoRestricaoLocalizacao() {
+        return alvoRestricaoLocalizacao;
+    }
+
+    public void setAlvoRestricaoLocalizacao(Localizacao localizacao) {
+        if (isRestricaoLocalizacao() && localizacao != null) {
+            getRestricaoInstance().setAlvo(localizacao.getIdLocalizacao());
+        } else {
+            return;
+        }
+        this.alvoRestricaoLocalizacao = localizacao;
+    }
+
+    public Boolean getAlvoRestricaoParticipante() {
+        return alvoRestricaoParticipante;
+    }
+
+    public void setAlvoRestricaoParticipante(Boolean inParticipante) {
+        if (isRestricaoParticipante()) {
+            getRestricaoInstance().setAlvo(inParticipante ? 1 : 0);
+        }
+        this.alvoRestricaoParticipante = inParticipante;
+    }
+
+    public void persistRestricao() {
+	    PastaRestricao restricao = getRestricaoInstance();
+	    restricao.setPasta(getInstance());
+	    try {
+            pastaRestricaoManager.persist(restricao);
+            getRestricoes().add(restricao);
+        } catch (DAOException e) {
+            LOG.error(e);
+            actionMessagesService.handleDAOException(e);
+        }
+	}
+	
+    public void removeRestricao(PastaRestricao restricao) {
+        try {
+            pastaRestricaoManager.remove(restricao);
+            setRestricoes(getInstance());
+        } catch (DAOException e) {
+            LOG.error(e);
+            actionMessagesService.handleDAOException(e);
+        }
+    }
+    
+    public void loadRestricao(PastaRestricao restricao) {
+        newRestricaoInstance();
+        setRestricaoInstance(restricao);
+    }
+    
+    public void updateRestricao() {
+        try {
+            pastaRestricaoManager.update(getRestricaoInstance());
+        } catch (DAOException e) {
+            LOG.error(e);
+            actionMessagesService.handleDAOException(e);
+        }
+    }
+    
+    public String getAlvoFormatado(PastaRestricao restricao) {
+        if (PastaRestricaoEnum.D.equals(restricao.getTipoPastaRestricao())) {
+            return (infoxMessages.get("pasta.restricao.alvoTodos"));
+        } else if (PastaRestricaoEnum.P.equals(restricao.getTipoPastaRestricao())) {
+            return papelManager.find(restricao.getAlvo()).toString();
+        } else if (PastaRestricaoEnum.R.equals(restricao.getTipoPastaRestricao())) {
+            return restricao.getAlvo() == 1 ? infoxMessages.get("pasta.restricao.participantes") : infoxMessages.get("pasta.restricao.naoParticipantes");
+        } else if (PastaRestricaoEnum.L.equals(restricao.getTipoPastaRestricao())) {
+            return localizacaoManager.find(restricao.getAlvo()).getCaminhoCompletoFormatado(); 
+        }
+        return null;
+    }
+    
+	public List<Papel> getAlvoPapelList() {
+	    return papelManager.getPapeisOrdemAlfabetica();
+	}
+	
 	public Pasta getInstance() {
 		return instance;
 	}
 
 	public void setInstance(Pasta pasta) {
 		this.instance = pasta;
-	}
-
-	public String getNome() {
-		return getInstance().getNome();
-	}
-
-	public void setNome(String nome) {
-		this.getInstance().setNome(nome);
-	}
-
-	public Boolean getSistema() {
-		return getInstance().getSistema();
-	}
-
-	public void setSistema(Boolean sistema) {
-		getInstance().setSistema(sistema);
 	}
 
 	public List<Pasta> getPastaList() {
@@ -160,33 +363,8 @@ public class PastaRestricaoAction implements Serializable {
 		this.pastaList = pastaList;
 	}
 
-	public void setEditavel(Boolean editavel) {
-		getInstance().setEditavel(editavel);
-	}
-
-	public Boolean getEditavel() {
-		return getInstance().getEditavel();
-	}
-
-	public void setRemovivel(Boolean removivel) {
-		getInstance().setRemovivel(removivel);
-	}
-
-	public Boolean getRemovivel() {
-		return getInstance().getRemovivel();
-	}
-
-	public void setProcesso(Processo processo) {
-        this.processo = processo.getProcessoRoot();
-        try {
-            this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
-        } catch (DAOException e) {
-            actionMessagesService.handleDAOException(e);
-        }
-	}
-
 	public Processo getProcesso() {
-		return getInstance().getProcesso();
+		return processo;
 	}
 
 	public Integer getId() {
@@ -198,14 +376,6 @@ public class PastaRestricaoAction implements Serializable {
 		setInstance(pastaManager.find(id));
 	}
 
-	public String getDescricao() {
-		return getInstance().getDescricao();
-	}
-
-	public void setDescricao(String descricao) {
-		getInstance().setDescricao(descricao);
-	}
-
 	public List<PastaRestricao> getRestricoes() {
 		return restricoes;
 	}
@@ -214,12 +384,6 @@ public class PastaRestricaoAction implements Serializable {
 		this.restricoes = pastaRestricaoManager.getByPasta(pasta);
 	}
 	
-	public void selectPasta(Pasta pasta){
-		setInstance(pasta);
-		setRestricoes(pasta);
-		setPastaSelecionada(true);
-	}
-
 	public Boolean getPastaSelecionada() {
 		return pastaSelecionada;
 	}
@@ -227,8 +391,12 @@ public class PastaRestricaoAction implements Serializable {
 	public void setPastaSelecionada(Boolean pastaSelecionada) {
 		this.pastaSelecionada = pastaSelecionada;
 	}
-	
-	
-	
 
+    public PastaRestricao getRestricaoInstance() {
+        return restricaoInstance;
+    }
+
+    public void setRestricaoInstance(PastaRestricao restricaoInstance) {
+        this.restricaoInstance = restricaoInstance;
+    }
 }

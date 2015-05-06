@@ -91,4 +91,8 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
     public UsuarioPerfil getPerfilTermoAdesao(UsuarioLogin usuario){
     	return getDao().getPerfilTermoAdesao(usuario);
     }
+    
+    public List<Papel> getPapeisOrdemAlfabetica() {
+        return getDao().getPapeisOrdemAlfabetica();
+    }
 }

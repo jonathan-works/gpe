@@ -4,25 +4,30 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Name(PastaList.NAME)
 @Scope(ScopeType.CONVERSATION)
+@AutoCreate
 public class PastaList extends EntityList<Pasta> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pastaList";
-    private final String DEFAULT_EJBQL = "select o from Pasta o";
+    private final String DEFAULT_EJBQL = "select o from Pasta o where o.processo = #{pastaList.processo}";
     private final String DEFAULT_ORDER = "nome"; 
+    
+    private Processo processo;
     
     @Override
     public List<Pasta> getResultList() {
-        if (getEntity().getProcesso() == null) {
+        if (processo == null) {
             return null;
         }
         return super.getResultList();
@@ -30,7 +35,7 @@ public class PastaList extends EntityList<Pasta> {
     
     @Override
     public Long getResultCount() {
-        if (getEntity().getProcesso() == null) {
+        if (processo == null) {
             return 0L;
         }
         return super.getResultCount();
@@ -55,6 +60,14 @@ public class PastaList extends EntityList<Pasta> {
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
+    }
+
+    public Processo getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
     }
 
 }

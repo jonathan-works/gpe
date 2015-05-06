@@ -1,6 +1,11 @@
 package br.com.infox.epp.processo.documento.type;
 
-public enum PastaRestricaoEnum {
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.infox.core.type.Displayable;
+
+public enum PastaRestricaoEnum implements Displayable {
     
     D("Default"),
     P("Papel"),
@@ -15,5 +20,13 @@ public enum PastaRestricaoEnum {
     
     public String getLabel() {
         return this.label;
+    }
+    
+    public static List<PastaRestricaoEnum> getValuesSemDefault() {
+        List<PastaRestricaoEnum> list = new ArrayList<>(3);
+        list.add(PastaRestricaoEnum.P);
+        list.add(PastaRestricaoEnum.R);
+        list.add(PastaRestricaoEnum.L);
+        return list;
     }
 }

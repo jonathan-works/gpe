@@ -7,6 +7,7 @@ import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_IDENTIFICADORES
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_BY_LOCALIZACAO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_ORDEM_AFABETICA;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PARAM_IDENTIFICADOR;
@@ -92,5 +93,8 @@ public class PapelDAO extends DAO<Papel> {
         parameters.put(PARAM_USUARIO, usuario);
         return getNamedSingleResult(GET_PERFIL_TERMO_ADESAO, parameters);
     }
-
+    
+    public List<Papel> getPapeisOrdemAlfabetica() {
+        return getNamedResultList(PAPEIS_ORDEM_AFABETICA);
+    }
 }

@@ -15,9 +15,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
-import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
-import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -34,6 +32,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private DocumentoService documentoService;
     @In
     private MetadadoProcessoManager metadadoProcessoManager;
+    @In
+    private PastaRestricaoManager pastaRestricaoManager;
     
     public Pasta getDefaultFolder(Processo processo) throws DAOException {
         Pasta pasta = getDefault(processo);
@@ -114,17 +114,18 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         	
     }
     
-    //TODO Persist a restrição
     public Pasta persistWithDefault(Pasta o) throws DAOException {
+    	Boolean editavel = (o.getEditavel() == null) ? Boolean.TRUE : o.getEditavel();
+    	o.setEditavel(editavel);
+		Boolean removivel = (o.getRemovivel() == null) ? Boolean.TRUE : o.getRemovivel();
+		o.setRemovivel(removivel);
     	Pasta pasta = super.persist(o);
-    	PastaRestricao restricao =  new PastaRestricao();
-    	restricao.setPasta(pasta);
-    	restricao.setTipoPastaRestricao(PastaRestricaoEnum.D);
-    	restricao.setAlvo(null);
-    	restricao.setRead(Boolean.FALSE);
-    	restricao.setWrite(Boolean.FALSE);
-    	restricao.setDelete(Boolean.FALSE); 
-    	new PastaRestricaoManager().persist(restricao); 
+    	pastaRestricaoManager.persistRestricaoDefault(pasta); 
     	return pasta;
+    }
+
+    public void deleteComRestricoes(Pasta pasta) throws DAOException {
+        pastaRestricaoManager.deleteByPasta(pasta);
+        remove(pasta);
     }
 }

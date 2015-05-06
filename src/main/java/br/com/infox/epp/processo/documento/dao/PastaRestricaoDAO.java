@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.dao;
 
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.DELETE_BY_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.PARAM_PASTA;
 
@@ -11,6 +12,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 
@@ -26,5 +28,11 @@ public class PastaRestricaoDAO extends DAO<PastaRestricao> {
         Map<String, Object> params = new HashMap<>();
         params.put(PARAM_PASTA, pasta);
         return getNamedResultList(GET_BY_PASTA, params);
+    }
+
+    public void deleteByPasta(Pasta pasta) throws DAOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put(PARAM_PASTA, pasta);
+        executeNamedQueryUpdate(DELETE_BY_PASTA, params);
     }
 }

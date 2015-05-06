@@ -25,6 +25,6 @@
     <action execute="#{sigiloProcessoList.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
     <action execute="#{sigiloDocumentoAction.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
     <action execute="#{documentoAnexoList.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
-    <action execute="#{pastaList.entity.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
+    <action execute="#{pastaList.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
 
 </page>

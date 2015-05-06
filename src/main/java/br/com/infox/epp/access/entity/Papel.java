@@ -19,6 +19,8 @@ import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_C
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_CLASSIFICACAO_DOCUMENTO_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_ORDEM_AFABETICA;
+import static br.com.infox.epp.access.query.PapelQuery.PAPEIS_ORDEM_AFABETICA_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR;
 import static br.com.infox.epp.access.query.PapelQuery.PAPEL_BY_IDENTIFICADOR_QUERY;
 import static br.com.infox.epp.access.query.PapelQuery.PERMISSOES_BY_PAPEL;
@@ -65,7 +67,9 @@ import br.com.infox.seam.util.ComponentUtil;
     @NamedQuery(name = PAPEIS_BY_LOCALIZACAO, query = PAPEIS_BY_LOCALIZACAO_QUERY),
     @NamedQuery(name = HAS_TO_SIGN_TERMO_ADESAO, query = HAS_TO_SIGN_TERMO_ADESAO_QUERY),
     @NamedQuery(name = GET_PERFIL_TERMO_ADESAO, query = GET_PERFIL_TERMO_ADESAO_QUERY),
-    @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY) })
+    @NamedQuery(name = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO, query = PAPEIS_NAO_ASSOCIADOS_A_TIPO_MODELO_DOCUMENTO_QUERY),
+    @NamedQuery(name = PAPEIS_ORDEM_AFABETICA, query = PAPEIS_ORDEM_AFABETICA_QUERY)
+})
 @NamedNativeQueries({ @NamedNativeQuery(name = PERMISSOES_BY_PAPEL, query = PERMISSOES_BY_PAPEL_QUERY) })
 public class Papel implements java.io.Serializable {
 

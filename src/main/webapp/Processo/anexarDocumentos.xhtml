@@ -13,11 +13,11 @@
     switchType="client"
     expanded="false"
     header="#{infoxMessages['pasta.pastas']}">
-    <rich:list value="#{pastaAction.pastaList}"
+    <rich:list value="#{pastaAction.getPastaListComRestricaoEscrita()}"
       styleClass="folder-ul"
       rowClass="folder-li"
       var="pasta">
-      <s:div rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)}">
+      <s:div>
 	      <h:graphicImage
 	        url="#{wiSkin.imageFolder}/folder.png"
 	        rendered="true"
@@ -60,7 +60,7 @@
             id="pastaDocumentoEditor"
             label="#{infoxMessages['pasta.pasta']}"
             value="#{documentoEditor.pasta}"
-            items="#{pastaAction.pastaList}"
+            items="#{pastaAction.getPastaListComRestricaoEscrita()}"
             required="true"
             rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
             showLabelSelecione="false">
@@ -163,7 +163,7 @@
             id="pastaDocumentoUploader"
             label="#{infoxMessages['pasta.pasta']}"
             value="#{documentoUploader.pasta}"
-            items="#{pastaAction.pastaList}"
+            items="#{pastaAction.getPastaListComRestricaoEscrita()}"
             required="false"
             rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
             showLabelSelecione="false">

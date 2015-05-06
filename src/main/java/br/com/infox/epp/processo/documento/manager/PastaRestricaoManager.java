@@ -168,4 +168,19 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
     public List<PastaRestricao> getByPasta(Pasta pasta) {
         return getDao().getByPasta(pasta);
     }
+
+    public void deleteByPasta(Pasta pasta) throws DAOException {
+        getDao().deleteByPasta(pasta);
+    }
+    
+    public PastaRestricao persistRestricaoDefault(Pasta pasta) throws DAOException {
+        PastaRestricao restricao = new PastaRestricao();
+        restricao.setPasta(pasta);
+        restricao.setTipoPastaRestricao(PastaRestricaoEnum.D);
+        restricao.setAlvo(null);
+        restricao.setRead(Boolean.TRUE);
+        restricao.setWrite(Boolean.TRUE);
+        restricao.setDelete(Boolean.TRUE); 
+        return persist(restricao);
+    }
 }

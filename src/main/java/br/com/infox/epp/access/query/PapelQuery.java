@@ -54,4 +54,7 @@ public interface PapelQuery {
     String GET_PERFIL_TERMO_ADESAO = "getPerfilTermoAdesao";
     String GET_PERFIL_TERMO_ADESAO_QUERY = "select up from UsuarioPerfil up inner join up.perfilTemplate pt inner join pt.papel p "
     		+ "where p.termoAdesao = true and up.ativo = true and pt.ativo = true and up.usuarioLogin = :" + PARAM_USUARIO;
+    
+    String PAPEIS_ORDEM_AFABETICA = "getPapeisOrdemAlfabetica";
+    String PAPEIS_ORDEM_AFABETICA_QUERY = "select o from Papel o order by o.nome";
 }
