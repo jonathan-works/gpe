@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+
+    <wi:dataTable id="pastaTable"
+        bean="#{pastaList}"
+        values="#{pastaList.list(15)}"
+        rowId="#{row.id}" >
+
+        <ui:define name="searchForm">
+            <wi:searchForm formId="pastaSearchForm" 
+                formTitle="#{infoxMessages['searchForm.title']}">
+                
+            <wi:inputText id="nome" value="#{pastaList.entity.nome}"
+                    label="#{infoxMessages['pasta.nome']}" />
+                   
+                <ui:define name="buttons">
+					<wi:commandButton id="searchButton"
+						value="#{infoxMessages['button.pesquisar']}"
+						action="#{searchAction}" styleClass="buttons"
+						reRender="#{wi:get(searchReRender, 'pageBody')}">
+						<a:param assignTo="#{bean.page}" value="1" />
+					</wi:commandButton>
+						<a:commandButton id="clearButton"
+							onclick="$('##{formId}').clearForm();showLoading();"
+							oncomplete="hideLoading();"
+							action="#{elFunctions.invokeMethod(clearAction)}"
+							value="#{infoxMessages['button.limpar']}" execute="@this"
+							render="#{wi:get(clearReRender, 'pageBody')}"
+							styleClass="buttons" />
+					<wi:commandButton id="addPastaBtn"
+						value="#{infoxMessages['documentoProcesso.addFolder']}"
+						rendered="#{s:hasPermission('/pages/Pasta/adicionarPasta', 'access')}"
+						onclick="#{rich:component('anexarPastaPanel')}.show();"
+						action="#{pastaRestricaoAction.newInstance()}"/>
+				</ui:define>
+                     
+            </wi:searchForm>
+        </ui:define>
+
+        <ui:define name="headerToolBar" />
+        <ui:define name="toolBar">      
+        	<a:commandLink action="#{pastaRestricaoAction.selectPasta(row)}" 
+				execute="@this" limitRender="true" rendered="true"
+				render="pastaRestricaoDiv"
+				onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['pasta.restricoes']}" />
+			</a:commandLink>
+        </ui:define>
+        <wi:columnOutputText columnId="nomePasta"
+            columnHeader="#{infoxMessages['pasta.nome']}"
+            value="#{row.nome}" />
+        <wi:columnOutputText columnId="tipoPasta"
+            columnHeader="#{infoxMessages['pasta.descricao']}"
+            value="#{row.descricao}" />
+        <wi:columnBoolean
+	       	columnId="pastaEditavel"
+	        columnHeader="#{infoxMessages['pasta.editavel']}"
+      		value="#{row.editavel}" />
+
+    </wi:dataTable>
+
+    <br />
+		<s:div id="pastaRestricaoDiv">
+	<br />
+			<wi:dataTable id="pastaRestricaoTable"
+				values="#{pastaRestricaoAction.restricoes}" rowId="#{row.id}"
+				showSearchForm="false" showGrid="#{pastaRestricaoAction.pastaSelecionada}"
+				tableTitle="#{infoxMessages['pasta.restricoes']} - #{pastaRestricaoAction.instance}">
+
+				<ui:define name="headerToolBar" />
+				<ui:define name="toolBar">
+					<wi:toolBar id="viewPastaRestricao" rendered="true"
+						reRender="pastaRestricaoDiv" url="#{wiSkin.imageFolder}/view.png" />
+					<wi:toolBar id="removePastaRestricao" rendered="true"
+						reRender="pastaRestricaoDiv"
+						url="#{wiSkin.imageFolder}/remove.png" />
+				</ui:define>
+				
+				<wi:columnEnum columnId="restricaoTipo"
+					columnHeader="#{infoxMessages['pasta.tipoRestricao']}"
+					value="#{row.tipoPastaRestricao}" />
+				<wi:columnOutputText columnId="restricaoAlvo"
+					columnHeader="#{infoxMessages['pasta.restricaoAlvo']}" value="#{row.alvo}" />
+				<wi:columnBoolean columnId="restricaoVisualizar"
+					columnHeader="#{infoxMessages['pasta.visualizarRestricao']}"
+					value="#{row.read}" />
+				<wi:columnBoolean columnId="restricaoInserir"
+					columnHeader="#{infoxMessages['pasta.inserirRestricao']}"
+					value="#{row.write}" />
+				<wi:columnBoolean columnId="restricaoRetirar"
+					columnHeader="#{infoxMessages['pasta.retirarRestricao']}"
+					value="#{row.delete}" />
+			</wi:dataTable>
+
+			<wi:commandButton id="addRestricaoButton" 
+				value="#{infoxMessages['pasta.adicionarRestricao']}" 
+				rendered="#{pastaRestricaoAction.pastaSelecionada}" />
+		</s:div>
+	<script type="text/javascript">
+      function clearAnexarPastaFields() {
+    		#{rich:jQuery('anexarPastaInputName')}.val('');
+    		#{rich:jQuery('anexarPastaInputDescricao')}.val('');
+    		$('.errorFields.errors').remove();
+    	    $('.errors').removeClass('errors');
+      }
+  </script>
+
+	<rich:popupPanel
+    id="anexarPastaPanel"
+    moveable="true"
+    show="false"
+    resizeable="false"
+    maxWidth="290"
+    maxHeight="190"
+    header="#{infoxMessages['pasta.add']}"
+    onbeforehide="clearAnexarPastaFields();">
+    <f:facet name="controls">
+      <h:graphicImage
+        id="pastaPanelCloseBtn"
+        styleClass="mp-close"
+        value="#{wiSkin.imageFolder}/closeMP.gif"
+        onmouseup="#{rich:component('anexarPastaPanel')}.hide();" />
+      </f:facet>
+      <h:form id="anexarPastaForm">
+        <wi:inputText
+          	id="anexarPastaInputName"
+          	value="#{pastaRestricaoAction.nome}"
+          	required="true"
+          	maxlength="250"
+        	label="#{infoxMessages['pasta.nome']}">
+        </wi:inputText>
+		<wi:inputText
+        	id="anexarPastaInputDescricao"
+        	value="#{pastaRestricaoAction.descricao}"
+        	required="false"
+        	maxlength="250"
+        	label="#{infoxMessages['pasta.descricao']}">
+	    </wi:inputText>
+        <br />
+        <wi:commandButton
+          id="addPastaButton"
+          action="#{pastaRestricaoAction.persist()}"
+          execute="@form"
+          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('anexarPastaPanel')}.hide();}else{clearAnexarPastaFields()}"
+          value="#{infoxMessages['pasta.add']}"
+          reRender="@form, pastaTable, pastaTablePanel, pastaRestricaoDiv" />
+      </h:form>
+    </rich:popupPanel>
+    
+</ui:composition>

@@ -1,5 +1,8 @@
 package br.com.infox.epp.fluxo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,10 +11,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 
 @Entity
 @Table(name = ModeloPasta.TABLE_NAME)
@@ -51,8 +57,15 @@ public class ModeloPasta {
     @NotNull
     @Column(name = "in_editavel", nullable = false)
     private Boolean editavel;
-
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloPasta")
+    private List<ModeloPastaRestricao> restricoes;
+    
     // TODO adicionar ordenação conforme sugerido por Nuno
+    
+    public ModeloPasta() {
+    	restricoes = new ArrayList<>();
+    }
     
     public Integer getId() {
         return id;
@@ -109,4 +122,12 @@ public class ModeloPasta {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+    
+	public List<ModeloPastaRestricao> getRestricoes() {
+		return restricoes;
+	}
+
+	public void setRestricoes(List<ModeloPastaRestricao> restricoes) {
+		this.restricoes = restricoes;
+	}
 }
