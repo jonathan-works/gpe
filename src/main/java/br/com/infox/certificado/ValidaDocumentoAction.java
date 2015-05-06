@@ -171,6 +171,7 @@ public class ValidaDocumentoAction implements Serializable {
 					}
 				}
 				listAssinaturaDocumento = null;
+				setPodeIniciarFluxoAnaliseDocumentos(validaPodeIniciarFluxoAnalise());
 			} catch (CertificadoException | AssinaturaException | DAOException e) {
 				LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
 				FacesMessages.instance().add(Severity.ERROR, e.getMessage());
