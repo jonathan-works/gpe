@@ -67,7 +67,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
                     restricaoDefault = restricao;
                 }
             }
-            if (!usuarioComRestricao) {
+            if (!usuarioComRestricao && restricaoDefault != null) {
                 populateBeanDefault(restricaoBean, restricaoDefault);
             }
             

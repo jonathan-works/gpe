@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.list;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -13,7 +14,6 @@ import org.jboss.seam.security.Identity;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
@@ -42,6 +42,14 @@ public class DocumentoList extends EntityList<Documento> {
     @In private PastaManager pastaManager;
     @In private ActionMessagesService actionMessagesService;
 
+    @Override
+    public List<Documento> list(int maxResult) {
+        if (getEntity().getPasta() == null) {
+            return null;
+        }
+        return super.list(maxResult);
+    }
+    
     @Override
     protected void addSearchFields() {
         addSearchField("pasta", SearchCriteria.IGUAL);
@@ -83,14 +91,6 @@ public class DocumentoList extends EntityList<Documento> {
     public void setProcesso(Processo processo) {
         Documento documento = getEntity();
         documento.setProcesso(processo);
-        if (documento.getPasta() == null) {
-            try {
-                Pasta pasta = pastaManager.getDefaultFolder(documento.getProcesso());
-                documento.setPasta(pasta);
-            } catch (DAOException e) {
-                actionMessagesService.handleDAOException(e);
-            }
-        }
     }
 
     public void checkPastaToRemove(Pasta toRemove) {
