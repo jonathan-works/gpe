@@ -337,7 +337,7 @@ public class ComunicacaoService {
 
 	private void rollbackAndThrow(String message, Exception cause) throws DAOException {
 		try {
-			Transaction.instance().rollback();
+			Transaction.instance().setRollbackOnly();
 			throw new DAOException(message, cause);
 		} catch (IllegalStateException | SecurityException | SystemException e) {
 			throw new DAOException(e);
