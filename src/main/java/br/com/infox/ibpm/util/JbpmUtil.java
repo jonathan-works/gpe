@@ -16,8 +16,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ManagedJbpmContext;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
@@ -35,6 +33,9 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
+import br.com.infox.seam.transaction.TransactionService;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(JbpmUtil.NAME)
@@ -80,6 +81,9 @@ public class JbpmUtil {
     }
 
     public static Session getJbpmSession() {
+    	// Iniciando transação para evitar erro ao chamar este método fora de uma transação, como ao carregar a combo de subprocessos
+    	// @Transactional(REQUIRED), mas o método é estático
+		TransactionService.beginTransaction();
         return ManagedJbpmContext.instance().getSession();
     }
 

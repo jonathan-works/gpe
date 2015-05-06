@@ -369,7 +369,7 @@ public class TaskInstanceHome implements Serializable {
 		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
 		documento.setIdJbpmTask(getCurrentTaskInstance().getId());
 		documento.setPasta(pastaManager.getDefaultFolder(processoEpaHome.getInstance()));
-		String descricao = JbpmUtil.instance().getMessages().get(variableAccess.getMappedName().split(":")[1]);
+		String descricao = JbpmUtil.instance().getMessages().get(processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getFluxo() + ":" + variableAccess.getMappedName().split(":")[1]);
 		documento.setDescricao(descricao == null ? "-" : descricao);
 		documentoManager.persist(documento);
 	}

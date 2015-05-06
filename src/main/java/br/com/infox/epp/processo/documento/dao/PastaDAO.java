@@ -1,6 +1,17 @@
 package br.com.infox.epp.processo.documento.dao;
 
-import static br.com.infox.epp.processo.documento.query.PastaQuery.*;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_EXCLUIDO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SIGILO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_NOME;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_LOCALIZACAO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NOME;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PASTA;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA_CLASSIFICACAO_DOCUMENTO_QUERY;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA_QUERY;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,5 +61,13 @@ public class PastaDAO extends DAO<Pasta> {
 		}
 		parameters.put(PARAM_PASTA, pasta);
 		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_QUERY + customFilter, parameters)).intValue();
+	}
+	
+	// Traz a primeira que encontrar caso haja mais de uma pasta com esse nome
+	public Pasta getPastaByNome(String nome, Processo processo) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(PARAM_NOME, nome);
+		parameters.put(PARAM_PROCESSO, processo);
+		return getNamedSingleResult(GET_BY_NOME, parameters);
 	}
 }

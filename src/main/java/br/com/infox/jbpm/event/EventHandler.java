@@ -12,6 +12,7 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 
+import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
 
 public class EventHandler implements Serializable {
@@ -76,8 +77,18 @@ public class EventHandler implements Serializable {
             return ret;
         }
         for (Event event : events.values()) {
-            EventHandler eh = new EventHandler(event);
-            ret.add(eh);
+        	boolean hide = false;
+        	List<Action> actions = event.getActions();
+        	for (Action action : actions) {
+        		if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
+        			hide = true;
+        			break;
+        		}
+        	}
+        	if (!hide) {
+        		EventHandler eh = new EventHandler(event);
+        		ret.add(eh);
+        	}
         }
         return ret;
     }

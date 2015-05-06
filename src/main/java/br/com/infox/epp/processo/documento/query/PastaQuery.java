@@ -6,6 +6,7 @@ public interface PastaQuery {
     String PARAM_IDS_DOCUMENTOS = "idsDocumentos";
     String PARAM_LOCALIZACAO = "localizacao";
     String PARAM_CLASSIFICACAO_DOCUMENTO = "classificacaoDocumento";
+    String PARAM_NOME = "nome";
     
     String GET_BY_PROCESSO = "getByProcesso";
     String GET_BY_PROCESSO_QUERY = "select o from Pasta o where o.processo = :" + PARAM_PROCESSO
@@ -27,4 +28,7 @@ public interface PastaQuery {
     String FILTER_SIGILO = " and not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) ";
     String FILTER_EXCLUIDO = " and o.excluido = false ";
     String FILTER_DOCUMENTOS = " and o.id not in (:" + PARAM_IDS_DOCUMENTOS + ") ";
+    
+    String GET_BY_NOME = "Pasta.getByNome";
+    String GET_BY_NOME_QUERY = "select o from Pasta o where o.processo = :" + PARAM_PROCESSO + " and o.nome = :" + PARAM_NOME;
 }

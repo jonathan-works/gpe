@@ -184,6 +184,33 @@
 								</wi:selectOneMenuEntity>
 							</rich:collapsiblePanel>
 						</h:form>
+						<h:form id="documentoGenerateForm">
+							<rich:collapsiblePanel
+								switchType="ajax"
+								expanded="true"
+								rendered="#{nodeFitter.nodeType == 'Task' || nodeFitter.nodeType == 'Node'}"
+								header="#{infoxMessages['process.documento.generate']}">
+								<wi:selectOneMenuEntity id="classificacaoDocumentoGenerate"
+									label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
+									value="#{nodeFitter.nodeHandler.classificacaoDocumento}"
+									items="#{nodeFitter.classificacoesDocumento}"
+									showLabelSelecione="true">
+									<a:ajax event="change" execute="@this" limitRender="true" render="documentoGenerateForm" />
+								</wi:selectOneMenuEntity>
+								<wi:selectOneMenuEntity
+									id="modeloDocumentoGenerate"
+									label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
+									value="#{nodeFitter.nodeHandler.modeloDocumento}"
+									items="#{nodeFitter.modeloDocumentoList}"
+									showLabelSelecione="true"
+									rendered="#{not empty nodeFitter.nodeHandler.classificacaoDocumento}">
+									<a:ajax event="change"
+										execute="@this"
+										limitRender="true"
+										render="documentoGenerateForm" />
+								</wi:selectOneMenuEntity>
+							</rich:collapsiblePanel>
+						</h:form>
                         <h:form>
                             <rich:collapsiblePanel
                                 switchType="ajax"
