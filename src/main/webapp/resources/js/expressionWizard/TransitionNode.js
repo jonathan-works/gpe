@@ -439,7 +439,7 @@
         break;
       default:
         console.error("Parse exception, token not found", current);
-        alert("Parser exception, token not found"+current);
+//        alert("Parser exception, token not found"+current);
         throw 0;
         break;
     }
@@ -468,7 +468,7 @@
         throw 0;
       } else {
         console.error("Parse exception, token not found", current);
-        alert("Parser exception, token not found"+current);
+//        alert("Parser exception, token not found"+current);
         throw 0;
       }
       cache.push(result);

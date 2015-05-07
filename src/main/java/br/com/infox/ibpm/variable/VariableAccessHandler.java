@@ -75,12 +75,13 @@ public class VariableAccessHandler implements Serializable {
         if (mappedName.indexOf(':') > 0) {
             String[] tokens = mappedName.split(":");
             this.type = VariableType.valueOf(tokens[0]);
+            this.name = variableAccess.getVariableName();
             switch (type) {
                 case DATE:
                     if (tokens.length < 3) {
-                        this.validacaoDataEnum = ValidacaoDataEnum.L;
+                    setValidacaoDataEnum(ValidacaoDataEnum.L);
                     } else {
-                        this.validacaoDataEnum = ValidacaoDataEnum.valueOf(tokens[2]);
+                    setValidacaoDataEnum(ValidacaoDataEnum.valueOf(tokens[2]));
                     }
                 break;
                 case ENUMERATION:
@@ -101,7 +102,6 @@ public class VariableAccessHandler implements Serializable {
         } else {
             this.type = VariableType.STRING;
         }
-        this.name = variableAccess.getVariableName();
         access = new boolean[4];
         access[0] = variableAccess.isReadable();
         access[1] = variableAccess.isWritable();
@@ -145,7 +145,7 @@ public class VariableAccessHandler implements Serializable {
             } else if (isPossuiDominio()) {
                 setDominioVariavelTarefa(dominioVariavelTarefa);
             } else {
-                setMappedName(format("{0}:{1}", type.name(), auxiliarName));
+                setMappedName(auxiliarName,type);
             }
         }
     }
@@ -156,13 +156,11 @@ public class VariableAccessHandler implements Serializable {
 
     public void setDominioVariavelTarefa(DominioVariavelTarefa dominioVariavelTarefa) {
         this.dominioVariavelTarefa = dominioVariavelTarefa;
-        String mappedName;
         if (this.dominioVariavelTarefa != null && name != null) {
-            mappedName = format("{0}:{1}:{2}", type.name(), name, this.dominioVariavelTarefa.getId());
+            setMappedName(name, type, this.dominioVariavelTarefa.getId());
         } else {
-            mappedName = format("{0}:{1}", type.name(), name);
+            setMappedName(name, type);
         }
-        setMappedName(mappedName);
     }
 
     public VariableAccess update() {
@@ -258,7 +256,7 @@ public class VariableAccessHandler implements Serializable {
             default:
                 break;
         }
-        setMappedName(format("{0}:{1}", type.name(), name));
+        setMappedName(name, type);
         this.possuiDominio = tipoPossuiDominio(type);
         this.isData = isTipoData(type);
         this.isFile = isTipoFile(type);
@@ -555,18 +553,22 @@ public class VariableAccessHandler implements Serializable {
     }
 
     public void setValidacaoDataEnum(ValidacaoDataEnum validacaoDataEnum) {
-        this.validacaoDataEnum = validacaoDataEnum;
-        String mappedName;
-        if (this.validacaoDataEnum != null && name != null) {
-            mappedName = format("{0}:{1}:{2}", type.name(), name, this.validacaoDataEnum.toString());
+        if ((this.validacaoDataEnum = validacaoDataEnum) != null && name != null) {
+            setMappedName(name, type, this.validacaoDataEnum.toString());
         } else {
-            mappedName = format("{0}:{1}", type.name(), name);
+            setMappedName(name, type);
         }
-        setMappedName(mappedName);
     }
 
-    private void setMappedName(String mappedName) {
-        ReflectionsUtil.setValue(variableAccess, "mappedName", mappedName);
+    private void setMappedName(String name, VariableType type, Object... extra) {
+        if (name == null) {
+            throw new IllegalStateException("Existe uma variável sem nome na tarefa ");
+        }
+        StringBuilder sb = new StringBuilder().append(type.name()).append(":").append(name);
+        for (Object value : extra) {
+            sb.append(":").append(value);
+        }
+        ReflectionsUtil.setValue(variableAccess, "mappedName", sb.toString());
     }
 
     public void limparModelos() {
@@ -584,14 +586,11 @@ public class VariableAccessHandler implements Serializable {
     }
 
     public void setFragmentConfiguration(FragmentConfiguration fragmentConfiguration) {
-        this.fragmentConfiguration = fragmentConfiguration;
-        String mappedName;
-        if (this.fragmentConfiguration != null && name != null) {
-            mappedName = format("{0}:{1}:{2}", type.name(), name, fragmentConfiguration.getCode());
+        if ((this.fragmentConfiguration = fragmentConfiguration) != null) {
+            setMappedName(name, type, fragmentConfiguration.getCode());
         } else {
-            mappedName = format("{0}:{1}", type.name(), name);
+            setMappedName(name, type);
         }
-        setMappedName(mappedName);
     }
 
 }
