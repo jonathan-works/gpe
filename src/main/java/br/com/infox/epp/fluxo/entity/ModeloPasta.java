@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.entity;
 
+import static br.com.infox.epp.fluxo.query.ModeloPastaQuery.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,16 +13,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.processo.documento.entity.PastaRestricao;
-
 @Entity
 @Table(name = ModeloPasta.TABLE_NAME)
+@NamedQueries(@NamedQuery(name = GET_BY_FLUXO, query=GET_BY_FLUXO_QUERY))
 public class ModeloPasta {
     protected static final String TABLE_NAME = "tb_modelo_pasta";
     private static final String SEQUENCE_NAME = "sq_modelo_pasta";
@@ -58,14 +61,9 @@ public class ModeloPasta {
     @Column(name = "in_editavel", nullable = false)
     private Boolean editavel;
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloPasta")
-    private List<ModeloPastaRestricao> restricoes;
+    @Column(name = "nr_ordem")
+    private Integer ordem;
     
-    // TODO adicionar ordenação conforme sugerido por Nuno
-    
-    public ModeloPasta() {
-    	restricoes = new ArrayList<>();
-    }
     
     public Integer getId() {
         return id;
@@ -95,7 +93,8 @@ public class ModeloPasta {
         return removivel;
     }
 
-    public void setRemovivel(Boolean removivel) {
+    
+	public void setRemovivel(Boolean removivel) {
         this.removivel = removivel;
     }
 
@@ -123,11 +122,17 @@ public class ModeloPasta {
         this.descricao = descricao;
     }
     
-	public List<ModeloPastaRestricao> getRestricoes() {
-		return restricoes;
+	public Integer getOrdem() {
+		return ordem;
 	}
 
-	public void setRestricoes(List<ModeloPastaRestricao> restricoes) {
-		this.restricoes = restricoes;
+	public void setOrdem(Integer ordem) {
+		this.ordem = ordem;
 	}
+	
+	@Override
+	public String toString() {
+		return getNome();
+	}
+
 }

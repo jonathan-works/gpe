@@ -19,7 +19,7 @@ public class ModeloPastaList extends EntityList<ModeloPasta>{
 	static final String NAME = "modeloPastaList";
 	
 	private final String DEFAULT_EJBQL = "select o from ModeloPasta o";
-	private final String DEFAULT_ORDER = "nome";
+	private final String DEFAULT_ORDER = "ordem";
 
 	
 	@Override

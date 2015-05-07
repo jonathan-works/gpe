@@ -1,6 +1,12 @@
 package br.com.infox.epp.fluxo.manager;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -10,20 +16,22 @@ import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;
 import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 
+@Name(ModeloPastaManager.NAME)
+@AutoCreate
 public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
 
+	private static final long serialVersionUID = 1L;
+	static final String NAME = "modeloPastaManager";
+
+	@In
+	ModeloPastaRestricaoManager modeloPastaRestricaoManager;
+	
 	public List<ModeloPasta> getByFluxo(Fluxo fluxo){
 		List<ModeloPasta> modeloPastaList = getDao().getByFluxo(fluxo);
-		//TODO verificar esse .isEmpty se não vai dar nullPointer caso modeloPastaList for null
-		if (modeloPastaList == null || modeloPastaList.isEmpty()) {
-			modeloPastaList = createDefaultFolders(fluxo);
+		if (modeloPastaList == null) {
+			modeloPastaList = new ArrayList<ModeloPasta>();
 		}
 		return modeloPastaList;
-	}
-	
-	private List<ModeloPasta> createDefaultFolders(Fluxo fluxo) {
-		// TODO Ver se precisa implementar isso ou excluir o if, conferir na us pastas Default
-		return null;
 	}
 
 	@Override
@@ -41,16 +49,18 @@ public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
 		}
 	}
 
+	@Transactional
 	public ModeloPasta persistWithDefault(ModeloPasta o) throws DAOException {
+		ModeloPasta modelo = persist(o);
 		ModeloPastaRestricao restricao = new ModeloPastaRestricao();
-		restricao.setModeloPasta(o);
+		restricao.setModeloPasta(modelo);
 		restricao.setTipoPastaRestricao(PastaRestricaoEnum.D);
 		restricao.setAlvo(null);
     	restricao.setRead(Boolean.FALSE);
     	restricao.setWrite(Boolean.FALSE);
     	restricao.setDelete(Boolean.FALSE);
-    	o.getRestricoes().add(restricao);
-    	return persist(o);		
+    	modeloPastaRestricaoManager.persist(restricao);
+    	return modelo;
 	}
 
 }
