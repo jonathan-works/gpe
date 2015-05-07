@@ -68,6 +68,8 @@
 						execute="@form"
                         action="#{pastaAction.selectPasta(pasta)}"
 						styleClass="folder"
+						onbegin="infox.showLoading();"
+						oncomplete="infox.hideLoading();"
 						limitRender="true">
   		              <h:graphicImage
                           url="#{wiSkin.imageFolder}/folder.png"
