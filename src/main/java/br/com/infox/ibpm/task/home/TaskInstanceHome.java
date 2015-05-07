@@ -479,7 +479,14 @@ public class TaskInstanceHome implements Serializable {
 
 	public boolean podeAssinarDocumento(String variableName) {
 		Pair<String, VariableType> variableType = variableTypeResolver.getVariableTypeMap().get(variableName);
-		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable(variableType.getLeft());
+		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+		if (taskInstance == null){
+			return false;
+		}
+		if (variableType == null){
+			return false;
+		}
+		Integer idDocumento = (Integer) taskInstance.getVariable(variableType.getLeft());
 		if (idDocumento != null) {
 			Documento documento = documentoManager.find(idDocumento);
 			return documento != null && !documento.isDocumentoAssinado(Authenticator.getPapelAtual())
