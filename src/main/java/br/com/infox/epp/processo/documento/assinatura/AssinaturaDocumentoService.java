@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.documento.assinatura;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
+import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
@@ -110,6 +112,10 @@ public class AssinaturaDocumentoService implements Serializable {
         }
         
         return isDocumentoTotalmenteAssinado(mapAssinaturas);
+    }
+    
+    public boolean isDocumentoTotalmenteAssinado(DocumentoBin documento){
+    	return isDocumentoTotalmenteAssinado(documento.getDocumentoList().get(0));
     }
     
     boolean isDocumentoTotalmenteAssinado(Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas) {
@@ -213,37 +219,54 @@ public class AssinaturaDocumentoService implements Serializable {
         }
     }
 
-    public void assinarDocumento(
-            final DocumentoBin documentoBin,
-            final UsuarioPerfil usuarioPerfilAtual, final String certChain,
-            final String signature) throws CertificadoException,
-            AssinaturaException, DAOException {
-        final UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
-        verificaCertificadoUsuarioLogado(certChain, usuario);
+	public void assinarDocumento(final DocumentoBin documentoBin,
+			final UsuarioPerfil usuarioPerfilAtual, final String certChain,
+			final String signature) throws CertificadoException,
+			AssinaturaException, DAOException {
+		final UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
+		verificaCertificadoUsuarioLogado(certChain, usuario);
 
-        final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(
-                documentoBin, usuarioPerfilAtual, certChain, signature);
-        List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
-        documentoBin.getAssinaturas().add(assinaturaDocumento);
-        documentoBin.setMinuta(false);
-        documentoBinManager.update(documentoBin);
-        try {
-        	for (Documento documento : documentosNaoSuficientementeAssinados) {
-	        	if (isDocumentoTotalmenteAssinado(documento)) {
-	        		assinaturaDocumentoListenerService.dispatch(documento);
-	        	}
-        	}
-        } catch (Exception e) {
-        	throw new DAOException(e);
-        }
-    }
+		final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature);
+		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
+		documentoBin.getAssinaturas().add(assinaturaDocumento);
+		
+		if (documentoBin.isMinuta()){
+			documentoBin.setMinuta(Boolean.FALSE);
+		}
+		if (isDocumentoTotalmenteAssinado(documentoBin)){
+			setDocumentoSuficientementeAssinado(documentoBin, usuarioPerfilAtual);
+		}
+		documentoBinManager.update(documentoBin);
+		try {
+			for (Documento documento : documentosNaoSuficientementeAssinados) {
+				if (isDocumentoTotalmenteAssinado(documento)) {
+					assinaturaDocumentoListenerService.dispatch(documento);
+				}
+			}
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
+
+	private void setDocumentoSuficientementeAssinado(final DocumentoBin documentoBin,
+			final UsuarioPerfil usuarioPerfilAtual) {
+		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
+		documentoBin.setDataSuficientementeAssinado(new Date());
+		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
+		for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documentoBin.getDocumentoList().get(0).getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
+			RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
+			registroAssinaturaSuficiente.setDocumentoBin(documentoBin);
+			registroAssinaturaSuficiente.setPapel(usuarioPerfilAtual.getPerfilTemplate().getPapel().getNome());
+			registroAssinaturaSuficiente.setTipoAssinatura(classificacaoDocumentoPapel.getTipoAssinatura());
+			registrosAssinaturaSuficiente.add(registroAssinaturaSuficiente);
+		}
+	}
     
     public void assinarDocumento(final Documento documento,
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws CertificadoException,
             AssinaturaException, DAOException {
-        this.assinarDocumento(documento.getDocumentoBin(),
-                perfilAtual, certChain, signature);
+        assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {
