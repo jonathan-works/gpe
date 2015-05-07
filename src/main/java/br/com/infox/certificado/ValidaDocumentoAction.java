@@ -166,7 +166,7 @@ public class ValidaDocumentoAction implements Serializable {
 					if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())) {
 						assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(),
 								certificateSignatureBean.getSignature());
-						this.podeIniciarFluxoAnaliseDocumentos = assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento());
+						setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
 						break;
 					}
 				}
@@ -275,7 +275,7 @@ public class ValidaDocumentoAction implements Serializable {
 	public void setIdDocumento(Integer idDocumento) {
 		validaDocumentoId(idDocumento);
 		this.idDocumento = idDocumento;
-		this.podeIniciarFluxoAnaliseDocumentos = validaPodeIniciarFluxoAnalise();
+		setPodeIniciarFluxoAnaliseDocumentos(validaPodeIniciarFluxoAnalise());
 	}
 
 	public String getExternalCallback() {
@@ -307,15 +307,17 @@ public class ValidaDocumentoAction implements Serializable {
 
 	private Boolean validaPodeIniciarFluxoAnalise() {
 		Documento documento = getDocumento();
+		boolean podeIniciarAnaliseDoc;
 		if (documento == null) {
-			this.podeIniciarFluxoAnaliseDocumentos = false;
+			podeIniciarAnaliseDoc = false;
 		} else {
-			this.podeIniciarFluxoAnaliseDocumentos = !papelInclusaoPossuiRecursoAnexar(documento) && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
-			if (this.podeIniciarFluxoAnaliseDocumentos){
-				this.podeIniciarFluxoAnaliseDocumentos = !existeProcessoAnaliseByDocumento(documento);
+			podeIniciarAnaliseDoc = !papelInclusaoPossuiRecursoAnexar(documento) && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
+			if (podeIniciarAnaliseDoc){
+				podeIniciarAnaliseDoc = !existeProcessoAnaliseByDocumento(documento);
 			}			
 		}
-		return this.podeIniciarFluxoAnaliseDocumentos;
+		setPodeIniciarFluxoAnaliseDocumentos(podeIniciarAnaliseDoc);
+		return podeIniciarAnaliseDoc;
 	}
 
 	private boolean existeProcessoAnaliseByDocumento(Documento documento) {
