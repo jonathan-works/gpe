@@ -42,7 +42,7 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
 			+ "where o.processo = #{documentoDisponivelComunicacaoList.processo} and o.excluido = false and "
 			+ "bin.minuta = false and "
 			+ "not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) "
-			+ "and DocumentoSuficientementeAssinado(o.id) = true ";
+			+ "and bin.suficientementeAssinado = true ";
 	
 	private static final String DEFAULT_ORDER = "a.dataAssinatura, o.dataInclusao desc";
 	
