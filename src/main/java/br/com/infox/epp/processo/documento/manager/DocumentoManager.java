@@ -46,6 +46,10 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         return getDao().getModeloDocumentoByIdDocumento(idDocumento);
     }
 
+    public List<Documento> getDocumentosFromDocumentoBin(DocumentoBin documentoBin){
+    	return getDao().getDocumentosFromDocumentoBin(documentoBin);
+    }
+    
     public String valorDocumento(Integer idDocumento) {
         return find(idDocumento).getDocumentoBin().getModeloDocumento();
     }
@@ -126,4 +130,5 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public List<Documento> getDocumentosSessaoAnexar(Processo processo, List<Integer> idsDocumentos) {
     	return getDao().getDocumentosSessaoAnexar(processo, idsDocumentos);
     }
+    
 }
