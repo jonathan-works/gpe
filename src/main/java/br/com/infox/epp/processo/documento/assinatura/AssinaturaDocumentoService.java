@@ -115,7 +115,11 @@ public class AssinaturaDocumentoService implements Serializable {
     }
     
     public boolean isDocumentoTotalmenteAssinado(DocumentoBin documento){
-    	return isDocumentoTotalmenteAssinado(documento.getDocumentoList().get(0));
+    	List<Documento> documentos = documentoManager.getDocumentosFromDocumentoBin(documento);
+    	if (documentos.size()>0){
+    	    return isDocumentoTotalmenteAssinado(documentos.get(0));
+    	}
+    	return false;
     }
     
     boolean isDocumentoTotalmenteAssinado(Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas) {
