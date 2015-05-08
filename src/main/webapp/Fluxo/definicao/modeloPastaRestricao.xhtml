@@ -38,7 +38,7 @@
 							styleClass="buttons" />
 					<wi:commandButton id="addModeloPastaBtn"
 						value="#{infoxMessages['modeloPasta.add']}"
-						onclick="#{rich:component('anexarModeloPastaPanel')}.show();"
+						onclick="#{rich:component('addModeloPastaPanel')}.show();"
 						action="#{modeloPastaRestricaoAction.newInstance()}"/>
 				</ui:define>
                      
@@ -126,30 +126,30 @@
 		
 		
 	<script type="text/javascript">
-      function clearAnexarModeloPastaFields() {
+      function clearAddModeloPastaFields() {
     		#{rich:jQuery('anexarModeloPastaInputName')}.val('');
     		#{rich:jQuery('anexarModeloPastaInputDescricao')}.val('');
-    		#{rich:jQuery('anexarModeloPastaImputOrdem')}.val(0);
+    		#{rich:jQuery('anexarModeloPastaImputOrdem')}.val('');
 			$('.errorFields.errors').remove();
 			$('.errors').removeClass('errors');
       }
   	</script>
 
 	<rich:popupPanel
-	    id="anexarModeloPastaPanel"
+	    id="addModeloPastaPanel"
 	    moveable="true"
 	    show="false"
 	    resizeable="false"
 	    minHeight="260"
 	    header="#{infoxMessages['modeloPasta.add']}"
-	    onbeforehide="clearAnexarModeloPastaFields();">
+	    onbeforehide="AddModeloPastaFields();">
 		
 		<f:facet name="controls">
       		<h:graphicImage
 		        id="modeloPastaPanelCloseBtn"
 		        styleClass="mp-close"
 		        value="#{wiSkin.imageFolder}/closeMP.gif"
-		        onmouseup="#{rich:component('anexarModeloPastaPanel')}.hide();" />
+		        onmouseup="#{rich:component('addModeloPastaPanel')}.hide();" />
       	</f:facet>
       	
       	<h:form id="anexarModeloPastaForm">
@@ -174,14 +174,19 @@
 	        	maxlength="19"
 	        	label="#{infoxMessages['modeloPasta.ordem']}">
 		    </wi:inputNumber>
-		    
+		    <wi:selectBooleanCheckbox id="removivel"
+                label="#{infoxMessages['modeloPasta.isRemovivel']}"
+                value="#{modeloPastaRestricaoAction.removivel}" />
+            <wi:selectBooleanCheckbox id="editavel"
+                label="#{infoxMessages['modeloPasta.isEditavel']}"
+                value="#{modeloPastaRestricaoAction.editavel}" />
 	        <br />
 	        
 	        <wi:commandButton
 	          id="addModeloPastaButton"
 	          action="#{modeloPastaRestricaoAction.persist()}"
 	          execute="@form"
-	          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('anexarModeloPastaPanel')}.hide();}else{clearAnexarModeloPastaFields()}"
+	          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addModeloPastaPanel')}.hide();}else{AddModeloPastaFields()}"
 	          value="#{infoxMessages['modeloPasta.add']}"
 	          reRender="@form, modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
       	</h:form>
@@ -194,33 +199,33 @@
 	    show="false"
 	    resizeable="false"
 	    minHeight="260"
-	    header="#{infoxMessages['modeloPasta.add']}">
+	    header="#{infoxMessages['modeloPasta.edit']}">
 		
 		<f:facet name="controls">
       		<h:graphicImage
-		        id="modeloPastaPanelCloseBtn"
+		        id="editModeloPastaPanelCloseBtn"
 		        styleClass="mp-close"
 		        value="#{wiSkin.imageFolder}/closeMP.gif"
-		        onmouseup="#{rich:component('anexarModeloPastaPanel')}.hide();" />
+		        onmouseup="#{rich:component('editarModeloPastaPanel')}.hide();" />
       	</f:facet>
       	
-      	<h:form id="anexarModeloPastaForm">
+      	<h:form id="editAnexarModeloPastaForm">
 	        <wi:inputText
-	          	id="anexarModeloPastaInputName"
+	          	id="editAnexarModeloPastaInputName"
 	          	value="#{modeloPastaRestricaoAction.nome}"
 	          	required="true"
 	          	maxlength="250"
 	        	label="#{infoxMessages['modeloPasta.nome']}">
 	        </wi:inputText>
 			<wi:inputText
-	        	id="anexarModeloPastaInputDescricao"
+	        	id="editAnexarModeloPastaInputDescricao"
 	        	value="#{modeloPastaRestricaoAction.descricao}"
 	        	required="false"
 	        	maxlength="250"
 	        	label="#{infoxMessages['modeloPasta.descricao']}">
 	        </wi:inputText>	
 	   		<wi:inputNumber
-	        	id="anexarModeloPastaInputOrdem"
+	        	id="editAnexarModeloPastaInputOrdem"
 	        	value="#{modeloPastaRestricaoAction.ordem}"
 	        	required="true"
 	        	maxlength="19"
@@ -230,11 +235,11 @@
 	        <br />
 	        
 	        <wi:commandButton
-	          id="addModeloPastaButton"
+	          id="saveModeloPastaButton"
 	          action="#{modeloPastaRestricaoAction.update()}"
 	          execute="@form"
-	          oncomplete="#{rich:component('anexarModeloPastaPanel')}.hide();"
-	          value="#{infoxMessages['modeloPasta.edit']}"
+	          oncomplete="#{rich:component('editarModeloPastaPanel')}.hide();"
+	          value="#{infoxMessages['modeloPasta.save']}"
 	          reRender="@form, modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
       	</h:form>
     </rich:popupPanel>
