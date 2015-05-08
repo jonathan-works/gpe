@@ -116,7 +116,7 @@
     			<ui:define name="toolBar">
                     <wi:toolBar id="viewPastaRestricao"
                         rendered="#{pastaRestricaoAction.canEditRestricao(row)}"
-                        reRender="pastaRestricaoDiv"
+                        reRender="pastaRestricaoDiv editRestricaoPanel"
                         action="#{pastaRestricaoAction.loadRestricao(row)}"
                         onclick="infox.showLoading();"
                     	oncomplete="infox.hideLoading(); #{rich:component('editRestricaoPanel')}.show();"
@@ -152,8 +152,9 @@
             <h:form>
         		<a:commandButton id="addRestricaoButton"
         			value="#{infoxMessages['pasta.adicionarRestricao']}" 
-                    onclick="#{rich:component('addRestricaoPanel')}.show();"
-        			render="@this" limitRender="true" styleClass="buttons"
+                    onclick="infox.showLoading();"
+                    oncomplete="infox.hideLoading();#{rich:component('addRestricaoPanel')}.show();"
+        			render="@this addRestricaoPanel" limitRender="true" styleClass="buttons"
                     rendered="#{pastaRestricaoAction.canEditRestricoes()}"
                     action="#{pastaRestricaoAction.newRestricaoInstance()}" />
             </h:form>
@@ -174,7 +175,7 @@
         	${rich:jQuery('alvoInputDiv')}.hide();
         	#{rich:jQuery('alvoTipoPapelInput')}.val('');
         	#{rich:jQuery('alvoTipoLocalizacaoInput')}.val('');
-        	#{rich:jQuery('alvoTipoParticipanteInput')}.attr('checked', true)
+        	#{rich:jQuery('alvoTipoParticipanteInput')}.attr('checked', true);
         	#{rich:jQuery('readInput')}.attr('checked', false);
         	#{rich:jQuery('writeInput')}.attr('checked', false);
         	#{rich:jQuery('deleteInput')}.attr('checked', false);
@@ -187,7 +188,7 @@
         	${rich:jQuery('editAlvoInputDiv')}.hide();
         	#{rich:jQuery('editAlvoTipoPapelInput')}.val('');
         	#{rich:jQuery('editAlvoTipoLocalizacaoInput')}.val('');
-        	#{rich:jQuery('editAlvoTipoParticipanteInput')}.attr('checked', true)
+        	#{rich:jQuery('editAlvoTipoParticipanteInput')}.attr('checked', true);
         	#{rich:jQuery('editReadInput')}.attr('checked', false);
         	#{rich:jQuery('editWriteInput')}.attr('checked', false);
         	#{rich:jQuery('editDeleteInput')}.attr('checked', false);
@@ -301,13 +302,20 @@
                 onmouseup="#{rich:component('editRestricaoPanel')}.hide();" />
         </f:facet>
         <h:form>
-            <wi:selectOneMenuEnum id="editTipoRestricaoInput" required="true"
-                label="#{infoxMessages['pasta.tipoRestricao']}"
-                items="#{pastaRestricaoAction.getTiposRestricao()}"
-                disabled="#{pastaRestricaoAction.isRestricaoDefault()}"
-                value="#{pastaRestricaoAction.restricaoInstance.tipoPastaRestricao}">
-                <a:ajax event="change" render="editAlvoInputDiv" />
-            </wi:selectOneMenuEnum>
+            <s:div id="editTipoRestricaoInputDiv">
+                <wi:selectOneMenuEnum id="editTipoRestricaoInput" required="true"
+                    label="#{infoxMessages['pasta.tipoRestricao']}"
+                    rendered="#{not pastaRestricaoAction.isRestricaoDefault()}"
+                    items="#{pastaRestricaoAction.getTiposRestricao()}"
+                    disabled="#{pastaRestricaoAction.isRestricaoDefault()}"
+                    value="#{pastaRestricaoAction.restricaoInstance.tipoPastaRestricao}">
+                    <a:ajax event="change" render="editAlvoInputDiv" />
+                </wi:selectOneMenuEnum>
+                <wi:outputText id="editTipoRestricaoDefault"
+                    rendered="#{pastaRestricaoAction.isRestricaoDefault()}"
+                    label="#{infoxMessages['pasta.tipoRestricao']}"
+                    value="#{infoxMessages['pasta.restricaoDefault']}" />
+            </s:div>
             <s:div id="editAlvoInputDiv">
                 <wi:outputText id="editAlvoTipoDefault"
                     rendered="#{pastaRestricaoAction.isRestricaoDefault()}"
@@ -333,7 +341,7 @@
                     label="#{infoxMessages['pasta.restricaoAlvo']}"
                     value="#{pastaRestricaoAction.alvoRestricaoParticipante}"/>
             </s:div>
-            <wi:selectBooleanCheckbox id="editEeadInput"
+            <wi:selectBooleanCheckbox id="editReadInput"
                 label="#{infoxMessages['pasta.visualizarRestricao']}"
                 value="#{pastaRestricaoAction.restricaoInstance.read}" />
             <wi:selectBooleanCheckbox id="editWriteInput"

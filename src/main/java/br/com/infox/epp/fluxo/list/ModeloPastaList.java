@@ -1,6 +1,5 @@
 package br.com.infox.epp.fluxo.list;
 
-import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -26,19 +25,6 @@ public class ModeloPastaList extends EntityList<ModeloPasta>{
 	protected void addSearchFields() {
 		addSearchField("nome", SearchCriteria.CONTENDO);
 		addSearchField("fluxo", SearchCriteria.IGUAL);
-	}
-
-	//TODO ver se precisa testar quando o fluxo não existe
-	@Override
-	public Long getResultCount(){
-//		return 0L;
-		return super.getResultCount();
-	}
-	
-	@Override
-	public List<ModeloPasta> getResultList() {
-//		return new ArrayList<ModeloPasta>();
-		return super.getResultList();
 	}
 
 	@Override

@@ -264,5 +264,13 @@
                 </s:div>
             </s:div>
         </infox:tab>
+        <infox:tab
+	        name="modeloPastasTab"
+	        id="modeloPastasTab"
+	        title="#{infoxMessages['modeloPasta.tabTitle']}"
+	        rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
+            action="#{modeloPastaRestricaoAction.init(fluxoCrudAction.instance)}">
+	        <ui:include src="definicao/modeloPastaRestricao.xhtml" />	        
+      	</infox:tab>
     </ui:define>
 </ui:composition>

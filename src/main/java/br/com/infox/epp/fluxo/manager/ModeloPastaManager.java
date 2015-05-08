@@ -21,11 +21,11 @@ import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
 
 	private static final long serialVersionUID = 1L;
-	static final String NAME = "modeloPastaManager";
+	public static final String NAME = "modeloPastaManager";
 
 	@In
-	ModeloPastaRestricaoManager modeloPastaRestricaoManager;
-	
+	private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
+		
 	public List<ModeloPasta> getByFluxo(Fluxo fluxo){
 		List<ModeloPasta> modeloPastaList = getDao().getByFluxo(fluxo);
 		if (modeloPastaList == null) {
@@ -45,7 +45,7 @@ public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
 			o.setEditavel(Boolean.TRUE);
 		}
 		if(o.getRemovivel() == null){
-			o.setEditavel(Boolean.TRUE);
+			o.setRemovivel(Boolean.TRUE);
 		}
 	}
 
@@ -56,9 +56,9 @@ public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
 		restricao.setModeloPasta(modelo);
 		restricao.setTipoPastaRestricao(PastaRestricaoEnum.D);
 		restricao.setAlvo(null);
-    	restricao.setRead(Boolean.FALSE);
-    	restricao.setWrite(Boolean.FALSE);
-    	restricao.setDelete(Boolean.FALSE);
+    	restricao.setRead(Boolean.TRUE);
+    	restricao.setWrite(Boolean.TRUE);
+    	restricao.setDelete(Boolean.TRUE);
     	modeloPastaRestricaoManager.persist(restricao);
     	return modelo;
 	}

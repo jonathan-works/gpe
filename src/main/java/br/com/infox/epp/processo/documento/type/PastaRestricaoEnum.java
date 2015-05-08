@@ -24,9 +24,9 @@ public enum PastaRestricaoEnum implements Displayable {
     
     public static List<PastaRestricaoEnum> getValuesSemDefault() {
         List<PastaRestricaoEnum> list = new ArrayList<>(3);
+        list.add(PastaRestricaoEnum.L);
         list.add(PastaRestricaoEnum.P);
         list.add(PastaRestricaoEnum.R);
-        list.add(PastaRestricaoEnum.L);
         return list;
     }
 }

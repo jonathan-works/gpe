@@ -26,38 +26,37 @@
 					<wi:commandButton id="searchButton"
 						value="#{infoxMessages['button.pesquisar']}"
 						action="#{searchAction}" styleClass="buttons"
-						reRender="#{wi:get(searchReRender, 'pageBody')}">
+						reRender="modeloPastaTable modeloPastaRestricaoDiv"
+						actionListener="modeloPastaRestricaoAction.newInstance()" >
 						<a:param assignTo="#{bean.page}" value="1" />
 					</wi:commandButton>
-						<a:commandButton id="clearButton"
+					<a:commandButton id="clearButton"
 							onclick="$('##{formId}').clearForm();showLoading();"
 							oncomplete="hideLoading();"
+							actionListener="#{modeloPastaRestricaoAction.newInstance()}"
 							action="#{elFunctions.invokeMethod(clearAction)}"
 							value="#{infoxMessages['button.limpar']}" execute="@this"
-							render="#{wi:get(clearReRender, 'pageBody')}"
+							render="#{wi:get(clearReRender, 'pageBody')} modeloPastaRestricaoDiv"
 							styleClass="buttons" />
 					<wi:commandButton id="addModeloPastaBtn"
 						value="#{infoxMessages['modeloPasta.add']}"
 						onclick="#{rich:component('addModeloPastaPanel')}.show();"
-						action="#{modeloPastaRestricaoAction.newInstance()}"/>
+						action="#{modeloPastaRestricaoAction.newInstance()}"
+						reRender="modeloPastaRestricaoDiv"/>
 				</ui:define>
                      
             </wi:searchForm>
         </ui:define>
 
+		<!-- Lista de modelos de pastas -->
         <ui:define name="headerToolBar" />
         <ui:define name="toolBar">      
         	<a:commandLink action="#{modeloPastaRestricaoAction.selectModeloPasta(row)}" 
-				execute="@this" limitRender="true" rendered="true"
-				render="modeloPastaRestricaoDiv"
+				execute="@this" limitRender="true" render="modeloPastaRestricaoDiv"
 				onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['modeloPasta.restricoes']}" />
+				<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['modeloPasta.restricoes']}" />
 			</a:commandLink>
-			<wi:toolBar id="editarModeloPasta"
-				value="#{infoxMessages['modeloPasta.edit']}"
-				onclick="#{rich:component('editarModeloPastaPanel')}.show();"
-				action="#{modeloPastaResricaoAction.selectModeloPasta(row)}"/>
-			<wi:toolBar action="#{modeloPastaRestricaoAction.removePasta(row)}"
+			<wi:toolBar action="#{modeloPastaRestricaoAction.removeModeloPasta(row)}"
                 limitToList="true" status=":status"
                 reRender="modeloPastaTable"
                 onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
@@ -86,52 +85,128 @@
     </wi:dataTable>
 
     <br />
-		<s:div id="modeloPastaRestricaoDiv">
 	<br />
+	<!-- Detalhes do modelo de pasta -->
+	<s:div id="modeloPastaRestricaoDiv">
+		<!-- Edição dos campos do modelo de pasta -->
+		<rich:panel id="editModeloPastaPanel" header="#{infoxMessages['modeloPasta.selected']} - #{modeloPastaRestricaoAction.instance}"
+            rendered="#{modeloPastaRestricaoAction.modeloPastaSelecionada}">
+            <h:form>
+            	<wi:inputText
+		          	id="editModeloPastaInputName"
+		          	value="#{modeloPastaRestricaoAction.instance.nome}"
+		          	required="true" maxlength="250"
+		        	label="#{infoxMessages['modeloPasta.nome']}">
+		        </wi:inputText>
+				<wi:inputText
+		        	id="editModeloPastaInputDescricao"
+		        	value="#{modeloPastaRestricaoAction.instance.descricao}"
+		        	required="false" maxlength="250"
+		        	label="#{infoxMessages['modeloPasta.descricao']}">
+		        </wi:inputText>	
+		   		<wi:inputNumber
+		        	id="editModeloPastaInputOrdem"
+		        	value="#{modeloPastaRestricaoAction.instance.ordem}"
+		        	required="true" maxlength="19"
+		        	label="#{infoxMessages['modeloPasta.ordem']}">
+			    </wi:inputNumber>
+			    <wi:selectBooleanCheckbox id="editModeloPastaRemovivel"
+	                label="#{infoxMessages['modeloPasta.removivel']}"
+	                value="#{modeloPastaRestricaoAction.instance.removivel}" />
+	            <wi:selectBooleanCheckbox id="editModeloPastaEditavel"
+	                label="#{infoxMessages['modeloPasta.editavel']}"
+	                value="#{modeloPastaRestricaoAction.instance.editavel}" />
+            	<wi:commandButton id="saveModeloPastaButton"
+                    action="#{modeloPastaRestricaoAction.update()}"
+                    execute="@form" onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
+                    value="#{infoxMessages['modeloPasta.edit']}"
+                    reRender="@form modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
+            </h:form>
+            
+			<!-- Lista de restrições do modelo de pasta -->
 			<wi:dataTable id="modeloPastaRestricaoTable"
 				values="#{modeloPastaRestricaoAction.restricoes}" rowId="#{row.id}"
 				showSearchForm="false" showGrid="#{modeloPastaRestricaoAction.modeloPastaSelecionada}"
-				tableTitle="#{infoxMessages['modeloPasta.restricoes']} - #{modeloPastaRestricaoAction.instance}">
-
+				tableTitle="#{infoxMessages['modeloPasta.restricoes']}">
+	
 				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar">
-					<wi:toolBar id="viewPastaRestricao" rendered="true"
-						reRender="modeloPastaRestricaoDiv" url="#{wiSkin.imageFolder}/view.png" />
-					<wi:toolBar id="removePastaRestricao" rendered="true"
-						reRender="modeloPastaRestricaoDiv"
+					<wi:toolBar id="viewModeloPastaRestricao"
+						reRender="modeloPastaRestricaoDiv" url="#{wiSkin.imageFolder}/view.png"
+						action="modeloPastaRestricaoAction.loadRestricao(row)"
+						onclick="infox.showLoading();"
+                    	oncomplete="infox.hideLoading(); #{rich:component('editModeloRestricaoPanel')}.show();"/>
+					<wi:toolBar id="removeModeloPastaRestricao"
+						action="#{modeloPastaRestricaoAction.removeModeloRestricao(row)}"
+						reRender="modeloPastaRestricaoDiv" rendered="#{!modeloPastaRestricaoAction.isRestricaoDefault(row)}"
 						url="#{wiSkin.imageFolder}/remove.png" />
 				</ui:define>
 				
 				<wi:columnEnum columnId="restricaoTipo"
-					columnHeader="#{infoxMessages['pasta.tipoRestricao']}"
+					columnHeader="#{infoxMessages['modeloPasta.tipoRestricao']}"
 					value="#{row.tipoPastaRestricao}" />
 				<wi:columnOutputText columnId="restricaoAlvo"
-					columnHeader="#{infoxMessages['pasta.restricaoAlvo']}" 
-					value="#{row.alvo}" />
+					columnHeader="#{infoxMessages['modeloPasta.restricaoAlvo']}" 
+					value="#{modeloPastaRestricaoAction.getAlvoFormatado(row)}" />
 				<wi:columnBoolean columnId="restricaoVisualizar"
-					columnHeader="#{infoxMessages['pasta.visualizarRestricao']}"
+					columnHeader="#{infoxMessages['modeloPasta.visualizarRestricao']}"
 					value="#{row.read}" />
 				<wi:columnBoolean columnId="restricaoInserir"
-					columnHeader="#{infoxMessages['pasta.inserirRestricao']}"
+					columnHeader="#{infoxMessages['modeloPasta.inserirRestricao']}"
 					value="#{row.write}" />
 				<wi:columnBoolean columnId="restricaoRetirar"
-					columnHeader="#{infoxMessages['pasta.retirarRestricao']}"
+					columnHeader="#{infoxMessages['modeloPasta.retirarRestricao']}"
 					value="#{row.delete}" />
 			</wi:dataTable>
-
-			<wi:commandButton id="addRestricaoButton" 
-				value="#{infoxMessages['pasta.adicionarRestricao']}" 
-				rendered="#{modeloPastaRestricaoAction.modeloPastaSelecionada}" />
-		</s:div>
+	
+			<h:form>
+				<a:commandButton id="addModeloRestricaoButton"
+					value="#{infoxMessages['modeloPasta.adicionarRestricao']}"
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading(); #{rich:component('addModeloRestricaoPanel')}.show();"
+					render="@this addModeloRestricaoPanel" limitRender="true" styleClass="buttons"
+					action="#{modeloPastaRestricaoAction.newRestricaoInstance()}"/>
+			</h:form>
+				
+		</rich:panel>
+	</s:div>
 		
 		
 	<script type="text/javascript">
       function clearAddModeloPastaFields() {
-    		#{rich:jQuery('anexarModeloPastaInputName')}.val('');
-    		#{rich:jQuery('anexarModeloPastaInputDescricao')}.val('');
-    		#{rich:jQuery('anexarModeloPastaImputOrdem')}.val('');
+    		#{rich:jQuery('addModeloPastaInputName')}.val('');
+    		#{rich:jQuery('addModeloPastaInputDescricao')}.val('');
+    		#{rich:jQuery('addModeloPastaInputOrdemNumber')}.val('');
+    		#{rich:jQuery('modeloPastaRemovivel')}.attr('checked', true);
+        	#{rich:jQuery('modeloPastaEditavel')}.attr('checked', true);
 			$('.errorFields.errors').remove();
 			$('.errors').removeClass('errors');
+      }
+      
+      function clearAddModeloRestricaoFields() {
+      	#{rich:jQuery('tipoModeloRestricaoInput')}.val('');
+      	${rich:jQuery('alvoInputDiv')}.hide();
+      	#{rich:jQuery('alvoTipoPapelInput')}.val('');
+      	#{rich:jQuery('alvoTipoLocalizacaoInput')}.val('');
+      	#{rich:jQuery('alvoTipoParticipanteInput')}.attr('checked', true);
+      	#{rich:jQuery('readInput')}.attr('checked', false);
+      	#{rich:jQuery('writeInput')}.attr('checked', false);
+      	#{rich:jQuery('deleteInput')}.attr('checked', false);
+      	$('.errorFields.errors').remove();
+          $('.errors').removeClass('errors');
+      }
+      
+      function clearEditModeloRestricaoFields() {
+      	#{rich:jQuery('editTipoRestricaoInput')}.val('');
+      	${rich:jQuery('editAlvoInputDiv')}.hide();
+      	#{rich:jQuery('editAlvoTipoPapelInput')}.val('');
+      	#{rich:jQuery('editAlvoTipoLocalizacaoInput')}.val('');
+      	#{rich:jQuery('editAlvoTipoParticipanteInput')}.val('true')
+      	#{rich:jQuery('editReadInput')}.val('false');
+      	#{rich:jQuery('editWriteInput')}.val('false');
+      	#{rich:jQuery('editDeleteInput')}.val('false');
+      	$('.errorFields.errors').remove();
+          $('.errors').removeClass('errors');
       }
   	</script>
 
@@ -139,10 +214,10 @@
 	    id="addModeloPastaPanel"
 	    moveable="true"
 	    show="false"
-	    resizeable="false"
-	    minHeight="260"
+	    resizeable="true"
+	    minHeight="360" minWidth="290"
 	    header="#{infoxMessages['modeloPasta.add']}"
-	    onbeforehide="AddModeloPastaFields();">
+	    onbeforehide="clearAddModeloPastaFields();">
 		
 		<f:facet name="controls">
       		<h:graphicImage
@@ -152,96 +227,177 @@
 		        onmouseup="#{rich:component('addModeloPastaPanel')}.hide();" />
       	</f:facet>
       	
-      	<h:form id="anexarModeloPastaForm">
+      	<h:form id="addModeloPastaForm">
 	        <wi:inputText
-	          	id="anexarModeloPastaInputName"
-	          	value="#{modeloPastaRestricaoAction.nome}"
+	          	id="addModeloPastaInputName"
+	          	value="#{modeloPastaRestricaoAction.instance.nome}"
 	          	required="true"
 	          	maxlength="250"
 	        	label="#{infoxMessages['modeloPasta.nome']}">
 	        </wi:inputText>
 			<wi:inputText
-	        	id="anexarModeloPastaInputDescricao"
-	        	value="#{modeloPastaRestricaoAction.descricao}"
+	        	id="addModeloPastaInputDescricao"
+	        	value="#{modeloPastaRestricaoAction.instance.descricao}"
 	        	required="false"
 	        	maxlength="250"
 	        	label="#{infoxMessages['modeloPasta.descricao']}">
 	        </wi:inputText>	
 	   		<wi:inputNumber
-	        	id="anexarModeloPastaInputOrdem"
-	        	value="#{modeloPastaRestricaoAction.ordem}"
+	        	id="addModeloPastaInputOrdemNumber"
+	        	value="#{modeloPastaRestricaoAction.instance.ordem}"
 	        	required="true"
 	        	maxlength="19"
 	        	label="#{infoxMessages['modeloPasta.ordem']}">
 		    </wi:inputNumber>
-		    <wi:selectBooleanCheckbox id="removivel"
-                label="#{infoxMessages['modeloPasta.isRemovivel']}"
-                value="#{modeloPastaRestricaoAction.removivel}" />
-            <wi:selectBooleanCheckbox id="editavel"
-                label="#{infoxMessages['modeloPasta.isEditavel']}"
-                value="#{modeloPastaRestricaoAction.editavel}" />
+		    <wi:selectBooleanCheckbox id="modeloPastaRemovivel"
+                label="#{infoxMessages['modeloPasta.removivel']}"
+                value="#{modeloPastaRestricaoAction.instance.removivel}" />
+            <wi:selectBooleanCheckbox id="modeloPastaEditavel"
+                label="#{infoxMessages['modeloPasta.editavel']}"
+                value="#{modeloPastaRestricaoAction.instance.editavel}" />
 	        <br />
 	        
 	        <wi:commandButton
 	          id="addModeloPastaButton"
 	          action="#{modeloPastaRestricaoAction.persist()}"
 	          execute="@form"
-	          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addModeloPastaPanel')}.hide();}else{AddModeloPastaFields()}"
+	          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addModeloPastaPanel')}.hide();}else{clearAddModeloPastaFields()}"
 	          value="#{infoxMessages['modeloPasta.add']}"
 	          reRender="@form, modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
       	</h:form>
     </rich:popupPanel>
-    
-    
-    <rich:popupPanel
-	    id="editarModeloPastaPanel"
-	    moveable="true"
-	    show="false"
-	    resizeable="false"
-	    minHeight="260"
-	    header="#{infoxMessages['modeloPasta.edit']}">
-		
-		<f:facet name="controls">
-      		<h:graphicImage
-		        id="editModeloPastaPanelCloseBtn"
-		        styleClass="mp-close"
-		        value="#{wiSkin.imageFolder}/closeMP.gif"
-		        onmouseup="#{rich:component('editarModeloPastaPanel')}.hide();" />
-      	</f:facet>
-      	
-      	<h:form id="editAnexarModeloPastaForm">
-	        <wi:inputText
-	          	id="editAnexarModeloPastaInputName"
-	          	value="#{modeloPastaRestricaoAction.nome}"
-	          	required="true"
-	          	maxlength="250"
-	        	label="#{infoxMessages['modeloPasta.nome']}">
-	        </wi:inputText>
-			<wi:inputText
-	        	id="editAnexarModeloPastaInputDescricao"
-	        	value="#{modeloPastaRestricaoAction.descricao}"
-	        	required="false"
-	        	maxlength="250"
-	        	label="#{infoxMessages['modeloPasta.descricao']}">
-	        </wi:inputText>	
-	   		<wi:inputNumber
-	        	id="editAnexarModeloPastaInputOrdem"
-	        	value="#{modeloPastaRestricaoAction.ordem}"
-	        	required="true"
-	        	maxlength="19"
-	        	label="#{infoxMessages['modeloPasta.ordem']}">
-		    </wi:inputNumber>
-		    
-	        <br />
-	        
-	        <wi:commandButton
-	          id="saveModeloPastaButton"
-	          action="#{modeloPastaRestricaoAction.update()}"
-	          execute="@form"
-	          oncomplete="#{rich:component('editarModeloPastaPanel')}.hide();"
-	          value="#{infoxMessages['modeloPasta.save']}"
-	          reRender="@form, modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
-      	</h:form>
+   
+    <rich:popupPanel id="addModeloRestricaoPanel" moveable="true" show="false"
+        resizeable="true" minWidth="290" minHeight="360"
+        header="#{infoxMessages['modeloPasta.adicionarRestricao']}"
+        onbeforehide="clearAddModeloRestricaoFields();">
+        <f:facet name="controls">
+            <h:graphicImage id="modeloPastaRestricaoPanelCloseBtn"
+                styleClass="mp-close"
+                value="#{wiSkin.imageFolder}/closeMP.gif"
+                onmouseup="#{rich:component('addModeloRestricaoPanel')}.hide();" />
+        </f:facet>
+        <h:form>
+            <wi:selectOneMenuEnum id="tipoModeloRestricaoInput" required="true"
+                label="#{infoxMessages['modeloPasta.tipoRestricao']}"
+                items="#{modeloPastaRestricaoAction.tiposRestricao}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.tipoPastaRestricao}"
+                hideNoSelectionLabel="#{modeloPastaRestricaoAction.hideSelecione()}">
+                <a:ajax event="change" render="addAlvoInputDiv tipoModeloRestricaoInput" />
+            </wi:selectOneMenuEnum>
+            <s:div id="addAlvoInputDiv">
+                <wi:outputText id="alvoTipoDefault"
+                    rendered="#{modeloPastaRestricaoAction.isRestricaoDefault()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{infoxMessages['modeloPasta.restricao.alvoTodos']}" />
+                <wi:selectOneMenuEntity id="alvoTipoPapelInput"
+                    rendered="#{modeloPastaRestricaoAction.isRestricaoPapel()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{modeloPastaRestricaoAction.alvoRestricaoPapel}"
+                    showRequired="true" required="true"
+                    items="#{modeloPastaRestricaoAction.alvoPapelList}" />
+                <wi:selectOneRadio id="alvoTipoParticipanteInput"
+                    valueList="true:pasta.restricao.participantes,false:pasta.restricao.naoParticipantes"
+                    rendered="#{modeloPastaRestricaoAction.isRestricaoParticipante()}"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}"
+                    value="#{modeloPastaRestricaoAction.alvoRestricaoParticipante}"/>
+                <wi:tree id="alvoTipoLocalizacaoInput"
+                    rendered="#{modeloPastaRestricaoAction.isRestricaoLocalizacao()}"
+                    assignTo="modeloPastaRestricaoAction.alvoRestricaoLocalizacao"
+                    tree="#{localizacaoTree}"
+                    icon="#{wiSkin.imageFolder}/nivelTree.gif"
+                    iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                    required="true"
+                    label="#{infoxMessages['pasta.restricaoAlvo']}" />
+            </s:div>
+            <wi:selectBooleanCheckbox id="readInput"
+                label="#{infoxMessages['pasta.visualizarRestricao']}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.read}" />
+            <wi:selectBooleanCheckbox id="writeInput"
+                label="#{infoxMessages['pasta.inserirRestricao']}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.write}" />
+            <wi:selectBooleanCheckbox id="deleteInput"
+                label="#{infoxMessages['pasta.retirarRestricao']}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.delete}" />
+            <br />
+            <wi:commandButton id="addRestricaoButton"
+                action="#{modeloPastaRestricaoAction.persistRestricao()}"
+                execute="@form" limitRender="true"
+                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addModeloRestricaoPanel')}.hide();}else{clearAddModeloRestricaoFields()}"
+                value="#{infoxMessages['button.add']}"
+                reRender="@form modeloPastaRestricaoDiv pageBodyDialogMessage" />
+        </h:form>
+        
     </rich:popupPanel>
+
+    <rich:popupPanel id="editModeloRestricaoPanel" moveable="true" show="false"
+        resizeable="true" minWidth="290" minHeight="360"
+        header="#{infoxMessages['modeloPasta.restricao.edit']}"
+        onbeforehide="clearEditModeloRestricaoFields();">
+        <f:facet name="controls">
+            <h:graphicImage id="editModeloPastaRestricaoPanelCloseBtn"
+                styleClass="mp-close"
+                value="#{wiSkin.imageFolder}/closeMP.gif"
+                onmouseup="#{rich:component('editModeloRestricaoPanel')}.hide();" />
+        </f:facet>
+        <h:form>
+        	<s:div id="editRestricaoTipoDiv">
+	            <wi:selectOneMenuEnum id="editTipoRestricaoInput" required="true"
+	                label="#{infoxMessages['modeloPasta.tipoRestricao']}"
+	                items="#{modeloPastaRestricaoAction.tiposRestricao}"
+	                disabled="#{modeloPastaRestricaoAction.isRestricaoDefault()}"
+	                rendered="#{not modeloPastaRestricaoAction.isRestricaoDefault()}"
+	                value="#{modeloPastaRestricaoAction.restricaoInstance.tipoPastaRestricao}">
+	                <a:ajax event="change" render="editAlvoInputDiv" />
+	            </wi:selectOneMenuEnum>
+	            <wi:outputText id="alvoTipoDefaultOutput"
+	                label="#{infoxMessages['modeloPasta.tipoRestricao']}"
+	                rendered="#{modeloPastaRestricaoAction.isRestricaoDefault()}"
+	                value="#{infoxMessages['pasta.restricaoDefault']}" />
+            </s:div>
+            <s:div id="editAlvoInputDiv">
+                <wi:outputText id="editAlvoTipoDefault"
+                    rendered="#{modeloPastaRestricaoAction.isRestricaoDefault()}"
+                    label="#{infoxMessages['modeloPasta.restricaoAlvo']}"
+                    value="#{infoxMessages['pasta.restricao.alvoTodos']}" />
+                <wi:selectOneMenuEntity id="editAlvoTipoPapelInput"
+                    rendered="#{modeloPastaRestricaoAction.isRestricaoPapel()}"
+                    label="#{infoxMessages['modeloPasta.restricaoAlvo']}"
+                    value="#{modeloPastaRestricaoAction.alvoRestricaoPapel}"
+                    showRequired="true" required="true"
+                    items="#{modeloPastaRestricaoAction.alvoPapelList}" />
+                <wi:tree id="editAlvoTipoLocalizacaoInput"
+                    rendered="#{modeloPastaRestricaoAction.isRestricaoLocalizacao()}"
+                    assignTo="modeloPastaRestricaoAction.alvoRestricaoLocalizacao"
+                    tree="#{localizacaoTree}"
+                    icon="#{wiSkin.imageFolder}/nivelTree.gif"
+                    iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                    required="true"
+                    label="#{infoxMessages['modeloPasta.restricaoAlvo']}" />
+                <wi:selectOneRadio id="editAlvoTipoParticipanteInput"
+                    valueList="true:pasta.restricao.participantes,false:pasta.restricao.naoParticipantes"
+                    rendered="#{modeloPastaRestricaoAction.isRestricaoParticipante()}"
+                    label="#{infoxMessages['modeloPasta.restricaoAlvo']}"
+                    value="#{modeloPastaRestricaoAction.alvoRestricaoParticipante}"/>
+            </s:div>
+            <wi:selectBooleanCheckbox id="editReadInput"
+                label="#{infoxMessages['pasta.visualizarRestricao']}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.read}" />
+            <wi:selectBooleanCheckbox id="editWriteInput"
+                label="#{infoxMessages['pasta.inserirRestricao']}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.write}" />
+            <wi:selectBooleanCheckbox id="editDeleteInput"
+                label="#{infoxMessages['pasta.retirarRestricao']}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.delete}" />
+            <br />
+            <wi:commandButton id="editRestricaoButton"
+                action="#{modeloPastaRestricaoAction.updateRestricao()}"
+                execute="@form" limitRender="true"
+                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('editModeloRestricaoPanel')}.hide();}else{clearEditModeloRestricaoFields()}"
+                value="#{infoxMessages['button.save']}"
+                reRender="@form modeloPastaRestricaoDiv pageBodyDialogMessage" />
+        </h:form>
+    </rich:popupPanel>
+    
     
 </ui:composition>
