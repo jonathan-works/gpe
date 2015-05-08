@@ -50,7 +50,7 @@
         <ui:define name="toolBar">      
         	<a:commandLink action="#{modeloPastaRestricaoAction.selectModeloPasta(row)}" 
 				execute="@this" limitRender="true" rendered="true"
-				render="pastaRestricaoDiv"
+				render="modeloPastaRestricaoDiv"
 				onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['modeloPasta.restricoes']}" />
 			</a:commandLink>
@@ -86,9 +86,9 @@
 				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar">
 					<wi:toolBar id="viewPastaRestricao" rendered="true"
-						reRender="pastaRestricaoDiv" url="#{wiSkin.imageFolder}/view.png" />
+						reRender="modeloPastaRestricaoDiv" url="#{wiSkin.imageFolder}/view.png" />
 					<wi:toolBar id="removePastaRestricao" rendered="true"
-						reRender="pastaRestricaoDiv"
+						reRender="modeloPastaRestricaoDiv"
 						url="#{wiSkin.imageFolder}/remove.png" />
 				</ui:define>
 				
@@ -96,7 +96,8 @@
 					columnHeader="#{infoxMessages['pasta.tipoRestricao']}"
 					value="#{row.tipoPastaRestricao}" />
 				<wi:columnOutputText columnId="restricaoAlvo"
-					columnHeader="#{infoxMessages['pasta.restricaoAlvo']}" value="#{row.alvo}" />
+					columnHeader="#{infoxMessages['pasta.restricaoAlvo']}" 
+					value="#{row.alvo}" />
 				<wi:columnBoolean columnId="restricaoVisualizar"
 					columnHeader="#{infoxMessages['pasta.visualizarRestricao']}"
 					value="#{row.read}" />
@@ -110,64 +111,70 @@
 
 			<wi:commandButton id="addRestricaoButton" 
 				value="#{infoxMessages['pasta.adicionarRestricao']}" 
-				rendered="#{pastaRestricaoAction.pastaSelecionada}" />
+				rendered="#{modeloPastaRestricaoAction.modeloPastaSelecionada}" />
 		</s:div>
+		
+		
 	<script type="text/javascript">
       function clearAnexarModeloPastaFields() {
-    		#{rich:jQuery('anexarPastaInputName')}.val('');
-    		#{rich:jQuery('anexarPastaInputDescricao')}.val('');
-    		$('.errorFields.errors').remove();
-    	    $('.errors').removeClass('errors');
+    		#{rich:jQuery('anexarModeloPastaInputName')}.val('');
+    		#{rich:jQuery('anexarModeloPastaInputDescricao')}.val('');
+    		#{rich:jQuery('anexarModeloPastaImputOrdem')}.val(0);
+			$('.errorFields.errors').remove();
+			$('.errors').removeClass('errors');
       }
-  </script>
+  	</script>
 
 	<rich:popupPanel
-    id="anexarModeloPastaPanel"
-    moveable="true"
-    show="false"
-    resizeable="false"
-    minHeight="260"
-    header="#{infoxMessages['modeloPasta.add']}"
-    onbeforehide="clearAnexarModeloPastaFields();">
-    <f:facet name="controls">
-      <h:graphicImage
-        id="modeloPastaPanelCloseBtn"
-        styleClass="mp-close"
-        value="#{wiSkin.imageFolder}/closeMP.gif"
-        onmouseup="#{rich:component('anexarModeloPastaPanel')}.hide();" />
-      </f:facet>
-      <h:form id="anexarModeloPastaForm">
-        <wi:inputText
-          	id="anexarModeloPastaInputName"
-          	value="#{modeloPastaRestricaoAction.nome}"
-          	required="true"
-          	maxlength="250"
-        	label="#{infoxMessages['modeloPasta.nome']}">
-        </wi:inputText>
-		<wi:inputText
-        	id="anexarModeloPastaInputDescricao"
-        	value="#{modeloPastaRestricaoAction.descricao}"
-        	required="false"
-        	maxlength="250"
-        	label="#{infoxMessages['modeloPasta.descricao']}">
-        </wi:inputText>	
-   		<wi:inputNumber
-        	id="anexarModeloPastaInputOrdem"
-        	value="#{modeloPastaRestricaoAction.ordem}"
-        	required="true"
-        	maxlength="19"
-        	label="#{infoxMessages['modeloPasta.ordem']}">
-	    </wi:inputNumber>
-        <br />
-        <wi:commandButton
-          id="addModeloPastaButton"
-          action="#{modeloPastaRestricaoAction.persist()}"
-          execute="@form"
-          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('anexarModeloPastaPanel')}.hide();}else{clearAnexarModeloPastaFields()}"
-          value="#{infoxMessages['modeloPasta.add']}"
-          reRender="@form, modeloPastaTable, modeloPastaRestricaoDiv" />
-          <!-- ver onde é que está esse pastaTablePanel -->
-      </h:form>
+	    id="anexarModeloPastaPanel"
+	    moveable="true"
+	    show="false"
+	    resizeable="false"
+	    minHeight="260"
+	    header="#{infoxMessages['modeloPasta.add']}"
+	    onbeforehide="clearAnexarModeloPastaFields();">
+		
+		<f:facet name="controls">
+      		<h:graphicImage
+		        id="modeloPastaPanelCloseBtn"
+		        styleClass="mp-close"
+		        value="#{wiSkin.imageFolder}/closeMP.gif"
+		        onmouseup="#{rich:component('anexarModeloPastaPanel')}.hide();" />
+      	</f:facet>
+      	
+      	<h:form id="anexarModeloPastaForm">
+	        <wi:inputText
+	          	id="anexarModeloPastaInputName"
+	          	value="#{modeloPastaRestricaoAction.nome}"
+	          	required="true"
+	          	maxlength="250"
+	        	label="#{infoxMessages['modeloPasta.nome']}">
+	        </wi:inputText>
+			<wi:inputText
+	        	id="anexarModeloPastaInputDescricao"
+	        	value="#{modeloPastaRestricaoAction.descricao}"
+	        	required="false"
+	        	maxlength="250"
+	        	label="#{infoxMessages['modeloPasta.descricao']}">
+	        </wi:inputText>	
+	   		<wi:inputNumber
+	        	id="anexarModeloPastaInputOrdem"
+	        	value="#{modeloPastaRestricaoAction.ordem}"
+	        	required="true"
+	        	maxlength="19"
+	        	label="#{infoxMessages['modeloPasta.ordem']}">
+		    </wi:inputNumber>
+		    
+	        <br />
+	        
+	        <wi:commandButton
+	          id="addModeloPastaButton"
+	          action="#{modeloPastaRestricaoAction.persist()}"
+	          execute="@form"
+	          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('anexarModeloPastaPanel')}.hide();}else{clearAnexarModeloPastaFields()}"
+	          value="#{infoxMessages['modeloPasta.add']}"
+	          reRender="@form, modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
+      	</h:form>
     </rich:popupPanel>
     
 </ui:composition>
