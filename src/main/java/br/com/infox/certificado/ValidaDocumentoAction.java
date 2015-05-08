@@ -293,6 +293,7 @@ public class ValidaDocumentoAction implements Serializable {
 				Processo processoAnalise = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo, getDocumento());
 				processoAnaliseDocumentoService.inicializarFluxoDocumento(processoAnalise, null);
 				FacesMessages.instance().add("Processo de Análise Iniciado com sucesso");
+				setPodeIniciarFluxoAnaliseDocumentos(Boolean.FALSE);
 			} catch (DAOException e) {
 				LOG.error(e);
 				actionMessagesService.handleDAOException(e);
