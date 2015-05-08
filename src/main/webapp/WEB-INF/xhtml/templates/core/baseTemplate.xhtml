@@ -17,8 +17,6 @@
 </h:head>
 
 <ui:include src="include/ajaxQueue.xhtml" />
-<ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
-<ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 
 <h:body id="body" onbeforeunload="#{onbeforeunload}" onload="#{onload}"
   onunload="#{onunload}">
@@ -26,6 +24,8 @@
   <s:div id="script">
   	<ui:insert name="scripts" />
   </s:div>
+  <ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
+  <ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 </h:body>
 
 </html>
