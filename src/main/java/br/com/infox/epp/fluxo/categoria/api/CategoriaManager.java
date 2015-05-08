@@ -3,7 +3,7 @@ package br.com.infox.epp.fluxo.categoria.api;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import br.com.infox.cdi.annotations.Transactional;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.kernel.manager.CrudManager;
 
