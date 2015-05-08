@@ -188,8 +188,6 @@ public class ProcessoDAO extends DAO<Processo> {
 			return processo;
 		} catch (Exception e) {
 			throw new DAOException(e);
-		} finally {
-			rollbackTransactionIfNeeded();
 		}
 	}
 
