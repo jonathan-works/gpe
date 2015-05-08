@@ -7,7 +7,6 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.fluxo.dao.ModeloPastaDAO;
 import br.com.infox.epp.fluxo.dao.ModeloPastaRestricaoDAO;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;

@@ -62,5 +62,10 @@ public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
     	modeloPastaRestricaoManager.persist(restricao);
     	return modelo;
 	}
+	
+	public void deleteComRestricoes(ModeloPasta modelo) throws DAOException{
+		modeloPastaRestricaoManager.deleteByModeloPasta(modelo);
+		remove(modelo);
+	}
 
 }

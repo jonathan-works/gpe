@@ -21,12 +21,10 @@ import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.ModeloPastaManager;
 import br.com.infox.epp.fluxo.manager.ModeloPastaRestricaoManager;
-import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Name(ModeloPastaRestricaoAction.NAME)
 @Scope(ScopeType.PAGE)
@@ -45,8 +43,6 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	private ActionMessagesService actionMessagesService;
 	@In
 	private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
-	@In
-	private ProcessBuilder processBuilder;
 	
 	private ModeloPasta instance;
 	private List<ModeloPasta> modeloPastaList;
@@ -56,9 +52,9 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	private Boolean modeloPastaSelecionada = false;
 
 	@Create
-	public void create() {
+	public void init(final Fluxo fluxo) {
 		newInstance();
-		setFluxo(processBuilder.getFluxo());
+		setFluxo(fluxo);
 	}
 
 	public void newInstance() {
