@@ -25,6 +25,7 @@ import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Name(ModeloPastaRestricaoAction.NAME)
@@ -84,7 +85,6 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		setSistema(false);		
 		return true;
 	}
-	
 	public void persist() {
 		try {
 			if (prePersist()) {
@@ -98,13 +98,47 @@ public class ModeloPastaRestricaoAction implements Serializable {
 			actionMessagesService.handleDAOException(e);
 		}
 	}
-	
-	public void update() {
-	
+
+	private boolean hasAnotherNome(String nome) {
+		for (ModeloPasta modeloPasta : getModeloPastaList()) {
+			if (nome.equals(modeloPasta.getNome())) {
+				FacesMessages.instance().add(Severity.INFO, "Já existe um outro Modelo de Pasta com este nome.");
+				return true;
+			}
+		}
+		return false;
 	}
 	
-	public void remove(Pasta pasta) {
-		
+	private boolean hasAnotherOrdem(Integer ordem) {
+		for (ModeloPasta modeloPasta : getModeloPastaList()) {
+			if (ordem.equals(modeloPasta.getOrdem())) {
+				FacesMessages.instance().add(Severity.INFO, "Já existe um outro Modelo de Pasta com esta ordem.");
+				return false;
+			}
+		}
+		return false;
+	}
+	public void update() {
+		//TODO testar
+		String nome = getNome();
+		Integer ordem = getOrdem();
+		getInstance().setFluxo(getFluxo());
+		if (!(hasAnotherNome(nome) || hasAnotherOrdem(ordem))) {
+			
+		}
+	}
+	
+	public void removeModeloPasta(ModeloPasta modelo) {
+		try {
+			if (modeloPastaManager == null) {
+				modeloPastaManager = ComponentUtil.getComponent(PastaManager.NAME);
+			}
+			modeloPastaManager.deleteComRestricoes(modelo);
+			setModeloPastaList(modeloPastaManager.getByFluxo(getFluxo()));
+			FacesMessages.instance().add(Severity.INFO, "Pasta removida com sucesso.");
+		} catch (DAOException e) {
+			actionMessagesService.handleDAOException(e);
+		}
 	}
 
 	public void selectModeloPasta(ModeloPasta modeloPasta){
