@@ -193,7 +193,7 @@
 			</h:form>
 			<br />
 			<!-- Documentos disponíveis para serem vinculados à comunicação -->
-			<rich:panel id="documentos" header="Documentos" 
+			<rich:panel id="documentos" header="#{infoxMessages['movimentar.documentos.titleTab']}" 
 				rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada or not empty envioComunicacaoController.modeloComunicacao.documentos}">
 				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(10)}" 
 					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"

@@ -2,7 +2,9 @@ package br.com.infox.certificado;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -166,11 +168,12 @@ public class ValidaDocumentoAction implements Serializable {
 					if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())) {
 						assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(),
 								certificateSignatureBean.getSignature());
-						this.podeIniciarFluxoAnaliseDocumentos = assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento());
+						setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
 						break;
 					}
 				}
 				listAssinaturaDocumento = null;
+				setPodeIniciarFluxoAnaliseDocumentos(validaPodeIniciarFluxoAnalise());
 			} catch (CertificadoException | AssinaturaException | DAOException e) {
 				LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
 				FacesMessages.instance().add(Severity.ERROR, e.getMessage());
@@ -274,6 +277,7 @@ public class ValidaDocumentoAction implements Serializable {
 	public void setIdDocumento(Integer idDocumento) {
 		validaDocumentoId(idDocumento);
 		this.idDocumento = idDocumento;
+		setPodeIniciarFluxoAnaliseDocumentos(validaPodeIniciarFluxoAnalise());
 	}
 
 	public String getExternalCallback() {
@@ -290,6 +294,8 @@ public class ValidaDocumentoAction implements Serializable {
 			try {
 				Processo processoAnalise = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo, getDocumento());
 				processoAnaliseDocumentoService.inicializarFluxoDocumento(processoAnalise, null);
+				FacesMessages.instance().add("Processo de Análise Iniciado com sucesso");
+				setPodeIniciarFluxoAnaliseDocumentos(Boolean.FALSE);
 			} catch (DAOException e) {
 				LOG.error(e);
 				actionMessagesService.handleDAOException(e);
@@ -298,30 +304,56 @@ public class ValidaDocumentoAction implements Serializable {
 		}
 	}
 
-	public boolean isPodeIniciarFluxoAnaliseDocumentos() {
-		Documento documento = getDocumento();
-		if (documento == null) {
-			this.podeIniciarFluxoAnaliseDocumentos = false;
-		} else {
-			Papel papelInclusao = documento.getPerfilTemplate().getPapel();
-			this.podeIniciarFluxoAnaliseDocumentos = !papelInclusao.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE) 
-					&& assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
-			if (this.podeIniciarFluxoAnaliseDocumentos){
-				List<Processo> listProcesso = processoDAO.getProcessosFilhoNotEndedByTipo(documento.getProcesso(),
-						TipoProcesso.DOCUMENTO.toString());
-				for (Processo processo : listProcesso) {
-					MetadadoProcesso metadadoProcesso = processo.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
-					if (metadadoProcesso.getValor().equals(documento.getId().toString())) {
-						this.podeIniciarFluxoAnaliseDocumentos = false;
-						break;
-					}
-				}
-			}			
-		}
+	public Boolean getpodeIniciarFluxoAnaliseDocumentos() {
 		return this.podeIniciarFluxoAnaliseDocumentos;
 	}
 
-	public void setPodeIniciarFluxoAnaliseDocumentos(boolean isDocumentoTotalmenteAssinado) {
+	private Boolean validaPodeIniciarFluxoAnalise() {
+		Documento documento = getDocumento();
+		boolean podeIniciarAnaliseDoc;
+		if (documento == null) {
+			podeIniciarAnaliseDoc = false;
+		} else {
+			podeIniciarAnaliseDoc = !papelInclusaoPossuiRecursoAnexar(documento) && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento);
+			if (podeIniciarAnaliseDoc){
+				podeIniciarAnaliseDoc = !existeProcessoAnaliseByDocumento(documento);
+			}			
+		}
+		setPodeIniciarFluxoAnaliseDocumentos(podeIniciarAnaliseDoc);
+		return podeIniciarAnaliseDoc;
+	}
+
+	private boolean existeProcessoAnaliseByDocumento(Documento documento) {
+		List<Processo> listProcesso = processoDAO.getProcessosFilhosByTipo(documento.getProcesso(),
+				TipoProcesso.DOCUMENTO.toString());
+		for (Processo processo : listProcesso) {
+			MetadadoProcesso metadadoProcesso = processo.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
+			if (metadadoProcesso.getValor().equals(documento.getId().toString())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean papelInclusaoPossuiRecursoAnexar(Documento documento) {
+		Papel papelInclusao = documento.getPerfilTemplate().getPapel();
+		if(papelInclusao.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE))
+			return true;
+		
+		Queue<Papel> papeisPais = new LinkedList<Papel>(papelInclusao.getGrupos());
+		while(papeisPais.peek() != null){
+			Papel papelPai = papeisPais.element();
+			papeisPais.remove();
+			if(papelPai.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE))
+				return true;
+			for(Papel papel : papelPai.getGrupos()){
+				papeisPais.add(papel);
+			}
+		}
+		return false;
+	}
+
+	public void setPodeIniciarFluxoAnaliseDocumentos(Boolean isDocumentoTotalmenteAssinado) {
 		this.podeIniciarFluxoAnaliseDocumentos = isDocumentoTotalmenteAssinado;
 	}
 }

@@ -18,6 +18,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TASKMGMINST
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_TOKEN;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_USUARIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_SITUACAO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_TIPO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
@@ -198,6 +199,13 @@ public class ProcessoDAO extends DAO<Processo> {
 		parameters.put(PROCESSO_PAI_PARAM, processo);
 		parameters.put(TIPO_PROCESSO_PARAM, tipoProcesso);
 		return getNamedResultList(PROCESSOS_FILHO_NOT_ENDED_BY_TIPO, parameters);
+    }
+	
+	public List<Processo> getProcessosFilhosByTipo(Processo processo, String tipoProcesso) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(PROCESSO_PAI_PARAM, processo);
+		parameters.put(TIPO_PROCESSO_PARAM, tipoProcesso);
+		return getNamedResultList(PROCESSOS_FILHO_BY_TIPO, parameters);
     }
 	
 	public List<Processo> getProcessosByIdCaixa(Integer idCaixa) {

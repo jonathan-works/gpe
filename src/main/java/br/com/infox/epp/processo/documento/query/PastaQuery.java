@@ -21,8 +21,8 @@ public interface PastaQuery {
     String FILTER_NUMERO_DOCUMENTO = " and o.numeroDocumento = :" + PARAM_NUMERO_DOCUMENTO;
     
     
-    String FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR = " and (DocumentoSuficientementeAssinado(o.id) = true or o.localizacao = :" + PARAM_LOCALIZACAO + ") ";
-    String FILTER_SUFICIENTEMENTE_ASSINADO = " and DocumentoSuficientementeAssinado(o.id) = true ";
+    String FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR = " and (bin.suficientementeAssinado = true or o.localizacao = :" + PARAM_LOCALIZACAO + ") ";
+    String FILTER_SUFICIENTEMENTE_ASSINADO = " and bin.suficientementeAssinado = true ";
 
     String FILTER_SIGILO = " and not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) ";
     String FILTER_EXCLUIDO = " and o.excluido = false ";

@@ -90,9 +90,11 @@
 				</h:form>
 				<s:div rendered="#{showIniciarAnaliseDocumentos and validaDocumentoAction.podeIniciarFluxoAnaliseDocumentos }">
 					<h:form id="inicioAnaliseDocumentoForm">
-						<h:commandButton  
-						action="#{validaDocumentoAction.inicarAnaliseDocumento}"
-						value="#{infoxMessages['comunicacao.iniciarAnaliseDocumento']}" immediate="true" styleClass="buttons" /> 
+						<a:commandButton  
+						action="#{validaDocumentoAction.inicarAnaliseDocumento()}"
+						value="#{infoxMessages['comunicacao.iniciarAnaliseDocumento']}" styleClass="buttons" 
+						limitRender="true" execute="@this" onclick="infox.showLoading();"
+						oncomplete="infox.hideLoading(); #{rich:component(idPopup)}.hide();" render="pageBodyDialogMessage, conteudoAssinatura"/> 
 					</h:form>
 				</s:div>
 				

@@ -25,44 +25,38 @@ import br.com.infox.epp.system.manager.ParametroManager;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class DocumentoList extends EntityList<Documento> {
-	
+
     private static final long serialVersionUID = 1L;
     private static final String DEFAULT_EJBQL = "select o from Documento o inner join o.documentoBin bin where "
-    		+ "bin.minuta = false and "
+            + "bin.minuta = false and "
             + "(not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true and "
             + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o))) and "
-            + "(DocumentoSuficientementeAssinado(o.id) = true or o.localizacao = #{authenticator.getUsuarioPerfilAtual().getLocalizacao()})";
-    
-    private static final String DOCUMENTO_EXCLUIDO_FILTER = " and o.excluido = false";
-    
+            + "(bin.suficientementeAssinado = true or o.localizacao = #{authenticator.getUsuarioPerfilAtual().getLocalizacao()})";
+
     private static final String DEFAULT_ORDER = "o.dataInclusao desc";
 
     public static final String NAME = "documentoList";
-    
-    
-    @In
-    private ParametroManager parametroManager;
-    @In
-    private PastaManager pastaManager;
-    @In
-    private ActionMessagesService actionMessagesService;
-   
+
+    @In private ParametroManager parametroManager;
+    @In private PastaManager pastaManager;
+    @In private ActionMessagesService actionMessagesService;
+
     @Override
     protected void addSearchFields() {
         addSearchField("pasta", SearchCriteria.IGUAL);
         addSearchField("classificacaoDocumento", SearchCriteria.IGUAL);
         addSearchField("numeroDocumento", SearchCriteria.IGUAL);
+        addSearchField("excluido", SearchCriteria.IGUAL);
     }
 
     @Override
     protected String getDefaultEjbql() {
-    	String usuarioExternoPodeVer = (String) Parametros.IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO.getValue();
-        if(Identity.instance().hasRole("usuarioExterno") && "false".equals(usuarioExternoPodeVer)){
-        	return DEFAULT_EJBQL + DOCUMENTO_EXCLUIDO_FILTER;
-        } else {
-        	return DEFAULT_EJBQL;
+        String usuarioExternoPodeVer = (String) Parametros.IS_USUARIO_EXTERNO_VER_DOC_EXCLUIDO.getValue();
+        if (Identity.instance().hasRole("usuarioExterno") && "false".equals(usuarioExternoPodeVer)) {
+            getEntity().setExcluido(Boolean.FALSE);
         }
+        return DEFAULT_EJBQL;
     }
 
     @Override
@@ -72,23 +66,24 @@ public class DocumentoList extends EntityList<Documento> {
 
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
-    	Map<String, String> map = new HashMap<>();
-    	map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
-    	map.put("numeroDocumento", "o.numeroDocumento");
-    	map.put("usuarioInclusao", "o.usuarioInclusao");
-    	map.put("dataInclusao", "o.dataInclusao");
-    	map.put("descricao", "o.descricao");
-    	map.put("classificacaoDocumento", "o.classificacaoDocumento");
+        Map<String, String> map = new HashMap<>();
+        map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
+        map.put("numeroDocumento", "o.numeroDocumento");
+        map.put("usuarioInclusao", "o.usuarioInclusao");
+        map.put("dataInclusao", "o.dataInclusao");
+        map.put("descricao", "o.descricao");
+        map.put("classificacaoDocumento", "o.classificacaoDocumento");
         return map;
     }
+
     public Processo getProcesso() {
         return getEntity().getProcesso();
     }
-    
+
     public void setProcesso(Processo processo) {
         Documento documento = getEntity();
         documento.setProcesso(processo);
-        if (documento.getPasta()== null){
+        if (documento.getPasta() == null) {
             try {
                 Pasta pasta = pastaManager.getDefaultFolder(documento.getProcesso());
                 documento.setPasta(pasta);

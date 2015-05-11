@@ -35,6 +35,7 @@ import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
 import br.com.infox.hibernate.UUIDGenericType;
 
@@ -87,7 +88,18 @@ public class DocumentoBin implements Serializable {
     
     @Column(name = "in_minuta")
     @NotNull
-    private boolean minuta = true;
+    private Boolean minuta;
+    
+    @NotNull
+    @Column(name="in_assin_sufic")
+    private Boolean suficientementeAssinado;
+    
+    @Column(name="dt_assin_sufic", nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataSuficientementeAssinado;
+    
+    @OneToMany(fetch= FetchType.LAZY, mappedBy="documentoBin")
+    private List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList;
@@ -99,9 +111,12 @@ public class DocumentoBin implements Serializable {
     private byte[] processoDocumento;
 
     public DocumentoBin() {
+    	this.minuta = Boolean.TRUE;
+    	this.suficientementeAssinado = Boolean.FALSE;
         this.dataInclusao=new Date();
         this.documentoList = new ArrayList<>(0);
         this.assinaturas = new ArrayList<>(0);
+        this.registrosAssinaturaSuficiente = new ArrayList<>(0);
     }
     
     @PrePersist
@@ -206,15 +221,44 @@ public class DocumentoBin implements Serializable {
         this.uuid = uuid;
     }
     
-    public boolean isMinuta() {
+    public Boolean isMinuta() {
 		return minuta;
 	}
     
-    public void setMinuta(boolean minuta) {
+    public Boolean getMinuta(){
+        return minuta;
+    }
+    
+    public void setMinuta(Boolean minuta) {
 		this.minuta = minuta;
 	}
     
-    @Override
+    public Boolean getSuficientementeAssinado() {
+		return suficientementeAssinado;
+	}
+
+	public void setSuficientementeAssinado(Boolean suficientementeAssinado) {
+		this.suficientementeAssinado = suficientementeAssinado;
+	}
+
+	public Date getDataSuficientementeAssinado() {
+		return dataSuficientementeAssinado;
+	}
+
+	public void setDataSuficientementeAssinado(Date dataSuficientementeAssinado) {
+		this.dataSuficientementeAssinado = dataSuficientementeAssinado;
+	}
+
+	public List<RegistroAssinaturaSuficiente> getRegistrosAssinaturaSuficiente() {
+		return registrosAssinaturaSuficiente;
+	}
+
+	public void setRegistrosAssinaturaSuficiente(
+			List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente) {
+		this.registrosAssinaturaSuficiente = registrosAssinaturaSuficiente;
+	}
+
+	@Override
     public String toString() {
         return isBinario() ? nomeArquivo : md5Documento;
     }
