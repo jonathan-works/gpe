@@ -29,6 +29,7 @@ import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
@@ -40,6 +41,8 @@ public class IniciarProcessoService implements Serializable {
 	
 	@In
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+    @In
+    private VariavelProcessoService variavelProcessoService;
 	@In
 	private ProcessoManager processoManager;
     @In
@@ -127,7 +130,7 @@ public class IniciarProcessoService implements Serializable {
             ContextInstance contextInstance) {
         List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
-            contextInstance.setVariable(variavelProcesso.getNome(), null);
+            contextInstance.setVariable(variavelProcesso.getNome(), variavelProcessoService.getVariavelProcesso(processo, variavelProcesso.getNome()));
         }
     }
 }
