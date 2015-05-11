@@ -8,7 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 @Name(VariavelService.NAME)
-@Scope(ScopeType.APPLICATION)
+@Scope(ScopeType.EVENT)
 @Install(precedence=Install.APPLICATION)
 public class VariavelService implements Serializable {
 
