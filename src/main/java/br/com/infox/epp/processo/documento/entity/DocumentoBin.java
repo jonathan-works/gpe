@@ -225,6 +225,10 @@ public class DocumentoBin implements Serializable {
 		return minuta;
 	}
     
+    public Boolean getMinuta(){
+        return minuta;
+    }
+    
     public void setMinuta(Boolean minuta) {
 		this.minuta = minuta;
 	}
