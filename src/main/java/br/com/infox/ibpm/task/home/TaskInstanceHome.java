@@ -53,6 +53,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -597,12 +598,12 @@ public class TaskInstanceHome implements Serializable {
 		return isAssinaturaOk;
 	}
 
-	private boolean validarAssinaturaDocumento(Documento documento) {
-		if (documento.isAssinaturaObrigatoria(Authenticator.getPapelAtual())) {
-			return documento.hasAssinaturaSuficiente() || documento.isDocumentoAssinado(Authenticator.getPapelAtual());
-		}
-		return true;
-	}
+    private boolean validarAssinaturaDocumento(Documento documento) {
+        Papel papel = Authenticator.getPapelAtual();
+        boolean isValid = assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento)
+                || !documento.isAssinaturaObrigatoria(papel) || documento.isDocumentoAssinado(papel);
+        return isValid;
+    }
 
 	private boolean validFileUpload() {
 		// TODO verificar se é necessária a mesma validação do update para
