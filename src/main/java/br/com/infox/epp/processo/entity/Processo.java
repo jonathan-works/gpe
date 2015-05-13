@@ -138,7 +138,7 @@ public class Processo implements Serializable {
     private Processo processoPai;
     
     @OneToMany(mappedBy = "processoPai", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
-    private ArrayList<Processo> processosFilhos;
+    private List<Processo> processosFilhos;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -211,12 +211,12 @@ public class Processo implements Serializable {
     }
         
     
-    public ArrayList<Processo> getFilhos() {
+    public List<Processo> getFilhos() {
 		return processosFilhos;
 	}
 
 
-	public void setFilhos(ArrayList<Processo> filhos) {
+	public void setFilhos(List<Processo> filhos) {
 		this.processosFilhos = filhos;
 	}
 
