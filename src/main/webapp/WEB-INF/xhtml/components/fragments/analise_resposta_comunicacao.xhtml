@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j">
+	
+	<!-- pensar em dividir em dois componentes um para a comunicação e um para os documentos da resposta -->
+	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
+		<wi:outputText id="destinatario" value="#{analisarRespostaAction.destinatario}"
+			label="#{infoxMessages['comunicacao.destinatario']}" />
+		<wi:outputText id="dataExpedicaoComunicacao" label="#{infoxMessages['comunicacao.dataEnvio']}"
+			value="#{analisarRespostaAction.dataResposta}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</wi:outputText>
+		<wi:outputText id="dataResposta" label="#{infoxMessages['comunicacao.dataResposta']}"
+			value="#{analisarRespostaAction.dataResposta}">
+			<f:convertDateTime pattern="dd/MM/yyyy" />
+		</wi:outputText>
+		<wi:outputText id="tipoComunicacao" value="#{analisarRespostaAction.tipoComunicacao}"
+			label="#{infoxMessages['comunicacao.tipoComunicacao']}" />
+		
+		<h:form>
+			<h:commandButton value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons"  />
+		</h:form>		
+		<rich:panel id="documentosComunicacao" header="#{infoxMessages['comunicacao.documentosComunicacao']}" rendered="true">
+			<h:form>
+			<rich:dataTable value="#{analisarRespostaAction.documentosComunicacao}" 
+					var="bean" styleClass="dtable rf-dt-crud">
+					<rich:column styleClass="dt-toolbar-col" rendered="true">
+							<a:commandLink rendered="true">
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+							</a:commandLink>
+					</rich:column>
+					<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
+					<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
+					<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.tamanho}" />
+			</rich:dataTable>
+			</h:form>
+		</rich:panel>
+	</rich:collapsiblePanel>
+	
+	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.respostaComunicacao']}" switchType="client">
+		<rich:panel id="documentosResposta" header="#{infoxMessages['comunicacao.documentosResposta']}" rendered="true">
+			<h:form>
+			<rich:dataTable value="#{analisarRespostaAction.documentosResposta}" 
+					var="bean" styleClass="dtable rf-dt-crud">
+					<rich:column styleClass="dt-toolbar-col" rendered="true">
+							<a:commandLink rendered="true">
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+							</a:commandLink>
+					</rich:column>
+					<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{bean.numeroDocumento}" />
+					<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
+					<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
+					<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.tamanho}" />
+			</rich:dataTable>
+			</h:form>
+		</rich:panel>
+	</rich:collapsiblePanel>
+</ui:composition>
