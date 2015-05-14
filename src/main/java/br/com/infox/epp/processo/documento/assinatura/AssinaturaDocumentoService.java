@@ -259,13 +259,17 @@ public class AssinaturaDocumentoService implements Serializable {
 		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
 		documentoBin.setDataSuficientementeAssinado(new Date());
 		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
-		for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documentoBin.getDocumentoList().get(0).getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
-			RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
-			registroAssinaturaSuficiente.setDocumentoBin(documentoBin);
-			registroAssinaturaSuficiente.setPapel(usuarioPerfilAtual.getPerfilTemplate().getPapel().getNome());
-			registroAssinaturaSuficiente.setTipoAssinatura(classificacaoDocumentoPapel.getTipoAssinatura());
-			registrosAssinaturaSuficiente.add(registroAssinaturaSuficiente);
-		}
+		List<Documento> documentoList = documentoManager.getDocumentosFromDocumentoBin(documentoBin);
+        if (!(documentoList == null || documentoList.isEmpty())) {
+            Documento documento = documentoList.get(0);
+            for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
+                RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
+                registroAssinaturaSuficiente.setDocumentoBin(documentoBin);
+                registroAssinaturaSuficiente.setPapel(usuarioPerfilAtual.getPerfilTemplate().getPapel().getNome());
+                registroAssinaturaSuficiente.setTipoAssinatura(classificacaoDocumentoPapel.getTipoAssinatura());
+                registrosAssinaturaSuficiente.add(registroAssinaturaSuficiente);
+            }
+        }
 	}
     
     public void assinarDocumento(final Documento documento,

@@ -384,12 +384,21 @@ public class Documento implements Serializable, Cloneable {
     
     public boolean isAssinaturaObrigatoria(Papel papel) {
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
-    	for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : papeis){
-    		if (classificacaoDocumentoPapel.getPapel().equals(papel) ) {
-    			return  classificacaoDocumentoPapel.getTipoAssinatura() == TipoAssinaturaEnum.O;
-    		}
-    	}
-    	return false;
+    	boolean existeObrigatoria=false;
+    	TipoAssinaturaEnum tipoAssinaturaEncontrado=null;
+        for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : papeis) {
+            switch (classificacaoDocumentoPapel.getTipoAssinatura()) {
+            case O:
+                existeObrigatoria |= true;
+                break;
+            default:
+                break;
+            }
+            if (classificacaoDocumentoPapel.getPapel().equals(papel)) {
+                tipoAssinaturaEncontrado = classificacaoDocumentoPapel.getTipoAssinatura();
+            }
+        }
+    	return TipoAssinaturaEnum.O.equals(tipoAssinaturaEncontrado) || (TipoAssinaturaEnum.S.equals(tipoAssinaturaEncontrado) && !existeObrigatoria);
     }
     
     @Transient
