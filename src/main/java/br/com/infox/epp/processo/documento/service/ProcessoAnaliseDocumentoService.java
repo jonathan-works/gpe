@@ -77,7 +77,7 @@ public class ProcessoAnaliseDocumentoService {
 		return processoAnalise;
 	}
 	
-	public void inicializarFluxoDocumento(Processo processoAnalise, Map<String, Object> variaveisJbpm) throws DAOException {
+	public void inicializarFluxoDocumento(Processo processoAnalise, Map<String, Object> variaveisJbpm) throws DAOException {//TODO colocar aqui pra inserir metadado
 		if (variaveisJbpm == null) {
 			variaveisJbpm = new HashMap<>();
 		} else {

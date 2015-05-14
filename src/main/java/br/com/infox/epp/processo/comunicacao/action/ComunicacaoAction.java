@@ -17,8 +17,8 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.security.Identity;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -201,7 +201,7 @@ public class ComunicacaoAction implements Serializable {
 		return classificacoesDocumento;
 	}
 	
-	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo() {
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo() {//TODO ver se é aqui que influenca as classificações da resposta
 		if (classificacoesDocumentoProrrogacaoPrazo == null) {
 			if (isProrrogacaoPrazo()) {
 				ModeloComunicacao modeloComunicacao = modeloComunicacaoManager.find(destinatario.getIdModeloComunicacao());
@@ -371,7 +371,7 @@ public class ComunicacaoAction implements Serializable {
 		ciencia = false;
 	}
 	
-	public void pedirProrrogacaoPrazo() {
+	public void pedirProrrogacaoPrazo() {// TODO ver onde colocar o metadado DATA_PEDIDO_PRORROGACAO
 		try {
 			Processo comunicacao = destinatario.getComunicacao();
 			documentoUploader.setProcesso(comunicacao.getProcessoRoot());
@@ -417,7 +417,7 @@ public class ComunicacaoAction implements Serializable {
 		return dadosCiencia.get(bean.getIdDestinatario());
 	}
 	
-	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {
+	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {//TODO testar aqui se essa comunicação já pediu prorrogação
 		return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getTipoComunicacao()) && isCienciaConfirmada(bean);
 	}
 	

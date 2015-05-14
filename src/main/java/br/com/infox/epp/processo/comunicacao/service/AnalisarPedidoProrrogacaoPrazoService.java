@@ -7,7 +7,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Local
-public interface AnalisarPedidoProrrogacaoPrazoService {
+public interface AnalisarPedidoProrrogacaoPrazoService {//TODO ver a classe do TCE que extende isso
 	Documento getSolicitacaoProrrogacaoPrazo(Processo processoAnaliseDocumento);
 	void atualizarPrazo(Processo comunicacao, Integer diasProrrogacao) throws DAOException;
 }
