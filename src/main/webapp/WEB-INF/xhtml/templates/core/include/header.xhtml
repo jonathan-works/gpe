@@ -9,11 +9,12 @@
     <s:div styleClass="banner">
         <s:div styleClass="banner-lft">
             <h:form>
-                <h:commandLink action="#{conversationFacade.endBeforeRedirect(authenticator.urlPainel)}">
+                <a:commandLink action="#{conversationFacade.endBeforeRedirect(authenticator.urlPainel)}"
+                	execute="@this" status="dummy">
                     <h:graphicImage styleClass="banner-logo"
                         rendered="#{!hideImage}"
                         url="#{wiSkin.imageFolder}/logo_epp_topo.png" />
-                </h:commandLink>
+                </a:commandLink>
             </h:form>
         </s:div>
         <s:div styleClass="banner-ctr">
