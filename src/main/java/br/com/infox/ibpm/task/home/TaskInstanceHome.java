@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.task.home;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -91,6 +92,7 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
+import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -490,9 +492,9 @@ public class TaskInstanceHome implements Serializable {
 		Integer idDocumento = (Integer) taskInstance.getVariable(variableType.getLeft());
 		if (idDocumento != null) {
 			Documento documento = documentoManager.find(idDocumento);
-			return documento != null && !documento.isDocumentoAssinado(Authenticator.getPapelAtual())
-					&& !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())
-					&& documento.isDocumentoAssinavel(Authenticator.getPapelAtual());
+			return documento != null 
+			        && documento.isDocumentoAssinavel(Authenticator.getPapelAtual())
+			        && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
 		}
 		return false;
 	}
@@ -590,7 +592,8 @@ public class TaskInstanceHome implements Serializable {
 				Documento documento = documentoManager.find(variableInstance.getValue());
 				boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
 				if (!assinaturaVariavelOk) {
-					FacesMessages.instance().add(String.format(infoxMessages.get("assinaturaDocumento.faltaAssinatura"), key.split(":")[1]));
+				    String label = VariableHandler.getLabel(format("{0}:{1}", taskInstance.getTask().getProcessDefinition().getName(), key.split(":")[1]));
+					FacesMessages.instance().add(String.format(infoxMessages.get("assinaturaDocumento.faltaAssinatura"), label));
 				}
 				isAssinaturaOk = isAssinaturaOk && assinaturaVariavelOk;
 			}
