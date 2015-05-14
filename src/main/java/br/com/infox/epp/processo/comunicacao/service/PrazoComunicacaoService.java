@@ -70,8 +70,13 @@ public class PrazoComunicacaoService {
 		}
 		if (diasPrazoCumprimento >= 0) {
     		Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
+    		String dataLimite = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento);
     		MetadadoProcesso metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
-    		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento));
+    		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, dataLimite);
+    		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoLimiteDataCumprimento));
+    		
+    		metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
+    				ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL, dataLimite);
     		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoLimiteDataCumprimento));
 		}
 		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia, comunicacao);
