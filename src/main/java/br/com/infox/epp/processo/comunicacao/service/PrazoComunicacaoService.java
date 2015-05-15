@@ -23,6 +23,8 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.system.Parametros;
 
+import com.google.common.base.Strings;
+
 @Name(PrazoComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
@@ -111,4 +113,48 @@ public class PrazoComunicacaoService {
 		ContextInstance contextInstance = processInstance.getContextInstance();
         contextInstance.setVariable("possuiPrazoParaCumprimento", possuiPrazoParaCumprimento);
     }
+    
+    public Date getDataPedidoProrrogacao(Processo comunicacao){
+    	MetadadoProcesso metadadoProcesso = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO);
+    	if(metadadoProcesso != null) {
+    		return metadadoProcesso.getValue();
+    	}
+    	return null;
+    }
+    
+    public boolean hasPedidoProrrogacaoEmAberto(Processo comunicacao){
+    	return getDataPedidoProrrogacao(comunicacao) != null && getDataAnaliseProrrogacao(comunicacao) == null;
+    }
+    
+    public Date getDataAnaliseProrrogacao(Processo comunicacao){
+    	MetadadoProcesso metadadoProcesso = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_ANALISE_PRORROGACAO);
+    	if(metadadoProcesso != null) {
+    		return metadadoProcesso.getValue();
+    	}
+    	return null;
+    }
+    
+    public boolean isPrazoProrrogado(Processo comunicacao){
+    	return  !comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL).getValue().equals(
+    					comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO).getValue());
+    }
+    
+    //TODO ver onde coloco isso aqui
+    public String getStatusProrrogacaoFormatado(Processo comunicacao){
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		if (hasPedidoProrrogacaoEmAberto(comunicacao)){
+			return "Aguardando análise desde " + dateFormat.format(getDataPedidoProrrogacao(comunicacao));
+		}else{
+			String dataAnalise = dateFormat.format(getDataAnaliseProrrogacao(comunicacao)); 
+			if ( Strings.isNullOrEmpty(dataAnalise)){
+				if(isPrazoProrrogado(comunicacao)){
+					return "Prazo Prorrogado em " + dataAnalise;
+				}else{
+					return "Prorrogação negada em " + dataAnalise;
+				}
+			}
+		}
+		return "-";
+    }
+    
 }
