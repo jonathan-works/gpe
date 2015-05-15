@@ -24,6 +24,7 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -42,6 +43,8 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
+import com.google.common.base.Strings;
 
 @Name(RespostaComunicacaoAction.NAME)
 @AutoCreate
@@ -84,6 +87,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	private Processo processoComunicacao;
 	private Processo processoRaiz;
 	private Date prazoResposta;
+	private String statusProrrogacao;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
@@ -128,8 +132,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void gravarResposta() {
-		String textoEditor = documentoEdicao.getDocumentoBin().getModeloDocumento();
-		if (textoEditor == null || textoEditor.isEmpty()) {
+		if (Strings.isNullOrEmpty(documentoEdicao.getDocumentoBin().getModeloDocumento())) {
 			FacesMessages.instance().add("Insira texto no editor");
 			return;
 		}
@@ -176,6 +179,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 		try {
 			respostaComunicacaoService.enviarResposta(documentosResposta);
+			initClassificacoes();
 			FacesMessages.instance().add("Resposta enviada com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -264,9 +268,17 @@ public class RespostaComunicacaoAction implements Serializable {
 		return prazoResposta;
 	}
 
+	public String getStatusProrrogacao() {
+		return prazoComunicacaoService.getStatusProrrogacaoFormatado(processoComunicacao);
+	}
+
+	public void setStatusProrrogacao(String statusProrrogacao) {
+		this.statusProrrogacao = statusProrrogacao;
+	}
+
 	private void initClassificacoes() {
-		TipoComunicacao tipoComunicacao = destinatario.getModeloComunicacao().getTipoComunicacao();
-		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, true);
-		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, false);
+		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
+		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(modeloComunicacao, true);
+		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(modeloComunicacao, false);
 	}
 }
