@@ -56,11 +56,13 @@ public class ContagemPrazoProcessor {
 	private void analisarProcessosAguardandoCumprimento() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCumprimento();
 		for (Processo processo : processos) {
-		    Date dataLimite = processo.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO).getValue();//TODO adicionar teste do prazo congelado
-            DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
-			if (dataParaCumprimento.isBeforeNow()) {
-				movimentarProcessoJBPM(processo);
-			}
+		    Date dataLimite = processo.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO).getValue();
+		    if (!prazoComunicacaoService.hasPedidoProrrogacaoEmAberto(processo)){
+	            DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
+				if (dataParaCumprimento.isBeforeNow()) {
+					movimentarProcessoJBPM(processo);
+				}
+		    }
 		}
 	}
 	
