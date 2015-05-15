@@ -62,16 +62,6 @@ public class Pasta implements Serializable, Cloneable {
     @JoinColumn(name = "id_processo", nullable = false)
     private Processo processo;
     
-    @Deprecated
-    @NotNull
-    @Column(name = "in_visivel_externo", nullable = false)
-    private Boolean visivelExterno = Boolean.FALSE;
-
-    @Deprecated
-    @NotNull
-    @Column(name = "in_visivel_nao_participante", nullable = false)
-    private Boolean visivelNaoParticipante = Boolean.FALSE;
-
     @NotNull
     @Column(name = "in_removivel", nullable = false)
     private Boolean removivel;
@@ -108,26 +98,6 @@ public class Pasta implements Serializable, Cloneable {
 
     public void setProcesso(Processo processo) {
         this.processo = processo;
-    }
-
-    @Deprecated
-    public Boolean getVisivelExterno() {
-        return visivelExterno;
-    }
-
-    @Deprecated
-    public void setVisivelExterno(Boolean visivelExterno) {
-        this.visivelExterno = visivelExterno;
-    }
-
-    @Deprecated
-    public Boolean getVisivelNaoParticipante() {
-        return visivelNaoParticipante;
-    }
-
-    @Deprecated
-    public void setVisivelNaoParticipante(Boolean visivelNaoParticipante) {
-        this.visivelNaoParticipante = visivelNaoParticipante;
     }
 
     public String getNome() {

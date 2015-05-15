@@ -2,7 +2,6 @@ package br.com.infox.epp.fluxo.crud;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -80,7 +79,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		setInstance(new ModeloPasta());
 		getInstance().setRemovivel(true);
 		getInstance().setEditavel(true);
-		getInstance().setSistema(false);
+		getInstance().setSistema(true);
 	}
 	
 	public void newRestricaoInstance() {
@@ -267,7 +266,6 @@ public class ModeloPastaRestricaoAction implements Serializable {
     public void setRestricaoInstance(ModeloPastaRestricao restricaoInstance) {
         this.restricaoInstance = restricaoInstance;
     }
-    //TODO ver com Avner esses tipos de restrições aqui se deveriam ser repetidos
 	public Boolean isRestricaoDefault(ModeloPastaRestricao modelo) {
 	    return PastaRestricaoEnum.D.equals(modelo.getTipoPastaRestricao());
 	}
@@ -329,8 +327,6 @@ public class ModeloPastaRestricaoAction implements Serializable {
         this.alvoRestricaoParticipante = inParticipante;
     }
     
-    //até aqui
-	
 	public List<ModeloPastaRestricao> getRestricoes() {
 		return restricoes;
 	}

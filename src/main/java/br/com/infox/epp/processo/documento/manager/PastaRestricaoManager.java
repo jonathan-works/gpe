@@ -15,6 +15,9 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.fluxo.entity.ModeloPasta;
+import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;
+import br.com.infox.epp.fluxo.manager.ModeloPastaRestricaoManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.dao.PastaRestricaoDAO;
@@ -40,6 +43,8 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
     private PapelManager papelManager;
     @In
     private LocalizacaoManager localizacaoManager;
+    @In
+    private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
 
     public Map<Integer, PastaRestricaoBean> loadRestricoes(Processo processo, UsuarioLogin usuario, Localizacao localizacao, Papel papel) throws DAOException {
         Map<Integer, PastaRestricaoBean> restricoes = new HashMap<>();
@@ -182,5 +187,19 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
         restricao.setWrite(Boolean.TRUE);
         restricao.setDelete(Boolean.TRUE); 
         return persist(restricao);
+    }
+    
+    public void createRestricoesFromModelo(ModeloPasta modeloPasta, Pasta pasta) throws DAOException {
+        List<ModeloPastaRestricao> modeloRestricaoList = modeloPastaRestricaoManager.getByModeloPasta(modeloPasta);
+        for (ModeloPastaRestricao modeloRestricao : modeloRestricaoList) {
+            PastaRestricao restricao = new PastaRestricao();
+            restricao.setPasta(pasta);
+            restricao.setTipoPastaRestricao(modeloRestricao.getTipoPastaRestricao());
+            restricao.setAlvo(modeloRestricao.getAlvo());
+            restricao.setRead(modeloRestricao.getRead());
+            restricao.setWrite(modeloRestricao.getWrite());
+            restricao.setDelete(modeloRestricao.getDelete());
+            persist(restricao);
+        }
     }
 }

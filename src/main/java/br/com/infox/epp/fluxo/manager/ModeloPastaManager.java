@@ -67,5 +67,4 @@ public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
 		modeloPastaRestricaoManager.deleteByModeloPasta(modelo);
 		remove(modelo);
 	}
-
 }

@@ -1,9 +1,7 @@
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.epp.fluxo.query.ModeloPastaQuery.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import static br.com.infox.epp.fluxo.query.ModeloPastaQuery.GET_BY_FLUXO;
+import static br.com.infox.epp.fluxo.query.ModeloPastaQuery.GET_BY_FLUXO_QUERY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -135,4 +132,28 @@ public class ModeloPasta {
 		return getNome();
 	}
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof ModeloPasta))
+            return false;
+        ModeloPasta other = (ModeloPasta) obj;
+        if (getId() == null) {
+            if (other.getId() != null)
+                return false;
+        } else if (!getId().equals(other.getId()))
+            return false;
+        return true;
+    }
 }
