@@ -120,6 +120,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 
 	public void endTask() {
 		try {
+//			TODO: ver onde colocar o metadado ComunicacaoMetadadoProvider.DATA_ANALISE_PRORROGACAO
 			MetadadoProcesso metadadoPrazo = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
 			if (metadadoPrazo != null && diasProrrogacao != null) {
 				int prazoExistente = Integer.valueOf(metadadoPrazo.getValor());

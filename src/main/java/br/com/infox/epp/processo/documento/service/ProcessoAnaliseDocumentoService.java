@@ -77,7 +77,7 @@ public class ProcessoAnaliseDocumentoService {
 		return processoAnalise;
 	}
 	
-	public void inicializarFluxoDocumento(Processo processoAnalise, Map<String, Object> variaveisJbpm) throws DAOException {//TODO colocar aqui pra inserir metadado
+	public void inicializarFluxoDocumento(Processo processoAnalise, Map<String, Object> variaveisJbpm) throws DAOException {
 		if (variaveisJbpm == null) {
 			variaveisJbpm = new HashMap<>();
 		} else {
@@ -99,7 +99,6 @@ public class ProcessoAnaliseDocumentoService {
 					if (prorrogacaoPrazoService.isClassificacaoProrrogacaoPrazo(documentoAnalise.getClassificacaoDocumento(), 
 							destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao())){
 						variaveisJbpm.put("pedidoProrrogacaoPrazo", true);
-						//TODO esse é o momento de adicionar o metadado de congelamento de prazo, mas como é do TCE ver onde colocar
 						break;
 					}
 				}
