@@ -32,10 +32,10 @@
 		</rich:collapsiblePanel>
 		<br />
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
-			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
+			switchType="client" id="comunicacoes">
 			<h:form>
 				<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
-					var="bean" styleClass="dtable rf-dt-crud">
+					var="bean" styleClass="dtable rf-dt-crud" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole(usuarioInterno)}">
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
 								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
@@ -81,7 +81,7 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.statusProrrogacao']}</f:facet>
-						<h:outputText value="-" />
+						<h:outputText value="#{bean.statusProrrogacao}" />
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.documentos']}</f:facet>
