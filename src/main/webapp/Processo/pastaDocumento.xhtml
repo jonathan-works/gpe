@@ -23,41 +23,41 @@
         header="#{infoxMessages['searchForm.title']}"
         switchType="client">
         <h:form>
-            <h:outputText
-                value="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
-                styleClass="name" />
-            <h:selectOneMenu id="classificacaoDocumento"
-                value="#{documentoProcessoAction.classificacaoDocumentoItem}"
-                styleClass="input select">
-                <f:ajax immediate="true" event="valueChange"
-                    execute="@form"
+            <div style="display: inline-block">
+                <h:outputText
+                    value="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
+                    styleClass="name" />
+                <h:selectOneMenu id="classificacaoDocumento"
+                    value="#{documentoProcessoAction.documentoFilter.idClassificacaoDocumento}"
+                    styleClass="input select">
+                    <f:selectItem noSelectionOption="true"
+                        itemValue="#{null}"
+                        itemLabel="#{infoxMessages['crud.select.all']}" />
+                    <f:selectItems
+                        value="#{documentoProcessoAction.listClassificacaoDocumento}"
+                        var="item" itemLabel="#{item.descricao}"
+                        itemValue="#{item.id}" />
+                    <f:converter converterId="javax.faces.Integer" />
+                </h:selectOneMenu>
+            </div>
+            <div style="display: inline-block; margin-left: 10px;">
+                <h:outputText
+                    value="#{infoxMessages['documentoProcesso.numeroDocumento']}"
+                    styleClass="name" />
+                <h:inputText id="numeroDocumentoPesquisa"
+                    value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"
+                    styleClasse="input text">
+                    <f:converter converterId="javax.faces.Integer" />
+                </h:inputText>
+            </div>
+            <div />
+            <h:commandButton id="btnFiltrarDocumentos"
+                value="#{infoxMessages['button.pesquisar']}"
+                action="#{documentoProcessoAction.filtrarDocumentos()}"
+                styleClass="buttons buttons">
+                <f:ajax immediate="true" execute="@form"
                     render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form" />
-                <f:selectItem noSelectionOption="true"
-                    itemValue="#{null}"
-                    itemLabel="#{infoxMessages['crud.select.all']}" />
-                <f:selectItems
-                    value="#{documentoProcessoAction.listClassificacaoDocumento}"
-                    var="item" itemLabel="#{item.descricao}"
-                    itemValue="#{item.id}" />
-                <f:converter converterId="javax.faces.Integer" />
-            </h:selectOneMenu>
-		</div>
-		<div style="display:inline-block; margin-left:10px;">
-			<h:outputText value="#{infoxMessages['documentoProcesso.numeroDocumento']}" 
-						  styleClass="name"/>
-			<h:inputText id="numeroDocumentoPesquisa"
-				  value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"
-				  styleClasse="input text">
-				  <f:converter converterId="javax.faces.Integer"/>	
-			</h:inputText>
-		</div>
-		<div />
-		<h:commandButton id="btnFiltrarDocumentos"
-				value="#{infoxMessages['button.pesquisar']}"
-				action="#{documentoProcessoAction.filtrarDocumentos()}"
-				styleClass="buttons buttons">
-				<f:ajax immediate="true" execute="@form" render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form"/>
-		</h:commandButton>				
+            </h:commandButton>
 
         </h:form>
     </rich:collapsiblePanel>
@@ -86,9 +86,9 @@
                             <a:commandLink render="documentoListDiv"
                                 execute="@form"
                                 action="#{pastaAction.selectPasta(pasta)}"
+            					onbegin="infox.showLoading();"
+            					oncomplete="infox.hideLoading();"
                                 styleClass="folder" limitRender="true">
-						onbegin="infox.showLoading();"
-						oncomplete="infox.hideLoading();"
                                 <h:graphicImage
                                     url="#{wiSkin.imageFolder}/folder.png"
                                     rendered="true" title="#{pasta}" />
