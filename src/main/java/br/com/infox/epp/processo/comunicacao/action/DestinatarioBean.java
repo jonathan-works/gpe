@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
@@ -15,8 +16,9 @@ public class DestinatarioBean {
 	private String prazoAtendimento;
 	private String prazoFinal;
 	private Processo comunicacao;
-	private Long idModeloComunicacao;
+	private ModeloComunicacao modeloComunicacao;
 	private Documento documentoComunicacao;
+	private String statusProrrogacao;
 	
 	public Long getIdDestinatario() {
 		return idDestinatario;
@@ -78,16 +80,22 @@ public class DestinatarioBean {
 	public void setComunicacao(Processo comunicacao) {
 		this.comunicacao = comunicacao;
 	}
-	public Long getIdModeloComunicacao() {
-		return idModeloComunicacao;
+	public ModeloComunicacao getModeloComunicacao() {
+		return modeloComunicacao;
 	}
-	public void setIdModeloComunicacao(Long idModeloComunicacao) {
-		this.idModeloComunicacao = idModeloComunicacao;
+	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+		this.modeloComunicacao = modeloComunicacao;
 	}
 	public Documento getDocumentoComunicacao() {
 		return documentoComunicacao;
 	}
 	public void setDocumentoComunicacao(Documento documentoComunicacao) {
 		this.documentoComunicacao = documentoComunicacao;
+	}
+	public String getStatusProrrogacao() {
+		return statusProrrogacao;
+	}
+	public void setStatusProrrogacao(String statusProrrogacao) {
+		this.statusProrrogacao = statusProrrogacao;
 	}
 }
