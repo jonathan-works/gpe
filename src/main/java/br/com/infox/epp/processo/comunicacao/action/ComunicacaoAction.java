@@ -201,12 +201,11 @@ public class ComunicacaoAction implements Serializable {
 		return classificacoesDocumento;
 	}
 	
-	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo() {//TODO ver se é aqui que influenca as classificações da resposta
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo() {
 		if (classificacoesDocumentoProrrogacaoPrazo == null) {
 			if (isProrrogacaoPrazo()) {
-				ModeloComunicacao modeloComunicacao = modeloComunicacaoManager.find(destinatario.getIdModeloComunicacao());
 				classificacoesDocumentoProrrogacaoPrazo = new ArrayList<>();
-				classificacoesDocumentoProrrogacaoPrazo.add(prorrogacaoPrazoService.getClassificacaoProrrogacaoPrazo(modeloComunicacao.getTipoComunicacao()));
+				classificacoesDocumentoProrrogacaoPrazo.add(prorrogacaoPrazoService.getClassificacaoProrrogacaoPrazo(destinatario.getModeloComunicacao()));
 			}
 		}
 		return classificacoesDocumentoProrrogacaoPrazo;
@@ -371,7 +370,7 @@ public class ComunicacaoAction implements Serializable {
 		ciencia = false;
 	}
 	
-	public void pedirProrrogacaoPrazo() {// TODO ver onde colocar o metadado DATA_PEDIDO_PRORROGACAO
+	public void pedirProrrogacaoPrazo() {
 		try {
 			Processo comunicacao = destinatario.getComunicacao();
 			documentoUploader.setProcesso(comunicacao.getProcessoRoot());
@@ -383,6 +382,12 @@ public class ComunicacaoAction implements Serializable {
 
 			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, documento);
 			processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao, null);
+			
+			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+			MetadadoProcesso dataPedidoProrrogacao = metadadoProcessoProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
+			metadadoProcessoManager.persist(dataPedidoProrrogacao);
+			
 			FacesMessages.instance().add("Pedido de prorrogação de prazo efetuado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -417,8 +422,9 @@ public class ComunicacaoAction implements Serializable {
 		return dadosCiencia.get(bean.getIdDestinatario());
 	}
 	
-	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {//TODO testar aqui se essa comunicação já pediu prorrogação
-		return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getTipoComunicacao()) && isCienciaConfirmada(bean);
+	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {
+		return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getModeloComunicacao()) && isCienciaConfirmada(bean) &&
+				prazoComunicacaoService.getDataPedidoProrrogacao(bean.getComunicacao()) == null;
 	}
 	
 	public void clear() {
@@ -441,7 +447,7 @@ public class ComunicacaoAction implements Serializable {
 		bean.setTipoComunicacao(destinatario.getModeloComunicacao().getTipoComunicacao());
 		bean.setNome(destinatario.getNome());
 		bean.setDocumentoComunicacao(destinatario.getDocumentoComunicacao());
-		bean.setIdModeloComunicacao(destinatario.getModeloComunicacao().getId());
+		bean.setModeloComunicacao(destinatario.getModeloComunicacao());
 		
 		Processo comunicacao = bean.getComunicacao();
 		MetadadoProcesso metadadoPrazo = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
@@ -454,6 +460,7 @@ public class ComunicacaoAction implements Serializable {
 		bean.setDataConfirmacao(getDataConfirmacao(comunicacao));
 		bean.setResponsavelConfirmacao(getResponsavelConfirmacao(comunicacao));
 		bean.setPrazoFinal(getPrazoFinal(comunicacao));
+		bean.setStatusProrrogacao(getStatusProrrogacao(comunicacao));
 		return bean;
 	}
 	
@@ -485,6 +492,10 @@ public class ComunicacaoAction implements Serializable {
 			return dateFormat.format(metadado.getValue());
 		}
 		return "-";
+	}
+	
+	private String getStatusProrrogacao(Processo comunicacao){
+		return prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao);
 	}
 
 	public String getTextoCiencia() {
