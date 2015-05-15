@@ -19,7 +19,7 @@
 			<f:convertDateTime pattern="dd/MM/yyyy" />
 		</wi:outputText>
 		<wi:outputText id="statusProrrogacao" label="#{infoxMessages['comunicacao.statusProrrogacao']}"
-			value="Solicitação analisada em 16/05/2015">
+			value="#{respostaComunicacaoAction.statusProrrogacao}">
 		</wi:outputText>
 		<h:form>
 			<h:commandButton value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
