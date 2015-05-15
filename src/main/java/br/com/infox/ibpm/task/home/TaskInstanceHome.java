@@ -42,6 +42,7 @@ import org.jbpm.context.exe.variableinstance.NullInstance;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -535,6 +536,12 @@ public class TaskInstanceHome implements Serializable {
 
 	@Observer(Event.EVENTTYPE_TASK_CREATE)
 	public void setCurrentTaskInstance(ExecutionContext context) {
+		if (currentTaskInstance != null) {
+			Token currentRootToken = currentTaskInstance.getProcessInstance().getRootToken();
+			if (!currentRootToken.equals(context.getProcessInstance().getRootToken())) {
+				return;
+			}
+		}
 		setCurrentTaskInstance(context.getTaskInstance());
 	}
 
