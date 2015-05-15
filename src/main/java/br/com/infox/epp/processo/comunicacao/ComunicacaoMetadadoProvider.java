@@ -46,11 +46,11 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
             new MetadadoProcessoDefinition("limiteDataCumprimento", "Limite para Cumprimento", Date.class);
 	
 	public static final MetadadoProcessoDefinition LIMITE_DATA_CUMPRIMENTO_INICIAL = 
-            new MetadadoProcessoDefinition("limiteDataCumprimento", "Limite Inicial para Cumprimento", Date.class);
+            new MetadadoProcessoDefinition("limiteDataCumprimentoInicial", "Limite Inicial para Cumprimento", Date.class);
 	
 	public static final MetadadoProcessoDefinition DATA_PEDIDO_PRORROGACAO = 
-            new MetadadoProcessoDefinition("limiteDataCumprimento", "Data de Soliticatção da Prorrogação", Date.class);
+            new MetadadoProcessoDefinition("dataPedidoProrrogacao", "Data de Solicitação da Prorrogação", Date.class);
 	
 	public static final MetadadoProcessoDefinition DATA_ANALISE_PRORROGACAO = 
-            new MetadadoProcessoDefinition("limiteDataCumprimento", "Data da Análise da Prorrogação", Date.class);
+            new MetadadoProcessoDefinition("dataAnaliseProrrogacao", "Data da Análise da Prorrogação", Date.class);
 }
