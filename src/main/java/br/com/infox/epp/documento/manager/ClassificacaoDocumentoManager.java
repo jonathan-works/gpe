@@ -9,8 +9,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
-import br.com.infox.epp.documento.type.TipoDocumentoEnum;
-import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
@@ -49,8 +48,8 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
 		return getDao().findByCodigo(codigo);
 	}
 	
-	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo, Papel papel) {
-		return getDao().getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, isModelo, papel);
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(ModeloComunicacao modeloComunicacao, boolean isModelo, Papel papel) {
+		return getDao().getClassificacoesDocumentoDisponiveisRespostaComunicacao(modeloComunicacao, isModelo, papel);
 	}
 	
     public List<ClassificacaoDocumento> getClassificacaoDocumentoListByProcesso(Processo processo) {
