@@ -139,7 +139,7 @@ public class ComunicacaoAction implements Serializable {
 	
 	public List<ModeloComunicacao> getComunicacoesDoProcesso() {
 		if (comunicacoes == null) {
-			comunicacoes = modeloComunicacaoManager.listModelosComunicacaoPorProcesso(processo);
+			comunicacoes = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(processo.getNumeroProcessoRoot());
 		}
 		return comunicacoes;
 	}
