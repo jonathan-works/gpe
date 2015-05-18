@@ -21,8 +21,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import com.google.common.base.Strings;
-
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -33,12 +31,14 @@ import br.com.infox.epp.processo.comunicacao.query.ModeloComunicacaoQuery;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 
+import com.google.common.base.Strings;
+
 @Entity
 @Table(name = "tb_modelo_comunicacao")
 @NamedQueries({
 	@NamedQuery(name = ModeloComunicacaoQuery.IS_EXPEDIDA, query = ModeloComunicacaoQuery.IS_EXPEDIDA_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO, query = ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO_QUERY),
-	@NamedQuery(name = ModeloComunicacaoQuery.LIST_BY_PROCESSO, query = ModeloComunicacaoQuery.LIST_BY_PROCESSO_QUERY),
+	@NamedQuery(name = ModeloComunicacaoQuery.LIST_BY_PROCESSO_ROOT, query = ModeloComunicacaoQuery.LIST_BY_PROCESSO_ROOT_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL, query = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL_QUERY)
 })
 public class ModeloComunicacao implements Serializable {

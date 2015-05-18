@@ -30,10 +30,10 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 		return getNamedSingleResult(ModeloComunicacaoQuery.IS_EXPEDIDA, params) == null;
 	}
 	
-	public List<ModeloComunicacao> listModelosComunicacaoPorProcesso(Processo processo) {
+	public List<ModeloComunicacao> listModelosComunicacaoPorProcessoRoot(String processoRoot) {
 		Map<String, Object> params = new HashMap<>();
-		params.put(ModeloComunicacaoQuery.PARAM_PROCESSO, processo);
-		return getNamedResultList(ModeloComunicacaoQuery.LIST_BY_PROCESSO, params);
+		params.put(ModeloComunicacaoQuery.PARAM_NUMERO_PROCESSO_ROOT, processoRoot);
+		return getNamedResultList(ModeloComunicacaoQuery.LIST_BY_PROCESSO_ROOT, params);
 	}
 	
 	public Processo getComunicacao(DestinatarioModeloComunicacao destinatario) {

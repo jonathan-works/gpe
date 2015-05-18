@@ -29,8 +29,8 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 		return getDao().isExpedida(modeloComunicacao);
 	}
 	
-	public List<ModeloComunicacao> listModelosComunicacaoPorProcesso(Processo processo) {
-		return getDao().listModelosComunicacaoPorProcesso(processo);
+	public List<ModeloComunicacao> listModelosComunicacaoPorProcessoRoot(String processoRoot) {
+		return getDao().listModelosComunicacaoPorProcessoRoot(processoRoot);
 	}
 	
 	public Processo getComunicacao(DestinatarioModeloComunicacao destinatario) {
