@@ -26,6 +26,10 @@ public class ProrrogacaoPrazoService {
 		return false;
 	}
 	
+	public boolean canRequestProrrogacaoPrazo(ModeloComunicacao modeloComunicacao){
+		return false;
+	}
+	
 	public ClassificacaoDocumento getClassificacaoProrrogacaoPrazo(ModeloComunicacao modeloComunicacao) {
 		throw new BusinessException("O tipo de comunicação " + modeloComunicacao.getTipoComunicacao().getDescricao() + " não admite pedido de prorrogação de prazo");
 	}
