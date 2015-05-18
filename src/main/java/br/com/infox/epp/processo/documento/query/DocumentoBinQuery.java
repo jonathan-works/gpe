@@ -8,7 +8,7 @@ public interface DocumentoBinQuery {
     String GET_BY_UUID_QUERY = "select o from DocumentoBin o where o.uuid = :" + QUERY_PARAM_UUID;
     
     String GET_DOCUMENTOS_NAO_SUFICIENTEMENTE_ASSINADOS = "DocumentoBin.getDocumentosNaoSuficientementeAssinados";
-    String GET_DOCUMENTOS_NAO_SUFICIENTEMENTE_ASSINADOS_QUERY = "select o from Documento o where "
-    		+ " o.documentoBin = :" + QUERY_PARAM_DOCUMENTO_BIN +
-    		" and o.documentoBin.minuta = false and DocumentoSuficientementeAssinado(o.id) = false";
+    String GET_DOCUMENTOS_NAO_SUFICIENTEMENTE_ASSINADOS_QUERY = "select o from Documento o inner join o.documentoBin bin where "
+    		+ " bin = :" + QUERY_PARAM_DOCUMENTO_BIN +
+    		" and bin.minuta = false and bin.suficientementeAssinado = false";
 }

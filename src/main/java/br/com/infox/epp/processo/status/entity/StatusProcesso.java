@@ -32,6 +32,11 @@ public class StatusProcesso implements Serializable {
 	@Size(max = LengthConstants.NOME_PADRAO)
 	@Column(name = "nm_status_processo", nullable = false, length = LengthConstants.NOME_PADRAO)
 	private String nome;
+	
+	@NotNull
+	@Size(max = LengthConstants.NOME_PADRAO)
+	@Column(name = "ds_status_processo", nullable = false, length = LengthConstants.NOME_PADRAO)
+	private String descricao;
 
 	public Integer getIdStatusProcesso() {
 		return idStatusProcesso;
@@ -49,8 +54,16 @@ public class StatusProcesso implements Serializable {
 		this.nome = nome;
 	}
 	
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
 	public String toString() {
-		return this.nome;
+		return this.descricao;
 	}
 
 	@Override

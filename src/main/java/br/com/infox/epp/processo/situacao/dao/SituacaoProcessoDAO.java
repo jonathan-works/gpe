@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
@@ -123,7 +124,6 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		        appendDestinoOrDestinatarioFilter(abstractQuery);
 		    }
 		} else if (TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
-			appendDestinoOrDestinatarioFilter(abstractQuery);
 			appendPapelLocalizacaoFilter(abstractQuery);
 		} else {
 			appendPapelLocalizacaoFilter(abstractQuery);
@@ -381,7 +381,17 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
         Integer idUnidadeDecisora = authenticator.getMonocraticaLogada().getIdUnidadeDecisoraMonocratica();
         Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
         predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()), predicateSubquery);
-        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        
+        Subquery<Integer> subQueryProcessoRoot = abstractQuery.subquery(Integer.class);
+        Root<Processo> processo = subQueryProcessoRoot.from(Processo.class);
+        Expression<Integer> idProcesso = processo.get("idProcesso");
+        subQueryProcessoRoot.select(idProcesso);
+        subQueryProcessoRoot.where(cb.and(
+        	cb.equal(processo.get("numeroProcesso"), cb.function("NumeroProcessoRoot", String.class, root.get("idProcesso"))),
+        	cb.isNull(processo.get("processoPai"))
+        ));
+        
+        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"),	subQueryProcessoRoot), predicateSubquery);
         subquery.where(predicateSubquery);
         
         Predicate predicate = abstractQuery.getRestriction();

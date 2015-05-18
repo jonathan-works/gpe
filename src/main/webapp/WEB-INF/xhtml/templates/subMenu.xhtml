@@ -13,13 +13,15 @@
     var="sub">
     <li class="menu-itm"><h:panelGroup
         rendered="#{empty sub.children}">
-        <h:commandLink
+        <a:commandLink
             styleClass="menu-lnk"
+            execute="@this"
+            status="dummy"
             action="#{conversationFacade.endBeforeRedirect(sub.url)}">
           <div class="menu-itm-lbl" id="#{sub.label}">
             <h:outputText value="#{sub.label}" />
           </div>
-        </h:commandLink>
+        </a:commandLink>
       </h:panelGroup> <h:panelGroup rendered="#{not empty sub.children}">
         <div class="menu-itm-lbl sub-menu-lbl" id="#{sub.label}">
           <h:outputText value="#{sub.label}" />

@@ -11,9 +11,9 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -42,7 +42,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     
     public List<Pasta> getByProcesso(Processo processo) throws DAOException {
         List<Pasta> pastaList = getDao().getByProcesso(processo);
-        if (pastaList == null || pastaList.isEmpty()) {
+        if (getDefault(processo) == null && (pastaList == null || pastaList.isEmpty())) {
             pastaList = createDefaultFolders(processo); 
         }
         return pastaList;
@@ -52,10 +52,9 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	return getDao().getTotalDocumentosPasta(pasta);
     }
     
-    public int getTotalDocumentosPastaClassificacaoDocumento(Pasta pasta, ClassificacaoDocumento classificacaoDocumento) {
-    	return getDao().getTotalDocumentosPastaClassificacaoDocumento(pasta, classificacaoDocumento);
+    public int getTotalDocumentosPastaPorFiltros(Pasta pasta, DocumentoFilter documentoFilter) {
+    	return getDao().getTotalDocumentosPastaPorFiltros(pasta, documentoFilter);
     }
-    
     public int getTotalDocumentosPasta(Pasta pasta, String customFilter, Map<String, Object> params) {
     	return getDao().getTotalDocumentosPasta(pasta, customFilter, params);
     }
@@ -68,8 +67,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	return MessageFormat.format(pasta.getTemplateNomePasta(), totalDocumentos);
     }
     
-    public String getNomePasta(Pasta pasta, ClassificacaoDocumento classificacaoDocumento) {
-    	return getNomePasta(pasta, getTotalDocumentosPastaClassificacaoDocumento(pasta, classificacaoDocumento));
+    public String getNomePasta(Pasta pasta,  DocumentoFilter documentoFilter) {
+    	return getNomePasta(pasta, getTotalDocumentosPastaPorFiltros(pasta, documentoFilter));
     }
     
     private List<Pasta> createDefaultFolders(Processo processo) throws DAOException {

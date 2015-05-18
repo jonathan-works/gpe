@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.task.home;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -41,6 +42,7 @@ import org.jbpm.context.exe.variableinstance.NullInstance;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -54,6 +56,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -91,6 +94,7 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
+import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -481,12 +485,19 @@ public class TaskInstanceHome implements Serializable {
 
 	public boolean podeAssinarDocumento(String variableName) {
 		Pair<String, VariableType> variableType = variableTypeResolver.getVariableTypeMap().get(variableName);
-		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable(variableType.getLeft());
+		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+		if (taskInstance == null){
+			return false;
+		}
+		if (variableType == null){
+			return false;
+		}
+		Integer idDocumento = (Integer) taskInstance.getVariable(variableType.getLeft());
 		if (idDocumento != null) {
 			Documento documento = documentoManager.find(idDocumento);
-			return documento != null && !documento.isDocumentoAssinado(Authenticator.getPapelAtual())
-					&& !documento.isDocumentoAssinado(Authenticator.getUsuarioLogado())
-					&& documento.isDocumentoAssinavel(Authenticator.getPapelAtual());
+			return documento != null 
+			        && documento.isDocumentoAssinavel(Authenticator.getPapelAtual())
+			        && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
 		}
 		return false;
 	}
@@ -525,6 +536,12 @@ public class TaskInstanceHome implements Serializable {
 
 	@Observer(Event.EVENTTYPE_TASK_CREATE)
 	public void setCurrentTaskInstance(ExecutionContext context) {
+		if (currentTaskInstance != null) {
+			Token currentRootToken = currentTaskInstance.getProcessInstance().getRootToken();
+			if (!currentRootToken.equals(context.getProcessInstance().getRootToken())) {
+				return;
+			}
+		}
 		setCurrentTaskInstance(context.getTaskInstance());
 	}
 
@@ -584,7 +601,8 @@ public class TaskInstanceHome implements Serializable {
 				Documento documento = documentoManager.find(variableInstance.getValue());
 				boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
 				if (!assinaturaVariavelOk) {
-					FacesMessages.instance().add(String.format(infoxMessages.get("assinaturaDocumento.faltaAssinatura"), key.split(":")[1]));
+				    String label = VariableHandler.getLabel(format("{0}:{1}", taskInstance.getTask().getProcessDefinition().getName(), key.split(":")[1]));
+					FacesMessages.instance().add(String.format(infoxMessages.get("assinaturaDocumento.faltaAssinatura"), label));
 				}
 				isAssinaturaOk = isAssinaturaOk && assinaturaVariavelOk;
 			}
@@ -592,12 +610,12 @@ public class TaskInstanceHome implements Serializable {
 		return isAssinaturaOk;
 	}
 
-	private boolean validarAssinaturaDocumento(Documento documento) {
-		if (documento.isAssinaturaObrigatoria(Authenticator.getPapelAtual())) {
-			return documento.hasAssinaturaSuficiente() || documento.isDocumentoAssinado(Authenticator.getPapelAtual());
-		}
-		return true;
-	}
+    private boolean validarAssinaturaDocumento(Documento documento) {
+        Papel papel = Authenticator.getPapelAtual();
+        boolean isValid = assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento)
+                || !documento.isAssinaturaObrigatoria(papel) || documento.isDocumentoAssinado(papel);
+        return isValid;
+    }
 
 	private boolean validFileUpload() {
 		// TODO verificar se é necessária a mesma validação do update para
