@@ -5,6 +5,8 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
+import com.google.common.base.Strings;
+
 public class DestinatarioBean {
 	private Long idDestinatario;
 	private String nome;
@@ -93,6 +95,9 @@ public class DestinatarioBean {
 		this.documentoComunicacao = documentoComunicacao;
 	}
 	public String getStatusProrrogacao() {
+		if(Strings.isNullOrEmpty(statusProrrogacao)){
+			return "-";
+		}
 		return statusProrrogacao;
 	}
 	public void setStatusProrrogacao(String statusProrrogacao) {
