@@ -104,6 +104,7 @@ public class Fluxo implements Serializable {
     private Date dataFimPublicacao;
     private String xml;
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
+    private List<ModeloPasta> modeloPastaList = new ArrayList<>(0); 
 
     public Fluxo() {
     }
@@ -277,6 +278,15 @@ public class Fluxo implements Serializable {
         return fluxoPapelList;
     }
 
+    public void setModeloPastaList(List<ModeloPasta> modeloPastaList) {
+        this.modeloPastaList = modeloPastaList;
+    }
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
+    public List<ModeloPasta> getModeloPastaList() {
+        return modeloPastaList;
+    }
+    
     @Transient
     public String getDataInicioFormatada() {
         return DateFormat.getDateInstance().format(dataInicioPublicacao);

@@ -2,16 +2,13 @@ package br.com.infox.epp.fluxo.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 
 @Name(ModeloPastaList.NAME)
-@Scope(ScopeType.PAGE) //TODO avaliar se é suficiente
 public class ModeloPastaList extends EntityList<ModeloPasta>{
 
 	private static final long serialVersionUID = 1L;
@@ -19,11 +16,16 @@ public class ModeloPastaList extends EntityList<ModeloPasta>{
 	
 	private final String DEFAULT_EJBQL = "select o from ModeloPasta o";
 	private final String DEFAULT_ORDER = "ordem";
-
+	
+	public void clearSearchFields() {
+	    getEntity().setNome(null);
+	    getEntity().setDescricao(null);
+	}
 	
 	@Override
 	protected void addSearchFields() {
 		addSearchField("nome", SearchCriteria.CONTENDO);
+		addSearchField("descricao", SearchCriteria.CONTENDO);
 		addSearchField("fluxo", SearchCriteria.IGUAL);
 	}
 

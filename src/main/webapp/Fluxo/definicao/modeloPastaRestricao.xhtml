@@ -9,7 +9,6 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-
     <wi:dataTable id="modeloPastaTable"
         bean="#{modeloPastaList}"
         values="#{modeloPastaList.list(15)}"
@@ -20,30 +19,32 @@
                 formTitle="#{infoxMessages['searchForm.title']}">
                 
             <wi:inputText id="nome" value="#{modeloPastaList.entity.nome}"
-                    label="#{infoxMessages['modeloPasta.nome']}" />
+                label="#{infoxMessages['modeloPasta.nome']}" />
+            <wi:inputText id="descricao" value="#{modeloPastaList.entity.descricao}"
+                label="#{infoxMessages['modeloPasta.descricao']}" />
                    
-                <ui:define name="buttons">
-					<wi:commandButton id="searchButton"
-						value="#{infoxMessages['button.pesquisar']}"
-						action="#{searchAction}" styleClass="buttons"
-						reRender="modeloPastaTable modeloPastaRestricaoDiv"
-						actionListener="modeloPastaRestricaoAction.newInstance()" >
-						<a:param assignTo="#{bean.page}" value="1" />
-					</wi:commandButton>
-					<a:commandButton id="clearButton"
-							onclick="$('##{formId}').clearForm();showLoading();"
-							oncomplete="hideLoading();"
-							actionListener="#{modeloPastaRestricaoAction.newInstance()}"
-							action="#{elFunctions.invokeMethod(clearAction)}"
-							value="#{infoxMessages['button.limpar']}" execute="@this"
-							render="#{wi:get(clearReRender, 'pageBody')} modeloPastaRestricaoDiv"
-							styleClass="buttons" />
-					<wi:commandButton id="addModeloPastaBtn"
-						value="#{infoxMessages['modeloPasta.add']}"
-						onclick="#{rich:component('addModeloPastaPanel')}.show();"
-						action="#{modeloPastaRestricaoAction.newInstance()}"
-						reRender="modeloPastaRestricaoDiv"/>
-				</ui:define>
+            <ui:define name="buttons">
+				<wi:commandButton id="searchButton"
+					value="#{infoxMessages['button.pesquisar']}"
+					action="#{searchAction}" styleClass="buttons"
+					reRender="modeloPastaTable modeloPastaRestricaoDiv"
+					actionListener="modeloPastaRestricaoAction.newInstance()" >
+					<a:param assignTo="#{bean.page}" value="1" />
+				</wi:commandButton>
+                <a:commandButton id="clearButton"
+                    onclick="$('##{formId}').clearForm();showLoading();"
+                    oncomplete="hideLoading();"
+                    action="#{modeloPastaList.clearSearchFields()}"
+                    value="#{infoxMessages['button.limpar']}" execute="@this"
+                    render="#{wi:get(clearReRender, 'pageBody')} modeloPastaRestricaoDiv"
+                    styleClass="buttons" />
+                <wi:commandButton id="addModeloPastaBtn"
+                    value="#{infoxMessages['modeloPasta.add']}"
+                    onclick="infox.showLoading();"
+                    oncomplete="infox.hideLoading(); #{rich:component('addModeloPastaPanel')}.show();"
+                    action="#{modeloPastaRestricaoAction.newInstance()}"
+                    reRender="modeloPastaRestricaoDiv" />
+                </ui:define>
                      
             </wi:searchForm>
         </ui:define>
@@ -58,7 +59,7 @@
 			</a:commandLink>
 			<wi:toolBar action="#{modeloPastaRestricaoAction.removeModeloPasta(row)}"
                 limitToList="true" status=":status"
-                reRender="modeloPastaTable"
+                reRender="modeloPastaTable modeloPastaRestricaoDiv"
                 onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
                 oncomplete="infox.hideLoading();"
                 url="#{wiSkin.imageFolder}/remove.png"
@@ -97,6 +98,9 @@
 		          	value="#{modeloPastaRestricaoAction.instance.nome}"
 		          	required="true" maxlength="250"
 		        	label="#{infoxMessages['modeloPasta.nome']}">
+                    <f:validator validatorId="nomeModeloPastaValidator" />
+                    <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
+                    <f:attribute name="idModeloPasta" value="#{modeloPastaRestricaoAction.instance.id}" />
 		        </wi:inputText>
 				<wi:inputText
 		        	id="editModeloPastaInputDescricao"
@@ -109,6 +113,9 @@
 		        	value="#{modeloPastaRestricaoAction.instance.ordem}"
 		        	required="true" maxlength="19"
 		        	label="#{infoxMessages['modeloPasta.ordem']}">
+                    <f:validator validatorId="ordemModeloPastaValidator" />
+                    <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
+                    <f:attribute name="idModeloPasta" value="#{modeloPastaRestricaoAction.instance.id}" />
 			    </wi:inputNumber>
 			    <wi:selectBooleanCheckbox id="editModeloPastaRemovivel"
 	                label="#{infoxMessages['modeloPasta.removivel']}"
@@ -144,18 +151,23 @@
 				
 				<wi:columnEnum columnId="restricaoTipo"
 					columnHeader="#{infoxMessages['modeloPasta.tipoRestricao']}"
+                    hideOrder="true"
 					value="#{row.tipoPastaRestricao}" />
 				<wi:columnOutputText columnId="restricaoAlvo"
-					columnHeader="#{infoxMessages['modeloPasta.restricaoAlvo']}" 
+					columnHeader="#{infoxMessages['modeloPasta.restricaoAlvo']}"
+                    hideOrder="true" 
 					value="#{modeloPastaRestricaoAction.getAlvoFormatado(row)}" />
 				<wi:columnBoolean columnId="restricaoVisualizar"
 					columnHeader="#{infoxMessages['modeloPasta.visualizarRestricao']}"
+                    hideOrder="true"
 					value="#{row.read}" />
 				<wi:columnBoolean columnId="restricaoInserir"
 					columnHeader="#{infoxMessages['modeloPasta.inserirRestricao']}"
+                    hideOrder="true"
 					value="#{row.write}" />
 				<wi:columnBoolean columnId="restricaoRetirar"
 					columnHeader="#{infoxMessages['modeloPasta.retirarRestricao']}"
+                    hideOrder="true"
 					value="#{row.delete}" />
 			</wi:dataTable>
 	
@@ -231,23 +243,24 @@
 	        <wi:inputText
 	          	id="addModeloPastaInputName"
 	          	value="#{modeloPastaRestricaoAction.instance.nome}"
-	          	required="true"
-	          	maxlength="250"
+	          	required="true" maxlength="250"
 	        	label="#{infoxMessages['modeloPasta.nome']}">
+                <f:validator validatorId="nomeModeloPastaValidator" />
+                <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
 	        </wi:inputText>
 			<wi:inputText
 	        	id="addModeloPastaInputDescricao"
 	        	value="#{modeloPastaRestricaoAction.instance.descricao}"
-	        	required="false"
-	        	maxlength="250"
+	        	required="false" maxlength="250"
 	        	label="#{infoxMessages['modeloPasta.descricao']}">
 	        </wi:inputText>	
 	   		<wi:inputNumber
 	        	id="addModeloPastaInputOrdemNumber"
 	        	value="#{modeloPastaRestricaoAction.instance.ordem}"
-	        	required="true"
-	        	maxlength="19"
+	        	required="true" maxlength="19"
 	        	label="#{infoxMessages['modeloPasta.ordem']}">
+                <f:validator validatorId="ordemModeloPastaValidator" />
+                <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
 		    </wi:inputNumber>
 		    <wi:selectBooleanCheckbox id="modeloPastaRemovivel"
                 label="#{infoxMessages['modeloPasta.removivel']}"
@@ -256,14 +269,13 @@
                 label="#{infoxMessages['modeloPasta.editavel']}"
                 value="#{modeloPastaRestricaoAction.instance.editavel}" />
 	        <br />
-	        
 	        <wi:commandButton
-	          id="addModeloPastaButton"
-	          action="#{modeloPastaRestricaoAction.persist()}"
-	          execute="@form"
-	          oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addModeloPastaPanel')}.hide();}else{clearAddModeloPastaFields()}"
-	          value="#{infoxMessages['modeloPasta.add']}"
-	          reRender="@form, modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
+                id="addModeloPastaButton"
+                action="#{modeloPastaRestricaoAction.persist()}"
+                execute="@form"
+                oncomplete="if(#{not (facesContext.validationFailed)}){#{rich:component('addModeloPastaPanel')}.hide();}else{infox.hideLoading();}"
+                value="#{infoxMessages['modeloPasta.add']}"
+                reRender="@form, modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
       	</h:form>
     </rich:popupPanel>
    
@@ -323,7 +335,7 @@
             <wi:commandButton id="addRestricaoButton"
                 action="#{modeloPastaRestricaoAction.persistRestricao()}"
                 execute="@form" limitRender="true"
-                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addModeloRestricaoPanel')}.hide();}else{clearAddModeloRestricaoFields()}"
+                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addModeloRestricaoPanel')}.hide();}else{clearAddModeloRestricaoFields();}"
                 value="#{infoxMessages['button.add']}"
                 reRender="@form modeloPastaRestricaoDiv pageBodyDialogMessage" />
         </h:form>
