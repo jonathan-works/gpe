@@ -5,7 +5,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
+import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM; 
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY;
@@ -30,6 +30,8 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_I
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_BY_ID_CAIXA;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_BY_ID_CAIXA_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_TIPO;
+import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_TIPO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
@@ -111,6 +113,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
     @NamedQuery(name = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO, query = TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO_QUERY),
     @NamedQuery(name = TEMPO_GASTO_PROCESSO_EPP, query = TEMPO_GASTO_PROCESSO_EPP_QUERY),
     @NamedQuery(name = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO, query = PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY),
+    @NamedQuery(name = PROCESSOS_FILHO_BY_TIPO, query = PROCESSOS_FILHO_BY_TIPO_QUERY),
     @NamedQuery(name = GET_PROCESSO_BY_NUMERO_PROCESSO, query = GET_PROCESSO_BY_NUMERO_PROCESSO_QUERY),
     @NamedQuery(name = PROCESSOS_BY_ID_CAIXA, query = PROCESSOS_BY_ID_CAIXA_QUERY),
     @NamedQuery(name = LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA, query = LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA_QUERY),
@@ -133,6 +136,9 @@ public class Processo implements Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "id_processo_pai", nullable = true)
     private Processo processoPai;
+    
+    @OneToMany(mappedBy = "processoPai", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
+    private List<Processo> processosFilhos;
     
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -171,7 +177,7 @@ public class Processo implements Serializable {
 
     @Column(name = ID_JBPM)
     private Long idJbpm;
-
+    
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_natureza_categoria_fluxo", nullable = false)
@@ -194,6 +200,7 @@ public class Processo implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<Pasta> pastaList = new ArrayList<>();
     
+    
     @PrePersist
     private void prePersist() {
     	if (idProcesso == null) {
@@ -202,8 +209,19 @@ public class Processo implements Serializable {
     		setNumeroProcesso(getIdProcesso().toString());
     	}
     }
+        
     
-    public Integer getIdProcesso() {
+    public List<Processo> getFilhos() {
+		return processosFilhos;
+	}
+
+
+	public void setFilhos(List<Processo> filhos) {
+		this.processosFilhos = filhos;
+	}
+
+
+	public Integer getIdProcesso() {
 		return idProcesso;
 	}
 

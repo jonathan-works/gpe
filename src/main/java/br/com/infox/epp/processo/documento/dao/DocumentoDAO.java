@@ -21,6 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
@@ -44,6 +49,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.session.SessionAssistant;
@@ -154,5 +160,14 @@ public class DocumentoDAO extends DAO<Documento> {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, classificacaoDocumento);
         return getNamedSingleResult(DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO, parameters);
+    }
+
+    public List<Documento> getDocumentosFromDocumentoBin(DocumentoBin documentoBin) {
+        EntityManager entityManager = getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Documento> cq = cb.createQuery(Documento.class);
+        Root<Documento> from = cq.from(Documento.class);
+        cq.select(from).where(cb.equal(from.get("documentoBin"), documentoBin));
+        return entityManager.createQuery(cq).getResultList();
     }
 }

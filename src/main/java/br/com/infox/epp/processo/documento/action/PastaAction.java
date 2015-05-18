@@ -52,6 +52,8 @@ public class PastaAction implements Serializable {
     private ParticipanteProcessoManager participanteProcessoManager;
     @In
     private DocumentoList documentoList;
+    @In
+    private DocumentoProcessoAction documentoProcessoAction;
 
     private Processo processo;
     private List<Pasta> pastaList;
@@ -261,10 +263,7 @@ public class PastaAction implements Serializable {
     }
 
     public String getNomePasta(Pasta pasta) {
-    	if (documentoList.getEntity().getClassificacaoDocumento() != null) {
-    		return pastaManager.getNomePasta(pasta, documentoList.getEntity().getClassificacaoDocumento());
-    	}
-    	return pastaManager.getNomePasta(pasta);
+		return pastaManager.getNomePasta(pasta, documentoProcessoAction.getDocumentoFilter());
     }
 }
 

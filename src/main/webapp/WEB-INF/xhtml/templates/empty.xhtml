@@ -21,7 +21,6 @@
 <h:body id="body">
 
   <ui:include src="ajaxQueue.xhtml" />
-  <ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
   <ui:include src="/WEB-INF/xhtml/components/ajaxStatusModal.xhtml" />
 
   <s:div styleClass="empty pageBody" id="pageBody">
@@ -34,5 +33,6 @@
   <s:div id="script">
     <ui:insert name="scripts" />
   </s:div>
+  <ui:include src="/WEB-INF/xhtml/components/ajaxStatus.xhtml" />
 </h:body>
 </html>

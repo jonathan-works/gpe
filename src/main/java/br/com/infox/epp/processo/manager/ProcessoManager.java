@@ -36,6 +36,7 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
@@ -65,6 +66,26 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private ProcessoTarefaManager processoTarefaManager;
+    
+    
+    public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
+        for (Processo filho : p.getFilhos()) {
+            if (filho.getDataFim() != null) {
+                continue;
+            }
+            for (MetadadoProcesso metadado : filho.getMetadadoProcessoList()) {
+                final Object value = metadado.getValue();
+                if (value != null && value instanceof TipoProcesso && value.equals(tipo)) {
+                    return filho;
+                }
+            }
+            Processo neto = buscarPrimeiroProcesso(filho, tipo);
+            if (neto != null) {
+                return neto;
+            }
+        }
+        return null;
+    }
 
     public DocumentoBin createDocumentoBin(final Object value) throws DAOException {
         final DocumentoBin bin = new DocumentoBin();
@@ -264,6 +285,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	
 	public List<Processo> getProcessosFilhoNotEndedByTipo(Processo processo, String tipoProcesso) {
 		return getDao().getProcessosFilhoNotEndedByTipo(processo, tipoProcesso);
+    }
+	
+	public List<Processo> getProcessosFilhoByTipo(Processo processo, String tipoProcesso) {
+		return getDao().getProcessosFilhosByTipo(processo, tipoProcesso);
     }
 	
 	public List<Processo> getProcessosByIdCaixa(Integer idCaixa) {
