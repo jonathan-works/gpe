@@ -22,8 +22,10 @@
 			value="#{respostaComunicacaoAction.statusProrrogacao}">
 		</wi:outputText>
 		<h:form>
-			<h:commandButton value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-				action="#{respostaComunicacaoAction.downloadComunicacao}" />
+			<h:commandButton id="visualizarComunicacao" 
+				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+				styleClass="buttons"
+				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{respostaComunicacaoAction.idDestinatario}','1024'); return false;" />
 		</h:form>
 		<s:div />
 	</rich:collapsiblePanel>
