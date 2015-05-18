@@ -2,20 +2,26 @@ package br.com.infox.cdi.producer;
 
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
 
 import br.com.infox.cdi.qualifier.BinaryDatabase;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.util.JNDI;
 
 
 public class EntityManagerProducer {
 	
 	@Produces
-	@PersistenceContext(unitName = "EPAPersistenceUnit")
-	private EntityManager entityManager;
+	@ViewScoped
+	private EntityManager entityManager() {
+		return JNDI.<EntityManagerFactory>lookup("java:comp/env/EPAPersistenceUnit").createEntityManager();
+	}
 	
 	@Produces
-	@PersistenceContext(unitName = "EPABinPersistenceUnit")
+	@ViewScoped
 	@BinaryDatabase
-	private EntityManager entityManagerBin;
+	private EntityManager entityManagerBin() {
+		 return JNDI.<EntityManagerFactory>lookup("java:comp/env/EPABinPersistenceUnit").createEntityManager();
+	}
 
 }
