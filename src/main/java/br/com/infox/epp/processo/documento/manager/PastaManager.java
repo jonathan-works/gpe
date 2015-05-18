@@ -85,8 +85,9 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
             pastaList.add(createFromModelo(modeloPasta, processo));
         }
         
-        if (!pastaList.isEmpty()) {
-            Pasta padrao = pastaList.get(0);
+        Pasta padrao = getDefault(processo.getProcessoRoot());
+        if (padrao == null && !pastaList.isEmpty()) {
+            padrao = pastaList.get(0);
             documentoService.setDefaultFolder(padrao);
             metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.PASTA_DEFAULT, padrao.getId().toString());
         }
