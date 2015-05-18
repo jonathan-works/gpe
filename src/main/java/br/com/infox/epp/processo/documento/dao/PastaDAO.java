@@ -6,7 +6,9 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_NUMERO
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SIGILO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_LOCALIZACAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NUMERO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PASTA;
@@ -70,4 +72,11 @@ public class PastaDAO extends DAO<Pasta> {
 		parameters.put(PARAM_PASTA, pasta);
 		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_QUERY + customFilter, parameters)).intValue();
 	}
+
+    public Pasta getByProcessoAndDescricao(Processo processo, String descricao) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(PARAM_PROCESSO, processo);
+        params.put(PARAM_DESCRICAO, descricao);
+        return getNamedSingleResult(GET_BY_PROCESSO_AND_DESCRICAO, params);
+    }
 }

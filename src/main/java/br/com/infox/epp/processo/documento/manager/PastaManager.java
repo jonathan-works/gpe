@@ -133,4 +133,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         pastaRestricaoManager.deleteByPasta(pasta);
         remove(pasta);
     }
+    
+    public Pasta getByProcessoAndDescricao(Processo processo, String descricao) {
+        return getDao().getByProcessoAndDescricao(processo, descricao);
+    }
 }

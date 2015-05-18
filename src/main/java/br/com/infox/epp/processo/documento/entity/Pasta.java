@@ -1,6 +1,8 @@
 package br.com.infox.epp.processo.documento.entity;
 
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO_QUERY;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA_QUERY;
@@ -33,7 +35,8 @@ import br.com.infox.epp.processo.entity.Processo;
 @Table(name = Pasta.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = GET_BY_PROCESSO, query = GET_BY_PROCESSO_QUERY),
-    @NamedQuery(name = TOTAL_DOCUMENTOS_PASTA, query = TOTAL_DOCUMENTOS_PASTA_QUERY)
+    @NamedQuery(name = TOTAL_DOCUMENTOS_PASTA, query = TOTAL_DOCUMENTOS_PASTA_QUERY),
+    @NamedQuery(name = GET_BY_PROCESSO_AND_DESCRICAO, query = GET_BY_PROCESSO_AND_DESCRICAO_QUERY)
 })
 public class Pasta implements Serializable, Cloneable {
 
