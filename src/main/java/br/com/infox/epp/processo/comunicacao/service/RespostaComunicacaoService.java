@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoServi
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -70,6 +72,11 @@ public class RespostaComunicacaoService {
 		setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
 		documentoRespostaComunicacaoDAO.updateDocumentoComoEnviado(respostas);
+		
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+		MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
 	}
 	
 	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {
