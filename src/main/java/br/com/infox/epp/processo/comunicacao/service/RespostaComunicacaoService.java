@@ -20,7 +20,9 @@ import org.jbpm.graph.exe.ProcessInstance;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
+import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
@@ -44,6 +46,8 @@ public class RespostaComunicacaoService {
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@In
+	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	
 	public void enviarResposta(Documento resposta) throws DAOException {
 		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(resposta);
@@ -73,10 +77,19 @@ public class RespostaComunicacaoService {
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
 		documentoRespostaComunicacaoDAO.updateDocumentoComoEnviado(respostas);
 		
-		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-		MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
-				ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
-		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
+		//TODO: ver se tem melhor jeito de fazer isso aqui
+		MetadadoProcesso metadadoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+		TipoComunicacao tipoComunicacao = ((DestinatarioModeloComunicacao) metadadoDestinatario.getValue()).getModeloComunicacao().getTipoComunicacao();
+		for(Documento resposta : respostas){
+			if (prorrogacaoPrazoService.isClassificacaoProrrogacaoPrazo(resposta.getClassificacaoDocumento(), tipoComunicacao)){
+				MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+				MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
+						ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
+				comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
+				break;
+			}
+		}
+		
 	}
 	
 	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {
