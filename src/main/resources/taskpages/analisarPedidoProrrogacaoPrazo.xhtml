@@ -18,10 +18,15 @@
 			<f:convertDateTime pattern="dd/MM/yyyy" />
 		</wi:outputText>
 		<h:form>
-			<h:commandButton value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-				action="#{analisarPedidoProrrogacaoPrazoAction.downloadComunicacao}" />
-			<h:commandButton value="#{infoxMessages['comunicacao.visualizarPedidoDeProrrogacao']}" styleClass="buttons" 
-				action="#{analisarPedidoProrrogacaoPrazoAction.downloadSolicitacaoProrrogacaoPrazo()}" />
+			<h:commandButton id="visualizarComunicacao" 
+				type="button" 
+				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+				styleClass="buttons"
+				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{analisarPedidoProrrogacaoPrazoAction.idDestinatarioComunicacao}','1024'); return false;" />
+			<h:commandButton id="baixarPedidoProrrogacao" 
+				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+				styleClass="buttons"
+				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{analisarPedidoProrrogacaoPrazoAction.idDocPedidoProrrogacao}','1024'); return false;" />
 		</h:form>
 		<s:div />
 		<wi:dataTable id="documentosComunicacao" values="#{documentoComunicacaoList.list(10)}" bean="#{documentoComunicacaoList}"
@@ -109,7 +114,7 @@
 	    				<a:ajax event="change" render="@form" execute="@form" limitRender="true" />
 	    		</wi:inputDate>
 	    		<h:commandButton value="#{infoxMessages['comunicacao.prorrogarPrazo']}" styleClass="buttons" 
-						action="#{analisarPedidoProrrogacaoPrazoAction.prorrogarPrazoDeCumprimento()}" />
+						action="#{analisarPedidoProrrogacaoPrazoAction.prorrogarPrazoDeCumprimento()}" render="@form"/>
 			</h:form>
 		</rich:panel>
 	</s:div>
