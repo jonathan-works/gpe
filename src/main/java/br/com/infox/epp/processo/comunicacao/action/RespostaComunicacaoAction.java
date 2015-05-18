@@ -15,7 +15,6 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -116,14 +115,8 @@ public class RespostaComunicacaoAction implements Serializable {
 		prazoResposta = prazoComunicacaoService.contabilizarPrazoCumprimento(processoComunicacao);
 	}
 
-	public void downloadComunicacao() {
-		try {
-			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatario.getModeloComunicacao(), destinatario);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
-		} catch (DAOException e) {
-			LOG.error("", e);
-			actionMessagesService.handleDAOException(e);
-		}
+	public Long getIdDestinatario(){
+		return destinatario.getId();
 	}
 		
 	public void assignModeloDocumento() {
