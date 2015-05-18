@@ -23,8 +23,6 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.system.Parametros;
 
-import com.google.common.base.Strings;
-
 @Name(PrazoComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
@@ -139,22 +137,21 @@ public class PrazoComunicacaoService {
     					comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO).getValue());
     }
     
-    //TODO ver onde coloco isso aqui
     public String getStatusProrrogacaoFormatado(Processo comunicacao){
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		if (hasPedidoProrrogacaoEmAberto(comunicacao)){
-			return "Aguardando análise desde " + dateFormat.format(getDataPedidoProrrogacao(comunicacao));
-		}else{
-			String dataAnalise = dateFormat.format(getDataAnaliseProrrogacao(comunicacao)); 
-			if ( Strings.isNullOrEmpty(dataAnalise)){
+    	if(comunicacao != null && getDataPedidoProrrogacao(comunicacao) != null){
+    		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    		if (hasPedidoProrrogacaoEmAberto(comunicacao)){
+    			return "Aguardando análise desde " + dateFormat.format(getDataPedidoProrrogacao(comunicacao));
+    		}else{
+    			String dataAnalise = dateFormat.format(getDataAnaliseProrrogacao(comunicacao)); 
 				if(isPrazoProrrogado(comunicacao)){
-					return "Prazo Prorrogado em " + dataAnalise;
+					return "Prazo prorrogado em " + dataAnalise;
 				}else{
 					return "Prorrogação negada em " + dataAnalise;
 				}
-			}
-		}
-		return "-";
+    		}
+    	}
+		return "";
     }
     
 }
