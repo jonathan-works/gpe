@@ -158,14 +158,13 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	
 	public List<DestinatarioBean> getDestinatariosCienciaConfirmada() {
 		List<DestinatarioBean> destinatarios = new ArrayList<>();
-	    List<ModeloComunicacao> comunicacoesDoProcesso = modeloComunicacaoManager.listModelosComunicacaoPorProcesso(comunicacao.getProcessoRoot());
-	    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) {
+	    List<ModeloComunicacao> comunicacoesDoProcesso = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(comunicacao.getNumeroProcessoRoot());
+	    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) { //TODO deveria chamar esse metodo do comunicacao action?
 	        List<DestinatarioBean> destinatariosPorModelo = comunicacaoAction.getDestinatarios(modeloComunicacao);
 	        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
 	        	if (!destinatarioBean.getPrazoFinal().equals("-")){
 	        		destinatarios.add(destinatarioBean);
 	        	}
-	        	
             }
         }
 	    return destinatarios;
