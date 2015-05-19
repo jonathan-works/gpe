@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -92,15 +93,15 @@ public class ProcessoAnaliseDocumentoService {
 				variaveisJbpm.put("respostaComunicacao", true);
 				
 				List<MetadadoProcesso> metadadoDocumentoList = processoAnalise.getMetadadoList(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
-				MetadadoProcesso metadadoDestinatario = processoAnalise.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
-				DestinatarioModeloComunicacao destinatarioComunicacao = metadadoDestinatario.getValue();
+				List<Documento> documentos = new ArrayList<Documento>(metadadoDocumentoList.size());
 				for(MetadadoProcesso metadadoDocumentoAnalise : metadadoDocumentoList){
 					Documento documentoAnalise = metadadoDocumentoAnalise.getValue();
-					if (prorrogacaoPrazoService.isClassificacaoProrrogacaoPrazo(documentoAnalise.getClassificacaoDocumento(), 
-							destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao())){
-						variaveisJbpm.put("pedidoProrrogacaoPrazo", true);
-						break;
-					}
+					documentos.add(documentoAnalise);
+				}
+				MetadadoProcesso metadadoDestinatario = processoAnalise.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+				DestinatarioModeloComunicacao destinatarioComunicacao = metadadoDestinatario.getValue();
+				if(prorrogacaoPrazoService.containsClassificacaoProrrogacaoPrazo(documentos, destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao())){
+					variaveisJbpm.put("pedidoProrrogacaoPrazo", true);
 				}
 			}
 		}
@@ -135,4 +136,5 @@ public class ProcessoAnaliseDocumentoService {
 		}
 		
 	}
+	
 }
