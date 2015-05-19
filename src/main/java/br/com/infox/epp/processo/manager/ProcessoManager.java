@@ -36,10 +36,14 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.manager.ParametroManager;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.util.time.DateRange;
 
 @Name(ProcessoManager.NAME)
@@ -49,6 +53,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private static final long serialVersionUID = 8095772422429350875L;
     public static final String NAME = "processoManager";
     private static final int PORCENTAGEM = 100;
+    private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
 
     @In
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
@@ -66,7 +71,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private ProcessoTarefaManager processoTarefaManager;
-    
+    @In
+	private SituacaoProcessoDAO situacaoProcessoDAO;
     public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
         for (Processo filho : p.getFilhos()) {
             if (filho.getDataFim() != null) {
@@ -305,5 +311,22 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	
 	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
 		return getDao().getProcessoEpaByIdJbpm(idJbpm);
+	}
+	
+	public void movimentarProcessoJBPM(Processo processo) throws DAOException {
+		Long idTaskInstance = situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso());
+		if (idTaskInstance == null) {
+			LOG.warn("idTaskInstance para o processo " + processo.getNumeroProcesso() + " nulo");
+			return;
+		}
+		TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(idTaskInstance);
+		taskInstance.end();
+		atualizarProcessoTarefa(taskInstance);
+	}
+	
+	private void atualizarProcessoTarefa(TaskInstance taskInstance) throws DAOException {
+		ProcessoTarefa processoTarefa = processoTarefaManager.getByTaskInstance(taskInstance.getId());
+		processoTarefa.setDataFim(taskInstance.getEnd());
+		processoTarefaManager.update(processoTarefa);
 	}
 }
