@@ -34,7 +34,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel_;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
-import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
@@ -100,7 +100,7 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     	return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, params);
     }
     
-    public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(ModeloComunicacao modeloComunicacao, boolean isModelo, Papel papel) {
+    public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isModelo, Papel papel) {
 		return getUseableClassificacaoDocumento(isModelo, papel);
 	}
 
