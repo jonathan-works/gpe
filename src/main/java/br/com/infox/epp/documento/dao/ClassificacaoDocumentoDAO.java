@@ -10,6 +10,7 @@ import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PAPEL
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PARAM_DESCRICAO;
 import static br.com.infox.epp.documento.query.ClassificacaoDocumentoQuery.PARAM_PROCESSO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
@@ -98,4 +100,35 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo, Papel papel) {
 		return getUseableClassificacaoDocumento(isModelo, papel);
 	}
+
+    private CriteriaQuery<ClassificacaoDocumento> createQueryClassificacoesDocumentoCruds(TipoDocumentoEnum tipoDocumento) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ClassificacaoDocumento> query = cb.createQuery(ClassificacaoDocumento.class);
+        Root<ClassificacaoDocumento> from = query.from(ClassificacaoDocumento.class);
+        Predicate predicate = cb.and(cb.isFalse(from.get(ClassificacaoDocumento_.sistema)), 
+                cb.isTrue(from.get(ClassificacaoDocumento_.ativo)));
+        
+        if (tipoDocumento != null){
+            List<TipoDocumentoEnum> tiposDocumento = new ArrayList<>();
+            tiposDocumento.add(TipoDocumentoEnum.T);
+            switch (tipoDocumento) {
+            case T:
+                tiposDocumento.add(TipoDocumentoEnum.P);
+                tiposDocumento.add(TipoDocumentoEnum.D);
+                break;
+
+            default:
+                tiposDocumento.add(tipoDocumento);
+                break;
+            }
+            predicate = cb.and(predicate, from.get(ClassificacaoDocumento_.inTipoDocumento).in(tiposDocumento));
+        }
+        query.where(predicate).orderBy(cb.asc(from.get(ClassificacaoDocumento_.descricao)));
+        return query;
+    }
+    
+    public List<ClassificacaoDocumento> getClassificacoesDocumentoCruds(TipoDocumentoEnum tipoDocumento) {
+        CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumentoCruds(tipoDocumento);
+        return getEntityManager().createQuery(query).getResultList();
+    }
 }
