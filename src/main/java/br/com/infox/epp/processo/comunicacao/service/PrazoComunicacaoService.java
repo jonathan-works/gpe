@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
+import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -18,8 +19,10 @@ import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.system.Parametros;
 
@@ -35,6 +38,8 @@ public class PrazoComunicacaoService {
 	private CalendarioEventosManager calendarioEventosManager;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@In
+	private ProcessoManager processoManager;
 	
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
@@ -112,46 +117,12 @@ public class PrazoComunicacaoService {
         contextInstance.setVariable("possuiPrazoParaCumprimento", possuiPrazoParaCumprimento);
     }
     
-    public Date getDataPedidoProrrogacao(Processo comunicacao){
-    	MetadadoProcesso metadadoProcesso = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO);
-    	if(metadadoProcesso != null) {
-    		return metadadoProcesso.getValue();
-    	}
-    	return null;
-    }
-    
-    public boolean hasPedidoProrrogacaoEmAberto(Processo comunicacao){
-    	return getDataPedidoProrrogacao(comunicacao) != null && getDataAnaliseProrrogacao(comunicacao) == null;
-    }
-    
-    public Date getDataAnaliseProrrogacao(Processo comunicacao){
-    	MetadadoProcesso metadadoProcesso = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_ANALISE_PRORROGACAO);
-    	if(metadadoProcesso != null) {
-    		return metadadoProcesso.getValue();
-    	}
-    	return null;
-    }
-    
-    public boolean isPrazoProrrogado(Processo comunicacao){
-    	return  !comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL).getValue().equals(
-    					comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO).getValue());
-    }
-    
-    public String getStatusProrrogacaoFormatado(Processo comunicacao){
-    	if(comunicacao != null && getDataPedidoProrrogacao(comunicacao) != null){
-    		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    		if (hasPedidoProrrogacaoEmAberto(comunicacao)){
-    			return "Aguardando análise desde " + dateFormat.format(getDataPedidoProrrogacao(comunicacao));
-    		}else{
-    			String dataAnalise = dateFormat.format(getDataAnaliseProrrogacao(comunicacao)); 
-				if(isPrazoProrrogado(comunicacao)){
-					return "Prazo prorrogado em " + dataAnalise;
-				}else{
-					return "Prorrogação negada em " + dataAnalise;
-				}
-    		}
-    	}
-		return "";
-    }
+    public void movimentarComunicacaoPrazoExpirado(Processo comunicacao, MetadadoProcessoDefinition metadadoPrazo) throws DAOException{
+		Date dataLimite = comunicacao.getMetadado(metadadoPrazo).getValue();
+		DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
+		if (dataParaCumprimento.isBeforeNow()) {
+			processoManager.movimentarProcessoJBPM(comunicacao);
+		}
+	}
     
 }
